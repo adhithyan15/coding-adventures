@@ -785,3 +785,20 @@ renaming,inlining,motion,merging,deletion lineage/stableIDs/spans/pass-sweep/CV0
 remain OPEN. Miri **DEFERRED/PENDING**, never passed; frozen checkout/run/inputs/
 target/receipts untouched and unpolled, no duplicate or termination. Delivery
 first, genuine final-source Miri afterward; heartbeat remains ACTIVE.
+
+
+## CV04b cap23 exact-source validation checkpoint
+
+The dedicated outer-entier proof admits cumulative absolute units through23;
+its shared sign classifier remains conservative. Original quantitative22 cases
+are retained as126 exact-source real-formatter positives; only their specified
+cap24 counterparts replace the negative oracles. All221 mixed safety cases,
+including48 shadowed cases, stay exact. Source09fb passes965 unit tests and
+strict lint with complete347-refusal/126-admission execution censuses, independently
+reviewed. The original failed interleaved census and earlier semantic reds remain.
+
+Focused integration at3137 passes4 tests, including exact old22/new23 admissions,
+quantitative24 refusal and unchanged rounding controls. These checks do not claim
+full native/downstream/Closure parity. Miri remains **DEFERRED/PENDING**; its frozen
+run stays untouched and genuine final-source acceptance follows implementation
+and delivery. Full transformation lineage/output-byte-source joins remain OPEN.

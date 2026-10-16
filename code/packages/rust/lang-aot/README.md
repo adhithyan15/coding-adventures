@@ -1393,3 +1393,25 @@ renaming,inlining,motion,merging,deletion lineage/stableIDs/spans/pass-sweep/CV0
 remain OPEN. Miri **DEFERRED/PENDING**, never passed; frozen checkout/run/inputs/
 target/receipts untouched and unpolled, no duplicate or termination. Delivery
 first, genuine final-source Miri afterward; heartbeat remains ACTIVE.
+
+
+## CV04b exact cap23 runtime source checkpoint
+
+Execution source3137 retains29 explicit source/output pairs:16 effect-marked
+22/23 cases,10 exact historic boundary contexts,2 unchanged incoming matrix
+sources and the exact prior22 integration source. All29 execute on NativeAot,
+LLVM, WASM, JVM, VM and JIT:174 unique source/backend checks. Available-but-no-run
+and traps fail. Saved-only sources require process/result0. Real-result sources
+require exact numeric WASM return, exact host process0 for native/LLVM/JVM, and
+completed VM/JIT execution with fresh exact typed Float return observations;
+13 cases produce26 checked VM/JIT observations. The guard rejects stale/missing/
+multiple/wrong-type/value observations and its type prevents cross-thread moves.
+Both compiler/LANG all-target strict lint passes at3137.
+
+These are focused stdout/effect/completion checks, not the full matrix or typed
+native/LLVM entry ABI parity. That ABI remains OPEN; the CLR f64-entry conversion
+gap remains OPEN and absent CLR is uncounted. Original compile/import and mistaken
+universal-zero status reds are preserved. Earlier complete suites retain their
+own exact execution heads. Current-main integration, full affected final suites,
+hosted checks and real merge remain pending. Miri is **DEFERRED/PENDING**, never
+passed; frozen inputs/run/receipts/target remain untouched.

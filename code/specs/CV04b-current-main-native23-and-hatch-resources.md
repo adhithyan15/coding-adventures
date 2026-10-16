@@ -311,3 +311,17 @@ never be skipped/relaxed. No CLR execution claim when absent. Full Closure parit
 and final-source security/requiredCI/Miri remain separate. This corrects the
 previous mistaken zero assertion from observed/source evidence; it does not
 rename sources, remove real execution, or accept arbitrary process failure.
+
+
+## Actual scoped validation checkpoint3137
+
+Source3137 has actual focused integration4P, adversarial observer1P and runtime1P
+with174 unique29x6 backend tuples/26 exact typed Float returns, both package
+all-target strict0. Producer3898 is fully consumed0. This successor encodes
+thread affinity through standard PhantomData<Rc<()>>; the compiled cross-thread
+negative failsE0277 and same-thread control compiles, with neither binary run.
+Source reviewde459e24 passes, separate terminal1c6ffe99 PASS binds7936 bodies/bothlocks/helper/logs. The originalbb830
+runtime receipt/review is not relabeled as3137. The965-unit/census347+126 complete
+unit receipt remains exact09fb. Full affected/final-source/hosted and nativeLLVM
+typed ABI/absentCLR/Miri limitations above remain unchanged. Mandatory audit
+143000Z observes new main94df timeline config; no newmain acceptance is granted.

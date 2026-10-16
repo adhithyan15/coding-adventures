@@ -1,88 +1,77 @@
 # Closure Compiler on Rust — parity backlog
 
 <!-- CV04b current-main integration pending -->
-Local native implementation5031e756/maincf5da3f5 merge6ab6f339 is unpublished;
-sole PR17288 publishes
-D3b6132a518, conflicting, auto-merge OFF. Fresh audit20261016T132135Z observes
-maincf5da3f5. Native22/23 tests and hatch fields are merged. Dedicated production
-now changes exactly four places cap21→23, inverse-proven against the full owned
-prefix; shared classification stays exact406. Hatch repair/fixture migration
-and full new-source validation remain pending.
-Next bounded contract: `CV04b-current-main-native23-and-hatch-resources.md`,
-committed before successor tests/merge/production. Preserve unrelated edits.
+Sole PR17288 still publishes D3b6132a518, conflicting with auto-merge OFF.
+Mandatory audit20261016T143000Z observes origin/main94df4cf1 (timeline config,
+10 new paths after6e54 collision); these deltas remain unintegrated and unaccepted.
+Current native cap23 execution source3137fe13 is unpublished; integrated maincf5
+remains at merge6ab. Preserve base ESTree canonical boundary, own types, zero new
+crates.io dependencies and unrelated edits. Next reviewed bounded contract is
+`CV04b-current-main-native23-and-hatch-resources.md` (committed before tests/code).
 
-Native v9 source406a9b5b passes1882P/0F/1 existing outer trampoline I across74
-executables+5 empty doctest harnesses, strict0; producer85176 fully consumed0.
-Receipt `CV04b-main-v9-native-406a9b5b.json` binds7899 inputs/209 local roots and
-both unchanged locks. All24 exact19/20/21 source pairs execute normalExit0/exact
-output on NativeAot/Llvm/Wasm/Jvm/Vm/Jit:144 unique tuples; no CLR claim. Only the
-source-hashed archive outer3P/1I is allowed with its passing isolated-child parent;
-all other harnesses0I, all0F/measured/filtered. Static helper4b02e749/source9433a8d6
-reviews pass. Independent terminald1762a9f PASS reproduces all bodies/locks/census.
-V8 Cargo101/E0597/zero-runtime failure remains preserved.
+Dedicated production5031 changes exactly four places cap21→23; all other owned
+production/shared classifier bytes stay exact406. Eleven missing full historical
+contexts outside merge-conflict markers were restored before oracle migration;
+ten quantitative admissions changed, structural context7 stayed negative. Actual
+b1 baseline11P/incoming0P2F,49ad semantic3P10F,5031 focused13P+2P/full917P24F stay
+preserved with their exact logs. Complete independent inventory-v2 binds347 old
+negative occurrences:126 purely quantitative22 and221 safety including48 shadowed.
+Specac5 preceded09fb materialization: only126 specified cap24 replacements, plus126
+byte-exact original-source real-formatter positives, all18 inverses and every
+other function/source assertion retained. Source review7578563b PASS.
 
-Earlier exact execution heads: fast15 source58e52fad=2009P/0F/0I (2007 executable
-passes+2 doctests;56 executables/15 docs,13 empty), strict0, source2b01de36 and
-terminal04fb6f69 PASS. Standalone Closurefa4a78ee=1139P/0F/0I/182 executables,
-strict0, terminale3ccb63d PASS; its resolved36 local roots sit within237 union
-roots/7899 inputs. These are not relabeled as406 or latest main. Core67
-1555P/strict0/review6056f7c7 and geometric22 66P/strict0/reviews683d1b2b/32a877d8
-remain bounded historical receipts. Native120 former-source companions and mixed
-guards retain independent whole-file inverse reviewfaa1cce8.
+Actual09fb full ALGOL lib965P/0F/0I/unfiltered with all347 negative and126 positive
+post-assertion IDs and exact executable join; package strict0. Serialized producer
+81099 consumed0, receipt `CV04b-cap23-complete-units-v2-09fb5986.json`, independent
+terminal21c2e65c PASS binds7932 bodies/locks/helper. Preserve original965P but
+344/125 interleaved census refusal (strict not run). Existing22 integration
+compiled red2P1F; its separate progress-line wrapper failure remains preserved.
 
-Whole Wardley/Ishikawa IR/layout/scene/glyph/metadata/query tests and every old
-source/function remain. Failed fixture runs7bec2001P/7F,7302002P/6F,4552003P/6F
-and their inverses remain. Font1/32 actual text-frame/box/both-glyph proofs and
-ordinary-circle/private pipeline-square overflow controls stay intact.
+Runtime speca2f/14b precedes exact29 static fixtures68c and fresh typed-observer
+testsda306, implementationbb830/thread-affinity3137. Preserve zero-harness E0603
+import failure and e5df compiled runtime red:16 saved cases execute6 backends,
+then result-context17 WASM completes21/stdout21 and refutes the mistaken universal
+zero spec. The independently reviewed correction preserves every exact source:
+real main return and host process status are distinct. Do not rename result or
+accept arbitrary status/None/traps. Current3137 executes all29 on six actual
+backends (NativeAot/Llvm/Wasm/Jvm/Vm/Jit),174 unique tuples,26 exact typed Float
+observations; focused integration4P, adversarial observer1P, runtime1P and both
+packages all-target strict0. Producer3898 consumed0; receipt
+`CV04b-cap23-runtime29-v4-3137fe13.json`. Source de459e24 PASS; successor terminal
+1c6ffe99 PASS binds7936 bodies/bothlocks/helper and actual tuples. Cross-thread guard move is actually rejectedE0277; same-thread
+control compiles; neither affinity probe binary was run. Native/LLVM typed-main
+ABI/value parity stays OPEN. CLR f64-entry conversion gap stays OPEN; absent CLR
+is uncounted. Focused filters are explicit and are not a full matrix claim.
 
-Incoming hatchab41 security **WITHHELD**, report34e4156b: huge finite canvas can
-stall float stepping; numeric spans can amplify work/output. These are source/
-binary64 witnesses, not Rust runtime/UB receipts. Repair contract base+v2 has
-SECURITY CONTRACT PASSfe9afa7c, not implementation acceptance: fallible own layout
-API, finite signed grid, aggregate integer/two-pass/exact-output budgets, fallible
-storage and no partial output. Preserve ordinary hatching plus font/frame/depth
-guards; require compiled red/green, complete fixtures and independent review.
-Native22 draft review8ca4d80d conditionally supports dedicated-only proof and exact
-incoming normal-exit companions; native23 implementation needs full acceptance.
-Merge source review found11 exact missing older boundary contexts outside conflict
-markers: four owned22 and seven intermediate native22-producer cap23 sources.
-All11 were restored verbatim inb1ca: actual cap21 baseline11P and incoming
-admission0P/2F, consumed. Ten quantitative oracle changes have exact whole-file
-inverses;49ad compiled semantic red3P/10F, consumed. The nested conditional stays
-negative.5031 focused retained13P/incoming2P GREEN includes intermediate-rounding,
-shared-exp and24-budget guards, but full ALGOL library FAILS917P/24F/0I (Cargo101,
-build-finished true), strict not run. Producer37273 consumed; receipt
-`CV04b-cap23-focused-full-5031e756.json`. Independent inventory-v2 binds347 negatives:126 quantitative22 plus221 safety,
-including48 shadowed cases. Specac5 preceded exact test migration09fb:347 negative
-cases (only126 specified24 replacements) and126 byte-exact original-source real
-formatter companions, every other function/production byte and18 inverses intact.
-Independent source review7578563b PASS. Actual serialized09fb unit965P/0F/0I,
-exact347/126 marker census/executable join and strict0; producer81099 consumed0,
-receipt `CV04b-cap23-complete-units-v2-09fb5986.json`. Earlier interleaved census
-withheld receipt is preserved; independent terminal review pending. Separate
-existing22 integration oracle compiled red2P1F/Cargo101; its wrapper progress-line
-assertion failed and remains preserved. Next spec adds exact29 runtime companions
-and quantitative24 integration migration without altering production.
-New observed main6e54ad6b collision integration is unintegrated and security
-WITHHELD33c6686f: quadratic pair scans, eager hatches, cap-font cross-side overlap.
-Collision draft+v2 now has independent security-contract PASS3fcfeadf and is
-tracked before integration; implementation/tests remain pending. Exact29 runtime
-fixtures68c first failed to compileE0603 (zero runtime), fixed test import ate5df.
-Focused integration4P/0F actual0. Runtime compiled red0P1F/Cargo101:16 saved
-22/23 cases execute all6 backends (96 strict Exit0 tuples); result-context17
-additionally NativeAot/Llvm0, then Wasm normal code21/stdout21 disproves the
-mistaken universal-zero spec. All exact source bytes remain; successor typed
-exit/ABI contract is independently under review. No full native/runtime29 or
-downstream/final-source acceptance follows from partial observations.
+Earlier accepted execution heads retain distinct attribution: native406=1882P/
+0F/1 controlled outer archive trampoline I,74 executables/5 empty doctests,
+144 exact24x6 normalExit0/output tuples and strict0; terminald1762a9f PASS.
+Fast58=2009P/strict0 (56 executables/15 docs,13 empty), terminal04fb6f69 PASS;
+Closurefa4=1139P/strict0/182 executables, terminale3ccb63d PASS. Core67=1555P/
+strict0/review6056f7c7 and geometric22=66P/strict0/review32a877d8 stay historical.
+All old full Wardley/Ishikawa source/layout/scene/glyph/metadata/query, font/frame,
+depth and resource assertions remain. Full new-source native/downstream/final
+acceptance is not transferred from those receipts or focused current checks.
 
-Next: spec-first current-main/native23/hatch repair, exact old-source and whole-
-fixture retention, fresh input/graph/lock receipts, affected suites/strict and
-exact-head source/terminal security, then sole-PR publication/CI/actual merge.
-Composite/synthetic identities, all transformation/pass-sweep lineage, output-byte
-source joins and evidence-backed Closure parity remain OPEN. Miri
-**DEFERRED/PENDING**, never passed; frozen run/checkout/inputs/receipts/target
-untouched and unpolled. Delivery first, genuine final-source Miri afterward.
-Base ESTree boundary, own types, no new crates.io dependencies. Heartbeat ACTIVE.
+Incoming hatchab41 security WITHHELD34e4156b: huge finite canvas can stall float
+stepping and numeric span amplifies work/output. Hatch v2 contract has security
+PASSfe9afa7c. Incoming collision6e54 security WITHHELD33c6686f: quadratic pair
+work/eager hatches/cap-font cross-side overlap. Contract-v1 precision gap was
+WITHHELD94d9732e; combined v2 PASS3fcfeadf adds represented extents, side/pair
+clearance certificates and correct shared work admission/error ordering. Both
+contracts are tracked; implementation/tests/complete hatch fixture migration
+remain pending. New timeline94df security audit is running; no acceptance inferred.
+
+Next: audit latest main, implement/test reviewed bounded geometry integration
+with whole-source/fixture retention; derive fresh complete input/dependency/lock
+graphs; run full affected compiler/native/downstream/diagram/Closure suites and
+strict; exact-head independent source/resource/terminal reviews; update only the
+sole PR and resolve required hosted checks/conflicts, then verify actual merge.
+Composite/synthetic IDs, folding/renaming/inlining/motion/merging/deletion and
+pass/sweep lineage, output-byte/source joins and evidence-backed Closure parity
+remain OPEN. Miri **DEFERRED/PENDING**, never passed; frozen checkout/process/
+inputs/receipts/target untouched and unpolled. Implementation/delivery first,
+genuine final-source Miri afterward; full objective OPEN and heartbeat ACTIVE.
 <!-- /CV04b current-main integration pending -->
 
 <!-- CV04a dedicated native18 selected -->
