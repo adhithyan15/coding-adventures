@@ -193,3 +193,22 @@ name/kind/source and executable with every declared metadata test target. Requir
 terminal exit0, successful build-finished, matching runtime target identities,
 nonempty aggregate assertions and zero failed/ignored/measured/filtered summaries
 before accepting tests. A core-only receipt covers only its selected packages.
+
+
+## Exact active node paint parameters
+
+The first full geometric run9c71b9bc executes all retained targets but exposes
+an overbroad new decorator extent guard: it rejects the old finite ordinary
+circle companion with radius1.2e308 before that control enables pipeline_parent.
+Preserve that existing assertion. The postcondition checks actual emitted paint
+parameters, without adding an enclosing-box containment claim. Remove the generic
+radius*4+25 envelope. Independently validate only enabled strategy-ring radius,
+Market triangle/dot coordinates and radii, and inertia line endpoints using the
+paint route's exact evaluation order. The existing pipeline-square gate remains.
+Keep exact label-origin/offset and link-label rotation/width checks unchanged.
+
+Retain source scalar caps and all existing resource tests. Add forged private
+ordinary/strategy/inertia/pipeline controls at finite extreme radii; test-first
+red must compile and expose the too-broad guard. Validate finite-but-overflowing
+actual Market/inertia points and supported decorated companions. Full geometric
+suite/strict then proves retention, before completing paint fixture migration.
