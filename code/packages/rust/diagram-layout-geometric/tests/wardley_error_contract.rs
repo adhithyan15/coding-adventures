@@ -9,7 +9,7 @@ fn source(config:WardleyConfig)->WardleyDiagram { WardleyDiagram {title:Some("T"
 stages:stages(),nodes:vec![WardleyNode{id:"a".into(),label:"A".into(),visibility:1.0,evolution:0.0,anchor:true,pipeline_parent:false},
 WardleyNode{id:"b".into(),label:"B".into(),visibility:0.0,evolution:1.0,anchor:false,pipeline_parent:false}],
 links:vec![WardleyLink{source:"A".into(),target:"B".into()}],
-evolves:vec![WardleyEvolution{component:"A".into(),target:0.5}],notes:vec![],annotations_box:None,annotations:vec![],forces:vec![],pipelines:vec![]} }
+evolves:vec![WardleyEvolution{component:"A".into(),target:0.5}],notes:vec![],annotations_box:None,annotations:vec![],forces:vec![],pipelines:vec![],stage_boundaries:vec![]} }
 
 #[test]
 fn wardley_config_errors_name_the_exact_field_before_empty_paths() {

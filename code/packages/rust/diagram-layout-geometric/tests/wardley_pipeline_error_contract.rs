@@ -1,7 +1,7 @@
 use diagram_ir::*;
 use diagram_layout_geometric::{try_layout_wardley,WardleyLayoutError};
 fn config()->WardleyConfig {WardleyConfig {width:900.0,height:600.0,padding:48.0,node_radius:6.0,node_label_offset:8.0,axis_font_size:12.0,label_font_size:10.0,show_grid:false,use_max_width:true,theme:WardleyTheme {background_color:"#ffffff".into(),axis_color:"#000000".into(),axis_text_color:"#222222".into(),grid_color:"rgba(100, 100, 100, 0.2)".into(),component_fill:"#ffffff".into(),component_stroke:"#000000".into(),component_label_color:"#222222".into(),link_stroke:"#000000".into(),evolution_stroke:"#dc3545".into()}}}
-fn diagram()->WardleyDiagram {WardleyDiagram{title:None,config:config(),stages:vec![],nodes:vec![],links:vec![],evolves:vec![],notes:vec![],annotations_box:None,annotations:vec![],forces:vec![],pipelines:vec![]}}
+fn diagram()->WardleyDiagram {WardleyDiagram{title:None,config:config(),stages:vec![],nodes:vec![],links:vec![],evolves:vec![],notes:vec![],annotations_box:None,annotations:vec![],forces:vec![],pipelines:vec![],stage_boundaries:vec![]}}
 fn n(id:&str,v:f64,e:f64,parent:bool)->WardleyNode {WardleyNode{id:id.into(),label:id.into(),visibility:v,evolution:e,anchor:false,pipeline_parent:parent}}
 fn pipe(parent:&str,ids:&[&str])->WardleyPipeline {WardleyPipeline{parent_id:parent.into(),component_ids:ids.iter().map(|s|s.to_string()).collect()}}
 fn seeded()->WardleyDiagram {let mut d=diagram();d.nodes=vec![n("P",0.5,0.9,true),n("C",0.5,0.25,false),n("Q",0.0,0.8,true),n("D",0.0,0.75,false)];d.pipelines=vec![pipe("P",&["C"]),pipe("Q",&["D"])];d}

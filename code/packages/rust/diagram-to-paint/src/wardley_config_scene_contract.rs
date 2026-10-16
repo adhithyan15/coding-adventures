@@ -47,14 +47,14 @@ Case{name:"minimum-positive-fonts",source:"%%{init: {\"wardley-beta\":{\"width\"
         diagram_ir::WardleyNode{id:"wardley-1".into(),label:"A".into(),visibility:1.0,evolution:0.0,anchor:true,pipeline_parent:false},
         diagram_ir::WardleyNode{id:"wardley-2".into(),label:"B".into(),visibility:0.0,evolution:1.0,anchor:false,pipeline_parent:false}]}else{vec![]},
       links:if c.populated {vec![diagram_ir::WardleyLink{source:"A".into(),target:"B".into()}]}else{vec![]},
-      evolves:if c.populated {vec![diagram_ir::WardleyEvolution{component:"A".into(),target:0.5}]}else{vec![]},notes:vec![],annotations_box:None,annotations:vec![],forces:vec![],pipelines:vec![]};
+      evolves:if c.populated {vec![diagram_ir::WardleyEvolution{component:"A".into(),target:0.5}]}else{vec![]},notes:vec![],annotations_box:None,annotations:vec![],forces:vec![],pipelines:vec![],stage_boundaries:vec![]};
     let parsed=mermaid_parser::parse_wardley(c.source).unwrap();assert_eq!(parsed,expected_ir,"wholeIR {} {family}",c.name);
     let expected_layout=LayoutedWardleyDiagram{width:c.w,height:c.h,title:c.populated.then(||"T".into()),config:c.config.clone(),
       stages:stage_names.map(String::from).to_vec(),nodes:if c.populated {vec![
         diagram_ir::LayoutedWardleyNode{id:"wardley-1".into(),label:"A".into(),position:p(c.lo,c.lo),anchor:true,pipeline_parent:false},
         diagram_ir::LayoutedWardleyNode{id:"wardley-2".into(),label:"B".into(),position:p(c.hi_x,c.hi_y),anchor:false,pipeline_parent:false}]}else{vec![]},
       links:if c.populated {vec![diagram_ir::LayoutedWardleyLink{from:p(c.lo,c.lo),to:p(c.hi_x,c.hi_y)}]}else{vec![]},
-      evolves:if c.populated {vec![diagram_ir::LayoutedWardleyEvolution{from:p(c.lo,c.lo),to:p(c.mid,c.lo)}]}else{vec![]},notes:vec![],annotations_box:None,annotations:vec![],forces:vec![],pipelines:vec![]};
+      evolves:if c.populated {vec![diagram_ir::LayoutedWardleyEvolution{from:p(c.lo,c.lo),to:p(c.mid,c.lo)}]}else{vec![]},notes:vec![],annotations_box:None,annotations:vec![],forces:vec![],pipelines:vec![],stage_boundaries:vec![]};
     let layout=diagram_layout_geometric::try_layout_wardley(&parsed).unwrap();assert_eq!(layout,expected_layout,"wholeLayout {} {family}",c.name);
     let mut instructions=vec![path(vec![p(c.lo,c.lo),p(c.lo,c.hi_y),p(c.hi_x,c.hi_y)],"#000000",1.0,false)];
     for (x,y) in &c.grid {instructions.push(path(vec![p(*x,c.lo),p(*x,c.hi_y)],"rgba(100, 100, 100, 0.2)",1.0,true));

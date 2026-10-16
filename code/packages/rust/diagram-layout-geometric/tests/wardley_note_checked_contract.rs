@@ -2,7 +2,7 @@ use diagram_ir::{WardleyConfig,WardleyDiagram,WardleyNote,WardleyTheme,LayoutedW
 use diagram_layout_geometric::{layout_wardley,try_layout_wardley};
 fn theme()->WardleyTheme {WardleyTheme {background_color:"#ffffff".into(),axis_color:"#000000".into(),axis_text_color:"#222222".into(),grid_color:"rgba(100, 100, 100, 0.2)".into(),component_fill:"#ffffff".into(),component_stroke:"#000000".into(),component_label_color:"#222222".into(),link_stroke:"#000000".into(),evolution_stroke:"#dc3545".into()}}
 fn config()->WardleyConfig {WardleyConfig {width:900.0,height:600.0,padding:48.0,node_radius:6.0,node_label_offset:8.0,axis_font_size:12.0,label_font_size:10.0,show_grid:false,use_max_width:true,theme:theme()}}
-fn diagram()->WardleyDiagram {WardleyDiagram{title:None,config:config(),stages:vec![],nodes:vec![],links:vec![],evolves:vec![],notes:vec![],annotations_box:None,annotations:vec![],forces:vec![],pipelines:vec![]}}
+fn diagram()->WardleyDiagram {WardleyDiagram{title:None,config:config(),stages:vec![],nodes:vec![],links:vec![],evolves:vec![],notes:vec![],annotations_box:None,annotations:vec![],forces:vec![],pipelines:vec![],stage_boundaries:vec![]}}
 
 #[test]
 fn valid_note_edges_have_literal_complete_layout_and_order() {
@@ -10,7 +10,7 @@ fn valid_note_edges_have_literal_complete_layout_and_order() {
  let expected=LayoutedWardleyDiagram {width:900.0,height:600.0,title:None,config:config(),stages:vec![],nodes:vec![],links:vec![],evolves:vec![],notes:vec![
  LayoutedWardleyNote{text:"L".into(),position:Point{x:48.0,y:552.0}},
  LayoutedWardleyNote{text:"R".into(),position:Point{x:852.0,y:48.0}},
- LayoutedWardleyNote{text:"M".into(),position:Point{x:450.0,y:300.0}}],annotations_box:None,annotations:vec![],forces:vec![],pipelines:vec![]};
+ LayoutedWardleyNote{text:"M".into(),position:Point{x:450.0,y:300.0}}],annotations_box:None,annotations:vec![],forces:vec![],pipelines:vec![],stage_boundaries:vec![]};
  assert_eq!(try_layout_wardley(&d),Ok(expected.clone()));assert_eq!(layout_wardley(&d),expected);
  eprintln!("WARDLEY-NOTE-LAYOUT 3literalpoints/wholelayout");
 }

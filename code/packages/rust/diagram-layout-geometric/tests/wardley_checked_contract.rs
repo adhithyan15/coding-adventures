@@ -10,13 +10,13 @@ fn source(config:WardleyConfig)->WardleyDiagram { WardleyDiagram {title:Some("T"
 stages:stages(),nodes:vec![WardleyNode{id:"a".into(),label:"A".into(),visibility:1.0,evolution:0.0,anchor:true,pipeline_parent:false},
 WardleyNode{id:"b".into(),label:"B".into(),visibility:0.0,evolution:1.0,anchor:false,pipeline_parent:false}],
 links:vec![WardleyLink{source:"A".into(),target:"B".into()}],
-evolves:vec![WardleyEvolution{component:"A".into(),target:0.5}],notes:vec![],annotations_box:None,annotations:vec![],forces:vec![],pipelines:vec![]} }
+evolves:vec![WardleyEvolution{component:"A".into(),target:0.5}],notes:vec![],annotations_box:None,annotations:vec![],forces:vec![],pipelines:vec![],stage_boundaries:vec![]} }
 fn frame(config:WardleyConfig,width:f64,height:f64,lo:f64,hi_x:f64,hi_y:f64,mid_x:f64)->LayoutedWardleyDiagram {
 LayoutedWardleyDiagram {width,height,title:Some("T".into()),config,stages:stages(),
 nodes:vec![LayoutedWardleyNode{id:"a".into(),label:"A".into(),position:Point{x:lo,y:lo},anchor:true,pipeline_parent:false},
 LayoutedWardleyNode{id:"b".into(),label:"B".into(),position:Point{x:hi_x,y:hi_y},anchor:false,pipeline_parent:false}],
 links:vec![LayoutedWardleyLink{from:Point{x:lo,y:lo},to:Point{x:hi_x,y:hi_y}}],
-evolves:vec![LayoutedWardleyEvolution{from:Point{x:lo,y:lo},to:Point{x:mid_x,y:lo}}],notes:vec![],annotations_box:None,annotations:vec![],forces:vec![],pipelines:vec![]} }
+evolves:vec![LayoutedWardleyEvolution{from:Point{x:lo,y:lo},to:Point{x:mid_x,y:lo}}],notes:vec![],annotations_box:None,annotations:vec![],forces:vec![],pipelines:vec![],stage_boundaries:vec![]} }
 
 #[test]
 fn wardley_complete_default_minimum_and_cap_frames_are_literal() {
