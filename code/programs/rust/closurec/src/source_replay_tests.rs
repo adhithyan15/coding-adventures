@@ -467,7 +467,7 @@ fn d3b_moved_consumed_allocation_survives_path_mutation_without_reread() {
     catalog
         .validate(
             &shaped(&log),
-            &[recorded.id.clone()],
+            std::slice::from_ref(&recorded.id),
             std::slice::from_ref(&path),
         )
         .unwrap();
@@ -626,8 +626,10 @@ fn d3b_catalog_resource_boundaries_charge_capacity_and_preserve_prefix() {
     assert_eq!(catalog_storage(2).unwrap(), 2 * size_of::<TrustedInput>());
     assert_eq!(fingerprint_storage(3).unwrap(), 96);
     assert!(SourceCatalog::new(usize::MAX, EsVersion::Es2025, ReplayLimits::default()).is_err());
-    let mut limits = ReplayLimits::default();
-    limits.index_bytes = catalog_storage(1).unwrap();
+    let mut limits = ReplayLimits {
+        index_bytes: catalog_storage(1).unwrap(),
+        ..ReplayLimits::default()
+    };
     SourceCatalog::new(1, EsVersion::Es2025, limits).unwrap();
     limits.index_bytes -= 1;
     assert!(SourceCatalog::new(1, EsVersion::Es2025, limits).is_err());
@@ -649,8 +651,10 @@ fn d3b_catalog_resource_boundaries_charge_capacity_and_preserve_prefix() {
         )
         .is_err());
     }
-    let mut limits = ReplayLimits::default();
-    limits.source_capacity = 16;
+    let limits = ReplayLimits {
+        source_capacity: 16,
+        ..ReplayLimits::default()
+    };
     let mut owner = SourceCatalog::new(2, EsVersion::Es2025, limits).unwrap();
     owner
         .retain("1".into(), "cv1.0000000000000001", None)
@@ -709,9 +713,11 @@ fn d3b_exact_source_and_fingerprint_retention_refusals_are_atomic() {
     for admitted in [true, false] {
         let source = "a".to_owned();
         let capacity = source.capacity();
-        let mut limits = ReplayLimits::default();
-        limits.source_capacity = capacity;
-        limits.fingerprint_bytes = if admitted { 32 } else { 31 };
+        let limits = ReplayLimits {
+            source_capacity: capacity,
+            fingerprint_bytes: if admitted { 32 } else { 31 },
+            ..ReplayLimits::default()
+        };
         let mut owner = SourceCatalog::new(1, EsVersion::Es2025, limits).unwrap();
         let before = owner.used;
         let result = owner.retain(
@@ -730,14 +736,18 @@ fn d3b_exact_source_and_fingerprint_retention_refusals_are_atomic() {
         }
     }
     let source = "a".to_owned();
-    let mut limits = ReplayLimits::default();
-    limits.source_capacity = source.capacity() - 1;
+    let limits = ReplayLimits {
+        source_capacity: source.capacity() - 1,
+        ..ReplayLimits::default()
+    };
     assert!(SourceCatalog::new(1, EsVersion::Es2025, limits)
         .unwrap()
         .retain(source, "cv1.0000000000000001", None)
         .is_err());
-    let mut limits = ReplayLimits::default();
-    limits.work = 0;
+    let limits = ReplayLimits {
+        work: 0,
+        ..ReplayLimits::default()
+    };
     assert!(SourceCatalog::new(1, EsVersion::Es2025, limits).is_err());
 }
 

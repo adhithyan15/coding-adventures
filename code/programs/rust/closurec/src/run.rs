@@ -1502,17 +1502,17 @@ fn run_compiler_with_limits(
         let path_display = path.to_string_lossy();
         let transformed = match &cv_id {
             Some(id) if matches!(config.compilation.level, CompilationLevel::Simple | CompilationLevel::Advanced) => transform_source_with_ingestion(
-                &contents,
+                contents,
                 config,
                 Some((&mut cv_log, id.as_str(), &token_cv_ids, path_display.as_ref())),
                 captured,
             )?,
             Some(id) => transform_source_with_cv(
-                &contents,
+                contents,
                 config,
                 Some((&mut cv_log, id.as_str(), &token_cv_ids, path_display.as_ref())),
             )?,
-            None => transform_source(&contents, config)?,
+            None => transform_source(contents, config)?,
         };
 
         if let Some(id) = cv_id {

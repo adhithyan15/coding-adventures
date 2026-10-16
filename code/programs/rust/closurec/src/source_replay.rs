@@ -292,7 +292,7 @@ impl SourceCatalog {
             return Err("source replay catalog cardinality".into());
         }
         let mut census = 0usize;
-        for (_, entry) in log.entries() {
+        for entry in log.entries().values() {
             work.take(1)?;
             if let Some(origin) = &entry.origin {
                 work.take(origin.source.len())?;
@@ -507,7 +507,7 @@ fn decode_digest(text: &str) -> Result<[u8; 32], String> {
         return Err("source replay digest encoding".into());
     }
     let mut digest = [0; 32];
-    for (slot, pair) in digest.iter_mut().zip(text.as_bytes().chunks_exact(2)) {
+    for (slot, pair) in digest.iter_mut().zip(text.as_bytes().as_chunks::<2>().0) {
         let nibble = |b: u8| match b {
             b'0'..=b'9' => Ok(b - b'0'),
             b'a'..=b'f' => Ok(b - b'a' + 10),
