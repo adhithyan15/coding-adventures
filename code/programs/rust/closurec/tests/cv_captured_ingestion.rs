@@ -154,6 +154,44 @@ fn ascii(a: usize, b: usize) -> Span {
     [[a, a, a, 0, a, a], [b, b, b, 0, b, b]]
 }
 fn inventory<'a>(w: &'a Value, root: &str) -> Vec<&'a str> {
+    // The census is independent of this root's descriptor and includes old
+    // namespace-free lexer rows. A disconnected second tokenizer must not hide
+    // behind a different Origin.source spelling or an unused physical child.
+    let declared: BTreeSet<_> = w["entries"]
+        .as_object()
+        .unwrap()
+        .values()
+        .filter(|e| e["origin"]["source"] == "input_file")
+        .flat_map(|e| {
+            e["contributions"]
+                .as_array()
+                .unwrap()
+                .iter()
+                .filter(|c| c["source"] == "source.inventory" && c["tag"] == "finalized")
+                .flat_map(|c| {
+                    c["meta"][NS]["piece_ids"]
+                        .as_array()
+                        .unwrap()
+                        .iter()
+                        .map(|v| v.as_str().unwrap())
+                })
+        })
+        .collect();
+    let actual: BTreeSet<_> = w["entries"]
+        .as_object()
+        .unwrap()
+        .iter()
+        .filter(|(_, e)| {
+            e["origin"]["source"] == "lexer_token"
+                || e["origin"]["source"] == "lexer_trivia"
+                || e["origin"]["meta"][NS]["role"] == "piece"
+        })
+        .map(|(id, _)| id.as_str())
+        .collect();
+    assert_eq!(
+        actual, declared,
+        "complete global legacy/reserved physical census"
+    );
     let events: Vec<_> = w["entries"][root]["contributions"]
         .as_array()
         .unwrap()
@@ -170,6 +208,69 @@ fn inventory<'a>(w: &'a Value, root: &str) -> Vec<&'a str> {
         .map(|v| v.as_str().unwrap())
         .collect();
     assert_eq!(ids.len(), ids.iter().collect::<BTreeSet<_>>().len());
+    let mut next_token = 0;
+    let mut previous = pos([0; 6]);
+    let mut eof = 0;
+    for (index, id) in ids.iter().enumerate() {
+        let entry = &w["entries"][*id];
+        let piece = &entry["origin"]["meta"][NS];
+        assert_eq!(entry["parent_ids"], json!([root]));
+        assert_eq!(piece["schema"], "1");
+        assert_eq!(piece["role"], "piece");
+        assert_eq!(piece["input_id"], root);
+        assert_eq!(piece["piece_index"], index.to_string());
+        assert_eq!(
+            piece["start"], previous,
+            "ordered complete consumed partition"
+        );
+        for point in [&piece["start"], &piece["end"]] {
+            assert_eq!(point.as_object().unwrap().len(), 6);
+            for key in [
+                "byte_offset",
+                "scalar_offset",
+                "utf16_offset",
+                "line",
+                "scalar_column",
+                "utf16_column",
+            ] {
+                let n = point[key].as_str().unwrap().parse::<u64>().unwrap();
+                assert_eq!(point[key], n.to_string(), "canonical coordinate");
+            }
+        }
+        match piece["kind"].as_str().unwrap() {
+            "token" | "eof" => {
+                assert_eq!(piece["token_index"], next_token.to_string());
+                next_token += 1;
+                assert_eq!(entry["origin"]["source"], "lexer_token");
+                assert_eq!(piece.as_object().unwrap().len(), 9);
+                assert!(piece["token_type"].is_string());
+                if piece["kind"] == "eof" {
+                    eof += 1;
+                    assert_eq!(index + 1, ids.len());
+                    assert_eq!(piece["token_type"], "EOF");
+                    assert_eq!(piece["start"], piece["end"]);
+                } else {
+                    assert_ne!(piece["start"], piece["end"]);
+                }
+            }
+            "trivia" => {
+                assert_eq!(entry["origin"]["source"], "lexer_trivia");
+                assert_eq!(piece.as_object().unwrap().len(), 7);
+                assert_ne!(piece["start"], piece["end"]);
+            }
+            _ => panic!("unknown physical piece kind"),
+        }
+        previous = piece["end"].clone();
+    }
+    assert_eq!(eof, 1);
+    assert_eq!(
+        previous["byte_offset"],
+        w["entries"][root]["origin"]["meta"][NS]["byte_length"]
+    );
+    assert_eq!(
+        *descriptor,
+        json!({"schema":"1","role":"inventory","status":"available","piece_count":ids.len().to_string(),"token_count":next_token.to_string(),"piece_ids":ids})
+    );
     ids
 }
 fn physical(w: &Value, root: &str, span: Span) -> String {
@@ -408,4 +509,23 @@ fn d2_right_brace_and_restricted_return_asi_keep_physical_ownership() {
         merge_parents(&w, &result, &ids);
         println!("D2_LINEAGE_OK brace-or-return");
     }
+}
+
+#[test]
+fn d2_inventory_oracle_rejects_reordering_and_namespace_free_extra_tokens() {
+    let point = pos([0; 6]);
+    let end = pos([1, 1, 1, 0, 1, 1]);
+    let mut good = json!({"entries":{
+        "root":{"origin":{"source":"input_file","meta":{NS:{"byte_length":"1"}}},"contributions":[{"source":"source.inventory","tag":"finalized","meta":{NS:{"schema":"1","role":"inventory","status":"available","piece_count":"2","token_count":"2","piece_ids":["token","eof"]}}}]},
+        "token":{"parent_ids":["root"],"origin":{"source":"lexer_token","meta":{NS:{"schema":"1","role":"piece","input_id":"root","piece_index":"0","kind":"token","start":point,"end":end,"token_index":"0","token_type":"Number"}}}},
+        "eof":{"parent_ids":["root"],"origin":{"source":"lexer_token","meta":{NS:{"schema":"1","role":"piece","input_id":"root","piece_index":"1","kind":"eof","start":end,"end":end,"token_index":"1","token_type":"EOF"}}}}
+    }});
+    assert_eq!(inventory(&good, "root"), vec!["token", "eof"]);
+    let mut reversed = good.clone();
+    reversed["entries"]["root"]["contributions"][0]["meta"][NS]["piece_ids"] =
+        json!(["eof", "token"]);
+    assert!(std::panic::catch_unwind(|| inventory(&reversed, "root")).is_err());
+    good["entries"]["extra"] =
+        json!({"parent_ids":["root"],"origin":{"source":"lexer_token","meta":{}}});
+    assert!(std::panic::catch_unwind(|| inventory(&good, "root")).is_err());
 }

@@ -84,6 +84,12 @@ authored raw half-open ranges. Every physical ancestor must be present in its
 root's ordered inventory and have that exact root as its sole direct parent.
 Verify six raw coordinates, source digest and edition; unrelated equal-spelling
 tokens, trivia, EOF and other input roots must not become operand ancestors.
+Independently verify the ordered inventory's piece/token ordinals, closed
+descriptor/counts, contiguous coordinates and unique terminal EOF. Compare the
+union of every root inventory with a whole-graph physical census that includes
+namespace-free legacy lexer_token/lexer_trivia rows. A path-only remint check is
+insufficient. Synthetic reversed-inventory and extra unmarked-token controls
+must fail the oracle itself before its actual lineage results are accepted.
 
 Cover repeated literal spellings, binary/unary/string-length/nested folds,
 equal conditional branches retaining both histories, comments/CRLF, multiline
