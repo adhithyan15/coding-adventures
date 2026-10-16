@@ -121,6 +121,11 @@ Dedicated24-unit integration (local validation; PR delivery pending):
 
 twenty-four exact additive offset units may remain inside that bounded transform,
 either as one exact `24` term or a checked sum of exact `1` through `23` terms,
+
+Incoming25 surface (integration validation pending):
+
+twenty-five exact additive offset units may remain inside that bounded transform,
+either as one exact `25` term or a checked sum of exact `1` through `24` terms,
 with the cap tracked through parentheses and supported wrappers and applied per
 conditional path. Unary
 signs, arithmetic composition with finite static operands, and real-valued

@@ -347,11 +347,15 @@ conditional path receives its own eighteen-unit budget.
 Dedicated24-unit integration (local validation; PR delivery pending):
 
 Variable-free exact additive zero terms and up to twenty-four exact offset units
+
+Incoming25 surface (integration validation pending):
+
+Variable-free exact additive zero terms and up to twenty-five exact offset units
 may surround that bounded result before `entier`; larger and dynamic additive
-terms remain conservative. The twenty-four-unit cap accepts one exact `24` term
-or a checked sum of exact `1` through `23` terms and is preserved through parentheses,
+terms remain conservative. The twenty-five-unit cap accepts one exact `25` term
+or a checked sum of exact `1` through `24` terms and is preserved through parentheses,
 supported standard-function wrappers, and runtime conditional branches; each
-conditional path receives its own twenty-four-unit budget.
+conditional path receives its own twenty-five-unit budget.
 Variable-free exact multiplicative unit factors may likewise surround it;
 non-unit or variable factors remain conservative.
 Exact unit division is also permitted when the bounded result is the numerator;

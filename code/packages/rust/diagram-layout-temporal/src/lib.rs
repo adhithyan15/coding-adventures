@@ -129,13 +129,35 @@ fn layout_timeline(
                 }
                 for period in &section.periods {
                     has_period = true;
-                    let card_height = 48.0 + period.events.len() as f64 * 18.0;
+                    let card_x = spine_x + 28.0;
+                    let card_width = 180.0;
+                    let card_height = 48.0;
                     items.push(LayoutedTemporalItem::TimelinePeriod {
-                        x: spine_x + 28.0, y, width: width - spine_x - 52.0,
-                        height: card_height, label: period.label.clone(),
-                        events: period.events.clone(), color_index,
+                        x: card_x, y, width: card_width, height: card_height,
+                        label: period.label.clone(), events: Vec::new(), color_index,
                     });
-                    y = timeline_finite(y + timeline_finite(card_height + 18.0)?)?;
+                    let event_x = card_x + card_width + 36.0;
+                    let event_width = (width - event_x - padding).max(160.0);
+                    for (event_index, event) in period.events.iter().enumerate() {
+                        let event_y = y + event_index as f64 * 38.0;
+                        items.push(LayoutedTemporalItem::TimelineEventLink {
+                            x1: card_x + card_width,
+                            y1: y + card_height / 2.0,
+                            x2: event_x,
+                            y2: event_y + 15.0,
+                            color_index,
+                        });
+                        items.push(LayoutedTemporalItem::TimelineEvent {
+                            x: event_x,
+                            y: event_y,
+                            width: event_width,
+                            height: 30.0,
+                            label: event.clone(),
+                            color_index,
+                        });
+                    }
+                    let row_height = card_height.max(period.events.len() as f64 * 38.0 - 8.0);
+                    y = timeline_finite(y + timeline_finite(row_height + 18.0)?)?;
                     if !without_sections || !diagram.config.disable_multicolor {
                         color_index = color_index.checked_add(1)
                             .ok_or(TemporalLayoutError::TimelineGeometry)?;
@@ -170,12 +192,33 @@ fn layout_timeline(
 
                 for (index, period) in section.periods.iter().enumerate() {
                     let x = start_x + index as f64 * (card_width + gap);
-                    let card_height = 48.0 + period.events.len() as f64 * 18.0;
+                    let card_height = 48.0;
                     row_height = row_height.max(card_height);
                     items.push(LayoutedTemporalItem::TimelinePeriod {
                         x, y: card_y + 24.0, width: card_width, height: card_height,
-                        label: period.label.clone(), events: period.events.clone(), color_index,
+                        label: period.label.clone(), events: Vec::new(), color_index,
                     });
+                    for (event_index, event) in period.events.iter().enumerate() {
+                        let event_y = card_y + 90.0 + event_index as f64 * 38.0;
+                        items.push(LayoutedTemporalItem::TimelineEventLink {
+                            x1: x + card_width / 2.0,
+                            y1: card_y + 24.0 + card_height,
+                            x2: x + card_width / 2.0,
+                            y2: event_y,
+                            color_index,
+                        });
+                        items.push(LayoutedTemporalItem::TimelineEvent {
+                            x,
+                            y: event_y,
+                            width: card_width,
+                            height: 30.0,
+                            label: event.clone(),
+                            color_index,
+                        });
+                    }
+                    if !period.events.is_empty() {
+                        row_height = row_height.max(72.0 + period.events.len() as f64 * 38.0);
+                    }
                     if !without_sections || !diagram.config.disable_multicolor {
                         color_index = color_index.checked_add(1)
                             .ok_or(TemporalLayoutError::TimelineGeometry)?;
@@ -2673,3 +2716,6 @@ mod tests {
 
 #[cfg(test)]
 mod cv04_timeline_checked;
+
+#[cfg(test)]
+mod cv04_incoming_timeline_eventcards;

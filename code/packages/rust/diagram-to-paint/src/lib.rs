@@ -8899,6 +8899,65 @@ where
                     ));
                 }
             }
+            LayoutedTemporalItem::TimelineEventLink {
+                x1, y1, x2, y2, color_index,
+            } => {
+                let stroke = timeline_color(
+                    &timeline_config.section_inverse_colors, *color_index, "#2563eb",
+                );
+                instructions.push(PaintInstruction::Path(PaintPath {
+                    base: PaintBase::default(),
+                    commands: vec![
+                        PathCommand::MoveTo { x: *x1, y: *y1 },
+                        PathCommand::LineTo { x: *x2, y: *y2 },
+                    ],
+                    fill: None,
+                    fill_rule: None,
+                    stroke: Some(stroke.into()),
+                    stroke_width: Some(2.0),
+                    stroke_cap: Some(StrokeCap::Round),
+                    stroke_join: Some(StrokeJoin::Round),
+                    stroke_dash: Some(vec![5.0, 5.0]),
+                    stroke_dash_offset: None,
+                }));
+                instructions.push(PaintInstruction::Path(simple_arrowhead(
+                    &Point { x: *x1, y: *y1 },
+                    &Point { x: *x2, y: *y2 },
+                    stroke,
+                )));
+            }
+            LayoutedTemporalItem::TimelineEvent {
+                x, y, width, height, label, color_index,
+            } => {
+                instructions.push(PaintInstruction::Rect(PaintRect {
+                    base: PaintBase::default(),
+                    x: *x,
+                    y: *y,
+                    width: *width,
+                    height: *height,
+                    fill: Some(timeline_color(
+                        &timeline_config.section_colors, *color_index, "#dbeafe",
+                    ).into()),
+                    stroke: Some(timeline_color(
+                        &timeline_config.section_inverse_colors, *color_index, "#2563eb",
+                    ).into()),
+                    stroke_width: Some(1.5),
+                    corner_radius: Some(6.0),
+                    stroke_dash: None,
+                    stroke_dash_offset: None,
+                }));
+                text_children.push(text_node(
+                    label,
+                    *x + 10.0,
+                    *y + 6.0,
+                    *width - 20.0,
+                    *height - 12.0,
+                    lf.clone(),
+                    css_to_color(timeline_color(
+                        &timeline_config.section_label_colors, *color_index, "#0f172a",
+                    )),
+                ));
+            }
             LayoutedTemporalItem::JourneyTitle {
                 x,
                 y,
@@ -12063,6 +12122,61 @@ emphasized --> direct
             PaintInstruction::Rect(rect)
                 if rect.fill.as_deref() == Some("#112233")
                     && rect.stroke.as_deref() == Some("#445566")
+        )));
+    }
+
+    #[test]
+    fn timeline_config_lowers_to_scene_metadata_retained_separate_event_cards() {
+        let shaper = FakeShaper;
+        let metrics = FakeMetrics;
+        let resolver = FakeResolver;
+        let opts = make_opts(&shaper, &metrics, &resolver);
+        let layout = LayoutedTemporalDiagram {
+            width: 320.0,
+            height: 180.0,
+            accessibility_title: None,
+            accessibility_description: None,
+            timeline_config: Some(diagram_ir::TimelineConfig {
+                padding: 72.0,
+                left_margin: 80.0,
+                use_max_width: true,
+                disable_multicolor: true,
+                section_colors: vec!["#112233".into()],
+                section_label_colors: vec!["#fefefe".into()],
+                section_inverse_colors: vec!["#445566".into()],
+            }),
+            interactions: Vec::new(),
+            items: vec![
+                LayoutedTemporalItem::TimelinePeriod {
+                    x: 20.0, y: 20.0, width: 120.0, height: 60.0,
+                    label: "2025".into(), events: Vec::new(), color_index: 0,
+                },
+                LayoutedTemporalItem::TimelineEventLink {
+                    x1: 140.0, y1: 50.0, x2: 170.0, y2: 50.0, color_index: 0,
+                },
+                LayoutedTemporalItem::TimelineEvent {
+                    x: 170.0, y: 35.0, width: 120.0, height: 30.0,
+                    label: "Public beta".into(), color_index: 0,
+                },
+            ],
+        };
+        let scene = diagram_to_paint_temporal(&layout, &opts);
+        let metadata = scene.metadata.unwrap();
+        assert_eq!(metadata.get("timeline.padding").map(String::as_str), Some("72"));
+        assert_eq!(metadata.get("timeline.leftMargin").map(String::as_str), Some("80"));
+        assert_eq!(metadata.get("timeline.useMaxWidth").map(String::as_str), Some("true"));
+        assert_eq!(metadata.get("timeline.disableMulticolor").map(String::as_str), Some("true"));
+        assert_eq!(metadata.get("timeline.theme.cScale0").map(String::as_str), Some("#112233"));
+        assert!(scene.instructions.iter().any(|instruction| matches!(
+            instruction,
+            PaintInstruction::Rect(rect)
+                if rect.fill.as_deref() == Some("#112233")
+                    && rect.stroke.as_deref() == Some("#445566")
+        )));
+        assert!(scene.instructions.iter().any(|instruction| matches!(
+            instruction,
+            PaintInstruction::Path(path)
+                if path.stroke_dash.as_deref() == Some(&[5.0, 5.0][..])
         )));
     }
 
