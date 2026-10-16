@@ -777,7 +777,8 @@ The global Mermaid `fontSize` setting survives typed causal IR, scales cause-lab
 geometry during layout, and selects the matching glyph size before Paint lowering.
 Global `look: handDrawn` and `handDrawnSeed` settings also survive causal IR;
 layout deterministically perturbs spine, bone, effect-box, and cause-box paths before
-backend-neutral Paint lowering. RoughJS hachure fill remains part of the visual parity gap.
+backend-neutral Paint lowering. Five-pixel, negative-41-degree hachure lines are clipped
+to those seeded outlines and lower as portable paths with Mermaid's fill color and weight.
 Every causal bone also carries a tangent-aligned arrowhead through layout IR and lowers
 to a filled backend-neutral Paint path in both classic and hand-drawn modes.
 The effect uses Mermaid's closed fish-head silhouette, sampled from the upstream quadratic
