@@ -1,0 +1,28 @@
+{
+  "lesson": {
+    "id": "TA-W282-a1-timed-production",
+    "language": "tamil",
+    "chapter": 282,
+    "sequence": 16080,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "eyes-or-hands-step"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type",
+      "eyes-or-hands-step"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:4f9db7efa353dc21",
+    "detachableSegments": [
+      "Writing — timed assessment production"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}
