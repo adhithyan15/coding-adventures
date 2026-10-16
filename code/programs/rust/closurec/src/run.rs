@@ -1081,6 +1081,16 @@ fn collect_externs_property_names(
 /// CLOC11.02: glob-expanded inputs, identity pipeline body. See the
 /// module docstring for the future expansion plan.
 pub fn run_compiler(config: &CompilerConfig) -> Result<CompilerOutput, CompilerError> {
+    run_compiler_with_shape_limits(config, source_domain::ShapeLimits::default())
+}
+
+// The production entry always supplies fixed private defaults. This seam lets
+// unit tests inject a refusal into the actual compiler transaction without
+// adding a CLI/configuration escape hatch or reducing production graph limits.
+fn run_compiler_with_shape_limits(
+    config: &CompilerConfig,
+    shape_limits: source_domain::ShapeLimits,
+) -> Result<CompilerOutput, CompilerError> {
     config.special_modes.correlation_vector_limits.validate()
         .map_err(provenance_error("configuration"))?;
     // Step 0: identity-banner fallback. Empty argv → friendly
@@ -1975,7 +1985,7 @@ pub fn run_compiler(config: &CompilerConfig) -> Result<CompilerOutput, CompilerE
     if config.special_modes.correlation_vector {
         // Admit the full physical inventory before any filter, format, summary
         // or prepared output is published. Shape is not source-content replay.
-        source_domain::validate_shape(&cv_log, source_domain::ShapeLimits::default())
+        source_domain::validate_shape(&cv_log, shape_limits)
             .map_err(provenance_error("source_domain"))?;
         // CLOC11.69 — format selection. `None` short-circuits
         // the whole write step: the CV log is still computed
