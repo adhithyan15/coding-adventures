@@ -9,10 +9,10 @@
 // Bengali, Arabic and Urdu already live apart for exactly this reason.
 //
 // WHAT THIS SUITE HAS TO GUARD THAT THE OTHERS DO NOT
-// This track's whole curriculum is a market transaction and for 257 lessons it
-// taught no numeral. That is the kind of finding a coverage percentage buries —
-// the point is one of 197 — so it got a test of its own, and so did the fact
-// that a bargaining course has no word for "no".
+// This track began as a market transaction and for 257 lessons taught no
+// numeral. It now has 897 direct lesson owners through chapter 150. That is the
+// kind of moving corpus an inventory can silently fall behind: chapters 44–149
+// added hundreds of exact atoms while this file still reported many as absent.
 //
 // HL-C350 closed the numeral half (chapters 32–36) and the assertions below now
 // pin the CLOSURE rather than the absence, in both directions: the probe must
@@ -32,6 +32,52 @@ import {
 // One read-only lesson snapshot serves every assertion in this suite. Loading
 // the entire corpus per case obscures the inventory claim with Windows I/O.
 const lessons = loadLessons();
+
+// These are direct lesson owners, not words found incidentally in prose. Keeping
+// the table beside the count makes a right total from the wrong evidence much
+// harder to publish.
+const reconciledLaterAtoms = {
+  "MW-A1-N-03": [
+    "MW-LEX-C78-TIME78-01", "MW-LEX-C78-TIME78-02", "MW-LEX-C78-TIME78-03",
+    "MW-LEX-C90-TIME90-01", "MW-LEX-C90-TIME90-02",
+  ],
+  "MW-A1-PRON-05": ["MW-LEX-C102-DEF102-03"],
+  "MW-A1-ADV-01": ["MW-LEX-C82-PLACE82-01", "MW-LEX-C82-PLACE82-02"],
+  "MW-A1-ADV-02": ["MW-LEX-C79-TIME79-03", "MW-LEX-C79-TIME79-04"],
+  "MW-A1-ADV-07": ["MW-LEX-KAISO-01", "MW-LEX-C96-LOC96-01"],
+  "MW-A1-ADV-08": ["MW-LEX-C117-WHY117-01", "MW-LEX-C117-WHY117-05"],
+  "MW-A1-V-07": ["MW-LEX-C50-FAMILY50-05", "MW-LEX-C57-VERBS57-03", "MW-LEX-C57-VERBS57-04"],
+  "MW-A1-NG-04": [
+    "MW-LEX-C81-PLACE81-01", "MW-LEX-C81-PLACE81-02", "MW-LEX-C96-LOC96-03",
+    "MW-LEX-C96-LOC96-04", "MW-LEX-C97-LOC97-05", "MW-LEX-C98-LOC98-01",
+  ],
+  "MW-A1-NG-09": [
+    "MW-LEX-C79-TIME79-03", "MW-LEX-C91-TIME91-02", "MW-LEX-C92-TIME92-03",
+    "MW-LEX-C94-TIME94-03", "MW-LEX-C94-TIME94-04",
+  ],
+  "MW-A1-NG-12": [
+    "MW-LEX-C88-WORLD88-01", "MW-LEX-C77-ADJ77-01", "MW-LEX-C77-ADJ77-02",
+    "MW-LEX-C77-ADJ77-03",
+  ],
+  "MW-A1-NG-17": ["MW-LEX-C73-ADJ73-03", "MW-LEX-C73-ADJ73-04"],
+  "MW-A1-NG-18": ["MW-LEX-C57-VERBS57-03", "MW-LEX-C57-VERBS57-04"],
+  "MW-A1-NE-01": [
+    "MW-LEX-C44-BODY44-01", "MW-LEX-C44-BODY44-02", "MW-LEX-C44-BODY44-03",
+    "MW-LEX-C44-BODY44-04", "MW-LEX-C44-BODY44-05",
+  ],
+  "MW-A1-NE-02": [
+    "MW-LEX-C144-QUAL144-03", "MW-LEX-C144-QUAL144-04", "MW-LEX-C144-QUAL144-05",
+    "MW-LEX-C146-QUAL146-05", "MW-LEX-C147-QUAL147-02", "MW-LEX-C147-QUAL147-03",
+  ],
+  "MW-A1-NE-03": [
+    "MW-LEX-C52-VERBS52-01", "MW-LEX-C52-VERBS52-02", "MW-LEX-C52-VERBS52-03",
+    "MW-LEX-C52-VERBS52-04", "MW-LEX-C52-VERBS52-05",
+  ],
+  "MW-A1-NE-07": ["MW-LEX-C50-FAMILY50-02", "MW-LEX-C50-FAMILY50-03", "MW-LEX-C50-FAMILY50-04"],
+  "MW-A1-NE-30": ["MW-LEX-C69-NATURE69-01", "MW-LEX-C69-NATURE69-02", "MW-LEX-C69-NATURE69-03"],
+  "MW-A1-NE-31": ["MW-LEX-C84-TOWN84-01", "MW-LEX-C84-TOWN84-02", "MW-LEX-C89-WORLD89-03"],
+  "MW-A1-NE-35": ["MW-LEX-C67-SCHOOL67-03", "MW-LEX-C67-SCHOOL67-04"],
+} as const;
 
 describe("the committed Marwadi A1 inventory", () => {
   const inventory = loadExamInventory("marwadi", "A1");
@@ -103,6 +149,7 @@ describe("the committed Marwadi A1 inventory", () => {
     expect(inventory.source).toMatch(/^PROJECT-DEFINED\./);
     expect(inventory.source).toMatch(/EXAM ENVELOPE: ONE EXISTS AND IT IS PROJECT-DEFINED/);
     expect(isExamInventoryComplete(inventory)).toBe(false);
+    expect(inventory.about).toMatch(/NO READINESS, ATTAINMENT, MOCK-EXAM OR HUMAN-VALIDATION CLAIM/);
     for (const dimension of EXAM_CONTENT_DIMENSIONS) {
       expect(inventory.scope[dimension].status, dimension).toBe("partial");
     }
@@ -110,8 +157,8 @@ describe("the committed Marwadi A1 inventory", () => {
 
   it("records the exam-levels caveat as STALE rather than deferring to it", () => {
     // The caveat says the mapping "does not claim that the current starter
-    // chapter reaches it". The track has 312 lessons across 36 chapters, an
-    // assessment spec, task shapes, and 25 four-skill scored practice atoms.
+    // chapter reaches it". The track has 897 lessons across 151 chapters, an
+    // assessment spec, task shapes, and 31 scored performance atoms.
     // A caveat that has been overtaken is recorded as overtaken — the same
     // treatment a sibling track's OVERSTATED caveat got, in the other direction.
     const stale = inventory.points.find((point) => point.id === "MW-A1-REG-04")!;
@@ -140,32 +187,58 @@ describe("the committed Marwadi A1 inventory", () => {
     }
   });
 
-  it("reports an EMPTY joining column, an adverb column of one, and a closed transaction column", () => {
+  it("reports an EMPTY joining column, the reconciled adverb column, and a closed transaction column", () => {
     const coverage = measureExamCoverage(inventory, lessons);
     expect(coverage.enumerated).toBe(197);
-    expect(coverage.covered).toBe(79);
-    expect(coverage.unmapped).toBe(118);
+    expect(coverage.covered).toBe(98);
+    expect(coverage.unmapped).toBe(99);
     expect(coverage.partial).toBe(0);
     // FLAT ZERO. `ar`, `ane`, `aur` (and), `pan`, `par` (but), `ke` (that),
-    // `jad` (when) all return ZERO occurrences in 312 files. A learner with
-    // twelve kinship words and seven foods cannot say "bread and tea".
+    // `jad` (when) all lack direct owners across 897 lessons. A learner with
+    // a broad family and food lexicon still cannot say "bread and tea".
     expect(coverage.byCategory["Yojak (joining and subordination)"]!).toEqual({
       enumerated: 11,
       covered: 0,
     });
-    // NO LONGER FLAT, and by exactly one: `koni` closed MW-A1-ADV-05, the
-    // polarity point. Nothing is still here, there, today, yesterday or badly —
-    // the column moved from 0 to 1 because the track finally has a word for
-    // NOT, and for no other reason.
-    expect(coverage.byCategory["Kriya-visheshan (adverbs)"]!).toEqual({ enumerated: 8, covered: 1 });
+    // Five are now exact: place, time, polarity, how/where, and why/because.
+    // Quantity, manner and connective adverbs remain genuinely partial.
+    expect(coverage.byCategory["Kriya-visheshan (adverbs)"]!).toEqual({ enumerated: 8, covered: 5 });
     // And the column this track is actually built around is closed outright.
     expect(coverage.byCategory["Saudo (the counter transaction this track is built around)"]!).toEqual({
       enumerated: 4,
       covered: 4,
     });
     expect(formatExamCoverage(coverage)).toContain(
-      "marwadi A1 (partial inventory): 79/197 points covered (40%)",
+      "marwadi A1 (partial inventory): 98/197 points covered (50%)",
     );
+  }, 60_000);
+
+  it("reconciles later direct owners without converting partial vocabulary into coverage", () => {
+    const taught = trackIntroducedAtoms(lessons, "marwadi");
+    for (const [id, atoms] of Object.entries(reconciledLaterAtoms)) {
+      const point = inventory.points.find((candidate) => candidate.id === id)!;
+      expect(point.probe, id).toEqual(atoms);
+      for (const atom of atoms) expect(taught.has(atom), `${id}:${atom}`).toBe(true);
+    }
+
+    const stillPartial = [
+      "MW-A1-Q-02", "MW-A1-F2-02", "MW-A1-F2-13", "MW-A1-F2-14", "MW-A1-F2-15",
+      "MW-A1-F3-01", "MW-A1-F3-04", "MW-A1-NG-03", "MW-A1-NG-08", "MW-A1-NG-13",
+      "MW-A1-NG-14", "MW-A1-NG-16", "MW-A1-NE-04", "MW-A1-NE-05", "MW-A1-NE-08",
+      "MW-A1-NE-11", "MW-A1-NE-13", "MW-A1-NE-14", "MW-A1-NE-15", "MW-A1-NE-16",
+      "MW-A1-NE-18", "MW-A1-NE-22", "MW-A1-NE-23", "MW-A1-NE-25", "MW-A1-NE-28",
+      "MW-A1-LIP-05",
+    ];
+    for (const id of stillPartial) {
+      const point = inventory.points.find((candidate) => candidate.id === id)!;
+      expect(point.probe, `${id} must stay partial`).toBeNull();
+      expect(point.note, `${id} needs a reconciled partial note`).toMatch(/NOW|now|still|partial|ONLY|one|five/);
+    }
+
+    expect(isExamInventoryComplete(inventory)).toBe(false);
+    for (const dimension of EXAM_CONTENT_DIMENSIONS) {
+      expect(inventory.scope[dimension].status, dimension).toBe("partial");
+    }
   }, 60_000);
 
   it("keeps the findings a percentage would bury: the numerals that closed, and no word for no", () => {
