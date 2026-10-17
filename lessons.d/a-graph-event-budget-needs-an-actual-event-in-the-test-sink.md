@@ -13,4 +13,3 @@ Keep all three max_nodes/max_edges/max_events cases. Add an explicit checked
 contribution after merge and before publishing the test receipt, so each budget
 is exercised by the operation it actually constrains. Preserve the failed run
 and distinguish this fixture repair from a production safety change.
-
