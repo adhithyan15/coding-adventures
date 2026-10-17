@@ -581,3 +581,117 @@ fn c37_selected_call_joins_actual_callee_and_argument_rewrite_before_outer_event
         }
     }
 }
+
+#[test]
+fn c38_literal_conditional_joins_test_and_chosen_descendants_in_own_pass_context() {
+    for level in ["SIMPLE", "ADVANCED"] {
+        for (source, truthy, label) in [
+            ("report((1+0)?observe(1+2):drop(4+5));", true, "1"),
+            ("report((0+0)?drop(4+5):observe(1+2));", false, "0"),
+        ] {
+            let (j, _, _) = compile(&[source], level);
+            let entries = j["entries"].as_object().unwrap();
+            let before = format!("({label}) ? ... : ...");
+            let own_fold = |after: &str, conditional: bool| {
+                let rows: Vec<_> = entries
+                    .iter()
+                    .filter(|(id, e)| {
+                        e["contributions"].as_array().unwrap().iter().any(|c| {
+                            c["source"] == "constant-fold"
+                                && c["tag"] == "folded"
+                                && c["meta"]["after"] == after
+                                && c["meta"]["new_cv"] == id.as_str()
+                                && (!conditional || c["meta"]["before"] == before)
+                        })
+                    })
+                    .collect();
+                assert_eq!(rows.len(), 1, "exact own fold to {after}");
+                rows[0].0.clone()
+            };
+            let result = own_fold("<expr>", true);
+            let test = own_fold(label, false);
+            let child = own_fold("3", false);
+            let unchosen = own_fold("9", false);
+            let token = |name: &str| {
+                let start = source.find(name).unwrap();
+                let rows: Vec<_> = entries
+                    .iter()
+                    .filter(|(_, entry)| {
+                        let physical = &entry["origin"]["meta"][SOURCE];
+                        physical["kind"] == "token"
+                            && physical["start"] == position(source, start)
+                            && physical["end"] == position(source, start + name.len())
+                    })
+                    .collect();
+                assert_eq!(rows.len(), 1);
+                rows[0].0.clone()
+            };
+            let callee = token("observe");
+            let ignored_callee = token("drop");
+            let parents = entries[&result]["parent_ids"].as_array().unwrap();
+            assert_eq!(parents.len(), 1);
+            let merge_id = parents[0].as_str().unwrap();
+            // CLOC27 reuses actual token IDs. No original conditional/call root
+            // ID is invented where the current bridge carries None.
+            assert_eq!(
+                entries[merge_id]["parent_ids"],
+                json!([test, callee, child])
+            );
+            let reachable = ancestry(&j, &result);
+            assert!(reachable.contains(&child));
+            assert!(!reachable.contains(&unchosen));
+            assert!(!reachable.contains(&ignored_callee));
+            let events = j["journal"]["events"].as_array().unwrap();
+            let event = |kind: &str, id: &str| {
+                let rows: Vec<_> = events
+                    .iter()
+                    .filter(|e| e["event"]["kind"] == kind && e["event"]["entity"] == id)
+                    .collect();
+                assert_eq!(rows.len(), 1);
+                rows[0]
+            };
+            let merge = event("merge", merge_id);
+            let derive = event("derive", &result);
+            let contribution = event("contribution", &result);
+            assert_eq!(merge["context"], derive["context"]);
+            assert_eq!(merge["context"], contribution["context"]);
+            assert!(clock(&merge["sequence"]) < clock(&derive["sequence"]));
+            assert!(clock(&derive["sequence"]) < clock(&contribution["sequence"]));
+            for prior in [&test, &child, &unchosen] {
+                let earlier = event("contribution", prior);
+                assert_eq!(earlier["context"], merge["context"]);
+                assert!(clock(&earlier["sequence"]) < clock(&merge["sequence"]));
+            }
+            let test_clock = clock(&event("contribution", &test)["sequence"]);
+            let chosen_clock = clock(&event("contribution", &child)["sequence"]);
+            let other_clock = clock(&event("contribution", &unchosen)["sequence"]);
+            assert!(test_clock < chosen_clock && test_clock < other_clock);
+            if truthy {
+                assert!(chosen_clock < other_clock);
+            } else {
+                assert!(other_clock < chosen_clock);
+            }
+            let pass = events
+                .iter()
+                .find(|e| e["sequence"] == merge["context"])
+                .unwrap();
+            assert_eq!(pass["event"]["scope"]["kind"], "pass");
+            assert_eq!(clock(&pass["event"]["scope"]["sweep"]), 0);
+            let schedule = events
+                .iter()
+                .find(|e| e["event"]["kind"] == "schedule" && e["context"] == pass["context"])
+                .unwrap();
+            let slot = clock(&pass["event"]["scope"]["slot"]) as usize;
+            assert_eq!(schedule["event"]["passes"][slot]["name"], "constant-fold");
+            let end = events
+                .iter()
+                .find(|e| {
+                    e["event"]["kind"] == "context_end" && e["event"]["begin"] == pass["sequence"]
+                })
+                .unwrap();
+            assert_eq!(end["event"]["outcome"]["kind"], "accepted");
+            assert_eq!(end["event"]["outcome"]["changed"], true);
+            assert!(clock(&contribution["sequence"]) < clock(&end["sequence"]));
+        }
+    }
+}

@@ -570,11 +570,38 @@ fn c35_member_refusals_preserve_all_preexisting_publication_destinations() {
 
 #[test]
 fn c36_selected_merge_and_derive_refusals_preserve_all_publication_destinations() {
+    selected_merge_and_derive_refusals(
+        "c36",
+        "report([7,9][0]);",
+        "array-literal[2][0]",
+        "element[0]",
+    );
+}
+
+#[test]
+fn c38_literal_conditional_refusals_preserve_all_publication_destinations() {
+    for (family, source, before) in [
+        (
+            "c38-true",
+            "report(true?observe(1+2):other());",
+            "(true) ? ... : ...",
+        ),
+        (
+            "c38-false",
+            "report(false?other():observe(1+2));",
+            "(false) ? ... : ...",
+        ),
+    ] {
+        selected_merge_and_derive_refusals(family, source, before, "<expr>");
+    }
+}
+
+fn selected_merge_and_derive_refusals(family: &str, source: &str, before: &str, after: &str) {
     use crate::config::{CompilationLevel, CompilerConfig, CorrelationVectorFormat};
-    let dir = std::env::temp_dir().join(format!("closurec-c36-pub-{}", std::process::id()));
+    let dir = std::env::temp_dir().join(format!("closurec-{family}-pub-{}", std::process::id()));
     std::fs::create_dir(&dir).unwrap();
     let input = dir.join("input.js");
-    std::fs::write(&input, "report([7,9][0]);").unwrap();
+    std::fs::write(&input, source).unwrap();
     let paths = ["out.js", "out.map", "manifest.txt", "trace.json"].map(|name| dir.join(name));
     for level in [CompilationLevel::Simple, CompilationLevel::Advanced] {
         let mut c = CompilerConfig::default();
@@ -596,8 +623,8 @@ fn c36_selected_merge_and_derive_refusals_preserve_all_publication_destinations(
                 e["contributions"].as_array().unwrap().iter().any(|v| {
                     v["source"] == "constant-fold"
                         && v["tag"] == "folded"
-                        && v["meta"]["before"] == "array-literal[2][0]"
-                        && v["meta"]["after"] == "element[0]"
+                        && v["meta"]["before"] == before
+                        && v["meta"]["after"] == after
                         && v["meta"]["new_cv"] == id.as_str()
                 })
             })
