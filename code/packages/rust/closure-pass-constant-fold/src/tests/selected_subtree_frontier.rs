@@ -47,30 +47,57 @@ fn c37_actual_selected_call_root_reaches_retained_argument_rewrite_in_exact_orde
             });
             let input = pick(
                 vec![Some(selected), Some(num(9.0, Some(&ids[7])))],
-                if string_key { string("0", Some(&ids[2])) } else { num(0.0, Some(&ids[2])) },
+                if string_key {
+                    string("0", Some(&ids[2]))
+                } else {
+                    num(0.0, Some(&ids[2]))
+                },
                 &ids,
             );
             let out = run(&input, &mut cv);
             let result = extract_expr(&out.program);
-            let Expression::CallExpression(call) = result else { panic!("call preserved") };
-            let Expression::Identifier(callee) = call.callee.as_ref() else { panic!("callee") };
-            let Expression::NumericLiteral(argument) = &call.arguments[0] else { panic!("argument folded") };
+            let Expression::CallExpression(call) = result else {
+                panic!("call preserved")
+            };
+            let Expression::Identifier(callee) = call.callee.as_ref() else {
+                panic!("callee")
+            };
+            let Expression::NumericLiteral(argument) = &call.arguments[0] else {
+                panic!("argument folded")
+            };
             assert_eq!(callee.cv.as_deref(), Some(ids[4].as_str()));
             assert_eq!(callee.name, "observe");
             assert_eq!(argument.value.to_bits(), 3.0f64.to_bits());
-            let child = argument.cv.as_ref().expect("actual retained derived argument");
+            let child = argument
+                .cv
+                .as_ref()
+                .expect("actual retained derived argument");
             let child_entry = cv.get(child).unwrap();
             assert_eq!(child_entry.contributions.len(), 1);
             assert_eq!(child_entry.contributions[0].meta["new_cv"], *child);
-            assert_eq!(cv.get(&child_entry.parent_ids[0]).unwrap().parent_ids, ids[5..7]);
+            assert_eq!(
+                cv.get(&child_entry.parent_ids[0]).unwrap().parent_ids,
+                ids[5..7]
+            );
             let mut expected = ids[..3].to_vec();
-            if root_present { expected.push(ids[3].clone()); }
+            if root_present {
+                expected.push(ids[3].clone());
+            }
             expected.extend([ids[4].clone(), child.clone()]);
-            assert_eq!(immediate(&cv, result), expected,
-                "member,array,actual key,selected root,callee,actual rewritten argument");
+            assert_eq!(
+                immediate(&cv, result),
+                expected,
+                "member,array,actual key,selected root,callee,actual rewritten argument"
+            );
             let root = root_cv(result).unwrap();
-            assert!(reaches(&cv, &root, child), "returned root reaches actual child rewrite");
-            assert!(!reaches(&cv, &root, &ids[7]), "unselected native semantic root excluded");
+            assert!(
+                reaches(&cv, &root, child),
+                "returned root reaches actual child rewrite"
+            );
+            assert!(
+                !reaches(&cv, &root, &ids[7]),
+                "unselected native semantic root excluded"
+            );
         }
     }
 }
@@ -78,14 +105,18 @@ fn c37_actual_selected_call_root_reaches_retained_argument_rewrite_in_exact_orde
 fn stamp_all_native_objects(value: &mut Value, cv: &mut CVLog) {
     match value {
         Value::Object(object) => {
-            for child in object.values_mut() { stamp_all_native_objects(child, cv); }
+            for child in object.values_mut() {
+                stamp_all_native_objects(child, cv);
+            }
             // Test-only wire construction: roundtrip below discards fields on
             // objects that do not actually carry a native CV. The oracle reads
             // back the actual typed subtree, never assumes insertion succeeded.
             object.insert("cv".into(), json!(cv.try_create(None).unwrap()));
         }
         Value::Array(items) => {
-            for child in items { stamp_all_native_objects(child, cv); }
+            for child in items {
+                stamp_all_native_objects(child, cv);
+            }
         }
         _ => {}
     }
@@ -94,10 +125,18 @@ fn stamp_all_native_objects(value: &mut Value, cv: &mut CVLog) {
 fn identity_set(value: &Value, ids: &mut BTreeSet<String>) {
     match value {
         Value::Object(object) => {
-            if let Some(id) = object.get("cv").and_then(Value::as_str) { ids.insert(id.into()); }
-            for child in object.values() { identity_set(child, ids); }
+            if let Some(id) = object.get("cv").and_then(Value::as_str) {
+                ids.insert(id.into());
+            }
+            for child in object.values() {
+                identity_set(child, ids);
+            }
         }
-        Value::Array(items) => { for child in items { identity_set(child, ids); } }
+        Value::Array(items) => {
+            for child in items {
+                identity_set(child, ids);
+            }
+        }
         _ => {}
     }
 }
@@ -108,7 +147,9 @@ fn c37_nonempty_native_expression_census_preserves_and_joins_all_retained_ids() 
     let mut positive_nested_shapes = 0;
     for string_key in [false, true] {
         for (name, expression) in shapes(None) {
-            if name == "SpreadElement" { continue; } // Existing eligibility unchanged.
+            if name == "SpreadElement" {
+                continue;
+            } // Existing eligibility unchanged.
             let mut cv = CVLog::new_checked_compact(GraphLimits::default()).unwrap();
             let operands: Vec<_> = (0..4).map(|_| cv.try_create(None).unwrap()).collect();
             let mut wire = serde_json::to_value(expression).unwrap();
@@ -121,7 +162,11 @@ fn c37_nonempty_native_expression_census_preserves_and_joins_all_retained_ids() 
             positive_nested_shapes += usize::from(selected_ids.len() > 1);
             let input = pick(
                 vec![Some(selected), Some(num(9.0, Some(&operands[3])))],
-                if string_key { string("0", Some(&operands[2])) } else { num(0.0, Some(&operands[2])) },
+                if string_key {
+                    string("0", Some(&operands[2]))
+                } else {
+                    num(0.0, Some(&operands[2]))
+                },
                 &operands,
             );
             let out = run(&input, &mut cv);
@@ -130,18 +175,35 @@ fn c37_nonempty_native_expression_census_preserves_and_joins_all_retained_ids() 
             let mut expected_payload = before;
             after.as_object_mut().unwrap().remove("cv");
             expected_payload.as_object_mut().unwrap().remove("cv");
-            assert_eq!(after, expected_payload, "{name} nested CV and payload conservation");
+            assert_eq!(
+                after, expected_payload,
+                "{name} nested CV and payload conservation"
+            );
             let mut expected = selected_ids.clone();
             expected.extend(operands[..3].iter().cloned());
             let frontier = immediate(&cv, result);
-            assert_eq!(frontier.len(), expected.len(), "{name} no duplicate parents");
-            assert_eq!(frontier.iter().cloned().collect::<BTreeSet<_>>(), expected, "{name} exact selected ID set");
+            assert_eq!(
+                frontier.len(),
+                expected.len(),
+                "{name} no duplicate parents"
+            );
+            assert_eq!(
+                frontier.iter().cloned().collect::<BTreeSet<_>>(),
+                expected,
+                "{name} exact selected ID set"
+            );
             assert_eq!(&frontier[..3], &operands[..3], "fixed operand prefix");
             let root = root_cv(result).unwrap();
-            assert!(selected_ids.iter().all(|id| reaches(&cv, &root, id)), "{name} actual root reachability");
+            assert!(
+                selected_ids.iter().all(|id| reaches(&cv, &root, id)),
+                "{name} actual root reachability"
+            );
             selected_shapes += 1;
         }
     }
     assert_eq!(selected_shapes, 70);
-    assert!(positive_nested_shapes >= 40, "nonvacuous stamped composite census");
+    assert!(
+        positive_nested_shapes >= 40,
+        "nonvacuous stamped composite census"
+    );
 }

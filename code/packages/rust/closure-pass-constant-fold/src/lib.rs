@@ -107,6 +107,7 @@ use serde_json::json;
 
 mod array_length_frontier;
 mod selected_root_identity;
+mod selected_subtree_frontier;
 
 /// Constant-folding pass — see crate-level docs.
 #[derive(Debug, Default, Clone, Copy)]
@@ -4818,15 +4819,17 @@ fn fold_array_index_access(
                 }
                 let before = format!("array-literal[{len}][{idx}]");
                 let after = format!("element[{idx}]");
-                // CLOC36: the returned clone owns the selection rewrite. Its
-                // old root remains an operand, while nested CVs and every
-                // non-CV field remain exactly the already-folded selection.
-                let mut replacement = selected.clone();
-                let slot = selected_root_identity::slot(&mut replacement);
-                *slot = fork_selected_array_cvs(
-                    [parent_cv.as_deref(), a.cv.as_deref(), key_cv, slot.as_deref()],
+                // CLOC37: collect the actual selected subtree before cloning
+                // or mutating the outer graph. A composite's old CV need not
+                // reach a child rewritten during this bottom-up pass.
+                let new_cv = fork_selected_array_cvs(
+                    [parent_cv.as_deref(), a.cv.as_deref(), key_cv], selected,
                     &before, &after, st,
                 );
+                if st.cv_error.is_some() { return None; }
+                let mut replacement = selected.clone();
+                let slot = selected_root_identity::slot(&mut replacement);
+                *slot = new_cv;
                 Some(replacement)
             }
             // In-bounds HOLE (CLOC12.196b): reads as `undefined` → `void 0`.
@@ -4934,17 +4937,19 @@ fn fold_array_string_key_access(
     fold_array_index_access(a, &k, s.cv.as_deref(), parent_cv, st)
 }
 
-/// Four fixed optional operand slots reuse the metered first-seen collector.
-/// No selected-descendant traversal or general pass-wide bound is claimed.
+/// Fixed operands precede the exhaustive borrowed selected-subtree preorder.
+/// The collector bounds its own cumulative work and temporary requested storage;
+/// it does not claim a bound on the recursive folder or later selected clone.
 #[inline(never)]
 fn fork_selected_array_cvs(
-    parents: [Option<&str>; 4],
+    parents: [Option<&str>; 3],
+    selected: &Expression,
     before: &str,
     after: &str,
     st: &mut FoldState,
 ) -> Option<String> {
     if st.cv_error.is_some() { return None; }
-    match array_length_frontier::collect(parents.into_iter()) {
+    match selected_subtree_frontier::collect(parents, selected) {
         Ok(unique) => st.fork_unique_operand_cvs(&unique, before, after),
         Err(error) => { st.cv_error = Some(error); None }
     }
