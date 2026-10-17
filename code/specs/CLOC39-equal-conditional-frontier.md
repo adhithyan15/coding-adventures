@@ -52,9 +52,11 @@ replay. All scans, hashing/equality/initialization and actual prefix slots
 share ONE checked work budget; all simultaneously live frame/reference/bucket
 buffers and old/new frame migration peaks share ONE requested-storage cap.
 
-For compatible scan reuse, each root scan retains three metered prefix slots:
-only the first may hold original conditional CV; later slots are absent. Both
-count and replay use the same recipe. This bounded constant work is explicit,
+For compatible scan reuse, each root scan retains three metered prefix slots.
+The test scan receives [original_conditional_cv, None, None]; the consequent
+scan receives [None, None, None]; the alternate scan receives [None, None, None].
+These exact arrays apply in both count and replay. The original conditional
+is visited once per complete count/replay scan, never once for each tree. This bounded constant work is explicit,
 not an unmetered synthetic AST or a cloned/sibling queue. Single-subtree C37/C38
 callers retain their exact prior work/storage/allocation behavior. No new
 crates.io dependency, wire/public type, production limit or pass/sweep change.

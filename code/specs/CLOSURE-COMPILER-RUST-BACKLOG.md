@@ -3162,3 +3162,7 @@ receipts untouched/unpolled. Full transformation/output/parity objective OPEN.
   main reconciliation/sole PR conflict/CI/delivery/full parity remain OPEN.
   Miri DEFERRED/PENDING, frozen run untouched; final-source acceptance after
   implementation delivery.
+
+- CLOC39 pre-code review clarification: test prefix is conditional/None/None;
+  consequent and alternate prefixes are all None in both count and replay.
+  Original conditional is not repeated per tree; budgets meter actual slots.
