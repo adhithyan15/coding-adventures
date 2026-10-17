@@ -157,6 +157,8 @@ export interface WorkItem {
   outstanding: number;
   /** PRs this decomposes into at the family's tranche size. Sort key 3. */
   tranches: number;
+  /** Concrete prerequisites that keep this item visible but out of the actionable head. */
+  blockedBy?: readonly string[];
 }
 
 /** Work counted rather than listed, because listing it would be a lie. */
@@ -171,6 +173,8 @@ export interface CompletionPlan {
   ceiling: CefrLevel;
   /** The next items, fully enumerated and ready to pick up. */
   head: WorkItem[];
+  /** Visible debt that cannot be picked up until its named prerequisites exist. */
+  blocked: WorkItem[];
   /** Everything behind the head, counted per family. */
   projection: PlanProjection[];
   summary: {
@@ -215,6 +219,8 @@ export interface CompletionPlanInput {
   writingStages?: WritingStageReport;
   /** Tracks with a validated `<track>/assessment.json` covering the whole ladder. */
   assessmentContracts?: readonly string[];
+  /** Measured blockers for publishing a missing contract, keyed by track. */
+  assessmentPrerequisites?: ReadonlyArray<{ language: string; missing: readonly string[] }>;
   /** Declared external exams that intentionally have no CEFR equivalence. */
   externalCapstones?: ReadonlyArray<{
     language: string;
@@ -308,6 +314,9 @@ export function buildCompletionPlan(input: CompletionPlanInput): CompletionPlan 
   }
   const closureByLanguage = new Map(input.scriptClosure.tracks.map((track) => [track.language, track]));
   const contracted = new Set(input.assessmentContracts ?? []);
+  const assessmentPrerequisites = new Map(
+    (input.assessmentPrerequisites ?? []).map((entry) => [entry.language, entry.missing]),
+  );
 
   // Items are collected PER TRACK and interleaved at the end, never pooled and
   // sorted flat. The first version of this function pooled them, and the queue it
@@ -362,6 +371,7 @@ export function buildCompletionPlan(input: CompletionPlanInput): CompletionPlan 
     // exists, a track cannot honestly claim that finishing its book prepares the
     // reader to pass, however complete its vocabulary and grammar may look.
     if (!contracted.has(track.language)) {
+      const blockedBy = assessmentPrerequisites.get(track.language);
       mine.push({
         id: `assessment-contract/${track.language}`,
         kind: "assessment-contract",
@@ -373,6 +383,7 @@ export function buildCompletionPlan(input: CompletionPlanInput): CompletionPlan 
           `the gentle writing stages, scored tasks, rubrics, answer keys and timed full mocks`,
         outstanding: 1,
         tranches: 1,
+        ...(blockedBy && blockedBy.length > 0 ? { blockedBy } : {}),
       });
     }
 
@@ -536,14 +547,21 @@ export function buildCompletionPlan(input: CompletionPlanInput): CompletionPlan 
     items.push(...mine);
   }
 
+  const blocked = items.filter((item) => item.blockedBy?.length);
+  const actionableByTrack = new Map([...byTrack].map(([language, mine]) => [
+    language,
+    mine.filter((item) => !item.blockedBy?.length),
+  ]));
+  const actionable = items.length - blocked.length;
   return {
     ceiling,
-    head: interleave(byTrack, input.levelGate).slice(0, headSize),
+    head: interleave(actionableByTrack, input.levelGate).slice(0, headSize),
+    blocked,
     projection: project(input, ceiling, items),
     summary: {
       tracks: input.levelGate.tracks.length,
       tracksDone,
-      itemsInHead: Math.min(headSize, items.length),
+      itemsInHead: Math.min(headSize, actionable),
       itemsOutstanding: items.length,
       projectedTotal: projectedTotal(input, ceiling, items),
     },
@@ -843,6 +861,16 @@ export function renderCompletionPlan(plan: CompletionPlan): string[] {
     lines.push(`       ${item.goal}`);
     lines.push(`       ${item.outstanding} outstanding, ${item.tranches} tranche(s)`);
   });
+  if (plan.blocked.length > 0) {
+    lines.push("");
+    lines.push(`${plan.blocked.length} blocked item(s), retained but not actionable:`);
+    for (const item of plan.blocked.slice(0, 10)) {
+      const missing = item.blockedBy ?? [];
+      lines.push(`  [${item.level}] ${item.kind} — ${item.language}: ${missing.slice(0, 3).join(", ")}`);
+      if (missing.length > 3) lines.push(`       and ${missing.length - 3} more prerequisite(s)`);
+    }
+    if (plan.blocked.length > 10) lines.push(`  ... ${plan.blocked.length - 10} more blocked item(s)`);
+  }
   lines.push("");
   lines.push("Projection to the ceiling, per family:");
   for (const entry of plan.projection) {

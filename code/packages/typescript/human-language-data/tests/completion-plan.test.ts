@@ -102,6 +102,26 @@ describe("completion plan", () => {
     expect(built.head[0]?.goal).toContain("independent reading, listening, writing and speaking passes");
   });
 
+  it("keeps an artifact-blocked contract in the projection but queues its concrete prerequisite", () => {
+    const built = plan({
+      levelGate: gate([{ language: "italian", inProgressAt: "pre-A1" }]),
+      assessmentContracts: [],
+      assessmentPrerequisites: [{
+        language: "italian",
+        missing: ["task-shapes/a2.json", "mocks/a1/rubric.md", "mocks/a1/mock-1-answer-key.md"],
+      }],
+      taskShapes: [{ language: "italian", level: "pre-A1" }],
+    });
+    expect(built.head[0]).toMatchObject({ id: "task-shape/italian/A1" });
+    expect(built.head.some((item) => item.kind === "assessment-contract")).toBe(false);
+    expect(built.blocked).toEqual([expect.objectContaining({
+      id: "assessment-contract/italian",
+      blockedBy: ["task-shapes/a2.json", "mocks/a1/rubric.md", "mocks/a1/mock-1-answer-key.md"],
+    })]);
+    expect(built.projection.find((entry) => entry.kind === "assessment-contract")?.items).toBe(1);
+    expect(built.summary.itemsOutstanding).toBeGreaterThan(built.summary.itemsInHead);
+  });
+
   it("suppresses the assessment item only for a validated contracted track", () => {
     const built = plan({
       levelGate: gate([{ language: "alpha", inProgressAt: "pre-A1" }]),
