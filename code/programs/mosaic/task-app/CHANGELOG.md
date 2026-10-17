@@ -4,6 +4,12 @@ All notable changes to the `task-app` web program are documented here.
 
 ## [Unreleased]
 
+### Fixed — Qt milestone diamonds retain their authored rotation (#17675)
+
+Timeline milestone markers and their legend swatches retain centered 45-degree
+rotation in Qt. Both themes now measure 81 Qt style drops instead of 83;
+unsupported transforms remain reported. Release artifact coverage is unchanged.
+
 Entries added after `task-app-v0.5.7` accumulate here until the next version is
 cut.
 

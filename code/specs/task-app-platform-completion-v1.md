@@ -148,7 +148,7 @@ rather than letting them read as silent gaps.
 
 ### Product quality ratchet
 
-**Next bounded visual fix — #17502: SwiftUI milestone rotations.** TaskApp's
+**Completed bounded visual fix — #17502: SwiftUI milestone rotations.** TaskApp's
 timeline and calendar milestones both author a centered `rotate(45deg)` to
 make diamonds. Lower a single finite degree rotation after sizing and surface
 paint but before elevation shadows. Keep native layout footprint unchanged,
@@ -289,14 +289,27 @@ asset digests, and the existing artifact coverage and limitations are retained.
 `task-app-v0.5.6`.** Published from #17492 and audited: immutable tag and
 manifest match the source commit, and all twelve checksums match asset digests.
 
-**Next release checkpoint — P1 [#17610](https://github.com/adhithyan15/coding-adventures/issues/17610):
+**Published and audited release checkpoint — P1 [#17610](https://github.com/adhithyan15/coding-adventures/issues/17610):
 publish `task-app-v0.5.7`.** Roll forward the compatible SwiftUI milestone
 rotation fix (#17503): timeline and calendar markers retain their 45-degree
 diamond shape, reducing the measured SwiftUI style inventory from 59 to 57.
-Validate every existing release payload lane on the exact source commit, publish
-from main after preparation merges, and audit the immutable tag, manifest,
-inventory, and checksums. Static HTML, Web Components, and Paint remain CI-only;
-signing, notarization, and installers remain #13977. Preparation is not publication.
+Published from `93206f2a5b2cb3c02f30bb7dd23c7573898d2334` after every payload lane
+passed in run 38971558648. The immutable tag and manifest match that source;
+all 13 assets and twelve checksum entries were audited against GitHub digests.
+Static HTML, Web Components, and Paint remain CI-only; signing, notarization,
+and installers remain #13977.
+
+### Next bounded fidelity item — #17675: Qt milestone rotations
+
+After the P0 native lifecycle gates and v0.5.7 publication, preserve the two
+authored timeline milestone and legend-swatch `rotate(45deg)` declarations in
+Qt. Use native centered Item rotation without changing layout dimensions.
+Accept only a single finite degree rotation; preserve ordered state precedence
+with a zero-degree fallback, and keep rejected values in degradation reports.
+Translation, scaling, transform chains, and transform-origin are excluded.
+Assert exact emitted bindings, negative inputs, and both authored themes before
+retiring the two Qt transform allowances (83 to 81 measured drops). Validate
+native Qt payload generation/build in CI; do not claim local Qt runtime proof.
 
 ### Tier C — reach, stated honestly
 

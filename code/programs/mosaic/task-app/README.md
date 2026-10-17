@@ -94,8 +94,8 @@ rows, and the main content remains vertically scrollable. The fresh and restored
 lifecycle runs both require zero layout exceptions at that size (#16949).
 
 The same native contract ratchets the remaining style debt per backend and per
-property. Fresh `native-complete` reports currently contain 29 XAML, 63 SwiftUI,
-40 Compose, 83 Qt, and 69 Flutter drops; any new property or increase above
+property. Fresh `native-complete` reports currently contain 29 XAML, 57 SwiftUI,
+40 Compose, 81 Qt, and 69 Flutter drops; any new property or increase above
 those measured maxima fails CI. These inventories are explicit debt on the path
 to #12022's zero-drop gate, not a claim of visual completeness. Native text
 tracking now preserves TaskApp's authored `letter-spacing` on all five backends,
@@ -233,6 +233,10 @@ cd host/web && npm install && npm run dev       # http://localhost:5173
 ```
 
 ## Incremental releases
+
+The next unreleased Qt fidelity patch preserves the timeline milestone and
+legend-swatch diamond rotations (#17675), reducing measured Qt style drops from
+83 to 81. Downloadable coverage is unchanged.
 
 TaskApp uses product-scoped [Semantic Versioning](https://semver.org/):
 `task-app-vMAJOR.MINOR.PATCH`. Compatible fixes and packaging improvements bump

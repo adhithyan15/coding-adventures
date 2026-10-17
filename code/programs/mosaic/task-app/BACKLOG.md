@@ -69,12 +69,12 @@ Each item, once picked up, follows: spec-sync → tests → implementation → C
 
 ## Product completion queue
 
-**Next priority: [#17610](https://github.com/adhithyan15/coding-adventures/issues/17610)
-— publish `task-app-v0.5.7`.** The P0 native lifecycle gates are complete.
-The v0.5.6 diagnostic patch is published and audited. SwiftUI milestone
-rotations are fixed in #17503; prepare this compatible visual patch, validate
-every existing payload lane, then publish from main and audit the immutable
-assets. Artifact coverage is unchanged; preparation is not publication.
+**Next priority: [#17675](https://github.com/adhithyan15/coding-adventures/issues/17675)
+— preserve Qt milestone rotations.** The P0 native lifecycle gates and the
+immutable v0.5.7 publication/audit (#17610) are complete. Preserve the timeline
+milestone and legend-swatch diamonds through centered native Qt rotation and
+verify both themes before reducing its style-drop allowance from 83 to 81.
+Artifact coverage is unchanged; native Qt execution remains a CI claim.
 
 The durable product backlog is [GitHub issue #13517](https://github.com/adhithyan15/coding-adventures/issues/13517).
 It tracks the local-first, Rust-scheduled, native TaskApp completion loop and

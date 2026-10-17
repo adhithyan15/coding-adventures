@@ -16,6 +16,10 @@ string describing the component as a tree of Qt Quick elements.
 
 ## Pipeline position
 
+Painted rectangles preserve a single finite `rotate(Ndeg)` through centered
+Qt Item rotation, including ordered state overrides. Layout dimensions remain
+unchanged; other transform functions and units remain explicit style debt.
+
 ```
 .mil  (interface)  ──┐
                      │
