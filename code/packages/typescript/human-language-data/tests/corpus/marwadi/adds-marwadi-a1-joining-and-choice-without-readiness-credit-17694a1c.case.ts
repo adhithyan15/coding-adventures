@@ -68,7 +68,7 @@ it("adds one bounded Marwadi A1 joining-and-choice tranche without readiness cre
   expect(learnerCopy).toContain("कुत्तो अर बिल्ली");
   expect(learnerCopy).toContain("चाय अर पाणी?");
   expect(learnerCopy).toContain("चाय गरम है, पण पाणी ठंडो है");
-  expect(learnerCopy).toContain("बाटी गरम है क्यूंकै तावो गरम है");
+  expect(learnerCopy).toContain("बाटी गरम है क्यूंकै तवो गरम है");
   expect(learnerCopy).toMatch(/not an A1 mock|not A1 readiness/i);
   expect(learnerCopy).toContain("Linguistic Survey of India");
 
@@ -130,4 +130,3 @@ it("adds one bounded Marwadi A1 joining-and-choice tranche without readiness cre
     "marwadi A1 (partial inventory): 103/197 points covered (52%)",
   );
 }, 120_000);
-
