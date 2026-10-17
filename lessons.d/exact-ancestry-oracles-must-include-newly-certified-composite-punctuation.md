@@ -13,3 +13,9 @@ astral string's exact byte/scalar/UTF-16 coordinates. Require the unique member'
 input, range and ordered parents plus the fold's exact immediate operand merge.
 Keep whole-set equality excluding every unrelated token, trivia and EOF, and
 leave the unary case unchanged. Do not relax exact ancestry to token presence.
+
+The first migrated immediate-merge expectation also assumed the synthesized
+dot-property Identifier had its own leaf CV. The focused7P1F receipt exposed
+that distinction: the member owns its property token, while the immediate fold
+merge has exactly the member and string CVs. Physical ancestry and immediate
+AST-operand identity are different edges; assert each exact structure separately.

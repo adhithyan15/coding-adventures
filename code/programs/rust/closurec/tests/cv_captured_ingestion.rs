@@ -466,11 +466,9 @@ fn d2_string_and_unary_folds_reach_raw_input_pieces() {
             assert_eq!(meta["last_piece_id"], ids[2]);
             assert_eq!(meta["start"], pos(expected[0][0]));
             assert_eq!(meta["end"], pos(expected[2][1]));
-            merge_parents(
-                &w,
-                &result,
-                &[member_id.clone(), ids[0].clone(), ids[2].clone()],
-            );
+            // Dot-property Identifiers have no separate leaf CV in the bridge;
+            // the property's physical identity is reached through the member.
+            merge_parents(&w, &result, &[member_id.clone(), ids[0].clone()]);
         } else {
             assert_eq!(
                 w["entries"][result]["parent_ids"],
