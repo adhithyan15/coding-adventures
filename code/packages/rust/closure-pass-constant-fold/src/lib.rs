@@ -4822,7 +4822,7 @@ fn fold_array_index_access(
                 // CLOC37: collect the actual selected subtree before cloning
                 // or mutating the outer graph. A composite's old CV need not
                 // reach a child rewritten during this bottom-up pass.
-                let new_cv = fork_selected_array_cvs(
+                let new_cv = fork_selected_subtree_cvs(
                     [parent_cv.as_deref(), a.cv.as_deref(), key_cv], selected,
                     &before, &after, st,
                 );
@@ -4941,7 +4941,7 @@ fn fold_array_string_key_access(
 /// The collector bounds its own cumulative work and temporary requested storage;
 /// it does not claim a bound on the recursive folder or later selected clone.
 #[inline(never)]
-fn fork_selected_array_cvs(
+fn fork_selected_subtree_cvs(
     parents: [Option<&str>; 3],
     selected: &Expression,
     before: &str,
@@ -6439,11 +6439,19 @@ fn fold_conditional(c: &ConditionalExpression, st: &mut FoldState) -> Expression
     let alternate = fold_expression(&c.alternate, st);
 
     if let Some(truthy) = literal_truthy(&test) {
-        let chosen = if truthy { consequent } else { alternate };
-        let parent = c.cv.clone();
+        let mut chosen = if truthy { consequent } else { alternate };
         let before = format!("({}) ? ... : ...", lit_label(&test));
         let after = literal_label_for_expr(&chosen);
-        let _new_cv = st.fork_cv(&parent, &before, &after);
+        // The actual owned branch must carry the selection, including newer
+        // child identities hidden by an opaque composite's previous root.
+        // Both branches have already folded; their earlier work is not undone.
+        let new_cv = fork_selected_subtree_cvs(
+            [c.cv.as_deref(), primitive_cv(&test), None], &chosen,
+            &before, &after, st,
+        );
+        if st.cv_error.is_none() {
+            *selected_root_identity::slot(&mut chosen) = new_cv;
+        }
         return chosen;
     }
 
