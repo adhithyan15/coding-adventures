@@ -6,7 +6,7 @@ use crate::run::source_inventory::{
 use crate::run::source_replay::{ReplayLimits, SourceCatalog};
 use coding_adventures_correlation_vector::GraphLimits;
 use coding_adventures_javascript_parser::{
-    asi::parse_with_asi, bridge::grammar_to_program_with_array_observer, DEFAULT_ES_VERSION,
+    asi::parse_with_asi, bridge::grammar_to_program_with_composite_observer, DEFAULT_ES_VERSION,
 };
 use serde_json::json;
 use std::path::{Path, PathBuf};
@@ -42,7 +42,7 @@ fn fixture_with(source: &str, limits: ArrayLimits, graph: GraphLimits) -> Result
     let mut ledger = ArrayLedger::new(limits)?;
     let program = {
         let mut observer = ledger.observer(&mut log, &recorded.id)?;
-        grammar_to_program_with_array_observer(&node, DEFAULT_ES_VERSION, &mut observer)
+        grammar_to_program_with_composite_observer(&node, DEFAULT_ES_VERSION, &mut observer)
             .map_err(|e| e.to_string())?
     };
     crate::run::run_typed_pipeline(program, None, Some(&mut log)).map_err(|e| format!("{e:?}"))?;

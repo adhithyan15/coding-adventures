@@ -170,6 +170,18 @@ fn c35_exact_and_one_less_limits_include_mixed_nonpower_growth_and_final_census(
     }
 }
 #[test]
+fn c35_original_checked_graph_node_and_edge_exhaustion_refuses_member_construction() {
+    let prepared = prepare("a.b;",GraphLimits::default()).unwrap();
+    let nodes = prepared.log.entries().len();
+    let edges = prepared.log.entries().values().map(|e|e.parent_ids.len()).sum();
+    for limits in [GraphLimits {max_nodes:nodes,..Default::default()},GraphLimits {max_edges:edges,..Default::default()}] {
+        let mut p=prepare("a.b;",limits).unwrap(); let before=p.log.to_json_string().unwrap();
+        let mut ledger=ArrayLedger::new(ArrayLimits::default()).unwrap(); let mut sink=ledger.observer(&mut p.log,&p.root).unwrap();
+        assert!(matches!(grammar_to_program_with_composite_observer(&p.node,DEFAULT_ES_VERSION,&mut sink),Err(coding_adventures_javascript_parser::bridge::ObservedBridgeError::Observer(s)) if s.contains("limit")));
+        assert_eq!(p.log.to_json_string().unwrap(),before); assert!(ledger.receipts.is_empty());
+    }
+}
+#[test]
 fn c35_member_refusals_preserve_all_preexisting_publication_destinations() {
     use crate::config::{CompilerConfig,CompilationLevel,CorrelationVectorFormat};
     let dir = std::env::temp_dir().join(format!("closurec-c35-pub-{}",std::process::id()));
