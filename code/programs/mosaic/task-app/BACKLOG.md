@@ -71,7 +71,7 @@ Each item, once picked up, follows: spec-sync → tests → implementation → C
 
 **Next priority: [#17682](https://github.com/adhithyan15/coding-adventures/issues/17682)
 — publish and audit `task-app-v0.5.8`.** The P0 native lifecycle gates and the
-immutable v0.5.7 publication/audit (#17610) are complete. Preserve the timeline
+immutable v0.5.7 publication/audit (#17610) are complete. The timeline
 milestone and legend-swatch diamonds now retain centered native Qt rotation
 through #17676, with both themes measuring 81 style drops instead of 83.
 Validate every existing release payload, publish after preparation merges,
