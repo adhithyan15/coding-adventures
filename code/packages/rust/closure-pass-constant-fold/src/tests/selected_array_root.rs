@@ -370,7 +370,6 @@ fn c36_opaque_selected_call_keeps_nonempty_nested_and_derived_child_cvs() {
         );
         let out = run(&prog, &mut cv);
         let result = extract_expr(&out.program);
-        assert_owned(&cv, result, &ids[..4]);
         let Expression::CallExpression(call) = result else {
             panic!("selected effect must remain a call");
         };
@@ -395,8 +394,12 @@ fn c36_opaque_selected_call_keeps_nonempty_nested_and_derived_child_cvs() {
         assert_eq!(child.contributions.len(), 1);
         assert_eq!(child.contributions[0].meta["after"], "3");
         assert_eq!(cv.get(&child.parent_ids[0]).unwrap().parent_ids, ids[5..7]);
-        // This proves the returned CHILD retains its earlier rewrite. CLOC36
-        // does not claim a general root-to-descendant parent_ids closure.
+        // CLOC37 extends CLOC36's four-parent contract with the selected
+        // callee and actual derived argument, preserving the original child
+        // ownership/payload assertions above rather than weakening them.
+        let mut expected = ids[..5].to_vec();
+        expected.push(argument.cv.as_ref().unwrap().clone());
+        assert_owned(&cv, result, &expected);
     }
 }
 
