@@ -15,7 +15,7 @@ use diagram_ir::{
 };
 use std::collections::{HashMap, HashSet};
 
-pub const VERSION: &str = "0.27.0";
+pub const VERSION: &str = "0.28.0";
 
 const MIN_NODE_W: f64 = 160.0;
 const HEADER_H: f64 = 40.0;
@@ -169,6 +169,7 @@ pub fn layout_structural_diagram(diagram: &StructuralDiagram) -> LayoutedStructu
         title: diagram.title.clone(),
         accessibility_title: diagram.accessibility_title.clone(),
         accessibility_description: diagram.accessibility_description.clone(),
+        architecture_config: diagram.architecture_config.clone(),
         groups,
         nodes,
         relationships: rels,
@@ -1146,7 +1147,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.27.0");
+        assert_eq!(crate::VERSION, "0.28.0");
     }
 
     #[test]
@@ -1466,6 +1467,7 @@ mod tests {
             padding: 48.0,
             ideal_edge_length_multiplier: 1.25,
             edge_elasticity: 0.45,
+            num_iter: 2500,
             randomize: false,
             seed: 1,
         });

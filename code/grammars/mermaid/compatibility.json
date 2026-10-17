@@ -149,7 +149,7 @@
     {
       "id": "architecture",
       "headers": ["architecture", "architecture-beta"],
-      "status": "partial",
+      "status": "full",
       "ir": "structural",
       "smoke_source": "architecture-beta\nservice api(server)[API]"
     },

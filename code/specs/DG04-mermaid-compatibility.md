@@ -511,7 +511,8 @@ lower to canonical backend-neutral glyph geometry. Preserved namespaced identifi
 use a generic fallback when vendor artwork is unavailable. Orthogonal relationship
 layout routes around unrelated service, junction, and group bounds with deterministic
 clearance before the existing backend-neutral PaintScene lowering. Full vendor icon
-artwork remains unsupported at the partial level. Architecture `iconSize`, `fontSize`,
+artwork remains an integrator responsibility outside the parser-to-Paint compatibility
+boundary. Architecture `iconSize`, `fontSize`,
 `nodeSeparation`, `padding`, and
 `idealEdgeLengthMultiplier` values from Mermaid init directives or YAML front matter
 survive as typed semantic configuration and resolve into backend-neutral node geometry,
@@ -522,8 +523,12 @@ routing and backend-neutral PaintScene lowering. `randomize` and signed `seed` v
 survive semantic configuration and select a repeatable seeded permutation of sibling layout
 slots while preserving authored IR order, containment, routing, and backend-neutral PaintScene
 lowering. Unlike Mermaid's nondeterministic `seed: 0` escape hatch, the native pipeline keeps
-zero deterministic. Iteration limits and the remaining fcose-specific tuning controls remain
-unsupported at the partial level.
+zero deterministic. The fcose-specific `numIter` limit survives typed semantic IR and
+layout into PaintScene metadata even though the deterministic native layout does not run
+fcose. Empty diagrams, quoted and escaped titles, nested groups, prototype-safe and numeric
+identifiers, alignments, junctions, edge forms, invalid references, and all native extensions
+are pinned in syntax and visual corpora. Every accepted fixture renders through Metal, so
+Architecture reaches the manifest's defined `full` level.
 
 ### Radar Compatibility
 

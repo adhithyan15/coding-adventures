@@ -121,6 +121,14 @@ mod apple {
         env!("CARGO_MANIFEST_DIR"),
         "/../../../grammars/mermaid/kanban-11.16.1-visual-corpus.json"
     ));
+    const ARCHITECTURE_CORPUS: &str = include_str!(concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/../../../grammars/mermaid/architecture-11.16.1-corpus.json"
+    ));
+    const ARCHITECTURE_VISUAL_CORPUS: &str = include_str!(concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/../../../grammars/mermaid/architecture-11.16.1-visual-corpus.json"
+    ));
 
     #[test]
     fn render_dot_diagram_to_png() {
@@ -2056,6 +2064,52 @@ line "Target" [35, 50, 68, 82]"##,
         assert!(layout.nodes.iter().enumerate().any(|(index, node)| {
             node.x != 40.0 + (index % 3) as f64 * 235.0
         }));
+    }
+
+    #[test]
+    fn render_pinned_mermaid_architecture_visual_corpus_to_png() {
+        let syntax: Value = serde_json::from_str(ARCHITECTURE_CORPUS)
+            .expect("architecture corpus JSON");
+        let visual: Value = serde_json::from_str(ARCHITECTURE_VISUAL_CORPUS)
+            .expect("architecture visual corpus JSON");
+        assert_eq!(visual["upstream_commit"], syntax["upstream_commit"]);
+
+        let valid = syntax["valid"].as_array().expect("valid architecture fixtures");
+        let fixture_ids = visual["fixtures"].as_array().expect("visual fixture ids");
+        assert_eq!(fixture_ids.len(), valid.len(), "visual corpus must cover every valid fixture");
+        let unique = fixture_ids.iter().filter_map(Value::as_str).collect::<BTreeSet<_>>();
+        assert_eq!(unique.len(), fixture_ids.len(), "visual fixture ids must be unique");
+
+        let shaper = CoreTextShaper;
+        let metrics = CoreTextMetrics;
+        let resolver = CoreTextResolver::new();
+        for fixture_id in fixture_ids {
+            let id = fixture_id.as_str().expect("visual fixture id");
+            let fixture = valid.iter().find(|fixture| fixture["id"] == id)
+                .unwrap_or_else(|| panic!("visual fixture {id} must exist in the syntax corpus"));
+            let diagram = parse_architecture(
+                fixture["source"].as_str().expect("architecture fixture source"),
+            ).unwrap_or_else(|error| panic!("architecture visual fixture {id} failed: {error}"));
+            let layout = layout_structural_diagram(&diagram);
+            let scene = diagram_to_paint_structural(&layout, &DiagramToPaintOptions {
+                background: layout_ir::Color { r: 255, g: 255, b: 255, a: 255 },
+                device_pixel_ratio: 2.0,
+                label_font: font_spec("Helvetica", 14.0),
+                title_font: font_spec("Helvetica", 18.0),
+                shaper: &shaper,
+                metrics: &metrics,
+                resolver: &resolver,
+            });
+            if id != "empty" {
+                assert!(!scene.instructions.is_empty(), "visual fixture {id} must lower to paint");
+            }
+            if id == "layout-config" {
+                assert_eq!(scene.metadata.as_ref().and_then(|metadata|
+                    metadata.get("architecture.numIter")), Some(&"5000".to_string()));
+            }
+            let pixels = render(&scene);
+            assert!(pixels.width > 0 && pixels.height > 0, "visual fixture {id} must render");
+        }
     }
 
     #[test]
