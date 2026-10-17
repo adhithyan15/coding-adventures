@@ -20,7 +20,7 @@
 // that were closed. The polarity finding is untouched and still red.
 // ---------------------------------------------------------------------------
 import { describe, expect, it } from "vitest";
-import { loadExamInventory, loadLessons } from "../src/loader.js";
+import { loadExamInventory, loadLessons, loadTrackChapters } from "../src/loader.js";
 import {
   EXAM_CONTENT_DIMENSIONS,
   measureExamCoverage,
@@ -82,6 +82,14 @@ const reconciledLaterAtoms = {
 describe("the committed Marwadi A1 inventory", () => {
   const inventory = loadExamInventory("marwadi", "A1");
   const spanish = loadExamInventory("spanish", "A1");
+
+  it("pins the direct-owner snapshot behind the reconciliation", () => {
+    const marwadiLessons = lessons.filter((lesson) => lesson.language === "marwadi");
+    const marwadiChapters = loadTrackChapters().find((track) => track.language === "marwadi");
+    expect(marwadiLessons).toHaveLength(897);
+    expect(marwadiChapters?.chapters).toHaveLength(150);
+    expect(trackIntroducedAtoms(lessons, "marwadi").size).toBe(831);
+  });
 
   it("keeps every point's probe key, and never an empty probe", () => {
     for (const point of inventory.points) {
@@ -157,7 +165,7 @@ describe("the committed Marwadi A1 inventory", () => {
 
   it("records the exam-levels caveat as STALE rather than deferring to it", () => {
     // The caveat says the mapping "does not claim that the current starter
-    // chapter reaches it". The track has 897 lessons across 151 chapters, an
+    // chapter reaches it". The track has 897 lessons across 150 chapters, an
     // assessment spec, task shapes, and 31 scored performance atoms.
     // A caveat that has been overtaken is recorded as overtaken — the same
     // treatment a sibling track's OVERSTATED caveat got, in the other direction.

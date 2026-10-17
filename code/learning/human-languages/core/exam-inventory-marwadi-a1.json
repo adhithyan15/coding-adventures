@@ -2,7 +2,7 @@
   "version": 1,
   "language": "marwadi",
   "level": "A1",
-  "about": "A PROJECT-DEFINED EDITORIAL EQUIVALENT, NOT AN EXTERNAL SYLLABUS. Marwadi may have no external syllabus at all: no complete external pre-A1-to-C2 ladder has been identified, and nothing here is attributable to DELE, the Instituto Cervantes or another awarding body. The Spanish A1 inventory lends only a language-neutral point structure; every Marwadi exponent is this project's editorial judgement. Coverage measures exact introduced atoms in 897 lessons across 151 chapters and is NO READINESS, ATTAINMENT, MOCK-EXAM OR HUMAN-VALIDATION CLAIM while every scope dimension remains partial. THE REGISTER COLUMN WAS MEASURED, NOT IMPORTED: 39 lessons use one of six non-neutral register values and all 897 declare central-marwari-devanagari. WHAT THIS TRACK DOES DIFFERENTLY is an expanding-interval retrieval schedule: introduction lessons feed cumulative first and second passes rather than a one-pass word list. NOT SEARCHED, BY INSTRUCTION: no new external Marwadi syllabus search was performed for this reconciliation; the project backlog records that sourcing question as settled.",
+  "about": "A PROJECT-DEFINED EDITORIAL EQUIVALENT, NOT AN EXTERNAL SYLLABUS. Marwadi may have no external syllabus at all: no complete external pre-A1-to-C2 ladder has been identified, and nothing here is attributable to DELE, the Instituto Cervantes or another awarding body. The Spanish A1 inventory lends only a language-neutral point structure; every Marwadi exponent is this project's editorial judgement. Coverage measures exact introduced atoms in 897 lessons across 150 chapters and is NO READINESS, ATTAINMENT, MOCK-EXAM OR HUMAN-VALIDATION CLAIM while every scope dimension remains partial. THE REGISTER COLUMN WAS MEASURED, NOT IMPORTED: 39 lessons use one of six non-neutral register values and all 897 declare central-marwari-devanagari. WHAT THIS TRACK DOES DIFFERENTLY is an expanding-interval retrieval schedule: introduction lessons feed cumulative first and second passes rather than a one-pass word list. NOT SEARCHED, BY INSTRUCTION: no new external Marwadi syllabus search was performed for this reconciliation; the project backlog records that sourcing question as settled.",
   "source": "PROJECT-DEFINED. LEVEL PROXY: core/exam-inventory-es-a1.json supplies the language-neutral A1 demand structure and attributes nothing about Marwadi to DELE or the Instituto Cervantes. EXAM ENVELOPE: ONE EXISTS AND IT IS PROJECT-DEFINED in marwadi/assessment-spec.md, assessment.json, task-shapes/ and track.json; it is a contract and not evidence. PROFICIENCY BACKBONE: core/exam-levels.json retains the no-external-ladder caveat. CORPUS EVIDENCE: every probe was checked against 897 direct lesson owners introducing 831 distinct atoms -- 630 LEX, 155 SCRIPT, 31 PERFORMANCE, 3 DIALOGUE, 3 SKILL, 2 QUESTION, 2 ANSWER and one each of COURTESY, FAREWELL, PHRASE, REGISTER and RESPONSE. All 897 lessons declare central-marwari-devanagari. NOT SEARCHED, BY INSTRUCTION: no external Marwadi content syllabus search was repeated for this evidence reconciliation.",
   "anchors": [
     {
@@ -20,7 +20,7 @@
     {
       "id": "MW-CORPUS",
       "kind": "project-owned",
-      "title": "code/learning/human-languages/marwadi/ -- 897 lessons across 151 chapters, curriculum.d and chapters.d",
+      "title": "code/learning/human-languages/marwadi/ -- 897 lessons across 150 chapters, curriculum.d and chapters.d",
       "note": "Our own work. It is what every probe resolves against and it is finite and auditable, but agreeing with it is not corroboration: the corpus cannot tell you what an exam would ask, only what this course happens to teach. Where a point's note says a word is missing, that absence was read out of this directory."
     },
     {
@@ -3462,7 +3462,7 @@
       ],
       "derivedFrom": [],
       "marwadiSpecific": true,
-      "note": "Recorded rather than deferred to. marwadi's caveat says the project-defined equivalent must test four skills with published task shapes, rubrics, pass thresholds and timed mocks, and that the mapping does not claim the current STARTER CHAPTER reaches it. The track now has 897 lessons across 151 chapters, ships assessment-spec.md, assessment.json and task-shapes/, and introduces 31 PERFORMANCE atoms. The starter-chapter description describes a track that no longer exists; the rest stands: no external Marwadi pre-A1-to-C2 ladder has been identified, and this partial inventory claims neither readiness nor attainment."
+      "note": "Recorded rather than deferred to. marwadi's caveat says the project-defined equivalent must test four skills with published task shapes, rubrics, pass thresholds and timed mocks, and that the mapping does not claim the current STARTER CHAPTER reaches it. The track now has 897 lessons across 150 chapters, ships assessment-spec.md, assessment.json and task-shapes/, and introduces 31 PERFORMANCE atoms. The starter-chapter description describes a track that no longer exists; the rest stands: no external Marwadi pre-A1-to-C2 ladder has been identified, and this partial inventory claims neither readiness nor attainment."
     },
     {
       "id": "MW-A1-SAU-01",

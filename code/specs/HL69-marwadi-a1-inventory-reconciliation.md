@@ -53,7 +53,7 @@ joint rather than repeat obsolete zero-occurrence claims.
 ## Measurement and boundaries
 
 The inventory prose and its owning test must use the current direct-owner
-snapshot: 897 lessons across 151 chapters, introducing 831 distinct atoms. The
+snapshot: 897 lessons across 150 chapters, introducing 831 distinct atoms. The
 test must pin every newly mapped point to its exact atom set and verify that:
 
 - the atoms exist in the current Marwadi lesson corpus;
