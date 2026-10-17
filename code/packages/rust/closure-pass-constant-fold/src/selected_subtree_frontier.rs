@@ -2151,9 +2151,48 @@ fn step_yieldexpression<'a>(
     Ok(())
 }
 
+/// Preserve exact singleton behavior for C37/C38 callers and their oracles.
 fn collect_with<'a, H, A>(
     prefix: [Option<&'a str>; 3],
     selected: &'a Expression,
+    work: usize,
+    bytes: usize,
+    hash: H,
+    allocate: A,
+) -> Result<Vec<&'a str>, String>
+where
+    H: FnMut(&str) -> u64,
+    A: FnMut(usize) -> Result<(), String>,
+{
+    collect_roots_with(prefix, &[selected], work, bytes, hash, allocate)
+}
+
+/// Each complete scan visits prefix/test, then absent-prefix consequent and
+/// alternate. One Budget and retained stack cover all trees before replay.
+fn scan_roots<'a>(
+    prefix: [Option<&'a str>; 3],
+    roots: &[&'a Expression],
+    stack: &mut Stack<'a>,
+    budget: &mut Budget,
+    allocate: &mut Allocate<'_>,
+    visit: &mut Visit<'a, '_>,
+) -> Result<(), String> {
+    for (index, root) in roots.iter().enumerate() {
+        scan(
+            if index == 0 { prefix } else { [None; 3] },
+            root,
+            stack,
+            budget,
+            allocate,
+            visit,
+        )?;
+    }
+    Ok(())
+}
+
+fn collect_roots_with<'a, H, A>(
+    prefix: [Option<&'a str>; 3],
+    roots: &[&'a Expression],
     work: usize,
     bytes: usize,
     mut hash: H,
@@ -2166,9 +2205,9 @@ where
     let mut budget = Budget { work, bytes };
     let mut stack = Stack::new();
     let mut count = 0usize;
-    scan(
+    scan_roots(
         prefix,
-        selected,
+        roots,
         &mut stack,
         &mut budget,
         &mut allocate,
@@ -2219,9 +2258,9 @@ where
     }
     table.resize(buckets, None);
     let mask = buckets - 1;
-    scan(
+    scan_roots(
         prefix,
-        selected,
+        roots,
         &mut stack,
         &mut budget,
         &mut allocate,
@@ -2269,3 +2308,27 @@ pub(super) fn collect<'a>(
 #[cfg(test)]
 #[path = "selected_subtree_frontier_tests.rs"]
 mod tests;
+
+/// Both equivalent arms and the evaluated test supply rewrite evidence, even
+/// though only one branch executes. No synthetic AST or independent budgets.
+pub(super) fn collect_equal_conditional<'a>(
+    conditional: Option<&'a str>,
+    test: &'a Expression,
+    consequent: &'a Expression,
+    alternate: &'a Expression,
+) -> Result<Vec<&'a str>, String> {
+    let limits = GraphLimits::default();
+    let random = RandomState::new();
+    collect_roots_with(
+        [conditional, None, None],
+        &[test, consequent, alternate],
+        limits.max_work,
+        limits.max_input_bytes,
+        |id| random.hash_one(id),
+        |_| Ok(()),
+    )
+}
+
+#[cfg(test)]
+#[path = "equal_conditional_frontier_tests.rs"]
+mod equal_conditional_tests;

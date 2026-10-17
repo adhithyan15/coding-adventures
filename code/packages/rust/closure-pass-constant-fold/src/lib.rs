@@ -4955,6 +4955,23 @@ fn fork_selected_subtree_cvs(
     }
 }
 
+/// Join three equal-conditional evidence trees under one collector budget.
+/// The test and discarded alternate are evidence, not extra runtime evaluations.
+#[inline(never)]
+fn fork_equal_conditional_cvs(
+    conditional: Option<&str>, test: &Expression,
+    consequent: &Expression, alternate: &Expression,
+    after: &str, st: &mut FoldState,
+) -> Option<String> {
+    if st.cv_error.is_some() { return None; }
+    match selected_subtree_frontier::collect_equal_conditional(
+        conditional, test, consequent, alternate,
+    ) {
+        Ok(unique) => st.fork_unique_operand_cvs(&unique, "t ? X : X", after),
+        Err(error) => { st.cv_error = Some(error); None }
+    }
+}
+
 // ---------------------------------------------------------------------
 // Binary
 // ---------------------------------------------------------------------
@@ -6476,33 +6493,23 @@ fn fold_conditional(c: &ConditionalExpression, st: &mut FoldState) -> Expression
     // emitter parenthesises a sequence in argument / sub-expression position, so
     // `w(f()?x:x)` prints `w((f(),x))`, matching the reference compiler.
     //
-    // Primitive fold identities describe history, not JavaScript behavior.
-    // Comparing them would make tracing alone disable equal-branch collapse.
-    // Broader composite equality still uses the existing structural comparison.
+    // Native identities describe history, not JavaScript behavior. The
+    // existing borrowed equality ignores CVs throughout both composite arms.
     if equal_fold_branches(&consequent, &alternate) {
-        let parent = c.cv.clone();
-        if is_side_effect_free(&test) {
-            // Pure test: the branch on `t` is dead AND `t` has no effect, so the
-            // whole conditional is just `X` (`a?b:b`→`b`, `a?1:1`→`1`).
-            let new_cv = st.fork_operand_cvs(
-                &[parent.as_deref(), primitive_cv(&test),
-                    primitive_cv(&consequent), primitive_cv(&alternate)],
-                "t ? X : X",
-                "X",
-            );
+        let pure = is_side_effect_free(&test);
+        let new_cv = fork_equal_conditional_cvs(
+            c.cv.as_deref(), &test, &consequent, &alternate,
+            if pure { "X" } else { "(t,X)" }, st,
+        );
+        if pure {
+            // Return the existing value, owning the rewrite only at its root.
             let mut chosen = consequent;
-            if let Some(identity) = primitive_cv_mut(&mut chosen) {
-                *identity = new_cv;
+            if st.cv_error.is_none() {
+                *selected_root_identity::slot(&mut chosen) = new_cv;
             }
             return chosen;
         }
-        // Impure test: keep `t`'s effect via the comma sequence `(t, X)`.
-        let new_cv = st.fork_operand_cvs(
-            &[parent.as_deref(), primitive_cv(&test),
-                primitive_cv(&consequent), primitive_cv(&alternate)],
-            "t ? X : X",
-            "(t,X)",
-        );
+        // Retain the test effect before the one emitted branch evaluation.
         return Expression::SequenceExpression(SequenceExpression {
             cv: new_cv,
             expressions: vec![test, consequent],
@@ -6855,21 +6862,6 @@ fn primitive_cv(expr: &Expression) -> Option<&str> {
 /// Signed zero remains distinct; this borrowed traversal never clones trees.
 fn equal_fold_branches(left: &Expression, right: &Expression) -> bool {
     left.eq_ignoring_cv(right)
-}
-
-/// Stamp only the primitive roots covered by this slice. Composite identities
-/// and their output mappings require the remaining CCR-065 foundation work.
-fn primitive_cv_mut(expr: &mut Expression) -> Option<&mut Option<String>> {
-    match expr {
-        Expression::Identifier(n) => Some(&mut n.cv),
-        Expression::NumericLiteral(n) => Some(&mut n.cv),
-        Expression::StringLiteral(n) => Some(&mut n.cv),
-        Expression::BooleanLiteral(n) => Some(&mut n.cv),
-        Expression::NullLiteral(n) => Some(&mut n.cv),
-        Expression::BigIntLiteral(n) => Some(&mut n.cv),
-        Expression::UndefinedLiteral(n) => Some(&mut n.cv),
-        _ => None,
-    }
 }
 
 fn stamp_literal_cv(v: FoldedLiteral, cv: Option<String>) -> Expression {
