@@ -190,7 +190,7 @@ fn c38_existing_truthiness_and_labels_include_nan_infinities_and_signed_zero() {
         (num(f64::INFINITY, None), true, "Infinity"),
         (num(f64::NEG_INFINITY, None), true, "-Infinity"),
         (string("", None), false, "\"\""),
-        (string("ðŸ˜€", None), true, "\"ðŸ˜€\""),
+        (string("😀", None), true, "\"😀\""),
         (
             Expression::NullLiteral(NullLiteral { cv: None }),
             false,
