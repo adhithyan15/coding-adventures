@@ -770,15 +770,16 @@ fixture plus grammar boundary cases, and the matching visual corpus lowers every
 accepted fixture through hierarchy layout, PaintScene instructions, Metal, and
 PNG. Treemap is therefore full at the pinned native compatibility level.
 
-### Venn Native Slice
+### Venn Native Compatibility
 
-The initial Mermaid 11.16.1 Venn slice parses declared sets, validated
+The Mermaid 11.16.1 Venn implementation parses declared sets, validated
 multi-set unions, labels, numeric sizes, attached text nodes, titles, and the
 documented fill, stroke, opacity, and text styling directives into dedicated
 set IR. Deterministic circle geometry lowers through backend-neutral ellipses
-and glyph runs, with native Metal-to-PNG validation. Exact area-proportional
-overlap optimization, theme-exact styling, and interactive behavior remain
-unsupported at the partial level. Positive `width` and `height`, non-negative
+and glyph runs, with native Metal-to-PNG validation. Exact browser-side
+area-proportional overlap optimization, theme-exact SVG styling, and interactive
+behavior remain outside the backend-neutral native contract. Positive `width`
+and `height`, non-negative
 `padding`, `useMaxWidth`, and `useDebugLayout` settings from init directives or
 YAML front matter survive typed semantic IR. Canvas dimensions and padding
 control deterministic circle geometry, while every resolved setting remains
@@ -792,7 +793,9 @@ precedence, and invalid theme colors fall back independently to the native palet
 When `useDebugLayout` is enabled, layout applies Mermaid 11.16.1's text-area
 radius and grid-cell equations to the native deterministic centers and records
 explicit debug IR. Paint lowering emits portable dashed purple circles and teal
-cells without backend-specific logic.
+cells without backend-specific logic. Attached text always uses those resolved
+grid-cell centers, preventing every note in a set or intersection from collapsing
+onto one centroid even when debug geometry is hidden.
 Unstyled set circles now follow Mermaid's palette-derived stroke, ten-percent
 fill opacity, and width-scaled five-unit stroke defaults. Authored fill opacity,
 stroke color, and stroke width continue to take precedence during Paint lowering.
@@ -805,6 +808,15 @@ non-negative, while fill opacity is constrained to the CSS range from zero to on
 Venn title, set/intersection, and attached-text typography now uses Mermaid's
 width-relative 32, 48, and 40 reference-unit scales. Resolved label sizes live in
 layout IR and reach glyph runs without backend-specific typography decisions.
+The complete pinned syntax corpus covers every upstream parser fixture and every
+active upstream rendering fixture, including partial three-way intersections,
+quoted identifiers, attached text, styles, and asymmetric sizes. The matching
+visual corpus lowers every accepted fixture through set IR, deterministic layout,
+PaintScene instructions, Metal, and PNG. Externally supplied browser themes and
+the rough.js `handDrawn` presentation do not change the pinned Venn source grammar
+and remain presentation concerns; the native pipeline renders those source bodies
+with its deterministic portable geometry. Venn is therefore full at the pinned
+native compatibility level.
 
 ### Ishikawa Native Slice
 
