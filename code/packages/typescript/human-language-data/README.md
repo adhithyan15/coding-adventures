@@ -268,6 +268,17 @@ and topologically earlier; and every non-shared support lesson in the path must
 belong to exactly one typed extension. Repeated visits to the same shared node
 remain legal through distinct ordered path segments.
 
+## Completion-plan assessment readiness
+
+The completion plan keeps a missing seven-rung `assessment.json` visible as
+debt, but does not put it in the actionable head while its task shapes or timed
+mock source papers, answer keys, and rubrics are absent. Its `blocked` output
+names those prerequisites per track and level; the projection still counts the
+contract. This is a conservative planning screen, not permission to publish a
+contract: the assessment-contract and artifact gates remain authoritative, and
+new contracts must never name missing evidence. See
+[`HL15`](../../../specs/HL15-the-completion-plan.md).
+
 ## Scope note
 
 Script/character-breakdown data (`data/scripts/*.json`, the "learn to write, piece
