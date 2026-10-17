@@ -83,6 +83,7 @@ function plan(input: Partial<CompletionPlanInput> & Pick<CompletionPlanInput, "l
     // "assessment is not the variable under test", not that the real corpus has
     // paid this debt.
     assessmentContracts: input.levelGate.tracks.map((track) => track.language),
+    assessmentPrerequisites: [],
     taskShapes,
     ...input,
   });
@@ -93,6 +94,7 @@ describe("completion plan", () => {
     const built = plan({
       levelGate: gate([{ language: "alpha", inProgressAt: "pre-A1", blockers: vocabularyBlocker(250) }]),
       assessmentContracts: [],
+      assessmentPrerequisites: [{ language: "alpha", missing: [] }],
     });
     expect(built.head[0]).toMatchObject({
       id: "assessment-contract/alpha",
@@ -120,6 +122,15 @@ describe("completion plan", () => {
     })]);
     expect(built.projection.find((entry) => entry.kind === "assessment-contract")?.items).toBe(1);
     expect(built.summary.itemsOutstanding).toBeGreaterThan(built.summary.itemsInHead);
+  });
+
+  it("fails closed when a caller omits a track's prerequisite measurement", () => {
+    const built = plan({
+      levelGate: gate([{ language: "italian", inProgressAt: "pre-A1" }]),
+      assessmentContracts: [],
+    });
+    expect(built.head.some((item) => item.id === "assessment-contract/italian")).toBe(false);
+    expect(built.blocked[0]?.blockedBy).toContain("assessment artifact prerequisites not measured");
   });
 
   it("suppresses the assessment item only for a validated contracted track", () => {

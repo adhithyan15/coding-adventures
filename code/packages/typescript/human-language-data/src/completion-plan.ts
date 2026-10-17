@@ -220,7 +220,7 @@ export interface CompletionPlanInput {
   /** Tracks with a validated `<track>/assessment.json` covering the whole ladder. */
   assessmentContracts?: readonly string[];
   /** Measured blockers for publishing a missing contract, keyed by track. */
-  assessmentPrerequisites?: ReadonlyArray<{ language: string; missing: readonly string[] }>;
+  assessmentPrerequisites: ReadonlyArray<{ language: string; missing: readonly string[] }>;
   /** Declared external exams that intentionally have no CEFR equivalence. */
   externalCapstones?: ReadonlyArray<{
     language: string;
@@ -315,7 +315,7 @@ export function buildCompletionPlan(input: CompletionPlanInput): CompletionPlan 
   const closureByLanguage = new Map(input.scriptClosure.tracks.map((track) => [track.language, track]));
   const contracted = new Set(input.assessmentContracts ?? []);
   const assessmentPrerequisites = new Map(
-    (input.assessmentPrerequisites ?? []).map((entry) => [entry.language, entry.missing]),
+    input.assessmentPrerequisites.map((entry) => [entry.language, entry.missing]),
   );
 
   // Items are collected PER TRACK and interleaved at the end, never pooled and
@@ -371,7 +371,9 @@ export function buildCompletionPlan(input: CompletionPlanInput): CompletionPlan 
     // exists, a track cannot honestly claim that finishing its book prepares the
     // reader to pass, however complete its vocabulary and grammar may look.
     if (!contracted.has(track.language)) {
-      const blockedBy = assessmentPrerequisites.get(track.language);
+      // Missing measurement is unknown readiness, never proof of readiness.
+      const blockedBy = assessmentPrerequisites.get(track.language)
+        ?? ["assessment artifact prerequisites not measured"];
       mine.push({
         id: `assessment-contract/${track.language}`,
         kind: "assessment-contract",

@@ -52,6 +52,18 @@ describe("assessment contract prerequisites", () => {
     expect(measureAssessmentPrerequisites(path, ["italian"], shapes, 2)[0]?.missing).toEqual([]);
   });
 
+  it("does not mistake directories named like source files for mock evidence", () => {
+    const path = root();
+    const mockDir = join(path, "italian", "mocks", "a1");
+    mkdirSync(join(mockDir, "rubric.md"), { recursive: true });
+    mkdirSync(join(mockDir, "mock-1-paper.md"));
+    mkdirSync(join(mockDir, "mock-1-answer-key.md"));
+    const missing = measureAssessmentPrerequisites(path, ["italian"], [], 1)[0]?.missing ?? [];
+    expect(missing).toContain("mocks/a1/mock-1.md or mock-1-paper.md");
+    expect(missing).toContain("mocks/a1/mock-1-answer-key.md");
+    expect(missing).toContain("mocks/a1/rubric.md or mock-1-rubric.md");
+  });
+
   it("rejects an unsafe track id before probing outside the root", () => {
     const path = root();
     expect(() => measureAssessmentPrerequisites(path, ["../other"], [], 2)).toThrow("unsafe track id");

@@ -6,5 +6,7 @@
 - Name concrete per-level prerequisites in the blocked output and preserve the
   projected total; the final assessment-contract and artifact gates remain
   authoritative.
+- Fail closed for unmeasured tracks and reject directories masquerading as
+  paper, key, or rubric files.
 - Cover both synthetic complete/incomplete sources and the real Italian corpus
   with focused planner tests.
