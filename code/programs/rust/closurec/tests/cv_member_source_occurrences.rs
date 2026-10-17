@@ -695,3 +695,137 @@ fn c38_literal_conditional_joins_test_and_chosen_descendants_in_own_pass_context
         }
     }
 }
+
+#[test]
+fn c39_equal_conditional_joins_both_physical_arms_and_own_pass_context() {
+    for level in ["SIMPLE", "ADVANCED"] {
+        for (source, impure, test_name, after) in [
+            (
+                "report(gate?observe(1+2):observe(1+2));",
+                false,
+                "gate",
+                "X",
+            ),
+            (
+                "report(check(1+0)?observe(1+2):observe(1+2));",
+                true,
+                "check",
+                "(t,X)",
+            ),
+        ] {
+            let (j, _, _) = compile(&[source], level);
+            let entries = j["entries"].as_object().unwrap();
+            let events = j["journal"]["events"].as_array().unwrap();
+            let event = |kind: &str, id: &str| {
+                let rows: Vec<_> = events
+                    .iter()
+                    .filter(|e| e["event"]["kind"] == kind && e["event"]["entity"] == id)
+                    .collect();
+                assert_eq!(rows.len(), 1);
+                rows[0]
+            };
+            let token = |start: usize, name: &str| {
+                let rows: Vec<_> = entries
+                    .iter()
+                    .filter(|(_, e)| {
+                        let physical = &e["origin"]["meta"][SOURCE];
+                        physical["kind"] == "token"
+                            && physical["start"] == position(source, start)
+                            && physical["end"] == position(source, start + name.len())
+                    })
+                    .collect();
+                assert_eq!(rows.len(), 1);
+                rows[0].0.clone()
+            };
+            let rewritten = |before: &str, after: &str| {
+                let mut ids: Vec<_> = entries
+                    .iter()
+                    .filter(|(id, e)| {
+                        e["contributions"].as_array().unwrap().iter().any(|c| {
+                            c["source"] == "constant-fold"
+                                && c["tag"] == "folded"
+                                && c["meta"]["before"] == before
+                                && c["meta"]["after"] == after
+                                && c["meta"]["new_cv"] == id.as_str()
+                        })
+                    })
+                    .map(|(id, _)| id.clone())
+                    .collect();
+                ids.sort_by_key(|id| clock(&event("derive", id)["sequence"]));
+                ids
+            };
+            let own = rewritten("t ? X : X", after);
+            assert_eq!(own.len(), 1);
+            let root = &own[0];
+            let children = rewritten("(1) + (2)", "3");
+            assert_eq!(children.len(), 2);
+            assert_ne!(children[0], children[1]);
+            let occurrences: Vec<_> = source
+                .match_indices("observe")
+                .map(|(index, _)| index)
+                .collect();
+            assert_eq!(occurrences.len(), 2);
+            let left = token(occurrences[0], "observe");
+            let right = token(occurrences[1], "observe");
+            assert_ne!(left, right);
+            let mut expected = vec![token(source.find(test_name).unwrap(), test_name)];
+            let test_child = if impure {
+                let ids = rewritten("(1) + (0)", "1");
+                assert_eq!(ids.len(), 1);
+                expected.push(ids[0].clone());
+                Some(ids[0].clone())
+            } else {
+                None
+            };
+            expected.extend([left, children[0].clone(), right, children[1].clone()]);
+            let parents = entries[root]["parent_ids"].as_array().unwrap();
+            assert_eq!(parents.len(), 1);
+            let merge_id = parents[0].as_str().unwrap();
+            // The bridge does not invent original conditional/call root IDs.
+            assert_eq!(entries[merge_id]["parent_ids"], json!(expected));
+            let reachable = ancestry(&j, root);
+            for id in &children {
+                assert!(reachable.contains(id));
+            }
+            let merge = event("merge", merge_id);
+            let derive = event("derive", root);
+            let contribution = event("contribution", root);
+            assert_eq!(merge["context"], derive["context"]);
+            assert_eq!(merge["context"], contribution["context"]);
+            assert!(clock(&merge["sequence"]) < clock(&derive["sequence"]));
+            assert!(clock(&derive["sequence"]) < clock(&contribution["sequence"]));
+            let first = event("contribution", &children[0]);
+            let second = event("contribution", &children[1]);
+            assert_eq!(first["context"], merge["context"]);
+            assert_eq!(second["context"], merge["context"]);
+            assert!(clock(&first["sequence"]) < clock(&second["sequence"]));
+            assert!(clock(&second["sequence"]) < clock(&merge["sequence"]));
+            if let Some(id) = test_child {
+                let earlier = event("contribution", &id);
+                assert_eq!(earlier["context"], merge["context"]);
+                assert!(clock(&earlier["sequence"]) < clock(&first["sequence"]));
+            }
+            let pass = events
+                .iter()
+                .find(|e| e["sequence"] == merge["context"])
+                .unwrap();
+            assert_eq!(pass["event"]["scope"]["kind"], "pass");
+            assert_eq!(clock(&pass["event"]["scope"]["sweep"]), 0);
+            let schedule = events
+                .iter()
+                .find(|e| e["event"]["kind"] == "schedule" && e["context"] == pass["context"])
+                .unwrap();
+            let slot = clock(&pass["event"]["scope"]["slot"]) as usize;
+            assert_eq!(schedule["event"]["passes"][slot]["name"], "constant-fold");
+            let end = events
+                .iter()
+                .find(|e| {
+                    e["event"]["kind"] == "context_end" && e["event"]["begin"] == pass["sequence"]
+                })
+                .unwrap();
+            assert_eq!(end["event"]["outcome"]["kind"], "accepted");
+            assert_eq!(end["event"]["outcome"]["changed"], true);
+            assert!(clock(&contribution["sequence"]) < clock(&end["sequence"]));
+        }
+    }
+}

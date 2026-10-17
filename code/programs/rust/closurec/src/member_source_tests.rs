@@ -608,7 +608,63 @@ fn c38_unchosen_child_refusals_preserve_all_publication_destinations() {
     }
 }
 
+#[test]
+fn c39_equal_conditional_outer_refusals_preserve_all_publication_destinations() {
+    for (family, source, after) in [
+        ("c39-pure", "report(gate?observe(1+2):observe(1+2));", "X"),
+        (
+            "c39-impure",
+            "report(check()?observe(1+2):observe(1+2));",
+            "(t,X)",
+        ),
+    ] {
+        selected_merge_and_derive_refusals(family, source, "t ? X : X", after);
+    }
+}
+
+#[test]
+fn c39_equal_conditional_child_origins_preserve_all_publication_destinations() {
+    for (family, source) in [
+        (
+            "c39-pure-children",
+            "report(guard[1+0]?observe(1+2):observe(1+2));",
+        ),
+        (
+            "c39-impure-children",
+            "report(check(1+0)?observe(1+2):observe(1+2));",
+        ),
+    ] {
+        // Target the actual test/consequent/alternate child's own operation,
+        // including both otherwise identical branch arithmetic occurrences.
+        for (origin, before, after, index, matches) in [
+            ("test", "(1) + (0)", "1", 0, 1),
+            ("consequent", "(1) + (2)", "3", 0, 2),
+            ("alternate", "(1) + (2)", "3", 1, 2),
+        ] {
+            selected_merge_and_derive_refusals_at(
+                &format!("{family}-{origin}"),
+                source,
+                before,
+                after,
+                index,
+                matches,
+            );
+        }
+    }
+}
+
 fn selected_merge_and_derive_refusals(family: &str, source: &str, before: &str, after: &str) {
+    selected_merge_and_derive_refusals_at(family, source, before, after, 0, 1);
+}
+
+fn selected_merge_and_derive_refusals_at(
+    family: &str,
+    source: &str,
+    before: &str,
+    after: &str,
+    selected_index: usize,
+    expected_matches: usize,
+) {
     use crate::config::{CompilationLevel, CompilerConfig, CorrelationVectorFormat};
     let dir = std::env::temp_dir().join(format!("closurec-{family}-pub-{}", std::process::id()));
     std::fs::create_dir(&dir).unwrap();
@@ -629,7 +685,7 @@ fn selected_merge_and_derive_refusals(family: &str, source: &str, before: &str, 
         let j: serde_json::Value =
             serde_json::from_slice(&std::fs::read(&paths[3]).unwrap()).unwrap();
         let entries = j["entries"].as_object().unwrap();
-        let selected: Vec<_> = entries
+        let mut selected: Vec<_> = entries
             .iter()
             .filter(|(id, e)| {
                 e["contributions"].as_array().unwrap().iter().any(|v| {
@@ -641,9 +697,25 @@ fn selected_merge_and_derive_refusals(family: &str, source: &str, before: &str, 
                 })
             })
             .collect();
-        assert_eq!(selected.len(), 1);
-        let merge_id = selected[0].1["parent_ids"][0].as_str().unwrap();
+        assert_eq!(selected.len(), expected_matches);
         let events = j["journal"]["events"].as_array().unwrap();
+        // HashMap order cannot identify the two equal branch occurrences.
+        // Their distinct actual derive events give source evaluation order.
+        selected.sort_by_key(|(id, _)| {
+            let positions: Vec<_> = events
+                .iter()
+                .enumerate()
+                .filter(|(_, e)| {
+                    e["event"]["kind"] == "derive" && e["event"]["entity"] == id.as_str()
+                })
+                .map(|(index, _)| index)
+                .collect();
+            assert_eq!(positions.len(), 1);
+            positions[0]
+        });
+        let merge_id = selected[selected_index].1["parent_ids"][0]
+            .as_str()
+            .unwrap();
         let index = events
             .iter()
             .position(|e| e["event"]["kind"] == "merge" && e["event"]["entity"] == merge_id)

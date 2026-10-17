@@ -3166,3 +3166,10 @@ receipts untouched/unpolled. Full transformation/output/parity objective OPEN.
 - CLOC39 pre-code review clarification: test prefix is conditional/None/None;
   consequent and alternate prefixes are all None in both count and replay.
   Original conditional is not repeated per tree; budgets meter actual slots.
+
+- CLOC39 tests-first811 native producer94277: helper0/actualCargo101/buildtrue,
+  1P4F451filtered; exact initial regression accepted independently (bf975/23a893),
+  not implementation acceptance or all144/32 loop coverage. Twelve checked
+  child-origin contexts completed; other four functions failed early.
+  Unwired independent resource and CLI lineage/publication tests follow before
+  implementation. No Miri activity; DEFERRED/PENDING and delivery OPEN.
