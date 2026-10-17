@@ -446,19 +446,32 @@ fn c38_unchosen_child_checked_refusals_latch_before_outer_selection() {
             let limits = if missing_parent {
                 GraphLimits::default()
             } else {
-                GraphLimits { max_nodes: 5, ..Default::default() }
+                GraphLimits {
+                    max_nodes: 5,
+                    ..Default::default()
+                }
             };
             let mut cv = CVLog::new_checked_chronology(limits).unwrap();
             let ids: Vec<_> = (0..5).map(|_| cv.try_create(None).unwrap()).collect();
-            let right = if missing_parent { "missing-parent" } else { &ids[4] };
+            let right = if missing_parent {
+                "missing-parent"
+            } else {
+                &ids[4]
+            };
             let entries_before = serde_json::to_value(cv.entries()).unwrap();
             let journal_before = serde_json::to_value(cv.journal().unwrap().events()).unwrap();
             let expected = cv.try_merge(&[ids[3].as_str(), right], None).unwrap_err();
             assert_eq!(serde_json::to_value(cv.entries()).unwrap(), entries_before);
-            assert_eq!(serde_json::to_value(cv.journal().unwrap().events()).unwrap(), journal_before);
+            assert_eq!(
+                serde_json::to_value(cv.journal().unwrap().events()).unwrap(),
+                journal_before
+            );
             let input = choose(
                 boolean(truthy, Some(&ids[1])),
-                Expression::Identifier(Identifier { cv: Some(ids[2].clone()), name: "chosen".into() }),
+                Expression::Identifier(Identifier {
+                    cv: Some(ids[2].clone()),
+                    name: "chosen".into(),
+                }),
                 Expression::BinaryExpression(BinaryExpression {
                     cv: None,
                     operator: BinaryOperator::Add,
@@ -468,17 +481,26 @@ fn c38_unchosen_child_checked_refusals_latch_before_outer_selection() {
                 truthy,
                 Some(&ids[0]),
             );
-            let error = ConstantFoldPass::new().run(PassContext {
-                program: &input, sidecar: &Sidecar::new(), cv: &mut cv,
-            }).unwrap_err();
+            let error = ConstantFoldPass::new()
+                .run(PassContext {
+                    program: &input,
+                    sidecar: &Sidecar::new(),
+                    cv: &mut cv,
+                })
+                .unwrap_err();
             assert_eq!(error.pass_name, "constant-fold");
             assert_eq!(error.message, format!("CV fold merge failed: {expected}"));
             // Neither the refused child nor the later outer selection may add
             // identities, journal events, or contributions after the latch.
             assert_eq!(serde_json::to_value(cv.entries()).unwrap(), entries_before);
-            assert_eq!(serde_json::to_value(cv.journal().unwrap().events()).unwrap(), journal_before);
+            assert_eq!(
+                serde_json::to_value(cv.journal().unwrap().events()).unwrap(),
+                journal_before
+            );
             if missing_parent {
-                let outer = cv.try_merge(&[ids[0].as_str(), ids[1].as_str(), ids[2].as_str()], None).unwrap();
+                let outer = cv
+                    .try_merge(&[ids[0].as_str(), ids[1].as_str(), ids[2].as_str()], None)
+                    .unwrap();
                 cv.try_derive(&outer, None).unwrap();
             }
         }
