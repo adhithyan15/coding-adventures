@@ -765,6 +765,17 @@ impl CompositeOccurrenceObserver for Observer<'_> {
             w.text(&t.value)?;
             is_optional = t.value == "?.";
             is_dot = t.type_ == TokenType::Dot && t.value == ".";
+            if is_optional {
+                // Standard grammar punctuation uses the generic Name fallback
+                // plus its precise token name. Buy the scan before comparing.
+                w.take(1)?;
+                if let Some(name) = &t.type_name {
+                    w.text(name)?;
+                }
+                if t.type_ != TokenType::Name || t.type_name.as_deref() != Some("OPTIONAL_CHAIN") {
+                    return Err("member source optional marker kind/name".into());
+                }
+            }
         }
         if is_optional != optional || (!computed && !optional && !is_dot) {
             return Err("member source optional/dot suffix disagreement".into());
