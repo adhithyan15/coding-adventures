@@ -3100,3 +3100,20 @@ receipts untouched/unpolled. Full transformation/output/parity objective OPEN.
   dynamically discovered published head `6132a518b3990619eb904397ee0b21a69ce8ac20`,
   CONFLICTING/0 checks/autoOFF. Main reconciliation/delivery/full lineage/parity
   remain OPEN. Miri DEFERRED/PENDING; frozen run untouched, final-source later.
+
+### 2026-10-17: CLOC37 selected-subtree frontier locally validated
+
+- Actual selected roots now join exact member/array/actual-key then complete
+  selected native subtree preorder, including newer opaque child rewrites.
+  Exhaustive86 types/11 list frames; two scans share work and all live requested
+  buffers/old-new growth share storage. Child CVs/payload/guards preserved.
+- Execution `3be4a9c9e58c37a6e5fc6681eaa003063bbc68fe`:2924P/0F/2historicalI/195exe+3emptydocs,
+  bothstrict0; source/combined independent reviews PASS. Populated161 cases,
+  actual selected call/function body, exact budgets/deep/wide/CLI clocks and
+  prior all-output refusal controls pass. Separate59/354/54 runtime acceptance
+  retains focused LANG/CLR/native-LLVM limits; no full parity inference.
+- Next literal conditional selected-root repair needs a separate contract;
+  equal-branch/other transformations/output joins/full parity remain OPEN.
+  Main `9f67440bb9a3271455e19f27a6e5743bbf6e051c` reconciliation and sole PR#17288
+  CONFLICTING/hosted CI/delivery OPEN. Miri DEFERRED/PENDING, frozen run
+  untouched; genuine final-source acceptance follows implementation delivery.

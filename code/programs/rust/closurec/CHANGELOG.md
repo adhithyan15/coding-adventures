@@ -4,6 +4,19 @@ All notable changes to the `coding-adventures-closurec` binary will be documente
 
 ## [Unreleased]
 
+### CLOC37 selected-subtree lineage
+
+Present in-bounds array selection joins member/array/actual-key identities and
+the complete selected native subtree in deterministic preorder. Its returned
+root reaches retained child rewrites, including opaque calls and function
+bodies. A bounded borrowed count/replay walk charges cumulative work and all
+simultaneously live requested buffers before checked graph mutation. Source
+intervals, child CVs, payload and selection guards are preserved; see CLOC37
+for exact local suite/runtime/security evidence and limits. Conditional/other
+transformations, output-byte/source mappings, parity and delivery remain OPEN.
+Miri DEFERRED/PENDING; genuine final-source acceptance follows delivery.
+
+
 ### CLOC36 selected array replacement roots
 
 In-bounds array selection stamps the actual returned root with its own checked

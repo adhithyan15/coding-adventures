@@ -1,6 +1,6 @@
 # CLOC37: bounded selected-subtree identity frontier
 
-Status: contract only; implementation, executable acceptance and delivery OPEN.
+Status: selected-subtree slice locally validated; delivery and full completion OPEN.
 
 CLOC36 stamps the actual root returned by a present in-bounds array selection.
 Its four immediate operands do not establish ancestry to rewrites inside an
@@ -141,3 +141,61 @@ inlining, output-byte/source joins and evidence-backed Closure parity remain
 OPEN. Miri remains DEFERRED/PENDING; preserve its frozen checkout/run/inputs/
 target/receipts untouched and obtain genuine final-source acceptance after
 implementation delivery. Full objective OPEN; heartbeat ACTIVE.
+
+## 2026-10-17: selected-subtree frontier locally validated
+
+Actual full/runtime execution head `3be4a9c9e58c37a6e5fc6681eaa003063bbc68fe` extends CLOC36 root ownership to the
+complete selected-subtree identity frontier. Member/array/actual-key operands
+precede native field-declaration preorder; nonempty composite roots do not hide
+newer rewritten descendants. First-seen deduplication preserves exact order.
+Numeric-string keys retain their actual original folded identity. Only the
+returned root is stamped; nested CVs, raw payload and semantic guards remain.
+
+The borrowed iterative collector has86 reachable native types and11 resumable
+list-frame kinds,72 full struct decisions and14 exhaustive enum decisions.
+Its count/replay scans share one work budget; frame storage, ordered references,
+hash buckets and old/new migration peaks share one requested-storage cap.
+Missing IDs, holes, terminal advances, ID bytes, hashing and collided equality
+are charged; fallible allocations and checked arithmetic precede mutation.
+This bounds collector work/requested storage, not the recursive folder/clone,
+system allocator or caller-owned AST. Default production limits are unchanged.
+
+Contract3684 received independent PASS before code. Tests-first23cb compiled
+0P2F expected semantic red; the first failure was the first numeric/root-None
+call cell and the second BinaryExpression census cell. No all-case positive
+claim follows from red. Tests-onlyc34/501 pinned independent leaf33/absent11
+work formulas and the new descendant oracle before implementation817.
+Later tests-only897/3be strengthen all-field, deep/wide and CLI evidence.
+
+Actual full suites:282 parser +470 folder +1166 CLI +1006 native =2924P/0F,
+two unchanged historical ignores,195 executables and three empty doctests;
+both all-target strict checks complete0. Controls include161 populated native
+field/variant cases across86 types;70 actual selected expression cases;
+selected call and function/default/body rewrite ancestry; independent161-work
+collision boundary, exact/one-less work/storage, old/new frame peak, combined
+overflow, injected allocation failures,4096 depth/100000 width on144KiB stack
+with iterative fixture disposal. SIMPLE/ADVANCED numeric/string CLI cells have
+exact ordered semantic parents, child-before-outer and own merge/derive/event
+clocks and traced/plain emitted-byte equality. Existing24 all-output sentinel
+graph-refusal cells and physical source-interval controls remain passing.
+Core receipt `99f99b16e35b9fb34ea65f870a1a3e462272d515da9c5bdd9ee6126f27cb5926`; source `d093e6b7be18c998f78d4bc13ad1753bf5d2ce00a1f859ee50c1f13eefd919ca`;
+combined terminal `5d6ccdd1fa9e63c248ffb2cd5a8eb3dfba2259df823e588a4da113b0d20405b1`. Complete source/lock/log/manifest/artifact
+and physical executable joins are bound; focused filtered harnesses add no
+unique suite coverage and do not inflate these totals.
+
+Separate same-head runtime `548691bd0c819b4307118841715badd4a1016d56e98be26c77c5e8e811ef31d5`:59 declared sources/354 ordered
+six-backend observations/54 VM-JIT Float-bit captures; integration4P/observer1P/
+refusal1P/strict0. LANG526 filtered, CLR absent/uncounted and native/LLVM
+typed-main ABI OPEN; no full LANG, raw-stdout-byte or general precision theorem.
+
+Audit 2026-10-17T21:55:12.594889+00:00: main `9f67440bb9a3271455e19f27a6e5743bbf6e051c`; sole Closure/shared
+PR#17288 published `6132a518b3990619eb904397ee0b21a69ce8ac20`, CONFLICTING/
+0 checks/autoOFF. No push/merge/hosted acceptance.
+Next literal conditional still discards its checked fork; equal-branch and
+other folds, typed role-rich records, rename/inlining/motion/deletion, complete
+pass/output-byte/source joins, current-main reconciliation/delivery and full
+Closure parity remain OPEN. Base ESTree/own types/no new crates.io preserved.
+Miri DEFERRED/PENDING, never passed; frozen run/source/inputs/target/receipts
+untouched and unpolled. Genuine final-source Miri follows implementation
+delivery. Full objective OPEN; heartbeat ACTIVE. A later documentation carrier
+does not claim a new Rust execution.
