@@ -3013,3 +3013,25 @@ receipts untouched/unpolled. Full transformation/output/parity objective OPEN.
   main76955 reconciliation beyonda2 and delivery remain OPEN. Miri DEFERRED/PENDING;
   frozen run/inputs/target/receipts untouched/unpolled. Final-source Miri follows
   implementation delivery; full goal and heartbeat ACTIVE.
+
+### 2026-10-16: CLOC34 member prefix bridge hook locally accepted
+
+- New library composite entry shares one borrowed array/member sink. Eight
+  factories expose exact borrowed owner/inclusive suffix endpoint and flags;
+  four computed hooks follow existing cursor advance. Legacy/array-only paths,
+  original leaf IDs, non-CV fields and first-refusal/worker guarantees preserved.
+  No registry/source walk/dependency/CLI schema change. This is infrastructure,
+  not trusted CLI member source certification.
+- Compiled scaffold red8outerF; graph-event fixture and strict tuple-lint failures
+  retained, corrected test-only without weaker controls. Actual full head24f28:
+  parser282P/folder451P+2historicalI/CLI1152P/native1006P=2891P/194executables,
+  three empty docs and both strict0. Source/combined terminal PASS; exact hashes
+  and scopes in CLOC34. Separate59source/354tuple/54Float-bit downstream plus
+  integration/observer/refusal/strict controls pass. CLR/nativeLLVM limits OPEN.
+- Next: spec-first trusted member-prefix CLI identities/shared ranges, then
+  full transformations/pass-sweep/output joins/parity. Audited mainb7f5f264befe2d3c7bdd029a4b019212e36a13c1
+  reconciliation beyonda2/native29 and PR17288 mergeabilityUNKNOWN/zero
+  checks/autoOFF at2026-10-17T00:14:20.245833+00:00 leave delivery OPEN. One PR;
+  baseESTree/own types/no new crates.io preserved. Miri DEFERRED/PENDING, frozen
+  checkout/run/inputs/target/receipts untouched/unpolled; final-source rerun after
+  implementation delivery. Full goal and heartbeat ACTIVE.

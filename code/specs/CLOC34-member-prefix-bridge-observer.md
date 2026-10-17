@@ -96,3 +96,53 @@ parity remain OPEN. Base ESTree canonical serialized boundary and own types stay
 One active implementation PR; current-main reconciliation/CI/actual merge remain
 pending. Miri DEFERRED/PENDING: frozen checkout/run/inputs/target/receipts stay
 untouched and unpolled. Genuine final-source Miri follows implementation delivery.
+
+## 2026-10-16: library member prefix observation locally accepted
+
+Contract5a4b passed independent review before tests15a/scaffold2212/unit8c99 and
+implementation11ac. All eight actual factories now forward the borrowed owner,
+inclusive suffix endpoint and computed/optional flags to one composite sink.
+Four computed hooks follow existing closing-bracket cursor advancement; checks
+are gated to the composite route before any extra indexed read. No prefix/source
+walk or registry is added. Existing legacy/array-only bodies are preserved by
+an exact whole-file bridge inverse; only member CVs change on the new route.
+
+Compiled scaffold2212 red has eight outer failed tests; the nested child failed
+one/filtered seven and is not additive. Focus11ac had7P1F because the new sink
+expected max_events=0 to reject a bare merge. Explicit checked contribution
+repairs that fixture without changing any three budget cases. Focusdbe then
+passed8 member/8 old array/3 unit tests but strict rejected its tuple return
+type. Exact tuple aliases repair lint; positive array-in-key, optional suffix
+and new-computed prefix/order controls are stronger. Placeholder/EOF lesson
+gate failures were corrected and remain failures in their original evidence.
+Production after11ac is unchanged; failed receipts are never retro-accepted.
+
+At exact execution head `24f28ca8c0997a9b2425847d6dcd5f98196ec9ea`, complete parser282P, folder451P/two historical
+ignored, closurec1152P and nativecompiler1006P total2891 passed across194
+executables plus three empty doctests. Both affected all-target strict checks
+pass. Tests assert exact borrowed same-owner prefix endpoints, typed CV ownership,
+ordered original token parents, sibling/later-suffix exclusion, optional flags,
+array-key postorder, unchanged leaf CVs/native AST equality, all supported parent
+paths, malformed-endpoint old-route controls, graph/refusal/panic/nested runs,
+caught first-error latch and late4097th-member refusal on a128KiB caller.
+Full core receipt `fa0279b4881f76444b76c9ac49b3358b7055f2fe6c225baadff954984d62190f`; source review `061ed305d73ca825ce53849486366af6ec5c10c42fc358df5eddd3b4a7c3af4a`;
+combined terminal review `93112cd1ca2d02c400c306391d6b6b7edb54fcd1ce4586275c33bf4a9a4bb1bd`. All frozen inputs/locks, actual command
+exits, complete logs and executable joins/hashes are independently bound.
+
+Separate downstream run at the same head passes59 exact sources/354 ordered
+six-backend tuples/54 VM-JIT Float-bit observations, integration4P, observer1P,
+compile-refusal1P and strict. Receipt `ce05ef050409480cd0f4195b76616d9d0045f48aae534709eee9e66e8f007704`. Focused LANG selectors
+each filter526 unrelated tests; CLR absent/uncounted; native/LLVM typed-main ABI
+OPEN. This is not full LANG runtime or full Closure parity acceptance.
+
+Next is a separately specified trusted CLI member-prefix adapter using existing
+shared SourceRange and CLOC33 final replay/closed-ledger schedule. This library
+slice alone assigns no CLI member identities and certifies no source spans or
+output-byte mapping. Full transformation/pass/sweep history, other composites,
+rename/inline/motion/merge/deletion and parity remain OPEN. Base ESTree, own types
+and no new crates.io dependencies preserved. Audited mainb7f5f264befe2d3c7bdd029a4b019212e36a13c1
+reconciliation beyonda2 (latest native29) remains pending. SolePR17288
+publishes6132a518b3990619eb904397ee0b21a69ce8ac20, mergeabilityUNKNOWN/zero checks/autoOFF
+at2026-10-17T00:14:20.245833+00:00; delivery pending, no new push/merge claim. Miri DEFERRED/PENDING; frozen run/checkout/
+inputs/target/receipts untouched/unpolled. Genuine final-source Miri follows
+implementation delivery. Full objective/heartbeat remain ACTIVE.

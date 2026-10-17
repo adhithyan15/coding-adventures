@@ -87,5 +87,5 @@ Final-source Miri remains DEFERRED/PENDING; existing frozen validation is untouc
 Each member callback receives its borrowed CST owner, inclusive suffix endpoint,
 and computed/optional flags; only the returned member CV may change. Legacy and
 array-only entries remain available. This library hook does not certify source
-ranges or wire CLI member identities. Validation is pending in CLOC34; Miri is
+ranges or wire CLI member identities. Local affected validation is recorded in CLOC34; Miri is
 DEFERRED/PENDING until implementation delivery and genuine final-source testing.
