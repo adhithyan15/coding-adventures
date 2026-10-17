@@ -89,9 +89,13 @@ Commit tests first and capture actual compiled CLI red on unchanged9ac library
 and array adapter. Assert exact member source kind/range/physical ordered parents,
 own Merge chronology and distinct same-owner suffixes, repeated text/input roots,
 parent-before-pass order and unrelated sibling exclusion. Start fold checks from
-the result-owned fold contribution/new_cv and follow exact member/array/operand
-ancestry, not merely a token somewhere in the graph. Cover primitive/array length,
-array index/key folds, dot/computed/mixed/grouped/call/new/optional/super prefixes,
+the actual typed replacement CV, require its own fold contribution/new_cv and
+follow exact member/array/operand ancestry, not merely a recorded unused branch
+or a token somewhere in the graph. Cover primitive/array length and stamped
+hole/out-of-bounds results. Existing in-bounds array element/numeric-key picks
+record an unused fork but return selected.clone() with its old CV: CLOC35 tests
+their original member occurrence only and keeps that replacement-ownership gap
+OPEN for a separate spec-first repair. Also cover dot/computed/mixed/grouped/call/new/optional/super prefixes,
 array keys, comments/raw escapes/CRLF/astral/ASI and tracing-off byte equality.
 
 Extend old array regression expectations only for the newly legitimate complete
@@ -125,3 +129,12 @@ main reconciliation/conflicts/required CI/actual merge and full objective remain
 OPEN; keep one active PR. Miri DEFERRED/PENDING: frozen run/checkout/inputs/target/
 receipts untouched/unpolled. Genuine final-source Miri follows implementation
 delivery. No full completion or heartbeat-disable claim until then.
+
+## Contract clarification before implementation
+
+Independent review found the in-bounds selected-element fork is recorded but
+not returned by fold_array_index_access. A log contribution/new_cv alone cannot
+prove the AST replacement owns that ID. The test contract above now separates
+this known family gap from stamped length/hole/out-of-bounds cases and requires
+actual typed replacement ownership controls for the latter. No folder behavior
+is changed in this original-source slice; the gap remains part of completion.

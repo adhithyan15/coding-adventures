@@ -115,12 +115,15 @@ fn exact(j: &Value, source: &str, path: &str, text: &str, kind: &str, after: Opt
 }
 #[test]
 fn result_owned_primitive_and_array_folds_reach_exact_member_occurrences() {
-    let source = "report([].length);report([,,][\"length\"]);report(\"😀\".length);report([\"x\"][0]);\n";
+    let source = "report([].length);report([,,][\"length\"]);report(\"😀\".length);report([\"x\"][0]);report([,][0]);\n";
     for level in ["SIMPLE","ADVANCED"] {
         let (j,_,paths) = compile(&[source],level);
-        for (text,after) in [("[].length","0"),("[,,][\"length\"]","2"),("\"😀\".length","2"),("[\"x\"][0]","\"x\"")] {
+        for (text,after) in [("[].length","0"),("[,,][\"length\"]","2"),("\"😀\".length","2"),("[,][0]","void 0")] {
             exact(&j,source,&paths[0],text,"MemberExpression",Some(after));
         }
+        // The original in-bounds member is certified here; its known unused
+        // fork/selected-clone replacement ownership is a separate open repair.
+        exact(&j,source,&paths[0],"[\"x\"][0]","MemberExpression",None);
     }
 }
 #[test]
