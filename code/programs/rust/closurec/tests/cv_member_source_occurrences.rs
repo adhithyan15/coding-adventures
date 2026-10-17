@@ -51,6 +51,7 @@ fn ancestry(j: &Value, id: &str) -> BTreeSet<String> {
     let mut out = BTreeSet::new(); visit(j,id,&mut out); out
 }
 fn number(v: &Value) -> usize { v.as_str().unwrap().parse().unwrap() }
+fn clock(v: &Value) -> u64 { u64::from_str_radix(v.as_str().unwrap(),16).unwrap() }
 
 fn member(j: &Value, source: &str, path: &str, start: usize, end: usize, kind: &str, after: Option<&str>) -> String {
     let entries = j["entries"].as_object().unwrap();
@@ -94,9 +95,9 @@ fn member(j: &Value, source: &str, path: &str, start: usize, end: usize, kind: &
     let events = j["journal"]["events"].as_array().unwrap();
     let merges: Vec<_> = events.iter().filter(|e| e["event"]["kind"] == "merge" && e["event"]["entity"] == id.as_str()).collect();
     assert_eq!(merges.len(),1); assert!(merges[0]["context"].is_null());
-    let sequence = number(&merges[0]["sequence"]);
-    let first_pass = events.iter().find(|e| e["event"]["kind"] == "pass_start").unwrap();
-    assert!(sequence < number(&first_pass["sequence"]),"member Merge before transformation pass");
+    let sequence = clock(&merges[0]["sequence"]);
+    let first_pass = events.iter().find(|e| e["event"]["kind"] == "context_begin" && e["event"]["scope"]["kind"] == "pass").unwrap();
+    assert!(sequence < clock(&first_pass["sequence"]),"member Merge before transformation pass");
     if let Some(after) = after {
         let results: Vec<_> = entries.iter().filter(|(result_id,e)| ancestry(j,result_id).contains(id)
             && e["contributions"].as_array().unwrap().iter().any(|c| c["source"] == "constant-fold" && c["tag"] == "folded" && c["meta"]["after"] == after && c["meta"]["new_cv"] == result_id.as_str())).collect();
@@ -106,7 +107,7 @@ fn member(j: &Value, source: &str, path: &str, start: usize, end: usize, kind: &
         let expected: BTreeSet<_> = pieces[first..=last].iter().map(|p| p.as_str().unwrap()).collect();
         assert_eq!(reached_physical,expected,"exact complete member operand interval, no physical siblings");
         let birth = events.iter().find(|e| matches!(e["event"]["kind"].as_str(),Some("merge"|"derive")) && e["event"]["entity"] == result_id.as_str()).unwrap();
-        assert!(sequence < number(&birth["sequence"]));
+        assert!(sequence < clock(&birth["sequence"]));
     }
     id.clone()
 }
