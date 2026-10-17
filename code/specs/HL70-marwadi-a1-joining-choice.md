@@ -70,4 +70,3 @@ rows, changelog fragment, and corpus test use Marwadi or direct generated
 shards. The focused test must pin the five exact points, the introduced atoms,
 the chapter payoff, the source boundary, and the 103/197 coverage result without
 adding or editing a cross-track aggregate owner.
-
