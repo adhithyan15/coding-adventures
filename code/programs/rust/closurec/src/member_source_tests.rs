@@ -596,6 +596,18 @@ fn c38_literal_conditional_refusals_preserve_all_publication_destinations() {
     }
 }
 
+#[test]
+fn c38_unchosen_child_refusals_preserve_all_publication_destinations() {
+    for (family, source) in [
+        ("c38-unchosen-true", "report(true?chosen:(4+5));"),
+        ("c38-unchosen-false", "report(false?(4+5):chosen);"),
+    ] {
+        // The positive trace targets the unchosen child's checked merge/derive,
+        // which run before the outer conditional choice is recorded.
+        selected_merge_and_derive_refusals(family, source, "(4) + (5)", "9");
+    }
+}
+
 fn selected_merge_and_derive_refusals(family: &str, source: &str, before: &str, after: &str) {
     use crate::config::{CompilationLevel, CompilerConfig, CorrelationVectorFormat};
     let dir = std::env::temp_dir().join(format!("closurec-{family}-pub-{}", std::process::id()));
