@@ -356,7 +356,9 @@ fn c39_checked_child_failure_origins_keep_prior_activity_and_latch_before_outer_
                 assert_eq!(&events[..old_events.len()], old_events);
                 let new_events = &events[old_events.len()..];
                 assert_eq!(new_events.len(), 3 * origin);
-                for (stage, chunk) in new_events.chunks_exact(3).enumerate() {
+                let (chunks, remainder) = new_events.as_chunks::<3>();
+                assert!(remainder.is_empty());
+                for (stage, chunk) in chunks.iter().enumerate() {
                     assert_eq!(chunk[0]["event"]["kind"], "merge");
                     assert_eq!(chunk[1]["event"]["kind"], "derive");
                     assert_eq!(chunk[2]["event"]["kind"], "contribution");
