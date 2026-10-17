@@ -207,3 +207,87 @@ fn c37_nonempty_native_expression_census_preserves_and_joins_all_retained_ids() 
         "nonvacuous stamped composite census"
     );
 }
+
+#[test]
+fn c37_actual_selected_function_reaches_default_parameter_and_body_rewrite() {
+    for string_key in [false, true] {
+        let mut cv = CVLog::new_checked_compact(GraphLimits::default()).unwrap();
+        let ids: Vec<_> = (0..15).map(|_| cv.try_create(None).unwrap()).collect();
+        let identifier = |slot: usize, name: &str| Identifier {
+            cv: Some(ids[slot].clone()),
+            name: name.into(),
+        };
+        let selected = Expression::FunctionExpression(FunctionExpression {
+            cv: Some(ids[3].clone()),
+            id: Some(identifier(4, "f")),
+            params: vec![FunctionParam::AssignmentPattern(AssignmentPattern {
+                cv: Some(ids[5].clone()),
+                left: identifier(6, "x"),
+                right: Expression::Identifier(identifier(7, "fallback")),
+            })],
+            body: BlockStatement {
+                cv: Some(ids[8].clone()),
+                body: vec![Statement::expression_statement(ExpressionStatement {
+                    cv: Some(ids[9].clone()),
+                    expression: Expression::CallExpression(CallExpression {
+                        cv: Some(ids[10].clone()),
+                        callee: Box::new(Expression::Identifier(identifier(11, "observe"))),
+                        arguments: vec![Expression::BinaryExpression(BinaryExpression {
+                            cv: None,
+                            operator: BinaryOperator::Add,
+                            left: Box::new(num(1.0, Some(&ids[12]))),
+                            right: Box::new(num(2.0, Some(&ids[13]))),
+                        })],
+                    }),
+                })],
+            },
+            generator: false,
+            is_async: false,
+        });
+        let input = pick(
+            vec![Some(selected), Some(num(9.0, Some(&ids[14])))],
+            if string_key {
+                string("0", Some(&ids[2]))
+            } else {
+                num(0.0, Some(&ids[2]))
+            },
+            &ids,
+        );
+        let out = run(&input, &mut cv);
+        let result = extract_expr(&out.program);
+        let Expression::FunctionExpression(function) = result else {
+            panic!("actual selected function")
+        };
+        let Statement::Tagged(TaggedStatement::ExpressionStatement(statement)) =
+            &function.body.body[0]
+        else {
+            panic!("body statement")
+        };
+        let Expression::CallExpression(call) = &statement.expression else {
+            panic!("body call")
+        };
+        let Expression::NumericLiteral(argument) = &call.arguments[0] else {
+            panic!("body argument rewritten")
+        };
+        assert_eq!(argument.value.to_bits(), 3.0f64.to_bits());
+        let child = argument.cv.as_ref().unwrap();
+        let mut expected = ids[..12].to_vec();
+        expected.push(child.clone());
+        assert_eq!(
+            immediate(&cv, result),
+            expected,
+            "function/id/default/body/statement/call declaration order"
+        );
+        assert_eq!(function.id.as_ref().unwrap().cv.as_ref(), Some(&ids[4]));
+        assert_eq!(function.body.cv.as_ref(), Some(&ids[8]));
+        let root = root_cv(result).unwrap();
+        assert!(reaches(&cv, &root, child));
+        assert!(!reaches(&cv, &root, &ids[14]));
+        assert_eq!(
+            cv.get(&cv.get(child).unwrap().parent_ids[0])
+                .unwrap()
+                .parent_ids,
+            ids[12..14]
+        );
+    }
+}

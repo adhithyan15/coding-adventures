@@ -471,3 +471,113 @@ fn repeated_inputs_keep_raw_escaped_crlf_astral_asi_member_parents_separate() {
         assert!(ancestry(&j, &ids[0]).is_disjoint(&ancestry(&j, &ids[1])));
     }
 }
+
+#[test]
+fn c37_selected_call_joins_actual_callee_and_argument_rewrite_before_outer_event() {
+    for level in ["SIMPLE", "ADVANCED"] {
+        for source in [
+            "report([observe(1+2),9][0+0]);",
+            "report([observe(1+2),9][\"\"+\"0\"]);",
+        ] {
+            let (j, _, paths) = compile(&[source], level);
+            let member = exact(
+                &j,
+                source,
+                &paths[0],
+                &source[7..source.len() - 2],
+                "MemberExpression",
+                None,
+            );
+            let entries = j["entries"].as_object().unwrap();
+            let own_fold = |after: &str| {
+                let rows: Vec<_> = entries
+                    .iter()
+                    .filter(|(id, entry)| {
+                        entry["contributions"].as_array().unwrap().iter().any(|c| {
+                            c["source"] == "constant-fold"
+                                && c["tag"] == "folded"
+                                && c["meta"]["after"] == after
+                                && c["meta"]["new_cv"] == id.as_str()
+                        })
+                    })
+                    .collect();
+                assert_eq!(rows.len(), 1);
+                rows[0].0.clone()
+            };
+            let result = own_fold("element[0]");
+            let child = own_fold("3");
+            let key = own_fold(if source.contains("\"\"") {
+                "\"0\""
+            } else {
+                "0"
+            });
+            let array_end = source.find("][").unwrap() + 1;
+            let arrays: Vec<_> = entries
+                .iter()
+                .filter(|(_, entry)| {
+                    entry["origin"]["source"] == "typed_array"
+                        && entry["origin"]["meta"][NODE]["start"] == position(source, 7)
+                        && entry["origin"]["meta"][NODE]["end"] == position(source, array_end)
+                })
+                .collect();
+            assert_eq!(arrays.len(), 1);
+            let callee_start = source.find("observe").unwrap();
+            let callees: Vec<_> = entries
+                .iter()
+                .filter(|(_, entry)| {
+                    let physical = &entry["origin"]["meta"][SOURCE];
+                    physical["kind"] == "token"
+                        && physical["start"] == position(source, callee_start)
+                        && physical["end"] == position(source, callee_start + "observe".len())
+                })
+                .collect();
+            assert_eq!(callees.len(), 1);
+            let parents = entries[&result]["parent_ids"].as_array().unwrap();
+            assert_eq!(parents.len(), 1);
+            let merged_id = parents[0].as_str().unwrap();
+            assert_eq!(
+                entries[merged_id]["parent_ids"],
+                json!([member, arrays[0].0, key, callees[0].0, child])
+            );
+            assert!(
+                ancestry(&j, &result).contains(&child),
+                "selected root reaches newer argument identity"
+            );
+            let events = j["journal"]["events"].as_array().unwrap();
+            let event = |kind: &str, id: &str| {
+                let rows: Vec<_> = events
+                    .iter()
+                    .filter(|e| e["event"]["kind"] == kind && e["event"]["entity"] == id)
+                    .collect();
+                assert_eq!(rows.len(), 1);
+                rows[0]
+            };
+            let merge = event("merge", merged_id);
+            let derive = event("derive", &result);
+            let contribution = event("contribution", &result);
+            assert_eq!(merge["context"], derive["context"]);
+            assert_eq!(merge["context"], contribution["context"]);
+            assert!(clock(&merge["sequence"]) < clock(&derive["sequence"]));
+            assert!(clock(&derive["sequence"]) < clock(&contribution["sequence"]));
+            for rewritten in [&key, &child] {
+                let prior = event("contribution", rewritten);
+                assert_eq!(prior["context"], merge["context"]);
+                assert!(clock(&prior["sequence"]) < clock(&merge["sequence"]));
+            }
+            let pass = events
+                .iter()
+                .find(|e| e["sequence"] == merge["context"])
+                .unwrap();
+            assert_eq!(pass["event"]["scope"]["kind"], "pass");
+            assert_eq!(clock(&pass["event"]["scope"]["sweep"]), 0);
+            let end = events
+                .iter()
+                .find(|e| {
+                    e["event"]["kind"] == "context_end" && e["event"]["begin"] == pass["sequence"]
+                })
+                .unwrap();
+            assert_eq!(end["event"]["outcome"]["kind"], "accepted");
+            assert!(clock(&contribution["sequence"]) < clock(&end["sequence"]));
+        }
+    }
+}
