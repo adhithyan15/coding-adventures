@@ -3192,3 +3192,18 @@ receipts untouched/unpolled. Full transformation/output/parity objective OPEN.
   Other transformations/typedroles/output joins/parity remain OPEN.
   Miri DEFERRED/PENDING; frozen run untouched, final-source acceptance after
   implementation delivery. Full objective OPEN; heartbeat ACTIVE.
+
+### 2026-10-17: CLOC40 logical literal-choice root contract selected
+
+- CLOC39 scoped full/runtime/docs and four independent reviews accepted; actual
+  Rust2cb61536/docs94fdd4e0 retain distinct evidence. CLOC40 spec precedes tests
+  and implementation: original logical CV, folded left CV, selected native
+  subtree preorder, chosen-left alias dedup and actual returned-root ownership.
+- Preserve existing literal admission, eager left/right/error order, labels and
+  singleton collector caps. Same-op reassociation/synthetic inner identity is
+  explicitly OPEN. Contract/tests/code/security/delivery remain pending.
+- Fresh audit23:18:37Z: main7aa8396d; sole Closure/shared PR17288 published6132a518,
+  CONFLICTING/0checks/autoOFF. Main import findings/current-main reconciliation/
+  requiredCI/actualmerge/full transform roles/output joins/parity remain OPEN.
+- Miri DEFERRED/PENDING, frozen run/inputs/target/receipts untouched/unpolled;
+  genuine final-source acceptance follows implementation delivery.
