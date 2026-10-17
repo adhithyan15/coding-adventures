@@ -24,3 +24,12 @@ searching only for PASSED could accept NOT PASSED and did not require the full
 execution HEAD in the review opening. Require the positive SECURITY REVIEW
 PASSED marker, reject negative header markers, and bind the exact full source
 HEAD within the opening review text in addition to path and fingerprint checks.
+
+
+The first actual C40 docs writer refused an LF-only raw backlog-title anchor
+against the existing CRLF source bytes. Its proposal-before-write design left
+the entire worktree clean and no plan was created. Preserve that failed helper
+and exit1 evidence, select the exact existing CRLF or LF title prefix without
+normalizing the whole file, then save and verify the complete byte inverse.
+The corrected carrier includes this lesson as an explicit changed execution
+input alongside the other Markdown paths; never assume it is inert source.

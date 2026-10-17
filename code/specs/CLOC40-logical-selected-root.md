@@ -1,6 +1,6 @@
 # CLOC40: literal logical selection owns its returned root
 
-Status: contract selected; implementation and delivery OPEN.
+Status: logical literal-choice slice locally validated; delivery and full completion OPEN.
 
 At audited local source94fdd4e0, fold_logical folds left then right. Its
 literal-choice arm forks a parent-only identity into unused _new_cv and returns
@@ -112,3 +112,72 @@ conflict-free required CI, actual merge reachability and delivery remain OPEN.
 Miri DEFERRED/PENDING, never passed; frozen run/checkout/inputs/target/receipts
 remain untouched and unpolled. Genuine final-source Miri follows implementation
 delivery. Full objective OPEN; heartbeat ACTIVE.
+
+## 2026-10-17: logical literal-choice slice locally validated
+
+Actual Rust full/runtime source `a3ec4ef38dcf5cbc8856ab6dc9c99fcff5de0794` follows reviewed specbfcbb67f and compiled
+tests-first076db132 red: actual buildtrue/Cargo101/2P7F463filtered; only child-
+failure and declined-family functions completed. Failing loops receive no
+coverage credit. Pre-code test review withheld0cc5fe45 for missing typed bits/raw
+assertions on the right-native NumericLiteral fixture; the separate left-bit
+table did not prove that direction. The tests-only repair preserves every JSON
+payload/ancestry assertion and adds typed right value.to_bits()/raw checks plus
+a filled lesson; the earlier withheld report remains withheld. Production
+changes only the existing logical kept arm: capture
+folded-left identity, collect original logical/left/chosen complete subtree with
+first-seen alias dedup, then stamp the actual chosen root after checked success.
+Existing labels, literal guards, left/right folding, nested payload and limits
+remain. One/no available ID derives directly/creates nothing. Reassociation
+synthetic identities and typed deletion/role events remain OPEN.
+
+At2f1cd7f5 all2962 tests genuinely passed, but package-strict101/buildfalse
+reported two unused_parens warnings in new test fixtures; CLIstrict was not
+executed and aggregate acceptance stayed WITHHELD. Test-only a3ec4ef3 removes
+only those two parentheses pairs and adds a filled lesson, retaining all literal
+values/assertions/production code. Final full/strict/runtime results below are
+new executions at `a3ec4ef38dcf5cbc8856ab6dc9c99fcff5de0794`, with no older-head acceptance transfer.
+
+Actual full suites:282parser+499folder+1175CLI+1006native=2962P/0F,
+two unchanged historical ignores/195 executable joins/three empty doctests;
+both all-target strict checks actual0. Native nine functions complete216 native
+right-root cells,36 explicit literal-side rows with typed numeric bits/raw and
+astral UTF-8,48 availability/alias cells, populated call/function descendants,
+unchosen-right history exclusion,24 child-failure cells/22 distinct configs,
+and30 outer checked refusals. The two duplicated ??-right left-error cells
+fail while a numeric left is being folded; they do not prove a nullish-right
+admission result. Existing C37/C39 exact resource and Unicode controls remain.
+
+SIMPLE/ADVANCED12 actual physical-token/pass/sweep/clock/traced-plain-byte cells
+pass. Current CLI left-only selection has no invented logical CV and therefore
+derives directly; right selection merges actual left/callee/rewritten-child
+parents. New108 outer and264 child-origin all-output refusal cells preserve
+JS/map/manifest/trace sentinel bytes. Every old default merge/derive assertion
+remains. Cell counts are not additional unique test-function totals. The CLI
+test writer's preparation guard gap was caught before execution and repaired
+with exact HEAD/both preimages/all-proposals-before-write; a filled lesson
+records that review finding and the earlier pre-write quoting syntax error.
+
+The first docs writer then refused an LF-only raw title anchor against the
+backlog's existing CRLF bytes. It failed before creating the plan or mutating
+any source file; no docs commit or acceptance resulted. The byte-aware successor
+preserves the exact existing title/EOL prefix and records this caught failure
+in the existing preimage lesson. This seven-Markdown carrier explicitly excepts
+that lesson as well as the six spec/backlog/README/CHANGELOG inputs; it does
+not assume Markdown inputs are inert or assign Rust execution to the carrier.
+
+Core `acf6c943b72fc3e53f8cdcd0859860ce0b84f4fa9dd5088f137d28c2723463f3`; exact source `bce0bb70fdc93eb5f5fdeb72691c027e2fda1ba520ba8988a6bf8ec36bad56d3`;
+combined terminal `61c60ac7b03428ec71a74f86174f4d32ebcb79d8d4849f272c6cb27960357a2f` bind real source/locks/logs/artifacts.
+Separate same-head runtime `407ccd7892464bdc3f11adeeaab96ad7cc4530397e9272ed9a446e40c4b1e138` retains59 declared sources,
+354 ordered six-backend observations/54 VM-JIT Float-bit captures;
+integration4P/observer1P/refusal1P/strict0. LANG526 filtered, CLR absent/uncounted,
+native/LLVM typed-main ABI OPEN; no full LANG/raw-output-byte/precision theorem.
+
+Audit 2026-10-17T23:52:43.212328+00:00: main `7aa8396d2dd7b81687168722ba71e95b0650101f`; sole Closure/shared
+PR#17288 published `6132a518b3990619eb904397ee0b21a69ce8ac20`, CONFLICTING/
+0 checks/autoOFF. No push/hosted acceptance/merge.
+Remaining fold/reassociation/rename/inline/motion/merging/deletion roles, full
+pass/output-byte/source joins/parity/current-main reconciliation/delivery OPEN.
+Base ESTree/own types/no new crates.io preserved. Miri DEFERRED/PENDING;
+frozen run/checkout/inputs/target/receipts untouched/unpolled. Genuine final-source
+Miri follows implementation delivery. Full objective OPEN; heartbeat ACTIVE.
+This later Markdown carrier claims no additional Rust execution.

@@ -4,6 +4,18 @@ All notable changes to the `coding-adventures-closure-pass-constant-fold` crate 
 
 ## [Unreleased]
 
+### CLOC40 logical literal-choice ownership
+
+Admitted literal &&/||/?? choices now stamp the actual returned root with
+checked ordered logical/left/selected-subtree ancestry, deduplicating chosen-
+left aliases. Nested identities, payload, eager child folding, first-error
+behavior, labels, existing guards and collector limits remain. Exact source/
+pass clocks and child/outer publication-refusal controls supplement prior
+resource tests. See CLOC40 for bounded local evidence. Reassociation/typed
+roles/deletion/full output-byte/source joins/parity/delivery remain OPEN.
+Miri DEFERRED/PENDING; final-source acceptance follows implementation delivery.
+
+
 ### CLOC39 equal-conditional evidence frontiers
 
 Equal-branch collapse now joins available conditional and complete folded test,

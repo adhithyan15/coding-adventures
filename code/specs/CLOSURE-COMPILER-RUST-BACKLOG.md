@@ -1,5 +1,15 @@
 # Closure Compiler on Rust — parity backlog
 
+<!-- Closure current concise checkpoint: CLOC40 -->
+Current local execution `a3ec4ef38dcf5cbc8856ab6dc9c99fcff5de0794` completes bounded CLOC40 ownership (2962P,
+strict/source/terminal PASS); this later docs carrier adds no Rust execution.
+Audited main `7aa8396d2dd7b81687168722ba71e95b0650101f` is newer than the locally reconciled
+a2be13f7 base. PR#17288 remains CONFLICTING/autoOFF with
+0 hosted checks. Delivery/full parity/complete lineage
+and final-source Miri remain OPEN; Miri DEFERRED/PENDING. Older dated integration
+sections below are historical checkpoints, not current acceptance claims.
+<!-- Closure current concise checkpoint end -->
+
 <!-- CV04b current-main integration pending -->
 Sole PR17288 publishes6132a518b3990619eb904397ee0b21a69ce8ac20,
 CONFLICTING/auto OFF/zero hosted checks in fresh20261016T171941Z audit:
@@ -3207,3 +3217,20 @@ receipts untouched/unpolled. Full transformation/output/parity objective OPEN.
   requiredCI/actualmerge/full transform roles/output joins/parity remain OPEN.
 - Miri DEFERRED/PENDING, frozen run/inputs/target/receipts untouched/unpolled;
   genuine final-source acceptance follows implementation delivery.
+
+### 2026-10-17: CLOC40 logical literal-choice root locally validated
+
+- Actual returned root now owns ordered logical/left/chosen subtree ancestry;
+  alias dedup, guards, labels, eager child work/error order and limits preserved.
+- Executed `a3ec4ef38dcf5cbc8856ab6dc9c99fcff5de0794`:2962P0F2historicalI195exe3emptydocs/bothstrict0;
+  source/combined independent PASS. Native216/36/48, populated descendants,
+  24failurecells/22distinctconfigs,30outer refusals; CLI12source/clock/byte,
+  108outer+264child sentinel cells. Separate focused59/354/54 runtime retains
+  LANG/CLR/native-LLVM limits. Initial076 compiled red remains exact2P7F.
+- Earlier2f1 full2962P with package-strict101/CLIstrict unexecuted remains
+  aggregateWITHHELD; a3 test-only parenthesis repair retains production/assertions.
+- Timestamped main `7aa8396d2dd7b81687168722ba71e95b0650101f`, sole PR#17288
+  CONFLICTING/hosted checks/actualmerge/delivery OPEN. Other lineage roles,
+  reassociation/output joins/parity remain OPEN. Miri DEFERRED/PENDING;
+  frozen run untouched, genuine final-source acceptance after implementation
+  delivery. Full objective OPEN; heartbeat ACTIVE.
