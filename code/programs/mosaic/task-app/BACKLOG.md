@@ -69,12 +69,14 @@ Each item, once picked up, follows: spec-sync → tests → implementation → C
 
 ## Product completion queue
 
-**Next priority: [#17675](https://github.com/adhithyan15/coding-adventures/issues/17675)
-— preserve Qt milestone rotations.** The P0 native lifecycle gates and the
+**Next priority: [#17682](https://github.com/adhithyan15/coding-adventures/issues/17682)
+— publish and audit `task-app-v0.5.8`.** The P0 native lifecycle gates and the
 immutable v0.5.7 publication/audit (#17610) are complete. Preserve the timeline
-milestone and legend-swatch diamonds through centered native Qt rotation and
-verify both themes before reducing its style-drop allowance from 83 to 81.
-Artifact coverage is unchanged; native Qt execution remains a CI claim.
+milestone and legend-swatch diamonds now retain centered native Qt rotation
+through #17676, with both themes measuring 81 style drops instead of 83.
+Validate every existing release payload, publish after preparation merges,
+and audit the immutable assets before closing #17682. Artifact coverage is
+unchanged; preparation is not publication.
 
 The durable product backlog is [GitHub issue #13517](https://github.com/adhithyan15/coding-adventures/issues/13517).
 It tracks the local-first, Rust-scheduled, native TaskApp completion loop and
