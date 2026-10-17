@@ -3057,3 +3057,16 @@ receipts untouched/unpolled. Full transformation/output/parity objective OPEN.
   OPEN. BaseESTree/own types/no new crates.io preserved. Miri DEFERRED/PENDING;
   frozen run/checkout/inputs/target/receipts untouched/unpolled; genuine final-source
   acceptance after delivery. Full goal OPEN and heartbeat ACTIVE.
+
+### 2026-10-17: CLOC36 selected replacement root contract
+
+- [CLOC36](CLOC36-selected-array-root-ownership.md) separates actual in-bounds
+  selected root ownership and four fixed immediate operands from a later
+  bounded descendant/frontier collector. Contract only; implementation pending.
+- Require exhaustive private root decisions for 36 Expression variants without
+  changing semantic selection eligibility, numeric-string source identity,
+  exact ordered ancestry or existing limits. Opaque descendant rewrite closure
+  and conditional selected-root gaps remain OPEN, not counted as repaired.
+- One active Closure/shared PR; publication/main reconciliation/CI/full parity
+  and output mappings remain OPEN. Miri DEFERRED/PENDING; frozen run preserved;
+  genuine final-source acceptance follows implementation delivery.
