@@ -183,7 +183,15 @@ fn c35_closed_member_kinds_cannot_forge_namespace_origin_ranges_or_parent_order(
                     e["origin"]["meta"][NS]["first_piece_id"] =
                         e["origin"]["meta"][NS]["last_piece_id"].clone()
                 }
-                "range" => e["origin"]["meta"][NS]["start"]["byte_offset"] = json!("0"),
+                "range" => {
+                    let start = &mut e["origin"]["meta"][NS]["start"]["byte_offset"];
+                    assert_ne!(
+                        start,
+                        &json!("1"),
+                        "mutant must differ from the fixture baseline"
+                    );
+                    *start = json!("1");
+                }
                 "parents" => e["parent_ids"].as_array_mut().unwrap().reverse(),
                 "origin" => e["origin"]["source"] = json!("ordinary"),
                 "location" => e["origin"]["location"] = json!("invented"),
