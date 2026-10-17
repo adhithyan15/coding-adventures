@@ -3035,3 +3035,25 @@ receipts untouched/unpolled. Full transformation/output/parity objective OPEN.
   baseESTree/own types/no new crates.io preserved. Miri DEFERRED/PENDING, frozen
   checkout/run/inputs/target/receipts untouched/unpolled; final-source rerun after
   implementation delivery. Full goal and heartbeat ACTIVE.
+
+### 2026-10-17: CLOC35 original member source occurrences locally validated
+
+- Captured traced typed member/optional-member prefixes now receive private
+  closed receipts, shared spans and complete ordered physical token parents.
+  Prepaid child-zero walks and marker-kind authority precede checked graph
+  construction. Final D3a/D3b replay and source census precede publication.
+- Full exacte5:282 parser+451 folder+1163 CLI+1006 native=2902P/0F/2historicalI,
+  195 executables/three empty docs/both strict0. Source and combined terminal
+  security PASS; exact receipts/hashes and actual returned typed-CV controls
+  are recorded in CLOC35. Separate59-source/354-tuple/54-Float-bit downstream
+  controls pass; focused LANG/CLR/native-LLVM scope limitations remain OPEN.
+- Next CLOC36 DESIGN ONLY: in-bounds array selected.clone retains oldCV despite
+  recorded fork; repair ACTUAL replacement ownership and exact operand lineage.
+  Original member certification is not full fold/rename/inline/motion/merge/
+  deletion, pass-sweep/output-byte mapping or Closure parity completion.
+- Audited main670b3bc94420d933fb7b4bb484da0d4db4fea437; solePR17288 published
+  6132a518b3990619eb904397ee0b21a69ce8ac20, mergeabilityCONFLICTING,
+  0 checks/autoOFF. Main reconciliation/CI/delivery
+  OPEN. BaseESTree/own types/no new crates.io preserved. Miri DEFERRED/PENDING;
+  frozen run/checkout/inputs/target/receipts untouched/unpolled; genuine final-source
+  acceptance after delivery. Full goal OPEN and heartbeat ACTIVE.

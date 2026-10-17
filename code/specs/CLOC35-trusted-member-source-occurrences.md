@@ -138,3 +138,67 @@ prove the AST replacement owns that ID. The test contract above now separates
 this known family gap from stamped length/hole/out-of-bounds cases and requires
 actual typed replacement ownership controls for the latter. No folder behavior
 is changed in this original-source slice; the gap remains part of completion.
+
+## 2026-10-17: bounded original-member source certification locally validated
+
+The captured traced typed route now uses one composite observer and private
+closed Array/Member/OptionalMember ledger. Exact original member prefixes reuse
+shared SourceRange, physical ordered D1 token parents and a seven-field origin.
+Only the child-zero spine is walked, with prepaid work and checked storage;
+dot/computed/optional punctuation requires its actual token kind/grammar name.
+Final admission remains after all input pipelines and D3a/D3b replay, before
+publication. Both owned source locations are counted even with their namespace
+removed. No dependency, lock, public AST field or production limit is added.
+
+Amended contract a9261fce passed before implementation; compiled CLI red1d7452a6
+was 0P3F. Review of8fc found optional marker authority and an overbuying peak
+oracle. Tests-first edaad42e compiled red0P1F;11b repairs the production marker
+checks. Its private focus7P1F exposed a no-op range mutant, repaired test-only
+at7514 with an explicit different-baseline assertion. Original failed receipts
+stay unaccepted. Focus7514 passes32 tests and CLI strict.
+
+Full7514 stopped on an older D2 string-length oracle. The test-only successor
+requires exact astral string/dot/property physical spans and one certified
+member, retaining global set/root/exclusion checks. Focus3b exposed an incorrect
+immediate-property-CV assumption; e5 requires precisely member+string CVs while
+the property token is reached through the member. D2focus e5 passes8. Production
+is unchanged from11b and original failed receipts remain unaccepted.
+
+Actual full execution head `e5e48a3fb7ec442b615615965257418645350994` passes parser282, folder451 with two historical
+ignored, CLI1163 and native compiler1006:2902P/0F/2I,195 executables and three
+empty doctests. Both affected all-target strict checks pass. Core receipt
+`17a21a4a7929010f4ee03d37634a59dbb29abee32af00765af00a5af53e5d9f0`; exact-head source review `bd29375d816b9d28233ead158d596fd99d164e0e09bc0f833d13e770ef275440`; independent combined
+terminal review `8ce137bc9cc52a2f8aa08cfbcf0cfa6ddb9cbda434dc5a110bf6675b24881ba8`. Frozen inputs, both locks, complete command
+logs, nonvacuous test census and executable/artifact joins are independently
+bound. Test-only final source transfer does not relabel an older Rust run.
+
+Tests assert exact original member identity, span and complete ordered physical
+parents, own unscoped Merge clock and following input-bound pass context;
+repeated inputs, escapes/CRLF/astral/ASI, sibling and later-suffix exclusion;
+private forged authority/census failures; exact and one-less work/peak/ledger/
+metadata; graph capacity and all-output sentinel publication refusals. Stamped
+length/hole/out-of-bounds fold controls start at the ACTUAL returned typed
+Program CV and require its own contribution and exact member ancestry.
+
+Separate same-head downstream receipt `32cef2a1468f65d9fc0b706875152801e0e3fb0f12f5db24a636ffd9d5dfa9c8` passes59 exact
+sources/354 ordered six-backend tuples/54 VM-JIT Float-bit observations,
+integration4P/observer1P/refusal1P/strict. Focused LANG selectors filter526
+unrelated tests; CLR absent/uncounted and native/LLVM typed-main ABI remain
+OPEN. This is bounded validation, not full LANG or Closure parity acceptance.
+
+Known next gap: in-bounds array selection records fork_cv but returns
+selected.clone with the old CV. Its unused journal branch is NOT replacement
+ownership. CLOC36 must repair actual selected replacement CVs and precise
+selected/array/member/key/child lineage, with non-CV behavior and side-effect
+guards preserved. This CLOC35 slice certifies original members only. Other
+composites/synthetic identities, full fold/rename/inline/motion/merge/deletion,
+pass/sweep lineage, output-byte/source joins and Closure parity remain OPEN.
+Base ESTree canonical boundary, own types and no new crates.io preserved.
+
+Remote audit 2026-10-17T20:51:19.245282+00:00: main `670b3bc94420d933fb7b4bb484da0d4db4fea437`, sole Closure/
+shared PR#17288 published `6132a518b3990619eb904397ee0b21a69ce8ac20`, mergeability
+CONFLICTING, 0 checks and auto-merge OFF.
+Main reconciliation beyonda2, conflicts, required CI and delivery remain OPEN;
+no new push or merge. Miri DEFERRED/PENDING, never passed; frozen checkout/run/
+inputs/target/receipts untouched/unpolled. Genuine final-source Miri follows
+implementation delivery. Full objective and heartbeat remain ACTIVE.

@@ -8190,7 +8190,7 @@ local parser path dependency, no crates.io dependency. Original array ancestry
 fixtures now include all punctuation while retaining nested rewrite assertions.
 Full parity/delivery/Miri remain open; Miri DEFERRED/PENDING.
 
-### CLOC35 trusted member source occurrences (local validation pending)
+### CLOC35 trusted member source occurrences (local validation recorded)
 
 - Use the composite bridge on captured traced typed inputs, preserving legacy
   and untraced routes. Record distinct member-prefix IDs, exact shared ranges,
