@@ -12,6 +12,9 @@ mod literal_conditional_root;
 #[path = "equal_conditional_frontier.rs"]
 mod equal_conditional_frontier;
 
+#[path = "logical_selected_root.rs"]
+mod logical_selected_root;
+
 // Test-only wire fixtures independently enumerate the actual AST union. No
 // production visitor/serialization is added to discover or stamp root CVs.
 fn shapes(cv: Option<&str>) -> Vec<(String, Expression)> {
