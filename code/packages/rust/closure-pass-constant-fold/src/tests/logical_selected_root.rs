@@ -134,6 +134,12 @@ fn c40_right_selected_native_shapes_own_actual_root_with_or_without_logical_id()
                     .unwrap()
                     .1;
                 let payload = serde_json::to_value(&chosen).unwrap();
+                // JSON number equality does not establish the sign bit of -0.
+                // Capture this actual right operand before ownership moves it.
+                let numeric_payload = match &chosen {
+                    Expression::NumericLiteral(n) => Some((n.value.to_bits(), n.raw.clone())),
+                    _ => None,
+                };
                 let (before, after) = labels(op, &chosen);
                 let p = input(
                     op,
@@ -143,6 +149,13 @@ fn c40_right_selected_native_shapes_own_actual_root_with_or_without_logical_id()
                 );
                 let out = run(&p, &mut cv);
                 let result = extract_expr(&out.program);
+                if let Some((bits, raw)) = numeric_payload {
+                    let Expression::NumericLiteral(n) = result else {
+                        panic!("selected numeric right operand")
+                    };
+                    assert_eq!(n.value.to_bits(), bits);
+                    assert_eq!(n.raw, raw);
+                }
                 let mut actual = serde_json::to_value(result).unwrap();
                 let mut expected_payload = payload;
                 actual.as_object_mut().unwrap().remove("cv");
