@@ -4811,12 +4811,12 @@ pub fn parse_treemap(source: &str) -> Result<TreemapDiagram, ParseError> {
     for token in tokens.iter().filter(|token| token_name(token) == "CLASS_DEF_STATEMENT") {
         let declaration = token.value.trim().trim_end_matches(';').trim();
         let value = declaration.strip_prefix("classDef").expect("grammar requires classDef").trim();
-        let (name, declarations) = value.split_once(char::is_whitespace)
-            .ok_or_else(|| token_error(token, "treemap classDef requires a name and style"))?;
+        let mut parts = value.splitn(2, char::is_whitespace);
+        let name = parts.next().expect("grammar requires a class name");
+        let declarations = parts.next().unwrap_or("").trim();
         class_styles.insert(name.to_string(), parse_treemap_style(token, declarations)?);
     }
     let mut ancestors = Vec::<(usize, String)>::new();
-    let mut seen_root = false;
 
     for (line_index, line) in prepared.lines().enumerate() {
         let trimmed = line.trim();
@@ -4850,16 +4850,6 @@ pub fn parse_treemap(source: &str) -> Result<TreemapDiagram, ParseError> {
             .take_while(|character| character.is_whitespace())
             .map(|character| if character == '\t' { 4 } else { 1 })
             .sum::<usize>();
-        if indentation == 0 {
-            if seen_root {
-                return Err(ParseError {
-                    message: "Multiple root nodes are not allowed in a treemap.".into(),
-                    line: line_index + 1,
-                    col: 1,
-                });
-            }
-            seen_root = true;
-        }
         let quote = trimmed.chars().next().unwrap_or_default();
         let closing = trimmed[1..].find(quote).map(|offset| offset + 1).ok_or_else(|| ParseError {
             message: "unterminated treemap node label".into(),

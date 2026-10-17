@@ -170,7 +170,7 @@
     {
       "id": "treemap",
       "headers": ["treemap", "treemap-beta"],
-      "status": "partial",
+      "status": "full",
       "ir": "hierarchy",
       "smoke_source": "treemap\n\"Root\"\n  \"Child\": 10"
     },
