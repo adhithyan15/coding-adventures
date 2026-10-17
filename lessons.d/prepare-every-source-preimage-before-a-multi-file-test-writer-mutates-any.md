@@ -33,3 +33,12 @@ and exit1 evidence, select the exact existing CRLF or LF title prefix without
 normalizing the whole file, then save and verify the complete byte inverse.
 The corrected carrier includes this lesson as an explicit changed execution
 input alongside the other Markdown paths; never assume it is inert source.
+
+
+The first actual carrier checker then found two manually named C40 shards
+whose full-title filenames exceeded the canonical first-twelve-word slug.
+Doc-shards passed, lessons exited1 with two problems, and diff was not run.
+Use lessons.py new (or its exact slugify function for a tracked rename), retain
+each whole lesson body, and rerun the real validator. The corrected carrier
+records both old-path absences and new-path bodies as explicit input exceptions;
+the failed carrier and its receipts remain history, never passing evidence.

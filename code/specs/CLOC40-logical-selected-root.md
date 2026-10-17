@@ -181,3 +181,13 @@ Base ESTree/own types/no new crates.io preserved. Miri DEFERRED/PENDING;
 frozen run/checkout/inputs/target/receipts untouched/unpolled. Genuine final-source
 Miri follows implementation delivery. Full objective OPEN; heartbeat ACTIVE.
 This later Markdown carrier claims no additional Rust execution.
+
+
+The intermediate carrier16236e2b actually passed doc-shards but failed lessons
+with two canonical filename/title slug mismatches; diff was not executed and
+both independent carrier reports stayed WITHHELD. The final Markdown-only
+successor uses the repository slugify function to rename those two lessons,
+preserving their complete bodies and recording this correction in the preimage
+lesson. Its closed inverse includes eight materialized Markdown bodies and both
+removed old names (ten changed paths), rooted at the actual a3 Rust execution.
+This is not an inert-Markdown assumption or Rust execution at either carrier.
