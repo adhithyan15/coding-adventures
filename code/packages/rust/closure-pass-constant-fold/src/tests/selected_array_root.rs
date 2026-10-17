@@ -3,6 +3,9 @@ use super::*;
 use coding_adventures_correlation_vector::GraphLimits;
 use serde_json::{json, Value};
 
+#[path = "selected_subtree_frontier.rs"]
+mod selected_subtree_frontier;
+
 // Test-only wire fixtures independently enumerate the actual AST union. No
 // production visitor/serialization is added to discover or stamp root CVs.
 fn shapes(cv: Option<&str>) -> Vec<(String, Expression)> {
