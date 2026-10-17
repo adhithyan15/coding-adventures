@@ -567,3 +567,94 @@ fn c35_member_refusals_preserve_all_preexisting_publication_destinations() {
     }
     std::fs::remove_dir(dir).unwrap();
 }
+
+#[test]
+fn c36_selected_merge_and_derive_refusals_preserve_all_publication_destinations() {
+    use crate::config::{CompilationLevel, CompilerConfig, CorrelationVectorFormat};
+    let dir = std::env::temp_dir().join(format!("closurec-c36-pub-{}", std::process::id()));
+    std::fs::create_dir(&dir).unwrap();
+    let input = dir.join("input.js");
+    std::fs::write(&input, "report([7,9][0]);").unwrap();
+    let paths = ["out.js", "out.map", "manifest.txt", "trace.json"].map(|name| dir.join(name));
+    for level in [CompilationLevel::Simple, CompilationLevel::Advanced] {
+        let mut c = CompilerConfig::default();
+        c.compilation.level = level;
+        c.io.js_patterns = vec![input.to_string_lossy().into_owned()];
+        c.io.js_output_file = Some(paths[0].clone());
+        c.source_map.path_template = paths[1].to_string_lossy().into_owned();
+        c.chunks.output_manifest_file = Some(paths[2].clone());
+        c.special_modes.correlation_vector = true;
+        c.special_modes.correlation_vector_format = CorrelationVectorFormat::Json;
+        c.special_modes.correlation_vector_output = Some(paths[3].clone());
+        crate::run::run_compiler(&c).unwrap();
+        let j: serde_json::Value =
+            serde_json::from_slice(&std::fs::read(&paths[3]).unwrap()).unwrap();
+        let entries = j["entries"].as_object().unwrap();
+        let selected: Vec<_> = entries
+            .iter()
+            .filter(|(id, e)| {
+                e["contributions"].as_array().unwrap().iter().any(|v| {
+                    v["source"] == "constant-fold"
+                        && v["tag"] == "folded"
+                        && v["meta"]["before"] == "array-literal[2][0]"
+                        && v["meta"]["after"] == "element[0]"
+                        && v["meta"]["new_cv"] == id.as_str()
+                })
+            })
+            .collect();
+        assert_eq!(selected.len(), 1);
+        let merge_id = selected[0].1["parent_ids"][0].as_str().unwrap();
+        let events = j["journal"]["events"].as_array().unwrap();
+        let index = events
+            .iter()
+            .position(|e| e["event"]["kind"] == "merge" && e["event"]["entity"] == merge_id)
+            .unwrap();
+        assert!(
+            !events[index]["context"].is_null(),
+            "selection's own pass merge"
+        );
+        let before_merge = events[..index]
+            .iter()
+            .filter(|e| {
+                matches!(
+                    e["event"]["kind"].as_str(),
+                    Some("create" | "derive" | "merge")
+                )
+            })
+            .count();
+        for cap in [before_merge, before_merge + 1] {
+            for format in [
+                CorrelationVectorFormat::Json,
+                CorrelationVectorFormat::Ndjson,
+                CorrelationVectorFormat::None,
+            ] {
+                for filtered in [false, true] {
+                    for p in &paths {
+                        std::fs::write(p, b"prior\0selection sentinel").unwrap();
+                    }
+                    let mut refused = c.clone();
+                    refused.special_modes.correlation_vector_limits.max_nodes = cap;
+                    refused.special_modes.correlation_vector_format = format;
+                    if filtered {
+                        refused.special_modes.correlation_vector_filter =
+                            vec!["hide-selection".into()];
+                    }
+                    let error = crate::run::run_compiler(&refused).unwrap_err();
+                    assert!(
+                        matches!(error, crate::run::CompilerError::TypedPipeline { .. }),
+                        "{error:?}"
+                    );
+                    assert!(error.to_string().contains("constant-fold"), "{error:?}");
+                    for p in &paths {
+                        assert_eq!(std::fs::read(p).unwrap(), b"prior\0selection sentinel");
+                    }
+                    assert_eq!(std::fs::read_dir(&dir).unwrap().count(), 5);
+                }
+            }
+        }
+    }
+    for p in paths.iter().chain(std::iter::once(&input)) {
+        std::fs::remove_file(p).unwrap();
+    }
+    std::fs::remove_dir(dir).unwrap();
+}

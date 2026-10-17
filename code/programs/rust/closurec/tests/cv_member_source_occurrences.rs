@@ -358,6 +358,98 @@ fn every_flat_prefix_preserves_exact_original_group_call_new_optional_and_super_
             .starts_with(j["entries"][inner]["parent_ids"].as_array().unwrap()));
     }
 }
+
+#[test]
+fn c36_selected_operand_merge_and_own_fold_events_share_exact_pass_context() {
+    for level in ["SIMPLE", "ADVANCED"] {
+        for (source, key_after) in [
+            ("report([1+2,9][0+0]);", "0"),
+            ("report([1+2,9][\"\"+\"0\"]);", "\"0\""),
+        ] {
+            let (j, _, paths) = compile(&[source], level);
+            let text = &source[7..source.len() - 2];
+            let member = exact(&j, source, &paths[0], text, "MemberExpression", None);
+            let entries = j["entries"].as_object().unwrap();
+            let find_fold = |after: &str| {
+                let rows: Vec<_> = entries
+                    .iter()
+                    .filter(|(id, e)| {
+                        e["contributions"].as_array().unwrap().iter().any(|c| {
+                            c["source"] == "constant-fold"
+                                && c["tag"] == "folded"
+                                && c["meta"]["after"] == after
+                                && c["meta"]["new_cv"] == id.as_str()
+                        })
+                    })
+                    .collect();
+                assert_eq!(rows.len(), 1, "one exact own fold to {after}");
+                rows[0].0.clone()
+            };
+            let selected = find_fold("3");
+            let key = find_fold(key_after);
+            let result = find_fold("element[0]");
+            let arrays: Vec<_> = entries
+                .iter()
+                .filter(|(_, e)| {
+                    e["origin"]["source"] == "typed_array"
+                        && e["origin"]["meta"][NODE]["start"] == position(source, 7)
+                        && e["origin"]["meta"][NODE]["end"] == position(source, 14)
+                })
+                .collect();
+            assert_eq!(arrays.len(), 1);
+            let merge = entries[&result]["parent_ids"].as_array().unwrap();
+            assert_eq!(merge.len(), 1);
+            let merge_id = merge[0].as_str().unwrap();
+            assert_eq!(
+                entries[merge_id]["parent_ids"],
+                json!([member, arrays[0].0, key, selected])
+            );
+            let events = j["journal"]["events"].as_array().unwrap();
+            let event = |kind: &str, id: &str| {
+                let rows: Vec<_> = events
+                    .iter()
+                    .filter(|e| e["event"]["kind"] == kind && e["event"]["entity"] == id)
+                    .collect();
+                assert_eq!(rows.len(), 1);
+                rows[0]
+            };
+            let merged = event("merge", merge_id);
+            let derived = event("derive", &result);
+            let contributed = event("contribution", &result);
+            assert_eq!(derived["context"], merged["context"]);
+            assert_eq!(contributed["context"], merged["context"]);
+            assert!(clock(&merged["sequence"]) < clock(&derived["sequence"]));
+            assert!(clock(&derived["sequence"]) < clock(&contributed["sequence"]));
+            for child in [&key, &selected] {
+                let rewritten = event("contribution", child);
+                assert_eq!(rewritten["context"], merged["context"]);
+                assert!(clock(&rewritten["sequence"]) < clock(&merged["sequence"]));
+            }
+            let pass = events
+                .iter()
+                .find(|e| e["sequence"] == merged["context"])
+                .unwrap();
+            assert_eq!(pass["event"]["kind"], "context_begin");
+            assert_eq!(pass["event"]["scope"]["kind"], "pass");
+            assert_eq!(clock(&pass["event"]["scope"]["sweep"]), 0);
+            let schedule = events
+                .iter()
+                .find(|e| e["event"]["kind"] == "schedule" && e["context"] == pass["context"])
+                .unwrap();
+            let slot = clock(&pass["event"]["scope"]["slot"]) as usize;
+            assert_eq!(schedule["event"]["passes"][slot]["name"], "constant-fold");
+            let ended = events
+                .iter()
+                .find(|e| {
+                    e["event"]["kind"] == "context_end" && e["event"]["begin"] == pass["sequence"]
+                })
+                .unwrap();
+            assert_eq!(ended["event"]["outcome"]["kind"], "accepted");
+            assert_eq!(ended["event"]["outcome"]["changed"], true);
+            assert!(clock(&contributed["sequence"]) < clock(&ended["sequence"]));
+        }
+    }
+}
 #[test]
 fn repeated_inputs_keep_raw_escaped_crlf_astral_asi_member_parents_separate() {
     let source = "/*😀*/\r\nreport([/*x*/\"\\u0061\",,[]].length)\na.b.c\n";
