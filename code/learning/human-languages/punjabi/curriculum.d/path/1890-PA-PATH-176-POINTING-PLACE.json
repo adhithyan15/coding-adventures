@@ -1,0 +1,9 @@
+{
+  "id": "PA-PATH-176-POINTING-PLACE",
+  "spine_node": "SPINE-ASK-LOCATION",
+  "before": [],
+  "inline": [
+    "PA-EXT-176-POINTING-PLACE"
+  ],
+  "after": []
+}
