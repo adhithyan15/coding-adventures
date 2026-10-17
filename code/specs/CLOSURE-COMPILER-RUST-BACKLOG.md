@@ -3148,3 +3148,17 @@ receipts untouched/unpolled. Full transformation/output/parity objective OPEN.
   Main `a5f78efb7188e06adfbd10432dc2387d54a35fd3` reconciliation, sole PR#17288
   UNKNOWN/hosted checks/merge/delivery OPEN. Miri DEFERRED/PENDING;
   frozen run untouched/unpolled, genuine final-source acceptance after delivery.
+
+### 2026-10-17: CLOC39 equal-conditional frontier contract selected
+
+- Spec-first CLOC39 separately joins original conditional plus complete folded
+  test/consequent/alternate frontiers. Preserve current native CV-ignoring
+  equality, literal/pure guards, payload and evaluation order; pure actual root
+  or impure new sequence owns the checked rewrite. No typed deletion claim.
+- Reuse C37 scanner with one cumulative multi-root count/replay work/storage
+  budget and preserve exact singleton costs. Tests-first exact lineage, child
+  failure origins, physical source/clock and all-publication controls required.
+- Contract only; implementation/execution/security acceptance pending. Current
+  main reconciliation/sole PR conflict/CI/delivery/full parity remain OPEN.
+  Miri DEFERRED/PENDING, frozen run untouched; final-source acceptance after
+  implementation delivery.
