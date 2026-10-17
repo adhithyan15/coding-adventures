@@ -7041,6 +7041,7 @@ mod tests {
     use coding_adventures_type_sidecar::Sidecar;
 
     mod array_length_lineage;
+    mod selected_array_root;
 
     fn program() -> Program {
         Program::new("prog.1".to_string(), EsVersion::Es2025, SourceType::Module)
