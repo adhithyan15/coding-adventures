@@ -378,20 +378,59 @@ fn c35_bad_private_member_evidence_refuses_before_any_graph_mutation() {
     }
 }
 #[test]
+fn c35_optional_marker_kind_and_grammar_name_are_required_before_graph_mutation() {
+    for (source, computed) in [("a?.b;", false), ("a?.[b];", true)] {
+        for case in ["kind", "grammar-name", "missing-name"] {
+            let mut p = prepare(source, GraphLimits::default()).unwrap();
+            let mut node = owner(&p.node).unwrap().clone();
+            let end = node.children.len() - 1;
+            let ASTNodeOrToken::Token(marker) = &mut node.children[1] else {
+                panic!("optional marker");
+            };
+            assert_eq!(marker.value, "?.");
+            assert_eq!(marker.type_name.as_deref(), Some("OPTIONAL_CHAIN"));
+            match case {
+                "kind" => marker.type_ = TokenType::Number,
+                "grammar-name" => marker.type_name = Some("NUMBER".into()),
+                "missing-name" => marker.type_name = None,
+                _ => unreachable!(),
+            }
+            let before = p.log.to_json_string().unwrap();
+            let mut ledger = ArrayLedger::new(ArrayLimits::default()).unwrap();
+            let mut sink = ledger.observer(&mut p.log, &p.root).unwrap();
+            assert!(
+                sink.member_constructed(&node, end, computed, true).is_err(),
+                "accepted {case} {source}"
+            );
+            assert_eq!(p.log.to_json_string().unwrap(), before);
+            assert!(ledger.receipts.is_empty());
+        }
+    }
+}
+#[test]
 fn c35_exact_and_one_less_limits_include_mixed_nonpower_growth_and_final_census() {
     for source in ["a.b;", "[];a.b;a?.b;", "[];a.b;[];a?.[x];a[b];"] {
         let f = fixture(source, ArrayLimits::default()).unwrap();
         validate(&f, &f.p.log).unwrap();
         let ledger_bytes = f.ledger.receipts.capacity() * size_of::<Receipt>();
-        let count = f
-            .ledger
-            .receipts
-            .iter()
-            .map(|r| r.last_index - r.first_index + 1)
-            .max()
-            .unwrap();
-        let peak =
-            ledger_bytes + count * (size_of::<String>() + 64 + size_of::<&str>()) + META_BYTES;
+        // Capacity and interval maxima may occur in different callbacks. Buy
+        // only the maximum simultaneous phase, including old/new ledger growth.
+        let mut capacity = 0usize;
+        let mut peak = 0usize;
+        for (index, row) in f.ledger.receipts.iter().enumerate() {
+            if index == capacity {
+                let old = capacity;
+                capacity = if old == 0 { 1 } else { old * 2 };
+                peak = peak.max((old + capacity) * size_of::<Receipt>());
+            }
+            let count = row.last_index - row.first_index + 1;
+            peak = peak.max(
+                capacity * size_of::<Receipt>()
+                    + count * (size_of::<String>() + 64 + size_of::<&str>())
+                    + META_BYTES,
+            );
+        }
+        assert_eq!(capacity, f.ledger.receipts.capacity());
         let exact = ArrayLimits {
             work: f.ledger.used_work,
             buffer_bytes: peak,
