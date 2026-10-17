@@ -665,6 +665,25 @@ fn selected_merge_and_derive_refusals_at(
     selected_index: usize,
     expected_matches: usize,
 ) {
+    selected_refusals_kind(
+        family,
+        source,
+        before,
+        after,
+        (selected_index, expected_matches, true),
+    );
+}
+
+// A source logical left-selection has one available parent and derives directly.
+// Keep all old merge/derive controls intact; explicitly request that direct
+// phase only for the new left-selection controls.
+fn selected_refusals_kind(
+    family: &str,
+    source: &str,
+    before: &str,
+    after: &str,
+    (selected_index, expected_matches, merged): (usize, usize, bool),
+) {
     use crate::config::{CompilationLevel, CompilerConfig, CorrelationVectorFormat};
     let dir = std::env::temp_dir().join(format!("closurec-{family}-pub-{}", std::process::id()));
     std::fs::create_dir(&dir).unwrap();
@@ -713,12 +732,17 @@ fn selected_merge_and_derive_refusals_at(
             assert_eq!(positions.len(), 1);
             positions[0]
         });
-        let merge_id = selected[selected_index].1["parent_ids"][0]
-            .as_str()
-            .unwrap();
+        let target_id = if merged {
+            selected[selected_index].1["parent_ids"][0]
+                .as_str()
+                .unwrap()
+        } else {
+            selected[selected_index].0.as_str()
+        };
+        let kind = if merged { "merge" } else { "derive" };
         let index = events
             .iter()
-            .position(|e| e["event"]["kind"] == "merge" && e["event"]["entity"] == merge_id)
+            .position(|e| e["event"]["kind"] == kind && e["event"]["entity"] == target_id)
             .unwrap();
         assert!(
             !events[index]["context"].is_null(),
@@ -733,7 +757,12 @@ fn selected_merge_and_derive_refusals_at(
                 )
             })
             .count();
-        for cap in [before_merge, before_merge + 1] {
+        let caps = if merged {
+            vec![before_merge, before_merge + 1]
+        } else {
+            vec![before_merge]
+        };
+        for cap in caps {
             for format in [
                 CorrelationVectorFormat::Json,
                 CorrelationVectorFormat::Ndjson,
@@ -768,4 +797,109 @@ fn selected_merge_and_derive_refusals_at(
         std::fs::remove_file(p).unwrap();
     }
     std::fs::remove_dir(dir).unwrap();
+}
+
+#[test]
+fn c40_logical_outer_refusals_preserve_all_publication_destinations() {
+    for (name, source, before, after, merged) in [
+        (
+            "and-right",
+            "report((1+0)&&observe(1+2));",
+            "(<expr>) && (...)",
+            "<expr>",
+            true,
+        ),
+        (
+            "or-right",
+            "report((0+0)||observe(1+2));",
+            "(<expr>) || (...)",
+            "<expr>",
+            true,
+        ),
+        (
+            "nullish-right",
+            "report(null??observe(1+2));",
+            "(<expr>) ?? (...)",
+            "<expr>",
+            true,
+        ),
+        (
+            "and-left",
+            "report((0+0)&&observe(1+2));",
+            "(0) && (...)",
+            "0",
+            false,
+        ),
+        (
+            "or-left",
+            "report((1+0)||observe(1+2));",
+            "(1) || (...)",
+            "1",
+            false,
+        ),
+        (
+            "nullish-left",
+            "report((1+0)??observe(1+2));",
+            "(1) ?? (...)",
+            "1",
+            false,
+        ),
+    ] {
+        selected_refusals_kind(
+            &format!("c40-outer-{name}"),
+            source,
+            before,
+            after,
+            (0, 1, merged),
+        );
+    }
+}
+
+#[test]
+fn c40_logical_child_origins_preserve_all_publication_destinations() {
+    for (name, source, left) in [
+        (
+            "and-right",
+            "report((1+0)&&observe(4+5));",
+            Some(("(1) + (0)", "1")),
+        ),
+        (
+            "or-right",
+            "report((0+0)||observe(4+5));",
+            Some(("(0) + (0)", "0")),
+        ),
+        ("nullish-right", "report(null??observe(4+5));", None),
+        (
+            "and-left",
+            "report((0+0)&&observe(4+5));",
+            Some(("(0) + (0)", "0")),
+        ),
+        (
+            "or-left",
+            "report((1+0)||observe(4+5));",
+            Some(("(1) + (0)", "1")),
+        ),
+        (
+            "nullish-left",
+            "report((1+0)??observe(4+5));",
+            Some(("(1) + (0)", "1")),
+        ),
+    ] {
+        if let Some((before, after)) = left {
+            selected_merge_and_derive_refusals(
+                &format!("c40-child-left-{name}"),
+                source,
+                before,
+                after,
+            );
+        }
+        // The right child's own checked work happens even when short-circuited
+        // at JavaScript runtime; this compiler deliberately folds both operands.
+        selected_merge_and_derive_refusals(
+            &format!("c40-child-right-{name}"),
+            source,
+            "(4) + (5)",
+            "9",
+        );
+    }
 }

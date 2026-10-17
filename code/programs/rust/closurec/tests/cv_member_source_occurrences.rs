@@ -829,3 +829,119 @@ fn c39_equal_conditional_joins_both_physical_arms_and_own_pass_context() {
         }
     }
 }
+
+#[test]
+fn c40_logical_actual_left_and_chosen_tokens_join_own_pass_context() {
+    for level in ["SIMPLE", "ADVANCED"] {
+        for (source, operator, keep_right, label) in [
+            ("report((1+0)&&observe(4+5));", "&&", true, "1"),
+            ("report((0+0)||observe(4+5));", "||", true, "0"),
+            ("report(null??observe(4+5));", "??", true, "null"),
+            ("report((0+0)&&observe(4+5));", "&&", false, "0"),
+            ("report((1+0)||observe(4+5));", "||", false, "1"),
+            ("report((1+0)??observe(4+5));", "??", false, "1"),
+        ] {
+            // compile() independently asserts traced/plain emitted-byte identity.
+            let (j, _, _) = compile(&[source], level);
+            let entries = j["entries"].as_object().unwrap();
+            let own_fold = |before: &str, after: &str| {
+                let rows: Vec<_> = entries
+                    .iter()
+                    .filter(|(id, e)| {
+                        e["contributions"].as_array().unwrap().iter().any(|c| {
+                            c["source"] == "constant-fold"
+                                && c["tag"] == "folded"
+                                && c["meta"]["before"] == before
+                                && c["meta"]["after"] == after
+                                && c["meta"]["new_cv"] == id.as_str()
+                        })
+                    })
+                    .collect();
+                assert_eq!(rows.len(), 1, "exact own fold {before} to {after}");
+                rows[0].0.clone()
+            };
+            let token = |name: &str| {
+                let start = source.find(name).unwrap();
+                let rows: Vec<_> = entries
+                    .iter()
+                    .filter(|(_, e)| {
+                        let physical = &e["origin"]["meta"][SOURCE];
+                        physical["kind"] == "token"
+                            && physical["start"] == position(source, start)
+                            && physical["end"] == position(source, start + name.len())
+                    })
+                    .collect();
+                assert_eq!(rows.len(), 1, "physical {name}");
+                rows[0].0.clone()
+            };
+            let left = if label == "null" {
+                token("null")
+            } else {
+                own_fold(&format!("({label}) + (0)"), label)
+            };
+            let child = own_fold("(4) + (5)", "9");
+            let callee = token("observe");
+            let after = if keep_right { "<expr>" } else { label };
+            let result = own_fold(&format!("({after}) {operator} (...)"), after);
+            let events = j["journal"]["events"].as_array().unwrap();
+            let event = |kind: &str, id: &str| {
+                let rows: Vec<_> = events
+                    .iter()
+                    .filter(|e| e["event"]["kind"] == kind && e["event"]["entity"] == id)
+                    .collect();
+                assert_eq!(rows.len(), 1);
+                rows[0]
+            };
+            let derive = event("derive", &result);
+            let contribution = event("contribution", &result);
+            let first = if keep_right {
+                let merged = entries[&result]["parent_ids"][0].as_str().unwrap();
+                assert_eq!(entries[&result]["parent_ids"], json!([merged]));
+                assert_eq!(entries[merged]["parent_ids"], json!([left, callee, child]));
+                let merge = event("merge", merged);
+                assert_eq!(merge["context"], derive["context"]);
+                assert!(clock(&merge["sequence"]) < clock(&derive["sequence"]));
+                merge
+            } else {
+                // No original logical CV is fabricated: left-only source choice
+                // has one available identity and therefore derives without merge.
+                assert_eq!(entries[&result]["parent_ids"], json!([left]));
+                let reachable = ancestry(&j, &result);
+                assert!(!reachable.contains(&child));
+                assert!(!reachable.contains(&callee));
+                derive
+            };
+            assert_eq!(derive["context"], contribution["context"]);
+            assert!(clock(&derive["sequence"]) < clock(&contribution["sequence"]));
+            let right_event = event("contribution", &child);
+            assert_eq!(right_event["context"], first["context"]);
+            assert!(clock(&right_event["sequence"]) < clock(&first["sequence"]));
+            if label != "null" {
+                let left_event = event("contribution", &left);
+                assert_eq!(left_event["context"], right_event["context"]);
+                assert!(clock(&left_event["sequence"]) < clock(&right_event["sequence"]));
+            }
+            let pass = events
+                .iter()
+                .find(|e| e["sequence"] == derive["context"])
+                .unwrap();
+            assert_eq!(pass["event"]["scope"]["kind"], "pass");
+            assert_eq!(clock(&pass["event"]["scope"]["sweep"]), 0);
+            let schedule = events
+                .iter()
+                .find(|e| e["event"]["kind"] == "schedule" && e["context"] == pass["context"])
+                .unwrap();
+            let slot = clock(&pass["event"]["scope"]["slot"]) as usize;
+            assert_eq!(schedule["event"]["passes"][slot]["name"], "constant-fold");
+            let end = events
+                .iter()
+                .find(|e| {
+                    e["event"]["kind"] == "context_end" && e["event"]["begin"] == pass["sequence"]
+                })
+                .unwrap();
+            assert_eq!(end["event"]["outcome"]["kind"], "accepted");
+            assert_eq!(end["event"]["outcome"]["changed"], true);
+            assert!(clock(&contribution["sequence"]) < clock(&end["sequence"]));
+        }
+    }
+}
