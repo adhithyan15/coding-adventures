@@ -190,7 +190,7 @@ fn c38_existing_truthiness_and_labels_include_nan_infinities_and_signed_zero() {
         (num(f64::INFINITY, None), true, "Infinity"),
         (num(f64::NEG_INFINITY, None), true, "-Infinity"),
         (string("", None), false, "\"\""),
-        (string("😀", None), true, "\"😀\""),
+        (string("ðŸ˜€", None), true, "\"ðŸ˜€\""),
         (
             Expression::NullLiteral(NullLiteral { cv: None }),
             false,
@@ -458,14 +458,12 @@ fn c38_unchosen_child_checked_refusals_latch_before_outer_selection() {
             } else {
                 &ids[4]
             };
-            let entries_before = serde_json::to_value(cv.entries()).unwrap();
-            let journal_before = serde_json::to_value(cv.journal().unwrap().events()).unwrap();
+            let snapshot = |cv: &CVLog| {
+                serde_json::from_str::<serde_json::Value>(&cv.to_json_string().unwrap()).unwrap()
+            };
+            let before = snapshot(&cv);
             let expected = cv.try_merge(&[ids[3].as_str(), right], None).unwrap_err();
-            assert_eq!(serde_json::to_value(cv.entries()).unwrap(), entries_before);
-            assert_eq!(
-                serde_json::to_value(cv.journal().unwrap().events()).unwrap(),
-                journal_before
-            );
+            assert_eq!(snapshot(&cv), before);
             let input = choose(
                 boolean(truthy, Some(&ids[1])),
                 Expression::Identifier(Identifier {
@@ -492,11 +490,7 @@ fn c38_unchosen_child_checked_refusals_latch_before_outer_selection() {
             assert_eq!(error.message, format!("CV fold merge failed: {expected}"));
             // Neither the refused child nor the later outer selection may add
             // identities, journal events, or contributions after the latch.
-            assert_eq!(serde_json::to_value(cv.entries()).unwrap(), entries_before);
-            assert_eq!(
-                serde_json::to_value(cv.journal().unwrap().events()).unwrap(),
-                journal_before
-            );
+            assert_eq!(snapshot(&cv), before);
             if missing_parent {
                 let outer = cv
                     .try_merge(&[ids[0].as_str(), ids[1].as_str(), ids[2].as_str()], None)
