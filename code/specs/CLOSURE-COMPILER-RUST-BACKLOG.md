@@ -3084,3 +3084,19 @@ receipts untouched/unpolled. Full transformation/output/parity objective OPEN.
   `9f67440bb9a3271455e19f27a6e5743bbf6e051c` reconciliation, PR#17288 conflicts,
   hosted required CI/full delivery/full lineage/output mapping/parity OPEN.
   Miri DEFERRED/PENDING; frozen run preserved, final-source acceptance later.
+
+### 2026-10-17: CLOC37 selected-subtree frontier contract
+
+- [CLOC37](CLOC37-selected-subtree-frontier.md) specifies exact selected-subtree
+  preorder after member/array/actual-key operands. Continue through nonempty
+  composite CVs to retained rewritten descendants, with exhaustive own-AST
+  fields/variants and metered iterative list frames. Contract only: no C37
+  implementation, compiled regression or runtime acceptance yet.
+- Work charges both scans and ID/hash/collision operations; requested-storage
+  peak includes simultaneously live walk/dedup buffers and old/new growth.
+  No unmetered intermediate vector, recursive visitor or JSON bridge. Current
+  CLOC27 source-token provenance remains real; stale epic audit is superseded.
+- Current audit main `9f67440bb9a3271455e19f27a6e5743bbf6e051c`, sole PR#17288
+  dynamically discovered published head `6132a518b3990619eb904397ee0b21a69ce8ac20`,
+  CONFLICTING/0 checks/autoOFF. Main reconciliation/delivery/full lineage/parity
+  remain OPEN. Miri DEFERRED/PENDING; frozen run untouched, final-source later.
