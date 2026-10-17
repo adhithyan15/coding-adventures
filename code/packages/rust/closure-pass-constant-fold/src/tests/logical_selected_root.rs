@@ -482,9 +482,9 @@ fn c40_checked_child_origins_preserve_first_error_and_prior_left_activity() {
                         }
                     };
                     let value = if op == LogicalOperator::And {
-                        (if right_selected { 1.0 } else { 0.0 })
+                        if right_selected { 1.0 } else { 0.0 }
                     } else if op == LogicalOperator::Or {
-                        (if right_selected { 0.0 } else { 1.0 })
+                        if right_selected { 0.0 } else { 1.0 }
                     } else {
                         0.0
                     };
