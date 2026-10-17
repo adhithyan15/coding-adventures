@@ -3173,3 +3173,22 @@ receipts untouched/unpolled. Full transformation/output/parity objective OPEN.
   child-origin contexts completed; other four functions failed early.
   Unwired independent resource and CLI lineage/publication tests follow before
   implementation. No Miri activity; DEFERRED/PENDING and delivery OPEN.
+
+### 2026-10-17: CLOC39 equal-conditional frontier locally validated
+
+- Checked ordered available conditional/test/consequent/alternate complete
+  frontiers now own pure actual roots or impure new sequence roots. One shared
+  count/replay work/storage budget, exact singleton costs, existing guards/
+  equality/evaluation/nested payload retained; no typed deletion/role claim.
+- Actual execution `2cb61536f9e1a8408b6890df2b4afb4ea9ae6e42`:2950P/0F/2historicalI/195exe+3emptydocs,
+  bothstrict0; source/combined independent PASS. Native144/32, exact parents/
+  child-error origins; resource104/121/31/100/shared-cap/allocation/deep-wide;
+  CLI4 exact source/clock/byte cells and48outer+144child refusal cells pass.
+  Same-head focused59/354/54 runtime retains LANG/CLR/native-LLVM limits.
+- Earlier811 compiled red and821 focused tests/strict failure remain exact;
+  narrow2cb test repair and guarded owned-target symbol cleanup are recorded
+  without passing-credit transfer. Current-main `7aa8396d2dd7b81687168722ba71e95b0650101f`,
+  sole PR#17288 UNKNOWN/hosted checks/merge/delivery OPEN.
+  Other transformations/typedroles/output joins/parity remain OPEN.
+  Miri DEFERRED/PENDING; frozen run untouched, final-source acceptance after
+  implementation delivery. Full objective OPEN; heartbeat ACTIVE.

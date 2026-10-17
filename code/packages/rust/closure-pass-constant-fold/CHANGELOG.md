@@ -4,6 +4,19 @@ All notable changes to the `coding-adventures-closure-pass-constant-fold` crate 
 
 ## [Unreleased]
 
+### CLOC39 equal-conditional evidence frontiers
+
+Equal-branch collapse now joins available conditional and complete folded test,
+consequent and alternate identities under one cumulative count/replay budget.
+The pure returned root or impure sequence owns the checked fold; nested data,
+evaluation order and existing equality/side-effect guards remain. Both arms
+provide source/rewrite evidence while one arm executes. Exact graph/source/
+pass clocks and child/outer refusal controls supplement prior scanner limits.
+See CLOC39 for local acceptance evidence; typed roles/deletion, full output-byte/
+source joins/parity/delivery remain OPEN. Miri DEFERRED/PENDING; genuine
+final-source acceptance follows implementation delivery.
+
+
 ### CLOC38 literal conditional root lineage
 
 Literal conditional selection now stamps its actual returned expression root

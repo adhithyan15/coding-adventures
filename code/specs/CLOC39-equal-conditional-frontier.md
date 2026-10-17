@@ -1,6 +1,6 @@
 # CLOC39: equal-branch conditionals join all three folded subtrees
 
-Status: contract only; implementation, execution and delivery OPEN.
+Status: equal-conditional slice locally validated; delivery and full completion OPEN.
 
 CLOC38 covers literal truthiness selection. This separate slice covers only
 fold_conditional's existing equal_fold_branches path after literal_truthy has
@@ -96,3 +96,74 @@ mappings and evidence-backed Closure parity remain OPEN. Base ESTree canonical
 boundary/own types/no new crates.io preserved. Miri DEFERRED/PENDING; frozen run,
 checkout/inputs/target/receipts untouched/unpolled. Genuine final-source Miri
 follows authorized implementation delivery. Full objective OPEN; heartbeat ACTIVE.
+
+## 2026-10-17: equal-conditional three-tree slice locally validated
+
+Actual full/runtime execution `2cb61536f9e1a8408b6890df2b4afb4ea9ae6e42` follows CLOC39 contractc03ebe94, reviewed
+before code. Existing literal-truthiness/equality/side-effect admission and
+test/consequent/alternate folding order remain. The checked fold joins available
+original conditional then complete folded test/consequent/alternate native
+preorder, with first-seen dedup across all trees. Both equal arms provide
+rewrite/source evidence, without claiming both execute. Pure tests return the
+existing consequent with only its actual root stamped; impure tests retain
+SequenceExpression[test,consequent] and own the new sequence root. Nested CVs
+and non-CV payload remain; labels stay t ? X : X -> X or (t,X). No IDs yields
+no identity/contribution; one ID derives directly. Typed roles/deletion events
+and general output-byte/source mappings are not added by this slice.
+
+One Budget/frame stack covers all count roots, combined raw-count reference
+and bucket allocation, then all replay roots. Test prefix is conditional/None/
+None and both branch prefixes are all None in each scan. The original conditional
+is not recharged per tree. C37 singleton work/storage and exhaustive typed field
+walker are unchanged. All live buffers and old/new frame migration peaks are
+metered; no synthetic/cloned AST, root heap queue, new crates.io dependency or
+production-limit change. This bounds collector work/requested buffers, not the
+existing recursive folder/equality/clone or caller/system memory.
+
+Tests-first811 compiled1P4F red: twelve child-error contexts completed, while
+four failures stopped other loops early. Resources/CLI32bd were committed and
+statically reviewed before production821. Focus821 really passed12 new and5
+old array functions, but its strict101 chunks lint made aggregate acceptance
+WITHHELD. The2cb tests-only array-chunk repair retained every assertion and
+added an empty-remainder check; the failed receipt remains failed. An initial
+2cb disk guard stopped before receipt/Cargo/target writes; reclaiming only
+regenerable PDB symbols in the separate owned target restored space without
+lowering the guard or touching executables, source, receipts or frozen Miri.
+None of this older evidence transfers final acceptance to `2cb61536f9e1a8408b6890df2b4afb4ea9ae6e42`.
+
+Actual full suites:282 parser+490 folder+1172 CLI+1006 native=2950P/0F,
+two unchanged historical ignores,195 executable joins/three empty doctests;
+both all-target strict checks complete0. Native144 root-shape cells,32 ID
+availability/duplicate cells, both rewritten arms plus complete test descendants,
+twelve first-child error contexts and ten outer graph/event refusals pass.
+Seven new resource functions prove independently derived104/121/31/100 work,
+exact/one-less requested storage, combined raw duplicate capacity, cumulative
+rather than per-tree allowances, all three allocation refusals, and three-tree
+4096-deep/100000-wide collection on144KiB stack with iterative disposal.
+All old C37/C38 populated/Unicode/budget/allocation/guard controls remain.
+
+SIMPLE/ADVANCED pure/impure CLI cells join BOTH distinct physical observe-token
+intervals, both real rewritten argument IDs and test evidence in exact order;
+child-before-outer and own merge/derive/contribution pass/sweep clocks and
+traced/plain emitted bytes match. New48 outer and144 test/consequent/alternate
+child merge/derive refusal cells preserve all four publication sentinel bytes.
+Equal duplicate labels are selected by actual derive-event order; prior helper
+assertions/default single-occurrence controls are preserved. Cell counts are
+loop evidence, not additional unique test-function totals.
+Core `0df045615db01c8109473df9b775279d6e58a1534222c2a24484e9e2cff3633f`, source `04d4ecd304484a6975b4468ac567921980d50992a9b0b06b6e64f1d4b2122c00`,
+combined terminal `d2fbbab31e0f1456dbbcbb6b23171ea05b5c36026ddda560ffa6fd28933f7993` bind physical source/locks/logs/artifacts.
+
+Separate same-head runtime `400860da6d60ac2b68002becadd8f592a37ee3a0fb4b5aad315db577e2982fe5` retains59 declared sources,
+354 ordered six-backend observations/54 exact VM-JIT Float-bit captures;
+integration4P/observer1P/refusal1P/strict0. LANG526 filtered, CLR absent/uncounted,
+native/LLVM typed-main ABI OPEN; no full LANG/raw-output-byte/precision theorem.
+
+Audit 2026-10-17T23:08:17.375524+00:00: main `7aa8396d2dd7b81687168722ba71e95b0650101f`; sole Closure/shared
+PR#17288 published `6132a518b3990619eb904397ee0b21a69ce8ac20`, UNKNOWN/
+0 checks/autoOFF. No push/hosted acceptance/merge.
+Remaining fold/rename/inline/motion/merging/deletion roles, complete pass/output
+byte/source joins, parity and current-main delivery remain OPEN. Base ESTree
+canonical boundary/own types/no new crates.io preserved. Miri DEFERRED/PENDING;
+frozen run/checkout/inputs/target/receipts untouched/unpolled. Genuine final-source
+Miri follows implementation delivery. Full objective OPEN; heartbeat ACTIVE.
+This later Markdown carrier claims no additional Rust execution.
