@@ -337,3 +337,117 @@ fn c36_selection_checked_failures_reject_the_typed_candidate() {
         }
     }
 }
+
+#[test]
+fn c36_opaque_selected_call_keeps_nonempty_nested_and_derived_child_cvs() {
+    for string_key in [false, true] {
+        let mut cv = CVLog::new_checked_compact(GraphLimits::default()).unwrap();
+        let ids: Vec<_> = (0..7).map(|_| cv.try_create(None).unwrap()).collect();
+        let selected = Expression::CallExpression(CallExpression {
+            cv: Some(ids[3].clone()),
+            callee: Box::new(Expression::Identifier(Identifier {
+                cv: Some(ids[4].clone()),
+                name: "observe".into(),
+            })),
+            arguments: vec![Expression::BinaryExpression(BinaryExpression {
+                cv: None,
+                operator: BinaryOperator::Add,
+                left: Box::new(num(1.0, Some(&ids[5]))),
+                right: Box::new(num(2.0, Some(&ids[6]))),
+            })],
+        });
+        let prog = pick(
+            vec![Some(selected), Some(num(9.0, None))],
+            if string_key {
+                string("0", Some(&ids[2]))
+            } else {
+                num(0.0, Some(&ids[2]))
+            },
+            &ids,
+        );
+        let out = run(&prog, &mut cv);
+        let result = extract_expr(&out.program);
+        assert_owned(&cv, result, &ids[..4]);
+        let Expression::CallExpression(call) = result else {
+            panic!("selected effect must remain a call");
+        };
+        let Expression::Identifier(callee) = call.callee.as_ref() else {
+            panic!("callee");
+        };
+        assert_eq!(callee.cv.as_ref(), Some(&ids[4]));
+        assert_eq!(callee.name, "observe");
+        assert_eq!(call.arguments.len(), 1);
+        let Expression::NumericLiteral(argument) = &call.arguments[0] else {
+            panic!("folded argument");
+        };
+        assert_eq!(argument.value.to_bits(), 3.0f64.to_bits());
+        let child = cv
+            .get(
+                argument
+                    .cv
+                    .as_deref()
+                    .expect("derived child retained in actual subtree"),
+            )
+            .unwrap();
+        assert_eq!(child.contributions.len(), 1);
+        assert_eq!(child.contributions[0].meta["after"], "3");
+        assert_eq!(cv.get(&child.parent_ids[0]).unwrap().parent_ids, ids[5..7]);
+        // This proves the returned CHILD retains its earlier rewrite. CLOC36
+        // does not claim a general root-to-descendant parent_ids closure.
+    }
+}
+
+#[test]
+fn c36_numeric_string_spellings_keep_the_original_string_key_identity() {
+    for spelling in ["0", "00", " 0 ", "0x0", "0e0", "", "-0"] {
+        let mut cv = CVLog::new_checked_compact(GraphLimits::default()).unwrap();
+        let ids: Vec<_> = (0..4).map(|_| cv.try_create(None).unwrap()).collect();
+        let prog = pick(
+            vec![Some(num(7.0, Some(&ids[3]))), Some(num(9.0, None))],
+            string(spelling, Some(&ids[2])),
+            &ids,
+        );
+        let out = run(&prog, &mut cv);
+        assert_owned(&cv, extract_expr(&out.program), &ids);
+    }
+}
+
+#[test]
+fn c36_sibling_effect_spread_and_fractional_refusals_keep_semantics() {
+    for case in 0..4 {
+        let mut cv = CVLog::new_checked_compact(GraphLimits::default()).unwrap();
+        let ids: Vec<_> = (0..4).map(|_| cv.try_create(None).unwrap()).collect();
+        let sibling = match case {
+            0 => Expression::CallExpression(CallExpression {
+                cv: None,
+                callee: Box::new(ident("effect")),
+                arguments: vec![],
+            }),
+            1 => Expression::SpreadElement(SpreadElement {
+                cv: None,
+                argument: Box::new(ident("unknown")),
+            }),
+            _ => num(9.0, None),
+        };
+        let key = if case == 3 {
+            string("0.5", Some(&ids[2]))
+        } else {
+            num(if case == 2 { 0.5 } else { 0.0 }, Some(&ids[2]))
+        };
+        let prog = pick(
+            vec![Some(num(7.0, Some(&ids[3]))), Some(sibling)],
+            key,
+            &ids,
+        );
+        let out = run(&prog, &mut cv);
+        assert!(matches!(
+            extract_expr(&out.program),
+            Expression::MemberExpression(_)
+        ));
+        assert!(extract_expr(&out.program).eq_ignoring_cv(extract_expr(&prog)));
+        assert!(out
+            .contributions
+            .iter()
+            .all(|c| c.meta["after"] != "element[0]"));
+    }
+}
