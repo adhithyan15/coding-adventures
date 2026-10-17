@@ -10,3 +10,6 @@
   paper, key, or rubric files.
 - Cover both synthetic complete/incomplete sources and the real Italian corpus
   with focused planner tests.
+- Preserve registered track directories in the inventory-only planner fixture,
+  so its deduplication test still reaches its assertion after the new
+  prerequisite screen.
