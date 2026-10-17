@@ -18,3 +18,9 @@ actual execution rather than treating a prepared helper as completed evidence.
 Use a saved UTF-8 Python helper for source edits containing Rust quotes. A prior
 PowerShell Python one-liner lost nested quotation marks and failed to parse;
 that failure occurred before any file write and was corrected before tests.
+
+The later unexecuted docs writer also needed a stronger review-verdict guard:
+searching only for PASSED could accept NOT PASSED and did not require the full
+execution HEAD in the review opening. Require the positive SECURITY REVIEW
+PASSED marker, reject negative header markers, and bind the exact full source
+HEAD within the opening review text in addition to path and fingerprint checks.

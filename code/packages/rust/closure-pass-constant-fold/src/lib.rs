@@ -6153,23 +6153,30 @@ fn fold_logical(l: &LogicalExpression, st: &mut FoldState) -> Expression {
     };
 
     if let Some(side) = kept {
-        let chosen = match side {
+        // Capture the actual deciding left identity before moving either
+        // operand. When left itself is chosen the collector deduplicates the
+        // alias; an opaque chosen right also contributes its newer children.
+        let left_cv = primitive_cv(&left).map(str::to_owned);
+        let mut chosen = match side {
             Side::Left => left,
             Side::Right => right,
         };
-        let parent = l.cv.clone();
         let before = format!(
             "({}) {} (...)",
             lit_label(&chosen),
             logical_op_label(l.operator)
         );
         let after = literal_label_for_expr(&chosen);
-        // We mark `changed = true` regardless of tracing, but only
-        // emit a contribution + derive a new cv when tracing is on.
-        let _new_cv = st.fork_cv(&parent, &before, &after);
-        // The chosen side keeps its own cv (it's the same node, just
-        // promoted); we don't re-stamp it. Contribution records the
-        // collapse.
+        // Earlier left/right work is retained even for a short-circuited
+        // runtime operand. A latched child error skips this outer collection;
+        // checked failure rejects the candidate without publishing a Program.
+        let new_cv = fork_selected_subtree_cvs(
+            [l.cv.as_deref(), left_cv.as_deref(), None], &chosen,
+            &before, &after, st,
+        );
+        if st.cv_error.is_none() {
+            *selected_root_identity::slot(&mut chosen) = new_cv;
+        }
         return chosen;
     }
 
