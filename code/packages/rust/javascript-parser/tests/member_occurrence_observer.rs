@@ -57,6 +57,14 @@ impl Recording<'_> {
             .collect();
         let refs: Vec<_> = parents.iter().map(String::as_str).collect();
         let id = self.log.try_merge(&refs, None)?;
+        // Merge buys node/edge capacity; exercise the independent contribution
+        // event budget explicitly, just as CLOC32's recording sink does.
+        self.log.contribute(
+            &id,
+            "test-member-observer",
+            "constructed",
+            Default::default(),
+        )?;
         self.records.push(Record {
             kind,
             owner: node as *const GrammarASTNode as usize,
