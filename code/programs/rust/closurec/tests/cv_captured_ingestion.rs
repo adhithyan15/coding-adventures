@@ -431,20 +431,53 @@ fn d2_string_and_unary_folds_reach_raw_input_pieces() {
         (
             "report(\"😀\".length);",
             "2",
-            [[7, 7, 7, 0, 7, 7], [13, 10, 11, 0, 10, 11]],
+            vec![
+                [[7, 7, 7, 0, 7, 7], [13, 10, 11, 0, 10, 11]],
+                [[13, 10, 11, 0, 10, 11], [14, 11, 12, 0, 11, 12]],
+                [[14, 11, 12, 0, 11, 12], [20, 17, 18, 0, 17, 18]],
+            ],
         ),
-        ("report(-2);", "-2", ascii(8, 9)),
+        ("report(-2);", "-2", vec![ascii(8, 9)]),
     ] {
         let f = Fixture::new(&[source]);
         let w = f.compile("SIMPLE");
         let root = root(&w, &f.inputs[0], source);
         let result = single_fold(&w, after);
-        let ids = operands(&w, &result, root, &[expected]);
-        assert_eq!(
-            w["entries"][result]["parent_ids"],
-            json!(ids),
-            "single-operand direct derivation"
-        );
+        let ids = operands(&w, &result, root, &expected);
+        if after == "2" {
+            // CLOC35 certifies the complete original member. The raw astral
+            // string remains the same physical operand; dot/property are now
+            // legitimate ancestry through ONE exact, input-owned member.
+            let members: Vec<_> = w["entries"]
+                .as_object()
+                .unwrap()
+                .iter()
+                .filter(|(_, entry)| entry["origin"]["source"] == "typed_member")
+                .collect();
+            assert_eq!(members.len(), 1);
+            let (member_id, member) = members[0];
+            assert_eq!(member["parent_ids"], json!(ids));
+            let meta = &member["origin"]["meta"]["closurec_node_v1"];
+            assert_eq!(meta.as_object().unwrap().len(), 7);
+            assert_eq!(meta["schema"], "1");
+            assert_eq!(meta["kind"], "MemberExpression");
+            assert_eq!(meta["input_id"], root);
+            assert_eq!(meta["first_piece_id"], ids[0]);
+            assert_eq!(meta["last_piece_id"], ids[2]);
+            assert_eq!(meta["start"], pos(expected[0][0]));
+            assert_eq!(meta["end"], pos(expected[2][1]));
+            merge_parents(
+                &w,
+                &result,
+                &[member_id.clone(), ids[0].clone(), ids[2].clone()],
+            );
+        } else {
+            assert_eq!(
+                w["entries"][result]["parent_ids"],
+                json!(ids),
+                "single-operand direct derivation"
+            );
+        }
         println!("D2_LINEAGE_OK single {after}");
     }
 }
