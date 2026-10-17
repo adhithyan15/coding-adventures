@@ -96,8 +96,11 @@ fn member(j: &Value, source: &str, path: &str, start: usize, end: usize, kind: &
     let merges: Vec<_> = events.iter().filter(|e| e["event"]["kind"] == "merge" && e["event"]["entity"] == id.as_str()).collect();
     assert_eq!(merges.len(),1); assert!(merges[0]["context"].is_null());
     let sequence = clock(&merges[0]["sequence"]);
-    let first_pass = events.iter().find(|e| e["event"]["kind"] == "context_begin" && e["event"]["scope"]["kind"] == "pass").unwrap();
-    assert!(sequence < clock(&first_pass["sequence"]),"member Merge before transformation pass");
+    let pipeline = events.iter().find(|e| clock(&e["sequence"]) > sequence
+        && e["event"]["kind"] == "context_begin" && e["event"]["scope"]["kind"] == "pipeline").unwrap();
+    let first_pass = events.iter().find(|e| e["event"]["kind"] == "context_begin"
+        && e["event"]["scope"]["kind"] == "pass" && e["context"] == pipeline["sequence"]).unwrap();
+    assert!(sequence < clock(&pipeline["sequence"]) && clock(&pipeline["sequence"]) < clock(&first_pass["sequence"]),"member Merge before its own input pipeline/pass");
     if let Some(after) = after {
         let results: Vec<_> = entries.iter().filter(|(result_id,e)| ancestry(j,result_id).contains(id)
             && e["contributions"].as_array().unwrap().iter().any(|c| c["source"] == "constant-fold" && c["tag"] == "folded" && c["meta"]["after"] == after && c["meta"]["new_cv"] == result_id.as_str())).collect();
