@@ -1,9 +1,11 @@
-//! Original array occurrences are provisional until D3b certifies physical facts.
+//! Original array/member occurrences are provisional until D3b certifies physical facts.
 //! The callback records actual construction; final admission joins those private
 //! receipts to replay-admitted source and exact Merge chronology before publish.
 use super::source_replay::SourceReplayAdmitted;
 use coding_adventures_correlation_vector::{CVLog, JournalEvent, Origin};
-use coding_adventures_javascript_parser::bridge::ArrayOccurrenceObserver;
+use coding_adventures_javascript_parser::bridge::{
+    ArrayOccurrenceObserver, CompositeOccurrenceObserver,
+};
 use lexer::lexical::{SourcePosition, SourceRange};
 use lexer::token::{Token, TokenType};
 use parser::grammar_parser::{ASTNodeOrToken, GrammarASTNode};
@@ -31,7 +33,37 @@ impl Default for ArrayLimits {
     }
 }
 #[derive(Clone, Copy)]
+enum NodeKind {
+    Array,
+    Member,
+    OptionalMember,
+}
+impl NodeKind {
+    fn name(self) -> &'static str {
+        match self {
+            Self::Array => "ArrayExpression",
+            Self::Member => "MemberExpression",
+            Self::OptionalMember => "OptionalMemberExpression",
+        }
+    }
+    fn source(self) -> &'static str {
+        match self {
+            Self::Array => "typed_array",
+            Self::Member | Self::OptionalMember => "typed_member",
+        }
+    }
+    fn location(self) -> &'static str {
+        match self {
+            Self::Array => "array_literal",
+            Self::Member | Self::OptionalMember => "member_prefix",
+        }
+    }
+}
+#[derive(Clone, Copy)]
 struct Receipt {
+    kind: NodeKind,
+    first_kind: TokenType,
+    last_kind: TokenType,
     id: u64,
     root: u64,
     first: u64,
@@ -370,8 +402,8 @@ impl ArrayLedger {
             w.text(&o.source)?;
             w.text(&o.location)?;
             w.take(add(1, o.meta.len())?)?;
-            if o.source != "typed_array"
-                || o.location != "array_literal"
+            if o.source != row.kind.source()
+                || o.location != row.kind.location()
                 || o.timestamp.is_some()
                 || o.meta.len() != 1
             {
@@ -392,7 +424,7 @@ impl ArrayLedger {
             )?;
             for (field, expected) in [
                 ("schema", "1"),
-                ("kind", "ArrayExpression"),
+                ("kind", row.kind.name()),
                 ("input_id", root),
                 ("first_piece_id", first),
                 ("last_piece_id", last),
@@ -429,8 +461,10 @@ impl ArrayLedger {
             }
             let a = source_piece(log, first, root, &mut w)?;
             let b = source_piece(log, last, root, &mut w)?;
-            if a.get("token_type").and_then(Value::as_str) != Some("LBracket")
-                || b.get("token_type").and_then(Value::as_str) != Some("RBracket")
+            if a.get("token_type").and_then(Value::as_str)
+                != Some(super::source_inventory::token_name(row.first_kind))
+                || b.get("token_type").and_then(Value::as_str)
+                    != Some(super::source_inventory::token_name(row.last_kind))
             {
                 return Err("array source replay boundary kind".into());
             }
@@ -474,7 +508,7 @@ impl ArrayLedger {
                 w.text(&o.source)?;
                 w.take(add(1, o.meta.len())?)?;
                 reserved = o.meta.contains_key(NS);
-                tagged = o.source == "typed_array";
+                tagged = matches!(o.source.as_str(), "typed_array" | "typed_member");
             }
             if reserved || tagged {
                 // Charge each actual numeric comparison. A guessed floor-log
@@ -523,31 +557,44 @@ pub(super) struct Observer<'a> {
     root: &'a str,
     root_sequence: u64,
 }
-impl ArrayOccurrenceObserver for Observer<'_> {
-    fn array_constructed(&mut self, node: &GrammarASTNode) -> Result<Option<String>, String> {
-        let mut w = Work {
-            used: self.ledger.used_work,
-            limit: self.ledger.limits.work,
-        };
-        w.take(add(1, node.children.len())?)?;
-        w.text(&node.rule_name)?;
-        if node.rule_name != "array_literal" || !(2..=3).contains(&node.children.len()) {
-            return Err("array source direct grammar shape".into());
+// The common creator buys the whole physical interval, not an AST frontier.
+// Array and member policies choose boundaries; their storage/work/graph gates
+// and final source replay remain one closed publication domain.
+impl Observer<'_> {
+    fn construct(
+        &mut self,
+        open: &Token,
+        close: &Token,
+        kind: NodeKind,
+        w: &mut Work,
+    ) -> Result<Option<String>, String> {
+        for token in [open, close] {
+            w.take(1)?;
+            if matches!(
+                token.type_,
+                TokenType::Eof | TokenType::Newline | TokenType::Indent | TokenType::Dedent
+            ) {
+                return Err("member source nonphysical boundary kind".into());
+            }
         }
-        let (Some(ASTNodeOrToken::Token(open)), Some(ASTNodeOrToken::Token(close))) =
-            (node.children.first(), node.children.last())
-        else {
-            return Err("array source direct brackets".into());
-        };
-        if open.type_ != TokenType::LBracket || close.type_ != TokenType::RBracket {
-            return Err("array source direct bracket kinds".into());
-        }
-        let (first, first_index, a) = boundary(self.log, open, self.root, "LBracket", &mut w)?;
-        let (last, last_index, b) = boundary(self.log, close, self.root, "RBracket", &mut w)?;
+        let (first, first_index, a) = boundary(
+            self.log,
+            open,
+            self.root,
+            super::source_inventory::token_name(open.type_),
+            w,
+        )?;
+        let (last, last_index, b) = boundary(
+            self.log,
+            close,
+            self.root,
+            super::source_inventory::token_name(close.type_),
+            w,
+        )?;
         if first >= last || first_index >= last_index || a.end.byte_offset > b.start.byte_offset {
             return Err("array source boundary order".into());
         }
-        let pieces = inventory(self.log, self.root, &mut w)?;
+        let pieces = inventory(self.log, self.root, w)?;
         if last_index >= pieces.len()
             || pieces[first_index].as_str() != open.cv.as_deref()
             || pieces[last_index].as_str() != close.cv.as_deref()
@@ -561,7 +608,7 @@ impl ArrayOccurrenceObserver for Observer<'_> {
             return Err("array source metadata limit".into());
         }
         w.take(META_BYTES)?;
-        self.ledger.reserve_receipt(&mut w)?;
+        self.ledger.reserve_receipt(w)?;
         // Simultaneous owned String rows (24), each ID allocation (<=64),
         // borrowed reference rows (8), fixed metadata and current receipt capacity.
         let per_parent = add(add(size_of::<String>(), 64)?, size_of::<&str>())?;
@@ -582,8 +629,8 @@ impl ArrayOccurrenceObserver for Observer<'_> {
         }
         for p in &pieces[first_index..=last_index] {
             let key = p.as_str().ok_or("array source piece identity type")?;
-            source_piece(self.log, key, self.root, &mut w)?;
-            parents.push(copy_id(key, &mut w)?);
+            source_piece(self.log, key, self.root, w)?;
+            parents.push(copy_id(key, w)?);
         }
         let mut refs = Vec::new();
         refs.try_reserve_exact(count)
@@ -598,23 +645,26 @@ impl ArrayOccurrenceObserver for Observer<'_> {
             start: a.start,
             end: b.end,
         };
-        let meta = json!({"schema":"1","kind":"ArrayExpression","input_id":self.root,"first_piece_id":open.cv.as_deref().unwrap(),"last_piece_id":close.cv.as_deref().unwrap(),"start":super::source_inventory::position(range.start),"end":super::source_inventory::position(range.end)});
+        let meta = json!({"schema":"1","kind":kind.name(),"input_id":self.root,"first_piece_id":open.cv.as_deref().unwrap(),"last_piece_id":close.cv.as_deref().unwrap(),"start":super::source_inventory::position(range.start),"end":super::source_inventory::position(range.end)});
         let key = self.log.try_merge(
             &refs,
             Some(Origin {
-                source: "typed_array".into(),
-                location: "array_literal".into(),
+                source: kind.source().into(),
+                location: kind.location().into(),
                 timestamp: None,
                 meta: HashMap::from([(NS.into(), meta)]),
             }),
         )?;
-        let sequence = compact(&key, &mut w)?;
+        let sequence = compact(&key, w)?;
         let merge_sequence = self
             .log
             .journal()
             .ok_or("array source missing construction journal")?
             .last_sequence();
         self.ledger.receipts.push(Receipt {
+            kind,
+            first_kind: open.type_,
+            last_kind: close.type_,
             id: sequence,
             root: self.root_sequence,
             first,
@@ -628,6 +678,120 @@ impl ArrayOccurrenceObserver for Observer<'_> {
         Ok(Some(key))
     }
 }
+impl ArrayOccurrenceObserver for Observer<'_> {
+    fn array_constructed(&mut self, node: &GrammarASTNode) -> Result<Option<String>, String> {
+        let mut w = Work {
+            used: self.ledger.used_work,
+            limit: self.ledger.limits.work,
+        };
+        w.take(add(1, node.children.len())?)?;
+        w.text(&node.rule_name)?;
+        if node.rule_name != "array_literal" || !(2..=3).contains(&node.children.len()) {
+            return Err("array source direct grammar shape".into());
+        }
+        let (Some(ASTNodeOrToken::Token(open)), Some(ASTNodeOrToken::Token(close))) =
+            (node.children.first(), node.children.last())
+        else {
+            return Err("array source direct brackets".into());
+        };
+        if open.type_ != TokenType::LBracket || close.type_ != TokenType::RBracket {
+            return Err("array source direct bracket kinds".into());
+        }
+        self.construct(open, close, NodeKind::Array, &mut w)
+    }
+}
+/// Only one indexed suffix and one leftmost spine are inspected; no source
+/// spelling search, recursive traversal, registry or prefix-sized scratch exists.
+fn direct_token<'a>(
+    node: &'a GrammarASTNode,
+    index: usize,
+    w: &mut Work,
+) -> Result<&'a Token, String> {
+    w.take(1)?;
+    match node.children.get(index) {
+        Some(ASTNodeOrToken::Token(t)) => Ok(t),
+        _ => Err("member source direct suffix token".into()),
+    }
+}
+impl CompositeOccurrenceObserver for Observer<'_> {
+    fn member_constructed(
+        &mut self,
+        node: &GrammarASTNode,
+        end: usize,
+        computed: bool,
+        optional: bool,
+    ) -> Result<Option<String>, String> {
+        let mut w = Work {
+            used: self.ledger.used_work,
+            limit: self.ledger.limits.work,
+        };
+        w.take(add(1, node.children.len())?)?;
+        w.text(&node.rule_name)?;
+        if !matches!(
+            node.rule_name.as_str(),
+            "member_expression" | "call_expression" | "optional_chain_expression"
+        ) {
+            return Err("member source owner rule".into());
+        }
+        let close = direct_token(node, end, &mut w)?;
+        let marker_index = if computed {
+            w.text(&close.value)?;
+            if close.type_ != TokenType::RBracket || close.value != "]" {
+                return Err("member source closing bracket".into());
+            }
+            let key_index = end.checked_sub(1).ok_or("member source missing key")?;
+            w.take(1)?;
+            if !matches!(node.children.get(key_index), Some(ASTNodeOrToken::Node(_))) {
+                return Err("member source direct key".into());
+            }
+            let bracket = end.checked_sub(2).ok_or("member source missing bracket")?;
+            let open = direct_token(node, bracket, &mut w)?;
+            w.text(&open.value)?;
+            if open.type_ != TokenType::LBracket || open.value != "[" {
+                return Err("member source opening bracket".into());
+            }
+            bracket.checked_sub(1)
+        } else {
+            if !matches!(close.type_, TokenType::Name | TokenType::Keyword) {
+                return Err("member source property kind".into());
+            }
+            Some(end.checked_sub(1).ok_or("member source missing dot")?)
+        };
+        w.take(1)?;
+        let marker = marker_index.and_then(|index| node.children.get(index));
+        let mut is_optional = false;
+        let mut is_dot = false;
+        if let Some(ASTNodeOrToken::Token(t)) = marker {
+            w.text(&t.value)?;
+            is_optional = t.value == "?.";
+            is_dot = t.type_ == TokenType::Dot && t.value == ".";
+        }
+        if is_optional != optional || (!computed && !optional && !is_dot) {
+            return Err("member source optional/dot suffix disagreement".into());
+        }
+        // The first source terminal is reached by descending ONLY child zero.
+        // Pay before every inspection; an empty spine is a refusal, not a search.
+        let mut children = node.children.as_slice();
+        let open = loop {
+            w.take(1)?;
+            match children.first() {
+                Some(ASTNodeOrToken::Token(t)) => break t,
+                Some(ASTNodeOrToken::Node(n)) => children = n.children.as_slice(),
+                None => return Err("member source empty first spine".into()),
+            }
+        };
+        let kind = if optional {
+            NodeKind::OptionalMember
+        } else {
+            NodeKind::Member
+        };
+        self.construct(open, close, kind, &mut w)
+    }
+}
 #[cfg(test)]
 #[path = "array_source_tests.rs"]
 mod tests;
+
+#[cfg(test)]
+#[path = "member_source_tests.rs"]
+mod member_tests;

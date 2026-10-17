@@ -726,7 +726,7 @@ fn transform_source_core(
                 Some(ledger) => {
                     let (log, root, _, _) = cv_pair.as_mut().ok_or_else(|| provenance_error("array_source")("missing actual traced input".into()))?;
                     let mut observer = ledger.observer(log, root).map_err(provenance_error("array_source"))?;
-                    bridge::grammar_to_program_with_array_observer(&node, es_version, &mut observer)
+                    bridge::grammar_to_program_with_composite_observer(&node, es_version, &mut observer)
                         .map_err(|error| match error {
                             bridge::ObservedBridgeError::Bridge(error) => ordinary_bridge_error(error),
                             bridge::ObservedBridgeError::Observer(message) | bridge::ObservedBridgeError::Worker(message) => provenance_error("array_source")(message),

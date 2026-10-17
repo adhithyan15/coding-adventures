@@ -235,21 +235,42 @@ fn assert_array(
         // CLOC35 adds the complete original member operand, not merely the
         // previously available computed key. Keep the exact array interval
         // above, and require exact membership of every physical piece here.
-        let suffix = if source[end..].starts_with(".length") { ".length" }
-            else if source[end..].starts_with("[\"length\"]") { "[\"length\"]" }
-            else { panic!("length fixture suffix"); };
-        let member_end = position(source,end+suffix.len());
-        let members: Vec<_> = entries.iter().filter(|(_,e)| {
-            let node = &e["origin"]["meta"][NODE];
-            e["origin"]["source"] == "typed_member" && node["kind"] == "MemberExpression"
-                && node["input_id"] == root.as_str() && node["start"] == meta["start"] && node["end"] == member_end
-        }).collect();
-        assert_eq!(members.len(),1,"exact newly legitimate original member");
-        let (member_id,member) = members[0]; assert!(reachable.contains(member_id));
-        let member_last = pieces.iter().position(|p|p==&member["origin"]["meta"][NODE]["last_piece_id"]).unwrap();
-        assert_eq!(member["parent_ids"],Value::Array(pieces[first..=member_last].to_vec()));
-        for (index,p) in pieces.iter().enumerate() {
-            assert_eq!(reachable.contains(p.as_str().unwrap()),(first..=member_last).contains(&index),"exact expanded member operand; unrelated sibling excluded");
+        let suffix = if source[end..].starts_with(".length") {
+            ".length"
+        } else if source[end..].starts_with("[\"length\"]") {
+            "[\"length\"]"
+        } else {
+            panic!("length fixture suffix");
+        };
+        let member_end = position(source, end + suffix.len());
+        let members: Vec<_> = entries
+            .iter()
+            .filter(|(_, e)| {
+                let node = &e["origin"]["meta"][NODE];
+                e["origin"]["source"] == "typed_member"
+                    && node["kind"] == "MemberExpression"
+                    && node["input_id"] == root.as_str()
+                    && node["start"] == meta["start"]
+                    && node["end"] == member_end
+            })
+            .collect();
+        assert_eq!(members.len(), 1, "exact newly legitimate original member");
+        let (member_id, member) = members[0];
+        assert!(reachable.contains(member_id));
+        let member_last = pieces
+            .iter()
+            .position(|p| p == &member["origin"]["meta"][NODE]["last_piece_id"])
+            .unwrap();
+        assert_eq!(
+            member["parent_ids"],
+            Value::Array(pieces[first..=member_last].to_vec())
+        );
+        for (index, p) in pieces.iter().enumerate() {
+            assert_eq!(
+                reachable.contains(p.as_str().unwrap()),
+                (first..=member_last).contains(&index),
+                "exact expanded member operand; unrelated sibling excluded"
+            );
         }
         let recorded = events
             .iter()

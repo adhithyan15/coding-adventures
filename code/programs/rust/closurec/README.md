@@ -664,3 +664,14 @@ shared lexical ranges. A private construction ledger is checked only after full
 consumed-source replay and all input pipelines, before publication. Legacy
 source facades and tracing-off bytes remain unchanged. Local affected validation is recorded in CLOC33;
 full transformation/output lineage and Miri DEFERRED/PENDING remain open.
+
+### CLOC35 trusted member-prefix source occurrences (validation pending)
+
+Captured traced SIMPLE/ADVANCED compilation now uses one composite bridge sink
+for arrays and actual member prefixes. Fresh member IDs retain exact original
+physical-piece parents and shared source ranges; final source replay and closed
+kind/receipt/chronology admission precede publication. No new dependency or span
+representation. In-bounds selected-element replacement ownership remains a
+separate known gap; this original-source slice does not certify full rewrite or
+output-byte lineage. Local validation is pending in CLOC35. Miri DEFERRED/PENDING;
+genuine final-source validation follows implementation delivery.

@@ -8189,3 +8189,15 @@ Reuse existing physical IDs and shared lexical ranges; add only an existing
 local parser path dependency, no crates.io dependency. Original array ancestry
 fixtures now include all punctuation while retaining nested rewrite assertions.
 Full parity/delivery/Miri remain open; Miri DEFERRED/PENDING.
+
+### CLOC35 trusted member source occurrences (local validation pending)
+
+- Use the composite bridge on captured traced typed inputs, preserving legacy
+  and untraced routes. Record distinct member-prefix IDs, exact shared ranges,
+  complete physical parents and private kind/boundary/Merge receipts.
+- Extend the existing closed array node domain without widening work/storage/
+  graph ceilings or adding source indices/registry/dependencies. Full source
+  replay still precedes final node admission before publication.
+- Actual replacement-owned length/hole/out-of-bounds controls are separate from
+  the open in-bounds selected-clone gap. Full transformations/output/parity and
+  current-main delivery remain OPEN. Miri DEFERRED/PENDING.
