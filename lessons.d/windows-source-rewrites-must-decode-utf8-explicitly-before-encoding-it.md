@@ -17,3 +17,10 @@ retained. Use explicit encoding='utf-8' for text reads and writes; prefer byte
 replacement for an exact restoration. Review the entire successor diff before
 claiming prior assertions or non-ASCII witnesses were preserved, then rerun the
 affected suites on the actual corrected head.
+
+A later documentation review caught wording that conflated the failed2ba compile
+receipt with the actually green14e full execution receipt. The latter's source
+review was WITHHELD, independently of its accepted execution evidence. State
+these distinct outcomes explicitly and never transfer older-head acceptance to
+the corrected head. Documentation checker success alone cannot validate this
+attribution; preserve the superseded carrier and require exact source review.

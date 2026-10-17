@@ -1,6 +1,6 @@
 # CLOC38: literal conditional selection owns its returned root
 
-Status: contract only; implementation, execution and delivery OPEN.
+Status: literal conditional slice locally validated; delivery and full completion OPEN.
 
 After folding a conditional's test and both branches, the literal-truthiness
 case currently forks a CV into an unused local and returns the chosen branch
@@ -96,3 +96,63 @@ motion/deletion, full output-byte/source joins and evidence-backed Closure
 parity remain OPEN. Miri DEFERRED/PENDING, never passed; frozen run/checkout/
 inputs/target/receipts untouched. Genuine final-source Miri follows implementation
 delivery. Full objective OPEN; heartbeat ACTIVE.
+
+## 2026-10-17: literal conditional root slice locally validated
+
+Actual full/runtime execution `e6c9cbd8e3089d3063b8c06204b6e1681fc37629` retains the existing literal truthiness
+admission and test/consequent/alternate fold order. The selected expression's
+actual root owns the checked fold when identities are available; ordered
+semantic parents are available original conditional, actual folded literal test,
+then complete selected native subtree preorder with first-seen deduplication.
+No IDs means no new identity or contribution; one unique ID derives directly. Only the selected root is stamped;
+nested CVs and non-CV payload remain. Unchosen branch activity precedes outer
+selection but does not become a semantic operand. C37's bounded iterative
+collector and C36's exhaustive root accessor are reused without limit changes.
+
+Contract6e3 preceded code and independent review. Native69b compiled1P6F
+expected red (first failures do not prove all144 shape cells). Production3c693
+changes only the literal arm and private shared helper name; equal-branch path,
+truthiness, labels, array guards, collector and root accessor remain unchanged.
+Source review initially withheld the missing unchosen-error control; tests-only
+successors add exact checked failure-origin evidence for both truthy choices.
+A later test compile failure (JournalRecord lacks Serialize) and an unintended
+Windows decoding rewrite of the astral fixture were repaired through the
+supported complete canonical export and exact UTF-8 restoration. The2ba
+compile receipt remains failed;14e full suites actually passed with an accepted
+execution receipt, while independent SOURCE acceptance stayed WITHHELD for
+encoding. Neither older result transfers acceptance to the corrected e6 head.
+
+Actual full suites:282 parser+478 folder+1169 CLI+1006 native=2935P/0F,
+two unchanged historical ignores,195 executable joins and three empty doctests;
+both all-target strict checks complete0. Native144 selected-root shape cells,
+16 duplicate/availability controls,12 truthiness families including exact astral
+UTF-8, NaN/infinities/signed zero, prior test/call/function child rewrites,
+unsupported unequal branches and checked outer refusals pass. Both truthy
+choices also exercise real unchosen-child node-limit and ample-capacity forged
+missing-parent failures: exact latched error and entire graph/chronology equality,
+then successful outer merge/derive capacity in the latter control. No rollback
+of earlier successful child activity is claimed.
+
+SIMPLE/ADVANCED CLI cells join real physical token source intervals to exact
+ordered parent IDs, preserve child-before-outer and branch order, own
+merge/derive/contribution pass/sweep clocks and traced/plain emitted bytes.
+48 outer conditional and48 unchosen-child merge/derive publication-refusal
+cells preserve all four output sentinel byte strings, alongside24 retained C36
+cells. C37 exact work/storage/overflow/allocation/deep/wide controls remain.
+Core `33bb23c5fd25bf4e7e7ec315439f727b634b37eae4212aed32841da49cf8f284`, source `a6e2668d39c1d53824c32923331189e6226c71ec1878a0df186aedb7e0ead2e2`,
+combined terminal `c4efba8a690a7c89b5cc22af22e455752107031d68b44196ab375cd512a69581` bind physical source/locks/logs/artifacts.
+
+Separate same-head runtime `06eaba6c397b383f49992ac2b67339d6750056e6f0a219e19b5c6bcf22c6eafb` retains59 declared sources,
+354 ordered six-backend observations and54 VM-JIT Float-bit captures;
+integration4P/observer1P/refusal1P/strict0. LANG526 filtered, CLR absent/uncounted,
+native/LLVM typed-main ABI OPEN; no full LANG or raw-output-byte theorem.
+
+Audit 2026-10-17T22:33:28.981551+00:00: main `a5f78efb7188e06adfbd10432dc2387d54a35fd3`; sole Closure/shared
+PR#17288 published `6132a518b3990619eb904397ee0b21a69ce8ac20`, UNKNOWN/
+0 checks/autoOFF. No push/merge/hosted acceptance.
+Equal-branch and other transformations, rename/inlining/motion/merging/deletion,
+full pass/output-byte/source mappings, parity and current-main delivery remain
+OPEN. Base ESTree/own types/no new crates.io preserved. Miri DEFERRED/PENDING;
+frozen run/checkout/inputs/target/receipts untouched/unpolled. Genuine final-source
+Miri follows implementation delivery. Full objective OPEN; heartbeat ACTIVE.
+This later Markdown carrier does not claim another Rust execution.

@@ -118,3 +118,15 @@ intervals, child CVs, payload and selection guards are preserved; see CLOC37
 for exact local suite/runtime/security evidence and limits. Conditional/other
 transformations, output-byte/source mappings, parity and delivery remain OPEN.
 Miri DEFERRED/PENDING; genuine final-source acceptance follows delivery.
+
+### CLOC38 literal conditional root lineage
+
+Literal conditional selection now stamps its actual returned expression root
+with the checked join of available conditional, folded literal test and complete
+selected subtree identities in preorder. No IDs yields no identity/contribution.
+Existing truthiness, evaluation order, nested CVs,
+payload and equal-branch semantics remain. Exact lineage/clock/physical-source
+and all-output refusal controls cover both choices and unchosen-child errors;
+see CLOC38 for local suite/runtime/security evidence and limits. Equal-branch
+and broader transformation/output-byte/source/parity/delivery work remain OPEN.
+Miri DEFERRED/PENDING; genuine final-source acceptance follows delivery.

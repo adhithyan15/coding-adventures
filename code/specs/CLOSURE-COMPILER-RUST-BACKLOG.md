@@ -3130,3 +3130,21 @@ receipts untouched/unpolled. Full transformation/output/parity objective OPEN.
   Audit main `9f67440bb9a3271455e19f27a6e5743bbf6e051c`; sole PR#17288 dynamically
   discovered published `6132a518b3990619eb904397ee0b21a69ce8ac20`, CONFLICTING/
   0 checks/autoOFF. Miri DEFERRED/PENDING; frozen run untouched, final-source later.
+
+### 2026-10-17: CLOC38 literal conditional root locally validated
+
+- Actual chosen root joins available conditional, actual folded literal test
+  and chosen subtree preorder; no IDs yields no identity/contribution. Existing truthiness/order/equal-branch path retained;
+  no nested CV/payload/production-limit/dependency change. Both-choice exact
+  unchosen-error latching and output sentinel controls supplement success order.
+- Execution `e6c9cbd8e3089d3063b8c06204b6e1681fc37629`:2935P/0F/2historicalI/195exe+3emptydocs,
+  bothstrict0, independent source/combined reviews PASS. Same-head59/354/54
+  focused runtime retains LANG/CLR/native-LLVM limits. The2ba compile receipt
+  remains failed;14e full suites passed but SOURCE review stayed WITHHELD for
+  encoding. Neither transfers acceptance to e6; lessons record both repairs.
+- Proposed next CLOC39 equal-branch frontier contract is DESIGN ONLY: audit
+  operand roles, both-branch merging/deletion and cumulative multi-walk budgets
+  before code. Other transformations/full output joins/parity remain OPEN.
+  Main `a5f78efb7188e06adfbd10432dc2387d54a35fd3` reconciliation, sole PR#17288
+  UNKNOWN/hosted checks/merge/delivery OPEN. Miri DEFERRED/PENDING;
+  frozen run untouched/unpolled, genuine final-source acceptance after delivery.
