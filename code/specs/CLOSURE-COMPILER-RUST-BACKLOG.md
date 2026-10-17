@@ -3117,3 +3117,16 @@ receipts untouched/unpolled. Full transformation/output/parity objective OPEN.
   Main `9f67440bb9a3271455e19f27a6e5743bbf6e051c` reconciliation and sole PR#17288
   CONFLICTING/hosted CI/delivery OPEN. Miri DEFERRED/PENDING, frozen run
   untouched; genuine final-source acceptance follows implementation delivery.
+
+### 2026-10-17: CLOC38 literal conditional selected-root contract
+
+- [CLOC38](CLOC38-literal-conditional-root-ownership.md) repairs the literal
+  conditional's discarded fork and old returned-root identity using C36/C37
+  access/collection. Exact conditional/test/chosen-subtree semantic parents,
+  actual child rewrite ancestry and existing truthiness/order/limits retained.
+  Contract only; no implementation or executable acceptance yet.
+- Equal-branch pure/impure paths, other transformations, output-byte/source
+  joins, full parity and current-main reconciliation/delivery remain OPEN.
+  Audit main `9f67440bb9a3271455e19f27a6e5743bbf6e051c`; sole PR#17288 dynamically
+  discovered published `6132a518b3990619eb904397ee0b21a69ce8ac20`, CONFLICTING/
+  0 checks/autoOFF. Miri DEFERRED/PENDING; frozen run untouched, final-source later.
