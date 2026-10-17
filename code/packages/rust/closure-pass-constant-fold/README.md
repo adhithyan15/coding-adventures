@@ -95,3 +95,14 @@ A borrowed collector meters per-fold work and requested temporary storage
 before graph mutation, including collision/equality work. These operand links
 do not supply missing composite occurrences, opaque child lineage or complete
 source/output mappings. Final-source Miri remains DEFERRED/PENDING.
+
+### CLOC36 selected array replacement roots
+
+In-bounds array selection stamps the actual returned root with its own checked
+fold identity. Immediate parents retain member, array, actual numeric/string
+key and selected-root histories in first-seen order. Every Expression variant
+has an explicit private root slot; semantic spread/effect/index guards and all
+non-CV/nested-CV fields are preserved. Exact typed-root, trace-context and
+publication-refusal controls pass locally; see CLOC36 for execution receipts.
+Opaque root-to-descendant graph closure and full parity/output mappings remain
+OPEN. Miri DEFERRED/PENDING; genuine final-source acceptance follows delivery.

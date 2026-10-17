@@ -3070,3 +3070,17 @@ receipts untouched/unpolled. Full transformation/output/parity objective OPEN.
 - One active Closure/shared PR; publication/main reconciliation/CI/full parity
   and output mappings remain OPEN. Miri DEFERRED/PENDING; frozen run preserved;
   genuine final-source acceptance follows implementation delivery.
+
+### 2026-10-17: CLOC36 actual selected roots locally validated
+
+- CLOC36 now owns the ACTUAL returned selection root and the four fixed
+  immediate operand identities; numeric-string conversion retains the original
+  folded string CV. Exhaustive36 slots, unchanged non-CV/nested fields and
+  semantic/effect guards. General descendant closure/conditional roots OPEN.
+- Execution `ce3d150cc452995a0d7b6fd3c87160ba476d3306`:2913P/0F/2historicalI/195exe+3emptydocs/bothstrict0;
+  exact source/combined reviews PASS. Separate59-source/354-tuple/54-Float-bit
+  runtime controls pass with focused LANG/CLR/native-LLVM limits explicit.
+- Next: separately specify the bounded selected-descendant frontier. Main
+  `9f67440bb9a3271455e19f27a6e5743bbf6e051c` reconciliation, PR#17288 conflicts,
+  hosted required CI/full delivery/full lineage/output mapping/parity OPEN.
+  Miri DEFERRED/PENDING; frozen run preserved, final-source acceptance later.

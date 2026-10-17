@@ -4,6 +4,18 @@ All notable changes to the `coding-adventures-closurec` binary will be documente
 
 ## [Unreleased]
 
+### CLOC36 selected array replacement roots
+
+In-bounds array selection stamps the actual returned root with its own checked
+fold identity. Immediate parents retain member, array, actual numeric/string
+key and selected-root histories in first-seen order. Every Expression variant
+has an explicit private root slot; semantic spread/effect/index guards and all
+non-CV/nested-CV fields are preserved. Exact typed-root, trace-context and
+publication-refusal controls pass locally; see CLOC36 for execution receipts.
+Opaque root-to-descendant graph closure and full parity/output mappings remain
+OPEN. Miri DEFERRED/PENDING; genuine final-source acceptance follows delivery.
+
+
 ### Added — consumed-source grammar replay (CV04b D3b)
 
 Traced compilation retains each actual consumed String allocation by move and
