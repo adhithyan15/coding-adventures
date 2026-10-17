@@ -155,12 +155,10 @@ fn visit(
         other => panic!("fixture visitor missing {other:?}"),
     }
 }
-fn program_nodes(
-    program: &Program,
-) -> (
-    Vec<(&'static str, Option<String>, bool, bool)>,
-    Vec<(String, Option<String>)>,
-) {
+type TypedOccurrence = (&'static str, Option<String>, bool, bool);
+type TypedLeaf = (String, Option<String>);
+
+fn program_nodes(program: &Program) -> (Vec<TypedOccurrence>, Vec<TypedLeaf>) {
     let mut nodes = Vec::new();
     let mut leaves = Vec::new();
     for item in &program.body {
@@ -176,7 +174,7 @@ fn program_nodes(
 
 #[test]
 fn exact_member_prefixes_own_distinct_ids_and_original_ordered_parents() {
-    let source = "[a[b.c],a?.[d.e],f().x[y],new F().x,(a).b.c,a?.b.c,a?.().x];a.b;a.b;";
+    let source = "[a[b.c],a?.[d.e],f().x[y],new F().x,(a).b.c,a?.b.c,a?.().x,a[[]],a?.[[]],a?.b[c],new F()[x]];a.b;a.b;";
     let mut log = CVLog::new_checked_compact(GraphLimits::default()).unwrap();
     let node =
         parse_javascript_typed_with_cv(source, "prefix.js", DEFAULT_ES_VERSION, &mut log).unwrap();
@@ -203,8 +201,25 @@ fn exact_member_prefixes_own_distinct_ids_and_original_ordered_parents() {
             .map(|r| r.text.as_str())
             .collect::<Vec<_>>(),
         [
-            "b.c", "a[b.c]", "d.e", "a?.[d.e]", "f().x", "f().x[y]", "newF().x", "(a).b",
-            "(a).b.c", "a?.b", "a?.b.c", "a?.().x", "a.b", "a.b"
+            "b.c",
+            "a[b.c]",
+            "d.e",
+            "a?.[d.e]",
+            "f().x",
+            "f().x[y]",
+            "newF().x",
+            "(a).b",
+            "(a).b.c",
+            "a?.b",
+            "a?.b.c",
+            "a?.().x",
+            "a[[]]",
+            "a?.[[]]",
+            "a?.b",
+            "a?.b[c]",
+            "newF()[x]",
+            "a.b",
+            "a.b"
         ]
     );
     assert_eq!(typed.len(), observer.records.len());

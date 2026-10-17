@@ -14,4 +14,3 @@ contribution after merge and before publishing the test receipt, so each budget
 is exercised by the operation it actually constrains. Preserve the failed run
 and distinguish this fixture repair from a production safety change.
 
-TODO: what went wrong, what the fix was, and what to do differently. Replace this line.
