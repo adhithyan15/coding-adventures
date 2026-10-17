@@ -587,14 +587,17 @@ representative pinned visual corpus rendered through Metal-to-PNG. Event
 Modeling is therefore full at the pinned native compatibility level;
 browser-only responsive resizing remains outside the backend-neutral contract.
 
-### Treemap Native Slice
+### Treemap Native Compatibility
 
-The initial Mermaid 11.16.1 Treemap slice recognizes both `treemap` and
+The Mermaid 11.16.1 Treemap implementation recognizes both `treemap` and
 `treemap-beta` and parses quoted parent and leaf nodes, indentation hierarchy,
 colon or comma numeric values, class selectors, titles, and accessibility
 metadata into dedicated hierarchy IR. Empty documents match the upstream
-grammar, while semantic validation rejects a second unindented root with the
-pinned Mermaid diagnostic. Deterministic alternating partitions
+grammar. Multiple unindented sections remain sibling roots under Mermaid's
+renderer-created virtual root, matching every active upstream rendering fixture;
+the registered but parser-invocation-inactive upstream single-root validator is
+not treated as runtime behavior. Style-less `classDef` declarations are also
+accepted as the pinned grammar permits. Deterministic alternating partitions
 lower through backend-neutral rectangles and glyph runs, with native
 Metal-to-PNG validation. Named `classDef` declarations resolve fill, stroke,
 dash, dash offset, fill/stroke/overall opacity, text color, and font styling
@@ -755,12 +758,17 @@ the upstream renderer. Common D3 value-format families lower natively, including
 grouped and fixed decimals, currency, significant digits, scientific notation,
 percentages, SI prefixes, radix output, signs, trimmed zeroes, alternate radix
 prefixes, width, fill, and left/right/center/sign-aware alignment. Exact D3
-locale-specific separators and the broader CSS property surface remain
-unsupported at the partial level. Treemap layout, value visibility, font, and
+locale-specific separators and CSS properties outside the typed Treemap style
+contract remain integrator-owned rather than backend-specific renderer behavior.
+Treemap layout, value visibility, font, and
 border configuration also flow through semantic IR, hierarchy layout, and paint.
 Explicit section and leaf fill, stroke, and stroke-width options, independent
 label/value colors, and title color/size follow the same backend-neutral path;
-named class styles retain precedence over those diagram-wide node options.
+named class styles retain precedence over those diagram-wide node options. The
+complete pinned syntax corpus covers every active upstream Treemap rendering
+fixture plus grammar boundary cases, and the matching visual corpus lowers every
+accepted fixture through hierarchy layout, PaintScene instructions, Metal, and
+PNG. Treemap is therefore full at the pinned native compatibility level.
 
 ### Venn Native Slice
 
