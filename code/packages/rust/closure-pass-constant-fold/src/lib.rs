@@ -106,6 +106,7 @@ use coding_adventures_javascript_ast::{
 use serde_json::json;
 
 mod array_length_frontier;
+mod selected_root_identity;
 
 /// Constant-folding pass — see crate-level docs.
 #[derive(Debug, Default, Clone, Copy)]
@@ -4643,7 +4644,7 @@ fn fold_member(m: &MemberExpression, st: &mut FoldState) -> Expression {
         if let (Expression::ArrayExpression(a), Expression::NumericLiteral(k)) =
             (&object, &property)
         {
-            if let Some(folded) = fold_array_index_access(a, k, &m.cv, st) {
+            if let Some(folded) = fold_array_index_access(a, k, k.cv.as_deref(), &m.cv, st) {
                 return folded;
             }
         }
@@ -4771,6 +4772,7 @@ fn is_es3_reserved_word(s: &str) -> bool {
 fn fold_array_index_access(
     a: &ArrayExpression,
     k: &NumericLiteral,
+    key_cv: Option<&str>,
     parent_cv: &Option<String>,
     st: &mut FoldState,
 ) -> Option<Expression> {
@@ -4816,10 +4818,16 @@ fn fold_array_index_access(
                 }
                 let before = format!("array-literal[{len}][{idx}]");
                 let after = format!("element[{idx}]");
-                // Records the fold (and sets `changed`); the selected element
-                // keeps its own cv for span provenance.
-                let _new_cv = st.fork_cv(parent_cv, &before, &after);
-                Some(selected.clone())
+                // CLOC36: the returned clone owns the selection rewrite. Its
+                // old root remains an operand, while nested CVs and every
+                // non-CV field remain exactly the already-folded selection.
+                let mut replacement = selected.clone();
+                let slot = selected_root_identity::slot(&mut replacement);
+                *slot = fork_selected_array_cvs(
+                    [parent_cv.as_deref(), a.cv.as_deref(), key_cv, slot.as_deref()],
+                    &before, &after, st,
+                );
+                Some(replacement)
             }
             // In-bounds HOLE (CLOC12.196b): reads as `undefined` → `void 0`.
             None => {
@@ -4921,7 +4929,25 @@ fn fold_array_string_key_access(
         value: n,
         raw: format_js_number(n),
     };
-    fold_array_index_access(a, &k, parent_cv, st)
+    // The conversion value is not a source NumericLiteral. Preserve the
+    // actual folded string identity separately, leaving k.cv untraced.
+    fold_array_index_access(a, &k, s.cv.as_deref(), parent_cv, st)
+}
+
+/// Four fixed optional operand slots reuse the metered first-seen collector.
+/// No selected-descendant traversal or general pass-wide bound is claimed.
+#[inline(never)]
+fn fork_selected_array_cvs(
+    parents: [Option<&str>; 4],
+    before: &str,
+    after: &str,
+    st: &mut FoldState,
+) -> Option<String> {
+    if st.cv_error.is_some() { return None; }
+    match array_length_frontier::collect(parents.into_iter()) {
+        Ok(unique) => st.fork_unique_operand_cvs(&unique, before, after),
+        Err(error) => { st.cv_error = Some(error); None }
+    }
 }
 
 // ---------------------------------------------------------------------
