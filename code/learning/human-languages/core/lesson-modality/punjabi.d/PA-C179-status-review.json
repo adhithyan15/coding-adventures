@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C179-status-review",
+    "language": "punjabi",
+    "chapter": 179,
+    "sequence": 9380,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "eyes-or-hands-step"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "eyes-or-hands-step"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:93b985584e062d8f"
+  },
+  "findings": []
+}

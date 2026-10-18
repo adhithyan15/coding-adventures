@@ -1,0 +1,707 @@
+{
+  "version": 1,
+  "language": "punjabi",
+  "chapter": 179,
+  "title": "Morning Open, Afternoon Closed",
+  "drivablePrefix": 2,
+  "sourceHash": "fnv1a64:b254c1e89e522afe",
+  "lessons": [
+    {
+      "id": "PA-C179-samaa",
+      "sequence": 9330,
+      "title": "ਸਮਾਂ (samaa) — one word for time",
+      "headword": "ਸਮਾਂ",
+      "romanization": "samaa",
+      "gloss": "time",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a2b8544a9887159a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the familiar schedule once: ਅਮਨ ਨਾਲ ਅੱਠ ਵਜੇ ਤੋਂ ਦਸ ਵਜੇ ਤੱਕ ਕੰਮ ਕਰੋ। ਦਸ ਵਜੇ ਤੋਂ ਬਾਅਦ ਘਰ ਆਉਣਾ।."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: one schedule noun",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਸਮਾਂ (samaa) — samā̃ — time."
+            },
+            {
+              "kind": "speech",
+              "text": "This lesson gives one useful schedule word. Keep it small: it does not add a new clock frame."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "HEAR",
+              "instruction": "samā̃; YOU SAY: ਸਮਾਂ (samaa)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU HEAR: *samā̃*; YOU SAY: **ਸਮਾਂ**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ਸਮਾਂ (samaa)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: **ਸਮਾਂ**]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say time. (ਸਮਾਂ (samaa).)"
+            },
+            {
+              "kind": "speech",
+              "text": "Source: NCERT, Punjabi activity material, uses ਸਮਾਂ (samaa) in day-part contexts."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C179-savere",
+      "sequence": 9340,
+      "title": "ਸਵੇਰੇ ਅੱਠ ਵਜੇ (savere atth vaje) — place the morning before the hour",
+      "headword": "ਸਵੇਰੇ ਅੱਠ ਵਜੇ",
+      "romanization": "savere atth vaje",
+      "gloss": "at eight in the morning",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:18bc8508cd097f29",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say ਸਮਾਂ (samaa). Then retrieve ਦਸ ਵਜੇ ਤੋਂ ਬਾਅਦ."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: morning precedes the hour",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਸਵੇਰੇ ਅੱਠ ਵਜੇ (savere atth vaje) — savere aṭṭh vaje — at eight in the morning."
+            },
+            {
+              "kind": "speech",
+              "text": "Put ਸਵੇਰੇ before the familiar whole-hour phrase. This lesson owns that bounded day-part use."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "HEAR",
+              "instruction": "savere aṭṭh vaje; YOU SAY: ਸਵੇਰੇ ਅੱਠ ਵਜੇ (savere atth vaje)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU HEAR: *savere aṭṭh vaje*; YOU SAY: **ਸਵੇਰੇ ਅੱਠ ਵਜੇ**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "ਸਵੇਰੇ ਅੱਠ ਵਜੇ (savere atth vaje)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ਸਵੇਰੇ ਅੱਠ ਵਜੇ**]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say at eight in the morning, then say time."
+            },
+            {
+              "kind": "speech",
+              "text": "Source: UK Government, Punjabi asylum accommodation guide, uses ਸਵੇਰੇ in public-hours language."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C179-khullha",
+      "sequence": 9350,
+      "title": "ਬਾਗ਼ ਸਵੇਰੇ ਖੁੱਲ੍ਹਾ ਹੈ (baagh savere khullha hai) — one open status",
+      "headword": "ਬਾਗ਼ ਸਵੇਰੇ ਖੁੱਲ੍ਹਾ ਹੈ",
+      "romanization": "baagh savere khullha hai",
+      "gloss": "the garden is open in the morning",
+      "script": "gurmukhi",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "eyes-or-hands-step"
+      ],
+      "sourceHash": "fnv1a64:6a8c115ae3ff30ab",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
+        ],
+        "waitUntilStopped": [
+          "Warm-up",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up and Guided Practice."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Read ਬਾਗ਼. Then say ਸਵੇਰੇ."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: one open status",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਬਾਗ਼ ਸਵੇਰੇ ਖੁੱਲ੍ਹਾ ਹੈ (baagh savere khullha hai) — bāġ savere khullhā hai — the garden is open in the morning."
+            },
+            {
+              "kind": "speech",
+              "text": "Here ਖੁੱਲ੍ਹਾ gives the open status. Keep the whole model together."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "HEAR",
+              "instruction": "the open-status model; YOU SAY: ਬਾਗ਼ ਸਵੇਰੇ ਖੁੱਲ੍ਹਾ ਹੈ (baagh savere khullha hai)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU HEAR: the open-status model; YOU SAY: **ਬਾਗ਼ ਸਵੇਰੇ ਖੁੱਲ੍ਹਾ ਹੈ**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "ਬਾਗ਼ ਸਵੇਰੇ ਖੁੱਲ੍ਹਾ ਹੈ (baagh savere khullha hai)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ਬਾਗ਼ ਸਵੇਰੇ ਖੁੱਲ੍ਹਾ ਹੈ**]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the open-status model without looking."
+            },
+            {
+              "kind": "speech",
+              "text": "Source: Punjabi University, teaching vocabulary, publishes the ਖੁੱਲ੍ਹਾ/ਬੰਦ contrast."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C179-dupahir",
+      "sequence": 9360,
+      "title": "ਦੁਪਹਿਰ ਦੋ ਵਜੇ (dupahir do vaje) — place the afternoon before the hour",
+      "headword": "ਦੁਪਹਿਰ ਦੋ ਵਜੇ",
+      "romanization": "dupahir do vaje",
+      "gloss": "at two in the afternoon",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:997600ec3e255a68",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say ਸਮਾਂ (samaa). Then retrieve ਬਾਗ਼ ਸਵੇਰੇ ਖੁੱਲ੍ਹਾ ਹੈ (baagh savere khullha hai)."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: afternoon precedes the hour",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਦੁਪਹਿਰ ਦੋ ਵਜੇ — dupahir do vaje — at two in the afternoon."
+            },
+            {
+              "kind": "speech",
+              "text": "Put ਦੁਪਹਿਰ before the familiar whole-hour phrase. This lesson owns only this day-part use."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "HEAR",
+              "instruction": "dupahir do vaje; YOU SAY: ਦੁਪਹਿਰ ਦੋ ਵਜੇ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU HEAR: *dupahir do vaje*; YOU SAY: **ਦੁਪਹਿਰ ਦੋ ਵਜੇ**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "ਦੁਪਹਿਰ ਦੋ ਵਜੇ (dupahir do vaje)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ਦੁਪਹਿਰ ਦੋ ਵਜੇ**]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say at two in the afternoon."
+            },
+            {
+              "kind": "speech",
+              "text": "Source: NCERT, Punjabi activity material, uses ਦੁਪਹਿਰ in a day-part context."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C179-band",
+      "sequence": 9370,
+      "title": "ਬਾਗ਼ ਬੰਦ ਹੈ (baagh band hai) — one closed status",
+      "headword": "ਬਾਗ਼ ਬੰਦ ਹੈ",
+      "romanization": "baagh band hai",
+      "gloss": "the garden is closed",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:acce2600010cacd7",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Retrieve ਬਾਗ਼ ਸਵੇਰੇ ਖੁੱਲ੍ਹਾ ਹੈ (baagh savere khullha hai)."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: one closed status",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਬਾਗ਼ ਬੰਦ ਹੈ (baagh band hai) — bāġ band hai — the garden is closed."
+            },
+            {
+              "kind": "speech",
+              "text": "Here ਬੰਦ gives the contrasting closed status."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "HEAR",
+              "instruction": "the closed-status model; YOU SAY: ਬਾਗ਼ ਬੰਦ ਹੈ (baagh band hai)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU HEAR: the closed-status model; YOU SAY: **ਬਾਗ਼ ਬੰਦ ਹੈ**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "ਬਾਗ਼ ਬੰਦ ਹੈ (baagh band hai)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ਬਾਗ਼ ਬੰਦ ਹੈ**]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the closed model, then the open model."
+            },
+            {
+              "kind": "speech",
+              "text": "Sources: Punjabi University, RCPLT dictionary, defines ਬੰਦ as closed or shut; Punjabi University teaching vocabulary gives the open/closed pair."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C179-status-review",
+      "sequence": 9380,
+      "title": "ਸਵੇਰੇ ਖੁੱਲ੍ਹਾ; ਦੁਪਹਿਰ ਬੰਦ (savere khullha; dupahir band) — review the two statuses",
+      "headword": "ਸਵੇਰੇ ਖੁੱਲ੍ਹਾ; ਦੁਪਹਿਰ ਬੰਦ",
+      "romanization": "savere khullha; dupahir band",
+      "gloss": "open in the morning; closed in the afternoon",
+      "script": "gurmukhi",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "eyes-or-hands-step"
+      ],
+      "sourceHash": "fnv1a64:93b985584e062d8f",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
+        ],
+        "waitUntilStopped": [
+          "Warm-up"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Warm-up."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say ਸਮਾਂ (samaa). Read ਬਾਗ਼ ਸਵੇਰੇ ਖੁੱਲ੍ਹਾ ਹੈ (baagh savere khullha hai) and ਬਾਗ਼ ਬੰਦ ਹੈ (baagh band hai). Then say ਦੁਪਹਿਰ ਦੋ ਵਜੇ (dupahir do vaje)."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "HEAR",
+              "instruction": "morning; YOU SAY: ਸਵੇਰੇ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU HEAR: morning; YOU SAY: **ਸਵੇਰੇ**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "HEAR",
+              "instruction": "afternoon; YOU SAY: ਦੁਪਹਿਰ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU HEAR: afternoon; YOU SAY: **ਦੁਪਹਿਰ**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "HEAR",
+              "instruction": "open; YOU SAY: ਖੁੱਲ੍ਹਾ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU HEAR: open; YOU SAY: **ਖੁੱਲ੍ਹਾ**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "HEAR",
+              "instruction": "closed; YOU SAY: ਬੰਦ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU HEAR: closed; YOU SAY: **ਬੰਦ**]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Retrieve all five new forms without looking."
+            },
+            {
+              "kind": "speech",
+              "text": "This is reinforcement inside the second prerequisite tranche. It does not unblock Punjabi A2 mock 1 and is not an A2 mock, A2 readiness, or A2 attainment."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C179-payoff",
+      "sequence": 9390,
+      "title": "ਬਾਗ਼ ਸਵੇਰੇ ਅੱਠ ਵਜੇ ਖੁੱਲ੍ਹਾ ਹੈ। ਦੁਪਹਿਰ ਦੋ ਵਜੇ ਬੰਦ ਹੈ। (baagh savere atth vaje khullha hai. dupahir do vaje band hai.)",
+      "headword": "ਬਾਗ਼ ਸਵੇਰੇ ਅੱਠ ਵਜੇ ਖੁੱਲ੍ਹਾ ਹੈ। ਦੁਪਹਿਰ ਦੋ ਵਜੇ ਬੰਦ ਹੈ।",
+      "romanization": "baagh savere atth vaje khullha hai. dupahir do vaje band hai.",
+      "gloss": "the garden is open at eight in the morning and closed at two in the afternoon",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2a28d3f707f6211f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Retrieve ਸਮਾਂ (samaa), then the morning, afternoon, open, and closed forms."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice: four-skill payoff",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਬਾਗ਼ ਸਵੇਰੇ ਅੱਠ ਵਜੇ ਖੁੱਲ੍ਹਾ ਹੈ। ਦੁਪਹਿਰ ਦੋ ਵਜੇ ਬੰਦ ਹੈ। (baagh savere atth vaje khullha hai. dupahir do vaje band hai.)"
+            },
+            {
+              "kind": "prompt",
+              "action": "HEAR",
+              "instruction": "the two-sentence hours note; YOU SAY: ਬਾਗ਼ ਸਵੇਰੇ ਅੱਠ ਵਜੇ ਖੁੱਲ੍ਹਾ ਹੈ। ਦੁਪਹਿਰ ਦੋ ਵਜੇ ਬੰਦ ਹੈ। (baagh savere atth vaje khullha hai. dupahir do vaje band hai.)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU HEAR: the two-sentence hours note; YOU SAY: **ਬਾਗ਼ ਸਵੇਰੇ ਅੱਠ ਵਜੇ ਖੁੱਲ੍ਹਾ ਹੈ। ਦੁਪਹਿਰ ਦੋ ਵਜੇ ਬੰਦ ਹੈ।**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "ਬਾਗ਼ ਸਵੇਰੇ ਅੱਠ ਵਜੇ ਖੁੱਲ੍ਹਾ ਹੈ। ਦੁਪਹਿਰ ਦੋ ਵਜੇ ਬੰਦ ਹੈ। (baagh savere atth vaje khullha hai. dupahir do vaje band hai.)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ਬਾਗ਼ ਸਵੇਰੇ ਅੱਠ ਵਜੇ ਖੁੱਲ੍ਹਾ ਹੈ। ਦੁਪਹਿਰ ਦੋ ਵਜੇ ਬੰਦ ਹੈ।**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "ਬਾਗ਼ ਸਵੇਰੇ ਅੱਠ ਵਜੇ ਖੁੱਲ੍ਹਾ ਹੈ। ਦੁਪਹਿਰ ਦੋ ਵਜੇ ਬੰਦ ਹੈ। (baagh savere atth vaje khullha hai. dupahir do vaje band hai.) after covering the model",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **ਬਾਗ਼ ਸਵੇਰੇ ਅੱਠ ਵਜੇ ਖੁੱਲ੍ਹਾ ਹੈ। ਦੁਪਹਿਰ ਦੋ ਵਜੇ ਬੰਦ ਹੈ।** after covering the model]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Rebuild the hours note without looking, then name the five new forms."
+            },
+            {
+              "kind": "speech",
+              "text": "This is the second prerequisite tranche exposed by Punjabi A2 mock drafting. It does not unblock Punjabi A2 mock 1 by itself. It is not an A2 mock, not A2 readiness or attainment, and not external or human validation."
+            },
+            {
+              "kind": "speech",
+              "text": "Sources: UK Government, Punjabi asylum accommodation guide, for public-hours language; Punjabi University, teaching vocabulary, for the open/closed pair."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}
