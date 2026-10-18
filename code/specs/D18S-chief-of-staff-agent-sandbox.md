@@ -2500,8 +2500,13 @@ through S-I3 before two weeks are spent on Windows.
    - it is added before `CreateProcessW`, by the image's
      read-modify-write, through a handle reopened from the held one and
      under the same lock;
-   - it is not added again if an equal or wider allow entry for the SID
-     is already there.
+   - it is merged into the SID's allow entry if one is there already
+     (`GRANT_ACCESS`), so granting twice leaves one entry;
+   - the list is written back with its protection as it was. A protected
+     list, such as an owner-only file's, must not start inheriting its
+     directory's entries;
+   - a list that cannot be changed refuses the launch, for example a
+     file whose owner is SYSTEM.
 
    *Removal.* Once the agent has exited, every explicit ACE naming its
    SID is removed from each granted file, under the same lock. "Exited"
