@@ -166,6 +166,10 @@ fn event_hard_lines_unicode_and_actual_width_keep_complete_products() {
         ("two-terminators", "\n\n".into(), 2, 2),
         ("crlf", "A\r\nB\r\n".into(), 2, 2),
         ("empty-middle", "A\n\nC\n".into(), 3, 3),
+        ("leading-lf", "\nA".into(), 2, 2),
+        ("lone-cr", "A\rB".into(), 1, 1),
+        ("whitespace", " ".repeat(20), 2, 1),
+        ("unicode-line-separator", "\u{2028}".repeat(20), 2, 1),
         ("unicode-scalars", "🦀".repeat(20), 2, 1),
         ("combining-scalars", "e\u{301}".repeat(20), 3, 2),
     ] {

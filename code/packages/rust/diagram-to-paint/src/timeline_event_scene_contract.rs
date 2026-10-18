@@ -20,6 +20,7 @@ mod timeline_event_scene_contract {
     include!("timeline_default_direction_contract.rs");
     include!("timeline_size_layout_product_contract.rs");
     include!("timeline_period_height_product_contract.rs");
+    include!("timeline_event_height_product_contract.rs");
     include!("timeline_family_scene_contract.rs");
 
     #[test]
