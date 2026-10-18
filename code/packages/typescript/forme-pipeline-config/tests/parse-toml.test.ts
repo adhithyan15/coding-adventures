@@ -121,6 +121,56 @@ nested.answer = 42
     });
   });
 
+  it("evaluates TOML scalar spellings inside open stage config", () => {
+    const parsed = parseTomlConfig(String.raw`name = "scalars"
+[settings]
+storage-root = "."
+cache-dir = "cache"
+reproducible-build = false
+log-level = "info"
+best-effort = false
+[[stages]]
+stage = "@example/source"
+config = { escaped = "line\n\u03bb", literal = 'C:\data', hex = 0x2a, octal = 0o52, binary = 0b101010, date = 2026-10-18 }
+`);
+    expect(parsed.stages[0]?.config).toEqual({
+      escaped: "line\nλ",
+      literal: "C:\\data",
+      hex: 42,
+      octal: 42,
+      binary: 42,
+      date: "2026-10-18",
+    });
+  });
+
+  it("applies TOML multiline string newline and continuation rules", () => {
+    const parsed = parseTomlConfig(`name = "multiline"
+[settings]
+storage-root = "."
+cache-dir = "cache"
+reproducible-build = false
+log-level = "info"
+best-effort = false
+[[stages]]
+stage = "@example/source"
+config = { basic = """
+one\\
+  two""", literal = '''
+raw\\ntext''' }
+`);
+    expect(parsed.stages[0]?.config).toEqual({ basic: "onetwo", literal: "raw\\ntext" });
+  });
+
+  it.each([
+    [String.raw`name = "bad\q"`, /unsupported escape/i],
+    [String.raw`name = "bad\uD800"`, /invalid Unicode scalar/i],
+    [String.raw`name = "bad\u12xz"`, /invalid TOML|invalid.*escape/i],
+    ['name = "unsafe"\nvalue = 9007199254740992', /safe integer/i],
+    ['name = "deadline"\n[settings]\nstorage-root = "."\ncache-dir = "cache"\nreproducible-build = false\nlog-level = "info"\nbest-effort = false\ndeadline-ms = 0\n[[stages]]\nstage = "@example/source"', /deadline-ms.*positive finite/i],
+  ])("rejects invalid scalar values", (source, message) => {
+    expect(() => parseTomlConfig(source)).toThrow(message);
+  });
+
   it.each([
     ['name = "one"\nname = "two"', /already assigned|duplicate/i],
     ['[settings]\n[settings]', /declared more than once|duplicate/i],
@@ -130,22 +180,24 @@ nested.answer = 42
   });
 
   it.each([
-    ['extra = true\n', /extra.*not supported/i],
-    ['', /settings\.extra.*not supported/i, '[settings]\nextra = true\n'],
-    ['', /stages\[0\]\.extra.*not supported/i, '[[stages]]\nstage = "@example/source"\nextra = true\n'],
-    ['', /wires\[0\]\.from\.extra.*not supported/i, '[[wires]]\nfrom = { id = "a", extra = "x" }\nto = { id = "b" }\n'],
-    ['', /outputs\[0\]\.extra.*not supported/i, '[[outputs]]\nfrom-instance = "a"\nname = "web"\nextra = true\n'],
-  ])("rejects unknown keys in closed tables", (rootFragment, message, trailingFragment = "") => {
-    const source = `${rootFragment}name = "closed"
+    [{ root: 'extra = true\n' }, /extra.*not supported/i],
+    [{ settings: 'extra = true\n' }, /settings\.extra.*not supported/i],
+    [{ stage: 'extra = true\n' }, /stages\[0\]\.extra.*not supported/i],
+    [{ trailing: '[[wires]]\nfrom = { id = "a", extra = "x" }\nto = { id = "b" }\n' }, /wires\[0\]\.from\.extra.*not supported/i],
+    [{ trailing: '[[outputs]]\nfrom-instance = "a"\nname = "web"\nextra = true\n' }, /outputs\[0\]\.extra.*not supported/i],
+  ])("rejects unknown keys in closed tables", (parts, message) => {
+    const source = `${parts.root ?? ""}name = "closed"
 [settings]
 storage-root = "."
 cache-dir = "cache"
 reproducible-build = false
 log-level = "info"
 best-effort = false
+${parts.settings ?? ""}
 [[stages]]
 stage = "@example/source"
-${trailingFragment}`;
+${parts.stage ?? ""}
+${parts.trailing ?? ""}`;
     expect(() => parseTomlConfig(source)).toThrow(message);
   });
 

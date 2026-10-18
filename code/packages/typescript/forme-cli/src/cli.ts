@@ -1,6 +1,6 @@
 import { createHash } from "node:crypto";
-import { access, mkdir, rm, writeFile } from "node:fs/promises";
-import { dirname, isAbsolute, relative, resolve } from "node:path";
+import { access, mkdir, open, rm, writeFile } from "node:fs/promises";
+import { dirname, extname, isAbsolute, relative, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import {
   ParseErrors,
@@ -22,6 +22,8 @@ import {
   ConfigError,
   isStageRef,
   loadTsConfig,
+  MAX_TOML_CONFIG_BYTES,
+  parseTomlConfig,
   type PipelineConfig,
 } from "@coding-adventures/forme-pipeline-config";
 import { type CancellationToken } from "@coding-adventures/forme-stage";
@@ -46,6 +48,7 @@ const DEFAULT_CONFIG_NAMES = [
   "forme.config.mts",
   "forme.config.js",
   "forme.config.mjs",
+  "forme.config.toml",
 ] as const;
 
 const CLI_SPEC_PATH = fileURLToPath(new URL("../forme.cli.json", import.meta.url));
@@ -105,7 +108,7 @@ const defaultIO: CliIO = {
 };
 
 const defaultServices: CliServices = {
-  loadConfig: path => loadTsConfig(path),
+  loadConfig: loadProjectConfig,
   createOrchestrator: (cacheRoot, runtime) => createProductOrchestrator({
     ...runtime,
     cacheRoot,
@@ -117,6 +120,42 @@ const defaultServices: CliServices = {
     ...(process.platform === "win32" ? { verifyWindowsAcl } : {}),
   }),
 };
+
+/** Dispatch executable configs and declarative data without guessing formats. */
+async function loadProjectConfig(path: string): Promise<PipelineConfig> {
+  const extension = extname(path).toLowerCase();
+  if (extension === ".toml") return parseTomlConfig(await readBoundedToml(path));
+  if ([".ts", ".mts", ".js", ".mjs"].includes(extension)) return loadTsConfig(path);
+  throw new Error(`unsupported Forme config extension ${JSON.stringify(extension || "<none>")}`);
+}
+
+/**
+ * Read at most the parser's advertised source ceiling plus one sentinel byte.
+ * The second size check closes the stat/read race if a file grows after stat.
+ */
+async function readBoundedToml(path: string): Promise<string> {
+  const handle = await open(path, "r");
+  try {
+    const metadata = await handle.stat();
+    if (!metadata.isFile()) throw new Error(`TOML config is not a regular file: ${path}`);
+    if (metadata.size > MAX_TOML_CONFIG_BYTES) {
+      throw new Error(`TOML config exceeds ${MAX_TOML_CONFIG_BYTES}-byte limit: ${path}`);
+    }
+    const buffer = Buffer.alloc(MAX_TOML_CONFIG_BYTES + 1);
+    let offset = 0;
+    while (offset < buffer.byteLength) {
+      const { bytesRead } = await handle.read(buffer, offset, buffer.byteLength - offset, offset);
+      if (bytesRead === 0) break;
+      offset += bytesRead;
+    }
+    if (offset > MAX_TOML_CONFIG_BYTES) {
+      throw new Error(`TOML config exceeds ${MAX_TOML_CONFIG_BYTES}-byte limit: ${path}`);
+    }
+    return new TextDecoder("utf-8", { fatal: true }).decode(buffer.subarray(0, offset));
+  } finally {
+    await handle.close();
+  }
+}
 
 export async function run(
   argv: readonly string[],

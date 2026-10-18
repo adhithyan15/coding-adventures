@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+- Load explicitly selected `.toml` pipeline configs and discover
+  `forme.config.toml` after the canonical executable config names. Reads are
+  bounded to the parser's one-MiB contract, require valid UTF-8, and dispatch
+  only known extensions.
+- Prove a declarative package-stage pipeline through the real `forme check`
+  subprocess, installed-plugin discovery, FM02 resolution, and DAG validation.
+
 - Launch npm's JavaScript CLI directly through the active Node executable on
   Windows, retaining literal argument-vector spawning without a command shell
   so frozen local bootstraps run safely on all supported release platforms.
