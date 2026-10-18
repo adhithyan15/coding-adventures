@@ -1,0 +1,19 @@
+{
+  "chapter": 549,
+  "title": "Casados",
+  "label": "ch:es-casados",
+  "canDo": "I can say whether someone is married or single, who married whom, and who raised a glass.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "ES-C549-brindar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 549: I can say whether someone is married or single, who married whom, and who raised a glass.",
+    "assesses": [
+      "ES-LEX-C549-CASADO-03",
+      "ES-LEX-C549-CASADO-04",
+      "ES-LEX-C549-CASADO-05"
+    ]
+  }
+}

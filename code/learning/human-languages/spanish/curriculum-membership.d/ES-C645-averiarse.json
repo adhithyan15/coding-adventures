@@ -1,0 +1,11 @@
+{
+  "id": "ES-C645-averiarse",
+  "pathSegment": "ES-PATH-645-AVERIA",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ES-EXT-645-AVERIA",
+      "order": 1
+    }
+  ]
+}

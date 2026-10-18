@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C655-mareo",
+    "language": "spanish",
+    "chapter": 655,
+    "sequence": 22580,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:74fb8d5d8e9593fc"
+  },
+  "findings": []
+}

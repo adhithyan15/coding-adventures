@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C520-crimen",
+    "language": "spanish",
+    "chapter": 520,
+    "sequence": 15600,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1a83ec46f32e07bc"
+  },
+  "findings": []
+}

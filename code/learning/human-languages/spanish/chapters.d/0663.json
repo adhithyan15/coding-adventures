@@ -1,0 +1,19 @@
+{
+  "chapter": 663,
+  "title": "Lo que cuesta la habitación",
+  "label": "ch:es-lo-que-cuesta-la-habitacion",
+  "canDo": "I can understand the price of a stay: the tourist tax, extra charges, the deposit and a refund.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "ES-R663-repaso-656-663",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 663: I can understand the price of a stay: the tourist tax, extra charges, the deposit and a refund.",
+    "assesses": [
+      "ES-LEX-C663-TEMPORADA-03",
+      "ES-LEX-C663-TEMPORADA-04",
+      "ES-LEX-C663-TEMPORADA-05"
+    ]
+  }
+}

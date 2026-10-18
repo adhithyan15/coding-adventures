@@ -1,0 +1,11 @@
+{
+  "id": "ES-C763-retrato",
+  "pathSegment": "ES-PATH-763-ARTE",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ES-EXT-763-ARTE",
+      "order": 1
+    }
+  ]
+}

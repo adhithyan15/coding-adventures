@@ -1,0 +1,11 @@
+{
+  "id": "ES-R777-repaso-776-777",
+  "pathSegment": "ES-PATH-777-ENCHUFAR",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "ES-EXT-777-ENCHUFAR",
+      "order": 5
+    }
+  ]
+}

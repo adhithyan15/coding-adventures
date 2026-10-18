@@ -1,0 +1,11 @@
+{
+  "id": "ES-C743-psicologo",
+  "pathSegment": "ES-PATH-743-MENTE",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ES-EXT-743-MENTE",
+      "order": 2
+    }
+  ]
+}

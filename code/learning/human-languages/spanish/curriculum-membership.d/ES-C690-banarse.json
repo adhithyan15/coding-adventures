@@ -1,0 +1,11 @@
+{
+  "id": "ES-C690-banarse",
+  "pathSegment": "ES-PATH-690-PLAYA",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "ES-EXT-690-PLAYA",
+      "order": 0
+    }
+  ]
+}

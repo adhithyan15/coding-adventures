@@ -1,0 +1,19 @@
+{
+  "chapter": 742,
+  "title": "Comer bien",
+  "label": "ch:es-comer-bien",
+  "canDo": "I can talk about diet, appetite, chewing well, being overweight and exercise.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "ES-C742-masticar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 742: I can talk about diet, appetite, chewing well, being overweight and exercise.",
+    "assesses": [
+      "ES-LEX-C742-DIETA-03",
+      "ES-LEX-C742-DIETA-04",
+      "ES-LEX-C742-DIETA-05"
+    ]
+  }
+}

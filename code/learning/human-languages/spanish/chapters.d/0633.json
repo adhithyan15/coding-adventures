@@ -1,0 +1,19 @@
+{
+  "chapter": 633,
+  "title": "Ricos y pobres",
+  "label": "ch:es-ricos-y-pobres",
+  "canDo": "I can compare rich and poor and say what is free or a luxury.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "ES-C633-gratuito",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 633: I can compare rich and poor and say what is free or a luxury.",
+    "assesses": [
+      "ES-LEX-C633-RIQUEZA-03",
+      "ES-LEX-C633-RIQUEZA-04",
+      "ES-LEX-C633-RIQUEZA-05"
+    ]
+  }
+}

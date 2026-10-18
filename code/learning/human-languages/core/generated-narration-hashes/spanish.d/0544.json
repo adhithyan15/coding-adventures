@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 544,
+  "sourceHash": "fnv1a64:c81b1d9c2a45673f",
+  "lessonIds": [
+    "ES-C544-nacimiento",
+    "ES-C544-parto",
+    "ES-C544-dar-a-luz",
+    "ES-C544-embarazo",
+    "ES-C544-recien-nacido"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch544.txt",
+  "json": "spanish/narration/ch544.json",
+  "textHash": "fnv1a64:8228de30a996cb47",
+  "jsonHash": "fnv1a64:fe737e2fcc4ae321",
+  "findings": []
+}

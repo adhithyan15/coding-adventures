@@ -1,0 +1,11 @@
+{
+  "id": "ES-C529-escombros",
+  "pathSegment": "ES-PATH-529-BOMBA",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ES-EXT-529-BOMBA",
+      "order": 3
+    }
+  ]
+}

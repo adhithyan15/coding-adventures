@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C584-ventaja",
+    "language": "spanish",
+    "chapter": 584,
+    "sequence": 18910,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9c147559cd636427"
+  },
+  "findings": []
+}

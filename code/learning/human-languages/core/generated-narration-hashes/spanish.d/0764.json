@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 764,
+  "sourceHash": "fnv1a64:2ca8d040bce0da2e",
+  "lessonIds": [
+    "ES-C764-inolvidable",
+    "ES-C764-olvido",
+    "ES-C764-memorizar",
+    "ES-C764-revivir",
+    "ES-C764-diario"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch764.txt",
+  "json": "spanish/narration/ch764.json",
+  "textHash": "fnv1a64:ec89e7fd66cb095e",
+  "jsonHash": "fnv1a64:b2d4c800004f2918",
+  "findings": []
+}

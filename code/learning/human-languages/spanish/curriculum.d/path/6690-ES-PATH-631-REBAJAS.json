@@ -1,0 +1,9 @@
+{
+  "id": "ES-PATH-631-REBAJAS",
+  "spine_node": "SPINE-EXPRESS-CONDITION",
+  "before": [],
+  "inline": [
+    "ES-EXT-631-REBAJAS"
+  ],
+  "after": []
+}

@@ -1,0 +1,9 @@
+{
+  "id": "ES-PATH-603-DERECHO",
+  "spine_node": "SPINE-GIVE-REASONS",
+  "before": [],
+  "inline": [
+    "ES-EXT-603-DERECHO"
+  ],
+  "after": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 735,
+  "title": "Por dentro del cuerpo",
+  "label": "ch:es-por-dentro-del-cuerpo",
+  "canDo": "I can name the skeleton and inner organs and say that my heart is beating fast.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "ES-R735-repaso-728-735",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 735: I can name the skeleton and inner organs and say that my heart is beating fast.",
+    "assesses": [
+      "ES-LEX-C735-HUESO-03",
+      "ES-LEX-C735-HUESO-04",
+      "ES-LEX-C735-HUESO-05"
+    ]
+  }
+}

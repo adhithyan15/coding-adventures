@@ -1,0 +1,9 @@
+{
+  "id": "ES-PATH-714-CARINO",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "ES-EXT-714-CARINO"
+  ],
+  "after": []
+}

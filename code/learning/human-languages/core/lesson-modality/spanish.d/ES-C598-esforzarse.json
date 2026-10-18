@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C598-esforzarse",
+    "language": "spanish",
+    "chapter": 598,
+    "sequence": 19650,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f3eb45c6f339e518"
+  },
+  "findings": []
+}

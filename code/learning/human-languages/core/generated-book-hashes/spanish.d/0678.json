@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 678,
+  "sourceHash": "fnv1a64:da9581237fe54009",
+  "lessonIds": [
+    "ES-C678-visitar",
+    "ES-C678-ermita",
+    "ES-C678-estatua",
+    "ES-C678-torre",
+    "ES-C678-galeria"
+  ],
+  "tex": "spanish/book/chapters/ch678-de-visita.tex"
+}

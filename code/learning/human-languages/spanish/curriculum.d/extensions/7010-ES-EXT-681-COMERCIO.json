@@ -1,0 +1,8 @@
+{
+  "id": "ES-EXT-681-COMERCIO",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can shop around a town: the street market, the shopping centre, the department store, holiday opening and who serves me.",
+  "prerequisites": []
+}

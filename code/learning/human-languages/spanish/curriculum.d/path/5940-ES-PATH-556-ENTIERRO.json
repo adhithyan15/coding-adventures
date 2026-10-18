@@ -1,0 +1,9 @@
+{
+  "id": "ES-PATH-556-ENTIERRO",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "ES-EXT-556-ENTIERRO"
+  ],
+  "after": []
+}

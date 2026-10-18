@@ -1,0 +1,11 @@
+{
+  "id": "ES-C559-carroza",
+  "pathSegment": "ES-PATH-559-DESFILE",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ES-EXT-559-DESFILE",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 580,
+  "sourceHash": "fnv1a64:8b7cdfbfda7314af",
+  "lessonIds": [
+    "ES-C580-motivo",
+    "ES-C580-a-raiz-de",
+    "ES-C580-ya-que",
+    "ES-C580-puesto-que",
+    "ES-C580-dado-que"
+  ],
+  "tex": "spanish/book/chapters/ch580-el-porque.tex"
+}

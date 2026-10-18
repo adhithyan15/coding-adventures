@@ -1,0 +1,11 @@
+{
+  "id": "ES-C775-lata",
+  "pathSegment": "ES-PATH-775-NEVERA",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ES-EXT-775-NEVERA",
+      "order": 2
+    }
+  ]
+}

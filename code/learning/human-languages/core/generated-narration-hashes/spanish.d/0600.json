@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 600,
+  "sourceHash": "fnv1a64:ba6269dbafe43812",
+  "lessonIds": [
+    "ES-C600-ciudadania",
+    "ES-C600-colectivo",
+    "ES-C600-civismo",
+    "ES-C600-ciudadano",
+    "ES-C600-pertenecer"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch600.txt",
+  "json": "spanish/narration/ch600.json",
+  "textHash": "fnv1a64:0d498c59eb6b2c7b",
+  "jsonHash": "fnv1a64:03b4471e74a26ff1",
+  "findings": []
+}

@@ -1,0 +1,14 @@
+{
+  "language": "spanish",
+  "chapter": 559,
+  "sourceHash": "fnv1a64:591f382c491dae52",
+  "lessonIds": [
+    "ES-C559-desfile",
+    "ES-C559-procesion",
+    "ES-C559-feria",
+    "ES-C559-carroza",
+    "ES-C559-multitud",
+    "ES-R559-repaso-552-559"
+  ],
+  "tex": "spanish/book/chapters/ch559-el-desfile.tex"
+}

@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 748,
+  "sourceHash": "fnv1a64:b9a01d96a1b72783",
+  "lessonIds": [
+    "ES-C748-adoptar",
+    "ES-C748-acoger",
+    "ES-C748-adopcion",
+    "ES-C748-madrastra",
+    "ES-C748-padrastro"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch748.txt",
+  "json": "spanish/narration/ch748.json",
+  "textHash": "fnv1a64:1e14ad2ad6a92e7f",
+  "jsonHash": "fnv1a64:e48a2ff8c9caba52",
+  "findings": []
+}

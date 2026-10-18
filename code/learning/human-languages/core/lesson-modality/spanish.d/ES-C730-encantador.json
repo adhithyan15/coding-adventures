@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C730-encantador",
+    "language": "spanish",
+    "chapter": 730,
+    "sequence": 26430,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f607855d0e5147b0"
+  },
+  "findings": []
+}

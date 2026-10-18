@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 742,
+  "sourceHash": "fnv1a64:6ccde954a04cfbf3",
+  "lessonIds": [
+    "ES-C742-dieta",
+    "ES-C742-sobrepeso",
+    "ES-C742-apetito",
+    "ES-C742-ejercicio",
+    "ES-C742-masticar"
+  ],
+  "tex": "spanish/book/chapters/ch742-comer-bien.tex"
+}

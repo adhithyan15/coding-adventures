@@ -1,0 +1,11 @@
+{
+  "id": "ES-C673-retroceder",
+  "pathSegment": "ES-PATH-673-DIRIGIRSE",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ES-EXT-673-DIRIGIRSE",
+      "order": 2
+    }
+  ]
+}

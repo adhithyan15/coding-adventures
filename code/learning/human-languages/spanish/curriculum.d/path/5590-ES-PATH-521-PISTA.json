@@ -1,0 +1,9 @@
+{
+  "id": "ES-PATH-521-PISTA",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "ES-EXT-521-PISTA"
+  ],
+  "after": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 625,
+  "title": "Legal o ilegal",
+  "label": "ch:es-legal-o-ilegal",
+  "canDo": "I can say which laws are in force, who breaks them and how to report it.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "ES-C625-denuncia",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 625: I can say which laws are in force, who breaks them and how to report it.",
+    "assesses": [
+      "ES-LEX-C625-LEGAL-03",
+      "ES-LEX-C625-LEGAL-04",
+      "ES-LEX-C625-LEGAL-05"
+    ]
+  }
+}

@@ -1,0 +1,858 @@
+{
+  "version": 1,
+  "language": "spanish",
+  "chapter": 607,
+  "title": "El medio ambiente",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:fa72c14cd3762674",
+  "lessons": [
+    {
+      "id": "ES-C607-medio-ambiente",
+      "sequence": 20080,
+      "title": "el medio ambiente — the environment",
+      "headword": "el medio ambiente",
+      "romanization": "el medio ambiente",
+      "gloss": "the environment",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ef3b4752193db22f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Spanish for the charity, then the Spanish for to take part."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: el medio ambiente",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "el medio ambiente — \"the environment\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Hay que cuidar el medio ambiente. We have to look after the environment."
+            },
+            {
+              "kind": "speech",
+              "text": "Also written medioambiente; the adjective is medioambiental."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "el medio ambiente is built on medio, inherited from Latin medius 'middle', and ambiente, from Latin ambiens 'going round', from ambire (Lewis & Short)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el medio ambiente",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el medio ambiente*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el medio ambiente, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el medio ambiente*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with el medio ambiente",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *el medio ambiente*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Spanish for the charity, then the Spanish for to take part, then say el medio ambiente again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Spanish for the charity, then the Spanish for to take part, then say *el medio ambiente* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does el medio ambiente mean? (\"The environment\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C607-consumo",
+      "sequence": 20090,
+      "title": "el consumo — the consumption",
+      "headword": "el consumo",
+      "romanization": "el consumo",
+      "gloss": "the consumption",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b4d4f1f656348d1b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Spanish for to take part, then the Spanish for the environment."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: el consumo",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "el consumo — \"the consumption\"."
+            },
+            {
+              "kind": "speech",
+              "text": "El consumo de agua es muy alto. Water consumption is very high."
+            },
+            {
+              "kind": "speech",
+              "text": "La sociedad de consumo — the consumer society."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "consumo is built on consumir, a learned borrowing from Latin consumere 'to use up', from sumere 'to take' (EtymDB)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el consumo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el consumo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el consumo, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el consumo*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with el consumo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *el consumo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Spanish for to take part, then the Spanish for the environment, then say el consumo again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Spanish for to take part, then the Spanish for the environment, then say *el consumo* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does el consumo mean? (\"The consumption\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C607-consumir",
+      "sequence": 20100,
+      "title": "consumir — to consume, to use",
+      "headword": "consumir",
+      "romanization": "consumir",
+      "gloss": "to consume, to use",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:49cdb1a56a8e3da1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Spanish for the environment, then the Spanish for the consumption."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: consumir",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "consumir — \"to consume, to use\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Este coche consume poca gasolina. This car uses little petrol."
+            },
+            {
+              "kind": "speech",
+              "text": "Regular -ir verb."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "consumir is a learned borrowing from Latin consumere 'to use up', built from con and sumere 'to take' (EtymDB)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "consumir",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *consumir*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "consumir, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *consumir*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with consumir",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *consumir*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Spanish for the environment, then the Spanish for the consumption, then say consumir again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Spanish for the environment, then the Spanish for the consumption, then say *consumir* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does consumir mean? (\"To consume, to use\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C607-recurso",
+      "sequence": 20110,
+      "title": "el recurso — the resource; the appeal",
+      "headword": "el recurso",
+      "romanization": "el recurso",
+      "gloss": "the resource; the appeal",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ca7b40aabf011843",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Spanish for the consumption, then the Spanish for to consume."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: el recurso",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "el recurso — \"the resource; the appeal\"."
+            },
+            {
+              "kind": "speech",
+              "text": "El agua es un recurso limitado. Water is a limited resource."
+            },
+            {
+              "kind": "speech",
+              "text": "Recursos humanos — human resources. In law, an appeal."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "recurso is a learned borrowing from Latin recursus 'a return, a running back', built on currere 'to run' (EtymDB)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el recurso",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el recurso*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el recurso, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el recurso*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with el recurso",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *el recurso*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Spanish for the consumption, then the Spanish for to consume, then say el recurso again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Spanish for the consumption, then the Spanish for to consume, then say *el recurso* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does el recurso mean? (\"The resource; the appeal\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C607-medida",
+      "sequence": 20120,
+      "title": "la medida — the measure, the step; the size",
+      "headword": "la medida",
+      "romanization": "la medida",
+      "gloss": "the measure, the step; the size",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:fb9c06c4cd6dd0a4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Spanish for to consume, then the Spanish for the resource."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: la medida",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la medida — \"the measure, the step; the size\"."
+            },
+            {
+              "kind": "speech",
+              "text": "El gobierno tomó nuevas medidas. The government took new measures."
+            },
+            {
+              "kind": "speech",
+              "text": "Tomar medidas — to take steps. A medida que — as."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "medida is built on medir, which is inherited from spoken Latin metire, Latin metiri 'to measure' (EtymDB)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la medida",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la medida*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la medida, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la medida*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with la medida",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *la medida*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Spanish for to consume, then the Spanish for the resource, then say la medida again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Spanish for to consume, then the Spanish for the resource, then say *la medida* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does la medida mean? (\"The measure, the step; the size\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-R607-repaso-600-607",
+      "sequence": 20130,
+      "title": "Repaso de los capítulos 600–607",
+      "headword": "(dialogue)",
+      "romanization": "(dialogue)",
+      "gloss": "a review of chapters 600-607",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4ddd630f775119e9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Spanish for the citizenship and the group."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the citizenship, the group, civic-mindedness, the citizen, to belong",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the citizenship, the group, civic-mindedness, the citizen, to belong]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the government, the politics, political, the minister, the town councillor",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the government, the politics, political, the minister, the town councillor]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the vote, the elections, the candidate, the voter, the democracy",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the vote, the elections, the candidate, the voter, the democracy]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the privilege, the equality, the inequality, the justice, unfair",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the privilege, the equality, the inequality, the justice, unfair]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to protest, to express, controversial, to claim, to demand",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to protest, to express, controversial, to claim, to demand]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the social exclusion, the violence, the discrimination, the racism, the corruption",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the social exclusion, the violence, the discrimination, the racism, the corruption]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the solidarity, the volunteering, the association, the charity, to take part",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the solidarity, the volunteering, the association, the charity, to take part]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the environment, the consumption, to consume, the resource, the measure",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the environment, the consumption, to consume, the resource, the measure]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The citizenship? (la ciudadanía.) The group? (el colectivo.) Civic-mindedness? (el civismo.) The citizen? (el ciudadano.) To belong? (pertenecer.) The government? (el gobierno.) The politics? (la política.) Political? (político.) The minister? (el ministro.) The town councillor? (el concejal.) The vote? (el voto.) The elections? (las elecciones.) The candidate? (el candidato.) The voter? (el votante.) The democracy? (la democracia.) The privilege? (el privilegio.) The equality? (la igualdad.) The inequality? (la desigualdad.) The justice? (la justicia.) Unfair? (injusto.) To protest? (protestar.) To express? (expresar.) Controversial? (polémico.) To claim? (reclamar.) To demand? (reivindicar.) The social exclusion? (la marginación.) The violence? (la violencia.) The discrimination? (la discriminación.) The racism? (el racismo.) The corruption? (la corrupción.) The solidarity? (la solidaridad.) The volunteering? (el voluntariado.) The association? (la asociación.) The charity? (la caridad.) To take part? (participar.) The environment? (el medio ambiente.) The consumption? (el consumo.) To consume? (consumir.) The resource? (el recurso.) The measure? (la medida.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

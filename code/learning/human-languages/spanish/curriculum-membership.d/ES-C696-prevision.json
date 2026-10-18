@@ -1,0 +1,11 @@
+{
+  "id": "ES-C696-prevision",
+  "pathSegment": "ES-PATH-696-CLIMA",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ES-EXT-696-CLIMA",
+      "order": 2
+    }
+  ]
+}

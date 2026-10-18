@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C742-masticar",
+    "language": "spanish",
+    "chapter": 742,
+    "sequence": 27080,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:35364ec966d9351e"
+  },
+  "findings": []
+}

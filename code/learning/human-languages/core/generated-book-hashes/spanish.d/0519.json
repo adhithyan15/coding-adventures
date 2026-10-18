@@ -1,0 +1,14 @@
+{
+  "language": "spanish",
+  "chapter": 519,
+  "sourceHash": "fnv1a64:20b5bbe17e7f4b43",
+  "lessonIds": [
+    "ES-C519-detener",
+    "ES-C519-arrestar",
+    "ES-C519-detencion",
+    "ES-C519-patrulla",
+    "ES-C519-perseguir",
+    "ES-R519-repaso-512-519"
+  ],
+  "tex": "spanish/book/chapters/ch519-la-policia-actua.tex"
+}

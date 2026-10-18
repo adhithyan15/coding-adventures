@@ -1,0 +1,20 @@
+{
+  "language": "spanish",
+  "chapter": 631,
+  "sourceHash": "fnv1a64:01af3e253158558f",
+  "lessonIds": [
+    "ES-C631-liquidacion",
+    "ES-C631-rebaja",
+    "ES-C631-venta",
+    "ES-C631-demanda",
+    "ES-C631-valer",
+    "ES-R631-repaso-624-631"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "spanish/narration/ch631.txt",
+  "json": "spanish/narration/ch631.json",
+  "textHash": "fnv1a64:d4afe3556783a0ef",
+  "jsonHash": "fnv1a64:7b44c711e1524c17",
+  "findings": []
+}

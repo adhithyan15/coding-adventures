@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 640,
+  "sourceHash": "fnv1a64:edc26ac40c5fd211",
+  "lessonIds": [
+    "ES-C640-veranear",
+    "ES-C640-automovil",
+    "ES-C640-circulacion",
+    "ES-C640-furgoneta",
+    "ES-C640-conductor"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch640.txt",
+  "json": "spanish/narration/ch640.json",
+  "textHash": "fnv1a64:e2d4a6aa74427068",
+  "jsonHash": "fnv1a64:9c2215a7d8067c85",
+  "findings": []
+}

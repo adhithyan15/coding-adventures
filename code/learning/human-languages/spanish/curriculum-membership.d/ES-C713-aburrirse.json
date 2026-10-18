@@ -1,0 +1,11 @@
+{
+  "id": "ES-C713-aburrirse",
+  "pathSegment": "ES-PATH-713-DIVERTIDO",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ES-EXT-713-DIVERTIDO",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,9 @@
+{
+  "id": "ES-PATH-760-PERSONAJE",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "ES-EXT-760-PERSONAJE"
+  ],
+  "after": []
+}

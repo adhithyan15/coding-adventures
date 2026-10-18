@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C727-sensible",
+    "language": "spanish",
+    "chapter": 727,
+    "sequence": 26270,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a074d1527d41e3be"
+  },
+  "findings": []
+}

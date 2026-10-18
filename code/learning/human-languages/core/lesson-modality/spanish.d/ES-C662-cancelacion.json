@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C662-cancelacion",
+    "language": "spanish",
+    "chapter": 662,
+    "sequence": 22960,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9a937273877f1195"
+  },
+  "findings": []
+}

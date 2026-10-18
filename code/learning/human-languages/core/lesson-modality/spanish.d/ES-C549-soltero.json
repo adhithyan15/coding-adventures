@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C549-soltero",
+    "language": "spanish",
+    "chapter": 549,
+    "sequence": 17080,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c03fd27f4961a883"
+  },
+  "findings": []
+}

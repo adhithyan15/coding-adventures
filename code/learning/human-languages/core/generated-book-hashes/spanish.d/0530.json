@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 530,
+  "sourceHash": "fnv1a64:f6d68190804311fe",
+  "lessonIds": [
+    "ES-C530-arriesgado",
+    "ES-C530-riesgo",
+    "ES-C530-amenaza",
+    "ES-C530-ataque",
+    "ES-C530-atacar"
+  ],
+  "tex": "spanish/book/chapters/ch530-en-peligro.tex"
+}

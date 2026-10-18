@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 634,
+  "sourceHash": "fnv1a64:79f3070569d62634",
+  "lessonIds": [
+    "ES-C634-negociar",
+    "ES-C634-negociacion",
+    "ES-C634-ceder",
+    "ES-C634-acordar",
+    "ES-C634-persuadir"
+  ],
+  "tex": "spanish/book/chapters/ch634-llegar-a-un-acuerdo.tex"
+}

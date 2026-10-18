@@ -1,0 +1,19 @@
+{
+  "chapter": 762,
+  "title": "Leer en casa",
+  "label": "ch:es-leer-en-casa",
+  "canDo": "I can talk about reading at home: magazines, covers, crosswords and flicking through pages.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "ES-C762-hojear",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 762: I can talk about reading at home: magazines, covers, crosswords and flicking through pages.",
+    "assesses": [
+      "ES-LEX-C762-PRENSA-03",
+      "ES-LEX-C762-PRENSA-04",
+      "ES-LEX-C762-PRENSA-05"
+    ]
+  }
+}

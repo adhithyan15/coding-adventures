@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C518-robo",
+    "language": "spanish",
+    "chapter": 518,
+    "sequence": 15490,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5260b6bff5444456"
+  },
+  "findings": []
+}

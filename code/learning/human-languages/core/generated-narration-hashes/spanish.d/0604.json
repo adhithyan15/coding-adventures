@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 604,
+  "sourceHash": "fnv1a64:6daf842acae5d70b",
+  "lessonIds": [
+    "ES-C604-protestar",
+    "ES-C604-expresar",
+    "ES-C604-polemico",
+    "ES-C604-reclamar",
+    "ES-C604-reivindicar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch604.txt",
+  "json": "spanish/narration/ch604.json",
+  "textHash": "fnv1a64:45d27b7804e374fd",
+  "jsonHash": "fnv1a64:937ba14b18a93585",
+  "findings": []
+}

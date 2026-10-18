@@ -1,0 +1,19 @@
+{
+  "chapter": 630,
+  "title": "La economía",
+  "label": "ch:es-la-economia",
+  "canDo": "I can follow simple news about the economy, inflation, exports and trade.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "ES-C630-comercio",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 630: I can follow simple news about the economy, inflation, exports and trade.",
+    "assesses": [
+      "ES-LEX-C630-ECONOMIA-03",
+      "ES-LEX-C630-ECONOMIA-04",
+      "ES-LEX-C630-ECONOMIA-05"
+    ]
+  }
+}

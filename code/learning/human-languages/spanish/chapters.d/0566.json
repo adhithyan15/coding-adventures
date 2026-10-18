@@ -1,0 +1,19 @@
+{
+  "chapter": 566,
+  "title": "Una aventura",
+  "label": "ch:es-una-aventura",
+  "canDo": "I can tell an anecdote about an adventure, a great feat, a record or some news.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "ES-C566-novedad",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 566: I can tell an anecdote about an adventure, a great feat, a record or some news.",
+    "assesses": [
+      "ES-LEX-C566-AVENTURA-03",
+      "ES-LEX-C566-AVENTURA-04",
+      "ES-LEX-C566-AVENTURA-05"
+    ]
+  }
+}

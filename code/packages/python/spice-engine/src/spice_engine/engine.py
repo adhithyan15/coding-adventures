@@ -7253,6 +7253,8 @@ class DcSweepPoint:
     node_voltages: dict[str, float]
     branch_currents: dict[str, float]
     converged: bool
+    secondary_source_name: str | None = None
+    secondary_source_value: float | None = None
 
 
 @dataclass
@@ -14965,6 +14967,88 @@ def dc_sweep(
         )
 
     return DcSweepResult(points=points, source_name=source_name)
+
+
+def dc_sweep_2d(
+    circuit: Circuit,
+    source_name: str,
+    start: float,
+    stop: float,
+    step: float,
+    secondary_source_name: str,
+    secondary_start: float,
+    secondary_stop: float,
+    secondary_step: float,
+    *,
+    max_iterations: int = 50,
+    tol: float = 1e-6,
+) -> DcSweepResult:
+    """Run a two-axis DC source sweep with the second source as the outer loop."""
+    secondary = dc_sweep(
+        circuit,
+        secondary_source_name,
+        secondary_start,
+        secondary_stop,
+        secondary_step,
+        max_iterations=max_iterations,
+        tol=tol,
+    )
+    points: list[DcSweepPoint] = []
+    for outer in secondary.points:
+        swept_circuit = _circuit_with_source_value(
+            circuit, secondary_source_name, outer.source_value
+        )
+        inner = dc_sweep(
+            swept_circuit,
+            source_name,
+            start,
+            stop,
+            step,
+            max_iterations=max_iterations,
+            tol=tol,
+        )
+        points.extend(
+            DcSweepPoint(
+                source_value=point.source_value,
+                node_voltages=point.node_voltages,
+                branch_currents=point.branch_currents,
+                converged=point.converged,
+                secondary_source_name=secondary_source_name,
+                secondary_source_value=outer.source_value,
+            )
+            for point in inner.points
+        )
+    return DcSweepResult(points=points, source_name=source_name)
+
+
+def _circuit_with_source_value(circuit: Circuit, source_name: str, value: float) -> Circuit:
+    """Return a circuit copy with one independent source set to *value*."""
+    for index, element in enumerate(circuit.elements):
+        if isinstance(element, VoltageSource) and element.name == source_name:
+            elements = list(circuit.elements)
+            elements[index] = VoltageSource(
+                element.name,
+                element.n_plus,
+                element.n_minus,
+                value,
+                element.waveform,
+                element.ac,
+            )
+            return Circuit(elements=elements)
+        if isinstance(element, CurrentSource) and element.name == source_name:
+            elements = list(circuit.elements)
+            elements[index] = CurrentSource(
+                element.name,
+                element.n_plus,
+                element.n_minus,
+                value,
+                element.waveform,
+                element.ac,
+            )
+            return Circuit(elements=elements)
+    raise ValueError(
+        f"dc_sweep: no VoltageSource or CurrentSource named {source_name!r} found in the circuit"
+    )
 
 
 def dc_sweep_corners(

@@ -1,0 +1,11 @@
+{
+  "id": "ES-C591-autonomo",
+  "pathSegment": "ES-PATH-591-DESPIDO",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ES-EXT-591-DESPIDO",
+      "order": 1
+    }
+  ]
+}

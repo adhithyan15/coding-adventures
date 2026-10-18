@@ -1,0 +1,11 @@
+{
+  "id": "ES-C646-repostar",
+  "pathSegment": "ES-PATH-646-GASOLINA",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ES-EXT-646-GASOLINA",
+      "order": 1
+    }
+  ]
+}

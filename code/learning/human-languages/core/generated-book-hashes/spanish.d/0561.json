@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 561,
+  "sourceHash": "fnv1a64:d74852db68747e11",
+  "lessonIds": [
+    "ES-C561-marcharse",
+    "ES-C561-zarpar",
+    "ES-C561-partida",
+    "ES-C561-regreso",
+    "ES-C561-ausencia"
+  ],
+  "tex": "spanish/book/chapters/ch561-la-partida.tex"
+}

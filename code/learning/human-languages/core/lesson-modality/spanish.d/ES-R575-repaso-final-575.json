@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-R575-repaso-final-575",
+    "language": "spanish",
+    "chapter": 575,
+    "sequence": 18460,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b54d56955bc9b96c"
+  },
+  "findings": []
+}

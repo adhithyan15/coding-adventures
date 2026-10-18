@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C730-atractivo",
+    "language": "spanish",
+    "chapter": 730,
+    "sequence": 26450,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c8149513c1b53f57"
+  },
+  "findings": []
+}

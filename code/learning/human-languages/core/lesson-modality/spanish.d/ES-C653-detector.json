@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C653-detector",
+    "language": "spanish",
+    "chapter": 653,
+    "sequence": 22480,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9b06224aa8e301bd"
+  },
+  "findings": []
+}

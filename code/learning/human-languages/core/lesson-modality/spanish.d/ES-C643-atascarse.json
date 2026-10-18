@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C643-atascarse",
+    "language": "spanish",
+    "chapter": 643,
+    "sequence": 21970,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ccc25677a6ac8238"
+  },
+  "findings": []
+}

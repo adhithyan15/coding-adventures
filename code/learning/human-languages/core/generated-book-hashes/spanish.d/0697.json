@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 697,
+  "sourceHash": "fnv1a64:9e814120310fcb6e",
+  "lessonIds": [
+    "ES-C697-escampar",
+    "ES-C697-chubasco",
+    "ES-C697-aguacero",
+    "ES-C697-llovizna",
+    "ES-C697-lloviznar"
+  ],
+  "tex": "spanish/book/chapters/ch697-lluvia.tex"
+}

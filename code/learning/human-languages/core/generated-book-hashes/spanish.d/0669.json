@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 669,
+  "sourceHash": "fnv1a64:409976a45433f609",
+  "lessonIds": [
+    "ES-C669-plano",
+    "ES-C669-orientarse",
+    "ES-C669-ubicacion",
+    "ES-C669-senalar",
+    "ES-C669-situado"
+  ],
+  "tex": "spanish/book/chapters/ch669-con-el-plano.tex"
+}

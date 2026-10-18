@@ -1,0 +1,11 @@
+{
+  "id": "ES-C558-celebracion",
+  "pathSegment": "ES-PATH-558-HOMENAJE",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "ES-EXT-558-HOMENAJE",
+      "order": 0
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "ES-C709-extranar",
+  "pathSegment": "ES-PATH-709-SOLEDAD",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ES-EXT-709-SOLEDAD",
+      "order": 2
+    }
+  ]
+}

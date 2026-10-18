@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 753,
+  "sourceHash": "fnv1a64:fc07a80cc0cd4c8b",
+  "lessonIds": [
+    "ES-C753-musico",
+    "ES-C753-tararear",
+    "ES-C753-cancion",
+    "ES-C753-ritmo",
+    "ES-C753-componer"
+  ],
+  "tex": "spanish/book/chapters/ch753-musica-y-canciones.tex"
+}

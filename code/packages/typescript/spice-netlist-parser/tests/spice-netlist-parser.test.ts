@@ -90,6 +90,42 @@ C1 out 0 1u IC=0
     expect(runNetlist(deck)).toHaveLength(5);
   });
 
+  it("runs two-axis DC sweeps with the second source as the outer axis", () => {
+    const corpus = JSON.parse(readFileSync(
+      new URL("../../../../grammars/spice/nested-dc-sweep-v1-corpus.json", import.meta.url),
+      "utf8",
+    )) as { cases: readonly { deck: string; expected: {
+      primarySource: string;
+      secondarySource: string;
+      points: readonly (readonly [number, number])[];
+      finalOut: number;
+    } }[] };
+    const testCase = corpus.cases[0];
+    const parsed = parseNetlist(testCase.deck);
+
+    expect(parsed.dcCards()[0]).toEqual({
+      kind: "dc",
+      sourceName: testCase.expected.primarySource,
+      start: 0,
+      stop: 1,
+      step: 1,
+      secondarySourceName: testCase.expected.secondarySource,
+      secondaryStart: 0,
+      secondaryStop: 2,
+      secondaryStep: 2,
+    });
+    const results = parsed.runAnalysisPlan();
+    const points = results[0].result as readonly {
+      value: number;
+      secondaryValue?: number;
+      result: { voltage(node: string): number | undefined };
+    }[];
+    expect(points.map((point) => [point.value, point.secondaryValue])).toEqual(testCase.expected.points);
+    expect(points.at(-1)?.result.voltage("out")).toBeCloseTo(testCase.expected.finalOut, 9);
+    expect(parsed.selectOutputs(results)[0].rows.map((row) => [row.axisValue, row.secondaryAxisValue]))
+      .toEqual(testCase.expected.points);
+  });
+
   it("runs the shared Berkeley v1 core corpus", () => {
     const corpus = JSON.parse(readFileSync(
       new URL("../../../../grammars/spice/berkeley-v1-op-corpus.json", import.meta.url),

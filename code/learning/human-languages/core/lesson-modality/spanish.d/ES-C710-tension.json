@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C710-tension",
+    "language": "spanish",
+    "chapter": 710,
+    "sequence": 25430,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d2771be786ac7062"
+  },
+  "findings": []
+}

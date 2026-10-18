@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C569-luchar",
+    "language": "spanish",
+    "chapter": 569,
+    "sequence": 18100,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1d31311236deff8e"
+  },
+  "findings": []
+}

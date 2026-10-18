@@ -1,0 +1,8 @@
+{
+  "id": "ES-EXT-580-MOTIVO",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can give the reason for something with since and given that.",
+  "prerequisites": []
+}

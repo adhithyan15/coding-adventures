@@ -1,0 +1,8 @@
+{
+  "id": "ES-EXT-751-AFICION",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can talk about my hobbies, what I collect and what I like to paint.",
+  "prerequisites": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "ES-C614-garantizar",
+  "pathSegment": "ES-PATH-614-RIESGO",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ES-EXT-614-RIESGO",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C702-mojarse",
+    "language": "spanish",
+    "chapter": 702,
+    "sequence": 24970,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:35d279399efcef15"
+  },
+  "findings": []
+}

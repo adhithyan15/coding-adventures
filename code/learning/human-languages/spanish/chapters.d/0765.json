@@ -1,0 +1,19 @@
+{
+  "chapter": 765,
+  "title": "Ilusiones y deseos",
+  "label": "ch:es-ilusiones-y-deseos",
+  "canDo": "I can talk about my wishes, my whims and my imagination.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "ES-C765-aspirar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 765: I can talk about my wishes, my whims and my imagination.",
+    "assesses": [
+      "ES-LEX-C765-ILUSION-03",
+      "ES-LEX-C765-ILUSION-04",
+      "ES-LEX-C765-ILUSION-05"
+    ]
+  }
+}

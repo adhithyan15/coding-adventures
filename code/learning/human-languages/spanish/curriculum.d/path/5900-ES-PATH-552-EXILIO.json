@@ -1,0 +1,9 @@
+{
+  "id": "ES-PATH-552-EXILIO",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "ES-EXT-552-EXILIO"
+  ],
+  "after": []
+}

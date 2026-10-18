@@ -1,0 +1,11 @@
+{
+  "id": "ES-C683-municipio",
+  "pathSegment": "ES-PATH-683-REGION",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ES-EXT-683-REGION",
+      "order": 2
+    }
+  ]
+}

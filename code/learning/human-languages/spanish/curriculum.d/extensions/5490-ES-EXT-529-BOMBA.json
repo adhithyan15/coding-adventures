@@ -1,0 +1,8 @@
+{
+  "id": "ES-EXT-529-BOMBA",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say that something exploded or burst, what it destroyed and what was left in the rubble.",
+  "prerequisites": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "ES-C747-yerno",
+  "pathSegment": "ES-PATH-747-POLITICA",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ES-EXT-747-POLITICA",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 514,
+  "sourceHash": "fnv1a64:ef5732f22bceff63",
+  "lessonIds": [
+    "ES-C514-reportaje",
+    "ES-C514-reportero",
+    "ES-C514-entrevistar",
+    "ES-C514-difundir",
+    "ES-C514-anunciar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch514.txt",
+  "json": "spanish/narration/ch514.json",
+  "textHash": "fnv1a64:ac987f490cc0b63d",
+  "jsonHash": "fnv1a64:7bedc5cba828c19e",
+  "findings": []
+}

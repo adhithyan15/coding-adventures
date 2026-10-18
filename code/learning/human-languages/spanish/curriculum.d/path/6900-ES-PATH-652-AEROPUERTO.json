@@ -1,0 +1,9 @@
+{
+  "id": "ES-PATH-652-AEROPUERTO",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "ES-EXT-652-AEROPUERTO"
+  ],
+  "after": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 572,
+  "title": "Todo cambió",
+  "label": "ch:es-todo-cambio",
+  "canDo": "I can say that someone or something became, transformed, evolved, developed and got over something.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "ES-C572-superar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 572: I can say that someone or something became, transformed, evolved, developed and got over something.",
+    "assesses": [
+      "ES-LEX-C572-CAMBIO-03",
+      "ES-LEX-C572-CAMBIO-04",
+      "ES-LEX-C572-CAMBIO-05"
+    ]
+  }
+}

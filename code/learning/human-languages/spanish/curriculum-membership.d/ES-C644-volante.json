@@ -1,0 +1,11 @@
+{
+  "id": "ES-C644-volante",
+  "pathSegment": "ES-PATH-644-COCHE",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ES-EXT-644-COCHE",
+      "order": 1
+    }
+  ]
+}

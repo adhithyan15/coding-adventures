@@ -1,0 +1,19 @@
+{
+  "chapter": 529,
+  "title": "La explosión",
+  "label": "ch:es-la-explosion",
+  "canDo": "I can say that something exploded or burst, what it destroyed and what was left in the rubble.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "ES-C529-destruir",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 529: I can say that something exploded or burst, what it destroyed and what was left in the rubble.",
+    "assesses": [
+      "ES-LEX-C529-BOMBA-03",
+      "ES-LEX-C529-BOMBA-04",
+      "ES-LEX-C529-BOMBA-05"
+    ]
+  }
+}

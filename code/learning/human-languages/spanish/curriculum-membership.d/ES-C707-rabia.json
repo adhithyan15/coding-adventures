@@ -1,0 +1,11 @@
+{
+  "id": "ES-C707-rabia",
+  "pathSegment": "ES-PATH-707-ENFADO",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ES-EXT-707-ENFADO",
+      "order": 2
+    }
+  ]
+}

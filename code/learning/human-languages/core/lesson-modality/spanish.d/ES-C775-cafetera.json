@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C775-cafetera",
+    "language": "spanish",
+    "chapter": 775,
+    "sequence": 28760,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0add5216718b3e61"
+  },
+  "findings": []
+}

@@ -1,0 +1,9 @@
+{
+  "id": "ES-PATH-605-PROBSOC",
+  "spine_node": "SPINE-GIVE-REASONS",
+  "before": [],
+  "inline": [
+    "ES-EXT-605-PROBSOC"
+  ],
+  "after": []
+}

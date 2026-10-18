@@ -1,0 +1,11 @@
+{
+  "id": "ES-C576-sostener",
+  "pathSegment": "ES-PATH-576-OPINA",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ES-EXT-576-OPINA",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,8 @@
+{
+  "id": "ES-EXT-683-REGION",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say which region, district or municipality a place is in, find the mayor’s office and talk about hamlets.",
+  "prerequisites": []
+}

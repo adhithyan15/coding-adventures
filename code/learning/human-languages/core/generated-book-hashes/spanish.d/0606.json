@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 606,
+  "sourceHash": "fnv1a64:cb7d2f034730173f",
+  "lessonIds": [
+    "ES-C606-solidaridad",
+    "ES-C606-voluntariado",
+    "ES-C606-asociacion",
+    "ES-C606-caridad",
+    "ES-C606-participar"
+  ],
+  "tex": "spanish/book/chapters/ch606-ayudar-a-los-demas.tex"
+}

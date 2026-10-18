@@ -1,0 +1,11 @@
+{
+  "id": "ES-C591-teletrabajo",
+  "pathSegment": "ES-PATH-591-DESPIDO",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ES-EXT-591-DESPIDO",
+      "order": 3
+    }
+  ]
+}

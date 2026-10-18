@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C712-animar",
+    "language": "spanish",
+    "chapter": 712,
+    "sequence": 25540,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a5f864cd1d81a8e3"
+  },
+  "findings": []
+}

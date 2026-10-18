@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 708,
+  "sourceHash": "fnv1a64:50b50759150a8ad3",
+  "lessonIds": [
+    "ES-C708-celos",
+    "ES-C708-celoso",
+    "ES-C708-envidia",
+    "ES-C708-envidiar",
+    "ES-C708-rencor"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch708.txt",
+  "json": "spanish/narration/ch708.json",
+  "textHash": "fnv1a64:8e516cc4d44e565a",
+  "jsonHash": "fnv1a64:8f3bd12fd0bb0245",
+  "findings": []
+}

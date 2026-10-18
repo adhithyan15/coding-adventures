@@ -1,0 +1,11 @@
+{
+  "id": "ES-C590-seleccionar",
+  "pathSegment": "ES-PATH-590-VACANTE",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ES-EXT-590-VACANTE",
+      "order": 1
+    }
+  ]
+}

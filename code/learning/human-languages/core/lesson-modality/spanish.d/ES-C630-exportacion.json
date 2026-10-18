@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C630-exportacion",
+    "language": "spanish",
+    "chapter": 630,
+    "sequence": 21280,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:232a67019b62e599"
+  },
+  "findings": []
+}

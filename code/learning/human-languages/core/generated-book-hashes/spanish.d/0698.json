@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 698,
+  "sourceHash": "fnv1a64:947079c2df88a318",
+  "lessonIds": [
+    "ES-C698-nublado",
+    "ES-C698-despejado",
+    "ES-C698-soleado",
+    "ES-C698-nublarse",
+    "ES-C698-despejar"
+  ],
+  "tex": "spanish/book/chapters/ch698-nubes-y-sol.tex"
+}

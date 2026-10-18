@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C538-ultimamente",
+    "language": "spanish",
+    "chapter": 538,
+    "sequence": 16550,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:99011863aadc3079"
+  },
+  "findings": []
+}

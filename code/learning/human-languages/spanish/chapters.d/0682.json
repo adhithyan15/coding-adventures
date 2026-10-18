@@ -1,0 +1,19 @@
+{
+  "chapter": 682,
+  "title": "Lo que hay en la calle",
+  "label": "ch:es-lo-que-hay-en-la-calle",
+  "canDo": "I can talk about what is in the street: lamp posts, bins, kerbs and pedestrian streets.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "ES-C682-peatonal",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 682: I can talk about what is in the street: lamp posts, bins, kerbs and pedestrian streets.",
+    "assesses": [
+      "ES-LEX-C682-CALLE-03",
+      "ES-LEX-C682-CALLE-04",
+      "ES-LEX-C682-CALLE-05"
+    ]
+  }
+}

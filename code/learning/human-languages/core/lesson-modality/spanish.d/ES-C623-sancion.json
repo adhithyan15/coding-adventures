@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C623-sancion",
+    "language": "spanish",
+    "chapter": 623,
+    "sequence": 20920,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4ff68ff6435d2966"
+  },
+  "findings": []
+}

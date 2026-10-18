@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 768,
+  "sourceHash": "fnv1a64:6482e6413ac60e72",
+  "lessonIds": [
+    "ES-C768-hervir",
+    "ES-C768-freir",
+    "ES-C768-pelar",
+    "ES-C768-batir",
+    "ES-C768-ingrediente"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch768.txt",
+  "json": "spanish/narration/ch768.json",
+  "textHash": "fnv1a64:fd26636c1d21938c",
+  "jsonHash": "fnv1a64:788e97b3fa5f5b0b",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "ES-C598-habilidad",
+  "pathSegment": "ES-PATH-598-SABER",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ES-EXT-598-SABER",
+      "order": 1
+    }
+  ]
+}

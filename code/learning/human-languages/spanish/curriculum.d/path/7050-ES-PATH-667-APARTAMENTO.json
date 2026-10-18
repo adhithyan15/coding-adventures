@@ -1,0 +1,9 @@
+{
+  "id": "ES-PATH-667-APARTAMENTO",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "ES-EXT-667-APARTAMENTO"
+  ],
+  "after": []
+}

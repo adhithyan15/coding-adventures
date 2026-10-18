@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C561-regreso",
+    "language": "spanish",
+    "chapter": 561,
+    "sequence": 17720,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:349c535dbc592655"
+  },
+  "findings": []
+}

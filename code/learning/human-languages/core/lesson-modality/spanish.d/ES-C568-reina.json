@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C568-reina",
+    "language": "spanish",
+    "chapter": 568,
+    "sequence": 18080,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a4605223c3988951"
+  },
+  "findings": []
+}

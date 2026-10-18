@@ -1,0 +1,9 @@
+{
+  "id": "ES-PATH-707-ENFADO",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "ES-EXT-707-ENFADO"
+  ],
+  "after": []
+}

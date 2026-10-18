@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C690-banador",
+    "language": "spanish",
+    "chapter": 690,
+    "sequence": 24390,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1650a00b6df304b1"
+  },
+  "findings": []
+}

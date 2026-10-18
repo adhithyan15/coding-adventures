@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C534-inmediatamente",
+    "language": "spanish",
+    "chapter": 534,
+    "sequence": 16320,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d531e05dc2ced858"
+  },
+  "findings": []
+}

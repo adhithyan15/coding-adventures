@@ -1,0 +1,9 @@
+{
+  "id": "ES-PATH-544-PARTO",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "ES-EXT-544-PARTO"
+  ],
+  "after": []
+}

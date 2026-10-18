@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 598,
+  "sourceHash": "fnv1a64:8ff0d7c035db94fb",
+  "lessonIds": [
+    "ES-C598-conocimiento",
+    "ES-C598-habilidad",
+    "ES-C598-capacidad",
+    "ES-C598-esforzarse",
+    "ES-C598-aportar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch598.txt",
+  "json": "spanish/narration/ch598.json",
+  "textHash": "fnv1a64:4e80aa198324a89a",
+  "jsonHash": "fnv1a64:328d43b0d92409fe",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 666,
+  "sourceHash": "fnv1a64:5f8f90e53696396b",
+  "lessonIds": [
+    "ES-C666-saco-de-dormir",
+    "ES-C666-acampar",
+    "ES-C666-esterilla",
+    "ES-C666-caravana",
+    "ES-C666-linterna"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch666.txt",
+  "json": "spanish/narration/ch666.json",
+  "textHash": "fnv1a64:4e91467e6b51201f",
+  "jsonHash": "fnv1a64:2c8e18ebc7995ae6",
+  "findings": []
+}

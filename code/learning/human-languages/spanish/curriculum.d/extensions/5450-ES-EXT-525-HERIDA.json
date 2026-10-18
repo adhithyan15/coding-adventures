@@ -1,0 +1,8 @@
+{
+  "id": "ES-EXT-525-HERIDA",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say that someone was injured, how bad the wound was, who helped and that an ambulance came.",
+  "prerequisites": []
+}

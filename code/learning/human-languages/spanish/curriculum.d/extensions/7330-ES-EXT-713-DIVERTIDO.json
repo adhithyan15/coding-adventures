@@ -1,0 +1,8 @@
+{
+  "id": "ES-EXT-713-DIVERTIDO",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say whether something was fun, funny or boring.",
+  "prerequisites": []
+}

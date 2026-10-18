@@ -1,0 +1,858 @@
+{
+  "version": 1,
+  "language": "spanish",
+  "chapter": 599,
+  "title": "Un estudio",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:37f0e770fc7e384f",
+  "lessons": [
+    {
+      "id": "ES-C599-experimento",
+      "sequence": 19670,
+      "title": "el experimento — the experiment",
+      "headword": "el experimento",
+      "romanization": "el experimento",
+      "gloss": "the experiment",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:079ba7f054060a12",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Spanish for to make an effort, then the Spanish for to contribute."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: el experimento",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "el experimento — \"the experiment\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Hicimos un experimento en clase. We did an experiment in class."
+            },
+            {
+              "kind": "speech",
+              "text": "Hacer un experimento — to do an experiment."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "experimento is a learned borrowing from Latin experimentum 'a test, a trial', built on experiri 'to try out' (EtymDB)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el experimento",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el experimento*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el experimento, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el experimento*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with el experimento",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *el experimento*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Spanish for to make an effort, then the Spanish for to contribute, then say el experimento again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Spanish for to make an effort, then the Spanish for to contribute, then say *el experimento* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does el experimento mean? (\"The experiment\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C599-comparar",
+      "sequence": 19680,
+      "title": "comparar — to compare",
+      "headword": "comparar",
+      "romanization": "comparar",
+      "gloss": "to compare",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:39c6df0497532a18",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Spanish for to contribute, then the Spanish for the experiment."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: comparar",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "comparar — \"to compare\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Comparamos los resultados de dos grupos. We compared the results of two groups."
+            },
+            {
+              "kind": "speech",
+              "text": "Comparar con — to compare with."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "comparar is a learned borrowing from Latin comparare 'to put together, to match', built on par 'equal' (EtymDB)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "comparar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *comparar*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "comparar, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *comparar*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with comparar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *comparar*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Spanish for to contribute, then the Spanish for the experiment, then say comparar again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Spanish for to contribute, then the Spanish for the experiment, then say *comparar* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does comparar mean? (\"To compare\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C599-analizar",
+      "sequence": 19690,
+      "title": "analizar — to analyse",
+      "headword": "analizar",
+      "romanization": "analizar",
+      "gloss": "to analyse",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c230a6a617e2dcba",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Spanish for the experiment, then the Spanish for to compare."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: analizar",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "analizar — \"to analyse\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Tenemos que analizar los datos. We have to analyse the data."
+            },
+            {
+              "kind": "speech",
+              "text": "Spelling: analicé."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "analizar is built on análisis, a learned borrowing from Greek analysis 'a loosening, a breaking up' (EtymDB)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "analizar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *analizar*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "analizar, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *analizar*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with analizar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *analizar*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Spanish for the experiment, then the Spanish for to compare, then say analizar again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Spanish for the experiment, then the Spanish for to compare, then say *analizar* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does analizar mean? (\"To analyse\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C599-conclusion",
+      "sequence": 19700,
+      "title": "la conclusión — the conclusion",
+      "headword": "la conclusión",
+      "romanization": "la conclusión",
+      "gloss": "the conclusion",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1ccbd7d372381b24",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Spanish for to compare, then the Spanish for to analyse."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: la conclusión",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la conclusión — \"the conclusion\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Llegamos a una conclusión. We reached a conclusion."
+            },
+            {
+              "kind": "speech",
+              "text": "En conclusión — in conclusion."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "conclusión is a learned borrowing from Latin conclusio 'a closing, an end', built on concludere and claudere 'to shut' (EtymDB)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la conclusión",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la conclusión*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la conclusión, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la conclusión*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with la conclusión",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *la conclusión*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Spanish for to compare, then the Spanish for to analyse, then say la conclusión again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Spanish for to compare, then the Spanish for to analyse, then say *la conclusión* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does la conclusión mean? (\"The conclusion\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C599-metodo",
+      "sequence": 19710,
+      "title": "el método — the method",
+      "headword": "el método",
+      "romanization": "el método",
+      "gloss": "the method",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:cab1d34fa973699c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Spanish for to analyse, then the Spanish for the conclusion."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: el método",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "el método — \"the method\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Es un buen método para estudiar. It is a good method for studying."
+            },
+            {
+              "kind": "speech",
+              "text": "Método de pago — payment method."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "método is a learned borrowing from Latin methodus, taken from Greek methodos 'a following after, a way of inquiry', built from meta and hodos 'way' (EtymDB)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el método",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el método*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el método, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el método*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with el método",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *el método*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Spanish for to analyse, then the Spanish for the conclusion, then say el método again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Spanish for to analyse, then the Spanish for the conclusion, then say *el método* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does el método mean? (\"The method\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-R599-repaso-592-599",
+      "sequence": 19720,
+      "title": "Repaso de los capítulos 592–599",
+      "headword": "(dialogue)",
+      "romanization": "(dialogue)",
+      "gloss": "a review of chapters 592-599",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:691af2968c26bc04",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Spanish for the businessman and the multinational company."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the businessman, the multinational company, the industry, the head office, the branch",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the businessman, the multinational company, the industry, the head office, the branch]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the task, to carry out, the performance, to do for a living, efficient",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the task, to carry out, the performance, to do for a living, efficient]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the leadership, to motivate, the collaboration, to run, to manage",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the leadership, to motivate, the collaboration, to run, to manage]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the career, to be promoted, the merit, ambitious, to succeed",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the career, to be promoted, the merit, ambitious, to succeed]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the syllabus, the enrolment, the tutorial, the faculty, the master's degree",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the syllabus, the enrolment, the tutorial, the faculty, the master's degree]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the learning, the teaching, to educate, to assess, the assessment",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the learning, the teaching, to educate, to assess, the assessment]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the knowledge, the skill, the ability, to make an effort, to contribute",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the knowledge, the skill, the ability, to make an effort, to contribute]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the experiment, to compare, to analyse, the conclusion, the method",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the experiment, to compare, to analyse, the conclusion, the method]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The businessman? (el empresario.) The multinational company? (la multinacional.) The industry? (la industria.) The head office? (la sede.) The branch? (la sucursal.) The task? (la tarea.) To carry out? (desempeñar.) The performance? (el rendimiento.) To do for a living? (dedicarse.) Efficient? (eficiente.) The leadership? (el liderazgo.) To motivate? (motivar.) The collaboration? (la colaboración.) To run? (dirigir.) To manage? (gestionar.) The career? (la carrera.) To be promoted? (ascender.) The merit? (el mérito.) Ambitious? (ambicioso.) To succeed? (triunfar.) The syllabus? (el temario.) The enrolment? (la matrícula.) The tutorial? (la tutoría.) The faculty? (la facultad.) The master's degree? (el máster.) The learning? (el aprendizaje.) The teaching? (la enseñanza.) To educate? (educar.) To assess? (evaluar.) The assessment? (la evaluación.) The knowledge? (el conocimiento.) The skill? (la habilidad.) The ability? (la capacidad.) To make an effort? (esforzarse.) To contribute? (aportar.) The experiment? (el experimento.) To compare? (comparar.) To analyse? (analizar.) The conclusion? (la conclusión.) The method? (el método.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

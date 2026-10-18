@@ -1,0 +1,11 @@
+{
+  "id": "ES-C582-de-modo-que",
+  "pathSegment": "ES-PATH-582-CONSEC",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "ES-EXT-582-CONSEC",
+      "order": 4
+    }
+  ]
+}

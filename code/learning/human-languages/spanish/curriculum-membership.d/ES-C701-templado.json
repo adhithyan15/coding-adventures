@@ -1,0 +1,11 @@
+{
+  "id": "ES-C701-templado",
+  "pathSegment": "ES-PATH-701-CALOR",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ES-EXT-701-CALOR",
+      "order": 1
+    }
+  ]
+}

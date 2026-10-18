@@ -1,0 +1,16 @@
+{
+  "language": "spanish",
+  "chapter": 703,
+  "sourceHash": "fnv1a64:fa89239456b82085",
+  "lessonIds": [
+    "ES-C703-atardecer",
+    "ES-C703-anochecer",
+    "ES-C703-horizonte",
+    "ES-C703-arco-iris",
+    "ES-C703-contemplar",
+    "ES-R703-repaso-696-703",
+    "ES-R703-repaso-final-703",
+    "ES-R703-repaso-problemas-de-viaje"
+  ],
+  "tex": "spanish/book/chapters/ch703-al-caer-la-tarde.tex"
+}

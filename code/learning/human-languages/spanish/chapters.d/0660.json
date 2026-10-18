@@ -1,0 +1,19 @@
+{
+  "chapter": 660,
+  "title": "Dónde dormir",
+  "label": "ch:es-donde-dormir",
+  "canDo": "I can talk about where to stay: a guesthouse, a hostel or with friends.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "ES-C660-albergue",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 660: I can talk about where to stay: a guesthouse, a hostel or with friends.",
+    "assesses": [
+      "ES-LEX-C660-ALOJAMIENTO-03",
+      "ES-LEX-C660-ALOJAMIENTO-04",
+      "ES-LEX-C660-ALOJAMIENTO-05"
+    ]
+  }
+}

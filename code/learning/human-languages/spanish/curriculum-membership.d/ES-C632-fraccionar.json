@@ -1,0 +1,11 @@
+{
+  "id": "ES-C632-fraccionar",
+  "pathSegment": "ES-PATH-632-PAGO",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ES-EXT-632-PAGO",
+      "order": 2
+    }
+  ]
+}

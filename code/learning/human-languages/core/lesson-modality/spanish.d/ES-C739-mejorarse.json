@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C739-mejorarse",
+    "language": "spanish",
+    "chapter": 739,
+    "sequence": 26900,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:fce791e96c9b3b23"
+  },
+  "findings": []
+}

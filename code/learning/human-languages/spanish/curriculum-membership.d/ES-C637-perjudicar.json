@@ -1,0 +1,11 @@
+{
+  "id": "ES-C637-perjudicar",
+  "pathSegment": "ES-PATH-637-FAVOR",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ES-EXT-637-FAVOR",
+      "order": 1
+    }
+  ]
+}

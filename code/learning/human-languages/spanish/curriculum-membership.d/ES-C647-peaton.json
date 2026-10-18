@@ -1,0 +1,11 @@
+{
+  "id": "ES-C647-peaton",
+  "pathSegment": "ES-PATH-647-CRUZAR",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ES-EXT-647-CRUZAR",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C655-desfase-horario",
+    "language": "spanish",
+    "chapter": 655,
+    "sequence": 22560,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6909677fa20801a5"
+  },
+  "findings": []
+}

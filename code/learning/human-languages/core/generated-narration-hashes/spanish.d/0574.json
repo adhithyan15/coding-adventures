@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 574,
+  "sourceHash": "fnv1a64:6332d7cf60c09105",
+  "lessonIds": [
+    "ES-C574-enterarse",
+    "ES-C574-recibir",
+    "ES-C574-notificacion",
+    "ES-C574-telediario",
+    "ES-C574-incidente"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch574.txt",
+  "json": "spanish/narration/ch574.json",
+  "textHash": "fnv1a64:e90dbbe7d734faae",
+  "jsonHash": "fnv1a64:73c95abdd25b8e4a",
+  "findings": []
+}

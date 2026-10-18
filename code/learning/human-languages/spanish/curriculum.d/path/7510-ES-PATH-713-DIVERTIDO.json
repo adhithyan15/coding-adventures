@@ -1,0 +1,9 @@
+{
+  "id": "ES-PATH-713-DIVERTIDO",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "ES-EXT-713-DIVERTIDO"
+  ],
+  "after": []
+}

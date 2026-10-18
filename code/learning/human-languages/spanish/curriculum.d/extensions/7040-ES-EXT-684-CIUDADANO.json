@@ -1,0 +1,8 @@
+{
+  "id": "ES-EXT-684-CIUDADANO",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can compare city and country life and talk about locals and people from out of town.",
+  "prerequisites": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 532,
+  "sourceHash": "fnv1a64:47d4c5549f48d20c",
+  "lessonIds": [
+    "ES-C532-misterio",
+    "ES-C532-enigma",
+    "ES-C532-ocultar",
+    "ES-C532-esconder",
+    "ES-C532-secreto"
+  ],
+  "tex": "spanish/book/chapters/ch532-un-misterio.tex"
+}

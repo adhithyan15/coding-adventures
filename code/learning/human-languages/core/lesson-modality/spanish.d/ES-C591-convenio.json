@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C591-convenio",
+    "language": "spanish",
+    "chapter": 591,
+    "sequence": 19260,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:dc8f7b914477e6d0"
+  },
+  "findings": []
+}

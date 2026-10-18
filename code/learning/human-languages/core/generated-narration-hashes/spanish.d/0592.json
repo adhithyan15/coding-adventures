@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 592,
+  "sourceHash": "fnv1a64:aeba4151375010f1",
+  "lessonIds": [
+    "ES-C592-empresario",
+    "ES-C592-multinacional",
+    "ES-C592-industria",
+    "ES-C592-sede",
+    "ES-C592-sucursal"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch592.txt",
+  "json": "spanish/narration/ch592.json",
+  "textHash": "fnv1a64:a94d0baf60d68581",
+  "jsonHash": "fnv1a64:5c187f4b974defc9",
+  "findings": []
+}

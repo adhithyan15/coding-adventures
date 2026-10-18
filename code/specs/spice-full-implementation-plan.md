@@ -5650,6 +5650,18 @@ model-card parameter, or a UI artifact is not a completion signal.
      the same public parser contract.
 
 52. Deck compatibility follow-up.
+   - **Two-axis deck-owned DC sweeps** (completed in this cross-language
+     contract slice): Python, Rust, and TypeScript now parse and execute
+     `.dc source start stop step source2 start2 stop2 step2`. The first source
+     is the deterministic inner loop, the second source is the outer loop, and
+     every DC result and selected-output row retains both axis values. This is
+     the first nested-sweep primitive; temperature, parameter, corner, Monte
+     Carlo, raw-format, and measurement expansion remain separate phases.
+     Discovery: the stable CLI envelope delegates to the deck-control executor,
+     which currently accepts only one-axis `.dc` cards. Extend that executor,
+     its tabular/JSON records, and browser consumers together in the next
+     CLI/API milestone rather than silently flattening or dropping the outer
+     axis here.
    - Expand deck-owned output compatibility beyond source-order analysis
      execution and stable artifact exports toward nested sweeps, raw-format
      interoperability, and remaining vendor-style output controls.

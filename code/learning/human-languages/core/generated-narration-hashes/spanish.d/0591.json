@@ -1,0 +1,20 @@
+{
+  "language": "spanish",
+  "chapter": 591,
+  "sourceHash": "fnv1a64:08ffcee4ad065f71",
+  "lessonIds": [
+    "ES-C591-convenio",
+    "ES-C591-autonomo",
+    "ES-C591-funcionario",
+    "ES-C591-teletrabajo",
+    "ES-C591-sindicato",
+    "ES-R591-repaso-584-591"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "spanish/narration/ch591.txt",
+  "json": "spanish/narration/ch591.json",
+  "textHash": "fnv1a64:7eafe9bdb05b762a",
+  "jsonHash": "fnv1a64:da9e26696b04b3ab",
+  "findings": []
+}

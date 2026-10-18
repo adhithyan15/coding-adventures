@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C716-consolar",
+    "language": "spanish",
+    "chapter": 716,
+    "sequence": 25720,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ee76fb1b3391240d"
+  },
+  "findings": []
+}

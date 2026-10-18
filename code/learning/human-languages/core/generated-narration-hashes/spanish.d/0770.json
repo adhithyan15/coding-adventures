@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 770,
+  "sourceHash": "fnv1a64:efd74c3f6496e04b",
+  "lessonIds": [
+    "ES-C770-tintoreria",
+    "ES-C770-probador",
+    "ES-C770-ferreteria",
+    "ES-C770-carniceria",
+    "ES-C770-fruteria"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch770.txt",
+  "json": "spanish/narration/ch770.json",
+  "textHash": "fnv1a64:bb8f42c4e0f916ff",
+  "jsonHash": "fnv1a64:3203e146e5808688",
+  "findings": []
+}

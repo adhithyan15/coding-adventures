@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 632,
+  "sourceHash": "fnv1a64:f193114d90094513",
+  "lessonIds": [
+    "ES-C632-abonar",
+    "ES-C632-mensualidad",
+    "ES-C632-fraccionar",
+    "ES-C632-ingresar",
+    "ES-C632-pension"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch632.txt",
+  "json": "spanish/narration/ch632.json",
+  "textHash": "fnv1a64:14204fbe43e84884",
+  "jsonHash": "fnv1a64:3ff250ce7fe5f6c4",
+  "findings": []
+}

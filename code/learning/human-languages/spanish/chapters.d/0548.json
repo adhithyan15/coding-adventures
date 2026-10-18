@@ -1,0 +1,19 @@
+{
+  "chapter": 548,
+  "title": "El banquete",
+  "label": "ch:es-el-banquete",
+  "canDo": "I can describe a wedding: the marriage, the ceremony, the reception meal, the toast and the honeymoon.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "ES-C548-luna-de-miel",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 548: I can describe a wedding: the marriage, the ceremony, the reception meal, the toast and the honeymoon.",
+    "assesses": [
+      "ES-LEX-C548-BANQUETE-03",
+      "ES-LEX-C548-BANQUETE-04",
+      "ES-LEX-C548-BANQUETE-05"
+    ]
+  }
+}

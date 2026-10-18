@@ -1,0 +1,19 @@
+{
+  "chapter": 617,
+  "title": "Elegir",
+  "label": "ch:es-elegir",
+  "canDo": "I can talk about a decision, the options and what comes first for me.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "ES-C617-criterio",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 617: I can talk about a decision, the options and what comes first for me.",
+    "assesses": [
+      "ES-LEX-C617-DECIDE-03",
+      "ES-LEX-C617-DECIDE-04",
+      "ES-LEX-C617-DECIDE-05"
+    ]
+  }
+}

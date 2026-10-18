@@ -1,0 +1,11 @@
+{
+  "id": "ES-C675-soportal",
+  "pathSegment": "ES-PATH-675-AFUERAS",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ES-EXT-675-AFUERAS",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 610,
+  "sourceHash": "fnv1a64:80a01a074b88ed3a",
+  "lessonIds": [
+    "ES-C610-tolerancia",
+    "ES-C610-tolerar",
+    "ES-C610-integracion",
+    "ES-C610-inmigracion",
+    "ES-C610-convivencia"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch610.txt",
+  "json": "spanish/narration/ch610.json",
+  "textHash": "fnv1a64:30e6ab7dc6324d91",
+  "jsonHash": "fnv1a64:78e999abb89c0177",
+  "findings": []
+}

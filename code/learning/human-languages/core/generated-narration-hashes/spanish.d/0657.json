@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 657,
+  "sourceHash": "fnv1a64:90ca593b8e466586",
+  "lessonIds": [
+    "ES-C657-caducar",
+    "ES-C657-valido",
+    "ES-C657-renovar",
+    "ES-C657-fotocopia",
+    "ES-C657-consulado"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch657.txt",
+  "json": "spanish/narration/ch657.json",
+  "textHash": "fnv1a64:cb42f5c193aa2437",
+  "jsonHash": "fnv1a64:aa278643508dd2cf",
+  "findings": []
+}

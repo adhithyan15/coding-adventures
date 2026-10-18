@@ -1,0 +1,19 @@
+{
+  "chapter": 650,
+  "title": "Autocar y tranvía",
+  "label": "ch:es-autocar-y-tranvia",
+  "canDo": "I can take a coach or a tram, use a bus pass, change and validate my ticket.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "ES-C650-validar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 650: I can take a coach or a tram, use a bus pass, change and validate my ticket.",
+    "assesses": [
+      "ES-LEX-C650-LINEA-03",
+      "ES-LEX-C650-LINEA-04",
+      "ES-LEX-C650-LINEA-05"
+    ]
+  }
+}

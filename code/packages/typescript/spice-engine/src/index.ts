@@ -2209,6 +2209,8 @@ export interface CornerTemperatureDcResult {
 export interface DcSweepPoint {
   readonly value: number;
   readonly result: DcResult;
+  readonly secondarySourceName?: string;
+  readonly secondaryValue?: number;
 }
 
 export interface CornerDcSweepPoint {
@@ -14969,6 +14971,38 @@ export function dcSweep(
   ) {
     const swept = circuitWithSweptSource(circuit, sourceName, value);
     points.push({ value, result: dcOp(swept) });
+  }
+  return points;
+}
+
+export function dcSweep2d(
+  circuit: Circuit,
+  sourceName: string,
+  start: number,
+  stop: number,
+  step: number,
+  secondarySourceName: string,
+  secondaryStart: number,
+  secondaryStop: number,
+  secondaryStep: number,
+): DcSweepPoint[] {
+  validateSweep(sourceName, start, stop, step);
+  validateSweep(secondarySourceName, secondaryStart, secondaryStop, secondaryStep);
+  const points: DcSweepPoint[] = [];
+  const epsilon = Math.abs(secondaryStep) * 1.0e-9;
+  for (
+    let secondaryValue = secondaryStart;
+    sweepIncludes(secondaryValue, secondaryStop, secondaryStep, epsilon);
+    secondaryValue += secondaryStep
+  ) {
+    const outer = circuitWithSweptSource(circuit, secondarySourceName, secondaryValue);
+    points.push(
+      ...dcSweep(outer, sourceName, start, stop, step).map((point) => ({
+        ...point,
+        secondarySourceName,
+        secondaryValue,
+      })),
+    );
   }
   return points;
 }

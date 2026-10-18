@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C597-educar",
+    "language": "spanish",
+    "chapter": 597,
+    "sequence": 19590,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7e4b706c74ba65ad"
+  },
+  "findings": []
+}

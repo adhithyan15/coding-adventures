@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 766,
+  "sourceHash": "fnv1a64:05ab11e5a1ca331e",
+  "lessonIds": [
+    "ES-C766-reto",
+    "ES-C766-ambicion",
+    "ES-C766-creativo",
+    "ES-C766-logro",
+    "ES-C766-talento"
+  ],
+  "tex": "spanish/book/chapters/ch766-retos-y-logros.tex"
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C628-hipoteca",
+    "language": "spanish",
+    "chapter": 628,
+    "sequence": 21180,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:324f83c94e0e52d0"
+  },
+  "findings": []
+}

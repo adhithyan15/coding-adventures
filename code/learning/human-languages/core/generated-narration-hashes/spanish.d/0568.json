@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 568,
+  "sourceHash": "fnv1a64:4c9db3b4a77a0752",
+  "lessonIds": [
+    "ES-C568-historico",
+    "ES-C568-revolucion",
+    "ES-C568-monarca",
+    "ES-C568-reina",
+    "ES-C568-conquistar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch568.txt",
+  "json": "spanish/narration/ch568.json",
+  "textHash": "fnv1a64:c459af326fe92ad1",
+  "jsonHash": "fnv1a64:b103785abdf417cf",
+  "findings": []
+}

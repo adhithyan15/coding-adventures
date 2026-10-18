@@ -1,0 +1,8 @@
+{
+  "id": "ES-EXT-553-EMPLEO",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can talk about changes at work: a promotion, a final settlement, someone taking over, a dismissal and resigning.",
+  "prerequisites": []
+}

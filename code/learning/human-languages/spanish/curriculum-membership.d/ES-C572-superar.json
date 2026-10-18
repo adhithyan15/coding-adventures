@@ -1,0 +1,11 @@
+{
+  "id": "ES-C572-superar",
+  "pathSegment": "ES-PATH-572-CAMBIO",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "ES-EXT-572-CAMBIO",
+      "order": 4
+    }
+  ]
+}

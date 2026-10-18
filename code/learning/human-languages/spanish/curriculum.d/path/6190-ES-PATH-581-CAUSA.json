@@ -1,0 +1,9 @@
+{
+  "id": "ES-PATH-581-CAUSA",
+  "spine_node": "SPINE-GIVE-REASONS",
+  "before": [],
+  "inline": [
+    "ES-EXT-581-CAUSA"
+  ],
+  "after": []
+}

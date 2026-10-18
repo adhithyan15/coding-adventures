@@ -1,0 +1,11 @@
+{
+  "id": "ES-C677-monumento",
+  "pathSegment": "ES-PATH-677-MONUMENTO",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "ES-EXT-677-MONUMENTO",
+      "order": 0
+    }
+  ]
+}

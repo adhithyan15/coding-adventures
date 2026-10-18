@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C607-medio-ambiente",
+    "language": "spanish",
+    "chapter": 607,
+    "sequence": 20080,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ef3b4752193db22f"
+  },
+  "findings": []
+}

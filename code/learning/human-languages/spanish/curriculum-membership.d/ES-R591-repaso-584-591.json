@@ -1,0 +1,11 @@
+{
+  "id": "ES-R591-repaso-584-591",
+  "pathSegment": "ES-PATH-591-DESPIDO",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "ES-EXT-591-DESPIDO",
+      "order": 5
+    }
+  ]
+}

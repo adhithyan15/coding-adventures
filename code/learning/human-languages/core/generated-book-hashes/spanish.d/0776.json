@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 776,
+  "sourceHash": "fnv1a64:654de6c0bee90d42",
+  "lessonIds": [
+    "ES-C776-contrasena",
+    "ES-C776-archivo",
+    "ES-C776-carpeta",
+    "ES-C776-actualizar",
+    "ES-C776-teclado"
+  ],
+  "tex": "spanish/book/chapters/ch776-si-olvidas-la-contrasena.tex"
+}

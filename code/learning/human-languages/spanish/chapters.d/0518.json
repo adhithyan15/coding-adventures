@@ -1,0 +1,19 @@
+{
+  "chapter": 518,
+  "title": "Un robo en el barrio",
+  "label": "ch:es-un-robo-en-el-barrio",
+  "canDo": "I can report a robbery: what was stolen, who the suspect is, and how the thief ran away.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "ES-C518-huir",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 518: I can report a robbery: what was stolen, who the suspect is, and how the thief ran away.",
+    "assesses": [
+      "ES-LEX-C518-ROBO-03",
+      "ES-LEX-C518-ROBO-04",
+      "ES-LEX-C518-ROBO-05"
+    ]
+  }
+}

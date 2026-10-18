@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C694-lagartija",
+    "language": "spanish",
+    "chapter": 694,
+    "sequence": 24600,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:76547a866c4ca850"
+  },
+  "findings": []
+}

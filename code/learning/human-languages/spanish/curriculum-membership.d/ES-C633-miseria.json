@@ -1,0 +1,11 @@
+{
+  "id": "ES-C633-miseria",
+  "pathSegment": "ES-PATH-633-RIQUEZA",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ES-EXT-633-RIQUEZA",
+      "order": 1
+    }
+  ]
+}

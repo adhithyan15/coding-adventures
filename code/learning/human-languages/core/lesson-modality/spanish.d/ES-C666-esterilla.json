@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C666-esterilla",
+    "language": "spanish",
+    "chapter": 666,
+    "sequence": 23150,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:05f5aa621981749a"
+  },
+  "findings": []
+}

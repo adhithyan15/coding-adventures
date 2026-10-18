@@ -1,0 +1,19 @@
+{
+  "chapter": 609,
+  "title": "Progresar",
+  "label": "ch:es-progresar",
+  "canDo": "I can talk about progress, a challenge and how to face it and do better.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "ES-C609-perseverar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 609: I can talk about progress, a challenge and how to face it and do better.",
+    "assesses": [
+      "ES-LEX-C609-PROGRESO-03",
+      "ES-LEX-C609-PROGRESO-04",
+      "ES-LEX-C609-PROGRESO-05"
+    ]
+  }
+}

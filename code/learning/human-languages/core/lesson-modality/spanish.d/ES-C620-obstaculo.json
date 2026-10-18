@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C620-obstaculo",
+    "language": "spanish",
+    "chapter": 620,
+    "sequence": 20770,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:efb3eddf231adca3"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "ES-C760-maquillaje",
+  "pathSegment": "ES-PATH-760-PERSONAJE",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ES-EXT-760-PERSONAJE",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,9 @@
+{
+  "id": "ES-PATH-571-DESCUBRIR",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "ES-EXT-571-DESCUBRIR"
+  ],
+  "after": []
+}

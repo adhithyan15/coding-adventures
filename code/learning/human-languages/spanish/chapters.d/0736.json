@@ -1,0 +1,19 @@
+{
+  "chapter": 736,
+  "title": "La cara",
+  "label": "ch:es-la-cara",
+  "canDo": "I can describe a face: the forehead, cheeks, chin, beard and ears.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "ES-C736-oreja",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 736: I can describe a face: the forehead, cheeks, chin, beard and ears.",
+    "assesses": [
+      "ES-LEX-C736-CARA-03",
+      "ES-LEX-C736-CARA-04",
+      "ES-LEX-C736-CARA-05"
+    ]
+  }
+}

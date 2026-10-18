@@ -795,6 +795,9 @@ Selected `.options` keys can also be turned into engine-call options with
 Runnable `.op`, `.dc`, `.ac dec` / `.ac log`, and `.tran` cards can be planned
 and executed directly with `parsed.analysis_plan()`, `parsed.run_analysis_plan()`,
 or `run_netlist(deck)`.
+`.dc` accepts either `source start stop step` or a second four-token source
+axis; the first source is the inner loop and each result retains the outer-axis
+source and value.
 `.save`, `.probe`, `.print`, and `.plot` cards can be applied to executed
 analysis results with `parsed.select_outputs(&results)?`. Supported `.measure`
 cards can be evaluated with `parsed.measure_results(&results)?`; the first

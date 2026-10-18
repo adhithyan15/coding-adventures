@@ -1,0 +1,8 @@
+{
+  "id": "ES-EXT-548-BANQUETE",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can describe a wedding: the marriage, the ceremony, the reception meal, the toast and the honeymoon.",
+  "prerequisites": []
+}

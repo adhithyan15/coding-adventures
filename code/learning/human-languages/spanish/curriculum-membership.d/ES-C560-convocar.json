@@ -1,0 +1,11 @@
+{
+  "id": "ES-C560-convocar",
+  "pathSegment": "ES-PATH-560-ENCUENTRO",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ES-EXT-560-ENCUENTRO",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "ES-C525-herir",
+  "pathSegment": "ES-PATH-525-HERIDA",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ES-EXT-525-HERIDA",
+      "order": 1
+    }
+  ]
+}

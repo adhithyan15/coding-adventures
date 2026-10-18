@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 741,
+  "sourceHash": "fnv1a64:5db330be71cc4e05",
+  "lessonIds": [
+    "ES-C741-cansancio",
+    "ES-C741-agotado",
+    "ES-C741-dormirse",
+    "ES-C741-insomnio",
+    "ES-C741-siesta"
+  ],
+  "tex": "spanish/book/chapters/ch741-cansancio-y-descanso.tex"
+}

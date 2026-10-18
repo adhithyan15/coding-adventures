@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C615-proponerse",
+    "language": "spanish",
+    "chapter": 615,
+    "sequence": 20530,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a8d9d88c23c4939d"
+  },
+  "findings": []
+}

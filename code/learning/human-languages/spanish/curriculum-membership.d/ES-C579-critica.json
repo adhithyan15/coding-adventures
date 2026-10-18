@@ -1,0 +1,11 @@
+{
+  "id": "ES-C579-critica",
+  "pathSegment": "ES-PATH-579-CRITICA",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ES-EXT-579-CRITICA",
+      "order": 1
+    }
+  ]
+}

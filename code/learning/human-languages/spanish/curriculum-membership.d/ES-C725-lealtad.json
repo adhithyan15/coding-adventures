@@ -1,0 +1,11 @@
+{
+  "id": "ES-C725-lealtad",
+  "pathSegment": "ES-PATH-725-FIEL",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ES-EXT-725-FIEL",
+      "order": 2
+    }
+  ]
+}

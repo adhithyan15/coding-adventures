@@ -1,0 +1,11 @@
+{
+  "id": "ES-C720-admirar",
+  "pathSegment": "ES-PATH-720-GRACIAS",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ES-EXT-720-GRACIAS",
+      "order": 1
+    }
+  ]
+}

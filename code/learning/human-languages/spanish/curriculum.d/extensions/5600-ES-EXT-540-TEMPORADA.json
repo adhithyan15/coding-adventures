@@ -1,0 +1,8 @@
+{
+  "id": "ES-EXT-540-TEMPORADA",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say whether something happened at the beginning, in the middle or at the end of a month or a year, and how often it happens.",
+  "prerequisites": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "ES-C567-soldado",
+  "pathSegment": "ES-PATH-567-GUERRA",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ES-EXT-567-GUERRA",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C529-destruir",
+    "language": "spanish",
+    "chapter": 529,
+    "sequence": 16090,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3ac47af4a8eb3a71"
+  },
+  "findings": []
+}

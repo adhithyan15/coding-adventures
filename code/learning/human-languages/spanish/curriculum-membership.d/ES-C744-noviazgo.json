@@ -1,0 +1,11 @@
+{
+  "id": "ES-C744-noviazgo",
+  "pathSegment": "ES-PATH-744-NOVIOS",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ES-EXT-744-NOVIOS",
+      "order": 2
+    }
+  ]
+}

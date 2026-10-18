@@ -1,0 +1,11 @@
+{
+  "id": "ES-C565-argumento",
+  "pathSegment": "ES-PATH-565-ESCENA",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ES-EXT-565-ESCENA",
+      "order": 1
+    }
+  ]
+}

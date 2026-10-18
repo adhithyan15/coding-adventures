@@ -1,0 +1,11 @@
+{
+  "id": "ES-C526-salvar",
+  "pathSegment": "ES-PATH-526-RESCATE",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ES-EXT-526-RESCATE",
+      "order": 2
+    }
+  ]
+}

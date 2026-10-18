@@ -1,0 +1,8 @@
+{
+  "id": "ES-EXT-590-VACANTE",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can read a job offer that names the vacancy, the profile and the training needed, and how people are selected.",
+  "prerequisites": []
+}

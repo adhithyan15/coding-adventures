@@ -1,0 +1,19 @@
+{
+  "chapter": 543,
+  "title": "Más tarde de lo previsto",
+  "label": "ch:es-mas-tarde-de-lo-previsto",
+  "canDo": "I can say that something was resumed, delayed, put off, moved forward or stayed the same.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "ES-R543-repaso-536-543",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 543: I can say that something was resumed, delayed, put off, moved forward or stayed the same.",
+    "assesses": [
+      "ES-LEX-C543-RETRASO-03",
+      "ES-LEX-C543-RETRASO-04",
+      "ES-LEX-C543-RETRASO-05"
+    ]
+  }
+}

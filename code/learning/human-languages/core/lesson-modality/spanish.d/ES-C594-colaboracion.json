@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C594-colaboracion",
+    "language": "spanish",
+    "chapter": 594,
+    "sequence": 19440,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:02b4230b890dc213"
+  },
+  "findings": []
+}

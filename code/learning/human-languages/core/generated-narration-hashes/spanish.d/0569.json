@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 569,
+  "sourceHash": "fnv1a64:0bf31e099ff91776",
+  "lessonIds": [
+    "ES-C569-luchar",
+    "ES-C569-derrotar",
+    "ES-C569-vencer",
+    "ES-C569-defender",
+    "ES-C569-conflicto"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch569.txt",
+  "json": "spanish/narration/ch569.json",
+  "textHash": "fnv1a64:60161e8e430962a5",
+  "jsonHash": "fnv1a64:15a002d8aa363324",
+  "findings": []
+}

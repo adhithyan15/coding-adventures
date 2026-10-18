@@ -1,0 +1,11 @@
+{
+  "id": "ES-C545-criar",
+  "pathSegment": "ES-PATH-545-NINEZ",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "ES-EXT-545-NINEZ",
+      "order": 0
+    }
+  ]
+}

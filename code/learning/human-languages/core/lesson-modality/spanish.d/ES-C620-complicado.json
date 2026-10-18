@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C620-complicado",
+    "language": "spanish",
+    "chapter": 620,
+    "sequence": 20780,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6a151d9556fe22c9"
+  },
+  "findings": []
+}

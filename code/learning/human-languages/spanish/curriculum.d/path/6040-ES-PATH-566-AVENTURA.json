@@ -1,0 +1,9 @@
+{
+  "id": "ES-PATH-566-AVENTURA",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "ES-EXT-566-AVENTURA"
+  ],
+  "after": []
+}

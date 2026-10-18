@@ -1,0 +1,8 @@
+{
+  "id": "ES-EXT-721-CARACTER",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can describe someone's character, their strong points and their faults.",
+  "prerequisites": []
+}

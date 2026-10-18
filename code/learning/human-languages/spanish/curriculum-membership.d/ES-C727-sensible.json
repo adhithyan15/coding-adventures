@@ -1,0 +1,11 @@
+{
+  "id": "ES-C727-sensible",
+  "pathSegment": "ES-PATH-727-SENSIBLE",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "ES-EXT-727-SENSIBLE",
+      "order": 0
+    }
+  ]
+}

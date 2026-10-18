@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 625,
+  "sourceHash": "fnv1a64:15a379a136a49ddf",
+  "lessonIds": [
+    "ES-C625-vigente",
+    "ES-C625-ilegal",
+    "ES-C625-infringir",
+    "ES-C625-denunciar",
+    "ES-C625-denuncia"
+  ],
+  "tex": "spanish/book/chapters/ch625-legal-o-ilegal.tex"
+}

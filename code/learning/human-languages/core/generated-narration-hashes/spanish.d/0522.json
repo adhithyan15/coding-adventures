@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 522,
+  "sourceHash": "fnv1a64:5f59828bd221ec95",
+  "lessonIds": [
+    "ES-C522-juicio",
+    "ES-C522-juez",
+    "ES-C522-juzgar",
+    "ES-C522-condenar",
+    "ES-C522-carcel"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch522.txt",
+  "json": "spanish/narration/ch522.json",
+  "textHash": "fnv1a64:783e782e16ed04ed",
+  "jsonHash": "fnv1a64:730c080957b0c456",
+  "findings": []
+}

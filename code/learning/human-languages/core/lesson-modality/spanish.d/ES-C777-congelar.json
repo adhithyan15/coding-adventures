@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C777-congelar",
+    "language": "spanish",
+    "chapter": 777,
+    "sequence": 28860,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b968189e08fb4ee6"
+  },
+  "findings": []
+}

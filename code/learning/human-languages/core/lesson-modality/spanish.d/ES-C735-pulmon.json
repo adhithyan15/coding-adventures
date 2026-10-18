@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C735-pulmon",
+    "language": "spanish",
+    "chapter": 735,
+    "sequence": 26690,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:54ec04c14e69a7e1"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 580,
+  "title": "El porqué",
+  "label": "ch:es-el-porque",
+  "canDo": "I can give the reason for something with since and given that.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "ES-C580-dado-que",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 580: I can give the reason for something with since and given that.",
+    "assesses": [
+      "ES-LEX-C580-MOTIVO-03",
+      "ES-LEX-C580-MOTIVO-04",
+      "ES-LEX-C580-MOTIVO-05"
+    ]
+  }
+}

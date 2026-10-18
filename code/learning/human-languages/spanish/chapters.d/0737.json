@@ -1,0 +1,19 @@
+{
+  "chapter": 737,
+  "title": "Del codo a la cadera",
+  "label": "ch:es-del-codo-a-la-cadera",
+  "canDo": "I can say where it hurts: elbow, wrist, waist, hip or ribs.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "ES-C737-costilla",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 737: I can say where it hurts: elbow, wrist, waist, hip or ribs.",
+    "assesses": [
+      "ES-LEX-C737-CUERPO-03",
+      "ES-LEX-C737-CUERPO-04",
+      "ES-LEX-C737-CUERPO-05"
+    ]
+  }
+}

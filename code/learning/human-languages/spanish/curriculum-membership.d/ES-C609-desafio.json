@@ -1,0 +1,11 @@
+{
+  "id": "ES-C609-desafio",
+  "pathSegment": "ES-PATH-609-PROGRESO",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ES-EXT-609-PROGRESO",
+      "order": 2
+    }
+  ]
+}

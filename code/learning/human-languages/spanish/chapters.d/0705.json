@@ -1,0 +1,19 @@
+{
+  "chapter": 705,
+  "title": "Orgullo y vergüenza",
+  "label": "ch:es-orgullo-y-verguenza",
+  "canDo": "I can say when I feel proud of someone or ashamed of something.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "ES-C705-avergonzarse",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 705: I can say when I feel proud of someone or ashamed of something.",
+    "assesses": [
+      "ES-LEX-C705-ORGULLO-03",
+      "ES-LEX-C705-ORGULLO-04",
+      "ES-LEX-C705-ORGULLO-05"
+    ]
+  }
+}

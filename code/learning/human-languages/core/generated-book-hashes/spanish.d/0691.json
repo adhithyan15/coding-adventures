@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 691,
+  "sourceHash": "fnv1a64:edb6972790f1fcb4",
+  "lessonIds": [
+    "ES-C691-agricultor",
+    "ES-C691-campesino",
+    "ES-C691-finca",
+    "ES-C691-vinedo",
+    "ES-C691-cultivar"
+  ],
+  "tex": "spanish/book/chapters/ch691-la-vida-en-el-campo.tex"
+}

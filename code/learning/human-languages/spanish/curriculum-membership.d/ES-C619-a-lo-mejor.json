@@ -1,0 +1,11 @@
+{
+  "id": "ES-C619-a-lo-mejor",
+  "pathSegment": "ES-PATH-619-QUIZA",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "ES-EXT-619-QUIZA",
+      "order": 0
+    }
+  ]
+}

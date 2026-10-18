@@ -1,0 +1,11 @@
+{
+  "id": "ES-C609-perfeccionar",
+  "pathSegment": "ES-PATH-609-PROGRESO",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ES-EXT-609-PROGRESO",
+      "order": 1
+    }
+  ]
+}

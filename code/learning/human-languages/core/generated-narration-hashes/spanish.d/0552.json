@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 552,
+  "sourceHash": "fnv1a64:0ff09bc11dc31801",
+  "lessonIds": [
+    "ES-C552-inmigrante",
+    "ES-C552-exilio",
+    "ES-C552-refugiado",
+    "ES-C552-frontera",
+    "ES-C552-independizarse"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch552.txt",
+  "json": "spanish/narration/ch552.json",
+  "textHash": "fnv1a64:c29e3f9465d0df3a",
+  "jsonHash": "fnv1a64:1950720da7cbd25a",
+  "findings": []
+}

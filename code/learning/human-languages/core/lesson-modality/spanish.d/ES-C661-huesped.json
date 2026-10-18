@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C661-huesped",
+    "language": "spanish",
+    "chapter": 661,
+    "sequence": 22890,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4a034d8cc7d6973a"
+  },
+  "findings": []
+}

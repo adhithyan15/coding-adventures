@@ -1,0 +1,19 @@
+{
+  "chapter": 725,
+  "title": "Amigos fieles",
+  "label": "ch:es-amigos-fieles",
+  "canDo": "I can describe a loyal friend, say when someone pretends, and make up after a quarrel.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "ES-C725-fingir",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 725: I can describe a loyal friend, say when someone pretends, and make up after a quarrel.",
+    "assesses": [
+      "ES-LEX-C725-FIEL-03",
+      "ES-LEX-C725-FIEL-04",
+      "ES-LEX-C725-FIEL-05"
+    ]
+  }
+}

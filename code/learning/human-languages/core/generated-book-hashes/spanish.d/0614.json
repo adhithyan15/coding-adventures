@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 614,
+  "sourceHash": "fnv1a64:8ca0e132057cbf86",
+  "lessonIds": [
+    "ES-C614-prevenir",
+    "ES-C614-arriesgar",
+    "ES-C614-garantizar",
+    "ES-C614-garantia",
+    "ES-C614-proteccion"
+  ],
+  "tex": "spanish/book/chapters/ch614-riesgos-y-garantias.tex"
+}

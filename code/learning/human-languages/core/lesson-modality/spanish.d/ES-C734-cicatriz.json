@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C734-cicatriz",
+    "language": "spanish",
+    "chapter": 734,
+    "sequence": 26670,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0e96c8db5565a444"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "ES-C513-titular",
+  "pathSegment": "ES-PATH-513-PRENSA",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ES-EXT-513-PRENSA",
+      "order": 1
+    }
+  ]
+}

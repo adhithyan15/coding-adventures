@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 749,
+  "sourceHash": "fnv1a64:71bf70caa6d871c7",
+  "lessonIds": [
+    "ES-C749-gemelo",
+    "ES-C749-hermanastro",
+    "ES-C749-adolescente",
+    "ES-C749-bisabuelo",
+    "ES-C749-huerfano"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch749.txt",
+  "json": "spanish/narration/ch749.json",
+  "textHash": "fnv1a64:8afe8a9ea26e2fdc",
+  "jsonHash": "fnv1a64:fdf77084379234c7",
+  "findings": []
+}

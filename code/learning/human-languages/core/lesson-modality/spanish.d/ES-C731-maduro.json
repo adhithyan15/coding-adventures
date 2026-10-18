@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C731-maduro",
+    "language": "spanish",
+    "chapter": 731,
+    "sequence": 26480,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:49175d78e9663d85"
+  },
+  "findings": []
+}

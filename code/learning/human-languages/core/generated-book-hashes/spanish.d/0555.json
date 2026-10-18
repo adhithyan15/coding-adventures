@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 555,
+  "sourceHash": "fnv1a64:516b6345cde629dd",
+  "lessonIds": [
+    "ES-C555-vejez",
+    "ES-C555-anciano",
+    "ES-C555-muerte",
+    "ES-C555-muerto",
+    "ES-C555-difunto"
+  ],
+  "tex": "spanish/book/chapters/ch555-la-vejez.tex"
+}

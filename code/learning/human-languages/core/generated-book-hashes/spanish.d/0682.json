@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 682,
+  "sourceHash": "fnv1a64:01a6cae176241d54",
+  "lessonIds": [
+    "ES-C682-farola",
+    "ES-C682-papelera",
+    "ES-C682-contenedor",
+    "ES-C682-bordillo",
+    "ES-C682-peatonal"
+  ],
+  "tex": "spanish/book/chapters/ch682-lo-que-hay-en-la-calle.tex"
+}

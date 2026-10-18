@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C543-adelantar",
+    "language": "spanish",
+    "chapter": 543,
+    "sequence": 16790,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9f291842d3b7fe0a"
+  },
+  "findings": []
+}

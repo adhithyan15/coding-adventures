@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 649,
+  "sourceHash": "fnv1a64:9311f575205aa855",
+  "lessonIds": [
+    "ES-C649-moto",
+    "ES-C649-motorista",
+    "ES-C649-patinete",
+    "ES-C649-pedalear",
+    "ES-C649-ciclista"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch649.txt",
+  "json": "spanish/narration/ch649.json",
+  "textHash": "fnv1a64:cb93820a4b3b39b3",
+  "jsonHash": "fnv1a64:4690cac2181a034d",
+  "findings": []
+}

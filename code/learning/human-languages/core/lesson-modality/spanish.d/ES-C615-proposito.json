@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C615-proposito",
+    "language": "spanish",
+    "chapter": 615,
+    "sequence": 20510,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2a701e63ef4f7553"
+  },
+  "findings": []
+}

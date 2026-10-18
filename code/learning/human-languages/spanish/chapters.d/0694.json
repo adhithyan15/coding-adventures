@@ -1,0 +1,19 @@
+{
+  "chapter": 694,
+  "title": "Animales del campo",
+  "label": "ch:es-animales-del-campo",
+  "canDo": "I can name small wild creatures: seagulls, birds, insects, butterflies and lizards.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "ES-C694-lagartija",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 694: I can name small wild creatures: seagulls, birds, insects, butterflies and lizards.",
+    "assesses": [
+      "ES-LEX-C694-ANIMALES-03",
+      "ES-LEX-C694-ANIMALES-04",
+      "ES-LEX-C694-ANIMALES-05"
+    ]
+  }
+}

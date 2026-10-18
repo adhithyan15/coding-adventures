@@ -1,0 +1,11 @@
+{
+  "id": "ES-C579-reconocer",
+  "pathSegment": "ES-PATH-579-CRITICA",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ES-EXT-579-CRITICA",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,9 @@
+{
+  "id": "ES-PATH-774-DESVAN",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "ES-EXT-774-DESVAN"
+  ],
+  "after": []
+}

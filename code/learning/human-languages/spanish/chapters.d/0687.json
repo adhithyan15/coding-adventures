@@ -1,0 +1,19 @@
+{
+  "chapter": 687,
+  "title": "Caminos de montaña",
+  "label": "ch:es-caminos-de-montana",
+  "canDo": "I can plan a day out on foot: a long walk along a path, a mountain hut, climbing and exploring.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "ES-R687-repaso-680-687",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 687: I can plan a day out on foot: a long walk along a path, a mountain hut, climbing and exploring.",
+    "assesses": [
+      "ES-LEX-C687-EXCURSION-03",
+      "ES-LEX-C687-EXCURSION-04",
+      "ES-LEX-C687-EXCURSION-05"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C537-hasta-entonces",
+    "language": "spanish",
+    "chapter": 537,
+    "sequence": 16470,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f5d950e0e1a009ee"
+  },
+  "findings": []
+}

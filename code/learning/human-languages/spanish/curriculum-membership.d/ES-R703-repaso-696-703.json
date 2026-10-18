@@ -1,0 +1,11 @@
+{
+  "id": "ES-R703-repaso-696-703",
+  "pathSegment": "ES-PATH-703-ANOCHECER",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "ES-EXT-703-ANOCHECER",
+      "order": 5
+    }
+  ]
+}

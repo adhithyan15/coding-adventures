@@ -12023,6 +12023,8 @@ impl Default for DcOpOptions {
 pub struct DcSweepPoint {
     pub value: f64,
     pub result: DcResult,
+    pub secondary_source_name: Option<String>,
+    pub secondary_value: Option<f64>,
 }
 
 #[derive(Debug, Clone, PartialEq)]
@@ -19473,8 +19475,44 @@ pub fn dc_sweep(
         points.push(DcSweepPoint {
             value,
             result: dc_op(&swept)?,
+            secondary_source_name: None,
+            secondary_value: None,
         });
         value += step;
+    }
+    Ok(points)
+}
+
+pub fn dc_sweep_2d(
+    circuit: &Circuit,
+    source_name: &str,
+    start: f64,
+    stop: f64,
+    step: f64,
+    secondary_source_name: &str,
+    secondary_start: f64,
+    secondary_stop: f64,
+    secondary_step: f64,
+) -> Result<Vec<DcSweepPoint>, SpiceError> {
+    validate_sweep(source_name, start, stop, step)?;
+    validate_sweep(
+        secondary_source_name,
+        secondary_start,
+        secondary_stop,
+        secondary_step,
+    )?;
+    let mut points = Vec::new();
+    let mut secondary_value = secondary_start;
+    let epsilon = secondary_step.abs() * 1.0e-9;
+    while sweep_includes(secondary_value, secondary_stop, secondary_step, epsilon) {
+        let mut outer = circuit.clone();
+        set_source_value(&mut outer, secondary_source_name, secondary_value)?;
+        for mut point in dc_sweep(&outer, source_name, start, stop, step)? {
+            point.secondary_source_name = Some(secondary_source_name.to_string());
+            point.secondary_value = Some(secondary_value);
+            points.push(point);
+        }
+        secondary_value += secondary_step;
     }
     Ok(points)
 }

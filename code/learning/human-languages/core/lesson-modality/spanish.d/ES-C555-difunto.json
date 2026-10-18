@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C555-difunto",
+    "language": "spanish",
+    "chapter": 555,
+    "sequence": 17420,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c7a09401e4ce6feb"
+  },
+  "findings": []
+}

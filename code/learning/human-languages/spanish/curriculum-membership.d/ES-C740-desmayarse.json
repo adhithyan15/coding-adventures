@@ -1,0 +1,11 @@
+{
+  "id": "ES-C740-desmayarse",
+  "pathSegment": "ES-PATH-740-MAREO",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ES-EXT-740-MAREO",
+      "order": 3
+    }
+  ]
+}

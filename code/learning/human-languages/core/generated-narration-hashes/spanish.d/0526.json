@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 526,
+  "sourceHash": "fnv1a64:6c5b542fb197c739",
+  "lessonIds": [
+    "ES-C526-rescatar",
+    "ES-C526-rescate",
+    "ES-C526-salvar",
+    "ES-C526-sobrevivir",
+    "ES-C526-atrapar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch526.txt",
+  "json": "spanish/narration/ch526.json",
+  "textHash": "fnv1a64:4c4b0aab17b4f9fa",
+  "jsonHash": "fnv1a64:90471bec14812c6b",
+  "findings": []
+}

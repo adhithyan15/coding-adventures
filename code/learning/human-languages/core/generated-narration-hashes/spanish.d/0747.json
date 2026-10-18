@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 747,
+  "sourceHash": "fnv1a64:f78176bd6fbb6f09",
+  "lessonIds": [
+    "ES-C747-cunado",
+    "ES-C747-suegro",
+    "ES-C747-suegra",
+    "ES-C747-yerno",
+    "ES-C747-nuera"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch747.txt",
+  "json": "spanish/narration/ch747.json",
+  "textHash": "fnv1a64:baef826e99c44dc0",
+  "jsonHash": "fnv1a64:e220aa0e6c5c54f4",
+  "findings": []
+}

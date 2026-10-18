@@ -1,0 +1,19 @@
+{
+  "chapter": 686,
+  "title": "Hacia la cima",
+  "label": "ch:es-hacia-la-cima",
+  "canDo": "I can talk about climbing a mountain: the way up, the rocks, the peak and the summit.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "ES-C686-escalar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 686: I can talk about climbing a mountain: the way up, the rocks, the peak and the summit.",
+    "assesses": [
+      "ES-LEX-C686-CIMA-03",
+      "ES-LEX-C686-CIMA-04",
+      "ES-LEX-C686-CIMA-05"
+    ]
+  }
+}
