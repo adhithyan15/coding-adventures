@@ -128,7 +128,7 @@ function artifactReference(value: unknown, where: string): string {
     || path.startsWith("\\")
     || /^[A-Za-z]:/.test(path)
     || path.includes("\\")
-    || path.split("/").includes("..")
+    || path.split("/").some((segment) => segment === ".." || segment === "." || segment === "")
     || /^[a-z][a-z0-9+.-]*:/i.test(path)
   ) {
     throw new Error(`assessment: ${where} must be a safe relative artifact reference`);
@@ -319,6 +319,9 @@ export function parseAssessmentContract(
         ...(humanValidation === undefined ? {} : { humanValidation }),
       };
     });
+    if (new Set(fullMocks.map((mock) => mock.id)).size !== fullMocks.length) {
+      throw new Error(`assessment: ${expectedLanguage}.${current} has duplicate full mock ids`);
+    }
     return {
       level: current,
       target: {
@@ -439,6 +442,9 @@ export function parseAssessmentContract(
         ...(humanValidation === undefined ? {} : { humanValidation }),
       };
     });
+    if (new Set(fullMocks.map((mock) => mock.id)).size !== fullMocks.length) {
+      throw new Error(`assessment: ${where} has duplicate full mock ids`);
+    }
 
     return {
       id,

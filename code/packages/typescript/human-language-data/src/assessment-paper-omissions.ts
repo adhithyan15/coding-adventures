@@ -32,6 +32,9 @@ export function omittedPaperMocks(contract: AssessmentContract): string[] {
       .filter((mock) => mock.paper === undefined)
       .map((mock) => identity("capstone", capstone.id, mock))),
   ];
+  if (new Set(omitted).size !== omitted.length) {
+    throw new Error(`assessment papers: ${contract.language} has duplicate omitted mock identities`);
+  }
   return omitted.sort();
 }
 

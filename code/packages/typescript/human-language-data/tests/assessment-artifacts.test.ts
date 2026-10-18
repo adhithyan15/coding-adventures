@@ -167,6 +167,29 @@ describe("dangling assessment-contract references", () => {
     expect(() => loadAssessmentContracts(root)).toThrow(/paper must be distinct from rubric and answerKey/);
   });
 
+  it("does not accept a dotted path alias of the answer key as the paper", () => {
+    const value = contract("fixtura") as { levels: Array<{ fullMocks: Array<{ paper: string; answerKey: string }> }> };
+    value.levels[0]!.fullMocks[0]!.paper = value.levels[0]!.fullMocks[0]!.answerKey.replace("mocks/", "mocks/./");
+    write("fixtura/assessment.json", `${JSON.stringify(value)}\n`);
+    expect(() => loadAssessmentContracts(root)).toThrow(/paper must be a safe relative artifact reference/);
+  });
+
+  it("does not let a duplicate mock ID reuse one legacy paper-omission pin", () => {
+    const value = contract("fixtura") as { levels: Array<{ fullMocks: Array<{ id: string; paper?: string }> }> };
+    value.levels[0]!.fullMocks[1]!.id = value.levels[0]!.fullMocks[0]!.id;
+    delete value.levels[0]!.fullMocks[1]!.paper;
+    write("fixtura/assessment.json", `${JSON.stringify(value)}\n`);
+    expect(() => loadAssessmentContracts(root)).toThrow(/duplicate full mock ids/);
+  });
+
+  it("does not count a directory as a built learner-facing paper", () => {
+    satisfy("fixtura");
+    const value = contract("fixtura") as { levels: Array<{ fullMocks: Array<{ paper: string }> }> };
+    value.levels[0]!.fullMocks[0]!.paper = "mocks/pre-a1";
+    write("fixtura/assessment.json", `${JSON.stringify(value)}\n`);
+    expect(() => checkAssessmentArtifacts(root)).toThrow(/not a regular file/);
+  });
+
   it("rejects a paper reached through a directory junction outside its track", () => {
     satisfy("fixtura");
     const source = join(root, "fixtura", "mocks", "a1");

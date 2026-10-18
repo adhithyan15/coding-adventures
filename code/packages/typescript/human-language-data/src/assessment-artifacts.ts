@@ -42,7 +42,7 @@
 // thirteen independent authors closing thirteen independent debts must not
 // collide on one file.
 // ---------------------------------------------------------------------------
-import { readdirSync, realpathSync } from "node:fs";
+import { readdirSync, realpathSync, statSync } from "node:fs";
 import { isAbsolute, join, relative, resolve, sep } from "node:path";
 
 import type { AssessmentContract, AssessmentSkill } from "./assessment.js";
@@ -190,6 +190,9 @@ export function auditTrackArtifacts(
     const fromTrack = relative(canonicalTrack, realpathSync(target));
     if (fromTrack === ".." || fromTrack.startsWith(`..${sep}`) || isAbsolute(fromTrack)) {
       throw new Error(`assessment artifacts: '${target}' resolves outside the track directory`);
+    }
+    if (!statSync(target).isFile()) {
+      throw new Error(`assessment artifacts: '${target}' is not a regular file`);
     }
     present.push(path);
   }
