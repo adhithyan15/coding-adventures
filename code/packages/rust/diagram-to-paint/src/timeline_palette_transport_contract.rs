@@ -42,6 +42,7 @@ fn timeline_independent_palette_lengths_keep_whole_scenes_and_queries() {
             let mut metadata = HashMap::from([
                 ("accessibility.title".into(), "Palette history".into()),
                 ("accessibility.description".into(), "Complete palette transport".into()),
+                ("timeline.fontFamily".into(), "\"trebuchet ms\", verdana, arial, sans-serif".into()),
                 ("timeline.padding".into(), "50".into()),
                 ("timeline.leftMargin".into(), "50".into()),
                 ("timeline.useMaxWidth".into(), "true".into()),
@@ -79,8 +80,8 @@ fn timeline_independent_palette_lengths_keep_whole_scenes_and_queries() {
                 ],
             };
             let expected_queries = vec![
-                FontQuery::named("Georgia"),
-                FontQuery::named("Courier New").with_weight(text_interfaces::FontWeight(700)),
+                FontQuery::named("\"trebuchet ms\", verdana, arial, sans-serif"),
+                FontQuery::named("\"trebuchet ms\", verdana, arial, sans-serif").with_weight(text_interfaces::FontWeight(700)),
             ];
             let input = LayoutedTemporalDiagram {
                 width: 300.0, height: 200.0, accessibility_title: Some("Palette history".into()),

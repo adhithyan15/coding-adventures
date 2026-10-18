@@ -167,6 +167,7 @@ fn default_and_explicit_direction_keep_complete_product_contracts() {
             ),
         ]);
         let mut metadata = HashMap::from([
+            ("timeline.fontFamily".into(), "\"trebuchet ms\", verdana, arial, sans-serif".into()),
             ("timeline.padding".into(), "50".into()),
             ("timeline.leftMargin".into(), "50".into()),
             ("timeline.useMaxWidth".into(), "false".into()),
@@ -190,8 +191,8 @@ fn default_and_explicit_direction_keep_complete_product_contracts() {
             instructions,
         };
         let expected_queries = vec![
-            FontQuery::named("Courier New").with_weight(text_interfaces::FontWeight(700)),
-            FontQuery::named("Georgia"),
+            FontQuery::named("\"trebuchet ms\", verdana, arial, sans-serif").with_weight(text_interfaces::FontWeight(700)),
+            FontQuery::named("\"trebuchet ms\", verdana, arial, sans-serif"),
         ];
         let source = format!("{header}\nP : E\n");
         let parsed = mermaid_parser::parse_timeline(&source).unwrap();

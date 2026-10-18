@@ -18,12 +18,23 @@ mod timeline_event_scene_contract {
 
     include!("timeline_legacy_scene_data.rs");
     include!("timeline_default_direction_contract.rs");
+    include!("timeline_family_scene_contract.rs");
 
     #[test]
     fn retained_embedded_event_layouts_keep_complete_legacy_scenes() {
         for (name, declared_layout, declared_scene, declared_queries) in
             declared_legacy_timeline_scene_cases()
         {
+            // Retain the entire declared legacy Scene/query vectors above.
+            // The permitted delta is one metadata field and query family only.
+            let mut declared_scene = declared_scene;
+            declared_scene.metadata.as_mut().unwrap().insert("timeline.fontFamily".into(), "\"trebuchet ms\", verdana, arial, sans-serif".into());
+            let declared_queries: Vec<_> = declared_queries.into_iter().map(|mut query| {
+                query.family_names = vec!["\"trebuchet ms\", verdana, arial, sans-serif".into()];
+                query
+            }).collect();
+            assert_eq!(declared_queries.len(), 2);
+            assert_ne!(declared_queries[0], declared_queries[1]);
             let defaults = make_opts(&FakeShaper, &FakeMetrics, &FakeResolver);
             let resolver = Resolver(std::cell::RefCell::new(Vec::new()));
             let options = DiagramToPaintOptions {
@@ -504,6 +515,7 @@ mod timeline_event_scene_contract {
                                     "accessibility.description".into(),
                                     "Ordered milestones".into(),
                                 ),
+                                ("timeline.fontFamily".into(), "\"trebuchet ms\", verdana, arial, sans-serif".into()),
                                 ("timeline.padding".into(), padding.to_string()),
                                 ("timeline.leftMargin".into(), margin.to_string()),
                                 ("timeline.useMaxWidth".into(), custom.to_string()),
@@ -530,9 +542,9 @@ mod timeline_event_scene_contract {
                                 metadata: Some(metadata),
                                 instructions: geometry,
                             };
-                            let title_query = FontQuery::named("Courier New")
+                            let title_query = FontQuery::named("\"trebuchet ms\", verdana, arial, sans-serif")
                                 .with_weight(text_interfaces::FontWeight(700));
-                            let label_query = FontQuery::named("Georgia");
+                            let label_query = FontQuery::named("\"trebuchet ms\", verdana, arial, sans-serif");
                             let expected_queries = if title || !named {
                                 vec![title_query, label_query]
                             } else {
