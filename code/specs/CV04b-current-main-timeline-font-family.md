@@ -85,3 +85,19 @@ Update affected READMEs/changelogs and durable backlog/issues. Publish only to
 the dynamically rediscovered sole PR after concrete review; retain current
 conflict/hosted/exact-head review and actual-merge gates before auto-merge.
 Final-source Miri follows implementation delivery; the heartbeat stays active.
+
+
+Bounded execution `0b7687390d942b02853dfb04a778cc73b8d3d302`: 1174 native tests passed across 57 unfiltered
+harnesses (0 ignored); 2 doctests passed/0 ignored
+across 14 libraries; all 14 strict commands passed. The fresh graph retains
+1293 manifests, 436 registry rows, reverse14/forward50. Complete new controls
+cover 84 source IR cases, 48 source products, nine direct typed families and
+two non-Timeline None-config role controls. Compiled red cbca778f precedes the
+consumer implementation; its executable preimages and exact streams are saved.
+The default-field test preceded the ABI bootstrap (53 exhaustive literal
+insertions plus field/default, 55 insertions total; five updates unchanged).
+All old source, geometry and 87 complete Scenes remain, with declared family
+and metadata-only oracle changes demonstrated by saved whole-file inverses.
+Exact-source and terminal independent reviews are required before this carrier.
+No font-size, wrapping, title/period role or layout change is included.
+Miri DEFERRED/PENDING; current-main reconciliation and full-goal gates stay OPEN.

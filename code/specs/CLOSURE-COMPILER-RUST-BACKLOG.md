@@ -1,16 +1,19 @@
 # Closure Compiler on Rust — parity backlog
 
-<!-- Closure current concise checkpoint: CV04b Timeline default direction -->
-Bounded source execution `74d9f01c11650b4e0aae49b4ad4d4108136033f1` aligns bare-header and typed defaults
-with LR; explicit TD/LR, existing source/configuration/geometry remain exact.
-1168 tests PASS across55harnesses/0existing ignores, 2doctests
-PASS/0ignored across14targets; all14strict checks PASS.
-Graph1293manifests/reverse14/forward50, unchanged436registrydeclarations.
-37complete source/empty/retained IR cells and3complete portable product Scenes.
-Earlier timeline-event executiondc842d0c remains258P, Venn/CLOC41 retained.
-Failed first7475red and corrected696064semantic red evidence are preserved.
-Sole PR17288 remains unmerged/autoOFF; current-main reconciliation, exact-head
-review/hosted/conflict and actual-merge reachability gates still apply.
+<!-- Closure current concise checkpoint: CV04b Timeline font family -->
+Bounded execution `0b7687390d942b02853dfb04a778cc73b8d3d302` carries owned themeVariables.fontFamily through IR
+to Timeline-only queries/effective metadata, with the declared opaque default
+and trim/allowlist fallback. All roles/sizes/attributes/layout/source ownership
+and None-config non-Timeline families remain exact. 1174 native tests PASS
+across57harnesses/0ignored, 2doctests PASS/0ignored
+across14libraries; all14strict checks PASS. Graph1293/reverse14/forward50/436rows.
+84complete source IR cells, 48source products, nine direct typed families and
+two None-config title/label controls. 53literal ABI insertions plus field/default;
+five struct updates unchanged. All87old complete Scenes retained by declared
+family/metadata-only inverses. Compiled redcbca778f and saved executables retained.
+Sole PR17288 remains unmerged/autoOFF; current-main conflicts/hosted/exact-head
+review and actual-merge reachability gates apply. Next bounded audit: Timeline
+font-size/layout admission, preserving numeric/palette/old source controls.
 Full Closure parity, ingestion IDs, output-byte/source maps, stable IDs/spans,
 pass/sweep and fold/rename/inline/motion/merge/delete lineage remain OPEN.
 Miri DEFERRED/PENDING, never passed; frozen run/inputs/receipts/target untouched.
