@@ -23,10 +23,13 @@ Windows, validates each returned record, and reopens each selected owner
 relative to that handle without following reparse points. A junction swapped
 in after pathname prevalidation cannot supply an outside owner list. This
 does not promise a snapshot of an actively edited in-root directory: native
-enumeration may observe either side of a concurrent in-root change.
-Unix read-side ancestor-swap hardening remains a separate follow-up
-(tracked in [#17740](https://github.com/adhithyan15/coding-adventures/issues/17740));
-do not treat this Windows fix as cross-platform concurrent-read safety.
+enumeration may observe either side of a concurrent in-root change. On Unix,
+the read path opens each descendant directory relative to a pinned parent
+descriptor, lists through that descriptor, and opens JSON shards relative to
+the pinned leaf directory with a no-follow regular-file check. This closes
+read-side ancestor symlink swaps, but does not make concurrent in-root edits a
+snapshot. Unix mutation-side ancestor-swap hardening is tracked separately in
+[#17747](https://github.com/adhithyan15/coding-adventures/issues/17747).
 
 ## Safe regeneration of the Dravidian syllabaries
 
