@@ -108,8 +108,9 @@ response completes the purpose.
 <!-- mock-part:prea1-speaking-short-request -->
 ### Short request — 30 points
 
-Score whether the water request is completed with appropriate courtesy and is
-intelligible. Do not require the answer-key example word for word.
+Score whether the pictured-item request is completed with appropriate courtesy
+and is intelligible. Do not require the form-specific answer-key example word
+for word.
 <!-- /mock-part:prea1-speaking-short-request -->
 
 ## Readiness boundary
