@@ -10,3 +10,8 @@ before making a change. Read and write repository JSON with encoding="utf-8"
 explicitly (utf-8-sig only for externally BOM-prefixed receipts), and stop shell
 follow-up mutations when the helper fails. Check lesson categories before using
 `lessons.py new`; the attempted generic tooling category was not registered.
+
+A cleanup comparison also caught silent UTF-8-to-cp1252 mojibake in the roadmap
+helper. Restore the preserved UTF-8 prefix and keep only the intended new suffix;
+use explicit encoding for every text read, including read-modify-write helpers.
+When displaying Unicode through Windows Python, configure stdout to UTF-8 too.
