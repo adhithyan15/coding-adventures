@@ -3,7 +3,6 @@
   "language": "punjabi",
   "note": "Legacy-only ceiling. New full mocks must declare a real paper; this exact set may only fall.",
   "omittedMocks": [
-    "[\"level\",\"A1\",\"a1-mock-2\"]",
     "[\"level\",\"A2\",\"a2-mock-1\"]",
     "[\"level\",\"A2\",\"a2-mock-2\"]",
     "[\"level\",\"B1\",\"b1-mock-1\"]",
