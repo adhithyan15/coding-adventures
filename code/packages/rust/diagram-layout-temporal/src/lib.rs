@@ -151,8 +151,10 @@ fn layout_timeline(
                     });
                     let event_x = card_x + card_width + 36.0;
                     let event_width = (width - event_x - padding).max(160.0);
-                    for (event_index, event) in period.events.iter().enumerate() {
-                        let event_y = y + event_index as f64 * event_pitch;
+                    // The absolute cursor makes the represented addition order
+                    // explicit; a later variable event height can use the same stack.
+                    let mut event_y = y;
+                    for event in &period.events {
                         items.push(LayoutedTemporalItem::TimelineEventLink {
                             x1: card_x + card_width,
                             y1: y + card_height / 2.0,
@@ -168,8 +170,11 @@ fn layout_timeline(
                             label: event.clone(),
                             color_index,
                         });
+                        event_y = timeline_finite(event_y + event_pitch)?;
                     }
-                    let row_height = card_height.max(period.events.len() as f64 * event_pitch - 8.0);
+                    let event_span = timeline_finite(event_y - y)?;
+                    let event_stack_height = timeline_finite(event_span - 8.0)?.max(0.0);
+                    let row_height = card_height.max(event_stack_height);
                     y = timeline_finite(y + timeline_finite(row_height + 18.0)?)?;
                     if !without_sections || !diagram.config.disable_multicolor {
                         color_index = color_index.checked_add(1)
@@ -211,10 +216,11 @@ fn layout_timeline(
                         x, y: card_y + 24.0, width: card_width, height: card_height,
                         label: period.label.clone(), events: Vec::new(), color_index,
                     });
-                    for (event_index, event) in period.events.iter().enumerate() {
-                        // Group the role-dependent offset before adding the row origin;
-                        // the default remains the represented card_y + 90.
-                        let event_y = card_y + (card_height + 42.0) + event_index as f64 * event_pitch;
+                    // Group the role-dependent offset before adding the row origin;
+                    // the default remains the represented card_y + 90.
+                    let event_start_y = timeline_finite(card_y + (card_height + 42.0))?;
+                    let mut event_y = event_start_y;
+                    for event in &period.events {
                         items.push(LayoutedTemporalItem::TimelineEventLink {
                             x1: x + card_width / 2.0,
                             y1: card_y + 24.0 + card_height,
@@ -230,9 +236,13 @@ fn layout_timeline(
                             label: event.clone(),
                             color_index,
                         });
+                        event_y = timeline_finite(event_y + event_pitch)?;
                     }
                     if !period.events.is_empty() {
-                        row_height = row_height.max((card_height + 24.0) + period.events.len() as f64 * event_pitch);
+                        let event_span = timeline_finite(event_y - event_start_y)?;
+                        row_height = row_height.max(timeline_finite(
+                            timeline_finite(card_height + 24.0)? + event_span,
+                        )?);
                     }
                     if !without_sections || !diagram.config.disable_multicolor {
                         color_index = color_index.checked_add(1)
