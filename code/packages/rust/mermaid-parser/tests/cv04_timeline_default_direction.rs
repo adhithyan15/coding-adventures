@@ -48,7 +48,13 @@ fn complete_headers(headers: &[(&str, TimelineDirection)]) {
                 Some("timeline TD".into()),
                 TimelineDiagram {
                     accessibility_title: Some("timeline LR".into()),
-                    accessibility_description: Some(description.into()),
+                    // Shared preprocessing blanks directive-like spans before
+                    // accessibility tokenization; keep the authored source above.
+                    accessibility_description: Some(if context == 1 {
+                        "timeline TD".into()
+                    } else {
+                        description.into()
+                    }),
                     config: if context >= 2 {
                         config(72.0, 80.0)
                     } else {
