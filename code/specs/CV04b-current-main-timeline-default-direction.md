@@ -36,12 +36,14 @@ one-period/one-event sources. At canvas width 640 and default configuration:
 | Direction | Canvas | Period (x,y,w,h) | Event (x,y,w,h) | Link |
 | --- | --- | --- | --- | --- |
 | LR/default | 640 x 296 | 206,118,190,48 | 206,184,190,30 | 301,166 -> 301,184 |
-| TD | 640 x 176 | 234,50,180,48 | 450,50,140,30 | 414,74 -> 450,65 |
+| TD | 640 x 176 | 234,50,180,48 | 450,50,160,30 | 414,74 -> 450,65 |
 
 LR's final spine is 301,106 -> 301,106. TD's leading spine is
 206,66 -> 206,90. Period/event labels are `P`/`E`. TD event width is
-`640 - 100 - 350 - 50 = 140`; do not copy an inferred width from a returned
-layout. Expected painter instructions are declared before production calls.
+`max(640 - 100 - 350 - 50, 160) = 160`; retain the existing minimum width.
+The initial spec omitted that clamp; source inspection and independent review
+corrected it before any tests or production edits. Expected painter instructions
+are declared before production calls.
 The separate TD oracle prevents accidentally making every header LR.
 
 Run meaningful focused red tests against unchanged production, then the exact
