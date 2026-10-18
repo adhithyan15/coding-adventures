@@ -51,9 +51,10 @@ Every track shares the same shape:
   book/                        authored LaTeX fragments + chapters; book.tex is projected on demand
 ```
 
-For every track, add one ranked fragment under `CHANGELOG.d/`; never
-edit or commit the rendered `CHANGELOG.md`. The document-shard check rejects
-missing, malformed, linked, case-fold-colliding, or resurrected owners.
+For every direct-owner track with a `CHANGELOG.d/`, add one ranked fragment
+there; never edit or commit the rendered `CHANGELOG.md`. The document-shard
+check rejects missing, malformed, linked, case-fold-colliding, or resurrected
+owners.
 
 The machine-readable layer alongside the tracks is:
 
