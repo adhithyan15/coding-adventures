@@ -114,6 +114,15 @@ between the policy's minimum two complete mocks and the mocks whose paper,
 rubric, key, and structure evidence all pass. Missing task-shape inventories
 remain an explicit prerequisite rather than an invented zero-deficit result.
 
+The Spanish mock-stem coverage reporter is a review aid, not a pass/fail
+assessment gate. It must reject an unknown level before reading any corpus
+data, including when called from JavaScript without TypeScript's level type.
+For a supported level, it must derive taught forms from the same Spanish
+curriculum, lesson, and spine evidence as the mock audit, without loading
+unrelated language tracks. This bounded read must preserve the reporter's
+complete stem-and-option buckets and the audit's existing output; performance
+work must not suppress words or relax test timeouts.
+
 An external exam may require a separately passed component that is not itself
 one of the four universal skills—for example, TORFL's `Lexis. Grammar`
 subtest. Declare each such part in the level's optional `additionalComponents`
