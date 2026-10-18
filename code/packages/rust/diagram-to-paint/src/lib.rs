@@ -8801,7 +8801,7 @@ fn git_commit_symbol_instructions(
 
 // The family is one opaque resolver name, not a CSS fallback parser. Match
 // the source reader's existing trim-then-ASCII allowlist for forged typed input.
-// No font sizes, geometry, other temporal font roles or scalar guards change.
+// This family selection does not alter geometry or ordinary temporal roles.
 fn timeline_effective_font_family(value: &str) -> &str {
     let value = value.trim();
     if !value.is_empty() && value.chars().all(|c| c.is_ascii_alphanumeric()
@@ -8847,19 +8847,38 @@ where
     M: FontMetrics<Handle = S::Handle>,
     R: FontResolver<Handle = S::Handle>,
 {
+    // The text bridge passes sizes to the shaper as f32 at DPR1, while
+    // metrics retain f64. Admit both planned requests before any backend work.
+    // This does not validate caller line height or arbitrary backend output.
+    let timeline_sizes = diagram.timeline_config.as_ref().map(|config| {
+        let represented = |size: f64| size.is_finite() && size > 0.0
+            && (size as f32).is_finite() && (size as f32) > 0.0;
+        let label = config.font_size;
+        if !represented(label) {
+            return Err(TemporalPaintError::TimelineFontSize);
+        }
+        let title = label * 2.0;
+        if !represented(title) {
+            return Err(TemporalPaintError::TimelineTitleFontSize);
+        }
+        Ok((label, title))
+    }).transpose()?;
     let mut instructions: Vec<PaintInstruction> = Vec::new();
     let mut text_children: Vec<PositionedNode> = Vec::new();
     let lf = options.label_font.clone();
     let ls = lf.size;
     let timeline_config = diagram.timeline_config.clone().unwrap_or_default();
-    // A Timeline configuration selects only the Timeline font clones. Keep
-    // ordinary temporal/caller fonts and every numeric font attribute intact.
+    // Override only Timeline clones; retain caller style and ordinary roles.
     let mut timeline_label_font = lf.clone();
     let mut timeline_title_font = options.title_font.clone();
     if let Some(config) = &diagram.timeline_config {
         let family = timeline_effective_font_family(&config.font_family);
         timeline_label_font.family = family.into();
         timeline_title_font.family = family.into();
+    }
+    if let Some((label, title)) = timeline_sizes {
+        timeline_label_font.size = label;
+        timeline_title_font.size = title;
     }
 
     for item in &diagram.items {
@@ -9584,6 +9603,7 @@ where
         metadata.insert("timeline.padding".into(), config.padding.to_string());
         metadata.insert("timeline.leftMargin".into(), config.left_margin.to_string());
         metadata.insert("timeline.fontFamily".into(), timeline_effective_font_family(&config.font_family).into());
+        metadata.insert("timeline.fontSize".into(), config.font_size.to_string());
         metadata.insert("timeline.useMaxWidth".into(), config.use_max_width.to_string());
         metadata.insert(
             "timeline.disableMulticolor".into(),
