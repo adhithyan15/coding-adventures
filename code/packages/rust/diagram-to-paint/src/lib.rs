@@ -13679,6 +13679,7 @@ emphasized --> direct
     include!("venn_cascade_paint_contract.rs");
     include!("venn_rgba_paint_contract.rs");
     include!("venn_typography_contract.rs");
+    include!("venn_normal_paint_contract.rs");
     include!("ishikawa_theme_contract.rs");
     include!("ishikawa_default_fallback_contract.rs");
     include!("ishikawa_box_labels_contract.rs");
