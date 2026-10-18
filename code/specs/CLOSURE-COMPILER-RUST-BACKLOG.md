@@ -11,6 +11,22 @@ actual-merge gates. Full parity/lineage/output-byte-source joins remain OPEN.
 Miri DEFERRED/PENDING, never passed; frozen run/inputs/target/receipts untouched.
 <!-- Closure current concise checkpoint end -->
 
+## Selected next: normal Venn text cell centers
+
+CLOC41 progress is published at `fbb2bd93fc935025548fc21decbef55785c77a6a`
+on sole PR17288. Actual source execution remains `fa8b81c2` (3277P/41I;
+strict/source/terminal PASS); the later six-MD carrier and three documentation
+gates passed without Rust re-execution. The PR is still conflicting/unmerged,
+auto-merge OFF, with zero hosted checks in the latest audit.
+
+Next contract: [normal Venn cell centers](CV04b-current-main-venn-normal-cell-centers.md).
+Reconcile only attached-text grid positions/order through the owned structural
+group index and checked layout. Preserve all old debug geometry, typed errors,
+whole Scene/query/corpus controls and portable dependencies. The contract and
+independent preflights are preparatory: no new Rust implementation, test run,
+current-main acceptance or merge is claimed. Incoming native33/34 and other
+main overlaps remain separately OPEN; do not cap-chase. Miri DEFERRED/PENDING.
+
 ## Historical checkpoint material, including the native32 carrier below
 
 
