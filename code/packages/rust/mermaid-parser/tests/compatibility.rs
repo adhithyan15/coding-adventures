@@ -3304,3 +3304,41 @@ fn zenuml_parses_nested_sync_calls_controls_returns_and_creation() {
         event, diagram_ir::SequenceEvent::Message { label, .. } if label == "return X"
     )));
 }
+
+#[test]
+fn zenuml_lowers_reply_forms_comments_and_control_branches() {
+    let diagram = parse_zenuml(
+        "zenuml\nClient->A.method() {\n  // lookup result\n  SomeType result = B.lookup()\n  if(ok) {\n    return result\n  } else {\n    @reply\n    A->Client: fallback\n  }\n}\ntry {\n  A->B: work\n} catch {\n  B->A: failed\n} finally {\n  A->B: cleanup\n}",
+    ).expect("ZenUML replies and branches should parse");
+
+    assert!(diagram.events.iter().any(|event| matches!(
+        event,
+        diagram_ir::SequenceEvent::Note { text, .. } if text == "lookup result"
+    )));
+    assert!(diagram.events.iter().any(|event| matches!(
+        event,
+        diagram_ir::SequenceEvent::Message {
+            from,
+            to,
+            label,
+            line_style: diagram_ir::SequenceLineStyle::Dotted,
+            ..
+        } if from == "B" && to == "A" && label == "SomeType result"
+    )));
+    assert!(diagram.events.iter().any(|event| matches!(
+        event,
+        diagram_ir::SequenceEvent::Message {
+            from,
+            to,
+            label,
+            line_style: diagram_ir::SequenceLineStyle::Dotted,
+            ..
+        } if from == "A" && to == "Client" && label == "fallback"
+    )));
+    assert_eq!(diagram.events.iter().filter(|event| matches!(
+        event, diagram_ir::SequenceEvent::BlockBranch { .. }
+    )).count(), 3);
+    assert_eq!(diagram.events.iter().filter(|event| matches!(
+        event, diagram_ir::SequenceEvent::BlockEnd { .. }
+    )).count(), 2);
+}

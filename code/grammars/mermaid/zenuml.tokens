@@ -7,10 +7,11 @@ HEADER = /[ \t]*zenuml[ \t]*/
 TITLE_LINE = /[ \t]*title[ \t]+[^\r\n]+/
 MESSAGE_LINE = /[ \t]*[A-Za-z_][A-Za-z0-9_.]*[ \t]*->[ \t]*[A-Za-z_][A-Za-z0-9_.]*[ \t]*:[^\r\n]*/
 ANNOTATED_PARTICIPANT_LINE = /[ \t]*@(?:Actor|Database)[ \t]+[A-Za-z_][A-Za-z0-9_.]*[ \t]*/
+REPLY_ANNOTATOR_LINE = /[ \t]*@(?:return|reply)[ \t]*/
 ALIAS_LINE = /[ \t]*[A-Za-z_][A-Za-z0-9_.]*[ \t]+as[ \t]+[^\r\n]+/
 CONTROL_LINE = /[ \t]*(?:if|while|for|forEach|foreach|loop|opt|par|try|catch|finally)(?:[ \t]*\([^\r\n{}]*\))?[ \t]*\{[ \t]*/
-SYNC_LINE = /[ \t]*(?:[A-Za-z_][A-Za-z0-9_.]*[ \t]+)?[A-Za-z_][A-Za-z0-9_.]*\([^\r\n{}]*\)[ \t]*(?:\{[^\r\n}]*\}|\{)?[ \t]*/
+SYNC_LINE = /[ \t]*(?:(?:[A-Za-z_][A-Za-z0-9_.]*[ \t]+)?[A-Za-z_][A-Za-z0-9_.]*[ \t]*=[ \t]*)?(?:[A-Za-z_][A-Za-z0-9_.]*[ \t]*->[ \t]*)?(?:[A-Za-z_][A-Za-z0-9_]*(?:\.[A-Za-z_][A-Za-z0-9_]*)+(?:\([^\r\n{}]*\))?|[A-Za-z_][A-Za-z0-9_]*\([^\r\n{}]*\))[ \t]*(?:\{[^\r\n}]*\}|\{)?[ \t]*/
 RETURN_LINE = /[ \t]*(?:@return[ \t]*)?return(?:[ \t]+[^\r\n{}]+)?[ \t]*/
 CREATION_LINE = /[ \t]*new[ \t]+[A-Za-z_][A-Za-z0-9_.]*(?:\([^\r\n{}]*\))?[ \t]*/
-BRACE_LINE = /[ \t]*\}[ \t]*(?:else(?:[ \t]+if[ \t]*\([^\r\n{}]*\))?[ \t]*\{)?[ \t]*/
+BRACE_LINE = /[ \t]*\}[ \t]*(?:(?:else(?:[ \t]+if[ \t]*\([^\r\n{}]*\))?|catch|finally)[ \t]*\{)?[ \t]*/
 PARTICIPANT_LINE = /[ \t]*[A-Za-z_][A-Za-z0-9_.]*[ \t]*/

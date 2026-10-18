@@ -4855,7 +4855,7 @@ line "Target" [35, 50, 68, 82]"##,
 
     #[test]
     fn render_mermaid_zenuml_to_png() {
-        let diagram = parse_zenuml("zenuml\ntitle Native ZenUML\nA.method() {\n  if(x) {\n    B.method() {\n      selfCall() { return X }\n    }\n  }\n}").expect("zenuml parse failed");
+        let diagram = parse_zenuml("zenuml\ntitle Native ZenUML\nClient->A.method() {\n  // typed lookup result\n  SomeType result = B.lookup()\n  if(ok) {\n    return result\n  } else {\n    @reply\n    A->Client: fallback\n  }\n}").expect("zenuml parse failed");
         let layout = layout_sequence_diagram(&diagram);
         let shaper = CoreTextShaper; let metrics = CoreTextMetrics; let resolver = CoreTextResolver::new();
         let scene = diagram_to_paint_sequence(&layout, &DiagramToPaintOptions {

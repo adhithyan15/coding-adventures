@@ -37,6 +37,26 @@
       "name": "creation message",
       "compatible": true,
       "source": "zenuml\nnew A1"
+    },
+    {
+      "name": "reply assignments and annotator",
+      "compatible": true,
+      "source": "zenuml\nClient->A.SyncMessage() {\n  a = B.lookup()\n  SomeType result = B.compute()\n  @return\n  A->Client: result\n}"
+    },
+    {
+      "name": "if else-if else branches",
+      "compatible": true,
+      "source": "zenuml\nif(condition1) {\n  A->B: one\n} else if(condition2) {\n  A->B: two\n} else {\n  A->B: three\n}"
+    },
+    {
+      "name": "try catch finally branches",
+      "compatible": true,
+      "source": "zenuml\ntry {\n  Consumer->API: Book\n} catch {\n  API->Consumer: failure\n} finally {\n  API->Service: rollback\n}"
+    },
+    {
+      "name": "comments above messages",
+      "compatible": true,
+      "source": "zenuml\nA\n// **Markdown** comment\nA.method()"
     }
   ]
 }
