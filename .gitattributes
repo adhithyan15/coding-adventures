@@ -32,6 +32,7 @@ code/learning/human-languages/latin/CHANGELOG.d/*.md whitespace=-blank-at-eof
 code/learning/human-languages/persian/CHANGELOG.d/*.md whitespace=-blank-at-eof
 code/learning/human-languages/portuguese/CHANGELOG.d/*.md whitespace=-blank-at-eof
 code/learning/human-languages/russian/CHANGELOG.d/*.md whitespace=-blank-at-eof
+code/learning/human-languages/spanish/CHANGELOG.d/*.md whitespace=-blank-at-eof
 code/packages/typescript/human-language-data/CHANGELOG.d/*.md whitespace=-blank-at-eof
 code/packages/typescript/script-ductus/CHANGELOG.d/*.md whitespace=-blank-at-eof
 code/programs/typescript/language-ladder/CHANGELOG.d/*.md whitespace=-blank-at-eof
