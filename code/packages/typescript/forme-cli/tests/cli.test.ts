@@ -126,6 +126,17 @@ function successfulResult(): RunResult {
 }
 
 describe("argument and diagnostic contracts", () => {
+  it("ASCII-escapes config-derived status output", async () => {
+    const io = makeIO();
+    const loaded = config({ name: "safe\u001b]8;;https://evil.example\u0007\n\u202e" });
+    expect(await run(["check"], io, {}, services(loaded))).toBe(EXIT_OK);
+    expect(io.stdoutText).not.toContain("\u001b");
+    expect(io.stdoutText).not.toContain("\u0007");
+    expect(io.stdoutText).not.toContain("\u202e");
+    expect(io.stdoutText.split("\n")).toHaveLength(2);
+    expect(io.stdoutText).toContain("\\u{1b}");
+  });
+
   it("prints help and version with stable success exits", async () => {
     const help = makeIO();
     expect(await run([], help)).toBe(EXIT_OK);
@@ -685,7 +696,7 @@ describe("installed-project shape", () => {
     await execFileAsync("mkfifo", [fifo]);
 
     for (const path of [linked, hardlinked, fifo]) {
-      const io = makeIO();
+      const io = makeIO(root, new Set([path]));
       expect(await run(["check", "--config", path], io)).toBe(EXIT_USAGE_OR_CONFIG);
       expect(io.stderrText).toMatch(/regular|link|identity/i);
     }
@@ -696,7 +707,7 @@ describe("installed-project shape", () => {
     roots.push(root);
     const path = join(root, "forme.config.toml");
     await writeFile(path, '"bad\\u001b\\n\\u202e" = true\n', "utf8");
-    const io = makeIO();
+    const io = makeIO(root, new Set([path]));
     expect(await run(["check", "--config", path], io)).toBe(EXIT_USAGE_OR_CONFIG);
     expect(io.stderrText).not.toContain("\u001b");
     expect(io.stderrText).not.toContain("\u202e");

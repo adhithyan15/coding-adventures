@@ -166,6 +166,11 @@ raw\\ntext''' }
     [String.raw`name = "bad\uD800"`, /invalid Unicode scalar/i],
     [String.raw`name = "bad\u12xz"`, /invalid TOML|invalid.*escape/i],
     ['name = "unsafe"\nvalue = 9007199254740992', /safe integer/i],
+    ['name = "unsafe"\nvalue = 2025-02-29', /invalid calendar date/i],
+    ['name = "unsafe"\nvalue = 24:00:00', /invalid clock time/i],
+    ['name = "unsafe"\nvalue = 2024-01-01T00:00:00+24:00', /invalid UTC offset/i],
+    [`name = "${"\ud800"}"`, /invalid Unicode scalar/i],
+    [`name = "raw${"\u0001"}control"`, /control|invalid TOML/i],
     ['name = "deadline"\n[settings]\nstorage-root = "."\ncache-dir = "cache"\nreproducible-build = false\nlog-level = "info"\nbest-effort = false\ndeadline-ms = 0\n[[stages]]\nstage = "@example/source"', /deadline-ms.*positive finite/i],
   ])("rejects invalid scalar values", (source, message) => {
     expect(() => parseTomlConfig(source)).toThrow(message);
@@ -278,6 +283,10 @@ from = { id = "a" }`, /wires\[0\]\.to.*table/i],
       .toThrow(/nesting.*64/i);
     expect(() => parseTomlConfig(`name = "many"\nvalues = [${Array.from({ length: 4097 }, () => "0").join(",")}]`))
       .toThrow(/collection.*4096/i);
+  });
+
+  it("rejects overlong UTF-16 input before allocating its UTF-8 encoding", () => {
+    expect(() => parseTomlConfig("\ud83d\ude00".repeat(524_289))).toThrow(/source.*1048576/i);
   });
 
   it("rejects non-finite values before they enter stage configuration", () => {
