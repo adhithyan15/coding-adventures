@@ -3870,12 +3870,12 @@ pub fn parse_timeline(source: &str) -> Result<(Option<String>, TimelineDiagram),
     let mut title = None;
     let mut accessibility_title = None;
     let mut accessibility_description = None;
-    let mut direction = TimelineDirection::TopDown;
+    let mut direction = TimelineDirection::LeftRight;
     let mut sections = Vec::<TimelineSection>::new();
     for token in tokens {
         match token.type_name.as_deref() {
-            Some("HEADER_LR") => direction = TimelineDirection::LeftRight,
-            Some("HEADER_TD" | "HEADER") => direction = TimelineDirection::TopDown,
+            Some("HEADER_LR" | "HEADER") => direction = TimelineDirection::LeftRight,
+            Some("HEADER_TD") => direction = TimelineDirection::TopDown,
             Some("TITLE_STATEMENT") => {
                 title = Some(normalize_mermaid_line_breaks(token.value["title".len()..].trim()));
             }

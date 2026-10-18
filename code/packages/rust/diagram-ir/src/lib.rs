@@ -2496,8 +2496,8 @@ pub enum TemporalKind {
 
 #[derive(Clone, Copy, Debug, Default, PartialEq)]
 pub enum TimelineDirection {
-    #[default]
     TopDown,
+    #[default]
     LeftRight,
 }
 
