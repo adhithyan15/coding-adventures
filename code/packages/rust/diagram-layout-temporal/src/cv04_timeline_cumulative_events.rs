@@ -286,3 +286,80 @@ fn rounded_cursor_span_keeps_complete_large_coordinate_product() {
     );
     println!("timeline-cumulative-rounded COMPLETE exponent=54");
 }
+
+#[test]
+fn fractional_lr_origin_distinguishes_each_cumulative_event_position() {
+    let mut cfg = config(16.01);
+    cfg.padding = 0.0;
+    let input = TemporalDiagram {
+        kind: TemporalKind::Timeline,
+        title: None,
+        body: TemporalBody::Timeline(TimelineDiagram {
+            accessibility_title: Some("LR cursor".into()),
+            accessibility_description: None,
+            config: cfg.clone(),
+            direction: TimelineDirection::LeftRight,
+            sections: vec![TimelineSection {
+                label: None,
+                periods: vec![TimelinePeriod {
+                    label: "P".into(),
+                    events: vec!["E0".into(), "E1".into(), "E2".into(), "E3".into()],
+                }],
+            }],
+        }),
+    };
+    let mut items = vec![LayoutedTemporalItem::TimelinePeriod {
+        x: 156.0,
+        y: 68.0,
+        width: 190.0,
+        height: 48.03,
+        label: "P".into(),
+        events: Vec::new(),
+        color_index: 0,
+    }];
+    // The indexed alternative gives210.0675 and248.08625 for E2/E3.
+    // These are independent literals, not values read from the actual layout.
+    for (label, y) in [
+        ("E0", 134.03),
+        ("E1", 172.04875),
+        ("E2", 210.06750000000002),
+        ("E3", 248.08625000000004),
+    ] {
+        items.push(LayoutedTemporalItem::TimelineEventLink {
+            x1: 251.0,
+            y1: 116.03,
+            x2: 251.0,
+            y2: y,
+            color_index: 0,
+        });
+        items.push(LayoutedTemporalItem::TimelineEvent {
+            x: 156.0,
+            y,
+            width: 190.0,
+            height: 30.018750000000004,
+            label: label.into(),
+            color_index: 0,
+        });
+    }
+    items.push(LayoutedTemporalItem::TimelineSpine {
+        x1: 251.0,
+        y1: 56.0,
+        x2: 251.0,
+        y2: 56.0,
+    });
+    let expected = LayoutedTemporalDiagram {
+        width: 640.0,
+        height: 310.1050000000001,
+        accessibility_title: Some("LR cursor".into()),
+        accessibility_description: None,
+        timeline_config: Some(cfg),
+        interactions: Vec::new(),
+        items,
+    };
+    assert_eq!(
+        try_layout_temporal_diagram(&input, 640.0),
+        Ok(expected.clone())
+    );
+    assert_eq!(layout_temporal_diagram(&input, 640.0), expected);
+    println!("timeline-cumulative-lr-origin COMPLETE padding=0:size=16.01");
+}
