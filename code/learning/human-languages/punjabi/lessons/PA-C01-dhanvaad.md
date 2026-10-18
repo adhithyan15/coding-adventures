@@ -12,6 +12,7 @@ concept_tag: COURTESY-THANKS
 prerequisites: [PA-W01-haan-dictation]
 sounds: []
 roots: [dhanya, vada]
+etymology_hook: "dhannavād: Sanskrit dhanya 'fortunate, blessed' + vāda 'a saying', from vad 'to speak'"
 duration:
   max_seconds: 150
 requires:

@@ -14,7 +14,8 @@ romanization: "mez"
 concept_tag: PA-HOME68-MEZ
 prerequisites: [PA-C67-khirki, PA-C67-kursi]
 sounds: []
-roots: []
+roots: [persian-mez]
+etymology_hook: "mez: usually traced to Persian mēz 'table'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C67-kursi]
 <!-- hl-knowledge: introduces=[PA-LEX-C68-HOME68-01]; assesses=[] -->
 
 **ਮੇਜ਼** — *mez* — "a table".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਮੇਜ਼** (*mez*) is a loan, usually traced to Persian *mēz*, "table". Many take the Persian word from Portuguese *mesa*, "table".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

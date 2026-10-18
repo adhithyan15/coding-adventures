@@ -1,0 +1,10 @@
+{
+  "id": "SA-EXT-264-FUT264",
+  "stage": "A2",
+  "kind": "required",
+  "category": "grammar",
+  "canDo": "I can make a near-term first-person plan with three complete future forms.",
+  "prerequisites": [
+    "SA-EXT-263-FUT263"
+  ]
+}

@@ -14,7 +14,8 @@ romanization: "nāch"
 concept_tag: UR-CHIZ169-NACH
 prerequisites: [UR-C168-futbal, UR-C169-bansuri]
 sounds: []
-roots: []
+roots: [sanskrit-nrtya]
+etymology_hook: "nāch ← Sanskrit nṛtya 'dancing', a tadbhava (CDIAL 7582)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C169-bansuri]
 <!-- hl-knowledge: introduces=[UR-LEX-C169-CHIZ169-02]; assesses=[] -->
 
 **ناچ** — *nāch* — "a dance".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ناچ** (*nāch*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *nṛtya*, "dancing" (CDIAL 7582). It is built on *nṛt-*, "to dance", the root of *nāchnā*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

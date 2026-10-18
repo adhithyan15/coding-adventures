@@ -14,7 +14,8 @@ romanization: "sāhôsi"
 concept_tag: BN-QUAL138-SAHOSI
 prerequisites: [BN-C138-boka, BN-C138-doyalu]
 sounds: []
-roots: []
+roots: [sanskrit-sahasin]
+etymology_hook: "sāhôsi ← Sanskrit sāhasin 'bold', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C138-doyalu]
 <!-- hl-knowledge: introduces=[BN-LEX-C138-QUAL138-05]; assesses=[] -->
 
 **সাহসী** — *sāhôsi* — "brave".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**সাহসী** (*sāhôsi*) is Sanskrit *sāhasin*, "bold", taken over whole as a learned loan, a tatsama.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

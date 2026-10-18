@@ -14,7 +14,8 @@ romanization: "pattanam"
 concept_tag: SA-THG195-PATTANAM
 prerequisites: [SA-C194-gosthi, SA-C194-melakah]
 sounds: []
-roots: []
+roots: [sanskrit-pattana]
+etymology_hook: "pattana 'town': origin disputed, Dravidian loan or *partana 'ferry' (CDIAL 7705); Hindi pāṭan"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C194-melakah]
 <!-- hl-knowledge: introduces=[SA-LEX-C195-THG195-01]; assesses=[] -->
 
 **पत्तनम्** — *pattanam* — "a port town".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of *pattana* is disputed. CDIAL 7705 reports that it is probably borrowed from Dravidian, but notes that its sense "ferry" in several modern languages supports a native *\*partana-*, related to Latin *portus*, "harbour"; the two may have merged. It lives on as Hindi *pāṭan*, "town".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

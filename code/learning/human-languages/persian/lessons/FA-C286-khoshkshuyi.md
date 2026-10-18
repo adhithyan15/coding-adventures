@@ -14,7 +14,8 @@ romanization: "khoshkshuyi"
 concept_tag: FA-KAR286-KHOSHKSHUYI
 prerequisites: [FA-C285-engelisi, FA-C285-hendese]
 sounds: []
-roots: []
+roots: [persian-khushk]
+etymology_hook: "khoshkshuyi: Persian khoshk 'dry' + shu 'washing' + -i; inherited"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C285-hendese]
 <!-- hl-knowledge: introduces=[FA-LEX-C286-KAR286-01]; assesses=[] -->
 
 **خشکشویی** — *khoshkshuyi* — "a dry cleaner's".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*khoshkshuyi* is built from *khoshk*, "dry", *shu*, "washing", and *-i*: the dry-washing shop. *khoshk* is inherited, usually traced to Middle Persian *xušk*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

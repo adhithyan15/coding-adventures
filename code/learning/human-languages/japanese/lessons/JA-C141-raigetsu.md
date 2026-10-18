@@ -14,7 +14,8 @@ romanization: "raigetsu"
 concept_tag: JA-FUT141-RAIGETSU
 prerequisites: [JA-C141-raishuu, JA-C140-sengetsu, JA-C137-perapera, JA-C132-kore]
 sounds: []
-roots: []
+roots: [middle-chinese-loj, middle-chinese-ngjwot]
+etymology_hook: "raigetsu: Sino-Japanese 来 'come' + 月 'moon', on'yomi borrowed from Chinese"
 duration:
   max_seconds: 200
 requires:
@@ -51,6 +52,11 @@ same as in **らいしゅう**: "the one coming".
 
 > **らいげつ うみに いきます。** — *raigetsu umi ni ikimasu* — "I will go
 > to the sea next month."
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**らいげつ** (*raigetsu*) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are *rai*, "come, coming" (Middle Chinese *loj*) and *getsu*, "moon, month" (*ngjwot*) (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-C141-RAIGETSU, JA-LEX-C141-RAISHUU] -->

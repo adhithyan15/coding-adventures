@@ -14,7 +14,8 @@ romanization: "ʿāmil"
 concept_tag: AR-AMAL189-AMIL
 prerequisites: [AR-C189-muhasib, AR-C189-suhufi]
 sounds: []
-roots: []
+roots: [ʿ-m-l]
+etymology_hook: "ʿāmil: built on the root ʿ-m-l, 'to work' (Lane); ʿāmil is the active participle, 'one who works'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C189-suhufi]
 <!-- hl-knowledge: introduces=[AR-LEX-C189-AMAL189-03]; assesses=[] -->
 
 **عامل** — *ʿāmil* — "a worker".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**عامل** (*ʿāmil*) is built on the native Arabic root *ʿ-m-l*, "to work" (Lane). *ʿĀmil* is the active participle, "one who works".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

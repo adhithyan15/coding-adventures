@@ -12,9 +12,9 @@ concept_tag: BN-GRAM-OBJECT-KE
 prerequisites: [BN-R24-all-of-us, BN-C22-animacy, BN-C11-bhai, BN-C11-bondhu]
 sounds: []
 roots: []
-etymology_hook: "Bengali marks a person who is acted upon and leaves a thing unmarked, which is the same instinct behind the animacy split that chose its plurals. Spanish does the identical job with the little a in vi a Juan, and for the identical reason."
+etymology_hook: "-ke: origin not settled; CDIAL ties some postpositions to kakṣa 'side' but not -ke (CDIAL 2588)"
 duration:
-  max_seconds: 250
+  max_seconds: 265
 requires:
   knowledge: [BN-GRAMMAR-C22-ANIMACY-01, BN-GRAMMAR-C24-AMADER-01, BN-LEX-C11-BHAI-01, BN-LEX-C11-BONDHU-01]
 introduces:
@@ -59,6 +59,11 @@ people — and not on things:
 
 The animacy split you learned three chapters ago is doing this too. That one
 question keeps paying.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **কে** is not settled. Under *kakṣa*, "side", CDIAL lists Old Bengali *kakhu*, "to, for", and says some postpositions probably grew from that sense (CDIAL 2588), but not **কে**.
 
 ## Grammar Lens: the same slot, still one at a time
 <!-- hl-knowledge: introduces=[]; assesses=[BN-GRAMMAR-C25-OBJECT-KE-01, BN-GRAMMAR-C23-TAR-01, BN-GRAMMAR-C24-AMADER-01, BN-GRAMMAR-C20-CLASSIFIER-01] -->

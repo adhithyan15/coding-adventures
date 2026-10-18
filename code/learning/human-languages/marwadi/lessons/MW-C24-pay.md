@@ -11,8 +11,8 @@ gloss: take the money, written from one old word and one sign carrying two vowel
 concept_tag: MW-SHOPPING-PAY-WRITTEN
 prerequisites: [MW-C24-hear-pay]
 sounds: [unaspirated-p, open-ai, dental-l, long-e, long-o]
-roots: []
-etymology_hook: The same letter twice in a row, wearing a different vowel each time.
+roots: [sanskrit-labhate, indo-aryan-padamsha]
+etymology_hook: "paisā le lo: paisā ← *padāṃśa (CDIAL 7761); le, lo ← labhate 'takes' (CDIAL 10948)"
 duration:
   max_seconds: 195
 requires:
@@ -48,6 +48,11 @@ The same **ल** stands twice in a row, once with **े** and once with **ो**.
 [YOU READ: the pair slowly and watch only the mark]
 
 It is the mark, not the letter, that tells the two words apart.
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**पैसा ले लो** (*paisā le lo*) joins words with their own lessons: *paisā*, "money", from *\*padāṃśa*, "quarter part" (CDIAL 7761); and *le* and *lo*, two forms of the verb "to take", which CDIAL lists as Old Marwari *lei* under Sanskrit *labhate*, "takes" (CDIAL 10948).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-PAY-01, MW-SCRIPT-E-MATRA-01, MW-SCRIPT-O-MATRA-01] -->

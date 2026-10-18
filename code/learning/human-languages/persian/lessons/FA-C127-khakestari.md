@@ -14,7 +14,8 @@ romanization: "khâkestari"
 concept_tag: FA-QUAL127-KHAKESTARI
 prerequisites: [FA-C127-shur, FA-C127-banafsh]
 sounds: []
-roots: []
+roots: [persian-khak]
+etymology_hook: "khâkestari: Persian khâkestar 'ash' (built on khâk, EtymDB) + -i"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C127-banafsh]
 <!-- hl-knowledge: introduces=[FA-LEX-C127-QUAL127-05]; assesses=[] -->
 
 **خاکستری** — *khâkestari* — "grey".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*khâkestari* is *khâkestar*, "ash", with the colour ending *-i*: ash-coloured. *khâkestar* is built on *khâk*, "dust, earth", inherited from Middle Persian *xāk* (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

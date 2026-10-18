@@ -14,7 +14,8 @@ romanization: "bæktigôtô"
 concept_tag: BN-GUN193-BKTIGOTO
 prerequisites: [BN-C193-majhari, BN-C193-kachher]
 sounds: []
-roots: []
+roots: [sanskrit-vyakti, sanskrit-gata]
+etymology_hook: "bæktigôtô: Sanskrit vyakti 'a person' + gata 'gone to, concerning', tatsama parts"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C193-kachher]
 <!-- hl-knowledge: introduces=[BN-LEX-C193-GUN193-04]; assesses=[] -->
 
 **ব্যক্তিগত** — *bæktigôtô* — "personal".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ব্যক্তিগত** (*bæktigôtô*) is built from Sanskrit *vyakti*, "an individual", and *gata*, "gone to, concerning", both taken over whole: "concerning the person".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

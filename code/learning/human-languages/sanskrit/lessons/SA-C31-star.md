@@ -14,7 +14,8 @@ romanization: "tārā"
 concept_tag: SA-SKY-TARA
 prerequisites: [SA-C31-moon, SA-C29-bow, SA-C30-flower]
 sounds: []
-roots: []
+roots: [sanskrit-tara]
+etymology_hook: "tārā 'star': EtymDB traces it to the root of English star and Greek astēr; CDIAL 5798 compares Vedic stṛ"
 duration:
   max_seconds: 210
 requires:
@@ -45,7 +46,7 @@ reviews_of: [SA-C31-moon]
 
 **तारा** is a star, and it is among the most travelled words in the family. English *star*, German *Stern*, Latin *stella*, Greek *astēr* — behind *astronomy* and *asterisk* and *disaster*, "a bad star" — and Persian *setāre* are all the same word, from a shape like **\*ster-**.
 
-Sanskrit dropped the *s-* at the front and kept the rest. Ends in **-आ**, like **माला** and **यात्रा**.
+Sanskrit *tārā* is usually taken to have dropped the *s-* at the front and kept the rest (EtymDB); the Rigveda still has *stṛ*, "star", with the *s-*, and MW and CDIAL 5798 compare it. Ends in **-आ**, like **माला** and **यात्रा**.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

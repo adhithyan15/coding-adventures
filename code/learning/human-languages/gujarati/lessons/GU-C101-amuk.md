@@ -14,7 +14,8 @@ romanization: "amuk"
 concept_tag: GU-DEF101-AMUK
 prerequisites: [GU-C100-potanu, GU-C100-banne]
 sounds: []
-roots: []
+roots: [sanskrit-amuka]
+etymology_hook: "amuk ← Sanskrit amuka 'such and such person', a tatsama (CDIAL 568)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C100-banne]
 <!-- hl-knowledge: introduces=[GU-LEX-C101-DEF101-01]; assesses=[] -->
 
 **અમુક** (*amuk*) — "some, certain".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**અમુક** (*amuk*) is Sanskrit *amuka*, "such and such person", taken over whole as a learned loan, a tatsama (CDIAL 568).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

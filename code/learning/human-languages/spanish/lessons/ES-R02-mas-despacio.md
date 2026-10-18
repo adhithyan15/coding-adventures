@@ -6,7 +6,7 @@ sequence: 507
 chapter: 15
 type: word
 headword: más despacio
-gloss: "more slowly" — the request that makes the last sentence solvable
+gloss: '"more slowly" — the request that makes the last sentence solvable'
 concept_tag: ES-REPAIR-MASDESPACIO
 prerequisites: [ES-R01-no-entiendo, ES-C06-por-favor]
 sounds: []

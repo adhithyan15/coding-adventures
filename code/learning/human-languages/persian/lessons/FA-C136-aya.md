@@ -15,6 +15,7 @@ concept_tag: FA-NAFY136-AYA
 prerequisites: [FA-C135-charkhidan, FA-C136-hanuz]
 sounds: []
 roots: []
+etymology_hook: "âyâ: native Persian; origin not settled"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C136-hanuz]
 <!-- hl-knowledge: introduces=[FA-LEX-C136-NAFY136-02]; assesses=[] -->
 
 **آیا** — *âyâ* — "a word that opens a yes-or-no question". It turns a statement into a question: **آیا او اینجاست** — *âyâ u injâst* — "Is he here?" In speech the rising voice alone often does the same.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*âyâ* is a native Persian question word, but no source used here gives its older form, and its origin is not settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -6,7 +6,7 @@ sequence: 795
 chapter: 43
 type: grammar
 headword: comemos
-gloss: "we eat" — and the first place -er and -ir stop agreeing
+gloss: '"we eat" — and the first place -er and -ir stop agreeing'
 concept_tag: ES-GRAMMAR-ER-IR-PRESENT-PLURAL
 prerequisites: [ES-C07-sintesis-dos-continentes]
 sounds: []

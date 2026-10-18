@@ -14,7 +14,8 @@ romanization: "daqīq"
 concept_tag: AR-SHAY273-DAQIQ
 prerequisites: [AR-C273-halwa, AR-C273-makaruna]
 sounds: []
-roots: []
+roots: [d-q-q]
+etymology_hook: "daqīq: built on the root d-q-q, 'to be fine, thin, small' (Lane); daqīq is 'fine': flour, ground fine"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C273-makaruna]
 <!-- hl-knowledge: introduces=[AR-LEX-C273-SHAY273-04]; assesses=[] -->
 
 **دقيق** — *daqīq* — "flour".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**دقيق** (*daqīq*) is built on the native Arabic root *d-q-q*, "to be fine, thin, small" (Lane). *Daqīq* is "fine": flour, ground fine.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

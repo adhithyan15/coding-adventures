@@ -4,7 +4,7 @@
   "chapter": 174,
   "title": "To give back, To decorate, To look after, To improve, To weigh",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:b31112a349c4ca2a",
+  "sourceHash": "fnv1a64:531f8a3ad6735e1f",
   "lessons": [
     {
       "id": "HI-C174-lautana",
@@ -287,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:bfd78b01fb565d92",
+      "sourceHash": "fnv1a64:97d664da654bebfc",
       "notice": null,
       "blocks": [
         {
@@ -325,7 +325,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "सँभालना (sãbhālnā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from saṁbhārayati, \"prepares, maintains\" (CDIAL 12961). It is the causing form of saṁbharati, \"brings together\"."
+              "text": "सँभालना (sãbhālnā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. CDIAL lists it in its entry for Sanskrit saṁbharati, \"brings together, prepares\" (CDIAL 12961), among a group of forms with -l- that it places under neither of its two numbered headwords. The same entry puts Hindi sãbhārnā, \"to sustain\", under the causing form saṁbhārayati, \"maintains\"."
             }
           ]
         },

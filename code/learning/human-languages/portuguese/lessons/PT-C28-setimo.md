@@ -68,6 +68,9 @@ put it." Without it a reader would say *se-TI-mo*, and the word would be wrong.
 
 *Décimo*, three lessons ahead, carries the accent for the same reason.
 
+**Sétimo** comes from Latin *septimus*, "seventh", which Latin built on
+*septem*, "seven" (EtymDB 2.1).
+
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[PT-LEX-SETIMO-02, PT-ETYMON-SETIMO-03] -->
 

@@ -14,7 +14,8 @@ romanization: "kojâ"
 concept_tag: FA-DEF85-KOJA
 prerequisites: [FA-C84-khod, FA-C85-kodam]
 sounds: []
-roots: []
+roots: [persian-ja]
+etymology_hook: "kojâ: Persian ko 'where' (Middle Persian kū) + jâ 'place'; native"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C85-kodam]
 <!-- hl-knowledge: introduces=[FA-LEX-C85-DEF85-02]; assesses=[] -->
 
 **کجا** — *kojâ* — "where?".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*kojâ* is *ko*, "where", with *jâ*, "place": "what place". Both are native Persian; *ko* is usually traced to Middle Persian *kū*, "where".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

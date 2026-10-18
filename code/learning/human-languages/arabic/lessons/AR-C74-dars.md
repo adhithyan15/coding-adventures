@@ -14,7 +14,8 @@ romanization: "dars"
 concept_tag: AR-SCHOOL74-DARS
 prerequisites: [AR-C74-mal, AR-C74-kharita]
 sounds: []
-roots: []
+roots: [d-r-s]
+etymology_hook: "dars: built on the root d-r-s, 'to become effaced' (Lane); Lane gives dars as a lecture, a lesson"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C74-kharita]
 <!-- hl-knowledge: introduces=[AR-LEX-C74-SCHOOL74-04]; assesses=[] -->
 
 **درس** — *dars* — "a lesson".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**درس** (*dars*) is built on the native Arabic root *d-r-s*, "to become effaced; to study" (Lane). Lane gives *dars* as a lecture, a lesson.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

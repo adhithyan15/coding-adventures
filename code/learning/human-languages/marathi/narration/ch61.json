@@ -4,7 +4,7 @@
   "chapter": 61,
   "title": "The Rest Are Built",
   "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:eb4cf2dc1c7a6606",
+  "sourceHash": "fnv1a64:ac5efcb85bb6331c",
   "lessons": [
     {
       "id": "MR-C61-sahava",
@@ -638,7 +638,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f48135725b9e5db6",
+      "sourceHash": "fnv1a64:b84b89d49b95f70e",
       "notice": null,
       "blocks": [
         {

@@ -4,7 +4,7 @@
   "chapter": 1,
   "title": "Greetings and responses",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:72b92c995f76c4b5",
+  "sourceHash": "fnv1a64:5eedba6be5ea9375",
   "lessons": [
     {
       "id": "UR-C01-salam",
@@ -379,7 +379,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:db83c4e6e472f161",
+      "sourceHash": "fnv1a64:f23dcd51c50cca88",
       "notice": null,
       "blocks": [
         {
@@ -437,6 +437,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The phrase, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "جی ہاں (jī hā̃) joins two inherited words. jī is Sanskrit jīva, \"long live!\", the command form of jīvati, \"lives\" (CDIAL 5240). hā̃ comes from Sanskrit ām, \"yes\", with an h- that CDIAL calls emphatic or taken from the verb \"to be\" (CDIAL 1235)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "grammar",
           "title": "Grammar Lens: respect inside “yes”",
           "segments": [
@@ -447,7 +458,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -462,7 +473,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -627,7 +638,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:41207b2b5549fba5",
+      "sourceHash": "fnv1a64:b7eb03f60ab47b37",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -693,6 +704,17 @@
         },
         {
           "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "نہیں (nahī̃) is a tadbhava, a word inherited and reshaped by sound change. It comes from Sanskrit nahi, \"surely not\", built from na, \"not\", and hi, \"surely\" (CDIAL 7035)."
+            }
+          ]
+        },
+        {
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -707,7 +729,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "guided-production",
           "title": "Guided Practice — say it back",
           "segments": [
@@ -722,7 +744,7 @@
           ]
         },
         {
-          "index": 5,
+          "index": 6,
           "type": "script",
           "title": "Script — the chapter's shapes, from memory",
           "segments": [
@@ -759,7 +781,7 @@
           ]
         },
         {
-          "index": 6,
+          "index": 7,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

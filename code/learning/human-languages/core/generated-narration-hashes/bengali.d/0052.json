@@ -1,7 +1,7 @@
 {
   "language": "bengali",
   "chapter": 52,
-  "sourceHash": "fnv1a64:3744370c1f5d46bf",
+  "sourceHash": "fnv1a64:bba84c8fcd9fe241",
   "lessonIds": [
     "BN-C52-dhora",
     "BN-C52-kata",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "bengali/narration/ch52.txt",
   "json": "bengali/narration/ch52.json",
-  "textHash": "fnv1a64:05c8c4aceba20e8e",
-  "jsonHash": "fnv1a64:214dde998b69623a",
+  "textHash": "fnv1a64:213e6b78c4278e0d",
+  "jsonHash": "fnv1a64:bf6b1bb0dc59cd67",
   "findings": []
 }

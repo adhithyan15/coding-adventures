@@ -14,7 +14,8 @@ romanization: "tanomoshii"
 concept_tag: JA-QUAL129-TANOMOSHII
 prerequisites: [JA-C129-yakamashii, JA-C129-atsukamashii]
 sounds: []
-roots: []
+roots: [japanese-tanomu]
+etymology_hook: "tanomoshii: native, on tanomu 'to rely on' + -shii"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C129-atsukamashii]
 <!-- hl-knowledge: introduces=[JA-LEX-C129-QUAL129-05]; assesses=[] -->
 
 **たのもしい** — *tanomoshii* — "reliable".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**たのもしい** (*tanomoshii*) is native, built on *tanomu*, "to rely on", with the adjective ending *-shii*: "to be relied on" (JMdict). It is inherited rather than borrowed.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "ʿarīḍ"
 concept_tag: AR-QUAL150-ARID
 prerequisites: [AR-C150-munkhafid, AR-C150-murtafi]
 sounds: []
-roots: []
+roots: [ʿ-r-ḍ]
+etymology_hook: "ʿarīḍ: built on the root ʿ-r-ḍ, 'to be broad' (Lane); ʿarīḍ is the faʿīl adjective, 'broad'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C150-murtafi]
 <!-- hl-knowledge: introduces=[AR-LEX-C150-QUAL150-04]; assesses=[] -->
 
 **عريض** — *ʿarīḍ* — "wide".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**عريض** (*ʿarīḍ*) is built on the native Arabic root *ʿ-r-ḍ*, "to be broad" (Lane). *ʿArīḍ* is the *faʿīl* adjective, "broad".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

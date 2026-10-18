@@ -11,8 +11,8 @@ gloss: very, written from the gha of ghar and the retroflex n of paani
 concept_tag: MW-DEGREE-VERY-WRITTEN
 prerequisites: [MW-C23-hear-ghano]
 sounds: [aspirated-gh, retroflex-n, long-o]
-roots: []
-etymology_hook: Three signs, all old, and two of them come from the first words this track ever taught.
+roots: [sanskrit-ghana]
+etymology_hook: "ghaṇo ← Sanskrit ghana 'compact, firm, dense', a tadbhava (CDIAL 4424, Marwari row)"
 duration:
   max_seconds: 170
 requires:
@@ -47,6 +47,11 @@ reviews_of: [MW-C23-hear-ghano, MW-W10-gha, MW-C10-ghar, MW-C18-ghee, MW-C22-kit
 Three signs, none of them new. Write **घर**, **घी**, and **घणो** one under the
 other: the same **घ** opens all three. Then write **कितणो** beside **घणो** and
 check the **णो** at the end is drawn the same way in both.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**घणो** (*ghaṇo*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *ghana*, "compact, firm, dense". CDIAL lists Marwari *ghaṇo* under it (CDIAL 4424). The sense moved from "dense" to "much" and "very".
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-GHANO-01] -->

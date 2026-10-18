@@ -14,7 +14,8 @@ romanization: "ā̃kh"
 concept_tag: MW-BODY46-AKH
 prerequisites: [MW-C46-pith, MW-C46-jibh]
 sounds: []
-roots: []
+roots: [sanskrit-akshi]
+etymology_hook: "ā̃kh ← Sanskrit akṣi 'eye', a tadbhava (CDIAL 43, Old Marwari row)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C46-jibh]
 <!-- hl-knowledge: introduces=[MW-LEX-C46-BODY46-03]; assesses=[] -->
 
 **आंख** — *ā̃kh* — "an eye".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**आंख** (*ā̃kh*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *akṣi*, "eye". CDIAL lists Old Marwari *ākhi* under it (CDIAL 43). English *eye* and Latin *oculus* are the same ancient word.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

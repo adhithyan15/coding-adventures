@@ -4,7 +4,7 @@
   "chapter": 121,
   "title": "Rolling board, Wide platter, Bowl, Tongs, Lock",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:a05ff8dfb4231a01",
+  "sourceHash": "fnv1a64:22b84f80b25a16aa",
   "lessons": [
     {
       "id": "MW-C121-chaklo",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5bd85208315d0382",
+      "sourceHash": "fnv1a64:18742950e09f9fbe",
       "notice": null,
       "blocks": [
         {
@@ -52,6 +52,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "चकलो (chaklo) is a tadbhava, a word inherited and reshaped by sound change. It comes from cakrala, \"circular\", a form CDIAL reconstructs from its descendants. CDIAL gives no Marwari form in this entry (CDIAL 4548); the match is through Hindi caklā. It is built on cakra, \"wheel\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -62,7 +73,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -111,7 +122,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -161,7 +172,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e1a97f6b96ffff5c",
+      "sourceHash": "fnv1a64:00d820004631b151",
       "notice": null,
       "blocks": [
         {
@@ -194,6 +205,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "परात (parāt) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from pātra, \"drinking vessel, dish\". CDIAL gives no Marwari form in this entry (CDIAL 8055); the match is through Gujarati parāt. CDIAL lists the Gujarati form under the Sanskrit word without explaining its r."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -204,7 +226,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -253,7 +275,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -303,7 +325,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:dfed7c9e4f5d42f6",
+      "sourceHash": "fnv1a64:89c831f36345d82c",
       "notice": null,
       "blocks": [
         {
@@ -336,6 +358,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "कटोरो (kaṭoro) is a tadbhava, a word inherited and reshaped by sound change. It comes from kaṭṭora, \"cup\", a form CDIAL reconstructs from its descendants. CDIAL gives no Marwari form in this entry (CDIAL 2648); the match is through Hindi kaṭorā and Gujarati kaṭoro."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -346,7 +379,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -395,7 +428,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -445,7 +478,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4c206fe7c10cd2bf",
+      "sourceHash": "fnv1a64:3ae5c7b504df294d",
       "notice": null,
       "blocks": [
         {
@@ -478,6 +511,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "चिमटो (chimṭo) is a tadbhava, a word inherited and reshaped by sound change. It comes from cimb, \"pinch\", a form CDIAL reconstructs from its descendants. CDIAL gives no Marwari form in this entry (CDIAL 4822); the match is through Hindi cimṭā and Gujarati cimṭo."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -488,7 +532,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -537,7 +581,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -587,7 +631,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9e2b290f6046e6f7",
+      "sourceHash": "fnv1a64:b4ad3f04fa309a27",
       "notice": null,
       "blocks": [
         {
@@ -620,6 +664,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ताळो (tāḷo) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from tāḍa, \"latch\". CDIAL lists Marwari tāḷo under it (CDIAL 5749). CDIAL compares Dravidian words for \"bar, bolt\", such as Tamil ones."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -630,7 +685,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -679,7 +734,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

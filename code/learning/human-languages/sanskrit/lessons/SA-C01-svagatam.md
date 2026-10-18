@@ -14,7 +14,8 @@ romanization: "svāgatam"
 concept_tag: GREETING-WELCOME
 prerequisites: [SA-C01-dhanyavada]
 sounds: [sva-conjunct, halant]
-roots: [su-good, gam-come]
+roots: [su-good, gam-come, sanskrit-svagata]
+etymology_hook: "svāgata ← su 'well' + āgata 'come', from ā + √gam; MW glosses it 'well come' (CDIAL 13920)"
 reviews_of: [SA-C01-namaskara]
 duration:
   max_seconds: 210
@@ -37,7 +38,7 @@ variety: classical
 
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-DHANYAVADA] -->
 
-[PAUSE 2s] One word that is *cognate* with English "welcome" — not just a
+[PAUSE 2s] One word that is partly *cognate* with English "welcome", not only a
 translation of it.
 
 ## Sounds you'll need
@@ -54,9 +55,9 @@ the mouth simply closes.
 
 *svāgatam* = *su* ("well, good") + *āgata* ("come," from *ā* "toward" + the root
 √gam "to go/come") — "**well come**," which is exactly what English *welcome*
-means too. Two deep Indo-European threads surface:
-- *su-* "good" is the twin of **Greek *eu-*** — the *eu* of *euphoria*, *eulogy*,
-  *euphemism*. Sanskrit *su-* and Greek *eu-* are the same prefix.
+means too. Two Indo-European threads surface:
+- *su-* "good" does the work of **Greek *eu-*** — the *eu* of *euphoria*, *eulogy*,
+  *euphemism*; MW sets the two prefixes side by side.
 - the root √gam "to go/come" is PIE *gʷem-* — the very root of English **come**
   (and of Latin *venīre*, hence *venue*, *convene*).
 
@@ -79,7 +80,7 @@ Sanskrit words seem to melt into one another. The neuter ending *-am* makes it
 [PAUSE 1s]
 - [YOU SAY: read it — svā · ga · tam]
 - [YOU SAY: the two parts (*su* "well" + *āgata* "come")]
-- [YOU SAY: the English word that is *su-*'s Greek twin (*eu-*, as in *euphoria*)]
+- [YOU SAY: the Greek prefix MW sets beside *su-* (*eu-*, as in *euphoria*)]
 - [YOU SAY: the English cousin of the root √gam (**come**)]
 
 ## Wrap-up Recall
@@ -87,4 +88,4 @@ Sanskrit words seem to melt into one another. The neuter ending *-am* makes it
 <!-- hl-knowledge: introduces=[]; assesses=[SA-ETYMON-SU-AGATA] -->
 
 [PAUSE 3s] *Svāgatam* literally means what, and name two of its far-flung cousins.
-("Well come" = welcome; Greek *eu-* (from *su-*) and English *come* (from √gam).)
+("Well come" = welcome; Greek *eu-* (beside *su-*) and English *come* (cousin of √gam).)

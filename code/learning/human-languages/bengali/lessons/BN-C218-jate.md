@@ -14,7 +14,8 @@ romanization: "jāte"
 concept_tag: BN-KARON218-JATE
 prerequisites: [BN-C218-jodio, BN-C218-jmon]
 sounds: []
-roots: []
+roots: [sanskrit-ya-relative]
+etymology_hook: "jāte: jā 'which', the relative pronoun ← ya- (CDIAL 10391), + -te 'in'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C218-jmon]
 <!-- hl-knowledge: introduces=[BN-LEX-C218-KARON218-03]; assesses=[] -->
 
 **যাতে** — *jāte* — "so that".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**যাতে** (*jāte*) is *jā*, "which", the relative pronoun CDIAL lists as Bengali *je* under Sanskrit *ya-* (CDIAL 10391), + *-te*, "in": "in which way".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

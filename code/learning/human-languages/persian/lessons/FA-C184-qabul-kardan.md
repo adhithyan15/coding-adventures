@@ -14,7 +14,8 @@ romanization: "qabul kardan"
 concept_tag: FA-VERB-QABUL-KARDAN
 prerequisites: [FA-C183-molaqat-kardan, FA-C183-ashna-shodan]
 sounds: []
-roots: []
+roots: [arabic-qabul]
+etymology_hook: "qabul ← Arabic qabūl 'acceptance, reception', root q-b-l (Lane), + Persian kardan"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C183-ashna-shodan]
 <!-- hl-knowledge: introduces=[FA-LEX-C184-KONESH184-01]; assesses=[] -->
 
 **قبول کردن** — *qabul kardan* — "to accept".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*qabul kardan* pairs *qabul*, borrowed from Arabic *qabūl*, "acceptance, reception" (root *q-b-l*, Lane), with the Persian verb *kardan*, "to do, to make". *kardan*, "to do", is an inherited verb, from Middle Persian *kardan* (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

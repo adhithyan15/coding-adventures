@@ -14,7 +14,8 @@ romanization: "sardī"
 concept_tag: PA-TIME99-SARDI
 prerequisites: [PA-C99-parso, PA-C99-garmi]
 sounds: []
-roots: []
+roots: [persian-sardi]
+etymology_hook: "sardī: usually traced to Persian sardī 'cold'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C99-garmi]
 <!-- hl-knowledge: introduces=[PA-LEX-C99-TIME99-05]; assesses=[] -->
 
 **ਸਰਦੀ** — *sardī* — "winter, the cold".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਸਰਦੀ** (*sardī*) is a loan, usually traced to Persian *sardī*, "cold". It is Persian *sard*, "cold", with the ending *-ī*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

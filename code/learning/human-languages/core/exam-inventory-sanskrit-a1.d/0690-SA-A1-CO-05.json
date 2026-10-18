@@ -1,0 +1,17 @@
+{
+  "id": "SA-A1-CO-05",
+  "category": "Samuccaya — coordination",
+  "label": "distributive: one … the other",
+  "probe": [
+    "SA-LEX-C36-REPLY-02"
+  ],
+  "anchorIds": [
+    "ES-A1-PROXY",
+    "SA-CORPUS",
+    "ED-SANSKRIT"
+  ],
+  "derivedFrom": [
+    "A1-CO-05"
+  ],
+  "note": "sarvam ('all, the whole of it') is the only quantifier of this family taught; the eka … anya pairing is not. Counted covered on the exponent, thinly."
+}

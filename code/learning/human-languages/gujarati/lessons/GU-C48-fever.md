@@ -14,7 +14,8 @@ romanization: "tāv"
 concept_tag: GU-BODY3-FEVER
 prerequisites: [GU-C48-heart, GU-C48-blood]
 sounds: []
-roots: []
+roots: [sanskrit-tapa]
+etymology_hook: "tāv ← Sanskrit tāpa 'heat, glow; pain', a tadbhava (CDIAL 5767)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C48-blood]
 <!-- hl-knowledge: introduces=[GU-LEX-C48-BODY3-04]; assesses=[] -->
 
 **તાવ** (*tāv*) — "a fever".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**તાવ** (*tāv*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *tāpa*, "heat, glow; pain" (CDIAL 5767).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

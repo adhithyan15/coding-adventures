@@ -14,7 +14,8 @@ romanization: "naqqâshi"
 concept_tag: FA-CHIZ280-NAQQASHI
 prerequisites: [FA-C280-konsert, FA-C280-honar]
 sounds: []
-roots: []
+roots: [arabic-naqsh]
+etymology_hook: "naqqâshi: naqqâsh ← Arabic naqqāš 'painter', root n-q-š (Lane), + -i"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C280-honar]
 <!-- hl-knowledge: introduces=[FA-LEX-C280-CHIZ280-05]; assesses=[] -->
 
 **نقاشی** — *naqqâshi* — "painting".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*naqqâshi* is *naqqâsh*, "painter", with the ending *-i*. *naqqâsh* is borrowed from Arabic *naqqāš*, "engraver, painter" (root *n-q-š*, Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

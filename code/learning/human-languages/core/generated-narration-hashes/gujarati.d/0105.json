@@ -1,7 +1,7 @@
 {
   "language": "gujarati",
   "chapter": 105,
-  "sourceHash": "fnv1a64:5fe21c988694a249",
+  "sourceHash": "fnv1a64:d6fa6eb7eb170a82",
   "lessonIds": [
     "GU-C105-sadhan",
     "GU-C105-rakhvu",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "gujarati/narration/ch105.txt",
   "json": "gujarati/narration/ch105.json",
-  "textHash": "fnv1a64:ea9ce2d935033d22",
-  "jsonHash": "fnv1a64:92e98f4166b97daa",
+  "textHash": "fnv1a64:896b49aec1dc9428",
+  "jsonHash": "fnv1a64:ca9ef6cd81f627f5",
   "findings": []
 }

@@ -10,8 +10,8 @@ romanization: zhōngguó
 gloss: China
 prerequisites: [ZH-R17-character-language-r2]
 sounds: [tone-1, tone-2]
-roots: []
-etymology_hook: The known zhōng gains guó, country, to name China.
+roots: [middle-chinese-trjuwng, middle-chinese-kwok]
+etymology_hook: "zhōngguó: built from Middle Chinese trjuwng 'middle' and kwok 'state'"
 duration:
   max_seconds: 120
 requires:
@@ -42,6 +42,9 @@ reviews_of: [ZH-R17-character-language-r2, ZH-C17-hear-zhongwen, ZH-C11-qing]
 
 The first syllable stays *zhōng*. Change the rising ending: *wén* names writing
 or language; *guó* names a country. The new written ending waits one lesson.
+
+*Zhōngguó* is built from Middle Chinese *trjuwng*, "middle", and *kwok*,
+"state".
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-ZHONGGUO-01] -->

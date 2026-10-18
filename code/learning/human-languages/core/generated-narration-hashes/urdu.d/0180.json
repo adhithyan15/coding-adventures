@@ -1,7 +1,7 @@
 {
   "language": "urdu",
   "chapter": 180,
-  "sourceHash": "fnv1a64:abbee5dad17cf914",
+  "sourceHash": "fnv1a64:aa6fb613d04ba40e",
   "lessonIds": [
     "UR-C180-sharmana",
     "UR-C180-jhagarna",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "urdu/narration/ch180.txt",
   "json": "urdu/narration/ch180.json",
-  "textHash": "fnv1a64:bac508c1943782d5",
-  "jsonHash": "fnv1a64:6c06036fc0a30dde",
+  "textHash": "fnv1a64:b5cc6b8a71f08ee2",
+  "jsonHash": "fnv1a64:079ae9be6ff2f840",
   "findings": []
 }

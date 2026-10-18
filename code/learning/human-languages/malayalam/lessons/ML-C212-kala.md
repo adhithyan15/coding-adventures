@@ -14,7 +14,7 @@ romanization: "kala"
 concept_tag: ML-VASTU212-KALA
 prerequisites: [ML-C211-aparicitan, ML-C211-partti]
 sounds: []
-roots: [sanskrit-kala]
+roots: [sanskrit-kala-art]
 etymology_hook: "kala ← Sanskrit kalā 'an art' (CDIAL 2927), which CDIAL itself takes from Dravidian (DEDR 1297)"
 duration:
   max_seconds: 200

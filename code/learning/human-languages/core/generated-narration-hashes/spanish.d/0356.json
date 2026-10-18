@@ -1,7 +1,7 @@
 {
   "language": "spanish",
   "chapter": 356,
-  "sourceHash": "fnv1a64:2ce8a86a2a35fe06",
+  "sourceHash": "fnv1a64:ebae223e245db6dd",
   "lessonIds": [
     "ES-C356-desde",
     "ES-C356-cita",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "spanish/narration/ch356.txt",
   "json": "spanish/narration/ch356.json",
-  "textHash": "fnv1a64:5a5edfe3ac8fdd29",
-  "jsonHash": "fnv1a64:437775ac7a5162c0",
+  "textHash": "fnv1a64:3fa0457493db4c71",
+  "jsonHash": "fnv1a64:13171167cf7a1a81",
   "findings": []
 }

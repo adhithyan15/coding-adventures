@@ -1,7 +1,7 @@
 {
   "language": "german",
   "chapter": 211,
-  "sourceHash": "fnv1a64:9cd5a5431cca29b1",
+  "sourceHash": "fnv1a64:c639a687442c6644",
   "lessonIds": [
     "GE-C211-aengstlich",
     "GE-C211-anstrengend",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "german/narration/ch211.txt",
   "json": "german/narration/ch211.json",
-  "textHash": "fnv1a64:42a562e7d1cb7e58",
-  "jsonHash": "fnv1a64:128a3222b422bf51",
+  "textHash": "fnv1a64:becd28f1fe64149d",
+  "jsonHash": "fnv1a64:2d9a03e461096a0f",
   "findings": []
 }

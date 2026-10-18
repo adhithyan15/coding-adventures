@@ -14,7 +14,8 @@ romanization: "sahar"
 concept_tag: MW-TOWN84-SAHAR
 prerequisites: [MW-C83-saikal, MW-C84-gav]
 sounds: []
-roots: []
+roots: [persian-shahr]
+etymology_hook: "sahar: usually traced to Persian šahr 'city'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C84-gav]
 <!-- hl-knowledge: introduces=[MW-LEX-C84-TOWN84-02]; assesses=[] -->
 
 **सहर** — *sahar* — "a city".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**सहर** (*sahar*) is a loan, usually traced to Persian *šahr*, "city".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

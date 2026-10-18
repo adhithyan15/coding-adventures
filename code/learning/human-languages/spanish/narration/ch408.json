@@ -4,7 +4,7 @@
   "chapter": 408,
   "title": "Doctor, Pills and Tiredness",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:5c94c478d58606d6",
+  "sourceHash": "fnv1a64:c28ad77dc0a59620",
   "lessons": [
     {
       "id": "ES-C408-doctor",
@@ -137,7 +137,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:36132c9f1e07f9bd",
+      "sourceHash": "fnv1a64:f5e0a0bfbad50fa8",
       "notice": null,
       "blocks": [
         {
@@ -164,7 +164,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Pastilla belongs transparently with pasta and the small-form ending -illa: a little formed portion. The older physical idea survives in a bar of soap or a mint. In the clinic, una pastilla is a small medicinal tablet."
+              "text": "Pastilla looks like pasta plus the small-form ending -illa, but it comes from Latin pastillus, a little loaf or lozenge (EtymDB 2.1, Lewis & Short). The older physical idea survives in a bar of soap or a mint. In the clinic, una pastilla is a small medicinal tablet."
             },
             {
               "kind": "speech",
@@ -229,7 +229,7 @@
             },
             {
               "kind": "speech",
-              "text": "Sources: DLE: pastilla; RAE, derivation and composition: pastilla from pasta."
+              "text": "Sources: EtymDB 2.1 (Fourrier & Sagot 2020), pastilla from Latin pastillus; Lewis & Short, pastillus, a diminutive of pānis."
             }
           ]
         }
@@ -340,7 +340,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:193783467a3e7680",
+      "sourceHash": "fnv1a64:565e05c7d11b5804",
       "notice": null,
       "blocks": [
         {

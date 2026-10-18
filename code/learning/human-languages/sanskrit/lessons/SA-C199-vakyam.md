@@ -14,7 +14,8 @@ romanization: "vākyam"
 concept_tag: SA-SCH199-VAKYAM
 prerequisites: [SA-C198-nidam, SA-C198-andam]
 sounds: []
-roots: []
+roots: [sanskrit-vakya]
+etymology_hook: "vākya 'speech, sentence' ← root √vac 'speak'; MW compares Latin vōx (CDIAL 11468)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C198-andam]
 <!-- hl-knowledge: introduces=[SA-LEX-C199-SCH199-01]; assesses=[] -->
 
 **वाक्यम्** — *vākyam* — "a sentence".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*vākya* is built on the root √vac, "to speak" (MW): a sentence is something said (CDIAL 11468). The root is inherited from Indo-European, and MW compares Latin *vōx*, "voice".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "ʿayn"
 concept_tag: AR-BODY50-AYN
 prerequisites: [AR-C40-lianna, AR-C40-hinama]
 sounds: []
-roots: []
+roots: [ʿ-y-n]
+etymology_hook: "ʿayn: built on the root ʿ-y-n, 'an eye' (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C40-hinama]
 <!-- hl-knowledge: introduces=[AR-LEX-C50-BODY50-01]; assesses=[] -->
 
 **عين** — *ʿayn* — "an eye".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**عين** (*ʿayn*) is built on the native Arabic root *ʿ-y-n*, "an eye; a spring of water" (Lane). The letter *ʿayn* carries the same name, and Hebrew *ʿayin*, "eye", is its cousin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

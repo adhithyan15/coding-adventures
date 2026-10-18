@@ -12,7 +12,7 @@ concept_tag: UR-COAT
 prerequisites: [UR-C14-topi, UR-C05-khuda-hafiz-more]
 sounds: [rtl, retroflex-t]
 roots: [english-coat]
-etymology_hook: koṭ is borrowed directly from English coat, a modern loan sitting beside the older Sanskrit-derived کوٹ meaning "fort," an unrelated homograph. This chapter has now shown every direction a word can travel -- Persian and Arabic into Urdu (قمیض), Urdu out into English (ٹوپی), and English straight into Urdu (کوٹ) -- three loans, three directions, in four lessons.
+etymology_hook: "koṭ ← English coat; a different, older koṭ 'fort' comes from Sanskrit koṭṭa (CDIAL 3500)"
 duration:
   max_seconds: 290
 requires:
@@ -56,8 +56,7 @@ chapter's last word takes the shortest road of all.
 
 **کوٹ** is borrowed directly from English **coat** — a modern loan, one
 generation old rather than a thousand years. It happens to look identical
-to an older, unrelated **کوٹ** meaning "fort," inherited from Sanskrit
-*koṭṭa* — the two are homographs, not cousins, and the spelling gives no
+to an older, unrelated **کوٹ** meaning "fort," inherited from Sanskrit *koṭṭa* (CDIAL 3500) — the two are homographs, not cousins, and the spelling gives no
 warning either way.
 
 This book has named two layers before now: the inherited Indo-Aryan core,

@@ -11,8 +11,8 @@ gloss: neither … nor — the coordinator and the negator working together
 concept_tag: PA-JOIN-NA-NA
 prerequisites: [PA-C38-jaan, PA-C37-nahin-vaak]
 sounds: [dental-na, kanna-aa]
-roots: []
-etymology_hook: Punjabi repeats one small negative in front of each item rather than using two different words the way English does.
+roots: [na-negative]
+etymology_hook: "nā ← Sanskrit na 'not', inherited (CDIAL 6906), from PIE *ne, the root of English no"
 duration:
   max_seconds: 250
 requires:
@@ -55,6 +55,8 @@ rather than between them.
 
 That is worth noticing against **ਅਤੇ** and **ਜਾਂ**, which stand **between**. This
 is the first joining pattern in the book that goes in front of both halves.
+
+*Nā* is inherited: CDIAL lists Punjabi *na*, "not", under Sanskrit *na* (CDIAL 6906).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[PA-JOIN-NA-NA-01, PA-JOIN-JAAN-01] -->

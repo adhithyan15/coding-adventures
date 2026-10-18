@@ -14,7 +14,8 @@ romanization: "apriyaḥ"
 concept_tag: SA-QUAL156-APRIYAH
 prerequisites: [SA-C155-kathorah, SA-C156-priyah]
 sounds: []
-roots: []
+roots: [sanskrit-apriya]
+etymology_hook: "apriya ← a- 'not' + priya 'dear': 'disliked, unpleasant' (MW; CDIAL 501a)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C156-priyah]
 <!-- hl-knowledge: introduces=[SA-LEX-C156-QUAL156-02]; assesses=[] -->
 
 **अप्रियः** — *apriyaḥ* — "unpleasant".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*apriya* is built from *a-* "not" and *priya* "dear, liked" (MW; CDIAL 501a): "disliked, disagreeable". The *a-* is the same Indo-European negative as the *un-* of English *unpleasant*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

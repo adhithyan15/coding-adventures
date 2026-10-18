@@ -12,7 +12,7 @@ concept_tag: ZH-C04-PRACTICE
 prerequisites: [ZH-C04-bu]
 sounds: [tone-3, tone-4, tone-lexical]
 roots: []
-etymology_hook: Nothing new is taught here: two characters came out of one box, and the third turns a word you have had since the beginning.
+etymology_hook: 'Nothing new is taught here: two characters came out of one box, and the third turns a word you have had since the beginning.'
 duration:
   max_seconds: 240
 requires:

@@ -11,8 +11,8 @@ gloss: child
 concept_tag: JA-FAMILY-CHILD
 prerequisites: [JA-C13-tsuma]
 sounds: [mora]
-roots: []
-etymology_hook: Three old signs close the family set without adding a new script burden.
+roots: [japanese-ko-child, japanese-domo]
+etymology_hook: "kodomo: native ko 'child' + plural -domo (子供); once 'children'"
 duration:
   max_seconds: 165
 requires:
@@ -43,6 +43,11 @@ Retrieve **つま** once from its meaning.
 
 Hear *ko-do-mo*, choose “child,” then say the three
 even morae.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**こども** (*kodomo*) is native: *ko*, "child", with *-domo*, an old plural ending, so it was once a plural, "children" (JMdict writes both parts with kun'yomi). It is inherited rather than borrowed.
 
 ## Guided Practice — read, copy, recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-KODOMO, JA-SCRIPT-KO-01, JA-SCRIPT-DO-01, JA-SCRIPT-MO-01] -->

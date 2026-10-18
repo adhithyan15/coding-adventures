@@ -12,6 +12,7 @@ concept_tag: AR-FUNC-DONT-UNDERSTAND
 prerequisites: [AR-C37-present, AR-C31-fahima, AR-C05-la]
 sounds: [alif-hamza]
 roots: [f-h-m]
+etymology_hook: "lā afham: lā 'not' + afham 'I understand', from fahima, root f-h-m (Lane)"
 duration:
   max_seconds: 245
 requires:
@@ -71,6 +72,11 @@ One note on the page rather than the language: **فاء**, the letter in the mid
 of **أفهم**, has no lesson in this track's script ladder yet, so the sentence is
 printed whole here, in the lesson that owns it, and named in romanization
 wherever else it appears.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**لا أفهم** (*lā afham*) is built from *lā*, "not", an inherited negative, and *afham*, "I understand", the present tense of *fahima* on the native root *f-h-m* (Lane).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[AR-FUNC-C37-LA-AFHAM-01, AR-GRAMMAR-C37-PRESENT-I-01, AR-CONCEPT-C31-KATABA-01, AR-CONCEPT-C31-SAALA-01] -->

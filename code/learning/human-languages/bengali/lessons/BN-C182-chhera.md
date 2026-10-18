@@ -14,7 +14,8 @@ romanization: "chhẽṛā"
 concept_tag: BN-VERB-CHHERA
 prerequisites: [BN-C181-mukhostho-kora, BN-C181-bojhano]
 sounds: []
-roots: []
+roots: [sanskrit-chidra]
+etymology_hook: "chhẽṛā ← Sanskrit chidra 'torn asunder; hole', a tadbhava (CDIAL 5043)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C181-bojhano]
 <!-- hl-knowledge: introduces=[BN-LEX-C182-ACT182-01]; assesses=[] -->
 
 **ছেঁড়া** — *chhẽṛā* — "to tear".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ছেঁড়া** (*chhẽṛā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *chidra*, "torn asunder; hole" (CDIAL 5043). CDIAL lists Bengali *chẽṛā*, "to break, tear".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

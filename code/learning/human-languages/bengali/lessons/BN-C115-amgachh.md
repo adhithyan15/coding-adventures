@@ -14,7 +14,8 @@ romanization: "āmgāchh"
 concept_tag: BN-THINGS115-AMGACHH
 prerequisites: [BN-C114-kata, BN-C115-bash]
 sounds: []
-roots: []
+roots: [sanskrit-amra, indo-aryan-gaksha]
+etymology_hook: "āmgāchh: ām 'mango' ← āmra (CDIAL 1268) + gāchh 'tree' ← *gakṣa (CDIAL 3949)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C115-bash]
 <!-- hl-knowledge: introduces=[BN-LEX-C115-THINGS115-02]; assesses=[] -->
 
 **আমগাছ** — *āmgāchh* — "a mango tree".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**আমগাছ** (*āmgāchh*) is *ām*, "mango", from Sanskrit *āmra* (CDIAL 1268), + *gāchh*, "tree", from *\*gakṣa*, a form CDIAL reconstructs (CDIAL 3949).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

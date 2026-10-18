@@ -12,6 +12,9 @@ Before the new one: say the Marwadi for bad, then the Marwadi for long.
 You'll want to know: गरम.
 गरम — garam — "hot".
 
+The word, taken apart.
+गरम (garam) is a loan, usually traced to Persian garm, "warm, hot".
+
 What you've built.
 One more word for this chapter.
 
@@ -42,6 +45,9 @@ Before the new one: say the Marwadi for long, then the Marwadi for hot.
 
 You'll want to know: ठंडो.
 ठंडो — ṭhaṇḍo — "cold".
+
+The word, taken apart.
+CDIAL lists Hindi ṭhaṇḍā, "cold", under a reconstructed ṭhaṇḍha, which it sets under Sanskrit stabdha, "stiff, solidified", tracing the sense from "firm" through "sluggish" to "cold" (CDIAL 13676); it gives no Marwari form. DEDR compares Dravidian words for "cool", such as Tamil taṇ (DEDR 3045).
 
 What you've built.
 One more word for this chapter.
@@ -74,6 +80,9 @@ Before the new one: say the Marwadi for hot, then the Marwadi for cold.
 You'll want to know: तेज.
 तेज — tej — "fast".
 
+The word, taken apart.
+तेज (tej) is a loan, usually traced to Persian tēz, "sharp, swift". Marwadi says the z as j.
+
 What you've built.
 One more word for this chapter.
 
@@ -105,6 +114,9 @@ Before the new one: say the Marwadi for cold, then the Marwadi for fast.
 You'll want to know: सोरो.
 सोरो — soro — "easy".
 
+The word, taken apart.
+The origin of सोरो (soro) is not settled; CDIAL has no entry for it. A likely relative is Hindi suhelā and Gujarati sahelũ, "easy", which CDIAL lists under Sanskrit sukha, "easy, pleasant" (CDIAL 13451), but that entry does not explain the r of सोरो (soro).
+
 What you've built.
 One more word for this chapter.
 
@@ -135,6 +147,9 @@ Before the new one: say the Marwadi for fast, then the Marwadi for easy.
 
 You'll want to know: दोरो.
 दोरो — doro — "difficult".
+
+The word, taken apart.
+The origin of दोरो (doro) is not settled; CDIAL has no entry for it. A likely relative is Hindi duhelā and Gujarati dohelũ, "difficult", which CDIAL lists under Sanskrit duḥkha, "difficulty, pain" (CDIAL 6375), but that entry does not explain the r of दोरो (doro).
 
 What you've built.
 One more word for this chapter.

@@ -14,7 +14,8 @@ romanization: "kirāyā"
 concept_tag: UR-PARH146-KIRAYA
 prerequisites: [UR-C146-taim-tebal, UR-C146-notis]
 sounds: []
-roots: []
+roots: [arabic-kira]
+etymology_hook: "kirāyā ← Arabic kirāʾ 'hire, rent', through Persian (Lane, root k-r-y)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C146-notis]
 <!-- hl-knowledge: introduces=[UR-LEX-C146-PARH146-03]; assesses=[] -->
 
 **کرایہ** — *kirāyā* — "rent; a fare". The money for a room, or for a ride: **کمرے کا کرایہ** — *kamre kā kirāyā* — "the rent for the room".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**کرایہ** (*kirāyā*) is a loan from Arabic *kirāʾ*, "hire, rent", which reached Urdu through Persian. Its Arabic root is *k-r-y* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "pākũ"
 concept_tag: GU-QUAL135-PAKU
 prerequisites: [GU-C135-bimar, GU-C135-taju]
 sounds: []
-roots: []
+roots: [sanskrit-pakva]
+etymology_hook: "pākũ ← Sanskrit pakva 'cooked, ripe', a tadbhava (CDIAL 7621)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C135-taju]
 <!-- hl-knowledge: introduces=[GU-LEX-C135-QUAL135-04]; assesses=[] -->
 
 **પાકું** (*pākũ*) — "ripe".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**પાકું** (*pākũ*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *pakva*, "cooked, ripe" (CDIAL 7621).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

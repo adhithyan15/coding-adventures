@@ -14,7 +14,8 @@ romanization: "kalam"
 concept_tag: MW-HOME65-KALAM
 prerequisites: [MW-C65-kamro, MW-C65-kitab]
 sounds: []
-roots: []
+roots: [arabic-qalam]
+etymology_hook: "kalam ← Arabic qalam 'reed pen', through Persian (Lane, root q-l-m)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C65-kitab]
 <!-- hl-knowledge: introduces=[MW-LEX-C65-HOME65-05]; assesses=[] -->
 
 **कलम** — *kalam* — "a pen".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**कलम** (*kalam*) is a loan from Arabic *qalam*, "reed pen", which reached Marwadi through Persian. Its Arabic root is *q-l-m* (Lane). CDIAL marks Hindi *kalam*, "pen", as a loan (CDIAL 2653).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

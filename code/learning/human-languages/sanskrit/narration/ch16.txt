@@ -16,6 +16,9 @@ You'll want to know: गृहम्.
 The traditional derivation ties it to the root √ग्रह् (grah), "to seize, to hold." A house is the thing that holds you — the grasp you live inside. That is how Sanskrit's own grammarians heard the word, and it is worth hearing that way.
 You can already stack an adjective in front of it: महत् गृहम् (gṛham), "a big house"; नव गृहम् (gṛham), "a new house." The adjective comes first, as you have already seen it do.
 
+The word, taken apart.
+MW files gṛha under √gṛbh, the older form of that root, but it also compares Gothic gards "house" and Latin hortus "garden". On that second account the word is inherited, a cousin of English yard, and the root story is the grammarians' reading of it.
+
 What you've built.
 This is your first place. Everything in this chapter is somewhere you can be, and every one of them takes the adjectives you already own.
 
@@ -44,8 +47,11 @@ Say "I live." (Vasāmi.) Where you live may be this lesson's word.
 
 You'll want to know: ग्रामः.
 ग्रामः (grāmaḥ) — "village."
-Its oldest sense is not "village" but "a collection, a troop" — a gathering of people considered as one body. The settlement took its name from the group, not the group from the settlement, which tells you how the word's first speakers saw the place: people first, buildings after.
+In the Rigveda it already means both the settlement and "a collection, a troop", a gathering of people considered as one body (MW). One word holds the people and the place together, which tells you how its first speakers saw a village: people and buildings as one thing.
 Notice the ending. गृहम् (gṛham) ends in -am; ग्रामः (grāmaḥ) ends in -aḥ. Sanskrit sorts its nouns into families, and that final syllable is the badge. You do not need the system yet — only the observation that the endings differ, and that the difference is not random.
+
+The word, taken apart.
+Grāma is an old Rigvedic word for a troop or community (MW), and its deeper origin is not settled. It lives on as Gujarati gām and Sinhala gama, "village" (CDIAL 4368).
 
 What you've built.
 Two places now, and your first glimpse of the noun families — the -am ending and the -aḥ ending, sitting side by side.
@@ -61,7 +67,7 @@ Guided Practice.
 
 Wrap-up Recall.
 [pause 3 seconds]
-What did ग्रामः (grāmaḥ) mean before it meant "village"? (A collection, a troop.) Which two endings have you now seen? (-am and -aḥ.)
+Besides "village", what else did ग्रामः (grāmaḥ) mean in the Rigveda? (A collection, a troop.) Which two endings have you now seen? (-am and -aḥ.)
 
 
 Lesson 3 of 9.
@@ -121,6 +127,9 @@ You'll want to know: मार्गः.
 From the root √मृग् (mṛg), "to track, to hunt, to search out." A road is a tracking — the line left by someone who went looking. The same root gives मृगः (mṛgaḥ), "deer": the animal that gets tracked.
 So the word does not name a built thing at all. It names the trace of a search, and only later the paved version of it. English keeps that metaphor alive when it speaks of a line of enquiry.
 
+The word, taken apart.
+Mārga is formed from mṛga, "wild animal": first the track of an animal, then any road (MW). It lives on as Hindi and Gujarati māg (CDIAL 10071).
+
 What you've built.
 मार्गः (mārgaḥ) takes the same -aḥ ending as ग्रामः (grāmaḥ). That is the second word in its family, and the pattern is becoming visible rather than asserted.
 
@@ -149,6 +158,9 @@ You'll want to know: वनम्.
 वनम् (vanam) — "forest, wood, wilderness."
 In the older literature it carries a weight that "forest" does not quite catch: वनम् (vanam) is where the settled world stops. To go to the वनम् (vanam) is to leave the grāmaḥ behind, and a great deal of Sanskrit narrative turns on somebody doing exactly that.
 Its ending is -am, so it belongs with gṛham — which gives the chapter a neat symmetry: the two -am words so far are the house you live inside and the wild you do not.
+
+The word, taken apart.
+Vana is a Rigvedic word for a single tree or a wood (CDIAL 11258). MW files it under the root √van, "to like, win", but its origin is not settled. It lives on as Hindi ban, "forest".
 
 What you've built.
 Four places, and the two endings now have two words each. That is a pattern you have observed, not one you have been handed.
@@ -226,6 +238,9 @@ You'll want to know: नगरम्.
 नगरम् (nagaram) — "city, town."
 Its origin is genuinely unsettled, and that is worth saying plainly rather than inventing a story. Sanskrit offers no agreed root for it. Some scholars have proposed that it came into the language from outside — one of a handful of everyday words that may record a borrowing from languages spoken in the subcontinent before Sanskrit arrived. Others resist that reading. The honest position is that nobody knows.
 Whatever its history, it ends in -am, like गृहम् (gṛham) and वनम् (vanam).
+
+The word, taken apart.
+DEDR 3568 sets nagara beside Tamil nakar, "house, town", and a Dravidian source is one proposal; MW doubts a split into naga + -ra. It lives on as Sinhala nuvara, "city" (CDIAL 6924).
 
 What you've built.
 Five places: house, village, road, forest, city. Three take -am and two take -aḥ, and the next lesson says what that division actually is.

@@ -14,7 +14,8 @@ gloss: "a feast day"
 concept_tag: AR-ANCHOR-IID
 prerequisites: [AR-C01-as-salamu-alaykum]
 sounds: []
-roots: []
+roots: [iid-feast]
+etymology_hook: "ʿīd: under ʿ-w-d 'to return' in Lane, a feast that comes round; EtymDB: from Syriac ʿēdā 'feast'; not settled"
 duration:
   max_seconds: 120
 requires:
@@ -44,6 +45,11 @@ variety: modern-standard-arabic
 
 Say it: *ʿīd*. [YOU LOOK: at its shape as you say it.] The next lesson takes one
 piece of it, **ع ي**, and writes it on its own.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**عيد** (*ʿīd*) is listed by Lane under *ʿ-w-d*, "to return": a thing that returns, hence a festival that comes round each year. EtymDB instead gives it as borrowed from Syriac *ʿēdā*, "feast". The two accounts are not settled.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[AR-LEX-ANCHOR-IID] -->

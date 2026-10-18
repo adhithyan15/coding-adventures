@@ -12,6 +12,9 @@ Before the new one: say the Persian for dangerous, then the Persian for safe.
 You'll want to know: تلخ.
 تلخ — talkh — "bitter".
 
+The word, taken apart.
+talkh is a native Persian word, inherited rather than borrowed: it continues Middle Persian taxl, "bitter" (EtymDB).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Persian for safe, then the Persian for bitter.
 
 You'll want to know: ترش.
 ترش — torsh — "sour".
+
+The word, taken apart.
+torsh is a native Persian word, inherited rather than borrowed; it is usually traced to Middle Persian turš, "sour".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Persian for bitter, then the Persian for sour.
 You'll want to know: شور.
 شور — shur — "salty".
 
+The word, taken apart.
+shur is a native Persian word, inherited rather than borrowed; it is usually traced to Middle Persian šōr, "salty".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Persian for sour, then the Persian for salty.
 You'll want to know: بنفش.
 بنفش — banafsh — "purple".
 
+The word, taken apart.
+banafsh is shortened from banafshe, the violet, usually traced to Middle Persian wanafšag: purple is the violet's colour.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Persian for salty, then the Persian for purple.
 
 You'll want to know: خاکستری.
 خاکستری — khâkestari — "grey".
+
+The word, taken apart.
+khâkestari is khâkestar, "ash", with the colour ending -i: ash-coloured. khâkestar is built on khâk, "dust, earth", inherited from Middle Persian xāk (EtymDB).
 
 What you've built.
 One more word for this chapter.

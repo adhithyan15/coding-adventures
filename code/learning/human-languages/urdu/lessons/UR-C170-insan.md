@@ -14,7 +14,8 @@ romanization: "insān"
 concept_tag: UR-CHIZ170-INSAN
 prerequisites: [UR-C169-mela, UR-C169-jashn]
 sounds: []
-roots: []
+roots: [arabic-insan]
+etymology_hook: "insān ← Arabic insān 'human being', through Persian (Lane, root ʾ-n-s)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C169-jashn]
 <!-- hl-knowledge: introduces=[UR-LEX-C170-CHIZ170-01]; assesses=[] -->
 
 **انسان** — *insān* — "a human being".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**انسان** (*insān*) is a loan from Arabic *insān*, "human being", which reached Urdu through Persian. Its Arabic root is *ʾ-n-s* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

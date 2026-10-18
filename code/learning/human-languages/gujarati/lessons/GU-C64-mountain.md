@@ -14,7 +14,8 @@ romanization: "parvat"
 concept_tag: GU-LAND-MOUNTAIN
 prerequisites: [GU-C64-flower, GU-C64-leaf]
 sounds: []
-roots: []
+roots: [sanskrit-parvata]
+etymology_hook: "parvat ← Sanskrit parvata 'rock, mountain', a tatsama (CDIAL 7945)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C64-leaf]
 <!-- hl-knowledge: introduces=[GU-LEX-C64-LAND-03]; assesses=[] -->
 
 **પર્વત** (*parvat*) — "a mountain".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**પર્વત** (*parvat*) is Sanskrit *parvata*, "rock, mountain", taken over whole as a learned loan, a tatsama (CDIAL 7945).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

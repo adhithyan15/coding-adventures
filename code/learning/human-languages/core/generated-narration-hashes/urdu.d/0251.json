@@ -1,7 +1,7 @@
 {
   "language": "urdu",
   "chapter": 251,
-  "sourceHash": "fnv1a64:4c89a3c39b2132f7",
+  "sourceHash": "fnv1a64:0f7276fada0e592f",
   "lessonIds": [
     "UR-C251-guriya",
     "UR-C251-phuldan",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "urdu/narration/ch251.txt",
   "json": "urdu/narration/ch251.json",
-  "textHash": "fnv1a64:573b3dd8f64eac55",
-  "jsonHash": "fnv1a64:ad366bb1467cd50f",
+  "textHash": "fnv1a64:2b58d8fab178abef",
+  "jsonHash": "fnv1a64:aed79f542fc9eba9",
   "findings": []
 }

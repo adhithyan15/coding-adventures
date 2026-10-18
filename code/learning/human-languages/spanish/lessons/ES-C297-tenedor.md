@@ -6,7 +6,7 @@ sequence: 3990
 chapter: 297
 type: word
 headword: el tenedor
-gloss: the fork — built on tener, to hold: it is "the holder", the same shape as any Spanish word ending in -dor
+gloss: 'the fork — built on tener, to hold: it is "the holder", the same shape as any Spanish word ending in -dor'
 concept_tag: ES-COOK-FORK
 prerequisites: [ES-C297-horno]
 sounds: [d-soft, stress-final]

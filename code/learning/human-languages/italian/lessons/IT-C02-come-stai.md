@@ -47,6 +47,9 @@ be,” from *stand*). Assemble Italian’s everyday question for a friend.
 - **come** = “how”
 - **stai** = “you are / stand,” the *tu* form of *stare*
 
+Both words are inherited from Latin: *come* from *quōmodo*, “in what way,” and
+*stare* from Latin *stāre*, “to stand” (EtymDB 2.1).
+
 The subject **tu** (“you”) is already carried by **stai**, so Italian normally
 leaves it unspoken. Say **Come stai?**, not *Come tu stai?*, unless you need to
 stress “you.” This is the same pro-drop habit you will use in later verb lessons.

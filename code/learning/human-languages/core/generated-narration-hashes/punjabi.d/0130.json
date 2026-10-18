@@ -1,7 +1,7 @@
 {
   "language": "punjabi",
   "chapter": 130,
-  "sourceHash": "fnv1a64:fdc3c37cde5712b5",
+  "sourceHash": "fnv1a64:2f209320aa7d6b12",
   "lessonIds": [
     "PA-C130-hiran",
     "PA-C130-ricch",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "punjabi/narration/ch130.txt",
   "json": "punjabi/narration/ch130.json",
-  "textHash": "fnv1a64:83c26f5568b09638",
-  "jsonHash": "fnv1a64:179ecb24957c1672",
+  "textHash": "fnv1a64:4d22672917ac5218",
+  "jsonHash": "fnv1a64:48c08558242c52a5",
   "findings": []
 }

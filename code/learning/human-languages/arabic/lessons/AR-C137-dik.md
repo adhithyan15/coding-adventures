@@ -14,7 +14,8 @@ romanization: "dīk"
 concept_tag: AR-THINGS137-DIK
 prerequisites: [AR-C136-farasha, AR-C137-ankabut, AR-C01-al, AR-C01-al, AR-C01-al]
 sounds: []
-roots: []
+roots: [d-y-k]
+etymology_hook: "dīk: a cock, an old native noun at the centre of Lane's article on d-y-k"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [AR-C137-ankabut]
 <!-- hl-knowledge: introduces=[AR-LEX-C137-THINGS137-02]; assesses=[] -->
 
 **ديك** — *dīk* — "a rooster".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ديك** (*dīk*), "a cock", is an old native noun at the centre of the root *d-y-k* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "pās kôrā"
 concept_tag: BN-VERB-PAS-KORA
 prerequisites: [BN-C213-chora, BN-C214-chhobi-tola]
 sounds: []
-roots: []
+roots: [english-pass, sanskrit-karoti]
+etymology_hook: "pās kôrā: pās ← English pass + kôrā ← karoti (CDIAL 2814)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C214-chhobi-tola]
 <!-- hl-knowledge: introduces=[BN-LEX-C214-ACT214-02]; assesses=[] -->
 
 **পাস করা** — *pās kôrā* — "to pass (an exam)".
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**পাস করা** (*pās kôrā*) is *pās*, from English *pass*, + *kôrā*, "to do", from Sanskrit *karoti*, "does" (CDIAL 2814).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

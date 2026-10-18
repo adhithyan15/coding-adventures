@@ -14,7 +14,8 @@ romanization: "pāhāṛ"
 concept_tag: BN-NATURE66-PAHAR
 prerequisites: [BN-C65-phul, BN-C65-pata]
 sounds: []
-roots: []
+roots: [indo-aryan-pahada]
+etymology_hook: "pāhāṛ ← *pāhāḍa 'rock, hill', a reconstructed form; a tadbhava (CDIAL 8141)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C65-pata]
 <!-- hl-knowledge: introduces=[BN-LEX-C66-NATURE66-01]; assesses=[] -->
 
 **পাহাড়** — *pāhāṛ* — "a mountain".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**পাহাড়** (*pāhāṛ*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*pāhāḍa*, "rock, hill", a form CDIAL reconstructs from its descendants (CDIAL 8141). CDIAL thinks it probably connected with Sanskrit *pāṣāṇa*, "stone".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

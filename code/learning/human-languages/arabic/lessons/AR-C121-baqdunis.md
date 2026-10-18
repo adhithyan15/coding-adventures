@@ -14,7 +14,8 @@ romanization: "baqdūnis"
 concept_tag: AR-THINGS121-BAQDUNIS
 prerequisites: [AR-C121-malfuf, AR-C121-nana]
 sounds: []
-roots: []
+roots: [greek-makedonisi]
+etymology_hook: "baqdūnis: usually traced to Greek makedonisi 'Macedonian parsley'; route not settled"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C121-nana]
 <!-- hl-knowledge: introduces=[AR-LEX-C121-THINGS121-03]; assesses=[] -->
 
 **بقدونس** — *baqdūnis* — "parsley".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**بقدونس** (*baqdūnis*) is usually traced to Greek *makedonisi*, "Macedonian (parsley)", the same word that gave Turkish *maydanoz*; the route into Arabic is not settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "zukām"
 concept_tag: UR-SEHAT152-ZUKAM
 prerequisites: [UR-C151-sans-lena, UR-C152-bimari]
 sounds: []
-roots: []
+roots: [arabic-zukam]
+etymology_hook: "zukām ← Arabic zukām 'a cold, catarrh', through Persian (Lane, root z-k-m)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C152-bimari]
 <!-- hl-knowledge: introduces=[UR-LEX-C152-SEHAT152-02]; assesses=[] -->
 
 **زکام** — *zukām* — "a head cold".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**زکام** (*zukām*) is a loan from Arabic *zukām*, "a cold, catarrh", which reached Urdu through Persian. Its Arabic root is *z-k-m* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

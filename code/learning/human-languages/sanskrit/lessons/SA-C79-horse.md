@@ -14,7 +14,8 @@ romanization: "aśvaḥ"
 concept_tag: SA-ANIMAL-HORSE
 prerequisites: [SA-C78-payasam, SA-C79-elephant]
 sounds: []
-roots: []
+roots: [sanskrit-ashva]
+etymology_hook: "aśva 'horse' is inherited: MW compares Avestan aspa, Latin equus and Greek hippos (CDIAL 920)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,12 @@ reviews_of: [SA-C79-elephant]
 <!-- hl-knowledge: introduces=[SA-LEX-C79-ANIMALS-02]; assesses=[] -->
 
 **अश्वः** (*aśvaḥ*) — "a horse", the animal that pulls a **रथः**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*Aśva* is inherited: MW compares Avestan *aspa*, Latin *equus* and Greek *hippos*,
+the source of English **equine** and **hippodrome** (CDIAL 920).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

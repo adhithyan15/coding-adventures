@@ -14,7 +14,8 @@ romanization: "ghaṇṭā"
 concept_tag: PA-TIME86-GHANTA
 prerequisites: [PA-C86-mahina, PA-C86-sal]
 sounds: []
-roots: []
+roots: [sanskrit-ghanta-bell]
+etymology_hook: "ghaṇṭā: Sanskrit ghaṇṭā 'bell', taken over whole; the inherited Punjabi form is ghaṇḍā (CDIAL 4421)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C86-sal]
 <!-- hl-knowledge: introduces=[PA-LEX-C86-TIME86-03]; assesses=[] -->
 
 **ਘੰਟਾ** — *ghaṇṭā* — "an hour".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਘੰਟਾ** (*ghaṇṭā*) is Sanskrit *ghaṇṭā*, "bell", taken over whole, a tatsama; the hour is usually explained as named for the gong struck to mark it. The inherited Punjabi form is *ghaṇḍā*, "a bell used to attract deer" (CDIAL 4421).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

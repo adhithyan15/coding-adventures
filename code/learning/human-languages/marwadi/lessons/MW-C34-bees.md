@@ -11,8 +11,8 @@ gloss: twenty, on the page — three signs, borrowed from three numbers below it
 concept_tag: MW-NUMBER-TWENTY-WRITTEN
 prerequisites: [MW-C34-hear-bees]
 sounds: [voiced-b, long-ii, voiceless-s]
-roots: []
-etymology_hook: The b of the bus, the long ii of three, and the s of ten.
+roots: [sanskrit-vimshati]
+etymology_hook: "bīs ← Sanskrit viṃśati 'twenty', a tadbhava (CDIAL 11616, Old Marwari row)"
 duration:
   max_seconds: 170
 requires:
@@ -47,6 +47,11 @@ Every piece is second-hand. **ब** came in with **बस**, the bus. **ी** ca
 with **पाणी**. **स** closes **दस** as well.
 
 Write **दस** and **बीस** one under the other and look at the last sign of each.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**बीस** (*bīs*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *viṃśati*, "twenty". CDIAL lists Old Marwari *bīsa* under it (CDIAL 11616).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-BEES-01, MW-SCRIPT-DAS-01, MW-SCRIPT-TEEN-01] -->

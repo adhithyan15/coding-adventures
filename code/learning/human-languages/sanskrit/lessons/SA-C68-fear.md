@@ -14,7 +14,8 @@ romanization: "bhayam"
 concept_tag: SA-FEEL-FEAR
 prerequisites: [SA-C67-ease, SA-C68-sorrow]
 sounds: []
-roots: []
+roots: [sanskrit-bhaya]
+etymology_hook: "bhaya 'fear' ← the root √bhī 'fear'; MW compares Lithuanian bijotis 'to fear' (CDIAL 9390)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,12 @@ reviews_of: [SA-C68-sorrow]
 <!-- hl-knowledge: introduces=[SA-LEX-C68-FEELINGS-02]; assesses=[] -->
 
 **भयम्** (*bhayam*) — "fear". **मम भयम् अस्ति** — "I am afraid".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*Bhaya* is built on the root √bhī, "to fear" (MW, CDIAL 9390). It is inherited: MW
+compares Lithuanian *bijotis* and Slavic *bojati*, "to fear".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

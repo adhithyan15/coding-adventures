@@ -6,7 +6,7 @@ sequence: 710
 chapter: 38
 type: grammar
 headword: hablamos
-gloss: "we speak" — the first form in this book that is not about one person
+gloss: '"we speak" — the first form in this book that is not about one person'
 concept_tag: ES-GRAMMAR-AR-PRESENT-PLURAL
 prerequisites: [ES-C07-sintesis-preguntar]
 sounds: []

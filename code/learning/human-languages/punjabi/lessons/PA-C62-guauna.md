@@ -14,7 +14,8 @@ romanization: "guāuṇā"
 concept_tag: PA-VERB-GUAUNA
 prerequisites: [PA-C61-rokna, PA-C61-dassna]
 sounds: []
-roots: []
+roots: [sanskrit-gamayati]
+etymology_hook: "guāuṇā: CDIAL lists Punjabi gãvāuṇā 'to lose, damage' under Sanskrit gamayati 'causes to go' (CDIAL 4028)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C61-dassna]
 <!-- hl-knowledge: introduces=[PA-LEX-C62-VERBS62-01]; assesses=[] -->
 
 **ਗੁਆਉਣਾ** — *guāuṇā* — "to lose".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਗੁਆਉਣਾ** (*guāuṇā*) is inherited. CDIAL lists it, in the spelling *gãvāuṇā*, "to lose, damage", under Sanskrit *gamayati*, "causes to go" (CDIAL 4028): to lose a thing is to make it go.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

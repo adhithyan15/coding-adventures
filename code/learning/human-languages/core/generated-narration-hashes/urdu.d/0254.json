@@ -1,7 +1,7 @@
 {
   "language": "urdu",
   "chapter": 254,
-  "sourceHash": "fnv1a64:3ae4aa3f7e496f0f",
+  "sourceHash": "fnv1a64:e1b0c6a8f3006d6a",
   "lessonIds": [
     "UR-C254-navil",
     "UR-C254-nazm",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "urdu/narration/ch254.txt",
   "json": "urdu/narration/ch254.json",
-  "textHash": "fnv1a64:504a189167de91ba",
-  "jsonHash": "fnv1a64:0eac417ed6ddb188",
+  "textHash": "fnv1a64:2d0cfbc6ed880257",
+  "jsonHash": "fnv1a64:d31ef7720d00132a",
   "findings": []
 }

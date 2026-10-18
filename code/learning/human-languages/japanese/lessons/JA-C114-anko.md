@@ -14,7 +14,8 @@ romanization: "anko"
 concept_tag: JA-THINGS114-ANKO
 prerequisites: [JA-C114-hakusai, JA-C114-ninniku]
 sounds: []
-roots: []
+roots: [japanese-anko]
+etymology_hook: "anko: Sino-Japanese an 餡 'bean filling' + the ending -ko"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C114-ninniku]
 <!-- hl-knowledge: introduces=[JA-LEX-C114-THINGS114-03]; assesses=[] -->
 
 **あんこ** — *anko* — "sweet bean paste".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**あんこ** (*anko*) is Sino-Japanese *an*, "bean filling", borrowed from Chinese in a later reading of its character, with the ending *-ko* (JMdict, KANJIDIC2).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

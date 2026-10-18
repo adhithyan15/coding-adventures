@@ -6,7 +6,7 @@ sequence: 5780
 chapter: 128
 type: review
 headword: (three letters)
-gloss: second pass: the same three letters, from the word back to the letter
+gloss: 'second pass: the same three letters, from the word back to the letter'
 romanization: "tīn akṣar"
 concept_tag: HI-LETTERS-FROM-WORDS
 prerequisites: [HI-W128-vowel-sign-i, HI-W128-letter-i, HI-W128-letter-nya]

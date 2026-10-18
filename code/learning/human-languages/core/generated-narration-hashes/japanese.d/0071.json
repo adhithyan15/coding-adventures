@@ -1,7 +1,7 @@
 {
   "language": "japanese",
   "chapter": 71,
-  "sourceHash": "fnv1a64:a04d6cd328903998",
+  "sourceHash": "fnv1a64:cb44a3604d950f16",
   "lessonIds": [
     "JA-C71-tsuno",
     "JA-C71-ana",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "japanese/narration/ch71.txt",
   "json": "japanese/narration/ch71.json",
-  "textHash": "fnv1a64:9e6323fb3f0ee1db",
-  "jsonHash": "fnv1a64:53b3a8ff33f3fea8",
+  "textHash": "fnv1a64:f824e8cb050ccf27",
+  "jsonHash": "fnv1a64:0a74a5dda64cc324",
   "findings": []
 }

@@ -14,7 +14,8 @@ romanization: "garam"
 concept_tag: GU-QUALITY-HOT
 prerequisites: [GU-C73-new, GU-C73-old]
 sounds: []
-roots: []
+roots: [persian-garm]
+etymology_hook: "garam: usually traced to Persian garm 'warm, hot'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C73-old]
 <!-- hl-knowledge: introduces=[GU-LEX-C73-QUALITY-04]; assesses=[] -->
 
 **ગરમ** (*garam*) — "hot".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ગરમ** (*garam*) is a loan, usually traced to Persian *garm*, "warm, hot".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

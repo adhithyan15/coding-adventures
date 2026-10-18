@@ -14,7 +14,8 @@ romanization: "miqaṣṣ"
 concept_tag: AR-THINGS124-MIQASS
 prerequisites: [AR-C123-mawqid, AR-C123-ina]
 sounds: []
-roots: []
+roots: [q-ṣ-ṣ]
+etymology_hook: "miqaṣṣ: built on the root q-ṣ-ṣ, 'to cut, to clip' (Lane); miqaṣṣ is an instrument noun, 'a thing for clipping'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C123-ina]
 <!-- hl-knowledge: introduces=[AR-LEX-C124-THINGS124-01]; assesses=[] -->
 
 **مقص** — *miqaṣṣ* — "scissors".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**مقص** (*miqaṣṣ*) is built on the native Arabic root *q-ṣ-ṣ*, "to cut, to clip" (Lane). *Miqaṣṣ* is an instrument noun, "a thing for clipping".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

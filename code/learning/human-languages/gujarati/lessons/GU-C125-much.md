@@ -14,7 +14,8 @@ romanization: "mūch"
 concept_tag: GU-THINGS125-MUCH
 prerequisites: [GU-C125-bhamar, GU-C125-dadhi]
 sounds: []
-roots: []
+roots: [indo-aryan-muccha]
+etymology_hook: "mūch ← *mucchā 'mustache', a reconstructed form of uncertain source (CDIAL 10180)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C125-dadhi]
 <!-- hl-knowledge: introduces=[GU-LEX-C125-THINGS125-03]; assesses=[] -->
 
 **મૂછ** (*mūch*) — "a moustache".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**મૂછ** (*mūch*) comes from *\*mucchā*, "mustache", a form CDIAL reconstructs (CDIAL 10180). CDIAL asks whether it blends *gocchā*, "furrow of the upper lip", with *mukha*, "mouth", or comes through Middle Indo-Aryan from Sanskrit *śmaśru*, "beard".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

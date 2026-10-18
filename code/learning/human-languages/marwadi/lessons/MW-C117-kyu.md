@@ -14,7 +14,8 @@ romanization: "kyū̃"
 concept_tag: MW-WHY117-KYU
 prerequisites: [MW-C116-hak, MW-C116-mauko]
 sounds: []
-roots: []
+roots: [sanskrit-kim]
+etymology_hook: "kyū̃ ← Sanskrit kim 'what, why', a tadbhava (CDIAL 3164, Old Marwari row)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C116-mauko]
 <!-- hl-knowledge: introduces=[MW-LEX-C117-WHY117-01]; assesses=[] -->
 
 **क्यूं** — *kyū̃* — "why".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**क्यूं** (*kyū̃*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *kim*, "what, why". CDIAL lists Old Marwari *kyu* under it (CDIAL 3164). Its *k-* is the old question stem.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

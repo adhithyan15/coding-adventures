@@ -14,7 +14,8 @@ romanization: "zamīl"
 concept_tag: AR-AMAL251-ZAMIL
 prerequisites: [AR-C251-mudir, AR-C251-muwazzaf]
 sounds: []
-roots: []
+roots: [z-m-l]
+etymology_hook: "zamīl: built on the root z-m-l (Lane); Lane's zamīl rides behind another on one beast; now a colleague"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C251-muwazzaf]
 <!-- hl-knowledge: introduces=[AR-LEX-C251-AMAL251-04]; assesses=[] -->
 
 **زميل** — *zamīl* — "a colleague".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**زميل** (*zamīl*) is built on the native Arabic root *z-m-l* (Lane). Lane's *zamīl* is one who rides behind another on the same beast; a colleague is a later sense.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "pænṭ"
 concept_tag: BN-CLOTHES85-PNT
 prerequisites: [BN-C84-gram, BN-C84-shohor]
 sounds: []
-roots: []
+roots: [english-pants]
+etymology_hook: "pænṭ ← English pants"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C84-shohor]
 <!-- hl-knowledge: introduces=[BN-LEX-C85-CLOTHES85-01]; assesses=[] -->
 
 **প্যান্ট** — *pænṭ* — "trousers".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**প্যান্ট** (*pænṭ*) is a loan from English *pants*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

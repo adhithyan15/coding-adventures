@@ -14,7 +14,8 @@ romanization: "cikitsakaḥ"
 concept_tag: SA-PPL210-CIKITSAKAH
 prerequisites: [SA-C210-vidyarthi, SA-C210-sahapathi]
 sounds: []
-roots: []
+roots: [sanskrit-cikitsa]
+etymology_hook: "cikitsaka ← cikitsā 'treatment', the desiderative of √cit 'perceive, attend to' (MW)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C210-sahapathi]
 <!-- hl-knowledge: introduces=[SA-LEX-C210-PPL210-05]; assesses=[] -->
 
 **चिकित्सकः** — *cikitsakaḥ* — "a doctor".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*cikitsaka* is built on *cikitsā*, "medical treatment", from *cikitsati*, the desiderative of √cit, "to perceive, attend to" (MW). The desiderative means "wishes to attend to", and so "cares for, treats medically".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

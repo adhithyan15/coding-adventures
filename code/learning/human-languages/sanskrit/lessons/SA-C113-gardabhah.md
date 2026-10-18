@@ -14,7 +14,8 @@ romanization: "gardabhaḥ"
 concept_tag: SA-THINGS113-GARDABHAH
 prerequisites: [SA-C112-srgalah, SA-C113-sasakah]
 sounds: []
-roots: []
+roots: [sanskrit-gardabha]
+etymology_hook: "gardabha 'ass' ← √gard 'shout': 'the crier, the brayer' (MW; CDIAL 4054); Hindi gadahā"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C113-sasakah]
 <!-- hl-knowledge: introduces=[SA-LEX-C113-THINGS113-02]; assesses=[] -->
 
 **गर्दभः** — *gardabhaḥ* — "a donkey".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*gardabha* comes from the root √gard "shout, make a noise" (CDIAL 4054): MW explains it as "the crier, the brayer", with a query mark. It lives on as Hindi *gadahā* and Marathi *gāḍhav* "donkey" (CDIAL 4054).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

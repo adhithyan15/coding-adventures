@@ -70,7 +70,7 @@ comes out by putting **не** after **тоже**:
 - **я тоже не знаю** — *ya tózhe ne znáyu* — I do **not** know **either**.
 
 English swaps the whole word — *too* becomes *either*. Russian leaves **тоже**
-where it is and lets **не** do the work, which is one fewer word to learn.
+where it is and lets **не** do the work, which is one fewer word to learn. Both pieces are old Slavic words; Vasmer compares **же** with Greek *-ge*, a small word of emphasis.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[RU-LEX-TOZHE-01, RU-GRAMMAR-TOZHE-NE-01] -->

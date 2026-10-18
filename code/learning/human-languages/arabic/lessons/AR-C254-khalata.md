@@ -14,7 +14,8 @@ romanization: "khalaṭa"
 concept_tag: AR-VERB-KHALATA
 prerequisites: [AR-C254-shawa, AR-C254-ghala]
 sounds: []
-roots: []
+roots: [kh-l-ṭ]
+etymology_hook: "khalaṭa: built on the root kh-l-ṭ, 'to mix' (Lane); khalaṭa is the plain verb, 'he mixed'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C254-ghala]
 <!-- hl-knowledge: introduces=[AR-LEX-C254-ACT254-04]; assesses=[] -->
 
 **خلط** — *khalaṭa* — "to mix".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**خلط** (*khalaṭa*) is built on the native Arabic root *kh-l-ṭ*, "to mix" (Lane). *Khalaṭa* is the plain verb, "he mixed".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

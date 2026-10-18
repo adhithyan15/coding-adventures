@@ -14,7 +14,8 @@ romanization: "bând"
 concept_tag: FA-SALAMAT227-BAND
 prerequisites: [FA-C226-sabidan, FA-C226-abkeshi-kardan]
 sounds: []
-roots: []
+roots: [french-bande]
+etymology_hook: "bând: a loan, usually traced to French bande 'band, bandage'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C226-abkeshi-kardan]
 <!-- hl-knowledge: introduces=[FA-LEX-C227-SALAMAT227-01]; assesses=[] -->
 
 **باند** — *bând* — "a bandage".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*bând* is a loan, usually traced to French *bande*, "band, bandage".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

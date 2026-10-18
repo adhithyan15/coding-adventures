@@ -11,8 +11,8 @@ gloss: there — the last cell of the frame, and a word the reader can predict b
 concept_tag: UR-LEX-VAHAN
 prerequisites: [UR-C24-yahan, UR-C18-voh, UR-C19-nahin-verb, UR-C23-par]
 sounds: []
-roots: []
-etymology_hook: "Three heads on one ending, and the whole set falls out: ک- asks, یہ- points near, وہ- points far. A reader who sees the pattern gets وہاں for nothing, which is the point of teaching یہاں first."
+roots: [sanskrit-asau]
+etymology_hook: "vahāṅ: the stem of voh 'that' with the place ending of yahāṅ 'here'; CDIAL has no entry, so its history is open"
 duration:
   max_seconds: 290
 requires:
@@ -55,6 +55,11 @@ If you guessed it, that is the lesson. The frame is closed:
 
 Six words, three heads, two frames — and every one of them was predictable from
 the shape of the others.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**وہاں** (*vahāṅ*) joins the stem of *voh*, "that", to the ending *-hāṅ* of *yahāṅ*, "here". Its history is not settled; CDIAL has no entry for it.
 
 ## Grammar Lens: what a place word can now do
 <!-- hl-knowledge: introduces=[]; assesses=[UR-LEX-VAHAN, UR-LEX-YAHAN, UR-GRAMMAR-NAHIN-VERB, UR-GRAMMAR-MEIN-POST, UR-GRAMMAR-IS-OBLIQUE, UR-LEX-KAMRA] -->

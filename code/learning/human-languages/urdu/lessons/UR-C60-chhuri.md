@@ -14,7 +14,8 @@ romanization: "chhurī"
 concept_tag: UR-HOME60-CHHURI
 prerequisites: [UR-C60-pyali, UR-C60-chammach]
 sounds: []
-roots: []
+roots: [sanskrit-kshuri]
+etymology_hook: "chhurī ← Sanskrit kṣurī 'knife, dagger', a tadbhava (CDIAL 3727)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C60-chammach]
 <!-- hl-knowledge: introduces=[UR-LEX-C60-HOME60-04]; assesses=[] -->
 
 **چھری** — *chhurī* — "a knife".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**چھری** (*chhurī*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *kṣurī*, "knife, dagger" (CDIAL 3727). It is the feminine of *kṣura*, "razor".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

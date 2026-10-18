@@ -4,7 +4,7 @@
   "chapter": 250,
   "title": "Foreigner, Tourist, Adult, Elderly person, Twin",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:93e3fa48d351911b",
+  "sourceHash": "fnv1a64:db7b0d2648dfbd36",
   "lessons": [
     {
       "id": "FR-C250-etranger",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b74ed768e75326b2",
+      "sourceHash": "fnv1a64:33ddd9dad0f3f0e2",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "étranger — the adjective étranger, \"foreign\", used as a noun: a foreigner."
+              "text": "étranger — the adjective étranger, \"foreign\", used as a noun: a foreigner. It is built on Old French estrange, \"foreign\" (EtymDB 2.1), from Latin extrāneus, \"from outside\"."
             }
           ]
         },

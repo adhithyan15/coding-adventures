@@ -14,7 +14,8 @@ romanization: "bhī̃t"
 concept_tag: MW-HOME62-BHIT
 prerequisites: [MW-C62-kursi, MW-C62-mej]
 sounds: []
-roots: []
+roots: [sanskrit-bhitti]
+etymology_hook: "bhī̃t ← Sanskrit bhitti 'mat of split reeds; wall', a tadbhava (CDIAL 9494, Hindi and Gujarati rows)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C62-mej]
 <!-- hl-knowledge: introduces=[MW-LEX-C62-HOME62-04]; assesses=[] -->
 
 **भींत** — *bhī̃t* — "a wall".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**भींत** (*bhī̃t*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *bhitti*, "mat of split reeds; wall". CDIAL gives no Marwari form in this entry (CDIAL 9494); the match is through Hindi *bhī̃t* and Gujarati *bhī̃t*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

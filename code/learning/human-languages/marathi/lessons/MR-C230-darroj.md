@@ -14,7 +14,7 @@ romanization: "darroj"
 concept_tag: MR-VEL230-DARROJ
 prerequisites: [MR-C230-suruvat, MR-C230-mudat]
 sounds: []
-roots: [persian-dar, persian-roz]
+roots: [persian-dar-in, persian-roz]
 etymology_hook: "darroj: Persian dar 'in' + rōz 'day', usually traced to Persian"
 duration:
   max_seconds: 200

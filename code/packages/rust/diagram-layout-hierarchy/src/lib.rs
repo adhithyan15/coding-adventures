@@ -168,117 +168,180 @@ fn swimlane_cross_lane_ranks(diagram: &SwimlaneDiagram) -> Option<HashMap<String
 
 /// Lay out explicit Railroad constructors into rule rows and branch paths.
 pub fn layout_railroad(diagram: &RailroadDiagram) -> LayoutedRailroadDiagram {
-    let title_height = if diagram.title.is_some() { 46.0 } else { 18.0 };
-    let mut rules = Vec::new(); let mut y = title_height; let mut width: f64 = 420.0;
+    let padding = diagram.config.padding;
+    let title_height = if diagram.title.is_some() { 36.0 + padding } else { 8.0 + padding };
+    let mut rules = Vec::new(); let mut y = title_height; let mut width: f64 = 400.0 + padding * 2.0;
     for rule in &diagram.rules {
         let mut elements = Vec::new(); let mut paths = Vec::new();
-        let (expr_width, expr_height) = layout_railroad_expression(&rule.definition, 140.0, y + 18.0, &mut elements, &mut paths);
-        let center = y + 18.0 + expr_height / 2.0;
-        paths.push(LayoutedRailroadPath { points: vec![Point { x: 116.0, y: center }, Point { x: 140.0, y: center }], loopback: false });
-        paths.push(LayoutedRailroadPath { points: vec![Point { x: 140.0 + expr_width, y: center }, Point { x: 164.0 + expr_width, y: center }], loopback: false });
-        let height = expr_height + 44.0; width = width.max(expr_width + 188.0);
-        rules.push(LayoutedRailroadRule { name: rule.name.clone(), y, height, elements, paths }); y += height + 14.0;
+        let content_y = y + padding + 8.0;
+        let rule_label = format!("{} =", rule.name);
+        let rule_label_width = rule_label.chars().count() as f64 * diagram.config.font_size * 0.61;
+        let name_width = rule_label_width + 20.0;
+        let start_marker_x = padding + name_width;
+        let expression_x = start_marker_x + 20.0;
+        let (expr_width, expr_height) = layout_railroad_expression(
+            &rule.definition, expression_x, content_y, &diagram.config, &mut elements, &mut paths,
+        );
+        let center = content_y + expr_height / 2.0;
+        let start_marker = Point { x: start_marker_x, y: center };
+        let end_marker = Point { x: expression_x + expr_width + 10.0, y: center };
+        paths.push(LayoutedRailroadPath { points: vec![Point { x: start_marker.x + diagram.config.marker_radius, y: center }, Point { x: expression_x, y: center }], loopback: false });
+        paths.push(LayoutedRailroadPath { points: vec![Point { x: expression_x + expr_width, y: center }, Point { x: end_marker.x - diagram.config.marker_radius, y: center }], loopback: false });
+        let height = expr_height + padding * 2.0 + 24.0;
+        width = width.max(end_marker.x + diagram.config.marker_radius + padding);
+        rules.push(LayoutedRailroadRule { name: rule.name.clone(), y, height, start_marker, end_marker, elements, paths });
+        y += height + diagram.config.vertical_separation;
     }
-    LayoutedRailroadDiagram { width, height: y + 12.0, title: diagram.title.clone(),
-        accessibility_title: diagram.accessibility_title.clone(), accessibility_description: diagram.accessibility_description.clone(), rules }
+    LayoutedRailroadDiagram { width, height: y + padding, title: diagram.title.clone(),
+        accessibility_title: diagram.accessibility_title.clone(), accessibility_description: diagram.accessibility_description.clone(),
+        config: diagram.config.clone(), rules }
 }
 
 fn layout_railroad_expression(expr: &RailroadExpression, x: f64, y: f64,
-    elements: &mut Vec<LayoutedRailroadElement>, paths: &mut Vec<LayoutedRailroadPath>) -> (f64, f64) {
+    config: &diagram_ir::RailroadConfig, elements: &mut Vec<LayoutedRailroadElement>,
+    paths: &mut Vec<LayoutedRailroadPath>) -> (f64, f64) {
     match expr {
         RailroadExpression::Terminal(label) | RailroadExpression::NonTerminal(label) | RailroadExpression::Special(label) => {
             let kind = match expr { RailroadExpression::Terminal(_) => RailroadElementKind::Terminal,
                 RailroadExpression::NonTerminal(_) => RailroadElementKind::NonTerminal, _ => RailroadElementKind::Special };
-            let width = (label.chars().count() as f64 * 8.5 + 28.0).clamp(64.0, 220.0);
-            elements.push(LayoutedRailroadElement { kind, label: label.clone(), x, y, width, height: 36.0 }); (width, 36.0)
+            let display_label = if kind == RailroadElementKind::Special { format!("? {label} ?") } else { label.clone() };
+            let text_width = display_label.chars().count() as f64 * config.font_size * 0.61;
+            let width = text_width.clamp(config.font_size * 3.15, config.font_size * 13.72) + config.padding * 2.0;
+            let height = config.font_size * 1.15 + config.padding * 2.0;
+            elements.push(LayoutedRailroadElement { kind, label: display_label, x, y, width, height }); (width, height)
         }
         RailroadExpression::Sequence(items) => {
-            let sizes: Vec<_> = items.iter().map(measure_railroad_expression).collect();
+            let sizes: Vec<_> = items.iter().map(|item| measure_railroad_expression(item, config)).collect();
             let max_height = sizes.iter().map(|size| size.1).fold(36.0, f64::max);
             let center = y + max_height / 2.0;
             let mut cursor = x; let mut previous_end = None;
             for (item, (_, item_height)) in items.iter().zip(sizes) {
-                let (item_width, _) = layout_railroad_expression(item, cursor, y + (max_height - item_height) / 2.0, elements, paths);
+                let (item_width, _) = layout_railroad_expression(item, cursor, y + (max_height - item_height) / 2.0, config, elements, paths);
                 if let Some(end) = previous_end { paths.push(LayoutedRailroadPath { points: vec![Point { x: end, y: center }, Point { x: cursor, y: center }], loopback: false }); }
-                previous_end = Some(cursor + item_width); cursor += item_width + 24.0;
+                previous_end = Some(cursor + item_width); cursor += item_width + config.horizontal_separation;
             }
-            ((cursor - x - 24.0).max(0.0), max_height)
+            ((cursor - x - config.horizontal_separation).max(0.0), max_height)
         }
         RailroadExpression::Choice(alternatives) => {
-            let gap = 14.0; let mut cursor_y = y; let mut max_width: f64 = 0.0; let mut sizes = Vec::new();
-            for alternative in alternatives { let size = layout_railroad_expression(alternative, x + 28.0, cursor_y, elements, paths); sizes.push((cursor_y, size)); cursor_y += size.1 + gap; max_width = max_width.max(size.0); }
+            let radius = config.arc_radius;
+            let gap = config.vertical_separation; let mut cursor_y = y; let mut max_width: f64 = 0.0; let mut sizes = Vec::new();
+            for alternative in alternatives { let size = layout_railroad_expression(alternative, x + radius * 2.0, cursor_y, config, elements, paths); sizes.push((cursor_y, size)); cursor_y += size.1 + gap; max_width = max_width.max(size.0); }
             let height = (cursor_y - y - gap).max(36.0); let middle = y + height / 2.0;
             for (alt_y, (alt_width, alt_height)) in sizes { let alt_center = alt_y + alt_height / 2.0;
-                paths.push(LayoutedRailroadPath { points: vec![Point { x, y: middle }, Point { x: x + 14.0, y: alt_center }, Point { x: x + 28.0, y: alt_center }], loopback: false });
-                paths.push(LayoutedRailroadPath { points: vec![Point { x: x + 28.0 + alt_width, y: alt_center }, Point { x: x + 42.0 + max_width, y: alt_center }, Point { x: x + 56.0 + max_width, y: middle }], loopback: false }); }
-            (max_width + 56.0, height)
+                let left = if (alt_center - middle).abs() <= f64::EPSILON {
+                    vec![Point { x, y: middle }, Point { x: x + radius * 2.0, y: middle }]
+                } else {
+                    vec![Point { x, y: middle }, Point { x: x + radius, y: middle },
+                        Point { x: x + radius, y: alt_center }, Point { x: x + radius * 2.0, y: alt_center }]
+                };
+                paths.push(LayoutedRailroadPath { points: left, loopback: false });
+                let right_start = x + radius * 2.0 + alt_width;
+                let right_lane = x + radius * 3.0 + max_width;
+                let exit = x + radius * 4.0 + max_width;
+                let right = if (alt_center - middle).abs() <= f64::EPSILON {
+                    vec![Point { x: right_start, y: middle }, Point { x: exit, y: middle }]
+                } else {
+                    vec![Point { x: right_start, y: alt_center }, Point { x: right_lane, y: alt_center },
+                        Point { x: right_lane, y: middle }, Point { x: exit, y: middle }]
+                };
+                paths.push(LayoutedRailroadPath { points: right, loopback: false }); }
+            (max_width + radius * 4.0, height)
         }
         RailroadExpression::Optional(element) => {
-            let inner_y = y + 14.0;
-            let (inner_width, inner_height) = layout_railroad_expression(element, x + 24.0, inner_y, elements, paths);
-            let height = inner_height + 28.0; let middle = inner_y + inner_height / 2.0; let bypass_y = y + 4.0;
-            let exit_x = x + inner_width + 48.0;
-            paths.push(LayoutedRailroadPath { points: vec![Point { x, y: middle }, Point { x: x + 24.0, y: middle }], loopback: false });
-            paths.push(LayoutedRailroadPath { points: vec![Point { x: x + 24.0 + inner_width, y: middle }, Point { x: exit_x, y: middle }], loopback: false });
-            paths.push(LayoutedRailroadPath { points: vec![Point { x, y: middle }, Point { x: x + 12.0, y: bypass_y }, Point { x: exit_x - 12.0, y: bypass_y }, Point { x: exit_x, y: middle }], loopback: false });
-            (inner_width + 48.0, height)
+            let radius = config.arc_radius;
+            let inner_y = y + radius * 2.0;
+            let (inner_width, inner_height) = layout_railroad_expression(element, x + radius * 2.0, inner_y, config, elements, paths);
+            let height = inner_height + radius * 2.0; let middle = inner_y + inner_height / 2.0;
+            let exit_x = x + inner_width + radius * 4.0;
+            paths.push(LayoutedRailroadPath { points: vec![Point { x, y: middle }, Point { x: x + radius * 2.0, y: middle }], loopback: false });
+            paths.push(LayoutedRailroadPath { points: vec![Point { x: x + radius * 2.0 + inner_width, y: middle }, Point { x: exit_x, y: middle }], loopback: false });
+            paths.push(LayoutedRailroadPath { points: vec![Point { x, y: middle }, Point { x: x + radius, y: middle },
+                Point { x: x + radius, y }, Point { x: exit_x - radius, y },
+                Point { x: exit_x - radius, y: middle }, Point { x: exit_x, y: middle }], loopback: false });
+            (inner_width + radius * 4.0, height)
         }
         RailroadExpression::Repetition { element, min, .. } => {
-            let inner_y = y + 15.0;
-            let (inner_width, inner_height) = layout_railroad_expression(element, x, inner_y, elements, paths);
-            let height = inner_height + 30.0; let middle = inner_y + inner_height / 2.0; let loop_y = inner_y + inner_height + 9.0;
-            paths.push(LayoutedRailroadPath { points: vec![Point { x: x + inner_width, y: middle }, Point { x: x + inner_width, y: loop_y }, Point { x, y: loop_y }, Point { x, y: middle }], loopback: true });
-            if *min == 0 { paths.push(LayoutedRailroadPath { points: vec![Point { x, y: middle }, Point { x: x + 12.0, y: y + 4.0 }, Point { x: x + inner_width - 12.0, y: y + 4.0 }, Point { x: x + inner_width, y: middle }], loopback: false }); }
-            (inner_width, height)
+            let radius = config.arc_radius;
+            let has_bypass = *min == 0;
+            let inner_y = y + if has_bypass { radius * 2.0 } else { 0.0 };
+            let inner_x = x + radius * 2.0;
+            let (inner_width, inner_height) = layout_railroad_expression(element, inner_x, inner_y, config, elements, paths);
+            let total_width = inner_width + radius * 4.0;
+            let height = inner_height + radius * 2.0 + if has_bypass { radius * 2.0 } else { 0.0 };
+            let middle = inner_y + inner_height / 2.0; let loop_y = inner_y + inner_height + radius * 2.0;
+            paths.push(LayoutedRailroadPath { points: vec![Point { x: inner_x + inner_width, y: middle },
+                Point { x: x + total_width - radius, y: middle }, Point { x: x + total_width - radius, y: loop_y },
+                Point { x: x + radius, y: loop_y }, Point { x: x + radius, y: middle }, Point { x: inner_x, y: middle }], loopback: true });
+            paths.push(LayoutedRailroadPath { points: vec![Point { x, y: middle }, Point { x: inner_x, y: middle }], loopback: false });
+            paths.push(LayoutedRailroadPath { points: vec![Point { x: inner_x + inner_width, y: middle }, Point { x: x + total_width, y: middle }], loopback: false });
+            if has_bypass { paths.push(LayoutedRailroadPath { points: vec![Point { x, y: middle }, Point { x: x + radius, y: middle },
+                Point { x: x + radius, y }, Point { x: x + total_width - radius, y },
+                Point { x: x + total_width - radius, y: middle }, Point { x: x + total_width, y: middle }], loopback: false }); }
+            (total_width, height)
         }
     }
 }
 
-fn measure_railroad_expression(expr: &RailroadExpression) -> (f64, f64) {
+fn measure_railroad_expression(expr: &RailroadExpression, config: &diagram_ir::RailroadConfig) -> (f64, f64) {
     match expr {
         RailroadExpression::Terminal(label) | RailroadExpression::NonTerminal(label) | RailroadExpression::Special(label) => {
-            ((label.chars().count() as f64 * 8.5 + 28.0).clamp(64.0, 220.0), 36.0)
+            let display_length = label.chars().count() + if matches!(expr, RailroadExpression::Special(_)) { 4 } else { 0 };
+            let text_width = display_length as f64 * config.font_size * 0.61;
+            (text_width.clamp(config.font_size * 3.15, config.font_size * 13.72) + config.padding * 2.0,
+                config.font_size * 1.15 + config.padding * 2.0)
         }
         RailroadExpression::Sequence(items) => {
-            let sizes: Vec<_> = items.iter().map(measure_railroad_expression).collect();
-            let width = sizes.iter().map(|size| size.0).sum::<f64>() + 24.0 * items.len().saturating_sub(1) as f64;
+            let sizes: Vec<_> = items.iter().map(|item| measure_railroad_expression(item, config)).collect();
+            let width = sizes.iter().map(|size| size.0).sum::<f64>()
+                + config.horizontal_separation * items.len().saturating_sub(1) as f64;
             let height = sizes.iter().map(|size| size.1).fold(36.0, f64::max);
             (width, height)
         }
         RailroadExpression::Choice(alternatives) => {
-            let sizes: Vec<_> = alternatives.iter().map(measure_railroad_expression).collect();
-            let width = sizes.iter().map(|size| size.0).fold(0.0, f64::max) + 56.0;
+            let sizes: Vec<_> = alternatives.iter().map(|item| measure_railroad_expression(item, config)).collect();
+            let width = sizes.iter().map(|size| size.0).fold(0.0, f64::max) + config.arc_radius * 4.0;
             let height = sizes.iter().map(|size| size.1).sum::<f64>()
-                + 14.0 * alternatives.len().saturating_sub(1) as f64;
+                + config.vertical_separation * alternatives.len().saturating_sub(1) as f64;
             (width, height.max(36.0))
         }
         RailroadExpression::Optional(element) => {
-            let (width, height) = measure_railroad_expression(element);
-            (width + 48.0, height + 28.0)
+            let (width, height) = measure_railroad_expression(element, config);
+            (width + config.arc_radius * 4.0, height + config.arc_radius * 2.0)
         }
-        RailroadExpression::Repetition { element, .. } => {
-            let (width, height) = measure_railroad_expression(element);
-            (width, height + 30.0)
+        RailroadExpression::Repetition { element, min, .. } => {
+            let (width, height) = measure_railroad_expression(element, config);
+            (width + config.arc_radius * 4.0,
+                height + config.arc_radius * 2.0 + if *min == 0 { config.arc_radius * 2.0 } else { 0.0 })
         }
     }
 }
 
 /// Lay out top-level Mermaid subgraphs as stable ownership lanes.
 pub fn layout_swimlane(diagram: &SwimlaneDiagram) -> LayoutedSwimlaneDiagram {
-    let title_height = if diagram.title.is_some() { 44.0 } else { 16.0 };
+    let title_height = if diagram.title.is_some() {
+        44.0 + diagram.flowchart_config.title_top_margin.unwrap_or(0.0)
+    } else {
+        16.0
+    };
     let horizontal_flow = matches!(
         diagram.direction,
         DiagramDirection::Lr | DiagramDirection::Rl
     );
-    let lane_header = 38.0;
-    let lane_gap = 12.0;
+    let subgraph_title_margin_top = diagram.flowchart_config.subgraph_title_margin_top.unwrap_or(0.0);
+    let subgraph_title_margin_bottom = diagram.flowchart_config.subgraph_title_margin_bottom.unwrap_or(0.0);
+    let lane_header = 38.0 + subgraph_title_margin_top + subgraph_title_margin_bottom;
+    let outer_padding = diagram.flowchart_config.diagram_padding.unwrap_or(12.0);
+    let lane_gap = diagram.flowchart_config.node_spacing.unwrap_or(12.0);
     let node_width = 132.0;
-    let node_height = 54.0;
-    let node_gap = 42.0;
+    let node_height = diagram.flowchart_config.padding
+        .map(|padding| 26.0 + padding * 2.0).unwrap_or(54.0).max(54.0);
+    let node_gap = diagram.flowchart_config.rank_spacing.unwrap_or(42.0);
     let cross_lane_ranks = swimlane_cross_lane_ranks(diagram);
     let max_rank = cross_lane_ranks.as_ref().and_then(|ranks| ranks.values().max().copied()).unwrap_or(0);
     let rank_slot_width = diagram.nodes.iter().map(|node|
-        swimlane_node_width(&node.shape, &node.label, &node.style)
+        swimlane_node_width(&node.shape, &node.label, &node.style,
+            diagram.theme.font_size.unwrap_or(13.0), diagram.flowchart_config.wrapping_width,
+            diagram.flowchart_config.padding)
     ).fold(node_width, f64::max);
     let max_group_depth = diagram.groups.iter().map(|group| {
         let mut depth = 1usize;
@@ -290,7 +353,8 @@ pub fn layout_swimlane(diagram: &SwimlaneDiagram) -> LayoutedSwimlaneDiagram {
         }
         depth
     }).max().unwrap_or(0);
-    let lane_cross = 150.0 + 60.0 * max_group_depth as f64;
+    let lane_cross = if horizontal_flow { 150.0 } else { (rank_slot_width + 18.0).max(150.0) }
+        + 60.0 * max_group_depth as f64;
     let lane_along = if cross_lane_ranks.is_some() && horizontal_flow {
         lane_header + (max_rank + 1) as f64 * rank_slot_width + max_rank as f64 * node_gap + 40.0
     } else if cross_lane_ranks.is_some() {
@@ -299,12 +363,15 @@ pub fn layout_swimlane(diagram: &SwimlaneDiagram) -> LayoutedSwimlaneDiagram {
         diagram.lanes.iter().map(|lane| {
             let widths = lane.node_ids.iter().filter_map(|node_id| {
                 diagram.nodes.iter().find(|node| &node.id == node_id)
-                    .map(|node| swimlane_node_width(&node.shape, &node.label, &node.style))
+                    .map(|node| swimlane_node_width(
+                        &node.shape, &node.label, &node.style, diagram.theme.font_size.unwrap_or(13.0),
+                        diagram.flowchart_config.wrapping_width, diagram.flowchart_config.padding,
+                    ))
             }).collect::<Vec<_>>();
             let gap_units = lane.node_ids.windows(2).map(|pair|
                 swimlane_link_gap_units(diagram, &pair[0], &pair[1])
             ).sum::<usize>();
-            lane_header + widths.iter().sum::<f64>() + node_gap * gap_units as f64 + 40.0
+            lane_header + widths.iter().sum::<f64>() + node_gap * gap_units as f64 + 48.0
         }).fold(0.0, f64::max)
     } else {
         diagram.lanes.iter().map(|lane| {
@@ -318,11 +385,11 @@ pub fn layout_swimlane(diagram: &SwimlaneDiagram) -> LayoutedSwimlaneDiagram {
     let (width, height) = if horizontal_flow {
         (
             lane_along.max(420.0),
-            title_height + diagram.lanes.len() as f64 * (lane_cross + lane_gap) + 12.0,
+            title_height + diagram.lanes.len() as f64 * (lane_cross + lane_gap) + outer_padding,
         )
     } else {
         (
-            diagram.lanes.len() as f64 * (lane_cross + lane_gap) + 12.0,
+            diagram.lanes.len() as f64 * (lane_cross + lane_gap) + outer_padding,
             title_height + lane_along.max(420.0),
         )
     };
@@ -336,22 +403,24 @@ pub fn layout_swimlane(diagram: &SwimlaneDiagram) -> LayoutedSwimlaneDiagram {
     for (lane_index, lane) in ordered_lanes.into_iter().enumerate() {
         let (x, y, lane_width, lane_height) = if horizontal_flow {
             (
-                12.0,
+                outer_padding,
                 title_height + lane_index as f64 * (lane_cross + lane_gap),
-                width - 24.0,
+                width - outer_padding * 2.0,
                 lane_cross,
             )
         } else {
             (
-                12.0 + lane_index as f64 * (lane_cross + lane_gap),
+                outer_padding + lane_index as f64 * (lane_cross + lane_gap),
                 title_height,
                 lane_cross,
-                height - title_height - 12.0,
+                height - title_height - outer_padding,
             )
         };
         lanes.push(LayoutedSwimlaneLane {
             id: lane.id.clone(),
             label: lane.label.clone(),
+            classes: lane.classes.clone(),
+            style: lane.style.clone(),
             x,
             y,
             width: lane_width,
@@ -377,8 +446,10 @@ pub fn layout_swimlane(diagram: &SwimlaneDiagram) -> LayoutedSwimlaneDiagram {
                 DiagramShape::ForkJoin if horizontal_flow => (10.0, 70.0),
                 DiagramShape::ForkJoin => (70.0, 10.0),
                 DiagramShape::LightningBolt => (35.0, 70.0),
-                _ if horizontal_flow => (swimlane_node_width(&node.shape, &node.label, &node.style), node_height),
-                _ => (node_width, node_height),
+                _ => (swimlane_node_width(
+                    &node.shape, &node.label, &node.style, diagram.theme.font_size.unwrap_or(13.0),
+                    diagram.flowchart_config.wrapping_width, diagram.flowchart_config.padding,
+                ), node_height),
             };
             let rank = cross_lane_ranks.as_ref().and_then(|ranks| ranks.get(node_id)).copied();
             let (node_x, node_y) = if let (true, Some(rank)) = (horizontal_flow, rank) {
@@ -438,12 +509,13 @@ pub fn layout_swimlane(diagram: &SwimlaneDiagram) -> LayoutedSwimlaneDiagram {
             left = left.min(x1); top = top.min(y1); right = right.max(x2); bottom = bottom.max(y2);
         }
         left = (left - 12.0).max(lane.x + 6.0);
-        top = (top - 30.0).max(lane.y + 32.0);
+        top = (top - 30.0 - subgraph_title_margin_top - subgraph_title_margin_bottom)
+            .max(lane.y + lane_header - 6.0);
         right = (right + 12.0).min(lane.x + lane.width - 6.0);
         bottom = (bottom + 12.0).min(lane.y + lane.height - 6.0);
         groups.push(LayoutedSwimlaneGroup {
             id: group.id.clone(), label: group.label.clone(), lane_id: group.lane_id.clone(),
-            parent_id: group.parent_id.clone(), x: left, y: top,
+            parent_id: group.parent_id.clone(), classes: group.classes.clone(), style: group.style.clone(), x: left, y: top,
             width: (right - left).max(40.0), height: (bottom - top).max(40.0),
         });
     }
@@ -479,7 +551,7 @@ pub fn layout_swimlane(diagram: &SwimlaneDiagram) -> LayoutedSwimlaneDiagram {
                 style: edge.style.clone(),
                 animate: edge.animate,
                 animation: edge.animation,
-                curve: edge.curve,
+                curve: edge.curve.or(diagram.flowchart_config.curve),
             })
         })
         .collect();
@@ -500,6 +572,8 @@ pub fn layout_swimlane(diagram: &SwimlaneDiagram) -> LayoutedSwimlaneDiagram {
         automatic_lane_ordering: diagram.automatic_lane_ordering,
         ignore_cross_lane_edges: diagram.ignore_cross_lane_edges,
         optimize_ranks_by_crossings: diagram.optimize_ranks_by_crossings,
+        flowchart_config: diagram.flowchart_config.clone(),
+        theme: diagram.theme.clone(),
     }
 }
 
@@ -635,7 +709,14 @@ fn swimlane_edge_endpoints(
     )
 }
 
-fn swimlane_node_width(shape: &DiagramShape, label: &str, style: &diagram_ir::DiagramStyle) -> f64 {
+fn swimlane_node_width(
+    shape: &DiagramShape,
+    label: &str,
+    style: &diagram_ir::DiagramStyle,
+    theme_font_size: f64,
+    wrapping_width: Option<f64>,
+    padding: Option<f64>,
+) -> f64 {
     match shape {
         DiagramShape::Anchor => 2.0,
         DiagramShape::SmallCircle | DiagramShape::FramedCircle | DiagramShape::FilledCircle => 14.0,
@@ -643,10 +724,12 @@ fn swimlane_node_width(shape: &DiagramShape, label: &str, style: &diagram_ir::Di
         DiagramShape::ForkJoin => 10.0,
         DiagramShape::LightningBolt => 35.0,
         _ => {
-            let font_scale = style.font_size.unwrap_or(13.0) / 13.0;
+            let font_scale = style.font_size.unwrap_or(theme_font_size) / 13.0;
             let weight_scale = if style.font_weight.unwrap_or(400) >= 600 { 1.06 } else { 1.0 };
-            (label.chars().count() as f64 * 7.2 * font_scale * weight_scale + 28.0)
-                .clamp(132.0, 360.0)
+            let horizontal_padding = padding.map(|value| value * 2.0).unwrap_or(28.0);
+            let minimum_width = 104.0 + horizontal_padding;
+            (label.chars().count() as f64 * 7.2 * font_scale * weight_scale + horizontal_padding)
+                .clamp(minimum_width, wrapping_width.unwrap_or(360.0).max(minimum_width))
         }
     }
 }
@@ -1013,8 +1096,8 @@ mod tests {
             direction: DiagramDirection::Lr, title: Some("Handoff".into()), accessibility_title: None,
             accessibility_description: None,
             lanes: vec![
-                SwimlaneLane { id: "buyer".into(), label: "Buyer".into(), node_ids: vec!["choose".into()] },
-                SwimlaneLane { id: "store".into(), label: "Store".into(), node_ids: vec!["ship".into()] },
+                SwimlaneLane { id: "buyer".into(), label: "Buyer".into(), node_ids: vec!["choose".into()], classes: Vec::new(), style: Default::default() },
+                SwimlaneLane { id: "store".into(), label: "Store".into(), node_ids: vec!["ship".into()], classes: Vec::new(), style: Default::default() },
             ],
             groups: vec![], nodes: vec![
                 SwimlaneNode { id: "choose".into(), label: "Choose".into(), lane_id: Some("buyer".into()), shape: DiagramShape::Rect, classes: Vec::new(), style: Default::default() },
@@ -1032,6 +1115,8 @@ mod tests {
             links: Vec::new(), callbacks: Vec::new(), line_hops: None, automatic_lane_ordering: false,
             ignore_cross_lane_edges: true,
             optimize_ranks_by_crossings: true,
+            flowchart_config: Default::default(),
+            theme: Default::default(),
         };
         let layout = layout_swimlane(&diagram);
         assert!(layout.lanes[1].y > layout.lanes[0].y);
@@ -1050,13 +1135,15 @@ mod tests {
         let diagram = SwimlaneDiagram {
             direction: DiagramDirection::Lr, title: None, accessibility_title: None,
             accessibility_description: None,
-            lanes: vec![SwimlaneLane { id: "lane".into(), label: "Lane".into(), node_ids: vec!["long".into()] }],
+            lanes: vec![SwimlaneLane { id: "lane".into(), label: "Lane".into(), node_ids: vec!["long".into()], classes: Vec::new(), style: Default::default() }],
             groups: vec![], nodes: vec![SwimlaneNode { id: "long".into(),
                 label: "A substantially longer process description".into(),
                 lane_id: Some("lane".into()), shape: DiagramShape::Rect, classes: Vec::new(), style: Default::default() }],
             edges: vec![], links: Vec::new(), callbacks: Vec::new(), line_hops: None, automatic_lane_ordering: false,
             ignore_cross_lane_edges: true,
             optimize_ranks_by_crossings: true,
+            flowchart_config: Default::default(),
+            theme: Default::default(),
         };
         let layout = layout_swimlane(&diagram);
         assert!(layout.nodes[0].width > 132.0);
@@ -1070,7 +1157,7 @@ mod tests {
             direction: DiagramDirection::Lr, title: None, accessibility_title: None,
             accessibility_description: None,
             lanes: vec![SwimlaneLane { id: "runtime".into(), label: "Runtime".into(),
-                node_ids: vec!["hosted".into(), "alert".into(), "collect".into(), "extract".into(), "manual".into(), "card".into(), "lined".into(), "text".into(), "start".into(), "stop".into(), "fork".into(), "bolt".into(), "brace-left".into(), "brace-right".into(), "braces".into(), "document".into(), "delay".into(), "horizontal-cylinder".into(), "lined-cylinder".into(), "display".into(), "divided".into(), "window-pane".into(), "junction".into(), "loop-limit".into(), "manual-input".into(), "multi-document".into(), "multi-process".into(), "stored-data".into(), "summary".into(), "tagged-document".into(), "tagged-process".into(), "paper-tape".into(), "lined-document".into(), "data-store".into(), "titled".into()] }],
+                node_ids: vec!["hosted".into(), "alert".into(), "collect".into(), "extract".into(), "manual".into(), "card".into(), "lined".into(), "text".into(), "start".into(), "stop".into(), "fork".into(), "bolt".into(), "brace-left".into(), "brace-right".into(), "braces".into(), "document".into(), "delay".into(), "horizontal-cylinder".into(), "lined-cylinder".into(), "display".into(), "divided".into(), "window-pane".into(), "junction".into(), "loop-limit".into(), "manual-input".into(), "multi-document".into(), "multi-process".into(), "stored-data".into(), "summary".into(), "tagged-document".into(), "tagged-process".into(), "paper-tape".into(), "lined-document".into(), "data-store".into(), "titled".into()], classes: Vec::new(), style: Default::default() }],
             groups: vec![], nodes: vec![
                 SwimlaneNode { id: "hosted".into(), label: "Hosted".into(), lane_id: Some("runtime".into()),
                     shape: DiagramShape::Cloud, classes: Vec::new(), style: Default::default() },
@@ -1146,6 +1233,8 @@ mod tests {
             edges: vec![], links: Vec::new(), callbacks: Vec::new(), line_hops: None, automatic_lane_ordering: false,
             ignore_cross_lane_edges: true,
             optimize_ranks_by_crossings: true,
+            flowchart_config: Default::default(),
+            theme: Default::default(),
         };
         let layout = layout_swimlane(&diagram);
         assert_eq!(layout.nodes[0].shape, DiagramShape::Cloud);
@@ -1215,6 +1304,7 @@ mod tests {
         use diagram_ir::{RailroadDiagram, RailroadExpression, RailroadRule};
         let diagram = RailroadDiagram {
             title: Some("Number".into()), accessibility_title: None, accessibility_description: None,
+            config: Default::default(),
             rules: vec![RailroadRule { name: "number".into(), definition: RailroadExpression::Sequence(vec![
                 RailroadExpression::Choice(vec![RailroadExpression::Terminal("0".into()), RailroadExpression::Terminal("1".into())]),
                 RailroadExpression::Repetition { element: Box::new(RailroadExpression::NonTerminal("digit".into())), min: 1, max: None },
@@ -1229,10 +1319,35 @@ mod tests {
     }
 
     #[test]
+    fn railroad_layout_uses_upstream_rule_and_special_display_labels() {
+        use diagram_ir::{RailroadDiagram, RailroadExpression, RailroadRule};
+        let diagram = RailroadDiagram {
+            title: None, accessibility_title: None, accessibility_description: None,
+            config: Default::default(),
+            rules: vec![
+                RailroadRule { name: "x".into(), definition: RailroadExpression::Special("integer".into()) },
+                RailroadRule { name: "long-rule-name".into(), definition: RailroadExpression::Terminal("value".into()) },
+            ],
+        };
+
+        let layout = layout_railroad(&diagram);
+        assert_eq!(layout.rules[0].elements[0].label, "? integer ?");
+        assert!(layout.rules[1].start_marker.x > layout.rules[0].start_marker.x);
+        for rule in &layout.rules {
+            assert_eq!(rule.start_marker.y, rule.end_marker.y);
+            assert_eq!(rule.paths[rule.paths.len() - 2].points[0].x,
+                rule.start_marker.x + layout.config.marker_radius);
+            assert_eq!(rule.paths[rule.paths.len() - 1].points[1].x,
+                rule.end_marker.x - layout.config.marker_radius);
+        }
+    }
+
+    #[test]
     fn railroad_layout_sizes_nested_repetition_without_clipping() {
         use diagram_ir::{RailroadDiagram, RailroadExpression, RailroadRule};
         let diagram = RailroadDiagram {
             title: None, accessibility_title: None, accessibility_description: None,
+            config: Default::default(),
             rules: vec![RailroadRule { name: "value".into(), definition: RailroadExpression::Sequence(vec![
                 RailroadExpression::NonTerminal("prefix".into()),
                 RailroadExpression::Repetition {
@@ -1252,5 +1367,56 @@ mod tests {
         assert!(rule.elements.iter().all(|element| element.y + element.height <= rule_bottom));
         assert!(rule.paths.iter().flat_map(|path| &path.points).all(|point| point.y <= rule_bottom));
         assert!(rule.height > 150.0);
+    }
+
+    #[test]
+    fn railroad_layout_applies_configured_spacing() {
+        use diagram_ir::{RailroadConfig, RailroadDiagram, RailroadExpression, RailroadRule};
+        let expression = RailroadExpression::Sequence(vec![
+            RailroadExpression::Terminal("a".into()),
+            RailroadExpression::Choice(vec![
+                RailroadExpression::Terminal("b".into()),
+                RailroadExpression::Terminal("c".into()),
+            ]),
+        ]);
+        let compact = layout_railroad(&RailroadDiagram {
+            title: None, accessibility_title: None, accessibility_description: None,
+            config: RailroadConfig { padding: 4.0, vertical_separation: 2.0, horizontal_separation: 3.0, ..Default::default() },
+            rules: vec![RailroadRule { name: "value".into(), definition: expression.clone() }],
+        });
+        let spacious = layout_railroad(&RailroadDiagram {
+            title: None, accessibility_title: None, accessibility_description: None,
+            config: RailroadConfig { padding: 30.0, vertical_separation: 40.0, horizontal_separation: 50.0, ..Default::default() },
+            rules: vec![RailroadRule { name: "value".into(), definition: expression }],
+        });
+        assert!(spacious.width > compact.width);
+        assert!(spacious.height > compact.height);
+        assert!(spacious.rules[0].elements[1].x > compact.rules[0].elements[1].x);
+    }
+
+    #[test]
+    fn railroad_layout_applies_configured_arc_radius_to_branch_geometry() {
+        use diagram_ir::{RailroadConfig, RailroadDiagram, RailroadExpression, RailroadRule};
+        let expression = RailroadExpression::Optional(Box::new(RailroadExpression::Choice(vec![
+            RailroadExpression::Terminal("a".into()),
+            RailroadExpression::Terminal("b".into()),
+        ])));
+        let layout_with_radius = |arc_radius| layout_railroad(&RailroadDiagram {
+            title: None, accessibility_title: None, accessibility_description: None,
+            config: RailroadConfig { arc_radius, ..Default::default() },
+            rules: vec![RailroadRule { name: "value".into(), definition: expression.clone() }],
+        });
+        let tight = layout_with_radius(4.0);
+        let wide = layout_with_radius(24.0);
+        assert!(wide.rules[0].end_marker.x > tight.rules[0].end_marker.x);
+        assert!(wide.width >= wide.rules[0].end_marker.x + wide.config.marker_radius + wide.config.padding);
+        assert!(wide.rules[0].height > tight.rules[0].height);
+        assert_ne!(wide.rules[0].paths, tight.rules[0].paths);
+        for layout in [&tight, &wide] {
+            let rule = &layout.rules[0];
+            assert!(rule.paths.iter().flat_map(|path| &path.points).all(|point|
+                point.x >= 0.0 && point.x <= layout.width
+                    && point.y >= rule.y && point.y <= rule.y + rule.height));
+        }
     }
 }

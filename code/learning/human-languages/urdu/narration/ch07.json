@@ -4,7 +4,7 @@
   "chapter": 7,
   "title": "Four Verbs of the Mind",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:41a55c6b04fa9568",
+  "sourceHash": "fnv1a64:964479ce5c463068",
   "lessons": [
     {
       "id": "UR-C07-sochna",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:1610c92214d4dc8e",
+      "sourceHash": "fnv1a64:1ad02e6332ee5c6b",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -100,7 +100,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "sochnā comes through Prakrit soccadi from Sanskrit śocati — “burns; grieves; mourns” — on the root śuc-. The sense cooled by stages: burn becomes be consumed by something becomes brood on it becomes plain think. Urdu's everyday word for thinking is an old word for sorrow that went quiet, which is why soch is still a thought and a worry."
+              "text": "sochnā goes back, CDIAL says, to Sanskrit śocyate, “is made to feel pain”, the passive of śocayati, “sets alight, burns” (CDIAL 12621), on the root śuc-, “burn; grieve”. The sense cooled by stages: burn becomes be consumed by something becomes brood on it becomes plain think. Urdu's everyday word for thinking is an old word for sorrow that went quiet, which is why soch is still a thought and a worry."
             },
             {
               "kind": "speech",
@@ -177,7 +177,7 @@
             },
             {
               "kind": "speech",
-              "text": "How many dots does چ carry, and where? (Three, below.) What did śocati mean before it meant “think”? (To burn, to grieve.) Is there an English cousin of śuc-? (No.)"
+              "text": "How many dots does چ carry, and where? (Three, below.) What did śuc- mean before it meant “think”? (To burn, to grieve.) Is there an English cousin of śuc-? (No.)"
             },
             {
               "kind": "speech",
@@ -388,7 +388,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:7b1c05f031b5c86a",
+      "sourceHash": "fnv1a64:a0b0c3927a0a3ad7",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -473,7 +473,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "samajhnā comes through Prakrit saṃbujjhadi from Sanskrit sambudhyate: sam-, “fully, together,” plus budh-, “to wake; to become aware.” To understand something is to come awake to it."
+              "text": "samajhnā comes through Prakrit saṃbujjhaï from Sanskrit saṃbudhyate, “wakes up, understands” (CDIAL 12959): sam-, “fully, together,” plus budh-, “to wake; to become aware.” To understand something is to come awake to it."
             },
             {
               "kind": "speech",
@@ -777,7 +777,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:fa3f6995ee6ff51b",
+      "sourceHash": "fnv1a64:024a03506f8e31ea",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -859,11 +859,11 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "paṛhnā comes from Prakrit paḍhaï, from Sanskrit paṭh-, “to recite; to read aloud.” Its ṭh softened into the flapped ṛh you have learned, and the meaning widened from reciting to reading to studying."
+              "text": "paṛhnā comes from Prakrit paḍhaï, from Sanskrit paṭh-, “to recite; to read aloud” (CDIAL 7712). Its ṭh softened into the flapped ṛh you have learned, and the meaning widened from reciting to reading to studying."
             },
             {
               "kind": "speech",
-              "text": "Be honest about the far end: paṭh- has no secure Indo-European ancestry. There is no English cousin, and the trail stops inside India."
+              "text": "Be honest about the far end: CDIAL takes paṭh- as a Middle Indo-Aryan form of an older pṛthati, and there is no English cousin."
             },
             {
               "kind": "speech",
@@ -950,7 +950,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:cf4fc8d0f93b4dc2",
+      "sourceHash": "fnv1a64:cbb87c65f3523408",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -1032,7 +1032,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "likhnā is Sanskrit likhati, “scratches, scrapes.” Writing was cutting a mark into a surface. Three other families reached for that picture out of three unrelated roots: Latin scrībere “to incise,” behind scribe and script; Greek gráphein “to scratch,” behind graph; Old English wrītan “to score, to cut,” which is write. Four families, each deciding that writing is scratching."
+              "text": "likhnā is Sanskrit likhati, “scratches, scrapes” (CDIAL 11048). Writing was cutting a mark into a surface. Three other families reached for that picture out of three unrelated roots: Latin scrībere “to incise,” behind scribe and script; Greek gráphein “to scratch,” behind graph; Old English wrītan “to score, to cut,” which is write. Four families, each deciding that writing is scratching."
             },
             {
               "kind": "speech",

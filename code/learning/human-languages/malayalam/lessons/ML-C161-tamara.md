@@ -39,7 +39,7 @@ reviews_of: [ML-C161-mulla]
 
 [PAUSE 2s] Before the new one: say the Malayalam for a banana plant, then the Malayalam for jasmine.
 
-[PAUSE 1s] *Maṇi*: a bell, or an hour? (Both; Tamil dictionaries treat them as two look-alike words.)
+[PAUSE 1s] *Maṇi*: a bell, or an hour? (Both: the hour is named after the bell that strikes it.)
 
 ## You'll want to know: താമര
 <!-- hl-knowledge: introduces=[ML-LEX-C161-THINGS161-05]; assesses=[] -->

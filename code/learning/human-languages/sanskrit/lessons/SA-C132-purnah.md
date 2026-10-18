@@ -14,7 +14,8 @@ romanization: "pūrṇaḥ"
 concept_tag: SA-QUAL132-PURNAH
 prerequisites: [SA-C132-vakrah, SA-C132-rjuh]
 sounds: []
-roots: []
+roots: [sanskrit-purna]
+etymology_hook: "pūrṇa 'filled, full' ← √pṝ 'fill' (CDIAL 8339); inherited, cousin of Latin plēnus and Persian pur (EtymDB)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C132-rjuh]
 <!-- hl-knowledge: introduces=[SA-LEX-C132-QUAL132-04]; assesses=[] -->
 
 **पूर्णः** — *pūrṇaḥ* — "full".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*pūrṇa* is the past participle of the root √pṝ "fill" (CDIAL 8339): "filled, full". It is inherited from Indo-European, and Latin *plēnus* (English *plenty*) and Persian *pur* "full" are cousins (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "mawḍūʿ"
 concept_tag: AR-SHAY218-MAWDU
 prerequisites: [AR-C217-battariyya, AR-C218-mitraqa]
 sounds: []
-roots: []
+roots: [w-ḍ-ʿ]
+etymology_hook: "mawḍūʿ: built on the root w-ḍ-ʿ, 'to put down, to lay' (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C218-mitraqa]
 <!-- hl-knowledge: introduces=[AR-LEX-C218-SHAY218-02]; assesses=[] -->
 
 **موضوع** — *mawḍūʿ* — "a topic, a subject".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**موضوع** (*mawḍūʿ*) is built on the native Arabic root *w-ḍ-ʿ*, "to put down, to lay" (Lane). *Mawḍūʿ* is the passive participle, "laid down, set": a topic.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

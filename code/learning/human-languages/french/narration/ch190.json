@@ -4,7 +4,7 @@
   "chapter": 190,
   "title": "Cheerful, Serious, Shy, Brave, Fearful",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:dd6b031f48d4fc3b",
+  "sourceHash": "fnv1a64:bb1d2b1b1aded7f0",
   "lessons": [
     {
       "id": "FR-C190-joyeux-joyeuse",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e7c788db1c880d6f",
+      "sourceHash": "fnv1a64:f178ba4ab8be171f",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "joyeux — joie, \"joy\", with -eux, \"full of\"."
+              "text": "joyeux — joie, \"joy\", with -eux, \"full of\". Joie from Latin gaudia, \"joys\", and -eux from Latin -ōsus (EtymDB 2.1)."
             }
           ]
         },
@@ -421,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4d0d7e3194119b67",
+      "sourceHash": "fnv1a64:7443ab356235768f",
       "notice": null,
       "blocks": [
         {
@@ -459,7 +459,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "courageux — courage with -eux, \"full of\"."
+              "text": "courageux — courage with -eux, \"full of\". Courage is built on Latin cor, \"heart\" (EtymDB 2.1), and -eux from Latin -ōsus."
             }
           ]
         },
@@ -555,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:426a3b7c42df2584",
+      "sourceHash": "fnv1a64:667de8e86d5aa168",
       "notice": null,
       "blocks": [
         {
@@ -593,7 +593,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "peureux — peur, \"fear\", with -eux, \"full of\"."
+              "text": "peureux — peur, \"fear\", with -eux, \"full of\". Peur from Latin pavor, \"fear\" (EtymDB 2.1), and -eux from Latin -ōsus."
             }
           ]
         },

@@ -14,7 +14,8 @@ romanization: "kawakami"
 concept_tag: JA-LOC82-KAWAKAMI
 prerequisites: [JA-C82-kougai, JA-C82-hantaigawa]
 sounds: []
-roots: []
+roots: [japanese-kawa-river, japanese-kami-upper]
+etymology_hook: "kawakami: native compound of kawa 'river' + kami 'upper part' (川上)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C82-hantaigawa]
 <!-- hl-knowledge: introduces=[JA-LEX-C82-LOC82-05]; assesses=[] -->
 
 **かわかみ** — *kawakami* — "upstream".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**かわかみ** (*kawakami*) is a native compound, inherited rather than borrowed: *kawa*, "river", and *kami*, "upper part", both kun'yomi of its kanji (JMdict, KANJIDIC2).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

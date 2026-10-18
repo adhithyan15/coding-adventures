@@ -12,7 +12,7 @@ concept_tag: UR-MANGO
 prerequisites: [UR-C17-practice, UR-C14-topi]
 sounds: [rtl, short-vowels-unwritten]
 roots: [sanskrit-amra]
-etymology_hook: ām descends from Sanskrit āmra through Prakrit amba, the fruit's inherited Indo-Aryan name; English mango does NOT come from it -- it came by sea from Tamil and Malayalam māṅkāy through Portuguese manga, so the fruit reached Europe under a Dravidian name while the Indo-Aryan name stayed home, and the two words are unrelated despite naming the same thing in the same country.
+etymology_hook: "ām ← Sanskrit āmra 'mango' (CDIAL 1268); English mango came instead from Tamil through Portuguese"
 duration:
   max_seconds: 270
 requires:
@@ -60,7 +60,7 @@ Say that now; you can already write every word in it except the first letter of
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[UR-ETYMON-AAM-MANGO]; assesses=[UR-LEX-AAM] -->
 
-**آم** is **inherited**: Sanskrit *āmra* became Prakrit *amba* and then Urdu
+**آم** is **inherited**: Sanskrit *āmra* (CDIAL 1268) became Prakrit *amba* and then Urdu
 *ām*, the ordinary north Indian name for the fruit for as long as there has been
 a north Indian name for it.
 

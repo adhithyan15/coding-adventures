@@ -14,7 +14,8 @@ romanization: "savā"
 concept_tag: UR-TIME92-SAVA
 prerequisites: [UR-C92-baje, UR-C92-sarhe]
 sounds: []
-roots: []
+roots: [sanskrit-sapada]
+etymology_hook: "savā ← Sanskrit sapāda 'increased by a fourth', a tadbhava (CDIAL 13134)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C92-sarhe]
 <!-- hl-knowledge: introduces=[UR-LEX-C92-TIME92-05]; assesses=[] -->
 
 **سوا** — *savā* — "a quarter past (plus a quarter)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**سوا** (*savā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *sapāda*, "increased by a fourth" (CDIAL 13134). It is built from *sa-*, "with", and *pāda*, "a quarter".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

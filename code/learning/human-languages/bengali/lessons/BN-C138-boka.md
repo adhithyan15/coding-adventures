@@ -14,7 +14,8 @@ romanization: "bokā"
 concept_tag: BN-QUAL138-BOKA
 prerequisites: [BN-C138-byasto, BN-C138-chalak]
 sounds: []
-roots: []
+roots: [indo-aryan-bukka]
+etymology_hook: "bokā: CDIAL lists bokā 'senseless' under *bōkka, in a group of forms for 'defective' (CDIAL 9263)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C138-chalak]
 <!-- hl-knowledge: introduces=[BN-LEX-C138-QUAL138-03]; assesses=[] -->
 
 **বোকা** — *bokā* — "foolish".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+CDIAL lists Bengali *bokā*, "senseless", under *\*bōkka*, one of a large group of forms for "defective" that it reconstructs (CDIAL 9263).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

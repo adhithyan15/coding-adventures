@@ -50,7 +50,7 @@ Only half the prediction comes true. **il** does split, into **lui** — and
 and *c'est elle*.
 
 Nothing decided that except which syllables happened to carry stress in Latin.
-*Illi* gave *lui*, *ille* gave *il*, and *illa* gave one *elle* that was heavy
+Latin *illī* gave *lui*, *ille* gave *il*, and *illa* gave one *elle* that was heavy
 enough already. The masculine split and the feminine did not, and the language
 has lived with the asymmetry ever since.
 

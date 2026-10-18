@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:41207b2b5549fba5",
+    "sourceHash": "fnv1a64:b7eb03f60ab47b37",
     "detachableSegments": [
       "Script — recombine known shapes",
       "Script — the chapter's shapes, from memory"

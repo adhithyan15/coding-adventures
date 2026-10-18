@@ -14,7 +14,8 @@ romanization: "biskuit"
 concept_tag: FA-CHIZ167-BISKUIT
 prerequisites: [FA-C167-bastani, FA-C167-shokolat]
 sounds: []
-roots: []
+roots: [french-biscuit]
+etymology_hook: "biskuit: a loan, usually traced to French biscuit 'biscuit'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C167-shokolat]
 <!-- hl-knowledge: introduces=[FA-LEX-C167-CHIZ167-03]; assesses=[] -->
 
 **بیسکویت** — *biskuit* — "a biscuit".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*biskuit* is a loan, usually traced to French *biscuit*, "biscuit".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

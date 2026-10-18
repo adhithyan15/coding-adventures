@@ -4,7 +4,7 @@
   "chapter": 117,
   "title": "Purse, Ring, Chain, Present, Photo",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:9b271ebd84b3dac5",
+  "sourceHash": "fnv1a64:5bf6ff2d089ab9ce",
   "lessons": [
     {
       "id": "GE-C117-geldboerse",
@@ -431,7 +431,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:58e306815dc5e640",
+      "sourceHash": "fnv1a64:31effa7764ea1a36",
       "notice": null,
       "blocks": [
         {
@@ -469,7 +469,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Geschenk is ge- + the stem of the verb \"to give as a present\", which first meant \"to pour out a drink for someone\". A present began as a drink poured for a guest."
+              "text": "Geschenk is ge- + the stem of the verb \"to give as a present\", which first meant \"to pour out a drink for someone\". A present began as a drink poured for a guest. Schenken from Old High German scenken, \"to pour, to give drink\" (EtymDB 2.1)."
             }
           ]
         },

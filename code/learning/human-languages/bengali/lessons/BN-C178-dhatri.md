@@ -14,7 +14,8 @@ romanization: "dhātrī"
 concept_tag: BN-KAJ178-DHATRI
 prerequisites: [BN-C178-dater-daktar, BN-C178-domkol]
 sounds: []
-roots: []
+roots: [sanskrit-dhatri]
+etymology_hook: "dhātrī ← Sanskrit dhātrī 'nurse', a tatsama (CDIAL 6774)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C178-domkol]
 <!-- hl-knowledge: introduces=[BN-LEX-C178-KAJ178-03]; assesses=[] -->
 
 **ধাত্রী** — *dhātrī* — "a midwife".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ধাত্রী** (*dhātrī*) is Sanskrit *dhātrī*, "nurse", taken over whole as a learned loan, a tatsama (CDIAL 6774). The word inherited from it is *dhāi*, "wet nurse", which CDIAL lists.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

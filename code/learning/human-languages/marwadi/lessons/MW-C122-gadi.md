@@ -14,7 +14,8 @@ romanization: "gādī"
 concept_tag: MW-THINGS122-GADI
 prerequisites: [MW-C122-sanduk, MW-C122-rajai]
 sounds: []
-roots: []
+roots: [indo-aryan-garda]
+etymology_hook: "gādī ← *garda 'seat', prob. from Dravidian (CDIAL 4053)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C122-rajai]
 <!-- hl-knowledge: introduces=[MW-LEX-C122-THINGS122-05]; assesses=[] -->
 
 **गादी** — *gādī* — "a mattress".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**गादी** (*gādī*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*garda*, "seat", a form CDIAL reconstructs from its descendants. CDIAL gives no Marwari form in this entry (CDIAL 4053); the match is through Hindi *gādī* and Gujarati *gādī*. CDIAL thinks the word probably came from Dravidian, like Kannada *gaddige*, "throne".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

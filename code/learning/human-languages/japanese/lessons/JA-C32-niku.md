@@ -14,7 +14,8 @@ romanization: "niku"
 concept_tag: JA-FOOD32-NIKU
 prerequisites: [JA-C31-gohan, JA-C32-sakana]
 sounds: []
-roots: []
+roots: [middle-chinese-nyuwk]
+etymology_hook: "niku: Sino-Japanese, the on'yomi of 肉 'flesh', from Middle Chinese nyuwk"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C32-sakana]
 <!-- hl-knowledge: introduces=[JA-LEX-C32-FOOD32-02]; assesses=[] -->
 
 **にく** — *niku* — "meat".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**にく** (*niku*) is Sino-Japanese (kango): the on'yomi of a character meaning "flesh, meat", a reading borrowed from Chinese (Middle Chinese *nyuwk* in Baxter's transcription; Unihan, KANJIDIC2).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

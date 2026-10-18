@@ -1,7 +1,7 @@
 {
   "language": "bengali",
   "chapter": 222,
-  "sourceHash": "fnv1a64:12bcf19a0f208b37",
+  "sourceHash": "fnv1a64:36a9ae595257ead0",
   "lessonIds": [
     "BN-C222-balb",
     "BN-C222-tibhi",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "bengali/narration/ch222.txt",
   "json": "bengali/narration/ch222.json",
-  "textHash": "fnv1a64:99fa441e5356c964",
-  "jsonHash": "fnv1a64:ac7766fb0d2079ad",
+  "textHash": "fnv1a64:6fe2964b102371ba",
+  "jsonHash": "fnv1a64:7477b2a26f0aaf20",
   "findings": []
 }

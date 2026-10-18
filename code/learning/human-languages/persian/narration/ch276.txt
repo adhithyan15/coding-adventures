@@ -12,6 +12,9 @@ Before the new one: say the Persian for cinnamon, then the Persian for cream.
 You'll want to know: سرکه.
 سرکه — serke — "vinegar".
 
+The word, taken apart.
+serke is a native Persian word, inherited rather than borrowed: EtymDB traces it to a Middle Persian word for vinegar written sk.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Persian for cream, then the Persian for vinegar.
 
 You'll want to know: آرد.
 آرد — ârd — "flour".
+
+The word, taken apart.
+ârd is a native Persian word, inherited rather than borrowed: it continues Middle Persian ārd, "flour" (EtymDB).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Persian for vinegar, then the Persian for flour.
 You'll want to know: شماره.
 شماره — shomâre — "a number".
 
+The word, taken apart.
+shomâre is a native Persian word, inherited rather than borrowed: it continues Middle Persian ōšmārag, "calculation, reckoning" (EtymDB). It belongs with shemordan, "to count".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Persian for flour, then the Persian for a number.
 You'll want to know: پیامک.
 پیامک — payâmak — "a text message".
 
+The word, taken apart.
+payâmak is payâm, "message", with the small-thing ending -ak: a little message, a modern Persian coinage. payâm is usually traced to Middle Persian paygām.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Persian for a number, then the Persian for a text me
 
 You'll want to know: ایمیل.
 ایمیل — imeyl — "an email".
+
+The word, taken apart.
+imeyl is a loan, usually traced to English email, "email".
 
 What you've built.
 One more word for this chapter.

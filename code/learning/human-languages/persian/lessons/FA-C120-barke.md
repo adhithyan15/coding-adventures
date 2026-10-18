@@ -14,7 +14,8 @@ romanization: "barke"
 concept_tag: FA-THINGS120-BARKE
 prerequisites: [FA-C120-kapshan, FA-C120-dampayi]
 sounds: []
-roots: []
+roots: [arabic-birka]
+etymology_hook: "barke ← Arabic birka 'pool, pond', root b-r-k (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C120-dampayi]
 <!-- hl-knowledge: introduces=[FA-LEX-C120-THINGS120-03]; assesses=[] -->
 
 **برکه** — *barke* — "a pond".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*barke* is borrowed from Arabic *birka*, "pool, pond". Its Arabic root is *b-r-k* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

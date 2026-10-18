@@ -14,7 +14,8 @@ romanization: "pedarbozorg"
 concept_tag: FA-HEALTH32-PEDARBOZORG
 prerequisites: [FA-C32-narahat, FA-C32-pezeshk]
 sounds: []
-roots: []
+roots: [persian-pidar, persian-buzurg]
+etymology_hook: "pedarbozorg: Persian pedar 'father' + bozorg 'great', both inherited from Middle Persian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C32-pezeshk]
 <!-- hl-knowledge: introduces=[FA-LEX-C32-HEALTH32-03]; assesses=[] -->
 
 **پدربزرگ** — *pedarbozorg* — "a grandfather".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*pedarbozorg* is built from two inherited Persian words: *pedar*, "father" (Middle Persian *pidar*), and *bozorg*, "big, great" (Middle Persian *wuzurg*, EtymDB). The "great father" is the grandfather.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

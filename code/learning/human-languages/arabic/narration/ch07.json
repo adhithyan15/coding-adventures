@@ -4,7 +4,7 @@
   "chapter": 7,
   "title": "Sorry",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:7b50736cc491b932",
+  "sourceHash": "fnv1a64:8a388358a0846c84",
   "lessons": [
     {
       "id": "AR-C07-asif",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:94187f75f7ae4f25",
+      "sourceHash": "fnv1a64:2d715350b4c467b2",
       "notice": null,
       "blocks": [
         {

@@ -14,7 +14,8 @@ romanization: "zakhmi shodan"
 concept_tag: FA-VERB-ZAKHMI-SHODAN
 prerequisites: [FA-C142-entekhab-kardan, FA-C142-sarma-khordan]
 sounds: []
-roots: []
+roots: [persian-zakhm, persian-shudan]
+etymology_hook: "zakhmi shodan: Persian zakhm 'wound' (Middle Persian zaxm) + -i + shodan"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C142-sarma-khordan]
 <!-- hl-knowledge: introduces=[FA-LEX-C142-KONESH142-05]; assesses=[] -->
 
 **زخمی شدن** — *zakhmi shodan* — "to get hurt".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*zakhmi shodan* pairs *zakhmi*, "wounded" (*zakhm*, "wound", with *-i*), with *shodan*, "to become". *zakhm* is native, usually traced to Middle Persian *zaxm*. *shodan*, "to become", is an inherited verb; it is usually traced to Middle Persian *šudan*, "to go".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

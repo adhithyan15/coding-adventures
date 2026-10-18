@@ -14,7 +14,8 @@ romanization: "kariha"
 concept_tag: AR-VERB-KARIHA
 prerequisites: [AR-C112-iqtirah, AR-C113-ihtimam]
 sounds: []
-roots: []
+roots: [k-r-h]
+etymology_hook: "kariha: built on the root k-r-h, 'to dislike, to hate' (Lane); kariha is the plain verb, 'he hated'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C113-ihtimam]
 <!-- hl-knowledge: introduces=[AR-LEX-C113-WANT113-02]; assesses=[] -->
 
 **كره** — *kariha* — "to hate".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**كره** (*kariha*) is built on the native Arabic root *k-r-h*, "to dislike, to hate" (Lane). *Kariha* is the plain verb, "he hated".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

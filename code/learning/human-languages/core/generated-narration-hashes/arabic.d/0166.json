@@ -1,7 +1,7 @@
 {
   "language": "arabic",
   "chapter": 166,
-  "sourceHash": "fnv1a64:3b605a750c3e41b3",
+  "sourceHash": "fnv1a64:3866eb8e3c6bdda3",
   "lessonIds": [
     "AR-C166-sada",
     "AR-C166-bana",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "arabic/narration/ch166.txt",
   "json": "arabic/narration/ch166.json",
-  "textHash": "fnv1a64:dad1287a10a3a1a0",
-  "jsonHash": "fnv1a64:de0998fc1cd55b27",
+  "textHash": "fnv1a64:13d9851e795b9d0e",
+  "jsonHash": "fnv1a64:7fbcae11e32d4f83",
   "findings": []
 }

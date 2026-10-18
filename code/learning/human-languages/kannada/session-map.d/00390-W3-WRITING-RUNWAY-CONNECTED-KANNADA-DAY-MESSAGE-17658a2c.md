@@ -1,0 +1,1 @@
+| W3 | writing-runway | connected Kannada day message | eight-box plan → one untimed model-free 70–90-word message for Anu; taught links, reason, question, and Kannada-script review; no A2-readiness claim |

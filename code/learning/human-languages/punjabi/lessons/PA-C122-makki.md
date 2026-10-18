@@ -14,7 +14,8 @@ romanization: "makkī"
 concept_tag: PA-THINGS122-MAKKI
 prerequisites: [PA-C122-bajra, PA-C122-kanak]
 sounds: []
-roots: []
+roots: [sanskrit-markaka]
+etymology_hook: "makkī: CDIAL lists it under the lexical Sanskrit markaka, a bird-name, without explaining the link (9879)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C122-kanak]
 <!-- hl-knowledge: introduces=[PA-LEX-C122-THINGS122-03]; assesses=[] -->
 
 **ਮੱਕੀ** — *makkī* — "maize".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+Where **ਮੱਕੀ** (*makkī*) comes from is not settled. CDIAL lists it under *markaka*, a bird-name known only from the old word-lists, and does not explain the link (CDIAL 9879).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

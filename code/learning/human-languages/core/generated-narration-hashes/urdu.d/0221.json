@@ -1,7 +1,7 @@
 {
   "language": "urdu",
   "chapter": 221,
-  "sourceHash": "fnv1a64:3a9846940badcfbc",
+  "sourceHash": "fnv1a64:e6ab99eb49bfa58b",
   "lessonIds": [
     "UR-C221-naraz",
     "UR-C221-hairan",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "urdu/narration/ch221.txt",
   "json": "urdu/narration/ch221.json",
-  "textHash": "fnv1a64:7c3bfd4092335a8f",
-  "jsonHash": "fnv1a64:5af4d0d49b57c9c2",
+  "textHash": "fnv1a64:a8e578533fa50590",
+  "jsonHash": "fnv1a64:5ff694065b939564",
   "findings": []
 }

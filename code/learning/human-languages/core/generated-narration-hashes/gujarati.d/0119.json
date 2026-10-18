@@ -1,7 +1,7 @@
 {
   "language": "gujarati",
   "chapter": 119,
-  "sourceHash": "fnv1a64:177779ac63b9e48d",
+  "sourceHash": "fnv1a64:ea65a36a75019e17",
   "lessonIds": [
     "GU-C119-kinaro",
     "GU-C119-dhodh",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "gujarati/narration/ch119.txt",
   "json": "gujarati/narration/ch119.json",
-  "textHash": "fnv1a64:f49de8f3c4973e9b",
-  "jsonHash": "fnv1a64:1f9f2a5591bb9735",
+  "textHash": "fnv1a64:1f1adcc02f0abda2",
+  "jsonHash": "fnv1a64:e1040283a277f52d",
   "findings": []
 }

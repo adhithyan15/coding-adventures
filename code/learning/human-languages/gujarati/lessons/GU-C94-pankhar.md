@@ -14,7 +14,8 @@ romanization: "pānkhar"
 concept_tag: GU-TIME94-PANKHAR
 prerequisites: [GU-C93-comasu, GU-C93-vasant]
 sounds: []
-roots: []
+roots: [sanskrit-parna, sanskrit-ksharati]
+etymology_hook: "pānkhar: pān 'leaf' ← parṇa (CDIAL 7918) + khar- 'fall' ← kṣarati (CDIAL 3663)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C93-vasant]
 <!-- hl-knowledge: introduces=[GU-LEX-C94-TIME94-01]; assesses=[] -->
 
 **પાનખર** (*pānkhar*) — "autumn".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**પાનખર** (*pānkhar*) is "leaf-fall": *pān*, "leaf", from Sanskrit *parṇa* (CDIAL 7918), and the stem of *kharvũ*, "to fall, fade", from *kṣarati*, "trickles; melts away" (CDIAL 3663).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

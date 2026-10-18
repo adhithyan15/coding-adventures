@@ -14,7 +14,8 @@ romanization: "nabbai"
 concept_tag: MW-NUMBERS87-NABBAI
 prerequisites: [MW-C86-sittar, MW-C87-assi]
 sounds: []
-roots: []
+roots: [sanskrit-navati]
+etymology_hook: "nabbai ← Sanskrit navati 'ninety', a tadbhava (CDIAL 6995, Hindi row)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C87-assi]
 <!-- hl-knowledge: introduces=[MW-LEX-C87-NUMBERS87-02]; assesses=[] -->
 
 **नब्बै** — *nabbai* — "ninety".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**नब्बै** (*nabbai*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *navati*, "ninety". CDIAL gives no Marwari form in this entry (CDIAL 6995); the match is through Hindi *nabbe*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

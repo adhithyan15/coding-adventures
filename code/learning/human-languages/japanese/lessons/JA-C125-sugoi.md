@@ -14,7 +14,8 @@ romanization: "sugoi"
 concept_tag: JA-QUAL125-SUGOI
 prerequisites: [JA-C124-okashii, JA-C124-omoshiroi]
 sounds: []
-roots: []
+roots: [japanese-sugoi]
+etymology_hook: "sugoi: native Japanese, inherited, not borrowed; usually kana, kanji 凄い as kun'yomi"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C124-omoshiroi]
 <!-- hl-knowledge: introduces=[JA-LEX-C125-QUAL125-01]; assesses=[] -->
 
 **すごい** — *sugoi* — "amazing".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**すごい** (*sugoi*) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. It is usually written in kana; its kanji, when used, is a kun'yomi attached later (JMdict, KANJIDIC2).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

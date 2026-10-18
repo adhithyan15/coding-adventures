@@ -14,7 +14,8 @@ romanization: "sevate"
 concept_tag: SA-VERB-SEVATE
 prerequisites: [SA-C173-muncati, SA-C173-labhate]
 sounds: []
-roots: []
+roots: [sanskrit-sevate, sanskrit-seva]
+etymology_hook: "sevate ← √sev 'associate with, attend on' (CDIAL 13593): 'serves, looks after'; sevā is kin"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C173-labhate]
 <!-- hl-knowledge: introduces=[SA-LEX-C173-ACT173-04]; assesses=[] -->
 
 **सेवते** — *sevate* — "serves, looks after".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*sevate* comes from the root √sev "associate with, attend on" (CDIAL 13593), already in the Rigveda. *sevā* "service" and *sevaka* "a servant" come from the same root.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

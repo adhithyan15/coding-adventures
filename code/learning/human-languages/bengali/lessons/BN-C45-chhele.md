@@ -14,7 +14,8 @@ romanization: "chhele"
 concept_tag: BN-HEALTH45-CHHELE
 prerequisites: [BN-C45-daktar, BN-C45-baba]
 sounds: []
-roots: []
+roots: [sanskrit-chagala]
+etymology_hook: "chhele: CDIAL's addenda list it under Sanskrit chagala, chēlaka 'goat' (CDIAL 4963)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C45-baba]
 <!-- hl-knowledge: introduces=[BN-LEX-C45-HEALTH45-04]; assesses=[] -->
 
 **ছেলে** — *chhele* — "a son; a boy".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+CDIAL, in its addenda, lists **ছেলে** (*chhele*), "boy", under Sanskrit *chagala*, "goat", beside the form *chēlaka*, "goat" (CDIAL 4963): the word for a boy seems to have begun as a word for a young goat.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

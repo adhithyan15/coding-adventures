@@ -14,7 +14,8 @@ romanization: "hathoṛo"
 concept_tag: MW-THINGS127-HATHORO
 prerequisites: [MW-C126-khuti, MW-C127-khilo]
 sounds: []
-roots: []
+roots: [indo-aryan-hastakuta]
+etymology_hook: "hathoṛo ← *hastakūṭa 'hand hammer', reconstructed (CDIAL 14028, Hindi and Gujarati rows)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C127-khilo]
 <!-- hl-knowledge: introduces=[MW-LEX-C127-THINGS127-02]; assesses=[] -->
 
 **हथोड़ो** — *hathoṛo* — "a hammer".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**हथोड़ो** (*hathoṛo*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*hastakūṭa*, "hand hammer", a form CDIAL reconstructs from its descendants. CDIAL gives no Marwari form in this entry (CDIAL 14028); the match is through Hindi *hathauṛā* and Gujarati *hathoṛo*. It is built on *hasta*, "hand", and *kūṭa*, "hammer".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

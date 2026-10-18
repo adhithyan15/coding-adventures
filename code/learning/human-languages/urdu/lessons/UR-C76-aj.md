@@ -14,7 +14,8 @@ romanization: "āj"
 concept_tag: UR-TIME76-AJ
 prerequisites: [UR-C75-ghanta, UR-C76-minat]
 sounds: []
-roots: []
+roots: [sanskrit-adya]
+etymology_hook: "āj ← Sanskrit adya 'today', a tadbhava (CDIAL 242)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C76-minat]
 <!-- hl-knowledge: introduces=[UR-LEX-C76-TIME76-02]; assesses=[] -->
 
 **آج** — *āj* — "today".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**آج** (*āj*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *adya*, "today" (CDIAL 242).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

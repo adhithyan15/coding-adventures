@@ -12,6 +12,9 @@ Before the new one: say the Japanese for a shelf, then the Japanese for a box.
 You'll want to know: かさ.
 かさ — kasa — "an umbrella".
 
+The word, taken apart.
+かさ (kasa) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2).
+
 What you've built.
 One more word for this chapter.
 
@@ -42,6 +45,9 @@ Before the new one: say the Japanese for a box, then the Japanese for an umbrell
 
 You'll want to know: がっこう.
 がっこう — gakkou — "a school".
+
+The word, taken apart.
+がっこう (gakkou) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are gaku, "learning" (Middle Chinese haewk) and kō, "school" (haewH) (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription).
 
 What you've built.
 One more word for this chapter.
@@ -74,6 +80,9 @@ Before the new one: say the Japanese for an umbrella, then the Japanese for a sc
 You'll want to know: しゅくだい.
 しゅくだい — shukudai — "homework".
 
+The word, taken apart.
+しゅくだい (shukudai) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are shuku, "lodge, stay overnight" (Middle Chinese sjuwk) and dai, "title, theme" (dej) (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription). Read literally, it is a theme kept overnight.
+
 What you've built.
 One more word for this chapter.
 
@@ -105,6 +114,9 @@ Before the new one: say the Japanese for a school, then the Japanese for homewor
 You'll want to know: もんだい.
 もんだい — mondai — "a problem, a question".
 
+The word, taken apart.
+もんだい (mondai) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are mon, "ask" (Middle Chinese mjunH) and dai, "title, theme" (dej) (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription).
+
 What you've built.
 One more word for this chapter.
 
@@ -135,6 +147,9 @@ Before the new one: say the Japanese for homework, then the Japanese for a probl
 
 You'll want to know: こたえ.
 こたえ — kotae — "an answer".
+
+The word, taken apart.
+こたえ (kotae) is native: the noun made from kotaeru, "to answer", by its stem (JMdict). It is inherited rather than borrowed; its kanji is a kun'yomi attached later.
 
 What you've built.
 One more word for this chapter.

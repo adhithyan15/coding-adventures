@@ -14,7 +14,8 @@ romanization: "sāvaṇ"
 concept_tag: MW-TIME93-SAVAN
 prerequisites: [MW-C92-baisakh, MW-C92-jeth]
 sounds: []
-roots: []
+roots: [sanskrit-shravana]
+etymology_hook: "sāvaṇ ← Sanskrit śrāvaṇa 'the month of the Śravaṇa star', a tadbhava (CDIAL 12699, Hindi and Gujarati rows)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C92-jeth]
 <!-- hl-knowledge: introduces=[MW-LEX-C93-TIME93-01]; assesses=[] -->
 
 **सावण** — *sāvaṇ* — "Savan (July-August)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**सावण** (*sāvaṇ*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *śrāvaṇa*, "the month of the Śravaṇa star". CDIAL gives no Marwari form in this entry (CDIAL 12699); the match is through Hindi *sāwan* and Gujarati *sāvaṇ*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

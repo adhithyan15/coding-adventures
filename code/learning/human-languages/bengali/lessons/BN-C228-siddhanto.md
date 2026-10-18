@@ -14,7 +14,8 @@ romanization: "siddhāntô"
 concept_tag: BN-JINIS228-SIDDHANTO
 prerequisites: [BN-C228-mrityu, BN-C228-bhagyo]
 sounds: []
-roots: []
+roots: [sanskrit-siddhanta]
+etymology_hook: "siddhāntô ← Sanskrit siddhānta 'settled conclusion', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C228-bhagyo]
 <!-- hl-knowledge: introduces=[BN-LEX-C228-JINIS228-05]; assesses=[] -->
 
 **সিদ্ধান্ত** — *siddhāntô* — "a decision".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**সিদ্ধান্ত** (*siddhāntô*) is Sanskrit *siddhānta*, "settled conclusion", taken over whole as a learned loan, a tatsama.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

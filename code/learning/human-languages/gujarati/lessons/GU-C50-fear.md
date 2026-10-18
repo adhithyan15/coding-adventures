@@ -14,7 +14,8 @@ romanization: "bīk"
 concept_tag: GU-FEEL-FEAR
 prerequisites: [GU-C50-happiness, GU-C50-anger]
 sounds: []
-roots: []
+roots: [sanskrit-bibheti]
+etymology_hook: "bīk: with bīvũ 'to fear' ← Sanskrit bibheti 'fears' (CDIAL 9241); CDIAL does not list bīk itself"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C50-anger]
 <!-- hl-knowledge: introduces=[GU-LEX-C50-FEEL-03]; assesses=[] -->
 
 **બીક** (*bīk*) — "fear".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**બીક** (*bīk*) belongs with the verb *bīvũ*, "to fear", which CDIAL lists under Sanskrit *bibheti*, "fears" (CDIAL 9241). CDIAL does not list the noun itself.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

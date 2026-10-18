@@ -1,7 +1,7 @@
 {
   "language": "marathi",
   "chapter": 27,
-  "sourceHash": "fnv1a64:7fa1478d97782aee",
+  "sourceHash": "fnv1a64:d9a40ff9cd7f31ec",
   "lessonIds": [
     "MR-C23-basne",
     "MR-C23-vatne",
@@ -14,6 +14,6 @@
   "text": "marathi/narration/ch27.txt",
   "json": "marathi/narration/ch27.json",
   "textHash": "fnv1a64:88357d260bf3c2d5",
-  "jsonHash": "fnv1a64:6cb208c5f1a91488",
+  "jsonHash": "fnv1a64:708ad1dc3f31d5c7",
   "findings": []
 }

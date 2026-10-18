@@ -14,7 +14,8 @@ romanization: "kârgâh"
 concept_tag: FA-KAR216-KARGAH
 prerequisites: [FA-C215-bazigar, FA-C215-khanande]
 sounds: []
-roots: []
+roots: [persian-kar, persian-gah]
+etymology_hook: "kârgâh: Persian kâr 'work' (EtymDB) + gâh 'place'; inherited"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C215-khanande]
 <!-- hl-knowledge: introduces=[FA-LEX-C216-KAR216-01]; assesses=[] -->
 
 **کارگاه** — *kârgâh* — "a workshop".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*kârgâh* is built from *kâr*, "work", and *gâh*, "place": the work-place. Both are inherited; *kâr* continues Middle Persian *kār* (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

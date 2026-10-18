@@ -14,7 +14,8 @@ romanization: "bhā̃j kôrā"
 concept_tag: BN-VERB-BHAJ-KORA
 prerequisites: [BN-C181-bojhano, BN-C182-chhera]
 sounds: []
-roots: []
+roots: [indo-aryan-bhanja, sanskrit-karoti]
+etymology_hook: "bhāṁj kôrā: bhāṁj 'fold', listed under *bhañja 'breaking' (CDIAL 9362), + kôrā (CDIAL 2814)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C182-chhera]
 <!-- hl-knowledge: introduces=[BN-LEX-C182-ACT182-02]; assesses=[] -->
 
 **ভাঁজ করা** — *bhā̃j kôrā* — "to fold".
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ভাঁজ করা** (*bhāṁj kôrā*) is *bhāṁj*, "fold", which CDIAL lists under *\*bhañja*, "breaking" (CDIAL 9362), + *kôrā*, "to do", from Sanskrit *karoti*, "does" (CDIAL 2814).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

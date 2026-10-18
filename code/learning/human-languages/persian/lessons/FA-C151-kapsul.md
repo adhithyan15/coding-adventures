@@ -14,7 +14,8 @@ romanization: "kapsul"
 concept_tag: FA-SALAMAT151-KAPSUL
 prerequisites: [FA-C151-pomad, FA-C151-qatre]
 sounds: []
-roots: []
+roots: [french-capsule]
+etymology_hook: "kapsul: a loan, usually traced to French capsule 'capsule'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C151-qatre]
 <!-- hl-knowledge: introduces=[FA-LEX-C151-SALAMAT151-05]; assesses=[] -->
 
 **کپسول** — *kapsul* — "a capsule".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*kapsul* is a loan, usually traced to French *capsule*, "capsule".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

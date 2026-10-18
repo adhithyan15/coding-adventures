@@ -14,7 +14,8 @@ romanization: "yamīn"
 concept_tag: AR-PLACE90-YAMIN
 prerequisites: [AR-C90-huna, AR-C90-hunaka]
 sounds: []
-roots: []
+roots: [y-m-n]
+etymology_hook: "yamīn: built on the root y-m-n, 'the right hand' (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C90-hunaka]
 <!-- hl-knowledge: introduces=[AR-LEX-C90-PLACE90-03]; assesses=[] -->
 
 **يمين** — *yamīn* — "right (side)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**يمين** (*yamīn*) is built on the native Arabic root *y-m-n*, "the right hand; good fortune" (Lane). Hebrew *yamin*, "right hand", heard in the name Benjamin, is its cousin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

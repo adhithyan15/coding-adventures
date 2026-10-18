@@ -14,7 +14,8 @@ romanization: "haq"
 concept_tag: UR-CHIZ205-HAQ
 prerequisites: [UR-C204-mashvara, UR-C205-qanun]
 sounds: []
-roots: []
+roots: [arabic-haqq]
+etymology_hook: "haq ← Arabic ḥaqq 'truth; what is due', through Persian (Lane, root ḥ-q-q)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C205-qanun]
 <!-- hl-knowledge: introduces=[UR-LEX-C205-CHIZ205-02]; assesses=[] -->
 
 **حق** — *haq* — "a right".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**حق** (*haq*) is a loan from Arabic *ḥaqq*, "truth; what is due", which reached Urdu through Persian. Its Arabic root is *ḥ-q-q* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

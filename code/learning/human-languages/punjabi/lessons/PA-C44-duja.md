@@ -11,10 +11,10 @@ gloss: second - the first word of a second number set, and the number is still v
 concept_tag: PA-ORDINAL-SECOND
 prerequisites: [PA-C43-kinne, PA-C43-kaun, PA-C40-ki, PA-W07-age-select, PA-C06-numbers-1-5]
 sounds: []
-roots: []
-etymology_hook: Wiktionary derives ਦੂਜਾ straight from Sanskrit dvitīya, so the word came down whole rather than being built here
+roots: [indo-aryan-dutiya]
+etymology_hook: "dūjā ← *dutīya 'second', a form CDIAL reconstructs beside Sanskrit dvitīya (CDIAL 6402)"
 duration:
-  max_seconds: 230
+  max_seconds: 233
 requires:
   knowledge: [PA-LEX-NUMBERS-ONE-TO-FIVE, PA-Q-KINNE-01, PA-Q-KAUN-01, PA-JOIN-KI-01, PA-FORM-AGE-CUE-MAP-01]
 introduces:
@@ -52,6 +52,8 @@ at the four growing distances this book measures.
 
 Say **ਦੋ** (*do*), then **ਦੂਜਾ** (*dūjā*). The number has not gone anywhere: the
 **ਦ** is still at the front and the vowel has only lengthened.
+
+CDIAL lists it under *\*dutīya*, beside Sanskrit *dvitīya*, "second" (CDIAL 6402).
 
 ## Script — one tiny step
 <!-- hl-knowledge: introduces=[PA-GRAMMAR-ORDINAL-SET-01]; assesses=[PA-Q-KINNE-01, PA-LEX-NUMBERS-ONE-TO-FIVE] -->

@@ -12,6 +12,9 @@ Before the new one: say the Bengali for luck, then the Bengali for a decision.
 You'll want to know: টর্চ.
 টর্চ — ṭôrch — "a torch".
 
+The word, taken apart.
+টর্চ (ṭôrch) is a loan from English torch.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Bengali for a decision, then the Bengali for a torch
 
 You'll want to know: শিকল.
 শিকল — shikôl — "a chain".
+
+The word, taken apart.
+শিকল (shikôl) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from śṛṅkhala, "chain" (CDIAL 12580). CDIAL lists Bengali sikal, "chain".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Bengali for a torch, then the Bengali for a chain.
 You'll want to know: করাত.
 করাত — kôrāt — "a saw".
 
+The word, taken apart.
+করাত (kôrāt) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from karapattra, "saw" (CDIAL 2795). CDIAL lists Bengali karāt, "saw", and notes that the Sanskrit form may be shaped by popular etymology, with a possible Dravidian source.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Bengali for a chain, then the Bengali for a saw.
 You'll want to know: ফিতে.
 ফিতে — phite — "a ribbon, a tape".
 
+The word, taken apart.
+ফিতে (phite) is usually traced to Portuguese fita, "ribbon".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Bengali for a saw, then the Bengali for a ribbon.
 
 You'll want to know: আবহাওয়া.
 আবহাওয়া — ābôhāoyā — "the weather".
+
+The word, taken apart.
+আবহাওয়া (ābôhāoyā) is a loan, usually traced to Persian āb-o-havā, "water and air; climate". It is Persian āb, "water", + o, "and", + havā, "air", which is itself Arabic.
 
 What you've built.
 One more word for this chapter.

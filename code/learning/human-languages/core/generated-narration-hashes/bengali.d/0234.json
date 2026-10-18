@@ -1,7 +1,7 @@
 {
   "language": "bengali",
   "chapter": 234,
-  "sourceHash": "fnv1a64:c48b826c163f1719",
+  "sourceHash": "fnv1a64:76c3fb1d22fe53a8",
   "lessonIds": [
     "BN-C234-shishi",
     "BN-C234-smriti",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "bengali/narration/ch234.txt",
   "json": "bengali/narration/ch234.json",
-  "textHash": "fnv1a64:2cb32cfbf6af9b02",
-  "jsonHash": "fnv1a64:4337cc08b726b093",
+  "textHash": "fnv1a64:216573c72b3b2731",
+  "jsonHash": "fnv1a64:ec9aad9dcd19c03e",
   "findings": []
 }

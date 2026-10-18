@@ -14,7 +14,8 @@ romanization: "bīj"
 concept_tag: UR-THINGS123-BIJ
 prerequisites: [UR-C123-mitti, UR-C123-ghas]
 sounds: []
-roots: []
+roots: [sanskrit-bija]
+etymology_hook: "bīj ← Sanskrit bīja 'seed', a tatsama (CDIAL 9250)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C123-ghas]
 <!-- hl-knowledge: introduces=[UR-LEX-C123-THINGS123-04]; assesses=[] -->
 
 **بیج** — *bīj* — "a seed".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**بیج** (*bīj*) is Sanskrit *bīja*, "seed", taken over whole as a learned loan, a tatsama (CDIAL 9250). CDIAL lists the inherited forms of the same word as *biyā* and *bīā*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

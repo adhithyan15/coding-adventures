@@ -14,7 +14,8 @@ romanization: "naram"
 concept_tag: PA-QUAL144-NARAM
 prerequisites: [PA-C143-kaura, PA-C143-tikkha]
 sounds: []
-roots: []
+roots: [persian-narm]
+etymology_hook: "naram: usually traced to Persian narm 'soft'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C143-tikkha]
 <!-- hl-knowledge: introduces=[PA-LEX-C144-QUAL144-01]; assesses=[] -->
 
 **ਨਰਮ** — *naram* — "soft".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਨਰਮ** (*naram*) is a loan, usually traced to Persian *narm*, "soft". Punjabi breaks up the *-rm* with a vowel.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

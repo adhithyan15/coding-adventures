@@ -14,7 +14,8 @@ romanization: "fuṭbāl"
 concept_tag: UR-CHIZ168-FUTBAL
 prerequisites: [UR-C168-vhel, UR-C168-kriket]
 sounds: []
-roots: []
+roots: [english-football]
+etymology_hook: "fuṭbāl ← English football"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C168-kriket]
 <!-- hl-knowledge: introduces=[UR-LEX-C168-CHIZ168-05]; assesses=[] -->
 
 **فٹ بال** — *fuṭbāl* — "football".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**فٹ بال** (*fuṭbāl*) is a loan from English *football*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

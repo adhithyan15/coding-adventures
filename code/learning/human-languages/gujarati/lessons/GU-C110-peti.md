@@ -14,7 +14,8 @@ romanization: "peṭī"
 concept_tag: GU-THINGS110-PETI
 prerequisites: [GU-C109-kacro, GU-C109-topli]
 sounds: []
-roots: []
+roots: [sanskrit-pitaka]
+etymology_hook: "peṭī ← *peṭṭa, a form beside Sanskrit piṭaka 'basket, box', which CDIAL calls non-Aryan (CDIAL 8164)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C109-topli]
 <!-- hl-knowledge: introduces=[GU-LEX-C110-THINGS110-01]; assesses=[] -->
 
 **પેટી** (*peṭī*) — "a box".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**પેટી** (*peṭī*) is a tadbhava. CDIAL lists it under *\*peṭṭa*, one of several forms beside Sanskrit *piṭaka*, "basket, box", which it calls non-Aryan (CDIAL 8164).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

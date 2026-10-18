@@ -14,7 +14,8 @@ romanization: "qamḥ"
 concept_tag: AR-THINGS128-QAMH
 prerequisites: [AR-C128-nazzara, AR-C128-filfil]
 sounds: []
-roots: []
+roots: [q-m-ḥ]
+etymology_hook: "qamḥ: Lane files it under q-m-ḥ as a word of Syria, some say Coptic; Hebrew qemaḥ 'flour' is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C128-filfil]
 <!-- hl-knowledge: introduces=[AR-LEX-C128-THINGS128-03]; assesses=[] -->
 
 **قمح** — *qamḥ* — "wheat".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**قمح** (*qamḥ*), "wheat", is a noun, filed under the root *q-m-ḥ* (Lane). His sources call it a word of Syria, or some say Coptic, and prefer the Syrian account; Hebrew *qemaḥ*, "flour", is a cousin (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

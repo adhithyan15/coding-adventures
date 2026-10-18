@@ -14,7 +14,8 @@ romanization: "bābā"
 concept_tag: BN-HEALTH45-BABA
 prerequisites: [BN-C45-khushi, BN-C45-daktar]
 sounds: []
-roots: []
+roots: [indo-aryan-bappa]
+etymology_hook: "bābā ← *bābba 'father', a nursery word (CDIAL 9209)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C45-daktar]
 <!-- hl-knowledge: introduces=[BN-LEX-C45-HEALTH45-03]; assesses=[] -->
 
 **বাবা** — *bābā* — "a father".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**বাবা** (*bābā*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*bābba*, "father", a form CDIAL reconstructs from its descendants (CDIAL 9209). CDIAL calls these nursery words.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

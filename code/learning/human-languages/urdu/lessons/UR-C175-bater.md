@@ -14,7 +14,8 @@ romanization: "baṭer"
 concept_tag: UR-CHIZ175-BATER
 prerequisites: [UR-C175-faluda, UR-C175-qulfi]
 sounds: []
-roots: []
+roots: [indo-aryan-vartakara]
+etymology_hook: "baṭer ← *vartakara 'making turns (of the quail)', a reconstructed form; a tadbhava (CDIAL 11350)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C175-qulfi]
 <!-- hl-knowledge: introduces=[UR-LEX-C175-CHIZ175-04]; assesses=[] -->
 
 **بٹیر** — *baṭer* — "a quail".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**بٹیر** (*baṭer*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*vartakara*, "making turns (of the quail)", a form CDIAL reconstructs from its descendants (CDIAL 11350). CDIAL suggests, with a query, that it is a reshaping of Sanskrit *vartikā*, "quail".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

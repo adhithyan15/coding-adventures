@@ -1,0 +1,17 @@
+{
+  "id": "SA-A1-ADJ-05",
+  "category": "Viśeṣaṇa — the adjective",
+  "label": "position: Sanskrit puts the adjective before its noun, and word order is free anyway",
+  "probe": [
+    "SA-GRAMMAR-C15-ADJ-SYSTEM"
+  ],
+  "anchorIds": [
+    "ES-A1-PROXY",
+    "SA-CORPUS",
+    "ED-SANSKRIT"
+  ],
+  "derivedFrom": [
+    "A1-ADJ-05"
+  ],
+  "note": "Spanish asks for a POSTNOMINAL restrictive adjective. Sanskrit's usual order is the opposite, and the deeper answer is that case endings carry the roles, so order is a matter of emphasis rather than grammar. Recorded here rather than invented as a rule."
+}

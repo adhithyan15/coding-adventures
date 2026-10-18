@@ -14,7 +14,8 @@ romanization: "sôru"
 concept_tag: BN-QUAL136-SORU
 prerequisites: [BN-C136-gobhir, BN-C136-choora]
 sounds: []
-roots: []
+roots: [sanskrit-saru]
+etymology_hook: "sôru ← Sanskrit saru 'fine', inherited (CDIAL 13264)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C136-choora]
 <!-- hl-knowledge: introduces=[BN-LEX-C136-QUAL136-03]; assesses=[] -->
 
 **সরু** — *sôru* — "narrow".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**সরু** (*sôru*) is inherited from Sanskrit *saru*, "fine", and has come down with almost no change (CDIAL 13264).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

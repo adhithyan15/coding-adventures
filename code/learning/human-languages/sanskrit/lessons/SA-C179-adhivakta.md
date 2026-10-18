@@ -14,7 +14,8 @@ romanization: "adhivaktā"
 concept_tag: SA-PPL179-ADHIVAKTA
 prerequisites: [SA-C179-raksakah, SA-C179-nyayadhisah]
 sounds: []
-roots: []
+roots: [sanskrit-adhivaktr]
+etymology_hook: "adhivaktṛ ← adhi- 'over, on behalf of' + vaktṛ 'speaker', from √vac 'speak'; MW glosses it 'an advocate'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C179-nyayadhisah]
 <!-- hl-knowledge: introduces=[SA-LEX-C179-PPL179-04]; assesses=[] -->
 
 **अधिवक्ता** — *adhivaktā* — "a lawyer".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*adhivaktā* is the nominative of *adhivaktṛ*, built on *adhi-* and *vaktṛ*, "speaker", from the root √vac, "to speak". MW already glosses it "an advocate, protector", the one who speaks up for you.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

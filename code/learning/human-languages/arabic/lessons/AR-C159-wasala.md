@@ -14,7 +14,8 @@ romanization: "waṣala"
 concept_tag: AR-VERB-WASALA
 prerequisites: [AR-C159-istayqaza, AR-C159-saida]
 sounds: []
-roots: []
+roots: [w-ṣ-l]
+etymology_hook: "waṣala: built on the root w-ṣ-l, 'to arrive, to join' (Lane); waṣala is the plain verb, 'he arrived'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C159-saida]
 <!-- hl-knowledge: introduces=[AR-LEX-C159-ACT159-03]; assesses=[] -->
 
 **وصل** — *waṣala* — "to arrive".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**وصل** (*waṣala*) is built on the native Arabic root *w-ṣ-l*, "to arrive, to join" (Lane). *Waṣala* is the plain verb, "he arrived".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "kôlôm"
 concept_tag: BN-SCHOOL64-KOLOM
 prerequisites: [BN-C63-boi, BN-C63-khata]
 sounds: []
-roots: []
+roots: [arabic-qalam]
+etymology_hook: "kôlôm ← Arabic qalam 'reed pen', through Persian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C63-khata]
 <!-- hl-knowledge: introduces=[BN-LEX-C64-SCHOOL64-01]; assesses=[] -->
 
 **কলম** — *kôlôm* — "a pen".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**কলম** (*kôlôm*) is a loan from Arabic *qalam*, "reed pen", which reached Bengali through Persian. Its Arabic root is *q-l-m* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

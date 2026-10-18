@@ -14,7 +14,8 @@ romanization: "pakvān"
 concept_tag: UR-CHIZ259-PAKVAN
 prerequisites: [UR-C258-nal, UR-C258-shavar]
 sounds: []
-roots: []
+roots: [sanskrit-pakva]
+etymology_hook: "pakvān: usually taken from Sanskrit pakvānna 'cooked food', pakva 'cooked' + anna 'food'; CDIAL has no entry"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C258-shavar]
 <!-- hl-knowledge: introduces=[UR-LEX-C259-CHIZ259-01]; assesses=[] -->
 
 **پکوان** — *pakvān* — "a dish (of food)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**پکوان** (*pakvān*) is usually taken from Sanskrit *pakvānna*, "cooked food", built from *pakva*, "cooked", and *anna*, "food". CDIAL has no entry for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

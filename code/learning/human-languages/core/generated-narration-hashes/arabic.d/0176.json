@@ -1,7 +1,7 @@
 {
   "language": "arabic",
   "chapter": 176,
-  "sourceHash": "fnv1a64:cd52ace906f73e71",
+  "sourceHash": "fnv1a64:fac901b34fbbc9c7",
   "lessonIds": [
     "AR-C176-thumma",
     "AR-C176-baynama",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "arabic/narration/ch176.txt",
   "json": "arabic/narration/ch176.json",
-  "textHash": "fnv1a64:afef07dca041ffa2",
-  "jsonHash": "fnv1a64:44e2954cf93a49aa",
+  "textHash": "fnv1a64:ecf4012aa6baa361",
+  "jsonHash": "fnv1a64:d0b8a915002ba970",
   "findings": []
 }

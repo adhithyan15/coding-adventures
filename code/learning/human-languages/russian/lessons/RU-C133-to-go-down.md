@@ -47,7 +47,7 @@ reviews_of: [RU-C133-to-go-up]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**спускаться** is *с-*, "down", with *пускать*, "to let go", and *-ся*, "oneself": to let yourself down.
+**спускаться** is *с-*, "down", with *пускать*, "to let go", and *-ся*, "oneself": to let yourself down. Vasmer links *пускать* with *пустить* and *пустой*, "empty"; its deeper origin is uncertain.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

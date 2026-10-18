@@ -14,7 +14,8 @@ romanization: "tonbo"
 concept_tag: JA-FOOD265-TONBO
 prerequisites: [JA-C65-koi, JA-C65-semi]
 sounds: []
-roots: []
+roots: [japanese-tonbo]
+etymology_hook: "tonbo: native; written 蜻蛉, read as a whole; origin not settled"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C65-semi]
 <!-- hl-knowledge: introduces=[JA-LEX-C65-FOOD265-03]; assesses=[] -->
 
 **とんぼ** — *tonbo* — "a dragonfly".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**とんぼ** (*tonbo*) is a native word, inherited rather than borrowed. JMdict writes it with two characters for kinds of dragonfly, read as a whole, and marks it as usually written in kana. Its older origin is not settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

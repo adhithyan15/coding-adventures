@@ -14,7 +14,8 @@ romanization: "iqtaraḍa"
 concept_tag: AR-VERB-IQTARADA
 prerequisites: [AR-C223-allaqa, AR-C224-kasaba]
 sounds: []
-roots: []
+roots: [q-r-ḍ]
+etymology_hook: "iqtaraḍa: built on the root q-r-ḍ, 'to cut off' (Lane); iqtaraḍa is Form VIII, 'to take a loan'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C224-kasaba]
 <!-- hl-knowledge: introduces=[AR-LEX-C224-ACT224-02]; assesses=[] -->
 
 **اقترض** — *iqtaraḍa* — "to borrow".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**اقترض** (*iqtaraḍa*) is built on the native Arabic root *q-r-ḍ*, "to cut off; to lend" (Lane). *Iqtaraḍa* is Form VIII, "to take a loan".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

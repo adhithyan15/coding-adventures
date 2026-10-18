@@ -14,7 +14,8 @@ romanization: "ṭarīqa"
 concept_tag: AR-SABAB208-TARIQA
 prerequisites: [AR-C208-hurriyya, AR-C208-qaida]
 sounds: []
-roots: []
+roots: [ṭ-r-q]
+etymology_hook: "ṭarīqa: built on the root ṭ-r-q, 'to strike, to beat' (Lane); Lane's ṭarīqa is a way, a manner of conduct"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C208-qaida]
 <!-- hl-knowledge: introduces=[AR-LEX-C208-SABAB208-05]; assesses=[] -->
 
 **طريقة** — *ṭarīqa* — "a way, a method".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**طريقة** (*ṭarīqa*) is built on the native Arabic root *ṭ-r-q*, "to strike, to beat" (Lane). Lane's *ṭarīqa* is a way, a manner of conduct.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -12,6 +12,9 @@ Before the new one: say the Bengali for chalk, then the Bengali for a scholarshi
 You'll want to know: জিলিপি.
 জিলিপি — jilipi — "a jalebi".
 
+The word, taken apart.
+জিলিপি (jilipi) is usually traced, through Persian, to Arabic zalābiya, the name of a fried sweet.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Bengali for a scholarship, then the Bengali for a ja
 
 You'll want to know: লাড্ডু.
 লাড্ডু — lāḍḍu — "a laddu".
+
+The word, taken apart.
+লাড্ডু (lāḍḍu) matches Sanskrit laḍḍu, "a kind of sweetmeat"; the Bengali word inherited from it is lāṛu, which CDIAL lists (CDIAL 10926). CDIAL takes the Sanskrit word as probably the same as laḍḍu, "lump", and notes a proposed link with Munda words for "lump".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Bengali for a jalebi, then the Bengali for a laddu.
 You'll want to know: গুড়.
 গুড় — guṛ — "jaggery".
 
+The word, taken apart.
+গুড় (guṛ) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from guḍa, "boiled sugarcane juice, molasses" (CDIAL 4182). CDIAL lists Bengali guṛ, "molasses", and asks whether the word is the same as guḍa, "ball".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Bengali for a laddu, then the Bengali for jaggery.
 You'll want to know: জাম.
 জাম — jām — "a black plum".
 
+The word, taken apart.
+জাম (jām) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from jambū, "the rose-apple tree" (CDIAL 5131). CDIAL lists Bengali jām for the tree and its fruit.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Bengali for jaggery, then the Bengali for a black pl
 
 You'll want to know: লিচু.
 লিচু — lichu — "a lychee".
+
+The word, taken apart.
+লিচু (lichu) is usually traced to Chinese lizhi, the name of the fruit.
 
 What you've built.
 One more word for this chapter.

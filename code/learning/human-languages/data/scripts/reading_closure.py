@@ -55,6 +55,8 @@ import re
 import sys
 import unicodedata
 
+from authoring_frontmatter import decode_scalar
+
 HERE = os.path.dirname(os.path.abspath(__file__))
 HL = os.path.normpath(os.path.join(HERE, "..", ".."))
 
@@ -86,13 +88,14 @@ def load(track):
     for f in sorted(os.listdir(d)):
         if not f.endswith(".md"):
             continue
-        text = open(os.path.join(d, f), encoding="utf-8").read()
+        with open(os.path.join(d, f), encoding="utf-8") as lesson_file:
+            text = lesson_file.read()
         seq = re.search(r"^sequence: (\d+)", text, re.M)
         hw = re.search(r"^headword: (.*)$", text, re.M)
         lid = re.search(r"^id: (\S+)", text, re.M)
         rows.append(dict(seq=int(seq.group(1)) if seq else 0,
                          id=lid.group(1) if lid else f[:-3],
-                         headword=(hw.group(1).strip().strip('"') if hw else ""),
+                         headword=(decode_scalar(hw.group(1), "headword") if hw else ""),
                          text=text))
     rows.sort(key=lambda r: r["seq"])
     return rows

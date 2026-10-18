@@ -14,7 +14,8 @@ romanization: "svasti"
 concept_tag: SA-LEAVE-SVASTI
 prerequisites: [SA-C28-auspicious, SA-C26-physician, SA-C27-thus]
 sounds: []
-roots: []
+roots: [sanskrit-svasti]
+etymology_hook: "svasti 'well-being' ← su 'well' + asti 'is', from √as 'be' (MW; CDIAL 13915)"
 duration:
   max_seconds: 210
 requires:
@@ -46,6 +47,12 @@ reviews_of: [SA-C28-auspicious]
 **स्वस्ति** is the oldest farewell in this book, and you can take it apart with what you already have. *Su-* means "well" — it is the *su-* inside **स्वागतम्**, "well-come". *Asti* means "is". So स्वस्ति is, exactly, **it is well** — said as a wish over someone leaving.
 
 Add the little ending *-ka* and you have *svastika*, "the mark of well-being", a good-luck sign that was drawn on doorways for thousands of years before the twentieth century took it and made it unusable in the West. The word is not the thing; but the word means what it means.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*Svasti* is a compound of *su*, "well", and *asti*, "is", from the root √as (CDIAL
+13915). It is already in the Rigveda (MW).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

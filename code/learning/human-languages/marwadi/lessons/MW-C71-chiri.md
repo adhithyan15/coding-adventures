@@ -14,7 +14,8 @@ romanization: "chiṛī"
 concept_tag: MW-ANIMALS71-CHIRI
 prerequisites: [MW-C71-bakri, MW-C71-bher]
 sounds: []
-roots: []
+roots: [sanskrit-cataka]
+etymology_hook: "chiṛī ← Sanskrit caṭaka 'sparrow', an imitative word (CDIAL 4571)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C71-bher]
 <!-- hl-knowledge: introduces=[MW-LEX-C71-ANIMALS71-03]; assesses=[] -->
 
 **चिड़ी** — *chiṛī* — "a sparrow, a small bird".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**चिड़ी** (*chiṛī*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *caṭaka*, "sparrow". CDIAL gives no Marwari form in this entry (CDIAL 4571); the match is through Hindi *ciṛī*. CDIAL calls the word imitative and lists *ciṛī* under a variant it reconstructs, *\*ciṭaka*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

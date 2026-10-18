@@ -6,7 +6,7 @@ sequence: 506
 chapter: 15
 type: word
 headword: no entiendo
-gloss: "I don't understand" — the most useful sentence a beginner owns
+gloss: '"I don''t understand" — the most useful sentence a beginner owns'
 concept_tag: ES-REPAIR-NOENTIENDO
 prerequisites: [ES-C19-no]
 sounds: []

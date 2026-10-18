@@ -14,7 +14,8 @@ romanization: "aqraḍa"
 concept_tag: AR-VERB-AQRADA
 prerequisites: [AR-C224-kasaba, AR-C224-iqtarada]
 sounds: []
-roots: []
+roots: [q-r-ḍ]
+etymology_hook: "aqraḍa: built on the root q-r-ḍ, 'to cut off' (Lane); aqraḍa is Form IV, 'to give a loan'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C224-iqtarada]
 <!-- hl-knowledge: introduces=[AR-LEX-C224-ACT224-03]; assesses=[] -->
 
 **أقرض** — *aqraḍa* — "to lend".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**أقرض** (*aqraḍa*) is built on the native Arabic root *q-r-ḍ*, "to cut off; to lend" (Lane). *Aqraḍa* is Form IV, "to give a loan".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

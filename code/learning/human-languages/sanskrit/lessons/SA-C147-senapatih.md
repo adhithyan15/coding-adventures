@@ -14,7 +14,8 @@ romanization: "senāpatiḥ"
 concept_tag: SA-PPL147-SENAPATIH
 prerequisites: [SA-C147-rajni, SA-C147-mantri]
 sounds: []
-roots: []
+roots: [sanskrit-senapati, sanskrit-sena, sanskrit-pati]
+etymology_hook: "senāpati ← senā 'army' + pati 'lord, master': 'the army's lord' (CDIAL 13589); pati is Latin potis' cousin"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C147-mantri]
 <!-- hl-knowledge: introduces=[SA-LEX-C147-PPL147-05]; assesses=[] -->
 
 **सेनापतिः** — *senāpatiḥ* — "a general".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*senāpati* is built from *senā* "army" and *pati* "lord, master" (CDIAL 13589), already in the Aitareya Brāhmaṇa. MW sets *pati* beside Greek *posis* "husband" and Latin *potis* "able".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

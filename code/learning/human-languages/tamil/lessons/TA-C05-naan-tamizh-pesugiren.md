@@ -43,7 +43,7 @@ with a sound almost no other language has.
 
 **நான் தமிழ் பேசுகிறேன்** = **நான்** (*nāṉ*, "I") + **தமிழ்** (*tamiḻ*, "Tamil,"
 the object) + **பேசுகிறேன்** (*pēsugiṟēṉ*, "speak") — "**I Tamil speak**," the
-verb last as always. The name **தமிழ்** (*tamiḻ*) is native, of debated but
+verb last as always. The name **தமிழ்** (*tamiḻ*) is native (DEDR 3080), of disputed but
 clearly Dravidian origin (often linked to a sense of "sweetness / one's own
 speech"); it names one of the oldest living literary languages in the world, with
 poetry two thousand years old still read today.

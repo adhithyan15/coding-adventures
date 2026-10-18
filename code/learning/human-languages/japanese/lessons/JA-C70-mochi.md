@@ -14,7 +14,8 @@ romanization: "mochi"
 concept_tag: JA-THINGS70-MOCHI
 prerequisites: [JA-C69-koori, JA-C69-natsuyasumi]
 sounds: []
-roots: []
+roots: [japanese-mochi]
+etymology_hook: "mochi: native Japanese, inherited, not borrowed; usually kana, kanji 餅 as kun'yomi"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C69-natsuyasumi]
 <!-- hl-knowledge: introduces=[JA-LEX-C70-THINGS70-01]; assesses=[] -->
 
 **もち** — *mochi* — "a rice cake".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**もち** (*mochi*) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. It is usually written in kana; its kanji, when used, is a kun'yomi attached later (JMdict, KANJIDIC2).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

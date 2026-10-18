@@ -14,7 +14,8 @@ romanization: "jangal"
 concept_tag: UR-NATURE64-JANGAL
 prerequisites: [UR-C64-patta, UR-C64-pahar]
 sounds: []
-roots: []
+roots: [sanskrit-jangala]
+etymology_hook: "jangal ← Sanskrit jāṅgala 'arid, sparse in trees', a tadbhava (CDIAL 5177)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C64-pahar]
 <!-- hl-knowledge: introduces=[UR-LEX-C64-NATURE64-03]; assesses=[] -->
 
 **جنگل** — *jangal* — "a forest".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**جنگل** (*jangal*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *jāṅgala*, "arid, sparse in trees" (CDIAL 5177). CDIAL notes a likely non-Aryan origin. The sense moved from "waste land" to "forest", and English took it back as *jungle*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

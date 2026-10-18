@@ -12,6 +12,9 @@ Before the new one: say the Urdu for to lend, then the Urdu for to save.
 You'll want to know: پار کرنا.
 پار کرنا — pār karnā — "to cross".
 
+The phrase, taken apart.
+پار کرنا (pār karnā) is "to do the far side". pār comes from Sanskrit pāra, "the further bank" (CDIAL 8100), and karnā from Sanskrit karoti, "does" (CDIAL 2814).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Urdu for to save, then the Urdu for to cross.
 
 You'll want to know: گھومنا.
 گھومنا — ghūmnā — "to wander, to go round".
+
+The word, taken apart.
+گھومنا (ghūmnā) is a tadbhava, a word inherited and reshaped by sound change. It comes from ghummati, "revolves", a form CDIAL reconstructs from its descendants (CDIAL 4485).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Urdu for to cross, then the Urdu for to wander.
 You'll want to know: سیر کرنا.
 سیر کرنا — sair karnā — "to go for a stroll".
 
+The phrase, taken apart.
+سیر کرنا (sair karnā) joins sair, "an outing", and karnā, "to do". sair is Arabic sayr, "a going, a journey", which reached Urdu through Persian (Lane, root s-y-r); karnā comes from Sanskrit karoti, "does" (CDIAL 2814).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Urdu for to wander, then the Urdu for to go for a st
 You'll want to know: کودنا.
 کودنا — kūdnā — "to jump".
 
+The word, taken apart.
+کودنا (kūdnā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from kūrdati, "leaps, jumps" (CDIAL 3412). CDIAL takes the Sanskrit verb as probably borrowed from Dravidian.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Urdu for to go for a stroll, then the Urdu for to ju
 
 You'll want to know: پھسلنا.
 پھسلنا — phisalnā — "to slip".
+
+The word, taken apart.
+پھسلنا (phisalnā) comes from a reconstructed phiss, "slip" (CDIAL 9080). CDIAL also lists it under Sanskrit picchala, "slimy, slippery" (CDIAL 8152).
 
 What you've built.
 One more word for this chapter.

@@ -15,6 +15,7 @@ concept_tag: GU-DEF100-POTANU
 prerequisites: [GU-C100-kasu, GU-C100-pote, GU-C05-hun-gujarati-bolun-chhun]
 sounds: []
 roots: []
+etymology_hook: "potānũ 'one's own': built on pote 'oneself'; origin not settled, CDIAL has no entry"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [GU-C100-pote]
 <!-- hl-knowledge: introduces=[GU-LEX-C100-DEF100-04]; assesses=[] -->
 
 **પોતાનું** (*potānũ*) — "one's own".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**પોતાનું** (*potānũ*) is built on *pote*, "oneself". The origin of that word is not settled: CDIAL, searched by form and by meaning, has no entry for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

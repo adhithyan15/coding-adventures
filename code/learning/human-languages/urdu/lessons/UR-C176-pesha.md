@@ -14,7 +14,8 @@ romanization: "peshā"
 concept_tag: UR-KAM176-PESHA
 prerequisites: [UR-C175-fakhta, UR-C176-naukri]
 sounds: []
-roots: []
+roots: [persian-pesha]
+etymology_hook: "peshā: usually traced to Persian pesha 'craft, profession'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C176-naukri]
 <!-- hl-knowledge: introduces=[UR-LEX-C176-KAM176-02]; assesses=[] -->
 
 **پیشہ** — *peshā* — "a profession".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**پیشہ** (*peshā*) is a loan, usually traced to Persian *pesha*, "craft, profession".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

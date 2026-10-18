@@ -14,7 +14,8 @@ romanization: "dūjo"
 concept_tag: MW-DEF102-DUJO
 prerequisites: [MW-C101-kun, MW-C102-sagla]
 sounds: []
-roots: []
+roots: [indo-aryan-dutiya]
+etymology_hook: "dūjo ← *dutīya 'second', reconstructed (CDIAL 6402, Hindi and Gujarati rows)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C102-sagla]
 <!-- hl-knowledge: introduces=[MW-LEX-C102-DEF102-02]; assesses=[] -->
 
 **दूजो** — *dūjo* — "another, the second".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**दूजो** (*dūjo*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*dutīya*, "second", a form CDIAL reconstructs from its descendants. CDIAL gives no Marwari form in this entry (CDIAL 6402); the match is through Hindi *dūjā* and Gujarati *dujũ*. CDIAL sets it beside Sanskrit *dvitīya*, "second".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

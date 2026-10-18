@@ -14,7 +14,8 @@ romanization: "khælā"
 concept_tag: BN-VERB-KHLA
 prerequisites: [BN-C48-bosa, BN-C48-hata]
 sounds: []
-roots: []
+roots: [indo-aryan-khel]
+etymology_hook: "khælā ← *khēll- 'play', a form CDIAL reconstructs; its deeper source is uncertain (CDIAL 3918)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C48-hata]
 <!-- hl-knowledge: introduces=[BN-LEX-C49-VERBS49-01]; assesses=[] -->
 
 **খেলা** — *khælā* — "to play".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**খেলা** (*khælā*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*khell*, "play", a form CDIAL reconstructs from its descendants (CDIAL 3918). CDIAL adds that if Sanskrit *krīḍati*, "plays", is of non-Aryan origin, these forms may share that source.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,7 +1,7 @@
 {
   "language": "urdu",
   "chapter": 188,
-  "sourceHash": "fnv1a64:7bdf45429f0473d2",
+  "sourceHash": "fnv1a64:d5393b9d8b15eaf7",
   "lessonIds": [
     "UR-C188-aprail",
     "UR-C188-mai",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "urdu/narration/ch188.txt",
   "json": "urdu/narration/ch188.json",
-  "textHash": "fnv1a64:1a030f55177746be",
-  "jsonHash": "fnv1a64:af662dfe7bd8b9ba",
+  "textHash": "fnv1a64:40bfec53f48bc522",
+  "jsonHash": "fnv1a64:8ef57428ab6ad3a1",
   "findings": []
 }

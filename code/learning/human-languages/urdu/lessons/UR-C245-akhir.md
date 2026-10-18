@@ -14,7 +14,8 @@ romanization: "ākhir"
 concept_tag: UR-VAQT245-AKHIR
 prerequisites: [UR-C245-rozana, UR-C245-aj-kal]
 sounds: []
-roots: []
+roots: [arabic-akhir]
+etymology_hook: "ākhir ← Arabic ākhir 'last, the end', through Persian (Lane, root ʾ-kh-r)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C245-aj-kal]
 <!-- hl-knowledge: introduces=[UR-LEX-C245-VAQT245-04]; assesses=[] -->
 
 **آخر** — *ākhir* — "at last; the end".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**آخر** (*ākhir*) is a loan from Arabic *ākhir*, "last, the end", which reached Urdu through Persian. Its Arabic root is *ʾ-kh-r* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

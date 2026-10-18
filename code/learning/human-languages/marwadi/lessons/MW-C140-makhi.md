@@ -14,7 +14,8 @@ romanization: "mākhī"
 concept_tag: MW-THINGS140-MAKHI
 prerequisites: [MW-C139-chil, MW-C140-undro]
 sounds: []
-roots: []
+roots: [sanskrit-makshika]
+etymology_hook: "mākhī ← Sanskrit makṣikā 'fly, bee', a tadbhava (CDIAL 9696, Hindi and Gujarati rows)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C140-undro]
 <!-- hl-knowledge: introduces=[MW-LEX-C140-THINGS140-02]; assesses=[] -->
 
 **माखी** — *mākhī* — "a fly".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**माखी** (*mākhī*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *makṣikā*, "fly, bee". CDIAL gives no Marwari form in this entry (CDIAL 9696); the match is through Hindi *mākhī* and Gujarati *mākhī*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

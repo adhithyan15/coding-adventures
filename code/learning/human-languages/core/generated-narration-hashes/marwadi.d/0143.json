@@ -1,7 +1,7 @@
 {
   "language": "marwadi",
   "chapter": 143,
-  "sourceHash": "fnv1a64:c124444e64758621",
+  "sourceHash": "fnv1a64:47a8f1bb6dcf84ce",
   "lessonIds": [
     "MW-C143-tato",
     "MW-C143-kharo",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "marwadi/narration/ch143.txt",
   "json": "marwadi/narration/ch143.json",
-  "textHash": "fnv1a64:b9f62ff0c8371226",
-  "jsonHash": "fnv1a64:3163f2c50d1a46b8",
+  "textHash": "fnv1a64:29009ef6b81cc395",
+  "jsonHash": "fnv1a64:9726d77f49bfd937",
   "findings": []
 }

@@ -14,7 +14,8 @@ romanization: "zaraʿa"
 concept_tag: AR-VERB-ZARAA
 prerequisites: [AR-C195-dalla, AR-C195-dalla2]
 sounds: []
-roots: []
+roots: [z-r-ʿ]
+etymology_hook: "zaraʿa: built on the root z-r-ʿ, 'to sow' (Lane); zaraʿa is the plain verb, 'he sowed'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C195-dalla2]
 <!-- hl-knowledge: introduces=[AR-LEX-C196-ACT196-01]; assesses=[] -->
 
 **زرع** — *zaraʿa* — "to plant".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**زرع** (*zaraʿa*) is built on the native Arabic root *z-r-ʿ*, "to sow" (Lane). *Zaraʿa* is the plain verb, "he sowed".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

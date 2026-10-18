@@ -1,7 +1,7 @@
 {
   "language": "punjabi",
   "chapter": 119,
-  "sourceHash": "fnv1a64:3d59b5418845ca41",
+  "sourceHash": "fnv1a64:8fa2c370925bed00",
   "lessonIds": [
     "PA-C119-manja",
     "PA-C119-pajama",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "punjabi/narration/ch119.txt",
   "json": "punjabi/narration/ch119.json",
-  "textHash": "fnv1a64:85220d2f395d11c3",
-  "jsonHash": "fnv1a64:9859257d319b7523",
+  "textHash": "fnv1a64:8c0e01c81fb30a84",
+  "jsonHash": "fnv1a64:a1aa101f814c53e4",
   "findings": []
 }

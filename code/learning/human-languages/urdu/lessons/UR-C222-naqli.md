@@ -14,7 +14,8 @@ romanization: "naqlī"
 concept_tag: UR-SIFAT222-NAQLI
 prerequisites: [UR-C222-bekar, UR-C222-anokha]
 sounds: []
-roots: []
+roots: [arabic-naql]
+etymology_hook: "naqlī: naql 'a copy' ← Arabic naql 'transfer, copying' (Lane, root n-q-l) + -ī"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C222-anokha]
 <!-- hl-knowledge: introduces=[UR-LEX-C222-SIFAT222-04]; assesses=[] -->
 
 **نقلی** — *naqlī* — "fake".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**نقلی** (*naqlī*) is *naql*, "a copy", with the ending *-ī*, "of". *naql* is Arabic, "a moving across; a copying", and reached Urdu through Persian (Lane, root *n-q-l*).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

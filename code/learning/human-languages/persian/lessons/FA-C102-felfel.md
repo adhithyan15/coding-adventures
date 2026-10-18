@@ -14,7 +14,8 @@ romanization: "felfel"
 concept_tag: FA-THINGS102-FELFEL
 prerequisites: [FA-C101-sir, FA-C102-zanjabil]
 sounds: []
-roots: []
+roots: [sanskrit-pippali]
+etymology_hook: "felfel ← Arabic filfil, usually traced via Persian pilpil to Sanskrit pippalī"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C102-zanjabil]
 <!-- hl-knowledge: introduces=[FA-LEX-C102-THINGS102-02]; assesses=[] -->
 
 **فلفل** — *felfel* — "pepper".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*felfel* is borrowed from Arabic *filfil*, "pepper", which is usually traced through Persian *pilpil* to Sanskrit *pippalī*, "long pepper". English *pepper* comes from the same Indian word through Greek and Latin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

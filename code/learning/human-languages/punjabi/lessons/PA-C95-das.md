@@ -14,7 +14,8 @@ romanization: "das"
 concept_tag: PA-NUMBERS95-DAS
 prerequisites: [PA-C95-atth, PA-C95-naum]
 sounds: []
-roots: []
+roots: [sanskrit-dasha]
+etymology_hook: "das: CDIAL marks it as taken from Hindi das; both go back to Sanskrit daśa 'ten' (CDIAL 6227)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C95-naum]
 <!-- hl-knowledge: introduces=[PA-LEX-C95-NUMBERS95-04]; assesses=[] -->
 
 **ਦਸ** — *das* — "ten".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਦਸ** (*das*) goes back to Sanskrit *daśa*, "ten", but CDIAL marks the Punjabi word as taken from Hindi *das* (CDIAL 6227).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "nāriyal"
 concept_tag: UR-CHIZ252-NARIYAL
 prerequisites: [UR-C252-khubani, UR-C252-anannas]
 sounds: []
-roots: []
+roots: [sanskrit-narikela]
+etymology_hook: "nāriyal ← Sanskrit nārikela 'coconut', a tadbhava (CDIAL 7075)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C252-anannas]
 <!-- hl-knowledge: introduces=[UR-LEX-C252-CHIZ252-04]; assesses=[] -->
 
 **ناریل** — *nāriyal* — "a coconut".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ناریل** (*nāriyal*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *nārikela*, "coconut" (CDIAL 7075). CDIAL takes the Sanskrit word from Dravidian.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

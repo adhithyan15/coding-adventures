@@ -14,7 +14,7 @@ romanization: "caturamāṉa"
 concept_tag: TA-GUNAM240-CATURAMANA
 prerequisites: [TA-C240-urutiyana, TA-C240-vattamana]
 sounds: []
-roots: [sanskrit-catura]
+roots: [sanskrit-caturasra]
 etymology_hook: "சதுரமான — caturam 'square' ← Sanskrit caturasra 'four-cornered', a well-established loan, + -āṉa"
 duration:
   max_seconds: 200

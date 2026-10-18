@@ -14,7 +14,8 @@ romanization: "kamar"
 concept_tag: UR-THINGS128-KAMAR
 prerequisites: [UR-C128-tota, UR-C128-bhalu]
 sounds: []
-roots: []
+roots: [persian-kamar]
+etymology_hook: "kamar: usually traced to Persian kamar 'waist'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C128-bhalu]
 <!-- hl-knowledge: introduces=[UR-LEX-C128-THINGS128-05]; assesses=[] -->
 
 **کمر** — *kamar* — "the waist, the lower back".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**کمر** (*kamar*) is a loan, usually traced to Persian *kamar*, "waist".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,0 +1,282 @@
+{
+  "version": 1,
+  "language": "sanskrit",
+  "chapter": 272,
+  "title": "One condolence, held as a whole",
+  "drivablePrefix": 3,
+  "sourceHash": "fnv1a64:9825a2039df96e57",
+  "lessons": [
+    {
+      "id": "SA-C272-offer-condolence",
+      "sequence": 16060,
+      "title": "One condolence, held as a whole",
+      "headword": "मम संवेदनाः शोकसन्तप्त-परिजनैः सह सन्ति।",
+      "romanization": "mama saṃvedanāḥ śokasantapta-parijanaiḥ saha santi",
+      "gloss": "my condolences are with the bereaved family members",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d62c1b824df2e064",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Recall मम, “my”; दुःखम्, “sorrow”; शोकः, “grief”; म्रियते, “dies”; and दया, “compassion.” These known words prepare the meaning. They are not yet a condolence you can say to somebody."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: one attested condolence",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "मम संवेदनाः शोकसन्तप्त-परिजनैः सह सन्ति। mama saṃvedanāḥ śokasantapta-parijanaiḥ saha santi. “My condolences are with the bereaved family members.”"
+            },
+            {
+              "kind": "speech",
+              "text": "A contemporary Sanskrit report from Hindusthān Samācār quotes the same complete sentence, including the editorial hyphen inside शोकसन्तप्त-परिजनैः. The report types an ASCII colon after परिजनै; the lesson normalizes that one character to the Devanagari visarga ः shown above. All India Radio Sanskrit bulletins independently use plural शोकसंवेदनाः for condolences directed to bereaved families. The sentence here is therefore attested contemporary Sanskrit, not a translation silently built from an English formula."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: keep the formula whole",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Hear the sentence in three meaning-chunks:"
+            },
+            {
+              "kind": "speech",
+              "text": "मम संवेदनाः — “my condolences”."
+            },
+            {
+              "kind": "speech",
+              "text": "शोकसन्तप्त-परिजनैः सह — “with the bereaved family members”."
+            },
+            {
+              "kind": "speech",
+              "text": "सन्ति — “are”."
+            },
+            {
+              "kind": "speech",
+              "text": "For now, keep these chunks together as one whole social formula. This lesson does not teach the instrumental plural or license new sentences from its pieces."
+            },
+            {
+              "kind": "speech",
+              "text": "The linked report also says तस्मै विनम्र-श्रद्धाञ्जलिः, a respectful tribute directed to the person who died. That is a different act. The sentence you are learning offers a condolence to the bereaved family; it is not a tribute to the person who died."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 4,
+              "perItem": false,
+              "source": "[PAUSE 4s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A family has lost somebody close. Address the bereaved family members and say the complete condolence slowly once."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 4,
+              "perItem": false,
+              "source": "[PAUSE 4s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say, “My condolences are with the bereaved family members.” Keep the attested sentence whole."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C272-condolence-first-retrieval",
+      "sequence": 16070,
+      "title": "Offer the condolence: round one",
+      "headword": "(independent condolence retrieval, first round)",
+      "romanization": "",
+      "gloss": "independently retrieve one condolence for a bereaved family",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3dfab313cb8d53d7",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Prepare to retrieve the complete sentence from its social purpose."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice: independent retrieval",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "No Sanskrit model is shown before you answer."
+            },
+            {
+              "kind": "speech",
+              "text": "A neighbour has lost a close relative. You are speaking to the bereaved family members, not paying tribute to the person who died. Say the Sanskrit for “My condolences are with the bereaved family members.”"
+            },
+            {
+              "kind": "pause",
+              "seconds": 8,
+              "perItem": false,
+              "source": "[PAUSE 8s]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built: check after answering",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Now check: मम संवेदनाः शोकसन्तप्त-परिजनैः सह सन्ति। (mama saṃvedanāḥ śokasantapta-parijanaiḥ saha santi.)"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall: boundary",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "You have retrieved one bounded condolence once without a visible model. This is not a claim of a wider condolence repertoire or general social competence."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C272-condolence-final-retrieval",
+      "sequence": 16080,
+      "title": "Offer the condolence: round two",
+      "headword": "(independent condolence retrieval, second round)",
+      "romanization": "",
+      "gloss": "retrieve the same condolence in a distinct memorial context",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6072dd1cae1aa431",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Retrieve the same social formula in a different setting."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice: independent retrieval in a fresh context",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "No Sanskrit model is shown before you answer."
+            },
+            {
+              "kind": "speech",
+              "text": "At a memorial gathering, you turn from remembering the person who died to address the bereaved family members directly. Say the Sanskrit for “My condolences are with the bereaved family members.”"
+            },
+            {
+              "kind": "pause",
+              "seconds": 8,
+              "perItem": false,
+              "source": "[PAUSE 8s]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built: check after answering",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Now check: मम संवेदनाः शोकसन्तप्त-परिजनैः सह सन्ति। (mama saṃvedanāḥ śokasantapta-parijanaiḥ saha santi.)"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall: boundary",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "You can retrieve this one attested condolence twice without a visible model. That is not evidence of general social competence, human validation, learner attainment, or exam readiness."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

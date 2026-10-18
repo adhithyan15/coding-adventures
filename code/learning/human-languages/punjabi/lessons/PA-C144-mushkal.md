@@ -14,7 +14,8 @@ romanization: "mushkal"
 concept_tag: PA-QUAL144-MUSHKAL
 prerequisites: [PA-C144-naram, PA-C144-sakht]
 sounds: []
-roots: []
+roots: [arabic-mushkil]
+etymology_hook: "mushkal ← Arabic mushkil 'difficult, doubtful', through Persian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C144-sakht]
 <!-- hl-knowledge: introduces=[PA-LEX-C144-QUAL144-03]; assesses=[] -->
 
 **ਮੁਸ਼ਕਲ** — *mushkal* — "difficult".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਮੁਸ਼ਕਲ** (*mushkal*) is a loan from Arabic *mushkil*, "difficult, doubtful", which reached Punjabi through Persian. Its Arabic root is *sh-k-l* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

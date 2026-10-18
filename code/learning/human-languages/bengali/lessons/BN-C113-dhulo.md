@@ -14,7 +14,8 @@ romanization: "dhulo"
 concept_tag: BN-THINGS113-DHULO
 prerequisites: [BN-C113-kuyo, BN-C113-kada, BN-C40-lines]
 sounds: []
-roots: []
+roots: [indo-aryan-dhudi]
+etymology_hook: "dhulo ← *dhūḍi 'dust, powder', a reconstructed form; a tadbhava (CDIAL 6835)"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [BN-C113-kada]
 <!-- hl-knowledge: introduces=[BN-LEX-C113-THINGS113-03]; assesses=[] -->
 
 **ধুলো** — *dhulo* — "dust".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ধুলো** (*dhulo*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*dhūḍi*, "dust, powder", a form CDIAL reconstructs from its descendants (CDIAL 6835). Sanskrit has *dhūli*; CDIAL writes the Bengali forms *dhul* and *dhulā*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

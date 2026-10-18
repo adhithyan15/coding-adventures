@@ -1,0 +1,19 @@
+{
+  "id": "SA-A1-S-01",
+  "category": "Vākya — the sentence",
+  "label": "declarative sentences, affirmative and negative",
+  "probe": [
+    "SA-LEX-NA-NO",
+    "SA-PATTERN-I-SPEAK-SANSKRIT",
+    "SA-PATTERN-NA-CINTA"
+  ],
+  "anchorIds": [
+    "ES-A1-PROXY",
+    "SA-CORPUS",
+    "ED-SANSKRIT"
+  ],
+  "derivedFrom": [
+    "A1-OS-01"
+  ],
+  "note": "na before the verb, and na cintā ('no worry') as the chapter-3 negative the track actually uses."
+}

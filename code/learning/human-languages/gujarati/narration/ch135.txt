@@ -12,6 +12,9 @@ Before the new one: say the Gujarati for sad, then the Gujarati for hungry.
 You'll want to know: તરસ્યું.
 તરસ્યું (tarasyũ) — "thirsty".
 
+The word, taken apart.
+તરસ્યું (tarasyũ) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from tṛṣita, "thirsty" (CDIAL 5937).
+
 What you've built.
 One more word for this chapter.
 
@@ -43,6 +46,9 @@ Which we includes the person you are talking to, ame or āpṇe? (Āpṇe.)
 You'll want to know: બીમાર.
 બીમાર (bīmār) — "ill".
 
+The word, taken apart.
+બીમાર (bīmār) is a loan, usually traced to Persian bīmār, "ill, sick".
+
 What you've built.
 One more word for this chapter.
 
@@ -71,6 +77,9 @@ Before the new one: say the Gujarati for thirsty, then the Gujarati for ill.
 
 You'll want to know: તાજું.
 તાજું (tājũ) — "fresh".
+
+The word, taken apart.
+તાજું (tājũ) is a loan, usually traced to Persian tāza, "fresh". Gujarati writes the z as j.
 
 What you've built.
 One more word for this chapter.
@@ -101,6 +110,9 @@ Before the new one: say the Gujarati for ill, then the Gujarati for fresh.
 You'll want to know: પાકું.
 પાકું (pākũ) — "ripe".
 
+The word, taken apart.
+પાકું (pākũ) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from pakva, "cooked, ripe" (CDIAL 7621).
+
 What you've built.
 One more word for this chapter.
 
@@ -129,6 +141,9 @@ Before the new one: say the Gujarati for fresh, then the Gujarati for ripe.
 
 You'll want to know: કાચું.
 કાચું (kācũ) — "raw, unripe".
+
+The word, taken apart.
+કાચું (kācũ) is a tadbhava, a word inherited and reshaped by sound change. It comes from kacca, "raw, unripe", a form CDIAL reconstructs from its descendants (CDIAL 2613).
 
 What you've built.
 One more word for this chapter.

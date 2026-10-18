@@ -1,7 +1,7 @@
 {
   "language": "punjabi",
   "chapter": 55,
-  "sourceHash": "fnv1a64:677be0d7ecabab30",
+  "sourceHash": "fnv1a64:54cca795b64d2de5",
   "lessonIds": [
     "PA-C55-patni",
     "PA-C55-bachcha",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "punjabi/narration/ch55.txt",
   "json": "punjabi/narration/ch55.json",
-  "textHash": "fnv1a64:02bb1a792b10e136",
-  "jsonHash": "fnv1a64:19e0dddbbb1ec2ef",
+  "textHash": "fnv1a64:496a87ad9194f595",
+  "jsonHash": "fnv1a64:88579b2edc70042a",
   "findings": []
 }

@@ -14,7 +14,8 @@ romanization: "pūrvā"
 concept_tag: SA-TRV202-PURVA
 prerequisites: [SA-C202-pathikah, SA-C202-disa]
 sounds: []
-roots: []
+roots: [sanskrit-purva]
+etymology_hook: "pūrva 'in front, former', so 'eastern'; MW connects it with purā 'before' and pra 'forth' (CDIAL 8343)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C202-disa]
 <!-- hl-knowledge: introduces=[SA-LEX-C202-TRV202-03]; assesses=[] -->
 
 **पूर्वा** — *pūrvā* — "the east".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*pūrva* means "in front, former, first" (CDIAL 8343), and MW connects it with *purā*, "before", and *pra*, "forth". Facing the sunrise, the east is the direction in front of you, so *pūrvā* (*diś*) is the east.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "bālṭī"
 concept_tag: MW-THINGS119-BALTI
 prerequisites: [MW-C119-loto, MW-C119-gilas]
 sounds: []
-roots: []
+roots: [portuguese-balde]
+etymology_hook: "bālṭī ← Portuguese balde 'bucket'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C119-gilas]
 <!-- hl-knowledge: introduces=[MW-LEX-C119-THINGS119-04]; assesses=[] -->
 
 **बाल्टी** — *bālṭī* — "a bucket".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**बाल्टी** (*bālṭī*) is a loan from Portuguese *balde*, "bucket".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

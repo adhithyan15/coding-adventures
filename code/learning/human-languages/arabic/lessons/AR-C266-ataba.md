@@ -14,7 +14,8 @@ romanization: "ʿataba"
 concept_tag: AR-MAKAN266-ATABA
 prerequisites: [AR-C266-qabw, AR-C266-midkhana]
 sounds: []
-roots: []
+roots: [ʿ-t-b]
+etymology_hook: "ʿataba: an old noun for a threshold, listed by Lane under ʿ-t-b, beside ʿataba 'to blame'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C266-midkhana]
 <!-- hl-knowledge: introduces=[AR-LEX-C266-MAKAN266-03]; assesses=[] -->
 
 **عتبة** — *ʿataba* — "a doorstep, a threshold".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**عتبة** (*ʿataba*), "a threshold, a step", is an old native noun, filed under the root *ʿ-t-b* (Lane), beside the verb *ʿataba*, "to blame".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

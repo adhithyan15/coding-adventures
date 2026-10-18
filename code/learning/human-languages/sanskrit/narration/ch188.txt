@@ -12,6 +12,9 @@ Before the new one: say the Sanskrit for truthful, then the Sanskrit for adept.
 You'll want to know: तृषितः.
 तृषितः — tṛṣitaḥ — "thirsty".
 
+The word, taken apart.
+tṛṣita is the past participle of the root √tṛṣ, "to be thirsty" (MW). The root is inherited from Indo-European: MW compares Gothic thaursus, "dry", and English thirst is usually traced to the same source. CDIAL 5937 gives Gujarati tarśyũ, "thirsty", as a descendant.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Sanskrit for adept, then the Sanskrit for thirsty.
 
 You'll want to know: सज्जः.
 सज्जः — sajjaḥ — "ready".
+
+The word, taken apart.
+sajja comes from sajj, a form of the root √sañj, "to cling, fasten", under which MW files it. Its first senses are "fixed, prepared, equipped": what is fastened in place is ready.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Sanskrit for thirsty, then the Sanskrit for ready.
 You'll want to know: व्यस्तः.
 व्यस्तः — vyastaḥ — "busy".
 
+The word, taken apart.
+vyasta comes from vi- with the root √as, "to throw", as its past participle (MW): "thrown apart, scattered". A mind scattered over many tasks is busy, and Hindi and Marathi use vyast in that sense.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Sanskrit for ready, then the Sanskrit for busy.
 You'll want to know: निर्मलः.
 निर्मलः — nirmalaḥ — "spotless, pure".
 
+The word, taken apart.
+nirmala is built on nis, "without", and mala, "dirt, impurity" (MW; CDIAL 7366). Mala itself lives on as Hindi mal, "dirt" (CDIAL 9899).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Sanskrit for busy, then the Sanskrit for spotless.
 
 You'll want to know: उज्ज्वलः.
 उज्ज्वलः — ujjvalaḥ — "bright, shining".
+
+The word, taken apart.
+ujjvala is built on ud, "up", and the root √jval, "to blaze, glow" (MW): "blazing up". It lives on as Hindi ujlā, "bright" (CDIAL 1670).
 
 What you've built.
 One more word for this chapter.

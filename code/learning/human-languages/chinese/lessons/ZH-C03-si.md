@@ -11,8 +11,8 @@ gloss: four
 concept_tag: ZH-NUMBER-FOUR
 prerequisites: [ZH-W03-si]
 sounds: [tone-4, tone-lexical]
-roots: []
-etymology_hook: 四 is a shape borrowed for its sound, and one tone away from a word nobody wants in its place.
+roots: [middle-chinese-sijh]
+etymology_hook: "sì 'four': inherited, from Middle Chinese sijH; its character was borrowed for the sound"
 duration:
   max_seconds: 250
 requires:
@@ -66,6 +66,13 @@ tone is part of a Mandarin word's identity, not an accent on it.
 
 Not a curiosity, either: it is why many buildings in China number floors 1, 2,
 3, 5, skipping four the way some Western buildings skip thirteen.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**四** *sì* is inherited from Middle Chinese *sijH*, "four" (Guangyun, in
+Baxter's transcription). The sound-borrowing above is the history of the
+character: the word came first, and a shape was borrowed to write it.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-NUM-SI] -->

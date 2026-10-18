@@ -14,7 +14,8 @@ romanization: "filfil"
 concept_tag: AR-THINGS128-FILFIL
 prerequisites: [AR-C127-qurt, AR-C128-nazzara]
 sounds: []
-roots: []
+roots: [persian-pilpil]
+etymology_hook: "filfil: arabicized from Persian pilpil (Lane), from Sanskrit pippalī 'long pepper'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C128-nazzara]
 <!-- hl-knowledge: introduces=[AR-LEX-C128-THINGS128-02]; assesses=[] -->
 
 **فلفل** — *filfil* — "pepper".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**فلفل** (*filfil*) is a loan: Lane records it as arabicized from Persian *pilpil*, "pepper", which goes back to Sanskrit *pippalī*, "long pepper".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

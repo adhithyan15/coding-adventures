@@ -14,7 +14,8 @@ romanization: "howsele"
 concept_tag: FA-CHERA270-HOWSELE
 prerequisites: [FA-C269-khoshbakhtane, FA-C270-shekl]
 sounds: []
-roots: []
+roots: [arabic-hawsala]
+etymology_hook: "howsele ← Arabic ḥawṣala 'crop of a bird', root ḥ-ṣ-l (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C270-shekl]
 <!-- hl-knowledge: introduces=[FA-LEX-C270-CHERA270-02]; assesses=[] -->
 
 **حوصله** — *howsele* — "patience".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*howsele* is borrowed from Arabic *ḥawṣala*, "crop of a bird". Its Arabic root is *ḥ-ṣ-l* (Lane). Persian uses it for patience, a capacity to hold things in (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

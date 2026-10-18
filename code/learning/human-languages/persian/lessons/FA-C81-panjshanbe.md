@@ -14,7 +14,8 @@ romanization: "panjshanbe"
 concept_tag: FA-TIME81-PANJSHANBE
 prerequisites: [FA-C81-doshanbe, FA-C81-chaharshanbe]
 sounds: []
-roots: []
+roots: [pie-penkwe, aramaic-shabbat]
+etymology_hook: "panjshanbe: Persian panj 'five' + shanbe 'Sabbath' (EtymDB)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C81-chaharshanbe]
 <!-- hl-knowledge: introduces=[FA-LEX-C81-TIME81-05]; assesses=[] -->
 
 **پنجشنبه** — *panjshanbe* — "Thursday".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*panjshanbe* is *panj*, "five", with *shanbe*, "Saturday" (EtymDB): the fifth day after the Sabbath. *panj* is an inherited Persian number.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

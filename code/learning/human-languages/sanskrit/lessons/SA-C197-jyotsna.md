@@ -14,7 +14,8 @@ romanization: "jyotsnā"
 concept_tag: SA-THG197-JYOTSNA
 prerequisites: [SA-C197-karaka, SA-C197-avasyayah]
 sounds: []
-roots: []
+roots: [sanskrit-jyotsna]
+etymology_hook: "jyotsnā 'moonlit night', filed under √jyut 'shine' (MW); Hindi junhāī (CDIAL 5301)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C197-avasyayah]
 <!-- hl-knowledge: introduces=[SA-LEX-C197-THG197-05]; assesses=[] -->
 
 **ज्योत्स्ना** — *jyotsnā* — "moonlight".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*jyotsnā* is filed by MW under the root √jyut, "to shine". It first meant "a moonlit night" and then "moonlight" (CDIAL 5301), and lives on as Hindi *junhāī*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

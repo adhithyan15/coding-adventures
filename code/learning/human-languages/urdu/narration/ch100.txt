@@ -12,6 +12,9 @@ Before the new one: say the Urdu for a lane, a narrow street, then the Urdu for 
 You'll want to know: چوراہا.
 چوراہا — chaurāhā — "a crossroads".
 
+The word, taken apart.
+چوراہا (chaurāhā) is usually explained as chau-, "four", with Persian rāh, "road". CDIAL does not list it; it lists cauhaṭṭā, "a crossing of market streets", from catur-, "four" (CDIAL 4626).
+
 What you've built.
 One more word for this chapter.
 
@@ -41,6 +44,9 @@ Before the new one: say the Urdu for a turn, a bend, then the Urdu for a crossro
 You'll want to know: آس پاس.
 آس پاس — ās pās — "around, nearby".
 
+The phrase, taken apart.
+آس پاس (ās pās) is built on pās, "near", from Sanskrit pārśve, "near", a form of pārśva, "side" (CDIAL 8118). ās is a rhyming partner put in front of it; its own source is not settled.
+
 What you've built.
 One more word for this chapter.
 
@@ -69,6 +75,9 @@ Before the new one: say the Urdu for a crossroads, then the Urdu for around.
 
 You'll want to know: ساتھ.
 ساتھ — sāth — "with, together".
+
+The word, taken apart.
+ساتھ (sāth) is inherited. It comes from Sanskrit sārthena, "in company with", a form of sārtha, "caravan, company" (CDIAL 13364).
 
 What you've built.
 One more word for this chapter.
@@ -101,6 +110,9 @@ One ending turns a place into a describing word: say لاہور, then لاہور
 You'll want to know: بازار.
 بازار — bāzār — "a market".
 
+The word, taken apart.
+بازار (bāzār) is a loan, usually traced to Persian bāzār, "market".
+
 What you've built.
 One more word for this chapter.
 
@@ -129,6 +141,9 @@ Before the new one: say the Urdu for with, then the Urdu for a market.
 
 You'll want to know: تھانہ.
 تھانہ — thānā — "a police station".
+
+The word, taken apart.
+تھانہ (thānā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from sthāna, "firm stance; place of abode" (CDIAL 13753). CDIAL glosses the Hindi word "police station".
 
 What you've built.
 One more word for this chapter.

@@ -14,7 +14,7 @@ romanization: "pāttiram"
 concept_tag: TA-THINGS118-PATTIRAM
 prerequisites: [TA-C117-utaimai, TA-C118-atuppu]
 sounds: []
-roots: [sanskrit-patra]
+roots: [sanskrit-patra-vessel]
 etymology_hook: "பாத்திரம் ← Sanskrit pātra 'drinking vessel, dish' (CDIAL 8055)"
 duration:
   max_seconds: 200

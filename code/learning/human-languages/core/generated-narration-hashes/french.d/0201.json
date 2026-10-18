@@ -1,7 +1,7 @@
 {
   "language": "french",
   "chapter": 201,
-  "sourceHash": "fnv1a64:ff4cdaf48d14af6c",
+  "sourceHash": "fnv1a64:ddf251635b56b72a",
   "lessonIds": [
     "FR-C201-terre",
     "FR-C201-boue",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "french/narration/ch201.txt",
   "json": "french/narration/ch201.json",
-  "textHash": "fnv1a64:e0083a7d81e05b13",
-  "jsonHash": "fnv1a64:dbbdd8033b359aab",
+  "textHash": "fnv1a64:df555be8adf3e230",
+  "jsonHash": "fnv1a64:9f6bb428feeb8d7a",
   "findings": []
 }

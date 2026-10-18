@@ -14,7 +14,8 @@ romanization: "rā̃dhuni"
 concept_tag: BN-KAJ261-RADHUNI
 prerequisites: [BN-C260-joy, BN-C261-mistri]
 sounds: []
-roots: []
+roots: [sanskrit-randhana]
+etymology_hook: "rāṁdhuni ← Sanskrit randhana 'cooking', a tadbhava (CDIAL 10615)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C261-mistri]
 <!-- hl-knowledge: introduces=[BN-LEX-C261-KAJ261-02]; assesses=[] -->
 
 **রাঁধুনি** — *rā̃dhuni* — "a cook".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**রাঁধুনি** (*rāṁdhuni*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *randhana*, "cooking" (CDIAL 10615). CDIAL lists Bengali *rāṁdhuni*, "cook".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

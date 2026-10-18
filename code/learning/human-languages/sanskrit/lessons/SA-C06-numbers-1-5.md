@@ -15,7 +15,7 @@ concept_tag: SA-NUMBERS-1-5
 prerequisites: [SA-C01-namaskara, SA-C05-vadami]
 sounds: [inherent-a, visarga, long-aa]
 roots: [pie-oyko, pie-dwoh, pie-treyes, pie-kwetwores, pie-penkwe]
-etymology_hook: "Learn the five Sanskrit stems and their gendered forms first; the next two short lessons trace their Indo-European cousins and pancha's travels"
+etymology_hook: "eka, dva, tri, catur, pañca are inherited: MW compares Latin duo, trēs, quattuor, quīnque"
 duration:
   max_seconds: 240
 requires:
@@ -63,6 +63,14 @@ Two notes first. A third, about the neuter forms, follows in the next lesson.
 
 ***Pañca* barely inflects** in the nominative and accusative. It is also the one
 you already half-know.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+All five are inherited from Proto-Indo-European, which is why the next lesson
+can line them up with Latin *duo*, *trēs*, *quattuor*, *quīnque* (MW).
+*Eka* is the odd one: its root is the one behind English *one*, but with a
+different suffix.
 
 ## What you've built: two directions
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-NUMBERS-ONE-TO-FIVE, SA-HISTORY-SANSKRIT-NUMERAL-ANCHOR] -->

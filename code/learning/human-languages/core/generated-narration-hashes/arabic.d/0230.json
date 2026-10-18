@@ -1,7 +1,7 @@
 {
   "language": "arabic",
   "chapter": 230,
-  "sourceHash": "fnv1a64:d69ba3bfaeed6c51",
+  "sourceHash": "fnv1a64:849160aa0dc691a1",
   "lessonIds": [
     "AR-C230-nabaha",
     "AR-C230-atama",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "arabic/narration/ch230.txt",
   "json": "arabic/narration/ch230.json",
-  "textHash": "fnv1a64:a336396e0a0792d3",
-  "jsonHash": "fnv1a64:6ee34f2995244a93",
+  "textHash": "fnv1a64:e69a9779c53ab834",
+  "jsonHash": "fnv1a64:8b0a806402d5ec4f",
   "findings": []
 }

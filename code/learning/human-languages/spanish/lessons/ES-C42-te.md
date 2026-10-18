@@ -6,7 +6,7 @@ sequence: 1221
 chapter: 85
 type: word
 headword: te quiero
-gloss: "you" as the object — and the sentence it makes, which is the one people actually need
+gloss: '"you" as the object — and the sentence it makes, which is the one people actually need'
 concept_tag: ES-PRONOUN-TE
 prerequisites: [ES-C42-me-objeto, ES-C11-querer]
 sounds: []

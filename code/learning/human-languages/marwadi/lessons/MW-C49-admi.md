@@ -14,7 +14,8 @@ romanization: "ādmī"
 concept_tag: MW-FAMILY49-ADMI
 prerequisites: [MW-C49-chhoro, MW-C49-chhori]
 sounds: []
-roots: []
+roots: [arabic-adami]
+etymology_hook: "ādmī ← Arabic ādamī 'human, of Adam', through Persian (Lane, root ʾ-d-m)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C49-chhori]
 <!-- hl-knowledge: introduces=[MW-LEX-C49-FAMILY49-05]; assesses=[] -->
 
 **आदमी** — *ādmī* — "a man".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**आदमी** (*ādmī*) is a loan from Arabic *ādamī*, "human, of Adam", which reached Marwadi through Persian. Its Arabic root is *ʾ-d-m* (Lane). It is the name *Ādam* with the ending *-ī*, "belonging to".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

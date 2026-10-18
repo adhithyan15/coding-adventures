@@ -15,6 +15,7 @@ concept_tag: FA-THINGS94-NAKH
 prerequisites: [FA-C94-gheychi, FA-C94-suzan]
 sounds: []
 roots: []
+etymology_hook: "nakh: origin not settled"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C94-suzan]
 <!-- hl-knowledge: introduces=[FA-LEX-C94-THINGS94-04]; assesses=[] -->
 
 **نخ** — *nakh* — "thread".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*nakh* is the everyday word for thread, but no source used here gives its origin, which is not settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

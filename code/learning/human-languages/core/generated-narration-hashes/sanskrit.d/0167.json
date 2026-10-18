@@ -1,7 +1,7 @@
 {
   "language": "sanskrit",
   "chapter": 167,
-  "sourceHash": "fnv1a64:1c19759045c7b3f8",
+  "sourceHash": "fnv1a64:0c2c181a8a6018f8",
   "lessonIds": [
     "SA-C167-kacchapah",
     "SA-C167-mahisi",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "sanskrit/narration/ch167.txt",
   "json": "sanskrit/narration/ch167.json",
-  "textHash": "fnv1a64:f5986667522c8742",
-  "jsonHash": "fnv1a64:5010eb67e7f475a0",
+  "textHash": "fnv1a64:5e2115e9ee0377d4",
+  "jsonHash": "fnv1a64:55c4adbcdea13173",
   "findings": []
 }

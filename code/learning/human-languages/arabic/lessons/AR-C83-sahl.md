@@ -14,7 +14,8 @@ romanization: "sahl"
 concept_tag: AR-ADJ83-SAHL
 prerequisites: [AR-C83-bati, AR-C83-sari]
 sounds: []
-roots: []
+roots: [s-h-l]
+etymology_hook: "sahl: built on the root s-h-l, 'to be easy' (Lane); sahl is also level, plain ground"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C83-sari]
 <!-- hl-knowledge: introduces=[AR-LEX-C83-ADJ83-03]; assesses=[] -->
 
 **سهل** — *sahl* — "easy".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**سهل** (*sahl*) is built on the native Arabic root *s-h-l*, "to be easy; level ground" (Lane). *Sahl* is also level, plain ground.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

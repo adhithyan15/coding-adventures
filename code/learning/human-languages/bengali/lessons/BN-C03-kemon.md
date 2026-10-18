@@ -12,6 +12,7 @@ concept_tag: QUESTION-HOW
 prerequisites: [BN-C02-ki]
 sounds: [e-sign, o-inherent]
 roots: [ka-interrogative]
+etymology_hook: "kēmon: on the old question stem ka- of kim 'what' (CDIAL 2574); CDIAL has no entry for the word itself"
 duration:
   max_seconds: 240
 requires:
@@ -48,6 +49,8 @@ from PIE **\*kʷo-** — the same question-root behind English **wh-** and Latin
 *qu-*. Bengali's questions nearly all begin with this **k-**: *ki* (what), *ke*
 (who), *kôbe* (when), *kōthāy* (where), *kēmon* (how). It is the Indian branch of
 the same family of question-words that gave English *what/who/how*.
+
+CDIAL lists Bengali *ke*, "who", under that stem (CDIAL 2574) but has no entry for *kēmon* itself, so how its ending formed is not settled.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[BN-CONCEPT-C02-KI-01, BN-CONCEPT-C03-KEMON-01] -->

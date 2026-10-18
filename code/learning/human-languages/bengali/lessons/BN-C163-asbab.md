@@ -14,7 +14,8 @@ romanization: "āsbāb"
 concept_tag: BN-JINIS163-ASBAB
 prerequisites: [BN-C162-samanyo, BN-C163-malpotro]
 sounds: []
-roots: []
+roots: [arabic-asbab]
+etymology_hook: "āsbāb ← Arabic asbāb 'means, gear', through Persian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C163-malpotro]
 <!-- hl-knowledge: introduces=[BN-LEX-C163-JINIS163-02]; assesses=[] -->
 
 **আসবাব** — *āsbāb* — "furniture".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**আসবাব** (*āsbāb*) is a loan from Arabic *asbāb*, "means, gear", which reached Bengali through Persian. Its Arabic root is *s-b-b* (Lane). It is the plural of *sabab*, "a cord; a means".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

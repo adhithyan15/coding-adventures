@@ -12,6 +12,7 @@ concept_tag: RESPONSE-YESNO
 prerequisites: [PA-C01-namaste]
 sounds: [nasal-vowel]
 roots: [na-negative]
+etymology_hook: "hāṁ ← Sanskrit ām 'yes', with an h- (CDIAL 1235); nahīṁ matches Hindi nahīṁ ← nahi 'surely not' (CDIAL 7035)"
 duration:
   max_seconds: 180
 requires:

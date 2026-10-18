@@ -64,6 +64,15 @@ internal sealed class BatchComponent : System.ComponentModel.ISupportInitialize
     public void EndInit() { Depth--; Ends++; }
 }
 
+internal sealed class InvalidBatchComponent : System.ComponentModel.ISupportInitialize
+{
+    public int Depth;
+    public int Ends;
+    public DateTime Count { get; set; }
+    public void BeginInit() { Depth++; }
+    public void EndInit() { Depth--; Ends++; }
+}
+
 internal static class Driver
 {
     private static int failures;
@@ -465,6 +474,25 @@ internal static class Driver
                     if (fields != 3) failures++;
                 }
                 break;
+            case "props-profile-validate":
+                var counts = new Dictionary<string, int>();
+                foreach (var line in System.IO.File.ReadAllLines(Environment.GetEnvironmentVariable("MOSAIC_PROFILE_PATH")!))
+                {
+                    using var document = System.Text.Json.JsonDocument.Parse(line);
+                    var sample = document.RootElement;
+                    var phase = sample.GetProperty("phase").GetString()!;
+                    counts[phase] = counts.GetValueOrDefault(phase) + 1;
+                    Check(sample.GetProperty("milliseconds").GetDouble() >= 0
+                        && sample.GetProperty("bytes").GetInt64() >= 0, "nonnegative profiling measurement");
+                    var fields = 0;
+                    foreach (var property in sample.EnumerateObject()) fields++;
+                    Check(fields == 3, "no names or values in profiling record");
+                }
+                Check(counts.GetValueOrDefault("apply-props-convert") == 4, "conversion attempts include failure");
+                Check(counts.GetValueOrDefault("apply-props-set") == 3, "setter attempts include failure");
+                Check(counts.GetValueOrDefault("apply-props-notify") == 4, "every batch releases notifications");
+                Check(counts.GetValueOrDefault("apply-props") == 4, "aggregate covers every attempt");
+                break;
             case "props-batch":
                 var batched = new BatchComponent();
                 MosaicRuntimeHost.ApplyProps(batched);
@@ -479,6 +507,12 @@ internal static class Driver
                 batched.ThrowOnSet = false;
                 MosaicRuntimeHost.ApplyProps(batched);
                 Check(batched.Ends == 3 && batched.Depth == 0, "later props can still apply");
+                var invalid = new InvalidBatchComponent();
+                var invalidFailed = false;
+                try { MosaicRuntimeHost.ApplyRequiredProps(invalid, "count"); }
+                catch (InvalidOperationException) { invalidFailed = true; }
+                Check(invalidFailed && invalid.Depth == 0 && invalid.Ends == 1,
+                    "strict conversion failure releases the props batch");
                 break;
             case "unhandled": await CaseUnhandled(); break;
             case "answered": await CaseAnswered(); break;

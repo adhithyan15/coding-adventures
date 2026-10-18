@@ -12,6 +12,9 @@ Before the new one: say the Gujarati for a cap, then the Gujarati for an umbrell
 You'll want to know: ચશ્માં.
 ચશ્માં (caśmā̃) — "glasses, spectacles".
 
+The word, taken apart.
+ચશ્માં (caśmā̃) (caśmāṁ) is a loan, usually traced to Persian chashma, "spring, fountain", built on chashm, "eye". The sense "spectacles" grew up in India.
+
 What you've built.
 One more word for glasses, bag, wallet, letter, gift.
 
@@ -40,6 +43,9 @@ Before the new one: say the Gujarati for an umbrella, then the Gujarati for glas
 
 You'll want to know: થેલી.
 થેલી (thelī) — "a bag".
+
+The word, taken apart.
+થેલી (thelī) is the feminine of thelo, "bag", which CDIAL lists under the lexical Sanskrit sthavi, "sack, bag" (CDIAL 13746).
 
 What you've built.
 One more word for glasses, bag, wallet, letter, gift.
@@ -70,6 +76,9 @@ Before the new one: say the Gujarati for glasses, then the Gujarati for a bag.
 You'll want to know: પાકીટ.
 પાકીટ (pākīṭ) — "a wallet". Where the પૈસા go.
 
+The word, taken apart.
+પાકીટ (pākīṭ) is a loan, usually traced to English packet.
+
 What you've built.
 One more word for glasses, bag, wallet, letter, gift.
 
@@ -99,6 +108,9 @@ Before the new one: say the Gujarati for a bag, then the Gujarati for a wallet.
 You'll want to know: પત્ર.
 પત્ર (patra) — "a letter". It comes by ટપાલ.
 
+The word, taken apart.
+પત્ર (patra) is Sanskrit pattra, "wing-feather; leaf; leaf of a book", taken over whole as a learned loan, a tatsama (CDIAL 7733).
+
 What you've built.
 One more word for glasses, bag, wallet, letter, gift.
 
@@ -127,6 +139,9 @@ Before the new one: say the Gujarati for a wallet, then the Gujarati for a lette
 
 You'll want to know: ભેટ.
 ભેટ (bheṭ) — "a gift".
+
+The word, taken apart.
+ભેટ (bheṭ) is inherited. CDIAL lists Gujarati bheṭ, "meeting", with bheṭvũ, "to meet", and bheṭiyo, "bearer of a gift", under a reconstructed bhiṭ, "meet, throng" (CDIAL 9490).
 
 What you've built.
 One more word for glasses, bag, wallet, letter, gift.

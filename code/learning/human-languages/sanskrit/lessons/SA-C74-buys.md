@@ -14,7 +14,8 @@ romanization: "krīṇāti"
 concept_tag: SA-VERB-BUY
 prerequisites: [SA-C73-calls, SA-C73-bows]
 sounds: []
-roots: []
+roots: [sanskrit-krinati]
+etymology_hook: "krīṇāti 'buys' ← the root √krī 'buy'; MW compares Irish crenaim 'I buy'; Bengali kinā (CDIAL 3594)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,13 @@ reviews_of: [SA-C73-bows]
 <!-- hl-knowledge: introduces=[SA-LEX-C74-MARKET-01]; assesses=[] -->
 
 **क्रीणाति** (*krīṇāti*) — "(he, she) buys". **फलं क्रीणाति** — "buys fruit".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*Krīṇāti* is the present of the root √krī, "to buy", already in the Rigveda (CDIAL
+3594). MW compares Old Irish *crenaim*, "I buy". It lives on as Bengali *kinā*,
+"to buy".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "nebhāno"
 concept_tag: BN-VERB-NEBHANO
 prerequisites: [BN-C236-sobha, BN-C236-sangbadik]
 sounds: []
-roots: []
+roots: [sanskrit-nirvayati]
+etymology_hook: "nebhāno ← Sanskrit nirvāyati 'is extinguished', a tadbhava (CDIAL 7399)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C236-sangbadik]
 <!-- hl-knowledge: introduces=[BN-LEX-C237-ACT237-01]; assesses=[] -->
 
 **নেভানো** — *nebhāno* — "to put out (a fire, a light)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**নেভানো** (*nebhāno*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *nirvāyati*, "is extinguished" (CDIAL 7399). CDIAL lists Bengali *nibāna*, "to extinguish".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

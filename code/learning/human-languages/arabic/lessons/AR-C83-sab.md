@@ -14,7 +14,8 @@ romanization: "ṣaʿb"
 concept_tag: AR-ADJ83-SAB
 prerequisites: [AR-C83-sari, AR-C83-sahl]
 sounds: []
-roots: []
+roots: [ṣ-ʿ-b]
+etymology_hook: "ṣaʿb: built on the root ṣ-ʿ-b, 'to be hard, difficult' (Lane); ṣaʿb is the plain adjective, 'difficult'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C83-sahl]
 <!-- hl-knowledge: introduces=[AR-LEX-C83-ADJ83-04]; assesses=[] -->
 
 **صعب** — *ṣaʿb* — "difficult".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**صعب** (*ṣaʿb*) is built on the native Arabic root *ṣ-ʿ-b*, "to be hard, difficult" (Lane). *Ṣaʿb* is the plain adjective, "difficult".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

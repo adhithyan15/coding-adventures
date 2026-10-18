@@ -15,6 +15,7 @@ concept_tag: FA-CHIZ175-FANDAK
 prerequisites: [FA-C174-qandan, FA-C174-namakdan]
 sounds: []
 roots: []
+etymology_hook: "fandak: origin not settled"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C174-namakdan]
 <!-- hl-knowledge: introduces=[FA-LEX-C175-CHIZ175-01]; assesses=[] -->
 
 **فندک** — *fandak* — "a lighter".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*fandak* is the word for a lighter, but no source used here gives its origin, which is not settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

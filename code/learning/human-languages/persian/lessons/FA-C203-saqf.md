@@ -14,7 +14,8 @@ romanization: "saqf"
 concept_tag: FA-CHIZ203-SAQF
 prerequisites: [FA-C202-bimaze, FA-C203-pelle]
 sounds: []
-roots: []
+roots: [arabic-saqf]
+etymology_hook: "saqf ← Arabic saqf 'ceiling, roof', root s-q-f (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C203-pelle]
 <!-- hl-knowledge: introduces=[FA-LEX-C203-CHIZ203-02]; assesses=[] -->
 
 **سقف** — *saqf* — "a ceiling".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*saqf* is borrowed from Arabic *saqf*, "ceiling, roof". Its Arabic root is *s-q-f* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

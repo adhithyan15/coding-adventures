@@ -14,7 +14,8 @@ romanization: "varzeshgâh"
 concept_tag: FA-MAKAN267-VARZESHGAH
 prerequisites: [FA-C266-vorudi, FA-C266-khoruji]
 sounds: []
-roots: []
+roots: [persian-varzidan, persian-gah]
+etymology_hook: "varzeshgâh: Persian varzesh 'sport' + gâh 'place'; inherited"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C266-khoruji]
 <!-- hl-knowledge: introduces=[FA-LEX-C267-MAKAN267-01]; assesses=[] -->
 
 **ورزشگاه** — *varzeshgâh* — "a stadium".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*varzeshgâh* is built from *varzesh*, "sport, exercise" (from *varzidan*, "to practise"), and *gâh*, "place": the place of sport. *varzidan* is inherited, usually traced to Middle Persian *warzīdan*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

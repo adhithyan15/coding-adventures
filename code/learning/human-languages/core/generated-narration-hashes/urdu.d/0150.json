@@ -1,7 +1,7 @@
 {
   "language": "urdu",
   "chapter": 150,
-  "sourceHash": "fnv1a64:ba05aa3e5903f4ed",
+  "sourceHash": "fnv1a64:4acddc94c680f19c",
   "lessonIds": [
     "UR-C150-rangna",
     "UR-C150-mitana",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "urdu/narration/ch150.txt",
   "json": "urdu/narration/ch150.json",
-  "textHash": "fnv1a64:99ad516d7cfe5097",
-  "jsonHash": "fnv1a64:6c1e5c4c93f1be3d",
+  "textHash": "fnv1a64:1604e1a19f9398f3",
+  "jsonHash": "fnv1a64:ca921b969e52b37b",
   "findings": []
 }

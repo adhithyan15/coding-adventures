@@ -14,7 +14,8 @@ romanization: "jôṛo kôrā"
 concept_tag: BN-VERB-JORO-KORA
 prerequisites: [BN-C182-chhera, BN-C182-bhaj-kora]
 sounds: []
-roots: []
+roots: [indo-aryan-jadati, sanskrit-karoti]
+etymology_hook: "jôṛo kôrā: jôṛo 'gathered', with jaṛ 'heaped together' (CDIAL 5091), + kôrā (CDIAL 2814)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C182-bhaj-kora]
 <!-- hl-knowledge: introduces=[BN-LEX-C182-ACT182-03]; assesses=[] -->
 
 **জড়ো করা** — *jôṛo kôrā* — "to gather".
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**জড়ো করা** (*jôṛo kôrā*) is *jôṛo*, "gathered", which belongs with Bengali *jaṛ*, "heaped together", listed under *\*jaḍati*, "joins", which CDIAL takes from Dravidian (CDIAL 5091), + *kôrā*, "to do", from Sanskrit *karoti*, "does" (CDIAL 2814).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

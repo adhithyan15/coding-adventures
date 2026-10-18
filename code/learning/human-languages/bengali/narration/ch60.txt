@@ -12,6 +12,9 @@ Before the new one: say the Bengali for a house, then the Bengali for a window.
 You'll want to know: চেয়ার.
 চেয়ার — cheyār — "a chair".
 
+The word, taken apart.
+চেয়ার (cheyār) is a loan from English chair.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Bengali for a window, then the Bengali for a chair.
 
 You'll want to know: টেবিল.
 টেবিল — ṭebil — "a table".
+
+The word, taken apart.
+টেবিল (ṭebil) is a loan from English table.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Bengali for a chair, then the Bengali for a table.
 You'll want to know: দেয়াল.
 দেয়াল — deyāl — "a wall".
 
+The word, taken apart.
+দেয়াল (deyāl) is a loan, usually traced to Persian dīvār, "wall".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Bengali for a table, then the Bengali for a wall.
 You'll want to know: ছাদ.
 ছাদ — chhād — "a roof".
 
+The word, taken apart.
+ছাদ (chhād) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from chadman, "roof" (CDIAL 4981).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Bengali for a wall, then the Bengali for a roof.
 
 You'll want to know: বিছানা.
 বিছানা — bichhānā — "a bed".
+
+The word, taken apart.
+বিছানা (bichhānā) is a tadbhava, a word inherited and reshaped by sound change. It comes from vicchādana, "covering over", a form CDIAL reconstructs from its descendants (CDIAL 11691).
 
 What you've built.
 One more word for this chapter.

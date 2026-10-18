@@ -2,6 +2,13 @@
 
 All notable changes to this package will be documented in this file.
 
+## Unreleased
+
+- Docs: connection distribution note now covers Windows, where `tcp-runtime`
+  uses the same acceptor fan-out as macOS/BSD. Multi-shard runs work on
+  Windows with that change (they failed at bind with "SO_REUSEPORT is not
+  supported").
+
 ## [0.2.0] - 2026-06-14
 
 ### Added

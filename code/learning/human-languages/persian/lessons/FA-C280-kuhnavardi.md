@@ -14,7 +14,8 @@ romanization: "kuhnavardi"
 concept_tag: FA-CHIZ280-KUHNAVARDI
 prerequisites: [FA-C279-yas, FA-C280-shatranj]
 sounds: []
-roots: []
+roots: [persian-koh]
+etymology_hook: "kuhnavardi: Persian kuh 'mountain' (EtymDB) + navard 'roaming' + -i"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C280-shatranj]
 <!-- hl-knowledge: introduces=[FA-LEX-C280-CHIZ280-02]; assesses=[] -->
 
 **کوهنوردی** — *kuhnavardi* — "mountain climbing".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*kuhnavardi* is *kuh*, "mountain" (Middle Persian *kōf*, EtymDB), with *navard*, "roaming" (from *navardidan*), and *-i*: mountain-roaming. All are native Persian.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

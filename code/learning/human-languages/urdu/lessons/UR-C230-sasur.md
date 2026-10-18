@@ -14,7 +14,8 @@ romanization: "sasur"
 concept_tag: UR-CHIZ230-SASUR
 prerequisites: [UR-C229-sit, UR-C230-poti]
 sounds: []
-roots: []
+roots: [sanskrit-shvashura]
+etymology_hook: "sasur ← Sanskrit śvaśura 'father-in-law', a tadbhava (CDIAL 12753)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C230-poti]
 <!-- hl-knowledge: introduces=[UR-LEX-C230-CHIZ230-02]; assesses=[] -->
 
 **سسر** — *sasur* — "a father-in-law".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**سسر** (*sasur*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *śvaśura*, "father-in-law" (CDIAL 12753).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

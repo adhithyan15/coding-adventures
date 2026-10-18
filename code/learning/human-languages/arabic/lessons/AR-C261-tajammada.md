@@ -14,7 +14,8 @@ romanization: "tajammada"
 concept_tag: AR-VERB-TAJAMMADA
 prerequisites: [AR-C260-laffa, AR-C261-dhaba]
 sounds: []
-roots: []
+roots: [j-m-d]
+etymology_hook: "tajammada: built on the root j-m-d, 'to freeze, to congeal' (Lane); tajammada is Form V, 'to become frozen'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C261-dhaba]
 <!-- hl-knowledge: introduces=[AR-LEX-C261-ACT261-02]; assesses=[] -->
 
 **تجمد** — *tajammada* — "to freeze".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**تجمد** (*tajammada*) is built on the native Arabic root *j-m-d*, "to freeze, to congeal" (Lane). *Tajammada* is Form V, "to become frozen".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,7 +1,7 @@
 {
   "language": "telugu",
   "chapter": 288,
-  "sourceHash": "fnv1a64:b81ed4349199b30a",
+  "sourceHash": "fnv1a64:cca044a522630dab",
   "lessonIds": [
     "TE-C288-aparesanu",
     "TE-C288-ajirnam",
@@ -14,6 +14,6 @@
   "text": "telugu/narration/ch288.txt",
   "json": "telugu/narration/ch288.json",
   "textHash": "fnv1a64:5d5e1b211449ba9f",
-  "jsonHash": "fnv1a64:185129c111dbf583",
+  "jsonHash": "fnv1a64:6b5d29e233d84fa4",
   "findings": []
 }

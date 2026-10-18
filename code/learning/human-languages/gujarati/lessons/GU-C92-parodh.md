@@ -14,7 +14,8 @@ romanization: "paroḍh"
 concept_tag: GU-TIME92-PARODH
 prerequisites: [GU-C91-okay, GU-C92-madhrat]
 sounds: []
-roots: []
+roots: [sanskrit-praroha]
+etymology_hook: "paroḍh 'dawn': listed under both prabhāta 'daybreak' and prarōha 'ray', CDIAL preferring prarōha (CDIAL 8707, 8747)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C92-madhrat]
 <!-- hl-knowledge: introduces=[GU-LEX-C92-TIME92-02]; assesses=[] -->
 
 **પરોઢ** (*paroḍh*) — "dawn, daybreak".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+CDIAL lists **પરોઢ** (*paroḍh*) under two Sanskrit words, *prabhāta*, "daybreak" (CDIAL 8707), and *praroha*, "sprout; ray" (CDIAL 8747). It thinks *praroha* explains the Gujarati vowel better.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

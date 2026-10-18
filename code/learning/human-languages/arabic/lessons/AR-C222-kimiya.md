@@ -14,7 +14,8 @@ romanization: "kīmiyāʾ"
 concept_tag: AR-AMAL222-KIMIYA
 prerequisites: [AR-C221-wajib, AR-C222-ulum]
 sounds: []
-roots: []
+roots: [greek-chemeia]
+etymology_hook: "kīmiyāʾ: usually traced to Greek chēmeia (EtymDB); English alchemy comes from al-kīmiyāʾ"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C222-ulum]
 <!-- hl-knowledge: introduces=[AR-LEX-C222-AMAL222-02]; assesses=[] -->
 
 **كيمياء** — *kīmiyāʾ* — "chemistry".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**كيمياء** (*kīmiyāʾ*) is usually traced to Greek *chēmeia*, "the art of transmuting metals" (EtymDB); English *alchemy* comes from *al-kīmiyāʾ*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

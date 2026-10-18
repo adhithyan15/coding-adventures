@@ -14,7 +14,8 @@ romanization: "kānanam"
 concept_tag: SA-THG225-KANANAM
 prerequisites: [SA-C225-upatyaka, SA-C225-marubhumih]
 sounds: []
-roots: []
+roots: [sanskrit-kanana]
+etymology_hook: "kānana 'forest': MW reports a root √kan; Mayrhofer takes it, with kāntāra, from Dravidian (CDIAL 3028)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C225-marubhumih]
 <!-- hl-knowledge: introduces=[SA-LEX-C225-THG225-03]; assesses=[] -->
 
 **काननम्** — *kānanam* — "a woodland".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*kānana* is a word for "forest, grove" (MW). Its origin is not settled: MW reports a derivation from a root √kan, while CDIAL 3028 cites Mayrhofer for taking it, with *kāntāra*, "wilderness", from Dravidian.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "nārangī"
 concept_tag: UR-FOOD57-NARANGI
 prerequisites: [UR-C56-shahd, UR-C56-angur]
 sounds: []
-roots: []
+roots: [sanskrit-naranga]
+etymology_hook: "nārangī ← Sanskrit nāraṅga 'orange tree', a tadbhava (CDIAL 7073)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C56-angur]
 <!-- hl-knowledge: introduces=[UR-LEX-C57-FOOD57-01]; assesses=[] -->
 
 **نارنگی** — *nārangī* — "an orange".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**نارنگی** (*nārangī*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *nāraṅga*, "orange tree" (CDIAL 7073).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

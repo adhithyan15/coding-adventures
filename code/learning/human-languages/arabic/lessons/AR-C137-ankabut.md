@@ -14,7 +14,8 @@ romanization: "ʿankabūt"
 concept_tag: AR-THINGS137-ANKABUT
 prerequisites: [AR-C136-nahla, AR-C136-farasha]
 sounds: []
-roots: []
+roots: [ʿ-n-k-b]
+etymology_hook: "ʿankabūt: built on the root ʿ-n-k-b, 'a spider' (Lane); Lane lists this four-letter word"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C136-farasha]
 <!-- hl-knowledge: introduces=[AR-LEX-C137-THINGS137-01]; assesses=[] -->
 
 **عنكبوت** — *ʿankabūt* — "a spider".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**عنكبوت** (*ʿankabūt*) is built on the native Arabic root *ʿ-n-k-b*, "a spider" (Lane). Lane lists this four-letter word; Hebrew *ʿakkāvīsh*, "spider", is usually compared.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

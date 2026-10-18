@@ -1,7 +1,7 @@
 {
   "language": "marwadi",
   "chapter": 87,
-  "sourceHash": "fnv1a64:cebf0e93f6fb73b0",
+  "sourceHash": "fnv1a64:d652d0c64604edcb",
   "lessonIds": [
     "MW-C87-assi",
     "MW-C87-nabbai",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "marwadi/narration/ch87.txt",
   "json": "marwadi/narration/ch87.json",
-  "textHash": "fnv1a64:3877c02dd436b164",
-  "jsonHash": "fnv1a64:0fca165df5b2f174",
+  "textHash": "fnv1a64:b5fdfccea95e5a6d",
+  "jsonHash": "fnv1a64:c35bb453eb8f037c",
   "findings": []
 }

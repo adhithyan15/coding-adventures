@@ -14,7 +14,8 @@ romanization: "ʿulūm"
 concept_tag: AR-AMAL222-ULUM
 prerequisites: [AR-C221-imtihan, AR-C221-wajib]
 sounds: []
-roots: []
+roots: [ʿ-l-m]
+etymology_hook: "ʿulūm: built on the root ʿ-l-m, 'to know' (Lane); ʿulūm is the plural of ʿilm, 'knowledge'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C221-wajib]
 <!-- hl-knowledge: introduces=[AR-LEX-C222-AMAL222-01]; assesses=[] -->
 
 **علوم** — *ʿulūm* — "science".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**علوم** (*ʿulūm*) is built on the native Arabic root *ʿ-l-m*, "to know" (Lane). *ʿUlūm* is the plural of *ʿilm*, "knowledge".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

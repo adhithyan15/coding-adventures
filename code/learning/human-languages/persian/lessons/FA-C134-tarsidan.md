@@ -14,7 +14,8 @@ romanization: "tarsidan"
 concept_tag: FA-VERB-TARSIDAN
 prerequisites: [FA-C133-geristan, FA-C134-zadan]
 sounds: []
-roots: []
+roots: [persian-tars]
+etymology_hook: "tarsidan: inherited, usually traced to Middle Persian tarsīdan"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C134-zadan]
 <!-- hl-knowledge: introduces=[FA-LEX-C134-ACT134-02]; assesses=[] -->
 
 **ترسیدن** — *tarsidan* — "to be afraid".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*tarsidan* is a native Persian word, inherited rather than borrowed; it is usually traced to Middle Persian *tarsīdan*, "to fear". EtymDB takes it back to the Indo-European root *\*tres-*, "to tremble", the root of Latin *terrere*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

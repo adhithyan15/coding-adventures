@@ -14,7 +14,8 @@ romanization: "paṭhanam"
 concept_tag: SA-SCH200-PATHANAM
 prerequisites: [SA-C199-ganitam, SA-C199-vijnanam]
 sounds: []
-roots: []
+roots: [path-recite]
+etymology_hook: "paṭhana 'reading' ← root √paṭh 'recite, read' (MW; CDIAL 7713); √paṭh gives Hindi paṛhnā (CDIAL 7712)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C199-vijnanam]
 <!-- hl-knowledge: introduces=[SA-LEX-C200-SCH200-01]; assesses=[] -->
 
 **पठनम्** — *paṭhanam* — "reading".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*paṭhana* is built on the root √paṭh, "to read aloud, recite" (MW; CDIAL 7713), the root of *paṭhati*, "reads", which you have already met. The verb lives on as Hindi *paṛhnā*, "to read" (CDIAL 7712).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

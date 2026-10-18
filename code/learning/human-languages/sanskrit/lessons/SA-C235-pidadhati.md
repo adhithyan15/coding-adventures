@@ -14,7 +14,8 @@ romanization: "pidadhāti"
 concept_tag: SA-VERB-PIDADHATI
 prerequisites: [SA-C234-samapayati, SA-C234-prayacchati]
 sounds: []
-roots: []
+roots: [sanskrit-pidadhati]
+etymology_hook: "pidadhāti ← pi-, a short form of api 'upon', + √dhā 'put': 'puts upon', so 'covers, closes' (MW)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C234-prayacchati]
 <!-- hl-knowledge: introduces=[SA-LEX-C235-ACT235-01]; assesses=[] -->
 
 **पिदधाति** — *pidadhāti* — "covers, closes".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*pidadhāti* is built on *pi-*, a shortened form of *api*, "upon", and *dadhāti*, "puts", from the root √dhā (MW). To put something upon a thing is to cover or close it; the Veda still says *api-dhā*. MW compares √dhā with English *do*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

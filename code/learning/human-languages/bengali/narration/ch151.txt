@@ -12,6 +12,9 @@ Before the new one: say the Bengali for to sneeze, then the Bengali for to cough
 You'll want to know: বন্ধ করা.
 বন্ধ করা — bôndhô kôrā — "to close".
 
+The phrase, taken apart.
+বন্ধ করা (bôndhô kôrā) is bôndhô, "closed", spelled as Sanskrit bandha, "binding" (CDIAL 9136), and matching Persian band, "shut", + kôrā, "to do", from Sanskrit karoti, "does" (CDIAL 2814).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Bengali for to cough, then the Bengali for to close.
 
 You'll want to know: গড়া.
 গড়া — gôṛā — "to build, to shape".
+
+The word, taken apart.
+গড়া (gôṛā) is a tadbhava, a word inherited and reshaped by sound change. It comes from gaṭhati, "makes, forms", a form CDIAL reconstructs from its descendants (CDIAL 3966). CDIAL lists Bengali gaṛā, "to hammer into shape, form".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Bengali for to close, then the Bengali for to build.
 You'll want to know: সারানো.
 সারানো — sārāno — "to repair".
 
+The word, taken apart.
+সারানো (sārāno) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from sārayati, "makes move, removes" (CDIAL 13358). CDIAL lists Bengali sārā, "to repair, finish"; sārāno is its causing form.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Bengali for to build, then the Bengali for to repair
 You'll want to know: ঝোলানো.
 ঝোলানো — jholāno — "to hang".
 
+The word, taken apart.
+ঝোলানো (jholāno) is a tadbhava, a word inherited and reshaped by sound change. It comes from jhulyati, "swings", a form CDIAL reconstructs from its descendants (CDIAL 5406). Jholāno is the causing form of jhulā, "to swing, hang", which CDIAL lists.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Bengali for to repair, then the Bengali for to hang.
 
 You'll want to know: বাঁধা.
 বাঁধা — bā̃dhā — "to tie".
+
+The word, taken apart.
+বাঁধা (bā̃dhā) (bāṁdhā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from bandhati, "binds" (CDIAL 9139).
 
 What you've built.
 One more word for this chapter.

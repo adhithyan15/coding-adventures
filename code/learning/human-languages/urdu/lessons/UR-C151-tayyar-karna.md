@@ -14,7 +14,8 @@ romanization: "tayyār karnā"
 concept_tag: UR-VERB-TAYYAR-KARNA
 prerequisites: [UR-C150-dastkhat-karna, UR-C150-fon-karna]
 sounds: []
-roots: []
+roots: [arabic-tayyar, kr-do]
+etymology_hook: "tayyār 'ready': usually traced, through Persian, to Arabic ṭayyār 'swift' (Lane, root ṭ-y-r); karnā (CDIAL 2814)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C150-fon-karna]
 <!-- hl-knowledge: introduces=[UR-LEX-C151-ACT151-01]; assesses=[] -->
 
 **تیار کرنا** — *tayyār karnā* — "to prepare".
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**تیار کرنا** (*tayyār karnā*) joins *tayyār*, "ready", and *karnā*, "to do". *tayyār* reached Urdu through Persian, which uses it in the same sense, and is usually traced to Arabic *ṭayyār*, "swift", used of a horse that almost flies, on the root *ṭ-y-r*, "to fly" (Lane). *karnā* comes from Sanskrit *karoti*, "does" (CDIAL 2814).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

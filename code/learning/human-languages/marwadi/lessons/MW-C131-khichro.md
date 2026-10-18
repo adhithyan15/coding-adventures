@@ -14,7 +14,8 @@ romanization: "khīchṛo"
 concept_tag: MW-THINGS131-KHICHRO
 prerequisites: [MW-C130-bajro, MW-C130-rabri]
 sounds: []
-roots: []
+roots: [sanskrit-khicca]
+etymology_hook: "khīchṛo ← Sanskrit khiccā 'dish of rice and peas', a tadbhava (CDIAL 3880, Hindi and Gujarati rows)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C130-rabri]
 <!-- hl-knowledge: introduces=[MW-LEX-C131-THINGS131-01]; assesses=[] -->
 
 **खीचड़ो** — *khīchṛo* — "a millet-and-lentil dish".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**खीचड़ो** (*khīchṛo*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *khiccā*, "dish of rice and peas". CDIAL gives no Marwari form in this entry (CDIAL 3880); the match is through Hindi *khicṛī* and Gujarati *khicṛo*. The *ṛ* is an added suffix.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

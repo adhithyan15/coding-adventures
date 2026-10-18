@@ -14,7 +14,8 @@ romanization: "shahr"
 concept_tag: FA-TOWN72-SHAHR
 prerequisites: [FA-C72-bazar, FA-C72-rusta]
 sounds: []
-roots: []
+roots: [persian-shahr]
+etymology_hook: "shahr ← Middle Persian šahr (EtymDB); inherited, native Iranian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C72-rusta]
 <!-- hl-knowledge: introduces=[FA-LEX-C72-TOWN72-05]; assesses=[] -->
 
 **شهر** — *shahr* — "a city".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*shahr* is a native Persian word, inherited rather than borrowed: it continues Middle Persian *šahr*, "land, realm" (EtymDB). Old Persian *xšaça-* meant "kingdom" (EtymDB): the word narrowed from a realm to a city.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

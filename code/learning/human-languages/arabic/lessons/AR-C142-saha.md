@@ -14,7 +14,8 @@ romanization: "sāḥa"
 concept_tag: AR-THINGS142-SAHA
 prerequisites: [AR-C142-musafir, AR-C142-masna]
 sounds: []
-roots: []
+roots: [s-w-ḥ]
+etymology_hook: "sāḥa: an old native noun Lane files under s-w-ḥ; Lane's sāḥa is the open space of a house"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C142-masna]
 <!-- hl-knowledge: introduces=[AR-LEX-C142-THINGS142-05]; assesses=[] -->
 
 **ساحة** — *sāḥa* — "a square".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ساحة** (*sāḥa*), "an open court", is an old native noun, filed under the root *s-w-ḥ* (Lane). Lane's *sāḥa* is the open space of a house.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

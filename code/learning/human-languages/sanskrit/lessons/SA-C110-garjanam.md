@@ -14,7 +14,8 @@ romanization: "garjanam"
 concept_tag: SA-THINGS110-GARJANAM
 prerequisites: [SA-C110-tarangah, SA-C110-vidyut]
 sounds: []
-roots: []
+roots: [sanskrit-garjana, sanskrit-garjati]
+etymology_hook: "garjana 'roaring, thunder' ← √garj 'roar' (CDIAL 4047), which MW compares with Latin garrire; Hindi gājan"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C110-vidyut]
 <!-- hl-knowledge: introduces=[SA-LEX-C110-THINGS110-05]; assesses=[] -->
 
 **गर्जनम्** — *garjanam* — "thunder".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*garjana* "roaring, thundering" comes from the root √garj "roar, growl" (CDIAL 4047), which MW compares with Latin *garrire* "chatter", the source of English *garrulous*. It lives on as Hindi *gājan* "thunder" (CDIAL 4047).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

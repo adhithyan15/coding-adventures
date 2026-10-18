@@ -14,7 +14,8 @@ romanization: "ṭesaṇ"
 concept_tag: MW-PLACE82-TESAN
 prerequisites: [MW-C82-sarak, MW-C82-gali]
 sounds: []
-roots: []
+roots: [english-station]
+etymology_hook: "ṭesaṇ ← English station"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C82-gali]
 <!-- hl-knowledge: introduces=[MW-LEX-C82-PLACE82-05]; assesses=[] -->
 
 **टेसण** — *ṭesaṇ* — "a station".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**टेसण** (*ṭesaṇ*) is a loan from English *station*. Marwadi drops the first *s* and ends the word in *ṇ*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

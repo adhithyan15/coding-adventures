@@ -15,6 +15,7 @@ concept_tag: FA-CHIZ282-LULE
 prerequisites: [FA-C281-chasb, FA-C281-chub]
 sounds: []
 roots: []
+etymology_hook: "lule: native Persian; origin not settled"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C281-chub]
 <!-- hl-knowledge: introduces=[FA-LEX-C282-CHIZ282-01]; assesses=[] -->
 
 **لوله** — *lule* — "a pipe".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*lule* is a native Persian word for a pipe, but no source used here gives its older form, and its origin is not settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

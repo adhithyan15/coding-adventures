@@ -14,7 +14,8 @@ romanization: "risālā"
 concept_tag: UR-CHIZ225-RISALA
 prerequisites: [UR-C225-lifafa, UR-C225-parsal]
 sounds: []
-roots: []
+roots: [arabic-risala]
+etymology_hook: "risālā ← Arabic risāla 'a message, an epistle', through Persian (Lane, root r-s-l)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C225-parsal]
 <!-- hl-knowledge: introduces=[UR-LEX-C225-CHIZ225-03]; assesses=[] -->
 
 **رسالہ** — *risālā* — "a magazine".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**رسالہ** (*risālā*) is a loan from Arabic *risāla*, "a message, an epistle", which reached Urdu through Persian. Its Arabic root is *r-s-l* (Lane). Urdu uses it for a magazine.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

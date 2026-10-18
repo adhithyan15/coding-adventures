@@ -14,7 +14,8 @@ romanization: "yaḥ"
 concept_tag: SA-REL-YAH
 prerequisites: [SA-R52-joins, SA-C14-deixis-system, SA-C14-who]
 sounds: []
-roots: []
+roots: [sanskrit-ya-relative]
+etymology_hook: "yaḥ 'who, which' ← the relative base ya-, inherited: MW compares Greek hos; Hindi jo (CDIAL 10391)"
 duration:
   max_seconds: 250
 requires:
@@ -62,6 +63,12 @@ exactly as those do.
 
 Say the four together, because from here on they behave as one family:
 **अ- · त- · क- · य-**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*Yaḥ* is built on the relative base *ya-*, which is inherited: MW compares the
+Greek relative *hos*. It lives on as Hindi *jo*, "who, which" (CDIAL 10391).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

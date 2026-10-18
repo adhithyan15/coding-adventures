@@ -14,7 +14,8 @@ romanization: "rahnā"
 concept_tag: UR-VERB-RAHNA
 prerequisites: [UR-C50-nachna, UR-C50-milna]
 sounds: []
-roots: []
+roots: [rah-remain]
+etymology_hook: "rahnā ← *rahati 'remains', a reconstructed form; a tadbhava (CDIAL 10666)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C50-milna]
 <!-- hl-knowledge: introduces=[UR-LEX-C50-VERBS50-04]; assesses=[] -->
 
 **رہنا** — *rahnā* — "to live, to stay".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**رہنا** (*rahnā*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*rahati*, "remains", a form CDIAL reconstructs from its descendants (CDIAL 10666).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

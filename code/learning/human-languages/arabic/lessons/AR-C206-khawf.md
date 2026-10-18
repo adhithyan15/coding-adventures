@@ -14,7 +14,8 @@ romanization: "khawf"
 concept_tag: AR-SABAB206-KHAWF
 prerequisites: [AR-C206-hall, AR-C206-bahja]
 sounds: []
-roots: []
+roots: [kh-w-f]
+etymology_hook: "khawf: built on the root kh-w-f, 'to fear' (Lane); khawf is the verbal noun, 'fear'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C206-bahja]
 <!-- hl-knowledge: introduces=[AR-LEX-C206-SABAB206-05]; assesses=[] -->
 
 **خوف** — *khawf* — "fear".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**خوف** (*khawf*) is built on the native Arabic root *kh-w-f*, "to fear" (Lane). *Khawf* is the verbal noun, "fear".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

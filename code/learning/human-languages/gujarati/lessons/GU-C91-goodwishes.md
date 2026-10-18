@@ -14,7 +14,8 @@ romanization: "śubhecchā"
 concept_tag: GU-COURTESY-GOODWISHES
 prerequisites: [GU-C91-welcome, GU-C91-congratulations]
 sounds: []
-roots: []
+roots: [sanskrit-shubha, sanskrit-iccha]
+etymology_hook: "śubhecchā: Sanskrit śubha 'auspicious, good' (CDIAL 12532) + icchā 'wish' (CDIAL 1557), a tatsama compound"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C91-congratulations]
 <!-- hl-knowledge: introduces=[GU-LEX-C91-COURTESY-03]; assesses=[] -->
 
 **શુભેચ્છા** (*śubhecchā*) — "good wishes".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**શુભેચ્છા** (*śubhecchā*) is a Sanskrit compound, a tatsama: *śubha*, "bright, auspicious, good" (CDIAL 12532), and *icchā*, "wish" (CDIAL 1557).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

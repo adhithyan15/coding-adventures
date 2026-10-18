@@ -14,7 +14,8 @@ romanization: "āmantrayati"
 concept_tag: SA-VERB-AMANTRAYATI
 prerequisites: [SA-C176-parivartayati, SA-C176-nivedayati]
 sounds: []
-roots: []
+roots: [sanskrit-amantrayati]
+etymology_hook: "āmantrayati ← ā- + mantraya- 'take counsel', from mantra 'counsel', on √man 'think' (MW; CDIAL 1242)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C176-nivedayati]
 <!-- hl-knowledge: introduces=[SA-LEX-C176-ACT176-03]; assesses=[] -->
 
 **आमन्त्रयति** — *āmantrayati* — "invites".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*āmantrayati* is *ā-* "towards" with *mantrayate*, "speaks, takes counsel", which MW calls a verb made from the noun *mantra*, built on the root √man "to think". CDIAL 1242 records "summons" for it in the Taittirīya Brāhmaṇa and "invites" in the Mahābhārata; it lives on as Gujarati *āmãtravũ*, "invites".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

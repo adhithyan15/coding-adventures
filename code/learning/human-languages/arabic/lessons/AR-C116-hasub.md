@@ -14,7 +14,8 @@ romanization: "ḥāsūb"
 concept_tag: AR-THINGS116-HASUB
 prerequisites: [AR-C116-furn, AR-C116-mirwaha]
 sounds: []
-roots: []
+roots: [ḥ-s-b]
+etymology_hook: "ḥāsūb: built on the root ḥ-s-b, 'to count, to reckon' (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C116-mirwaha]
 <!-- hl-knowledge: introduces=[AR-LEX-C116-THINGS116-05]; assesses=[] -->
 
 **حاسوب** — *ḥāsūb* — "a computer".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**حاسوب** (*ḥāsūb*) is built on the native Arabic root *ḥ-s-b*, "to count, to reckon" (Lane). *Ḥāsūb* is a modern coinage on the *fāʿūl* pattern, "a counting machine".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

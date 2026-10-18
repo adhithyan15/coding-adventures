@@ -14,7 +14,8 @@ romanization: "rezerv kardan"
 concept_tag: FA-VERB-REZERV-KARDAN
 prerequisites: [FA-C181-rad-shodan, FA-C181-qadam-zadan]
 sounds: []
-roots: []
+roots: [french-reserve, pie-kwer]
+etymology_hook: "rezerv ← French réserve, + Persian kardan 'to do'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C181-qadam-zadan]
 <!-- hl-knowledge: introduces=[FA-LEX-C182-KONESH182-01]; assesses=[] -->
 
 **رزرو کردن** — *rezerv kardan* — "to book, to reserve".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*rezerv kardan* pairs *rezerv*, borrowed from French *réserve*, "reserve", with the Persian verb *kardan*, "to do". *kardan*, "to do", is an inherited verb, from Middle Persian *kardan* (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

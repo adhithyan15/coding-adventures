@@ -4,7 +4,7 @@
   "chapter": 141,
   "title": "To stay, To come back, To arrive, To come out, To climb",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:6fbc7cc932c80c2d",
+  "sourceHash": "fnv1a64:ca9a4af23a964e6d",
   "lessons": [
     {
       "id": "UR-C141-thaharna",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ce8475ddb799de4a",
+      "sourceHash": "fnv1a64:e83c6d18f235a496",
       "notice": null,
       "blocks": [
         {
@@ -52,6 +52,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ٹھہرنا (ṭhaharnā) is a tadbhava, a word inherited and reshaped by sound change. It comes from stabhira, \"fixed, firm\", a form CDIAL reconstructs from its descendants (CDIAL 13680). It is built on stambh-, \"to make firm\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -62,7 +73,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -111,7 +122,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -142,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:bcd5873959b3a86f",
+      "sourceHash": "fnv1a64:ffa8a26570a45951",
       "notice": null,
       "blocks": [
         {
@@ -194,6 +205,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The origin of لوٹنا (lauṭnā) is uncertain. CDIAL has no entry for it."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -204,7 +226,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -253,7 +275,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -284,7 +306,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8f474ccd15052ef1",
+      "sourceHash": "fnv1a64:980746edd6f7d4fe",
       "notice": null,
       "blocks": [
         {
@@ -317,6 +339,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "پہنچنا (pahuṅchnā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from prabhūta, \"much, great\" (CDIAL 8716). Prakrit made a verb of it, \"is strong, reaches\", and Urdu kept \"to reach\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -327,7 +360,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -376,7 +409,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -407,7 +440,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:bd443f02a5dc1539",
+      "sourceHash": "fnv1a64:c5c2389d4453c0d6",
       "notice": null,
       "blocks": [
         {
@@ -440,6 +473,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "نکلنا (nikalnā) is a tadbhava, a word inherited and reshaped by sound change. It comes from niṣkalati, \"comes out\", a form CDIAL reconstructs from its descendants (CDIAL 7478). CDIAL takes it as formed back from Sanskrit niṣkālayati, \"drives out\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -450,7 +494,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -499,7 +543,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -530,7 +574,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9be5d49deddc1a74",
+      "sourceHash": "fnv1a64:fa695a0329384ff8",
       "notice": null,
       "blocks": [
         {
@@ -563,6 +607,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "چڑھنا (chaṛhnā) is a tadbhava, a word inherited and reshaped by sound change. It comes from caḍhati, \"rises\", a form CDIAL reconstructs from its descendants (CDIAL 4578)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -573,7 +628,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -622,7 +677,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

@@ -14,7 +14,8 @@ romanization: "âyene"
 concept_tag: FA-HOME46-AYENE
 prerequisites: [FA-C46-komod, FA-C46-zamin]
 sounds: []
-roots: []
+roots: [persian-ayene]
+etymology_hook: "âyene: inherited, usually traced to Middle Persian ādēnag"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C46-zamin]
 <!-- hl-knowledge: introduces=[FA-LEX-C46-HOME46-05]; assesses=[] -->
 
 **آینه** — *âyene* — "a mirror".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*âyene* is a native Persian word, inherited rather than borrowed; it is usually traced to Middle Persian *ādēnag*, "mirror".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

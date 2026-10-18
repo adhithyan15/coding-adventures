@@ -4,7 +4,7 @@
   "chapter": 41,
   "title": "Describing Things",
   "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:682dd14465a9575c",
+  "sourceHash": "fnv1a64:91fbeb1067f8199e",
   "lessons": [
     {
       "id": "HI-C41-big",
@@ -429,7 +429,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:bfb2e6a676c2513e",
+      "sourceHash": "fnv1a64:991226c8c940fdfb",
       "notice": null,
       "blocks": [
         {
@@ -479,7 +479,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "नया (nayā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from navya, \"new\" (CDIAL 7025)."
+              "text": "नया (nayā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from naviya, a by-form of Sanskrit navya, \"new\", which the Rigveda uses where the metre needs an extra syllable. CDIAL lists Hindi nayā and its feminine naī under naviya (CDIAL 7025)."
             }
           ]
         },

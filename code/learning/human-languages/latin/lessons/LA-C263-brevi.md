@@ -46,7 +46,7 @@ reviews_of: [LA-C263-diu]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**brevī** is the ablative of *brevis*, "short", with *tempore*, "in a time", understood: in a short time.
+**brevī** is the ablative of *brevis*, "short", with *tempore*, "in a time", understood: in a short time. *Brevis* is inherited, usually traced to a Proto-Indo-European word for "short" (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

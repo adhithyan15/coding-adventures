@@ -14,7 +14,8 @@ romanization: "mukallif"
 concept_tag: AR-SIFA177-MUKALLIF
 prerequisites: [AR-C176-aqall, AR-C176-farq]
 sounds: []
-roots: []
+roots: [k-l-f]
+etymology_hook: "mukallif: built on the root k-l-f, 'to impose a burden' (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C176-farq]
 <!-- hl-knowledge: introduces=[AR-LEX-C177-SIFA177-01]; assesses=[] -->
 
 **مكلف** — *mukallif* — "expensive, costly".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**مكلف** (*mukallif*) is built on the native Arabic root *k-l-f*, "to impose a burden" (Lane). *Mukallif* is the Form II participle, "laying a burden on", hence "costly".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

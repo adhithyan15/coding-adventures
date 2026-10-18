@@ -1,7 +1,7 @@
 {
   "language": "sanskrit",
   "chapter": 189,
-  "sourceHash": "fnv1a64:98854977e7fe9796",
+  "sourceHash": "fnv1a64:b9bb89a01ec4e42f",
   "lessonIds": [
     "SA-C189-manjusa",
     "SA-C189-sikyam",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "sanskrit/narration/ch189.txt",
   "json": "sanskrit/narration/ch189.json",
-  "textHash": "fnv1a64:aa06408242f90467",
-  "jsonHash": "fnv1a64:2b314c088de9fc8f",
+  "textHash": "fnv1a64:fd18b9f1884d70f9",
+  "jsonHash": "fnv1a64:b51bf2ba1468b50d",
   "findings": []
 }

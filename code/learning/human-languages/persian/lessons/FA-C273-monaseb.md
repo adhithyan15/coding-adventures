@@ -14,7 +14,8 @@ romanization: "monâseb"
 concept_tag: FA-SEFAT273-MONASEB
 prerequisites: [FA-C273-mofid, FA-C273-sonnati]
 sounds: []
-roots: []
+roots: [arabic-munasib]
+etymology_hook: "monâseb ← Arabic munāsib 'fitting, suitable', root n-s-b (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C273-sonnati]
 <!-- hl-knowledge: introduces=[FA-LEX-C273-SEFAT273-04]; assesses=[] -->
 
 **مناسب** — *monâseb* — "suitable".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*monâseb* is borrowed from Arabic *munāsib*, "fitting, suitable". Its Arabic root is *n-s-b* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "parivāraḥ"
 concept_tag: SA-PPL208-PARIVARAH
 prerequisites: [SA-C207-upadisati, SA-C207-sammanayati]
 sounds: []
-roots: []
+roots: [sanskrit-parivara]
+etymology_hook: "parivāra ← pari 'around' + √vṛ 'cover, surround': 'surroundings, followers' (MW; CDIAL 7876)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C207-sammanayati]
 <!-- hl-knowledge: introduces=[SA-LEX-C208-PPL208-01]; assesses=[] -->
 
 **परिवारः** — *parivāraḥ* — "a household, a family".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*parivāra* is built on *pari*, "around", and the root √vṛ, "to cover, surround" (MW). It first meant "cover, surroundings", then "followers" (CDIAL 7876), and Hindi took it as *parivār*, "family".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

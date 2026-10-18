@@ -14,7 +14,8 @@ romanization: "komalaḥ"
 concept_tag: SA-QUAL186-KOMALAH
 prerequisites: [SA-C185-nunam, SA-C185-avasyam]
 sounds: []
-roots: []
+roots: [sanskrit-komala]
+etymology_hook: "komala 'tender' is of uncertain origin; MW hesitantly reads ku + mala 'easily fading'; Gujarati komaḷ (CDIAL 3523)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C185-avasyam]
 <!-- hl-knowledge: introduces=[SA-LEX-C186-QUAL186-01]; assesses=[] -->
 
 **कोमलः** — *komalaḥ* — "tender, soft".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*komala* is of uncertain origin. MW offers, with a question mark, *ko-*, a form of *ku-* "little", with *mala* from √mlai "to fade", so "easily fading". It lives on as Gujarati *komaḷ*, "soft" (CDIAL 3523).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

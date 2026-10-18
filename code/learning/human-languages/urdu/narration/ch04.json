@@ -4,7 +4,7 @@
   "chapter": 4,
   "title": "How Are You?",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:dd772b03429ee0a9",
+  "sourceHash": "fnv1a64:d9d48ebf281eb443",
   "lessons": [
     {
       "id": "UR-C04-kaise-kaisi",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c025f11464b197ac",
+      "sourceHash": "fnv1a64:b93d5597c94914e2",
       "notice": null,
       "blocks": [
         {
@@ -75,6 +75,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The phrase, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "کیسے / کیسی (kaise / kaisī) are forms of kaisā, \"of what kind\", which CDIAL lists under Sanskrit kīdṛśa, \"of what kind\", with the question stem ka- in place of kī-, after jaisā, \"such as\" (CDIAL 3197)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "grammar",
           "title": "Grammar Lens: one agreement contrast",
           "segments": [
@@ -85,7 +96,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -128,7 +139,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -356,7 +367,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5e3020615dc2d0e5",
+      "sourceHash": "fnv1a64:214438b0b4449f94",
       "notice": null,
       "blocks": [
         {
@@ -393,6 +404,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The phrase, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The two questions آپ کیسے ہیں and آپ کیسی ہیں (āp kaise haiṅ, āp kaisī haiṅ) are built from inherited words. āp comes from Sanskrit ātman, \"self\" (CDIAL 1135); kaise and kaisī are forms of kaisā, which CDIAL lists under Sanskrit kīdṛśa, \"of what kind\" (CDIAL 3197); and haiṅ, \"are\", is the plural partner of hai, usually traced to Sanskrit asti, \"is\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "grammar",
           "title": "Grammar Lens: respect does not erase agreement",
           "segments": [
@@ -403,7 +425,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -437,7 +459,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -487,7 +509,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7f74c42f97939b60",
+      "sourceHash": "fnv1a64:0d3a7a099ef5b1e6",
       "notice": null,
       "blocks": [
         {
@@ -524,6 +546,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The phrase, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "میں... ہوں (maiṅ... hūṅ) is inherited. CDIAL lists maiṅ, \"I\", under the Sanskrit first-person base ma-, whose form mayā meant \"by me\" (CDIAL 9691); it is the same m- as English me. hūṅ, \"am\", is the first-person form of the inherited verb \"to be\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -557,7 +590,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -863,7 +896,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e39b76147af75278",
+      "sourceHash": "fnv1a64:73f1b232e0bd9d3f",
       "notice": null,
       "blocks": [
         {
@@ -906,6 +939,10 @@
             {
               "kind": "speech",
               "text": "Urdu ٹھیک and Hindi ṭhīk are the same everyday Hindustani word. Their grammar is closely shared; their scripts make different literary histories visible. This Urdu lesson leaves the Hindi side romanized: mixed-language practice may show both scripts only after each form has been learned in its own right."
+            },
+            {
+              "kind": "speech",
+              "text": "Its history is inherited: CDIAL lists ṭhīk, “firm, correct”, under a reconstructed ṭhīkka, “firm, right”, which it derives, probably, from Sanskrit sthita, “standing” (CDIAL 5503)."
             }
           ]
         },
@@ -1003,7 +1040,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:10920f7dc3693e39",
+      "sourceHash": "fnv1a64:17ddc3066e2a6d2e",
       "notice": null,
       "blocks": [
         {
@@ -1040,6 +1077,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The phrase, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "میں ٹھیک ہوں، شکریہ (maiṅ ṭhīk hūṅ, shukriyā) mixes Urdu's two layers. maiṅ, \"I\" (CDIAL 9691), ṭhīk, \"fine\", from a reconstructed ṭhīkka, \"firm, right\" (CDIAL 5503), and hūṅ, \"am\", are inherited; shukriyā is built on Arabic shukr, \"thanks\", which reached Urdu through Persian (Lane, root sh-k-r)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "grammar",
           "title": "Grammar Lens: keep the copula final",
           "segments": [
@@ -1058,7 +1106,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -1092,7 +1140,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

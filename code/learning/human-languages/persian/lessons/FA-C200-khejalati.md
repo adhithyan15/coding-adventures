@@ -14,7 +14,8 @@ romanization: "khejâlati"
 concept_tag: FA-SEFAT200-KHEJALATI
 prerequisites: [FA-C199-rahat, FA-C199-shik]
 sounds: []
-roots: []
+roots: [arabic-khajala]
+etymology_hook: "khejâlati: Arabic ḫajāla 'bashfulness', root ḫ-j-l (Lane), + Persian -i"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C199-shik]
 <!-- hl-knowledge: introduces=[FA-LEX-C200-SEFAT200-01]; assesses=[] -->
 
 **خجالتی** — *khejâlati* — "shy".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*khejâlati* is *khejâlat*, "shame, bashfulness", with the ending *-i*. *khejâlat* is borrowed from Arabic *ḫajāla*, "bashfulness" (root *ḫ-j-l*, Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

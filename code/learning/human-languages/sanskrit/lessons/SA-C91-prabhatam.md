@@ -14,7 +14,8 @@ romanization: "prabhātam"
 concept_tag: SA-TIME91-PRABHATAM
 prerequisites: [SA-C90-madhyaratrih, SA-C90-usah]
 sounds: []
-roots: []
+roots: [sanskrit-prabhata]
+etymology_hook: "prabhāta 'shone forth; daybreak' ← pra + the root √bhā 'shine' (MW; CDIAL 8707)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,12 @@ reviews_of: [SA-C90-usah]
 <!-- hl-knowledge: introduces=[SA-LEX-C91-TIME91-01]; assesses=[] -->
 
 **प्रभातम्** — *prabhātam* — "morning, daybreak".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*Prabhāta* is the past participle of *pra* + the root √bhā, "to shine": "shone
+forth", and so daybreak (MW, CDIAL 8707).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

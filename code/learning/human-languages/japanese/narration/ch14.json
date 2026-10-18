@@ -4,7 +4,7 @@
   "chapter": 14,
   "title": "Five Numbers, No New Signs",
   "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:2d75daa9c4b58dcd",
+  "sourceHash": "fnv1a64:47e1d29f8e2b8c49",
   "lessons": [
     {
       "id": "JA-C14-ichi",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:705683ee5d2ea018",
+      "sourceHash": "fnv1a64:60bb427c9d15fce8",
       "notice": null,
       "blocks": [
         {
@@ -78,6 +78,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "いち (ichi) is Sino-Japanese: the on'yomi of the character for \"one\", a reading borrowed from Chinese (Middle Chinese 'jit in Baxter's transcription; Unihan)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -106,7 +117,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -156,7 +167,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2e2bfcdd2ed9f07e",
+      "sourceHash": "fnv1a64:db417c6a91308095",
       "notice": null,
       "blocks": [
         {
@@ -228,6 +239,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "五 (go) is Sino-Japanese: go is the on'yomi of the character for \"five\", a reading borrowed from Chinese (Middle Chinese nguX). The native word for five is itsu, as in itsutsu (KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -247,7 +269,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -297,7 +319,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c71e47b3fdf2f0d1",
+      "sourceHash": "fnv1a64:fcef35766edb77e5",
       "notice": null,
       "blocks": [
         {
@@ -365,6 +387,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "に (ni) is Sino-Japanese: the on'yomi of the character for \"two\", borrowed from Chinese (Middle Chinese nyijH). The native word for two is futa, as in futatsu (KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -393,7 +426,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -444,7 +477,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:01bd96681ff4ee81",
+      "sourceHash": "fnv1a64:ef43e6ca000f83c3",
       "notice": null,
       "blocks": [
         {
@@ -521,6 +554,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "さん (san) is Sino-Japanese: the on'yomi of the character for \"three\", borrowed from Chinese (Middle Chinese sam); the final m of the Chinese became the moraic n. The native word for three is mi (KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -549,7 +593,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -599,7 +643,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9063ec19be9b7fe7",
+      "sourceHash": "fnv1a64:16c015de73e55b5b",
       "notice": null,
       "blocks": [
         {

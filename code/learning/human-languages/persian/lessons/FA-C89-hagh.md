@@ -14,7 +14,8 @@ romanization: "hagh"
 concept_tag: FA-CAN89-HAGH
 prerequisites: [FA-C89-maharat, FA-C89-tavanayi]
 sounds: []
-roots: []
+roots: [arabic-haqq]
+etymology_hook: "hagh ← Arabic ḥaqq 'truth, right, due', root ḥ-q-q (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C89-tavanayi]
 <!-- hl-knowledge: introduces=[FA-LEX-C89-CAN89-04]; assesses=[] -->
 
 **حق** — *hagh* — "a right".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*hagh* is borrowed from Arabic *ḥaqq*, "truth, right, due". Its Arabic root is *ḥ-q-q* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

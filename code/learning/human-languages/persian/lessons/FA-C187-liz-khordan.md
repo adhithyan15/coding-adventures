@@ -14,7 +14,8 @@ romanization: "liz khordan"
 concept_tag: FA-VERB-LIZ-KHORDAN
 prerequisites: [FA-C186-larzidan, FA-C186-khazidan]
 sounds: []
-roots: []
+roots: [persian-khurdan]
+etymology_hook: "liz khordan: Persian liz 'slippery' + khordan 'to eat'; native"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C186-khazidan]
 <!-- hl-knowledge: introduces=[FA-LEX-C187-KONESH187-01]; assesses=[] -->
 
 **لیز خوردن** — *liz khordan* — "to slip".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*liz khordan* pairs *liz*, "slippery", a native word, with *khordan*, "to eat": Persian "eats" a slip as it eats a fall. *khordan*, "to eat", is an inherited verb; EtymDB traces it to Middle Persian *xwar-*, "to eat".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

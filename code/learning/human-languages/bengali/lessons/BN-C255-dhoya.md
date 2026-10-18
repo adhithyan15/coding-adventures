@@ -14,7 +14,8 @@ romanization: "dhõyā"
 concept_tag: BN-JINIS255-DHOYA
 prerequisites: [BN-C255-jhor, BN-C255-bonya]
 sounds: []
-roots: []
+roots: [sanskrit-dhuma]
+etymology_hook: "dhõyā ← Sanskrit dhūma 'smoke, vapour', a tadbhava (CDIAL 6849)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C255-bonya]
 <!-- hl-knowledge: introduces=[BN-LEX-C255-JINIS255-04]; assesses=[] -->
 
 **ধোঁয়া** — *dhõyā* — "smoke".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ধোঁয়া** (*dhõyā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *dhūma*, "smoke, vapour" (CDIAL 6849). CDIAL lists Bengali *dhõyā*, "smoke".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

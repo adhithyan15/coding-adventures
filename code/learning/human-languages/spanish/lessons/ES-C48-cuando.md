@@ -6,7 +6,7 @@ sequence: 1381
 chapter: 112
 type: word
 headword: cuando
-gloss: "when" — the word that puts a scene and an event in one sentence, so the two pasts can be seen doing different jobs
+gloss: '"when" — the word that puts a scene and an event in one sentence, so the two pasts can be seen doing different jobs'
 concept_tag: ES-CONNECTIVE-CUANDO
 prerequisites: [ES-C48-dos-miradas]
 sounds: [diphthong-ua]

@@ -14,7 +14,8 @@ romanization: "qarâr"
 concept_tag: FA-ZAMAN191-QARAR
 prerequisites: [FA-C190-bihal, FA-C191-sar-e-vaqt]
 sounds: []
-roots: []
+roots: [arabic-qarar]
+etymology_hook: "qarâr ← Arabic qarār 'settling, fixed decision', root q-r-r (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C191-sar-e-vaqt]
 <!-- hl-knowledge: introduces=[FA-LEX-C191-ZAMAN191-02]; assesses=[] -->
 
 **قرار** — *qarâr* — "an appointment, an arrangement to meet".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*qarâr* is borrowed from Arabic *qarār*, "settling, fixed decision". Its Arabic root is *q-r-r* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

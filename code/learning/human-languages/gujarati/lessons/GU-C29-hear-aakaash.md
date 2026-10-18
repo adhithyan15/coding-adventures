@@ -11,8 +11,8 @@ gloss: sky, heard and said before it is ever shown
 concept_tag: GU-SKY-SKY-HEARD
 prerequisites: [GU-C29-hear-chandra]
 sounds: [independent-aa, ka, long-aa, voiceless-sh]
-roots: []
-etymology_hook: The third word is the container of the first two, which is why it arrives after them rather than before.
+roots: [sanskrit-akasha]
+etymology_hook: "ākāsh ← Sanskrit ākāśa 'sky', a tatsama (CDIAL 1008)"
 duration:
   max_seconds: 120
 requires:
@@ -39,6 +39,11 @@ reviews_of: [GU-C29-hear-chandra]
 
 [PAUSE 3s] Say the words for sun and for moon. Now listen twice: **ākāsh**. It means
 **sky** — the thing that holds both the *sūraj* and the *chandra*.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**આકાશ** (*ākāsh*) is Sanskrit *ākāśa*, "sky", taken over whole as a learned loan, a tatsama (CDIAL 1008).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[GU-LEX-AAKAASH-01, GU-LEX-CHANDRA-01] -->

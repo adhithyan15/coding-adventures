@@ -14,7 +14,8 @@ romanization: "ḍabbo"
 concept_tag: MW-THINGS122-DABBO
 prerequisites: [MW-C121-chimto, MW-C121-talo]
 sounds: []
-roots: []
+roots: [indo-aryan-dabba]
+etymology_hook: "ḍabbo ← *ḍabba 'box', non-Aryan, perhaps Dravidian (CDIAL 5528, Hindi row)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C121-talo]
 <!-- hl-knowledge: introduces=[MW-LEX-C122-THINGS122-01]; assesses=[] -->
 
 **डब्बो** — *ḍabbo* — "a box, a tin".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**डब्बो** (*ḍabbo*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*ḍabba*, "box", a form CDIAL reconstructs from its descendants. CDIAL gives no Marwari form in this entry (CDIAL 5528); the match is through Hindi *ḍabbā*. CDIAL calls the word non-Aryan and cites a view that it is Dravidian.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -12,7 +12,7 @@ concept_tag: MR-JOIN-SUDHAA
 prerequisites: [MR-C36-lyaavar]
 sounds: [matra-u, halant-conjunct, matra-aa]
 roots: []
-etymology_hook: "सुद्धा is Sanskrit शुद्ध (śuddha, 'pure, clean'), the same word behind the shuddha in classical music theory — 'purely that' hardened into 'even that', which is the ordinary path a word for PURE takes when it becomes a word for EVEN"
+etymology_hook: "सुद्धा is Sanskrit śuddha 'pure' (CDIAL 12520): 'purely that' hardened into 'even that'"
 duration:
   max_seconds: 210
 requires:

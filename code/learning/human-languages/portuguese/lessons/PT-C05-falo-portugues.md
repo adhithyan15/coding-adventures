@@ -6,7 +6,7 @@ sequence: 310
 chapter: 5
 type: phrase
 headword: Falo português
-gloss: "I speak Portuguese" — your first full sentence (português = Portuguese)
+gloss: '"I speak Portuguese" — your first full sentence (português = Portuguese)'
 concept_tag: PT-WORD-PORTUGUES
 prerequisites: [PT-C05-falar]
 sounds: [final-s-sh, nasal-em]

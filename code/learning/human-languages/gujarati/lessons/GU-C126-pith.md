@@ -14,7 +14,8 @@ romanization: "pīṭh"
 concept_tag: GU-THINGS126-PITH
 prerequisites: [GU-C125-gardan, GU-C125-chati]
 sounds: []
-roots: []
+roots: [sanskrit-prshti]
+etymology_hook: "pīṭh ← Sanskrit pṛṣṭi 'back', a sister of pṛṣṭha; a tadbhava (CDIAL 8370)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C125-chati]
 <!-- hl-knowledge: introduces=[GU-LEX-C126-THINGS126-01]; assesses=[] -->
 
 **પીઠ** (*pīṭh*) — "a back".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**પીઠ** (*pīṭh*) is a tadbhava of Sanskrit *pṛṣṭi*, "vertebrae; back" (CDIAL 8370).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

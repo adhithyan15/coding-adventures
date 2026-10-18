@@ -14,7 +14,8 @@ romanization: "amal"
 concept_tag: AR-WANT113-AMAL
 prerequisites: [AR-C113-raghba, AR-C113-hulm]
 sounds: []
-roots: []
+roots: [ʾ-m-l]
+etymology_hook: "amal: built on the root ʾ-m-l, 'to hope' (Lane); amal is the noun, 'hope'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C113-hulm]
 <!-- hl-knowledge: introduces=[AR-LEX-C113-WANT113-05]; assesses=[] -->
 
 **أمل** — *amal* — "hope".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**أمل** (*amal*) is built on the native Arabic root *ʾ-m-l*, "to hope" (Lane). *Amal* is the noun, "hope".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

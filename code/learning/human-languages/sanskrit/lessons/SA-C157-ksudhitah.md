@@ -14,7 +14,8 @@ romanization: "kṣudhitaḥ"
 concept_tag: SA-QUAL157-KSUDHITAH
 prerequisites: [SA-C157-cakitah, SA-C157-srantah]
 sounds: []
-roots: []
+roots: [sanskrit-kshudhita]
+etymology_hook: "kṣudhita 'hungry' ← kṣudh 'hunger' (MW, after Pāṇini): 'hungered'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C157-srantah]
 <!-- hl-knowledge: introduces=[SA-LEX-C157-QUAL157-05]; assesses=[] -->
 
 **क्षुधितः** — *kṣudhitaḥ* — "hungry".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*kṣudhita* is built from the root √kṣudh "be hungry" and its noun *kṣudh* "hunger" (MW): "hungered, hungry", a form Pāṇini's grammar discusses. *kṣudhā* "hunger" belongs to the same root.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -12,6 +12,9 @@ Before the new one: say the Bengali for a bird, then the Bengali for a mouse.
 You'll want to know: সিংহ.
 সিংহ — singhô — "a lion".
 
+The word, taken apart.
+সিংহ (singhô) is Sanskrit siṁha, "lion", taken over whole as a learned loan, a tatsama.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Bengali for a mouse, then the Bengali for a lion.
 
 You'll want to know: হাতি.
 হাতি — hāti — "an elephant".
+
+The word, taken apart.
+হাতি (hāti) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from hastin, "having hands; elephant" (CDIAL 14039).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Bengali for a lion, then the Bengali for an elephant
 You'll want to know: বানর.
 বানর — bānôr — "a monkey".
 
+The word, taken apart.
+বানর (bānôr) is Sanskrit vānara, "monkey", taken over whole as a learned loan, a tatsama (CDIAL 11515). The word inherited from it is bāṁdar, which CDIAL lists.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Bengali for an elephant, then the Bengali for a monk
 You'll want to know: সাপ.
 সাপ — sāp — "a snake".
 
+The word, taken apart.
+সাপ (sāp) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from sarpa, "snake" (CDIAL 13271).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Bengali for a monkey, then the Bengali for a snake.
 
 You'll want to know: কাক.
 কাক — kāk — "a crow".
+
+The word, taken apart.
+কাক (kāk) is Sanskrit kāka, "crow", taken over whole as a learned loan, a tatsama (CDIAL 2993). The word inherited from it is kāuā, which CDIAL lists.
 
 What you've built.
 One more word for this chapter.

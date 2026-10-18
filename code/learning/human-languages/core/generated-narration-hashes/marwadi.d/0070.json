@@ -1,7 +1,7 @@
 {
   "language": "marwadi",
   "chapter": 70,
-  "sourceHash": "fnv1a64:8c2c155ec123e13a",
+  "sourceHash": "fnv1a64:b61651f828597c32",
   "lessonIds": [
     "MW-C70-abho",
     "MW-C70-kutto",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "marwadi/narration/ch70.txt",
   "json": "marwadi/narration/ch70.json",
-  "textHash": "fnv1a64:994afa19485359cc",
-  "jsonHash": "fnv1a64:bdedae2b21ba9fff",
+  "textHash": "fnv1a64:ebe4f9e9822d39e9",
+  "jsonHash": "fnv1a64:da5cfc1c0a08afe8",
   "findings": []
 }

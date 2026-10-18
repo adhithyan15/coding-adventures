@@ -14,7 +14,8 @@ romanization: "khatm karnā"
 concept_tag: UR-VERB-KHATM-KARNA
 prerequisites: [UR-C242-muqabala-karna, UR-C242-koshish-karna]
 sounds: []
-roots: []
+roots: [arabic-khatm, kr-do]
+etymology_hook: "khatm ← Arabic khatm 'a sealing, an ending', through Persian (Lane, root kh-t-m); karnā (CDIAL 2814)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C242-koshish-karna]
 <!-- hl-knowledge: introduces=[UR-LEX-C242-ACT242-04]; assesses=[] -->
 
 **ختم کرنا** — *khatm karnā* — "to finish".
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ختم کرنا** (*khatm karnā*) joins *khatm*, "an end", and *karnā*, "to do". *khatm* is Arabic *khatm*, "a sealing; a finishing", which reached Urdu through Persian (Lane, root *kh-t-m*); *karnā* comes from Sanskrit *karoti*, "does" (CDIAL 2814).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

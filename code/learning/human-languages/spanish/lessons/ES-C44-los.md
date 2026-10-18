@@ -6,7 +6,7 @@ sequence: 1197
 chapter: 79
 type: grammar
 headword: los libros
-gloss: "the books" — the one article that does not simply add -s, for a reason you already met
+gloss: '"the books" — the one article that does not simply add -s, for a reason you already met'
 concept_tag: ES-GRAMMAR-DEFINITE-PLURAL-MASCULINE
 prerequisites: [ES-C44-las]
 sounds: [s-final]

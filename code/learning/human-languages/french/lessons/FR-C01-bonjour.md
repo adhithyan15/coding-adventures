@@ -50,7 +50,8 @@ Spanish hiding in it.
 
 **bonjour** = **bon** ("good") + **jour** ("day") = "good day." One written
 word, said *bõ- zhoor*. *bon* is masculine because *jour* is masculine — the
-agreement from the *bon* lesson, quietly at work.
+agreement from the *bon* lesson, quietly at work. Both are inherited: *bon* ← Latin
+*bonus*, *jour* ← Latin *diurnum*, "daytime" (EtymDB 2.1).
 
 ## Why it's said this way
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

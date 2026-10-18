@@ -12,6 +12,9 @@ Before the new one: say the Sanskrit for a bear, then the Sanskrit for a jackal.
 You'll want to know: शशकः.
 शशकः — śaśakaḥ — "a rabbit".
 
+The word, taken apart.
+śaśaka is śaśa "hare" with the suffix -ka (CDIAL 12357). śaśa is inherited from Indo-European: MW records the view that it is the same word as German Hase and English hare, and EtymDB agrees. It lives on as Marathi sasā "hare" (CDIAL 12357).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Sanskrit for a jackal, then the Sanskrit for a rabbi
 
 You'll want to know: गर्दभः.
 गर्दभः — gardabhaḥ — "a donkey".
+
+The word, taken apart.
+gardabha comes from the root √gard "shout, make a noise" (CDIAL 4054): MW explains it as "the crier, the brayer", with a query mark. It lives on as Hindi gadahā and Marathi gāḍhav "donkey" (CDIAL 4054).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Sanskrit for a rabbit, then the Sanskrit for a donke
 You'll want to know: वराहः.
 वराहः — varāhaḥ — "a boar".
 
+The word, taken apart.
+MW calls the derivation of varāha "a boar" doubtful, but EtymDB traces it to an Indo-Iranian word for the boar, inherited also by Avestan varāza and Persian gorāz "boar".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Sanskrit for a donkey, then the Sanskrit for a boar.
 You'll want to know: वृषभः.
 वृषभः — vṛṣabhaḥ — "a bull".
 
+The word, taken apart.
+vṛṣabha is built on vṛṣan "male, mighty" (CDIAL 12085): in the Rigveda it first means "manly, mighty", then "the bull", and then "the chief, the best" (MW). Pali wore it down to vasabha "bull" (CDIAL 12085).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Sanskrit for a boar, then the Sanskrit for a bull.
 
 You'll want to know: महिषः.
 महिषः — mahiṣaḥ — "a buffalo".
+
+The word, taken apart.
+mahiṣa first meant "great, mighty", from the root of mah- "great", which MW compares with Latin magnus and English much. CDIAL 9964 explains "buffalo" from mahiṣo mṛgāṇām, "the great one of the beasts". It lives on as Hindi bhaĩs and Marathi mhais "buffalo" (CDIAL 9964).
 
 What you've built.
 One more word for this chapter.

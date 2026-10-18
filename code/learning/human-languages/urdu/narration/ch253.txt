@@ -12,6 +12,9 @@ Before the new one: say the Urdu for a coconut, then the Urdu for a cashew.
 You'll want to know: چھپکلی.
 چھپکلی — chhipkalī — "a lizard".
 
+The word, taken apart.
+CDIAL lists Hindi chipkalī, "lizard", under Sanskrit śepyā, for which it reconstructs a sense "tail" (CDIAL 12607). How the word came to name the lizard is not explained.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Urdu for a cashew, then the Urdu for a lizard.
 
 You'll want to know: کچھوا.
 کچھوا — kachhuā — "a tortoise".
+
+The word, taken apart.
+کچھوا (kachhuā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from kacchapa, "turtle, tortoise" (CDIAL 2619).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Urdu for a lizard, then the Urdu for a tortoise.
 You'll want to know: مگرمچھ.
 مگرمچھ — magarmachh — "a crocodile".
 
+The word, taken apart.
+مگرمچھ (magarmachh) is "crocodile-fish". magar goes back to Sanskrit makara, "crocodile", a word CDIAL records without a Hindi form (CDIAL 9692), and machh, "fish", to Sanskrit matsya (CDIAL 9758).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Urdu for a tortoise, then the Urdu for a crocodile.
 You'll want to know: زرافہ.
 زرافہ — zarāfā — "a giraffe".
 
+The word, taken apart.
+زرافہ (zarāfā) is a loan from Arabic zarāfa, "giraffe", which reached Urdu through Persian. Its Arabic root is z-r-f (Lane). English giraffe comes from the same Arabic word.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Urdu for a crocodile, then the Urdu for a giraffe.
 
 You'll want to know: مکڑی.
 مکڑی — makṛī — "a spider".
+
+The word, taken apart.
+مکڑی (makṛī) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from markaṭa, "spider" (CDIAL 9883). The Sanskrit word is known only from the old word-lists.
 
 What you've built.
 One more word for this chapter.

@@ -14,7 +14,8 @@ romanization: "bedun-e"
 concept_tag: FA-CHERA159-BEDUN-E
 prerequisites: [FA-C158-moshkel, FA-C159-be-har-hal]
 sounds: []
-roots: []
+roots: [arabic-bi-duni]
+etymology_hook: "bedun-e ← Arabic bi-dūni 'without', root d-w-n (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C159-be-har-hal]
 <!-- hl-knowledge: introduces=[FA-LEX-C159-CHERA159-02]; assesses=[] -->
 
 **بدون** — *bedun-e* — "without".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*bedun-e* is borrowed from Arabic *bi-dūni*, "without". Its Arabic root is *d-w-n* (Lane). Persian uses the Arabic phrase as one word, with the linking *-e*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

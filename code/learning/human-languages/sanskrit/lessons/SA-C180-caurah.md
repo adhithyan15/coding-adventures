@@ -14,7 +14,8 @@ romanization: "cauraḥ"
 concept_tag: SA-PPL180-CAURAH
 prerequisites: [SA-C179-lekhakah, SA-C180-vyadhah]
 sounds: []
-roots: []
+roots: [sanskrit-cora]
+etymology_hook: "caura, a variant of cora 'thief', which MW links to √cur 'steal'; Hindi cor (CDIAL 4931)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C180-vyadhah]
 <!-- hl-knowledge: introduces=[SA-LEX-C180-PPL180-02]; assesses=[] -->
 
 **चौरः** — *cauraḥ* — "a thief".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*caura* is a variant of *cora*, "thief", and MW links both to the root √cur, "to steal". CDIAL 4931 lists the two forms together, and the word lives on as Hindi *cor*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

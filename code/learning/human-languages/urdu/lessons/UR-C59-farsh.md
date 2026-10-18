@@ -14,7 +14,8 @@ romanization: "farsh"
 concept_tag: UR-HOME59-FARSH
 prerequisites: [UR-C58-bistar, UR-C59-almari]
 sounds: []
-roots: []
+roots: [arabic-farsh]
+etymology_hook: "farsh ← Arabic farsh 'anything spread, a carpet', through Persian (Lane, root f-r-sh)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C59-almari]
 <!-- hl-knowledge: introduces=[UR-LEX-C59-HOME59-02]; assesses=[] -->
 
 **فرش** — *farsh* — "the floor".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**فرش** (*farsh*) is a loan from Arabic *farsh*, "anything spread, a carpet", which reached Urdu through Persian. Its Arabic root is *f-r-sh* (Lane). In Urdu it came to mean "the floor".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

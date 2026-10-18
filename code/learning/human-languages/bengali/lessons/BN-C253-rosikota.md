@@ -14,7 +14,8 @@ romanization: "rôsikôtā"
 concept_tag: BN-JINIS253-ROSIKOTA
 prerequisites: [BN-C253-mitthe, BN-C253-rohosyo]
 sounds: []
-roots: []
+roots: [sanskrit-rasika]
+etymology_hook: "rôsikôtā: Sanskrit rasika 'having taste, witty' + -tā '-ness', tatsama parts"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C253-rohosyo]
 <!-- hl-knowledge: introduces=[BN-LEX-C253-JINIS253-03]; assesses=[] -->
 
 **রসিকতা** — *rôsikôtā* — "a joke".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**রসিকতা** (*rôsikôtā*) is Sanskrit *rasika*, "having taste, witty", + the ending *-tā*, "-ness", both taken over whole.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

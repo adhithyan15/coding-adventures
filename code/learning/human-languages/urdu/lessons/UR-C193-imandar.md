@@ -14,7 +14,8 @@ romanization: "imāndār"
 concept_tag: UR-SIFAT193-IMANDAR
 prerequisites: [UR-C192-beshak, UR-C192-afsos]
 sounds: []
-roots: []
+roots: [arabic-iman, persian-dar-holder]
+etymology_hook: "imāndār: Arabic īmān 'faith' (Lane, root ʾ-m-n) + Persian -dār 'holder'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C192-afsos]
 <!-- hl-knowledge: introduces=[UR-LEX-C193-SIFAT193-01]; assesses=[] -->
 
 **ایماندار** — *imāndār* — "honest".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ایماندار** (*imāndār*) is "faith-holder". It joins Arabic *īmān*, "faith", which reached Urdu through Persian (Lane, root *ʾ-m-n*), and the Persian *-dār*, "holder".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

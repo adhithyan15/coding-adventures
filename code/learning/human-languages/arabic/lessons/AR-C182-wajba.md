@@ -14,7 +14,8 @@ romanization: "wajba"
 concept_tag: AR-SHAY182-WAJBA
 prerequisites: [AR-C182-shatira, AR-C182-muthallajat]
 sounds: []
-roots: []
+roots: [w-j-b]
+etymology_hook: "wajba: built on the root w-j-b, 'to fall' (Lane); wajba is a meal, a single eating"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C182-muthallajat]
 <!-- hl-knowledge: introduces=[AR-LEX-C182-SHAY182-04]; assesses=[] -->
 
 **وجبة** — *wajba* — "a meal".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**وجبة** (*wajba*) is built on the native Arabic root *w-j-b*, "to fall; to fall due" (Lane). *Wajba* is a meal, a single eating.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

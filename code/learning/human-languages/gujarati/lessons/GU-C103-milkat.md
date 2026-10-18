@@ -14,7 +14,8 @@ romanization: "milkat"
 concept_tag: GU-CAN103-MILKAT
 prerequisites: [GU-C103-adhikar, GU-C103-tak, GU-C39-ordinal-reach]
 sounds: []
-roots: []
+roots: [arabic-milk]
+etymology_hook: "milkat: usually traced, through Persian milkiyat, to Arabic milk 'possession', root m-l-k (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [GU-C103-tak]
 <!-- hl-knowledge: introduces=[GU-LEX-C103-CAN103-03]; assesses=[] -->
 
 **મિલકત** (*milkat*) — "property".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**મિલકત** (*milkat*) is a loan, usually traced through Persian *milkiyat*, "ownership", to Arabic *milk*, "possession". Its Arabic root is *m-l-k* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

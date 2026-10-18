@@ -4,7 +4,7 @@
   "chapter": 167,
   "title": "Turtle, She-buffalo, Calf, She-goat, Mare",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:1c19759045c7b3f8",
+  "sourceHash": "fnv1a64:0c2c181a8a6018f8",
   "lessons": [
     {
       "id": "SA-C167-kacchapah",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3e552d73e7996e82",
+      "sourceHash": "fnv1a64:12842419a9b4cdb6",
       "notice": null,
       "blocks": [
         {
@@ -52,6 +52,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "MW reads kacchapa \"a turtle\" as kaccha \"marsh\" + -pa \"keeping\": \"the one that keeps to the marsh\". CDIAL 2619 thinks that a popular reshaping of the older kaśyapa, so its origin is disputed. It lives on as Hindi kachuā and Gujarati kācbo (CDIAL 2619)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -62,7 +73,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -111,7 +122,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -142,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:760f2787bf8e8dc4",
+      "sourceHash": "fnv1a64:8039e9a895c11212",
       "notice": null,
       "blocks": [
         {
@@ -175,6 +186,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "mahiṣī is the feminine of mahiṣa \"great, mighty; buffalo\" (CDIAL 9964): \"the buffalo cow\". In the Rigveda the same word also means \"the king's chief wife\", \"the great one\" (CDIAL 9972). It lives on as Hindi bhaĩs \"buffalo\" (CDIAL 9964)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -185,7 +207,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -234,7 +256,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -265,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7f78df569ab1fcc2",
+      "sourceHash": "fnv1a64:54647de995d70acf",
       "notice": null,
       "blocks": [
         {
@@ -298,6 +320,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "vatsa \"a calf, a child\" probably first meant \"a yearling\" (MW; CDIAL 11239). It is inherited from Indo-European, cousin of Greek etos \"year\" and Latin vetus \"old\", the source of English veteran (EtymDB). It lives on as Hindi bachiyā \"calf\" (CDIAL 11239)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -308,7 +341,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -357,7 +390,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -388,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d9d83b1859caadfa",
+      "sourceHash": "fnv1a64:3af07559e702073f",
       "notice": null,
       "blocks": [
         {
@@ -421,6 +454,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ajā is the feminine of aja \"a goat\" (MW). MW sets aja beside Greek aix \"goat\" and Lithuanian ožys \"he-goat\": an inherited Indo-European word."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -431,7 +475,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -480,7 +524,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -511,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:92e45714af6e938f",
+      "sourceHash": "fnv1a64:24b488e1725cfcdb",
       "notice": null,
       "blocks": [
         {
@@ -544,6 +588,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "aśvā is the feminine of aśva \"horse\". It is inherited from Indo-European: MW sets aśva beside Latin equus and Greek hippos, and EtymDB pairs aśvā with Latin equa \"mare\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -554,7 +609,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -603,7 +658,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

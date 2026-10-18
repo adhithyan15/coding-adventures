@@ -14,7 +14,8 @@ romanization: "ahaḥ"
 concept_tag: SA-TIME90-AHAH
 prerequisites: [SA-C89-hard, SA-C89-sweet]
 sounds: []
-roots: []
+roots: [sanskrit-ahar]
+etymology_hook: "ahas/ahar 'day' is a Rigvedic word with no root given in MW; its origin is not settled (CDIAL 993)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,13 @@ reviews_of: [SA-C89-sweet]
 <!-- hl-knowledge: introduces=[SA-LEX-C90-TIME90-01]; assesses=[] -->
 
 **अहः** — *ahaḥ* — "a day, daytime".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*Ahaḥ* is a form of *ahar*, "day", which is already in the Rigveda (MW, CDIAL
+993). MW gives it no root, and its origin is not settled. It is the *-aha* of
+*saptāha*, "week".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "pushidan"
 concept_tag: FA-VERB-PUSHIDAN
 prerequisites: [FA-C39-boridan, FA-C39-gashtan]
 sounds: []
-roots: []
+roots: [persian-pushidan]
+etymology_hook: "pushidan ← Middle Persian pōšīdan (EtymDB); inherited, native Iranian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C39-gashtan]
 <!-- hl-knowledge: introduces=[FA-LEX-C39-VERBS39-03]; assesses=[] -->
 
 **پوشیدن** — *pushidan* — "to wear".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*pushidan* is a native Persian word, inherited rather than borrowed: it continues Middle Persian *pōšīdan*, "to cover, to put on, to wear" (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "caṇakaḥ"
 concept_tag: SA-THG159-CANAKAH
 prerequisites: [SA-C159-hingu, SA-C159-tilah]
 sounds: []
-roots: []
+roots: [sanskrit-cana, sanskrit-canaka]
+etymology_hook: "caṇaka ← caṇa 'chickpea' (MBh) + -ka (CDIAL 4579); no derivation is known; Hindi canā"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C159-tilah]
 <!-- hl-knowledge: introduces=[SA-LEX-C159-THG159-05]; assesses=[] -->
 
 **चणकः** — *caṇakaḥ* — "a chickpea".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*caṇaka* is *caṇa* "the chickpea" with the suffix *-ka* (CDIAL 4579). Neither MW nor CDIAL gives a derivation for *caṇa*, so its origin is uncertain. It lives on as Hindi and Punjabi *canā*, *caṇā* (CDIAL 4579).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

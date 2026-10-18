@@ -1,7 +1,7 @@
 {
   "language": "punjabi",
   "chapter": 57,
-  "sourceHash": "fnv1a64:a544ddf4033f1cb2",
+  "sourceHash": "fnv1a64:abc74b62ca196bf8",
   "lessonIds": [
     "PA-C57-utthna",
     "PA-C57-turna",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "punjabi/narration/ch57.txt",
   "json": "punjabi/narration/ch57.json",
-  "textHash": "fnv1a64:835f99c81ad4e594",
-  "jsonHash": "fnv1a64:9a24df8549973c07",
+  "textHash": "fnv1a64:9e8800297594497d",
+  "jsonHash": "fnv1a64:b01bea4605c83720",
   "findings": []
 }

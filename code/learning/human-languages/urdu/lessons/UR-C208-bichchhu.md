@@ -14,7 +14,8 @@ romanization: "bichchhū"
 concept_tag: UR-CHIZ208-BICHCHHU
 prerequisites: [UR-C208-giddh, UR-C208-chamgadar]
 sounds: []
-roots: []
+roots: [sanskrit-vrshcika]
+etymology_hook: "bichchhū ← Sanskrit vṛścika 'scorpion', a tadbhava (CDIAL 12081)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C208-chamgadar]
 <!-- hl-knowledge: introduces=[UR-LEX-C208-CHIZ208-05]; assesses=[] -->
 
 **بچھو** — *bichchhū* — "a scorpion".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**بچھو** (*bichchhū*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *vṛścika*, "scorpion" (CDIAL 12081). CDIAL asks whether the many shapes of this word come from a taboo on naming the scorpion.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

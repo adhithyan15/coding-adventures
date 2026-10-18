@@ -148,6 +148,18 @@ rather than letting them read as silent gaps.
 
 ### Product quality ratchet
 
+**Completed bounded visual fix — #17502: SwiftUI milestone rotations.** TaskApp's
+timeline and calendar milestones both author a centered `rotate(45deg)` to
+make diamonds. Lower a single finite degree rotation after sizing and surface
+paint but before elevation shadows. Keep native layout footprint unchanged,
+preserve state precedence, and report malformed, non-finite, multi-transform,
+and other-unit forms. Verify authored output before retiring the two transform
+allowances. Translation, scaling, and transform-origin remain outside scope.
+
+Fresh package-expanded source generation measures 57 SwiftUI style drops and
+zero transform drops, down from 59. Both authored themes emit two centered
+45-degree rotations. Runtime generation and Swift compilation require macOS CI.
+
 10. **P1 [#16182](https://github.com/adhithyan15/coding-adventures/issues/16182)
     — ratchet TaskApp's native style degradations.** All five native reporters
     are now wired. The initial `native-complete` generation recorded 77 XAML,
@@ -237,6 +249,17 @@ rather than letting them read as silent gaps.
 
 ### Native fidelity release checkpoint
 
+**Completed in #17483 — #17481: SwiftUI drag-body spacing reports.** Both
+`HostDraggable` and `HostDropTarget` already construct a vertical stack with
+authored spacing. Recognize those constructors in the gap reporter, requiring
+every occurrence of a shared part to consume the property. Unsupported values
+and reuse on non-spacing primitives must remain reported. Verify generated
+TaskApp before retiring its four gap allowances. Fresh package-expanded
+generation measures 59 style drops and no gap drops, down from 63; native
+runtime generation and Swift compilation passed in the macOS release CI lane.
+Drag callbacks and native
+behavior are unchanged; this is reporting reconciliation.
+
 11. **P1 [#17262](https://github.com/adhithyan15/coding-adventures/issues/17262)
     — publish `task-app-v0.5.2`.** Roll the compatible native-fidelity fixes
     accumulated after v0.5.1 into an immutable patch release. Keep the verified
@@ -257,13 +280,36 @@ rather than letting them read as silent gaps.
     Components, and Paint remain CI-only, while signing, notarization, and
     installers remain tracked by #13977.
 
-**Next release checkpoint — P1 [#17469](https://github.com/adhithyan15/coding-adventures/issues/17469):
-publish `task-app-v0.5.5`.** The native lifecycle gates are complete; this
-compatible patch rolls forward the Qt shadow reporting fix (#17386) and XAML
-seven-column calendar lowering (#17394). Validate the preparation PR through
-the existing release payload matrix, then publish from main and audit the
-immutable tag, source manifest, checksums, and coverage notes. Static HTML,
-Web Components, and Paint remain CI-only; signing and installers remain #13977.
+**Published checkpoint — [#17469](https://github.com/adhithyan15/coding-adventures/issues/17469):
+`task-app-v0.5.5`.** Published from #17470 and audited: immutable tag and
+manifest match the source commit, all twelve checksum entries match GitHub
+asset digests, and the existing artifact coverage and limitations are retained.
+
+**Published checkpoint — [#17491](https://github.com/adhithyan15/coding-adventures/issues/17491):
+`task-app-v0.5.6`.** Published from #17492 and audited: immutable tag and
+manifest match the source commit, and all twelve checksums match asset digests.
+
+**Published and audited release checkpoint — P1 [#17610](https://github.com/adhithyan15/coding-adventures/issues/17610):
+publish `task-app-v0.5.7`.** Roll forward the compatible SwiftUI milestone
+rotation fix (#17503): timeline and calendar markers retain their 45-degree
+diamond shape, reducing the measured SwiftUI style inventory from 59 to 57.
+Published from `93206f2a5b2cb3c02f30bb7dd23c7573898d2334` after every payload lane
+passed in run 38971558648. The immutable tag and manifest match that source;
+all 13 assets and twelve checksum entries were audited against GitHub digests.
+Static HTML, Web Components, and Paint remain CI-only; signing, notarization,
+and installers remain #13977.
+
+### Next bounded fidelity item — #17675: Qt milestone rotations
+
+After the P0 native lifecycle gates and v0.5.7 publication, preserve the two
+authored timeline milestone and legend-swatch `rotate(45deg)` declarations in
+Qt. Use native centered Item rotation without changing layout dimensions.
+Accept only a single finite degree rotation; preserve ordered state precedence
+with a zero-degree fallback, and keep rejected values in degradation reports.
+Translation, scaling, transform chains, and transform-origin are excluded.
+Assert exact emitted bindings, negative inputs, and both authored themes before
+retiring the two Qt transform allowances (83 to 81 measured drops). Validate
+native Qt payload generation/build in CI; do not claim local Qt runtime proof.
 
 ### Tier C — reach, stated honestly
 

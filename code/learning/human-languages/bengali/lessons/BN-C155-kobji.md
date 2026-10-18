@@ -15,6 +15,7 @@ concept_tag: BN-SVASTHYO155-KOBJI
 prerequisites: [BN-C154-mathabtha, BN-C154-petbtha]
 sounds: []
 roots: []
+etymology_hook: "kôbji 'wrist': origin not settled; CDIAL has no entry for it"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C154-petbtha]
 <!-- hl-knowledge: introduces=[BN-LEX-C155-SVASTHYO155-01]; assesses=[] -->
 
 **কবজি** — *kôbji* — "a wrist".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **কবজি** (*kôbji*) is not settled: CDIAL has no entry for it, and a search by form and by the gloss "wrist" finds only Bengali *rākhi*, "thread worn round the wrist" (CDIAL 10551), a different word.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

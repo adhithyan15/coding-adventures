@@ -14,7 +14,8 @@ romanization: "nuno"
 concept_tag: JA-THING133-NUNO
 prerequisites: [JA-W133-nu, JA-W17-no, JA-C133-ike, JA-C133-inu, JA-C131-ocha-o-kudasai]
 sounds: [mora]
-roots: []
+roots: [japanese-nuno]
+etymology_hook: "nuno: native Japanese, inherited, not borrowed; kanji 布 attached later as kun'yomi"
 duration:
   max_seconds: 200
 requires:
@@ -50,6 +51,11 @@ Then say *a pond* — **R2**, five lessons back.
 The new sign is spent at once. **ぬ** with **の** after it: two beats, *nu–no*,
 and both signs are ones you write. In **いぬ** the new sign comes last; in
 **ぬの** it comes first.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ぬの** (*nuno*) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-C133-NUNO, JA-LEX-ANCHOR-INU, JA-SCRIPT-NU-01, JA-SCRIPT-NO-01] -->

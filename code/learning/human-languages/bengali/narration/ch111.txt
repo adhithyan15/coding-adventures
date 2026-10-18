@@ -12,6 +12,9 @@ Before the new one: say the Bengali for matches, then the Bengali for coal.
 You'll want to know: দড়ি.
 দড়ি — dôṛi — "a rope".
 
+The word, taken apart.
+দড়ি (dôṛi) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from dṛti, "skin, leather bag" (CDIAL 6511). CDIAL glosses Bengali daṛi "sinew, tendon, cord, string".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Bengali for coal, then the Bengali for a rope.
 
 You'll want to know: পেরেক.
 পেরেক — perek — "a nail".
+
+The word, taken apart.
+পেরেক (perek) is a loan from Portuguese prego, "nail".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Bengali for a rope, then the Bengali for a nail.
 You'll want to know: হাতুড়ি.
 হাতুড়ি — hātuṛi — "a hammer".
 
+The word, taken apart.
+হাতুড়ি (hātuṛi) is a tadbhava, a word inherited and reshaped by sound change. It comes from hastakūṭa, "hand hammer", a form CDIAL reconstructs from its descendants (CDIAL 14028).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Bengali for a nail, then the Bengali for a hammer.
 You'll want to know: কুড়ুল.
 কুড়ুল — kuṛul — "an axe".
 
+The word, taken apart.
+কুড়ুল (kuṛul) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from kuṭhāra, "axe" (CDIAL 3244). CDIAL thinks the word probably Dravidian.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Bengali for a hammer, then the Bengali for an axe.
 
 You'll want to know: ছাতা.
 ছাতা — chhātā — "an umbrella".
+
+The word, taken apart.
+ছাতা (chhātā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from chattra, "parasol" (CDIAL 4972).
 
 What you've built.
 One more word for this chapter.

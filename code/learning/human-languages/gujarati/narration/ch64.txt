@@ -12,6 +12,9 @@ Before the new one: say the Gujarati for a garden, then the Gujarati for an addr
 You'll want to know: ફૂલ.
 ફૂલ (phūl) — "a flower".
 
+The word, taken apart.
+ફૂલ (phūl) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from phulla, "expanded, blown (of flowers)" (CDIAL 9092).
+
 What you've built.
 One more word for flower, mountain and forest.
 
@@ -40,6 +43,9 @@ Before the new one: say the Gujarati for an address, then the Gujarati for a flo
 
 You'll want to know: પાન.
 પાન (pān) — "a leaf".
+
+The word, taken apart.
+પાન (pān) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from parṇa, "plumage, foliage; leaf" (CDIAL 7918).
 
 What you've built.
 One more word for flower, mountain and forest.
@@ -70,6 +76,9 @@ Before the new one: say the Gujarati for a flower, then the Gujarati for a leaf.
 You'll want to know: પર્વત.
 પર્વત (parvat) — "a mountain".
 
+The word, taken apart.
+પર્વત (parvat) is Sanskrit parvata, "rock, mountain", taken over whole as a learned loan, a tatsama (CDIAL 7945).
+
 What you've built.
 One more word for flower, mountain and forest.
 
@@ -99,6 +108,9 @@ Before the new one: say the Gujarati for a leaf, then the Gujarati for a mountai
 You'll want to know: જંગલ.
 જંગલ (jaṅgal) — "a forest, the jungle".
 
+The word, taken apart.
+જંગલ (jaṅgal) goes back to Sanskrit jāṅgala, "arid, sparingly grown with trees" (CDIAL 5177). CDIAL notes that the noun spread across the modern languages in the form of the Hindi area, and that some forms support a non-Aryan origin.
+
 What you've built.
 One more word for flower, mountain and forest.
 
@@ -127,6 +139,9 @@ Before the new one: say the Gujarati for a mountain, then the Gujarati for a for
 
 You'll want to know: પથ્થર.
 પથ્થર (paththar) — "a stone".
+
+The word, taken apart.
+પથ્થર (paththar) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from prastara, "anything strewn; flat surface; rock, stone" (CDIAL 8857).
 
 What you've built.
 One more word for flower, mountain and forest.

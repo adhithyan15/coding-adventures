@@ -12,6 +12,9 @@ Before the new one: say the Arabic for a wound, then the Arabic for health.
 You'll want to know: حقنة.
 حقنة — ḥuqna — "an injection".
 
+The word, taken apart.
+حقنة (ḥuqna) is built on the native Arabic root ḥ-q-n, "to retain; to give a clyster" (Lane). Lane's ḥuqna is a clyster, a medicine given by the gut; the injection is a modern sense.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Arabic for health, then the Arabic for an injection.
 
 You'll want to know: عملية.
 عملية — ʿamaliyya — "an operation".
+
+The word, taken apart.
+عملية (ʿamaliyya) is built on the native Arabic root ʿ-m-l, "to work, to do" (Lane). ʿAmaliyya is a modern abstract noun from ʿamal, "work": an operation.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Arabic for an injection, then the Arabic for an oper
 You'll want to know: كدمة.
 كدمة — kadma — "a bruise".
 
+The word, taken apart.
+كدمة (kadma) is built on the native Arabic root k-d-m, "to bite with the front of the mouth" (Lane). Kadma, one bite, is a bruise in modern use; Lane does not list it.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Arabic for an operation, then the Arabic for a bruis
 You'll want to know: حرق.
 حرق — ḥarq — "a burn".
 
+The word, taken apart.
+حرق (ḥarq) is built on the native Arabic root ḥ-r-q, "to burn" (Lane). Ḥarq is the verbal noun, "burning", hence "a burn".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Arabic for a bruise, then the Arabic for a burn.
 
 You'll want to know: مغص.
 مغص — maghaṣ — "a stomach cramp".
+
+The word, taken apart.
+مغص (maghaṣ) is built on the native Arabic root m-gh-ṣ, "colic" (Lane). Lane's maghṣ is a griping pain in the belly.
 
 What you've built.
 One more word for this chapter.

@@ -14,7 +14,8 @@ romanization: "nabaḷũ"
 concept_tag: GU-QUAL137-NABALU
 prerequisites: [GU-C137-juvan, GU-C137-majbut]
 sounds: []
-roots: []
+roots: [sanskrit-nirbala]
+etymology_hook: "nabaḷũ ← Sanskrit nirbala 'weak', a tadbhava (CDIAL 7356)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C137-majbut]
 <!-- hl-knowledge: introduces=[GU-LEX-C137-QUAL137-04]; assesses=[] -->
 
 **નબળું** (*nabaḷũ*) — "weak".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**નબળું** (*nabaḷũ*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *nirbala*, "weak" (CDIAL 7356). It is *nir-*, "without", and *bala*, "strength".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

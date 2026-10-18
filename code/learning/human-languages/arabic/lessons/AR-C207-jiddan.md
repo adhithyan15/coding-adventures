@@ -14,7 +14,8 @@ romanization: "jiddan"
 concept_tag: AR-SABAB207-JIDDAN
 prerequisites: [AR-C206-khawf, AR-C207-faqat]
 sounds: []
-roots: []
+roots: [j-d-d]
+etymology_hook: "jiddan: built on the root j-d-d, 'to be in earnest' (Lane); jiddan is jidd 'earnestness' with the ending -an"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C207-faqat]
 <!-- hl-knowledge: introduces=[AR-LEX-C207-SABAB207-02]; assesses=[] -->
 
 **جدا** — *jiddan* — "very".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**جدا** (*jiddan*) is built on the native Arabic root *j-d-d*, "to be in earnest" (Lane). *Jiddan* is *jidd*, "earnestness", with the adverb ending *-an*: "in earnest", hence "very".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

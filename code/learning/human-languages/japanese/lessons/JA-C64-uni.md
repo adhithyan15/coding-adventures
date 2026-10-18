@@ -14,7 +14,8 @@ romanization: "uni"
 concept_tag: JA-WORLD64-UNI
 prerequisites: [JA-C64-kona, JA-C64-goma]
 sounds: []
-roots: []
+roots: [japanese-uni]
+etymology_hook: "uni: native; written 海胆, read as a whole; origin not settled"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C64-goma]
 <!-- hl-knowledge: introduces=[JA-LEX-C64-WORLD64-03]; assesses=[] -->
 
 **うに** — *uni* — "a sea urchin".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**うに** (*uni*) is a native word, inherited rather than borrowed. JMdict writes it with characters for "sea" and "gall", read as a whole, and marks it as usually written in kana. Its older origin is not settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "ʿaṣīr"
 concept_tag: AR-FOOD69-ASIR
 prerequisites: [AR-C68-basal, AR-C68-futur]
 sounds: []
-roots: []
+roots: [ʿ-ṣ-r]
+etymology_hook: "ʿaṣīr: built on the root ʿ-ṣ-r, 'to press, to squeeze' (Lane); ʿaṣīr is what is pressed out: juice"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C68-futur]
 <!-- hl-knowledge: introduces=[AR-LEX-C69-FOOD69-01]; assesses=[] -->
 
 **عصير** — *ʿaṣīr* — "juice".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**عصير** (*ʿaṣīr*) is built on the native Arabic root *ʿ-ṣ-r*, "to press, to squeeze" (Lane). *ʿAṣīr* is what is pressed out: juice.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

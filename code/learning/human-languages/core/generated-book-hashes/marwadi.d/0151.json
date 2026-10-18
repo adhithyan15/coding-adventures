@@ -1,0 +1,12 @@
+{
+  "language": "marwadi",
+  "chapter": 151,
+  "sourceHash": "fnv1a64:f55741a1fc4a833c",
+  "lessonIds": [
+    "MW-C151-ar-together",
+    "MW-C151-ar-choice",
+    "MW-C151-pan-contrast",
+    "MW-C151-kyunkai-reason"
+  ],
+  "tex": "marwadi/book/chapters/ch151-and-or-but-and-one-reason.tex"
+}

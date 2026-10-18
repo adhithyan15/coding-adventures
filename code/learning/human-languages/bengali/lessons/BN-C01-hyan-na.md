@@ -11,7 +11,8 @@ gloss: yes / no (hyã / nā)
 concept_tag: RESPONSE-YESNO
 prerequisites: [BN-C01-dhonnobad]
 sounds: [ho, y-phola, chandrabindu-nasal]
-roots: [na-negative]
+roots: [na-negative, sanskrit-am-yes]
+etymology_hook: "hyã ← Sanskrit ām 'yes', with an h- added (CDIAL 1235); nā ← Sanskrit na 'not' (CDIAL 6906)"
 duration:
   max_seconds: 240
 requires:
@@ -51,6 +52,8 @@ negative **na-** — the same Proto-Indo-European *ne* behind English **no**,
 **not**, **none**, Latin *nōn*, and Hindi *nahīṇ*. Bengali kept it at its
 shortest, bare *nā*: the family resemblance to English *no* sits right on the
 surface.
+
+CDIAL lists the Bengali word for "yes" under Sanskrit *ām*, "yes", with an *h-* added either for emphasis or from the verb "to be" (CDIAL 1235); *nā* is Sanskrit *na*, "not" (CDIAL 6906).
 
 ## Why it's said this way
 <!-- hl-knowledge: introduces=[]; assesses=[BN-CONCEPT-C01-DHONNOBAD-01, BN-CONCEPT-C01-HYANNA-01] -->

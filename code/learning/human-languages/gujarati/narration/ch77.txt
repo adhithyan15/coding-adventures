@@ -12,6 +12,9 @@ Before the new one: say the Gujarati for quickly, then the Gujarati for again.
 You'll want to know: હંમેશા.
 હંમેશા (hammeśā) — "always".
 
+The word, taken apart.
+હંમેશા (hammeśā) is a loan, usually traced to Persian hamēsha, "always".
+
 What you've built.
 One more word for always, sometimes, now, later.
 
@@ -40,6 +43,9 @@ Before the new one: say the Gujarati for again, then the Gujarati for always.
 
 You'll want to know: ક્યારેક.
 ક્યારેક (kyārek) — "sometimes". Built on ક્યારે, when.
+
+The word, taken apart.
+ક્યારેક (kyārek) is kyāre, "when", with ek, "one". CDIAL has no entry for kyāre, so beyond its question stem its history is not settled.
 
 What you've built.
 One more word for always, sometimes, now, later.
@@ -70,6 +76,9 @@ Before the new one: say the Gujarati for always, then the Gujarati for sometimes
 You'll want to know: હવે.
 હવે (have) — "now, from now on".
 
+The word, taken apart.
+CDIAL lists Old Gujarati hava, "now", the older form of હવે (have), under Sanskrit evam eva, "exactly so", crossed with the pronoun stem a- (CDIAL 2528).
+
 What you've built.
 One more word for always, sometimes, now, later.
 
@@ -99,6 +108,9 @@ Before the new one: say the Gujarati for sometimes, then the Gujarati for now.
 You'll want to know: પછી.
 પછી (pachī) — "later, after".
 
+The word, taken apart.
+પછી (pachī) is a tadbhava. CDIAL lists it under paśca, "hinder part", a form drawn from Sanskrit paścāt, "behind, afterward" (CDIAL 7990).
+
 What you've built.
 One more word for always, sometimes, now, later.
 
@@ -127,6 +139,9 @@ Before the new one: say the Gujarati for now, then the Gujarati for later.
 
 You'll want to know: પહેલાં.
 પહેલાં (pahelā̃) — "before, earlier".
+
+The word, taken apart.
+પહેલાં (pahelā̃) (pahelāṁ) is a form of pahelũ, "first", which CDIAL lists under prathilla, a variant of a reconstructed prathila, "first", built on Sanskrit prathama (CDIAL 8652).
 
 What you've built.
 One more word for always, sometimes, now, later.

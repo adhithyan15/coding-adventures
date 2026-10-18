@@ -14,7 +14,8 @@ romanization: "moṭh"
 concept_tag: MW-THINGS133-MOTH
 prerequisites: [MW-C133-chana, MW-C133-mug]
 sounds: []
-roots: []
+roots: [sanskrit-mukushtha]
+etymology_hook: "moṭh ← Sanskrit mukuṣṭha 'a kind of bean', a tadbhava (CDIAL 10148, Hindi row)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C133-mug]
 <!-- hl-knowledge: introduces=[MW-LEX-C133-THINGS133-03]; assesses=[] -->
 
 **मोठ** — *moṭh* — "moth beans".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**मोठ** (*moṭh*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *mukuṣṭha*, "a kind of bean". CDIAL gives no Marwari form in this entry (CDIAL 10148); the match is through Hindi *moṭh*. The Sanskrit word has many variant spellings in the old word-lists.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

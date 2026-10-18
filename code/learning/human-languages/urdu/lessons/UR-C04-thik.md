@@ -11,8 +11,8 @@ gloss: fine, well, correct
 concept_tag: WORD-WELL
 prerequisites: [UR-C04-main-hun, UR-C03-aap-tum-tu, UR-C03-kya, UR-C03-aap-tum-tu-more, UR-C04-main-hun-more]
 sounds: [rtl, retroflex-aspirated-th, long-i]
-roots: [shared-hindustani-thik]
-etymology_hook: Thik is shared everyday Hindustani vocabulary; Urdu writes it ٹھیک, while Hindi writes the very same word in its own script.
+roots: [shared-hindustani-thik, indo-aryan-thikka]
+etymology_hook: "ṭhīk ← *ṭhīkka 'firm, right', which CDIAL derives, probably, from sthita 'standing' (CDIAL 5503)"
 duration:
   max_seconds: 220
 requires:
@@ -58,6 +58,8 @@ grammar is closely shared; their scripts make different literary histories
 visible. This Urdu lesson leaves the Hindi side romanized: mixed-language
 practice may show both scripts only after each form has been learned in its own
 right.
+
+Its history is inherited: CDIAL lists **ṭhīk**, “firm, correct”, under a reconstructed *\*ṭhīkka*, “firm, right”, which it derives, probably, from Sanskrit *sthita*, “standing” (CDIAL 5503).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[UR-LEX-THIK, UR-SCRIPT-THIK, UR-CROSSLINGUAL-THIK, UR-LEX-AAP-TUM-TU, UR-SCRIPT-AAP-TUM-TU, UR-PRAGMATICS-YOU-REGISTER, UR-ETYMON-TUM-THOU, UR-LEX-KYA, UR-SCRIPT-KYA, UR-ETYMON-KYA-QUESTION-FAMILY] -->

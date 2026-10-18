@@ -1,7 +1,7 @@
 {
   "language": "kannada",
   "chapter": 34,
-  "sourceHash": "fnv1a64:2c4f5bb1639015c5",
+  "sourceHash": "fnv1a64:bffc64371a32f75c",
   "lessonIds": [
     "KA-C34-tegeduko",
     "KA-C34-keelu",
@@ -12,7 +12,7 @@
   "drivablePrefix": 4,
   "text": "kannada/narration/ch34.txt",
   "json": "kannada/narration/ch34.json",
-  "textHash": "fnv1a64:4ae01157cb33786f",
-  "jsonHash": "fnv1a64:babd52b30c6551fa",
+  "textHash": "fnv1a64:aeec649b85db141e",
+  "jsonHash": "fnv1a64:486db0f5324bb646",
   "findings": []
 }

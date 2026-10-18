@@ -14,7 +14,8 @@ romanization: "rândan"
 concept_tag: FA-VERB-RANDAN
 prerequisites: [FA-C134-buyidan, FA-C134-kandan]
 sounds: []
-roots: []
+roots: [persian-randan]
+etymology_hook: "rândan: inherited, usually traced to Middle Persian rāndan"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C134-kandan]
 <!-- hl-knowledge: introduces=[FA-LEX-C135-ACT135-01]; assesses=[] -->
 
 **راندن** — *rândan* — "to drive".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*rândan* is a native Persian word, inherited rather than borrowed; it is usually traced to Middle Persian *rāndan*, "to drive".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

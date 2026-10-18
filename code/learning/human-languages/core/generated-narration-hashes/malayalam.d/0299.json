@@ -1,7 +1,7 @@
 {
   "language": "malayalam",
   "chapter": 299,
-  "sourceHash": "fnv1a64:9c732e79f5c96c64",
+  "sourceHash": "fnv1a64:b5b51c8dcb983f75",
   "lessonIds": [
     "ML-C299-phaktari",
     "ML-C299-sarkkar",
@@ -14,6 +14,6 @@
   "text": "malayalam/narration/ch299.txt",
   "json": "malayalam/narration/ch299.json",
   "textHash": "fnv1a64:de94703e57f14c33",
-  "jsonHash": "fnv1a64:ea4e6f7e959d7a2b",
+  "jsonHash": "fnv1a64:4b12c0b9a70fcff2",
   "findings": []
 }

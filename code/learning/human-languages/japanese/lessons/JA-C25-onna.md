@@ -14,7 +14,8 @@ romanization: "onna"
 concept_tag: JA-FAMILY25-ONNA
 prerequisites: [JA-C25-otona, JA-C25-otoko]
 sounds: []
-roots: []
+roots: [japanese-onna]
+etymology_hook: "onna: native Japanese, inherited, not borrowed; kanji 女 attached later as kun'yomi"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C25-otoko]
 <!-- hl-knowledge: introduces=[JA-LEX-C25-FAMILY25-04]; assesses=[] -->
 
 **おんな** — *onna* — "a woman".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**おんな** (*onna*) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

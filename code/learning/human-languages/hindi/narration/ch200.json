@@ -4,7 +4,7 @@
   "chapter": 200,
   "title": "Skin, A state, A capital city, A border, An island",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:616c2a530f08087f",
+  "sourceHash": "fnv1a64:35265c21728b7382",
   "lessons": [
     {
       "id": "HI-C200-tvaca",
@@ -287,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e842dcc87690e96d",
+      "sourceHash": "fnv1a64:b97dcf2e6b214ea5",
       "notice": null,
       "blocks": [
         {

@@ -14,7 +14,8 @@ romanization: "majâni"
 concept_tag: FA-SEFAT235-MAJANI
 prerequisites: [FA-C235-mojud, FA-C235-kafi]
 sounds: []
-roots: []
+roots: [arabic-majjani]
+etymology_hook: "majâni ← Arabic majjānī 'free, without payment', root m-j-n (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C235-kafi]
 <!-- hl-knowledge: introduces=[FA-LEX-C235-SEFAT235-04]; assesses=[] -->
 
 **مجانی** — *majâni* — "free of charge".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*majâni* is borrowed from Arabic *majjānī*, "free, without payment". Its Arabic root is *m-j-n* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

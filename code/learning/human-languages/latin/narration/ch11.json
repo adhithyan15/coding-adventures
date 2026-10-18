@@ -4,7 +4,7 @@
   "chapter": 11,
   "title": "Months",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:b82b119102d6b430",
+  "sourceHash": "fnv1a64:1d1dc4d6cd1181f5",
   "lessons": [
     {
       "id": "LA-C11-menses",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:314bab5d80af52a8",
+      "sourceHash": "fnv1a64:c6575117d8a976b8",
       "notice": null,
       "blocks": [
         {
@@ -66,6 +66,10 @@
                 "Latin: November. who / what: \"the ninth\" (novem).",
                 "Latin: December. who / what: \"the tenth\" (decem)."
               ]
+            },
+            {
+              "kind": "speech",
+              "text": "Each name comes from the god, festival or number beside it; Aprīlis is the least certain."
             }
           ]
         },
@@ -80,7 +84,7 @@
             },
             {
               "kind": "speech",
-              "text": "Quīntīlis (\"the fifth\") and Sextīlis (\"the sixth\") already existed as ordinary, plainly-numbered months, right alongside September through December. Long after Julius Caesar's death, the Senate simply renamed Quīntīlis to Iūlius in his honor; decades later, Augustus received the same honor, and Sextīlis became Augustus. No months were created — two old, numbered ones just got new names, and Latin's fifth and sixth months quietly disappeared from view, hiding inside julio/juillet and agosto/août in every daughter language."
+              "text": "Quīntīlis (\"the fifth\") and Sextīlis (\"the sixth\") already existed as ordinary, plainly-numbered months, right alongside September through December. In 44 BC, the year Julius Caesar was killed, Rome renamed Quīntīlis to Iūlius in his honor; decades later, Augustus received the same honor, and Sextīlis became Augustus. No months were created — two old, numbered ones got new names, and Latin's fifth and sixth months quietly disappeared from view, hiding inside julio/juillet and agosto/août in every daughter language."
             }
           ]
         },

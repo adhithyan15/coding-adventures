@@ -14,7 +14,8 @@ romanization: "osanai"
 concept_tag: JA-QUAL125-OSANAI
 prerequisites: [JA-C125-hidoi, JA-C125-wakai]
 sounds: []
-roots: []
+roots: [japanese-osanai]
+etymology_hook: "osanai: native Japanese, inherited, not borrowed; kanji 幼い attached later as kun'yomi"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C125-wakai]
 <!-- hl-knowledge: introduces=[JA-LEX-C125-QUAL125-04]; assesses=[] -->
 
 **おさない** — *osanai* — "very young".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**おさない** (*osanai*) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

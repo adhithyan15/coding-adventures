@@ -14,7 +14,8 @@ romanization: "tāḍayati"
 concept_tag: SA-VERB-TADAYATI
 prerequisites: [SA-C174-corayati, SA-C174-bhaksayati]
 sounds: []
-roots: []
+roots: [sanskrit-tadayati]
+etymology_hook: "tāḍayati 'beats, strikes' ← √taḍ 'beat' (CDIAL 5752); Punjabi tāṛnā 'to slap'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C174-bhaksayati]
 <!-- hl-knowledge: introduces=[SA-LEX-C174-ACT174-03]; assesses=[] -->
 
 **ताडयति** — *tāḍayati* — "strikes, beats".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*tāḍayati* comes from the root √taḍ "beat, strike" (CDIAL 5752), found from the Nirukta on. It lives on as Punjabi *tāṛnā* "to slap" and Bengali *tāṛāna* "to drive away" (CDIAL 5752).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

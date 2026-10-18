@@ -1,7 +1,7 @@
 {
   "language": "hindi",
   "chapter": 141,
-  "sourceHash": "fnv1a64:3f942cbac6297e00",
+  "sourceHash": "fnv1a64:5c21117a9521df41",
   "lessonIds": [
     "HI-C141-makkhan",
     "HI-C141-panir",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "hindi/narration/ch141.txt",
   "json": "hindi/narration/ch141.json",
-  "textHash": "fnv1a64:a0b2d370bd31d775",
-  "jsonHash": "fnv1a64:db596df7e3cbc28f",
+  "textHash": "fnv1a64:b12fa7e1aac59dac",
+  "jsonHash": "fnv1a64:1fdbe013fcb26832",
   "findings": []
 }

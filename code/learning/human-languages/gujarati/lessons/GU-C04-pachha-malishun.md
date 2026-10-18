@@ -11,7 +11,8 @@ gloss: we'll meet again (goodbye)
 concept_tag: FAREWELL-LATER
 prerequisites: [GU-C04-pachha, GU-C04-malishun, GU-C01-aavjo]
 sounds: []
-roots: []
+roots: [indo-aryan-pashca, mil-meet]
+etymology_hook: "pāchhā ← *paśca 'hinder part' (CDIAL 7990); maḷīshũ from maḷvũ ← milati 'meets' (CDIAL 10133)"
 duration:
   max_seconds: 180
 requires:
@@ -46,6 +47,11 @@ meet") — "**we'll meet again**." Where the earlier **આવજો** (*āvjo*) 
 warm "come again," *pāchhā maḷīshũ* spells out the promise: we will meet once
 more. It is the same "promise of return" the whole subcontinent prefers (Hindi
 *phir milenge*, Bengali *āshi*, Tamil *pōy varugiṟēṉ*).
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+Both words are inherited. CDIAL lists *pāchhā* under *\*paśca*, "hinder part" (CDIAL 7990), and *maḷvũ* under Sanskrit *milati*, "meets" (CDIAL 10133).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[GU-CONCEPT-C01-AAVJO-01, GU-CONCEPT-C04-MALISHUN-01, GU-CONCEPT-C04-PACHHA-01, GU-CONCEPT-C04-PACHHAMALISHUN-01] -->

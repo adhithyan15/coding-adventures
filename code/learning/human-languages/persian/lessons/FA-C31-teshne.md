@@ -14,7 +14,8 @@ romanization: "teshne"
 concept_tag: FA-HEALTH31-TESHNE
 prerequisites: [FA-C31-dard, FA-C31-daru]
 sounds: []
-roots: []
+roots: [persian-teshne]
+etymology_hook: "teshne ← Middle Persian tišnag (EtymDB); inherited, native Iranian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C31-daru]
 <!-- hl-knowledge: introduces=[FA-LEX-C31-HEALTH31-03]; assesses=[] -->
 
 **تشنه** — *teshne* — "thirsty".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*teshne* is a native Persian word, inherited rather than borrowed: it continues Middle Persian *tišnag*, "thirsty" (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

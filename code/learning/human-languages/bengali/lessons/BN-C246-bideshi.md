@@ -14,7 +14,8 @@ romanization: "bideshi"
 concept_tag: BN-GUN246-BIDESHI
 prerequisites: [BN-C245-bekari, BN-C245-laibreri]
 sounds: []
-roots: []
+roots: [sanskrit-videsha]
+etymology_hook: "bideshi: Sanskrit videśa 'foreign land', a tatsama, + -i"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C245-laibreri]
 <!-- hl-knowledge: introduces=[BN-LEX-C246-GUN246-01]; assesses=[] -->
 
 **বিদেশি** — *bideshi* — "foreign".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**বিদেশি** (*bideshi*) is Sanskrit *videśa*, "a foreign land", taken over whole, + the ending *-i*, "of".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

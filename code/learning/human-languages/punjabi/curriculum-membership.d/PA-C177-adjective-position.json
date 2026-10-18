@@ -1,0 +1,11 @@
+{
+  "id": "PA-C177-adjective-position",
+  "pathSegment": "PA-PATH-177-NOUN-PHRASE-AGREEMENT",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PA-EXT-177-NOUN-PHRASE-AGREEMENT",
+      "order": 1
+    }
+  ]
+}

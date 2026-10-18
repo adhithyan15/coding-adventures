@@ -14,7 +14,8 @@ romanization: "dampâyi"
 concept_tag: FA-THINGS120-DAMPAYI
 prerequisites: [FA-C119-keravat, FA-C120-kapshan]
 sounds: []
-roots: []
+roots: [old-persian-pad]
+etymology_hook: "dampâyi: built on Persian pâ 'foot' (inherited)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C120-kapshan]
 <!-- hl-knowledge: introduces=[FA-LEX-C120-THINGS120-02]; assesses=[] -->
 
 **دمپایی** — *dampâyi* — "slippers".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*dampâyi* is built on *pâ*, "foot", an inherited word (Old Persian *pād-*), with *dam*, "beside", and the ending *-i*: the thing at the foot.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

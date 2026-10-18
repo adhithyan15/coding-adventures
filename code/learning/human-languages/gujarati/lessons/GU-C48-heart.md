@@ -14,7 +14,8 @@ romanization: "hṛday"
 concept_tag: GU-BODY3-HEART
 prerequisites: [GU-C47-tongue, GU-C48-knee]
 sounds: []
-roots: []
+roots: [sanskrit-hrdaya]
+etymology_hook: "hṛday ← Sanskrit hṛdaya 'heart', a tatsama (CDIAL 14152)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C48-knee]
 <!-- hl-knowledge: introduces=[GU-LEX-C48-BODY3-02]; assesses=[] -->
 
 **હૃદય** (*hṛday*) — "the heart".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**હૃદય** (*hṛday*) is Sanskrit *hṛdaya*, "heart", taken over whole as a learned loan, a tatsama (CDIAL 14152). CDIAL lists the inherited Gujarati form as *haiyũ*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

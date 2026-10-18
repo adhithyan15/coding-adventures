@@ -1,7 +1,7 @@
 {
   "language": "marathi",
   "chapter": 34,
-  "sourceHash": "fnv1a64:1684a53318b40142",
+  "sourceHash": "fnv1a64:819e11389e303d2d",
   "lessonIds": [
     "MR-C34-kaa-why",
     "MR-C34-kaaran",
@@ -13,6 +13,6 @@
   "text": "marathi/narration/ch34.txt",
   "json": "marathi/narration/ch34.json",
   "textHash": "fnv1a64:811b8a1f4f87bde1",
-  "jsonHash": "fnv1a64:1250750b9d359292",
+  "jsonHash": "fnv1a64:0813fd5cd3261902",
   "findings": []
 }

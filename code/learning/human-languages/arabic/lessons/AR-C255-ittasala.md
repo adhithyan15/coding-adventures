@@ -14,7 +14,8 @@ romanization: "ittaṣala"
 concept_tag: AR-VERB-ITTASALA
 prerequisites: [AR-C255-taakhkhara, AR-C255-zara]
 sounds: []
-roots: []
+roots: [w-ṣ-l]
+etymology_hook: "ittaṣala: built on the root w-ṣ-l, 'to arrive, to join' (Lane); ittaṣala is Form VIII, 'to join oneself to', to contact"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C255-zara]
 <!-- hl-knowledge: introduces=[AR-LEX-C255-ACT255-03]; assesses=[] -->
 
 **اتصل** — *ittaṣala* — "to phone, to call".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**اتصل** (*ittaṣala*) is built on the native Arabic root *w-ṣ-l*, "to arrive, to join" (Lane). *Ittaṣala* is Form VIII, "to join oneself to", to contact.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

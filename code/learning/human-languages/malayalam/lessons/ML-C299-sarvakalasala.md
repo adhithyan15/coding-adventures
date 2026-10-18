@@ -14,7 +14,7 @@ romanization: "sarvakalāśāla"
 concept_tag: ML-JOLI299-SARVAKALASALA
 prerequisites: [ML-C299-niyamam, ML-C299-koleju]
 sounds: []
-roots: [sanskrit-kala, sanskrit-shala]
+roots: [sanskrit-kala-art, sanskrit-shala]
 etymology_hook: "sarvakalāśāla: Sanskrit sarva 'all' + kalā 'art' (CDIAL 2927) + śālā 'hall' (CDIAL 12414)"
 duration:
   max_seconds: 200

@@ -14,7 +14,8 @@ romanization: "kalame"
 concept_tag: FA-SCHOOL50-KALAME
 prerequisites: [FA-C50-dars, FA-C50-javab]
 sounds: []
-roots: []
+roots: [arabic-kalima]
+etymology_hook: "kalame ← Arabic kalima 'word', root k-l-m (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C50-javab]
 <!-- hl-knowledge: introduces=[FA-LEX-C50-SCHOOL50-04]; assesses=[] -->
 
 **کلمه** — *kalame* — "a word".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*kalame* is borrowed from Arabic *kalima*, "word". Its Arabic root is *k-l-m* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

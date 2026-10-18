@@ -14,7 +14,8 @@ romanization: "śabdaḥ"
 concept_tag: SA-SOUND-SHABDA
 prerequisites: [SA-C49-oh, SA-C48-lion, SA-C49-then]
 sounds: []
-roots: []
+roots: [sanskrit-shabda]
+etymology_hook: "śabda 'sound, word': MW and CDIAL 12298 suggest √śap, both with a question; origin not settled"
 duration:
   max_seconds: 210
 requires:
@@ -47,6 +48,13 @@ reviews_of: [SA-C49-oh]
 This one has been handed to you three times without ever being named. *kāla-śabdāḥ* were the time ones; *ka-śabdāḥ* were the question ones; *saṅkhyā-śabdāḥ* were the number ones. The *-śabdāḥ* ending each of those three names is this very word, said of more than one thing at a time.
 
 So you have been reading it since long before this page. Now the piece itself is yours. Ends in **-अः**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*Śabda* is already in the Śatapatha Brāhmaṇa. MW suggests a link with the root
+√śap, and CDIAL 12298 marks the same root with a question mark, so its origin is
+not settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

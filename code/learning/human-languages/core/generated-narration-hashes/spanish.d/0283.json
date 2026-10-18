@@ -1,7 +1,7 @@
 {
   "language": "spanish",
   "chapter": 283,
-  "sourceHash": "fnv1a64:6f7070ea1ca9e21c",
+  "sourceHash": "fnv1a64:5c1588246876a3cf",
   "lessonIds": [
     "ES-C283-disculpe",
     "ES-C283-permiso",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "spanish/narration/ch283.txt",
   "json": "spanish/narration/ch283.json",
-  "textHash": "fnv1a64:efb576c827b9834a",
-  "jsonHash": "fnv1a64:b120e7805a9ba815",
+  "textHash": "fnv1a64:c87ee1b6c137a33f",
+  "jsonHash": "fnv1a64:1644b8ec0ef8ca6c",
   "findings": []
 }

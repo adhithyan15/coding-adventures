@@ -14,7 +14,8 @@ romanization: "fālūdā"
 concept_tag: UR-CHIZ175-FALUDA
 prerequisites: [UR-C174-anjir, UR-C175-ras-malai]
 sounds: []
-roots: []
+roots: [persian-paluda]
+etymology_hook: "fālūdā: usually traced to Persian pālūda 'strained, refined'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C175-ras-malai]
 <!-- hl-knowledge: introduces=[UR-LEX-C175-CHIZ175-02]; assesses=[] -->
 
 **فالودہ** — *fālūdā* — "falooda".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**فالودہ** (*fālūdā*) is usually traced to Persian *pālūda*, also *fālūda*, "strained, refined", from *pālūdan*, "to strain".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

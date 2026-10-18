@@ -14,7 +14,8 @@ romanization: "vā̃dro"
 concept_tag: GU-ANIMALS2-MONKEY
 prerequisites: [GU-C68-lion, GU-C68-elephant]
 sounds: []
-roots: []
+roots: [sanskrit-vanara]
+etymology_hook: "vāṁdro ← Sanskrit vānara 'monkey', a tadbhava (CDIAL 11515)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C68-elephant]
 <!-- hl-knowledge: introduces=[GU-LEX-C68-ANIMALS2-04]; assesses=[] -->
 
 **વાંદરો** (*vā̃dro*) — "a monkey".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**વાંદરો** (*vāṁdro*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *vānara*, "monkey" (CDIAL 11515).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

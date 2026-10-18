@@ -14,7 +14,8 @@ romanization: "kīmtī"
 concept_tag: PA-QUAL140-KIMTI
 prerequisites: [PA-C139-ghumiar, PA-C140-cupp]
 sounds: []
-roots: []
+roots: [arabic-qima]
+etymology_hook: "kīmtī: qīmat 'price', from Arabic qīma 'value', root q-w-m (Lane), through Persian, + -ī"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C140-cupp]
 <!-- hl-knowledge: introduces=[PA-LEX-C140-QUAL140-02]; assesses=[] -->
 
 **ਕੀਮਤੀ** — *kīmtī* — "valuable".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਕੀਮਤੀ** (*kīmtī*) is built on *kīmat*, "price", a loan from Arabic *qīma*, "value", which reached Punjabi through Persian; its Arabic root is *q-w-m* (Lane). The ending *-ī* makes it "having value".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

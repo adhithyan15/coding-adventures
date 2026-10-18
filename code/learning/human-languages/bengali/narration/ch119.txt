@@ -12,6 +12,9 @@ Before the new one: say the Bengali for puffed rice, then the Bengali for coffee
 You'll want to know: শরবত.
 শরবত — sôrbôt — "a sherbet".
 
+The word, taken apart.
+শরবত (sôrbôt) is a loan from Arabic sharbat, "a drink", which reached Bengali through Persian. Its Arabic root is sh-r-b (Lane).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Bengali for coffee, then the Bengali for a sherbet.
 
 You'll want to know: হালুয়া.
 হালুয়া — hālua — "halwa".
+
+The word, taken apart.
+হালুয়া (hālua) is a loan from Arabic ḥalwā, "a sweetmeat", which reached Bengali through Persian. Its Arabic root is ḥ-l-w (Lane).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Bengali for a sherbet, then the Bengali for halwa.
 You'll want to know: বিস্কুট.
 বিস্কুট — biskut — "a biscuit".
 
+The word, taken apart.
+বিস্কুট (biskut) is a loan from English biscuit.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Bengali for halwa, then the Bengali for a biscuit.
 You'll want to know: ধুতি.
 ধুতি — dhuti — "a dhoti".
 
+The word, taken apart.
+ধুতি (dhuti) is a tadbhava, a word inherited and reshaped by sound change. It comes from dhotta, "cloth", a form CDIAL reconstructs from its descendants (CDIAL 6881).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Bengali for a biscuit, then the Bengali for a dhoti.
 
 You'll want to know: পাঞ্জাবি.
 পাঞ্জাবি — pānjābi — "a long shirt".
+
+The word, taken apart.
+পাঞ্জাবি (pānjābi) is Pānjāb, the Punjab, with the ending -i: the shirt is named after the region, whose name is usually traced to Persian panj āb, "five waters".
 
 What you've built.
 One more word for this chapter.

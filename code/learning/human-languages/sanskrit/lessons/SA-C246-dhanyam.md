@@ -14,7 +14,8 @@ romanization: "dhānyam"
 concept_tag: SA-THG246-DHANYAM
 prerequisites: [SA-C245-ela, SA-C246-lajah]
 sounds: []
-roots: []
+roots: [sanskrit-dhanya-grain]
+etymology_hook: "dhānya 'grain' ← dhānā 'grain' (CDIAL 6778); Hindi dhān 'unhusked rice'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C246-lajah]
 <!-- hl-knowledge: introduces=[SA-LEX-C246-THG246-02]; assesses=[] -->
 
 **धान्यम्** — *dhānyam* — "grain".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*dhānya* means "of grain", and then "grain, corn" itself; it is built on *dhānā*, "grain" (CDIAL 6778). It lives on as Hindi *dhān*, "growing or unhusked rice". It is a different word from *dhanya*, "fortunate", in *dhanyavādaḥ*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

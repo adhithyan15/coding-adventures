@@ -14,7 +14,8 @@ romanization: "dvīpaḥ"
 concept_tag: SA-WATER-ISLAND
 prerequisites: [SA-C82-well, SA-C82-pond]
 sounds: []
-roots: []
+roots: [sanskrit-dvipa]
+etymology_hook: "dvīpa 'island' ← dvi 'two' + ap 'water': land with water on two sides (MW; CDIAL 6691)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,12 @@ reviews_of: [SA-C82-pond]
 <!-- hl-knowledge: introduces=[SA-LEX-C82-WATER-04]; assesses=[] -->
 
 **द्वीपः** (*dvīpaḥ*) — "an island", land with water on both sides: **द्वि**, "two".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*Dvīpa* is built from *dvi*, "two", and *ap*, "water": land with water on both
+sides (MW, CDIAL 6691).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

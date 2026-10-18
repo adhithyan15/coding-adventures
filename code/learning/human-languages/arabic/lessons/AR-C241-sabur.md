@@ -14,7 +14,8 @@ romanization: "ṣabūr"
 concept_tag: AR-SIFA241-SABUR
 prerequisites: [AR-C240-mumtaz, AR-C241-muhadhdhab]
 sounds: []
-roots: []
+roots: [ṣ-b-r]
+etymology_hook: "ṣabūr: built on the root ṣ-b-r, 'to bind' (Lane); ṣabūr is the faʿūl adjective, 'patient'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C241-muhadhdhab]
 <!-- hl-knowledge: introduces=[AR-LEX-C241-SIFA241-02]; assesses=[] -->
 
 **صبور** — *ṣabūr* — "patient".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**صبور** (*ṣabūr*) is built on the native Arabic root *ṣ-b-r*, "to bind; to be patient" (Lane). *Ṣabūr* is the *faʿūl* adjective, "patient".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

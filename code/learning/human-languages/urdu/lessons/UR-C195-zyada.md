@@ -14,7 +14,8 @@ romanization: "zyādā"
 concept_tag: UR-SIFAT195-ZYADA
 prerequisites: [UR-C195-asmani, UR-C195-achanak]
 sounds: []
-roots: []
+roots: [arabic-ziyada]
+etymology_hook: "zyādā ← Arabic ziyāda 'increase', through Persian (Lane, root z-y-d)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C195-achanak]
 <!-- hl-knowledge: introduces=[UR-LEX-C195-SIFAT195-03]; assesses=[] -->
 
 **زیادہ** — *zyādā* — "more, too much".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**زیادہ** (*zyādā*) is a loan from Arabic *ziyāda*, "increase", which reached Urdu through Persian. Its Arabic root is *z-y-d* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

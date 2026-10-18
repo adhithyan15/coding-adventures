@@ -5,7 +5,7 @@ spine_node: SPINE-RESPOND-BASIC
 sequence: 266
 chapter: 7
 type: word
-headword: no
+headword: 'no'
 gloss: no / not
 concept_tag: RESPONSE-NO
 prerequisites: [ES-C19-si]

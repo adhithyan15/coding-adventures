@@ -6,7 +6,7 @@ sequence: 4730
 chapter: 93
 type: review
 headword: (two letters)
-gloss: second pass: the same two letters, from the word back to the letter
+gloss: 'second pass: the same two letters, from the word back to the letter'
 romanization: "dve bukvy"
 concept_tag: RU-LETTERS-FROM-WORDS
 prerequisites: [RU-W93-e, RU-W93-shcha]

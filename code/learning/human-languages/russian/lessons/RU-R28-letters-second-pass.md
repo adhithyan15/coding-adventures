@@ -6,7 +6,7 @@ sequence: 1390
 chapter: 28
 type: review
 headword: (one letter)
-gloss: second pass: the same one letter, from the word back to the letter
+gloss: 'second pass: the same one letter, from the word back to the letter'
 romanization: "odna bukva"
 concept_tag: RU-LETTERS-FROM-WORDS
 prerequisites: [RU-W28-ya-small]

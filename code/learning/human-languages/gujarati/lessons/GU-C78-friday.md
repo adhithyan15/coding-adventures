@@ -14,7 +14,8 @@ romanization: "śukravār"
 concept_tag: GU-WEEK1-FRIDAY
 prerequisites: [GU-C78-wednesday, GU-C78-thursday]
 sounds: []
-roots: []
+roots: [sanskrit-shukra, sanskrit-vara-day]
+etymology_hook: "śukravār: Sanskrit śukra 'Venus' + vāra 'day of the week' (CDIAL 12506, 11547), a tatsama compound"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C78-thursday]
 <!-- hl-knowledge: introduces=[GU-LEX-C78-WEEK1-05]; assesses=[] -->
 
 **શુક્રવાર** (*śukravār*) — "Friday".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**શુક્રવાર** (*śukravār*) is a Sanskrit compound, a tatsama: *śukra*, "the planet Venus", and *vāra*, "day of the week" (CDIAL 12506, 11547).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

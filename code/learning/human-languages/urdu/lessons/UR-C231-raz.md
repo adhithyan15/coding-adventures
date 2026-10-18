@@ -14,7 +14,8 @@ romanization: "rāz"
 concept_tag: UR-CHIZ231-RAZ
 prerequisites: [UR-C231-rae, UR-C231-jhut]
 sounds: []
-roots: []
+roots: [persian-raz]
+etymology_hook: "rāz: usually traced to Persian rāz 'secret'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C231-jhut]
 <!-- hl-knowledge: introduces=[UR-LEX-C231-CHIZ231-03]; assesses=[] -->
 
 **راز** — *rāz* — "a secret".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**راز** (*rāz*) is a loan, usually traced to Persian *rāz*, "secret".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

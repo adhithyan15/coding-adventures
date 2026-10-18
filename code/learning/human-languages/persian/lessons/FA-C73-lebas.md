@@ -14,7 +14,8 @@ romanization: "lebâs"
 concept_tag: FA-TOWN73-LEBAS
 prerequisites: [FA-C73-forudgah, FA-C73-resturan]
 sounds: []
-roots: []
+roots: [arabic-libas]
+etymology_hook: "lebâs ← Arabic libās 'clothing', root l-b-s (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C73-resturan]
 <!-- hl-knowledge: introduces=[FA-LEX-C73-TOWN73-03]; assesses=[] -->
 
 **لباس** — *lebâs* — "clothes".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*lebâs* is borrowed from Arabic *libās*, "clothing". Its Arabic root is *l-b-s* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

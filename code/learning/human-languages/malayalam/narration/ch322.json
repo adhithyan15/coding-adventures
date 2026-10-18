@@ -4,7 +4,7 @@
   "chapter": 322,
   "title": "Biryani, Chapati, Parotta, Tapioca, Chutney",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:c286b38075601e4b",
+  "sourceHash": "fnv1a64:42f6daa0ff0c8477",
   "lessons": [
     {
       "id": "ML-C322-biriyani",
@@ -287,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0ac758c60041a248",
+      "sourceHash": "fnv1a64:786bc1446380b184",
       "notice": null,
       "blocks": [
         {
@@ -325,7 +325,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "പൊറോട്ട (poṟōṭṭa) is the Hindustani parāṭhā, a layered flatbread, reshaped in the mouth."
+              "text": "പൊറോട്ട (poṟōṭṭa) comes from Hindustani parāṭhā, a layered flatbread, reshaped in the mouth."
             }
           ]
         },

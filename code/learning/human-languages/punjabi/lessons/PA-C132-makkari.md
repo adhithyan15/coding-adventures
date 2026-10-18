@@ -14,7 +14,8 @@ romanization: "makkaṛī"
 concept_tag: PA-THINGS132-MAKKARI
 prerequisites: [PA-C132-madhumakkhi, PA-C132-titli]
 sounds: []
-roots: []
+roots: [sanskrit-markata-spider]
+etymology_hook: "makkaṛī ← Sanskrit markaṭa 'spider', a tadbhava (CDIAL 9883)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C132-titli]
 <!-- hl-knowledge: introduces=[PA-LEX-C132-THINGS132-04]; assesses=[] -->
 
 **ਮੱਕੜੀ** — *makkaṛī* — "a spider".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਮੱਕੜੀ** (*makkaṛī*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *markaṭa*, "spider" (CDIAL 9883).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "koumori"
 concept_tag: JA-THINGS117-KOUMORI
 prerequisites: [JA-C117-hotate, JA-C117-nomi]
 sounds: []
-roots: []
+roots: [japanese-koumori]
+etymology_hook: "kōmori: native; JMdict lists the older form kawahori"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C117-nomi]
 <!-- hl-knowledge: introduces=[JA-LEX-C117-THINGS117-03]; assesses=[] -->
 
 **こうもり** — *koumori* — "a bat".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**こうもり** (*kōmori*) is a native word, inherited rather than borrowed. JMdict lists an older form, *kawahori*, from which it wore down. Its older origin is not settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

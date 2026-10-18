@@ -4,7 +4,7 @@
   "chapter": 99,
   "title": "The Noun, And The Ending That Means Two Things",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:465af1a11b943f35",
+  "sourceHash": "fnv1a64:47072b09cf70d877",
   "lessons": [
     {
       "id": "HI-C91-bacche-plural",
@@ -556,7 +556,7 @@
       "modalityReasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:a141807457e298fe",
+      "sourceHash": "fnv1a64:8a66ec52c3c0b30c",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -631,7 +631,7 @@
             },
             {
               "kind": "speech",
-              "text": "आदमी is the Arabic loan ādamī, \"human\"."
+              "text": "आदमी is an Arabic word, ādamī, \"human\", borrowed through Persian."
             }
           ]
         },

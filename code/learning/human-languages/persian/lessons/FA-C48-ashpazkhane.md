@@ -14,7 +14,8 @@ romanization: "âshpazkhâne"
 concept_tag: FA-HOME48-ASHPAZKHANE
 prerequisites: [FA-C47-ghashogh, FA-C48-bottri]
 sounds: []
-roots: []
+roots: [persian-khana]
+etymology_hook: "âshpazkhâne: Persian âsh 'soup' + paz 'cook' + khâne 'house'; native"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C48-bottri]
 <!-- hl-knowledge: introduces=[FA-LEX-C48-HOME48-02]; assesses=[] -->
 
 **آشپزخانه** — *âshpazkhâne* — "a kitchen".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*âshpazkhâne* is built from three native pieces: *âsh*, "soup, cooked food", *-paz*, "cooking" (the present stem of *pokhtan*, "to cook"), and *khâne*, "house": the cook-house.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

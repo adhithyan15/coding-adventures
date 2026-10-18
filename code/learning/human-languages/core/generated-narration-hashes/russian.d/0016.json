@@ -1,7 +1,7 @@
 {
   "language": "russian",
   "chapter": 16,
-  "sourceHash": "fnv1a64:855ba0cfcd00f84f",
+  "sourceHash": "fnv1a64:761230424b997086",
   "lessonIds": [
     "RU-C16-i",
     "RU-C16-i-predlozheniya",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "russian/narration/ch16.txt",
   "json": "russian/narration/ch16.json",
-  "textHash": "fnv1a64:36008dcb0bfcc614",
-  "jsonHash": "fnv1a64:90b4de5209913434",
+  "textHash": "fnv1a64:0447d743bf4e7ec2",
+  "jsonHash": "fnv1a64:f2d17925594f998a",
   "findings": []
 }

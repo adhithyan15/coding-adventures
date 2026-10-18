@@ -14,7 +14,8 @@ romanization: "mukālama"
 concept_tag: AR-AMAL281-MUKALAMA
 prerequisites: [AR-C280-saydali, AR-C281-raqm]
 sounds: []
-roots: []
+roots: [k-l-m]
+etymology_hook: "mukālama: built on the root k-l-m, 'speech' (Lane); mukālama is the verbal noun of Form III, 'speaking with one another'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C281-raqm]
 <!-- hl-knowledge: introduces=[AR-LEX-C281-AMAL281-02]; assesses=[] -->
 
 **مكالمة** — *mukālama* — "a phone call".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**مكالمة** (*mukālama*) is built on the native Arabic root *k-l-m*, "speech; to speak to" (Lane). *Mukālama* is the verbal noun of Form III, "speaking with one another"; the phone call is a modern sense.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

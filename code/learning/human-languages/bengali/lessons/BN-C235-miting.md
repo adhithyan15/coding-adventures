@@ -14,7 +14,8 @@ romanization: "miṭing"
 concept_tag: BN-KAJ235-MITING
 prerequisites: [BN-C234-chehara, BN-C234-bbohar]
 sounds: []
-roots: []
+roots: [english-meeting]
+etymology_hook: "miṭing ← English meeting"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C234-bbohar]
 <!-- hl-knowledge: introduces=[BN-LEX-C235-KAJ235-01]; assesses=[] -->
 
 **মিটিং** — *miṭing* — "a meeting".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**মিটিং** (*miṭing*) is a loan from English *meeting*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

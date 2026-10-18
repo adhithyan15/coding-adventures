@@ -4,7 +4,7 @@
   "chapter": 298,
   "title": "Groceries, Packet, Salary, Wages, Worker",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:8ad148dc85bef4a2",
+  "sourceHash": "fnv1a64:462d3ca76acf9ff7",
   "lessons": [
     {
       "id": "ML-C298-palacarakku",
@@ -277,9 +277,9 @@
     {
       "id": "ML-C298-sambalam",
       "sequence": 13990,
-      "title": "ശമ്പളം (śambaḷaṁ) — a salary",
+      "title": "ശമ്പളം (śampaḷaṁ) — a salary",
       "headword": "ശമ്പളം",
-      "romanization": "śambaḷaṁ",
+      "romanization": "śampaḷaṁ",
       "gloss": "a salary",
       "script": "malayalam",
       "modality": "voice",
@@ -287,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:714c16db138429c6",
+      "sourceHash": "fnv1a64:bccfec8363ce699a",
       "notice": null,
       "blocks": [
         {
@@ -314,7 +314,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ശമ്പളം — śambaḷaṁ — \"a salary\"."
+              "text": "ശമ്പളം — śampaḷaṁ — \"a salary\"."
             }
           ]
         },
@@ -325,7 +325,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ശമ്പളം (śambaḷaṁ) from Sanskrit śambala, \"provisions for a journey\", reshaped as a tadbhava (its l became ḷ), with Malayalam's noun ending -ṁ (CDIAL 12315). Provisions for the road became regular pay."
+              "text": "ശമ്പളം (śampaḷaṁ) from Sanskrit śambala, \"provisions for a journey\", reshaped as a tadbhava (its l became ḷ), with Malayalam's noun ending -ṁ (CDIAL 12315). Provisions for the road became regular pay."
             }
           ]
         },
@@ -354,38 +354,38 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "śambaḷaṁ",
+              "instruction": "śampaḷaṁ",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: *śambaḷaṁ*]"
+              "source": "[YOU SAY: *śampaḷaṁ*]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "śambaḷaṁ, once more",
+              "instruction": "śampaḷaṁ, once more",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: *śambaḷaṁ*, once more]"
+              "source": "[YOU SAY: *śampaḷaṁ*, once more]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "say śambaḷaṁ",
+              "instruction": "say śampaḷaṁ",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: say *śambaḷaṁ*]"
+              "source": "[YOU SAY: say *śampaḷaṁ*]"
             },
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say the Malayalam for groceries, then the Malayalam for a packet, then say śambaḷaṁ again",
+              "instruction": "say the Malayalam for groceries, then the Malayalam for a packet, then say śampaḷaṁ again",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say the Malayalam for groceries, then the Malayalam for a packet, then say *śambaḷaṁ* again]"
+              "source": "[YOU RECALL: say the Malayalam for groceries, then the Malayalam for a packet, then say *śampaḷaṁ* again]"
             }
           ]
         },
@@ -402,7 +402,7 @@
             },
             {
               "kind": "speech",
-              "text": "What does ശമ്പളം (śambaḷaṁ) mean? (\"A salary\".) Say it once more."
+              "text": "What does ശമ്പളം (śampaḷaṁ) mean? (\"A salary\".) Say it once more."
             }
           ]
         }

@@ -14,7 +14,8 @@ romanization: "vartikā"
 concept_tag: SA-THINGS102-VARTIKA
 prerequisites: [SA-C102-camasah, SA-C102-culli]
 sounds: []
-roots: []
+roots: [sanskrit-varti]
+etymology_hook: "vartikā 'wick' ← varti 'wick' (√vṛt 'turn, roll'; CDIAL 11359); Hindi battī; 'candle' is modern"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C102-culli]
 <!-- hl-knowledge: introduces=[SA-LEX-C102-THINGS102-05]; assesses=[] -->
 
 **वर्तिका** — *vartikā* — "a candle, a wick".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*vartikā* is *varti* "wick" with the suffix *-kā*, from the root √vṛt "turn, roll" (CDIAL 11359): a wick is a rolled strip. It lives on as Hindi *battī* "wick, lamp" (CDIAL 11359); using it for a candle is modern.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

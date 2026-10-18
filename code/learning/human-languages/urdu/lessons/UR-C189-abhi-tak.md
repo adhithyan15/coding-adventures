@@ -14,7 +14,8 @@ romanization: "abhī tak"
 concept_tag: UR-VAQT189-ABHI-TAK
 prerequisites: [UR-C189-jab-tak, UR-C189-tab-tak]
 sounds: []
-roots: []
+roots: [sanskrit-evam-eva, sanskrit-tavatka]
+etymology_hook: "abhī: listed by CDIAL under evam eva (2528); tak ← Sanskrit tāvatka (CDIAL 5805)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C189-tab-tak]
 <!-- hl-knowledge: introduces=[UR-LEX-C189-VAQT189-03]; assesses=[] -->
 
 **ابھی تک** — *abhī tak* — "so far, still".
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ابھی تک** (*abhī tak*) is "right now, up to". CDIAL lists *abhī* under Sanskrit *evam eva*, "exactly so", crossed with the pointing stem *a-* (CDIAL 2528), and *tak*, "till", under Sanskrit *tāvatka*, built on *tāvant*, "so much" (CDIAL 5805).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

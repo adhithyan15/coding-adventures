@@ -6,7 +6,7 @@ sequence: 1430
 chapter: 49
 type: review
 headword: (fourteen letters)
-gloss: second pass: the same fourteen letters, from the word back to the letter
+gloss: 'second pass: the same fourteen letters, from the word back to the letter'
 romanization: "arbaʿat ʿashar ḥarfan"
 concept_tag: AR-LETTERS-FROM-WORDS
 prerequisites: [AR-W46-shin, AR-W46-sad, AR-W46-dal, AR-W47-alif-hamza-below, AR-W47-alif-maqsura, AR-W47-fa, AR-W47-qaf, AR-W48-dad, AR-W48-alif-madda, AR-W48-zay, AR-W48-ghayn, AR-W49-ta-emphatic, AR-W49-za-emphatic, AR-W49-dhal]

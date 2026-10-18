@@ -14,7 +14,8 @@ romanization: "āngṭi"
 concept_tag: BN-CLOTHES85-ANGTI
 prerequisites: [BN-C85-moja, BN-C85-poket]
 sounds: []
-roots: []
+roots: [indo-aryan-angushthiya]
+etymology_hook: "āngṭi ← *aṅguṣṭhiya 'of the thumb', a reconstructed form; a tadbhava (CDIAL 138)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C85-poket]
 <!-- hl-knowledge: introduces=[BN-LEX-C85-CLOTHES85-04]; assesses=[] -->
 
 **আংটি** — *āngṭi* — "a ring".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**আংটি** (*āngṭi*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*aṅguṣṭhiya*, "of the thumb", a form CDIAL reconstructs from its descendants (CDIAL 138). CDIAL writes the Bengali form *āṅṭi*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

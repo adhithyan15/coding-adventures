@@ -14,7 +14,8 @@ romanization: "mushṭ"
 concept_tag: AR-THINGS122-MUSHT
 prerequisites: [AR-C121-kammun, AR-C122-khizana]
 sounds: []
-roots: []
+roots: [m-sh-ṭ]
+etymology_hook: "mushṭ: built on the root m-sh-ṭ, 'to comb' (Lane); mushṭ is a comb"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C122-khizana]
 <!-- hl-knowledge: introduces=[AR-LEX-C122-THINGS122-02]; assesses=[] -->
 
 **مشط** — *mushṭ* — "a comb".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**مشط** (*mushṭ*) is built on the native Arabic root *m-sh-ṭ*, "to comb" (Lane). *Mushṭ* is a comb.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

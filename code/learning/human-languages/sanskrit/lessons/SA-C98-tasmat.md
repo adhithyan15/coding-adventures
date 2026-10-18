@@ -14,7 +14,8 @@ romanization: "tasmāt"
 concept_tag: SA-WHY98-TASMAT
 prerequisites: [SA-C97-yatah, SA-C98-atah]
 sounds: []
-roots: []
+roots: [sanskrit-tad]
+etymology_hook: "tasmāt, ablative of ta- 'that': 'from that' (MW); the pronoun ← PIE *tód (EtymDB), cf. English that"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C98-atah]
 <!-- hl-knowledge: introduces=[SA-LEX-C98-WHY98-02]; assesses=[] -->
 
 **तस्मात्** — *tasmāt* — "so, from that".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*tasmāt* is the ablative, "from that", of the pronoun *tad* "that" (MW), so "on that account, therefore". The pronoun is inherited from PIE *\*tód* (EtymDB), the same word as English *that*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

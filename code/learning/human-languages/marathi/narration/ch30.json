@@ -4,7 +4,7 @@
   "chapter": 30,
   "title": "Two Sentences, One Breath",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:45bd8d5afe41974f",
+  "sourceHash": "fnv1a64:c9315a3d30dd7630",
   "lessons": [
     {
       "id": "MR-C30-aani",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8066902abfb59e64",
+      "sourceHash": "fnv1a64:36220df2776aeb29",
       "notice": null,
       "blocks": [
         {

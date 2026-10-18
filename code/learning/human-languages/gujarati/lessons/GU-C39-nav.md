@@ -11,7 +11,7 @@ gloss: "nine — the one number in this chapter that lost nothing on the way"
 concept_tag: GU-NUMBER-NAV
 prerequisites: [GU-C39-aath, GU-C36-te, GU-W01-na, GU-W02-va]
 sounds: [inherent-a]
-roots: [sanskrit-nava]
+roots: [sanskrit-nava-nine]
 etymology_hook: "Sanskrit nava reaches Gujarati as nav with every consonant still standing -- the only number in this chapter that can say that"
 duration:
   max_seconds: 210

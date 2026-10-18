@@ -6,7 +6,7 @@ sequence: 820
 chapter: 40
 type: word
 headword: sedeō, sedēre
-gloss: "I sit" — the verb that is English *sit* by descent and English *session* by loan, and the clearest case of the difference
+gloss: '"I sit" — the verb that is English *sit* by descent and English *session* by loan, and the clearest case of the difference'
 concept_tag: VERB-SIT
 prerequisites: [LA-C40-dormio, LA-C39-capio]
 sounds: [macron-long-vowel, macron-none-short-vowel]

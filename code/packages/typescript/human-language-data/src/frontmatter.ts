@@ -79,8 +79,22 @@ function unquote(value: string, key: string): string {
         `${key} cannot use a double-quoted frontmatter scalar containing backslashes; use single quotes around the scalar instead`,
       );
     }
-    if ((first === '"' && last === '"') || (first === "'" && last === "'")) {
+    if (first === '"' && last === '"') {
       return value.slice(1, -1);
+    }
+    // A single-quoted YAML scalar has exactly one escape: a doubled quote `''`
+    // stands for one apostrophe. Decoding it is what lets a gloss that opens
+    // with a quoted English word and goes on past it be wrapped as one
+    // strict-YAML scalar while this reader and a real YAML parser still agree
+    // on every byte:
+    //
+    //   source value                    this reader and PyYAML both return
+    //   '"you''re welcome" — a reply'   "you're welcome" — a reply
+    //   '" "'                           " "
+    //
+    // Backslashes stay literal, exactly as YAML keeps them in single quotes.
+    if (first === "'" && last === "'") {
+      return value.slice(1, -1).replace(/''/g, "'");
     }
   }
   return value;

@@ -14,7 +14,8 @@ romanization: "âshti kardan"
 concept_tag: FA-VERB-ASHTI-KARDAN
 prerequisites: [FA-C221-bakhshidan, FA-C221-qahr-kardan]
 sounds: []
-roots: []
+roots: [persian-ashti, pie-kwer]
+etymology_hook: "âshti ← Middle Persian āštīh 'peace' (EtymDB), + kardan"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C221-qahr-kardan]
 <!-- hl-knowledge: introduces=[FA-LEX-C221-KONESH221-03]; assesses=[] -->
 
 **آشتی کردن** — *âshti kardan* — "to make up (after a quarrel)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*âshti kardan* pairs *âshti*, "peace, reconciliation", with *kardan*. *âshti* is inherited: EtymDB traces it to Middle Persian *āštīh*, "peace". *kardan*, "to do", is an inherited verb, from Middle Persian *kardan* (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

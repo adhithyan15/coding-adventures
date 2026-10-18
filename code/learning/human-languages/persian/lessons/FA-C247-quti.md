@@ -14,7 +14,8 @@ romanization: "quti"
 concept_tag: FA-CHIZ247-QUTI
 prerequisites: [FA-C246-panke, FA-C246-barq]
 sounds: []
-roots: []
+roots: [greek-kouti]
+etymology_hook: "quti ← Ottoman Turkish qūṭī ← Greek koutí 'box' (EtymDB)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C246-barq]
 <!-- hl-knowledge: introduces=[FA-LEX-C247-CHIZ247-01]; assesses=[] -->
 
 **قوطی** — *quti* — "a tin, a can".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*quti* came through Ottoman Turkish *qūṭī*, "box", from Greek *koutí* (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

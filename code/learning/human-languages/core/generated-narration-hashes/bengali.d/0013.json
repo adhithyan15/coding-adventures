@@ -1,7 +1,7 @@
 {
   "language": "bengali",
   "chapter": 13,
-  "sourceHash": "fnv1a64:7364674b4b6f1fb3",
+  "sourceHash": "fnv1a64:4147f6e492c01669",
   "lessonIds": [
     "BN-C07-howa",
     "BN-C07-jaowa",
@@ -14,7 +14,7 @@
   "drivablePrefix": 6,
   "text": "bengali/narration/ch13.txt",
   "json": "bengali/narration/ch13.json",
-  "textHash": "fnv1a64:d7cc7f006c581a6f",
-  "jsonHash": "fnv1a64:ebb7dfc83f22e3b0",
+  "textHash": "fnv1a64:c58904a396559908",
+  "jsonHash": "fnv1a64:69fbc801012c1897",
   "findings": []
 }

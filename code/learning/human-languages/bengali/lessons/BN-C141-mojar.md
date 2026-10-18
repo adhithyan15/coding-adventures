@@ -14,7 +14,8 @@ romanization: "môjār"
 concept_tag: BN-QUAL141-MOJAR
 prerequisites: [BN-C140-kacha, BN-C141-paka]
 sounds: []
-roots: []
+roots: [maza-persian]
+etymology_hook: "môjār: majā 'fun' + -r; majā is usually traced to Persian maza 'taste, relish'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C141-paka]
 <!-- hl-knowledge: introduces=[BN-LEX-C141-QUAL141-02]; assesses=[] -->
 
 **মজার** — *môjār* — "funny".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**মজার** (*môjār*) is *môjā*, "fun", with the ending *-r*. *Môjā* is usually traced to Persian *maza*, "taste, relish".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

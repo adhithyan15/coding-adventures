@@ -14,7 +14,8 @@ romanization: "der"
 concept_tag: PA-TIME87-DER
 prerequisites: [PA-C87-hun, PA-C87-hamesha]
 sounds: []
-roots: []
+roots: [persian-der]
+etymology_hook: "der: usually traced to Persian dēr 'late; a long time'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C87-hamesha]
 <!-- hl-knowledge: introduces=[PA-LEX-C87-TIME87-03]; assesses=[] -->
 
 **ਦੇਰ** — *der* — "a delay; late".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਦੇਰ** (*der*) is a loan, usually traced to Persian *dēr*, "late; a long time".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

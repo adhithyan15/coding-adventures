@@ -1,0 +1,17 @@
+{
+  "language": "punjabi",
+  "chapter": 176,
+  "sourceHash": "fnv1a64:149172eef4c4e304",
+  "lessonIds": [
+    "PA-C176-eh",
+    "PA-C176-vich",
+    "PA-C176-location-frame"
+  ],
+  "voiceLessons": 2,
+  "drivablePrefix": 2,
+  "text": "punjabi/narration/ch176.txt",
+  "json": "punjabi/narration/ch176.json",
+  "textHash": "fnv1a64:23f93bb433abad7a",
+  "jsonHash": "fnv1a64:fc8f2776bacbe1a9",
+  "findings": []
+}

@@ -14,7 +14,8 @@ romanization: "maidān"
 concept_tag: UR-LOC101-MAIDAN
 prerequisites: [UR-C101-park, UR-C101-sinema]
 sounds: []
-roots: []
+roots: [persian-maidan]
+etymology_hook: "maidān: usually traced to Persian maidān 'open ground'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C101-sinema]
 <!-- hl-knowledge: introduces=[UR-LEX-C101-LOC101-04]; assesses=[] -->
 
 **میدان** — *maidān* — "a field, a ground".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**میدان** (*maidān*) is a loan, usually traced to Persian *maidān*, "open ground".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

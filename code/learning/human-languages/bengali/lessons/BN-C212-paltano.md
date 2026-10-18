@@ -14,7 +14,8 @@ romanization: "pālṭāno"
 concept_tag: BN-VERB-PALTANO
 prerequisites: [BN-C212-tulona-kora, BN-C212-bhara-neoya]
 sounds: []
-roots: []
+roots: [indo-aryan-pallatt]
+etymology_hook: "pālṭāno ← *pallaṭṭ 'turn, overturn', a reconstructed form; a tadbhava (CDIAL 7968)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C212-bhara-neoya]
 <!-- hl-knowledge: introduces=[BN-LEX-C212-ACT212-03]; assesses=[] -->
 
 **পাল্টানো** — *pālṭāno* — "to swap, to change".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**পাল্টানো** (*pālṭāno*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*pallaṭṭ*, "turn, overturn", a form CDIAL reconstructs from its descendants (CDIAL 7968). CDIAL lists Bengali *pālṭāna*, "to turn, change", and calls the origin of the reconstructed form very doubtful.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

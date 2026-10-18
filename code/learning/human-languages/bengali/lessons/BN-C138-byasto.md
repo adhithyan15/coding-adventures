@@ -14,7 +14,8 @@ romanization: "byāstô"
 concept_tag: BN-QUAL138-BYASTO
 prerequisites: [BN-C137-klanto, BN-C137-sustho]
 sounds: []
-roots: []
+roots: [sanskrit-vyasta]
+etymology_hook: "byāstô ← Sanskrit vyasta 'scattered, distracted', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C137-sustho]
 <!-- hl-knowledge: introduces=[BN-LEX-C138-QUAL138-01]; assesses=[] -->
 
 **ব্যস্ত** — *byāstô* — "busy".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ব্যস্ত** (*byāstô*) is Sanskrit *vyasta*, "scattered, distracted", taken over whole as a learned loan, a tatsama. In Bengali it means "busy".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "mindīl"
 concept_tag: AR-THINGS127-MINDIL
 prerequisites: [AR-C127-sitara, AR-C127-qifl]
 sounds: []
-roots: []
+roots: [greek-mandilion]
+etymology_hook: "mindīl: usually traced to Greek mandilion (EtymDB), from Latin mantēle 'towel'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C127-qifl]
 <!-- hl-knowledge: introduces=[AR-LEX-C127-THINGS127-03]; assesses=[] -->
 
 **منديل** — *mindīl* — "a handkerchief".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**منديل** (*mindīl*) is usually traced to Greek *mandilion*, "towel, napkin" (EtymDB), from Latin *mantēle*; Arabic grammarians placed it under *n-d-l*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

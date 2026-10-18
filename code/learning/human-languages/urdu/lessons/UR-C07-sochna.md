@@ -11,8 +11,8 @@ gloss: to think — a verb that began as a word for burning and grieving
 concept_tag: VERB-THINK
 prerequisites: [UR-C06-janna]
 sounds: [rtl, long-a, che-vs-jim-dots]
-roots: [sanskrit-shuc, arabic-fkr]
-etymology_hook: sochnā comes through Prakrit from Sanskrit śocati "burns, grieves"; the root śuc- has no secure English cousin, and the noun soch still means both a thought and a worry — as does Urdu's borrowed Arabic fikr.
+roots: [sanskrit-shuc, arabic-fkr, sanskrit-shocyate]
+etymology_hook: "sochnā ← Sanskrit śocyate 'is made to feel pain', on the root śuc- 'burn, grieve' (CDIAL 12621)"
 duration:
   max_seconds: 286
 requires:
@@ -74,8 +74,7 @@ new verb walks into it.
 ## The word, taken apart — thinking that started as grieving
 <!-- hl-knowledge: introduces=[UR-ETYMON-SOCHNA-GRIEVE]; assesses=[UR-LEX-SOCHNA] -->
 
-**sochnā** comes through Prakrit *soccadi* from Sanskrit *śocati* — “**burns;
-grieves; mourns**” — on the root *śuc-*. The sense cooled by stages: *burn* →
+**sochnā** goes back, CDIAL says, to Sanskrit *śocyate*, “**is made to feel pain**”, the passive of *śocayati*, “sets alight, burns” (CDIAL 12621), on the root *śuc-*, “burn; grieve”. The sense cooled by stages: *burn* →
 *be consumed by something* → *brood on it* → plain *think*. Urdu's everyday word
 for thinking is an old word for sorrow that went quiet, which is why **soch** is
 still a thought *and* a worry.
@@ -102,7 +101,7 @@ fretting on its own.
 <!-- hl-knowledge: introduces=[]; assesses=[UR-LEX-SOCHNA, UR-SCRIPT-CHE-LETTER, UR-ETYMON-SOCHNA-GRIEVE, UR-GRAMMAR-PRESENT-TWO-AGREEMENTS, UR-LEX-JANNA] -->
 
 [PAUSE 3s] How many dots does **چ** carry, and where? (Three, below.) What did
-*śocati* mean before it meant “think”? (**To burn, to grieve**.) Is there an
+*śuc-* mean before it meant “think”? (**To burn, to grieve**.) Is there an
 English cousin of *śuc-*? (**No**.)
 
 Sources: [Wiktionary: سوچنا](https://en.wiktionary.org/wiki/%D8%B3%D9%88%DA%86%D9%86%D8%A7); [*Zero Zabar*: The Urdu alphabet](https://openbooks.library.northwestern.edu/zerozabar/chapter/the-urdu-alphabet/).

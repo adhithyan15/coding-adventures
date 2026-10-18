@@ -12,6 +12,9 @@ Before the new one: say the Marwadi for a fish, then the Marwadi for rice.
 You'll want to know: सेब.
 सेब — seb — "an apple".
 
+The word, taken apart.
+सेब (seb) is a loan, usually traced to Persian sēb, "apple".
+
 What you've built.
 One more word for this chapter.
 
@@ -42,6 +45,9 @@ Before the new one: say the Marwadi for rice, then the Marwadi for an apple.
 
 You'll want to know: केळो.
 केळो — keḷo — "a banana".
+
+The word, taken apart.
+केळो (keḷo) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from kadala, "the banana plant". CDIAL gives no Marwari form in this entry (CDIAL 2712); the match is through Hindi kelā and Gujarati keḷũ. CDIAL takes the Sanskrit word itself from an Austroasiatic language.
 
 What you've built.
 One more word for this chapter.
@@ -74,6 +80,9 @@ Before the new one: say the Marwadi for an apple, then the Marwadi for a banana.
 You'll want to know: आलू.
 आलू — ālū — "a potato".
 
+The word, taken apart.
+आलू (ālū) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from ālu, "esculent root". CDIAL gives no Marwari form in this entry (CDIAL 1388); the match is through Hindi ālū. The potato took the name of an older edible root.
+
 What you've built.
 One more word for this chapter.
 
@@ -105,6 +114,9 @@ Before the new one: say the Marwadi for a banana, then the Marwadi for a potato.
 You'll want to know: टमाटर.
 टमाटर — ṭamāṭar — "a tomato".
 
+The word, taken apart.
+टमाटर (ṭamāṭar) is a loan from English tomato.
+
 What you've built.
 One more word for this chapter.
 
@@ -135,6 +147,9 @@ Before the new one: say the Marwadi for a potato, then the Marwadi for a tomato.
 
 You'll want to know: गाजर.
 गाजर — gājar — "a carrot".
+
+The word, taken apart.
+गाजर (gājar) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from gārjara, "carrot". CDIAL gives no Marwari form in this entry (CDIAL 4140); the match is through Hindi gājar and Gujarati gājar.
 
 What you've built.
 One more word for this chapter.

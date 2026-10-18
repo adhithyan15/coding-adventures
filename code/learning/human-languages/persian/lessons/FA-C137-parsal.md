@@ -14,7 +14,8 @@ romanization: "pârsâl"
 concept_tag: FA-GOZASHTE137-PARSAL
 prerequisites: [FA-C137-be-tazegi, FA-C137-qablan]
 sounds: []
-roots: []
+roots: [persian-sal]
+etymology_hook: "pârsâl: Persian pâr 'last year' + sâl 'year' (EtymDB); native"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C137-qablan]
 <!-- hl-knowledge: introduces=[FA-LEX-C137-GOZASHTE137-03]; assesses=[] -->
 
 **پارسال** — *pârsâl* — "last year". **پارسال به شیراز رفتم** — *pârsâl be shirâz raftam* — "Last year I went to Shiraz."
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*pârsâl* is *pâr*, "last year", with *sâl*, "year". *sâl* continues Middle Persian *sāl* (EtymDB); EtymDB links *pâr* to the Indo-European *\*per-*, "before".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

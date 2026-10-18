@@ -14,7 +14,8 @@ romanization: "ʿiyāda"
 concept_tag: AR-SIHHA231-IYADA
 prerequisites: [AR-C231-ilaj, AR-C231-wasfa]
 sounds: []
-roots: []
+roots: [ʿ-w-d]
+etymology_hook: "ʿiyāda: built on the root ʿ-w-d, 'to return' (Lane); ʿiyāda is visiting the sick"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C231-wasfa]
 <!-- hl-knowledge: introduces=[AR-LEX-C231-SIHHA231-03]; assesses=[] -->
 
 **عيادة** — *ʿiyāda* — "a clinic".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**عيادة** (*ʿiyāda*) is built on the native Arabic root *ʿ-w-d*, "to return; to visit the sick" (Lane). *ʿIyāda* is visiting the sick; the clinic is a modern sense.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

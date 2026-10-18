@@ -14,7 +14,8 @@ romanization: "bājro"
 concept_tag: MW-THINGS130-BAJRO
 prerequisites: [MW-C130-nath, MW-C130-payal]
 sounds: []
-roots: []
+roots: [indo-aryan-bajjara]
+etymology_hook: "bājro ← *bājjara 'millet', reconstructed (CDIAL 9201, Hindi and Gujarati rows)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C130-payal]
 <!-- hl-knowledge: introduces=[MW-LEX-C130-THINGS130-04]; assesses=[] -->
 
 **बाजरो** — *bājro* — "millet".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**बाजरो** (*bājro*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*bājjara*, "millet", a form CDIAL reconstructs from its descendants. CDIAL gives no Marwari form in this entry (CDIAL 9201); the match is through Hindi *bājrā* and Gujarati *bājro*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

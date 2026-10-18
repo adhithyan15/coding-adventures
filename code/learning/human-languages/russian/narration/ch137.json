@@ -4,7 +4,7 @@
   "chapter": 137,
   "title": "Recently, for a Long Time, Before, Last, To Happen",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:72d6dad4c89a4762",
+  "sourceHash": "fnv1a64:b0ed03662d34d8bd",
   "lessons": [
     {
       "id": "RU-C137-nedavno",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6a3049d89910b9cb",
+      "sourceHash": "fnv1a64:902229f8604df255",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "недавно (nedávno) is не, \"not\", with давно (davnó), \"long ago\": not long ago. давно (davnó) goes with old даве, \"earlier\"."
+              "text": "недавно (nedávno) is не, \"not\", with давно (davnó), \"long ago\": not long ago. давно (davnó) goes with old даве, \"earlier\". Vasmer relates даве to Latin dūdum, \"a while ago\", and Greek dēn, \"long\"."
             }
           ]
         },
@@ -421,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5b9bb5605dc990dc",
+      "sourceHash": "fnv1a64:9b79b434e17302cd",
       "notice": null,
       "blocks": [
         {
@@ -459,7 +459,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "прошлый (próshlyy) is built on прошёл, \"passed\", from пройти, \"to go past\": про-, \"past\", with идти, \"to go\". What is past has gone by."
+              "text": "прошлый (próshlyy) is built on прошёл, \"passed\", the past tense of пройти, \"to go past\". Its -шёл is not from идти, \"to go\": Vasmer puts шёл with ходить, \"to walk\". What is past has gone by."
             }
           ]
         },

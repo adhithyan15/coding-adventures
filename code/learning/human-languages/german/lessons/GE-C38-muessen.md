@@ -66,7 +66,8 @@ kept their bare shape.
 
 So the missing *-t* in *er muss* and the missing *-s* in *he must* are the same
 missing ending, and if the English one has never bothered you, the German one
-need not either.
+need not either. *Müssen* ← Old High German *muozan* ← Proto-Germanic
+*\*mōtaną* (EtymDB 2.1), the same verb as English *must*.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-MUESSEN-01, GE-LEX-KOENNEN-01, GE-LEX-MOECHTEN-01, GE-GRAMMAR-THIRD-PERSON-T-03, GE-LEX-LERNEN-01, GE-LEX-DEUTSCH-01, GE-LEX-WOHNEN-01] -->

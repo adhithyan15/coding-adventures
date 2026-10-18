@@ -14,7 +14,8 @@ romanization: "piṭṭh"
 concept_tag: PA-THINGS135-PITTH
 prerequisites: [PA-C135-gardan, PA-C135-chati]
 sounds: []
-roots: []
+roots: [sanskrit-prshti]
+etymology_hook: "piṭṭh ← Sanskrit pṛṣṭi 'vertebrae; back', a tadbhava (CDIAL 8370)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C135-chati]
 <!-- hl-knowledge: introduces=[PA-LEX-C135-THINGS135-03]; assesses=[] -->
 
 **ਪਿੱਠ** — *piṭṭh* — "a back".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਪਿੱਠ** (*piṭṭh*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *pṛṣṭi*, "vertebrae; back" (CDIAL 8370).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

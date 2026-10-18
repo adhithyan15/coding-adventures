@@ -14,7 +14,8 @@ romanization: "sikkhṇā"
 concept_tag: PA-VERB-SIKKHNA
 prerequisites: [PA-C59-gauna, PA-C59-nachchna]
 sounds: []
-roots: []
+roots: [sanskrit-shikshate]
+etymology_hook: "sikkhṇā ← Sanskrit śikṣate 'learns', a tadbhava (CDIAL 12430)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C59-nachchna]
 <!-- hl-knowledge: introduces=[PA-LEX-C60-VERBS60-01]; assesses=[] -->
 
 **ਸਿੱਖਣਾ** — *sikkhṇā* — "to learn".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਸਿੱਖਣਾ** (*sikkhṇā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *śikṣate*, "learns" (CDIAL 12430).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

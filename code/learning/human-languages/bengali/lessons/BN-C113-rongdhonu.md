@@ -14,7 +14,8 @@ romanization: "rôngdhônu"
 concept_tag: BN-THINGS113-RONGDHONU
 prerequisites: [BN-C113-dhulo, BN-C113-bojro]
 sounds: []
-roots: []
+roots: [sanskrit-ranga, persian-rang, sanskrit-dhanus]
+etymology_hook: "rôngdhônu: rông 'colour' (Sanskrit raṅga or Persian rang) + dhônu 'bow', Sanskrit dhanus"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C113-bojro]
 <!-- hl-knowledge: introduces=[BN-LEX-C113-THINGS113-05]; assesses=[] -->
 
 **রংধনু** — *rôngdhônu* — "a rainbow".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**রংধনু** (*rôngdhônu*) is *rông*, "colour", which matches Sanskrit *raṅga* and Persian *rang* (CDIAL 10560), + *dhônu*, "bow", Sanskrit *dhanus*: a bow of colours.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

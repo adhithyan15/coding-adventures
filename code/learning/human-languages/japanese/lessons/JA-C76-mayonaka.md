@@ -14,7 +14,8 @@ romanization: "mayonaka"
 concept_tag: JA-TIME76-MAYONAKA
 prerequisites: [JA-C75-ototoshi, JA-C75-asanebou]
 sounds: []
-roots: []
+roots: [japanese-ma-true, japanese-yo-night, japanese-naka-middle]
+etymology_hook: "mayonaka: native ma 'true, very' + yo 'night' + naka 'middle' (真夜中)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C75-asanebou]
 <!-- hl-knowledge: introduces=[JA-LEX-C76-TIME76-01]; assesses=[] -->
 
 **まよなか** — *mayonaka* — "midnight".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**まよなか** (*mayonaka*) is a native compound, inherited rather than borrowed: *ma*, "true, very", *yo*, "night", and *naka*, "middle": the very middle of the night (JMdict, KANJIDIC2).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

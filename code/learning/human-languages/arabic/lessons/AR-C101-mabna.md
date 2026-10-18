@@ -14,7 +14,8 @@ romanization: "mabnā"
 concept_tag: AR-LOC101-MABNA
 prerequisites: [AR-C101-hayy, AR-C101-zuqaq]
 sounds: []
-roots: []
+roots: [b-n-y]
+etymology_hook: "mabnā: built on the root b-n-y, 'to build' (Lane); mabnā is the ma- noun of building, 'a thing built'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C101-zuqaq]
 <!-- hl-knowledge: introduces=[AR-LEX-C101-LOC101-03]; assesses=[] -->
 
 **مبنى** — *mabnā* — "a building".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**مبنى** (*mabnā*) is built on the native Arabic root *b-n-y*, "to build" (Lane). *Mabnā* is the *ma-* noun of building, "a thing built".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

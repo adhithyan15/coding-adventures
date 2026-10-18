@@ -14,7 +14,8 @@ romanization: "kuṛī"
 concept_tag: PA-FAMILY55-KURI
 prerequisites: [PA-C55-bachcha, PA-C55-munda]
 sounds: []
-roots: []
+roots: [indo-aryan-kuda-child]
+etymology_hook: "kuṛī ← *kuḍa 'boy', °ḍī 'girl', probably from Munda (Santali kuṛi 'girl'), or else Dravidian (CDIAL 3245)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C55-munda]
 <!-- hl-knowledge: introduces=[PA-LEX-C55-FAMILY55-04]; assesses=[] -->
 
 **ਕੁੜੀ** — *kuṛī* — "a girl".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+CDIAL lists **ਕੁੜੀ** (*kuṛī*), "girl, daughter", under a reconstructed *\*kuḍa*, "boy, son", with *\*kuḍī*, "girl, daughter". It takes the word, probably, from Munda, comparing Santali *kuṛi*, "girl"; or else from Dravidian (CDIAL 3245).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

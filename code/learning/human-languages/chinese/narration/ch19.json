@@ -4,7 +4,7 @@
   "chapter": 19,
   "title": "Asking",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:8cce2a6b20a0bb39",
+  "sourceHash": "fnv1a64:78a129c4c931c74a",
   "lessons": [
     {
       "id": "ZH-C19-hear-ma",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:828166f07190c779",
+      "sourceHash": "fnv1a64:921c87d7e6db3184",
       "notice": null,
       "blocks": [
         {
@@ -59,6 +59,10 @@
             {
               "kind": "speech",
               "text": "Hear kàn shū and then kàn shū ma. The words are identical and in the same order; only the light syllable at the end is new, and only the second one is asking."
+            },
+            {
+              "kind": "speech",
+              "text": "Ma is usually explained as coming from Middle Chinese mju, \"not have\", said at the end of a question; the account is not settled."
             }
           ]
         },
@@ -433,7 +437,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:fb30154414475b15",
+      "sourceHash": "fnv1a64:bf4b270586297f3e",
       "notice": null,
       "blocks": [
         {
@@ -492,6 +496,10 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: 吗, give it no tone at all, then say what it does rather than what it means]"
+            },
+            {
+              "kind": "speech",
+              "text": "吗 (ma) is usually explained as coming from Middle Chinese mju, \"not have\" (Guangyun, in Baxter's transcription), tagged onto the end of a question, and later written with this character for its sound. The account is common but not settled."
             }
           ]
         },
@@ -599,7 +607,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ff92343571f8d311",
+      "sourceHash": "fnv1a64:7d00a4f9e66ba2aa",
       "notice": null,
       "blocks": [
         {
@@ -635,6 +643,10 @@
             {
               "kind": "speech",
               "text": "Two third tones in a row still slide the first one up, exactly as they do in nǐ hǎo on its own — the light ma on the end changes nothing about that."
+            },
+            {
+              "kind": "speech",
+              "text": "Nǐ hǎo ma is the greeting with the question particle added; hǎo is inherited from Middle Chinese xawX, \"good\"."
             }
           ]
         },
@@ -684,7 +696,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ff8bf5058c118cf7",
+      "sourceHash": "fnv1a64:c8cb307818b9ebad",
       "notice": null,
       "blocks": [
         {
@@ -742,6 +754,10 @@
             {
               "kind": "speech",
               "text": "That is the whole of what 吗 (ma) buys you. The book has been able to write 你好 since its first page and has never once been able to ask anything. One character, six strokes, and the greeting turns into a question."
+            },
+            {
+              "kind": "speech",
+              "text": "Chinese built it from 你好 and 吗 (ma): hǎo is inherited from Middle Chinese xawX (Guangyun, in Baxter's transcription), and 吗 (ma) is usually traced, with some doubt, to mju, \"not have\"."
             }
           ]
         },
@@ -902,7 +918,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:125f5f9b4c797c91",
+      "sourceHash": "fnv1a64:9611cc92d06a7b48",
       "notice": null,
       "blocks": [
         {
@@ -942,6 +958,10 @@
             {
               "kind": "speech",
               "text": "Say it with the voice going down on shì and staying light on ma. Said flat it checks a fact; said with the fall exaggerated it registers surprise."
+            },
+            {
+              "kind": "speech",
+              "text": "Shì ma is built from shì, from Middle Chinese dzyeX, and the question particle ma."
             }
           ]
         },
@@ -993,7 +1013,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:bd75d5277732bacc",
+      "sourceHash": "fnv1a64:a251d75cd96587f9",
       "notice": null,
       "blocks": [
         {
@@ -1038,6 +1058,10 @@
             {
               "kind": "speech",
               "text": "It is the shortest sentence in the book and it is a complete turn in a conversation. Somebody says something; you say 是吗 (shì ma); they keep going. Nothing about it is a fixed phrase to memorise — it is the yes-or-no rule applied to a one-word sentence."
+            },
+            {
+              "kind": "speech",
+              "text": "Chinese built it from 是, inherited from Middle Chinese dzyeX (Guangyun, in Baxter's transcription), and the question particle 吗 (ma), whose origin is not settled."
             }
           ]
         },
@@ -1104,7 +1128,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6bf1b6d1bb2ccb4f",
+      "sourceHash": "fnv1a64:f384753cbda3857e",
       "notice": null,
       "blocks": [
         {
@@ -1148,6 +1172,10 @@
             {
               "kind": "speech",
               "text": "Both questions ask the same thing. ma is the neutral one; this one presses a little harder for a decision, which is why it is the one you hear at the end of a suggestion."
+            },
+            {
+              "kind": "speech",
+              "text": "Hǎo bu hǎo is built from two words inherited from Middle Chinese: xawX, \"good\", and pjut, \"not\"."
             }
           ]
         },
@@ -1198,7 +1226,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7e46017e9e3d8c31",
+      "sourceHash": "fnv1a64:001d8f81f26b5fda",
       "notice": null,
       "blocks": [
         {
@@ -1280,6 +1308,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "好不好 (hǎo bu hǎo) is a Chinese pattern, not a borrowing: both words are inherited from Middle Chinese, xawX, \"good\", and pjut, \"not\" (Guangyun, in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -1295,7 +1334,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

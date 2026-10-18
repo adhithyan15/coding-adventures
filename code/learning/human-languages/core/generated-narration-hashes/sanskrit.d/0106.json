@@ -1,7 +1,7 @@
 {
   "language": "sanskrit",
   "chapter": 106,
-  "sourceHash": "fnv1a64:b1a879fac98472a8",
+  "sourceHash": "fnv1a64:dc7164e226bb13a3",
   "lessonIds": [
     "SA-C106-rajjuh",
     "SA-C106-godhumah",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "sanskrit/narration/ch106.txt",
   "json": "sanskrit/narration/ch106.json",
-  "textHash": "fnv1a64:c2d7906259703792",
-  "jsonHash": "fnv1a64:8db36bbf2d04f742",
+  "textHash": "fnv1a64:960a07e9939c041c",
+  "jsonHash": "fnv1a64:ed4847d258fb8431",
   "findings": []
 }

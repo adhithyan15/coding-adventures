@@ -14,7 +14,8 @@ romanization: "ūṅṭ"
 concept_tag: UR-THINGS127-UNT
 prerequisites: [UR-C126-chyunti, UR-C126-gadha]
 sounds: []
-roots: []
+roots: [sanskrit-ushtra]
+etymology_hook: "ūṅṭ ← Sanskrit uṣṭra 'buffalo; camel', a tadbhava (CDIAL 2387)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C126-gadha]
 <!-- hl-knowledge: introduces=[UR-LEX-C127-THINGS127-01]; assesses=[] -->
 
 **اونٹ** — *ūṅṭ* — "a camel".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**اونٹ** (*ūṅṭ*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *uṣṭra*, "buffalo; camel" (CDIAL 2387).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

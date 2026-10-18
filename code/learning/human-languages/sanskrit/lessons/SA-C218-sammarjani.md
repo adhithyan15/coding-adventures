@@ -14,7 +14,8 @@ romanization: "sammārjanī"
 concept_tag: SA-THG218-SAMMARJANI
 prerequisites: [SA-C217-samah, SA-C217-visamah]
 sounds: []
-roots: []
+roots: [sanskrit-sammarjani]
+etymology_hook: "sammārjanī ← sam- + √mṛj 'wipe clean'; MW's sammārjana is 'thorough sweeping; a broom'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C217-visamah]
 <!-- hl-knowledge: introduces=[SA-LEX-C218-THG218-01]; assesses=[] -->
 
 **सम्मार्जनी** — *sammārjanī* — "a broom".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*sammārjanī* is built on *sam-*, "together, thoroughly", and the root √mṛj, "to wipe, rub clean". MW lists *sammārjana*, "sweeping or cleansing thoroughly", and also "a wisp or broom". MW compares √mṛj with Latin *mulgēre* and English *milk*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

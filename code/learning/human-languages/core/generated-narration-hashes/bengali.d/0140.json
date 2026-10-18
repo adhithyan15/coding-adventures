@@ -1,7 +1,7 @@
 {
   "language": "bengali",
   "chapter": 140,
-  "sourceHash": "fnv1a64:33bd1a9dfd62cf55",
+  "sourceHash": "fnv1a64:861d50e99e1e6f3b",
   "lessonIds": [
     "BN-C140-dharalo",
     "BN-C140-bhota",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "bengali/narration/ch140.txt",
   "json": "bengali/narration/ch140.json",
-  "textHash": "fnv1a64:cd63c0933564b7b2",
-  "jsonHash": "fnv1a64:e45b806009133974",
+  "textHash": "fnv1a64:5a8408ec5c3e7920",
+  "jsonHash": "fnv1a64:b01345d786c69682",
   "findings": []
 }

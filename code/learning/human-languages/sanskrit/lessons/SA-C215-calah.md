@@ -14,7 +14,8 @@ romanization: "calaḥ"
 concept_tag: SA-QUAL215-CALAH
 prerequisites: [SA-C214-vina, SA-C214-prati]
 sounds: []
-roots: []
+roots: [sanskrit-calati]
+etymology_hook: "cala 'moving, unsteady' ← root √cal 'move, stir'; MW compares Latin celer 'swift' (CDIAL 4713)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C214-prati]
 <!-- hl-knowledge: introduces=[SA-LEX-C215-QUAL215-01]; assesses=[] -->
 
 **चलः** — *calaḥ* — "moving, unsteady".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*cala* is built on the root √cal, "to move, stir, tremble" (MW; CDIAL 4713). MW compares Latin *celer*, "swift". The verb *calati* lives on as Hindi *calnā*, "to move, go" (CDIAL 4715).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

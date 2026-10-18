@@ -14,7 +14,8 @@ romanization: "maṣnaʿ"
 concept_tag: AR-THINGS142-MASNA
 prerequisites: [AR-C142-safina, AR-C142-musafir]
 sounds: []
-roots: []
+roots: [ṣ-n-ʿ]
+etymology_hook: "maṣnaʿ: built on the root ṣ-n-ʿ, 'to make, to fashion' (Lane); maṣnaʿ is the ma- place noun, 'a place of making'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C142-musafir]
 <!-- hl-knowledge: introduces=[AR-LEX-C142-THINGS142-04]; assesses=[] -->
 
 **مصنع** — *maṣnaʿ* — "a factory".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**مصنع** (*maṣnaʿ*) is built on the native Arabic root *ṣ-n-ʿ*, "to make, to fashion" (Lane). *Maṣnaʿ* is the *ma-* place noun, "a place of making".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

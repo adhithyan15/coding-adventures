@@ -14,7 +14,8 @@ romanization: "dūr"
 concept_tag: MW-PLACE81-DUR
 prerequisites: [MW-C80-der, MW-C80-paila]
 sounds: []
-roots: []
+roots: [sanskrit-dura]
+etymology_hook: "dūr ← Sanskrit dūra 'distant', with only its final vowel lost (CDIAL 6495)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C80-paila]
 <!-- hl-knowledge: introduces=[MW-LEX-C81-PLACE81-01]; assesses=[] -->
 
 **दूर** — *dūr* — "far".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**दूर** (*dūr*) is Sanskrit *dūra*, "distant", with only its final vowel lost (CDIAL 6495). CDIAL lists Hindi and Gujarati *dūr* under it and gives no Marwari form.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

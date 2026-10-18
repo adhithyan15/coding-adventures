@@ -46,7 +46,7 @@ reviews_of: [FR-C188-a-droite]
 ## The phrase, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**à gauche** — *à*, "on", and *gauche*, "the left".
+**à gauche** — *à*, "on", and *gauche*, "the left". *Gauche* comes from Old French *gauchir*, "to warp" (EtymDB 2.1), probably Frankish further back; *à* ← Latin *ad*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

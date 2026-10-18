@@ -14,7 +14,8 @@ romanization: "shikôṛ"
 concept_tag: BN-THINGS114-SHIKOR
 prerequisites: [BN-C114-kuyasha, BN-C114-shishir]
 sounds: []
-roots: []
+roots: [sanskrit-shipha]
+etymology_hook: "shikôṛ: apparently with śiphā 'fibrous root', where CDIAL lists Old Bengali śihaḍa 'root' (CDIAL 12443)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C114-shishir]
 <!-- hl-knowledge: introduces=[BN-LEX-C114-THINGS114-03]; assesses=[] -->
 
 **শিকড়** — *shikôṛ* — "a root".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**শিকড়** (*shikôṛ*) appears to belong with Sanskrit *śiphā*, "fibrous root". CDIAL has no entry for the modern word, but under *śiphā* it lists Old Bengali *śihaḍa*, "root", and Assamese *xihari*, "rootlet", both with an added *-ḍ-* (CDIAL 12443). How *shikôṛ* came by its *k* is not explained there.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

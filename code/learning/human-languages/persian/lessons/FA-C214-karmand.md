@@ -14,7 +14,8 @@ romanization: "kârmand"
 concept_tag: FA-KAR214-KARMAND
 prerequisites: [FA-C214-tajrobe, FA-C214-karfarma]
 sounds: []
-roots: []
+roots: [persian-kar]
+etymology_hook: "kârmand: Persian kâr 'work' (EtymDB) + -mand 'having'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C214-karfarma]
 <!-- hl-knowledge: introduces=[FA-LEX-C214-KAR214-03]; assesses=[] -->
 
 **کارمند** — *kârmand* — "an employee, a clerk".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*kârmand* is built from *kâr*, "work", and the ending *-mand*, "having": one who has work. *kâr* is inherited, from Middle Persian *kār* (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "ototoshi"
 concept_tag: JA-TIME75-OTOTOSHI
 prerequisites: [JA-C75-kotoshi, JA-C75-konshuu]
 sounds: []
-roots: []
+roots: [japanese-ototoshi]
+etymology_hook: "ototoshi: native; like ototoi, with toshi 'year'; 一昨年 read as a whole"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C75-konshuu]
 <!-- hl-knowledge: introduces=[JA-LEX-C75-TIME75-04]; assesses=[] -->
 
 **おととし** — *ototoshi* — "the year before last".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**おととし** (*ototoshi*) is a native word, inherited rather than borrowed, built like *ototoi* with *toshi*, "year", in place of the day. JMdict writes it with characters for "one", "past" and "year", read as a whole; its older origin is not settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "vinā"
 concept_tag: SA-WHY214-VINA
 prerequisites: [SA-C214-khalu, SA-C214-iva]
 sounds: []
-roots: []
+roots: [sanskrit-vina]
+etymology_hook: "vinā 'without', probably an old case form of vi 'apart' (MW); Hindi bin (CDIAL 11772)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C214-iva]
 <!-- hl-knowledge: introduces=[SA-LEX-C214-WHY214-04]; assesses=[] -->
 
 **विना** — *vinā* — "without".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*vinā* is probably an old case form of *vi*, "apart, away" (MW). It lives on as Hindi *bin*, "without" (CDIAL 11772), and Hindi *binā* is the same word.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

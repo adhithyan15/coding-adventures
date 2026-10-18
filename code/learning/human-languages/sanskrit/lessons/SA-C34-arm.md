@@ -14,7 +14,8 @@ romanization: "bāhuḥ"
 concept_tag: SA-LIMB-BAHU
 prerequisites: [SA-C33-sea, SA-C32-tree, SA-C33-river]
 sounds: []
-roots: []
+roots: [sanskrit-bahu-arm]
+etymology_hook: "bāhu 'arm' is inherited: MW compares Greek pēkhus 'forearm' and English bough (CDIAL 9229)"
 duration:
   max_seconds: 210
 requires:

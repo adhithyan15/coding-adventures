@@ -14,7 +14,8 @@ romanization: "kummathrā"
 concept_tag: AR-SHAY244-KUMMATHRA
 prerequisites: [AR-C244-zabadi, AR-C244-khawkh]
 sounds: []
-roots: []
+roots: [syriac-kumathra]
+etymology_hook: "kummathrā: usually traced to Syriac kumathrā 'pear' (EtymDB)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C244-khawkh]
 <!-- hl-knowledge: introduces=[AR-LEX-C244-SHAY244-03]; assesses=[] -->
 
 **كمثرى** — *kummathrā* — "pears".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**كمثرى** (*kummathrā*) is usually traced to Syriac *kumathrā*, "pear" (EtymDB); it has no Arabic root.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

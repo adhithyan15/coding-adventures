@@ -4,7 +4,7 @@
   "chapter": 83,
   "title": "All the Way Up, and On a Calendar",
   "drivablePrefix": 8,
-  "sourceHash": "fnv1a64:19c507df21d5bc5f",
+  "sourceHash": "fnv1a64:87ad8677a6337b72",
   "lessons": [
     {
       "id": "TA-C83-sixth",
@@ -472,7 +472,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:dc85c1802b868365",
+      "sourceHash": "fnv1a64:3fb459bc2f0f5c1d",
       "notice": null,
       "blocks": [
         {
@@ -535,7 +535,7 @@
             },
             {
               "kind": "speech",
-              "text": "ஒன்பது was already a built word when you learned it: an old ஒன், one, in front of பது, ten — one short of ten. The ordinal ending goes on top of that, and none of the machinery underneath reacts to it."
+              "text": "ஒன்பது was already a built word when you learned it: an old ஒன், one, in front of பது, ten — usually read as one short of ten. The ordinal ending goes on top of that, and none of the machinery underneath reacts to it."
             }
           ]
         },
@@ -603,7 +603,7 @@
             },
             {
               "kind": "speech",
-              "text": "What two numbers are inside ஒன்பது? (One and ten — nine is one short of ten.)"
+              "text": "What two numbers are inside ஒன்பது? (One and ten — usually read as one short of ten.)"
             },
             {
               "kind": "speech",

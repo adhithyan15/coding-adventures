@@ -14,7 +14,8 @@ romanization: "hi"
 concept_tag: SA-WHY185-HI
 prerequisites: [SA-C185-kiyat, SA-C185-kidrsah]
 sounds: []
-roots: []
+roots: [sanskrit-hi-particle]
+etymology_hook: "hi 'for, indeed', an old Vedic particle; MW compares the particles ha and gha; deeper origin not settled"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C185-kidrsah]
 <!-- hl-knowledge: introduces=[SA-LEX-C185-WHY185-03]; assesses=[] -->
 
 **हि** — *hi* — "for, indeed".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*hi* is an old particle, already in the Vedas, that never stands first in its sentence (MW). MW compares it with the particles *ha* and *gha*; where it came from before that is not settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

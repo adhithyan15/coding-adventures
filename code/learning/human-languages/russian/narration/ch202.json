@@ -4,7 +4,7 @@
   "chapter": 202,
   "title": "Electrician, Plumber, Pilot, Sailor, Fisherman",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:c1c58405f9174c85",
+  "sourceHash": "fnv1a64:05d0457476571940",
   "lessons": [
     {
       "id": "RU-C202-elektrik",
@@ -555,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a66b8485c8fdca82",
+      "sourceHash": "fnv1a64:52f98f9f4368e982",
       "notice": null,
       "blocks": [
         {
@@ -593,7 +593,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "рыбак (rybák) is рыба, \"fish\", with -ак, \"a person\": a fisherman."
+              "text": "рыбак (rybák) is рыба, \"fish\", with -ак, \"a person\": a fisherman. Where рыба comes from is uncertain; Vasmer reports a doubtful comparison with Old High German rūppa, \"caterpillar\"."
             }
           ]
         },

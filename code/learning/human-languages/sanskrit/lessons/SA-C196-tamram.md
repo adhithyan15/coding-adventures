@@ -14,7 +14,8 @@ romanization: "tāmram"
 concept_tag: SA-THG196-TAMRAM
 prerequisites: [SA-C195-prantah, SA-C195-sima]
 sounds: []
-roots: []
+roots: [sanskrit-tamra]
+etymology_hook: "tāmra 'copper-red, copper'; MW and CDIAL point to a root √tam, CDIAL with a question mark; Hindi tāmā (CDIAL 5779)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C195-sima]
 <!-- hl-knowledge: introduces=[SA-LEX-C196-THG196-01]; assesses=[] -->
 
 **ताम्रम्** — *tāmram* — "copper".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*tāmra* first meant "dark red, copper-coloured", then the metal itself (CDIAL 5779). Its origin is uncertain: MW and CDIAL both point to a root √tam, CDIAL with a question mark. It lives on as Hindi *tāmā*, "copper".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "pahelā̃"
 concept_tag: GU-WHEN-BEFORE
 prerequisites: [GU-C77-now, GU-C77-later]
 sounds: []
-roots: []
+roots: [indo-aryan-prathila]
+etymology_hook: "pahelāṁ: a form of pahelũ 'first' ← *prathila 'first', reconstructed (CDIAL 8652)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C77-later]
 <!-- hl-knowledge: introduces=[GU-LEX-C77-WHEN-05]; assesses=[] -->
 
 **પહેલાં** (*pahelā̃*) — "before, earlier".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**પહેલાં** (*pahelāṁ*) is a form of *pahelũ*, "first", which CDIAL lists under *\*prathilla*, a variant of a reconstructed *\*prathila*, "first", built on Sanskrit *prathama* (CDIAL 8652).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

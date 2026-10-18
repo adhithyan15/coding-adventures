@@ -4,7 +4,7 @@
   "chapter": 254,
   "title": "Girl, Lad, Young woman, Parents, Nephew",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:7b45734347930db5",
+  "sourceHash": "fnv1a64:904372513fa5a5ca",
   "lessons": [
     {
       "id": "RU-C254-devochka",
@@ -287,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8511f0c90fe775bc",
+      "sourceHash": "fnv1a64:aee47badb5a5c6ae",
       "notice": null,
       "blocks": [
         {
@@ -325,7 +325,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "девушка (dévushka) is дева, \"a maiden\", with the fond -ушка."
+              "text": "девушка (dévushka) is дева, \"a maiden\", with the fond -ушка. Vasmer derives дева from an Indo-European root \"to suckle\", the root behind Latin fēmina, \"woman\"."
             }
           ]
         },

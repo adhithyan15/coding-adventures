@@ -14,7 +14,8 @@ romanization: "adhikār"
 concept_tag: PA-CAN110-ADHIKAR
 prerequisites: [PA-C110-shakti, PA-C110-hakk]
 sounds: []
-roots: []
+roots: [sanskrit-adhikara]
+etymology_hook: "adhikār ← Sanskrit adhikāra 'authority, a right', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C110-hakk]
 <!-- hl-knowledge: introduces=[PA-LEX-C110-CAN110-03]; assesses=[] -->
 
 **ਅਧਿਕਾਰ** — *adhikār* — "authority, a right".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਅਧਿਕਾਰ** (*adhikār*) is Sanskrit *adhikāra*, "authority, a right", taken over whole as a learned loan, a tatsama.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

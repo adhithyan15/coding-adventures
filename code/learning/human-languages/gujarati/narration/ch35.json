@@ -4,7 +4,7 @@
   "chapter": 35,
   "title": "The Word for Not, and the Word for Sorry",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:19e7a7451de20afd",
+  "sourceHash": "fnv1a64:243e841732e26f32",
   "lessons": [
     {
       "id": "GU-C31-nathi",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b3eeb940b2b0f357",
+      "sourceHash": "fnv1a64:a31cdab98f716d3d",
       "notice": null,
       "blocks": [
         {
@@ -72,6 +72,10 @@
             {
               "kind": "speech",
               "text": "The two halves are still visible inside it. ન is the old na, \"not\". The -થી is what is left of અસ્તિ (asti), \"is\" — the same ancient verb that comes down into English as is and into Latin as est. So nathī is literally not-is, two words that fused so long ago that Gujarati now treats them as one."
+            },
+            {
+              "kind": "speech",
+              "text": "CDIAL lists નથી (nathī) under Sanskrit nāsti, \"is not\", which is na and asti (CDIAL 7091)."
             }
           ]
         },
@@ -147,7 +151,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f642ceb0b90e2d5e",
+      "sourceHash": "fnv1a64:e2c9d30a76207f6b",
       "notice": null,
       "blocks": [
         {
@@ -196,6 +200,10 @@
             {
               "kind": "speech",
               "text": "One thing to know before you say it. The -તો ending is the masculine form. A woman says સમજતી નથી (samajtī nathī), with -તી. Gujarati marks the speaker's own gender on this verb, so the sentence you use is the one that matches you — the same choice the track's gender chapter set up, arriving now on a sentence you will say every day."
+            },
+            {
+              "kind": "speech",
+              "text": "Both words are inherited. CDIAL lists samajvũ under Sanskrit saṁbudhyate, \"wakes up, understands\" (CDIAL 12959), and nathī under nāsti, \"is not\" (CDIAL 7091)."
             }
           ]
         },

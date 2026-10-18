@@ -14,7 +14,8 @@ romanization: "kushi"
 concept_tag: JA-WORLD61-KUSHI
 prerequisites: [JA-C61-ito, JA-C61-hari]
 sounds: []
-roots: []
+roots: [japanese-kushi]
+etymology_hook: "kushi: native Japanese, inherited, not borrowed; kanji 櫛 attached later as kun'yomi"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C61-hari]
 <!-- hl-knowledge: introduces=[JA-LEX-C61-WORLD61-03]; assesses=[] -->
 
 **くし** — *kushi* — "a comb".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**くし** (*kushi*) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

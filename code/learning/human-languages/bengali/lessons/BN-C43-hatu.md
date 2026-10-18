@@ -14,7 +14,8 @@ romanization: "hā̃ṭu"
 concept_tag: BN-BODY43-HATU
 prerequisites: [BN-C43-kadh, BN-C43-rokto]
 sounds: []
-roots: []
+roots: [sanskrit-ashthivat]
+etymology_hook: "hāṁṭu ← Sanskrit aṣṭhīvat 'knee', a tadbhava (CDIAL 959)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C43-rokto]
 <!-- hl-knowledge: introduces=[BN-LEX-C43-BODY43-03]; assesses=[] -->
 
 **হাঁটু** — *hā̃ṭu* — "a knee".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**হাঁটু** (*hāṁṭu*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *aṣṭhīvat*, "knee" (CDIAL 959).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

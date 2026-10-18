@@ -11,8 +11,8 @@ gloss: to understand — literally to wake up fully, on the root that named the 
 concept_tag: VERB-UNDERSTAND
 prerequisites: [UR-C07-sochna]
 sounds: [rtl, do-chashmi-he, retroflex-aspirated-th]
-roots: [sanskrit-budh, pie-bheudh]
-etymology_hook: samajhnā is Sanskrit sam- "fully" plus budh- "to wake, to perceive" — the root behind Buddha "the woken one" and, through PIE *bʰewdʰ-, behind English bode and forbid; understanding, in Urdu, is waking up.
+roots: [sanskrit-budh, pie-bheudh, sanskrit-sambudhyate]
+etymology_hook: "samajhnā ← Sanskrit saṃbudhyate 'wakes up, understands', sam- + budh- (CDIAL 12959)"
 duration:
   max_seconds: 281
 requires:
@@ -75,7 +75,7 @@ only breathes on its right-hand neighbour.
 ## The word, taken apart — waking up, fully
 <!-- hl-knowledge: introduces=[UR-ETYMON-SAMAJHNA-WAKE]; assesses=[UR-LEX-SAMAJHNA] -->
 
-**samajhnā** comes through Prakrit *saṃbujjhadi* from Sanskrit *sambudhyate*:
+**samajhnā** comes through Prakrit *saṃbujjhaï* from Sanskrit *saṃbudhyate*, “wakes up, understands” (CDIAL 12959):
 **sam-**, “fully, together,” plus **budh-**, “**to wake; to become aware**.” To
 understand something is to come awake to it.
 

@@ -14,7 +14,8 @@ romanization: "kāfī"
 concept_tag: UR-FOOD57-KAFI
 prerequisites: [UR-C57-lemu, UR-C57-nashta]
 sounds: []
-roots: []
+roots: [english-coffee]
+etymology_hook: "kāfī ← English coffee"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C57-nashta]
 <!-- hl-knowledge: introduces=[UR-LEX-C57-FOOD57-04]; assesses=[] -->
 
 **کافی** — *kāfī* — "coffee".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**کافی** (*kāfī*) is a loan from English *coffee*. English took the word, through other European languages and Turkish, from Arabic *qahwa*. It only looks like *kāfī*, "enough", which is a different Arabic word.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

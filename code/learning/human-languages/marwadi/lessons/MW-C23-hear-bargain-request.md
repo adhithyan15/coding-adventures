@@ -11,8 +11,8 @@ gloss: make it a little cheaper — the counter-offer, heard whole
 concept_tag: MW-SHOPPING-BARGAIN-REQUEST
 prerequisites: [MW-C23-karo]
 sounds: [aspirated-th, voiceless-s, unaspirated-k]
-roots: []
-etymology_hook: Two chapters of shopping words and a price question finally meet in the one line that moves a price.
+roots: [sanskrit-stoka, sanskrit-karoti]
+etymology_hook: "thoṛu sasto karo: thoṛu ← stoka (CDIAL 13720); sasto not settled; karo ← karoti (CDIAL 2814)"
 duration:
   max_seconds: 180
 requires:
@@ -54,6 +54,11 @@ describing. Learn the printed line as it stands, and treat *sastā* and *sasto*
 as the same word wearing two endings rather than two different words.
 
 Say the whole exchange in order: ask the price, say it is too much, then this.
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*thoṛu sasto karo* joins words with their own lessons: *thoṛu*, "a little", from Sanskrit *stoka*, "a drop" (CDIAL 13720); *sasto*, "cheap", whose origin is not settled; and *karo*, "make", from Sanskrit *karoti*, "does" (CDIAL 2814).
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-BARGAIN-REQUEST-01] -->

@@ -4,7 +4,7 @@
   "chapter": 30,
   "title": "Welcoming a Guest",
   "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:267eefff93e643fb",
+  "sourceHash": "fnv1a64:99e27a66827e2e57",
   "lessons": [
     {
       "id": "SA-C30-door",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d73352e50dfbbf8f",
+      "sourceHash": "fnv1a64:03f6d31d654ec083",
       "notice": null,
       "blocks": [
         {
@@ -159,7 +159,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:bd38ddfe12e9f3fe",
+      "sourceHash": "fnv1a64:d20dd3d9554a3b77",
       "notice": null,
       "blocks": [
         {
@@ -200,6 +200,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Āsana is built on the root √ās, \"to sit\", with the suffix -ana that names the act or its place (MW). MW compares Greek hēmai, \"I sit\". It lives on as Hindi āsan (CDIAL 1484)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -210,7 +221,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -268,7 +279,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -299,7 +310,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d684a539af95ce02",
+      "sourceHash": "fnv1a64:ccb0acf340b5f053",
       "notice": null,
       "blocks": [
         {
@@ -330,7 +341,7 @@
             },
             {
               "kind": "speech",
-              "text": "पुष्पम् (puṣpam) is a flower. Its root means \"to bloom, to thrive, to nourish\", so the word names the opening rather than the petals."
+              "text": "पुष्पम् (puṣpam) is a flower. It is usually filed under a root meaning \"to thrive, to nourish\"; if that holds, the word names the thriving rather than the petals."
             },
             {
               "kind": "speech",
@@ -340,6 +351,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Puṣpa is usually filed under the root √puṣ, \"to thrive, nourish\" (MW), but CDIAL 8303 marks that link with a question mark, so it is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -350,7 +372,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -408,7 +430,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -439,7 +461,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d92bfd66c00a27fc",
+      "sourceHash": "fnv1a64:4a432332c1f1f1d1",
       "notice": null,
       "blocks": [
         {
@@ -480,6 +502,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Mālā is often taken to be borrowed from Dravidian: CDIAL 10092 and DEDR 4827 compare Tamil mālai, \"garland\". It lives on as Hindi māl."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -490,7 +523,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -548,7 +581,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -579,7 +612,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:043a19f1f4f2ca79",
+      "sourceHash": "fnv1a64:b1ae1ec4707d8244",
       "notice": null,
       "blocks": [
         {
@@ -614,12 +647,23 @@
             },
             {
               "kind": "speech",
-              "text": "The root means \"to anoint, to smear\", and the cupped hands were first of all a vessel: the shape you make to carry water, or an offering. The gesture of greeting began as the shape of giving something away. So the welcome closes where the book opened, on the first word you learned, with the hands finally named."
+              "text": "The root means \"to anoint, to smear\". MW describes the hands as hollowed as if to receive food, and says that raised to the forehead they became a sign of supplication: the gesture of greeting grew out of the shape of asking. So the welcome closes where the book opened, on the first word you learned, with the hands finally named."
             }
           ]
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Añjali is built on the root √añj, \"to anoint\" (MW, CDIAL 171), which MW compares with Latin unguō, \"I anoint\", the source of English ointment."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -630,7 +674,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -688,7 +732,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

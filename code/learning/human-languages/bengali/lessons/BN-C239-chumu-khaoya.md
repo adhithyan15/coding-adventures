@@ -14,7 +14,8 @@ romanization: "chumu khāoyā"
 concept_tag: BN-VERB-CHUMU-KHAOYA
 prerequisites: [BN-C238-tara-kora, BN-C238-bishvas-kora]
 sounds: []
-roots: []
+roots: [sanskrit-cumbati, sanskrit-khadati]
+etymology_hook: "chumu khāoyā: chumu 'kiss', with cumā ← cumbati (CDIAL 4870), + khāoyā 'to eat' (CDIAL 3865)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C238-bishvas-kora]
 <!-- hl-knowledge: introduces=[BN-LEX-C239-ACT239-01]; assesses=[] -->
 
 **চুমু খাওয়া** — *chumu khāoyā* — "to kiss".
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**চুমু খাওয়া** (*chumu khāoyā*) is *chumu*, "a kiss", which belongs with Bengali *cumā*, "to kiss", from Sanskrit *cumbati*, "kisses" (CDIAL 4870), + *khāoyā*, "to eat", from Sanskrit *khādati*, "eats" (CDIAL 3865): "to eat a kiss".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

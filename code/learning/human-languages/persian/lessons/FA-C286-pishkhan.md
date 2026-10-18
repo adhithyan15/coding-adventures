@@ -14,7 +14,8 @@ romanization: "pishkhân"
 concept_tag: FA-KAR286-PISHKHAN
 prerequisites: [FA-C285-hendese, FA-C286-khoshkshuyi]
 sounds: []
-roots: []
+roots: [persian-pesh]
+etymology_hook: "pishkhân: Persian pish 'front' + khân 'table'; inherited"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C286-khoshkshuyi]
 <!-- hl-knowledge: introduces=[FA-LEX-C286-KAR286-02]; assesses=[] -->
 
 **پیشخوان** — *pishkhân* — "a counter".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*pishkhân* is built from *pish*, "front", and *khân*, "table, tray": the table in front. *pish* is inherited, usually traced to Middle Persian *pēš*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

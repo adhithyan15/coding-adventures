@@ -14,7 +14,8 @@ romanization: "zarâfe"
 concept_tag: FA-THINGS121-ZARAFE
 prerequisites: [FA-C121-kerm, FA-C121-hashare]
 sounds: []
-roots: []
+roots: [arabic-zarafa]
+etymology_hook: "zarâfe ← Arabic zarāfa 'giraffe' (EtymDB); English giraffe is the same word"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C121-hashare]
 <!-- hl-knowledge: introduces=[FA-LEX-C121-THINGS121-05]; assesses=[] -->
 
 **زرافه** — *zarâfe* — "a giraffe".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*zarâfe* is borrowed from Arabic *zarāfa*, "giraffe" (EtymDB), and English *giraffe* comes from the same Arabic word. EtymDB traces the Arabic word itself back to a Persian compound, but that is not settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

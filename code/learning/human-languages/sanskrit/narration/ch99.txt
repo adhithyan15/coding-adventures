@@ -12,6 +12,9 @@ Before the new one: say the Sanskrit for for that reason, then the Sanskrit for 
 You'll want to know: मञ्चः.
 मञ्चः — mañcaḥ — "a bed, a platform".
 
+The word, taken apart.
+mañca "a stage, a platform, a bed" is of unclear origin: CDIAL 9715 suggests a root √mac with a query mark, and MW equates √mac with a twin √mañc that it calls probably artificial. It lives on as Punjabi mañjā "bed, cot" and Hindi māñcā "platform" (CDIAL 9715).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Sanskrit for because, then the Sanskrit for a bed.
 
 You'll want to know: उपधानम्.
 उपधानम् — upadhānam — "a pillow".
+
+The word, taken apart.
+upadhāna comes from upa-√dhā "place upon": "that on which one rests", a pillow, already in the Atharvaveda (MW). The root √dhā "put, place" is one MW sets beside Greek tithēmi and English do.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Sanskrit for a bed, then the Sanskrit for a pillow.
 You'll want to know: कम्बलः.
 कम्बलः — kambalaḥ — "a blanket".
 
+The word, taken apart.
+kambala "a woollen blanket" is already in the Atharvaveda (MW), but its source is uncertain: CDIAL 2771, after EWA, allows that it may be borrowed from Austroasiatic. Hindi kambal "blanket" comes from it (CDIAL 2771).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Sanskrit for a pillow, then the Sanskrit for a blank
 You'll want to know: यवनिका.
 यवनिका — yavanikā — "a curtain".
 
+The word, taken apart.
+MW lists yavanikā "a screen of cloth, a curtain" under yavana "Ionian, Greek", beside yavanikā "a Greek woman", which suggests "the Greek cloth". MW also records a form javanikā, so the link with the Greeks is not settled.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Sanskrit for a blanket, then the Sanskrit for a curt
 
 You'll want to know: तालकम्.
 तालकम् — tālakam — "a lock".
+
+The word, taken apart.
+tālaka "a lock, a bolt" is known only from the old word lists (MW). CDIAL 5749 and DEDR 3179 compare it with a Dravidian family of words for a door bar or bolt, so it is perhaps borrowed from Dravidian. It lives on as Hindi tālā "lock" (CDIAL 5749).
 
 What you've built.
 One more word for this chapter.

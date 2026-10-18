@@ -14,7 +14,8 @@ romanization: "sūī"
 concept_tag: PA-THINGS115-SUI
 prerequisites: [PA-C115-bhada, PA-C115-kaici]
 sounds: []
-roots: []
+roots: [sanskrit-suci]
+etymology_hook: "sūī ← Sanskrit sūcī 'needle', a tadbhava (CDIAL 13551)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C115-kaici]
 <!-- hl-knowledge: introduces=[PA-LEX-C115-THINGS115-05]; assesses=[] -->
 
 **ਸੂਈ** — *sūī* — "a needle".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਸੂਈ** (*sūī*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *sūcī*, "needle" (CDIAL 13551).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

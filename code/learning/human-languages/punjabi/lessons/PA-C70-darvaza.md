@@ -14,7 +14,8 @@ romanization: "darvāzā"
 concept_tag: PA-HOME70-DARVAZA
 prerequisites: [PA-C70-chaku, PA-C70-botal]
 sounds: []
-roots: []
+roots: [persian-dar-door]
+etymology_hook: "darvāzā: usually traced to Persian darvāza 'gate, door'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C70-botal]
 <!-- hl-knowledge: introduces=[PA-LEX-C70-HOME70-04]; assesses=[] -->
 
 **ਦਰਵਾਜ਼ਾ** — *darvāzā* — "a door".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਦਰਵਾਜ਼ਾ** (*darvāzā*) is a loan, usually traced to Persian *darvāza*, "gate, door".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

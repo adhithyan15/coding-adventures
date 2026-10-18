@@ -1,7 +1,7 @@
 {
   "language": "urdu",
   "chapter": 148,
-  "sourceHash": "fnv1a64:3332dba8919084c1",
+  "sourceHash": "fnv1a64:e3a9bc84a6f81781",
   "lessonIds": [
     "UR-C148-chunna",
     "UR-C148-badalna",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "urdu/narration/ch148.txt",
   "json": "urdu/narration/ch148.json",
-  "textHash": "fnv1a64:8c2191ceb19f0823",
-  "jsonHash": "fnv1a64:b1ca653b0576a72b",
+  "textHash": "fnv1a64:d22b71db038f27c6",
+  "jsonHash": "fnv1a64:7dbe0bef6892f291",
   "findings": []
 }

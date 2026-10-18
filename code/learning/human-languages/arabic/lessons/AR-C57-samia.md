@@ -14,7 +14,8 @@ romanization: "samiʿa"
 concept_tag: AR-VERB-SAMIA
 prerequisites: [AR-C57-muallim, AR-C57-shariba]
 sounds: []
-roots: []
+roots: [s-m-ʿ]
+etymology_hook: "samiʿa: built on the root s-m-ʿ, 'to hear' (Lane); Hebrew shamaʿ, 'to hear', is its well-known cousin"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C57-shariba]
 <!-- hl-knowledge: introduces=[AR-LEX-C57-FAMILY57-03]; assesses=[] -->
 
 **سمع** — *samiʿa* — "to hear (he heard)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**سمع** (*samiʿa*) is built on the native Arabic root *s-m-ʿ*, "to hear" (Lane). Hebrew *shamaʿ*, "to hear", is its well-known cousin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

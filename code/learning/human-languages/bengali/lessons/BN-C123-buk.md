@@ -14,7 +14,8 @@ romanization: "buk"
 concept_tag: BN-THINGS123-BUK
 prerequisites: [BN-C123-beral, BN-C123-konui]
 sounds: []
-roots: []
+roots: [sanskrit-bukka]
+etymology_hook: "buk ← Sanskrit bukka 'heart', which CDIAL treats as non-Aryan (CDIAL 12064)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C123-konui]
 <!-- hl-knowledge: introduces=[BN-LEX-C123-THINGS123-03]; assesses=[] -->
 
 **বুক** — *buk* — "the chest".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**বুক** (*buk*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *bukka*, "heart" (CDIAL 12064). CDIAL treats *bukka* as a non-Aryan word that crossed with Sanskrit *vṛkka*, "kidneys".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

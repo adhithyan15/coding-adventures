@@ -6,7 +6,7 @@ sequence: 1229
 chapter: 90
 type: word
 headword: os
-gloss: "you all" as the object — the shortest word in the set, and the one that stops at a border
+gloss: '"you all" as the object — the shortest word in the set, and the one that stops at a border'
 concept_tag: ES-PRONOUN-OS
 prerequisites: [ES-C45-los-las, ES-C11-querer]
 sounds: []

@@ -14,7 +14,8 @@ romanization: "dhairyam"
 concept_tag: SA-WEL151-DHAIRYAM
 prerequisites: [SA-C150-udarapida, SA-C151-utsahah]
 sounds: []
-roots: []
+roots: [sanskrit-dhairya]
+etymology_hook: "dhairya ← dhīra 'firm, steady' with lengthened vowel (MW): 'firmness, courage, patience'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C151-utsahah]
 <!-- hl-knowledge: introduces=[SA-LEX-C151-WEL151-02]; assesses=[] -->
 
 **धैर्यम्** — *dhairyam* — "courage, patience".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*dhairya* is built from *dhīra* "firm, steady, brave" with the first vowel strengthened to *ai* (MW): "firmness", and so "courage, patience".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

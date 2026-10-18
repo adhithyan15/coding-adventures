@@ -14,7 +14,8 @@ romanization: "muzāriʿ"
 concept_tag: AR-THINGS144-MUZARI
 prerequisites: [AR-C144-najjar, AR-C144-khabbaz]
 sounds: []
-roots: []
+roots: [z-r-ʿ]
+etymology_hook: "muzāriʿ: built on the root z-r-ʿ, 'to sow' (Lane); muzāriʿ is the Form III participle, 'one who works the sown land'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C144-khabbaz]
 <!-- hl-knowledge: introduces=[AR-LEX-C144-THINGS144-04]; assesses=[] -->
 
 **مزارع** — *muzāriʿ* — "a farmer".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**مزارع** (*muzāriʿ*) is built on the native Arabic root *z-r-ʿ*, "to sow" (Lane). *Muzāriʿ* is the Form III participle, "one who works the sown land".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

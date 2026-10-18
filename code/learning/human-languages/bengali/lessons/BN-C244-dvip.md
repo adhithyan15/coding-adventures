@@ -14,7 +14,8 @@ romanization: "dvīp"
 concept_tag: BN-JAYGA244-DVIP
 prerequisites: [BN-C244-sorkar, BN-C244-jati]
 sounds: []
-roots: []
+roots: [sanskrit-dvipa]
+etymology_hook: "dvīp ← Sanskrit dvīpa 'land, island', a tatsama (CDIAL 6691)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C244-jati]
 <!-- hl-knowledge: introduces=[BN-LEX-C244-JAYGA244-04]; assesses=[] -->
 
 **দ্বীপ** — *dvīp* — "an island".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**দ্বীপ** (*dvīp*) is Sanskrit *dvīpa*, "land, island", taken over whole as a learned loan, a tatsama (CDIAL 6691). The inherited forms are *dīyā* and *de*, which CDIAL lists.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

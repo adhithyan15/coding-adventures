@@ -14,7 +14,8 @@ romanization: "sei"
 concept_tag: JA-WHY98-SEI
 prerequisites: [JA-C98-riyuu, JA-C98-tame]
 sounds: []
-roots: []
+roots: [japanese-sei-fault]
+etymology_hook: "sei: usually written in kana (JMdict gives 所為); origin not settled"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C98-tame]
 <!-- hl-knowledge: introduces=[JA-LEX-C98-WHY98-04]; assesses=[] -->
 
 **せい** — *sei* — "the fault, the cause".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**せい** (*sei*) is usually written in kana, though JMdict gives a kanji spelling for it. Where the word comes from is not settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

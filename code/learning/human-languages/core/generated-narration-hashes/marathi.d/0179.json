@@ -1,7 +1,7 @@
 {
   "language": "marathi",
   "chapter": 179,
-  "sourceHash": "fnv1a64:cd6dd84696982e49",
+  "sourceHash": "fnv1a64:784420622c67761c",
   "lessonIds": [
     "MR-C179-nyayalay",
     "MR-C179-nyayadhis",
@@ -16,6 +16,6 @@
   "text": "marathi/narration/ch179.txt",
   "json": "marathi/narration/ch179.json",
   "textHash": "fnv1a64:367be3a0507a275c",
-  "jsonHash": "fnv1a64:31f4c4707786539c",
+  "jsonHash": "fnv1a64:41783244868d0310",
   "findings": []
 }

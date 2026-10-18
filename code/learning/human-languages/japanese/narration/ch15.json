@@ -4,7 +4,7 @@
   "chapter": 15,
   "title": "The Two Signs the Rest of the Run Cost",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:568a8003dd1c90e7",
+  "sourceHash": "fnv1a64:b1fb1addb44cb171",
   "lessons": [
     {
       "id": "JA-C15-nana",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f2cb6b771bee2d09",
+      "sourceHash": "fnv1a64:bc79f8116cab6624",
       "notice": null,
       "blocks": [
         {
@@ -91,6 +91,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "なな (nana) is native: the kun'yomi of the character for \"seven\", a word inherited, not borrowed. The borrowed reading is shichi, from Chinese (Middle Chinese tshit in Baxter's transcription; KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built — the same seam, a second time",
           "segments": [
@@ -123,7 +134,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -143,7 +154,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -194,7 +205,7 @@
         "sight-cue",
         "eyes-or-hands-step"
       ],
-      "sourceHash": "fnv1a64:42bedc3f16b7164c",
+      "sourceHash": "fnv1a64:739f0042deb03a0e",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -276,6 +287,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "はち (hachi) is Sino-Japanese: the on'yomi of the character for \"eight\", borrowed from Chinese (Middle Chinese peat). The native word, ya, lives on in yattsu (KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice — read, copy, recall",
           "segments": [
@@ -286,7 +308,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -336,7 +358,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ae583d187e707f2b",
+      "sourceHash": "fnv1a64:9a6b12f8b155abd9",
       "notice": null,
       "blocks": [
         {
@@ -404,6 +426,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "く (ku) is Sino-Japanese, and so is kyū: both are on'yomi of the character for \"nine\", borrowed from Chinese at different times from one Chinese word (Middle Chinese kjuwX). The native word is kokono (KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built — a second reading that is not a native word",
           "segments": [
@@ -437,7 +470,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -457,7 +490,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -661,7 +694,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:eca3739ec9b141fa",
+      "sourceHash": "fnv1a64:fb3e827405ea681a",
       "notice": null,
       "blocks": [
         {
@@ -729,6 +762,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ろく (roku) is Sino-Japanese: the on'yomi of the character for \"six\", borrowed from Chinese (Middle Chinese ljuwk). The native word, mu, lives on in muttsu (KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built — why six waited",
           "segments": [
@@ -747,7 +791,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -776,7 +820,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -999,7 +1043,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:438c32bc4dead044",
+      "sourceHash": "fnv1a64:667d08f693d67f40",
       "notice": null,
       "blocks": [
         {
@@ -1096,6 +1140,17 @@
         },
         {
           "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "じゅう (jū) is Sino-Japanese: the on'yomi of the character for \"ten\", borrowed from Chinese (Middle Chinese dzyip). The native word is tō (KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -1115,7 +1170,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

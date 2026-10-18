@@ -14,7 +14,8 @@ romanization: "kamarband"
 concept_tag: FA-CLOTHES75-KAMARBAND
 prerequisites: [FA-C74-kafsh, FA-C75-kot]
 sounds: []
-roots: []
+roots: [persian-band]
+etymology_hook: "kamarband: Persian kamar 'waist' + band 'band' (EtymDB); native"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C75-kot]
 <!-- hl-knowledge: introduces=[FA-LEX-C75-CLOTHES75-02]; assesses=[] -->
 
 **کمربند** — *kamarband* — "a belt".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*kamarband* is built from *kamar*, "waist" (Middle Persian *kamar*, EtymDB), and *band*, "band, tie" (EtymDB): a waist-band. Both parts are native Persian.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

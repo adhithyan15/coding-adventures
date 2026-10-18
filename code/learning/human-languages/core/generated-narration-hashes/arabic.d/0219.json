@@ -1,7 +1,7 @@
 {
   "language": "arabic",
   "chapter": 219,
-  "sourceHash": "fnv1a64:8bfa6176c319f244",
+  "sourceHash": "fnv1a64:2dddaaef7c239137",
   "lessonIds": [
     "AR-C219-khartum",
     "AR-C219-khashab",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "arabic/narration/ch219.txt",
   "json": "arabic/narration/ch219.json",
-  "textHash": "fnv1a64:5046359aafc5cb78",
-  "jsonHash": "fnv1a64:ef087f75f3acf76f",
+  "textHash": "fnv1a64:10055c2607c84123",
+  "jsonHash": "fnv1a64:4515605c13a712c9",
   "findings": []
 }

@@ -103,6 +103,7 @@ The word that completes the pair. Cūr asks; quia answers, and it hangs a whole 
 Cūr nōn venīs? Quia nōn possum. — Why are you not coming? Because I cannot.
 That sentence uses four things this tranche has given you — cūr, quia, the nōn in front of a verb, and possum — and nothing else. It is the first question-and-reason exchange this book can build.
 Latin has three words here and they are not quite the same: quia states a plain cause, quod states one the hearer already accepts, and quoniam ("since now") states one both parties take for granted. A reader meets all three. Start with quia.
+Quia is built on the stem of quis, "who, what", inherited from Proto-Indo-European kʷis (EtymDB 2.1); the exact form behind it is disputed.
 
 Guided Practice.
 [pause 1 second]
@@ -141,6 +142,7 @@ The name-exchange lesson taught you to say mihi nōmen est, "the name is to me,"
 For everything else, the adjective is what you want, and it agrees with what is owned rather than with the owner:
 liber meus — my book (masculine, so meus) epistula mea — my letter (feminine, so mea).
 That is the opposite of English, where my never changes. It matches French mon livre / ma lettre and Spanish mi only in part — Spanish flattened the gender out of mi and kept it in mío.
+Meus is built on the stem of mē, "me", inherited from Proto-Indo-European (e)me- (EtymDB 2.1).
 
 Guided Practice.
 [pause 1 second]

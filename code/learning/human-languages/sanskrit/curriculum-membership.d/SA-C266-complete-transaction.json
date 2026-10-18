@@ -1,0 +1,11 @@
+{
+  "id": "SA-C266-complete-transaction",
+  "pathSegment": "SA-PATH-266-MARKET266",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "SA-EXT-266-MARKET266",
+      "order": 3
+    }
+  ]
+}

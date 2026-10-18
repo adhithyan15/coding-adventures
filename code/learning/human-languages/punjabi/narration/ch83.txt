@@ -12,6 +12,9 @@ Before the new one: say the Punjabi for sweet, then the Punjabi for fat.
 You'll want to know: ਪਤਲਾ.
 ਪਤਲਾ — patlā — "thin".
 
+The word, taken apart.
+ਪਤਲਾ (patlā) came into Punjabi from Hindi. CDIAL lists Hindi patlā, "thin, weak", under Sanskrit pattrala, "leafy", and so "leaf-like, thin", and marks the Punjabi word as taken from it (CDIAL 7736).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Punjabi for fat, then the Punjabi for thin.
 
 You'll want to know: ਹਲਕਾ.
 ਹਲਕਾ — halkā — "light (in weight)".
+
+The word, taken apart.
+ਹਲਕਾ (halkā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from laghu, "light" (CDIAL 10896). Its sounds have been swapped, and a -k- added.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Punjabi for thin, then the Punjabi for light.
 You'll want to know: ਭਾਰੀ.
 ਭਾਰੀ — bhārī — "heavy".
 
+The word, taken apart.
+ਭਾਰੀ (bhārī) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from bhārika, "forming a load, heavy" (CDIAL 9465).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Punjabi for light, then the Punjabi for heavy.
 You'll want to know: ਜ਼ਰੂਰੀ.
 ਜ਼ਰੂਰੀ — zarūrī — "important, necessary".
 
+The word, taken apart.
+ਜ਼ਰੂਰੀ (zarūrī) is a loan from Arabic ḍarūrī, "necessary", which reached Punjabi through Persian. Its Arabic root is ḍ-r-r (Lane).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Punjabi for heavy, then the Punjabi for important.
 
 You'll want to know: ਹਰਾ.
 ਹਰਾ — harā — "green".
+
+The word, taken apart.
+ਹਰਾ (harā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from harita, "yellow; green" (CDIAL 13985).
 
 What you've built.
 One more word for this chapter.

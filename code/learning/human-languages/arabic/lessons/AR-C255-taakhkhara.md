@@ -14,7 +14,8 @@ romanization: "taʾakhkhara"
 concept_tag: AR-VERB-TAAKHKHARA
 prerequisites: [AR-C254-khalata, AR-C254-qashshara]
 sounds: []
-roots: []
+roots: [ʾ-kh-r]
+etymology_hook: "taʾakhkhara: built on the root ʾ-kh-r, 'to come after, to be late' (Lane); taʾakhkhara is Form V, 'to lag behind'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C254-qashshara]
 <!-- hl-knowledge: introduces=[AR-LEX-C255-ACT255-01]; assesses=[] -->
 
 **تأخر** — *taʾakhkhara* — "to be late".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**تأخر** (*taʾakhkhara*) is built on the native Arabic root *ʾ-kh-r*, "to come after, to be late" (Lane). *Taʾakhkhara* is Form V, "to lag behind".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

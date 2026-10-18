@@ -14,7 +14,8 @@ romanization: "ṭrên"
 concept_tag: BN-THINGS128-TREN
 prerequisites: [BN-C128-bondor, BN-C128-jahaj]
 sounds: []
-roots: []
+roots: [english-train]
+etymology_hook: "ṭrên ← English train"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C128-jahaj]
 <!-- hl-knowledge: introduces=[BN-LEX-C128-THINGS128-04]; assesses=[] -->
 
 **ট্রেন** — *ṭrên* — "a train".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ট্রেন** (*ṭrên*) is a loan from English *train*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

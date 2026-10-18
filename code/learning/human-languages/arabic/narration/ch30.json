@@ -4,7 +4,7 @@
   "chapter": 30,
   "title": "Knowing and Eating",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:b920c9c43b2204e9",
+  "sourceHash": "fnv1a64:e1124bbfdde46532",
   "lessons": [
     {
       "id": "AR-C30-arafa",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7f82d1080a5a3f77",
+      "sourceHash": "fnv1a64:5f081cd280d63a3a",
       "notice": null,
       "blocks": [
         {
@@ -165,7 +165,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:67f93a3fc1967962",
+      "sourceHash": "fnv1a64:643eee2ebaec2dfb",
       "notice": null,
       "blocks": [
         {

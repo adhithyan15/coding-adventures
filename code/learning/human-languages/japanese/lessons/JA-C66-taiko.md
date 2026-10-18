@@ -14,7 +14,8 @@ romanization: "taiko"
 concept_tag: JA-THINGS66-TAIKO
 prerequisites: [JA-C66-ikada, JA-C66-fue]
 sounds: []
-roots: []
+roots: [middle-chinese-thajh, middle-chinese-kux]
+etymology_hook: "taiko: Sino-Japanese 太 'big' + 鼓 'drum', on'yomi borrowed from Chinese"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C66-fue]
 <!-- hl-knowledge: introduces=[JA-LEX-C66-THINGS66-05]; assesses=[] -->
 
 **たいこ** — *taiko* — "a drum".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**たいこ** (*taiko*) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are *tai*, "big, great" (Middle Chinese *thajH*) and *ko*, "drum" (*kuX*) (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

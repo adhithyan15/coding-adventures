@@ -14,7 +14,8 @@ romanization: "varṣā"
 concept_tag: SA-WEATHER-RAIN
 prerequisites: [SA-C75-plane, SA-C75-enters]
 sounds: []
-roots: []
+roots: [sanskrit-varsha]
+etymology_hook: "varṣā 'rain, the rains' ← the root √vṛṣ 'rain' (MW; CDIAL 11396); varṣa gives Hindi baras"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,13 @@ reviews_of: [SA-C75-enters]
 <!-- hl-knowledge: introduces=[SA-LEX-C76-WEATHER-01]; assesses=[] -->
 
 **वर्षा** (*varṣā*) — "rain", and in the plural the rainy season.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*Varṣā* is built on the root √vṛṣ, "to rain" (MW, CDIAL 11396). Its sister
+*varṣa*, "rain; a year", counted in rainy seasons, lives on as Hindi *baras*,
+"year" (CDIAL 11392).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

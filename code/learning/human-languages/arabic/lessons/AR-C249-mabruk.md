@@ -14,7 +14,8 @@ romanization: "mabrūk"
 concept_tag: AR-SHAY249-MABRUK
 prerequisites: [AR-C249-jawda, AR-C249-ihtifal]
 sounds: []
-roots: []
+roots: [b-r-k]
+etymology_hook: "mabrūk: built on the root b-r-k, 'a blessing' (Lane); mabrūk is the passive participle, 'blessed'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C249-ihtifal]
 <!-- hl-knowledge: introduces=[AR-LEX-C249-SHAY249-04]; assesses=[] -->
 
 **مبروك** — *mabrūk* — "congratulations".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**مبروك** (*mabrūk*) is built on the native Arabic root *b-r-k*, "a blessing; to kneel" (Lane). *Mabrūk* is the passive participle, "blessed".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

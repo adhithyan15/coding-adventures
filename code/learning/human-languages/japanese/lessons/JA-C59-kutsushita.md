@@ -14,7 +14,8 @@ romanization: "kutsushita"
 concept_tag: JA-CLOTHES59-KUTSUSHITA
 prerequisites: [JA-C58-kutsu, JA-C59-boushi]
 sounds: []
-roots: []
+roots: [japanese-kutsu, japanese-shita]
+etymology_hook: "kutsushita: kutsu 'shoe' + native shita 'under' (靴下); kutsu's own origin is not settled"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C59-boushi]
 <!-- hl-knowledge: introduces=[JA-LEX-C59-CLOTHES59-02]; assesses=[] -->
 
 **くつした** — *kutsushita* — "socks".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**くつした** (*kutsushita*) is a compound of *kutsu*, "shoe", and native *shita*, "under", both kun'yomi of its kanji (JMdict, KANJIDIC2). *Kutsu* is usually counted native, but whether it is inherited or an early loan is not settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

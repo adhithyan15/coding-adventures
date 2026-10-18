@@ -12,7 +12,7 @@ concept_tag: VERB-LIKE-LOVE
 prerequisites: [MR-C09-madat-karne, MR-C06-number-differences]
 sounds: [standalone-vowel-aa, retroflex-na]
 roots: [old-marathi-avadane-like, sanskrit-preman-love, pie-preyh-love]
-etymology_hook: "आवडणे is inherited straight from Old Marathi with cognates in Konkani and Sindhi and no securely established Sanskrit ancestor — a native word where Hindi and Urdu use the Persian loan pasand; beside it प्रेम is Sanskrit preman on the root प्री prī- 'to be dear', Indo-European \\*preyH-, which Germanic turned into English friend and free"
+etymology_hook: "आवडणे is native, from Old Marathi, with no secure Sanskrit ancestor; Hindi and Urdu use Persian pasand"
 duration:
   max_seconds: 290
 requires:

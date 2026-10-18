@@ -14,7 +14,8 @@ romanization: "śarkarā"
 concept_tag: SA-FOOD-SHARKARA
 prerequisites: [SA-C40-curd, SA-C38-ash, SA-C39-bird]
 sounds: []
-roots: []
+roots: [sanskrit-sharkara]
+etymology_hook: "śarkarā 'gravel, grit', then 'candied sugar' (CDIAL 12337-12338); via Persian and Arabic it became sugar"
 duration:
   max_seconds: 210
 requires:
@@ -47,6 +48,14 @@ reviews_of: [SA-C40-curd]
 This one word is behind every sugar in Europe. It went into Arabic as *sukkar*, into Latin as *saccharum*, and from there into Italian *zucchero*, French *sucre*, German *Zucker* and English *sugar* and *saccharine*.
 
 Feminine, ending in **-आ**, like माला and शिला.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*Śarkarā* first meant gravel or grit, in the Atharvaveda, and only later candied
+sugar (CDIAL 12337, 12338); CDIAL notes a proposal that the sugar sense came
+through a Mon-Khmer word. Borrowed through Persian into Arabic *sukkar*, it
+reached English as **sugar**.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

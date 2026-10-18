@@ -1,7 +1,7 @@
 {
   "language": "urdu",
   "chapter": 102,
-  "sourceHash": "fnv1a64:2e58ee9cd0b68826",
+  "sourceHash": "fnv1a64:00351fa5956554aa",
   "lessonIds": [
     "UR-C102-bavarchikhana",
     "UR-C102-bathrum",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "urdu/narration/ch102.txt",
   "json": "urdu/narration/ch102.json",
-  "textHash": "fnv1a64:bc0f2f16f7d438f9",
-  "jsonHash": "fnv1a64:15ec3813c251738d",
+  "textHash": "fnv1a64:156b04f50bd5497b",
+  "jsonHash": "fnv1a64:d09660879e9ecb99",
   "findings": []
 }

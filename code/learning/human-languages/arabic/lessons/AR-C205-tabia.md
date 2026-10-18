@@ -14,7 +14,8 @@ romanization: "ṭabīʿa"
 concept_tag: AR-MAKAN205-TABIA
 prerequisites: [AR-C204-asima, AR-C204-ayna]
 sounds: []
-roots: []
+roots: [ṭ-b-ʿ]
+etymology_hook: "ṭabīʿa: built on the root ṭ-b-ʿ, 'to seal, to stamp' (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C204-ayna]
 <!-- hl-knowledge: introduces=[AR-LEX-C205-MAKAN205-01]; assesses=[] -->
 
 **طبيعة** — *ṭabīʿa* — "nature".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**طبيعة** (*ṭabīʿa*) is built on the native Arabic root *ṭ-b-ʿ*, "to seal, to stamp" (Lane). *Ṭabīʿa* is the impress stamped on a thing, its natural disposition: nature.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

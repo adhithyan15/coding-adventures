@@ -12,6 +12,9 @@ Before the new one: say the Sanskrit for shuts, then the Sanskrit for opens.
 You'll want to know: दीव्यति.
 दीव्यति — dīvyati — "gambles, plays".
 
+The word, taken apart.
+dīvyati comes from the root √div, "to cast dice, play, gamble" (MW), as its present. MW keeps this √div apart from div, "sky, heaven", the word behind the god Dyaus.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Sanskrit for opens, then the Sanskrit for gambles.
 
 You'll want to know: प्रवहति.
 प्रवहति — pravahati — "flows".
+
+The word, taken apart.
+pravahati is built on pra, "forth", and the root √vah, "to carry" (MW), the root of vahati, "carries", which you have already met. CDIAL 8792 lists it, and Marathi pohṇẽ, "to swim, float", comes from it.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Sanskrit for gambles, then the Sanskrit for flows.
 You'll want to know: आस्वादयति.
 आस्वादयति — āsvādayati — "tastes".
 
+The word, taken apart.
+āsvādayati is built on ā- and the causative of the root √svad, "to taste well, be sweet" (MW). MW derives the root, probably, from su "well" and √ad "eat", and compares its adjective svādu, "sweet", with Latin suāvis and English sweet.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Sanskrit for flows, then the Sanskrit for tastes.
 You'll want to know: उपदिशति.
 उपदिशति — upadiśati — "advises, instructs".
 
+The word, taken apart.
+upadiśati is built on upa, "towards", and the root √diś, "to point out, show" (MW), the root of diśā, "direction". To instruct someone is to point things out to them, and the noun upadeśa means "teaching".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Sanskrit for tastes, then the Sanskrit for advises.
 
 You'll want to know: सम्मानयति.
 सम्मानयति — sammānayati — "honours".
+
+The word, taken apart.
+sammānayati is built on sam and mānayati, "esteems, honours" (CDIAL 10047), which MW calls the causative of the root √man, "to think". To honour someone is to make them thought of. MW compares √man with Latin meminisse, "to remember", and English mean.
 
 What you've built.
 One more word for this chapter.

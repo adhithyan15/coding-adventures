@@ -1,7 +1,7 @@
 {
   "language": "persian",
   "chapter": 257,
-  "sourceHash": "fnv1a64:11401edd5947a6b6",
+  "sourceHash": "fnv1a64:06d2a3795ab66d80",
   "lessonIds": [
     "FA-C257-deltang-shodan",
     "FA-C257-bozorg-shodan",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "persian/narration/ch257.txt",
   "json": "persian/narration/ch257.json",
-  "textHash": "fnv1a64:da1a086480ff4dd4",
-  "jsonHash": "fnv1a64:f91357a745dfd5a7",
+  "textHash": "fnv1a64:d39adfd13785a294",
+  "jsonHash": "fnv1a64:282929acaff8ee0e",
   "findings": []
 }

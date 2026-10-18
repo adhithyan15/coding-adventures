@@ -47,7 +47,7 @@ reviews_of: [RU-C136-nikuda]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**зачем** is *за*, "for, after", with *чем*, a form of *что*, "what": "for what".
+**зачем** is *за*, "for, after", with *чем*, a form of *что*, "what": "for what". Vasmer traces *что* to Proto-Slavic *\*čĭ*, "what", with a pointing *to* on the end.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

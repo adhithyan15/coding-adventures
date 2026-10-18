@@ -14,7 +14,8 @@ romanization: "ibhām"
 concept_tag: AR-SIHHA263-IBHAM
 prerequisites: [AR-C263-araq, AR-C263-misam]
 sounds: []
-roots: []
+roots: [b-h-m]
+etymology_hook: "ibhām: built on the root b-h-m, 'to be obscure, to be closed' (Lane); ibhām is the thumb"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C263-misam]
 <!-- hl-knowledge: introduces=[AR-LEX-C263-SIHHA263-04]; assesses=[] -->
 
 **إبهام** — *ibhām* — "a thumb".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**إبهام** (*ibhām*) is built on the native Arabic root *b-h-m*, "to be obscure, to be closed" (Lane). *Ibhām* is the thumb.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

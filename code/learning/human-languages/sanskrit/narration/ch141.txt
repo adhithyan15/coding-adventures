@@ -12,6 +12,9 @@ Before the new one: say the Sanskrit for a bill (to pay), then the Sanskrit for 
 You'll want to know: पिबति.
 पिबति — pibati — "drinks".
 
+The word, taken apart.
+pibati comes from the root √pā "drink", with its reduplicated present stem piba- (MW). It is inherited from Indo-European: Latin bibo "I drink" and Greek pinō are its cousins (EtymDB). It lives on as Hindi pīnā "to drink" (CDIAL 8209).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Sanskrit for a receipt, then the Sanskrit for drinks
 
 You'll want to know: वसति.
 वसति — vasati — "dwells, lives".
+
+The word, taken apart.
+vasati comes from the root √vas "dwell, stay" (CDIAL 11435), inherited from Indo-European (EtymDB). MW sets it beside Gothic wisan and English was and were: "to stay" became "to be". It lives on as Hindi basnā "to dwell" (CDIAL 11435).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Sanskrit for drinks, then the Sanskrit for dwells.
 You'll want to know: चरति.
 चरति — carati — "moves about, grazes".
 
+The word, taken apart.
+carati comes from the root √car "move, range about" (CDIAL 4686), inherited from Indo-European: Greek pelō and Latin colō are counted as its cousins (EtymDB). It lives on as Hindi carnā "to graze" (CDIAL 4686).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Sanskrit for dwells, then the Sanskrit for moves abo
 You'll want to know: स्पृशति.
 स्पृशति — spṛśati — "touches".
 
+The word, taken apart.
+spṛśati comes from the root √spṛś "touch, stroke" (CDIAL 13815), already in the Rigveda. sparśa "touch", the word for the stop consonants in Sanskrit grammar, comes from the same root (MW).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Sanskrit for moves about, then the Sanskrit for touc
 
 You'll want to know: त्यजति.
 त्यजति — tyajati — "leaves, gives up".
+
+The word, taken apart.
+tyajati comes from the root √tyaj "leave, abandon, give up" (CDIAL 5984), inherited from Indo-European (EtymDB). tyāga "renunciation" comes from the same root.
 
 What you've built.
 One more word for this chapter.

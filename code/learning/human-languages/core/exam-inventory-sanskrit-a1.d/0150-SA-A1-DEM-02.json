@@ -1,0 +1,19 @@
+{
+  "id": "SA-A1-DEM-02",
+  "category": "Sarvanāma — deixis and demonstratives",
+  "label": "spatial deixis: TWO terms, near and far, not Spanish's three",
+  "probe": [
+    "SA-LEX-C14-DEIXIS-03",
+    "SA-LEX-C14-DEIXIS-04",
+    "SA-GRAMMAR-C14-DEIXIS-SYSTEM"
+  ],
+  "anchorIds": [
+    "ES-A1-PROXY",
+    "SA-CORPUS",
+    "ED-SANSKRIT"
+  ],
+  "derivedFrom": [
+    "A1-DEM-02"
+  ],
+  "note": "atra and tatra. Spanish's three-way este/ese/aquel is answered honestly by a two-way system rather than by inventing a middle term. (Sanskrit does have a third stem, adas, for the remote; the track does not teach it and this point does not pretend otherwise.)"
+}

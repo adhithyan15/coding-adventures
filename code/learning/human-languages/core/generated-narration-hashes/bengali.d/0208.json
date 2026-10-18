@@ -1,7 +1,7 @@
 {
   "language": "bengali",
   "chapter": 208,
-  "sourceHash": "fnv1a64:bba80a51cdfc880f",
+  "sourceHash": "fnv1a64:4429f887c9d6dc57",
   "lessonIds": [
     "BN-C208-pailot",
     "BN-C208-nabik",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "bengali/narration/ch208.txt",
   "json": "bengali/narration/ch208.json",
-  "textHash": "fnv1a64:ac187260d2b4c840",
-  "jsonHash": "fnv1a64:d10a97cb292732d1",
+  "textHash": "fnv1a64:5bfeb8f3cb9bbd30",
+  "jsonHash": "fnv1a64:3f5cfd5a863c4543",
   "findings": []
 }

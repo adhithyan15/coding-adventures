@@ -14,7 +14,8 @@ romanization: "pôdôbi"
 concept_tag: BN-JINIS227-PODOBI
 prerequisites: [BN-C226-parking, BN-C226-lokjon]
 sounds: []
-roots: []
+roots: [sanskrit-padavi]
+etymology_hook: "pôdôbi ← Sanskrit padavī 'road; rank, title', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C226-lokjon]
 <!-- hl-knowledge: introduces=[BN-LEX-C227-JINIS227-01]; assesses=[] -->
 
 **পদবি** — *pôdôbi* — "a surname".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**পদবি** (*pôdôbi*) is Sanskrit *padavī*, "road; rank, title", taken over whole as a learned loan, a tatsama.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

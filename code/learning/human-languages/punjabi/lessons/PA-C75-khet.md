@@ -14,7 +14,8 @@ romanization: "khet"
 concept_tag: PA-NATURE75-KHET
 prerequisites: [PA-C74-patthar, PA-C75-ret]
 sounds: []
-roots: []
+roots: [sanskrit-kshetra]
+etymology_hook: "khet ← Sanskrit kṣetra 'land', a tadbhava (CDIAL 3735)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C75-ret]
 <!-- hl-knowledge: introduces=[PA-LEX-C75-NATURE75-02]; assesses=[] -->
 
 **ਖੇਤ** — *khet* — "a field".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਖੇਤ** (*khet*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *kṣetra*, "land" (CDIAL 3735).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "mārjayati"
 concept_tag: SA-VERB-MARJAYATI
 prerequisites: [SA-C136-dharayati, SA-C136-ganayati]
 sounds: []
-roots: []
+roots: [sanskrit-marjayati]
+etymology_hook: "mārjayati ← √mṛj 'wipe, rub', which MW sets beside Latin mulgere and English milk; Gujarati mājvũ"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C136-ganayati]
 <!-- hl-knowledge: introduces=[SA-LEX-C136-ACT136-04]; assesses=[] -->
 
 **मार्जयति** — *mārjayati* — "wipes, cleans".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*mārjayati* is the causative form of the root √mṛj "wipe, rub, clean" (MW). MW sets √mṛj beside Latin *mulgere* "to milk" and English *milk*. The plain verb *mārjati* lives on as Gujarati *mājvũ* "to scour" (CDIAL 10080).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

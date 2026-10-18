@@ -14,7 +14,8 @@ romanization: "kesariyo"
 concept_tag: MW-QUAL145-KESARIYO
 prerequisites: [MW-C144-thigno, MW-C145-gulabi]
 sounds: []
-roots: []
+roots: [sanskrit-kesara]
+etymology_hook: "kesariyo: kesar 'saffron' ← Sanskrit kesara 'filament' (CDIAL 3474) + -iyo"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C145-gulabi]
 <!-- hl-knowledge: introduces=[MW-LEX-C145-QUAL145-02]; assesses=[] -->
 
 **केसरियो** — *kesariyo* — "saffron-coloured".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**केसरियो** (*kesariyo*) is built with the suffix *-iyo* on *kesar*, "saffron", which CDIAL lists as Gujarati and Hindi *kesar* under Sanskrit *kesara*, "hair, filament" (CDIAL 3474): saffron is the flower's filament.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "thelī"
 concept_tag: GU-CARRY-BAG
 prerequisites: [GU-C87-umbrella, GU-C88-glasses]
 sounds: []
-roots: []
+roots: [sanskrit-sthavi]
+etymology_hook: "thelī: with thelo 'bag' ← Sanskrit sthavi 'sack, bag' (CDIAL 13746)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C88-glasses]
 <!-- hl-knowledge: introduces=[GU-LEX-C88-CARRY-02]; assesses=[] -->
 
 **થેલી** (*thelī*) — "a bag".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**થેલી** (*thelī*) is the feminine of *thelo*, "bag", which CDIAL lists under the lexical Sanskrit *sthavi*, "sack, bag" (CDIAL 13746).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

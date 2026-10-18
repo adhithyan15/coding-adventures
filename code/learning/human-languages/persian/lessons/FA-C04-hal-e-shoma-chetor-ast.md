@@ -12,7 +12,7 @@ concept_tag: STATE-HOW-ARE-YOU
 prerequisites: [FA-C04-chetor]
 sounds: [rtl, ezafe-e, short-vowels-unwritten, persian-question-mark]
 roots: [arabic-hal, persian-che, arabic-tawr]
-etymology_hook: The line literally asks “the state of you, in what manner is?” while Persian ezafe quietly links state to respectful you.
+etymology_hook: "hâl ← Arabic ḥāl 'state' (Lane); chetor = Persian che + Arabic ṭawr; shomâ and ast are inherited"
 duration:
   max_seconds: 230
 requires:
@@ -58,6 +58,11 @@ Persian asks, literally, “the state of you, in what manner is?”
 This chapter asks you to produce the careful written form with **ast**. Everyday
 Iranian speech often contracts the end to *chetore?*; recognize that
 preview, but keep the uncontracted line until the careful pattern is secure.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+Two layers meet in this line. *hâl*, "state", is borrowed from Arabic *ḥāl* (root *ḥ-w-l*, Lane), and *chetor* is Persian *che*, "what", with Arabic *ṭawr*, "manner". *shomâ*, *ast* and the linking *-e* are inherited Persian.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[FA-LEX-WELLBEING-QUESTION, FA-GRAMMAR-HAL-E-SHOMA, FA-PRAGMATICS-WELLBEING-FORMAL] -->

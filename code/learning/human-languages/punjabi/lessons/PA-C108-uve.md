@@ -14,7 +14,8 @@ romanization: "uvẽ"
 concept_tag: PA-DEF108-UVE
 prerequisites: [PA-C108-unna, PA-C108-ive]
 sounds: []
-roots: []
+roots: [sanskrit-evam-eva]
+etymology_hook: "uvẽ: the partner of ivẽ, which CDIAL lists under evam eva 'exactly so' (2528); no entry for uvẽ"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C108-ive]
 <!-- hl-knowledge: introduces=[PA-LEX-C108-DEF108-04]; assesses=[] -->
 
 **ਉਵੇਂ** — *uvẽ* — "like that".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਉਵੇਂ** (*uvẽ*) is the partner of *ivẽ*, "like this", which CDIAL lists under Sanskrit *evam eva*, "exactly so" (CDIAL 2528). CDIAL has no entry for *uvẽ*, which has the *u-* of *oh*, "that".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

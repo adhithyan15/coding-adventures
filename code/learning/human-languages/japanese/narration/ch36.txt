@@ -12,6 +12,9 @@ Before the new one: say the Japanese for breakfast, then the Japanese for sweets
 You'll want to know: のり.
 のり — nori — "seaweed".
 
+The word, taken apart.
+のり (nori) is a native word, inherited rather than borrowed. JMdict writes it with the characters for "sea" and "moss", read as a whole for their meaning, and marks it as usually written in kana. Its older origin is not settled.
+
 What you've built.
 One more word for this chapter.
 
@@ -42,6 +45,9 @@ Before the new one: say the Japanese for sweets, then the Japanese for seaweed.
 
 You'll want to know: うめ.
 うめ — ume — "a Japanese plum".
+
+The word, taken apart.
+うめ (ume) is the kun'yomi of the character for the plum, and is usually explained as a very early loan from Chinese (Middle Chinese mwoj), separate from the later on'yomi bai. Whether it is a loan or native is not settled (KANJIDIC2).
 
 What you've built.
 One more word for this chapter.
@@ -74,6 +80,9 @@ Before the new one: say the Japanese for seaweed, then the Japanese for a Japane
 You'll want to know: くり.
 くり — kuri — "a chestnut".
 
+The word, taken apart.
+くり (kuri) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. It is usually written in kana; its kanji, when used, is a kun'yomi attached later (JMdict, KANJIDIC2).
+
 What you've built.
 One more word for this chapter.
 
@@ -105,6 +114,9 @@ Before the new one: say the Japanese for a Japanese plum, then the Japanese for 
 You'll want to know: まめ.
 まめ — mame — "beans".
 
+The word, taken apart.
+まめ (mame) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2).
+
 What you've built.
 One more word for this chapter.
 
@@ -135,6 +147,9 @@ Before the new one: say the Japanese for a chestnut, then the Japanese for beans
 
 You'll want to know: こめ.
 こめ — kome — "uncooked rice".
+
+The word, taken apart.
+こめ (kome) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2).
 
 What you've built.
 One more word for this chapter.

@@ -14,7 +14,8 @@ romanization: "prāsādaḥ"
 concept_tag: SA-THG250-PRASADAH
 prerequisites: [SA-C249-khela, SA-C250-durgam]
 sounds: []
-roots: []
+roots: [sanskrit-prasada-palace]
+etymology_hook: "prāsāda 'lofty seat, palace' ← pra + √sad 'sit': 'sitting forward', a raised seat (MW; CDIAL 8971)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C250-durgam]
 <!-- hl-knowledge: introduces=[SA-LEX-C250-THG250-02]; assesses=[] -->
 
 **प्रासादः** — *prāsādaḥ* — "a palace".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*prāsāda* is built on *pra*, "forward", and the root √sad, "to sit" (MW): "a lofty seat or terrace" where one sits in view, and later a lofty mansion or palace (CDIAL 8971, which marks the root with a question mark). It is a different word from *prasāda*, "favour".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

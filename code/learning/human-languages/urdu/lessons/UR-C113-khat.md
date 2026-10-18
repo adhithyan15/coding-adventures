@@ -14,7 +14,8 @@ romanization: "khat"
 concept_tag: UR-THINGS113-KHAT
 prerequisites: [UR-C113-daraz, UR-C113-chitthi]
 sounds: []
-roots: []
+roots: [arabic-khatt]
+etymology_hook: "khat ← Arabic khaṭṭ 'a line; writing', through Persian (Lane, root kh-ṭ-ṭ)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C113-chitthi]
 <!-- hl-knowledge: introduces=[UR-LEX-C113-THINGS113-03]; assesses=[] -->
 
 **خط** — *khat* — "a letter, a note".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**خط** (*khat*) is a loan from Arabic *khaṭṭ*, "a line; writing", which reached Urdu through Persian. Its Arabic root is *kh-ṭ-ṭ* (Lane). In Urdu it came to mean "a letter".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

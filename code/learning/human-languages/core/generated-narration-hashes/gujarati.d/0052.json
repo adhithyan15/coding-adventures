@@ -1,7 +1,7 @@
 {
   "language": "gujarati",
   "chapter": 52,
-  "sourceHash": "fnv1a64:d70d019f35cb525c",
+  "sourceHash": "fnv1a64:3ef085e4523876e1",
   "lessonIds": [
     "GU-C52-kaka",
     "GU-C52-kaki",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "gujarati/narration/ch52.txt",
   "json": "gujarati/narration/ch52.json",
-  "textHash": "fnv1a64:f39e7eab2bd8cf58",
-  "jsonHash": "fnv1a64:1af38f48ebeffa51",
+  "textHash": "fnv1a64:d96d93e0e578ae8c",
+  "jsonHash": "fnv1a64:d0c6b1e55054021b",
   "findings": []
 }

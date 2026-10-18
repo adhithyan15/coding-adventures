@@ -14,7 +14,8 @@ romanization: "khashab"
 concept_tag: AR-SHAY219-KHASHAB
 prerequisites: [AR-C218-wazn, AR-C219-khartum]
 sounds: []
-roots: []
+roots: [kh-sh-b]
+etymology_hook: "khashab: an old noun for wood, listed by Lane under the native Arabic root kh-sh-b"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C219-khartum]
 <!-- hl-knowledge: introduces=[AR-LEX-C219-SHAY219-02]; assesses=[] -->
 
 **خشب** — *khashab* — "wood".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**خشب** (*khashab*), "wood", is an old native noun, filed under the root *kh-sh-b* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

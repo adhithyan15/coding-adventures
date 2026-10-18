@@ -14,7 +14,8 @@ romanization: "qad"
 concept_tag: FA-SALAMAT189-QAD
 prerequisites: [FA-C189-azmayesh, FA-C189-ambulans]
 sounds: []
-roots: []
+roots: [arabic-qadd]
+etymology_hook: "qad ← Arabic qadd 'stature, height', root q-d-d (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C189-ambulans]
 <!-- hl-knowledge: introduces=[FA-LEX-C189-SALAMAT189-05]; assesses=[] -->
 
 **قد** — *qad* — "height".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*qad* is borrowed from Arabic *qadd*, "stature, height". Its Arabic root is *q-d-d* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

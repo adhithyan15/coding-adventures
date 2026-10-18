@@ -4,7 +4,7 @@
   "chapter": 139,
   "title": "How Long?",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:1946c120986b6e69",
+  "sourceHash": "fnv1a64:dc299d307eded526",
   "lessons": [
     {
       "id": "ML-C139-time",
@@ -287,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9768a3b321b85268",
+      "sourceHash": "fnv1a64:a781588fc80f5e49",
       "notice": null,
       "blocks": [
         {

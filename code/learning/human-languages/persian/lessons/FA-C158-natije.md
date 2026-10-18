@@ -14,7 +14,8 @@ romanization: "natije"
 concept_tag: FA-CHERA158-NATIJE
 prerequisites: [FA-C158-vali, FA-C158-be-khater-e]
 sounds: []
-roots: []
+roots: [arabic-natija]
+etymology_hook: "natije ← Arabic natīja 'result, outcome', root n-t-j (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C158-be-khater-e]
 <!-- hl-knowledge: introduces=[FA-LEX-C158-CHERA158-04]; assesses=[] -->
 
 **نتیجه** — *natije* — "a result".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*natije* is borrowed from Arabic *natīja*, "result, outcome". Its Arabic root is *n-t-j* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

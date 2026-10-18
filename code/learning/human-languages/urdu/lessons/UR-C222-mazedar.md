@@ -14,7 +14,8 @@ romanization: "mazedār"
 concept_tag: UR-SIFAT222-MAZEDAR
 prerequisites: [UR-C221-khamosh, UR-C221-shandar]
 sounds: []
-roots: []
+roots: [maza-persian, persian-dar-holder]
+etymology_hook: "mazedār: maza 'taste', usually traced to Persian maza, + Persian -dār 'holder'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C221-shandar]
 <!-- hl-knowledge: introduces=[UR-LEX-C222-SIFAT222-01]; assesses=[] -->
 
 **مزیدار** — *mazedār* — "tasty".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**مزیدار** (*mazedār*) is "holding taste": *maza*, "taste, relish", usually traced to Persian *maza*, with the Persian *-dār*, "holder".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

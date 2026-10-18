@@ -14,7 +14,8 @@ romanization: "taraf"
 concept_tag: UR-LOC98-TARAF
 prerequisites: [UR-C97-kinara, UR-C98-kona]
 sounds: []
-roots: []
+roots: [arabic-taraf]
+etymology_hook: "taraf ← Arabic ṭaraf 'edge, side', through Persian (Lane, root ṭ-r-f)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C98-kona]
 <!-- hl-knowledge: introduces=[UR-LEX-C98-LOC98-02]; assesses=[] -->
 
 **طرف** — *taraf* — "a side, a direction".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**طرف** (*taraf*) is a loan from Arabic *ṭaraf*, "edge, side", which reached Urdu through Persian. Its Arabic root is *ṭ-r-f* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

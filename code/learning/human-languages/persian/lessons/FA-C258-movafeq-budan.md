@@ -14,7 +14,8 @@ romanization: "movâfeq budan"
 concept_tag: FA-VERB-MOVAFEQ-BUDAN
 prerequisites: [FA-C258-zang-zadan, FA-C258-dorost-kardan]
 sounds: []
-roots: []
+roots: [arabic-muwafiq]
+etymology_hook: "movâfeq ← Arabic muwāfiq 'agreeing, suitable', root w-f-q (Lane), + Persian budan"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C258-dorost-kardan]
 <!-- hl-knowledge: introduces=[FA-LEX-C258-KONESH258-04]; assesses=[] -->
 
 **موافق بودن** — *movâfeq budan* — "to agree".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*movâfeq budan* pairs *movâfeq*, borrowed from Arabic *muwāfiq*, "agreeing, suitable" (root *w-f-q*, Lane), with the Persian verb *budan*, "to be". *budan*, "to be", is an inherited verb; it is usually traced to Middle Persian *būdan*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

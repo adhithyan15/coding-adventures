@@ -46,7 +46,9 @@ Chapter 1's formal *alvidā*.
 **फिर मिलेंगे** = **फिर** (*phir*, "again") + **मिलेंगे** (*milenge*, "we will
 meet") — "**we'll meet again**." Where Chapter 1's **अलविदा** (*alvidā*) is a
 grave, final farewell (and, fittingly, a **Perso-Arabic** word — *al-widā*, "the
-farewell"), *phir milenge* is native, everyday, and hopeful. It is the exact
+farewell"), *phir milenge* is native, everyday, and hopeful: **फिर** goes back to
+*\*phirati*, "turns" (CDIAL 9078), and **मिलेंगे** to Sanskrit *milati*,
+"meets" (CDIAL 10133). It is the exact
 sibling of the "promise of return" goodbyes across South Asia — Tamil, Bengali,
 Marathi all say "I'll come again" rather than "goodbye."
 

@@ -14,7 +14,8 @@ romanization: "pehle se"
 concept_tag: UR-MAZI144-PEHLE-SE
 prerequisites: [UR-C142-barhna, UR-C144-hal-hi-mein]
 sounds: []
-roots: []
+roots: [indo-aryan-prathila, sanskrit-sahita, sanskrit-sama]
+etymology_hook: "pehle ← *prathilla 'first' (CDIAL 8652); se 'from' is inherited (CDIAL 13310)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C144-hal-hi-mein]
 <!-- hl-knowledge: introduces=[UR-LEX-C144-MAZI144-02]; assesses=[] -->
 
 **پہلے سے** — *pehle se* — "already, beforehand". It is **پہلے**, "before", with **سے**: **میں پہلے سے جانتا ہوں۔** — *maiṅ pehle se jāntā hūṅ* — "I already know." A woman says **جانتی**.
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**پہلے سے** (*pehle se*) joins *pehle*, "first, before", and *se*, "from". *pehle* is the adverb of *pahlā*, which CDIAL lists under *\*prathilla*, a variant of a reconstructed *\*prathila*, "first" (CDIAL 8652). CDIAL lists *se* under Sanskrit *sahita*, "together with" (CDIAL 13310), and *sama*, "equal", has also been suggested (CDIAL 13173).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

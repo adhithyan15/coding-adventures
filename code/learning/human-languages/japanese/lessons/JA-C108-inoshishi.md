@@ -14,7 +14,8 @@ romanization: "inoshishi"
 concept_tag: JA-THINGS108-INOSHISHI
 prerequisites: [JA-C108-same, JA-C108-risu]
 sounds: []
-roots: []
+roots: [japanese-inoshishi]
+etymology_hook: "inoshishi: native Japanese, inherited, not borrowed; usually kana, kanji 猪 as kun'yomi"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C108-risu]
 <!-- hl-knowledge: introduces=[JA-LEX-C108-THINGS108-05]; assesses=[] -->
 
 **いのしし** — *inoshishi* — "a wild boar".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**いのしし** (*inoshishi*) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. It is usually written in kana; its kanji, when used, is a kun'yomi attached later (JMdict, KANJIDIC2).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

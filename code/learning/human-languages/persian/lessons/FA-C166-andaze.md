@@ -14,7 +14,8 @@ romanization: "andâze"
 concept_tag: FA-CHIZ166-ANDAZE
 prerequisites: [FA-C166-tuman, FA-C166-moshtari]
 sounds: []
-roots: []
+roots: [persian-andaza]
+etymology_hook: "andâze: inherited, usually traced to Middle Persian handāzag"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C166-moshtari]
 <!-- hl-knowledge: introduces=[FA-LEX-C166-CHIZ166-03]; assesses=[] -->
 
 **اندازه** — *andâze* — "a size".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*andâze* is a native Persian word, inherited rather than borrowed; it is usually traced to Middle Persian *handāzag*, "measure".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

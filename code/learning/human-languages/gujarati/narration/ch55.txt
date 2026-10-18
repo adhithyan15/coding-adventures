@@ -12,6 +12,9 @@ Before the new one: say the Gujarati for to sleep, then the Gujarati for to play
 You'll want to know: રાંધવું.
 રાંધવું (rā̃dhvũ) — "to cook".
 
+The word, taken apart.
+રાંધવું (rā̃dhvũ) (rāṁdhvũ) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from randhayati, "subjects, torments; prepares or cooks food" (CDIAL 10616).
+
 What you've built.
 One more word for cook, wash, give, bring, drink.
 
@@ -40,6 +43,9 @@ Before the new one: say the Gujarati for to play, then the Gujarati for to cook.
 
 You'll want to know: ધોવું.
 ધોવું (dhovũ) — "to wash".
+
+The word, taken apart.
+ધોવું (dhovũ) is a tadbhava, a word inherited and reshaped by sound change. It comes from dhauvati, "washes", a form CDIAL reconstructs from its descendants (CDIAL 6886).
 
 What you've built.
 One more word for cook, wash, give, bring, drink.
@@ -70,6 +76,9 @@ Before the new one: say the Gujarati for to cook, then the Gujarati for to wash.
 You'll want to know: આપવું.
 આપવું (āpvũ) — "to give".
 
+The word, taken apart.
+આપવું (āpvũ) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from arpayati, "causes to move, puts in, delivers up" (CDIAL 684).
+
 What you've built.
 One more word for cook, wash, give, bring, drink.
 
@@ -99,6 +108,9 @@ Before the new one: say the Gujarati for to wash, then the Gujarati for to give.
 You'll want to know: લાવવું.
 લાવવું (lāvvũ) — "to bring".
 
+The word, taken apart.
+The origin of લાવવું (lāvvũ) is not settled. CDIAL lists a Gujarati lāvvũ only in the sense "to apply" (CDIAL 11004). For Hindi lānā, "to bring", it gives Sanskrit labhate, "takes", crossed with dadāti, "gives" (CDIAL 10948).
+
 What you've built.
 One more word for cook, wash, give, bring, drink.
 
@@ -127,6 +139,9 @@ Before the new one: say the Gujarati for to give, then the Gujarati for to bring
 
 You'll want to know: પીવું.
 પીવું (pīvũ) — "to drink". What you do with પાણી and ચા.
+
+The word, taken apart.
+પીવું (pīvũ) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from pibati, "drinks" (CDIAL 8209).
 
 What you've built.
 One more word for cook, wash, give, bring, drink.

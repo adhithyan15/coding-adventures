@@ -1,7 +1,7 @@
 {
   "language": "urdu",
   "chapter": 201,
-  "sourceHash": "fnv1a64:68a3c3a6babccca8",
+  "sourceHash": "fnv1a64:79c6e18ffbe677c8",
   "lessonIds": [
     "UR-C201-haki",
     "UR-C201-tenis",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "urdu/narration/ch201.txt",
   "json": "urdu/narration/ch201.json",
-  "textHash": "fnv1a64:0212701fe6375f90",
-  "jsonHash": "fnv1a64:68b292c2f425d644",
+  "textHash": "fnv1a64:42bb5de1fb330be9",
+  "jsonHash": "fnv1a64:6789bab58afdcee5",
   "findings": []
 }

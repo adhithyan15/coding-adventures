@@ -223,10 +223,13 @@ local-rooted transform. Unary signs may wrap that exact name actual without
 losing the proof, and additive composition may include finite static terms.
 That additive form may in turn be multiplied or divided by finite static
 terms, and the resulting exact local-rooted form may be the sole dynamic base
-of a power chain whose exponents are finite and static. Unrestricted runtime
-`entier` remains conservative. Up to five supported built-in real standard functions
-may wrap that powered exact name actual. A user-declared procedure receives no
-built-in privilege and must qualify through the ordinary procedure proof.
+of a power chain whose exponents are finite and static. Up to six supported built-in numeric standard
+functions, including integer-valued `sign`, may wrap that powered exact name
+actual. A user-declared procedure receives no built-in privilege and must
+qualify through the ordinary procedure proof.
+One additional built-in `entier` may wrap a supported bounded transform rooted
+in `sign(...)`, including the exact `entier(sign(...))` root; broader runtime
+`entier` operands remain conservative.
 Built-in `sign` also preserves the proof for a selector-safe runtime-real
 operand because its result is always `-1`, `0`, or `1`.
 The same bounded result preserves runtime-real formatter provenance when it is
@@ -236,8 +239,12 @@ already integral `-1`, `0`, or `1`; unrestricted runtime `entier` remains gated.
 Unary `+` and `-` around the built-in `sign` result preserve the same bound.
 Built-in integer `abs` may also map that bounded result to exact `0` or `1`
 before `entier`; a user-declared `abs` remains conservative.
-Variable-free exact additive zero terms may surround that bounded result before
-`entier`; nonzero or dynamic additive terms remain conservative.
+Variable-free exact additive zero terms and up to forty-one exact offset units
+may surround that bounded result before `entier`; larger and dynamic additive
+terms remain conservative. The forty-one-unit cap accepts one exact `41` term
+or a checked sum of exact `1` through `40` terms and is preserved through parentheses,
+supported standard-function wrappers, and runtime conditional branches; each
+conditional path receives its own forty-one-unit budget.
 Variable-free exact multiplicative unit factors may likewise surround it;
 non-unit or variable factors remain conservative.
 Exact unit division is also permitted when the bounded result is the numerator;

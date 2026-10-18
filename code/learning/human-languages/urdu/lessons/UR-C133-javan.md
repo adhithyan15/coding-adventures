@@ -14,7 +14,8 @@ romanization: "javān"
 concept_tag: UR-QUAL133-JAVAN
 prerequisites: [UR-C132-mazbut, UR-C132-kamzor]
 sounds: []
-roots: []
+roots: [persian-javan, indo-aryan-yuvana]
+etymology_hook: "javān: usually traced to Persian javān 'young'; CDIAL also lists juwān 'a youth' under *yuvāna 'young' (CDIAL 10510)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C132-kamzor]
 <!-- hl-knowledge: introduces=[UR-LEX-C133-QUAL133-01]; assesses=[] -->
 
 **جوان** — *javān* — "young".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**جوان** (*javān*) is usually traced to Persian *javān*, "young". CDIAL also lists a Hindi *juwān*, "a youth", under *\*yuvāna*, "young", the Indo-Aryan form of the same ancient word (CDIAL 10510).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

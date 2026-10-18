@@ -14,7 +14,8 @@ romanization: "śvaḥ"
 concept_tag: SA-FUT139-SVAH
 prerequisites: [SA-C138-vardhate, SA-C139-bhavisyat]
 sounds: []
-roots: []
+roots: [shvas-tomorrow]
+etymology_hook: "śvaḥ = śvas 'tomorrow', already in the Rigveda (MW); final s said as ḥ; Pali sve (CDIAL 12760)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C139-bhavisyat]
 <!-- hl-knowledge: introduces=[SA-LEX-C139-FUT139-02]; assesses=[] -->
 
 **श्वः** — *śvaḥ* — "tomorrow". The time word stands first and the future follows: **श्वः सः पठिष्यति।** — "Tomorrow he will read." You already have **परश्वः**, the day after it.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*śvaḥ* is *śvas* "tomorrow", already in the Rigveda, with the final *s* said as *ḥ* at the end of a phrase (MW). Pali kept it as *sve* "tomorrow" (CDIAL 12760); the Hindi *kal* comes from a different word.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

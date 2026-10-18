@@ -14,7 +14,8 @@ romanization: "masjid"
 concept_tag: UR-TOWN80-MASJID
 prerequisites: [UR-C80-bas, UR-C80-pul]
 sounds: []
-roots: []
+roots: [arabic-masjid]
+etymology_hook: "masjid ← Arabic masjid 'place of prostration, mosque', through Persian (Lane, root s-j-d)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C80-pul]
 <!-- hl-knowledge: introduces=[UR-LEX-C80-TOWN80-05]; assesses=[] -->
 
 **مسجد** — *masjid* — "a mosque".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**مسجد** (*masjid*) is a loan from Arabic *masjid*, "place of prostration, mosque", which reached Urdu through Persian. Its Arabic root is *s-j-d* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

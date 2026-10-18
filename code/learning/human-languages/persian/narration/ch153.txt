@@ -12,6 +12,9 @@ Before the new one: say the Persian for last, then the Persian for after.
 You'll want to know: نیمه شب.
 نیمه شب — nime-shab — "midnight".
 
+The word, taken apart.
+nime-shab is nime, "half", with shab, "night": the half of the night. Both are native; nime is usually traced to Middle Persian nēmag.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Persian for after, then the Persian for midnight.
 
 You'll want to know: پیش.
 پیش — pish — "ago".
+
+The word, taken apart.
+pish is a native Persian word, inherited rather than borrowed; it is usually traced to Middle Persian pēš, "before, front".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Persian for midnight, then the Persian for ago.
 You'll want to know: سپس.
 سپس — sepas — "then, afterwards".
 
+The word, taken apart.
+sepas is built on pas, "after" (Middle Persian pas, EtymDB), but where its first part comes from is not settled.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Persian for ago, then the Persian for then.
 You'll want to know: بالاخره.
 بالاخره — bâlâkhare — "finally, at last".
 
+The word, taken apart.
+bâlâkhare is borrowed as a whole phrase from Arabic bi-l-āḫira, "at the last" (root ʾ-ḫ-r, Lane).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Persian for then, then the Persian for finally.
 
 You'll want to know: هفتگی.
 هفتگی — haftegi — "weekly".
+
+The word, taken apart.
+haftegi is hafte, "week", with the ending -gi: weekly. hafte is built on haft, "seven", inherited from Middle Persian (EtymDB).
 
 What you've built.
 One more word for this chapter.

@@ -14,7 +14,8 @@ romanization: "basant"
 concept_tag: PA-TIME100-BASANT
 prerequisites: [PA-C99-sardi, PA-C100-barsat]
 sounds: []
-roots: []
+roots: [sanskrit-vasanta]
+etymology_hook: "basant ← Sanskrit vasanta 'spring season', a semi-tatsama (CDIAL 11439)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C100-barsat]
 <!-- hl-knowledge: introduces=[PA-LEX-C100-TIME100-02]; assesses=[] -->
 
 **ਬਸੰਤ** — *basant* — "spring".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਬਸੰਤ** (*basant*) is a semi-tatsama: Sanskrit *vasanta*, "spring season", borrowed after the old sound changes had run their course and then lightly reshaped (CDIAL 11439). Punjabi has *b-* for the *v-*; CDIAL lists no Punjabi form.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "prasiddhaḥ"
 concept_tag: SA-QUAL127-PRASIDDHAH
 prerequisites: [SA-C127-dhanikah, SA-C127-tarunah]
 sounds: []
-roots: []
+roots: [sanskrit-prasiddha]
+etymology_hook: "prasiddha ← pra-√sidh 'succeed, be made clear' (MW; CDIAL 8842): 'well known, famous'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C127-tarunah]
 <!-- hl-knowledge: introduces=[SA-LEX-C127-QUAL127-04]; assesses=[] -->
 
 **प्रसिद्धः** — *prasiddhaḥ* — "famous".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*prasiddha* is the past participle of *pra-√sidh* "be accomplished, be made clear", the root √sidh "succeed" with *pra* "forth" (MW; CDIAL 8842): "brought about", then "well known, famous".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

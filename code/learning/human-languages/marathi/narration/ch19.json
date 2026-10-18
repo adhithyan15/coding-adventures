@@ -4,7 +4,7 @@
   "chapter": 19,
   "title": "Eye, Ear, Mouth, and Nose",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:fd01428da1034c4a",
+  "sourceHash": "fnv1a64:4270e67d1f36076d",
   "lessons": [
     {
       "id": "MR-C12-dola",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:d23979b65f211399",
+      "sourceHash": "fnv1a64:40613732150ee93b",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -77,7 +77,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "डोळा (ḍoḷā) continues Maharastri Prakrit ḍola, \"eye,\" from Sanskrit दोल dola — \"a swing, a swinging.\" Somewhere in Prakrit, \"a swinging thing\" came to mean \"eye,\" and that word pushed out the one you might expect: the true inherited Indo-Aryan eye-word is Sanskrit अक्षि/अक्ष akṣi/akṣa, from Indo-European h₃ekʷ-, the very cousin of Latin oculus and English eye. Hindi's आँख ā̃kh continues that old word, worn down through Prakrit acchi. Marathi's eye is not that word at all — it is a replacement, built on something that once just meant swing."
+              "text": "डोळा (ḍoḷā) continues Maharastri Prakrit ḍola, \"eye,\" from Sanskrit दोल dola — \"a swing, a swinging.\" Somewhere in Prakrit, \"a swinging thing\" came to mean \"eye,\" and that word pushed out the one you might expect: the true inherited Indo-Aryan eye-word is Sanskrit अक्षि/अक्ष akṣi/akṣa, from Indo-European h₃ekʷ-, the very cousin of Latin oculus and English eye. Hindi's आँख ā̃kh continues that old word, worn down through Prakrit acchi. Marathi's eye is not that word at all — it is a replacement, built on something that once meant only swing."
             }
           ]
         },
@@ -122,11 +122,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "what you do with your डोळे — pāhṇe, \"to see,\" Chapter 14's verb whose own root was Indo-European spek-",
+              "instruction": "what you do with your डोळे — pāhṇe, \"to see,\" Chapter 14's verb, which CDIAL traces to pracāh, \"look for\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: what you do with your **डोळे** — **pāhṇe**, \"to see,\" Chapter 14's verb whose own root was Indo-European *\\*spek-*]"
+              "source": "[YOU SAY: what you do with your **डोळे** — **pāhṇe**, \"to see,\" Chapter 14's verb, which CDIAL traces to *\\*pracāh*, \"look for\"]"
             },
             {
               "kind": "prompt",
@@ -175,7 +175,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:35746beb47413228",
+      "sourceHash": "fnv1a64:41a9183c2b1bf2cc",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -325,7 +325,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:99fafdbc80a14674",
+      "sourceHash": "fnv1a64:679635a30f8c7b1a",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -463,7 +463,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:1af3fe99d6ea1595",
+      "sourceHash": "fnv1a64:024510d8e1231c63",
       "notice": {
         "modality": "sight",
         "needs": [

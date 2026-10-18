@@ -14,7 +14,8 @@ romanization: "rôhôsyô"
 concept_tag: BN-JINIS253-ROHOSYO
 prerequisites: [BN-C252-shvoshur, BN-C253-mitthe]
 sounds: []
-roots: []
+roots: [sanskrit-rahasya]
+etymology_hook: "rôhôsyô ← Sanskrit rahasya 'secret, mystery', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C253-mitthe]
 <!-- hl-knowledge: introduces=[BN-LEX-C253-JINIS253-02]; assesses=[] -->
 
 **রহস্য** — *rôhôsyô* — "a mystery".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**রহস্য** (*rôhôsyô*) is Sanskrit *rahasya*, "secret, mystery", taken over whole as a learned loan, a tatsama.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

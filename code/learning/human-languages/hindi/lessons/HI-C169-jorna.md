@@ -15,7 +15,7 @@ concept_tag: HI-VERB-JORNA
 prerequisites: [HI-C168-calana, HI-C168-chorna]
 sounds: []
 roots: [indo-aryan-yutati]
-etymology_hook: "joṛnā ← *yuṭati 'is joined', a reconstructed form; a tadbhava (CDIAL 10496)"
+etymology_hook: "joṛnā ← *yoṭayati 'joins', a form CDIAL reconstructs in its entry for *yuṭati 'is joined' (CDIAL 10496)"
 duration:
   max_seconds: 200
 requires:
@@ -47,7 +47,7 @@ reviews_of: [HI-C168-chorna]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**जोड़ना** (*joṛnā*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*yuṭati*, "is joined", a form CDIAL reconstructs from its descendants (CDIAL 10496). CDIAL calls its link with Sanskrit *yuj-*, "to join", obscure.
+**जोड़ना** (*joṛnā*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*yoṭayati*, "joins", one of a family of forms CDIAL reconstructs from their descendants under *\*yuṭati*, "is joined" (CDIAL 10496). The plain *\*yuṭati* gave Hindi the intransitive *juṛnā*, "to be joined". CDIAL calls the whole family's link with Sanskrit *yuj-*, "to join", obscure.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

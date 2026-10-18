@@ -1,7 +1,7 @@
 {
   "language": "persian",
   "chapter": 199,
-  "sourceHash": "fnv1a64:e41140ad694b704e",
+  "sourceHash": "fnv1a64:562a9fae3d7758a1",
   "lessonIds": [
     "FA-C199-alude",
     "FA-C199-charb",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "persian/narration/ch199.txt",
   "json": "persian/narration/ch199.json",
-  "textHash": "fnv1a64:ad22ae9f93475856",
-  "jsonHash": "fnv1a64:fd04adf4b8a45f47",
+  "textHash": "fnv1a64:c9f1a179939db469",
+  "jsonHash": "fnv1a64:117b5738d47aad2c",
   "findings": []
 }

@@ -14,7 +14,8 @@ romanization: "prācīnaḥ"
 concept_tag: SA-QUAL129-PRACINAH
 prerequisites: [SA-C129-sitalah, SA-C129-navinah]
 sounds: []
-roots: []
+roots: [sanskrit-pracina]
+etymology_hook: "prācīna ← prāñc 'facing forward, eastward' (CDIAL 8920): first 'eastern', then 'former, ancient' (MW)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C129-navinah]
 <!-- hl-knowledge: introduces=[SA-LEX-C129-QUAL129-03]; assesses=[] -->
 
 **प्राचीनः** — *prācīnaḥ* — "ancient".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*prācīna* is built on *prāñc* "turned forward, facing east" (CDIAL 8920): in the Rigveda it means "eastern", and later "former, ancient" (MW), since what lies in front lies before in time.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

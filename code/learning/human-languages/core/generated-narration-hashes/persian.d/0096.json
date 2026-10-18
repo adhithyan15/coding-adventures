@@ -1,7 +1,7 @@
 {
   "language": "persian",
   "chapter": 96,
-  "sourceHash": "fnv1a64:1281d9ca42936fde",
+  "sourceHash": "fnv1a64:f84de131ca3ced8c",
   "lessonIds": [
     "FA-C96-yakhchal",
     "FA-C96-kebrit",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "persian/narration/ch96.txt",
   "json": "persian/narration/ch96.json",
-  "textHash": "fnv1a64:76afa168d45c3630",
-  "jsonHash": "fnv1a64:7641aeebc3601edf",
+  "textHash": "fnv1a64:fd0af8613e39ddbd",
+  "jsonHash": "fnv1a64:e297757fe4f78c29",
   "findings": []
 }

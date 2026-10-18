@@ -14,7 +14,8 @@ romanization: "hushiār"
 concept_tag: PA-QUAL144-HUSHIAR
 prerequisites: [PA-C144-sakht, PA-C144-mushkal]
 sounds: []
-roots: []
+roots: [persian-hoshyar]
+etymology_hook: "hushiār: usually traced to Persian hoshyār 'alert, wise'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C144-mushkal]
 <!-- hl-knowledge: introduces=[PA-LEX-C144-QUAL144-04]; assesses=[] -->
 
 **ਹੁਸ਼ਿਆਰ** — *hushiār* — "clever".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਹੁਸ਼ਿਆਰ** (*hushiār*) is a loan, usually traced to Persian *hoshyār*, "alert, wise". It is built on *hosh*, "the senses".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

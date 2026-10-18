@@ -4,7 +4,7 @@
   "chapter": 25,
   "title": "Cloth, Shirt, Sari, and Glasses",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:cb92396262fa17ba",
+  "sourceHash": "fnv1a64:934eba85e4d7974b",
   "lessons": [
     {
       "id": "BN-C15-kapor",
@@ -351,7 +351,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:856d91d7e3a4e43c",
+      "sourceHash": "fnv1a64:2c5b640af0338b00",
       "notice": {
         "modality": "sight",
         "needs": [

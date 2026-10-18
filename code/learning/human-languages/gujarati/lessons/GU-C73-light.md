@@ -14,7 +14,8 @@ romanization: "halkũ"
 concept_tag: GU-QUALITY-LIGHT
 prerequisites: [GU-C72-short, GU-C72-heavy]
 sounds: []
-roots: []
+roots: [sanskrit-laghu]
+etymology_hook: "halkũ ← Sanskrit laghu 'light', its sounds swapped; CDIAL marks halkũ as taken from Hindi (CDIAL 10896)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C72-heavy]
 <!-- hl-knowledge: introduces=[GU-LEX-C73-QUALITY-01]; assesses=[] -->
 
 **હલકું** (*halkũ*) — "light (not heavy)". The opposite of **ભારે**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**હલકું** (*halkũ*) goes back to Sanskrit *laghu*, "light", with its first sounds swapped (CDIAL 10896). CDIAL marks this form as taken from Hindi; Gujarati's own descendants include *haḷvũ*, "light, soft".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

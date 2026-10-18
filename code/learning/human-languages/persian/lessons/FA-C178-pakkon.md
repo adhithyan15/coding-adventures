@@ -14,7 +14,8 @@ romanization: "pâkkon"
 concept_tag: FA-KAR178-PAKKON
 prerequisites: [FA-C178-mangane, FA-C178-pushe]
 sounds: []
-roots: []
+roots: [persian-pak]
+etymology_hook: "pâkkon: Persian pâk 'clean' (EtymDB) + kon 'making' (kardan); native"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C178-pushe]
 <!-- hl-knowledge: introduces=[FA-LEX-C178-KAR178-03]; assesses=[] -->
 
 **پاک کن** — *pâkkon* — "an eraser".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*pâkkon* is *pâk*, "clean" (Middle Persian *pāk*, EtymDB), with *-kon*, "making" (from *kardan*): the thing that makes clean. Both are native.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

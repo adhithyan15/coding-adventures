@@ -14,7 +14,8 @@ romanization: "zarāfā"
 concept_tag: UR-CHIZ253-ZARAFA
 prerequisites: [UR-C253-kachhua, UR-C253-magarmachh]
 sounds: []
-roots: []
+roots: [arabic-zarafa]
+etymology_hook: "zarāfā ← Arabic zarāfa 'giraffe', through Persian (Lane, root z-r-f)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C253-magarmachh]
 <!-- hl-knowledge: introduces=[UR-LEX-C253-CHIZ253-04]; assesses=[] -->
 
 **زرافہ** — *zarāfā* — "a giraffe".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**زرافہ** (*zarāfā*) is a loan from Arabic *zarāfa*, "giraffe", which reached Urdu through Persian. Its Arabic root is *z-r-f* (Lane). English *giraffe* comes from the same Arabic word.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

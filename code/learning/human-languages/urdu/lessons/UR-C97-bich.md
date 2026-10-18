@@ -14,7 +14,8 @@ romanization: "bīch"
 concept_tag: UR-LOC97-BICH
 prerequisites: [UR-C97-samne, UR-C97-pichhe]
 sounds: []
-roots: []
+roots: [indo-aryan-vicya]
+etymology_hook: "bīch ← *vīcya 'middle', a reconstructed form; a tadbhava (CDIAL 12042)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C97-pichhe]
 <!-- hl-knowledge: introduces=[UR-LEX-C97-LOC97-04]; assesses=[] -->
 
 **بیچ** — *bīch* — "the middle".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**بیچ** (*bīch*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*vīcya*, "middle", a form CDIAL reconstructs from its descendants (CDIAL 12042). CDIAL compares Vedic *vīcyā*, "among".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

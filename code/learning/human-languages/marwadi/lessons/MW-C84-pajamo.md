@@ -14,7 +14,8 @@ romanization: "pajāmo"
 concept_tag: MW-TOWN84-PAJAMO
 prerequisites: [MW-C84-sahar, MW-C84-kurto]
 sounds: []
-roots: []
+roots: [persian-payjama]
+etymology_hook: "pajāmo: usually traced to Persian pāy-jāma 'leg garment'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C84-kurto]
 <!-- hl-knowledge: introduces=[MW-LEX-C84-TOWN84-04]; assesses=[] -->
 
 **पजामो** — *pajāmo* — "pyjama trousers".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**पजामो** (*pajāmo*) is a loan, usually traced to Persian *pāy-jāma*, "leg garment". It is built on Persian *pāy*, "leg", and *jāma*, "garment". English *pyjamas* is the same word.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

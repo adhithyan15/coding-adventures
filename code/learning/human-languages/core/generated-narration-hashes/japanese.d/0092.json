@@ -1,7 +1,7 @@
 {
   "language": "japanese",
   "chapter": 92,
-  "sourceHash": "fnv1a64:7746262fe2dc5b44",
+  "sourceHash": "fnv1a64:41c73b10073e92d2",
   "lessonIds": [
     "JA-C92-hoshii",
     "JA-C92-negai",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "japanese/narration/ch92.txt",
   "json": "japanese/narration/ch92.json",
-  "textHash": "fnv1a64:c4c19c2a823bde0c",
-  "jsonHash": "fnv1a64:ca2e3c782c9b6d80",
+  "textHash": "fnv1a64:f007ff7f2468e21b",
+  "jsonHash": "fnv1a64:d7d9d69ee1b2514a",
   "findings": []
 }

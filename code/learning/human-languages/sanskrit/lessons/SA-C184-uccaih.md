@@ -14,7 +14,8 @@ romanization: "uccaiḥ"
 concept_tag: SA-LOC184-UCCAIH
 prerequisites: [SA-C184-nikate, SA-C184-antara]
 sounds: []
-roots: []
+roots: [sanskrit-ucca]
+etymology_hook: "uccaiḥ 'aloud, high' is an old case form of ucca 'high' (CDIAL 1634); Punjabi uccā 'high'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C184-antara]
 <!-- hl-knowledge: introduces=[SA-LEX-C184-LOC184-04]; assesses=[] -->
 
 **उच्चैः** — *uccaiḥ* — "loudly, high".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*uccaiḥ* is an old case form of *ucca*, "high", used as an adverb (MW), and the Rigveda already has it (CDIAL 1634). *Ucca* lives on as Punjabi *uccā*, "high", and as the Hindi word for high. MW says it is said to come from *ud* "up" and √añc "bend".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

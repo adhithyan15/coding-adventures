@@ -1,0 +1,10 @@
+{
+  "id": "SA-EXT-270-TECH270",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can retrieve the familiar words for computer and internet from meaning.",
+  "prerequisites": [
+    "SA-EXT-269-MEDIA269"
+  ]
+}

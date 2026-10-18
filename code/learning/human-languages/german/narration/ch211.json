@@ -4,7 +4,7 @@
   "chapter": 211,
   "title": "Anxious, Tiring, Excited, Excellent, Working",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:9cd5a5431cca29b1",
+  "sourceHash": "fnv1a64:c639a687442c6644",
   "lessons": [
     {
       "id": "GE-C211-aengstlich",
@@ -287,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0735b652288af480",
+      "sourceHash": "fnv1a64:12c76e92370f761a",
       "notice": null,
       "blocks": [
         {
@@ -325,7 +325,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "aufgeregt is the past participle of auf + an old verb meaning \"to stir, to move\": stirred up."
+              "text": "aufgeregt is the past participle of auf + an old verb meaning \"to stir, to move\": stirred up. Auf from Proto-Germanic upp (EtymDB 2.1), the same word as English up."
             }
           ]
         },

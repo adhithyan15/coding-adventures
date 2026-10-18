@@ -14,7 +14,8 @@ romanization: "ayu"
 concept_tag: JA-THINGS115-AYU
 prerequisites: [JA-C115-hinata, JA-C115-namako]
 sounds: []
-roots: []
+roots: [japanese-ayu]
+etymology_hook: "ayu: native Japanese, inherited, not borrowed; usually kana, kanji 鮎 as kun'yomi"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C115-namako]
 <!-- hl-knowledge: introduces=[JA-LEX-C115-THINGS115-05]; assesses=[] -->
 
 **あゆ** — *ayu* — "a sweetfish".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**あゆ** (*ayu*) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. It is usually written in kana; its kanji, when used, is a kun'yomi attached later (JMdict, KANJIDIC2).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

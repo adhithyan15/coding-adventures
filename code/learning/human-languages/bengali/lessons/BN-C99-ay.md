@@ -14,7 +14,8 @@ romanization: "āy"
 concept_tag: BN-CAN99-AY
 prerequisites: [BN-C98-jomi, BN-C99-sompotti]
 sounds: []
-roots: []
+roots: [sanskrit-aya]
+etymology_hook: "āy ← Sanskrit āya 'arrival; income', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C99-sompotti]
 <!-- hl-knowledge: introduces=[BN-LEX-C99-CAN99-02]; assesses=[] -->
 
 **আয়** — *āy* — "income".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**আয়** (*āy*) is Sanskrit *āya*, "arrival; income", taken over whole as a learned loan, a tatsama.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

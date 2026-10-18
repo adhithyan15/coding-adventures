@@ -11,8 +11,8 @@ gloss: a little — the softener that keeps a counter-offer polite
 concept_tag: MW-QUANTITY-A-LITTLE
 prerequisites: [MW-R23-answer-two]
 sounds: [aspirated-th, long-o, retroflex-flap, short-u]
-roots: []
-etymology_hook: The difference between haggling and asking is one small word placed in front.
+roots: [sanskrit-stoka]
+etymology_hook: "thoṛu ← Sanskrit stoka 'a drop, a little', with an added -ṛ- (CDIAL 13720, Marwari row)"
 duration:
   max_seconds: 165
 requires:
@@ -52,6 +52,11 @@ Hold it against *ghaṇo*, which you learned four lessons ago. *ghaṇo* makes a
 word bigger; *thoṛu* makes an amount smaller. A seller hears the difference at
 once, and it is the difference between complaining about a price and offering
 to meet it.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*thoṛu* is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *stoka*, "drop; a little". CDIAL lists Marwari *thoṛo* under it (CDIAL 13720). CDIAL explains the *ṛ* as an added suffix.
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-THODU-01, MW-LEX-GHANO-01] -->

@@ -14,7 +14,8 @@ romanization: "gamāvṇo"
 concept_tag: MW-VERB-GAMAVNO
 prerequisites: [MW-C109-marno, MW-C110-batno]
 sounds: []
-roots: []
+roots: [sanskrit-gamayati]
+etymology_hook: "gamāvṇo ← Sanskrit gamayati 'causes to go', a tadbhava (CDIAL 4028, Old Marwari row)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C110-batno]
 <!-- hl-knowledge: introduces=[MW-LEX-C110-ACT110-02]; assesses=[] -->
 
 **गमावणो** — *gamāvṇo* — "to mislay, to lose (a thing)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**गमावणो** (*gamāvṇo*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *gamayati*, "causes to go". CDIAL lists Old Marwari *gavī* under it (CDIAL 4028). The Old Marwari row means "lost"; the sense moved from "send away" to "lose".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

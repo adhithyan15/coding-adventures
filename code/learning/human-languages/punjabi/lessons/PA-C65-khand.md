@@ -14,7 +14,8 @@ romanization: "khaṇḍ"
 concept_tag: PA-FOOD65-KHAND
 prerequisites: [PA-C65-tamatar, PA-C65-gajar]
 sounds: []
-roots: []
+roots: [sanskrit-khanda]
+etymology_hook: "khaṇḍ ← Sanskrit khaṇḍa 'partially dried molasses', a tadbhava (CDIAL 3800)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C65-gajar]
 <!-- hl-knowledge: introduces=[PA-LEX-C65-FOOD65-03]; assesses=[] -->
 
 **ਖੰਡ** — *khaṇḍ* — "sugar".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਖੰਡ** (*khaṇḍ*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *khaṇḍa*, "partially dried molasses" (CDIAL 3800). CDIAL lists Punjabi *khaṇḍ*, "coarse sugar".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

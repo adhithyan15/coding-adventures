@@ -14,8 +14,8 @@ romanization: "kaze"
 concept_tag: JA-ANCHOR-KAZE
 prerequisites: [JA-C136-suzushii, JA-W03-ka, JA-W136-zo, JA-W134-bu, JA-C127-sawayaka]
 sounds: [mora]
-roots: []
-etymology_hook: Kaze is the word for a wind and, written the same way in kana, for a cold you catch; its second sign is せ with the voicing mark, a sign the book has not yet written.
+roots: [japanese-kaze]
+etymology_hook: "kaze: native 'wind'; the cold is written 風邪 'wind evil', read as a whole"
 duration:
   max_seconds: 200
 requires:
@@ -53,6 +53,11 @@ two apart; in kana they look the same.
 
 Two beats: *ka–ze*. **か** you already write. The second sign is **せ** with
 the voicing mark, so *se* becomes *ze*. The next lesson writes it.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**かぜ** (*kaze*) is a native word, "wind", inherited rather than borrowed. For the cold you catch JMdict writes "wind" and "evil", read as a whole: the illness shares the word for wind.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-ANCHOR-KAZE, JA-SCRIPT-KA-01] -->

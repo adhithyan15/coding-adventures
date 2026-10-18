@@ -14,7 +14,8 @@ romanization: "pānā"
 concept_tag: UR-VERB-PANA
 prerequisites: [UR-C103-pas, UR-C103-sakna]
 sounds: []
-roots: []
+roots: [sanskrit-prapayati]
+etymology_hook: "pānā ← Sanskrit prāpayati 'causes to be obtained, obtains', a tadbhava (CDIAL 8943)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C103-sakna]
 <!-- hl-knowledge: introduces=[UR-LEX-C103-LOC103-05]; assesses=[] -->
 
 **پانا** — *pānā* — "to manage to, to get".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**پانا** (*pānā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *prāpayati*, "causes to be obtained, obtains" (CDIAL 8943).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

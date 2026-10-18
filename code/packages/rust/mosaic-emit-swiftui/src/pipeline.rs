@@ -2350,6 +2350,17 @@ fn swiftui_elevation_shadow(value: &str) -> Option<&'static str> {
     }
 }
 
+/// A single centered CSS degree rotation maps to SwiftUI's visual rotation,
+/// which leaves the view's layout footprint alone. Parse and reserialize the
+/// number so authored text never enters generated Swift as executable syntax.
+/// Other transform functions, units and chains stay explicit style debt.
+fn swiftui_rotation_degrees(value: &str) -> Option<String> {
+    let angle = value.trim().trim_matches('"').trim()
+        .strip_prefix("rotate(")?.strip_suffix("deg)")?.trim()
+        .parse::<f64>().ok()?;
+    angle.is_finite().then(|| angle.to_string())
+}
+
 /// Build a SwiftUI view-modifier chain from a slice of [`StyleProp`].
 ///
 /// Each modifier renders on its own line, prefixed by `\n` + an indent of
@@ -2377,6 +2388,7 @@ fn swiftui_elevation_shadow(value: &str) -> Option<&'static str> {
 /// | `border-width: Npx` (+ optional `border-color`)| `.border(<color or Color.gray>, width: N)`                       |
 /// | `elevation: raised\|overlay`                    | `.shadow(color:..., radius: 8\|24, x: 0, y: 4\|16)`             |
 /// | `opacity: N`                                   | `.opacity(N)`                                                    |
+/// | `transform: rotate(Ndeg)`                      | `.rotationEffect(.degrees(N))`                                  |
 /// | `text-align: left`/`center`/`right` (base only)| `alignment:` arg of `.frame(...)` (`.leading`/`.center`/`.trailing`) |
 /// | anything else                                  | silently skipped (React emitter does the same for v1)            |
 ///
@@ -2388,7 +2400,7 @@ fn swiftui_elevation_shadow(value: &str) -> Option<&'static str> {
 ///
 /// Emitted top-to-bottom: `.foregroundColor` → `.font` → `.fontWeight`
 /// → `.padding` → `.frame(width:,height:,alignment:)` → `.background`
-/// → `.border` → `.shadow` → `.opacity`. Content styling and sizing come BEFORE paint
+/// → `.border` → `.rotationEffect` → `.shadow` → `.opacity`. Content styling and sizing come BEFORE paint
 /// so the background fills, and the border strokes, the full frame rather
 /// than a text-sized box. See the inline comment in the emission body.
 ///
@@ -2544,6 +2556,7 @@ fn swiftui_modifier_chain_with_drops(
     // the point values (#14837).
     let mut min_height_fills = false;
     let mut elevation = PropBucket::new(layer_count);
+    let mut rotation = PropBucket::new(layer_count);
     let mut opacity = PropBucket::new(layer_count);
 
     // `text-align` is a static layout concern — we deliberately do NOT
@@ -2718,6 +2731,13 @@ fn swiftui_modifier_chain_with_drops(
             "elevation" if layer_idx.is_none() => {
                 if let Some(args) = swiftui_elevation_shadow(&p.value) {
                     set(&mut elevation, args.to_string());
+                } else {
+                    dropped.push(p.clone());
+                }
+            }
+            "transform" => {
+                if let Some(degrees) = swiftui_rotation_degrees(&p.value) {
+                    set(&mut rotation, degrees);
                 } else {
                     dropped.push(p.clone());
                 }
@@ -3129,6 +3149,17 @@ fn swiftui_modifier_chain_with_drops(
         );
     }
 
+    // Rotate the complete painted surface, rather than rotating only its
+    // contents before the frame/background exists. Shadows then follow the
+    // rotated silhouette; SwiftUI preserves the original layout footprint.
+    if !rotation.empty() {
+        let degrees = layer_value(&rotation, state_layers, "0");
+        out.push_str(&format!("\n{pad}.rotationEffect(.degrees({degrees}))"));
+        push_swiftui_animation(
+            &mut out, &pad, "transform", &degrees, base_transitions, state_layers,
+        );
+    }
+
     // 8. .shadow — elevation belongs outside the painted surface so it
     // follows the final rounded/background/border silhouette.
     if !elevation.empty() {
@@ -3178,9 +3209,9 @@ pub struct DroppedStyleProperty {
 /// of supported names, which would go stale silently the moment a property
 /// stopped being lowered.
 ///
-/// State-layer props are not walked separately: a state block can only set a
-/// property the base lowering also understands, so a drop there is the same
-/// drop, reported once against the part.
+/// Most state-layer properties retain the historical base-only report.
+/// Transform values need their own state audit: a supported base rotation
+/// does not imply a state rotation has a supported unit or function.
 ///
 /// `layout` is needed because not every property is lowered by a modifier.
 /// `gap` is lowered at view-CONSTRUCTION time — `HStack(spacing:)` — which the
@@ -3239,6 +3270,20 @@ pub fn dropped_style_properties(
                 name: drop.name,
                 value: drop.value,
             });
+        }
+        // State names cannot prove value support. Reuse the exact rotation
+        // parser rather than exempting a state because its base lowered.
+        for state in &part.states {
+            for prop in &state.props {
+                if prop.name == "transform" && swiftui_rotation_degrees(&prop.value).is_none() {
+                    out.push(DroppedStyleProperty {
+                        part: part.name.clone(),
+                        name: prop.name.clone(),
+                        value: prop.value.clone(),
+                        reason: format!("state {}: {}", state.state, swiftui_drop_reason(&prop.name)),
+                    });
+                }
+            }
         }
     }
     out
@@ -3303,6 +3348,9 @@ fn constructor_consuming_parts<'a>(
         let in_table = in_table || node.tag == "HostTable";
         let view = match node.tag.as_str() {
             "Column" => Some("VStack"),
+            // Drag wrappers construct their bodies through container(VStack)
+            // too. Classify spacing only here: alignment is separate debt.
+            "HostDraggable" | "HostDropTarget" if property == "gap" => Some("VStack"),
             "Row" if !in_table => Some("HStack"),
             _ => None,
         };
@@ -14021,6 +14069,64 @@ mod tests {
         assert_eq!(chain, "");
     }
 
+    #[test]
+    fn degree_rotation_wraps_the_painted_surface_before_its_shadow() {
+        let props = vec![
+            sp("width", "12"), sp("height", "12"),
+            sp("background", "#000"), sp("border-width", "1"),
+            sp("transform", "\"rotate(45deg)\""), sp("elevation", "raised"),
+        ];
+        let (chain, drops) = swiftui_modifier_chain_with_drops(&props, &[], &[], 0, None);
+        let rotation = chain.find(".rotationEffect(.degrees(45))").expect("diamond rotation");
+        assert!(chain.find(".frame(").unwrap() < rotation);
+        assert!(chain.find(".background(").unwrap() < rotation);
+        assert!(chain.find(".border(").unwrap() < rotation);
+        assert!(rotation < chain.find(".shadow(").unwrap());
+        assert!(drops.is_empty(), "{drops:?}");
+    }
+
+    #[test]
+    fn degree_rotation_preserves_state_precedence_and_zero_fallback() {
+        let first = vec![sp("transform", "rotate(-22.5deg)")];
+        let second = vec![sp("transform", "rotate(90deg)")];
+        let layers = vec![
+            StateLayer { cond_expr: "first".into(), props: &first, transitions: &[] },
+            StateLayer { cond_expr: "second".into(), props: &second, transitions: &[] },
+        ];
+        let chain = swiftui_modifier_chain(&[sp("transform", "rotate(45deg)")], &layers, 0, None);
+        assert!(chain.contains(".rotationEffect(.degrees(((second) ? 90 : ((first) ? -22.5 : 45))))"), "{chain}");
+        let state_only = swiftui_modifier_chain(&[], &layers[..1], 0, None);
+        assert!(state_only.contains(".degrees(((first) ? -22.5 : 0))"), "{state_only}");
+    }
+
+    #[test]
+    fn unsupported_rotation_forms_remain_explicit_style_drops() {
+        for value in ["rotate(1rad)", "rotate(50%)", "rotate(NaNdeg)",
+            "rotate(infdeg)", "rotate(1e999deg)", "rotate(--2deg)",
+            "rotate(45deg) scale(2)", "rotate(45deg); injected()", "none"] {
+            let props = vec![sp("transform", value)];
+            let (chain, drops) = swiftui_modifier_chain_with_drops(&props, &[], &[], 0, None);
+            assert!(chain.is_empty(), "{value}: {chain}");
+            assert_eq!(drops, props, "{value}");
+        }
+    }
+
+    #[test]
+    fn unsupported_state_rotation_is_visible_in_the_public_report() {
+        let mut style = style_with_part("F", "c", vec![sp("transform", "rotate(45deg)")]);
+        style.parts[0].states.push(StateStyle {
+            slot: None, slot_is_bool: false, state: "hover".into(),
+            props: vec![sp("transform", "scale(2)")], transitions: vec![],
+        });
+        let layout = gap_layout(None, "Box", "c");
+        let drops = dropped_style_properties(&style, &layout);
+        assert_eq!(drops.len(), 1);
+        assert_eq!(drops[0].name, "transform");
+        assert_eq!(drops[0].value, "scale(2)");
+        style.parts[0].states[0].props = vec![sp("transform", "rotate(-22.5deg)")];
+        assert!(dropped_style_properties(&style, &layout).is_empty());
+    }
+
     // ---------------------------------------------------------------------
     // T3 — width+height collapse to a single `.frame(width: N, height: N)`.
     // ---------------------------------------------------------------------
@@ -16802,6 +16908,35 @@ mod tests {
         for tag in ["Column", "Row"] {
             let drops = gap_drops(&gap_layout(None, tag, "c"));
             assert!(drops.is_empty(), "{tag} applies the gap; got: {drops:?}");
+        }
+    }
+
+    /// Drag bodies use the same vertical stack constructor as Column. Test
+    /// emission as well as reporting so a future primitive change cannot hide
+    /// spacing loss behind the reporter's classification.
+    #[test]
+    fn drag_body_gap_is_emitted_and_not_reported_as_dropped() {
+        for tag in ["HostDraggable", "HostDropTarget"] {
+            let mut node = gap_layout(None, tag, "c");
+            node.children = vec![leaf("Text", vec![]), leaf("Text", vec![])];
+            let style = style_with_part("F", "c", vec![sp("gap", "8px")]);
+            let output = from_pipeline(
+                &component("F", vec![], vec![]),
+                &layout_with("F", node.clone()),
+                &style,
+            )
+            .expect("drag body emits")
+            .output;
+            assert!(output.contains("VStack(spacing: 8) {"), "{tag}: {output}");
+            assert!(gap_drops(&node).is_empty(), "{tag} already emits its gap");
+
+            let unsupported = style_with_part("F", "c", vec![sp("gap", "1rem")]);
+            assert!(dropped_style_properties(&unsupported, &node)
+                .iter()
+                .any(|drop| drop.name == "gap"));
+
+            let reused = container_node("Column", vec![node, gap_layout(None, "Box", "c")]);
+            assert_eq!(gap_drops(&reused).len(), 1, "unsupported reuse must remain visible");
         }
     }
 

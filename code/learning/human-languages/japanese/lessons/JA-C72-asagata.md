@@ -14,7 +14,8 @@ romanization: "asagata"
 concept_tag: JA-TIME72-ASAGATA
 prerequisites: [JA-C72-gogo, JA-C72-yonaka]
 sounds: []
-roots: []
+roots: [japanese-asa-morning, japanese-kata-direction]
+etymology_hook: "asagata: native compound of asa 'morning' + kata 'side, time' (朝方)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C72-yonaka]
 <!-- hl-knowledge: introduces=[JA-LEX-C72-TIME72-03]; assesses=[] -->
 
 **あさがた** — *asagata* — "early morning".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**あさがた** (*asagata*) is a native compound, inherited rather than borrowed: *asa*, "morning", and *kata*, "side; time", voiced to *gata*, both kun'yomi of its kanji (JMdict, KANJIDIC2).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

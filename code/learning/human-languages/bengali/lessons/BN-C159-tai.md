@@ -14,7 +14,8 @@ romanization: "tāi"
 concept_tag: BN-KARON159-TAI
 prerequisites: [BN-C158-minar, BN-C158-siling]
 sounds: []
-roots: []
+roots: [sanskrit-ta]
+etymology_hook: "tāi: tā 'that' + -i 'indeed'; tā is listed under the pronoun base ta- (CDIAL 5612)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C158-siling]
 <!-- hl-knowledge: introduces=[BN-LEX-C159-KARON159-01]; assesses=[] -->
 
 **তাই** — *tāi* — "so, therefore".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**তাই** (*tāi*) is *tā*, "that", + *-i*, "indeed": "that very thing, so". CDIAL lists Bengali *tā* under the Sanskrit pronoun base *ta-*, "that" (CDIAL 5612), with Middle Bengali *tẽ*, "therefore".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

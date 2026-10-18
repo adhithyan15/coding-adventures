@@ -6,7 +6,7 @@ sequence: 1386
 chapter: 117
 type: grammar
 headword: he hablado
-gloss: "I have spoken" — and haber, a verb that gave away its meaning and kept only a job
+gloss: '"I have spoken" — and haber, a verb that gave away its meaning and kept only a job'
 concept_tag: ES-GRAMMAR-PERFECT-FIRST-PERSON
 prerequisites: [ES-C49-participio]
 sounds: [silent-h]

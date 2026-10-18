@@ -14,7 +14,8 @@ romanization: "ṣafḥa"
 concept_tag: AR-AMAL282-SAFHA
 prerequisites: [AR-C282-hasiba, AR-C282-miqlama]
 sounds: []
-roots: []
+roots: [ṣ-f-ḥ]
+etymology_hook: "ṣafḥa: built on the root ṣ-f-ḥ, 'a broad surface' (Lane); ṣafḥa is a broad face: a page"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C282-miqlama]
 <!-- hl-knowledge: introduces=[AR-LEX-C282-AMAL282-03]; assesses=[] -->
 
 **صفحة** — *ṣafḥa* — "a page".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**صفحة** (*ṣafḥa*) is built on the native Arabic root *ṣ-f-ḥ*, "a broad surface; the face" (Lane). *Ṣafḥa* is a broad face: a page.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

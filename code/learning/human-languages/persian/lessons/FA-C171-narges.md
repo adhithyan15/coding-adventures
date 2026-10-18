@@ -14,7 +14,8 @@ romanization: "narges"
 concept_tag: FA-CHIZ171-NARGES
 prerequisites: [FA-C170-akhlaq, FA-C170-shakhsiyat]
 sounds: []
-roots: []
+roots: [greek-narkissos]
+etymology_hook: "narges ← Middle Persian nargis ← Greek narkissos (EtymDB)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C170-shakhsiyat]
 <!-- hl-knowledge: introduces=[FA-LEX-C171-CHIZ171-01]; assesses=[] -->
 
 **نرگس** — *narges* — "a narcissus".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*narges* goes back to Greek *narkissos*, "narcissus, daffodil" (EtymDB); Middle Persian already had *nargis*. English *narcissus* is the same Greek word.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

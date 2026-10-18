@@ -6,7 +6,7 @@ sequence: 3890
 chapter: 295
 type: word
 headword: la orilla
-gloss: the shore — Latin ora, an edge or border, with the small ending: the little edge of anything
+gloss: 'the shore — Latin ora, an edge or border, with the small ending: the little edge of anything'
 concept_tag: ES-PATH-SHORE
 prerequisites: [ES-C295-puente]
 sounds: [r-tap, ll-y]

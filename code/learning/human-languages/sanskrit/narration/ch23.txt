@@ -75,7 +75,10 @@ Before the new one: what did mātā mean?
 
 You'll want to know: सूनुः.
 सूनुः (sūnuḥ) — "son".
-From √सू (sū), 'to bring forth, to give birth' — so the word means the one who was brought forth. Its cousins are Gothic sunus, Old English sunu, English son, Lithuanian sunus, Russian syn. Sanskrit's other son-word, putraḥ, is far commoner in the texts and has no such relatives; this quieter one is the inherited word.
+From √सू (sū), 'to bring forth, to give birth' — so the word means the one who was brought forth. Its cousins are Gothic sunus, Old English sunu, English son, Lithuanian sūnus, Russian syn. Sanskrit's other son-word, putraḥ, is far commoner in the texts, but its own origin is doubtful (MW); this quieter one is the word with the familiar cousins.
+
+The word, taken apart.
+Sūnu is built on the root √sū, "to bring forth" (MW), and it is inherited: MW compares Gothic sunus, Lithuanian sūnus and English son (CDIAL 13569).
 
 What you've built.
 Three of the four, and a root that names a person by what happened to them.
@@ -106,7 +109,7 @@ Before the new one: what did sūnuḥ mean?
 
 You'll want to know: दुहिता.
 दुहिता (duhitā) — "daughter".
-Back to the -ṛ family: the stem is दुहितृ (duhitṛ-), standing beside पिता (pitā) and माता (mātā). Its cousins are English daughter, Greek thugatēr, Gothic dauhtar, Persian duxtar. Indian tradition read it as 'the one who milks', from √दुह् (duh) — a tidy story about a daughter's work in the house, which comparative linguists do not accept, because the cousins are older than the pun. Keep the story, and keep the fact that it is one.
+Back to the -ṛ family: the stem is दुहितृ (duhitṛ-), standing beside पिता (pitā) and माता (mātā). Its cousins are English daughter, Greek thugatēr, Gothic dauhtar, Persian duxtar. Indian tradition, and MW after it, read it as 'the one who milks', from √दुह् (duh) — a tidy story about a daughter's work in the house. The cousins show the word is far older than Sanskrit, so the story is a reading, not a settled etymology. Keep the story, and keep the fact that it is one.
 
 What you've built.
 That closes the run: father, mother, son, daughter — the four words the family kept longest.

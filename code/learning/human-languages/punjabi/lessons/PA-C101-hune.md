@@ -14,7 +14,8 @@ romanization: "huṇe"
 concept_tag: PA-TIME101-HUNE
 prerequisites: [PA-C100-roz, PA-C100-tarikh]
 sounds: []
-roots: []
+roots: [sanskrit-adhunaiva]
+etymology_hook: "huṇe ← Sanskrit adhunaiva 'right now', a tadbhava (CDIAL 270)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C100-tarikh]
 <!-- hl-knowledge: introduces=[PA-LEX-C101-TIME101-01]; assesses=[] -->
 
 **ਹੁਣੇ** — *huṇe* — "right now".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਹੁਣੇ** (*huṇe*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *adhunaiva*, "right now" (CDIAL 270). It is *adhunā*, "now", with *eva*, "exactly".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

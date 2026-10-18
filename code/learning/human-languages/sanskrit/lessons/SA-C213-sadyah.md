@@ -14,7 +14,8 @@ romanization: "sadyaḥ"
 concept_tag: SA-TIME213-SADYAH
 prerequisites: [SA-C212-svapnah, SA-C212-trptih]
 sounds: []
-roots: []
+roots: [sanskrit-sadyas]
+etymology_hook: "sadyas 'on the same day, at once' ← sa 'same' + dyu 'day' (MW; CDIAL 13123)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C212-trptih]
 <!-- hl-knowledge: introduces=[SA-LEX-C213-TIME213-01]; assesses=[] -->
 
 **सद्यः** — *sadyaḥ* — "at once".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*sadyaḥ* is built on *sa-*, "same", and *dyu*, "day" (MW; CDIAL 13123): "on the same day", and so "at once". It is already in the Rigveda.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

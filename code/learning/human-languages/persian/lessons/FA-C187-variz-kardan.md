@@ -14,7 +14,8 @@ romanization: "vâriz kardan"
 concept_tag: FA-VERB-VARIZ-KARDAN
 prerequisites: [FA-C187-derow-kardan, FA-C187-pasandaz-kardan]
 sounds: []
-roots: []
+roots: [pie-kwer]
+etymology_hook: "vâriz kardan: vâriz, usually analysed as vâ- 'back' + riz- 'pour' (rikhtan), + kardan"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C187-pasandaz-kardan]
 <!-- hl-knowledge: introduces=[FA-LEX-C187-KONESH187-05]; assesses=[] -->
 
 **واریز کردن** — *vâriz kardan* — "to deposit (money)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*vâriz kardan* pairs *vâriz*, "deposit", with *kardan*, "to do". *vâriz* is usually analysed as *vâ-*, "back, again", with *riz-*, the present stem of *rikhtan*, "to pour". *kardan*, "to do", is an inherited verb, from Middle Persian *kardan* (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

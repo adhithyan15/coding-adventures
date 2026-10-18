@@ -14,7 +14,8 @@ romanization: "nimbukam"
 concept_tag: SA-THINGS109-NIMBUKAM
 prerequisites: [SA-C109-draksa, SA-C109-panasam]
 sounds: []
-roots: []
+roots: [sanskrit-nimbu]
+etymology_hook: "nimbūka, nimbū 'lime' is borrowed from Austroasiatic (CDIAL 7247, after EWA); Hindi nimbū"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C109-panasam]
 <!-- hl-knowledge: introduces=[SA-LEX-C109-THINGS109-04]; assesses=[] -->
 
 **निम्बुकम्** — *nimbukam* — "a lemon".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*nimbūka*, beside *nimbū*, is "the lime" in the old word lists (MW), and CDIAL 7247, after EWA, takes it as borrowed from Austroasiatic. It lives on as Hindi *nimbū* "lime, lemon" (CDIAL 7247).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

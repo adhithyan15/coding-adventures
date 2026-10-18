@@ -14,7 +14,8 @@ romanization: "ârezu"
 concept_tag: FA-CAN90-AREZU
 prerequisites: [FA-C90-saheb, FA-C90-ghodrat]
 sounds: []
-roots: []
+roots: [persian-arezu]
+etymology_hook: "ârezu: inherited, usually traced to Middle Persian ārzōg"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C90-ghodrat]
 <!-- hl-knowledge: introduces=[FA-LEX-C90-CAN90-04]; assesses=[] -->
 
 **آرزو** — *ârezu* — "a wish".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*ârezu* is a native Persian word, inherited rather than borrowed; it is usually traced to Middle Persian *ārzōg*, "desire".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

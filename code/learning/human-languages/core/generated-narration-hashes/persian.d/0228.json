@@ -1,7 +1,7 @@
 {
   "language": "persian",
   "chapter": 228,
-  "sourceHash": "fnv1a64:c769caaf1b4f0323",
+  "sourceHash": "fnv1a64:574f4a1cb3512e70",
   "lessonIds": [
     "FA-C228-sizdah-bedar",
     "FA-C228-chaharshanbe-suri",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "persian/narration/ch228.txt",
   "json": "persian/narration/ch228.json",
-  "textHash": "fnv1a64:e2b7a0c17b193498",
-  "jsonHash": "fnv1a64:2a18ee2c5f0bafec",
+  "textHash": "fnv1a64:be0fe3d3386716ff",
+  "jsonHash": "fnv1a64:5453b1f77ef69990",
   "findings": []
 }

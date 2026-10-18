@@ -6,7 +6,8 @@ need not be one conflict domain. Malayalam A1 crossed that threshold at 4,839
 lines and 39 touches in the latest 200 human-language commits; Hindi A1 followed
 at 2,881 lines and 22 touches after the same boundary proved stable. Marathi A1
 then crossed it at 4,780 lines and 13 unique-commit touches in the latest
-500-commit audit.
+500-commit audit. Sanskrit A1 followed at 3,497 lines and 14 touches in the
+latest 50-commit audit while its coverage program was active.
 
 ## Canonical layout
 

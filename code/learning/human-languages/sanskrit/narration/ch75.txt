@@ -12,6 +12,9 @@ Before the new one: say the Sanskrit for a shop, then the Sanskrit for a market.
 You'll want to know: वाहनम्.
 वाहनम् (vāhanam) — "a vehicle", anything that carries you on a यात्रा.
 
+The word, taken apart.
+Vāhana is built on the root √vah, "to carry, convey" (MW, CDIAL 11610). It is inherited: MW compares Latin vehere, "to carry", and vehiculum, the source of English vehicle.
+
 What you've built.
 The general word.
 
@@ -40,6 +43,9 @@ Before the new one: say the Sanskrit for a market, then the Sanskrit for a vehic
 
 You'll want to know: रथः.
 रथः (rathaḥ) — "a chariot", the vehicle of the old stories.
+
+The word, taken apart.
+MW explains ratha as "the goer", from the root √ṛ, "to go", but EtymDB links it to Latin rota and Lithuanian ratas, "wheel", which makes the chariot first the wheeled thing. Either way it is inherited, and Rigvedic (CDIAL 10602).
 
 What you've built.
 The vehicle of the epics.
@@ -70,6 +76,9 @@ Before the new one: say the Sanskrit for a vehicle, then the Sanskrit for a char
 You'll want to know: नौका.
 नौका (naukā) — "a boat", the way across a नदी.
 
+The word, taken apart.
+Naukā is built from nau, "ship", with the small-thing ending -kā (MW). It is inherited: MW compares Greek naus and Latin nāvis, the source of English naval and navy.
+
 What you've built.
 The way over water.
 
@@ -99,6 +108,9 @@ Before the new one: say the Sanskrit for a chariot, then the Sanskrit for a boat
 You'll want to know: विमानम्.
 विमानम् (vimānam) — "an aeroplane". In the old stories it was a vehicle of the gods that crossed the आकाशः.
 
+The word, taken apart.
+Vimāna is built from vi and the root √mā, "to measure": first "measuring out, traversing", then the self-moving aerial car of the gods (MW, CDIAL 11823). Its use for an aeroplane is modern.
+
 What you've built.
 The vehicle of the sky.
 
@@ -127,6 +139,9 @@ Before the new one: say the Sanskrit for a boat, then the Sanskrit for an aeropl
 
 You'll want to know: प्रविशति.
 प्रविशति (praviśati) — "(he, she) goes in". गृहं प्रविशति — "goes into the house".
+
+The word, taken apart.
+Praviśati is built from pra, "forward", and the root √viś, "to enter, settle" (MW), the root of upaviśati. It lives on as Hindi paisnā, "to enter" (CDIAL 8803).
 
 What you've built.
 The verb of every doorway.

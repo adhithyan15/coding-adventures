@@ -14,7 +14,8 @@ romanization: "vasantaḥ"
 concept_tag: SA-WEATHER-SPRING
 prerequisites: [SA-C76-cold, SA-C76-heat]
 sounds: []
-roots: []
+roots: [sanskrit-vasanta]
+etymology_hook: "vasanta 'spring', 'the brilliant season' ← √vas 'shine'; MW compares Latin vēr 'spring' (CDIAL 11439)"
 duration:
   max_seconds: 200
 requires:
@@ -43,6 +44,13 @@ reviews_of: [SA-C76-heat]
 
 **वसन्तः** (*vasantaḥ*) — "spring", the first **ऋतुः** of the year, when the
 **पुष्पम्** opens.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+MW explains *vasanta* as "the brilliant season", from the root √vas, "to shine"
+(CDIAL 11439). It is inherited: MW compares Greek *ear* and Latin *vēr*, "spring",
+the source of English **vernal**.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

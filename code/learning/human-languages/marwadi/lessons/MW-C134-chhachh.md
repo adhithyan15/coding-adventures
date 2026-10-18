@@ -14,7 +14,8 @@ romanization: "chhāchh"
 concept_tag: MW-THINGS134-CHHACHH
 prerequisites: [MW-C133-gur, MW-C134-makkhan]
 sounds: []
-roots: []
+roots: [indo-aryan-chacchi]
+etymology_hook: "chhāchh ← *chācchī 'buttermilk', reconstructed (CDIAL 5012, Marwari row)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C134-makkhan]
 <!-- hl-knowledge: introduces=[MW-LEX-C134-THINGS134-02]; assesses=[] -->
 
 **छाछ** — *chhāchh* — "buttermilk".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**छाछ** (*chhāchh*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*chācchī*, "buttermilk", a form CDIAL reconstructs from its descendants. CDIAL lists Marwari *chāchī* under it (CDIAL 5012).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

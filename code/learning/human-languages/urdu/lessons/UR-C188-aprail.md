@@ -14,7 +14,8 @@ romanization: "aprail"
 concept_tag: UR-VAQT188-APRAIL
 prerequisites: [UR-C187-varzish, UR-C187-jism]
 sounds: []
-roots: []
+roots: [english-april]
+etymology_hook: "aprail ← English April"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C187-jism]
 <!-- hl-knowledge: introduces=[UR-LEX-C188-VAQT188-01]; assesses=[] -->
 
 **اپریل** — *aprail* — "April".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**اپریل** (*aprail*) is a loan from English *April*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "zohr"
 concept_tag: FA-TIME79-ZOHR
 prerequisites: [FA-C78-keshvar, FA-C78-dastan]
 sounds: []
-roots: []
+roots: [arabic-zuhr]
+etymology_hook: "zohr ← Arabic ẓuhr 'noon', root ẓ-h-r (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C78-dastan]
 <!-- hl-knowledge: introduces=[FA-LEX-C79-TIME79-01]; assesses=[] -->
 
 **ظهر** — *zohr* — "noon, midday".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*zohr* is borrowed from Arabic *ẓuhr*, "noon". Its Arabic root is *ẓ-h-r* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

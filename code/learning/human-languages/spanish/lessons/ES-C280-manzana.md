@@ -60,8 +60,8 @@ it kept was a variety.
 
 Gaius Matius was a Roman of the first century before our era, a friend of Julius
 Caesar, and a writer on cooking and gardening. A kind of apple carried his name:
-**mala Mattiana**, the Matian apples. That phrase wore down — *mattiana* into
-*manzana* — and along the way the adjective swallowed the noun. The
+**mala Mattiana**, the Matian apples. That phrase wore down — *manzana* comes
+from *mattiana* — and along the way the adjective swallowed the noun. The
 variety name became the word for the fruit, and the man vanished inside it.
 
 English does this too, and recently enough that the joins are still obvious.

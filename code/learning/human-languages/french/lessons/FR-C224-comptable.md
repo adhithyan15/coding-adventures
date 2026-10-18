@@ -46,7 +46,7 @@ reviews_of: [FR-C224-pilote]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**comptable** — *compter*, "to count", with *-able*: one who keeps the counts.
+**comptable** — *compter*, "to count", with *-able*: one who keeps the counts. *Compter* ← Latin *computāre*, "to reckon" (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

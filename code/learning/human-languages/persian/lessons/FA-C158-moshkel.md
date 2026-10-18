@@ -14,7 +14,8 @@ romanization: "moshkel"
 concept_tag: FA-CHERA158-MOSHKEL
 prerequisites: [FA-C158-be-khater-e, FA-C158-natije]
 sounds: []
-roots: []
+roots: [arabic-mushkil]
+etymology_hook: "moshkel ← Arabic muškil 'difficult, problematic', root š-k-l (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C158-natije]
 <!-- hl-knowledge: introduces=[FA-LEX-C158-CHERA158-05]; assesses=[] -->
 
 **مشکل** — *moshkel* — "a problem".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*moshkel* is borrowed from Arabic *muškil*, "difficult, problematic". Its Arabic root is *š-k-l* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

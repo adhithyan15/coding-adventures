@@ -45,8 +45,11 @@ Before the new word: what did prātaḥ mean?
 You'll want to know: मध्याह्नः.
 मध्याह्नः (madhyāhnaḥ) — "noon".
 मध्याह्नः (madhyāhnaḥ) is midday, the sun at the top of its climb.
-It is two pieces joined: madhya, "middle", and ahan, a day. Sanskrit keeps more than one word for a day, and this is the other one — दिनम् is the day you count, ahan the day you are standing in. English mid is madhya's own worn-down cousin.
+It is two pieces joined: madhya, "middle", and ahan, a day. Sanskrit keeps more than one word for a day, and this is the other one, beside दिनम्. English mid is madhya's own worn-down cousin.
 So noon is the middle of the day said in one breath, which is what noon is in most languages once you take the word apart.
+
+The word, taken apart.
+Madhyāhna is a compound of madhya, "middle", and ahan, "day" (MW, CDIAL 9818). Madhya is inherited: MW compares Latin medius and English mid.
 
 What you've built.
 The top of the day, between its two ends.
@@ -82,6 +85,9 @@ You'll want to know: सायम्.
 सायम् (sāyam) is evening: the end of the working day, when a thing is set down rather than picked up.
 Put it beside प्रातः and you hold the two ends of the daylight — the greeting at one end and the leave-taking at the other. sāyaṁ prātaḥ, "evening and morning", is one of the oldest paired phrases the language has.
 It rests on a piece meaning "to finish, to let go", so evening is named as the slackening of the day rather than as its darkness.
+
+The word, taken apart.
+Sāyam is the adverb of sāya, "close of day", which MW derives, probably, from the root √so, "to bring to an end" (CDIAL 13353).
 
 What you've built.
 Both ends of the daylight, and the middle between them.

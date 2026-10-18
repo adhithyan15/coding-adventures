@@ -11,7 +11,7 @@ concept_tag: GREETING-DAY
 prerequisites: [GE-C01-gut, GE-C01-tag]
 sounds: [vowel-u-german]
 roots: [godaz, dagaz]
-etymology_hook: Guten Tag is a frozen accusative: the -en is the masculine object ending, left behind by the fuller wish it was cut from
+etymology_hook: 'Guten Tag is a frozen accusative: the -en is the masculine object ending, left behind by the fuller wish it was cut from'
 duration:
   max_seconds: 240
 requires:
@@ -49,7 +49,9 @@ glimpse of how German adjectives work.
 <!-- hl-knowledge: introduces=[GE-LEX-GUTEN-TAG-01]; assesses=[] -->
 
 **Guten Tag** = **gut** ("good") + **Tag** ("day") = "good day," the neutral
-polite "hello" for daytime. Said *GOO-ten tahk*.
+polite "hello" for daytime. Said *GOO-ten tahk*. Both words are inherited: *gut*
+← Old High German *guot*, and *Tag* ← Proto-Germanic *\*dagaz*, the same word as
+English *day* (EtymDB 2.1).
 
 ## Grammar Lens: why *guten*, not *gut*?
 <!-- hl-knowledge: introduces=[GE-GRAMMAR-ADJ-ACC-MASC-02]; assesses=[] -->

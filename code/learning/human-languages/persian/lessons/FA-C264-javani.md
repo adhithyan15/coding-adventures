@@ -14,7 +14,8 @@ romanization: "javâni"
 concept_tag: FA-ZAMAN264-JAVANI
 prerequisites: [FA-C264-jashnvare, FA-C264-kudaki]
 sounds: []
-roots: []
+roots: [persian-javan]
+etymology_hook: "javâni: Persian javân 'young' (EtymDB) + -i"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C264-kudaki]
 <!-- hl-knowledge: introduces=[FA-LEX-C264-ZAMAN264-04]; assesses=[] -->
 
 **جوانی** — *javâni* — "youth".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*javâni* is *javân*, "young", with the noun ending *-i*. *javân* is inherited; EtymDB takes it back to the Indo-European word behind Latin *iuvenis*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

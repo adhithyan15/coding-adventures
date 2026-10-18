@@ -14,7 +14,8 @@ romanization: "dadāti"
 concept_tag: SA-VERB-GIVE
 prerequisites: [SA-C72-washes, SA-C72-brings]
 sounds: []
-roots: []
+roots: [sanskrit-dadati]
+etymology_hook: "dadāti 'gives' ← the root √dā 'give'; MW compares Greek didōmi and Latin dō; Hindi denā (CDIAL 6141)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,13 @@ reviews_of: [SA-C72-brings]
 <!-- hl-knowledge: introduces=[SA-LEX-C72-HOUSEWORK-05]; assesses=[] -->
 
 **ददाति** (*dadāti*) — "(he, she) gives". **मह्यम्** + **ददाति**: "gives to me".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*Dadāti* is the doubled present of the root √dā, "to give". It is inherited: MW
+compares Greek *didōmi* and Latin *dō*, "I give". It lives on as Hindi *denā*, "to
+give" (CDIAL 6141).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

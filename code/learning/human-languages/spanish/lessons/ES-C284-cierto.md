@@ -6,7 +6,7 @@ sequence: 3340
 chapter: 284
 type: word
 headword: cierto
-gloss: true — Latin certus, sifted: what is left after you separate it out
+gloss: 'true — Latin certus, sifted: what is left after you separate it out'
 concept_tag: ES-REPLY-TRUE
 prerequisites: [ES-C284-seguro]
 sounds: [diphthong-ie, soft-c]

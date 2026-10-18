@@ -14,7 +14,8 @@ romanization: "tārīkh"
 concept_tag: GU-TIME94-TARIKH
 prerequisites: [GU-C94-vahelu, GU-C94-roj]
 sounds: []
-roots: []
+roots: [arabic-tarikh]
+etymology_hook: "tārīkh ← Arabic tārīkh 'a dating, a date', through Persian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C94-roj]
 <!-- hl-knowledge: introduces=[GU-LEX-C94-TIME94-04]; assesses=[] -->
 
 **તારીખ** (*tārīkh*) — "a date".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**તારીખ** (*tārīkh*) is a loan from Arabic *tārīkh*, "a dating, a date", which reached Gujarati through Persian. Its Arabic root is *ʾ-r-kh* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

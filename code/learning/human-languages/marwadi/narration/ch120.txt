@@ -14,6 +14,9 @@ Before the new one: say the Marwadi for a bucket, then the Marwadi for a broom.
 You'll want to know: सूपड़ो.
 सूपड़ो — sūpṛo — "a winnowing basket".
 
+The word, taken apart.
+सूपड़ो (sūpṛo) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from śūrpa, "winnowing basket". CDIAL gives no Marwari form in this entry (CDIAL 12573); the match is through Gujarati supṛũ. The ṛ is an added suffix.
+
 What you've built.
 One more word for this chapter.
 
@@ -44,6 +47,9 @@ Before the new one: say the Marwadi for a broom, then the Marwadi for a winnowin
 
 You'll want to know: चाळणी.
 चाळणी — chāḷṇī — "a sieve".
+
+The word, taken apart.
+चाळणी (chāḷṇī) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from cālanī, "strainer, sieve". CDIAL gives no Marwari form in this entry (CDIAL 4771); the match is through Hindi cālnī and Gujarati cāḷṇī. It is built on the root cal, "to move".
 
 What you've built.
 One more word for this chapter.
@@ -76,6 +82,9 @@ Before the new one: say the Marwadi for a winnowing basket, then the Marwadi for
 You'll want to know: चक्की.
 चक्की — chakkī — "a grinding mill".
 
+The word, taken apart.
+चक्की (chakkī) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from cakra, "wheel; oil mill". CDIAL gives no Marwari form in this entry (CDIAL 4538); the match is through Hindi cākī. English wheel is a distant cousin of the Sanskrit word. चक्की (chakkī) keeps a doubled k that Hindi cākī, "millstone", has lost.
+
 What you've built.
 One more word for this chapter.
 
@@ -107,6 +116,9 @@ Before the new one: say the Marwadi for a sieve, then the Marwadi for a grinding
 You'll want to know: मूसळ.
 मूसळ — mūsaḷ — "a pestle".
 
+The word, taken apart.
+मूसळ (mūsaḷ) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from musala, "pestle". CDIAL gives no Marwari form in this entry (CDIAL 10223); the match is through Hindi mūsal. CDIAL notes that the s points to a non-Aryan origin, perhaps Dravidian.
+
 What you've built.
 One more word for this chapter.
 
@@ -137,6 +149,9 @@ Before the new one: say the Marwadi for a grinding mill, then the Marwadi for a 
 
 You'll want to know: बेलण.
 बेलण — belaṇ — "a rolling pin".
+
+The word, taken apart.
+बेलण (belaṇ) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from vellana, "shaking; rolling-pin". CDIAL gives no Marwari form in this entry (CDIAL 12120); the match is through Hindi belan and Gujarati velaṇ.
 
 What you've built.
 One more word for this chapter.

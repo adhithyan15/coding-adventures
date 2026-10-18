@@ -1,7 +1,7 @@
 {
   "language": "japanese",
   "chapter": 127,
-  "sourceHash": "fnv1a64:e7ae61217cde7dd8",
+  "sourceHash": "fnv1a64:d1bd4fde351a4af2",
   "lessonIds": [
     "JA-C127-ooi",
     "JA-C127-sukunai",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "japanese/narration/ch127.txt",
   "json": "japanese/narration/ch127.json",
-  "textHash": "fnv1a64:512bb05a05d89486",
-  "jsonHash": "fnv1a64:383148ec5bd4ec9a",
+  "textHash": "fnv1a64:849165b9c610cd5c",
+  "jsonHash": "fnv1a64:6678b6a6b1cf2d76",
   "findings": []
 }

@@ -12,6 +12,7 @@ concept_tag: WORD-NAME
 prerequisites: []
 sounds: [long-aa, no-top-line]
 roots: [naaman-sanskrit]
+etymology_hook: "nām ← Sanskrit nāman 'name', a tadbhava (CDIAL 7067), the same ancient word as English name"
 duration:
   max_seconds: 180
 requires:

@@ -12,6 +12,9 @@ Before the new one: say the Persian for a drop, then the Persian for a capsule.
 You'll want to know: امسال.
 امسال — emsâl — "this year".
 
+The word, taken apart.
+emsâl is em-, "this", with sâl, "year": "this year". Both are native; sâl continues Middle Persian sāl (EtymDB).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Persian for a capsule, then the Persian for this yea
 
 You'll want to know: روزانه.
 روزانه — ruzâne — "daily".
+
+The word, taken apart.
+ruzâne is ruz, "day", with the ending -âne, "every, belonging to": daily. ruz continues Middle Persian rōz (EtymDB).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Persian for this year, then the Persian for daily.
 You'll want to know: ماهانه.
 ماهانه — mâhâne — "monthly".
 
+The word, taken apart.
+mâhâne is mâh, "month", with the ending -âne, "every, belonging to": monthly. mâh is inherited; Old Persian had māha- (EtymDB).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Persian for daily, then the Persian for monthly.
 You'll want to know: آخر.
 آخر — âkhar — "last; the end".
 
+The word, taken apart.
+âkhar is borrowed from Arabic āḫir, "last, end". Its Arabic root is ʾ-ḫ-r (Lane).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Persian for monthly, then the Persian for last.
 
 You'll want to know: پس از.
 پس از — pas az — "after".
+
+The word, taken apart.
+pas az is pas, "after, behind", with az, "from". Both are native: EtymDB traces pas to Middle Persian pas, and az to Old Persian hacā.
 
 What you've built.
 One more word for this chapter.

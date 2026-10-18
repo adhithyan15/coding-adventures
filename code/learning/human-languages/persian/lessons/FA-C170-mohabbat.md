@@ -14,7 +14,8 @@ romanization: "mohabbat"
 concept_tag: FA-CHIZ170-MOHABBAT
 prerequisites: [FA-C169-doshman, FA-C169-mardom]
 sounds: []
-roots: []
+roots: [arabic-mahabba]
+etymology_hook: "mohabbat ← Arabic maḥabba 'love, affection', root ḥ-b-b (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C169-mardom]
 <!-- hl-knowledge: introduces=[FA-LEX-C170-CHIZ170-01]; assesses=[] -->
 
 **محبت** — *mohabbat* — "affection, kindness".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*mohabbat* is borrowed from Arabic *maḥabba*, "love, affection". Its Arabic root is *ḥ-b-b* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

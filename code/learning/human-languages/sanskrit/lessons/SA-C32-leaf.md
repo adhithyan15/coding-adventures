@@ -14,7 +14,8 @@ romanization: "patram"
 concept_tag: SA-TREE-PATRA
 prerequisites: [SA-C32-tree, SA-C30-seat, SA-C31-moon]
 sounds: []
-roots: []
+roots: [sanskrit-patra]
+etymology_hook: "pattra 'wing, leaf' ← the root √pat 'fly'; MW compares Greek pteron and English feather (CDIAL 7733)"
 duration:
   max_seconds: 210
 requires:

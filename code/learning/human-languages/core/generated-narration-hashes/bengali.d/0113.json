@@ -1,7 +1,7 @@
 {
   "language": "bengali",
   "chapter": 113,
-  "sourceHash": "fnv1a64:7c6527f049f39e64",
+  "sourceHash": "fnv1a64:aaee04d13bfdde11",
   "lessonIds": [
     "BN-C113-kuyo",
     "BN-C113-kada",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "bengali/narration/ch113.txt",
   "json": "bengali/narration/ch113.json",
-  "textHash": "fnv1a64:634b5cab8b646f07",
-  "jsonHash": "fnv1a64:8c58c38d1cc23a62",
+  "textHash": "fnv1a64:2cb50fe60a7d97c2",
+  "jsonHash": "fnv1a64:32838fc522de3d18",
   "findings": []
 }

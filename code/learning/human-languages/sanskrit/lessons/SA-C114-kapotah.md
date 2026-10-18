@@ -14,7 +14,8 @@ romanization: "kapotaḥ"
 concept_tag: SA-THINGS114-KAPOTAH
 prerequisites: [SA-C113-mahisah, SA-C114-mesah]
 sounds: []
-roots: []
+roots: [sanskrit-kapota]
+etymology_hook: "kapota 'pigeon' (RV) is inherited from Indo-Iranian (EtymDB), cousin of Persian kabūtar, Hindi's pigeon word"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C114-mesah]
 <!-- hl-knowledge: introduces=[SA-LEX-C114-THINGS114-02]; assesses=[] -->
 
 **कपोतः** — *kapotaḥ* — "a pigeon".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*kapota* "a dove, a pigeon" is old, in the Rigveda, and is inherited from Indo-Iranian (EtymDB). Its cousin is Persian *kabūtar* "pigeon", which Hindi and Urdu took from Persian, so the Hindi pigeon is a Persian cousin of this Sanskrit word.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

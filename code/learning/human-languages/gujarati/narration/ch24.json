@@ -4,7 +4,7 @@
   "chapter": 24,
   "title": "A First Three-Place Map",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:3c6ad133d6dbdf91",
+  "sourceHash": "fnv1a64:939a04b929685656",
   "lessons": [
     {
       "id": "GU-C20-hear-bajar",
@@ -175,7 +175,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f72eb9a9cc2b4d32",
+      "sourceHash": "fnv1a64:0553cbc19d7b86c7",
       "notice": null,
       "blocks": [
         {
@@ -191,6 +191,17 @@
         },
         {
           "index": 1,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ઘર (ghar) is usually taken as a popular form of Sanskrit gṛha, \"house\", which it has largely replaced. CDIAL lists it under Middle Indo-Aryan ghara, \"house\", and calls that derivation phonetically difficult (CDIAL 4428)."
+            }
+          ]
+        },
+        {
+          "index": 2,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -201,7 +212,7 @@
           ]
         },
         {
-          "index": 2,
+          "index": 3,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -411,7 +422,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:98e78cbccabee5ec",
+      "sourceHash": "fnv1a64:b0adf6cc09fb3ec8",
       "notice": null,
       "blocks": [
         {
@@ -427,6 +438,17 @@
         },
         {
           "index": 1,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "મંદિર (mandir) is Sanskrit mandira, \"dwelling, camp, town, temple\", taken over whole as a learned loan, a tatsama (CDIAL 9852)."
+            }
+          ]
+        },
+        {
+          "index": 2,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -437,7 +459,7 @@
           ]
         },
         {
-          "index": 2,
+          "index": 3,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

@@ -14,7 +14,8 @@ romanization: "bôndôr"
 concept_tag: BN-THINGS128-BONDOR
 prerequisites: [BN-C127-mojur, BN-C128-maine]
 sounds: []
-roots: []
+roots: [persian-bandar]
+etymology_hook: "bôndôr: usually traced to Persian bandar 'port, harbour'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C128-maine]
 <!-- hl-knowledge: introduces=[BN-LEX-C128-THINGS128-02]; assesses=[] -->
 
 **বন্দর** — *bôndôr* — "a port".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**বন্দর** (*bôndôr*) is a loan, usually traced to Persian *bandar*, "port, harbour".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

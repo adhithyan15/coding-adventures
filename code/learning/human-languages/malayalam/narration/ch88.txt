@@ -3,7 +3,7 @@ Malayalam, chapter 88: Counting Past Twenty.
 
 
 Lesson 1 of 4.
-മുപ്പത് — എൺപത് (muppatŭ — eṇpathŭ) — the tens.
+മുപ്പത് — എൺപത് (muppatŭ — eṇpatŭ) — the tens.
 
 Warm-up.
 [pause 2 seconds]
@@ -18,12 +18,12 @@ Every ten from here up is that same word with a different digit on it.
 അമ്പത് ampatŭ, 50. built on: five.
 അറുപത് aṟupatŭ, 60. built on: six.
 എഴുപത് eḻupatŭ, 70. built on: seven.
-എൺപത് eṇpathŭ, 80. built on: eight.
+എൺപത് eṇpatŭ, 80. built on: eight.
 Notice the middle of each word. -പത്- is in all of them, and it is the word for ten you have had since you learned to count.
 Eighty begins with എൺ-. Its final ൺ is the vowel-free retroflex nasal you met near the beginning of the book, so the whole word is now yours to read.
 
 The word, taken apart.
-മുപ്പത് — എൺപത് (muppatŭ — eṇpathŭ) are native Dravidian, each a small number joined to -patŭ, the combining form of "ten": DEDR 3918 lists Tamil muppatu, "thirty", and nāṟpatu, "forty", built the same way, and DEDR 784 lists Tamil eṇ-patu, "eighty".
+മുപ്പത് — എൺപത് (muppatŭ — eṇpatŭ) are native Dravidian, each a small number joined to -patŭ, the combining form of "ten": DEDR 3918 lists Tamil muppatu, "thirty", and nāṟpatu, "forty", built the same way, and DEDR 784 lists Tamil eṇ-patu, "eighty".
 
 Why it's said this way: the digits are worn, some more than others.
 The front of each word is the digit, but not in the shape you learned it in. These are older, shorter forms that survive only in compounds:
@@ -65,7 +65,7 @@ Now the one that breaks the run:
 There is no -പത്- in it. Every other ten was digit plus ten, and this one is not built that way at all.
 Look at how it ends. The word for a hundred, a line above, is sitting inside it — toṇ- ṇūṟŭ. Ninety is named from above, as a hundred short of something, where the other tens are named from below as so many tens.
 [a table of 3 rows, read aloud]
-എൺപത് eṇpathŭ 80. built from: eight tens.
+എൺപത് eṇpatŭ 80. built from: eight tens.
 തൊണ്ണൂറ് 90. built from: a hundred, reduced.
 നൂറ് 100. built from: itself.
 That is why the lesson gives you a hundred first. Learn toṇṇūṟŭ after nūṟŭ and it is one irregular word with a visible reason; learn it before, and it is noise.
@@ -124,7 +124,7 @@ What does a ten do before a digit? (Changes shape, taking -ത്തി-.) Which
 
 
 Lesson 4 of 4.
-(counting past twenty) (irupathinŭ mēle enna ōrmma) — from cold.
+(counting past twenty) (irupatinŭ mēle enna ōrmma) — from cold.
 
 Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped.
 

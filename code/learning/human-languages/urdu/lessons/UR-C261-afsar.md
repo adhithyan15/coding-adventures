@@ -14,7 +14,8 @@ romanization: "afsar"
 concept_tag: UR-KAM261-AFSAR
 prerequisites: [UR-C261-karkhana, UR-C261-miting]
 sounds: []
-roots: []
+roots: [english-officer]
+etymology_hook: "afsar: usually traced to English officer"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C261-miting]
 <!-- hl-knowledge: introduces=[UR-LEX-C261-KAM261-04]; assesses=[] -->
 
 **افسر** — *afsar* — "an officer".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**افسر** (*afsar*) is usually traced to English *officer*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "nishchôyi"
 concept_tag: BN-KARON190-NISHCHOYI
 prerequisites: [BN-C190-borong, BN-C190-hoyto]
 sounds: []
-roots: []
+roots: [sanskrit-niscaya]
+etymology_hook: "nishchôyi: Sanskrit niścaya 'certainty', a tatsama, + -i 'indeed'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C190-hoyto]
 <!-- hl-knowledge: introduces=[BN-LEX-C190-KARON190-03]; assesses=[] -->
 
 **নিশ্চয়ই** — *nishchôyi* — "certainly".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**নিশ্চয়ই** (*nishchôyi*) is Sanskrit *niścaya*, "certainty", taken over whole, + the stressing ending *-i*, "indeed".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

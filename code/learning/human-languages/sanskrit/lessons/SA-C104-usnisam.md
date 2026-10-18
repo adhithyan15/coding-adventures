@@ -14,7 +14,8 @@ romanization: "uṣṇīṣam"
 concept_tag: SA-THINGS104-USNISAM
 prerequisites: [SA-C104-satika, SA-C104-padatranam]
 sounds: []
-roots: []
+roots: [sanskrit-ushnisha]
+etymology_hook: "uṣṇīṣa 'turban' (AV); grammarians read it as uṣṇa 'heat' + īṣ 'ward off' (MW); its origin is uncertain"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C104-padatranam]
 <!-- hl-knowledge: introduces=[SA-LEX-C104-THINGS104-03]; assesses=[] -->
 
 **उष्णीषम्** — *uṣṇīṣam* — "a turban".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*uṣṇīṣa* "anything wound round the head, a turban" is old, already in the Atharvaveda. The grammarians quoted by MW read it as *uṣṇa* "heat" and *īṣ* "ward off", "what keeps off the heat", but that is a learned guess, and its origin is uncertain.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

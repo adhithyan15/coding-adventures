@@ -1,7 +1,7 @@
 {
   "language": "urdu",
   "chapter": 179,
-  "sourceHash": "fnv1a64:adfcf0a7668d0d9f",
+  "sourceHash": "fnv1a64:9039047ab2a769f8",
   "lessonIds": [
     "UR-C179-dai",
     "UR-C179-khazanchi",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "urdu/narration/ch179.txt",
   "json": "urdu/narration/ch179.json",
-  "textHash": "fnv1a64:4d67ad6540e8da11",
-  "jsonHash": "fnv1a64:6c23bff3041a9b1e",
+  "textHash": "fnv1a64:3e40ab45bddb37a4",
+  "jsonHash": "fnv1a64:eddaa6838bb6f14c",
   "findings": []
 }

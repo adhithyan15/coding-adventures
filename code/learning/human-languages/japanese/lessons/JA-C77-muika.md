@@ -14,7 +14,8 @@ romanization: "muika"
 concept_tag: JA-TIME77-MUIKA
 prerequisites: [JA-C77-yokka, JA-C77-itsuka]
 sounds: []
-roots: []
+roots: [japanese-mu-six, japanese-ka-day]
+etymology_hook: "muika: native mu 'six' (as mui) + ka 'day'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C77-itsuka]
 <!-- hl-knowledge: introduces=[JA-LEX-C77-TIME77-05]; assesses=[] -->
 
 **むいか** — *muika* — "the sixth of the month".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**むいか** (*muika*) is native: *mu*, "six", here *mui*, with *ka*, "day" (KANJIDIC2). It is inherited rather than borrowed.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

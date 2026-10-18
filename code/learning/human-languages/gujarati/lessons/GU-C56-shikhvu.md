@@ -14,7 +14,8 @@ romanization: "śīkhvũ"
 concept_tag: GU-VERB-SHIKHVU
 prerequisites: [GU-C56-hasvu, GU-C56-saambhalvu]
 sounds: []
-roots: []
+roots: [sanskrit-shikshate]
+etymology_hook: "śīkhvũ ← Sanskrit śikṣate 'learns', a tadbhava (CDIAL 12430)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C56-saambhalvu]
 <!-- hl-knowledge: introduces=[GU-LEX-C56-VOICE-05]; assesses=[] -->
 
 **શીખવું** (*śīkhvũ*) — "to learn". What you are doing now.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**શીખવું** (*śīkhvũ*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *śikṣate*, "learns" (CDIAL 12430).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

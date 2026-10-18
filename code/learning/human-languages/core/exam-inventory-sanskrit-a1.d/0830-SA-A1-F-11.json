@@ -1,0 +1,21 @@
+{
+  "id": "SA-A1-F-11",
+  "category": "Influencing the other person",
+  "label": "ask for something, and ask for help, politely",
+  "probe": [
+    "SA-LEX-C29-COURTESY-01",
+    "SA-LEX-SAHAYYAM-KAROTI-HELP",
+    "SA-LEX-C29-COURTESY-04"
+  ],
+  "anchorIds": [
+    "ES-A1-PROXY",
+    "CEFR-CV",
+    "SA-CORPUS",
+    "ED-SANSKRIT"
+  ],
+  "derivedFrom": [
+    "A1-F4-02",
+    "A1-F4-03"
+  ],
+  "note": "kṛpayā ('please'), sāhāyyaṁ karoti ('helps') and upakāraḥ ('a favour'). The imperative that a request needs is only present as two frozen forms — see SA-A1-V-07."
+}

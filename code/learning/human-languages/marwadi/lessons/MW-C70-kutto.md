@@ -14,7 +14,8 @@ romanization: "kutto"
 concept_tag: MW-NATURE70-KUTTO
 prerequisites: [MW-C69-ag, MW-C70-abho]
 sounds: []
-roots: []
+roots: [indo-aryan-kutta]
+etymology_hook: "kutto ← *kutta 'dog', an imitative word, reconstructed (CDIAL 3275, Marwari row)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C70-abho]
 <!-- hl-knowledge: introduces=[MW-LEX-C70-NATURE70-02]; assesses=[] -->
 
 **कुत्तो** — *kutto* — "a dog".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**कुत्तो** (*kutto*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*kutta*, "dog", a form CDIAL reconstructs from its descendants. CDIAL lists Marwari *kuto* under it (CDIAL 3275). CDIAL thinks the word imitates a call to a dog.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

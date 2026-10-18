@@ -14,7 +14,8 @@ romanization: "jub"
 concept_tag: FA-MAKAN268-JUB
 prerequisites: [FA-C268-sayeban, FA-C268-golkhane]
 sounds: []
-roots: []
+roots: [persian-jub]
+etymology_hook: "jub: inherited, usually traced to Middle Persian jōy"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C268-golkhane]
 <!-- hl-knowledge: introduces=[FA-LEX-C268-MAKAN268-04]; assesses=[] -->
 
 **جوب** — *jub* — "a street gutter".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*jub* is a native Persian word, inherited rather than borrowed; it is usually traced to Middle Persian *jōy*, "stream, channel".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

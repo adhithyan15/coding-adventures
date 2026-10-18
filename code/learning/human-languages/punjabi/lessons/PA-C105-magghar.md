@@ -14,7 +14,8 @@ romanization: "magghar"
 concept_tag: PA-TIME105-MAGGHAR
 prerequisites: [PA-C104-assu, PA-C105-kattak]
 sounds: []
-roots: []
+roots: [sanskrit-margashiras]
+etymology_hook: "magghar ← Sanskrit mārgaśiras 'the month November-December', a tadbhava (CDIAL 10076)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C105-kattak]
 <!-- hl-knowledge: introduces=[PA-LEX-C105-TIME105-02]; assesses=[] -->
 
 **ਮੱਘਰ** — *magghar* — "Magghar, a Punjabi month".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਮੱਘਰ** (*magghar*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *mārgaśiras*, "the month November-December" (CDIAL 10076).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

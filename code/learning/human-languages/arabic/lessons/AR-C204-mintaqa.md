@@ -14,7 +14,8 @@ romanization: "minṭaqa"
 concept_tag: AR-MAKAN204-MINTAQA
 prerequisites: [AR-C203-usbui, AR-C204-nahwa]
 sounds: []
-roots: []
+roots: [n-ṭ-q]
+etymology_hook: "minṭaqa: built on the root n-ṭ-q, 'to speak' (Lane); Lane's minṭaqa is a girdle"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C204-nahwa]
 <!-- hl-knowledge: introduces=[AR-LEX-C204-MAKAN204-02]; assesses=[] -->
 
 **منطقة** — *minṭaqa* — "an area, a district".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**منطقة** (*minṭaqa*) is built on the native Arabic root *n-ṭ-q*, "to speak" (Lane). Lane's *minṭaqa* is a girdle; the zone, like Greek *zōnē*, "belt", probably grew from it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "hārnā"
 concept_tag: PA-VERB-HARNA
 prerequisites: [PA-C112-liakat, PA-C112-jittna]
 sounds: []
-roots: []
+roots: [sanskrit-harayati]
+etymology_hook: "hārnā ← Sanskrit hārayati 'causes to be taken; loses', a tadbhava (CDIAL 14061)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C112-jittna]
 <!-- hl-knowledge: introduces=[PA-LEX-C112-CAN112-05]; assesses=[] -->
 
 **ਹਾਰਨਾ** — *hārnā* — "to lose (a game)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਹਾਰਨਾ** (*hārnā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *hārayati*, "causes to be taken; loses" (CDIAL 14061).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "ṭenis"
 concept_tag: BN-JINIS197-TENIS
 prerequisites: [BN-C197-phutbol, BN-C197-hoki]
 sounds: []
-roots: []
+roots: [english-tennis]
+etymology_hook: "ṭenis ← English tennis"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C197-hoki]
 <!-- hl-knowledge: introduces=[BN-LEX-C197-JINIS197-03]; assesses=[] -->
 
 **টেনিস** — *ṭenis* — "tennis".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**টেনিস** (*ṭenis*) is a loan from English *tennis*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

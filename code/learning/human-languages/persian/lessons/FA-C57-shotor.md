@@ -14,7 +14,8 @@ romanization: "shotor"
 concept_tag: FA-ANIMALS57-SHOTOR
 prerequisites: [FA-C56-mar, FA-C57-khers]
 sounds: []
-roots: []
+roots: [persian-shutur]
+etymology_hook: "shotor: inherited; EtymDB: Proto-Iranian *uštrah 'camel'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C57-khers]
 <!-- hl-knowledge: introduces=[FA-LEX-C57-ANIMALS57-02]; assesses=[] -->
 
 **شتر** — *shotor* — "a camel".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*shotor* is a native Persian word, inherited rather than borrowed: EtymDB traces it to Proto-Iranian *\*uštrah*, "camel", and Middle Persian had *uštar*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

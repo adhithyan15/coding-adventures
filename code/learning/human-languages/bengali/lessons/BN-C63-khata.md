@@ -14,7 +14,8 @@ romanization: "khātā"
 concept_tag: BN-HOME63-KHATA
 prerequisites: [BN-C63-dorja, BN-C63-boi]
 sounds: []
-roots: []
+roots: [sanskrit-kshatra]
+etymology_hook: "khātā ← Sanskrit kṣatra 'might, rule', a tadbhava (CDIAL 3648)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C63-boi]
 <!-- hl-knowledge: introduces=[BN-LEX-C63-HOME63-05]; assesses=[] -->
 
 **খাতা** — *khātā* — "an exercise book".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**খাতা** (*khātā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *kṣatra*, "might, rule" (CDIAL 3648). CDIAL glosses the Bengali form "plot of land, party, account book".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

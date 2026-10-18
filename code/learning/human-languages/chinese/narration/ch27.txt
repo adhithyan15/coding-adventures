@@ -86,6 +86,9 @@ And now three things this book taught separately can be said in one breath:
 Name, nationality, age — the three pieces of personal information any beginner's paper asks for, and the last of them was waiting on this one character.
 One habit worth knowing. Mandarin asks a small child's age with one question and an adult's with another, and both need words this book has not taught yet. What this lesson gives you is the answer, which is the half you are asked for.
 
+The word, taken apart.
+岁 (suì) is inherited from Middle Chinese sjwejH, "year" (Guangyun); Unihan also gives "age".
+
 Guided Practice.
 [your turn — say: shíbā suì — 十八岁]
 [pause 8 seconds for the answer]
@@ -178,6 +181,9 @@ English says I read and you read. Spanish says yo leo y tú lees. Mandarin will 
 我看书 — 你看书 — I read, and you read.
 Mandarin writes a comma at that seam; this book prints a dash, because it has taught no punctuation. What matters is that there is no joining word in it at all. That is not a shortcut or a casual register — it is how Mandarin does it, and the words that DO join clauses are different words for different relations, because, but, or, none of which is 和 (hé) and none of which this book has yet taught.
 So 和 (hé) is the first joining word in this track, and the first thing it teaches is where it may not go.
+
+The word, taken apart.
+和 (hé) is inherited from Middle Chinese hwa, "in harmony" (Guangyun, in Baxter's transcription); its use as "and" is a later development, usually traced through "together with".
 
 Guided Practice.
 [your turn — say: nǐ hé wǒ — 你和我]

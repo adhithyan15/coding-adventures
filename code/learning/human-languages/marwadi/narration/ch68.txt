@@ -12,6 +12,9 @@ Before the new one: say the Marwadi for a leaf, then the Marwadi for a hill.
 You'll want to know: जंगळ.
 जंगळ — jaṅgaḷ — "a forest".
 
+The word, taken apart.
+जंगळ (jaṅgaḷ) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from jāṅgala, "arid, sparingly grown with trees". CDIAL gives no Marwari form in this entry (CDIAL 5177); the match is through Hindi jaṅgal. CDIAL notes evidence for a non-Aryan origin. The sense moved from "dry, open country" to "forest".
+
 What you've built.
 One more word for this chapter.
 
@@ -42,6 +45,9 @@ Before the new one: say the Marwadi for a hill, then the Marwadi for a forest.
 
 You'll want to know: नदी.
 नदी — nadī — "a river".
+
+The word, taken apart.
+नदी (nadī) is Sanskrit nadī, "river", taken over whole as a learned loan, a tatsama (CDIAL 6943).
 
 What you've built.
 One more word for this chapter.
@@ -74,6 +80,9 @@ Before the new one: say the Marwadi for a forest, then the Marwadi for a river.
 You'll want to know: भाटो.
 भाटो — bhāṭo — "a stone".
 
+The word, taken apart.
+The origin of भाटो (bhāṭo) is not settled. CDIAL, searched by form and by meaning, has no entry for it.
+
 What you've built.
 One more word for this chapter.
 
@@ -105,6 +114,9 @@ Before the new one: say the Marwadi for a river, then the Marwadi for a stone.
 You'll want to know: रेत.
 रेत — ret — "sand".
 
+The word, taken apart.
+रेत (ret) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from retra, "perfumed powder". CDIAL lists Old Marwari reta under it (CDIAL 10816). CDIAL thinks a Munda source for the Sanskrit word scarcely likely.
+
 What you've built.
 One more word for this chapter.
 
@@ -135,6 +147,9 @@ Before the new one: say the Marwadi for a stone, then the Marwadi for sand.
 
 You'll want to know: खेत.
 खेत — khet — "a field".
+
+The word, taken apart.
+खेत (khet) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from kṣetra, "land". CDIAL lists Marwari khet under it (CDIAL 3735).
 
 What you've built.
 One more word for this chapter.

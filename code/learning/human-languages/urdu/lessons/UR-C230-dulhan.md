@@ -14,7 +14,8 @@ romanization: "dulhan"
 concept_tag: UR-CHIZ230-DULHAN
 prerequisites: [UR-C230-sas, UR-C230-dulha]
 sounds: []
-roots: []
+roots: [sanskrit-durlabha]
+etymology_hook: "dulhan: the feminine of dulhā 'bridegroom' ← Sanskrit durlabha 'beloved' (CDIAL 6446)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C230-dulha]
 <!-- hl-knowledge: introduces=[UR-LEX-C230-CHIZ230-05]; assesses=[] -->
 
 **دلہن** — *dulhan* — "a bride".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**دلہن** (*dulhan*) is the feminine of *dūlhā*, "bridegroom". CDIAL lists both under Sanskrit *durlabha*, "hard to obtain; beloved" (CDIAL 6446).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -12,6 +12,9 @@ Before the new one: say the Marwadi for maize, then the Marwadi for wheat.
 You'll want to know: चणा.
 चणा — chaṇā — "chickpeas".
 
+The word, taken apart.
+चणा (chaṇā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from caṇa, "the chickpea". CDIAL gives no Marwari form in this entry (CDIAL 4579); the match is through Gujarati caṇā. Marwadi, like Gujarati, keeps the ṇ.
+
 What you've built.
 One more word for this chapter.
 
@@ -42,6 +45,9 @@ Before the new one: say the Marwadi for wheat, then the Marwadi for chickpeas.
 
 You'll want to know: मूंग.
 मूंग — mū̃g — "mung beans".
+
+The word, taken apart.
+मूंग (mū̃g) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from mudga, "the bean Phaseolus mungo". CDIAL gives no Marwari form in this entry (CDIAL 10198); the match is through Hindi mū̃g.
 
 What you've built.
 One more word for this chapter.
@@ -74,6 +80,9 @@ Before the new one: say the Marwadi for chickpeas, then the Marwadi for mung bea
 You'll want to know: मोठ.
 मोठ — moṭh — "moth beans".
 
+The word, taken apart.
+मोठ (moṭh) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from mukuṣṭha, "a kind of bean". CDIAL gives no Marwari form in this entry (CDIAL 10148); the match is through Hindi moṭh. The Sanskrit word has many variant spellings in the old word-lists.
+
 What you've built.
 One more word for this chapter.
 
@@ -105,6 +114,9 @@ Before the new one: say the Marwadi for mung beans, then the Marwadi for moth be
 You'll want to know: तिल.
 तिल — til — "sesame".
 
+The word, taken apart.
+तिल (til) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from tila, "sesame". CDIAL lists Old Marwari tila under it (CDIAL 5827). The Old Marwari row means "small particle", a sense the Sanskrit word also had. CDIAL thinks the Sanskrit word itself probably came from Munda.
+
 What you've built.
 One more word for this chapter.
 
@@ -135,6 +147,9 @@ Before the new one: say the Marwadi for moth beans, then the Marwadi for sesame.
 
 You'll want to know: गुड़.
 गुड़ — guṛ — "jaggery".
+
+The word, taken apart.
+गुड़ (guṛ) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from guḍa, "boiled sugarcane juice, molasses". CDIAL gives no Marwari form in this entry (CDIAL 4182); the match is through Hindi guṛ. CDIAL asks whether it is the same word as guḍa, "ball".
 
 What you've built.
 One more word for this chapter.

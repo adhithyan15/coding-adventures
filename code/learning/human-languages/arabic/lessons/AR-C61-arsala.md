@@ -14,7 +14,8 @@ romanization: "arsala"
 concept_tag: AR-VERB-ARSALA
 prerequisites: [AR-C61-nasiya, AR-C61-arada]
 sounds: []
-roots: []
+roots: [r-s-l]
+etymology_hook: "arsala: built on the root r-s-l, 'to send' (Lane); Form IV arsala is 'he sent'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C61-arada]
 <!-- hl-knowledge: introduces=[AR-LEX-C61-VERBS61-04]; assesses=[] -->
 
 **أرسل** — *arsala* — "to send (he sent)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**أرسل** (*arsala*) is built on the native Arabic root *r-s-l*, "to send; to let go" (Lane). Form IV *arsala* is "he sent"; the same root gives *rasūl*, "a messenger".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "maksūr"
 concept_tag: AR-SIFA209-MAKSUR
 prerequisites: [AR-C209-mahruq, AR-C209-sihhi]
 sounds: []
-roots: []
+roots: [k-s-r]
+etymology_hook: "maksūr: built on the root k-s-r, 'to break' (Lane); maksūr is the passive participle, 'broken'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C209-sihhi]
 <!-- hl-knowledge: introduces=[AR-LEX-C209-SIFA209-05]; assesses=[] -->
 
 **مكسور** — *maksūr* — "broken".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**مكسور** (*maksūr*) is built on the native Arabic root *k-s-r*, "to break" (Lane). *Maksūr* is the passive participle, "broken".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

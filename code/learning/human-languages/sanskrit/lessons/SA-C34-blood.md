@@ -14,7 +14,8 @@ romanization: "raktam"
 concept_tag: SA-LIMB-RAKTA
 prerequisites: [SA-C34-bone, SA-C32-vine, SA-C33-town]
 sounds: []
-roots: []
+roots: [sanskrit-rakta]
+etymology_hook: "rakta 'dyed, red, blood' ← the root √rañj 'colour, dye' (MW; CDIAL 10539)"
 duration:
   max_seconds: 210
 requires:
@@ -46,6 +47,12 @@ reviews_of: [SA-C34-bone]
 **रक्तम्** began as a description rather than a name: it means "reddened, dyed", from a root *rañj*, "to colour". Sanskrit names blood by its colour and lets the colour word do the work.
 
 The same root gives **राग** (*rāga*), which is a colour, a passion and a mode of music all at once — a thing that has been dyed a particular way. Neuter **-अम्**, like **हिमम्**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*Rakta* is the past participle of the root √rañj, "to colour, dye": first "dyed",
+then "red", and so "blood" (MW, CDIAL 10539).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

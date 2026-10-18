@@ -14,7 +14,8 @@ romanization: "phôrm"
 concept_tag: BN-JINIS259-PHORM
 prerequisites: [BN-C259-dor, BN-C259-chhar]
 sounds: []
-roots: []
+roots: [english-form]
+etymology_hook: "phôrm ← English form"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C259-chhar]
 <!-- hl-knowledge: introduces=[BN-LEX-C259-JINIS259-03]; assesses=[] -->
 
 **ফর্ম** — *phôrm* — "a form".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ফর্ম** (*phôrm*) is a loan from English *form*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

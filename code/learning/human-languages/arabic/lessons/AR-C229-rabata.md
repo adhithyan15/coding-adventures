@@ -14,7 +14,8 @@ romanization: "rabaṭa"
 concept_tag: AR-VERB-RABATA
 prerequisites: [AR-C228-ghanna, AR-C228-sawwara]
 sounds: []
-roots: []
+roots: [r-b-ṭ]
+etymology_hook: "rabaṭa: built on the root r-b-ṭ, 'to tie' (Lane); rabaṭa is the plain verb, 'he tied'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C228-sawwara]
 <!-- hl-knowledge: introduces=[AR-LEX-C229-ACT229-01]; assesses=[] -->
 
 **ربط** — *rabaṭa* — "to tie".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ربط** (*rabaṭa*) is built on the native Arabic root *r-b-ṭ*, "to tie" (Lane). *Rabaṭa* is the plain verb, "he tied".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

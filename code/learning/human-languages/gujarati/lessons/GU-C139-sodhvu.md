@@ -14,7 +14,8 @@ romanization: "śodhvũ"
 concept_tag: GU-VERB-SODHVU
 prerequisites: [GU-C139-mokalvu, GU-C139-bhulvu]
 sounds: []
-roots: []
+roots: [sanskrit-shoddhum]
+etymology_hook: "śodhvũ 'to look for' ← Sanskrit śoddhum 'to purify' (CDIAL 12626)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C139-bhulvu]
 <!-- hl-knowledge: introduces=[GU-LEX-C139-ACT139-03]; assesses=[] -->
 
 **શોધવું** (*śodhvũ*) — "to look for".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**શોધવું** (*śodhvũ*) is a tadbhava. CDIAL lists it, with the senses "to purify, search", under Sanskrit *śoddhum*, "to purify" (CDIAL 12626).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

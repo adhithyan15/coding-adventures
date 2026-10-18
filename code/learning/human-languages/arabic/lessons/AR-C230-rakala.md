@@ -14,7 +14,8 @@ romanization: "rakala"
 concept_tag: AR-VERB-RAKALA
 prerequisites: [AR-C230-adafa, AR-C230-qassama]
 sounds: []
-roots: []
+roots: [r-k-l]
+etymology_hook: "rakala: built on the root r-k-l, 'to kick' (Lane); rakala is the plain verb, 'he kicked'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C230-qassama]
 <!-- hl-knowledge: introduces=[AR-LEX-C230-ACT230-05]; assesses=[] -->
 
 **ركل** — *rakala* — "to kick".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ركل** (*rakala*) is built on the native Arabic root *r-k-l*, "to kick" (Lane). *Rakala* is the plain verb, "he kicked".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

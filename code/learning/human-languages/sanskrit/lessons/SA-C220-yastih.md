@@ -14,7 +14,8 @@ romanization: "yaṣṭiḥ"
 concept_tag: SA-THG220-YASTIH
 prerequisites: [SA-C220-manadandah, SA-C220-dandah]
 sounds: []
-roots: []
+roots: [sanskrit-yashti]
+etymology_hook: "yaṣṭi 'staff, stick', probably from √yam 'hold' (MW); Hindi jāṭh 'post' (CDIAL 10444)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C220-dandah]
 <!-- hl-knowledge: introduces=[SA-LEX-C220-THG220-04]; assesses=[] -->
 
 **यष्टिः** — *yaṣṭiḥ* — "a staff".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*yaṣṭi* means "any support, a staff, pole" (MW), and MW derives it, probably, from √yam, "to hold, support". It is in the Śatapatha Brāhmaṇa, and Hindi *jāṭh*, "post, beam in a sugar mill", comes from it (CDIAL 10444).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

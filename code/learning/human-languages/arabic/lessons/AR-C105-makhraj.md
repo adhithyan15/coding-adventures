@@ -14,7 +14,8 @@ romanization: "makhraj"
 concept_tag: AR-LOC105-MAKHRAJ
 prerequisites: [AR-C104-unwan, AR-C105-madkhal]
 sounds: []
-roots: []
+roots: [kh-r-j]
+etymology_hook: "makhraj: built on the root kh-r-j, 'to go out' (Lane); makhraj is the ma- place noun, 'a place of going out'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C105-madkhal]
 <!-- hl-knowledge: introduces=[AR-LEX-C105-LOC105-02]; assesses=[] -->
 
 **مخرج** — *makhraj* — "an exit".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**مخرج** (*makhraj*) is built on the native Arabic root *kh-r-j*, "to go out" (Lane). *Makhraj* is the *ma-* place noun, "a place of going out".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

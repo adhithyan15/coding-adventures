@@ -14,7 +14,8 @@ romanization: "gôlpô kôrā"
 concept_tag: BN-VERB-GOLPO-KORA
 prerequisites: [BN-C241-kheyal-kora, BN-C241-janano]
 sounds: []
-roots: []
+roots: [indo-aryan-gappa, sanskrit-karoti]
+etymology_hook: "gôlpô kôrā: gôlpô 'talk', apparently with gappa 'tittle-tattle', an imitative word (CDIAL 4022), + kôrā"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C241-janano]
 <!-- hl-knowledge: introduces=[BN-LEX-C241-ACT241-05]; assesses=[] -->
 
 **গল্প করা** — *gôlpô kôrā* — "to chat".
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**গল্প করা** (*gôlpô kôrā*) is *gôlpô*, "a story, a chat", which appears to belong with Bengali *gappa*, "tittle-tattle", listed under *\*gappa*, "talk", which CDIAL calls imitative and compares with Sanskrit *jalpati*, "chatters" (CDIAL 4022), + *kôrā*, "to do", from Sanskrit *karoti*, "does" (CDIAL 2814).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

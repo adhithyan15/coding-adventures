@@ -4,7 +4,7 @@
   "chapter": 4,
   "title": "Polite Thanks, Three More Signs",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:25e7bb32253dc063",
+  "sourceHash": "fnv1a64:14c7401c83260234",
   "lessons": [
     {
       "id": "JA-W03-sa",
@@ -547,7 +547,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:7efc64215810c473",
+      "sourceHash": "fnv1a64:149686ea60a09769",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -616,6 +616,17 @@
         },
         {
           "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ありがとうございます (arigatō gozaimasu) joins two pieces. Arigatō comes from arigataku, \"in a way hard to come by\" (JMdict). Gozaimasu, the polite \"to be\", comes from gozaru, built from the honorific go and za, \"seat\", both borrowed from Chinese, with native aru, \"to be\"; -masu is the polite ending (JMdict)."
+            }
+          ]
+        },
+        {
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -654,7 +665,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

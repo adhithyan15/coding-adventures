@@ -14,7 +14,8 @@ romanization: "koishi"
 concept_tag: JA-THINGS106-KOISHI
 prerequisites: [JA-C106-tsubomi, JA-C106-iwa]
 sounds: []
-roots: []
+roots: [japanese-ko-small, japanese-ishi]
+etymology_hook: "koishi: native compound of ko 'small' + ishi 'stone' (小石)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C106-iwa]
 <!-- hl-knowledge: introduces=[JA-LEX-C106-THINGS106-05]; assesses=[] -->
 
 **こいし** — *koishi* — "a pebble".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**こいし** (*koishi*) is a native compound, inherited rather than borrowed: *ko*, "small", and *ishi*, "stone", both kun'yomi of its kanji (JMdict, KANJIDIC2).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

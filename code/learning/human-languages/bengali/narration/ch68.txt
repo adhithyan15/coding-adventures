@@ -12,6 +12,9 @@ Before the new one: say the Bengali for fire, then the Bengali for ice.
 You'll want to know: মাটি.
 মাটি — māṭi — "soil, earth".
 
+The word, taken apart.
+মাটি (māṭi) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from mṛttikā, "earth, clay" (CDIAL 10286).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Bengali for ice, then the Bengali for soil.
 
 You'll want to know: বাতাস.
 বাতাস — bātās — "wind".
+
+The word, taken apart.
+বাতাস (bātās) is a tadbhava, a word inherited and reshaped by sound change. It comes from vātatrāsa, "wind-storm", a form CDIAL reconstructs from its descendants (CDIAL 11493). It is a compound of vāta, "wind", and trāsa, "fear".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Bengali for soil, then the Bengali for wind.
 You'll want to know: আকাশ.
 আকাশ — ākāsh — "the sky".
 
+The word, taken apart.
+আকাশ (ākāsh) is Sanskrit ākāśa, "sky", taken over whole as a learned loan, a tatsama.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Bengali for wind, then the Bengali for the sky.
 You'll want to know: কুকুর.
 কুকুর — kukur — "a dog".
 
+The word, taken apart.
+কুকুর (kukur) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from kukkura, "dog" (CDIAL 3329). CDIAL calls the word imitative of the animal's sound.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Bengali for the sky, then the Bengali for a dog.
 
 You'll want to know: বিড়াল.
 বিড়াল — biṛāl — "a cat".
+
+The word, taken apart.
+বিড়াল (biṛāl) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from biḍāla, "cat" (CDIAL 9237). CDIAL writes the Bengali form birāl.
 
 What you've built.
 One more word for this chapter.

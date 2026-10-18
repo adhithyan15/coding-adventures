@@ -14,7 +14,8 @@ romanization: "mag"
 concept_tag: GU-THINGS113-MAG
 prerequisites: [GU-C113-madh, GU-C113-cana]
 sounds: []
-roots: []
+roots: [sanskrit-mudga]
+etymology_hook: "mag ← Sanskrit mudga 'the bean Phaseolus mungo', a tadbhava (CDIAL 10198)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C113-cana]
 <!-- hl-knowledge: introduces=[GU-LEX-C113-THINGS113-05]; assesses=[] -->
 
 **મગ** (*mag*) — "mung beans".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**મગ** (*mag*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *mudga*, "the bean Phaseolus mungo" (CDIAL 10198).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

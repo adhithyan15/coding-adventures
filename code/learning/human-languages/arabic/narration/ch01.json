@@ -4,7 +4,7 @@
   "chapter": 1,
   "title": "Greetings",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:0b447eada1397c86",
+  "sourceHash": "fnv1a64:0f675d98a430a823",
   "lessons": [
     {
       "id": "AR-C01-salam",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "writing-block"
       ],
-      "sourceHash": "fnv1a64:5c37e5d9ceb1ca46",
+      "sourceHash": "fnv1a64:eb8a39142f04d5b1",
       "notice": {
         "modality": "pen",
         "needs": [],
@@ -310,7 +310,7 @@
         "script-block",
         "eyes-or-hands-step"
       ],
-      "sourceHash": "fnv1a64:ad3aa5c456a26ab2",
+      "sourceHash": "fnv1a64:53a3a35ea43c7f51",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -420,7 +420,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:583946f87be612dc",
+      "sourceHash": "fnv1a64:38b9d07100589a8b",
       "notice": null,
       "blocks": [
         {
@@ -463,6 +463,10 @@
             {
               "kind": "speech",
               "text": "The root r–ḥ–b carries spaciousness: raḥb is roomy. So marḥaban is not an empty signal. It suggests, “There is room for you here.” A warm reply is marḥabtayn — literally, “two welcomes.”"
+            },
+            {
+              "kind": "speech",
+              "text": "Marḥaban is built on the native root r-ḥ-b, \"to be wide, roomy\" (Lane)."
             }
           ]
         },
@@ -661,7 +665,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:422f7cf96700d50c",
+      "sourceHash": "fnv1a64:3ce96a70f1c16b67",
       "notice": null,
       "blocks": [
         {
@@ -711,6 +715,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ثابت (thābit) is built on the native Arabic root th-b-t, \"to remain fixed, to be firm\" (Lane). Thābit is the active participle, \"standing firm\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -741,7 +756,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -889,7 +904,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:eee4425961d5c40a",
+      "sourceHash": "fnv1a64:58e5f4c99cf265a2",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -937,6 +952,10 @@
             {
               "kind": "speech",
               "text": "ال (al-, \"the\"). For roughly 800 years Arabic was the Mediterranean's language of science and trade, and English and Spanish absorbed its words with al- still attached: algebra (al-jabr), alcohol (al-kuḥl), algorithm (al-Khwārizmī), alchemy, almanac. Learning Arabic al- is meeting an old friend you've been carrying in English all along."
+            },
+            {
+              "kind": "speech",
+              "text": "The article itself is old Arabic. Hebrew has ha- in the same job, and how the two are related is debated, so its deeper origin is not settled."
             }
           ]
         },
@@ -1035,7 +1054,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:963b4861d4301001",
+      "sourceHash": "fnv1a64:e8d0b286bc352a25",
       "notice": null,
       "blocks": [
         {
@@ -1087,6 +1106,17 @@
         },
         {
           "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "as-salāmu ʿalaykum is built from as-salām, \"the peace\", on the native root s-l-m, \"to be safe, whole\" (Lane), and ʿalaykum, \"upon you\": ʿalā, \"upon\", with -kum, \"you\". Hebrew shalom ʿalekhem is the same greeting in a cousin language."
+            }
+          ]
+        },
+        {
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -1126,7 +1156,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -1157,7 +1187,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1a0b8a1e66535d7e",
+      "sourceHash": "fnv1a64:4b8c8aebce11d2fc",
       "notice": null,
       "blocks": [
         {
@@ -1207,6 +1237,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "عيد (ʿīd) is listed by Lane under ʿ-w-d, \"to return\": a thing that returns, hence a festival that comes round each year. EtymDB instead gives it as borrowed from Syriac ʿēdā, \"feast\". The two accounts are not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -1237,7 +1278,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -1391,7 +1432,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6782b23192861431",
+      "sourceHash": "fnv1a64:9f7963deaec381bd",
       "notice": null,
       "blocks": [
         {
@@ -1441,6 +1482,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "كوخ (kūkh) is a hut of reeds with a rounded roof. Lane's sources call it a Persian word, while EtymDB links it with Syriac kūkhītā; which way it travelled is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -1471,7 +1523,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -1505,7 +1557,7 @@
         "script-block",
         "eyes-or-hands-step"
       ],
-      "sourceHash": "fnv1a64:b936cd0f30dfdeb9",
+      "sourceHash": "fnv1a64:8ccd17337029fbfa",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -1614,7 +1666,7 @@
         "writing-block",
         "eyes-or-hands-step"
       ],
-      "sourceHash": "fnv1a64:dda282ebb991b146",
+      "sourceHash": "fnv1a64:963b48e4aa6c70c9",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -1704,7 +1756,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:c355f7396d5101a2",
+      "sourceHash": "fnv1a64:f8d9769aa3a3564c",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -1765,6 +1817,10 @@
             {
               "kind": "speech",
               "text": "صباح (ṣabāḥ), root ṣ–b–ḥ (dawn/waking: ṣubḥ \"dawn,\" aṣbaḥa \"to become / reach morning\"). خير (khayr, \"good, goodness\"), root kh–y–r. Together صباح الخير (ṣabāḥ al-khayr) = \"morning of the goodness.\" Note al-khayr keeps its l — خ is a moon letter — a clean contrast with as-salām."
+            },
+            {
+              "kind": "speech",
+              "text": "Both words are native Arabic, built on these roots (Lane)."
             }
           ]
         },
@@ -1860,7 +1916,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:4f7e095c92c412db",
+      "sourceHash": "fnv1a64:93d55bbee717d00f",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -2012,7 +2068,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:e9e87a5fbda780ed",
+      "sourceHash": "fnv1a64:ad1e291449b5b965",
       "notice": {
         "modality": "sight",
         "needs": [

@@ -14,7 +14,8 @@ romanization: "samt"
 concept_tag: FA-LOC86-SAMT
 prerequisites: [FA-C86-ruye, FA-C86-beyn]
 sounds: []
-roots: []
+roots: [arabic-samt]
+etymology_hook: "samt ← Arabic samt 'way, direction', root s-m-t (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C86-beyn]
 <!-- hl-knowledge: introduces=[FA-LEX-C86-LOC86-03]; assesses=[] -->
 
 **سمت** — *samt* — "a direction".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*samt* is borrowed from Arabic *samt*, "way, direction". Its Arabic root is *s-m-t* (Lane). English *zenith* comes from the Arabic phrase *samt ar-raʾs*, "direction of the head" (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

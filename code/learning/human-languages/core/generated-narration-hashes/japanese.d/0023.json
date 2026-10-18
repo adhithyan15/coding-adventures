@@ -1,7 +1,7 @@
 {
   "language": "japanese",
   "chapter": 23,
-  "sourceHash": "fnv1a64:7dc5c4055a68880a",
+  "sourceHash": "fnv1a64:11ab1a0414a45c17",
   "lessonIds": [
     "JA-C23-kusuri",
     "JA-C23-nemui",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "japanese/narration/ch23.txt",
   "json": "japanese/narration/ch23.json",
-  "textHash": "fnv1a64:cceceafb77610988",
-  "jsonHash": "fnv1a64:b77e2a7d3de08758",
+  "textHash": "fnv1a64:24e5dfd8457997fa",
+  "jsonHash": "fnv1a64:dd9f9e03a2a27e53",
   "findings": []
 }

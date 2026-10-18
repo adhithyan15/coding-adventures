@@ -14,7 +14,8 @@ romanization: "kôbi"
 concept_tag: BN-KAJ262-KOBI
 prerequisites: [BN-C261-senabahini, BN-C262-lekhok]
 sounds: []
-roots: []
+roots: [sanskrit-kavi]
+etymology_hook: "kôbi ← Sanskrit kavi 'wise; poet', a tatsama (CDIAL 2964)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C262-lekhok]
 <!-- hl-knowledge: introduces=[BN-LEX-C262-KAJ262-02]; assesses=[] -->
 
 **কবি** — *kôbi* — "a poet".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**কবি** (*kôbi*) is Sanskrit *kavi*, "wise; poet", taken over whole as a learned loan, a tatsama (CDIAL 2964).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

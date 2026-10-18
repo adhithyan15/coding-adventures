@@ -14,7 +14,8 @@ romanization: "bærthôtā"
 concept_tag: BN-JINIS228-BRTHOTA
 prerequisites: [BN-C227-poramorsho, BN-C227-sotyo]
 sounds: []
-roots: []
+roots: [sanskrit-vyartha]
+etymology_hook: "bærthôtā: Sanskrit vyartha 'useless' + -tā '-ness', tatsama parts"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C227-sotyo]
 <!-- hl-knowledge: introduces=[BN-LEX-C228-JINIS228-01]; assesses=[] -->
 
 **ব্যর্থতা** — *bærthôtā* — "failure".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ব্যর্থতা** (*bærthôtā*) is Sanskrit *vyartha*, "useless, vain", + the ending *-tā*, "-ness", both taken over whole.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

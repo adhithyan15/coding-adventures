@@ -14,7 +14,8 @@ romanization: "taraṅgaḥ"
 concept_tag: SA-THINGS110-TARANGAH
 prerequisites: [SA-C110-girih, SA-C110-prapatah]
 sounds: []
-roots: []
+roots: [sanskrit-taranga]
+etymology_hook: "taraṅga ← taram 'across' (√tṝ 'cross') + -ga 'going': 'the across-goer', a wave (MW)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C110-prapatah]
 <!-- hl-knowledge: introduces=[SA-LEX-C110-THINGS110-03]; assesses=[] -->
 
 **तरंगः** — *taraṅgaḥ* — "a wave".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*taraṅga* is built from *taram* "across", from the root √tṝ "cross", and *-ga* "going": MW explains it as "the across-goer", a wave. Punjabi kept it as *taraṅg* "wave" (CDIAL 5699).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

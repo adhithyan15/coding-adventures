@@ -14,7 +14,8 @@ romanization: "davā"
 concept_tag: GU-CARE-MEDICINE
 prerequisites: [GU-C48-cough, GU-C49-pain]
 sounds: []
-roots: []
+roots: [arabic-dawa]
+etymology_hook: "davā ← Arabic dawāʾ 'remedy, medicine', through Persian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C49-pain]
 <!-- hl-knowledge: introduces=[GU-LEX-C49-CARE-02]; assesses=[] -->
 
 **દવા** (*davā*) — "medicine". What you take for a **તાવ**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**દવા** (*davā*) is a loan from Arabic *dawāʾ*, "remedy, medicine", which reached Gujarati through Persian. Its Arabic root is *d-w-y* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

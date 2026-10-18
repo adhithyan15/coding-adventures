@@ -14,7 +14,8 @@ romanization: "dahati"
 concept_tag: SA-VERB-BURN
 prerequisites: [SA-C22-play, SA-C20-people]
 sounds: []
-roots: []
+roots: [sanskrit-dahati]
+etymology_hook: "dahati ← the root √dah 'burn'; MW compares Lithuanian degu 'I am hot'; Hindi dahnā (CDIAL 6245)"
 duration:
   max_seconds: 210
 requires:
@@ -43,7 +44,14 @@ reviews_of: [SA-C22-play]
 
 **दहति** (*dahati*) — "he, she or it burns".
 
-From **√दह्** (*dah*), and its distant English cousin is **day** — by way of a Germanic word for the burning warmth of the sky, not the daylight itself.
+From **√दह्** (*dah*), and its distant English cousin may be **day** — by way of a Germanic word for the burning warmth of the sky, not the daylight itself.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*Dahati* is the present of the root √dah, "to burn". It is inherited: MW compares
+Lithuanian *degu*, "I am hot", and Gothic *dags*, "day". It lives on as Hindi
+*dahnā*, "to burn" (CDIAL 6245).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

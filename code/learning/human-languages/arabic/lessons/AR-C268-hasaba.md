@@ -14,7 +14,8 @@ romanization: "ḥasaba"
 concept_tag: AR-SABAB268-HASABA
 prerequisites: [AR-C267-alaqa, AR-C268-maan]
 sounds: []
-roots: []
+roots: [ḥ-s-b]
+etymology_hook: "ḥasaba: built on the root ḥ-s-b, 'to count, to reckon' (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C268-maan]
 <!-- hl-knowledge: introduces=[AR-LEX-C268-SABAB268-02]; assesses=[] -->
 
 **حسب** — *ḥasaba* — "according to".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**حسب** (*ḥasaba*) is built on the native Arabic root *ḥ-s-b*, "to count, to reckon" (Lane). *Ḥasaba* is *ḥasab*, "measure", as a preposition: "according to".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

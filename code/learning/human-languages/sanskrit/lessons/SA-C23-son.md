@@ -14,7 +14,8 @@ romanization: "sūnuḥ"
 concept_tag: SA-NOUN-SON
 prerequisites: [SA-C23-mother, SA-C21-stand, SA-C22-play]
 sounds: []
-roots: []
+roots: [sanskrit-sunu]
+etymology_hook: "sūnu 'son' ← the root √sū 'give birth'; MW compares Gothic sunus and English son (CDIAL 13569)"
 duration:
   max_seconds: 210
 requires:
@@ -43,7 +44,13 @@ reviews_of: [SA-C23-mother]
 
 **सूनुः** (*sūnuḥ*) — "son".
 
-From **√सू** (*sū*), 'to bring forth, to give birth' — so the word means the one who was brought forth. Its cousins are Gothic *sunus*, Old English *sunu*, English *son*, Lithuanian *sunus*, Russian *syn*. Sanskrit's other son-word, *putraḥ*, is far commoner in the texts and has no such relatives; this quieter one is the inherited word.
+From **√सू** (*sū*), 'to bring forth, to give birth' — so the word means the one who was brought forth. Its cousins are Gothic *sunus*, Old English *sunu*, English *son*, Lithuanian *sūnus*, Russian *syn*. Sanskrit's other son-word, *putraḥ*, is far commoner in the texts, but its own origin is doubtful (MW); this quieter one is the word with the familiar cousins.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*Sūnu* is built on the root √sū, "to bring forth" (MW), and it is inherited: MW
+compares Gothic *sunus*, Lithuanian *sūnus* and English **son** (CDIAL 13569).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

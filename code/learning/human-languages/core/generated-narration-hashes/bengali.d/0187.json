@@ -1,7 +1,7 @@
 {
   "language": "bengali",
   "chapter": 187,
-  "sourceHash": "fnv1a64:07579dec14f2148e",
+  "sourceHash": "fnv1a64:8632345b045d11db",
   "lessonIds": [
     "BN-C187-somoymoto",
     "BN-C187-shotabdi",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "bengali/narration/ch187.txt",
   "json": "bengali/narration/ch187.json",
-  "textHash": "fnv1a64:e6d0d7c6921f2c6d",
-  "jsonHash": "fnv1a64:002123f65c5c628e",
+  "textHash": "fnv1a64:55dcd8bec7ced4d3",
+  "jsonHash": "fnv1a64:02810e12d1f475ff",
   "findings": []
 }

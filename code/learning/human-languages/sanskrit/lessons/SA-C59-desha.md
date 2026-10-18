@@ -14,7 +14,8 @@ romanization: "deśaḥ"
 concept_tag: SA-LEX-DESHA-COUNTRY
 prerequisites: [SA-R58-likes, SA-C18-from-where, SA-C16-village]
 sounds: []
-roots: []
+roots: [sanskrit-desha]
+etymology_hook: "deśa 'region, country' ← the root √diś 'point out, show' (MW); it lives on as Hindi des (CDIAL 6547)"
 duration:
   max_seconds: 250
 requires:

@@ -12,6 +12,9 @@ Before the new one: say the Bengali for a dhoti, then the Bengali for a long shi
 You'll want to know: চটি.
 চটি — chôṭi — "slippers".
 
+The word, taken apart.
+The origin of চটি (chôṭi) is not settled: CDIAL has no entry for it, and a search by form and by the glosses "slipper" and "shoe" finds nothing close.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Bengali for a long shirt, then the Bengali for slipp
 
 You'll want to know: মাফলার.
 মাফলার — māphlār — "a scarf".
+
+The word, taken apart.
+মাফলার (māphlār) is a loan from English muffler.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Bengali for slippers, then the Bengali for a scarf.
 You'll want to know: হার.
 হার — hār — "a necklace".
 
+The word, taken apart.
+হার (hār) is inherited from Sanskrit hāra, "necklace", and has come down with almost no change (CDIAL 14059).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Bengali for a scarf, then the Bengali for a necklace
 You'll want to know: শিয়াল.
 শিয়াল — shiyāl — "a jackal".
 
+The word, taken apart.
+শিয়াল (shiyāl) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from śṛgāla, "jackal" (CDIAL 12578).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Bengali for a necklace, then the Bengali for a jacka
 
 You'll want to know: বাদুড়.
 বাদুড় — bādur — "a bat".
+
+The word, taken apart.
+বাদুড় (bādur) is a tadbhava, a word inherited and reshaped by sound change. It comes from vālduḍa, "bat", a form CDIAL reconstructs from its descendants (CDIAL 11584). It stands beside Sanskrit vālguda, "bat"; CDIAL reports Bloch's view that the word is Dravidian.
 
 What you've built.
 One more word for this chapter.

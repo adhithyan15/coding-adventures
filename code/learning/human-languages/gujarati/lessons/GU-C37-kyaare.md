@@ -12,7 +12,7 @@ concept_tag: GU-Q-KYAARE
 prerequisites: [GU-C37-kyaan-write, GU-C35-jyaare]
 sounds: []
 roots: []
-etymology_hook: "ક્યારે and જ્યારે differ by one letter: ક- asks the question, જ- answers it."
+etymology_hook: "kyāre 'when?': on the question stem k-; CDIAL has no entry for it, so its history is not settled"
 duration:
   max_seconds: 240
 requires:
@@ -56,6 +56,8 @@ you almost nothing now.
 That pairing runs through the whole language — **ક-** for asking, **જ-** for the
 clause that answers, **ત-** for the thing pointed at. **જે … તે …** was the same
 system seen from the other side.
+
+CDIAL has no entry for **ક્યારે** (*kyāre*), so beyond its question stem its history is not settled.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[GU-Q-KYAARE-01, GU-JOIN-JYAARE-01] -->

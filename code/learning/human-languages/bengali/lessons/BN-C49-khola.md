@@ -14,7 +14,8 @@ romanization: "kholā"
 concept_tag: BN-VERB-KHOLA
 prerequisites: [BN-C49-becha, BN-C49-rakha]
 sounds: []
-roots: []
+roots: [indo-aryan-kholl]
+etymology_hook: "kholā ← *kholl 'to open', a reconstructed form; a tadbhava (CDIAL 3945)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C49-rakha]
 <!-- hl-knowledge: introduces=[BN-LEX-C49-VERBS49-05]; assesses=[] -->
 
 **খোলা** — *kholā* — "to open".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**খোলা** (*kholā*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*kholl*, "to open", a form CDIAL reconstructs from its descendants (CDIAL 3945).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "udyogaḥ"
 concept_tag: SA-WRK170-UDYOGAH
 prerequisites: [SA-C170-karyam, SA-C170-karma]
 sounds: []
-roots: []
+roots: [sanskrit-udyoga]
+etymology_hook: "udyoga ← ud-√yuj 'exert oneself' (MW; CDIAL 2055): 'exertion, effort', so 'occupation, industry'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C170-karma]
 <!-- hl-knowledge: introduces=[SA-LEX-C170-WRK170-03]; assesses=[] -->
 
 **उद्योगः** — *udyogaḥ* — "an occupation, industry".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*udyoga* comes from *ud-√yuj* "exert oneself, set to work", the root √yuj "yoke, join" with *ud* "up" (MW; CDIAL 2055): "exertion, persevering effort", and so "an occupation, industry".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

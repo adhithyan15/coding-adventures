@@ -14,7 +14,8 @@ romanization: "kāpvũ"
 concept_tag: GU-VERB-KAPVU
 prerequisites: [GU-C139-vaparvu, GU-C139-banavvu]
 sounds: []
-roots: []
+roots: [sanskrit-kalpayati]
+etymology_hook: "kāpvũ ← Sanskrit kalpayati 'sets in order; trims, cuts', a tadbhava (CDIAL 2944)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C139-banavvu]
 <!-- hl-knowledge: introduces=[GU-LEX-C140-ACT140-01]; assesses=[] -->
 
 **કાપવું** (*kāpvũ*) — "to cut".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**કાપવું** (*kāpvũ*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *kalpayati*, "sets in order; trims, cuts" (CDIAL 2944).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

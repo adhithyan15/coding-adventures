@@ -14,7 +14,8 @@ romanization: "phenakam"
 concept_tag: SA-THINGS101-PHENAKAM
 prerequisites: [SA-C100-sutram, SA-C101-kankatika]
 sounds: []
-roots: []
+roots: [sanskrit-phena]
+etymology_hook: "phenaka ← phena 'foam' + -ka; MW compares phena with English foam; 'soap' is a modern use"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C101-kankatika]
 <!-- hl-knowledge: introduces=[SA-LEX-C101-THINGS101-02]; assesses=[] -->
 
 **फेनकम्** — *phenakam* — "soap".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*phenaka* is built on *phena* "foam" with the suffix *-ka*: "the foaming thing". MW sets *phena* beside English *foam*, an inherited Indo-European word; using *phenaka* for soap is modern, since MW gives it other senses.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

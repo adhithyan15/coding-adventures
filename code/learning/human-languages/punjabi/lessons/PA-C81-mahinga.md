@@ -14,7 +14,8 @@ romanization: "mahiṅgā"
 concept_tag: PA-ADJ81-MAHINGA
 prerequisites: [PA-C80-tez, PA-C81-saukha]
 sounds: []
-roots: []
+roots: [sanskrit-mahargha]
+etymology_hook: "mahiṅgā ← Sanskrit mahārgha 'high-priced', a tadbhava (CDIAL 9954)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C81-saukha]
 <!-- hl-knowledge: introduces=[PA-LEX-C81-ADJ81-02]; assesses=[] -->
 
 **ਮਹਿੰਗਾ** — *mahiṅgā* — "expensive".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਮਹਿੰਗਾ** (*mahiṅgā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *mahārgha*, "high-priced" (CDIAL 9954). CDIAL lists Punjabi *maĩhgā*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

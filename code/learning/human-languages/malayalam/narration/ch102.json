@@ -4,7 +4,7 @@
   "chapter": 102,
   "title": "Saying When",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:e6009ffeb359d02c",
+  "sourceHash": "fnv1a64:318cac293b7765ec",
   "lessons": [
     {
       "id": "ML-C102-manikku",
@@ -347,7 +347,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f7e3276c5d74dac1",
+      "sourceHash": "fnv1a64:9516e54434d15a8e",
       "notice": null,
       "blocks": [
         {

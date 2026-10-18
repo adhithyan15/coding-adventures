@@ -14,7 +14,8 @@ romanization: "madhuraḥ"
 concept_tag: SA-DESCRIBE-SWEET
 prerequisites: [SA-C89-near, SA-C89-hard]
 sounds: []
-roots: []
+roots: [sanskrit-madhura, sanskrit-madhu]
+etymology_hook: "madhura 'sweet' ← madhu 'honey, sweet', the cousin of English mead (MW; CDIAL 9793)"
 duration:
   max_seconds: 200
 requires:
@@ -43,6 +44,12 @@ reviews_of: [SA-C89-hard]
 
 **मधुरः** (*madhuraḥ*) — "sweet", from **मधु**, "honey". **मधुरम् आम्रम्** — "a sweet
 mango".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*Madhura* is built from *madhu*, "honey, sweet" (MW, CDIAL 9793), the inherited
+word whose English cousin is **mead**.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "opôre"
 concept_tag: BN-JAYGA216-OPORE
 prerequisites: [BN-C216-pashe, BN-C216-charpashe]
 sounds: []
-roots: []
+roots: [indo-aryan-uppari]
+etymology_hook: "opôre: opôr 'top' ← *uppari 'above' (CDIAL 2333) + -e 'at'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C216-charpashe]
 <!-- hl-knowledge: introduces=[BN-LEX-C216-JAYGA216-04]; assesses=[] -->
 
 **ওপরে** — *opôre* — "above, upstairs".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ওপরে** (*opôre*) is *opôr*, "the top", which CDIAL lists as Bengali *upar* under *\*uppari*, "above" (CDIAL 2333), + *-e*, "at".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -11,8 +11,8 @@ gloss: "who — the question this book could not ask"
 concept_tag: GU-Q-KON
 prerequisites: [GU-C36-je-te, GU-C03-kem]
 sounds: []
-roots: []
-etymology_hook: "Every question word in Gujarati opens with the same ક-; કોણ is the one that asks about a person."
+roots: [sanskrit-kah-punar]
+etymology_hook: "koṇ ← Sanskrit kaḥ punar 'who', kaḥ 'who' + punar 'again' (CDIAL 2575)"
 duration:
   max_seconds: 240
 requires:
@@ -53,6 +53,8 @@ them the rest of the family announces itself.
 
 This chapter is that family. Nothing in it is a new kind of thing; each lesson
 is one more question the same stem can ask.
+
+CDIAL lists **કોણ** (*koṇ*) under Sanskrit *kaḥ punar*, "who", built from *kaḥ*, "who", and *punar*, "again" (CDIAL 2575).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[GU-Q-KON-01, GU-CONCEPT-C03-KEM-01] -->

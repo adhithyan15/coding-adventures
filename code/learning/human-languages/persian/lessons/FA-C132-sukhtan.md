@@ -14,7 +14,8 @@ romanization: "sukhtan"
 concept_tag: FA-VERB-SUKHTAN
 prerequisites: [FA-C132-keshidan, FA-C132-rikhtan]
 sounds: []
-roots: []
+roots: [persian-sukhtan]
+etymology_hook: "sukhtan: inherited, usually traced to Middle Persian sōxtan"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C132-rikhtan]
 <!-- hl-knowledge: introduces=[FA-LEX-C132-ACT132-05]; assesses=[] -->
 
 **سوختن** — *sukhtan* — "to burn".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*sukhtan* is a native Persian word, inherited rather than borrowed; it is usually traced to Middle Persian *sōxtan*, "to burn".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

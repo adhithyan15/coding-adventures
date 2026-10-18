@@ -14,7 +14,8 @@ romanization: "nishān"
 concept_tag: UR-SEHAT244-NISHAN
 prerequisites: [UR-C243-klinik, UR-C244-chhala]
 sounds: []
-roots: []
+roots: [persian-nishan]
+etymology_hook: "nishān: usually traced to Persian nishān 'a sign, a mark'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C244-chhala]
 <!-- hl-knowledge: introduces=[UR-LEX-C244-SEHAT244-02]; assesses=[] -->
 
 **نشان** — *nishān* — "a mark, a scar".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**نشان** (*nishān*) is a loan, usually traced to Persian *nishān*, "a sign, a mark".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

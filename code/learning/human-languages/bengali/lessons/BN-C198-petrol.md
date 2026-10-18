@@ -14,7 +14,8 @@ romanization: "peṭrol"
 concept_tag: BN-JINIS198-PETROL
 prerequisites: [BN-C197-tas, BN-C198-biman]
 sounds: []
-roots: []
+roots: [english-petrol]
+etymology_hook: "peṭrol ← English petrol"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C198-biman]
 <!-- hl-knowledge: introduces=[BN-LEX-C198-JINIS198-02]; assesses=[] -->
 
 **পেট্রোল** — *peṭrol* — "petrol".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**পেট্রোল** (*peṭrol*) is a loan from English *petrol*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

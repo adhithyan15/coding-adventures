@@ -4,7 +4,7 @@
   "chapter": 39,
   "title": "Hablan --- They, and Ustedes",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:92aaac305897a67d",
+  "sourceHash": "fnv1a64:9b0c11e5a2416642",
   "lessons": [
     {
       "id": "ES-C07-hablan",
@@ -12,14 +12,14 @@
       "title": "hablan — \"they speak,\" and \"you all speak\"",
       "headword": "hablan",
       "romanization": "hablan",
-      "gloss": "they speak\" — and, across most of the Spanish-speaking world, \"you all speak",
+      "gloss": "\"they speak\" — and, across most of the Spanish-speaking world, \"you all speak\"",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b7c00112257d1345",
+      "sourceHash": "fnv1a64:df92c8b1446cb5b5",
       "notice": null,
       "blocks": [
         {

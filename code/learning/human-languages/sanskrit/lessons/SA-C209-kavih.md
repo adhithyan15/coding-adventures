@@ -14,7 +14,8 @@ romanization: "kaviḥ"
 concept_tag: SA-PPL209-KAVIH
 prerequisites: [SA-C208-satruh, SA-C208-prativesi]
 sounds: []
-roots: []
+roots: [sanskrit-kavi]
+etymology_hook: "kavi 'wise; seer, poet', a Rigvedic word (CDIAL 2964); MW links it to a root √kū"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C208-prativesi]
 <!-- hl-knowledge: introduces=[SA-LEX-C209-PPL209-01]; assesses=[] -->
 
 **कविः** — *kaviḥ* — "a poet".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*kavi* is a Rigvedic word for a wise man or seer, and later a poet (CDIAL 2964). MW links it to a root √kū and to *kāvya*, "poetry". Hindi, Telugu and Malayalam took it over as their word for "poet".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

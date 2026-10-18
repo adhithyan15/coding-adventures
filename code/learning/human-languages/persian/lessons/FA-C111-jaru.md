@@ -14,7 +14,8 @@ romanization: "jâru"
 concept_tag: FA-THINGS111-JARU
 prerequisites: [FA-C111-sini, FA-C111-kase]
 sounds: []
-roots: []
+roots: [persian-ruftan]
+etymology_hook: "jâru: short for jârub, built on Persian rub- 'sweep' (ruftan); native"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C111-kase]
 <!-- hl-knowledge: introduces=[FA-LEX-C111-THINGS111-03]; assesses=[] -->
 
 **جارو** — *jâru* — "a broom".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*jâru* is short for *jârub*, usually explained as built on *rub-*, the present stem of *ruftan*, "to sweep". Both are native Persian.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

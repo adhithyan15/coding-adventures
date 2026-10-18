@@ -297,7 +297,7 @@ describe("emitFs — running", () => {
     expect(a).not.toBe(b);
   });
 
-  it("assets array is empty in v0", async () => {
+  it("keeps assets empty in the compatibility sink", async () => {
     const out = await runEmit([makePage({ route: "/a.html" })]);
     expect(out.manifest.assets).toEqual([]);
   });

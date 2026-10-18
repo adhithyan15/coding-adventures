@@ -14,7 +14,8 @@ romanization: "tankhvāh"
 concept_tag: UR-KAM176-TANKHVAH
 prerequisites: [UR-C176-naukri, UR-C176-pesha]
 sounds: []
-roots: []
+roots: [persian-tankhwah]
+etymology_hook: "tankhvāh: usually traced to Persian tankhwāh 'salary'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C176-pesha]
 <!-- hl-knowledge: introduces=[UR-LEX-C176-KAM176-03]; assesses=[] -->
 
 **تنخواہ** — *tankhvāh* — "a salary".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**تنخواہ** (*tankhvāh*) is a loan, usually traced to Persian *tankhwāh*, "salary".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

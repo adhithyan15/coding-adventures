@@ -1,7 +1,7 @@
 {
   "language": "sanskrit",
   "chapter": 222,
-  "sourceHash": "fnv1a64:febcd45a98f2e066",
+  "sourceHash": "fnv1a64:d7dc12ea537baf42",
   "lessonIds": [
     "SA-C222-sadhanam",
     "SA-C222-bharah",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "sanskrit/narration/ch222.txt",
   "json": "sanskrit/narration/ch222.json",
-  "textHash": "fnv1a64:c1d240c5bcf0d477",
-  "jsonHash": "fnv1a64:41fc3f2cb5b29c5e",
+  "textHash": "fnv1a64:35b6151614bd035a",
+  "jsonHash": "fnv1a64:e56382f0497ccf09",
   "findings": []
 }

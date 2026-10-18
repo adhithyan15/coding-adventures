@@ -1447,9 +1447,18 @@ backend immediately) come before the enabler-dependent items.
   preserving the proof, and additive composition may include finite static
   terms; that additive form may in turn be multiplied or divided by finite
   static terms, then used as the sole dynamic base of a power chain with finite
-  static exponents. Up to five supported built-in real standard functions may wrap
-  that powered exact name actual. Unrestricted runtime `entier`, globals, captured
-  locals, and other real-name branches remain conservative. Additive composition,
+  static exponents. Up to six supported built-in numeric standard functions,
+  including integer-valued `sign`, may wrap that powered exact name actual.
+  One additional built-in `entier` may wrap a supported bounded transform rooted
+  in `sign(...)`, including the exact `entier(sign(...))` root; broader runtime
+  `entier` operands remain conservative.
+  The bounded sign-rooted transform may include up to forty-one exact additive
+  offset units, either as one exact `41` term or a checked sum of exact `1`
+  through `40` terms. The cap is
+  preserved through parentheses and supported standard-function wrappers and
+  applied independently to each runtime conditional path. Larger and dynamic
+  offsets remain conservative.
+  Globals, captured locals, and other real-name branches remain conservative. Additive composition,
   multiplication, division, and exponentiation preserve it when every operand
   is independently runtime-real or a finite static numeric expression. The
   real-valued standard functions `abs`, `sqrt`, `sin`, `cos`, `ln`, `exp`, and

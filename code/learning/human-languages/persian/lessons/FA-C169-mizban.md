@@ -14,7 +14,8 @@ romanization: "mizbân"
 concept_tag: FA-CHIZ169-MIZBAN
 prerequisites: [FA-C169-bozorgsal, FA-C169-hamkelasi]
 sounds: []
-roots: []
+roots: [persian-mez]
+etymology_hook: "mizbân: Middle Persian mēzbān: mēzd 'meal' (EtymDB) + -bân 'keeper'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C169-hamkelasi]
 <!-- hl-knowledge: introduces=[FA-LEX-C169-CHIZ169-03]; assesses=[] -->
 
 **میزبان** — *mizbân* — "a host".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*mizbân* is usually traced to Middle Persian *mēzbān*: *mēzd*, "ritual meal" (EtymDB), with *-bân*, "keeper". The host is the keeper of the feast.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

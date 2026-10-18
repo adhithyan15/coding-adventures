@@ -1,7 +1,7 @@
 {
   "language": "punjabi",
   "chapter": 71,
-  "sourceHash": "fnv1a64:9c1d2c2a45b6bbff",
+  "sourceHash": "fnv1a64:9c1f1a4536936cd9",
   "lessonIds": [
     "PA-C71-kamra",
     "PA-C71-kitab",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "punjabi/narration/ch71.txt",
   "json": "punjabi/narration/ch71.json",
-  "textHash": "fnv1a64:b35ce96b716ab9f8",
-  "jsonHash": "fnv1a64:6018f1cffe8bdb0a",
+  "textHash": "fnv1a64:1059c428db7c4c07",
+  "jsonHash": "fnv1a64:6789b925a4467799",
   "findings": []
 }

@@ -14,7 +14,8 @@ romanization: "chātraḥ"
 concept_tag: SA-SCHOOL-STUDENT
 prerequisites: [SA-C82-shore, SA-C83-school]
 sounds: []
-roots: []
+roots: [sanskrit-chatra-pupil]
+etymology_hook: "chātra 'pupil', traditionally from chatra 'parasol': one who shields his teacher's faults (Apte); not settled"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,13 @@ reviews_of: [SA-C83-school]
 <!-- hl-knowledge: introduces=[SA-LEX-C83-SCHOOL-02]; assesses=[] -->
 
 **छात्रः** (*chātraḥ*) — "a student", the everyday word beside **शिष्यः**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The grammarians explain *chātra* as built on *chatra*, "parasol": the pupil whose
+habit is to shield his teacher's faults (Apte). That is the traditional account;
+the origin is not settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

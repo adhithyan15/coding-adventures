@@ -12,7 +12,7 @@ concept_tag: QUESTION-HOW
 prerequisites: [AR-C02-maa, AR-C02-ahlan]
 sounds: [rtl-known-letters, ay-diphthong]
 roots: [k-y-f]
-etymology_hook: "kayfa is a question word, not a root-and-pattern noun — it sits beside mā ('what') from Chapter 2; the root k-y-f also gives kayfiyya, 'quality/how-ness', and kayyafa 'to adapt' (make something fit the how)"
+etymology_hook: "kayfa: an inherited question word with no true root; Lane notes kayyafa and its kin were formed from it later"
 duration:
   max_seconds: 180
 requires:
@@ -70,6 +70,8 @@ root elsewhere:
 
 So the abstract noun for "quality" is built straight from the word "how." Arabic
 does this constantly: take a word, run it through a pattern, get a concept.
+
+*Kayfa* itself is inherited, not built on a three-letter root: Lane notes that verbs such as *kayyafa* were later formed from it by analogy.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[AR-CONCEPT-C03-KAYFA-01, AR-CONCEPT-C03-KAYFA-02] -->

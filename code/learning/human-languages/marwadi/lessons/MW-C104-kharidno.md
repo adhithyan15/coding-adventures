@@ -14,7 +14,8 @@ romanization: "kharīdṇo"
 concept_tag: MW-VERB-KHARIDNO
 prerequisites: [MW-C103-torno, MW-C103-jorno]
 sounds: []
-roots: []
+roots: [persian-kharid]
+etymology_hook: "kharīdṇo: usually traced to Persian kharīdan 'to buy'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C103-jorno]
 <!-- hl-knowledge: introduces=[MW-LEX-C104-ACT104-01]; assesses=[] -->
 
 **खरीदणो** — *kharīdṇo* — "to buy".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**खरीदणो** (*kharīdṇo*) is a loan, usually traced to Persian *xarīd*, "bought; to buy". Persian *xarīdan* means "to buy"; Marwadi added its own verb ending.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

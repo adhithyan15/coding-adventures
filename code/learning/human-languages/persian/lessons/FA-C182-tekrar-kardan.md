@@ -14,7 +14,8 @@ romanization: "tekrâr kardan"
 concept_tag: FA-VERB-TEKRAR-KARDAN
 prerequisites: [FA-C182-rezerv-kardan, FA-C182-estekhdam-kardan]
 sounds: []
-roots: []
+roots: [arabic-takrar]
+etymology_hook: "tekrâr ← Arabic takrār 'repetition', root k-r-r (Lane), + Persian kardan"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C182-estekhdam-kardan]
 <!-- hl-knowledge: introduces=[FA-LEX-C182-KONESH182-03]; assesses=[] -->
 
 **تکرار کردن** — *tekrâr kardan* — "to repeat".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*tekrâr kardan* pairs *tekrâr*, borrowed from Arabic *takrār*, "repetition" (root *k-r-r*, Lane), with the Persian verb *kardan*, "to do, to make". *kardan*, "to do", is an inherited verb, from Middle Persian *kardan* (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

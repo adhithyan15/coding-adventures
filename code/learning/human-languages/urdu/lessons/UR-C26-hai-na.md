@@ -11,8 +11,8 @@ gloss: isn't it? — a tag made of two words this book has had since chapter one
 concept_tag: UR-FUNC-HAI-NA
 prerequisites: [UR-C26-apna, UR-C19-na-na, UR-C19-kya-polar, UR-C24-yahan]
 sounds: []
-roots: []
-etymology_hook: "The tag is the negator نہ with its vowel drawn out and its meaning turned upside down: a word that refuses, used to invite agreement. English does the same trick with isn't it, which is a negation asking to be contradicted into a yes."
+roots: [asti, sanskrit-na]
+etymology_hook: "hai: usually traced to Sanskrit asti 'is'; nā ← the inherited negative na 'not' (CDIAL 6906)"
 duration:
   max_seconds: 230
 requires:
@@ -51,6 +51,11 @@ stands in front of a refused noun.
 Both halves have been in this book for twenty-five chapters. **ہے** arrived in
 chapter two and **نہ** in chapter nineteen, and nobody has ever put them
 together. It is not a new word; it is an assembly.
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ہے نا** (*hai nā*): *hai*, "is", is usually traced to Sanskrit *asti*, and *nā*, "no", to Sanskrit *na*, "not" (CDIAL 6906).
 
 ## Grammar Lens: two ways to ask, and they mean different things
 <!-- hl-knowledge: introduces=[]; assesses=[UR-FUNC-HAI-NA, UR-GRAMMAR-KYA-POLAR, UR-LEX-JI-HAN, UR-LEX-THIK] -->

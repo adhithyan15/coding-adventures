@@ -14,7 +14,8 @@ romanization: "labhate"
 concept_tag: SA-VERB-LABHATE
 prerequisites: [SA-C173-ksipati, SA-C173-muncati]
 sounds: []
-roots: []
+roots: [sanskrit-labhate]
+etymology_hook: "labhate ← √labh 'take, obtain' (CDIAL 10948), which MW compares with Greek lambanō 'take'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C173-muncati]
 <!-- hl-knowledge: introduces=[SA-LEX-C173-ACT173-03]; assesses=[] -->
 
 **लभते** — *labhate* — "gets, receives".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*labhate* comes from the root √labh "take, catch, obtain" (CDIAL 10948), inherited from Indo-European (EtymDB). MW compares it with Greek *lambanō* "take", and *lābha* "profit" is its noun.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

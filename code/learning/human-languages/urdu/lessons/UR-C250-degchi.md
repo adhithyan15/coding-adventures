@@ -14,7 +14,8 @@ romanization: "degchī"
 concept_tag: UR-CHIZ250-DEGCHI
 prerequisites: [UR-C249-aramdeh, UR-C249-qimti]
 sounds: []
-roots: []
+roots: [persian-deg]
+etymology_hook: "degchī: usually traced to Persian degcha, a small deg 'cooking pot'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C249-qimti]
 <!-- hl-knowledge: introduces=[UR-LEX-C250-CHIZ250-01]; assesses=[] -->
 
 **دیگچی** — *degchī* — "a cooking pot".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**دیگچی** (*degchī*) is usually traced to Persian *degcha*, "a small pot", built on *deg*, "a cooking pot".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

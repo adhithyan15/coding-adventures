@@ -58,7 +58,6 @@ STYLE_DROP_BASELINES: dict[str, dict[str, int]] = {
         "flex-shrink": 9,
         "flex-wrap": 1,
         "font": 1,
-        "gap": 4,
         "left": 6,
         "margin-bottom": 1,
         "margin-left": 1,
@@ -67,7 +66,6 @@ STYLE_DROP_BASELINES: dict[str, dict[str, int]] = {
         "position": 6,
         "text-overflow": 1,
         "top": 6,
-        "transform": 2,
         "white-space": 1,
     },
     "compose": {
@@ -137,7 +135,6 @@ STYLE_DROP_BASELINES: dict[str, dict[str, int]] = {
         "position": 6,
         "text-align": 6,
         "top": 6,
-        "transform": 2,
         # Exact control `width: 100%` declarations now lower to
         # `Layout.fillWidth`; the three remaining drops are Text geometry.
         "width": 3,

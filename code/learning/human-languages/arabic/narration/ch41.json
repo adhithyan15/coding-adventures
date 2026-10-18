@@ -4,7 +4,7 @@
   "chapter": 41,
   "title": "Calling Somebody, and Asking Again",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:7079056eff432917",
+  "sourceHash": "fnv1a64:3c68eba53d9b74f1",
   "lessons": [
     {
       "id": "AR-C41-ya",
@@ -162,7 +162,7 @@
       "modalityReasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:49e2273c766a369a",
+      "sourceHash": "fnv1a64:5aa4df72dd638c8f",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -248,6 +248,17 @@
         },
         {
           "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "كرّر من فضلك (karrir min faḍlik) is built from karrir, \"repeat\", the Form II command of the native root k-r-r, \"to return\" (Lane), and min faḍlik, \"please\", from faḍl, \"favour\", on f-ḍ-l."
+            }
+          ]
+        },
+        {
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -296,7 +307,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

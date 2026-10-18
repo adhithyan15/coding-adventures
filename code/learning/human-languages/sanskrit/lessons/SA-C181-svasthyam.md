@@ -14,7 +14,8 @@ romanization: "svāsthyam"
 concept_tag: SA-WEL181-SVASTHYAM
 prerequisites: [SA-C181-svasah, SA-C181-nadi]
 sounds: []
-roots: []
+roots: [sanskrit-svasthya]
+etymology_hook: "svāsthya ← svastha 'well, healthy' = sva 'self' + stha 'standing': 'being in oneself' (MW)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C181-nadi]
 <!-- hl-knowledge: introduces=[SA-LEX-C181-WEL181-05]; assesses=[] -->
 
 **स्वास्थ्यम्** — *svāsthyam* — "fitness, health".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*svāsthya* comes from *svastha*, "well, healthy", a compound of *sva* "self" and *stha* "standing" (MW): to be healthy is to be in your own natural state. The *-ya* ending turns the adjective into the noun "health".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

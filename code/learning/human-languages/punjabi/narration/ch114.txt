@@ -12,6 +12,9 @@ Before the new one: say the Punjabi for a cooking pot, then the Punjabi for a co
 You'll want to know: ਸਾਬਣ.
 ਸਾਬਣ — sābaṇ — "soap".
 
+The word, taken apart.
+ਸਾਬਣ (sābaṇ) is a loan from Arabic ṣābūn, "soap", which reached Punjabi through Persian. Its Arabic root is ṣ-b-n (Lane).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Punjabi for a comb, then the Punjabi for soap.
 
 You'll want to know: ਤੌਲੀਆ.
 ਤੌਲੀਆ — tauliā — "a towel".
+
+The word, taken apart.
+ਤੌਲੀਆ (tauliā) is a loan, usually traced to Portuguese toalha, "towel".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Punjabi for soap, then the Punjabi for a towel.
 You'll want to know: ਗੱਦਾ.
 ਗੱਦਾ — gaddā — "a mattress".
 
+The word, taken apart.
+ਗੱਦਾ (gaddā) is inherited. CDIAL lists Punjabi gaddī, "cushion, pad, seat", under a reconstructed garda, "seat", which it takes, probably, from Dravidian, and says Hindi gaddā, "quilted mattress", was taken from Punjabi (CDIAL 4053).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Punjabi for a towel, then the Punjabi for a mattress
 You'll want to know: ਚਾਦਰ.
 ਚਾਦਰ — cādar — "a bedsheet".
 
+The word, taken apart.
+ਚਾਦਰ (cādar) is a loan, usually traced to Persian chādar, "sheet, veil".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Punjabi for a mattress, then the Punjabi for a bedsh
 
 You'll want to know: ਕੰਬਲ.
 ਕੰਬਲ — kambal — "a blanket".
+
+The word, taken apart.
+ਕੰਬਲ (kambal) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from kambala, "woollen blanket" (CDIAL 2771). CDIAL notes a possible Austroasiatic origin, and says Hindi kambal was taken from Punjabi.
 
 What you've built.
 One more word for this chapter.

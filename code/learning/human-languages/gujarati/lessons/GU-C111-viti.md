@@ -14,7 +14,8 @@ romanization: "vī̃ṭī"
 concept_tag: GU-THINGS111-VITI
 prerequisites: [GU-C111-kurto, GU-C111-payjamo]
 sounds: []
-roots: []
+roots: [sanskrit-vita-roll]
+etymology_hook: "vīṁṭī 'ring': listed by CDIAL in a loose group of like words under Sanskrit vīṭā (CDIAL 12045)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C111-payjamo]
 <!-- hl-knowledge: introduces=[GU-LEX-C111-THINGS111-03]; assesses=[] -->
 
 **વીંટી** (*vī̃ṭī*) — "a ring".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+CDIAL lists **વીંટી** (*vīṁṭī*), "ring", under Sanskrit *vīṭā*, "small piece of stick; roll of betel", heading a loose group of words alike in shape and sense (CDIAL 12045). Austroasiatic links have been proposed for some of them.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

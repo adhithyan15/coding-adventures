@@ -14,7 +14,8 @@ romanization: "nafrat karnā"
 concept_tag: UR-VERB-NAFRAT-KARNA
 prerequisites: [UR-C215-bharosa-karna, UR-C215-shak-karna]
 sounds: []
-roots: []
+roots: [arabic-nafra, kr-do]
+etymology_hook: "nafrat ← Arabic nafra 'aversion', through Persian (Lane, root n-f-r); karnā (CDIAL 2814)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C215-shak-karna]
 <!-- hl-knowledge: introduces=[UR-LEX-C215-ACT215-05]; assesses=[] -->
 
 **نفرت کرنا** — *nafrat karnā* — "to hate".
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**نفرت کرنا** (*nafrat karnā*) joins *nafrat*, "hatred", and *karnā*, "to do". *nafrat* is Arabic *nafra*, "a shying away, aversion", which reached Urdu through Persian (Lane, root *n-f-r*); *karnā* comes from Sanskrit *karoti*, "does" (CDIAL 2814).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

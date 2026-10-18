@@ -14,7 +14,8 @@ romanization: "phā̃kā"
 concept_tag: BN-GUN219-PHAKA
 prerequisites: [BN-C219-jibonto, BN-C219-mrito]
 sounds: []
-roots: []
+roots: [indo-aryan-phakk]
+etymology_hook: "phāṁkā ← *phakk 'open', a reconstructed form; a tadbhava (CDIAL 9036)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C219-mrito]
 <!-- hl-knowledge: introduces=[BN-LEX-C219-GUN219-04]; assesses=[] -->
 
 **ফাঁকা** — *phā̃kā* — "deserted, empty".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ফাঁকা** (*phāṁkā*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*phakk*, "open", a form CDIAL reconstructs from its descendants (CDIAL 9036). CDIAL lists Bengali *phāṁk*, "opening".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

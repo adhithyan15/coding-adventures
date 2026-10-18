@@ -14,7 +14,8 @@ romanization: "dôyālu"
 concept_tag: BN-QUAL138-DOYALU
 prerequisites: [BN-C138-chalak, BN-C138-boka]
 sounds: []
-roots: []
+roots: [sanskrit-dayalu]
+etymology_hook: "dôyālu ← Sanskrit dayālu 'compassionate', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C138-boka]
 <!-- hl-knowledge: introduces=[BN-LEX-C138-QUAL138-04]; assesses=[] -->
 
 **দয়ালু** — *dôyālu* — "kind".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**দয়ালু** (*dôyālu*) is Sanskrit *dayālu*, "compassionate", taken over whole as a learned loan, a tatsama.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

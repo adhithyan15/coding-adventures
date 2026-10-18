@@ -4,7 +4,7 @@
   "chapter": 11,
   "title": "Four Core Colours",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:d438cf08840ea131",
+  "sourceHash": "fnv1a64:3e20126cb510e2d1",
   "lessons": [
     {
       "id": "HI-C11-kaalaa-safed",
@@ -12,14 +12,14 @@
       "title": "काला, सफ़ेद (kālā, safed) — black and white",
       "headword": "काला सफ़ेद",
       "romanization": "kālā safed",
-      "gloss": "black and white — one Sanskrit word tangled up with time and death, one a Persian loan",
+      "gloss": "black and white — black has a Sanskrit look-alike meaning time; white is a Persian loan",
       "script": "devanagari",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:568074e9d242044b",
+      "sourceHash": "fnv1a64:d68efe59b99716e7",
       "notice": null,
       "blocks": [
         {
@@ -35,18 +35,22 @@
             },
             {
               "kind": "speech",
-              "text": "Hindi's word for black hides something bigger inside it: the very same word Sanskrit uses for time itself — and for death."
+              "text": "Hindi's word for black has a look-alike: the Sanskrit word for time, and for death, sounds the same."
             }
           ]
         },
         {
           "index": 1,
           "type": "input",
-          "title": "You'll want to know — काला — black, time, and death, tangled together",
+          "title": "You'll want to know — काला — black, and a look-alike for time",
           "segments": [
             {
               "kind": "speech",
-              "text": "काला (kālā) = \"black,\" from Sanskrit काल (kāla), a word that covers both \"black/dark\" and \"time.\" Sanskrit's own tradition ties the two together poetically — time devours everything, and that devouring is imagined as dark — and the same word names the fierce goddess Kālī (\"the black/dark one\") and stands as an epithet of Yama, the god of death. Be honest, though: whether \"black\" and \"time\" are truly one and the same root, or two separate ancient words that Sanskrit poetry and theology later fused into a single idea, is a real, still-debated question among linguists — the cultural connection is certain; the precise etymology underneath it is not."
+              "text": "काला (kālā) = \"black,\" from Sanskrit काल (kāla), \"black, dark\" (CDIAL 3083), which CDIAL takes from a Dravidian word. The goddess Kālī, \"the dark one,\" is named from the same word."
+            },
+            {
+              "kind": "speech",
+              "text": "Sanskrit has a second काल (kāla), \"time,\" and so \"fate, death\" (CDIAL 3084); as Time the destroyer it is linked with Yama, the god of death. CDIAL gives the two separate entries, and Monier-Williams lists them as two words. MW wonders whether \"black\" shares the root kal-, \"to count,\" of \"time,\" and marks the guess as uncertain. Sanskrit poetry and religious tradition still pair them: time devours everything, and that devouring is pictured as dark. That pairing is a cultural association, not the word's history."
             }
           ]
         },
@@ -75,11 +79,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"kāla\" — time/black/death, then \"kālā\" — black",
+              "instruction": "\"kālā\" — black; then the other काल, \"time,\" a separate word",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"kāla\" — time/black/death, then \"kālā\" — black]"
+              "source": "[YOU SAY: \"kālā\" — black; then the other काल, \"time,\" a separate word]"
             },
             {
               "kind": "prompt",
@@ -114,7 +118,7 @@
             },
             {
               "kind": "speech",
-              "text": "What does काला's root काल (kāla) also mean, besides \"black\"? (\"Time\" — and by extension, death; the same word names the goddess Kālī and Yama's epithet Kāla.) Is it settled that \"black\" and \"time\" are the same root? (No — the cultural link is real and ancient, but linguists still debate whether it's one true root or two words later fused.) Where does सफ़ेद come from? (Persian safēd — the same kind of loan as māf, \"sorry.\")"
+              "text": "What does the other Sanskrit काल (kāla) mean? (\"Time\" — and so fate and death.) Is it the काल in काला? (No — CDIAL and MW list them as two words; the dark-and-time pairing is a cultural association.) Where does सफ़ेद come from? (Persian safēd — the same kind of loan as māf, \"sorry.\")"
             }
           ]
         }

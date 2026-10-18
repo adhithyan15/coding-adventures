@@ -1,7 +1,7 @@
 {
   "language": "sanskrit",
   "chapter": 155,
-  "sourceHash": "fnv1a64:2c949a9be4d9d693",
+  "sourceHash": "fnv1a64:134e94a0f8d4149d",
   "lessonIds": [
     "SA-C155-nutanah",
     "SA-C155-jirnah",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "sanskrit/narration/ch155.txt",
   "json": "sanskrit/narration/ch155.json",
-  "textHash": "fnv1a64:d523ea83d4693aeb",
-  "jsonHash": "fnv1a64:9043a58b53515f84",
+  "textHash": "fnv1a64:b46ee4322e3853a7",
+  "jsonHash": "fnv1a64:f1fd90d3fa5162bd",
   "findings": []
 }

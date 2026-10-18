@@ -4,7 +4,7 @@
   "chapter": 16,
   "title": "Your First Verb, and the Form That Means I",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:0b34acf4e5cf6183",
+  "sourceHash": "fnv1a64:39de8342d58e811f",
   "lessons": [
     {
       "id": "ES-C06-hablar",
@@ -142,14 +142,14 @@
       "title": "hablo — \"I speak\"",
       "headword": "hablo",
       "romanization": "hablo",
-      "gloss": "I speak\" — your first verb form, and the one ending that means \"I",
+      "gloss": "\"I speak\" — your first verb form, and the one ending that means \"I\"",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1997d3b98ae607ca",
+      "sourceHash": "fnv1a64:f13b1280497a8b72",
       "notice": null,
       "blocks": [
         {

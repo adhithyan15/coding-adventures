@@ -46,7 +46,7 @@ reviews_of: [FR-C135-siecle]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**courriel** — coined in Quebec in the 1990s from *courrier électronique*, "electronic mail".
+**courriel** — coined from *courrier électronique*, "electronic mail", in Quebec in the 1990s.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "mardom"
 concept_tag: FA-CHIZ169-MARDOM
 prerequisites: [FA-C169-mizban, FA-C169-doshman]
 sounds: []
-roots: []
+roots: [persian-mardom]
+etymology_hook: "mardom ← Middle Persian mardōm (EtymDB); inherited, native Iranian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C169-doshman]
 <!-- hl-knowledge: introduces=[FA-LEX-C169-CHIZ169-05]; assesses=[] -->
 
 **مردم** — *mardom* — "people".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*mardom* is a native Persian word, inherited rather than borrowed: it continues Middle Persian *mardōm*, "mankind, people" (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

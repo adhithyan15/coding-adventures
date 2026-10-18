@@ -56,7 +56,7 @@ the join hardened into **ß**.
 ## The letter, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**ß** is a letter, not a word: in the old German hand a long *s* joined to a following *s* or *z* fused into one shape, which is why it is called *Es-zett*, "s-z".
+**ß** is a letter, not a word: it comes from a long *s* joined to a following *s* or *z* in the old German hand, which is why it is called *Es-zett*, "s-z".
 
 ## Grammar Lens: ß after long, ss after short
 <!-- hl-knowledge: introduces=[GE-GRAMMAR-ESZETT-VOWEL-LENGTH-02]; assesses=[GE-LEX-ESZETT-01] -->

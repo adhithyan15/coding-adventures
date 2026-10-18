@@ -14,7 +14,8 @@ romanization: "achchhā"
 concept_tag: UR-ADJ70-ACHCHHA
 prerequisites: [UR-C70-chhota, UR-C70-naya]
 sounds: []
-roots: []
+roots: [accha]
+etymology_hook: "achchhā ← Sanskrit accha 'clear, transparent'; CDIAL lists acchā as taken from Punjabi (CDIAL 142)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C70-naya]
 <!-- hl-knowledge: introduces=[UR-LEX-C70-ADJ70-03]; assesses=[] -->
 
 **اچھا** — *achchhā* — "good".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**اچھا** (*achchhā*) goes back to Sanskrit *accha*, "clear, transparent" (CDIAL 142). CDIAL lists Hindi *āchā*, "good", and marks *acchā* itself as taken over from Punjabi. It adds that the Sanskrit word may once have meant "shadowless".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

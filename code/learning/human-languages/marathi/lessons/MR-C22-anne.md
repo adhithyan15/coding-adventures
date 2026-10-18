@@ -12,7 +12,7 @@ concept_tag: VERB-BRING
 prerequisites: [MR-C22-pine]
 sounds: [long-aa, retroflex-na]
 roots: [sanskrit-aa-nii-lead-here, sanskrit-nii-lead]
-etymology_hook: "आणणे continues Sanskrit आनयति ānayati, which is आ ā- \"toward here\" placed on नी nī- \"to lead\" — the same आ- that turns जाणे into येणे, so bringing is leading-toward-here"
+etymology_hook: "आणणे ← Sanskrit ānayati, ā- 'toward here' + nī- 'to lead': bringing is leading toward here"
 duration:
   max_seconds: 240
 requires:

@@ -14,7 +14,8 @@ romanization: "sômān"
 concept_tag: BN-GUN220-SOMAN
 prerequisites: [BN-C219-phaka, BN-C219-sthaniyo]
 sounds: []
-roots: []
+roots: [sanskrit-samana]
+etymology_hook: "sômān ← Sanskrit samāna 'same, alike', a tatsama (CDIAL 13211)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C219-sthaniyo]
 <!-- hl-knowledge: introduces=[BN-LEX-C220-GUN220-01]; assesses=[] -->
 
 **সমান** — *sômān* — "equal".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**সমান** (*sômān*) is Sanskrit *samāna*, "same, alike", taken over whole as a learned loan, a tatsama (CDIAL 13211).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

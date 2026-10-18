@@ -14,7 +14,8 @@ romanization: "chhuṭṭī"
 concept_tag: UR-WORLD87-CHHUTTI
 prerequisites: [UR-C87-git, UR-C87-safar]
 sounds: []
-roots: []
+roots: [indo-aryan-kshutyate]
+etymology_hook: "chhuṭṭī ← *kṣuṭyate 'is released' (CDIAL 3707); CDIAL marks the form as taken from Punjabi"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C87-safar]
 <!-- hl-knowledge: introduces=[UR-LEX-C87-WORLD87-03]; assesses=[] -->
 
 **چھٹی** — *chhuṭṭī* — "a holiday, time off".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**چھٹی** (*chhuṭṭī*) goes back to a reconstructed *\*kṣuṭyate*, "is released" (CDIAL 3707). CDIAL marks *chuṭṭī*, "leave", as taken over into Hindi from Punjabi.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "âbshâr"
 concept_tag: FA-THINGS103-ABSHAR
 prerequisites: [FA-C103-tappe, FA-C103-jazire]
 sounds: []
-roots: []
+roots: [persian-ab]
+etymology_hook: "âbshâr ← Middle Persian ābšār (EtymDB): âb 'water' + shâr 'pouring'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C103-jazire]
 <!-- hl-knowledge: introduces=[FA-LEX-C103-THINGS103-03]; assesses=[] -->
 
 **آبشار** — *âbshâr* — "a waterfall".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*âbshâr* is *âb*, "water", with *-shâr*, "pouring" (from *shâridan*, "to pour"): pouring water. EtymDB traces it to Middle Persian *ābšār*. Both parts are native.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

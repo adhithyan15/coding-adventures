@@ -14,7 +14,8 @@ romanization: "bulāuṇā"
 concept_tag: PA-VERB-BULAUNA
 prerequisites: [PA-C149-tarna, PA-C149-carhna]
 sounds: []
-roots: []
+roots: [bol-speak]
+etymology_hook: "bulāuṇā: the causing form of bolṇā 'to speak', from *bōll 'speak' (CDIAL 9321), as Hindi bulānā is"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C149-carhna]
 <!-- hl-knowledge: introduces=[PA-LEX-C149-ACT149-03]; assesses=[] -->
 
 **ਬੁਲਾਉਣਾ** — *bulāuṇā* — "to call".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਬੁਲਾਉਣਾ** (*bulāuṇā*) is the causing form of *bolṇā*, "to speak": to call someone is to "make speak". CDIAL lists Hindi *bulānā* this way under a reconstructed *\*bōll*, "speak" (CDIAL 9321).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

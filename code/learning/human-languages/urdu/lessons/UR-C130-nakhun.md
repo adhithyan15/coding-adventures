@@ -14,7 +14,8 @@ romanization: "nākhun"
 concept_tag: UR-THINGS130-NAKHUN
 prerequisites: [UR-C130-kohni, UR-C130-angutha]
 sounds: []
-roots: []
+roots: [persian-nakhun]
+etymology_hook: "nākhun: usually traced to Persian nākhun 'fingernail'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C130-angutha]
 <!-- hl-knowledge: introduces=[UR-LEX-C130-THINGS130-03]; assesses=[] -->
 
 **ناخن** — *nākhun* — "a nail (on a finger)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ناخن** (*nākhun*) is a loan, usually traced to Persian *nākhun*, "fingernail".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

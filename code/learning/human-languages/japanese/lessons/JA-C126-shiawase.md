@@ -14,7 +14,8 @@ romanization: "shiawase"
 concept_tag: JA-QUAL126-SHIAWASE
 prerequisites: [JA-C125-osanai, JA-C125-yutaka]
 sounds: []
-roots: []
+roots: [japanese-suru, japanese-awaseru]
+etymology_hook: "shiawase: native shi 'doing' + awase 'fitting together' (仕合わせ); once 'how things fall out'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C125-yutaka]
 <!-- hl-knowledge: introduces=[JA-LEX-C126-QUAL126-01]; assesses=[] -->
 
 **しあわせ** — *shiawase* — "happy".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**しあわせ** (*shiawase*) is native. JMdict's other spelling shows *shi*, from *suru*, "to do", and *awase*, "fitting together"; it is usually explained as first meaning how things fell out, good or bad. It is inherited rather than borrowed.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

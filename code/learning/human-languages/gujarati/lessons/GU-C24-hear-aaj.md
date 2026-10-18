@@ -11,8 +11,8 @@ gloss: today, the day you are standing in
 concept_tag: GU-TIME-TODAY-HEARD
 prerequisites: [GU-C24-hear-mahino]
 sounds: [independent-aa, voiced-j]
-roots: []
-etymology_hook: With a word for the day and a word for the month in place, it becomes worth naming which day you are standing in.
+roots: [sanskrit-adya]
+etymology_hook: "āj ← Sanskrit adya 'today', a tadbhava (CDIAL 242)"
 duration:
   max_seconds: 120
 requires:
@@ -40,6 +40,11 @@ reviews_of: [GU-C24-hear-mahino, GU-C24-hear-divas]
 [PAUSE 3s] Say the word for **day**, then the word for **month**. Now
 listen twice: **āj**. It means **today** — this *divas*, the one you are
 standing in. Two sounds only.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**આજ** (*āj*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *adya*, "today" (CDIAL 242).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[GU-LEX-AAJ-01, GU-LEX-DIVAS-01] -->

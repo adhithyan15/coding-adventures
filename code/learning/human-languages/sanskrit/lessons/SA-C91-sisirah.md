@@ -14,7 +14,8 @@ romanization: "śiśiraḥ"
 concept_tag: SA-TIME91-SISIRAH
 prerequisites: [SA-C91-sandhya, SA-C91-hemantah]
 sounds: []
-roots: []
+roots: [sanskrit-shishira]
+etymology_hook: "śiśira 'cold; the cold season', probably connected with √śyai and śīta 'cold' (MW; CDIAL 12475)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,12 @@ reviews_of: [SA-C91-hemantah]
 <!-- hl-knowledge: introduces=[SA-LEX-C91-TIME91-04]; assesses=[] -->
 
 **शिशिरः** — *śiśiraḥ* — "late winter".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*Śiśira* is probably connected with the root √śyai and with *śīta*, "cold" (MW,
+CDIAL 12475). It lives on as Hindi *sisir*, "cold, dew".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

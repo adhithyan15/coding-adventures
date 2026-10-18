@@ -14,7 +14,8 @@ romanization: "magphaḷī"
 concept_tag: GU-THINGS116-MAGPHALI
 prerequisites: [GU-C116-papaiyu, GU-C116-jamphal]
 sounds: []
-roots: []
+roots: [sanskrit-mudga, sanskrit-phala]
+etymology_hook: "magphaḷī: mag 'mung bean' ← mudga (CDIAL 10198) + phaḷī 'pod' ← phala (CDIAL 9051)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C116-jamphal]
 <!-- hl-knowledge: introduces=[GU-LEX-C116-THINGS116-04]; assesses=[] -->
 
 **મગફળી** (*magphaḷī*) — "peanuts".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**મગફળી** (*magphaḷī*) is *mag*, "mung bean", from Sanskrit *mudga* (CDIAL 10198), and *phaḷī*, "pod", which CDIAL lists under Sanskrit *phala*, "fruit" (CDIAL 9051).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

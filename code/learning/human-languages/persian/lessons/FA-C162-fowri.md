@@ -14,7 +14,8 @@ romanization: "fowri"
 concept_tag: FA-SEFAT162-FOWRI
 prerequisites: [FA-C161-goshad, FA-C162-dowlati]
 sounds: []
-roots: []
+roots: [arabic-fawr]
+etymology_hook: "fowri: fowr ← Arabic fawr 'at once', root f-w-r (Lane), + Persian -i"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C162-dowlati]
 <!-- hl-knowledge: introduces=[FA-LEX-C162-SEFAT162-02]; assesses=[] -->
 
 **فوری** — *fowri* — "urgent".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*fowri* is *fowr*, "at once", with the ending *-i*. *fowr* is borrowed from Arabic *fawr*, "boiling; at once" (root *f-w-r*, Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

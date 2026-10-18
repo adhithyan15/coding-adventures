@@ -14,7 +14,8 @@ romanization: "bhālū"
 concept_tag: UR-THINGS128-BHALU
 prerequisites: [UR-C128-kabutar, UR-C128-tota]
 sounds: []
-roots: []
+roots: [sanskrit-bhalluka]
+etymology_hook: "bhālū ← Sanskrit bhallūka 'bear', of debated source; a tadbhava (CDIAL 9415)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C128-tota]
 <!-- hl-knowledge: introduces=[UR-LEX-C128-THINGS128-04]; assesses=[] -->
 
 **بھالو** — *bhālū* — "a bear".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**بھالو** (*bhālū*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *bhallūka*, "bear" (CDIAL 9415). CDIAL gives an Indo-European source as possible and mentions a proposed Austroasiatic one.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

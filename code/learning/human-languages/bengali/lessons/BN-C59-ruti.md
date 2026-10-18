@@ -14,7 +14,8 @@ romanization: "ruṭi"
 concept_tag: BN-FOOD59-RUTI
 prerequisites: [BN-C58-doi, BN-C58-peyaj]
 sounds: []
-roots: []
+roots: [indo-aryan-rotta]
+etymology_hook: "ruṭi ← *roṭṭa 'bread', a reconstructed form; a tadbhava (CDIAL 10837)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C58-peyaj]
 <!-- hl-knowledge: introduces=[BN-LEX-C59-FOOD59-01]; assesses=[] -->
 
 **রুটি** — *ruṭi* — "bread".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**রুটি** (*ruṭi*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*roṭṭa*, "bread", a form CDIAL reconstructs from its descendants (CDIAL 10837). Late Sanskrit has *rōṭikā*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

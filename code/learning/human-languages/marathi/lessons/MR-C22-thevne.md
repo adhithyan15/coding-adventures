@@ -11,8 +11,8 @@ gloss: to put, to keep — a standing word, worn down from Sanskrit through Prak
 concept_tag: VERB-PUT
 prerequisites: [MR-C22-anne]
 sounds: [retroflex-tha, matra-e, retroflex-na]
-roots: [prakrit-thavai-place, sanskrit-sthaa-stand, pie-steh2-stand]
-etymology_hook: "ठेवणे continues Prakrit ṭhavei, from Sanskrit sthāpayati \"causes to stand,\" on the root sthā- from Indo-European *steh2- — the root English keeps in stand, stay, state and statue"
+roots: [sanskrit-stheya, sanskrit-sthaa-stand, pie-steh2-stand]
+etymology_hook: "ठेवणे: CDIAL files it under Sanskrit sthēya 'to be stationed' (13777), root sthā-, PIE *steh₂-: English stand"
 duration:
   max_seconds: 250
 requires:
@@ -59,11 +59,12 @@ and **व** and **णे** are all familiar. **ठे-व-णे**.
 ## The word, taken apart — a word for standing
 <!-- hl-knowledge: introduces=[MR-ETYMON-THEVNE-STEH2]; assesses=[MR-GRAMMAR-TATSAMA-TADBHAVA-SPLIT] -->
 
-**ठेवणे** comes through Prakrit **ṭhavei** from Sanskrit *sthāpayati*,
-"causes to stand." Prakrit had no taste for the *sth-* cluster
-and traded it for a single retroflex **ठ**, which is why the Marathi word looks
-nothing like its Sanskrit parent — a worn-down word, the *tadbhava* kind, beside
-the taken-up-whole kind you met with **मित्र**.
+CDIAL files **ठेवणे** under Sanskrit *sthēya*, "to be stationed" (CDIAL 13777).
+Marathi has *ṭheṇe*, "to stand still," and CDIAL reads **ठेवणे** as a causative
+formed on it: "to make it stay." Prakrit had no taste for the *sth-* cluster
+and wore it down to a single consonant, in Marathi the retroflex **ठ**, which is
+why the word looks nothing like its Sanskrit parent — a worn-down word, the
+*tadbhava* kind, beside the taken-up-whole kind you met with **मित्र**.
 
 Underneath sits the root *sthā-*, "to stand," from Indo-European
 ***\*steh₂-***. English holds four pieces of it: **stand**, **stay**, **state**

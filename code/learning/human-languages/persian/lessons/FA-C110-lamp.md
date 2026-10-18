@@ -14,7 +14,8 @@ romanization: "lâmp"
 concept_tag: FA-THINGS110-LAMP
 prerequisites: [FA-C109-farsh, FA-C109-mobl]
 sounds: []
-roots: []
+roots: [french-lampe]
+etymology_hook: "lâmp: a loan, usually traced to French lampe 'lamp'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C109-mobl]
 <!-- hl-knowledge: introduces=[FA-LEX-C110-THINGS110-01]; assesses=[] -->
 
 **لامپ** — *lâmp* — "a light bulb".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*lâmp* is a loan, usually traced to French *lampe*, "lamp".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

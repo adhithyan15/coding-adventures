@@ -14,7 +14,8 @@ romanization: "māine"
 concept_tag: BN-THINGS128-MAINE
 prerequisites: [BN-C127-karkhana, BN-C127-mojur]
 sounds: []
-roots: []
+roots: [persian-mahiyana]
+etymology_hook: "māine: usually traced to Persian māhiyāna 'monthly pay'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C127-mojur]
 <!-- hl-knowledge: introduces=[BN-LEX-C128-THINGS128-01]; assesses=[] -->
 
 **মাইনে** — *māine* — "a salary".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**মাইনে** (*māine*) is a loan, usually traced to Persian *māhiyāna*, "monthly pay". It is built on Persian *māh*, "month".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

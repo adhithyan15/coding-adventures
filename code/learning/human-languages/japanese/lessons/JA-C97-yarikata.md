@@ -14,7 +14,8 @@ romanization: "yarikata"
 concept_tag: JA-CAN97-YARIKATA
 prerequisites: [JA-C97-shudan, JA-C97-houhou]
 sounds: []
-roots: []
+roots: [japanese-yaru, japanese-kata-direction]
+etymology_hook: "yarikata: native yari 'doing' (yaru) + kata 'way'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C97-houhou]
 <!-- hl-knowledge: introduces=[JA-LEX-C97-CAN97-05]; assesses=[] -->
 
 **やりかた** — *yarikata* — "a way of doing".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**やりかた** (*yarikata*) is a native compound, inherited rather than borrowed: *yari*, "doing", from *yaru*, "to do", and *kata*, "way, manner" (JMdict, KANJIDIC2).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

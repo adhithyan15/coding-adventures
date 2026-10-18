@@ -14,7 +14,8 @@ romanization: "retī"
 concept_tag: GU-WATER-SAND
 prerequisites: [GU-C65-lake, GU-C65-well]
 sounds: []
-roots: []
+roots: [sanskrit-retra]
+etymology_hook: "retī ← Sanskrit retra 'perfumed powder', a tadbhava (CDIAL 10816)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C65-well]
 <!-- hl-knowledge: introduces=[GU-LEX-C65-WATER-04]; assesses=[] -->
 
 **રેતી** (*retī*) — "sand".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**રેતી** (*retī*) is a tadbhava. CDIAL lists it, beside Gujarati *ret*, "sand", under the lexical Sanskrit *retra*, "perfumed powder" (CDIAL 10816). It thinks scarcely likely the view that the Sanskrit word reshapes a Munda one.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

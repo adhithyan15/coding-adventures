@@ -12,7 +12,7 @@ concept_tag: UR-NUMBER-ONE
 prerequisites: [UR-R22-when-you-are-lost]
 sounds: [rtl, majhul-e]
 roots: [sanskrit-eka, proto-indo-european-oywos]
-etymology_hook: "ek continues Sanskrit eka through Prakrit, from Proto-Indo-European *oywos -- and Urdu kept the inherited word although Persian's yek was right beside it, which is the opposite of what garmi and sardi did."
+etymology_hook: "ek ← Sanskrit eka 'one', through a doubled *ekka (CDIAL 2462); from PIE *óywos, like English one"
 duration:
   max_seconds: 275
 requires:
@@ -51,7 +51,7 @@ It stops here.
 ## The word, taken apart — the road NOT taken
 <!-- hl-knowledge: introduces=[UR-ETYMON-EK-INHERITED]; assesses=[UR-LEX-EK, UR-REGISTER-TWO-ROADS-ONE-ROOT, UR-ETYMON-SARDI-PERSIAN] -->
 
-**ایک** continues Sanskrit *eka* through Prakrit, from Indo-European
+**ایک** continues Sanskrit *eka* through Prakrit, by way of a doubled *\*ekka* (CDIAL 2462), from Indo-European
 \**oywos*, "one" — the root behind English **one**, Latin **ūnus** and Greek
 **oîos**.
 

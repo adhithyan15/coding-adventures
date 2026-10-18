@@ -14,7 +14,8 @@ romanization: "kaṇṭakaḥ"
 concept_tag: SA-THG252-KANTAKAH
 prerequisites: [SA-C251-pankah, SA-C252-valli]
 sounds: []
-roots: []
+roots: [sanskrit-kantaka]
+etymology_hook: "kaṇṭaka 'thorn', in the Śatapatha Brāhmaṇa (CDIAL 2668); origin uncertain; Punjabi kaṇḍā"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C252-valli]
 <!-- hl-knowledge: introduces=[SA-LEX-C252-THG252-02]; assesses=[] -->
 
 **कण्टकः** — *kaṇṭakaḥ* — "a thorn".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*kaṇṭaka* is a thorn or anything pointed, already in the Śatapatha Brāhmaṇa (CDIAL 2668). MW gives no derivation, so its origin is uncertain. It lives on as Punjabi *kaṇḍā* and as the Hindi word for thorn.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

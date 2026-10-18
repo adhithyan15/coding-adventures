@@ -12,6 +12,9 @@ Before the new one: say the Bengali for to wake someone, then the Bengali for to
 You'll want to know: নামা.
 নামা — nāmā — "to get down".
 
+The word, taken apart.
+নামা (nāmā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from namra, "bent, submissive" (CDIAL 6964). CDIAL lists Bengali nāmā, "to descend", under it.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Bengali for to save, then the Bengali for to get dow
 
 You'll want to know: সাঁতার.
 সাঁতার — sā̃tār — "swimming".
+
+The word, taken apart.
+সাঁতার (sā̃tār) (sāṁtār) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from saṁtāra, "crossing over" (CDIAL 12888).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Bengali for to get down, then the Bengali for swimmi
 You'll want to know: লাফানো.
 লাফানো — lāphāno — "to jump".
 
+The word, taken apart.
+লাফানো (lāphāno) is a tadbhava, a word inherited and reshaped by sound change. It comes from lappha, "sudden movement", a form CDIAL reconstructs from its descendants (CDIAL 10939). Lāphāno is a verb from lāph, "a leap", which CDIAL lists.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Bengali for swimming, then the Bengali for to jump.
 You'll want to know: মারা.
 মারা — mārā — "to hit".
 
+The word, taken apart.
+মারা (mārā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from mārayati, "kills" (CDIAL 10066).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Bengali for to jump, then the Bengali for to hit.
 
 You'll want to know: ভাগ.
 ভাগ — bhāg — "a share".
+
+The word, taken apart.
+ভাগ (bhāg) is Sanskrit bhāga, "share, portion", taken over whole as a learned loan, a tatsama.
 
 What you've built.
 One more word for this chapter.

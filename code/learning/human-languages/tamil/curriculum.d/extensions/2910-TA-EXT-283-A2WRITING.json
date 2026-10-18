@@ -1,0 +1,10 @@
+{
+  "id": "TA-EXT-283-A2WRITING",
+  "stage": "A2",
+  "kind": "required",
+  "category": "writing",
+  "canDo": "I can independently write a model-free connected 70–90 word Tamil message in Tamil script for a named reader and practical purpose.",
+  "prerequisites": [
+    "TA-EXT-282-A1TIMED"
+  ]
+}

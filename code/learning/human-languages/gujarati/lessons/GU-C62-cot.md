@@ -14,7 +14,8 @@ romanization: "khāṭlo"
 concept_tag: GU-FURNITURE-COT
 prerequisites: [GU-C61-pot, GU-C62-bed]
 sounds: []
-roots: []
+roots: [sanskrit-khatva]
+etymology_hook: "khāṭlo: built on khāṭ 'bedstead' ← Sanskrit khaṭvā 'bedstead' (CDIAL 3781)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C62-bed]
 <!-- hl-knowledge: introduces=[GU-LEX-C62-FURNITURE-02]; assesses=[] -->
 
 **ખાટલો** (*khāṭlo*) — "a cot, a string bed".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ખાટલો** (*khāṭlo*) is built on Gujarati *khāṭ*, "bedstead", which CDIAL lists under Sanskrit *khaṭvā*, "bedstead" (CDIAL 3781).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

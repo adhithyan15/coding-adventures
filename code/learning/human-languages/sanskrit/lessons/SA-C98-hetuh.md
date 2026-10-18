@@ -14,7 +14,8 @@ romanization: "hetuḥ"
 concept_tag: SA-WHY98-HETUH
 prerequisites: [SA-C98-atah, SA-C98-tasmat]
 sounds: []
-roots: []
+roots: [sanskrit-hetu]
+etymology_hook: "hetu 'cause, motive' ← √hi 'urge on, set in motion' (CDIAL 14160); MW glosses it 'impulse'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C98-tasmat]
 <!-- hl-knowledge: introduces=[SA-LEX-C98-WHY98-03]; assesses=[] -->
 
 **हेतुः** — *hetuḥ* — "a cause".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*hetu* comes from the root √hi "urge on, set in motion" (CDIAL 14160): MW's first gloss is "impulse", the push that makes a thing happen, and from that "motive, cause, reason". Pali kept it unchanged as *hetu* (CDIAL 14160).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "munkhafiḍ"
 concept_tag: AR-QUAL150-MUNKHAFID
 prerequisites: [AR-C149-mumti, AR-C150-ladhidh]
 sounds: []
-roots: []
+roots: [kh-f-ḍ]
+etymology_hook: "munkhafiḍ: built on the root kh-f-ḍ, 'to lower' (Lane); munkhafiḍ is the Form VII participle, 'lowered, low'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C150-ladhidh]
 <!-- hl-knowledge: introduces=[AR-LEX-C150-QUAL150-02]; assesses=[] -->
 
 **منخفض** — *munkhafiḍ* — "low".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**منخفض** (*munkhafiḍ*) is built on the native Arabic root *kh-f-ḍ*, "to lower" (Lane). *Munkhafiḍ* is the Form VII participle, "lowered, low".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -6,7 +6,7 @@ sequence: 195
 chapter: 5
 type: phrase
 headword: Je parle français
-gloss: "I speak French" — your first full sentence (français = French)
+gloss: '"I speak French" — your first full sentence (français = French)'
 concept_tag: FR-WORD-FRANCAIS
 prerequisites: [FR-C05-parler]
 sounds: [nasal-an, soft-c-s]

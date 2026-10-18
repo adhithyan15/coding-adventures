@@ -6,7 +6,7 @@ sequence: 626
 chapter: 34
 type: grammar
 headword: comes
-gloss: "you eat" — the first slot where -er parts company with -ar
+gloss: '"you eat" — the first slot where -er parts company with -ar'
 concept_tag: ES-GRAMMAR-ER-PRESENT
 prerequisites: [ES-C07-como]
 sounds: []

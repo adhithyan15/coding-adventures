@@ -14,7 +14,8 @@ romanization: "puṣpam"
 concept_tag: SA-WELCOME-FLOWER
 prerequisites: [SA-C30-seat, SA-C28-journey, SA-C29-bow]
 sounds: []
-roots: []
+roots: [sanskrit-pushpa]
+etymology_hook: "puṣpa 'flower', usually filed under √puṣ 'thrive' (MW); CDIAL 8303 marks the link doubtful"
 duration:
   max_seconds: 210
 requires:
@@ -43,9 +44,15 @@ reviews_of: [SA-C30-seat]
 
 **पुष्पम्** (*puṣpam*) — "a flower".
 
-**पुष्पम्** is a flower. Its root means "to bloom, to thrive, to nourish", so the word names the opening rather than the petals.
+**पुष्पम्** is a flower. It is usually filed under a root meaning "to thrive, to nourish"; if that holds, the word names the thriving rather than the petals.
 
 You already have **फलम्**, the fruit, and now the flower that precedes it — and in Sanskrit the pair *puṣpa-phala* travels together as a set phrase, flower-and-fruit, the way English says *bricks and mortar*. Neuter **-अम्**, like फलम् itself.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*Puṣpa* is usually filed under the root √puṣ, "to thrive, nourish" (MW), but CDIAL
+8303 marks that link with a question mark, so it is not settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

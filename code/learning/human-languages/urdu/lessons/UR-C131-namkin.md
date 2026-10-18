@@ -14,7 +14,8 @@ romanization: "namkīn"
 concept_tag: UR-QUAL131-NAMKIN
 prerequisites: [UR-C131-karva, UR-C131-khatta]
 sounds: []
-roots: []
+roots: [persian-namakin]
+etymology_hook: "namkīn: usually traced to Persian namakīn 'salty'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C131-khatta]
 <!-- hl-knowledge: introduces=[UR-LEX-C131-QUAL131-03]; assesses=[] -->
 
 **نمکین** — *namkīn* — "salty".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**نمکین** (*namkīn*) is a loan, usually traced to Persian *namakīn*, "salty". It is built on *namak*, "salt".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -4,7 +4,7 @@
   "chapter": 154,
   "title": "So, Since, If, Although, Otherwise",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:fa80c7161ca40b02",
+  "sourceHash": "fnv1a64:f0a8475ce0a6e7fc",
   "lessons": [
     {
       "id": "RU-C154-poetomu",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:56be3d62fa278923",
+      "sourceHash": "fnv1a64:55bea03e833f5d4b",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "поэтому (poétomu) is по, \"by, after\", with этому, a form of этот, \"this\": \"for this reason\"."
+              "text": "поэтому (poétomu) is по, \"by, after\", with этому, a form of этот, \"this\": \"for this reason\". Vasmer builds этот from a pointing э and the old tŭ of тот."
             }
           ]
         },

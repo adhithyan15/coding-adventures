@@ -14,7 +14,8 @@ romanization: "sūryaḥ"
 concept_tag: SA-THINGS112-SURYAH
 prerequisites: [SA-C112-padmam, SA-C112-naksatram]
 sounds: []
-roots: []
+roots: [sanskrit-surya]
+etymology_hook: "sūrya 'sun' is inherited from Indo-European, cousin of Latin sōl and Greek hēlios (EtymDB; MW)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C112-naksatram]
 <!-- hl-knowledge: introduces=[SA-LEX-C112-THINGS112-03]; assesses=[] -->
 
 **सूर्यः** — *sūryaḥ* — "the sun".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*sūrya* "the sun" is inherited from Indo-European (EtymDB): MW sets its base *svar* "sun, light" beside Latin *sol* and Greek *hēlios*, the source of English *solar* and *helium*. Hindi *sūraj* "sun" comes from it (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

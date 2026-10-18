@@ -14,7 +14,8 @@ romanization: "dâkhel"
 concept_tag: FA-PLACE68-DAKHEL
 prerequisites: [FA-C67-dur, FA-C67-nazdik]
 sounds: []
-roots: []
+roots: [arabic-dahil]
+etymology_hook: "dâkhel ← Arabic dāḫil 'entering, inner', root d-ḫ-l (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C67-nazdik]
 <!-- hl-knowledge: introduces=[FA-LEX-C68-PLACE68-01]; assesses=[] -->
 
 **داخل** — *dâkhel* — "inside".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*dâkhel* is borrowed from Arabic *dāḫil*, "entering, inner". Its Arabic root is *d-ḫ-l* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

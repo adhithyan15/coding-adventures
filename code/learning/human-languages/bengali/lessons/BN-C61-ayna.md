@@ -14,7 +14,8 @@ romanization: "āynā"
 concept_tag: BN-HOME61-AYNA
 prerequisites: [BN-C61-mejhe, BN-C61-siri]
 sounds: []
-roots: []
+roots: [persian-ayina]
+etymology_hook: "āynā: usually traced to Persian āyina 'mirror'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C61-siri]
 <!-- hl-knowledge: introduces=[BN-LEX-C61-HOME61-04]; assesses=[] -->
 
 **আয়না** — *āynā* — "a mirror".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**আয়না** (*āynā*) is a loan, usually traced to Persian *āyina*, "mirror".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

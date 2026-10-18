@@ -14,7 +14,8 @@ romanization: "maiasa"
 concept_tag: JA-TIME73-MAIASA
 prerequisites: [JA-C73-asatte, JA-C73-ototoi]
 sounds: []
-roots: []
+roots: [middle-chinese-mwojx, japanese-asa-morning]
+etymology_hook: "maiasa: Sino-Japanese mai 毎 'every' + native asa 'morning'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C73-ototoi]
 <!-- hl-knowledge: introduces=[JA-LEX-C73-TIME73-05]; assesses=[] -->
 
 **まいあさ** — *maiasa* — "every morning".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**まいあさ** (*maiasa*) mixes the two layers: *mai*, "every", the on'yomi of its first character, borrowed from Chinese (Middle Chinese *mwojX*), and native *asa*, "morning", read as a kun'yomi (JMdict, KANJIDIC2).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,7 +1,7 @@
 {
   "language": "urdu",
   "chapter": 83,
-  "sourceHash": "fnv1a64:5fee466beda40f89",
+  "sourceHash": "fnv1a64:5443a2c38ec633dd",
   "lessonIds": [
     "UR-C83-anguthi",
     "UR-C83-ghari",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "urdu/narration/ch83.txt",
   "json": "urdu/narration/ch83.json",
-  "textHash": "fnv1a64:461cfd801b529e81",
-  "jsonHash": "fnv1a64:8f389ff34ea1fc54",
+  "textHash": "fnv1a64:435e8fedd7f454ab",
+  "jsonHash": "fnv1a64:2b31002dcb534a86",
   "findings": []
 }

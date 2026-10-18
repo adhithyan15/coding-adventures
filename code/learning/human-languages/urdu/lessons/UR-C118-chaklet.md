@@ -14,7 +14,8 @@ romanization: "chāklet"
 concept_tag: UR-THINGS118-CHAKLET
 prerequisites: [UR-C117-ata, UR-C118-biskut]
 sounds: []
-roots: []
+roots: [english-chocolate]
+etymology_hook: "chāklet ← English chocolate"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C118-biskut]
 <!-- hl-knowledge: introduces=[UR-LEX-C118-THINGS118-02]; assesses=[] -->
 
 **چاکلیٹ** — *chāklet* — "chocolate".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**چاکلیٹ** (*chāklet*) is a loan from English *chocolate*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

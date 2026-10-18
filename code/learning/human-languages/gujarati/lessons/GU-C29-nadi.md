@@ -12,7 +12,7 @@ concept_tag: GU-SKY-RIVER-WRITTEN
 prerequisites: [GU-C29-sky-five]
 sounds: [short-a, voiced-d, long-ii]
 roots: []
-etymology_hook: Three signs and no vowel stroke on the first: the river is where the inherent a earns its keep.
+etymology_hook: 'Three signs and no vowel stroke on the first: the river is where the inherent a earns its keep.'
 duration:
   max_seconds: 180
 requires:

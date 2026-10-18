@@ -14,7 +14,8 @@ romanization: "natīja"
 concept_tag: AR-SABAB174-NATIJA
 prerequisites: [AR-C173-burkan, AR-C174-sabab]
 sounds: []
-roots: []
+roots: [n-t-j]
+etymology_hook: "natīja: built on the root n-t-j, 'to bring forth young' (Lane); natīja is the offspring of a thing: a result"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C174-sabab]
 <!-- hl-knowledge: introduces=[AR-LEX-C174-SABAB174-02]; assesses=[] -->
 
 **نتيجة** — *natīja* — "a result".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**نتيجة** (*natīja*) is built on the native Arabic root *n-t-j*, "to bring forth young" (Lane). *Natīja* is the offspring of a thing: a result.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

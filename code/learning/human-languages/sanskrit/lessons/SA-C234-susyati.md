@@ -14,7 +14,8 @@ romanization: "śuṣyati"
 concept_tag: SA-VERB-SUSYATI
 prerequisites: [SA-C233-anugacchati, SA-C233-nirgacchati]
 sounds: []
-roots: []
+roots: [sanskrit-shushyati]
+etymology_hook: "śuṣyati ← root √śuṣ 'dry'; MW compares Greek auō 'I dry' and Lithuanian sausas 'dry'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C233-nirgacchati]
 <!-- hl-knowledge: introduces=[SA-LEX-C234-ACT234-01]; assesses=[] -->
 
 **शुष्यति** — *śuṣyati* — "dries up".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*śuṣyati* is the present of the root √śuṣ, "to dry, wither" (MW). MW thinks the root was first *suṣ*, and compares Greek *auō*, "I dry", and Lithuanian *sausas*, "dry", so it is inherited from Indo-European.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

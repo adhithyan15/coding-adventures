@@ -14,7 +14,8 @@ romanization: "kakṣā"
 concept_tag: SA-SCH168-KAKSA
 prerequisites: [SA-C167-aja, SA-C167-asva]
 sounds: []
-roots: []
+roots: [sanskrit-kaksha]
+etymology_hook: "kakṣā 'enclosure, private room' (MW), feminine of kakṣa 'armpit, hiding place'; 'class' is a modern use"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C167-asva]
 <!-- hl-knowledge: introduces=[SA-LEX-C168-SCH168-01]; assesses=[] -->
 
 **कक्षा** — *kakṣā* — "a class, a classroom".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*kakṣā* is built on *kakṣa* "hiding place, armpit", as its feminine; MW gives it as "a walled enclosure, a private room". Using it for a school class and its room is modern.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

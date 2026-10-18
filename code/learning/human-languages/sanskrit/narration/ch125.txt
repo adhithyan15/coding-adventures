@@ -12,6 +12,9 @@ Before the new one: say the Sanskrit for a cuckoo, then the Sanskrit for a sparr
 You'll want to know: नकुलः.
 नकुलः — nakulaḥ — "a mongoose".
 
+The word, taken apart.
+nakula "a mongoose" is old, in the Atharvaveda. Pāṇini's grammar splits it as na + kula, but MW thinks that probably wrong, so its origin is uncertain. It lives on as Hindi neul and naulā "mongoose" (CDIAL 6908).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Sanskrit for a sparrow, then the Sanskrit for a mong
 
 You'll want to know: ह्रस्वः.
 ह्रस्वः — hrasvaḥ — "short".
+
+The word, taken apart.
+hrasva "short, small" is inherited from Indo-Iranian (EtymDB), and MW sets it beside the root √hras "become short, lessen". In grammar it also names a short vowel (MW).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Sanskrit for a mongoose, then the Sanskrit for short
 You'll want to know: मृदुः.
 मृदुः — mṛduḥ — "soft".
 
+The word, taken apart.
+mṛdu "soft, tender, mild" is inherited from Indo-European (EtymDB): English mild and Latin mollis "soft" are its cousins. CDIAL 10292 sets it under the root √mṛd "press, crush".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Sanskrit for short, then the Sanskrit for soft.
 You'll want to know: शुद्धः.
 शुद्धः — śuddhaḥ — "clean, pure".
 
+The word, taken apart.
+śuddha is the past participle of the root √śudh "purify, become pure" (MW; CDIAL 12520): "cleansed", so "clean, pure". It lives on as Hindi sūdhā "clean, pure, true" (CDIAL 12520).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Sanskrit for soft, then the Sanskrit for clean.
 
 You'll want to know: मलिनः.
 मलिनः — malinaḥ — "dirty".
+
+The word, taken apart.
+malina "dirty, dark" is built on mala "dirt, filth" (MW), formed like the colour words in -na (CDIAL 9905). MW compares mala with Greek melas "black", as in melancholy; Marathi kept it as maḷīṇ "dirty" (CDIAL 9905).
 
 What you've built.
 One more word for this chapter.

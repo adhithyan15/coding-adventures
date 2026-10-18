@@ -14,7 +14,8 @@ romanization: "ākār"
 concept_tag: BN-JINIS170-AKAR
 prerequisites: [BN-C169-rag, BN-C169-shanti]
 sounds: []
-roots: []
+roots: [sanskrit-akara]
+etymology_hook: "ākār ← Sanskrit ākāra 'shape', a tatsama (CDIAL 1004)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C169-shanti]
 <!-- hl-knowledge: introduces=[BN-LEX-C170-JINIS170-01]; assesses=[] -->
 
 **আকার** — *ākār* — "a shape, a size".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**আকার** (*ākār*) is Sanskrit *ākāra*, "shape", taken over whole as a learned loan, a tatsama (CDIAL 1004).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

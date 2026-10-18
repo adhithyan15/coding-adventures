@@ -1,0 +1,24 @@
+## Changed — every Sanskrit word lesson says where its word comes from
+
+- **1,202 lessons gained an origin.** Each now has an `etymology_hook` and a "The word, taken apart" block. The 12 blocks that named no origin gained one sentence each.
+- **Written from each word's own entries:**
+  - Monier-Williams 1899 for the verbal root, its homonym number and its cognate notes.
+  - CDIAL for the entry number, a descendant the entry lists, and the entry's hedges.
+  - DEDR for Dravidian loans.
+  - EtymDB 2.1 for Indo-European cousins and loan chains.
+- **What the blocks say:**
+  - **Roots and compounds.** Most blocks give the root or a compound's members: *gamana* "going" from √gam, *vidyālaya* from *vidyā* + *ālaya*.
+  - **Cousins.** About 260 name an Indo-European cousin that MW's cognate note or EtymDB backs: *bharati* beside Latin *ferō* and English *bear*.
+  - **Loans.** Loans keep their sources' hedges: Dravidian, Munda, Iranian, and Greek *horā* and *kendra*.
+  - **Modern pairings.** Pairings MW does not record are called modern: *vimānapattana* "airport".
+  - **Not settled.** About 170 say the origin is not settled, with the usual account.
+- **Payoffs into the daughter languages.** Many blocks name what the word became, citing the CDIAL entry that lists it, e.g. Hindi *kūdnā* (CDIAL 3412), *dūlhā* (6446) and *cītā* (4804).
+- **Shared root slugs.** Roots reuse the `sanskrit-*` slugs the Hindi, Marathi, Bengali and Dravidian tracks already use for the same etymon, so the cousins panel joins them. Homonyms get gloss-suffixed slugs: `sanskrit-vamana-dwarf`, `sanskrit-catura-clever`, `sanskrit-patra-vessel`, `sanskrit-mala-dirt`.
+- **Older text corrected (chapters 1–45):**
+  - "ancestor of English *is*/*my*/*name*" now says "cousin".
+  - Hindi *hai* is under CDIAL 1031 *ākṣeti*, not *asti*.
+  - Hindi *kaise* is from *kīdṛśa* (CDIAL 3197).
+  - The *kuśa*-grass story of *kuśalam* is marked as a popular explanation no dictionary supports.
+  - The unsourced Proto-Indo-European form for *śvaḥ* is gone.
+  - Several false links are removed: Vārāṇasī from √vas, *gam* ~ English *go*, *sam* ~ Greek *syn*.
+- **Reviewed.** Six independent reviews read every lesson against its sources and corrected 167. No `max_seconds` value was raised.

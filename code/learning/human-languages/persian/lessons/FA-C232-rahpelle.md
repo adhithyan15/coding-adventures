@@ -14,7 +14,8 @@ romanization: "râhpelle"
 concept_tag: FA-MAKAN232-RAHPELLE
 prerequisites: [FA-C232-kashi, FA-C232-zirzamin]
 sounds: []
-roots: []
+roots: [persian-rah]
+etymology_hook: "râhpelle: Persian râh 'way' (EtymDB) + pelle 'step'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C232-zirzamin]
 <!-- hl-knowledge: introduces=[FA-LEX-C232-MAKAN232-03]; assesses=[] -->
 
 **راه پله** — *râhpelle* — "a stairwell".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*râhpelle* is *râh*, "way" (Middle Persian *rāh*, EtymDB), with *pelle*, "step": the way of the steps.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

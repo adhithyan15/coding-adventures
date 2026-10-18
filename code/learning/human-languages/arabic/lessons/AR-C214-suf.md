@@ -14,7 +14,8 @@ romanization: "ṣūf"
 concept_tag: AR-SHAY214-SUF
 prerequisites: [AR-C214-qumash, AR-C214-qutn]
 sounds: []
-roots: []
+roots: [ṣ-w-f]
+etymology_hook: "ṣūf: an old native noun listed by Lane under ṣ-w-f, beside a verb meaning 'to have much wool'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C214-qutn]
 <!-- hl-knowledge: introduces=[AR-LEX-C214-SHAY214-05]; assesses=[] -->
 
 **صوف** — *ṣūf* — "wool".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**صوف** (*ṣūf*), "wool", is an old native noun, listed under the root *ṣ-w-f* (Lane) beside a verb meaning "to have much wool".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

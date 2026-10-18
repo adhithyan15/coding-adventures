@@ -14,7 +14,8 @@ romanization: "sāp"
 concept_tag: GU-ANIMALS2-SNAKE
 prerequisites: [GU-C68-elephant, GU-C68-monkey]
 sounds: []
-roots: []
+roots: [sanskrit-sarpa]
+etymology_hook: "sāp ← Sanskrit sarpa 'snake', a tadbhava (CDIAL 13271)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C68-monkey]
 <!-- hl-knowledge: introduces=[GU-LEX-C68-ANIMALS2-05]; assesses=[] -->
 
 **સાપ** (*sāp*) — "a snake".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**સાપ** (*sāp*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *sarpa*, "snake" (CDIAL 13271).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

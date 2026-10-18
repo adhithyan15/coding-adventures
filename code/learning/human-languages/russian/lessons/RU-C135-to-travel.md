@@ -47,7 +47,7 @@ reviews_of: [RU-C135-to-draw]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**путешествовать** is the verb of *путешествие*, "a journey": *путь*, "way", with *шествовать*, "to march, to proceed".
+**путешествовать** is the verb of *путешествие*, "a journey": *путь*, "way", with *шествовать*, "to march, to proceed". *Путь* ← Proto-Slavic *\*pǫtĭ*, kin to Sanskrit *pánthās*, "path" (Vasmer); *шествие* is borrowed from Church Slavonic.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

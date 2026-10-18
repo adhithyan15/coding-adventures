@@ -14,7 +14,8 @@ romanization: "fenjân"
 concept_tag: FA-THINGS95-FENJAN
 prerequisites: [FA-C94-sabun, FA-C95-hule]
 sounds: []
-roots: []
+roots: [persian-pengan]
+etymology_hook: "fenjân ← Arabic finjān ← Persian pengân 'cup' (EtymDB)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C95-hule]
 <!-- hl-knowledge: introduces=[FA-LEX-C95-THINGS95-02]; assesses=[] -->
 
 **فنجان** — *fenjân* — "a cup".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*fenjân* is usually explained as the Arabic form of the Persian *pengân*, "cup, bowl" (EtymDB): Arabic, with no *p*, took the word as *finjān*, and Persian took that form back. EtymDB traces *pengân* to Greek *pinax*, "board, plate".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

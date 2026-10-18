@@ -14,7 +14,8 @@ romanization: "talkh"
 concept_tag: FA-QUAL127-TALKH
 prerequisites: [FA-C126-khatarnak, FA-C126-amn]
 sounds: []
-roots: []
+roots: [persian-talkh]
+etymology_hook: "talkh ← Middle Persian taxl (EtymDB); inherited, native Iranian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C126-amn]
 <!-- hl-knowledge: introduces=[FA-LEX-C127-QUAL127-01]; assesses=[] -->
 
 **تلخ** — *talkh* — "bitter".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*talkh* is a native Persian word, inherited rather than borrowed: it continues Middle Persian *taxl*, "bitter" (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

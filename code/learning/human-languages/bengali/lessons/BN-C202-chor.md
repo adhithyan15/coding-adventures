@@ -14,7 +14,8 @@ romanization: "chor"
 concept_tag: BN-JINIS202-CHOR
 prerequisites: [BN-C201-glas, BN-C202-bhata]
 sounds: []
-roots: []
+roots: [sanskrit-cora]
+etymology_hook: "chor ← Sanskrit cora 'thief', inherited (CDIAL 4931)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C202-bhata]
 <!-- hl-knowledge: introduces=[BN-LEX-C202-JINIS202-02]; assesses=[] -->
 
 **চোর** — *chor* — "a thief".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**চোর** (*chor*) is inherited from Sanskrit *cora*, "thief", and has come down with almost no change (CDIAL 4931).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

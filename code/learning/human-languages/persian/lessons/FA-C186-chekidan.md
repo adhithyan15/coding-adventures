@@ -14,7 +14,8 @@ romanization: "chekidan"
 concept_tag: FA-VERB-CHEKIDAN
 prerequisites: [FA-C186-baftan, FA-C186-tarashidan]
 sounds: []
-roots: []
+roots: [persian-chekidan]
+etymology_hook: "chekidan: inherited, usually traced to Middle Persian čakīdan"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C186-tarashidan]
 <!-- hl-knowledge: introduces=[FA-LEX-C186-KONESH186-03]; assesses=[] -->
 
 **چکیدن** — *chekidan* — "to drip".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*chekidan* is a native Persian word, inherited rather than borrowed; it is usually traced to Middle Persian *čakīdan*, "to drip".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

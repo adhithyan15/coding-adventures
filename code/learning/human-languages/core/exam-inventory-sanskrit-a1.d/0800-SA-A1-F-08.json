@@ -1,0 +1,21 @@
+{
+  "id": "SA-A1-F-08",
+  "category": "Opinions, attitudes and knowledge",
+  "label": "say what you can do",
+  "probe": [
+    "SA-LEX-SHAKNOTI-CAN-01",
+    "SA-GRAMMAR-INFINITIVE-TUM-01"
+  ],
+  "anchorIds": [
+    "ES-A1-PROXY",
+    "CEFR-CV",
+    "SA-CORPUS",
+    "ED-SANSKRIT"
+  ],
+  "derivedFrom": [
+    "A1-F2-16",
+    "A1-F2-17",
+    "A1-NG6-09"
+  ],
+  "note": "Closed by SA-C57-shaknoti. It is scheduled two chapters after the -tum infinitive because it takes one as its object, which is the dependency and not a preference."
+}

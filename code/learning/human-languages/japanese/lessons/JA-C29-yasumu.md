@@ -14,7 +14,8 @@ romanization: "yasumu"
 concept_tag: JA-VERB-YASUMU
 prerequisites: [JA-C29-naku, JA-C29-sumu]
 sounds: []
-roots: []
+roots: [japanese-yasumu]
+etymology_hook: "yasumu: native Japanese, inherited, not borrowed; kanji 休む attached later as kun'yomi"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C29-sumu]
 <!-- hl-knowledge: introduces=[JA-LEX-C29-VERBS29-04]; assesses=[] -->
 
 **やすむ** — *yasumu* — "to rest".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**やすむ** (*yasumu*) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

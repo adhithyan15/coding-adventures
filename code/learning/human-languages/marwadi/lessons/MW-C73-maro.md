@@ -14,7 +14,8 @@ romanization: "māṛo"
 concept_tag: MW-ADJ73-MARO
 prerequisites: [MW-C73-juno, MW-C73-achho]
 sounds: []
-roots: []
+roots: [indo-aryan-matta-defective]
+etymology_hook: "māṛo 'bad': no Marwari row, but CDIAL lists Sindhi māṛo 'thin, wicked' under *māḍa (CDIAL 9723)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C73-achho]
 <!-- hl-knowledge: introduces=[MW-LEX-C73-ADJ73-04]; assesses=[] -->
 
 **माड़ो** — *māṛo* — "bad".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+CDIAL gives no Marwari row for **माड़ो** (*māṛo*), but it lists Sindhi *māṛo*, "thin, wicked", and Punjabi *māṛā*, "thin, weak, bad", under *\*māḍa*, one of a large group of reconstructed words it heads *\*maṭṭa*, "defective" (CDIAL 9723). *māṛo* matches these in shape and sense, so it probably belongs to the same group, though CDIAL does not say so for Marwari.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

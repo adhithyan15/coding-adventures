@@ -14,7 +14,8 @@ romanization: "tadashii"
 concept_tag: JA-QUAL120-TADASHII
 prerequisites: [JA-C119-nikuya, JA-C120-katai]
 sounds: []
-roots: []
+roots: [japanese-tadashii]
+etymology_hook: "tadashii: native Japanese, inherited, not borrowed; kanji 正しい attached later as kun'yomi"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C120-katai]
 <!-- hl-knowledge: introduces=[JA-LEX-C120-QUAL120-02]; assesses=[] -->
 
 **ただしい** — *tadashii* — "correct".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ただしい** (*tadashii*) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

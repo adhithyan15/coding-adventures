@@ -14,7 +14,8 @@ romanization: "bhūkh"
 concept_tag: MW-HEALTH47-BHUKH
 prerequisites: [MW-C47-darad, MW-C47-davai]
 sounds: []
-roots: []
+roots: [sanskrit-bubhuksha]
+etymology_hook: "bhūkh ← Sanskrit bubhukṣā 'desire to eat, hunger', a tadbhava (CDIAL 9286, Old Marwari row)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C47-davai]
 <!-- hl-knowledge: introduces=[MW-LEX-C47-HEALTH47-05]; assesses=[] -->
 
 **भूख** — *bhūkh* — "hunger".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**भूख** (*bhūkh*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *bubhukṣā*, "desire to eat, hunger". CDIAL lists Old Marwari *bhūkha* under it (CDIAL 9286).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

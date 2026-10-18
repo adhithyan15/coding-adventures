@@ -12,6 +12,9 @@ Before the new one: say the Japanese for the opposite side, then the Japanese fo
 You'll want to know: この.
 この — kono — "this (next to me)".
 
+The word, taken apart.
+この (kono) is native: ko-, the root that points near the speaker, with no, "of" (JMdict). It is inherited rather than borrowed, and is usually written in kana.
+
 What you've built.
 One more word for this chapter.
 
@@ -42,6 +45,9 @@ Before the new one: say the Japanese for upstream, then the Japanese for this.
 
 You'll want to know: あの.
 あの — ano — "that (over there)".
+
+The word, taken apart.
+あの (ano) is native: a-, the root that points away from both speakers, with no, "of" (JMdict). It is inherited rather than borrowed, and is usually written in kana.
 
 What you've built.
 One more word for this chapter.
@@ -74,6 +80,9 @@ Before the new one: say the Japanese for this, then the Japanese for that.
 You'll want to know: どの.
 どの — dono — "which".
 
+The word, taken apart.
+どの (dono) is native: do-, the root of "which", with no, "of" (JMdict). It is inherited rather than borrowed, and is usually written in kana.
+
 What you've built.
 One more word for this chapter.
 
@@ -104,6 +113,9 @@ Before the new one: say the Japanese for that, then the Japanese for which.
 
 You'll want to know: こんな.
 こんな — konna — "this kind of".
+
+The word, taken apart.
+こんな (konna) is native, built on ko-, the root that points near the speaker; it is usually explained as a shortening of kono yō na, "of this kind". It is inherited rather than borrowed and has no kanji (JMdict).
 
 What you've built.
 One more word for this chapter.
@@ -137,6 +149,9 @@ Count long thin things: one, three, six. (いっぽん, さんぼん, ろっぽ�
 
 You'll want to know: あんな.
 あんな — anna — "that kind of".
+
+The word, taken apart.
+あんな (anna) is native, built on a-, the root that points away from both speakers; it is usually explained as a shortening of ano yō na, "of that kind". It is inherited rather than borrowed and has no kanji (JMdict).
 
 What you've built.
 One more word for this chapter.

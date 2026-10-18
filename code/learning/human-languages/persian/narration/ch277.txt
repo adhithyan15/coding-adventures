@@ -12,6 +12,9 @@ Before the new one: say the Persian for a text message, then the Persian for an 
 You'll want to know: والدین.
 والدین — vâledeyn — "parents".
 
+The word, taken apart.
+vâledeyn is borrowed from Arabic wālidayn, "the two parents". Its Arabic root is w-l-d (Lane). It is the Arabic dual form, "two parents".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Persian for an email, then the Persian for parents.
 
 You'll want to know: نامزد.
 نامزد — nâmzad — "a fiancé, a fiancée".
+
+The word, taken apart.
+nâmzad is nâm, "name" (inherited, EtymDB), with zad, "struck" (from zadan): one whose name has been set down for another. Both are native Persian.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Persian for parents, then the Persian for a fiancé.
 You'll want to know: داماد.
 داماد — dâmâd — "a bridegroom; a son-in-law".
 
+The word, taken apart.
+dâmâd is a native Persian word, inherited rather than borrowed: it continues Middle Persian dāmād, "bridegroom, son-in-law" (EtymDB). EtymDB takes it back to the Indo-European root ǵem-, "to marry", the root of Greek gambros, "son-in-law".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Persian for a fiancé, then the Persian for a brideg
 You'll want to know: فامیل.
 فامیل — fâmil — "relatives, extended family".
 
+The word, taken apart.
+fâmil is borrowed from French famille, "family" (EtymDB).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Persian for a bridegroom, then the Persian for relat
 
 You'll want to know: نوجوان.
 نوجوان — nojavân — "a teenager".
+
+The word, taken apart.
+nojavân is no, "new", with javân, "young": newly young. Both are inherited; EtymDB takes javân back to the Indo-European word behind Latin iuvenis.
 
 What you've built.
 One more word for this chapter.

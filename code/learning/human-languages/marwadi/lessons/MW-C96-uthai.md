@@ -15,6 +15,7 @@ concept_tag: MW-LOC96-UTHAI
 prerequisites: [MW-C95-ajkal, MW-C96-kathai]
 sounds: []
 roots: []
+etymology_hook: "uṭhai 'over there': origin not settled; CDIAL has no entry for it"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C96-kathai]
 <!-- hl-knowledge: introduces=[MW-LEX-C96-LOC96-02]; assesses=[] -->
 
 **उठै** — *uṭhai* — "over there".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **उठै** (*uṭhai*) is not settled. CDIAL, searched by form and by meaning, has no entry for it; it belongs with *aṭhai*, "here", whose history is not settled either.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

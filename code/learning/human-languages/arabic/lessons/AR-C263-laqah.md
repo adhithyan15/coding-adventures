@@ -14,7 +14,8 @@ romanization: "laqāḥ"
 concept_tag: AR-SIHHA263-LAQAH
 prerequisites: [AR-C262-hadith2, AR-C262-tawattur]
 sounds: []
-roots: []
+roots: [l-q-ḥ]
+etymology_hook: "laqāḥ: built on the root l-q-ḥ, 'to fertilize (a palm)' (Lane); Lane's laqāḥ is the pollen that fertilizes a palm"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C262-tawattur]
 <!-- hl-knowledge: introduces=[AR-LEX-C263-SIHHA263-01]; assesses=[] -->
 
 **لقاح** — *laqāḥ* — "a vaccine".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**لقاح** (*laqāḥ*) is built on the native Arabic root *l-q-ḥ*, "to fertilize (a palm)" (Lane). Lane's *laqāḥ* is the pollen that fertilizes a palm; the vaccine is a modern sense.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "vastu"
 concept_tag: SA-THG193-VASTU
 prerequisites: [SA-C193-krayah, SA-C193-vikrayah]
 sounds: []
-roots: []
+roots: [sanskrit-vastu, vas-dwell]
+etymology_hook: "vastu 'thing' ← root √vas 'dwell, abide': 'what abides, exists' (MW; CDIAL 11449)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C193-vikrayah]
 <!-- hl-knowledge: introduces=[SA-LEX-C193-THG193-03]; assesses=[] -->
 
 **वस्तु** — *vastu* — "an object, a thing".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*vastu* is built on the root √vas, "to dwell, abide" (MW), the root of *vasāmi*, "I live", one of your first verbs. It first meant "the seat or place of something", then "a really existing thing" (CDIAL 11449).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

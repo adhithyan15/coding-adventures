@@ -71,7 +71,7 @@ function realReport() {
 // corpus, mark one of its A1 lessons over budget in the ramp report, and run the
 // gate again on otherwise identical inputs.
 const SYNTHETIC_WITNESS = (() => {
-  const e = loadEverything();
+  const e = REAL_EVERYTHING;
   const inputs = {
     lessons: e.lessons,
     levels: summarizeLevels(e.lessons, e.curricula, e.spine),
@@ -140,7 +140,7 @@ describe("level-gate attainment owner discovery", () => {
     }
   });
 
-  it("rejects a symlink owner without opening its target", () => {
+  it("rejects a symlink owner without opening its target", (ctx) => {
     const root = fixture();
     const outside = fixture();
     const target = join(outside, "target.json");
@@ -148,7 +148,9 @@ describe("level-gate attainment owner discovery", () => {
     try {
       try {
         symlinkSync(target, join(root, "toy.json"), "file");
-      } catch {
+      } catch (error) {
+        if (process.platform !== "win32" || (error as NodeJS.ErrnoException).code !== "EPERM") throw error;
+        ctx.skip();
         // Windows without Developer Mode cannot create file symlinks. The
         // reader's lstat guard is still exercised on every platform that can.
         return;
@@ -471,7 +473,7 @@ describe("the first rung anybody actually climbed", () => {
     // verdict would pass on a gate that had quietly stopped measuring. So this
     // re-derives criterion 4 from the same two inputs the gate reads — the continuity
     // report and the lesson→level map — and names any atom that fails it.
-    const e = loadEverything();
+    const e = REAL_EVERYTHING;
     const continuity = measureContinuity(e.lessons);
     const spineNodes = lessonSpineNodes(e.curricula);
     const stageOf = new Map<string, CefrLevel>();
@@ -705,7 +707,7 @@ describe("the first rung anybody actually climbed", () => {
     const spanish = gate.tracks.find((t) => t.language === "spanish")!;
     expect(levelRank(spanish.attained!)).toBeGreaterThanOrEqual(levelRank("A1"));
 
-    const e = loadEverything();
+    const e = REAL_EVERYTHING;
     const spineNodes = lessonSpineNodes(e.curricula);
     const stageOf = new Map<string, CefrLevel>();
     for (const node of e.spine.nodes) {
@@ -775,7 +777,7 @@ describe("etymology is a hook, not a skill", () => {
     // assertion. A pinned integer on one track's unfinished work serialises every
     // parallel authoring tranche behind this file, and it names a number that is
     // supposed to fall to zero. What is checked now is the waiver itself.
-    const e = loadEverything();
+    const e = REAL_EVERYTHING;
     const base = measureContinuity(e.lessons);
     const gateInputs = {
       lessons: e.lessons,
@@ -909,7 +911,7 @@ describe("etymology is a hook, not a skill", () => {
     // The waiver lives at the GATE on purpose. `measureContinuity` still reports every
     // atom, so the gap report and every pinned corpus figure keep meaning what they
     // say. If this ever fails, the waiver has leaked into the measurement.
-    const e = loadEverything();
+    const e = REAL_EVERYTHING;
     const continuity = measureContinuity(e.lessons);
     const etymons = continuity.reinforcement.filter((d) => isEtymologyAtom(d.atom));
     expect(etymons.length).toBeGreaterThan(0);
@@ -929,7 +931,7 @@ describe("the criteria themselves", () => {
   it("passes a level only when all four hold", () => {
     // A synthetic track that satisfies nothing must attain nothing, and must name
     // every criterion it failed rather than the first one.
-    const e = loadEverything();
+    const e = REAL_EVERYTHING;
     const levels = summarizeLevels(e.lessons, e.curricula, e.spine);
     const ramp = measureRamp(e.lessons, loadChapterPolicy());
     const continuity = measureContinuity(e.lessons);
@@ -1170,7 +1172,7 @@ word ${index + 1}
   it("is absent, not empty, when the caller supplied no policy", { timeout: 60_000 }, () => {
     // "Not measured" and "attained nothing" are opposite facts. A consumer that
     // passes no chapter policy must not see a report claiming zero attainment.
-    const e = loadEverything();
+    const e = REAL_EVERYTHING;
     const report = buildCurriculumGapReport({
       registry: e.registry,
       lessons: e.lessons,

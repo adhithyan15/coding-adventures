@@ -14,7 +14,8 @@ romanization: "kangoshi"
 concept_tag: JA-THINGS111-KANGOSHI
 prerequisites: [JA-C110-sune, JA-C111-hitai]
 sounds: []
-roots: []
+roots: [middle-chinese-khan, middle-chinese-huh, middle-chinese-srij]
+etymology_hook: "kangoshi: Sino-Japanese 看 'look' + 護 'protect' + 師 'specialist', on'yomi borrowed from Chinese"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C111-hitai]
 <!-- hl-knowledge: introduces=[JA-LEX-C111-THINGS111-02]; assesses=[] -->
 
 **かんごし** — *kangoshi* — "a nurse".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**かんごし** (*kangoshi*) is Sino-Japanese (kango): three Chinese characters read with their on'yomi, readings borrowed from Chinese. They are *kan*, "look, watch over" (Middle Chinese *khan*), *go*, "protect" (*huH*) and *shi*, "specialist, teacher" (*srij*) (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

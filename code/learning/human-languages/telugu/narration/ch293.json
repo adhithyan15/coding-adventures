@@ -4,7 +4,7 @@
   "chapter": 293,
   "title": "Jail, Mosque, Church, Village council, Loft",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:1a04a80257a6bede",
+  "sourceHash": "fnv1a64:3ae92dcda9911b96",
   "lessons": [
     {
       "id": "TE-C293-jailu",
@@ -421,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:95247cba6301c114",
+      "sourceHash": "fnv1a64:d6eb7a8afaf1d970",
       "notice": null,
       "blocks": [
         {
@@ -459,7 +459,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "పంచాయతీ (pañcāyatī) matches Hindustani pañcāyat, \"village council\", which DEDR and CDIAL do not list."
+              "text": "పంచాయతీ (pañcāyatī) matches Hindustani pañcāyat, \"village council\", which DEDR and CDIAL do not list, so its exact route into Telugu is uncertain."
             }
           ]
         },

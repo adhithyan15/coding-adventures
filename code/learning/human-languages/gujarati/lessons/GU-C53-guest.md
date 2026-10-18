@@ -14,7 +14,8 @@ romanization: "mahemān"
 concept_tag: GU-FAMILY3-GUEST
 prerequisites: [GU-C53-daughter, GU-C53-relative]
 sounds: []
-roots: []
+roots: [persian-mihman]
+etymology_hook: "mahemān: usually traced to Persian mihmān 'guest'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C53-relative]
 <!-- hl-knowledge: introduces=[GU-LEX-C53-FAMILY3-05]; assesses=[] -->
 
 **મહેમાન** (*mahemān*) — "a guest". A guest is welcomed into the **ઘર**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**મહેમાન** (*mahemān*) is a loan, usually traced to Persian *mihmān*, "guest".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "postchi"
 concept_tag: FA-KAR284-POSTCHI
 prerequisites: [FA-C284-mekanik, FA-C284-arayeshgar]
 sounds: []
-roots: []
+roots: [french-poste]
+etymology_hook: "postchi: post ← French poste + -chi, an agent ending from Turkic"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C284-arayeshgar]
 <!-- hl-knowledge: introduces=[FA-LEX-C284-KAR284-03]; assesses=[] -->
 
 **پستچی** — *postchi* — "a postman".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*postchi* is *post*, "mail", borrowed from French *poste*, with the agent ending *-chi*, which Persian took from Turkic: a French word with a Turkic tail.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

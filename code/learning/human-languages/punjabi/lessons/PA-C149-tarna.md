@@ -14,7 +14,8 @@ romanization: "tarnā"
 concept_tag: PA-VERB-TARNA
 prerequisites: [PA-C148-cukkna, PA-C148-tappna]
 sounds: []
-roots: []
+roots: [sanskrit-tarati]
+etymology_hook: "tarnā ← Sanskrit tarati 'crosses; floats, swims', a tadbhava (CDIAL 5702)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C148-tappna]
 <!-- hl-knowledge: introduces=[PA-LEX-C149-ACT149-01]; assesses=[] -->
 
 **ਤਰਨਾ** — *tarnā* — "to swim".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਤਰਨਾ** (*tarnā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *tarati*, "crosses; floats, swims" (CDIAL 5702).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

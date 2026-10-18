@@ -14,7 +14,8 @@ romanization: "rimoṭ"
 concept_tag: BN-JINIS222-RIMOT
 prerequisites: [BN-C222-balb, BN-C222-tibhi]
 sounds: []
-roots: []
+roots: [english-remote]
+etymology_hook: "rimoṭ ← English remote"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C222-tibhi]
 <!-- hl-knowledge: introduces=[BN-LEX-C222-JINIS222-03]; assesses=[] -->
 
 **রিমোট** — *rimoṭ* — "a remote control".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**রিমোট** (*rimoṭ*) is a loan from English *remote*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

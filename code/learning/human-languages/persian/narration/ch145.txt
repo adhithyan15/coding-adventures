@@ -12,6 +12,9 @@ Before the new one: say the Persian for to continue, then the Persian for to typ
 You'll want to know: پوزش خواستن.
 پوزش خواستن — puzesh khâstan — "to apologise".
 
+The word, taken apart.
+puzesh khâstan is "to ask for pardon": puzesh, "apology", with khâstan, "to ask for". puzesh is native, but its older form is not settled. khâstan, "to ask for", is an inherited verb, from Middle Persian xwāstan (EtymDB).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Persian for to type, then the Persian for to apologi
 
 You'll want to know: نگهداری کردن.
 نگهداری کردن — negahdâri kardan — "to look after, to take care of".
+
+The word, taken apart.
+negahdâri kardan pairs negahdâri, "keeping", with kardan. negahdâri is negah, "look, watch", with dâr, "holding" (from dâshtan), and -i: keeping watch. All the pieces are native. kardan, "to do", is an inherited verb, from Middle Persian kardan (EtymDB).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Persian for to apologise, then the Persian for to lo
 You'll want to know: همراهی کردن.
 همراهی کردن — hamrâhi kardan — "to accompany".
 
+The word, taken apart.
+hamrâhi kardan pairs hamrâhi, "company on the road", with kardan. hamrâhi is ham-, "same", with râh, "road", and -i: sharing the road. All the pieces are native. kardan, "to do", is an inherited verb, from Middle Persian kardan (EtymDB).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Persian for to look after, then the Persian for to a
 You'll want to know: باور کردن.
 باور کردن — bâvar kardan — "to believe".
 
+The word, taken apart.
+bâvar kardan pairs bâvar, "belief", with kardan, "to make". bâvar is native, usually traced to Middle Persian wābar, "trustworthy". kardan, "to do", is an inherited verb, from Middle Persian kardan (EtymDB).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Persian for to accompany, then the Persian for to be
 
 You'll want to know: صدا زدن.
 صدا زدن — sedâ zadan — "to call (someone)".
+
+The word, taken apart.
+sedâ zadan pairs sedâ, "voice, sound", with zadan, "to strike". sedâ is borrowed from Arabic ṣadā, "echo" (EtymDB; root ṣ-d-y, Lane). zadan, "to strike", is an inherited verb; it is usually traced to Middle Persian zadan.
 
 What you've built.
 One more word for this chapter.

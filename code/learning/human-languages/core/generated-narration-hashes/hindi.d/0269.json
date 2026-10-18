@@ -1,7 +1,7 @@
 {
   "language": "hindi",
   "chapter": 269,
-  "sourceHash": "fnv1a64:6bd61933d3be0eee",
+  "sourceHash": "fnv1a64:b1e380074203d9e0",
   "lessonIds": [
     "HI-C269-koyla",
     "HI-C269-gais",
@@ -16,6 +16,6 @@
   "text": "hindi/narration/ch269.txt",
   "json": "hindi/narration/ch269.json",
   "textHash": "fnv1a64:90d09a7ba076c8f5",
-  "jsonHash": "fnv1a64:fc7581868576fd0c",
+  "jsonHash": "fnv1a64:c43e3991f29253a4",
   "findings": []
 }

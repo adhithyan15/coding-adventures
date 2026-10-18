@@ -14,7 +14,8 @@ romanization: "thalāthūn"
 concept_tag: AR-NUMBERS97-THALATHUN
 prerequisites: [AR-C96-tisa, AR-C97-ashara]
 sounds: []
-roots: []
+roots: [thalatha]
+etymology_hook: "thalāthūn: built on the root th-l-th, 'three' (Lane); thalāthūn is thalāth, 'three', with the tens ending -ūn"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C97-ashara]
 <!-- hl-knowledge: introduces=[AR-LEX-C97-NUMBERS97-02]; assesses=[] -->
 
 **ثلاثون** — *thalāthūn* — "thirty".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ثلاثون** (*thalāthūn*) is built on the native Arabic root *th-l-th*, "three" (Lane). *Thalāthūn* is *thalāth*, "three", with the tens ending *-ūn*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

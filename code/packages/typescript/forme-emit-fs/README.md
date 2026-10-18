@@ -4,9 +4,9 @@ Forme emit stage: `Stream<RenderedPage>` → `DeployArtifact`. Writes
 each rendered page to disk under a configured `outDir` and emits a
 single `DeployArtifact` summarising the result.
 
-Fifth (final) Forme stage of the blog v0 effort. This is the bottom
-of the pipeline — the bytes it writes are the bytes the deploy job
-ships.
+This is the compatibility page-only sink retained for simple and collection
+pipelines. Asset- and island-aware product routes use `forme-emit-site-fs`.
+The bytes this stage writes are the bytes its deploy job ships.
 
 ## Stage shape
 
@@ -66,24 +66,24 @@ root.
 These checks are pure path math — they run **before** any file open,
 so a malicious route never reaches the kernel.
 
-## Capability discipline (v0 pragmatic exception)
+## Direct filesystem boundary
 
 Emit stages have the same chicken-and-egg problem as
 `forme-source-fs`: `ctx.filesystem` is the orchestrator-provided
 `FilesystemApi`, but for `forme-emit-fs` to *write* disk *something*
 has to be the implementation.
 
-v0 resolves it the same way the source stage does:
+This first-party stage resolves it the same way the source stage does:
 
 - Declare `"filesystem:write"` in `required_capabilities.json` and
   in the stage's `capabilities` array so the manifest audit layer
   sees correct intent.
-- Read via `node:fs/promises` directly (the runtime path).
+- Write via `node:fs/promises` directly (the runtime path).
 
-When FM02 lands and the orchestrator wires real `FilesystemApi`s
-around stages, this stage will become one of the implementations
-rather than a consumer. Documented as a stage-level pragmatic
-exception in `required_capabilities.json` and the source header.
+FM02's capability-backed APIs now mediate installed third-party plugins. This
+first-party sink remains one of the filesystem implementations rather than a
+consumer of ambient plugin authority, as documented in
+`required_capabilities.json` and the source header.
 
 ## Reproducible builds
 
@@ -97,15 +97,14 @@ same build — the build identity is what's in the artifact, not where
 it lives. The canonical-JSON serialiser sorts keys, so stream-arrival
 order doesn't affect the hash either.
 
-## v0 simplifications (documented)
+## Compatibility contract
 
-- **`manifest.assets` is always `[]`** — no asset-emission stages
-  yet. Assets will get their own emit pipeline that this stage's
-  manifest merges with.
+- **`manifest.assets` is always `[]`** — asset-bearing pipelines use
+  `forme-emit-site-fs` instead.
 - **`DeployRoute.islands` / `DeployRoute.css` are always `[]`** —
-  this compatibility emitter keeps theme CSS inline. The asset-aware product
-  emitter carries the implemented FM04 style path; FM05 interactivity usage
-  remains pending.
+  this compatibility emitter keeps theme CSS inline and emits no island
+  metadata. `forme-emit-site-fs` carries the implemented FM04/FM05 product
+  paths.
 - **`DeployRoute.target` is always `{ kind: "file", path }`** — no
   handler-typed routes for the static blog.
 

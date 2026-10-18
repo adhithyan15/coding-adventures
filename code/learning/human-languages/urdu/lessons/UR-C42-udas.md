@@ -14,7 +14,8 @@ romanization: "udās"
 concept_tag: UR-HEALTH42-UDAS
 prerequisites: [UR-C42-bhuk, UR-C42-khush]
 sounds: []
-roots: []
+roots: [sanskrit-udasa]
+etymology_hook: "udās: usually traced to Sanskrit udāsa 'indifference'; CDIAL does not list it"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C42-khush]
 <!-- hl-knowledge: introduces=[UR-LEX-C42-HEALTH42-03]; assesses=[] -->
 
 **اداس** — *udās* — "sad".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**اداس** (*udās*) is usually traced to Sanskrit *udāsa*, "indifference", from *ud-ās-*, "to sit apart". CDIAL does not list it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

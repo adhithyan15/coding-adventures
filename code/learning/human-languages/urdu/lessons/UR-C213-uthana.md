@@ -14,7 +14,8 @@ romanization: "uṭhānā"
 concept_tag: UR-VERB-UTHANA
 prerequisites: [UR-C212-chakhna, UR-C213-pahunchana]
 sounds: []
-roots: []
+roots: [indo-aryan-ut-sthapayati]
+etymology_hook: "uṭhānā ← *ut-sthāpayati 'raises', a reconstructed form; a tadbhava (CDIAL 1903)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C213-pahunchana]
 <!-- hl-knowledge: introduces=[UR-LEX-C213-ACT213-02]; assesses=[] -->
 
 **اٹھانا** — *uṭhānā* — "to lift, to pick up".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**اٹھانا** (*uṭhānā*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*ut-sthāpayati*, "raises", a form CDIAL reconstructs from its descendants (CDIAL 1903). It is built on *sthā-*, "to stand": to lift is to make something stand up.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

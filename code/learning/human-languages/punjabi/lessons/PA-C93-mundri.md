@@ -14,7 +14,8 @@ romanization: "mundrī"
 concept_tag: PA-CLOTHES93-MUNDRI
 prerequisites: [PA-C93-jurab, PA-C93-jeb]
 sounds: []
-roots: []
+roots: [sanskrit-mudra]
+etymology_hook: "mundrī: CDIAL lists Lahnda mundrī 'ring' under Sanskrit mudrā 'seal, signet-ring', probably from Iranian (CDIAL 10203)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C93-jeb]
 <!-- hl-knowledge: introduces=[PA-LEX-C93-CLOTHES93-04]; assesses=[] -->
 
 **ਮੁੰਦਰੀ** — *mundrī* — "a ring".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਮੁੰਦਰੀ** (*mundrī*) is inherited. CDIAL lists the matching Lahnda *mundrī*, "ring", and Punjabi *mundī*, "ring", under Sanskrit *mudrā*, "seal, signet-ring", a word it takes, probably, from Iranian (CDIAL 10203).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

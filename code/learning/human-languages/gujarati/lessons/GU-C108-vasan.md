@@ -14,7 +14,8 @@ romanization: "vāsaṇ"
 concept_tag: GU-THINGS108-VASAN
 prerequisites: [GU-C107-pagthiyu, GU-C107-culo]
 sounds: []
-roots: []
+roots: [sanskrit-vasana]
+etymology_hook: "vāsaṇ ← Sanskrit vāsana 'box, casket', a tadbhava (CDIAL 11599)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C107-culo]
 <!-- hl-knowledge: introduces=[GU-LEX-C108-THINGS108-01]; assesses=[] -->
 
 **વાસણ** (*vāsaṇ*) — "a vessel, a utensil".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**વાસણ** (*vāsaṇ*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *vāsana*, "box, casket" (CDIAL 11599).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

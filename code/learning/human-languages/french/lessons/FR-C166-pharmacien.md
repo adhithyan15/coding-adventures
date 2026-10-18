@@ -46,7 +46,7 @@ reviews_of: [FR-C166-dentiste]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**pharmacien** — *pharmacie* with *-ien*, "one who works in".
+**pharmacien** — *pharmacie* with *-ien*, "one who works in". *Pharmacie* ← Medieval Latin *pharmacia*, from Greek (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

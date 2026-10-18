@@ -14,7 +14,8 @@ romanization: "mowj"
 concept_tag: FA-THINGS103-MOWJ
 prerequisites: [FA-C103-jazire, FA-C103-abshar]
 sounds: []
-roots: []
+roots: [arabic-mawj]
+etymology_hook: "mowj ← Arabic mawj 'waves', root m-w-j (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C103-abshar]
 <!-- hl-knowledge: introduces=[FA-LEX-C103-THINGS103-04]; assesses=[] -->
 
 **موج** — *mowj* — "a wave".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*mowj* is borrowed from Arabic *mawj*, "waves". Its Arabic root is *m-w-j* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

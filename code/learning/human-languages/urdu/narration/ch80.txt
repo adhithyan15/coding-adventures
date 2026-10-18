@@ -12,6 +12,9 @@ Before the new one: say the Urdu for a road, then the Urdu for a bank.
 You'll want to know: اسٹیشن.
 اسٹیشن — isṭeshan — "a station".
 
+The word, taken apart.
+اسٹیشن (isṭeshan) is a loan from English station.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Urdu for a bank, then the Urdu for a station.
 
 You'll want to know: گاڑی.
 گاڑی — gāṛī — "a car; a train".
+
+The word, taken apart.
+گاڑی (gāṛī) goes back to a reconstructed gāḍḍa, "cart", which CDIAL links, tentatively, with Sanskrit garta, "seat of a chariot" (CDIAL 4116).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Urdu for a station, then the Urdu for a car; a train
 You'll want to know: بس.
 بس — bas — "a bus; enough".
 
+The word, taken apart.
+بس (bas) is two words spelled alike. bas, "a bus", is a loan from English bus, short for omnibus; bas, "enough", is usually traced to Persian bas, "enough".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Urdu for a car; a train, then the Urdu for a bus; en
 You'll want to know: پل.
 پل — pul — "a bridge".
 
+The word, taken apart.
+پل (pul) is a loan, usually traced to Persian pul, "bridge".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Urdu for a bus; enough, then the Urdu for a bridge.
 
 You'll want to know: مسجد.
 مسجد — masjid — "a mosque".
+
+The word, taken apart.
+مسجد (masjid) is a loan from Arabic masjid, "place of prostration, mosque", which reached Urdu through Persian. Its Arabic root is s-j-d (Lane).
 
 What you've built.
 One more word for this chapter.

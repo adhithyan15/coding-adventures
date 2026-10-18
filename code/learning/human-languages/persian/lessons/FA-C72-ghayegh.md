@@ -14,7 +14,8 @@ romanization: "ghâyegh"
 concept_tag: FA-TOWN72-GHAYEGH
 prerequisites: [FA-C71-edare, FA-C71-polis]
 sounds: []
-roots: []
+roots: [turkic-qay-q]
+etymology_hook: "ghâyegh: a loan, usually traced to Turkic qayıq 'boat'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C71-polis]
 <!-- hl-knowledge: introduces=[FA-LEX-C72-TOWN72-01]; assesses=[] -->
 
 **قایق** — *ghâyegh* — "a boat".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*ghâyegh* is a loan, usually traced to Turkic *qayıq*, "boat".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

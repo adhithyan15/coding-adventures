@@ -14,7 +14,8 @@ romanization: "shām"
 concept_tag: UR-TIME75-SHAM
 prerequisites: [UR-C74-din, UR-C74-rat]
 sounds: []
-roots: []
+roots: [persian-sham-evening]
+etymology_hook: "shām: usually traced to Persian shām 'evening'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C74-rat]
 <!-- hl-knowledge: introduces=[UR-LEX-C75-TIME75-01]; assesses=[] -->
 
 **شام** — *shām* — "evening".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**شام** (*shām*) is a loan, usually traced to Persian *shām*, "evening". It only looks like Sanskrit *śyāma*, "dark", and is a different word.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

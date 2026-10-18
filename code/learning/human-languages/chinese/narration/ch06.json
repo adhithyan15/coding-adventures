@@ -4,7 +4,7 @@
   "chapter": 6,
   "title": "See You Again",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:6760201714550272",
+  "sourceHash": "fnv1a64:9d92a0d2a6487bbe",
   "lessons": [
     {
       "id": "ZH-W06-zai",
@@ -373,7 +373,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7ba822de278109cc",
+      "sourceHash": "fnv1a64:ddc249d28dfbdab1",
       "notice": null,
       "blocks": [
         {
@@ -425,11 +425,15 @@
             },
             {
               "kind": "speech",
-              "text": "So the word is \"see again.\" That is not a hook, not a mnemonic, not a traditional gloss offered with a warning attached. It is what the two characters say, and it is what the word means."
+              "text": "So the word is \"see again.\" That is no mnemonic: it is what the two characters say, and what the word means."
             },
             {
               "kind": "speech",
               "text": "Every earlier component gave you a hook — 亻 at the left of 你, 女 beside 子 in 好 — labelled a memory aid rather than history. Here the parts add up. Chinese does this often. Start expecting it."
+            },
+            {
+              "kind": "speech",
+              "text": "Both are inherited from Middle Chinese: tsojH, \"a second time\", and kenH, \"see\" (Guangyun)."
             }
           ]
         },

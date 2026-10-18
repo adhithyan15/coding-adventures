@@ -14,7 +14,8 @@ romanization: "veṇuḥ"
 concept_tag: SA-THG161-VENUH
 prerequisites: [SA-C160-kalasi, SA-C161-sankhah]
 sounds: []
-roots: []
+roots: [sanskrit-venu]
+etymology_hook: "veṇu 'bamboo, reed', then 'flute'; MW thinks it probably comes from √ve 'weave' (CDIAL 12096 is unsure)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C161-sankhah]
 <!-- hl-knowledge: introduces=[SA-LEX-C161-THG161-02]; assesses=[] -->
 
 **वेणुः** — *veṇuḥ* — "a flute".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*veṇu* first meant "a bamboo, a reed" in the Rigveda and later "a flute" (MW). MW thinks it probably comes from the root √ve "weave", but CDIAL 12096 finds its connections unclear, so its origin is uncertain.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

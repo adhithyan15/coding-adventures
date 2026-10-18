@@ -14,7 +14,8 @@ romanization: "adhunā"
 concept_tag: SA-TIME92-ADHUNA
 prerequisites: [SA-C92-purvam, SA-C92-pascat]
 sounds: []
-roots: []
+roots: [sanskrit-adhuna]
+etymology_hook: "adhunā 'now', which CDIAL 268 reports as an old instrumental of adhvan 'way'; Punjabi huṇ 'now'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,12 @@ reviews_of: [SA-C92-pascat]
 <!-- hl-knowledge: introduces=[SA-LEX-C92-TIME92-04]; assesses=[] -->
 
 **अधुना** — *adhunā* — "now".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*Adhunā* is a Śatapatha Brāhmaṇa word; CDIAL 268 reports Mayrhofer's view that it
+is an old instrumental of *adhvan*, "way". It lives on as Punjabi *huṇ*, "now".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

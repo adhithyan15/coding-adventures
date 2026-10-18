@@ -14,7 +14,8 @@ romanization: "dam"
 concept_tag: AR-BODY52-DAM
 prerequisites: [AR-C51-raqaba, AR-C52-wajh]
 sounds: []
-roots: []
+roots: [d-m-y]
+etymology_hook: "dam: built on the root d-m-y, 'blood' (Lane); an old Semitic noun: Hebrew dam, 'blood', is its cousin"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C52-wajh]
 <!-- hl-knowledge: introduces=[AR-LEX-C52-BODY52-02]; assesses=[] -->
 
 **دم** — *dam* — "blood".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**دم** (*dam*) is built on the native Arabic root *d-m-y*, "blood" (Lane). An old Semitic noun: Hebrew *dam*, "blood", is its cousin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

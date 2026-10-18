@@ -4,7 +4,7 @@
   "chapter": 31,
   "title": "The Letter in the Way",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:70b3464ea33dd443",
+  "sourceHash": "fnv1a64:933caff9ed205292",
   "lessons": [
     {
       "id": "BN-W05-tta",
@@ -200,7 +200,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:640a33f041a17fb3",
+      "sourceHash": "fnv1a64:31548297f818d39e",
       "notice": null,
       "blocks": [
         {
@@ -262,6 +262,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Where টা comes from is not settled. CDIAL, a dictionary of words rather than endings, has no entry for it; under Sanskrit ēka, \"one\", it asks whether the -ṭā of Assamese eṭā, \"one\", is Sanskrit vṛtta, \"round\", and leaves the question open (CDIAL 2462)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "grammar",
           "title": "Grammar Lens: why this is called a classifier and not an article",
           "segments": [
@@ -288,7 +299,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -337,7 +348,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -372,7 +383,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f21aa6bc4eb35933",
+      "sourceHash": "fnv1a64:f5c761d01a522b12",
       "notice": null,
       "blocks": [
         {
@@ -438,6 +449,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "এক goes back to Sanskrit ēka, \"one\" (CDIAL 2462); where the classifier টা (-ṭā) comes from is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "grammar",
           "title": "Grammar Lens: where the ending goes, and it moves",
           "segments": [
@@ -466,7 +488,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -515,7 +537,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -550,7 +572,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:25a4476abcc6e29f",
+      "sourceHash": "fnv1a64:35bc67b2bcaef9ee",
       "notice": null,
       "blocks": [
         {
@@ -595,6 +617,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "আর goes back to Sanskrit apara, \"other\", and aparam, \"again, moreover\" (CDIAL 434); এক to ēka, \"one\" (CDIAL 2462). The classifier's own origin is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "grammar",
           "title": "Grammar Lens: the pair that hands things out one at a time",
           "segments": [
@@ -613,7 +646,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -662,7 +695,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

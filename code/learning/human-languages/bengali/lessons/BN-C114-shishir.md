@@ -14,7 +14,8 @@ romanization: "shishir"
 concept_tag: BN-THINGS114-SHISHIR
 prerequisites: [BN-C113-rongdhonu, BN-C114-kuyasha]
 sounds: []
-roots: []
+roots: [sanskrit-shishira]
+etymology_hook: "shishir ← Sanskrit śiśira 'cold; dew', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C114-kuyasha]
 <!-- hl-knowledge: introduces=[BN-LEX-C114-THINGS114-02]; assesses=[] -->
 
 **শিশির** — *shishir* — "dew".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**শিশির** (*shishir*) is Sanskrit *śiśira*, "cold; dew", taken over whole as a learned loan, a tatsama.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

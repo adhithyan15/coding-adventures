@@ -14,7 +14,8 @@ romanization: "miḥfaẓa"
 concept_tag: AR-THINGS118-MIHFAZA
 prerequisites: [AR-C118-tadhkira, AR-C118-jawaz, AR-C19-wahid-khamsa, AR-C19-wahid-khamsa]
 sounds: []
-roots: []
+roots: [ḥ-f-ẓ]
+etymology_hook: "miḥfaẓa: built on the root ḥ-f-ẓ, 'to guard, to keep' (Lane); miḥfaẓa is an instrument noun, 'a thing for keeping'"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [AR-C118-jawaz]
 <!-- hl-knowledge: introduces=[AR-LEX-C118-THINGS118-04]; assesses=[] -->
 
 **محفظة** — *miḥfaẓa* — "a wallet".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**محفظة** (*miḥfaẓa*) is built on the native Arabic root *ḥ-f-ẓ*, "to guard, to keep" (Lane). *Miḥfaẓa* is an instrument noun, "a thing for keeping".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

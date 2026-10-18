@@ -11,8 +11,8 @@ gloss: see you later
 concept_tag: FAREWELL-LATER
 prerequisites: [MW-C06-practice]
 sounds: [long-aa, aspirated-chh, short-i, long-uu]
-roots: []
-etymology_hook: Learn the parting meaning and sound groups before four new written units arrive.
+roots: [indo-aryan-pashca, sanskrit-milati]
+etymology_hook: "pāchhe ← *paśca 'hinder part' (CDIAL 7990); milsū ← milati 'meets' (CDIAL 10133)"
 duration:
   max_seconds: 150
 requires:
@@ -50,6 +50,11 @@ Then the new parting line begins.
 Hear two groups: *pā-chhe | mil-sū*. The first points later/back; the second
 carries meeting again. Listen twice, say the two groups apart, then say them once together. Do
 not spell the line yet.
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*pāchhe milsū* is two inherited words. *pāchhe*, "later, behind", matches Old Marwari *pāchaï*, "behind", which CDIAL lists under *\*paśca*, "hinder part", drawn from Sanskrit *paścāt* (CDIAL 7990). *milsū*, "we will meet", is the future of a verb CDIAL lists as Old Marwari *milaï*, "meets", under Sanskrit *milati* (CDIAL 10133).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-PACHHE-01, MW-LEX-MILSOO-01, MW-FAREWELL-LATER-HEARD-01] -->

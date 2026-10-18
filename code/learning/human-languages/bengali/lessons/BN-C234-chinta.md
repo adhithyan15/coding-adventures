@@ -14,7 +14,8 @@ romanization: "chintā"
 concept_tag: BN-JINIS234-CHINTA
 prerequisites: [BN-C234-shishi, BN-C234-smriti]
 sounds: []
-roots: []
+roots: [sanskrit-cinta]
+etymology_hook: "chintā ← Sanskrit cintā 'thought, care', a tatsama (CDIAL 4816)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C234-smriti]
 <!-- hl-knowledge: introduces=[BN-LEX-C234-JINIS234-03]; assesses=[] -->
 
 **চিন্তা** — *chintā* — "a thought; a worry".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**চিন্তা** (*chintā*) is Sanskrit *cintā*, "thought, care", taken over whole as a learned loan, a tatsama (CDIAL 4816).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

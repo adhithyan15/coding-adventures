@@ -14,7 +14,8 @@ romanization: "camkīlā"
 concept_tag: PA-QUAL142-CAMKILA
 prerequisites: [PA-C141-siddha, PA-C142-vinga]
 sounds: []
-roots: []
+roots: [indo-aryan-camakka]
+etymology_hook: "camkīlā: camak 'shine', from camakṇā 'to shine', listed under *camakka 'sudden movement' (CDIAL 4676), + -īlā"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C142-vinga]
 <!-- hl-knowledge: introduces=[PA-LEX-C142-QUAL142-02]; assesses=[] -->
 
 **ਚਮਕੀਲਾ** — *camkīlā* — "shiny".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਚਮਕੀਲਾ** (*camkīlā*) is built on *camak*, "shine", from *camakṇā*, "to shine", which CDIAL lists under a reconstructed *\*camakka*, "sudden movement" (CDIAL 4676), with the ending *-īlā*, "full of".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

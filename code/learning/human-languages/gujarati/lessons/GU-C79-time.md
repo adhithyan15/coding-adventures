@@ -14,7 +14,8 @@ romanization: "samay"
 concept_tag: GU-WEEK2-TIME
 prerequisites: [GU-C79-tomorrow, GU-C79-yesterday]
 sounds: []
-roots: []
+roots: [sanskrit-samaya]
+etymology_hook: "samay ← Sanskrit samaya 'meeting; agreement; time', a tatsama (CDIAL 13185)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C79-yesterday]
 <!-- hl-knowledge: introduces=[GU-LEX-C79-WEEK2-05]; assesses=[] -->
 
 **સમય** (*samay*) — "time".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**સમય** (*samay*) is Sanskrit *samaya*, "meeting; agreement; time", taken over whole as a learned loan, a tatsama (CDIAL 13185). CDIAL lists the inherited Gujarati form as *samo*, "time, season".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

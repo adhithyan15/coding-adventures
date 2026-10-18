@@ -11,8 +11,8 @@ gloss: clarified butter
 concept_tag: MW-FOOD-GHEE
 prerequisites: [MW-C18-daal]
 sounds: [aspirated-gh, long-ii]
-roots: []
-etymology_hook: One breathy beat names the fat that is poured over the other food words in this chapter.
+roots: [sanskrit-ghrta]
+etymology_hook: "ghī ← Sanskrit ghṛta 'fluid grease, clarified butter or ghee', a tadbhava (CDIAL 4501, Hindi and Gujarati rows)"
 duration:
   max_seconds: 145
 requires:
@@ -47,6 +47,11 @@ reviews_of: [MW-C18-daal, MW-C10-bajar, MW-C15-shopping-seven]
 
 One beat, opening with the same breathy sound heard at the start of *ghar*
 and *ghoṛo*. Hear it twice and say it once.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*ghī* is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *ghṛta*, "fluid grease, clarified butter or ghee". CDIAL gives no Marwari form in this entry (CDIAL 4501); the match is through Hindi *ghī* and Gujarati *ghī*.
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-GHEE-01] -->

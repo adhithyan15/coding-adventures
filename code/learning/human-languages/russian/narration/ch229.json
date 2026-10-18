@@ -4,7 +4,7 @@
   "chapter": 229,
   "title": "Secretary, Accountant, Manager, Programmer, Lecturer",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:b7575a52f35408ba",
+  "sourceHash": "fnv1a64:2465d6e57d024ef7",
   "lessons": [
     {
       "id": "RU-C229-sekretar",
@@ -555,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d6cf8dc603495ef3",
+      "sourceHash": "fnv1a64:9c01210a7af0dcc9",
       "notice": null,
       "blocks": [
         {
@@ -593,7 +593,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "преподаватель (prepodavátel) is преподавать, \"to teach\", with -тель, \"one who does it\". The verb is пре- and по- with давать, \"to give\"."
+              "text": "преподаватель (prepodavátel) is преподавать, \"to teach\", with -тель, \"one who does it\". The verb is пре- and по- with давать, \"to give\". Vasmer takes давать from дать, \"to give\", kin to Lithuanian dovanà, \"a gift\"."
             }
           ]
         },

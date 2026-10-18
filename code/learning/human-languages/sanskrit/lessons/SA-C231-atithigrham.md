@@ -14,7 +14,8 @@ romanization: "atithigṛham"
 concept_tag: SA-TRV231-ATITHIGRHAM
 prerequisites: [SA-C231-sthanam, SA-C231-nivasah]
 sounds: []
-roots: []
+roots: [sanskrit-atithi, grha-sanskrit]
+etymology_hook: "atithigṛha = atithi 'guest' + gṛha 'house'; MW says atithi is said to be 'one without a fixed day'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C231-nivasah]
 <!-- hl-knowledge: introduces=[SA-LEX-C231-TRV231-04]; assesses=[] -->
 
 **अतिथिगृहम्** — *atithigṛham* — "a guest house".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*atithigṛha* is a compound of *atithi*, "guest", and *gṛha*, "house" (MW). MW reports that *atithi* is said to come from *a-tithi*, "one who has no fixed day for coming", or from a root √at, "to wander". MW does not list the compound, so the pairing is modern.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

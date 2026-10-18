@@ -14,7 +14,8 @@ romanization: "śāṭikā"
 concept_tag: SA-THINGS104-SATIKA
 prerequisites: [SA-C103-kankanam, SA-C103-uttariyam]
 sounds: []
-roots: []
+roots: [sanskrit-shati]
+etymology_hook: "śāṭikā ← śāṭī 'strip of cloth' (MW) + -kā; it became Hindi sāṛī (CDIAL 12381), whence English sari (EtymDB)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C103-uttariyam]
 <!-- hl-knowledge: introduces=[SA-LEX-C104-THINGS104-01]; assesses=[] -->
 
 **शाटिका** — *śāṭikā* — "a sari".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*śāṭikā* is *śāṭī* "a strip of cloth, a garment" (MW) with the suffix *-kā*; MW takes *śāṭa* from a root √śaṭ with a query, so the deeper source is uncertain. *śāṭī* wore down into Hindi *sāṛī* (CDIAL 12381), the source of English *sari* (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -4,7 +4,7 @@
   "chapter": 15,
   "title": "Noon and Midnight",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:a6de25bc14521232",
+  "sourceHash": "fnv1a64:01e67bf6608b1a40",
   "lessons": [
     {
       "id": "AR-C15-ad-duhr-muntasaf-al-layl",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:910137b8e2eefbb4",
+      "sourceHash": "fnv1a64:df3b3c486a26adf9",
       "notice": null,
       "blocks": [
         {
@@ -63,6 +63,17 @@
         },
         {
           "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "الظهر (aẓ-ẓuhr), \"noon\", is built on the native root ẓ-h-r, \"to appear, to be outward\" (Lane). Muntaṣaf al-layl is \"the middle of the night\": muntaṣaf on n-ṣ-f, \"half\", with layl, \"night\" (Lane)."
+            }
+          ]
+        },
+        {
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -102,7 +113,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

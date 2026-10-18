@@ -11,8 +11,8 @@ gloss: because — the question of the last lesson with one syllable added, and 
 concept_tag: CONNECTIVE-BECAUSE
 prerequisites: [UR-C21-kaun, UR-C21-kyun, UR-C20-lekin]
 sounds: []
-roots: []
-etymology_hook: "کیونکہ is کیوں ('why') plus کہ ('that') welded into one word — Urdu builds 'because' by answering its own question, exactly as Spanish builds porque out of por qué and English once built forasmuch as"
+roots: [ka-interrogative, persian-ki]
+etymology_hook: "kyūṅki: kyūṅ 'why', on the inherited question stem ka-, + ki 'that', usually traced to Persian ki"
 duration:
   max_seconds: 240
 requires:
@@ -56,6 +56,11 @@ question in a single word.
 Spanish does exactly this: *por qué* asks, *porque* answers, and the only
 difference is a space and an accent. English did it too, in *forasmuch as*,
 before the phrase went out of use.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**کیونکہ** (*kyūṅki*) joins *kyūṅ*, "why", built on the inherited question stem *ka-* that also gives *kyā*, "what" (CDIAL 3164), and *ki*, "that", usually traced to Persian *ki*.
 
 ## Grammar Lens: claim first, reason after
 <!-- hl-knowledge: introduces=[]; assesses=[UR-LEX-KYUNKI, UR-LEX-LEKIN, UR-FUNC-THIK-HAI] -->

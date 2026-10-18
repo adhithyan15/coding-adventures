@@ -14,7 +14,8 @@ romanization: "labkhand zadan"
 concept_tag: FA-VERB-LABKHAND-ZADAN
 prerequisites: [FA-C219-tamrin-kardan, FA-C219-busidan]
 sounds: []
-roots: []
+roots: [persian-lab, persian-zadan]
+etymology_hook: "labkhand zadan: Persian lab 'lip' + khand 'laugh' (EtymDB) + zadan"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C219-busidan]
 <!-- hl-knowledge: introduces=[FA-LEX-C219-KONESH219-05]; assesses=[] -->
 
 **لبخند زدن** — *labkhand zadan* — "to smile".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*labkhand zadan* is "to strike a smile": *labkhand*, "smile", is *lab*, "lip", with *khand*, "laugh" (from *khandidan*, EtymDB): a lip-laugh. All are native Persian. *zadan*, "to strike", is an inherited verb; it is usually traced to Middle Persian *zadan*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -16,7 +16,7 @@ use diagram_ir::{
     DiagramShape, DiagramTextSpan, EdgeMarker,
     DiagramStyle, EdgeKind, GraphCallback, GraphDiagram, GraphEdge, GraphGroup, GraphLink, GraphNode, GridCell, GridColumns,
     GridConnection, GridDiagram, GridEdgeStyle, GridGroup, InfoDiagram, PacketConfig, PacketDiagram, PacketField,
-    PacketTheme, RailroadDiagram, RailroadExpression, RailroadRule, SwimlaneDiagram, SwimlaneEdge,
+    PacketTheme, RailroadConfig, RailroadDiagram, RailroadExpression, RailroadRule, SwimlaneDiagram, SwimlaneEdge,
     SwimlaneEdgeAnimation, SwimlaneEdgeCurve, SwimlaneEdgeKind, SwimlaneGroup, SwimlaneLane, SwimlaneLineHops, SwimlaneNode,
 };
 use grammar_tools::parser_grammar::parse_parser_grammar;
@@ -596,11 +596,11 @@ use diagram_ir::{
     StructuralGroupMetadata, StructuralKind, StructuralNode,
     GanttTaskTags, StructuralNodeKind, StructuralNodeMetadata, StructuralPort,
     StructuralRelationship, StructuralRouting, TaskEnd, TaskStart, TemporalBody, TemporalDiagram,
-    TemporalKind, TimelineDiagram, TimelineDirection,
-    TimelinePeriod, TimelineSection, TreemapDiagram, TreemapNode, VennDiagram, VennRegion,
+    TemporalKind, TimelineConfig, TimelineDiagram, TimelineDirection,
+    TimelinePeriod, TimelineSection, TreemapDiagram, TreemapNode, VennConfig, VennDiagram, VennRegion,
     VennStyle, VennText, XyAxisConfig, XyChartConfig,
-    CynefinConfig, CynefinDiagram, CynefinDomain, CynefinStyle, CynefinTransition, IshikawaCause, IshikawaDiagram,
-    WardleyDiagram, WardleyEvolution, WardleyLink, WardleyNode, TreeViewConfig, TreeViewDiagram, TreeViewNode,
+    CynefinConfig, CynefinDiagram, CynefinDomain, CynefinStyle, CynefinTransition, IshikawaCause, IshikawaConfig, IshikawaDiagram, IshikawaLook,
+    WardleyAnnotation, WardleyConfig, WardleyDiagram, WardleyEvolution, WardleyForce, WardleyForceKind, WardleyLink, WardleyLinkFlow, WardleyNode, WardleyNote, WardleyPipeline, WardleySourceStrategy, WardleyTheme, TreeViewConfig, TreeViewDiagram, TreeViewNode,
     TreeViewNodeKind, TreeViewTheme,
 };
 
@@ -1102,9 +1102,6 @@ pub fn parse_architecture(source: &str) -> Result<StructuralDiagram, ParseError>
             )?);
         }
     }
-    if diagram.nodes.is_empty() {
-        return Err(ParseError { message: "architecture diagram requires a service".into(), line: 1, col: 1 });
-    }
     Ok(diagram)
 }
 
@@ -1150,6 +1147,7 @@ fn parse_architecture_config(source: &str) -> ArchitectureConfig {
             .unwrap_or(defaults.ideal_edge_length_multiplier),
         edge_elasticity: bounded_number("edgeElasticity", 0.0, 1.0)
             .unwrap_or(defaults.edge_elasticity),
+        num_iter: integer("numIter").filter(|value| *value > 0).unwrap_or(defaults.num_iter),
         randomize: boolean("randomize").unwrap_or(defaults.randomize),
         seed: integer("seed").unwrap_or(defaults.seed),
     }
@@ -1193,6 +1191,9 @@ fn parse_architecture_junction(
     if id.is_empty() || id.contains(char::is_whitespace) {
         return Err(token_error(token, "invalid architecture junction identifier"));
     }
+    if matches!(id, "align" | "row" | "column") {
+        return Err(token_error(token, "reserved architecture identifier"));
+    }
     if parent.is_some_and(|parent| parent.is_empty() || parent.contains(char::is_whitespace)) {
         return Err(token_error(token, "invalid architecture parent group"));
     }
@@ -1217,6 +1218,9 @@ fn parse_architecture_declaration(
     if id.is_empty() {
         return Err(token_error(token, "architecture declaration requires an identifier"));
     }
+    if matches!(id.as_str(), "align" | "row" | "column") {
+        return Err(token_error(token, "reserved architecture identifier"));
+    }
     let mut rest = source[id_end..].trim_start();
     let mut icon_text = None;
     let icon = if rest.starts_with('(') {
@@ -1234,7 +1238,11 @@ fn parse_architecture_declaration(
     };
     let label = if rest.starts_with('[') {
         let end = rest.find(']').ok_or_else(|| token_error(token, "unterminated architecture title"))?;
-        let label = rest[1..end].trim().trim_matches(['"', '\'']).to_string();
+        let label = rest[1..end]
+            .trim()
+            .trim_matches(['"', '\''])
+            .replace("\\\"", "\"")
+            .replace("\\'", "'");
         rest = rest[end + 1..].trim_start();
         label
     } else {
@@ -1443,12 +1451,9 @@ pub fn parse_kanban(source: &str) -> Result<BoardDiagram, ParseError> {
         })?;
     let mut diagram = BoardDiagram { ticket_base_url, config, ..BoardDiagram::default() };
     let mut ids = HashSet::new();
-    let mut card_indent = None;
     let mut last_card: Option<(usize, usize)> = None;
     for token in lines {
         if token.type_name.as_deref() == Some("ICON_LINE") {
-            let (column_index, card_index) = last_card
-                .ok_or_else(|| token_error(token, "kanban icon must follow a card"))?;
             let value = token.value.trim();
             let icon = value
                 .strip_prefix("::icon(")
@@ -1456,7 +1461,12 @@ pub fn parse_kanban(source: &str) -> Result<BoardDiagram, ParseError> {
                 .map(str::trim)
                 .filter(|value| !value.is_empty())
                 .ok_or_else(|| token_error(token, "kanban icon name cannot be empty"))?;
-            diagram.columns[column_index].cards[card_index].icon = Some(icon.to_string());
+            if let Some((column_index, card_index)) = last_card {
+                diagram.columns[column_index].cards[card_index].icon = Some(icon.to_string());
+            } else if diagram.columns.is_empty() {
+                return Err(token_error(token, "kanban icon must follow a column or card"));
+            }
+            // Mermaid accepts section icons but drops them when producing renderer data.
             continue;
         }
         if token.type_name.as_deref() == Some("CLASS_LINE") {
@@ -1491,9 +1501,6 @@ pub fn parse_kanban(source: &str) -> Result<BoardDiagram, ParseError> {
             &mut ids,
         );
         if indent == column_indent {
-            if metadata.has_card_only_fields() {
-                return Err(token_error(token, "kanban card metadata requires a card"));
-            }
             diagram.columns.push(BoardColumn {
                 id,
                 label,
@@ -1503,13 +1510,6 @@ pub fn parse_kanban(source: &str) -> Result<BoardDiagram, ParseError> {
             });
             last_card = None;
         } else if indent > column_indent {
-            match card_indent {
-                Some(expected) if indent != expected => {
-                    return Err(token_error(token, "nested kanban cards are outside the supported subset"));
-                }
-                None => card_indent = Some(indent),
-                Some(_) => {}
-            }
             let column_index = diagram.columns.len().checked_sub(1)
                 .ok_or_else(|| token_error(token, "kanban card must follow a column"))?;
             let column = diagram.columns.get_mut(column_index)
@@ -1538,12 +1538,6 @@ struct KanbanNodeMetadata {
     assigned: Option<String>,
     priority: Option<String>,
     icon: Option<String>,
-}
-
-impl KanbanNodeMetadata {
-    fn has_card_only_fields(&self) -> bool {
-        self.assigned.is_some() || self.priority.is_some() || self.icon.is_some()
-    }
 }
 
 fn parse_kanban_node_metadata<'a>(
@@ -3867,12 +3861,13 @@ pub fn parse_timeline(source: &str) -> Result<(Option<String>, TimelineDiagram),
     let mut title = None;
     let mut accessibility_title = None;
     let mut accessibility_description = None;
-    let mut direction = TimelineDirection::TopDown;
+    let mut direction = TimelineDirection::LeftRight;
     let mut sections = Vec::<TimelineSection>::new();
     for token in tokens {
         match token.type_name.as_deref() {
             Some("HEADER_LR") => direction = TimelineDirection::LeftRight,
-            Some("HEADER_TD" | "HEADER") => direction = TimelineDirection::TopDown,
+            Some("HEADER_TD") => direction = TimelineDirection::TopDown,
+            Some("HEADER") => direction = TimelineDirection::LeftRight,
             Some("TITLE_STATEMENT") => {
                 title = Some(normalize_mermaid_line_breaks(token.value["title".len()..].trim()));
             }
@@ -3917,9 +3912,8 @@ pub fn parse_timeline(source: &str) -> Result<(Option<String>, TimelineDiagram),
                 let period = sections.last_mut()
                     .and_then(|section| section.periods.last_mut())
                     .ok_or_else(|| token_error(&token, "timeline event requires a preceding period"))?;
-                period.events.push(normalize_mermaid_line_breaks(
-                    token.value.trim_start_matches(':').trim(),
-                ));
+                period.events.extend(split_timeline_events(&token.value).into_iter()
+                    .map(|event| normalize_mermaid_line_breaks(&event)));
             }
             _ => {}
         }
@@ -3928,9 +3922,125 @@ pub fn parse_timeline(source: &str) -> Result<(Option<String>, TimelineDiagram),
     Ok((title, TimelineDiagram {
         accessibility_title,
         accessibility_description,
+        config: parse_timeline_config(source),
         direction,
         sections,
     }))
+}
+
+fn split_timeline_events(raw: &str) -> Vec<String> {
+    let content = raw.trim_start().strip_prefix(':').unwrap_or(raw).trim_start();
+    let mut events = Vec::new();
+    let mut start = 0usize;
+    for (index, character) in content.char_indices() {
+        if character == ':' && content[index + 1..].chars().next().is_some_and(char::is_whitespace) {
+            let event = content[start..index].trim();
+            if !event.is_empty() { events.push(event.to_string()); }
+            start = index + 1;
+        }
+    }
+    let event = content[start..].trim();
+    if !event.is_empty() { events.push(event.to_string()); }
+    events
+}
+
+fn parse_timeline_config(source: &str) -> TimelineConfig {
+    let defaults = TimelineConfig::default();
+    let root_front_matter = mermaid_front_matter_section(source, &["config"]);
+    let front_matter = mermaid_front_matter_section(source, &["config", "timeline"]);
+    let config = mermaid_directive_object(source, "timeline")
+        .or(front_matter.as_deref())
+        .unwrap_or("");
+    let value = |name: &str| {
+        quadrant_directive_value(config, name).or_else(|| {
+            config.lines().find_map(|line| {
+                let (key, value) = line.trim().split_once(':')?;
+                (key.trim() == name)
+                    .then(|| value.trim().trim_matches(['"', '\'']).to_string())
+            })
+        })
+    };
+    let boolean = |name: &str, fallback: bool| {
+        value(name)
+            .and_then(|value| match value.to_ascii_lowercase().as_str() {
+                "true" => Some(true),
+                "false" => Some(false),
+                _ => None,
+            })
+            .unwrap_or(fallback)
+    };
+    let padding = value("padding")
+        .and_then(|value| value.parse::<f64>().ok())
+        .filter(|value| value.is_finite() && *value >= 0.0)
+        .unwrap_or(defaults.padding);
+    let left_margin = value("leftMargin")
+        .and_then(|value| value.parse::<f64>().ok())
+        .filter(|value| value.is_finite() && *value >= 0.0)
+        .unwrap_or(defaults.left_margin);
+    let root_value = |name: &str| quadrant_directive_value(source, name).or_else(|| {
+        root_front_matter.as_deref().and_then(|config| config.lines().find_map(|line| {
+            let (key, value) = line.trim().split_once(':')?;
+            (key.trim() == name)
+                .then(|| value.trim().trim_matches(['"', '\'']).to_string())
+        }))
+    });
+    let font_size = root_value("fontSize")
+        .and_then(parse_mermaid_font_size)
+        .filter(|value| value.is_finite() && *value > 0.0)
+        .unwrap_or(defaults.font_size);
+    let theme_front_matter = mermaid_front_matter_section(source, &["config", "themeVariables"])
+        .or_else(|| mermaid_front_matter_section(source, &["themeVariables"]));
+    let theme = mermaid_directive_object(source, "themeVariables")
+        .or(theme_front_matter.as_deref())
+        .unwrap_or("");
+    let theme_value = |name: &str| quadrant_directive_value(theme, name).or_else(|| {
+        theme.lines().find_map(|line| {
+            let (key, value) = line.trim().split_once(':')?;
+            (key.trim() == name)
+                .then(|| value.trim().trim_matches(['"', '\'']).to_string())
+        })
+    });
+    TimelineConfig {
+        padding,
+        left_margin,
+        font_size,
+        font_family: sanitize_railroad_font_family(
+            theme_value("fontFamily").as_deref(),
+            &defaults.font_family,
+        ),
+        use_max_width: boolean("useMaxWidth", defaults.use_max_width),
+        disable_multicolor: boolean("disableMulticolor", defaults.disable_multicolor),
+        section_colors: parse_timeline_theme_colors(source, "cScale", &defaults.section_colors),
+        section_label_colors: parse_timeline_theme_colors(
+            source,
+            "cScaleLabel",
+            &defaults.section_label_colors,
+        ),
+        section_inverse_colors: parse_timeline_theme_colors(
+            source,
+            "cScaleInv",
+            &defaults.section_inverse_colors,
+        ),
+    }
+}
+
+fn parse_timeline_theme_colors(source: &str, prefix: &str, defaults: &[String]) -> Vec<String> {
+    let front_matter = mermaid_front_matter_section(source, &["config", "themeVariables"])
+        .or_else(|| mermaid_front_matter_section(source, &["themeVariables"]));
+    let theme = mermaid_directive_object(source, "themeVariables")
+        .or(front_matter.as_deref())
+        .unwrap_or("");
+    defaults.iter().enumerate().map(|(index, fallback)| {
+        let key = format!("{prefix}{index}");
+        let value = quadrant_directive_value(theme, &key).or_else(|| {
+            theme.lines().find_map(|line| {
+                let (name, value) = line.trim().split_once(':')?;
+                (name.trim() == key)
+                    .then(|| value.trim().trim_matches(['"', '\'']).to_string())
+            })
+        });
+        sanitize_railroad_color(value.as_deref(), fallback)
+    }).collect()
 }
 
 fn parse_mermaid_font_size(value: String) -> Option<f64> {
@@ -4701,12 +4811,12 @@ pub fn parse_treemap(source: &str) -> Result<TreemapDiagram, ParseError> {
     for token in tokens.iter().filter(|token| token_name(token) == "CLASS_DEF_STATEMENT") {
         let declaration = token.value.trim().trim_end_matches(';').trim();
         let value = declaration.strip_prefix("classDef").expect("grammar requires classDef").trim();
-        let (name, declarations) = value.split_once(char::is_whitespace)
-            .ok_or_else(|| token_error(token, "treemap classDef requires a name and style"))?;
+        let mut parts = value.splitn(2, char::is_whitespace);
+        let name = parts.next().expect("grammar requires a class name");
+        let declarations = parts.next().unwrap_or("").trim();
         class_styles.insert(name.to_string(), parse_treemap_style(token, declarations)?);
     }
     let mut ancestors = Vec::<(usize, String)>::new();
-    let mut seen_root = false;
 
     for (line_index, line) in prepared.lines().enumerate() {
         let trimmed = line.trim();
@@ -4740,16 +4850,6 @@ pub fn parse_treemap(source: &str) -> Result<TreemapDiagram, ParseError> {
             .take_while(|character| character.is_whitespace())
             .map(|character| if character == '\t' { 4 } else { 1 })
             .sum::<usize>();
-        if indentation == 0 {
-            if seen_root {
-                return Err(ParseError {
-                    message: "Multiple root nodes are not allowed in a treemap.".into(),
-                    line: line_index + 1,
-                    col: 1,
-                });
-            }
-            seen_root = true;
-        }
         let quote = trimmed.chars().next().unwrap_or_default();
         let closing = trimmed[1..].find(quote).map(|offset| offset + 1).ok_or_else(|| ParseError {
             message: "unterminated treemap node label".into(),
@@ -5423,6 +5523,7 @@ fn merge_treemap_node_style(target: &mut DiagramStyle, source: &DiagramStyle) {
 
 /// Parse Mermaid 11.16.1 Venn declarations into dedicated set IR.
 pub fn parse_venn(source: &str) -> Result<VennDiagram, ParseError> {
+    let config = parse_venn_config(source);
     let prepared = prepare_line_grammar_source(source)?;
     let tokens = try_tokenize_mermaid_venn(&prepared).map_err(|message| ParseError { message, line: 1, col: 1 })?;
     let grammar = parse_parser_grammar(VENN_PARSER_GRAMMAR_SOURCE)
@@ -5430,7 +5531,7 @@ pub fn parse_venn(source: &str) -> Result<VennDiagram, ParseError> {
     GrammarParser::new(tokens, grammar).with_max_depth(MAX_RULE_DEPTH).parse()
         .map_err(|error| ParseError { message: error.message, line: error.token.line, col: error.token.column })?;
 
-    let mut diagram = VennDiagram::default();
+    let mut diagram = VennDiagram { config, ..Default::default() };
     let mut known_sets = std::collections::HashSet::new();
     let mut current_sets: Option<Vec<String>> = None;
     let mut pending_styles = Vec::<(Vec<String>, VennStyle)>::new();
@@ -5472,11 +5573,53 @@ pub fn parse_venn(source: &str) -> Result<VennDiagram, ParseError> {
     }
     for (mut targets, style) in pending_styles {
         targets.sort();
-        if let Some(region) = diagram.regions.iter_mut().find(|region| region.sets == targets) { region.style = style; }
-        else if targets.len() == 1 { if let Some(text) = diagram.texts.iter_mut().find(|text| text.id == targets[0]) { text.style = style; } }
+        if let Some(region) = diagram.regions.iter_mut().find(|region| region.sets == targets) {
+            merge_venn_style(&mut region.style, style);
+        } else if targets.len() == 1 {
+            if let Some(text) = diagram.texts.iter_mut().find(|text| text.id == targets[0]) {
+                merge_venn_style(&mut text.style, style);
+            }
+        }
     }
     if diagram.regions.iter().all(|region| region.sets.len() != 1) { return Err(venn_error(1, "venn requires at least one set")); }
     Ok(diagram)
+}
+
+fn parse_venn_config(source: &str) -> VennConfig {
+    let defaults = VennConfig::default();
+    let front_matter = mermaid_front_matter_section(source, &["config", "venn"]);
+    let config = mermaid_directive_object(source, "venn").or(front_matter.as_deref()).unwrap_or("");
+    let value = |name: &str| {
+        quadrant_directive_value(config, name).or_else(|| config.lines().find_map(|line| {
+            let (key, value) = line.trim().split_once(':')?;
+            (key.trim() == name).then(|| value.trim().trim_matches(['"', '\'']).to_string())
+        }))
+    };
+    let positive = |name: &str, fallback: f64| value(name).and_then(|value| value.parse::<f64>().ok())
+        .filter(|value| value.is_finite() && *value > 0.0).unwrap_or(fallback);
+    let non_negative = |name: &str, fallback: f64| value(name).and_then(|value| value.parse::<f64>().ok())
+        .filter(|value| value.is_finite() && *value >= 0.0).unwrap_or(fallback);
+    let boolean = |name: &str, fallback: bool| value(name).and_then(|value| match value.to_ascii_lowercase().as_str() {
+        "true" => Some(true), "false" => Some(false), _ => None,
+    }).unwrap_or(fallback);
+    let theme_front = mermaid_front_matter_section(source, &["themeVariables"]);
+    let theme = mermaid_directive_object(source, "themeVariables").or(theme_front.as_deref()).unwrap_or("");
+    let theme_value = |name: &str| quadrant_directive_value(theme, name).or_else(|| theme.lines().find_map(|line| {
+        let (key, value) = line.trim().split_once(':')?;
+        (key.trim() == name).then(|| value.trim().trim_matches(['"', '\'']).to_string())
+    }));
+    let title_text_color = sanitize_railroad_color(
+        theme_value("vennTitleTextColor").or_else(|| theme_value("titleColor")).as_deref(), &defaults.title_text_color);
+    let set_text_color = sanitize_railroad_color(
+        theme_value("vennSetTextColor").or_else(|| theme_value("textColor")).as_deref(), &defaults.set_text_color);
+    let font_family = sanitize_railroad_font_family(theme_value("fontFamily").as_deref(), &defaults.font_family);
+    let theme_colors = defaults.theme_colors.iter().enumerate().map(|(index, fallback)| {
+        sanitize_railroad_color(theme_value(&format!("venn{}", index + 1)).as_deref(), fallback)
+    }).collect();
+    VennConfig { width: positive("width", defaults.width), height: positive("height", defaults.height),
+        padding: non_negative("padding", defaults.padding), use_max_width: boolean("useMaxWidth", defaults.use_max_width),
+        use_debug_layout: boolean("useDebugLayout", defaults.use_debug_layout), font_family, title_text_color, set_text_color,
+        theme_colors }
 }
 
 fn strip_keyword_ci<'a>(line: &'a str, keyword: &str) -> Option<&'a str> {
@@ -5522,11 +5665,45 @@ fn parse_venn_style(raw: &str, line: usize) -> Result<VennStyle, ParseError> {
         let (name, value) = property.split_once(':').ok_or_else(|| venn_error(line, "invalid Venn style property"))?;
         let value = value.trim().trim_matches('"').to_string();
         match name.trim().to_ascii_lowercase().as_str() {
-            "fill" => style.fill = Some(value), "stroke" => style.stroke = Some(value), "color" => style.text_color = Some(value),
-            "stroke-width" => style.stroke_width = value.trim_end_matches("px").parse().ok(), "fill-opacity" => style.fill_opacity = value.parse().ok(), _ => {}
+            "fill" => style.fill = Some(parse_venn_style_color(&value, line, "fill")?),
+            "stroke" => style.stroke = Some(parse_venn_style_color(&value, line, "stroke")?),
+            "color" => style.text_color = Some(parse_venn_style_color(&value, line, "color")?),
+            "stroke-width" => style.stroke_width = Some(parse_venn_style_number(
+                value.trim_end_matches("px"), line, "stroke-width", |number| number >= 0.0)?),
+            "fill-opacity" => style.fill_opacity = Some(parse_venn_style_number(
+                &value, line, "fill-opacity", |number| (0.0..=1.0).contains(&number))?),
+            _ => {}
         }
     }
     Ok(style)
+}
+
+fn parse_venn_style_color(value: &str, line: usize, property: &str) -> Result<String, ParseError> {
+    let sanitized = sanitize_railroad_color(Some(value), "");
+    if sanitized.is_empty() {
+        Err(venn_error(line, format!("invalid Venn {property} color")))
+    } else {
+        Ok(sanitized)
+    }
+}
+
+fn parse_venn_style_number(
+    value: &str, line: usize, property: &str, valid: impl FnOnce(f64) -> bool,
+) -> Result<f64, ParseError> {
+    let number = value.parse::<f64>().map_err(|_| venn_error(line, format!("invalid Venn {property}")))?;
+    if number.is_finite() && valid(number) {
+        Ok(number)
+    } else {
+        Err(venn_error(line, format!("invalid Venn {property}")))
+    }
+}
+
+fn merge_venn_style(base: &mut VennStyle, overlay: VennStyle) {
+    if overlay.fill.is_some() { base.fill = overlay.fill; }
+    if overlay.stroke.is_some() { base.stroke = overlay.stroke; }
+    if overlay.stroke_width.is_some() { base.stroke_width = overlay.stroke_width; }
+    if overlay.text_color.is_some() { base.text_color = overlay.text_color; }
+    if overlay.fill_opacity.is_some() { base.fill_opacity = overlay.fill_opacity; }
 }
 
 fn split_venn_style_properties(raw: &str) -> Vec<&str> {
@@ -5545,7 +5722,7 @@ fn venn_error(line: usize, message: impl Into<String>) -> ParseError { ParseErro
 
 /// Parse Mermaid 11.16.1 indentation-based Ishikawa diagrams into causal IR.
 pub fn parse_ishikawa(source: &str) -> Result<IshikawaDiagram, ParseError> {
-    let diagram_padding = parse_ishikawa_padding(source);
+    let config = parse_ishikawa_config(source);
     let prepared = prepare_line_grammar_source(source)?;
     let tokens = try_tokenize_mermaid_ishikawa(&prepared).map_err(|message| ParseError { message, line: 1, col: 1 })?;
     let grammar = parse_parser_grammar(ISHIKAWA_PARSER_GRAMMAR_SOURCE)
@@ -5553,43 +5730,81 @@ pub fn parse_ishikawa(source: &str) -> Result<IshikawaDiagram, ParseError> {
     GrammarParser::new(tokens, grammar).with_max_depth(MAX_RULE_DEPTH).parse()
         .map_err(|error| ParseError { message: error.message, line: error.token.line, col: error.token.column })?;
 
+    let mut saw_header = false;
     let lines: Vec<_> = prepared.lines().enumerate().filter_map(|(index, line)| {
         let text = line.trim();
-        if text.is_empty() || matches!(text.to_ascii_lowercase().as_str(), "ishikawa" | "ishikawa-beta") { None }
-        else { Some((index + 1, indentation_width(line), text.to_string())) }
+        if text.is_empty() {
+            None
+        } else if !saw_header {
+            saw_header = true;
+            let header_length = if text.get(..13).is_some_and(|head| head.eq_ignore_ascii_case("ishikawa-beta")) {
+                13
+            } else {
+                8
+            };
+            let effect = text[header_length..].trim_start();
+            (!effect.is_empty()).then(|| (index + 1, 0, effect.to_string()))
+        } else {
+            Some((index + 1, indentation_width(line), text.to_string()))
+        }
     }).collect();
     let Some((_, _, effect)) = lines.first() else { return Err(ParseError { message: "ishikawa requires an effect".into(), line: 1, col: 1 }); };
     let mut causes = Vec::new();
     let mut stack = Vec::<(usize, String)>::new();
+    let mut base_level = None;
     for (line, indentation, label) in lines.iter().skip(1) {
-        let effective_indent = *indentation;
-        while stack.last().is_some_and(|(level, _)| *level >= effective_indent) { stack.pop(); }
+        let base_level = *base_level.get_or_insert(*indentation);
+        let level = indentation.saturating_sub(base_level) + 1;
+        while stack.last().is_some_and(|(stack_level, _)| *stack_level >= level) { stack.pop(); }
         let parent_id = stack.last().map(|(_, id)| id.clone());
         let id = format!("cause-{}", causes.len() + 1);
         let depth = parent_id.as_ref().and_then(|parent| causes.iter().find(|cause: &&IshikawaCause| &cause.id == parent)).map_or(1, |cause| cause.depth + 1);
         if label.is_empty() { return Err(ParseError { message: "empty Ishikawa cause".into(), line: *line, col: 1 }); }
         causes.push(IshikawaCause { id: id.clone(), label: label.clone(), parent_id, depth });
-        stack.push((effective_indent, id));
+        stack.push((level, id));
     }
-    Ok(IshikawaDiagram { effect: effect.clone(), causes, diagram_padding })
+    Ok(IshikawaDiagram { effect: effect.clone(), causes, config })
 }
 
-fn parse_ishikawa_padding(source: &str) -> f64 {
+fn parse_ishikawa_config(source: &str) -> IshikawaConfig {
+    let defaults = IshikawaConfig::default();
+    let root_front_matter = mermaid_front_matter_section(source, &["config"]);
     let front_matter = mermaid_front_matter_section(source, &["config", "ishikawa"]);
     let config = mermaid_directive_object(source, "ishikawa")
         .or(front_matter.as_deref())
         .unwrap_or("");
-    quadrant_directive_value(config, "diagramPadding")
-        .or_else(|| {
-            config.lines().find_map(|line| {
-                let (name, value) = line.trim().split_once(':')?;
-                (name.trim() == "diagramPadding")
-                    .then(|| value.trim().trim_matches(['"', '\'']).to_string())
-            })
-        })
-        .and_then(|value| value.parse::<f64>().ok())
-        .filter(|value| value.is_finite() && *value >= 0.0)
-        .unwrap_or(20.0)
+    let value = |name: &str| quadrant_directive_value(config, name).or_else(|| config.lines().find_map(|line| {
+        let (key, value) = line.trim().split_once(':')?;
+        (key.trim() == name).then(|| value.trim().trim_matches(['"', '\'']).to_string())
+    }));
+    let diagram_padding = value("diagramPadding").and_then(|value| value.parse::<f64>().ok())
+        .filter(|value| value.is_finite() && *value >= 0.0).unwrap_or(defaults.diagram_padding);
+    let use_max_width = value("useMaxWidth").and_then(|value| match value.to_ascii_lowercase().as_str() {
+        "true" => Some(true), "false" => Some(false), _ => None,
+    }).unwrap_or(defaults.use_max_width);
+    let root_value = |name: &str| quadrant_directive_value(source, name).or_else(|| root_front_matter.as_deref().and_then(|config| config.lines().find_map(|line| {
+        let (key, value) = line.trim().split_once(':')?;
+        (key.trim() == name).then(|| value.trim().trim_matches(['"', '\'']).to_string())
+    })));
+    let font_size = root_value("fontSize").and_then(parse_mermaid_font_size)
+        .filter(|value| value.is_finite() && *value > 0.0).unwrap_or(defaults.font_size);
+    let look = match root_value("look").as_deref() {
+        Some(value) if value.eq_ignore_ascii_case("handdrawn") => IshikawaLook::HandDrawn,
+        _ => IshikawaLook::Classic,
+    };
+    let hand_drawn_seed = root_value("handDrawnSeed").and_then(|value| value.parse::<i64>().ok())
+        .unwrap_or(defaults.hand_drawn_seed);
+    let theme_front = mermaid_front_matter_section(source, &["themeVariables"]);
+    let theme = mermaid_directive_object(source, "themeVariables").or(theme_front.as_deref()).unwrap_or("");
+    let theme_value = |name: &str| quadrant_directive_value(theme, name).or_else(|| theme.lines().find_map(|line| {
+        let (key, value) = line.trim().split_once(':')?;
+        (key.trim() == name).then(|| value.trim().trim_matches(['"', '\'']).to_string())
+    }));
+    IshikawaConfig { diagram_padding, use_max_width, font_size, look, hand_drawn_seed,
+        font_family: sanitize_railroad_font_family(theme_value("fontFamily").as_deref(), &defaults.font_family),
+        line_color: sanitize_railroad_color(theme_value("lineColor").as_deref(), &defaults.line_color),
+        fill_color: sanitize_railroad_color(theme_value("mainBkg").as_deref(), &defaults.fill_color),
+        text_color: sanitize_railroad_color(theme_value("textColor").as_deref(), &defaults.text_color) }
 }
 
 fn indentation_width(line: &str) -> usize {
@@ -5600,29 +5815,64 @@ fn indentation_width(line: &str) -> usize {
 
 /// Parse the coordinate-based core of Mermaid 11.16.1 Wardley maps.
 pub fn parse_wardley(source: &str) -> Result<WardleyDiagram, ParseError> {
-    let prepared = prepare_line_grammar_source(source)?;
+    let config = parse_wardley_config(source);
+    let (prepared, multiline_descriptions) = prepare_wardley_source(source)?;
     let tokens = try_tokenize_mermaid_wardley(&prepared).map_err(|message| ParseError { message, line: 1, col: 1 })?;
     let grammar = parse_parser_grammar(WARDLEY_PARSER_GRAMMAR_SOURCE)
         .unwrap_or_else(|error| panic!("Failed to parse wardley.grammar: {error}"));
     GrammarParser::new(tokens, grammar).with_max_depth(MAX_RULE_DEPTH).parse()
         .map_err(|error| ParseError { message: error.message, line: error.token.line, col: error.token.column })?;
-    let mut diagram = WardleyDiagram { title: None, width: 1100.0, height: 600.0,
-        stages: vec!["Genesis".into(), "Custom".into(), "Product".into(), "Commodity".into()],
-        nodes: Vec::new(), links: Vec::new(), evolves: Vec::new() };
+    let mut diagram = WardleyDiagram { title: None, accessibility_title: None, accessibility_description: None, config,
+        stages: vec!["Genesis".into(), "Custom Built".into(), "Product".into(), "Commodity".into()],
+        stage_boundaries: Vec::new(),
+        nodes: Vec::new(), links: Vec::new(), evolves: Vec::new(), notes: Vec::new(), annotations_box: None, annotations: Vec::new(), forces: Vec::new(), pipelines: Vec::new() };
+    let mut active_pipeline: Option<usize> = None;
     for (index, raw) in prepared.lines().enumerate() {
         let line_number = index + 1;
         let line = raw.split("%%").next().unwrap_or("").trim();
         if line.is_empty() || line.eq_ignore_ascii_case("wardley-beta") { continue; }
+        if let Some(pipeline_index) = active_pipeline {
+            if line == "}" {
+                if diagram.pipelines[pipeline_index].component_ids.is_empty() {
+                    return Err(wardley_error(line_number, "Wardley pipeline requires at least one component"));
+                }
+                active_pipeline = None; continue;
+            }
+            let Some(value) = line.strip_prefix("component ") else {
+                return Err(wardley_error(line_number, "Wardley pipeline bodies only accept components"));
+            };
+            let parent_id = diagram.pipelines[pipeline_index].parent_id.clone();
+            let parent_visibility = diagram.nodes.iter().find(|node| node.id == parent_id)
+                .map(|node| node.visibility).ok_or_else(|| wardley_error(line_number, "unknown Wardley pipeline parent"))?;
+            let node = parse_wardley_pipeline_component(value, parent_visibility, line_number, diagram.nodes.len())?;
+            diagram.pipelines[pipeline_index].component_ids.push(node.id.clone()); diagram.nodes.push(node); continue;
+        }
+        if line == "}" { return Err(wardley_error(line_number, "unexpected Wardley pipeline terminator")); }
         if let Some(value) = line.strip_prefix("title ") { diagram.title = Some(value.trim().to_string()); continue; }
+        if let Some((_, value)) = line.split_once(':').filter(|(keyword, _)| keyword.trim() == "accTitle") {
+            diagram.accessibility_title = Some(value.trim().to_string()); continue;
+        }
+        if let Some((_, value)) = line.split_once(':').filter(|(keyword, _)| keyword.trim() == "accDescr") {
+            let value = value.trim();
+            diagram.accessibility_description = value.strip_prefix("__WARDLEY_MULTILINE_")
+                .and_then(|index| index.parse::<usize>().ok())
+                .and_then(|index| multiline_descriptions.get(index).cloned())
+                .or_else(|| Some(value.to_string()));
+            continue;
+        }
         if let Some(value) = line.strip_prefix("size ") {
             let (width, height) = parse_wardley_coordinates(value, line_number)?;
             if width <= 0.0 || height <= 0.0 { return Err(wardley_error(line_number, "size must be positive")); }
-            diagram.width = width; diagram.height = height; continue;
+            diagram.config.width = width; diagram.config.height = height; continue;
         }
         if let Some(value) = line.strip_prefix("evolution ") {
-            let stages: Vec<_> = value.split("->").map(|stage| stage.trim().split('@').next().unwrap_or("").trim().trim_matches('"').to_string()).collect();
-            if stages.len() < 2 || stages.iter().any(String::is_empty) { return Err(wardley_error(line_number, "evolution requires at least two stages")); }
-            diagram.stages = stages; continue;
+            let parsed: Result<Vec<_>, _> = value.split("->").map(|stage| parse_wardley_stage(stage, line_number)).collect();
+            let parsed = parsed?;
+            if parsed.len() < 2 || parsed.iter().any(|(label, _)| label.is_empty()) {
+                return Err(wardley_error(line_number, "evolution requires at least two stages"));
+            }
+            diagram.stage_boundaries = parsed.iter().filter_map(|(_, boundary)| *boundary).collect();
+            diagram.stages = parsed.into_iter().map(|(label, _)| label).collect(); continue;
         }
         if let Some(value) = line.strip_prefix("anchor ") {
             diagram.nodes.push(parse_wardley_node(value, true, line_number, diagram.nodes.len())?); continue;
@@ -5630,15 +5880,71 @@ pub fn parse_wardley(source: &str) -> Result<WardleyDiagram, ParseError> {
         if let Some(value) = line.strip_prefix("component ") {
             diagram.nodes.push(parse_wardley_node(value, false, line_number, diagram.nodes.len())?); continue;
         }
+        if let Some(value) = line.strip_prefix("pipeline ") {
+            let Some(parent) = value.strip_suffix('{') else { return Err(wardley_error(line_number, "Wardley pipeline requires an opening brace")); };
+            let parent = wardley_name(parent);
+            let Some(parent_node) = diagram.nodes.iter_mut().find(|node| node.label == parent) else {
+                return Err(wardley_error(line_number, format!("Wardley pipeline {parent} must reference an existing component")));
+            };
+            parent_node.pipeline_parent = true;
+            diagram.pipelines.push(WardleyPipeline { parent_id: parent_node.id.clone(), component_ids: Vec::new() });
+            active_pipeline = Some(diagram.pipelines.len() - 1); continue;
+        }
         if let Some(value) = line.strip_prefix("evolve ") {
             let Some((name, target)) = value.rsplit_once(char::is_whitespace) else { return Err(wardley_error(line_number, "invalid evolve statement")); };
             let target = target.parse::<f64>().map_err(|_| wardley_error(line_number, "invalid evolve target"))?;
             if !(0.0..=1.0).contains(&target) { return Err(wardley_error(line_number, "evolve target must be between 0 and 1")); }
             diagram.evolves.push(WardleyEvolution { component: wardley_name(name), target }); continue;
         }
-        if let Some((source, target)) = line.split_once("->") {
-            diagram.links.push(WardleyLink { source: wardley_name(source), target: wardley_name(target) }); continue;
+        if let Some(value) = line.strip_prefix("note ") {
+            let Some(open) = value.rfind('[') else { return Err(wardley_error(line_number, "Wardley note requires coordinates")); };
+            let authored_text = value[..open].trim();
+            if authored_text.len() < 2 || !matches!((authored_text.chars().next(), authored_text.chars().last()),
+                (Some('"'), Some('"')) | (Some('\''), Some('\''))) {
+                return Err(wardley_error(line_number, "Wardley note text must be quoted"));
+            }
+            let (visibility, evolution) = parse_wardley_coordinates(&value[open..], line_number)?;
+            if !(0.0..=1.0).contains(&visibility) || !(0.0..=1.0).contains(&evolution) {
+                return Err(wardley_error(line_number, "Wardley note coordinates must be between 0 and 1"));
+            }
+            diagram.notes.push(WardleyNote { text: wardley_name(authored_text), visibility, evolution }); continue;
         }
+        if let Some(value) = line.strip_prefix("accelerator ") {
+            diagram.forces.push(parse_wardley_force(value, WardleyForceKind::Accelerator, line_number)?); continue;
+        }
+        if let Some(value) = line.strip_prefix("deaccelerator ") {
+            diagram.forces.push(parse_wardley_force(value, WardleyForceKind::Deaccelerator, line_number)?); continue;
+        }
+        if let Some(value) = line.strip_prefix("annotations ") {
+            let (visibility, evolution) = parse_wardley_coordinates(value, line_number)?;
+            if !(0.0..=1.0).contains(&visibility) || !(0.0..=1.0).contains(&evolution) {
+                return Err(wardley_error(line_number, "Wardley annotations box coordinates must be between 0 and 1"));
+            }
+            diagram.annotations_box = Some((visibility, evolution)); continue;
+        }
+        if let Some(value) = line.strip_prefix("annotation ") {
+            let Some((number, remainder)) = value.split_once(',') else { return Err(wardley_error(line_number, "invalid Wardley annotation")); };
+            let number = number.trim().parse::<usize>().map_err(|_| wardley_error(line_number, "invalid Wardley annotation number"))?;
+            let Some(close) = remainder.find(']') else { return Err(wardley_error(line_number, "Wardley annotation requires coordinates")); };
+            let (visibility, evolution) = parse_wardley_coordinates(&remainder[..=close], line_number)?;
+            let authored_text = remainder[close + 1..].trim();
+            if authored_text.len() < 2 || !matches!((authored_text.chars().next(), authored_text.chars().last()),
+                (Some('"'), Some('"')) | (Some('\''), Some('\''))) {
+                return Err(wardley_error(line_number, "Wardley annotation text must be quoted"));
+            }
+            if !(0.0..=1.0).contains(&visibility) || !(0.0..=1.0).contains(&evolution) {
+                return Err(wardley_error(line_number, "Wardley annotation coordinates must be between 0 and 1"));
+            }
+            if let Some(annotation) = diagram.annotations.iter_mut().find(|annotation| annotation.number == number) {
+                annotation.coordinates.push((visibility, evolution));
+                if annotation.text.is_empty() { annotation.text = wardley_name(authored_text); }
+            } else {
+                diagram.annotations.push(WardleyAnnotation { number, text: wardley_name(authored_text),
+                    coordinates: vec![(visibility, evolution)] });
+            }
+            continue;
+        }
+        if let Some(link) = parse_wardley_link(line, line_number)? { diagram.links.push(link); continue; }
         return Err(wardley_error(line_number, format!("unsupported Wardley statement: {line}")));
     }
     let names: HashSet<_> = diagram.nodes.iter().map(|node| node.label.as_str()).collect();
@@ -5648,17 +5954,266 @@ pub fn parse_wardley(source: &str) -> Result<WardleyDiagram, ParseError> {
     if let Some(evolve) = diagram.evolves.iter().find(|evolve| !names.contains(evolve.component.as_str())) {
         return Err(wardley_error(1, format!("unknown evolved component {}", evolve.component)));
     }
+    if active_pipeline.is_some() { return Err(wardley_error(prepared.lines().count(), "unterminated Wardley pipeline")); }
     Ok(diagram)
 }
 
+fn prepare_wardley_source(source: &str) -> Result<(String, Vec<String>), ParseError> {
+    let prepared = prepare_line_grammar_source(source)?;
+    let lines: Vec<_> = prepared.lines().collect(); let mut output = Vec::with_capacity(lines.len());
+    let mut multiline_descriptions = Vec::new(); let mut index = 0usize;
+    while index < lines.len() {
+        let trimmed = lines[index].trim();
+        let Some(after_keyword) = trimmed.strip_prefix("accDescr") else {
+            output.push(lines[index].to_string()); index += 1; continue;
+        };
+        let Some(mut remainder) = after_keyword.trim_start().strip_prefix('{') else {
+            output.push(lines[index].to_string()); index += 1; continue;
+        };
+        let start_line = index + 1; let mut description = Vec::new();
+        loop {
+            if let Some((content, trailing)) = remainder.split_once('}') {
+                if !trailing.trim().is_empty() {
+                    return Err(wardley_error(index + 1, "unexpected content after Wardley accessibility description"));
+                }
+                description.push(content.trim()); break;
+            }
+            description.push(remainder.trim()); index += 1;
+            if index == lines.len() { return Err(wardley_error(start_line, "unterminated Wardley accessibility description")); }
+            remainder = lines[index];
+        }
+        while description.first().is_some_and(|line| line.is_empty()) { description.remove(0); }
+        while description.last().is_some_and(|line| line.is_empty()) { description.pop(); }
+        let description_index = multiline_descriptions.len(); multiline_descriptions.push(description.join("\n"));
+        output.push(format!("accDescr: __WARDLEY_MULTILINE_{description_index}")); index += 1;
+    }
+    Ok((output.join("\n"), multiline_descriptions))
+}
+
+fn parse_wardley_link(value: &str, line: usize) -> Result<Option<WardleyLink>, ParseError> {
+    let Some(operator) = wardley_link_operator(value) else { return Ok(None); };
+    let source = wardley_name(&value[..operator.start]);
+    let (target, annotation) = split_wardley_link_annotation(&value[operator.end..]);
+    if annotation.is_some_and(|label| label.trim().is_empty()) {
+        return Err(wardley_error(line, "Wardley link annotations cannot be empty"));
+    }
+    let (target, target_flow) = wardley_link_target_port(target);
+    let target = wardley_name(target);
+    if source.is_empty() || target.is_empty() {
+        return Err(wardley_error(line, "Wardley links require source and target components"));
+    }
+    let annotation = annotation.map(str::trim).filter(|label| !label.is_empty()).map(str::to_string);
+    Ok(Some(WardleyLink { source, target, dashed: operator.dashed,
+        label: operator.label.or(annotation), flow: operator.flow.or(target_flow) }))
+}
+
+struct WardleyLinkOperator {
+    start: usize, end: usize, dashed: bool, flow: Option<WardleyLinkFlow>, label: Option<String>,
+}
+
+fn wardley_link_operator(value: &str) -> Option<WardleyLinkOperator> {
+    let bytes = value.as_bytes(); let mut index = 0; let mut quote = None;
+    while index < bytes.len() {
+        let byte = bytes[index];
+        if let Some(active) = quote {
+            if byte == active { quote = None; }
+            index += 1; continue;
+        }
+        if matches!(byte, b'\'' | b'"') { quote = Some(byte); index += 1; continue; }
+        if byte == b'+' && bytes.get(index + 1) == Some(&b'\'') {
+            let label_start = index + 2;
+            let label_end = value[label_start..].find('\'').map(|offset| label_start + offset)?;
+            let suffix_start = label_end + 1;
+            let (suffix_length, flow) = if value[suffix_start..].starts_with("<>") {
+                (2, WardleyLinkFlow::Bidirectional)
+            } else if value[suffix_start..].starts_with('<') {
+                (1, WardleyLinkFlow::Backward)
+            } else if value[suffix_start..].starts_with('>') {
+                (1, WardleyLinkFlow::Forward)
+            } else { return None; };
+            return Some(WardleyLinkOperator { start: index, end: suffix_start + suffix_length,
+                dashed: false, flow: Some(flow), label: Some(value[label_start..label_end].to_string()) });
+        }
+        for (operator, dashed, flow) in [
+            ("-.->", true, None), ("-->", false, None), ("->", false, None),
+            ("+<>", false, Some(WardleyLinkFlow::Bidirectional)),
+            ("+>", false, Some(WardleyLinkFlow::Forward)),
+            ("+<", false, Some(WardleyLinkFlow::Backward)),
+        ] {
+            if value[index..].starts_with(operator) {
+                return Some(WardleyLinkOperator { start: index, end: index + operator.len(), dashed, flow, label: None });
+            }
+        }
+        index += 1;
+    }
+    None
+}
+
+fn split_wardley_link_annotation(value: &str) -> (&str, Option<&str>) {
+    let mut quote = None;
+    for (index, byte) in value.bytes().enumerate() {
+        if let Some(active) = quote {
+            if byte == active { quote = None; }
+        } else if matches!(byte, b'\'' | b'"') {
+            quote = Some(byte);
+        } else if byte == b';' {
+            return (&value[..index], Some(&value[index + 1..]));
+        }
+    }
+    (value, None)
+}
+
+fn wardley_link_target_port(value: &str) -> (&str, Option<WardleyLinkFlow>) {
+    let value = value.trim_end();
+    for (port, flow) in [("+<>", WardleyLinkFlow::Bidirectional),
+        ("+>", WardleyLinkFlow::Forward), ("+<", WardleyLinkFlow::Backward)] {
+        if let Some(target) = value.strip_suffix(port) { return (target.trim_end(), Some(flow)); }
+    }
+    (value, None)
+}
+
+fn parse_wardley_config(source: &str) -> WardleyConfig {
+    let defaults = WardleyConfig::default();
+    let front_matter = mermaid_front_matter_section(source, &["config", "wardley-beta"]);
+    let config = mermaid_directive_object(source, "wardley-beta").or(front_matter.as_deref()).unwrap_or("");
+    let value = |name: &str| quadrant_directive_value(config, name).or_else(|| config.lines().find_map(|line| {
+        let (key, value) = line.trim().split_once(':')?;
+        (key.trim() == name).then(|| value.trim().trim_matches(['"', '\'']).to_string())
+    }));
+    let positive = |name: &str, fallback: f64| value(name).and_then(|value| value.parse::<f64>().ok())
+        .filter(|value| value.is_finite() && *value > 0.0).unwrap_or(fallback);
+    let non_negative = |name: &str, fallback: f64| value(name).and_then(|value| value.parse::<f64>().ok())
+        .filter(|value| value.is_finite() && *value >= 0.0).unwrap_or(fallback);
+    let boolean = |name: &str, fallback: bool| value(name).and_then(|value| match value.to_ascii_lowercase().as_str() {
+        "true" => Some(true), "false" => Some(false), _ => None,
+    }).unwrap_or(fallback);
+    WardleyConfig { width: positive("width", defaults.width), height: positive("height", defaults.height),
+        padding: non_negative("padding", defaults.padding), node_radius: positive("nodeRadius", defaults.node_radius),
+        node_label_offset: non_negative("nodeLabelOffset", defaults.node_label_offset),
+        axis_font_size: positive("axisFontSize", defaults.axis_font_size),
+        label_font_size: positive("labelFontSize", defaults.label_font_size),
+        show_grid: boolean("showGrid", defaults.show_grid), use_max_width: boolean("useMaxWidth", defaults.use_max_width),
+        theme: parse_wardley_theme(source) }
+}
+
+fn parse_wardley_theme(source: &str) -> WardleyTheme {
+    let defaults = WardleyTheme::default();
+    let root_front = mermaid_front_matter_section(source, &["config", "themeVariables"]);
+    let root = mermaid_directive_object(source, "themeVariables").or(root_front.as_deref()).unwrap_or("");
+    let nested_front = mermaid_front_matter_section(source, &["config", "themeVariables", "wardley"]);
+    let nested = mermaid_directive_object(root, "wardley").or(nested_front.as_deref()).unwrap_or("");
+    let value = |section: &str, name: &str| quadrant_directive_value(section, name).or_else(|| section.lines().find_map(|line| {
+        let (key, value) = line.trim().split_once(':')?;
+        (key.trim() == name).then(|| value.trim().trim_matches(['"', '\'']).to_string())
+    }));
+    let color = |name: &str, fallback: &str| sanitize_railroad_color(value(nested, name).as_deref(), fallback);
+    let background = sanitize_railroad_color(value(root, "background").as_deref(), &defaults.background_color);
+    let primary_text = sanitize_railroad_color(value(root, "primaryTextColor").as_deref(), &defaults.axis_text_color);
+    WardleyTheme { background_color: color("backgroundColor", &background), axis_color: color("axisColor", &defaults.axis_color),
+        axis_text_color: color("axisTextColor", &primary_text), grid_color: color("gridColor", &defaults.grid_color),
+        component_fill: color("componentFill", &defaults.component_fill),
+        component_stroke: color("componentStroke", &defaults.component_stroke),
+        component_label_color: color("componentLabelColor", &primary_text),
+        link_stroke: color("linkStroke", &defaults.link_stroke),
+        evolution_stroke: color("evolutionStroke", &defaults.evolution_stroke),
+        annotation_stroke: color("annotationStroke", &defaults.annotation_stroke),
+        annotation_text_color: color("annotationTextColor", &primary_text),
+        annotation_fill: color("annotationFill", &background) }
+}
+
 fn parse_wardley_node(value: &str, anchor: bool, line: usize, index: usize) -> Result<WardleyNode, ParseError> {
-    let Some(open) = value.rfind('[') else { return Err(wardley_error(line, "Wardley node requires coordinates")); };
+    let Some(open) = value.find('[') else { return Err(wardley_error(line, "Wardley node requires coordinates")); };
+    let Some(relative_close) = value[open..].find(']') else { return Err(wardley_error(line, "Wardley node requires coordinates")); };
+    let close = open + relative_close;
     let label = wardley_name(&value[..open]);
-    let (visibility, evolution) = parse_wardley_coordinates(&value[open..], line)?;
+    let (visibility, evolution) = parse_wardley_coordinates(&value[open..=close], line)?;
     if label.is_empty() || !(0.0..=1.0).contains(&visibility) || !(0.0..=1.0).contains(&evolution) {
         return Err(wardley_error(line, "Wardley node names must be non-empty and coordinates between 0 and 1"));
     }
-    Ok(WardleyNode { id: format!("wardley-{}", index + 1), label, visibility, evolution, anchor })
+    let suffix = parse_wardley_component_suffix(value[close + 1..].trim(), anchor, line)?;
+    Ok(WardleyNode { id: format!("wardley-{}", index + 1), label, visibility, evolution, anchor, pipeline_parent: false,
+        label_offset_x: suffix.label_offset_x, label_offset_y: suffix.label_offset_y,
+        source_strategy: suffix.source_strategy, inertia: suffix.inertia })
+}
+
+fn parse_wardley_stage(value: &str, line: usize) -> Result<(String, Option<f64>), ParseError> {
+    let (name, boundary_and_second) = value.trim().split_once('@').map_or((value.trim(), None), |(name, rest)| (name.trim(), Some(rest.trim())));
+    let (boundary, second) = if let Some(rest) = boundary_and_second {
+        let (boundary, second) = rest.split_once('/').map_or((rest, None), |(boundary, second)| (boundary.trim(), Some(second.trim())));
+        let boundary = boundary.parse::<f64>().map_err(|_| wardley_error(line, "invalid Wardley stage boundary"))?;
+        if !(0.0..=1.0).contains(&boundary) { return Err(wardley_error(line, "Wardley stage boundaries must be between 0 and 1")); }
+        (Some(boundary), second)
+    } else {
+        let (first, second) = name.split_once('/').map_or((name, None), |(first, second)| (first.trim(), Some(second.trim())));
+        return Ok((wardley_stage_label(first, second), None));
+    };
+    Ok((wardley_stage_label(name, second), boundary))
+}
+
+fn wardley_stage_label(first: &str, second: Option<&str>) -> String {
+    let first = wardley_name(first);
+    second.map_or(first.clone(), |second| format!("{first} / {}", wardley_name(second)))
+}
+
+fn parse_wardley_pipeline_component(value: &str, visibility: f64, line: usize, index: usize) -> Result<WardleyNode, ParseError> {
+    let Some(open) = value.find('[') else { return Err(wardley_error(line, "Wardley pipeline component requires evolution")); };
+    let Some(relative_close) = value[open..].find(']') else { return Err(wardley_error(line, "Wardley pipeline component requires evolution")); };
+    let close = open + relative_close;
+    let label = wardley_name(&value[..open]);
+    let evolution = value[open..=close].trim().strip_prefix('[').and_then(|value| value.strip_suffix(']'))
+        .ok_or_else(|| wardley_error(line, "invalid Wardley pipeline evolution"))?.trim().parse::<f64>()
+        .map_err(|_| wardley_error(line, "invalid Wardley pipeline evolution"))?;
+    if label.is_empty() || !(0.0..=1.0).contains(&evolution) {
+        return Err(wardley_error(line, "Wardley pipeline component names must be non-empty and evolution between 0 and 1"));
+    }
+    let suffix = parse_wardley_component_suffix(value[close + 1..].trim(), false, line)?;
+    if suffix.source_strategy.is_some() || suffix.inertia { return Err(wardley_error(line, "Wardley pipeline children only accept label offsets")); }
+    Ok(WardleyNode { id: format!("wardley-{}", index + 1), label, visibility, evolution, anchor: false, pipeline_parent: false,
+        label_offset_x: suffix.label_offset_x, label_offset_y: suffix.label_offset_y, source_strategy: None, inertia: false })
+}
+
+struct WardleyComponentSuffix { label_offset_x: Option<f64>, label_offset_y: Option<f64>,
+    source_strategy: Option<WardleySourceStrategy>, inertia: bool }
+
+fn parse_wardley_component_suffix(value: &str, anchor: bool, line: usize) -> Result<WardleyComponentSuffix, ParseError> {
+    if value.is_empty() { return Ok(WardleyComponentSuffix { label_offset_x: None, label_offset_y: None,
+        source_strategy: None, inertia: false }); }
+    if anchor { return Err(wardley_error(line, "Wardley anchors do not accept component suffixes")); }
+    let mut remainder = value; let mut offsets = (None, None); let mut strategy = None; let mut inertia = false;
+    if let Some(after_label) = remainder.strip_prefix("label ") {
+        let Some(close) = after_label.find(']') else { return Err(wardley_error(line, "invalid Wardley label offsets")); };
+        let (x, y) = parse_wardley_coordinates(&after_label[..=close], line)?;
+        if x.fract() != 0.0 || y.fract() != 0.0 { return Err(wardley_error(line, "Wardley label offsets must be integers")); }
+        offsets = (Some(x), Some(y)); remainder = after_label[close + 1..].trim();
+    }
+    while !remainder.is_empty() {
+        let (decorator, rest) = if let Some(parenthesized) = remainder.strip_prefix('(') {
+            let Some(close) = parenthesized.find(')') else { return Err(wardley_error(line, "invalid Wardley decorator")); };
+            (&parenthesized[..close], parenthesized[close + 1..].trim())
+        } else if let Some(rest) = remainder.strip_prefix("inertia") { ("inertia", rest.trim()) }
+        else { return Err(wardley_error(line, "unsupported Wardley component suffix")); };
+        match decorator {
+            "inertia" if !inertia => inertia = true,
+            "build" if strategy.is_none() => strategy = Some(WardleySourceStrategy::Build),
+            "buy" if strategy.is_none() => strategy = Some(WardleySourceStrategy::Buy),
+            "outsource" if strategy.is_none() => strategy = Some(WardleySourceStrategy::Outsource),
+            "market" if strategy.is_none() => strategy = Some(WardleySourceStrategy::Market),
+            _ => return Err(wardley_error(line, format!("invalid or duplicate Wardley decorator {decorator}"))),
+        }
+        remainder = rest;
+    }
+    Ok(WardleyComponentSuffix { label_offset_x: offsets.0, label_offset_y: offsets.1,
+        source_strategy: strategy, inertia })
+}
+
+fn parse_wardley_force(value: &str, kind: WardleyForceKind, line: usize) -> Result<WardleyForce, ParseError> {
+    let Some(open) = value.rfind('[') else { return Err(wardley_error(line, "Wardley force requires coordinates")); };
+    let label = wardley_name(&value[..open]);
+    let (visibility, evolution) = parse_wardley_coordinates(&value[open..], line)?;
+    if label.is_empty() || !(0.0..=1.0).contains(&visibility) || !(0.0..=1.0).contains(&evolution) {
+        return Err(wardley_error(line, "Wardley force names must be non-empty and coordinates between 0 and 1"));
+    }
+    Ok(WardleyForce { label, visibility, evolution, kind })
 }
 
 fn parse_wardley_coordinates(value: &str, line: usize) -> Result<(f64, f64), ParseError> {
@@ -6198,6 +6753,8 @@ pub fn parse_swimlane(source: &str) -> Result<SwimlaneDiagram, ParseError> {
     let automatic_lane_ordering = parse_swimlane_automatic_lane_ordering(source)?;
     let ignore_cross_lane_edges = parse_swimlane_ignore_cross_lane_edges(source)?;
     let optimize_ranks_by_crossings = parse_swimlane_optimize_ranks_by_crossings(source)?;
+    let flowchart_config = parse_swimlane_flowchart_config(source)?;
+    let theme = parse_swimlane_theme(source);
     let prepared = prepare_line_grammar_source(source)?;
     let tokens = try_tokenize_mermaid_swimlane(&prepared).map_err(|message| ParseError {
         message,
@@ -6230,6 +6787,8 @@ pub fn parse_swimlane(source: &str) -> Result<SwimlaneDiagram, ParseError> {
         automatic_lane_ordering,
         ignore_cross_lane_edges,
         optimize_ranks_by_crossings,
+        flowchart_config,
+        theme,
     };
     let mut current_lane: Option<usize> = None;
     let mut group_stack = Vec::<usize>::new();
@@ -6266,7 +6825,7 @@ pub fn parse_swimlane(source: &str) -> Result<SwimlaneDiagram, ParseError> {
             continue;
         }
         if let Some(value) = line.strip_prefix("subgraph ") {
-            let (id, label) = parse_swimlane_lane(
+            let (id, label, classes) = parse_swimlane_lane(
                 value, diagram.lanes.len() + diagram.groups.len() + 1, line_number,
             )?;
             if diagram.lanes.iter().any(|lane| lane.id == id)
@@ -6281,10 +6840,13 @@ pub fn parse_swimlane(source: &str) -> Result<SwimlaneDiagram, ParseError> {
                 let parent_id = group_stack.last().map(|group| diagram.groups[*group].id.clone());
                 diagram.groups.push(SwimlaneGroup {
                     id, label, lane_id: diagram.lanes[lane].id.clone(), parent_id, node_ids: Vec::new(),
+                    classes, style: DiagramStyle::default(),
                 });
                 group_stack.push(diagram.groups.len() - 1);
             } else {
-                diagram.lanes.push(SwimlaneLane { id, label, node_ids: Vec::new() });
+                diagram.lanes.push(SwimlaneLane {
+                    id, label, node_ids: Vec::new(), classes, style: DiagramStyle::default(),
+                });
                 current_lane = Some(diagram.lanes.len() - 1);
             }
             continue;
@@ -6429,6 +6991,22 @@ pub fn parse_swimlane(source: &str) -> Result<SwimlaneDiagram, ParseError> {
                     }
                 }
             }
+            if let Some(lane) = diagram.lanes.iter_mut().find(|lane| lane.id == target_id) {
+                matched = true;
+                for class in &classes {
+                    if !lane.classes.contains(class) {
+                        lane.classes.push(class.clone());
+                    }
+                }
+            }
+            if let Some(group) = diagram.groups.iter_mut().find(|group| group.id == target_id) {
+                matched = true;
+                for class in &classes {
+                    if !group.classes.contains(class) {
+                        group.classes.push(class.clone());
+                    }
+                }
+            }
             for edge in diagram.edges.iter_mut().filter(|edge| edge.id.as_deref() == Some(target_id.as_str())) {
                 matched = true;
                 for class in &classes {
@@ -6438,7 +7016,7 @@ pub fn parse_swimlane(source: &str) -> Result<SwimlaneDiagram, ParseError> {
                 }
             }
             if !matched {
-                return Err(swimlane_error(line, format!("Swimlane class references unknown node or edge {target_id:?}")));
+                return Err(swimlane_error(line, format!("Swimlane class references unknown node, edge, or subgraph {target_id:?}")));
             }
         }
     }
@@ -6458,18 +7036,42 @@ pub fn parse_swimlane(source: &str) -> Result<SwimlaneDiagram, ParseError> {
             merge_state_style(&mut edge.style, style);
         }
     }
+    for lane in &mut diagram.lanes {
+        for class in lane.classes.clone() {
+            let style = class_styles.get(&class).ok_or_else(|| {
+                swimlane_error(1, format!("Swimlane lane decorator references unknown class {class:?}"))
+            })?;
+            merge_state_style(&mut lane.style, style);
+        }
+    }
+    for group in &mut diagram.groups {
+        for class in group.classes.clone() {
+            let style = class_styles.get(&class).ok_or_else(|| {
+                swimlane_error(1, format!("Swimlane group decorator references unknown class {class:?}"))
+            })?;
+            merge_state_style(&mut group.style, style);
+        }
+    }
     for (target_id, style, line) in pending_styles {
         let mut matched = false;
         if let Some(node) = diagram.nodes.iter_mut().find(|node| node.id == target_id) {
             matched = true;
             merge_state_style(&mut node.style, &style);
         }
+        if let Some(lane) = diagram.lanes.iter_mut().find(|lane| lane.id == target_id) {
+            matched = true;
+            merge_state_style(&mut lane.style, &style);
+        }
+        if let Some(group) = diagram.groups.iter_mut().find(|group| group.id == target_id) {
+            matched = true;
+            merge_state_style(&mut group.style, &style);
+        }
         for edge in diagram.edges.iter_mut().filter(|edge| edge.id.as_deref() == Some(target_id.as_str())) {
             matched = true;
             merge_state_style(&mut edge.style, &style);
         }
         if !matched {
-            return Err(swimlane_error(line, format!("Swimlane style references unknown node or edge {target_id:?}")));
+            return Err(swimlane_error(line, format!("Swimlane style references unknown node, edge, or subgraph {target_id:?}")));
         }
     }
     for (targets, style, curve, line) in pending_link_styles {
@@ -6497,6 +7099,91 @@ pub fn parse_swimlane(source: &str) -> Result<SwimlaneDiagram, ParseError> {
         }
     }
     Ok(diagram)
+}
+
+fn parse_swimlane_flowchart_config(source: &str) -> Result<diagram_ir::SwimlaneFlowchartConfig, ParseError> {
+    let front_matter = mermaid_front_matter_section(source, &["config", "flowchart"]);
+    let directive = mermaid_directive_object(source, "flowchart");
+    let config_source = directive
+        .or(front_matter.as_deref()).unwrap_or("");
+    let value = |name: &str| {
+        quadrant_directive_value(config_source, name).or_else(|| config_source.lines().find_map(|line| {
+            let (key, value) = line.trim().split_once(':')?;
+            (key.trim() == name).then(|| value.trim().trim_matches(['"', '\'']).to_string())
+        })).filter(|value| !value.is_empty())
+    };
+    let parse_number = |value: Option<String>, name: &str| -> Result<Option<f64>, ParseError> {
+        let Some(value) = value else { return Ok(None); };
+        let parsed = value.parse::<f64>().map_err(|_| swimlane_error(
+            1, format!("Swimlane flowchart {name} must be a non-negative number"),
+        ))?;
+        if !parsed.is_finite() || parsed < 0.0 {
+            return Err(swimlane_error(1,
+                format!("Swimlane flowchart {name} must be a non-negative number")));
+        }
+        Ok(Some(parsed))
+    };
+    let parse = |name: &str| parse_number(value(name), name);
+    let margin_front_matter = mermaid_front_matter_section(
+        source, &["config", "flowchart", "subGraphTitleMargin"],
+    );
+    let margin_source = directive.and_then(|flowchart|
+        mermaid_directive_object(flowchart, "subGraphTitleMargin")
+    ).or(margin_front_matter.as_deref()).unwrap_or("");
+    let margin_value = |name: &str| {
+        quadrant_directive_value(margin_source, name).or_else(|| {
+            margin_source.lines().find_map(|line| {
+                let (key, value) = line.trim().split_once(':')?;
+                (key.trim() == name).then(|| value.trim().trim_matches(['"', '\'']).to_string())
+            })
+        }).filter(|value| !value.is_empty())
+    };
+    Ok(diagram_ir::SwimlaneFlowchartConfig {
+        node_spacing: parse("nodeSpacing")?,
+        rank_spacing: parse("rankSpacing")?,
+        diagram_padding: parse("diagramPadding")?,
+        curve: value("curve").map(|value| parse_swimlane_edge_curve(&value, 1)).transpose()?,
+        wrapping_width: parse("wrappingWidth")?.filter(|value| *value > 0.0),
+        padding: parse("padding")?,
+        title_top_margin: parse("titleTopMargin")?,
+        subgraph_title_margin_top: parse_number(
+            margin_value("top"), "subGraphTitleMargin.top",
+        )?,
+        subgraph_title_margin_bottom: parse_number(
+            margin_value("bottom"), "subGraphTitleMargin.bottom",
+        )?,
+    })
+}
+
+fn parse_swimlane_theme(source: &str) -> diagram_ir::SwimlaneTheme {
+    let front_matter = mermaid_front_matter_section(source, &["themeVariables"]);
+    let theme_source = mermaid_directive_object(source, "themeVariables")
+        .or(front_matter.as_deref()).unwrap_or("");
+    let value = |name: &str| {
+        quadrant_directive_value(theme_source, name).or_else(|| theme_source.lines().find_map(|line| {
+            let (key, value) = line.trim().split_once(':')?;
+            (key.trim() == name).then(|| value.trim().trim_matches(['"', '\'']).to_string())
+        })).filter(|value| !value.is_empty())
+    };
+    let defaults = diagram_ir::SwimlaneTheme::default();
+    diagram_ir::SwimlaneTheme {
+        main_background: value("mainBkg").unwrap_or(defaults.main_background),
+        node_border: value("nodeBorder").unwrap_or(defaults.node_border),
+        line_color: value("lineColor").unwrap_or(defaults.line_color),
+        primary_text_color: value("primaryTextColor").unwrap_or(defaults.primary_text_color),
+        font_family: value("fontFamily"),
+        font_size: value("fontSize").and_then(parse_mermaid_font_size)
+            .filter(|value| value.is_finite() && *value > 0.0),
+        text_color: value("textColor").unwrap_or(defaults.text_color),
+        edge_label_background: value("edgeLabelBackground"),
+        cluster_background: value("clusterBkg"),
+        cluster_border: value("clusterBorder"),
+        title_color: value("titleColor"),
+        node_text_color: value("nodeTextColor"),
+        arrowhead_color: value("arrowheadColor"),
+        stroke_width: value("strokeWidth").and_then(parse_mermaid_font_size)
+            .filter(|value| value.is_finite() && *value >= 0.0),
+    }
 }
 
 fn parse_swimlane_line_hops(source: &str) -> Result<Option<SwimlaneLineHops>, ParseError> {
@@ -6881,8 +7568,8 @@ fn parse_swimlane_lane(
     value: &str,
     index: usize,
     line: usize,
-) -> Result<(String, String), ParseError> {
-    let value = value.trim();
+) -> Result<(String, String, Vec<String>), ParseError> {
+    let (value, classes) = split_swimlane_class_decorators(value.trim());
     if let Some(open) = value.find('[') {
         let Some(label) = value[open + 1..].strip_suffix(']') else {
             return Err(swimlane_error(line, "unterminated Swimlane label"));
@@ -6894,7 +7581,7 @@ fn parse_swimlane_lane(
                 "Swimlane id and label must not be empty",
             ));
         }
-        return Ok((id.to_string(), normalize_swimlane_label(label)));
+        return Ok((id.to_string(), normalize_swimlane_label(label), classes));
     }
     if value.is_empty() {
         return Err(swimlane_error(line, "Swimlane label must not be empty"));
@@ -6908,7 +7595,7 @@ fn parse_swimlane_lane(
     } else {
         format!("swimlane-{index}")
     };
-    Ok((id, label))
+    Ok((id, label, classes))
 }
 
 fn parse_swimlane_edge_chain(
@@ -7476,6 +8163,8 @@ fn assign_swimlane_default_lane(diagram: &mut SwimlaneDiagram) {
                 id: DEFAULT_LANE_ID.into(),
                 label: String::new(),
                 node_ids: Vec::new(),
+                classes: Vec::new(),
+                style: DiagramStyle::default(),
             });
             diagram.lanes.len() - 1
         });
@@ -7498,15 +8187,23 @@ fn swimlane_error(line: usize, message: impl Into<String>) -> ParseError {
 }
 /// Parse Mermaid's explicit Railroad IR constructor notation.
 pub fn parse_railroad(source: &str) -> Result<RailroadDiagram, ParseError> {
-    let family = detect_mermaid_type(source)?; let prepared = prepare_line_grammar_source(source)?;
+    let family = detect_mermaid_type(source)?;
+    let config = parse_railroad_config(source)?;
+    let prepared = prepare_line_grammar_source(source)?;
     if prepared.trim_start().starts_with("railroad-ebnf-beta") {
-        return parse_railroad_ebnf_prepared(&prepared);
+        let mut diagram = parse_railroad_ebnf_prepared(&prepared)?;
+        diagram.config = config;
+        return Ok(diagram);
     }
     if prepared.trim_start().starts_with("railroad-abnf-beta") {
-        return parse_railroad_abnf_prepared(&prepared);
+        let mut diagram = parse_railroad_abnf_prepared(&prepared)?;
+        diagram.config = config;
+        return Ok(diagram);
     }
     if prepared.trim_start().starts_with("railroad-peg-beta") {
-        return parse_railroad_peg_prepared(&prepared);
+        let mut diagram = parse_railroad_peg_prepared(&prepared)?;
+        diagram.config = config;
+        return Ok(diagram);
     }
     if !prepared.trim_start().starts_with("railroad-beta") {
         return Err(ParseError { message: format!("Mermaid {} Railroad {:?} notation is recognized but not implemented", MERMAID_COMPATIBILITY_BASELINE, family.canonical_id()), line: 1, col: 1 });
@@ -7517,7 +8214,7 @@ pub fn parse_railroad(source: &str) -> Result<RailroadDiagram, ParseError> {
     GrammarParser::new(tokens.clone(), grammar).with_max_depth(MAX_RULE_DEPTH).parse()
         .map_err(|error| ParseError { message: error.message, line: error.token.line, col: error.token.column })?;
     let mut cursor = RailroadCursor { tokens: &tokens, index: 1 };
-    let mut diagram = RailroadDiagram { title: None, accessibility_title: None, accessibility_description: None, rules: Vec::new() };
+    let mut diagram = RailroadDiagram { title: None, accessibility_title: None, accessibility_description: None, config, rules: Vec::new() };
     while !cursor.at("EOF") {
         match cursor.name() {
             "TITLE" => diagram.title = Some(cursor.take_value()["title".len()..].trim().trim_matches('"').to_string()),
@@ -7534,6 +8231,140 @@ pub fn parse_railroad(source: &str) -> Result<RailroadDiagram, ParseError> {
     }
     if diagram.rules.is_empty() { return Err(ParseError { message: "Railroad diagrams require at least one rule".into(), line: 1, col: 1 }); }
     Ok(diagram)
+}
+
+fn parse_railroad_config(source: &str) -> Result<RailroadConfig, ParseError> {
+    let front_matter = mermaid_front_matter_section(source, &["config", "railroad"]);
+    let config_source = mermaid_directive_object(source, "railroad")
+        .or(front_matter.as_deref()).unwrap_or("");
+    let theme_front_matter = mermaid_front_matter_section(source, &["themeVariables"])
+        .or_else(|| mermaid_front_matter_section(source, &["config", "themeVariables"]));
+    let theme_source = mermaid_directive_object(source, "themeVariables")
+        .or(theme_front_matter.as_deref()).unwrap_or("");
+    let value = |name: &str| {
+        quadrant_directive_value(config_source, name).or_else(|| {
+            config_source.lines().find_map(|line| {
+                let (key, value) = line.trim().split_once(':')?;
+                (key.trim() == name).then(|| value.trim().trim_matches(['\"', '\'']).to_string())
+            })
+        }).filter(|value| !value.is_empty())
+    };
+    let theme_value = |name: &str| {
+        quadrant_directive_value(theme_source, name).or_else(|| {
+            theme_source.lines().find_map(|line| {
+                let (key, value) = line.trim().split_once(':')?;
+                (key.trim() == name).then(|| value.trim().trim_matches(['\"', '\'']).to_string())
+            })
+        }).filter(|value| !value.is_empty())
+    };
+    let parse = |name: &str, default: f64| -> Result<f64, ParseError> {
+        let Some(value) = value(name) else { return Ok(default); };
+        let parsed = value.parse::<f64>().map_err(|_| ParseError {
+            message: format!("Mermaid Railroad {name} must be a non-negative number"), line: 1, col: 1,
+        })?;
+        if !parsed.is_finite() || parsed < 0.0 {
+            return Err(ParseError {
+                message: format!("Mermaid Railroad {name} must be a non-negative number"), line: 1, col: 1,
+            });
+        }
+        Ok(parsed)
+    };
+    let defaults = RailroadConfig::default();
+    let parse_bool = |name: &str, default: bool| -> Result<bool, ParseError> {
+        let Some(value) = value(name) else { return Ok(default); };
+        match value.to_ascii_lowercase().as_str() {
+            "true" => Ok(true),
+            "false" => Ok(false),
+            _ => Err(ParseError {
+                message: format!("Mermaid Railroad {name} must be true or false"), line: 1, col: 1,
+            }),
+        }
+    };
+    let theme_string = |primary: &str, secondary: Option<&str>, default: &str| {
+        theme_value(primary)
+            .or_else(|| secondary.and_then(theme_value))
+            .unwrap_or_else(|| default.to_string())
+    };
+    let theme_font_size = theme_value("fontSize")
+        .and_then(|value| value.trim_end_matches("px").parse::<f64>().ok())
+        .filter(|value| value.is_finite() && *value > 0.0)
+        .unwrap_or(defaults.font_size);
+    let font_size = parse("fontSize", theme_font_size)?;
+    if font_size <= 0.0 {
+        return Err(ParseError {
+            message: "Mermaid Railroad fontSize must be a positive number".into(), line: 1, col: 1,
+        });
+    }
+    let theme_font_family = sanitize_railroad_font_family(
+        Some(&theme_string("fontFamily", None, &defaults.font_family)), &defaults.font_family);
+    let theme_terminal_fill = sanitize_railroad_color(
+        Some(&theme_string("secondBkg", Some("secondaryColor"), &defaults.terminal_fill)), &defaults.terminal_fill);
+    let theme_terminal_stroke = sanitize_railroad_color(
+        Some(&theme_string("secondaryBorderColor", Some("lineColor"), &defaults.terminal_stroke)), &defaults.terminal_stroke);
+    let theme_terminal_text = sanitize_railroad_color(
+        Some(&theme_string("secondaryTextColor", Some("textColor"), &defaults.terminal_text_color)), &defaults.terminal_text_color);
+    let theme_non_terminal_fill = sanitize_railroad_color(
+        Some(&theme_string("mainBkg", Some("background"), &defaults.non_terminal_fill)), &defaults.non_terminal_fill);
+    let theme_non_terminal_stroke = sanitize_railroad_color(
+        Some(&theme_string("primaryBorderColor", Some("lineColor"), &defaults.non_terminal_stroke)), &defaults.non_terminal_stroke);
+    let theme_non_terminal_text = sanitize_railroad_color(
+        Some(&theme_string("primaryTextColor", Some("textColor"), &defaults.non_terminal_text_color)), &defaults.non_terminal_text_color);
+    let theme_line = sanitize_railroad_color(
+        Some(&theme_string("lineColor", None, &defaults.line_color)), &defaults.line_color);
+    let theme_special_fill = sanitize_railroad_color(
+        Some(&theme_string("tertiaryColor", Some("secondaryColor"), &defaults.special_fill)), &defaults.special_fill);
+    let theme_special_stroke = sanitize_railroad_color(
+        Some(&theme_string("tertiaryBorderColor", Some("secondaryBorderColor"), &defaults.special_stroke)), &defaults.special_stroke);
+    let theme_rule_name = sanitize_railroad_color(
+        Some(&theme_string("titleColor", Some("textColor"), &defaults.rule_name_color)), &defaults.rule_name_color);
+    Ok(RailroadConfig {
+        compact_mode: parse_bool("compactMode", defaults.compact_mode)?,
+        padding: parse("padding", 10.0)?,
+        vertical_separation: parse("verticalSeparation", 8.0)?,
+        horizontal_separation: parse("horizontalSeparation", 10.0)?,
+        arc_radius: parse("arcRadius", defaults.arc_radius)?,
+        font_size,
+        font_family: sanitize_railroad_font_family(value("fontFamily").as_deref(), &theme_font_family),
+        terminal_fill: sanitize_railroad_color(value("terminalFill").as_deref(), &theme_terminal_fill),
+        terminal_stroke: sanitize_railroad_color(value("terminalStroke").as_deref(), &theme_terminal_stroke),
+        terminal_text_color: sanitize_railroad_color(value("terminalTextColor").as_deref(), &theme_terminal_text),
+        non_terminal_fill: sanitize_railroad_color(value("nonTerminalFill").as_deref(), &theme_non_terminal_fill),
+        non_terminal_stroke: sanitize_railroad_color(value("nonTerminalStroke").as_deref(), &theme_non_terminal_stroke),
+        non_terminal_text_color: sanitize_railroad_color(value("nonTerminalTextColor").as_deref(), &theme_non_terminal_text),
+        line_color: sanitize_railroad_color(value("lineColor").as_deref(), &theme_line),
+        stroke_width: parse("strokeWidth", defaults.stroke_width)?,
+        marker_fill: sanitize_railroad_color(value("markerFill").as_deref(), &theme_line),
+        special_fill: sanitize_railroad_color(value("specialFill").as_deref(), &theme_special_fill),
+        special_stroke: sanitize_railroad_color(value("specialStroke").as_deref(), &theme_special_stroke),
+        rule_name_color: sanitize_railroad_color(value("ruleNameColor").as_deref(), &theme_rule_name),
+        show_markers: parse_bool("showMarkers", defaults.show_markers)?,
+        marker_radius: parse("markerRadius", defaults.marker_radius)?,
+    })
+}
+
+fn sanitize_railroad_color(value: Option<&str>, fallback: &str) -> String {
+    let Some(value) = value.map(str::trim) else { return fallback.to_string(); };
+    let hex = value.strip_prefix('#').is_some_and(|digits| {
+        matches!(digits.len(), 3 | 4 | 6 | 8) && digits.chars().all(|character| character.is_ascii_hexdigit())
+    });
+    let named = !value.is_empty() && value.chars().all(|character| character.is_ascii_alphabetic());
+    let lowercase = value.to_ascii_lowercase();
+    let function = ["rgb", "rgba", "hsl", "hsla", "hwb", "lab", "lch", "oklab", "oklch"]
+        .iter().any(|name| lowercase.strip_prefix(name).and_then(|inner| inner.strip_prefix('('))
+            .and_then(|inner| inner.strip_suffix(')')).is_some_and(|inner| !inner.is_empty()
+                && inner.chars().all(|character| character.is_ascii_digit()
+                    || character.is_ascii_whitespace() || "%+,./-".contains(character))));
+    if hex || named || function { value.to_string() } else { fallback.to_string() }
+}
+
+fn sanitize_railroad_font_family(value: Option<&str>, fallback: &str) -> String {
+    let Some(value) = value.map(str::trim) else { return fallback.to_string(); };
+    if !value.is_empty() && value.chars().all(|character| character.is_ascii_alphanumeric()
+        || character == '_' || " \"',.-".contains(character)) {
+        value.to_string()
+    } else {
+        fallback.to_string()
+    }
 }
 
 fn parse_railroad_ebnf_prepared(source: &str) -> Result<RailroadDiagram, ParseError> {
@@ -7554,6 +8385,7 @@ fn parse_railroad_ebnf_prepared(source: &str) -> Result<RailroadDiagram, ParseEr
         title: None,
         accessibility_title: None,
         accessibility_description: None,
+        config: RailroadConfig::default(),
         rules: Vec::new(),
     };
     while !cursor.at("EOF") {
@@ -7724,6 +8556,7 @@ fn parse_railroad_abnf_prepared(source: &str) -> Result<RailroadDiagram, ParseEr
         title: None,
         accessibility_title: None,
         accessibility_description: None,
+        config: RailroadConfig::default(),
         rules: Vec::new(),
     };
     while !cursor.at("EOF") {
@@ -7886,6 +8719,7 @@ fn parse_railroad_peg_prepared(source: &str) -> Result<RailroadDiagram, ParseErr
         title: None,
         accessibility_title: None,
         accessibility_description: None,
+        config: RailroadConfig::default(),
         rules: Vec::new(),
     };
     while !cursor.at("EOF") {
@@ -13332,6 +14166,41 @@ mod tests_dg04 {
     use super::*;
 
     #[test]
+    fn venn_resolves_and_sanitizes_the_eight_color_theme_palette() {
+        let diagram = parse_venn(
+            "%%{init: {\"themeVariables\": {\"venn1\": \"#112233\", \"venn2\": \"red\", \"venn8\": \"url(evil)\"}}}%%\nvenn-beta\nset A\nset B",
+        ).unwrap();
+        assert_eq!(diagram.config.theme_colors.len(), 8);
+        assert_eq!(diagram.config.theme_colors[0], "#112233");
+        assert_eq!(diagram.config.theme_colors[1], "red");
+        assert_eq!(diagram.config.theme_colors[7], VennConfig::default().theme_colors[7]);
+    }
+
+    #[test]
+    fn venn_cascades_repeated_style_directives_by_property() {
+        let diagram = parse_venn(
+            "venn-beta\nset A\n  text note[Note]\nstyle A fill:#112233\nstyle A stroke:#445566, stroke-width:4\nstyle note color:#778899\nstyle note fill-opacity:0.4",
+        ).unwrap();
+        let set_style = &diagram.regions[0].style;
+        assert_eq!(set_style.fill.as_deref(), Some("#112233"));
+        assert_eq!(set_style.stroke.as_deref(), Some("#445566"));
+        assert_eq!(set_style.stroke_width, Some(4.0));
+        let text_style = &diagram.texts[0].style;
+        assert_eq!(text_style.text_color.as_deref(), Some("#778899"));
+        assert_eq!(text_style.fill_opacity, Some(0.4));
+    }
+
+    #[test]
+    fn venn_rejects_unsafe_colors_and_out_of_range_style_numbers() {
+        let unsafe_color = parse_venn("venn-beta\nset A\nstyle A fill:url(evil)").unwrap_err();
+        assert!(unsafe_color.message.contains("invalid Venn fill color"));
+        let opacity = parse_venn("venn-beta\nset A\nstyle A fill-opacity:1.5").unwrap_err();
+        assert!(opacity.message.contains("invalid Venn fill-opacity"));
+        let width = parse_venn("venn-beta\nset A\nstyle A stroke-width:-2px").unwrap_err();
+        assert!(width.message.contains("invalid Venn stroke-width"));
+    }
+
+    #[test]
     fn block_parses_grid_cells_spaces_shapes_and_connections() {
         let diagram = parse_block(
             "block-beta\ncolumns 3\nA[Parser] space B(IR)\nC((Paint))\nA -->|lower| C\nB-- \"observe\" ---C",
@@ -13971,9 +14840,10 @@ mod tests_dg04 {
     }
 
     #[test]
-    fn kanban_rejects_nested_cards_outside_partial_subset() {
-        let error = parse_kanban("kanban\nTodo\n  task1[Task]\n    nested[Nested]").unwrap_err();
-        assert!(error.message.contains("nested kanban cards"));
+    fn kanban_flattens_deeper_card_indentation_like_mermaid() {
+        let board = parse_kanban("kanban\nTodo\n  task1[Task]\n    nested[Nested]").unwrap();
+        assert_eq!(board.columns[0].cards.len(), 2);
+        assert_eq!(board.columns[0].cards[1].label.text, "Nested");
     }
 
     #[test]
@@ -14091,7 +14961,7 @@ mod tests_dg04 {
     #[test]
     fn architecture_preserves_size_and_separation_configuration() {
         let diagram = parse_architecture(
-            "%%{init: {\"architecture\": {\"iconSize\": 104, \"fontSize\": 19, \"nodeSeparation\": 112, \"padding\": 48, \"idealEdgeLengthMultiplier\": 1.25, \"edgeElasticity\": 0.8, \"randomize\": true, \"seed\": 17}}}%%\narchitecture-beta\nservice api(server)[API]",
+            "%%{init: {\"architecture\": {\"iconSize\": 104, \"fontSize\": 19, \"nodeSeparation\": 112, \"padding\": 48, \"idealEdgeLengthMultiplier\": 1.25, \"edgeElasticity\": 0.8, \"numIter\": 5000, \"randomize\": true, \"seed\": 17}}}%%\narchitecture-beta\nservice api(server)[API]",
         )
         .unwrap();
         assert_eq!(
@@ -14103,13 +14973,14 @@ mod tests_dg04 {
                 padding: 48.0,
                 ideal_edge_length_multiplier: 1.25,
                 edge_elasticity: 0.8,
+                num_iter: 5000,
                 randomize: true,
                 seed: 17,
             })
         );
 
         let diagram = parse_architecture(
-            "---\nconfig:\n  architecture:\n    iconSize: 96\n    fontSize: 18\n    nodeSeparation: 104\n    padding: 52\n    idealEdgeLengthMultiplier: 1.75\n    edgeElasticity: 0.2\n    randomize: false\n    seed: -9\n---\narchitecture-beta\nservice api(server)[API]",
+            "---\nconfig:\n  architecture:\n    iconSize: 96\n    fontSize: 18\n    nodeSeparation: 104\n    padding: 52\n    idealEdgeLengthMultiplier: 1.75\n    edgeElasticity: 0.2\n    numIter: 3200\n    randomize: false\n    seed: -9\n---\narchitecture-beta\nservice api(server)[API]",
         )
         .unwrap();
         let config = diagram.architecture_config.unwrap();
@@ -14119,6 +14990,7 @@ mod tests_dg04 {
         assert_eq!(config.padding, 52.0);
         assert_eq!(config.ideal_edge_length_multiplier, 1.75);
         assert_eq!(config.edge_elasticity, 0.2);
+        assert_eq!(config.num_iter, 3200);
         assert!(!config.randomize);
         assert_eq!(config.seed, -9);
 
@@ -14779,6 +15651,74 @@ Rel(customer, web, \"Uses\", \"HTTPS\")";
         let d = parse_gantt(GANTT_SRC).unwrap();
         assert_eq!(d.sections.len(), 1);
         assert_eq!(d.sections[0].label.as_deref(), Some("Phase 1"));
+    }
+
+    #[test]
+    fn timeline_preserves_render_configuration_from_init_and_front_matter() {
+        let (_, init) = parse_timeline(
+            "%%{init: {\"fontSize\": \"20px\", \"timeline\": {\"padding\": 72, \"leftMargin\": 80, \"useMaxWidth\": true, \"disableMulticolor\": true}, \"themeVariables\": {\"fontFamily\": \"Avenir Next\", \"cScale0\": \"#112233\", \"cScaleLabel0\": \"#fefefe\", \"cScaleInv0\": \"#445566\"}}}%%\n\
+             timeline\n2025 : Public beta\n2026 : General availability\n",
+        )
+        .unwrap();
+        assert_eq!(init.config.padding, 72.0);
+        assert_eq!(init.config.left_margin, 80.0);
+        assert_eq!(init.config.font_size, 20.0);
+        assert_eq!(init.config.font_family, "Avenir Next");
+        assert!(init.config.use_max_width);
+        assert!(init.config.disable_multicolor);
+        assert_eq!(init.config.section_colors[0], "#112233");
+        assert_eq!(init.config.section_label_colors[0], "#fefefe");
+        assert_eq!(init.config.section_inverse_colors[0], "#445566");
+
+        let (_, front_matter) = parse_timeline(
+            "---\nconfig:\n  fontSize: 22\n  themeVariables:\n    fontFamily: Georgia\n  timeline:\n    padding: 24\n    leftMargin: 36\n    useMaxWidth: true\n    disableMulticolor: true\n---\ntimeline\n2025\n",
+        )
+        .unwrap();
+        assert_eq!(front_matter.config.padding, 24.0);
+        assert_eq!(front_matter.config.left_margin, 36.0);
+        assert_eq!(front_matter.config.font_size, 22.0);
+        assert_eq!(front_matter.config.font_family, "Georgia");
+        assert!(front_matter.config.use_max_width);
+        assert!(front_matter.config.disable_multicolor);
+    }
+
+    #[test]
+    fn timeline_defaults_to_left_right_and_accepts_explicit_directions() {
+        let (_, default_direction) = parse_timeline("timeline\n2025\n").unwrap();
+        let (_, left_right) = parse_timeline("timeline LR\n2025\n").unwrap();
+        let (_, top_down) = parse_timeline("timeline TD\n2025\n").unwrap();
+
+        assert_eq!(default_direction.direction, TimelineDirection::LeftRight);
+        assert_eq!(left_right.direction, TimelineDirection::LeftRight);
+        assert_eq!(top_down.direction, TimelineDirection::TopDown);
+    }
+
+    #[test]
+    fn timeline_preserves_upstream_delimiter_rich_labels_and_inline_events() {
+        let (title, diagram) = parse_timeline(
+            "timeline\n\
+             title ;my;#title#;\n\
+             section ;a;#bc-123#;\n\
+             ;ta;sk1; : ;ev;ent1; : #ev#ent2# : [event3](http://example.com)\n",
+        )
+        .unwrap();
+
+        assert_eq!(title.as_deref(), Some(";my;#title#;"));
+        assert_eq!(diagram.sections[0].label.as_deref(), Some(";a;#bc-123#;"));
+        assert_eq!(diagram.sections[0].periods[0].label, ";ta;sk1;");
+        assert_eq!(
+            diagram.sections[0].periods[0].events,
+            [";ev;ent1;", "#ev#ent2#", "[event3](http://example.com)"]
+        );
+    }
+
+    #[test]
+    fn timeline_rejects_invalid_padding_by_falling_back_to_upstream_default() {
+        let (_, negative) = parse_timeline(
+            "%%{init: {\"timeline\": {\"padding\": -1}}}%%\ntimeline\n2025\n",
+        )
+        .unwrap();
+        assert_eq!(negative.config.padding, 50.0);
     }
 
     #[test]

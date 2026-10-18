@@ -4,7 +4,7 @@
   "chapter": 11,
   "title": "The First Verbs",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:f6f790b69039de20",
+  "sourceHash": "fnv1a64:418278c348d3f9e0",
   "lessons": [
     {
       "id": "GU-C05-bolvun",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:e4f5239b8128fd87",
+      "sourceHash": "fnv1a64:a928b483c49cecfc",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -66,7 +66,11 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "બોલવું (bolvũ, \"to speak\") is a native Indo-Aryan verb (the same bol- as Hindi bolnā and Punjabi bolṇā). Its ending -વું (-vũ) is Gujarati's infinitive marker — the \"to ___\" form: bol-vũ \"to speak,\" maḷ-vũ \"to meet\" (from maḷīshũ), āv-vũ \"to come\" (behind āvjo). Strip the -vũ and you have the stem (bol-)."
+              "text": "બોલવું (bolvũ, \"to speak\") is an inherited verb (the same bol- as Hindi bolnā and Punjabi bolṇā). Its ending -વું (-vũ) is Gujarati's infinitive marker — the \"to ___\" form: bol-vũ \"to speak,\" maḷ-vũ \"to meet\" (from maḷīshũ), āv-vũ \"to come\" (behind āvjo). Strip the -vũ and you have the stem (bol-)."
+            },
+            {
+              "kind": "speech",
+              "text": "CDIAL reconstructs boll-, \"speak\", behind Prakrit bollaï, \"speaks\" (CDIAL 9321). Where that came from is debated, and CDIAL calls a Dravidian source very doubtful."
             }
           ]
         },
@@ -173,7 +177,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:84918ea1eb5fdc3f",
+      "sourceHash": "fnv1a64:dbb1ebf76735010f",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -221,6 +225,10 @@
             {
               "kind": "speech",
               "text": "હું ગુજરાતી બોલું છું (hũ gujarātī bolũ chhũ) = હું (hũ, \"I\") + ગુજરાતી (gujarātī, the object) + બોલું છું (bolũ chhũ, \"speak\") — \"I Gujarati speak,\" verb last. The name ગુજરાત (Gujarāt) comes from the Gurjar — a people who entered western India around the 6th–8th centuries and gave their name to the land (Gurjara-deśa becomes Gujarāt); gujarātī is \"[the language] of Gujarat.\" So the language is named after a people, and the region after them in turn."
+            },
+            {
+              "kind": "speech",
+              "text": "Of the three native words, CDIAL lists hũ under Sanskrit aham, \"I\" (CDIAL 992), bolvũ under a reconstructed boll-, \"speak\" (CDIAL 9321), and chhe, of which chhũ is a form, under ākṣeti, \"abides\" (CDIAL 1031)."
             }
           ]
         },
@@ -307,7 +315,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:1a2f7599c6899391",
+      "sourceHash": "fnv1a64:6eeb1276fc75caf4",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -354,7 +362,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "કરવું (karvũ, \"to do, to make\") is from Sanskrit √કૃ (√kṛ, \"to do\"), from PIE kʷer- — one of Sanskrit's most productive roots, met in namaskār (\"the making of a bow\") and karma (\"a thing done\"). And કામ (kām, \"work\") is itself from Sanskrit karma — so \"work-do\" is, at root, \"kṛ-thing kṛ-do.\" Like Hindi, Gujarati builds compound verbs as noun + કરવું:"
+              "text": "કરવું (karvũ, \"to do, to make\") is from Sanskrit √કૃ (√kṛ, \"to do\"; CDIAL 2814), from PIE kʷer- — one of Sanskrit's most productive roots, met in namaskār (\"the making of a bow\") and karma (\"a thing done\"). And કામ (kām, \"work\") is itself from Sanskrit karma — so \"work-do\" is, at root, \"kṛ-thing kṛ-do.\" Like Hindi, Gujarati builds compound verbs as noun + કરવું:"
             },
             {
               "kind": "speech",
@@ -367,6 +375,10 @@
             {
               "kind": "speech",
               "text": "So hũ kām karũ chhũ = \"I work.\" Learn karvũ and a whole grammar of \"do-verbs\" opens up — the same one behind Hindi's kām karnā and Bengali's kāj karā."
+            },
+            {
+              "kind": "speech",
+              "text": "CDIAL lists kām under Sanskrit karman, \"act, work\" (CDIAL 2892)."
             }
           ]
         },
@@ -442,7 +454,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:4609bc8e479bf75b",
+      "sourceHash": "fnv1a64:d29bd621daa91cb2",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -489,7 +501,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "રહેવું (rahevũ, \"to live, to remain, to stay\") is from Sanskrit રહ્ (rah-, \"to remain\") — the same root as Hindi rahnā and Punjabi rahiṇā. \"I live in Ahmedabad\" is હું અમદાવાદમાં રહું છું (hũ Amdāvādmā rahũ chhũ) — stem rah- + person + copula, exactly like bolvũ."
+              "text": "રહેવું (rahevũ, \"to live, to remain, to stay\") goes back to rahati, \"remains\", a form CDIAL reconstructs from its descendants (CDIAL 10666): the same root as Hindi rahnā and Punjabi rahiṇā. \"I live in Ahmedabad\" is હું અમદાવાદમાં રહું છું (hũ Amdāvādmā rahũ chhũ) — stem rah- + person + copula, exactly like bolvũ."
             }
           ]
         },

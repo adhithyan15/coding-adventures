@@ -14,7 +14,8 @@ romanization: "hārvũ"
 concept_tag: GU-VERB-HARVU
 prerequisites: [GU-C105-dharavvu, GU-C105-jitvu]
 sounds: []
-roots: []
+roots: [sanskrit-harayati]
+etymology_hook: "hārvũ ← Sanskrit hārayati 'causes to be taken; loses', a tadbhava (CDIAL 14061)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C105-jitvu]
 <!-- hl-knowledge: introduces=[GU-LEX-C105-CAN105-05]; assesses=[] -->
 
 **હારવું** (*hārvũ*) — "to lose (a game)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**હારવું** (*hārvũ*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *hārayati*, "causes to be taken; loses" (CDIAL 14061).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

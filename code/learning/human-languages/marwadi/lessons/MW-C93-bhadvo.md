@@ -14,7 +14,8 @@ romanization: "bhādvo"
 concept_tag: MW-TIME93-BHADVO
 prerequisites: [MW-C92-jeth, MW-C93-savan]
 sounds: []
-roots: []
+roots: [sanskrit-bhadrapada]
+etymology_hook: "bhādvo ← Sanskrit bhādrapada 'the month August-September', a tadbhava (CDIAL 9447, Hindi and Gujarati rows)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C93-savan]
 <!-- hl-knowledge: introduces=[MW-LEX-C93-TIME93-02]; assesses=[] -->
 
 **भादवो** — *bhādvo* — "Bhadvo (August-September)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**भादवो** (*bhādvo*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *bhādrapada*, "the month August-September". CDIAL gives no Marwari form in this entry (CDIAL 9447); the match is through Hindi *bhādõ* and Gujarati *bhādarvo*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

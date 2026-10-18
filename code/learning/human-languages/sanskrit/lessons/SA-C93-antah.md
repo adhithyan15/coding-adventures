@@ -14,7 +14,8 @@ romanization: "antaḥ"
 concept_tag: SA-TIME93-ANTAH
 prerequisites: [SA-C93-vamah, SA-C93-daksinah]
 sounds: []
-roots: []
+roots: [sanskrit-antar]
+etymology_hook: "antaḥ = antar 'within', final r said as ḥ; MW compares Latin inter; Marathi āt 'inside' (CDIAL 356)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C93-daksinah]
 <!-- hl-knowledge: introduces=[SA-LEX-C93-TIME93-05]; assesses=[] -->
 
 **अन्तः** — *antaḥ* — "inside".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*antaḥ* is *antar* "within, between", with the final *r* said as *ḥ* at the end of a phrase (MW). MW sets it beside Latin *inter* "between", the *inter-* of English *international*, so it is inherited from Indo-European. It lives on as Marathi *āt* "inside" (CDIAL 356).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

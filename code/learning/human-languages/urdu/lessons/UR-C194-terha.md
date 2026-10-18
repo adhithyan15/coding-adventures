@@ -14,7 +14,8 @@ romanization: "ṭeṛhā"
 concept_tag: UR-SIFAT194-TERHA
 prerequisites: [UR-C193-pareshan, UR-C194-chaukor]
 sounds: []
-roots: []
+roots: [indo-aryan-tredda]
+etymology_hook: "ṭeṛhā ← *treḍḍha 'slanting, squinting', a reconstructed form; a tadbhava (CDIAL 6071)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C194-chaukor]
 <!-- hl-knowledge: introduces=[UR-LEX-C194-SIFAT194-02]; assesses=[] -->
 
 **ٹیڑھا** — *ṭeṛhā* — "crooked".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ٹیڑھا** (*ṭeṛhā*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*treḍḍha*, "slanting, squinting", a form CDIAL reconstructs from its descendants (CDIAL 6071). It is a form CDIAL gives beside a reconstructed *\*treḍḍa*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

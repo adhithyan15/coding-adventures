@@ -1,7 +1,7 @@
 {
   "language": "japanese",
   "chapter": 38,
-  "sourceHash": "fnv1a64:86006f5a8f7b876d",
+  "sourceHash": "fnv1a64:f4c0ff40fd9cc4d0",
   "lessonIds": [
     "JA-C38-yuka",
     "JA-C38-kagami",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "japanese/narration/ch38.txt",
   "json": "japanese/narration/ch38.json",
-  "textHash": "fnv1a64:f11773648603c912",
-  "jsonHash": "fnv1a64:67783a3dbad55397",
+  "textHash": "fnv1a64:410d22d4a4c9d83f",
+  "jsonHash": "fnv1a64:f2ff640983762ae8",
   "findings": []
 }

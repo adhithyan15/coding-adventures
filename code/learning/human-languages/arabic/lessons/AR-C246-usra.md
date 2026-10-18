@@ -14,7 +14,8 @@ romanization: "usra"
 concept_tag: AR-SHAY246-USRA
 prerequisites: [AR-C245-jawwal, AR-C245-shasha]
 sounds: []
-roots: []
+roots: [ʾ-s-r]
+etymology_hook: "usra: built on the root ʾ-s-r, 'to bind' (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C245-shasha]
 <!-- hl-knowledge: introduces=[AR-LEX-C246-SHAY246-01]; assesses=[] -->
 
 **أسرة** — *usra* — "a family".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**أسرة** (*usra*) is built on the native Arabic root *ʾ-s-r*, "to bind" (Lane). Lane's *usra* is a man's nearest kin, named because he is strengthened by them.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

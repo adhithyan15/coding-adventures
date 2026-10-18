@@ -14,7 +14,8 @@ romanization: "peṭ dard"
 concept_tag: UR-SEHAT152-PET-DARD
 prerequisites: [UR-C152-khansi, UR-C152-sar-dard]
 sounds: []
-roots: []
+roots: [prakrit-petta, persian-dard]
+etymology_hook: "peṭ ← *peṭṭa 'belly', reconstructed (CDIAL 8376); dard 'pain' usually traced to Persian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C152-sar-dard]
 <!-- hl-knowledge: introduces=[UR-LEX-C152-SEHAT152-05]; assesses=[] -->
 
 **پیٹ درد** — *peṭ dard* — "a stomach ache".
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**پیٹ درد** (*peṭ dard*) joins *peṭ*, "belly", and *dard*, "pain". CDIAL lists *peṭ* under a reconstructed *\*peṭṭa*, "belly" (CDIAL 8376), and notes that it may be the same word as forms meaning "basket"; *dard* is usually traced to Persian.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

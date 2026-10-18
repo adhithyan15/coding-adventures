@@ -12,6 +12,9 @@ Before the new one: say the Urdu for height, then the Urdu for a clinic.
 You'll want to know: چھالا.
 چھالا — chhālā — "a blister".
 
+The word, taken apart.
+چھالا (chhālā) belongs with Hindi chālā, "skin, hide", and chālī, "a small blister", which CDIAL lists under Sanskrit challi, "bark", a word it thinks probably non-Aryan (CDIAL 5005).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Urdu for a clinic, then the Urdu for a blister.
 
 You'll want to know: نشان.
 نشان — nishān — "a mark, a scar".
+
+The word, taken apart.
+نشان (nishān) is a loan, usually traced to Persian nishān, "a sign, a mark".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Urdu for a blister, then the Urdu for a mark.
 You'll want to know: پٹی.
 پٹی — paṭṭī — "a bandage".
 
+The word, taken apart.
+پٹی (paṭṭī) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from paṭṭa, "cloth; bandage" (CDIAL 7700). CDIAL thinks the word probably came from a non-Aryan source.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Urdu for a mark, then the Urdu for a bandage.
 You'll want to know: مرہم.
 مرہم — marham — "an ointment".
 
+The word, taken apart.
+مرہم (marham) is a loan from Arabic marham, "ointment", which reached Urdu through Persian. Its Arabic root is r-h-m (Lane).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Urdu for a bandage, then the Urdu for an ointment.
 
 You'll want to know: دوا خانہ.
 دوا خانہ — davā khānā — "a pharmacy".
+
+The phrase, taken apart.
+دوا خانہ (davā khānā) is "medicine house": davā, "medicine", from Arabic dawāʾ, "remedy", which reached Urdu through Persian (Lane, root d-w-y), and Persian khāna, "house".
 
 What you've built.
 One more word for this chapter.

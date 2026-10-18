@@ -14,7 +14,8 @@ romanization: "piyâde shodan"
 concept_tag: FA-VERB-PIYADE-SHODAN
 prerequisites: [FA-C252-negahban, FA-C252-roftegar]
 sounds: []
-roots: []
+roots: [persian-piyada, persian-shudan]
+etymology_hook: "piyâde ← Middle Persian payādag 'foot soldier' (EtymDB), + shodan"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C252-roftegar]
 <!-- hl-knowledge: introduces=[FA-LEX-C253-KONESH253-01]; assesses=[] -->
 
 **پیاده شدن** — *piyâde shodan* — "to get off (a vehicle)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*piyâde shodan* is "to become on foot": *piyâde* is inherited, from Middle Persian *payādag*, "foot soldier" (EtymDB, which also lists the sense "chess pawn"). *shodan*, "to become", is an inherited verb; it is usually traced to Middle Persian *šudan*, "to go".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

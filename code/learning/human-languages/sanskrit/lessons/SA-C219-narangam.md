@@ -14,7 +14,8 @@ romanization: "nāraṅgam"
 concept_tag: SA-THG219-NARANGAM
 prerequisites: [SA-C218-datram, SA-C219-bilvam]
 sounds: []
-roots: []
+roots: [sanskrit-naranga]
+etymology_hook: "nāraṅga 'orange tree' (CDIAL 7073), origin uncertain; EtymDB: Persian nārang, Arabic nāranj, English orange"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C219-bilvam]
 <!-- hl-knowledge: introduces=[SA-LEX-C219-THG219-02]; assesses=[] -->
 
 **नारंगम्** — *nāraṅgam* — "an orange".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*nāraṅga* names the orange tree, first in Suśruta (CDIAL 7073); MW gives no derivation, so its origin is uncertain. EtymDB traces it west: Persian borrowed it as *nārang*, Arabic took *nāranj*, and through Old French it became English *orange*. At home it stays as Hindi *nāraṅgī*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

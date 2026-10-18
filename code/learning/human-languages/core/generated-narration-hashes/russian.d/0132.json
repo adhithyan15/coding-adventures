@@ -1,7 +1,7 @@
 {
   "language": "russian",
   "chapter": 132,
-  "sourceHash": "fnv1a64:89e42478e9b4c75b",
+  "sourceHash": "fnv1a64:999e44e3894483aa",
   "lessonIds": [
     "RU-C132-to-get-dressed",
     "RU-C132-to-wash",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "russian/narration/ch132.txt",
   "json": "russian/narration/ch132.json",
-  "textHash": "fnv1a64:a50b224ba4b2b37a",
-  "jsonHash": "fnv1a64:1e5d8c775a7b507b",
+  "textHash": "fnv1a64:b36b3f3a8d01af49",
+  "jsonHash": "fnv1a64:41221203270742db",
   "findings": []
 }

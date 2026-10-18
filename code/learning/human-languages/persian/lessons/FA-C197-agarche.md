@@ -14,7 +14,8 @@ romanization: "agarche"
 concept_tag: FA-CHERA197-AGARCHE
 prerequisites: [FA-C197-qanun, FA-C197-ba-in-hal]
 sounds: []
-roots: []
+roots: [persian-agar, persian-che]
+etymology_hook: "agarche: Persian agar 'if' (EtymDB) + che; native"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C197-ba-in-hal]
 <!-- hl-knowledge: introduces=[FA-LEX-C197-CHERA197-04]; assesses=[] -->
 
 **اگرچه** — *agarche* — "although".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*agarche* is *agar*, "if", with *che*, "what": "even if". Both are native; *agar* continues Middle Persian *agar* (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -23,6 +23,9 @@ To say what happened, the polite verb changes ます to ました, mashita:
 せんしゅう はたらきました。 — senshū hatarakimashita — "I worked last week."
 はたらきます becomes はたらきました, ねます becomes ねました. Every polite verb makes its past this way.
 
+The word, taken apart.
+せんしゅう (senshū) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are sen, "before, previous" (Middle Chinese sen) and shū, "week" (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription).
+
 Guided Practice.
 [pause 1 second]
 [your turn — say: senshū]
@@ -56,6 +59,9 @@ You'll want to know: せんげつ.
 せんげつ — sengetsu — "last month". The せん at its start is the same as in せんしゅう (senshū): "the one before".
 せんげつ うみに いきました。 — sengetsu umi ni ikimashita — "I went to the sea last month."
 いく, iku, "to go", gives いきます and then いきました.
+
+The word, taken apart.
+せんげつ (sengetsu) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are sen, "before, previous" (Middle Chinese sen) and getsu, "moon, month" (ngjwot) (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription).
 
 Guided Practice.
 [pause 1 second]
@@ -94,6 +100,9 @@ To say what did NOT happen, the polite negative ません adds でした, deshit
 form: affirmative. now, or as a plan: いきます. before now: いきました.
 form: negative. now, or as a plan: いきません. before now: いきませんでした.
 
+The word, taken apart.
+きょねん (kyonen) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are kyo, "go away, past" (Middle Chinese khjoH) and nen, "year" (nen) (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription).
+
 Guided Practice.
 [pause 1 second]
 [your turn — say: kyonen]
@@ -129,6 +138,9 @@ You'll want to know: さっき.
 さっき — sakki — "a moment ago", "a little while ago": earlier today, not long before now. The small っ holds the beat before ki.
 さっき おきました。 — sakki okimashita — "I got up a little while ago."
 
+The word, taken apart.
+さっき (sakki) is native, usually explained as saki, "earlier, ahead", with the k doubled; JMdict writes both with the same character. It is inherited rather than borrowed.
+
 Guided Practice.
 [pause 1 second]
 [your turn — say: sakki]
@@ -163,6 +175,9 @@ You'll want to know: おわりました.
 しごとが おわりました。 — shigoto ga owarimashita — "Work is over; I have finished work."
 Now you can say what you did, and when:
 せんしゅう (senshū) はたらきました。 — "I worked last week." きょねん (kyonen) どこにも いきませんでした。 — "Last year I didn't go anywhere."
+
+The word, taken apart.
+おわりました (owarimashita) is native owaru, "to end", with -mashita, the past of the polite ending -masu. The verb is inherited rather than borrowed (JMdict).
 
 Guided Practice.
 [pause 1 second]

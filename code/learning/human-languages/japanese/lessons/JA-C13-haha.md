@@ -11,8 +11,8 @@ gloss: my mother
 concept_tag: JA-FAMILY-MOTHER
 prerequisites: [JA-C13-chichi]
 sounds: [mora]
-roots: []
-etymology_hook: A second doubled sign gives the matching in-group family word.
+roots: [japanese-haha]
+etymology_hook: "haha: native Japanese, inherited, not borrowed; kanji 母 attached later as kun'yomi"
 duration:
   max_seconds: 150
 requires:
@@ -43,6 +43,11 @@ Before meeting the paired family word, say **ちち** once.
 [YOU WRITE: distant **す**]
 
 Hear *ha-ha*, say it once, then contrast *chichi*.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**はは** (*haha*) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2).
 
 ## Guided Practice — read, copy, recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-HAHA, JA-SCRIPT-HA-01] -->

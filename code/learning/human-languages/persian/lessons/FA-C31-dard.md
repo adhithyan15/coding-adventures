@@ -14,7 +14,8 @@ romanization: "dard"
 concept_tag: FA-HEALTH31-DARD
 prerequisites: [FA-C30-bimarestan, FA-C30-bimar]
 sounds: []
-roots: []
+roots: [persian-dard]
+etymology_hook: "dard: inherited, usually traced to Middle Persian dard"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C30-bimar]
 <!-- hl-knowledge: introduces=[FA-LEX-C31-HEALTH31-01]; assesses=[] -->
 
 **درد** — *dard* — "pain".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*dard* is a native Persian word, inherited rather than borrowed; it is usually traced to Middle Persian *dard*, "pain".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "bhāṣate"
 concept_tag: SA-VERB-BHASATE
 prerequisites: [SA-C203-vandate, SA-C203-yacate]
 sounds: []
-roots: []
+roots: [sanskrit-bhashate]
+etymology_hook: "bhāṣate ← root √bhāṣ 'speak, say' (MW; CDIAL 9478)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C203-yacate]
 <!-- hl-knowledge: introduces=[SA-LEX-C203-ACT203-04]; assesses=[] -->
 
 **भाषते** — *bhāṣate* — "speaks, talks".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*bhāṣate* is the present of the root √bhāṣ, "to speak, say" (MW), first found in the Taittirīya Brāhmaṇa (CDIAL 9478). The nouns *bhāṣā*, "language", and *bhāṣaṇa*, "speech", are built on the same root.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -12,6 +12,9 @@ Before the new one: say the Marwadi for to fly, then the Marwadi for to weigh.
 You'll want to know: चावणो.
 चावणो — chāvṇo — "to want".
 
+The word, taken apart.
+चावणो (chāvṇo) is a tadbhava, a word inherited and reshaped by sound change. It comes from cāh, "see, look for, desire", a form CDIAL reconstructs from its descendants. CDIAL lists Old Marwari cāhaï under it (CDIAL 4775). CDIAL calls the further source of this reconstructed verb uncertain.
+
 What you've built.
 One more word for this chapter.
 
@@ -42,6 +45,9 @@ Before the new one: say the Marwadi for to weigh, then the Marwadi for to want.
 
 You'll want to know: इच्छा.
 इच्छा — ichchhā — "a wish".
+
+The word, taken apart.
+इच्छा (ichchhā) is Sanskrit icchā, "wish", taken over whole as a learned loan, a tatsama (CDIAL 1557).
 
 What you've built.
 One more word for this chapter.
@@ -74,6 +80,9 @@ Before the new one: say the Marwadi for to want, then the Marwadi for a wish.
 You'll want to know: मन.
 मन — man — "the mind, a wish".
 
+The word, taken apart.
+मन (man) is Sanskrit manas, "mind", taken over whole as a learned loan, a tatsama (CDIAL 9822). The -as ending was dropped. English mind is a distant cousin.
+
 What you've built.
 One more word for this chapter.
 
@@ -105,6 +114,9 @@ Before the new one: say the Marwadi for a wish, then the Marwadi for the mind.
 You'll want to know: आस.
 आस — ās — "hope".
 
+The word, taken apart.
+आस (ās) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from āśā, "wish, expectation". CDIAL lists Old Marwari āsa under it (CDIAL 1456).
+
 What you've built.
 One more word for this chapter.
 
@@ -135,6 +147,9 @@ Before the new one: say the Marwadi for the mind, then the Marwadi for hope.
 
 You'll want to know: मांग.
 मांग — mā̃g — "a demand".
+
+The word, taken apart.
+मांग (mā̃g) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from mārgya, "to be sought". CDIAL lists Old Marwari māṃga under it (CDIAL 10078). मांग (mā̃g) is the noun of māṅgṇo, "to ask for"; the Old Marwari row means "betrothed".
 
 What you've built.
 One more word for this chapter.

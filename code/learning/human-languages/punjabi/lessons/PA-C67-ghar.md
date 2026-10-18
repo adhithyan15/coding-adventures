@@ -14,7 +14,8 @@ romanization: "ghar"
 concept_tag: PA-FOOD67-GHAR
 prerequisites: [PA-C67-nashta, PA-C67-anda]
 sounds: []
-roots: []
+roots: [grha-sanskrit]
+etymology_hook: "ghar: usually taken as a popular form of Sanskrit gṛha 'house', a link CDIAL calls phonetically difficult (CDIAL 4428)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C67-anda]
 <!-- hl-knowledge: introduces=[PA-LEX-C67-FOOD67-03]; assesses=[] -->
 
 **ਘਰ** — *ghar* — "a house, home".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਘਰ** (*ghar*) is inherited. CDIAL lists it under *ghara*, "house", and reports that it is generally taken as a popular form of Sanskrit *gṛha*, "house", a link it calls phonetically difficult (CDIAL 4428).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

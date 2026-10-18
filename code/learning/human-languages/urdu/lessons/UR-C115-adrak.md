@@ -14,7 +14,8 @@ romanization: "adrak"
 concept_tag: UR-THINGS115-ADRAK
 prerequisites: [UR-C114-piyaz, UR-C114-lahsan]
 sounds: []
-roots: []
+roots: [sanskrit-ardraka]
+etymology_hook: "adrak goes back to Sanskrit ārdraka 'fresh ginger'; CDIAL lists the inherited form as ādā (CDIAL 1341)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C114-lahsan]
 <!-- hl-knowledge: introduces=[UR-LEX-C115-THINGS115-01]; assesses=[] -->
 
 **ادرک** — *adrak* — "ginger".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ادرک** (*adrak*) goes back to Sanskrit *ārdraka*, "fresh ginger" (CDIAL 1341). CDIAL lists the inherited Hindi form as *ādā*; *adrak* keeps more of the Sanskrit shape, so it was probably taken over later and lightly reshaped, a semi-tatsama.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

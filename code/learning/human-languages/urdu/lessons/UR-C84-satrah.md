@@ -14,7 +14,8 @@ romanization: "satrah"
 concept_tag: UR-NUMBERS84-SATRAH
 prerequisites: [UR-C84-pandrah, UR-C84-solah]
 sounds: []
-roots: []
+roots: [sanskrit-saptadasha]
+etymology_hook: "satrah ← Sanskrit saptadaśa 'seventeen', a tadbhava (CDIAL 13146)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C84-solah]
 <!-- hl-knowledge: introduces=[UR-LEX-C84-NUMBERS84-04]; assesses=[] -->
 
 **سترہ** — *satrah* — "seventeen".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**سترہ** (*satrah*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *saptadaśa*, "seventeen" (CDIAL 13146).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -12,6 +12,9 @@ Before the new one: say the Japanese for tofu, then the Japanese for salt.
 You'll want to know: さとう.
 さとう — satou — "sugar".
 
+The word, taken apart.
+さとう (satou) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are sa, "sand" (Middle Chinese srae) and tō, "sugar" (dang) (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription).
+
 What you've built.
 One more word for this chapter.
 
@@ -42,6 +45,9 @@ Before the new one: say the Japanese for salt, then the Japanese for sugar.
 
 You'll want to know: うどん.
 うどん — udon — "udon noodles".
+
+The word, taken apart.
+うどん (udon) is usually traced to a Chinese name for a kind of dumpling, written with two characters that JMdict also gives; the route and the change of meaning are not settled. JMdict marks it as usually written in kana.
 
 What you've built.
 One more word for this chapter.
@@ -74,6 +80,9 @@ Before the new one: say the Japanese for sugar, then the Japanese for udon noodl
 You'll want to know: すし.
 すし — sushi — "sushi".
 
+The word, taken apart.
+すし (sushi) is a native word, inherited rather than borrowed. The usual account derives it from an old adjective sushi, "sour", for the vinegared rice. JMdict marks its common spelling with characters for "long life" and "manage" as ateji, chosen for their sound.
+
 What you've built.
 One more word for this chapter.
 
@@ -105,6 +114,9 @@ Before the new one: say the Japanese for udon noodles, then the Japanese for sus
 You'll want to know: あさごはん.
 あさごはん — asagohan — "breakfast".
 
+The word, taken apart.
+あさごはん (asagohan) mixes the two layers: native asa, "morning", read as a kun'yomi, and gohan, "rice; a meal", Sino-Japanese go, "honourable", and han, "cooked rice" (Middle Chinese bjonH), borrowed from Chinese (JMdict, KANJIDIC2).
+
 What you've built.
 One more word for this chapter.
 
@@ -135,6 +147,9 @@ Before the new one: say the Japanese for sushi, then the Japanese for breakfast.
 
 You'll want to know: おかし.
 おかし — okashi — "sweets, snacks".
+
+The word, taken apart.
+おかし (okashi) is the native polite prefix o- with kashi, "sweets", Sino-Japanese: ka, "fruit; cake" (Middle Chinese kwaX), and shi, a noun ending written with the character for "child" (Middle Chinese tsiX), borrowed from Chinese (JMdict; Unihan).
 
 What you've built.
 One more word for this chapter.

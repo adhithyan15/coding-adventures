@@ -14,7 +14,8 @@ romanization: "dhuāṅ"
 concept_tag: UR-CHIZ206-DHUAN
 prerequisites: [UR-C205-kamyabi, UR-C206-dhul]
 sounds: []
-roots: []
+roots: [sanskrit-dhuma]
+etymology_hook: "dhuāṅ ← Sanskrit dhūma 'smoke, vapour', a tadbhava (CDIAL 6849)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C206-dhul]
 <!-- hl-knowledge: introduces=[UR-LEX-C206-CHIZ206-02]; assesses=[] -->
 
 **دھواں** — *dhuāṅ* — "smoke".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**دھواں** (*dhuāṅ*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *dhūma*, "smoke, vapour" (CDIAL 6849).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

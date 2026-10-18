@@ -14,7 +14,8 @@ romanization: "vīzā"
 concept_tag: UR-CHIZ198-VIZA
 prerequisites: [UR-C198-kaimra, UR-C198-pasport]
 sounds: []
-roots: []
+roots: [english-visa]
+etymology_hook: "vīzā ← English visa"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C198-pasport]
 <!-- hl-knowledge: introduces=[UR-LEX-C198-CHIZ198-05]; assesses=[] -->
 
 **ویزا** — *vīzā* — "a visa".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ویزا** (*vīzā*) is a loan from English *visa*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

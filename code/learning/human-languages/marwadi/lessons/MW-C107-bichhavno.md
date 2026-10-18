@@ -14,7 +14,8 @@ romanization: "bichhāvṇo"
 concept_tag: MW-VERB-BICHHAVNO
 prerequisites: [MW-C107-lagavno, MW-C107-hatavno]
 sounds: []
-roots: []
+roots: [indo-aryan-vicchadayati]
+etymology_hook: "bichhāvṇo ← *vicchādayati 'spread out', reconstructed (CDIAL 11692, Marwari row)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C107-hatavno]
 <!-- hl-knowledge: introduces=[MW-LEX-C107-ACT107-05]; assesses=[] -->
 
 **बिछावणो** — *bichhāvṇo* — "to spread out".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**बिछावणो** (*bichhāvṇo*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*vicchādayati*, "spread out", a form CDIAL reconstructs from its descendants. CDIAL lists Marwari *bichāṇo* under it (CDIAL 11692). It is built on the root *chad*, "to cover".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

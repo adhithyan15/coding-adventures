@@ -15,6 +15,7 @@ concept_tag: GU-THINGS116-DHOKLA
 prerequisites: [GU-C116-jamphal, GU-C116-magphali]
 sounds: []
 roots: []
+etymology_hook: "ḍhokḷāṁ: origin not settled; CDIAL has no entry for it"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C116-magphali]
 <!-- hl-knowledge: introduces=[GU-LEX-C116-THINGS116-05]; assesses=[] -->
 
 **ઢોકળાં** (*ḍhokḷā̃*) — "dhokla".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **ઢોકળાં** (*ḍhokḷāṁ*) is not settled. CDIAL, searched by form and by meaning, has no entry for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

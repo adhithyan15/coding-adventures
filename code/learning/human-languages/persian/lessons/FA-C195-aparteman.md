@@ -14,7 +14,8 @@ romanization: "âpârtemân"
 concept_tag: FA-MAKAN195-APARTEMAN
 prerequisites: [FA-C194-dare, FA-C194-qolle]
 sounds: []
-roots: []
+roots: [french-appartement]
+etymology_hook: "âpârtemân ← French appartement 'apartment'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C194-qolle]
 <!-- hl-knowledge: introduces=[FA-LEX-C195-MAKAN195-01]; assesses=[] -->
 
 **آپارتمان** — *âpârtemân* — "a flat, an apartment".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*âpârtemân* is borrowed from French *appartement*, "apartment" (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

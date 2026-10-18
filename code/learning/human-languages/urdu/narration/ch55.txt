@@ -12,6 +12,9 @@ Before the new one: say the Urdu for an apple, then the Urdu for a banana.
 You'll want to know: آلو.
 آلو — ālū — "a potato".
 
+The word, taken apart.
+آلو (ālū) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from ālu, "an edible root" (CDIAL 1388). When the potato came to India, it took the name of an older root vegetable.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Urdu for a banana, then the Urdu for a potato.
 
 You'll want to know: ٹماٹر.
 ٹماٹر — ṭamāṭar — "a tomato".
+
+The word, taken apart.
+ٹماٹر (ṭamāṭar) is a loan from English tomato.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Urdu for a potato, then the Urdu for a tomato.
 You'll want to know: گاجر.
 گاجر — gājar — "a carrot".
 
+The word, taken apart.
+گاجر (gājar) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from gārjara, "carrot" (CDIAL 4140). The Sanskrit word is known only from the old word-lists.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Urdu for a tomato, then the Urdu for a carrot.
 You'll want to know: چینی.
 چینی — chīnī — "sugar".
 
+The word, taken apart.
+چینی (chīnī) means "Chinese": sugar was named after China. CDIAL lists Hindi cīnā, "Chinese", under Sanskrit cīna, "Chinese" (CDIAL 4841); chīnī is the same name with the ending -ī.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Urdu for a carrot, then the Urdu for sugar.
 
 You'll want to know: نمک.
 نمک — namak — "salt".
+
+The word, taken apart.
+نمک (namak) is a loan, usually traced to Persian namak, "salt".
 
 What you've built.
 One more word for this chapter.

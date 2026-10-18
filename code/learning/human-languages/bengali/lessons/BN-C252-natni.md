@@ -14,7 +14,8 @@ romanization: "nātni"
 concept_tag: BN-JINIS252-NATNI
 prerequisites: [BN-C252-bhaipo, BN-C252-nati]
 sounds: []
-roots: []
+roots: [sanskrit-naptr]
+etymology_hook: "nātni ← Sanskrit naptṛ 'grandson', a tadbhava (CDIAL 6955b)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C252-nati]
 <!-- hl-knowledge: introduces=[BN-LEX-C252-JINIS252-04]; assesses=[] -->
 
 **নাতনি** — *nātni* — "a granddaughter".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**নাতনি** (*nātni*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *naptṛ*, "grandson" (CDIAL 6955b). CDIAL lists Bengali *nātini*, "granddaughter", made from it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

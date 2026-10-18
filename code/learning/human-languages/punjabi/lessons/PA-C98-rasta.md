@@ -14,7 +14,8 @@ romanization: "rastā"
 concept_tag: PA-WORLD98-RASTA
 prerequisites: [PA-C98-piar, PA-C98-sangit]
 sounds: []
-roots: []
+roots: [persian-rasta]
+etymology_hook: "rastā: usually traced to Persian rāsta 'straight; a road'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C98-sangit]
 <!-- hl-knowledge: introduces=[PA-LEX-C98-WORLD98-04]; assesses=[] -->
 
 **ਰਸਤਾ** — *rastā* — "a way, a route".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਰਸਤਾ** (*rastā*) is a loan, usually traced to Persian *rāsta*, "straight; a road". Persian *rāsta* is built on *rāst*, "straight".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "sainikaḥ"
 concept_tag: SA-PPL179-SAINIKAH
 prerequisites: [SA-C178-jamata, SA-C178-snusa]
 sounds: []
-roots: []
+roots: [sanskrit-sainika, sanskrit-sena]
+etymology_hook: "sainika ← senā 'army' + -ika 'belonging to' (MW)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C178-snusa]
 <!-- hl-knowledge: introduces=[SA-LEX-C179-PPL179-01]; assesses=[] -->
 
 **सैनिकः** — *sainikaḥ* — "a soldier".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*sainika* is built on *senā*, "army", with the suffix *-ika*, "belonging to" (MW): "one who belongs to the army". *Senā* is the old word for "army", and it lives on as Hindi *sen*, "army" (CDIAL 13587).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

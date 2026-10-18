@@ -14,7 +14,8 @@ romanization: "kadhaba"
 concept_tag: AR-VERB-KADHABA
 prerequisites: [AR-C258-ihtarama, AR-C258-samaha2]
 sounds: []
-roots: []
+roots: [k-dh-b]
+etymology_hook: "kadhaba: built on the root k-dh-b, 'to lie' (Lane); kadhaba is the plain verb, 'he lied'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C258-samaha2]
 <!-- hl-knowledge: introduces=[AR-LEX-C258-ACT258-03]; assesses=[] -->
 
 **كذب** — *kadhaba* — "to lie, to tell a lie".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**كذب** (*kadhaba*) is built on the native Arabic root *k-dh-b*, "to lie" (Lane). *Kadhaba* is the plain verb, "he lied".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

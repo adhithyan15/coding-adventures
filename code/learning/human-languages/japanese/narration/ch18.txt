@@ -25,11 +25,14 @@ Its own lesson said: ichi is one, and do counts an occurrence. That ど is a cou
 And the つ you spent all of last chapter on is a counter too — the general one. That is why nine of the ten native words carry it and とお does not.
 
 You'll Want to Know — when to reach for it.
-Japanese has a great many counters and you will not learn them all here. What you can learn in one sentence is the rule that gets you through:
+Japanese has a great many counters. One rule gets you through:
 When you do not know the counter, use the つ series. Up to ten it will carry almost any ordinary object.
 That is exactly what Wikipedia says of the traditional numerals — that the problem of choosing can often be sidestepped by using them. ひとつ to とお, and no further, because that is where the series stops.
 コーヒー ふたつ — two coffees. Nobody will blink.
 The rule has an edge, and it is the next lesson: people and animals do not take つ. They have counters of their own and there is no way round it.
+
+The word, taken apart.
+…つ (-tsu) is a native counter, inherited rather than borrowed; its older origin is not settled (JMdict).
 
 Guided Practice.
 Say コーヒー ふたつ. Then say いちど and name the counter inside it.
@@ -68,6 +71,9 @@ Grammar Lens — where the tsu rule stops.
 Last lesson's rule had an edge, and this is it. つ never counts people. There is no hitotsu of a person; you cannot sidestep にん (-nin), and the same is true of animals, which have counters of their own.
 So the rule now reads with both ends showing: use つ for ordinary things up to ten; use the proper counter for anything alive.
 And にん (-nin) itself has an exception, at exactly two numbers. That is the next lesson.
+
+The word, taken apart.
+にん (-nin) is Sino-Japanese: an on'yomi of the character for "person", borrowed from Chinese (Middle Chinese nyin); jin is a second on'yomi of the same character (KANJIDIC2).
 
 Guided Practice.
 [once you have stopped driving — write: にん (-nin)]
@@ -109,6 +115,9 @@ number: three. native count: みっつ. with the people counter: さんにん.
 hito- and futa- are the same pieces you learned two chapters ago. At one and two, the native number walks into the borrowed counter and stays; from three on, the borrowed number takes over.
 That is the third time you have seen this. At よん and なな the native word stood inside the borrowed count. Here the native word stands inside a borrowed counter. It is one seam, and it runs the whole length of Japanese numbers.
 あね ひとり、あに ふたり — one elder sister, two elder brothers.
+
+The word, taken apart.
+ひとり ふたり (hitori futari) are native: hito, "one", and futa, "two", with -ri, an old native counter for people that KANJIDIC2 lists as a reading of the character for "person". None of it is borrowed.
 
 Guided Practice.
 [once you have stopped driving — write: ひとり and ふたり]
@@ -220,6 +229,9 @@ number: five. the form: ごほん.
 number: seven. the form: ななほん.
 At three the ほ (ho) takes the dakuten you have had since chapter three, and at one, six, eight and ten it goes further still — further than the dakuten can take it. Both of those need a mark on the sign, and the second mark is one this book has never taught. The next two lessons buy it and then spend it; until then, say the four plain ones.
 
+The word, taken apart.
+ほん (-hon) is Sino-Japanese: the on'yomi of 本, a character for "root, origin", borrowed from Chinese (Middle Chinese pwonX; Unihan).
+
 Guided Practice.
 [once you have stopped driving — write: ほん (-hon)]
 Say nihon, yonhon, gohon, nanahon — the four that leave the counter alone. Then say あし にほん.
@@ -306,6 +318,9 @@ number: ten. the form: じゅっぽん. what happens: p, and a held beat.
 Nine is missing from that table on purpose. Its everyday form needs a sign this book has not taught, so it is left out rather than guessed at.
 Read the shape of the rest: one, six, eight and ten all end in a held beat and take p. Three ends in the nasal ん and takes b. Everything else is plain. The counter is not being irregular — it is being pushed by the sound in front of it.
 かみ いっぽん (ippon) — one hair.
+
+The word, taken apart.
+いっぽん (ippon) is Sino-Japanese: ichi, "one" (Middle Chinese 'jit), and hon (Middle Chinese pwonX), both borrowed from Chinese; ichi loses its last beat and h becomes p where they meet.
 
 [once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 Guided Practice — read, copy, recall.

@@ -15,6 +15,7 @@ concept_tag: UR-SIFAT195-ACHANAK
 prerequisites: [UR-C194-tikha, UR-C195-asmani]
 sounds: []
 roots: []
+etymology_hook: "achānak: origin uncertain; CDIAL has no entry"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C195-asmani]
 <!-- hl-knowledge: introduces=[UR-LEX-C195-SIFAT195-02]; assesses=[] -->
 
 **اچانک** — *achānak* — "suddenly".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **اچانک** (*achānak*) is uncertain. CDIAL has no entry for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

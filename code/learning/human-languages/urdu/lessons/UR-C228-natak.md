@@ -14,7 +14,8 @@ romanization: "nāṭak"
 concept_tag: UR-CHIZ228-NATAK
 prerequisites: [UR-C228-khilari, UR-C228-film]
 sounds: []
-roots: []
+roots: [sanskrit-nataka]
+etymology_hook: "nāṭak ← Sanskrit nāṭaka 'a play, a drama', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C228-film]
 <!-- hl-knowledge: introduces=[UR-LEX-C228-CHIZ228-05]; assesses=[] -->
 
 **ناٹک** — *nāṭak* — "a play, a drama".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ناٹک** (*nāṭak*) is Sanskrit *nāṭaka*, "a play, a drama", taken over whole as a learned loan, a tatsama. It is built on *naṭa*, "actor, dancer".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

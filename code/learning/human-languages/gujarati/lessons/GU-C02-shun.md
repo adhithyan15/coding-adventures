@@ -11,7 +11,8 @@ gloss: what
 concept_tag: QUESTION-WHAT
 prerequisites: [GU-C02-naam, GU-W02-da]
 sounds: [sha, u-nasal]
-roots: [ka-interrogative]
+roots: [ka-interrogative, sanskrit-kidrsha]
+etymology_hook: "shũ: CDIAL lists it under Sanskrit kīdṛśa 'of what kind', through *ksiũ, which lost its vowel (CDIAL 3197)"
 duration:
   max_seconds: 180
 requires:
@@ -53,6 +54,8 @@ interrogative stem **ક-** (*ka-*, PIE **\*kʷo-**) — the root behind English
 that **k-** plainly — *kem* (how), **કોણ** (*kōṇ*, who), **ક્યાં**
 (*kyā̃*, where), **ક્યારે** (*kyāre*, when) — but "what" wore down into this
 *sh-* form. So *shũ* is the odd cousin in a *k-* family.
+
+CDIAL lists it under Sanskrit *kīdṛśa*, "of what kind", through a form *\*ksiũ* that lost its first vowel (CDIAL 3197).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[GU-CONCEPT-C02-NAAM-01, GU-CONCEPT-C02-SHUN-01] -->

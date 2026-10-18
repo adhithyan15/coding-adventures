@@ -46,7 +46,7 @@ reviews_of: [FR-C197-marie]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**mariée** — the feminine of *marié*, used as a noun: the bride.
+**mariée** — the feminine of *marié*, used as a noun: the bride. *Marier* ← Latin *marītāre*, "to wed" (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

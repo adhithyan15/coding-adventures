@@ -11,8 +11,8 @@ gloss: university student
 concept_tag: ZH-SCHOOL-UNIVERSITY-STUDENT
 prerequisites: [ZH-C13-daxue]
 sounds: [tone-4, tone-2, tone-neutral]
-roots: []
-etymology_hook: University plus student overlaps at 学, so three spoken beats carry the longer identity word.
+roots: [middle-chinese-dah, middle-chinese-haewk, middle-chinese-srjaeng]
+etymology_hook: "dàxuésheng: built from Middle Chinese daH, haewk and srjaeng, 'big', 'learning', 'life'"
 duration:
   max_seconds: 135
 requires:
@@ -43,6 +43,9 @@ reviews_of: [ZH-C13-daxue, ZH-C13-xuesheng]
 
 Say three beats: falling *dà*, rising *xué*, light *sheng*. Do not repeat *xué*;
 the two familiar words overlap there.
+
+*Dàxuésheng* is built from Middle Chinese *daH*, *haewk* and *srjaeng*: big,
+learning, life.
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-DAXUESHENG-01] -->

@@ -1,7 +1,7 @@
 {
   "language": "arabic",
   "chapter": 268,
-  "sourceHash": "fnv1a64:f0c300fa3202a119",
+  "sourceHash": "fnv1a64:680f4b4551d9eef7",
   "lessonIds": [
     "AR-C268-maan",
     "AR-C268-hasaba",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "arabic/narration/ch268.txt",
   "json": "arabic/narration/ch268.json",
-  "textHash": "fnv1a64:60c5a7f33b6d1338",
-  "jsonHash": "fnv1a64:35ad8d56d5ca7dc1",
+  "textHash": "fnv1a64:f37a8b9ec7fecfd8",
+  "jsonHash": "fnv1a64:50544fac7e473e7d",
   "findings": []
 }

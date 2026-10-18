@@ -14,7 +14,8 @@ romanization: "miṣṭānnam"
 concept_tag: SA-THG246-MISTANNAM
 prerequisites: [SA-C246-saktuh, SA-C246-ksaudram]
 sounds: []
-roots: []
+roots: [sanskrit-mishta, ad-eat]
+etymology_hook: "miṣṭānna = miṣṭa 'sweet' + anna 'food'; miṣṭa gives Hindi mīṭhā (CDIAL 10299)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C246-ksaudram]
 <!-- hl-knowledge: introduces=[SA-LEX-C246-THG246-05]; assesses=[] -->
 
 **मिष्टान्नम्** — *miṣṭānnam* — "a sweet dish".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*miṣṭānna* is a compound of *miṣṭa*, "dainty, sweet", and *anna*, "food" (MW), which you have already met. CDIAL 10299 lists *miṣṭa* beside *mṛṣṭa*, "rubbed, prepared", and Hindi *mīṭhā*, "sweet", comes from it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

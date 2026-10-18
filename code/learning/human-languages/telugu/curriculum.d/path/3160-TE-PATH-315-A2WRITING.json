@@ -1,0 +1,9 @@
+{
+  "id": "TE-PATH-315-A2WRITING",
+  "spine_node": "SPINE-SAY-WHAT-I-DO",
+  "before": [],
+  "inline": [
+    "TE-EXT-315-A2WRITING"
+  ],
+  "after": []
+}

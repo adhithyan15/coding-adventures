@@ -14,7 +14,8 @@ romanization: "khābār"
 concept_tag: BN-JINIS223-KHABAR
 prerequisites: [BN-C222-printar, BN-C223-churi]
 sounds: []
-roots: []
+roots: [sanskrit-khadati]
+etymology_hook: "khābār: on khāoyā 'to eat' ← khādati (CDIAL 3865)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C223-churi]
 <!-- hl-knowledge: introduces=[BN-LEX-C223-JINIS223-02]; assesses=[] -->
 
 **খাবার** — *khābār* — "food".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**খাবার** (*khābār*), "food", is built on *khāoyā*, "to eat", from Sanskrit *khādati*, "chews, eats" (CDIAL 3865): "what is to be eaten".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

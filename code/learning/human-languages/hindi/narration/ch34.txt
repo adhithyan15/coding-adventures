@@ -11,12 +11,12 @@ You can already run a Hindi verb: strip the -ना, keep the stem, add -ता/
 
 The word, taken apart: सोचना.
 सोचना (sochnā) = "to think." It behaves itself completely: the infinitive ends in -ना like every Hindi verb, and the stem is सोच- (soch-). So मैं सोचता हूँ (maiṁ sochtā hūṁ, m.) / मैं सोचती हूँ (sochtī, f.) — "I think." Respectfully, आप सोचते हैं (āp sochte haiṁ).
-The stem is also a noun on its own. सोच (soch) means "a thought" — and, just as ordinarily, "worry." Hold on to that double meaning; the word's history is the reason for it.
+The stem is also a noun on its own. सोच (soch) means "a thought" — and, as often, "worry." Hold on to that double meaning.
 
 You'll want to know — thinking that started out as grieving.
-सोचना comes down from Sanskrit शोचति (śocati) — "burns; grieves; mourns" — on the root शुच् (śuc-). Through Prakrit the sound softened and the sense drifted: burn becomes be consumed by something becomes brood on it becomes plain think. Hindi's ordinary word for thinking is an old word for sorrow that cooled down.
-Be honest about the limits: शुच् has no secure English cousin. Nothing think-shaped waits at the other end of this trail, and inventing one would be worse than saying so.
-What travels instead is the shape of the change. English think and thank are one Germanic root — to thank someone was to think well of them. Latin pēnsāre meant "to weigh," which is why English has pensive. Three unrelated families, three mind-verbs, not one of them starting out meaning "to think."
+सोचना comes down from Sanskrit śocyate, "is made to feel pain" (CDIAL 12621), on the root शुच् (śuc-), "burn, grieve". Through Prakrit the sound softened and the sense drifted: burn becomes be consumed by something becomes brood on it becomes plain think. Hindi's ordinary word for thinking is an old word for sorrow that cooled down.
+Be honest about the limits: शुच् has no secure English cousin, and inventing one would be worse than saying so.
+What travels instead is the shape of the change. English think and thank are one Germanic root — to thank someone was to think well of them. Latin pēnsāre meant "to weigh," which is why English has pensive. Three families, and no mind-verb that began as "think."
 
 Guided Practice.
 [pause 1 second]
@@ -31,7 +31,7 @@ Guided Practice.
 
 Wrap-up Recall.
 [pause 3 seconds]
-What did śocati mean before it meant "think"? (To burn, to grieve.) Which everyday Hindi noun still carries both halves, and where does nahīṁ sit in maiṁ nahīṁ sochtā? (सोच, a thought and a worry; nahīṁ goes before the verb.) Is there an English cousin of śuc-? (No.)
+What did the root śuc- mean before it meant "think"? (To burn, to grieve.) Which everyday Hindi noun still carries both halves, and where does nahīṁ sit in maiṁ nahīṁ sochtā? (सोच, a thought and a worry; nahīṁ goes before the verb.) Is there an English cousin of śuc-? (No.)
 
 
 Lesson 2 of 4.

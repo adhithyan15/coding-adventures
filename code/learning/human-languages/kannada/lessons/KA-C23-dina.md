@@ -6,7 +6,7 @@ sequence: 520
 chapter: 23
 type: word
 headword: ದಿನ
-gloss: "day" — a Sanskrit tatsama word, kept whole and unworn, unlike Hindi's own eroded din; Kannada also has a real native Dravidian word, hagalu, but it means specifically "daytime," not "a day"
+gloss: '"day" — a Sanskrit tatsama word, kept whole and unworn, unlike Hindi''s own eroded din; Kannada also has a real native Dravidian word, hagalu, but it means specifically "daytime," not "a day"'
 romanization: "dina"
 concept_tag: TIME-DAY
 prerequisites: [KA-C17-madhyaahna-madhyaraatri, KA-C18-gante]

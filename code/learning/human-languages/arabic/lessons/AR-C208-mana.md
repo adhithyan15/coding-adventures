@@ -14,7 +14,8 @@ romanization: "maʿnā"
 concept_tag: AR-SABAB208-MANA
 prerequisites: [AR-C207-idha, AR-C207-kama]
 sounds: []
-roots: []
+roots: [ʿ-n-y]
+etymology_hook: "maʿnā: built on the root ʿ-n-y, 'to mean, to intend' (Lane); maʿnā is 'what is meant'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C207-kama]
 <!-- hl-knowledge: introduces=[AR-LEX-C208-SABAB208-01]; assesses=[] -->
 
 **معنى** — *maʿnā* — "a meaning".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**معنى** (*maʿnā*) is built on the native Arabic root *ʿ-n-y*, "to mean, to intend" (Lane). *Maʿnā* is "what is meant".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

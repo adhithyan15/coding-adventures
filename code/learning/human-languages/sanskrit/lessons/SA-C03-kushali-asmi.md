@@ -15,6 +15,7 @@ concept_tag: SA-REPLY-I-AM-WELL
 prerequisites: [SA-C03-kushalam]
 sounds: [anusvara, halant]
 roots: [kushala-sanskrit, as-to-be]
+etymology_hook: "kuśalin 'well' ← kuśala 'right, healthy' (MW); asmi 'I am' ← √as 'be', the same verb as English am"
 reviews_of: [SA-C03-kushalam, SA-C03-aham]
 duration:
   max_seconds: 210

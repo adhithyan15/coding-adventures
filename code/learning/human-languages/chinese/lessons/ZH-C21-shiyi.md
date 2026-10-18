@@ -11,8 +11,8 @@ gloss: "eleven — ten one, and the teens are finished in a sentence"
 concept_tag: ZH-DECIMAL-TEENS
 prerequisites: [ZH-C20-practice]
 sounds: [tone-lexical]
-roots: []
-etymology_hook: "Mandarin builds eleven as ten one and nineteen as ten nine, so the whole of the teens is one pattern rather than nine words -- the best gift the language gives a beginner."
+roots: [middle-chinese-dzyip, middle-chinese-jit]
+etymology_hook: "shíyī: a Chinese formation, ten + one, from Middle Chinese dzyip and 'jit"
 duration:
   max_seconds: 265
 requires:
@@ -53,6 +53,13 @@ each have their own nine irregular words to memorise here.
 **Mandarin has none. The teens are the numbers you already have, in the order
 you already say them.** Nine numbers, no new vocabulary, no new characters, and
 nothing to learn but the order.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**十一** is a Chinese formation, ten and one, and both pieces are inherited from
+Middle Chinese: *dzyip*, "ten", and *'jit*, "one" (Guangyun, in Baxter's
+transcription).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-SHIYI, ZH-GRAMMAR-DECIMAL-TEENS, ZH-LEX-NUM-SHI] -->

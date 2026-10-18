@@ -1,7 +1,7 @@
 {
   "language": "gujarati",
   "chapter": 126,
-  "sourceHash": "fnv1a64:641cab3fca9ef403",
+  "sourceHash": "fnv1a64:11e23adfa888a5d2",
   "lessonIds": [
     "GU-C126-pith",
     "GU-C126-kamar",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "gujarati/narration/ch126.txt",
   "json": "gujarati/narration/ch126.json",
-  "textHash": "fnv1a64:61aa10013974177c",
-  "jsonHash": "fnv1a64:1f48c707c7d30153",
+  "textHash": "fnv1a64:404101189cc6a3d5",
+  "jsonHash": "fnv1a64:66c089473c27f27b",
   "findings": []
 }

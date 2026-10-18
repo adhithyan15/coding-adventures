@@ -14,7 +14,8 @@ romanization: "ābôhāoyā"
 concept_tag: BN-JINIS229-ABOHAOYA
 prerequisites: [BN-C229-korat, BN-C229-phite]
 sounds: []
-roots: []
+roots: [persian-ab-o-hava]
+etymology_hook: "ābôhāoyā: usually traced to Persian āb-o-havā 'water and air; climate'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C229-phite]
 <!-- hl-knowledge: introduces=[BN-LEX-C229-JINIS229-05]; assesses=[] -->
 
 **আবহাওয়া** — *ābôhāoyā* — "the weather".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**আবহাওয়া** (*ābôhāoyā*) is a loan, usually traced to Persian *āb-o-havā*, "water and air; climate". It is Persian *āb*, "water", + *o*, "and", + *havā*, "air", which is itself Arabic.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "gaṇḍakaḥ"
 concept_tag: SA-THG198-GANDAKAH
 prerequisites: [SA-C198-harinah, SA-C198-citrakah]
 sounds: []
-roots: []
+roots: [sanskrit-gandaka]
+etymology_hook: "gaṇḍaka 'rhinoceros', probably of non-Aryan, perhaps Munda, origin (CDIAL 4000)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C198-citrakah]
 <!-- hl-knowledge: introduces=[SA-LEX-C198-THG198-03]; assesses=[] -->
 
 **गण्डकः** — *gaṇḍakaḥ* — "a rhinoceros".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*gaṇḍaka* is probably not an Indo-Aryan word: CDIAL 4000 thinks it shares a non-Aryan origin with *khaḍga*, another rhinoceros word, perhaps from Munda. Hindi *gaĩṛā* comes from a related form.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

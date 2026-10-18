@@ -4,7 +4,7 @@
   "chapter": 55,
   "title": "The Sky",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:69f49b4ded2ff752",
+  "sourceHash": "fnv1a64:348e4d821072638d",
   "lessons": [
     {
       "id": "HI-C55-sun",
@@ -290,7 +290,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0f65c01eba0a8cc5",
+      "sourceHash": "fnv1a64:d0a7518a87cf26ad",
       "notice": null,
       "blocks": [
         {
@@ -321,7 +321,7 @@
             },
             {
               "kind": "speech",
-              "text": "From Sanskrit तारा (tārā), 'star', from the reconstructed h₂stḗr — the same root as Latin stella, Greek astḗr, and English star."
+              "text": "CDIAL files it under Sanskrit tāraka, 'belonging to the stars', a form beside tārā, 'fixed star' (CDIAL 5798). That family is usually traced to the reconstructed h₂stḗr — the same root as Latin stella, Greek astḗr, and English star. CDIAL itself compares Vedic stṛ-, 'star'."
             },
             {
               "kind": "speech",

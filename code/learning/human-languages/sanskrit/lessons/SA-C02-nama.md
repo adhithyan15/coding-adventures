@@ -15,6 +15,7 @@ concept_tag: WORD-NAME
 prerequisites: []
 sounds: [inherent-a, long-aa]
 roots: [naaman-sanskrit]
+etymology_hook: "nāma ← nāman 'name', inherited: MW compares English name, Latin nōmen, Greek onoma"
 reviews_of: []
 duration:
   max_seconds: 210
@@ -31,14 +32,14 @@ register: neutral
 variety: classical
 ---
 
-# नाम (nāma) — "name," the source of a word half the world shares
+# नाम (nāma) — "name," a word half the world shares
 
 ## Warm-up
 
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-[PAUSE 2s] The first word of the introduction — and, since this is Sanskrit, the
-*source* of the word half the world uses.
+[PAUSE 2s] The first word of the introduction — and an old cousin of the
+word half the world uses.
 
 ## Sounds you'll need
 
@@ -53,10 +54,10 @@ keeps apart in *father* and *sofa*.
 
 *nāma* ("name," neuter) is from the stem *nāman*, from
 Proto-Indo-European **\*h₃nomn-**. This is not a *borrowing* from anywhere — it is
-the ancestor: the same root surfaces as English **name**, Latin *nōmen* (→
+inherited: the same root surfaces as English **name**, Latin *nōmen* (→
 **noun**, **nominate**), Greek *onoma*, and, worn down, as Hindi *nām*, Bengali
-*nām*, Punjabi *nāṁ*. When you say Sanskrit *nāma*, you are standing near the
-headwaters of a word that flowed to both Europe and modern India.
+*nām*, Punjabi *nāṁ*. Sanskrit *nāma* is the ancestor of the Indian forms and a
+cousin of the European ones: one root that flowed to both Europe and modern India.
 
 ## Guided Practice
 
@@ -64,7 +65,7 @@ headwaters of a word that flowed to both Europe and modern India.
 
 [PAUSE 1s]
 - [YOU SAY: "nāma"]
-- [YOU SAY: its children, west and east — English *name*, Latin *nōmen*; Hindi *nām*]
+- [YOU SAY: its cousins west and its children east — English *name*, Latin *nōmen*; Hindi *nām*]
 
 ## Wrap-up Recall
 

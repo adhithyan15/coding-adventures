@@ -14,7 +14,8 @@ romanization: "khânom"
 concept_tag: FA-FAMILY34-KHANOM
 prerequisites: [FA-C34-daneshju, FA-C34-agha]
 sounds: []
-roots: []
+roots: [turkic-khan]
+etymology_hook: "khânom: usually traced to Turkic (Turkish hanım 'lady', built on han 'khan')"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C34-agha]
 <!-- hl-knowledge: introduces=[FA-LEX-C34-FAMILY34-05]; assesses=[] -->
 
 **خانم** — *khânom* — "a lady; Mrs".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*khânom* is usually traced to Turkic, to the word behind Turkish *hanım*, "lady", which is built on *han*, "khan, ruler".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

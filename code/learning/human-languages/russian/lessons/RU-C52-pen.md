@@ -47,7 +47,7 @@ reviews_of: [RU-C52-book]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**ручка** is *рука*, "hand", with *-ка*, "little"; *к* turns to *ч* before it. The word means "a little hand", then "a handle", then "a pen", the thing you hold.
+**ручка** is *рука*, "hand", with *-ка*, "little"; *к* turns to *ч* before it. The word means "a little hand", then "a handle", then "a pen", the thing you hold. Vasmer relates *рука* to Lithuanian *rankà*, "hand", and a Lithuanian verb for gathering.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "nakśo"
 concept_tag: GU-JOURNEY-MAP
 prerequisites: [GU-C86-journey, GU-C86-ticket]
 sounds: []
-roots: []
+roots: [arabic-naqsh]
+etymology_hook: "nakśo ← Arabic naqsh 'a painting, an engraving', through Persian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C86-ticket]
 <!-- hl-knowledge: introduces=[GU-LEX-C86-JOURNEY-03]; assesses=[] -->
 
 **નકશો** (*nakśo*) — "a map".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**નકશો** (*nakśo*) is a loan from Arabic *naqsh*, "a painting, an engraving", which reached Gujarati through Persian. Its Arabic root is *n-q-sh* (Lane). Persian made *naqsha*, "map, plan", from it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

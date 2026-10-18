@@ -14,7 +14,8 @@ romanization: "lājuk"
 concept_tag: BN-QUAL144-LAJUK
 prerequisites: [BN-C143-chhotokhato, BN-C143-hasikhushi]
 sounds: []
-roots: []
+roots: [sanskrit-lajja]
+etymology_hook: "lājuk: lāj 'shame' ← Sanskrit lajjā 'shame, modesty' (CDIAL 10910) + -uk 'given to'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C143-hasikhushi]
 <!-- hl-knowledge: introduces=[BN-LEX-C144-QUAL144-01]; assesses=[] -->
 
 **লাজুক** — *lājuk* — "shy".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**লাজুক** (*lājuk*) is *lāj*, "shame, modesty", from Sanskrit *lajjā* (CDIAL 10910), with the ending *-uk*, "given to".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

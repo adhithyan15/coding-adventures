@@ -14,7 +14,8 @@ romanization: "môrā"
 concept_tag: BN-VERB-MORA
 prerequisites: [BN-C237-par-hooya, BN-C237-berano]
 sounds: []
-roots: []
+roots: [sanskrit-marate]
+etymology_hook: "môrā ← Sanskrit marate 'will die', a tadbhava (CDIAL 9871)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C237-berano]
 <!-- hl-knowledge: introduces=[BN-LEX-C238-ACT238-01]; assesses=[] -->
 
 **মরা** — *môrā* — "to die".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**মরা** (*môrā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *marate*, "will die" (CDIAL 9871). CDIAL lists Bengali *marā*, "dies", and thinks it possible or even probable that the verb continues this form directly.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "sundar"
 concept_tag: MW-QUAL144-SUNDAR
 prerequisites: [MW-C143-karvo, MW-C143-tikho]
 sounds: []
-roots: []
+roots: [sanskrit-sundara]
+etymology_hook: "sundar ← Sanskrit sundara 'beautiful', a tatsama (CDIAL 13474)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C143-tikho]
 <!-- hl-knowledge: introduces=[MW-LEX-C144-QUAL144-01]; assesses=[] -->
 
 **सुंदर** — *sundar* — "beautiful".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**सुंदर** (*sundar*) is Sanskrit *sundara*, "beautiful", taken over whole as a learned loan, a tatsama (CDIAL 13474). CDIAL asks whether the Sanskrit word is itself a Middle Indo-Aryan form of *sūnara*, "excellent".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "puro"
 concept_tag: BN-GUN162-PURO
 prerequisites: [BN-C162-pocha, BN-C162-adha]
 sounds: []
-roots: []
+roots: [sanskrit-pura]
+etymology_hook: "puro ← Sanskrit pūra 'filling', a tadbhava (CDIAL 8330)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C162-adha]
 <!-- hl-knowledge: introduces=[BN-LEX-C162-GUN162-04]; assesses=[] -->
 
 **পুরো** — *puro* — "whole, entire".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**পুরো** (*puro*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *pūra*, "filling" (CDIAL 8330). CDIAL lists Bengali *purā*, "full".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "sarovaraḥ"
 concept_tag: SA-THINGS124-SAROVARAH
 prerequisites: [SA-C123-dhumayanam, SA-C124-patah]
 sounds: []
-roots: []
+roots: [sanskrit-saras]
+etymology_hook: "sarovara ← saras 'lake, pool' (√sṛ 'flow', CDIAL 13254) + vara 'choice, best': 'the best of pools' (MW)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C124-patah]
 <!-- hl-knowledge: introduces=[SA-LEX-C124-THINGS124-02]; assesses=[] -->
 
 **सरोवरः** — *sarovaraḥ* — "a lake".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*sarovara* is built from *saras* "a lake, a pool", from the root √sṛ "flow" (CDIAL 13254), and *vara* "choice, best": "the finest of pools", a lake deep enough for the lotus (MW).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

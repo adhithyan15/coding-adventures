@@ -1,7 +1,7 @@
 {
   "language": "persian",
   "chapter": 268,
-  "sourceHash": "fnv1a64:5580d7806ab1af2f",
+  "sourceHash": "fnv1a64:36d5c27b9d404ecb",
   "lessonIds": [
     "FA-C268-darvaze",
     "FA-C268-sayeban",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "persian/narration/ch268.txt",
   "json": "persian/narration/ch268.json",
-  "textHash": "fnv1a64:fe26678ef1680b06",
-  "jsonHash": "fnv1a64:9492c1934bd3cafa",
+  "textHash": "fnv1a64:422e5ddefcf3291b",
+  "jsonHash": "fnv1a64:93b51d804639892b",
   "findings": []
 }

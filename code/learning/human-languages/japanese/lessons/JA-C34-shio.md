@@ -14,7 +14,8 @@ romanization: "shio"
 concept_tag: JA-FOOD34-SHIO
 prerequisites: [JA-C34-ninjin, JA-C34-toufu]
 sounds: []
-roots: []
+roots: [japanese-shio]
+etymology_hook: "shio: native Japanese, inherited, not borrowed; kanji 塩 attached later as kun'yomi"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C34-toufu]
 <!-- hl-knowledge: introduces=[JA-LEX-C34-FOOD34-05]; assesses=[] -->
 
 **しお** — *shio* — "salt".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**しお** (*shio*) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,7 +1,7 @@
 {
   "language": "japanese",
   "chapter": 46,
-  "sourceHash": "fnv1a64:c13a72e120ef82aa",
+  "sourceHash": "fnv1a64:534f7dbc0c2fbc83",
   "lessonIds": [
     "JA-C46-mushi",
     "JA-C46-ari",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "japanese/narration/ch46.txt",
   "json": "japanese/narration/ch46.json",
-  "textHash": "fnv1a64:5650b99d2021a241",
-  "jsonHash": "fnv1a64:547d58ce985c84a3",
+  "textHash": "fnv1a64:c9241c5a21d1e64d",
+  "jsonHash": "fnv1a64:e18d1c0784b82718",
   "findings": []
 }

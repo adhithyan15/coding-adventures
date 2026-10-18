@@ -14,7 +14,8 @@ romanization: "nath"
 concept_tag: MW-THINGS130-NATH
 prerequisites: [MW-C129-churi, MW-C130-borlo]
 sounds: []
-roots: []
+roots: [sanskrit-nasta-nose]
+etymology_hook: "nath ← Sanskrit nasta 'nose', a tadbhava (CDIAL 7031, Gujarati row)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C130-borlo]
 <!-- hl-knowledge: introduces=[MW-LEX-C130-THINGS130-02]; assesses=[] -->
 
 **नथ** — *nath* — "a nose ring".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**नथ** (*nath*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *nasta*, "nose". CDIAL gives no Marwari form in this entry (CDIAL 7031); the match is through Gujarati *nath*. CDIAL lists Gujarati *nath*, "nose ring for women", and Hindi *nāth*, "nose rope", under it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

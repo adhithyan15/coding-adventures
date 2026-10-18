@@ -14,7 +14,8 @@ romanization: "honya"
 concept_tag: JA-THINGS118-HONYA
 prerequisites: [JA-C118-kusari, JA-C118-wata]
 sounds: []
-roots: []
+roots: [middle-chinese-pwonx, japanese-ya-house]
+etymology_hook: "hon'ya: Sino-Japanese hon 本 'book' + native ya 'shop'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C118-wata]
 <!-- hl-knowledge: introduces=[JA-LEX-C118-THINGS118-05]; assesses=[] -->
 
 **ほんや** — *honya* — "a bookshop".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ほんや** (*hon'ya*) mixes the two layers: *hon*, "book", the on'yomi of its first character, borrowed from Chinese (Middle Chinese *pwonX*), and native *ya*, "house, shop" (JMdict, KANJIDIC2).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

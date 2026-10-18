@@ -14,7 +14,8 @@ romanization: "yokubou"
 concept_tag: JA-WANT92-YOKUBOU
 prerequisites: [JA-C92-negau, JA-C92-tanomi]
 sounds: []
-roots: []
+roots: [middle-chinese-yowk, middle-chinese-mjangh]
+etymology_hook: "yokubou: Sino-Japanese 欲 'desire' + 望 'hope', on'yomi borrowed from Chinese"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C92-tanomi]
 <!-- hl-knowledge: introduces=[JA-LEX-C92-WANT92-05]; assesses=[] -->
 
 **よくぼう** — *yokubou* — "a desire".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**よくぼう** (*yokubou*) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are *yoku*, "desire" (Middle Chinese *yowk*) and *bō*, "hope; gaze" (*mjangH*) (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

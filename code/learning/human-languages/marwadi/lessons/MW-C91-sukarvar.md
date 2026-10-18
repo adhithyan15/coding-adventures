@@ -14,7 +14,8 @@ romanization: "sukarvār"
 concept_tag: MW-TIME91-SUKARVAR
 prerequisites: [MW-C91-mangalvar, MW-C91-guruvar]
 sounds: []
-roots: []
+roots: [sanskrit-shukra, sanskrit-vara-day]
+etymology_hook: "sukarvār: Sanskrit śukra 'Venus' + vāra 'day of the week' (CDIAL 12506, 11547), lightly reshaped"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C91-guruvar]
 <!-- hl-knowledge: introduces=[MW-LEX-C91-TIME91-05]; assesses=[] -->
 
 **सुकरवार** — *sukarvār* — "Friday".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**सुकरवार** (*sukarvār*) is a Sanskrit compound, lightly reshaped, a semi-tatsama: *śukra*, "bright", also the planet Venus (CDIAL 12506), and *vāra*, "day of the week" (CDIAL 11547). Marwadi says the *ś* as *s* and splits the *kr* with a vowel.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

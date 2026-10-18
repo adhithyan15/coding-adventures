@@ -14,7 +14,8 @@ romanization: "kambalaḥ"
 concept_tag: SA-THINGS99-KAMBALAH
 prerequisites: [SA-C99-mancah, SA-C99-upadhanam]
 sounds: []
-roots: []
+roots: [sanskrit-kambala]
+etymology_hook: "kambala 'woollen blanket' is old (AV) but uncertain; perhaps Austroasiatic (CDIAL 2771); Hindi kambal"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C99-upadhanam]
 <!-- hl-knowledge: introduces=[SA-LEX-C99-THINGS99-03]; assesses=[] -->
 
 **कम्बलः** — *kambalaḥ* — "a blanket".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*kambala* "a woollen blanket" is already in the Atharvaveda (MW), but its source is uncertain: CDIAL 2771, after EWA, allows that it may be borrowed from Austroasiatic. Hindi *kambal* "blanket" comes from it (CDIAL 2771).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

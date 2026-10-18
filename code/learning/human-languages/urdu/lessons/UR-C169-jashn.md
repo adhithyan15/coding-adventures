@@ -14,7 +14,8 @@ romanization: "jashn"
 concept_tag: UR-CHIZ169-JASHN
 prerequisites: [UR-C169-numaish, UR-C169-mela]
 sounds: []
-roots: []
+roots: [persian-jashn]
+etymology_hook: "jashn: usually traced to Persian jashn 'a feast, a festival'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C169-mela]
 <!-- hl-knowledge: introduces=[UR-LEX-C169-CHIZ169-05]; assesses=[] -->
 
 **جشن** — *jashn* — "a celebration".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**جشن** (*jashn*) is a loan, usually traced to Persian *jashn*, "a feast, a festival".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -234,7 +234,7 @@ describe("letter-anchoring ceiling owner discovery", () => {
     }
   });
 
-  it("rejects a symlink owner without opening its target", () => {
+  it("rejects a symlink owner without opening its target", (ctx) => {
     const root = fixture();
     const outside = fixture();
     const target = join(outside, "target.json");
@@ -242,7 +242,9 @@ describe("letter-anchoring ceiling owner discovery", () => {
     try {
       try {
         symlinkSync(target, join(root, "toy.json"), "file");
-      } catch {
+      } catch (error) {
+        if (process.platform !== "win32" || (error as NodeJS.ErrnoException).code !== "EPERM") throw error;
+        ctx.skip();
         return;
       }
       expect(() => loadLetterAnchoringCeilingPins(root)).toThrow(/real file/);

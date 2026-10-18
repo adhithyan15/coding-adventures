@@ -14,7 +14,8 @@ romanization: "dârchin"
 concept_tag: FA-CHIZ275-DARCHIN
 prerequisites: [FA-C275-kalam, FA-C275-qarch]
 sounds: []
-roots: []
+roots: [persian-darchin]
+etymology_hook: "dârchin: Persian dâr 'wood' + chin 'China': Chinese wood (EtymDB)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C275-qarch]
 <!-- hl-knowledge: introduces=[FA-LEX-C275-CHIZ275-04]; assesses=[] -->
 
 **دارچین** — *dârchin* — "cinnamon".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*dârchin* is *dâr*, "wood, tree", with *chin*, "China": "Chinese wood" (EtymDB). Both parts are Persian; *chin* is the name of China.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

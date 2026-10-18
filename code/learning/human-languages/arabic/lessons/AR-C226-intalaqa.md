@@ -14,7 +14,8 @@ romanization: "inṭalaqa"
 concept_tag: AR-VERB-INTALAQA
 prerequisites: [AR-C225-istamala, AR-C225-ahdara]
 sounds: []
-roots: []
+roots: [ṭ-l-q]
+etymology_hook: "inṭalaqa: built on the root ṭ-l-q, 'to be free, to be let go' (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C225-ahdara]
 <!-- hl-knowledge: introduces=[AR-LEX-C226-ACT226-01]; assesses=[] -->
 
 **انطلق** — *inṭalaqa* — "to set off".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**انطلق** (*inṭalaqa*) is built on the native Arabic root *ṭ-l-q*, "to be free, to be let go" (Lane). *Inṭalaqa* is Form VII, "to be let loose", to set off.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

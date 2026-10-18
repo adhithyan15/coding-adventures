@@ -15,6 +15,7 @@ concept_tag: GU-PANTRY-FLOUR
 prerequisites: [GU-C57-coin, GU-C58-rice-grain]
 sounds: []
 roots: []
+etymology_hook: "loṭ 'flour': origin not settled; CDIAL has no entry for it"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C58-rice-grain]
 <!-- hl-knowledge: introduces=[GU-LEX-C58-PANTRY-02]; assesses=[] -->
 
 **લોટ** (*loṭ*) — "flour". What a **રોટલી** is made from.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **લોટ** (*loṭ*) is not settled. CDIAL, searched by form and by meaning, has no entry for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

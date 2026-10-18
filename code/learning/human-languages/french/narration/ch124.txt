@@ -45,7 +45,7 @@ You'll want to know: l'étudiant.
 l'étudiant — "a student".
 
 The word, taken apart.
-étudiant is the present participle of étudier, "to study", used as a noun: one who is studying.
+étudiant is the present participle of étudier, "to study", used as a noun: one who is studying. Étudier from Old French estudier, from the Latin family of studium, "eagerness, study" (EtymDB 2.1).
 
 What you've built.
 One more word for this chapter.

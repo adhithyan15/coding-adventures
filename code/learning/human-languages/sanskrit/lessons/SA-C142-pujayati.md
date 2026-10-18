@@ -14,7 +14,8 @@ romanization: "pūjayati"
 concept_tag: SA-VERB-PUJAYATI
 prerequisites: [SA-C142-racayati, SA-C142-darsayati]
 sounds: []
-roots: []
+roots: [sanskrit-puja]
+etymology_hook: "pūjayati ← √pūj 'honour, worship' (MW; CDIAL 8316); its origin is not settled; pūjā is kin"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C142-darsayati]
 <!-- hl-knowledge: introduces=[SA-LEX-C142-ACT142-05]; assesses=[] -->
 
 **पूजयति** — *pūjayati* — "worships".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*pūjayati* comes from the root √pūj "honour, worship" (MW; CDIAL 8316), and *pūjā* "worship" is the noun beside it. Its deeper origin is not settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

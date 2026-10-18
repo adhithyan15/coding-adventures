@@ -68,7 +68,7 @@ that carries doubt — the thing Russian puts in a sentence when the answer is n
 yet known.
 
 So *and* plus *maybe* gives *or*. Once you see **и** at the front of **или**, the
-pair is impossible to confuse: the short one joins, the long one doubts.
+pair is impossible to confuse: the short one joins, the long one doubts. Vasmer takes it the same way: **и** plus **ли**.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[RU-LEX-ILI-01, RU-LEX-I-01, RU-LEX-CHITAT] -->

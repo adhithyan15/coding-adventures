@@ -4,7 +4,7 @@
   "chapter": 23,
   "title": "Five Colors",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:000bf3f0a0d9294c",
+  "sourceHash": "fnv1a64:b2e1991c3aebed28",
   "lessons": [
     {
       "id": "BN-C14-lal",
@@ -327,17 +327,17 @@
     {
       "id": "BN-C14-kalo",
       "sequence": 1170,
-      "title": "কালো (kalo) — \"black,\" the same word as \"time\"",
+      "title": "কালো (kalo) — \"black,\" and a look-alike for \"time\"",
       "headword": "কালো",
       "romanization": "kalo",
-      "gloss": "black — the same word Sanskrit uses for time, and for death",
+      "gloss": "black — a look-alike of the Sanskrit word for time",
       "script": "bengali",
       "modality": "sight",
       "derivedModality": "sight",
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:6f043236401e26b5",
+      "sourceHash": "fnv1a64:bd23289a6dfefb54",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -362,7 +362,7 @@
             },
             {
               "kind": "speech",
-              "text": "Blue carried a false friend. This color hides something bigger inside it: the very word Sanskrit uses for time itself, and for death."
+              "text": "Blue carried a false friend. This color has a look-alike too: the Sanskrit word for time, and for death, sounds the same."
             }
           ]
         },
@@ -399,7 +399,11 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "কালো (kalo) is built on Sanskrit কাল (kāla), a word that covers both \"black, dark\" and \"time.\" Sanskrit's own tradition ties the two together poetically — time devours everything, and that devouring is imagined as dark — and the same word names the fierce goddess Kālī (\"the black/dark one\") and stands as an epithet of Yama, the god of death. Hindi's own kālā carries the identical root and the identical story. Be honest, though: whether \"black\" and \"time\" are truly one and the same root, or two separate ancient words that poetry and theology later fused into a single idea, is a real, still-debated question among linguists — the cultural connection is certain; the precise etymology underneath it is not."
+              "text": "কালো (kalo) comes from Sanskrit কাল (kāla), \"black, dark\" (CDIAL 3083), which CDIAL takes from a Dravidian word. Hindi's kālā comes from the same word, and so does the name of the goddess Kālī, \"the dark one.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Sanskrit has a second কাল (kāla), \"time,\" and so \"fate, death\" (CDIAL 3084); as Time the destroyer it is linked with Yama, the god of death. CDIAL gives the two separate entries, and Monier-Williams lists them as two words. MW wonders whether \"black\" shares the root kal-, \"to count,\" of \"time,\" and marks the guess as uncertain. The dictionaries keep the two words apart."
             }
           ]
         },
@@ -435,11 +439,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "what else কাল means — \"time,\" and by extension, death",
+              "instruction": "the other কাল — \"time,\" a separate word",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: what else কাল means — \"time,\" and by extension, death]"
+              "source": "[YOU SAY: the other কাল — \"time,\" a separate word]"
             },
             {
               "kind": "prompt",
@@ -465,7 +469,7 @@
             },
             {
               "kind": "speech",
-              "text": "What does কালো (kalo)'s root, কাল, also mean, besides \"black\"? (Time — and by extension, death; the same word names the goddess Kālī and Yama's epithet Kāla.) Is it settled that \"black\" and \"time\" are the same root? (No — the cultural link is real and ancient, but linguists still debate whether it is one true root or two words later fused.)"
+              "text": "Say what the other Sanskrit কাল means. (Time — and so fate and death.) Then say whether it is the কাল in কালো (kalo). (No — CDIAL and MW list them as two words.)"
             }
           ]
         }

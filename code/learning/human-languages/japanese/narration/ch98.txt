@@ -12,6 +12,9 @@ Before the new one: say the Japanese for a method, then the Japanese for a way o
 You'll want to know: どうして.
 どうして — doushite — "why".
 
+The word, taken apart.
+どうして (doushite) (dōshite) is native: dō, "how", built on the do- of "which", with shite, the linking form of suru, "to do": "having done how" (JMdict). It is inherited rather than borrowed.
+
 What you've built.
 One more word for this chapter.
 
@@ -42,6 +45,9 @@ Before the new one: say the Japanese for a way of doing, then the Japanese for w
 
 You'll want to know: りゆう.
 りゆう — riyuu — "a reason".
+
+The word, taken apart.
+りゆう (riyuu) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are ri, "reason" (Middle Chinese liX) and yū, "cause" (yuw) (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription).
 
 What you've built.
 One more word for this chapter.
@@ -74,6 +80,9 @@ Before the new one: say the Japanese for why, then the Japanese for a reason.
 You'll want to know: ため.
 ため — tame — "for the sake of; because of".
 
+The word, taken apart.
+ため (tame) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. It is usually written in kana; its kanji, when used, is a kun'yomi attached later (JMdict, KANJIDIC2).
+
 What you've built.
 One more word for this chapter.
 
@@ -105,6 +114,9 @@ Before the new one: say the Japanese for a reason, then the Japanese for for the
 You'll want to know: せい.
 せい — sei — "the fault, the cause".
 
+The word, taken apart.
+せい (sei) is usually written in kana, though JMdict gives a kanji spelling for it. Where the word comes from is not settled.
+
 What you've built.
 One more word for this chapter.
 
@@ -135,6 +147,9 @@ Before the new one: say the Japanese for for the sake of; because of, then the J
 
 You'll want to know: ゆえ.
 ゆえ — yue — "a reason (formal)".
+
+The word, taken apart.
+ゆえ (yue) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. It is usually written in kana; its kanji, when used, is a kun'yomi attached later (JMdict, KANJIDIC2).
 
 What you've built.
 One more word for this chapter.

@@ -14,7 +14,8 @@ romanization: "halvāī"
 concept_tag: UR-KAM263-HALVAI
 prerequisites: [UR-C262-adakar, UR-C263-nanbai]
 sounds: []
-roots: []
+roots: [arabic-halwa]
+etymology_hook: "halvāī: halvā 'a sweet' ← Arabic ḥalwā (Lane, root ḥ-l-w) + -āī 'one who makes it'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C263-nanbai]
 <!-- hl-knowledge: introduces=[UR-LEX-C263-KAM263-02]; assesses=[] -->
 
 **حلوائی** — *halvāī* — "a sweet-maker".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**حلوائی** (*halvāī*) is "one who makes *halvā*". *halvā* is Arabic *ḥalwā*, "a sweetmeat", which reached Urdu through Persian (Lane, root *ḥ-l-w*).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

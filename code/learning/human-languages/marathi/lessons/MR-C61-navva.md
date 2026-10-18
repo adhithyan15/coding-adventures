@@ -12,7 +12,7 @@ concept_tag: MR-ORDINAL-NINTH
 prerequisites: [MR-C61-aathva, MR-C60-pachva, MR-C57-sola, MR-C43-javal]
 sounds: []
 roots: []
-etymology_hook: "the ordinal is नववा, not नऊवा -- the older stem नव shows through under the modern नऊ, the same नव that Sanskrit and Latin novem both carry"
+etymology_hook: "नववा, not नऊवा: the ordinal stands on the older नव, Sanskrit nava 'nine', under modern नऊ"
 duration:
   max_seconds: 230
 requires:

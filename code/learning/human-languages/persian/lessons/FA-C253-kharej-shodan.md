@@ -14,7 +14,8 @@ romanization: "khârej shodan"
 concept_tag: FA-VERB-KHAREJ-SHODAN
 prerequisites: [FA-C253-piyade-shodan, FA-C253-vared-shodan]
 sounds: []
-roots: []
+roots: [arabic-harij]
+etymology_hook: "khârej ← Arabic ḫārij 'outside, going out', root ḫ-r-j (Lane), + Persian shodan"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C253-vared-shodan]
 <!-- hl-knowledge: introduces=[FA-LEX-C253-KONESH253-03]; assesses=[] -->
 
 **خارج شدن** — *khârej shodan* — "to go out, to exit".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*khârej shodan* pairs *khârej*, borrowed from Arabic *ḫārij*, "outside, going out" (root *ḫ-r-j*, Lane), with the Persian verb *shodan*, "to become". *shodan*, "to become", is an inherited verb; it is usually traced to Middle Persian *šudan*, "to go".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

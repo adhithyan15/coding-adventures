@@ -14,7 +14,8 @@ romanization: "chann"
 concept_tag: PA-NATURE75-CHANN
 prerequisites: [PA-C75-baddal, PA-C75-suraj]
 sounds: []
-roots: []
+roots: [sanskrit-candra]
+etymology_hook: "chann ← Sanskrit candra 'moon'; CDIAL lists Punjabi cand, candar and Lahnda cann (CDIAL 4661)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C75-suraj]
 <!-- hl-knowledge: introduces=[PA-LEX-C75-NATURE75-05]; assesses=[] -->
 
 **ਚੰਨ** — *chann* — "the moon".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਚੰਨ** (*chann*) is inherited from Sanskrit *candra*, "shining; moon". CDIAL lists Punjabi *cand* and *candar* under it, and the matching Lahnda *cann* (CDIAL 4661).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "kekṛā"
 concept_tag: UR-CHIZ235-KEKRA
 prerequisites: [UR-C235-jugnu, UR-C235-khatmal]
 sounds: []
-roots: []
+roots: [sanskrit-karkata]
+etymology_hook: "kekṛā ← Sanskrit karkaṭa 'crab', a tadbhava (CDIAL 2816)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C235-khatmal]
 <!-- hl-knowledge: introduces=[UR-LEX-C235-CHIZ235-04]; assesses=[] -->
 
 **کیکڑا** — *kekṛā* — "a crab".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**کیکڑا** (*kekṛā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *karkaṭa*, "crab" (CDIAL 2816). CDIAL thinks the word probably non-Aryan, and doubts the usual link with Latin *cancer*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

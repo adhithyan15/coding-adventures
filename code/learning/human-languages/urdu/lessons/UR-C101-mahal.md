@@ -14,7 +14,8 @@ romanization: "mahal"
 concept_tag: UR-LOC101-MAHAL
 prerequisites: [UR-C100-bazar, UR-C100-thana]
 sounds: []
-roots: []
+roots: [arabic-mahall]
+etymology_hook: "mahal ← Arabic maḥall 'a place of alighting, a quarter', through Persian (Lane, root ḥ-l-l)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C100-thana]
 <!-- hl-knowledge: introduces=[UR-LEX-C101-LOC101-01]; assesses=[] -->
 
 **محل** — *mahal* — "a palace".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**محل** (*mahal*) is a loan from Arabic *maḥall*, "a place of alighting, a quarter", which reached Urdu through Persian. Its Arabic root is *ḥ-l-l* (Lane). In Urdu it came to mean "a palace".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

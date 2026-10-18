@@ -14,7 +14,8 @@ romanization: "fākhtā"
 concept_tag: UR-CHIZ175-FAKHTA
 prerequisites: [UR-C175-qulfi, UR-C175-bater]
 sounds: []
-roots: []
+roots: [persian-fakhta]
+etymology_hook: "fākhtā: usually traced to Persian fākhta 'ring-dove'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C175-bater]
 <!-- hl-knowledge: introduces=[UR-LEX-C175-CHIZ175-05]; assesses=[] -->
 
 **فاختہ** — *fākhtā* — "a dove".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**فاختہ** (*fākhtā*) is a loan, usually traced to Persian *fākhta*, "ring-dove".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

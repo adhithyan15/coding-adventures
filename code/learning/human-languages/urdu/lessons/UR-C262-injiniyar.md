@@ -14,7 +14,8 @@ romanization: "injīniyar"
 concept_tag: UR-KAM262-INJINIYAR
 prerequisites: [UR-C262-jaj, UR-C262-shagird]
 sounds: []
-roots: []
+roots: [english-engineer]
+etymology_hook: "injīniyar ← English engineer"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C262-shagird]
 <!-- hl-knowledge: introduces=[UR-LEX-C262-KAM262-03]; assesses=[] -->
 
 **انجینئر** — *injīniyar* — "an engineer".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**انجینئر** (*injīniyar*) is a loan from English *engineer*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

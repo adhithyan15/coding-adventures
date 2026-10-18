@@ -14,7 +14,8 @@ romanization: "boridan"
 concept_tag: FA-VERB-BORIDAN
 prerequisites: [FA-C38-ferestadan, FA-C38-shemordan]
 sounds: []
-roots: []
+roots: [persian-boridan]
+etymology_hook: "boridan: inherited, usually traced to Middle Persian burrīdan"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C38-shemordan]
 <!-- hl-knowledge: introduces=[FA-LEX-C39-VERBS39-01]; assesses=[] -->
 
 **بریدن** — *boridan* — "to cut".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*boridan* is a native Persian word, inherited rather than borrowed; it is usually traced to Middle Persian *burrīdan*, "to cut".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

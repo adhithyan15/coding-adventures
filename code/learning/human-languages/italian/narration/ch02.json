@@ -4,7 +4,7 @@
   "chapter": 2,
   "title": "How Are You?",
   "drivablePrefix": 12,
-  "sourceHash": "fnv1a64:85dcfa039223718a",
+  "sourceHash": "fnv1a64:2654e4a9fb05a3de",
   "lessons": [
     {
       "id": "IT-C02-prego",
@@ -754,7 +754,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:de7dd82da90f3fb9",
+      "sourceHash": "fnv1a64:d7408637e6b321a5",
       "notice": null,
       "blocks": [
         {
@@ -790,6 +790,10 @@
             {
               "kind": "speech",
               "text": "stai = “you are / stand,” the tu form of stare."
+            },
+            {
+              "kind": "speech",
+              "text": "Both words are inherited from Latin: come from quōmodo, “in what way,” and stare from Latin stāre, “to stand” (EtymDB 2.1)."
             },
             {
               "kind": "speech",

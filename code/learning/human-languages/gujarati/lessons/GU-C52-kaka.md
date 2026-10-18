@@ -14,7 +14,8 @@ romanization: "kākā"
 concept_tag: GU-FAMILY2-KAKA
 prerequisites: [GU-C51-grandmother, GU-C51-child]
 sounds: []
-roots: []
+roots: [indo-aryan-kakka]
+etymology_hook: "kākā ← *kākka 'senior male relative', which CDIAL takes from Dravidian (CDIAL 2998)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C51-child]
 <!-- hl-knowledge: introduces=[GU-LEX-C52-FAMILY2-01]; assesses=[] -->
 
 **કાકા** (*kākā*) — "uncle (father's brother)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**કાકા** (*kākā*) goes back to *\*kākka*, "senior male relative", a form CDIAL reconstructs and takes from Dravidian, comparing Kannada *kakka*, "uncle" (CDIAL 2998).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

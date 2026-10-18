@@ -4,7 +4,7 @@
   "chapter": 170,
   "title": "Post, Salary, Tax, Bill, Cash",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:87812b52f723545f",
+  "sourceHash": "fnv1a64:eeaf8d27c895d2f2",
   "lessons": [
     {
       "id": "RU-C170-dolzhnost",
@@ -287,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:fa12a0b7f94ea305",
+      "sourceHash": "fnv1a64:88d88984c24a9095",
       "notice": null,
       "blocks": [
         {
@@ -325,7 +325,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "налог (nalóg) is на-, \"on\", with -лог, from the root of лежать, \"to lie\", and положить, \"to lay\": a tax is what is laid on you."
+              "text": "налог (nalóg) is на-, \"on\", with -лог, from the root of лежать, \"to lie\", and положить, \"to lay\": a tax is what is laid on you. Vasmer derives лог from лежать, Proto-Slavic ležati, kin to Greek léchos, \"a bed\"."
             }
           ]
         },

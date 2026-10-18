@@ -14,7 +14,8 @@ romanization: "istaṭāʿa"
 concept_tag: AR-VERB-ISTATAA
 prerequisites: [AR-C107-shahada, AR-C107-milkiyya]
 sounds: []
-roots: []
+roots: [ṭ-w-ʿ]
+etymology_hook: "istaṭāʿa: built on the root ṭ-w-ʿ, 'to obey, to comply' (Lane); Form X istaṭāʿa came to mean 'to be able' (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C107-milkiyya]
 <!-- hl-knowledge: introduces=[AR-LEX-C107-CAN107-04]; assesses=[] -->
 
 **استطاع** — *istaṭāʿa* — "to be able to, could".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**استطاع** (*istaṭāʿa*) is built on the native Arabic root *ṭ-w-ʿ*, "to obey, to comply" (Lane). Form X *istaṭāʿa* came to mean "to be able" (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "ḍaʿīf"
 concept_tag: AR-QUAL154-DAIF
 prerequisites: [AR-C154-ajuz, AR-C154-qawi]
 sounds: []
-roots: []
+roots: [ḍ-ʿ-f]
+etymology_hook: "ḍaʿīf: built on the root ḍ-ʿ-f, 'to be weak' (Lane); the word ḍaʿīf is the faʿīl adjective, 'weak'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C154-qawi]
 <!-- hl-knowledge: introduces=[AR-LEX-C154-QUAL154-05]; assesses=[] -->
 
 **ضعيف** — *ḍaʿīf* — "weak".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ضعيف** (*ḍaʿīf*) is built on the native Arabic root *ḍ-ʿ-f*, "to be weak" (Lane). The word *ḍaʿīf* is the *faʿīl* adjective, "weak".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

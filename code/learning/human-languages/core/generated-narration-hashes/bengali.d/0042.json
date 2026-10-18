@@ -1,7 +1,7 @@
 {
   "language": "bengali",
   "chapter": 42,
-  "sourceHash": "fnv1a64:c3265218d92af4ab",
+  "sourceHash": "fnv1a64:29c8de69c45f4028",
   "lessonIds": [
     "BN-C42-hat",
     "BN-C42-chul",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "bengali/narration/ch42.txt",
   "json": "bengali/narration/ch42.json",
-  "textHash": "fnv1a64:9fe12cc94967e9c7",
-  "jsonHash": "fnv1a64:a456d9c911793d0d",
+  "textHash": "fnv1a64:c3bed7445e96dcd1",
+  "jsonHash": "fnv1a64:97861b005a0e4a36",
   "findings": []
 }

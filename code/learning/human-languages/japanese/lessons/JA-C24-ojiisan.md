@@ -14,7 +14,8 @@ romanization: "ojiisan"
 concept_tag: JA-HEALTH24-OJIISAN
 prerequisites: [JA-C23-kowai, JA-C24-itami]
 sounds: []
-roots: []
+roots: [japanese-jii]
+etymology_hook: "ojiisan: native o- + jii 'old man, grandfather' + -san; kanji read for meaning"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C24-itami]
 <!-- hl-knowledge: introduces=[JA-LEX-C24-HEALTH24-02]; assesses=[] -->
 
 **おじいさん** — *ojiisan* — "a grandfather".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**おじいさん** (*ojīsan*) is native *jii*, "old man; grandfather", with the polite prefix *o-* and the polite ending *-san*. JMdict writes it with characters for "grandfather", read for their meaning. It is inherited rather than borrowed.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

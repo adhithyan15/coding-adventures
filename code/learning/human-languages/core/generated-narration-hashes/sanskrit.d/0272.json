@@ -1,0 +1,17 @@
+{
+  "language": "sanskrit",
+  "chapter": 272,
+  "sourceHash": "fnv1a64:9825a2039df96e57",
+  "lessonIds": [
+    "SA-C272-offer-condolence",
+    "SA-C272-condolence-first-retrieval",
+    "SA-C272-condolence-final-retrieval"
+  ],
+  "voiceLessons": 3,
+  "drivablePrefix": 3,
+  "text": "sanskrit/narration/ch272.txt",
+  "json": "sanskrit/narration/ch272.json",
+  "textHash": "fnv1a64:25a2d7274db8e8d3",
+  "jsonHash": "fnv1a64:1d9bf3b3365beaf3",
+  "findings": []
+}

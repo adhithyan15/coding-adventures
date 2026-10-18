@@ -14,7 +14,8 @@ romanization: "daulat"
 concept_tag: PA-CAN111-DAULAT
 prerequisites: [PA-C110-mauka, PA-C110-jaidad]
 sounds: []
-roots: []
+roots: [arabic-dawla]
+etymology_hook: "daulat ← Arabic dawla 'a turn of fortune; wealth; the state', through Persian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C110-jaidad]
 <!-- hl-knowledge: introduces=[PA-LEX-C111-CAN111-01]; assesses=[] -->
 
 **ਦੌਲਤ** — *daulat* — "wealth".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਦੌਲਤ** (*daulat*) is a loan from Arabic *dawla*, "a turn of fortune; wealth; the state", which reached Punjabi through Persian. Its Arabic root is *d-w-l* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

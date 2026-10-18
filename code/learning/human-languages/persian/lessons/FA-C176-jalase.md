@@ -14,7 +14,8 @@ romanization: "jalase"
 concept_tag: FA-KAR176-JALASE
 prerequisites: [FA-C176-sherkat, FA-C176-karkhane]
 sounds: []
-roots: []
+roots: [arabic-jalsa]
+etymology_hook: "jalase ← Arabic jalsa 'a sitting, session', root j-l-s (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C176-karkhane]
 <!-- hl-knowledge: introduces=[FA-LEX-C176-KAR176-04]; assesses=[] -->
 
 **جلسه** — *jalase* — "a meeting".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*jalase* is borrowed from Arabic *jalsa*, "a sitting, session". Its Arabic root is *j-l-s* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

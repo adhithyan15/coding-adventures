@@ -14,7 +14,8 @@ romanization: "ḥasāʾ"
 concept_tag: AR-THINGS130-HASA
 prerequisites: [AR-C130-bittikh, AR-C130-mishmish]
 sounds: []
-roots: []
+roots: [ḥ-s-w]
+etymology_hook: "ḥasāʾ: built on the root ḥ-s-w, 'to sip' (Lane); ḥasāʾ is broth, a thing sipped"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C130-mishmish]
 <!-- hl-knowledge: introduces=[AR-LEX-C130-THINGS130-04]; assesses=[] -->
 
 **حساء** — *ḥasāʾ* — "soup".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**حساء** (*ḥasāʾ*) is built on the native Arabic root *ḥ-s-w*, "to sip" (Lane). *Ḥasāʾ* is broth, a thing sipped.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

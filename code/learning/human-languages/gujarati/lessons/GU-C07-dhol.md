@@ -14,7 +14,8 @@ gloss: "a drum"
 concept_tag: GU-ANCHOR-DHOL
 prerequisites: [GU-C07-int]
 sounds: []
-roots: []
+roots: [sanskrit-dhola]
+etymology_hook: "ḍhol ← Sanskrit ḍhola 'large drum', through the doubled variant *ḍholla (CDIAL 5608)"
 duration:
   max_seconds: 120
 requires:
@@ -45,6 +46,11 @@ variety: standard
 **ઢોલ** — *ḍhol* — "a drum".
 
 Say it: *ḍhol*. [YOU LOOK: at its shape as you say it.] The lessons that follow take pieces of it, **ઢ**, and write each one on its own.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ઢોલ** (*ḍhol*) is a tadbhava of Sanskrit *ḍhola*, "large drum". CDIAL lists the Gujarati word under the doubled variant *\*ḍholla* (CDIAL 5608).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[GU-LEX-ANCHOR-DHOL] -->

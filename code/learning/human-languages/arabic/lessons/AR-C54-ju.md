@@ -14,7 +14,8 @@ romanization: "jūʿ"
 concept_tag: AR-HEALTH54-JU
 prerequisites: [AR-C53-alam, AR-C53-dawa]
 sounds: []
-roots: []
+roots: [j-w-ʿ]
+etymology_hook: "jūʿ: built on the root j-w-ʿ, 'to be hungry' (Lane); jūʿ is the verbal noun, 'hunger'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C53-dawa]
 <!-- hl-knowledge: introduces=[AR-LEX-C54-HEALTH54-01]; assesses=[] -->
 
 **جوع** — *jūʿ* — "hunger".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**جوع** (*jūʿ*) is built on the native Arabic root *j-w-ʿ*, "to be hungry" (Lane). *Jūʿ* is the verbal noun, "hunger".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

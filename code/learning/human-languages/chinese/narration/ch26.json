@@ -4,7 +4,7 @@
   "chapter": 26,
   "title": "Ne and Dui",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:ceff0e5c82fef96a",
+  "sourceHash": "fnv1a64:7bcd62aba4e33754",
   "lessons": [
     {
       "id": "ZH-W26-ne",
@@ -225,7 +225,7 @@
       "modalityReasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:397041f319545237",
+      "sourceHash": "fnv1a64:7e268425b53bb3d2",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -368,6 +368,17 @@
         },
         {
           "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "呢 (ne) borrowed its character for the sound; where the particle itself comes from is not settled."
+            }
+          ]
+        },
+        {
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -401,7 +412,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -630,7 +641,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:47e6f8a330cdccf7",
+      "sourceHash": "fnv1a64:19421d6cfdb084ac",
       "notice": null,
       "blocks": [
         {
@@ -756,6 +767,17 @@
         },
         {
           "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "对 (duì) is inherited from Middle Chinese twojH, glossed \"to answer; to match\" (Guangyun); \"correct\" is the later sense."
+            }
+          ]
+        },
+        {
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -789,7 +811,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

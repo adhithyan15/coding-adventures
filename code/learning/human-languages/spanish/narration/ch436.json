@@ -4,7 +4,7 @@
   "chapter": 436,
   "title": "Gente Y Trato",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:5d7b30acfce27f91",
+  "sourceHash": "fnv1a64:b3b0900bde931f31",
   "lessons": [
     {
       "id": "ES-C436-companero",
@@ -163,7 +163,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6bfd296ae1146fd8",
+      "sourceHash": "fnv1a64:1cac8df398309a9a",
       "notice": null,
       "blocks": [
         {
@@ -205,7 +205,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "This one does not come apart. It arrived whole, by way of Italian gruppo, and there is no Spanish piece inside it to recognise."
+              "text": "This one does not come apart. It arrived whole, borrowed from Italian gruppo, and there is no Spanish piece inside it to recognise."
             },
             {
               "kind": "speech",

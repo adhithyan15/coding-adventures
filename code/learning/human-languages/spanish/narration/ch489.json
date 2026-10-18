@@ -4,7 +4,7 @@
   "chapter": 489,
   "title": "Por la ciudad",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:3429483b10dd02f1",
+  "sourceHash": "fnv1a64:64c42ad4c1f59187",
   "lessons": [
     {
       "id": "ES-C489-aparcar",
@@ -583,7 +583,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:aec957b20a200aae",
+      "sourceHash": "fnv1a64:d319646b4b341ab4",
       "notice": null,
       "blocks": [
         {
@@ -625,7 +625,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "buzón has no settled origin. The accounts that dictionaries offer do not agree, and none has won."
+              "text": "buzón is of uncertain origin. The accounts that dictionaries offer do not agree, and none has won."
             }
           ]
         },

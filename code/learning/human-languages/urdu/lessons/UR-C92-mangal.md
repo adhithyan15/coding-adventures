@@ -14,7 +14,8 @@ romanization: "mangal"
 concept_tag: UR-TIME92-MANGAL
 prerequisites: [UR-C91-parson, UR-C91-itvar]
 sounds: []
-roots: []
+roots: [sanskrit-mangala, sanskrit-vara-day]
+etymology_hook: "mangal: short for mangalvār; Sanskrit maṅgala 'the planet Mars; auspicious' (CDIAL 9706) + vāra 'day of the week'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C91-itvar]
 <!-- hl-knowledge: introduces=[UR-LEX-C92-TIME92-01]; assesses=[] -->
 
 **منگل** — *mangal* — "Tuesday".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**منگل** (*mangal*) is short for *mangalvār*, "Mars's day": Sanskrit *maṅgala*, "the planet Mars", a word that also means "auspicious" (CDIAL 9706), with *vāra*, "day of the week".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

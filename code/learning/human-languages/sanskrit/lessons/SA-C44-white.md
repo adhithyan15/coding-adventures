@@ -14,7 +14,8 @@ romanization: "śvetaḥ"
 concept_tag: SA-COLOUR-SHVETA
 prerequisites: [SA-C43-honest, SA-C42-sometimes, SA-C43-hospitality]
 sounds: []
-roots: []
+roots: [shveta-white]
+etymology_hook: "śveta 'white' ← the root √śvit 'be bright'; MW compares Gothic hweits and English white (CDIAL 12774)"
 duration:
   max_seconds: 210
 requires:
@@ -47,6 +48,12 @@ reviews_of: [SA-C43-honest]
 English *white* is the same word by the Germanic road, and Russian *svet*, "light", is another of its brothers — brightness and whiteness were one idea for a long time.
 
 हिमम् is **श्वेतम्**, and so is दधि.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*Śveta* is built on the root √śvit, "to be bright, white" (MW, CDIAL 12774). It is
+inherited: MW compares Gothic *hweits*, the cousin of English **white**.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

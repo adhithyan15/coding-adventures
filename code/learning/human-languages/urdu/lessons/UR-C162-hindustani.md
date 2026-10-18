@@ -14,7 +14,8 @@ romanization: "hindustānī"
 concept_tag: UR-SIFAT162-HINDUSTANI
 prerequisites: [UR-C162-angrezi, UR-C162-pakistani]
 sounds: []
-roots: []
+roots: [persian-hindustan]
+etymology_hook: "hindustānī: Persian Hindūstān 'the land of Hind' + -ī"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C162-pakistani]
 <!-- hl-knowledge: introduces=[UR-LEX-C162-SIFAT162-04]; assesses=[] -->
 
 **ہندوستانی** — *hindustānī* — "Indian".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ہندوستانی** (*hindustānī*) is *Hindūstān*, "the land of Hind", with the ending *-ī*, "of". The name is Persian: *Hindū*, "of Hind, India", and *-stān*, "land".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "mojo"
 concept_tag: MW-CLOTHES85-MOJO
 prerequisites: [MW-C84-pajamo, MW-C84-juti]
 sounds: []
-roots: []
+roots: [persian-muza]
+etymology_hook: "mojo: usually traced to Persian mūza 'boot, stocking'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C84-juti]
 <!-- hl-knowledge: introduces=[MW-LEX-C85-CLOTHES85-01]; assesses=[] -->
 
 **मोजो** — *mojo* — "a sock".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**मोजो** (*mojo*) is a loan, usually traced to Persian *mūza*, "boot, stocking". Marwadi says the *z* as *j*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "vyādhaḥ"
 concept_tag: SA-PPL180-VYADHAH
 prerequisites: [SA-C179-adhivakta, SA-C179-lekhakah]
 sounds: []
-roots: []
+roots: [sanskrit-vyadha]
+etymology_hook: "vyādha ← root √vyadh 'pierce, wound'; MW: 'one who pierces', a hunter (CDIAL 12199)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C179-lekhakah]
 <!-- hl-knowledge: introduces=[SA-LEX-C180-PPL180-01]; assesses=[] -->
 
 **व्याधः** — *vyādhaḥ* — "a hunter".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*vyādha* is built on the root √vyadh, "to pierce, wound" (MW). MW glosses it "one who pierces or wounds", and so a hunter who lives by killing deer (CDIAL 12199).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

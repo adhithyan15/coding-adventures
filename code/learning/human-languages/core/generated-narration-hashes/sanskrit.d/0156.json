@@ -1,7 +1,7 @@
 {
   "language": "sanskrit",
   "chapter": 156,
-  "sourceHash": "fnv1a64:9f24e358538bd97f",
+  "sourceHash": "fnv1a64:643dad999737676b",
   "lessonIds": [
     "SA-C156-priyah",
     "SA-C156-apriyah",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "sanskrit/narration/ch156.txt",
   "json": "sanskrit/narration/ch156.json",
-  "textHash": "fnv1a64:c511a14c7b47ef9e",
-  "jsonHash": "fnv1a64:564e08dfd0817dee",
+  "textHash": "fnv1a64:5040c6db9af3dbbb",
+  "jsonHash": "fnv1a64:087305c0fae004a1",
   "findings": []
 }

@@ -14,7 +14,8 @@ romanization: "sarv"
 concept_tag: FA-CHIZ279-SARV
 prerequisites: [FA-C278-jayeze, FA-C278-ehteram]
 sounds: []
-roots: []
+roots: [persian-sarv]
+etymology_hook: "sarv ← Middle Persian sarw (EtymDB); inherited, native Iranian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C278-ehteram]
 <!-- hl-knowledge: introduces=[FA-LEX-C279-CHIZ279-01]; assesses=[] -->
 
 **سرو** — *sarv* — "a cypress".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*sarv* is a native Persian word, inherited rather than borrowed: it continues Middle Persian *sarw*, "cypress" (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

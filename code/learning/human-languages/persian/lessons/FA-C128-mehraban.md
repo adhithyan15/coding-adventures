@@ -14,7 +14,8 @@ romanization: "mehrabân"
 concept_tag: FA-QUAL128-MEHRABAN
 prerequisites: [FA-C128-talayi, FA-C128-gerd]
 sounds: []
-roots: []
+roots: [persian-mihr, persian-mihrban]
+etymology_hook: "mehrabân ← Middle Persian mihrbān (EtymDB): mehr 'kindness' + -bân 'keeper'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C128-gerd]
 <!-- hl-knowledge: introduces=[FA-LEX-C128-QUAL128-03]; assesses=[] -->
 
 **مهربان** — *mehrabân* — "kind".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*mehrabân* is *mehr*, "love, kindness", with *-bân*, "keeper": one who keeps kindness. EtymDB traces it to Middle Persian *mihrbān*. *mehr* is also the name of the old god Mithra.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

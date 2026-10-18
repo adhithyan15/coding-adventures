@@ -1,7 +1,7 @@
 {
   "language": "punjabi",
   "chapter": 63,
-  "sourceHash": "fnv1a64:aed04900b5035040",
+  "sourceHash": "fnv1a64:65a0608497c82078",
   "lessonIds": [
     "PA-C63-labbhna",
     "PA-C63-suttna",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "punjabi/narration/ch63.txt",
   "json": "punjabi/narration/ch63.json",
-  "textHash": "fnv1a64:38cff8abaf480129",
-  "jsonHash": "fnv1a64:e337a423e50cbdad",
+  "textHash": "fnv1a64:56f4fda931a1b5ef",
+  "jsonHash": "fnv1a64:e3f757d520a4a5ba",
   "findings": []
 }

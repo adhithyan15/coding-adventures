@@ -94,8 +94,8 @@ rows, and the main content remains vertically scrollable. The fresh and restored
 lifecycle runs both require zero layout exceptions at that size (#16949).
 
 The same native contract ratchets the remaining style debt per backend and per
-property. Fresh `native-complete` reports currently contain 29 XAML, 63 SwiftUI,
-40 Compose, 83 Qt, and 69 Flutter drops; any new property or increase above
+property. Fresh `native-complete` reports currently contain 29 XAML, 57 SwiftUI,
+40 Compose, 81 Qt, and 69 Flutter drops; any new property or increase above
 those measured maxima fails CI. These inventories are explicit debt on the path
 to #12022's zero-drop gate, not a claim of visual completeness. Native text
 tracking now preserves TaskApp's authored `letter-spacing` on all five backends,
@@ -234,6 +234,10 @@ cd host/web && npm install && npm run dev       # http://localhost:5173
 
 ## Incremental releases
 
+The next unreleased Qt fidelity patch preserves the timeline milestone and
+legend-swatch diamond rotations (#17675), reducing measured Qt style drops from
+83 to 81. Downloadable coverage is unchanged.
+
 TaskApp uses product-scoped [Semantic Versioning](https://semver.org/):
 `task-app-vMAJOR.MINOR.PATCH`. Compatible fixes and packaging improvements bump
 the patch version, new usable capabilities bump the minor version, and breaking
@@ -272,6 +276,18 @@ reconciles Qt elevation-shadow reporting. The downloadable artifact matrix
 remains unchanged: Static HTML, Web Components, and Paint are CI-only, while
 signing, notarization, and installers remain #13977. Publication and the
 immutable asset audit are tracked in #17469.
+
+The `task-app-v0.5.6` patch corrects SwiftUI drag-body gap reporting and tightens
+the style regression gate from 63 to 59 allowances. Emitted drag behavior and
+downloadable artifact coverage remain unchanged. Publication and the immutable
+asset audit are tracked in #17491; the same CI-only and signing limitations apply.
+
+The prepared `task-app-v0.5.7` patch preserves timeline and calendar milestone
+diamond rotations in SwiftUI and tightens its style regression gate from 59 to
+57 allowances. Publication and the immutable asset audit remain pending in
+#17610 until release validation and publication complete. Downloadable coverage
+is unchanged: Static HTML, Web Components, and Paint remain CI-only; signing,
+notarization, and installers remain #13977.
 
 From the repository's **Actions** tab, run **Release TaskApp** from `main` and
 provide both the bare version and its matching product tag. The equivalent CLI

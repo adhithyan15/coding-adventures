@@ -47,7 +47,7 @@ reviews_of: [RU-C36-grandson]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**внучка** is *внук*, "grandson", with *-ка*, which makes the female word; *к* turns to *ч* before it, as in *рука*, "hand", and *ручка*, "a little hand; a pen".
+**внучка** is *внук*, "grandson", with *-ка*, which makes the female word; *к* turns to *ч* before it, as in *рука*, "hand", and *ручка*, "a little hand; a pen". Vasmer traces *внук* to Proto-Slavic *\*vŭnukŭ* and tentatively links it with an old nursery word for an elder, kept in Latin *anus*, "old woman".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

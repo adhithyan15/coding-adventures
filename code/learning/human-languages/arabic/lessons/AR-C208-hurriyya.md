@@ -14,7 +14,8 @@ romanization: "ḥurriyya"
 concept_tag: AR-SABAB208-HURRIYYA
 prerequisites: [AR-C208-mana, AR-C208-mithal]
 sounds: []
-roots: []
+roots: [ḥ-r-r]
+etymology_hook: "ḥurriyya: built on the root ḥ-r-r, 'to be free' (Lane); ḥurriyya is ḥurr, 'free', with the abstract ending -iyya"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C208-mithal]
 <!-- hl-knowledge: introduces=[AR-LEX-C208-SABAB208-03]; assesses=[] -->
 
 **حرية** — *ḥurriyya* — "freedom".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**حرية** (*ḥurriyya*) is built on the native Arabic root *ḥ-r-r*, "to be free; to be hot" (Lane). *Ḥurriyya* is *ḥurr*, "free", with the abstract ending *-iyya*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

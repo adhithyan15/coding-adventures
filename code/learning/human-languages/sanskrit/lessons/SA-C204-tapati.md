@@ -14,7 +14,8 @@ romanization: "tapati"
 concept_tag: SA-VERB-TAPATI
 prerequisites: [SA-C204-vapati, SA-C204-jivati]
 sounds: []
-roots: []
+roots: [sanskrit-tapati]
+etymology_hook: "tapati ← root √tap 'be hot, give out heat'; MW compares Latin tepēre 'be warm' (CDIAL 5671)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C204-jivati]
 <!-- hl-knowledge: introduces=[SA-LEX-C204-ACT204-05]; assesses=[] -->
 
 **तपति** — *tapati* — "heats, is hot".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*tapati* is the present of the root √tap, "to give out heat, be hot" (MW; CDIAL 5671). MW compares Latin *tepēre*, "to be warm", the source of English *tepid*. The noun *tapas*, "heat", also means austerity.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

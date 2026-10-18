@@ -14,7 +14,8 @@ romanization: "sepas"
 concept_tag: FA-ZAMAN153-SEPAS
 prerequisites: [FA-C153-nime-shab, FA-C153-pish]
 sounds: []
-roots: []
+roots: [persian-pas]
+etymology_hook: "sepas: built on Persian pas 'after'; the first part is not settled"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C153-pish]
 <!-- hl-knowledge: introduces=[FA-LEX-C153-ZAMAN153-03]; assesses=[] -->
 
 **سپس** — *sepas* — "then, afterwards".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*sepas* is built on *pas*, "after" (Middle Persian *pas*, EtymDB), but where its first part comes from is not settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

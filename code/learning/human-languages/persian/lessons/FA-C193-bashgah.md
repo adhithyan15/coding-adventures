@@ -14,7 +14,8 @@ romanization: "bâshgâh"
 concept_tag: FA-MAKAN193-BASHGAH
 prerequisites: [FA-C192-be-zudi, FA-C193-darmangah]
 sounds: []
-roots: []
+roots: [persian-gah]
+etymology_hook: "bâshgâh: Persian bâsh- 'be' (budan) + gâh 'place'; a modern coinage"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C193-darmangah]
 <!-- hl-knowledge: introduces=[FA-LEX-C193-MAKAN193-02]; assesses=[] -->
 
 **باشگاه** — *bâshgâh* — "a gym, a club".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*bâshgâh* is built from *bâsh-*, the present stem of *budan*, "to be", and *gâh*, "place": a place to be, a modern Persian coinage for a club. *gâh* is inherited, usually traced to Middle Persian *gāh*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

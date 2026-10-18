@@ -14,7 +14,8 @@ romanization: "bhrūḥ"
 concept_tag: SA-THINGS117-BHRUH
 prerequisites: [SA-C117-vaksah, SA-C117-katih]
 sounds: []
-roots: []
+roots: [sanskrit-bhru]
+etymology_hook: "bhrū 'eyebrow' is inherited from Indo-European (EtymDB); MW compares Greek ophrys and English brow"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C117-katih]
 <!-- hl-knowledge: introduces=[SA-LEX-C117-THINGS117-04]; assesses=[] -->
 
 **भ्रूः** — *bhrūḥ* — "an eyebrow".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*bhrū* "an eyebrow" is inherited from Indo-European (EtymDB): MW sets it beside Greek *ophrys* and English *brow*. It lives on as Hindi *bhauṁh* "eyebrow" (CDIAL 9688).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

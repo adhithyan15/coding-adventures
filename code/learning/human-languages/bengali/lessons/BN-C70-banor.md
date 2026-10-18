@@ -14,7 +14,8 @@ romanization: "bānôr"
 concept_tag: BN-ANIMALS70-BANOR
 prerequisites: [BN-C70-singho, BN-C70-hati]
 sounds: []
-roots: []
+roots: [sanskrit-vanara]
+etymology_hook: "bānôr ← Sanskrit vānara 'monkey', a tatsama; CDIAL lists the inherited form bāṁdar (CDIAL 11515)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C70-hati]
 <!-- hl-knowledge: introduces=[BN-LEX-C70-ANIMALS70-03]; assesses=[] -->
 
 **বানর** — *bānôr* — "a monkey".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**বানর** (*bānôr*) is Sanskrit *vānara*, "monkey", taken over whole as a learned loan, a tatsama (CDIAL 11515). The word inherited from it is *bāṁdar*, which CDIAL lists.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

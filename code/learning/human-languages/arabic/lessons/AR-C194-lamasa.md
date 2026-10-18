@@ -14,7 +14,8 @@ romanization: "lamasa"
 concept_tag: AR-VERB-LAMASA
 prerequisites: [AR-C194-ibtalaa, AR-C194-madagha]
 sounds: []
-roots: []
+roots: [l-m-s]
+etymology_hook: "lamasa: built on the root l-m-s, 'to touch' (Lane); lamasa is the plain verb, 'he touched'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C194-madagha]
 <!-- hl-knowledge: introduces=[AR-LEX-C194-ACT194-03]; assesses=[] -->
 
 **لمس** — *lamasa* — "to touch".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**لمس** (*lamasa*) is built on the native Arabic root *l-m-s*, "to touch" (Lane). *Lamasa* is the plain verb, "he touched".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "anānās"
 concept_tag: AR-SHAY244-ANANAS
 prerequisites: [AR-C244-khawkh, AR-C244-kummathra]
 sounds: []
-roots: []
+roots: [tupi-nanas]
+etymology_hook: "anānās: a modern loan from European ananas, through Portuguese from Tupi nanas"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C244-kummathra]
 <!-- hl-knowledge: introduces=[AR-LEX-C244-SHAY244-04]; assesses=[] -->
 
 **أناناس** — *anānās* — "pineapple".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**أناناس** (*anānās*) is a modern loan from European *ananas*, which goes back through Portuguese to Tupi *nanas*, the pineapple; it has no Arabic root.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

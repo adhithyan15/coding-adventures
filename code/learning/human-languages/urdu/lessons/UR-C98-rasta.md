@@ -14,7 +14,8 @@ romanization: "rāstā"
 concept_tag: UR-LOC98-RASTA
 prerequisites: [UR-C98-kona, UR-C98-taraf]
 sounds: []
-roots: []
+roots: [persian-rasta]
+etymology_hook: "rāstā: usually traced to Persian rāsta 'straight; a road'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C98-taraf]
 <!-- hl-knowledge: introduces=[UR-LEX-C98-LOC98-03]; assesses=[] -->
 
 **راستہ** — *rāstā* — "a way, a route".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**راستہ** (*rāstā*) is a loan, usually traced to Persian *rāsta*, "straight; a road".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

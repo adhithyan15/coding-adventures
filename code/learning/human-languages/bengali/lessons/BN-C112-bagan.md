@@ -14,7 +14,8 @@ romanization: "bāgān"
 concept_tag: BN-THINGS112-BAGAN
 prerequisites: [BN-C112-deoyal, BN-C112-baranda]
 sounds: []
-roots: []
+roots: [persian-bagh]
+etymology_hook: "bāgān: usually traced to Persian bāgh 'garden'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C112-baranda]
 <!-- hl-knowledge: introduces=[BN-LEX-C112-THINGS112-05]; assesses=[] -->
 
 **বাগান** — *bāgān* — "a garden".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**বাগান** (*bāgān*) is a loan, usually traced to Persian *bāgh*, "garden". Where its ending *-ān* comes from is not settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

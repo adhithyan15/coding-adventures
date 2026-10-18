@@ -59,6 +59,9 @@ You'll want to know: টা.
 Bengali has no word for the. Thirty chapters of this book have taught nouns that float free — shirt, tea, brother — with no way to say you mean that one, the one we are both thinking of. The way you say it is not a word in front. It is টা (-ṭā), stuck on the end.
 Nothing goes between the noun and it, and nothing comes before the noun. The noun and its ending are written as one word.
 
+The word, taken apart.
+Where টা comes from is not settled. CDIAL, a dictionary of words rather than endings, has no entry for it; under Sanskrit ēka, "one", it asks whether the -ṭā of Assamese eṭā, "one", is Sanskrit vṛtta, "round", and leaves the question open (CDIAL 2462).
+
 Grammar Lens: why this is called a classifier and not an article.
 An article does one job: it says definite. টা (-ṭā) does that and one more. Bengali will not put a number directly on a noun, so টা (-ṭā) is also the piece a count has to pass through — you will meet that in the next lesson.
 There is a polite twin, টি, used for people and in careful writing:
@@ -100,6 +103,9 @@ So the ending you learned one lesson ago turns out to have been two doors:
 একটা (ekṭā) জামা — a shirt, any one.
 Same টা (-ṭā). Nothing in front of it, or a number in front of it.
 
+The word, taken apart.
+এক goes back to Sanskrit ēka, "one" (CDIAL 2462); where the classifier টা (-ṭā) comes from is not settled.
+
 Grammar Lens: where the ending goes, and it moves.
 Watch which word carries the suffix:
 [a table of 2 rows, read aloud]
@@ -136,6 +142,9 @@ You'll want to know: আরেকটা.
 Take the word apart and it is already three things you own:
 আর (and) + এক (one) + টা (-ṭā) (the classifier) becomes আরেকটা (ārekṭā).
 Which is why it does not merely mean a different one. It means one more, with the and still inside it.
+
+The word, taken apart.
+আর goes back to Sanskrit apara, "other", and aparam, "again, moreover" (CDIAL 434); এক to ēka, "one" (CDIAL 2462). The classifier's own origin is not settled.
 
 Grammar Lens: the pair that hands things out one at a time.
 Bengali uses একটা (ekṭā) … আরেকটা (ārekṭā) as a fixed pair to run down a list of things one by one, the way English uses one … another:

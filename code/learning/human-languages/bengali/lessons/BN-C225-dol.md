@@ -14,7 +14,8 @@ romanization: "dôl"
 concept_tag: BN-JINIS225-DOL
 prerequisites: [BN-C224-sheyal, BN-C224-nekre]
 sounds: []
-roots: []
+roots: [sanskrit-dala-band]
+etymology_hook: "dôl ← Sanskrit dala 'party, band', inherited (CDIAL 6215)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C224-nekre]
 <!-- hl-knowledge: introduces=[BN-LEX-C225-JINIS225-01]; assesses=[] -->
 
 **দল** — *dôl* — "a team, a group".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**দল** (*dôl*) is inherited from Sanskrit *dala*, "party, band", and has come down with almost no change (CDIAL 6215). CDIAL lists Bengali *dal*, "company", and reports Burrow's view that the word is Dravidian.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

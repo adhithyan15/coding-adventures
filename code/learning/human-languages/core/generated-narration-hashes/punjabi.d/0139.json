@@ -1,7 +1,7 @@
 {
   "language": "punjabi",
   "chapter": 139,
-  "sourceHash": "fnv1a64:de777f2edf3c0815",
+  "sourceHash": "fnv1a64:b61ed4b3c7607d1f",
   "lessonIds": [
     "PA-C139-tankhah",
     "PA-C139-darzi",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "punjabi/narration/ch139.txt",
   "json": "punjabi/narration/ch139.json",
-  "textHash": "fnv1a64:8b9cdfff55131aa0",
-  "jsonHash": "fnv1a64:bf8cbbb26f730ea8",
+  "textHash": "fnv1a64:260e606a5463372b",
+  "jsonHash": "fnv1a64:3ca79c5c0480fc40",
   "findings": []
 }

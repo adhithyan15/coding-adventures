@@ -14,7 +14,8 @@ romanization: "ḥafara"
 concept_tag: AR-VERB-HAFARA
 prerequisites: [AR-C198-hadatha, AR-C198-saqata]
 sounds: []
-roots: []
+roots: [ḥ-f-r]
+etymology_hook: "ḥafara: built on the root ḥ-f-r, 'to dig' (Lane); ḥafara is the plain verb, 'he dug'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C198-saqata]
 <!-- hl-knowledge: introduces=[AR-LEX-C198-ACT198-05]; assesses=[] -->
 
 **حفر** — *ḥafara* — "to dig".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**حفر** (*ḥafara*) is built on the native Arabic root *ḥ-f-r*, "to dig" (Lane). *Ḥafara* is the plain verb, "he dug".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

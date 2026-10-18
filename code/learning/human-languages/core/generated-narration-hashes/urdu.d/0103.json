@@ -1,7 +1,7 @@
 {
   "language": "urdu",
   "chapter": 103,
-  "sourceHash": "fnv1a64:3fb8008154d2eaf2",
+  "sourceHash": "fnv1a64:b93901edf1f77280",
   "lessonIds": [
     "UR-C103-hawaijahaz",
     "UR-C103-relgari",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "urdu/narration/ch103.txt",
   "json": "urdu/narration/ch103.json",
-  "textHash": "fnv1a64:d7ac7f5f7a1ca60d",
-  "jsonHash": "fnv1a64:1ad080b4f7657330",
+  "textHash": "fnv1a64:4c5beca9cef1013c",
+  "jsonHash": "fnv1a64:cd9e47436d8301fb",
   "findings": []
 }

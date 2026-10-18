@@ -14,7 +14,8 @@ romanization: "hrôd"
 concept_tag: BN-JAYGA217-HROD
 prerequisites: [BN-C216-opore, BN-C216-kothao]
 sounds: []
-roots: []
+roots: [sanskrit-hrada]
+etymology_hook: "hrôd ← Sanskrit hrada 'lake, pool', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C216-kothao]
 <!-- hl-knowledge: introduces=[BN-LEX-C217-JAYGA217-01]; assesses=[] -->
 
 **হ্রদ** — *hrôd* — "a lake".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**হ্রদ** (*hrôd*) is Sanskrit *hrada*, "lake, pool", taken over whole as a learned loan, a tatsama.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

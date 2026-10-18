@@ -14,7 +14,8 @@ romanization: "khũje pāoyā"
 concept_tag: BN-VERB-KHUJE-PAOYA
 prerequisites: [BN-C240-bhasa, BN-C241-hariye-jaoya]
 sounds: []
-roots: []
+roots: [indo-aryan-khojja, sanskrit-prapayati]
+etymology_hook: "khũje pāoyā: khũje 'searching' ← *khōjjati 'seeks' (CDIAL 3929) + pāoyā 'to get' ← prāpayati (CDIAL 8943)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C241-hariye-jaoya]
 <!-- hl-knowledge: introduces=[BN-LEX-C241-ACT241-02]; assesses=[] -->
 
 **খুঁজে পাওয়া** — *khũje pāoyā* — "to find".
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**খুঁজে পাওয়া** (*khũje pāoyā*) is *khũje*, "searching", a form of *khũjā*, "to search for", which CDIAL lists under *\*khōjjati*, "seeks" (CDIAL 3929), + *pāoyā*, "to get", from Sanskrit *prāpayati*, "causes to reach" (CDIAL 8943).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,0 +1,24 @@
+{
+  "id": "SA-A1-X-12",
+  "category": "Specific notions — the lexical fields",
+  "label": "study, the book and the classroom",
+  "probe": [
+    "SA-LEX-C35-HOUSE-04",
+    "SA-LEX-PATHATI-READ",
+    "SA-LEX-LIKHATI-WRITE",
+    "SA-LEX-C26-ROLE-01",
+    "SA-LEX-C26-ROLE-02",
+    "SA-LEX-C50-SOUND-05"
+  ],
+  "anchorIds": [
+    "ES-A1-PROXY",
+    "SA-CORPUS",
+    "ED-SANSKRIT"
+  ],
+  "derivedFrom": [
+    "A1-NE06-01",
+    "A1-NE06-04",
+    "A1-NE06-07"
+  ],
+  "note": "pustakam, paṭhati, likhati, guruḥ, śiṣyaḥ, ślokaḥ. The institution, the timetable, the examination and the mark are all absent — the track teaches the guru-śiṣya relation, not a school."
+}

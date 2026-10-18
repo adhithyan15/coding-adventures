@@ -14,7 +14,8 @@ romanization: "gôrôm"
 concept_tag: BN-ADJ73-GOROM
 prerequisites: [BN-C72-kharap, BN-C73-lomba]
 sounds: []
-roots: []
+roots: [persian-garm]
+etymology_hook: "gôrôm: usually traced to Persian garm 'warm, hot'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C73-lomba]
 <!-- hl-knowledge: introduces=[BN-LEX-C73-ADJ73-02]; assesses=[] -->
 
 **গরম** — *gôrôm* — "hot".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**গরম** (*gôrôm*) is a loan, usually traced to Persian *garm*, "warm, hot".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

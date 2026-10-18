@@ -14,7 +14,8 @@ romanization: "sāhôs"
 concept_tag: BN-CAN100-SAHOS
 prerequisites: [BN-C99-buddhi, BN-C99-gyan]
 sounds: []
-roots: []
+roots: [sanskrit-sahasa]
+etymology_hook: "sāhôs ← Sanskrit sāhasa 'boldness', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C99-gyan]
 <!-- hl-knowledge: introduces=[BN-LEX-C100-CAN100-01]; assesses=[] -->
 
 **সাহস** — *sāhôs* — "courage".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**সাহস** (*sāhôs*) is Sanskrit *sāhasa*, "boldness", taken over whole as a learned loan, a tatsama.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

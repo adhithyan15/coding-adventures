@@ -1,7 +1,7 @@
 {
   "language": "persian",
   "chapter": 284,
-  "sourceHash": "fnv1a64:e2d80badd3a77d38",
+  "sourceHash": "fnv1a64:9314010e346f1bbb",
   "lessonIds": [
     "FA-C284-mekanik",
     "FA-C284-arayeshgar",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "persian/narration/ch284.txt",
   "json": "persian/narration/ch284.json",
-  "textHash": "fnv1a64:60ec3c3185aac47d",
-  "jsonHash": "fnv1a64:e6f3c50be0f09edb",
+  "textHash": "fnv1a64:8ddf3d75ef910948",
+  "jsonHash": "fnv1a64:dea9e505bc40892e",
   "findings": []
 }

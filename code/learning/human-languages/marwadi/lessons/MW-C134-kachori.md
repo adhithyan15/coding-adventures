@@ -14,7 +14,8 @@ romanization: "kachorī"
 concept_tag: MW-THINGS134-KACHORI
 prerequisites: [MW-C134-chhachh, MW-C134-lassi]
 sounds: []
-roots: []
+roots: [indo-aryan-kaccapura]
+etymology_hook: "kachorī ← *kaccapūra 'a wheaten cake', reconstructed (CDIAL 2614, Hindi and Gujarati rows)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C134-lassi]
 <!-- hl-knowledge: introduces=[MW-LEX-C134-THINGS134-04]; assesses=[] -->
 
 **कचोरी** — *kachorī* — "a kachori".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**कचोरी** (*kachorī*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*kaccapūra*, "a wheaten cake", a form CDIAL reconstructs from its descendants. CDIAL gives no Marwari form in this entry (CDIAL 2614); the match is through Hindi *kacaurī* and Gujarati *kacorī*. CDIAL builds it on *pūra*, "cake", with a first part it queries.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

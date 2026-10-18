@@ -14,7 +14,8 @@ romanization: "miṭṭhā"
 concept_tag: PA-ADJ82-MITTHA
 prerequisites: [PA-C82-khali, PA-C82-saf]
 sounds: []
-roots: []
+roots: [sanskrit-mishta]
+etymology_hook: "miṭṭhā ← Sanskrit miṣṭa 'dainty, sweet', a tadbhava (CDIAL 10299)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C82-saf]
 <!-- hl-knowledge: introduces=[PA-LEX-C82-ADJ82-04]; assesses=[] -->
 
 **ਮਿੱਠਾ** — *miṭṭhā* — "sweet".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਮਿੱਠਾ** (*miṭṭhā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *miṣṭa*, "dainty, sweet" (CDIAL 10299).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "torsh"
 concept_tag: FA-QUAL127-TORSH
 prerequisites: [FA-C126-amn, FA-C127-talkh]
 sounds: []
-roots: []
+roots: [persian-torsh]
+etymology_hook: "torsh: inherited, usually traced to Middle Persian turš"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C127-talkh]
 <!-- hl-knowledge: introduces=[FA-LEX-C127-QUAL127-02]; assesses=[] -->
 
 **ترش** — *torsh* — "sour".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*torsh* is a native Persian word, inherited rather than borrowed; it is usually traced to Middle Persian *turš*, "sour".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

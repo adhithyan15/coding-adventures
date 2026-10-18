@@ -1,7 +1,7 @@
 {
   "language": "persian",
   "chapter": 174,
-  "sourceHash": "fnv1a64:ec6c850e06b0e4d8",
+  "sourceHash": "fnv1a64:767ce556309e388a",
   "lessonIds": [
     "FA-C174-kabinet",
     "FA-C174-zarfshuyi",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "persian/narration/ch174.txt",
   "json": "persian/narration/ch174.json",
-  "textHash": "fnv1a64:0f40f9d79b65c073",
-  "jsonHash": "fnv1a64:6373da10b362f1bc",
+  "textHash": "fnv1a64:1b70e7ba44035bc8",
+  "jsonHash": "fnv1a64:5f8f87deadad7571",
   "findings": []
 }

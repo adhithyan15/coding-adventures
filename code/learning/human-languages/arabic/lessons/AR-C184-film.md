@@ -14,7 +14,8 @@ romanization: "fīlm"
 concept_tag: AR-SHAY184-FILM
 prerequisites: [AR-C184-munasaba, AR-C184-zina]
 sounds: []
-roots: []
+roots: [english-film]
+etymology_hook: "fīlm: a modern loan from English film"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C184-zina]
 <!-- hl-knowledge: introduces=[AR-LEX-C184-SHAY184-05]; assesses=[] -->
 
 **فيلم** — *fīlm* — "a film".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**فيلم** (*fīlm*) is a modern loan from English *film*; it has no Arabic root.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

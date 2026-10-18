@@ -14,7 +14,8 @@ romanization: "phon"
 concept_tag: GU-JOURNEY-PHONE
 prerequisites: [GU-C86-ticket, GU-C86-map]
 sounds: []
-roots: []
+roots: [english-phone]
+etymology_hook: "phon ← English phone"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C86-map]
 <!-- hl-knowledge: introduces=[GU-LEX-C86-JOURNEY-04]; assesses=[] -->
 
 **ફોન** (*phon*) — "a phone".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ફોન** (*phon*) is a loan from English *phone*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,7 +1,7 @@
 {
   "language": "japanese",
   "chapter": 76,
-  "sourceHash": "fnv1a64:7907ebfab9f575c9",
+  "sourceHash": "fnv1a64:333ad1f609983d6b",
   "lessonIds": [
     "JA-C76-mayonaka",
     "JA-C76-isshuukan",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "japanese/narration/ch76.txt",
   "json": "japanese/narration/ch76.json",
-  "textHash": "fnv1a64:3057c25be4056b3a",
-  "jsonHash": "fnv1a64:b6ef1dc17b875907",
+  "textHash": "fnv1a64:37c9c86fc89012b4",
+  "jsonHash": "fnv1a64:93b6acf7e942e227",
   "findings": []
 }

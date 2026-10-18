@@ -14,7 +14,8 @@ romanization: "tena"
 concept_tag: SA-WHY241-TENA
 prerequisites: [SA-C241-krte, SA-C241-yena]
 sounds: []
-roots: []
+roots: [sanskrit-tad]
+etymology_hook: "tena 'by that' is the instrumental of ta- 'that'; MW compares Greek to and Gothic thata"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C241-yena]
 <!-- hl-knowledge: introduces=[SA-LEX-C241-WHY241-03]; assesses=[] -->
 
 **तेन** — *tena* — "by that, therefore".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*tena* is the instrumental of the pronoun stem *ta-*, "that", whose neuter is *tad* (MW). The stem is inherited from Indo-European: MW compares Greek *to*, "the", and Gothic *thata*, the cousin of English *that*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

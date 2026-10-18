@@ -14,7 +14,8 @@ romanization: "bhārā"
 concept_tag: PA-QUAL140-BHARA
 prerequisites: [PA-C140-dugha, PA-C140-haula]
 sounds: []
-roots: []
+roots: [sanskrit-bhara]
+etymology_hook: "bhārā ← Sanskrit bhāra 'burden, weight', a tadbhava (CDIAL 9459)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C140-haula]
 <!-- hl-knowledge: introduces=[PA-LEX-C140-QUAL140-05]; assesses=[] -->
 
 **ਭਾਰਾ** — *bhārā* — "heavy".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਭਾਰਾ** (*bhārā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *bhāra*, "burden, weight" (CDIAL 9459).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

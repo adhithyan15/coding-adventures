@@ -14,7 +14,8 @@ romanization: "lāphāno"
 concept_tag: BN-VERB-LAPHANO
 prerequisites: [BN-C103-nama, BN-C103-satar]
 sounds: []
-roots: []
+roots: [indo-aryan-lappa]
+etymology_hook: "lāphāno ← *lappha 'sudden movement', a reconstructed form; a tadbhava (CDIAL 10939)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C103-satar]
 <!-- hl-knowledge: introduces=[BN-LEX-C103-ACT103-03]; assesses=[] -->
 
 **লাফানো** — *lāphāno* — "to jump".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**লাফানো** (*lāphāno*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*lappha*, "sudden movement", a form CDIAL reconstructs from its descendants (CDIAL 10939). *Lāphāno* is a verb from *lāph*, "a leap", which CDIAL lists.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

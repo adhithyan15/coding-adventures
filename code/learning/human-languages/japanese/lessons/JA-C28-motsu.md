@@ -14,7 +14,8 @@ romanization: "motsu"
 concept_tag: JA-VERB-MOTSU
 prerequisites: [JA-C28-iu, JA-C28-omou]
 sounds: []
-roots: []
+roots: [japanese-motsu]
+etymology_hook: "motsu: native Japanese, inherited, not borrowed; kanji 持つ attached later as kun'yomi"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C28-omou]
 <!-- hl-knowledge: introduces=[JA-LEX-C28-VERBS28-05]; assesses=[] -->
 
 **もつ** — *motsu* — "to hold".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**もつ** (*motsu*) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

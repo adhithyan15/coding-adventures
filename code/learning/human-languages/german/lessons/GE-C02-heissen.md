@@ -11,7 +11,7 @@ concept_tag: DE-VERB-HEISSEN
 prerequisites: [GE-C02-ich]
 sounds: [eszett, ei-vowel]
 roots: [haitana]
-etymology_hook: heissen is the verb English let fade to poetry: hight, named, and behest, something called for
+etymology_hook: 'heissen is the verb English let fade to poetry: hight, named, and behest, something called for'
 duration:
   max_seconds: 180
 requires:

@@ -47,7 +47,7 @@ reviews_of: [RU-C229-programmist]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**преподаватель** is *преподавать*, "to teach", with *-тель*, "one who does it". The verb is *пре-* and *по-* with *давать*, "to give".
+**преподаватель** is *преподавать*, "to teach", with *-тель*, "one who does it". The verb is *пре-* and *по-* with *давать*, "to give". Vasmer takes *давать* from *дать*, "to give", kin to Lithuanian *dovanà*, "a gift".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

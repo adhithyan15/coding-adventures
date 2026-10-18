@@ -14,7 +14,8 @@ romanization: "jæmôn"
 concept_tag: BN-KARON218-JMON
 prerequisites: [BN-C217-stediyam, BN-C218-jodio]
 sounds: []
-roots: []
+roots: [sanskrit-ya-relative]
+etymology_hook: "jæmôn: je- 'which' on ya- (CDIAL 10391); the ending -môn is not settled"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C218-jodio]
 <!-- hl-knowledge: introduces=[BN-LEX-C218-KARON218-02]; assesses=[] -->
 
 **যেমন** — *jæmôn* — "such as, like".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**যেমন** (*jæmôn*) is built on *je*, "which", from the Sanskrit pronoun *ya-* (CDIAL 10391). CDIAL has no entry for the word itself, so how its ending formed is not settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

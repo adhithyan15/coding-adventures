@@ -14,7 +14,8 @@ romanization: "rāgi"
 concept_tag: BN-QUAL137-RAGI
 prerequisites: [BN-C137-golapi, BN-C137-dukhi]
 sounds: []
-roots: []
+roots: [sanskrit-raga]
+etymology_hook: "rāgi: rāg 'anger' + -i; rāg is Sanskrit rāga 'colour, passion'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C137-dukhi]
 <!-- hl-knowledge: introduces=[BN-LEX-C137-QUAL137-03]; assesses=[] -->
 
 **রাগী** — *rāgi* — "angry".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**রাগী** (*rāgi*) is *rāg*, "anger", with the ending *-i*. *Rāg* is Sanskrit *rāga*, "colour, passion", which in Bengali has come to mean anger.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

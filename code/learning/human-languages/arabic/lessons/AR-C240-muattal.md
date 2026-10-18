@@ -14,7 +14,8 @@ romanization: "muʿaṭṭal"
 concept_tag: AR-SIFA240-MUATTAL
 prerequisites: [AR-C239-dhikra, AR-C239-shakk]
 sounds: []
-roots: []
+roots: [ʿ-ṭ-l]
+etymology_hook: "muʿaṭṭal: built on the root ʿ-ṭ-l, 'to be without work' (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C239-shakk]
 <!-- hl-knowledge: introduces=[AR-LEX-C240-SIFA240-01]; assesses=[] -->
 
 **معطل** — *muʿaṭṭal* — "out of order".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**معطل** (*muʿaṭṭal*) is built on the native Arabic root *ʿ-ṭ-l*, "to be without work" (Lane). *Muʿaṭṭal* is the Form II passive participle, "left idle", hence "out of order".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

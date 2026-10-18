@@ -14,7 +14,8 @@ romanization: "bulāvṇo"
 concept_tag: MW-VERB-BULAVNO
 prerequisites: [MW-C104-kharidno, MW-C104-ugharno]
 sounds: []
-roots: []
+roots: [indo-aryan-boll]
+etymology_hook: "bulāvṇo ← *boll 'speak', reconstructed (CDIAL 9321, Old Marwari row)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C104-ugharno]
 <!-- hl-knowledge: introduces=[MW-LEX-C104-ACT104-03]; assesses=[] -->
 
 **बुलावणो** — *bulāvṇo* — "to call".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**बुलावणो** (*bulāvṇo*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*boll*, "speak", a form CDIAL reconstructs from its descendants. CDIAL lists Old Marwari *bolaï* under it (CDIAL 9321). It is the causing form of *bolṇo*, "to speak": "make speak", so "call".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "shikakui"
 concept_tag: JA-QUAL121-SHIKAKUI
 prerequisites: [JA-C120-shinsetsu, JA-C120-teinei]
 sounds: []
-roots: []
+roots: [middle-chinese-sijh, middle-chinese-kaewk]
+etymology_hook: "shikakui: Sino-Japanese shikaku 四角 'four corners' + native adjective -i"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C120-teinei]
 <!-- hl-knowledge: introduces=[JA-LEX-C121-QUAL121-01]; assesses=[] -->
 
 **しかくい** — *shikakui* — "square".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**しかくい** (*shikakui*) is Sino-Japanese *shikaku*, "four corners", borrowed from Chinese: *shi*, "four" (Middle Chinese *sijH*), and *kaku*, "angle, corner" (Middle Chinese *kaewk*), made into a native adjective with *-i* (JMdict, KANJIDIC2).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

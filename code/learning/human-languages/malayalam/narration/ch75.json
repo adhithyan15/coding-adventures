@@ -4,7 +4,7 @@
   "chapter": 75,
   "title": "When, and If",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:607737c2efea5736",
+  "sourceHash": "fnv1a64:b420db62864d90c5",
   "lessons": [
     {
       "id": "ML-C75-eppol",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8cd8cc5f32a72a5c",
+      "sourceHash": "fnv1a64:98469471824939cc",
       "notice": null,
       "blocks": [
         {
@@ -79,11 +79,11 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "That unmoving piece is പോൾ, and Tamil holds the set together the same way: the lesson that taught you now already showed you இப்போது (ippōtu), and the question form is எப்போது (eppōtu)."
+              "text": "That unmoving piece is പോൾ, a native word for \"time\" (DEDR 4559), and Tamil holds the set together the same way: the lesson that taught you now already showed you இப்போது (ippōtu), and the question form is எப்போது (eppōtu)."
             },
             {
               "kind": "speech",
-              "text": "പോൾ is not a word you can use on its own — it only ever turns up carrying one of these three openers, so this book will not ask you to use it alone. Remember it anyway. It comes back in the next lesson, on a verb."
+              "text": "പോൾ is not a word you can use on its own — it only ever turns up carrying one of these three openers. Remember it anyway. It comes back in the next lesson, on a verb."
             }
           ]
         },
@@ -183,7 +183,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c0770303f40c41d4",
+      "sourceHash": "fnv1a64:d20b2c2d97f10c68",
       "notice": null,
       "blocks": [
         {
@@ -252,7 +252,7 @@
             },
             {
               "kind": "speech",
-              "text": "The ം that ends വരും is an m. When a letter follows it, that m is written joined to what comes next — മ്പ, the same shape you already read in ഒമ്പത് (ombatŭ), \"nine\"."
+              "text": "The ം that ends വരും is an m. When a letter follows it, that m is written joined to what comes next — മ്പ, the same shape you already read in ഒമ്പത് (ompatŭ), \"nine\"."
             },
             {
               "kind": "speech",

@@ -1,0 +1,17 @@
+{
+  "chapter": 274,
+  "title": "One rental exchange, held as a whole",
+  "label": "ch:sa-bounded-rental",
+  "canDo": "I can ask and answer one attested question about a rented house.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "SA-C274-rental-final-retrieval",
+    "kind": "production",
+    "summary": "Complete chapter 274 by independently retrieving the bounded rental exchange a second time.",
+    "assesses": [
+      "SA-PATTERN-C274-RENTAL-01"
+    ]
+  }
+}

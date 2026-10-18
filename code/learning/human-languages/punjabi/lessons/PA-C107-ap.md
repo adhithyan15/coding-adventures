@@ -14,7 +14,8 @@ romanization: "āp"
 concept_tag: PA-DEF107-AP
 prerequisites: [PA-C106-har2, PA-C107-kujh]
 sounds: []
-roots: []
+roots: [sanskrit-atman]
+etymology_hook: "āp ← Sanskrit ātman 'breath, soul; self', a tadbhava (CDIAL 1135)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C107-kujh]
 <!-- hl-knowledge: introduces=[PA-LEX-C107-DEF107-02]; assesses=[] -->
 
 **ਆਪ** — *āp* — "oneself".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਆਪ** (*āp*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *ātman*, "breath, soul; self" (CDIAL 1135).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

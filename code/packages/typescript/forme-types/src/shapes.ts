@@ -17,10 +17,10 @@
  * AND on the descriptor — invited the "{ ...Kinds.X, kind: 'Stream' }"
  * confusion documented in `kinds.ts`.
  *
- * Kind shapes that reference unspecified kernel concepts (StyleDocument,
- * Interactivity) carry intentionally minimal stub types so the kernel
- * is buildable today.  FM04 (Style IR) and FM05 (Interactivity IR) will
- * tighten these without changing field names.
+ * StyleDocument and Interactivity intentionally remain minimal carrier
+ * envelopes here so the kernel stays the dependency-graph leaf. The normative
+ * FM04 and FM05 schemas and validators live in forme-style-ir and
+ * forme-interactivity-ir.
  */
 
 import type { DocumentNode } from "@coding-adventures/document-ast";
@@ -172,10 +172,10 @@ export interface Asset {
 // ─── Style & Interactivity stubs ──────────────────────────────────────────
 
 /**
- * Minimal placeholder for the Style IR.  FM04 will replace this with
- * the full token / selector / rule model.  Until then, stages that
- * don't actually use style information can carry an empty StyleDocument
- * and downstream renderers will fall back to their built-in defaults.
+ * Leaf-level compatibility envelope for Style IR. The full token, selector,
+ * rule, and validation model lives in forme-style-ir. Stages that do not use
+ * style information can carry an empty StyleDocument and downstream renderers
+ * fall back to their built-in defaults.
  */
 export interface StyleDocument {
   readonly tokens: ReadonlyRecord<string, JsonValue>;
@@ -194,9 +194,9 @@ export const EMPTY_STYLE: StyleDocument = {
 };
 
 /**
- * Minimal placeholder for the Interactivity IR.  FM05 will replace
- * with the full state / bindings / handlers model.  An empty
- * Interactivity is the default for static pages — those ship zero JS.
+ * Leaf-level compatibility envelope for Interactivity IR. The full bounded
+ * state, binding, handler, and island model lives in forme-interactivity-ir.
+ * An empty Interactivity is the default for static pages — those ship zero JS.
  */
 export interface Interactivity {
   readonly state: readonly JsonValue[];

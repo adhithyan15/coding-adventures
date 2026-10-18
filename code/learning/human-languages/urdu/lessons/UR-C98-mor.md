@@ -14,7 +14,8 @@ romanization: "moṛ"
 concept_tag: UR-LOC98-MOR
 prerequisites: [UR-C98-rasta, UR-C98-gali]
 sounds: []
-roots: []
+roots: [sanskrit-mutati]
+etymology_hook: "moṛ: the noun of moṛnā 'to twist', which CDIAL lists under mōṭati, a form beside Sanskrit muṭati 'twists' (CDIAL 10186)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C98-gali]
 <!-- hl-knowledge: introduces=[UR-LEX-C98-LOC98-05]; assesses=[] -->
 
 **موڑ** — *moṛ* — "a turn, a bend".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**موڑ** (*moṛ*), "a turn", is the noun of *moṛnā*, "to twist, to bend". CDIAL lists *moṛnā* under *mōṭati*, a form it gives beside Sanskrit *muṭati*, "twists" (CDIAL 10186).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

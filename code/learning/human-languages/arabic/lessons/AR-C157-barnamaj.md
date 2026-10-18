@@ -14,7 +14,8 @@ romanization: "barnāmaj"
 concept_tag: AR-MUSTAQBAL157-BARNAMAJ
 prerequisites: [AR-C157-al-qadim, AR-C157-min-al-an-fasaidan]
 sounds: []
-roots: []
+roots: [persian-barnama]
+etymology_hook: "barnāmaj: from Persian barnāma, Middle Persian barnāmag 'a written list' (EtymDB)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C157-min-al-an-fasaidan]
 <!-- hl-knowledge: introduces=[AR-LEX-C157-MUSTAQBAL157-03]; assesses=[] -->
 
 **برنامج** — *barnāmaj* — "a programme, a schedule". **برنامجي غدا مزدحم** — *barnāmajī ghadan muzdaḥim* — "My schedule tomorrow is full."
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**برنامج** (*barnāmaj*) is a loan from Persian *barnāma*, which EtymDB traces to Middle Persian *barnāmag*, a written list; it has no Arabic root.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

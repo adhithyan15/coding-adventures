@@ -1,0 +1,21 @@
+{
+  "id": "SA-A1-F-13",
+  "category": "Influencing the other person",
+  "label": "offer and invite",
+  "probe": [
+    "SA-LEX-SVAGATAM",
+    "SA-LEX-C30-WELCOME-02",
+    "SA-CULTURE-WELCOMING-A-GUEST",
+    "SA-LEX-C26-ROLE-04"
+  ],
+  "anchorIds": [
+    "ES-A1-PROXY",
+    "CEFR-CV",
+    "SA-CORPUS",
+    "ED-SANSKRIT"
+  ],
+  "derivedFrom": [
+    "A1-F4-07"
+  ],
+  "note": "svāgatam, āsanam ('a seat'), atithiḥ ('a guest') and the culture note on receiving one. Sanskrit's hospitality vocabulary is unusually well taught — chapters 30, 37 and 43 are all about it."
+}

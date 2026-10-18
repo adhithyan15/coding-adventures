@@ -44,6 +44,9 @@ variety: standard-contemporary
 
 - [bom](PT-C01-bom.md) ("good") + [dia](PT-C01-dia.md) ("day").
 
+Both are inherited from Latin: *bom* from *bonus*, "good", and *dia* from
+*diēs*, "day" (EtymDB 2.1).
+
 > **bom dia** = "good day" → in practice, **"good morning"** (used until noon).
 
 ## Why it's said this way

@@ -1,7 +1,7 @@
 {
   "language": "arabic",
   "chapter": 76,
-  "sourceHash": "fnv1a64:3acc80aa4603f9f6",
+  "sourceHash": "fnv1a64:3a1cd2161335cae9",
   "lessonIds": [
     "AR-C76-ghaba",
     "AR-C76-nahr",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "arabic/narration/ch76.txt",
   "json": "arabic/narration/ch76.json",
-  "textHash": "fnv1a64:5eba3595af8fb3dc",
-  "jsonHash": "fnv1a64:4e029430960abf20",
+  "textHash": "fnv1a64:71621e81dc289d09",
+  "jsonHash": "fnv1a64:2897d70711ffe4ae",
   "findings": []
 }

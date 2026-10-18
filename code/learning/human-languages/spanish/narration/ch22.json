@@ -4,7 +4,7 @@
   "chapter": 22,
   "title": "Espanol, and Your First Built Sentence",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:3691943af2f6aee3",
+  "sourceHash": "fnv1a64:2bcf29db250df1a3",
   "lessons": [
     {
       "id": "ES-C06-espanol",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c38028d6a3cfde1d",
+      "sourceHash": "fnv1a64:7f98882720ec0f4f",
       "notice": null,
       "blocks": [
         {
@@ -46,7 +46,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "español = \"Spanish\" — both the language and a Spaniard — from Hispania, the Roman name for the Iberian peninsula. The path Hispania becomes hispaniolus becomes español wore the word down, and there is the ñ again, exactly the -ni- squeeze you met in the writing lesson (Hispaniolus becomes españ-ol). Say it es-pa-NYOL."
+              "text": "español = \"Spanish\" — both the language and a Spaniard — from Hispania, the Roman name for the Iberian peninsula. It did not wear down inside Spanish: it is usually traced, after Corominas and the DLE, through Occitan espaignol to medieval Latin Hispaniolus. There is the ñ again, the -ni- squeeze you met in the writing lesson (Hispaniolus becomes españ-ol). Say it es-pa-NYOL."
             },
             {
               "kind": "speech",
@@ -85,11 +85,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the path — \"Hispania, hispaniolus, español\"",
+              "instruction": "the path — \"Hispania, Hispaniolus, espaignol, español\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the path — \"Hispania, hispaniolus, español\"]"
+              "source": "[YOU SAY: the path — \"Hispania, Hispaniolus, espaignol, español\"]"
             },
             {
               "kind": "prompt",

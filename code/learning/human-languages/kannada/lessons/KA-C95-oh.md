@@ -44,7 +44,7 @@ reviews_of: [KA-C95-notlikethat]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**ಓಹೋ** (*ōhō*) is an exclamation: the sound of surprise made into a word, as in many languages. It has no etymology beyond the sound.
+**ಓಹೋ** (*ōhō*) is an exclamation: the sound of surprise made into a word, as in many languages. It comes from the sound itself, with no older word behind it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

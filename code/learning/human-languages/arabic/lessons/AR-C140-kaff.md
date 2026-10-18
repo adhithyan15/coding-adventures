@@ -14,7 +14,8 @@ romanization: "kaff"
 concept_tag: AR-THINGS140-KAFF
 prerequisites: [AR-C139-khasr, AR-C139-mirfaq]
 sounds: []
-roots: []
+roots: [k-f-f]
+etymology_hook: "kaff: built on the root k-f-f, 'the palm of the hand' (Lane); kaff is the palm"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C139-mirfaq]
 <!-- hl-knowledge: introduces=[AR-LEX-C140-THINGS140-01]; assesses=[] -->
 
 **كف** — *kaff* — "a palm".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**كف** (*kaff*) is built on the native Arabic root *k-f-f*, "the palm of the hand; to hold back" (Lane). *Kaff* is the palm.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

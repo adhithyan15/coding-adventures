@@ -12,6 +12,9 @@ Before the new one: say the Sanskrit for a colour, then the Sanskrit for a word.
 You'll want to know: परिणामः.
 परिणामः — pariṇāmaḥ — "a result".
 
+The word, taken apart.
+pariṇāma comes from pari-√nam "bend round, change, ripen", the root √nam "bend" with pari "around" (MW): "change, transformation, ripening", and so "the outcome, the result". It is the root √nam of namaste.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Sanskrit for a word, then the Sanskrit for a result.
 
 You'll want to know: अंकः.
 अंकः — aṅkaḥ — "a mark, a number".
+
+The word, taken apart.
+aṅka comes from the root √añc "bend, curve" (CDIAL 100): first "a hook" in the Rigveda, then "a curved line, a mark", and so "a numeral". MW compares Greek ankōn "elbow, bend" and Latin uncus "hook", and it lives on as Hindi āṁk "mark" and Punjabi aṅg "figure" (CDIAL 100).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Sanskrit for a result, then the Sanskrit for a mark.
 You'll want to know: श्रेणी.
 श्रेणी — śreṇī — "a row, a grade".
 
+The word, taken apart.
+śreṇī, also śreṇi, "a line, a row, a series" is old, in the Rigveda. The grammarians derive it from the root √śri "lean on, attach" (MW), and CDIAL 12718 suggests the same with a query, so its origin is not settled. "Grade" is its school use today.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Sanskrit for a mark, then the Sanskrit for a row.
 You'll want to know: शब्दकोशः.
 शब्दकोशः — śabdakośaḥ — "a dictionary".
 
+The word, taken apart.
+śabdakośa is built from śabda "sound, word" and kośa "a vessel, a store, a treasury" (MW): "the word-store". MW already records it as the name of a dictionary, and kośa "treasury" is the usual Sanskrit word for a lexicon.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Sanskrit for a row, then the Sanskrit for a dictiona
 
 You'll want to know: लेखनम्.
 लेखनम् — lekhanam — "writing".
+
+The word, taken apart.
+lekhana comes from the root √likh "scratch, write" (CDIAL 11103): first "scraping" in the medical books, then "writing". lekha "a letter" and lekhanī "a pen" come from the same root.
 
 What you've built.
 One more word for this chapter.

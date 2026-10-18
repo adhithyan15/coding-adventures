@@ -4,7 +4,7 @@
   "chapter": 28,
   "title": "One to Five, By the Road Urdu Did Not Borrow",
   "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:47621466d33aa92b",
+  "sourceHash": "fnv1a64:a1a498eed3f6ae3f",
   "lessons": [
     {
       "id": "UR-C28-ek",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:19e0a7cfb170f2ca",
+      "sourceHash": "fnv1a64:378bd5ea69f741af",
       "notice": null,
       "blocks": [
         {
@@ -61,7 +61,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ایک (ek) continues Sanskrit eka through Prakrit, from Indo-European oywos, \"one\" — the root behind English one, Latin ūnus and Greek oîos."
+              "text": "ایک (ek) continues Sanskrit eka through Prakrit, by way of a doubled ekka (CDIAL 2462), from Indo-European oywos, \"one\" — the root behind English one, Latin ūnus and Greek oîos."
             },
             {
               "kind": "speech",
@@ -154,7 +154,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e568bbff8037dbff",
+      "sourceHash": "fnv1a64:017acab5646ee42c",
       "notice": null,
       "blocks": [
         {
@@ -196,7 +196,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "دو continues Sanskrit dvi through Prakrit do, from Indo-European dwóh₁, \"two.\" English two, Latin duo and Greek dýo are the same word."
+              "text": "دو continues Sanskrit dva (CDIAL 6648) through Prakrit do, from Indo-European dwóh₁, \"two.\" English two, Latin duo and Greek dýo are the same word."
             },
             {
               "kind": "speech",
@@ -285,7 +285,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:01eb1188764e99f1",
+      "sourceHash": "fnv1a64:6af91ed6f9a51e85",
       "notice": null,
       "blocks": [
         {
@@ -323,7 +323,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "تین (tīn) continues Sanskrit tri, from Indo-European treyes, \"three.\" English three, Latin trēs and Greek treîs are the same word."
+              "text": "تین (tīn) continues Sanskrit trīṇi, a form of tri-, \"three\" (CDIAL 5994), from Indo-European treyes, \"three.\" English three, Latin trēs and Greek treîs are the same word."
             },
             {
               "kind": "speech",
@@ -416,7 +416,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c381603ea5a5e009",
+      "sourceHash": "fnv1a64:82deaff0c8375e41",
       "notice": null,
       "blocks": [
         {
@@ -454,7 +454,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "چار (chār) continues Sanskrit catvāraḥ, from Indo-European kʷetwóres, \"four.\""
+              "text": "چار (chār) continues Sanskrit catvāraḥ (CDIAL 4655), from Indo-European kʷetwóres, \"four.\""
             },
             {
               "kind": "speech",
@@ -546,7 +546,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c4adde304c1a02ed",
+      "sourceHash": "fnv1a64:a0663ae28ad6a761",
       "notice": null,
       "blocks": [
         {
@@ -588,7 +588,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "پانچ (pānch) continues Sanskrit pañca, from Indo-European pénkʷe, \"five.\" Greek pénte, Latin quīnque and English five are the same word."
+              "text": "پانچ (pānch) continues Sanskrit pañca (CDIAL 7655), from Indo-European pénkʷe, \"five.\" Greek pénte, Latin quīnque and English five are the same word."
             },
             {
               "kind": "speech",

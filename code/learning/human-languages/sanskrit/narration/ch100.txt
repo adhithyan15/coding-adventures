@@ -12,6 +12,9 @@ Before the new one: say the Sanskrit for a curtain, then the Sanskrit for a lock
 You'll want to know: कीलः.
 कीलः — kīlaḥ — "a nail (to hammer)".
 
+The word, taken apart.
+kīla "a stake, a peg, a pin" has no settled origin: CDIAL 3202 notes an Indo-European account (EWA) but also a proposal of non-Aryan origin, since forms with kh- stand beside it. It lives on as Hindi kīl "nail" (CDIAL 3202).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Sanskrit for a lock, then the Sanskrit for a nail.
 
 You'll want to know: मुद्गरः.
 मुद्गरः — mudgaraḥ — "a hammer".
+
+The word, taken apart.
+MW takes mudgara "a hammer, a mallet" as probably formed from mudga "mung bean", but gives no further account, so its source is uncertain. It lives on as Marathi and Gujarati mogar "mallet" (CDIAL 10199).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Sanskrit for a nail, then the Sanskrit for a hammer.
 You'll want to know: कर्तरी.
 कर्तरी — kartarī — "scissors".
 
+The word, taken apart.
+kartarī "scissors" comes from the root √kṛt "cut" (CDIAL 2858), which MW compares with Latin curtus "cut short", the source of English curt. It lives on as Hindi and Punjabi katarnī "scissors" (CDIAL 2858).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Sanskrit for a hammer, then the Sanskrit for scissor
 You'll want to know: सूचिः.
 सूचिः — sūciḥ — "a needle".
 
+The word, taken apart.
+MW connects sūci "needle" with sūtra "thread" and the root √siv "sew", though CDIAL 13551 notes that some forms point to an older śūci-, so the link is not settled. It lives on as Hindi sūī and Bengali sui "needle" (CDIAL 13551).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Sanskrit for scissors, then the Sanskrit for a needl
 
 You'll want to know: सूत्रम्.
 सूत्रम् — sūtram — "thread".
+
+The word, taken apart.
+sūtra "thread" comes from the root √siv "sew" (MW), an Indo-European root (EtymDB) that also gave English sew and Latin suere. It lives on as Hindi sūt "thread" (CDIAL 13561), and a sūtra of rules is a "thread" of short lines.
 
 What you've built.
 One more word for this chapter.

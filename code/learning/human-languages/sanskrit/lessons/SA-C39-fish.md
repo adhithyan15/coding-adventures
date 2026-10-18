@@ -14,7 +14,8 @@ romanization: "matsyaḥ"
 concept_tag: SA-ANIMAL-MATSYA
 prerequisites: [SA-C39-bird, SA-C37-gracious, SA-C38-stone]
 sounds: []
-roots: []
+roots: [sanskrit-matsya]
+etymology_hook: "matsya 'fish' is Rigvedic, with no agreed European cousin; it lives on as Hindi machlī (CDIAL 9758)"
 duration:
   max_seconds: 210
 requires:
@@ -47,6 +48,13 @@ reviews_of: [SA-C39-bird]
 It wore down eastward into *machh*, which is why the fish on a Hindi menu is *machhlī* and the Bengali one is *machh*.
 
 Westward there is nothing to point at: no agreed European cousin has been found. A fish seems to be one of the things each family named for itself.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*Matsya* is already in the Rigveda, but no agreed European cousin is known, so its
+deeper origin is not settled. It lives on as Bengali *māch* and, with an added
+*-l-*, Hindi *machlī* (CDIAL 9758).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

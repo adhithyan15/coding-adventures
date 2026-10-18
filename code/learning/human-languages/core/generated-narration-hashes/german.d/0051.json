@@ -1,7 +1,7 @@
 {
   "language": "german",
   "chapter": 51,
-  "sourceHash": "fnv1a64:63b4fd6e8b34e129",
+  "sourceHash": "fnv1a64:81ffdfd4f48fdee1",
   "lessonIds": [
     "GE-C38-koennen",
     "GE-C38-moechten",
@@ -14,7 +14,7 @@
   "drivablePrefix": 6,
   "text": "german/narration/ch51.txt",
   "json": "german/narration/ch51.json",
-  "textHash": "fnv1a64:953321e7ef5e4c19",
-  "jsonHash": "fnv1a64:4fef72c2e2d2b117",
+  "textHash": "fnv1a64:ea659ea98af05d52",
+  "jsonHash": "fnv1a64:f86319702cb792f6",
   "findings": []
 }

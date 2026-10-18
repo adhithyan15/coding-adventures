@@ -14,7 +14,8 @@ romanization: "mākhôn"
 concept_tag: BN-FOOD57-MAKHON
 prerequisites: [BN-C57-gajor, BN-C57-nun]
 sounds: []
-roots: []
+roots: [sanskrit-mrakshana]
+etymology_hook: "mākhôn ← Sanskrit mrakṣaṇa 'rubbing in; ointment, oil', a tadbhava (CDIAL 10378)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C57-nun]
 <!-- hl-knowledge: introduces=[BN-LEX-C57-FOOD57-03]; assesses=[] -->
 
 **মাখন** — *mākhôn* — "butter".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**মাখন** (*mākhôn*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *mrakṣaṇa*, "rubbing in; ointment, oil" (CDIAL 10378).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

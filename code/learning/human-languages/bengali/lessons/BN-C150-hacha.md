@@ -14,7 +14,8 @@ romanization: "hā̃chā"
 concept_tag: BN-VERB-HACHA
 prerequisites: [BN-C150-torko-kora, BN-C150-chaliye-jaoya]
 sounds: []
-roots: []
+roots: [sanskrit-hanji]
+etymology_hook: "hāṁchā ← Sanskrit hañji 'sneezing'; CDIAL lists Assamese hāṁci, 'sneezing' (CDIAL 13941a)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C150-chaliye-jaoya]
 <!-- hl-knowledge: introduces=[BN-LEX-C150-ACT150-04]; assesses=[] -->
 
 **হাঁচা** — *hā̃chā* — "to sneeze".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**হাঁচা** (*hāṁchā*) goes back to Sanskrit *hañji*, "sneezing". CDIAL gives no Bengali form under that entry, but it lists Assamese *hāṁci*, "sneezing", the forms nearest to Bengali (CDIAL 13941a). CDIAL notes that the Sanskrit word is thought to be imitative.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

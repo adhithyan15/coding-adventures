@@ -14,7 +14,8 @@ romanization: "ḥaḍḍara"
 concept_tag: AR-VERB-HADDARA
 prerequisites: [AR-C224-asraa, AR-C225-sahaba]
 sounds: []
-roots: []
+roots: [ḥ-ḍ-r]
+etymology_hook: "ḥaḍḍara: built on the root ḥ-ḍ-r, 'to be present' (Lane); ḥaḍḍara is Form II, 'to make ready'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C225-sahaba]
 <!-- hl-knowledge: introduces=[AR-LEX-C225-ACT225-02]; assesses=[] -->
 
 **حضر** — *ḥaḍḍara* — "to prepare".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**حضر** (*ḥaḍḍara*) is built on the native Arabic root *ḥ-ḍ-r*, "to be present" (Lane). *Ḥaḍḍara* is Form II, "to make ready".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

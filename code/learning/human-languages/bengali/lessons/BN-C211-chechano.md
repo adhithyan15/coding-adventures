@@ -14,7 +14,8 @@ romanization: "chẽchāno"
 concept_tag: BN-VERB-CHECHANO
 prerequisites: [BN-C210-biye-kora, BN-C210-bacha]
 sounds: []
-roots: []
+roots: [indo-aryan-cicc]
+etymology_hook: "chẽchāno ← *cicc 'scream', a reconstructed form; a tadbhava (CDIAL 4789)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C210-bacha]
 <!-- hl-knowledge: introduces=[BN-LEX-C211-ACT211-01]; assesses=[] -->
 
 **চেঁচানো** — *chẽchāno* — "to shout".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**চেঁচানো** (*chẽchāno*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*cicc*, "scream", a form CDIAL reconstructs from its descendants (CDIAL 4789). CDIAL lists Bengali *cẽcāna*, "to cry out", and calls the word imitative.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

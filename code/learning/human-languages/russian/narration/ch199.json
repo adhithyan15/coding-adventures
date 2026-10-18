@@ -4,7 +4,7 @@
   "chapter": 199,
   "title": "Young people, Citizen, Foreigner, Tourist, Text",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:e20721e15316a28a",
+  "sourceHash": "fnv1a64:3758c407836dce42",
   "lessons": [
     {
       "id": "RU-C199-molodyozh",
@@ -287,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:cbad772c90e150c2",
+      "sourceHash": "fnv1a64:b292de9e6816b508",
       "notice": null,
       "blocks": [
         {
@@ -325,7 +325,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "иностранец (inostránets) is иной, \"other\", with страна, \"a country\", and -ец, \"one who\": a person from another land."
+              "text": "иностранец (inostránets) is иной, \"other\", with страна, \"a country\", and -ец, \"one who\": a person from another land. Vasmer takes страна as borrowed from Church Slavonic, and relates иной to Latin ūnus, \"one\"."
             }
           ]
         },

@@ -12,6 +12,9 @@ Before the new one: say the Bengali for a battery, then the Bengali for a switch
 You'll want to know: দর.
 দর — dôr — "a rate, a price".
 
+The word, taken apart.
+The origin of দর (dôr) is not settled: CDIAL has no entry for it in this sense, and a search by the glosses "rate" and "price" finds only words of other shapes, such as Bengali dām (CDIAL 6622).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Bengali for a switch, then the Bengali for a rate.
 
 You'll want to know: ছাড়.
 ছাড় — chhāṛ — "a discount".
+
+The word, taken apart.
+ছাড় (chhāṛ), "a discount", appears to belong with the verb chāṛā, "to let go", which CDIAL lists under Sanskrit chardati, "causes to flow over" (CDIAL 4998): "a letting go".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Bengali for a rate, then the Bengali for a discount.
 You'll want to know: ফর্ম.
 ফর্ম — phôrm — "a form".
 
+The word, taken apart.
+ফর্ম (phôrm) is a loan from English form.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Bengali for a discount, then the Bengali for a form.
 You'll want to know: আবেদন.
 আবেদন — ābedôn — "an application".
 
+The word, taken apart.
+আবেদন (ābedôn) is Sanskrit āvedana, "announcing, a petition", taken over whole as a learned loan, a tatsama.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Bengali for a form, then the Bengali for an applicat
 
 You'll want to know: পরিচয়পত্র.
 পরিচয়পত্র — pôrichôypôtrô — "an identity card".
+
+The word, taken apart.
+পরিচয়পত্র (pôrichôypôtrô) is built from Sanskrit paricaya, "acquaintance", and pattra, "leaf, letter", both taken over whole: "acquaintance letter".
 
 What you've built.
 One more word for this chapter.

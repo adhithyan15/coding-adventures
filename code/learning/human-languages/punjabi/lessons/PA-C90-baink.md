@@ -14,7 +14,8 @@ romanization: "baiṅk"
 concept_tag: PA-TOWN90-BAINK
 prerequisites: [PA-C90-sarak, PA-C90-gali]
 sounds: []
-roots: []
+roots: [english-bank]
+etymology_hook: "baiṅk ← English bank"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C90-gali]
 <!-- hl-knowledge: introduces=[PA-LEX-C90-TOWN90-03]; assesses=[] -->
 
 **ਬੈਂਕ** — *baiṅk* — "a bank".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਬੈਂਕ** (*baiṅk*) is a loan from English *bank*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

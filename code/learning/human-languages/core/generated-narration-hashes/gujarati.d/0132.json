@@ -1,7 +1,7 @@
 {
   "language": "gujarati",
   "chapter": 132,
-  "sourceHash": "fnv1a64:065333df5504cba0",
+  "sourceHash": "fnv1a64:bec2e138dd24f343",
   "lessonIds": [
     "GU-C132-cokhkhu",
     "GU-C132-gandu",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "gujarati/narration/ch132.txt",
   "json": "gujarati/narration/ch132.json",
-  "textHash": "fnv1a64:2bef6a68f4e70055",
-  "jsonHash": "fnv1a64:3696b0a6c2cf38c4",
+  "textHash": "fnv1a64:37fff27042de4bb8",
+  "jsonHash": "fnv1a64:d77ac245e896d95e",
   "findings": []
 }

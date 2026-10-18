@@ -14,7 +14,8 @@ romanization: "vasati"
 concept_tag: SA-VERB-VASATI
 prerequisites: [SA-C140-praptipatram, SA-C141-pibati]
 sounds: []
-roots: []
+roots: [vas-dwell, sanskrit-vasati]
+etymology_hook: "vasati ← √vas 'dwell', which MW sets beside English was, were; Hindi basnā 'to dwell' (CDIAL 11435)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C141-pibati]
 <!-- hl-knowledge: introduces=[SA-LEX-C141-ACT141-02]; assesses=[] -->
 
 **वसति** — *vasati* — "dwells, lives".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*vasati* comes from the root √vas "dwell, stay" (CDIAL 11435), inherited from Indo-European (EtymDB). MW sets it beside Gothic *wisan* and English *was* and *were*: "to stay" became "to be". It lives on as Hindi *basnā* "to dwell" (CDIAL 11435).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

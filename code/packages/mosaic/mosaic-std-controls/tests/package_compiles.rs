@@ -85,7 +85,12 @@ fn controls_are_native_complete_on_all_five_backends_and_both_themes() {
                 ],
                 Backend::Flutter => &[
                     "Semantics(label: label",
-                    "ExcludeSemantics(child: Text(displayValue))",
+                    // Open-ended: the readout now carries the theme's text
+                    // style, `Text(displayValue, style: TextStyle(...))`, and
+                    // the exact style is the token table's business, not this
+                    // test's. What matters is that the readout is hidden from
+                    // semantics (the Slider itself carries the label).
+                    "ExcludeSemantics(child: Text(displayValue",
                     "divisions: (step).toDouble() > 0 ?",
                 ],
                 Backend::Qt => &[
@@ -274,10 +279,18 @@ fn included_controls_build_a_native_complete_sign_in_surface_everywhere() {
             emitted.contains("Continue"),
             "{backend:?} lost button label"
         );
-        assert!(
-            emitted.contains("Team size"),
-            "{backend:?} lost number placeholder:\n{emitted}"
-        );
+        // Compose is exempt on purpose. Its number field is a
+        // `BasicTextField` whose text is `value.toString()`, which is never
+        // empty, so a placeholder could never show; the emitter stopped
+        // writing one in #15995 (see `host_number_input_dispatches_numeric_payload`
+        // in mosaic-emit-compose). Every other backend shows it while the
+        // field is being edited.
+        if backend != Backend::Compose {
+            assert!(
+                emitted.contains("Team size"),
+                "{backend:?} lost number placeholder:\n{emitted}"
+            );
+        }
         assert!(
             emitted.contains("Remember this device"),
             "{backend:?} lost checkbox label:\n{emitted}"

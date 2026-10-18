@@ -14,7 +14,8 @@ romanization: "qol dâdan"
 concept_tag: FA-VERB-QOL-DADAN
 prerequisites: [FA-C257-bozorg-shodan, FA-C257-ehsas-kardan]
 sounds: []
-roots: []
+roots: [arabic-qawl]
+etymology_hook: "qol ← Arabic qawl 'saying, word', root q-w-l (Lane), + Persian dâdan"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C257-ehsas-kardan]
 <!-- hl-knowledge: introduces=[FA-LEX-C257-KONESH257-04]; assesses=[] -->
 
 **قول دادن** — *qol dâdan* — "to promise".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*qol dâdan* pairs *qol*, borrowed from Arabic *qawl*, "saying, word" (root *q-w-l*, Lane), with the Persian verb *dâdan*, "to give". *dâdan*, "to give", is an inherited verb; EtymDB takes it back to the Indo-European root *\*deh₃-*, "to give".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

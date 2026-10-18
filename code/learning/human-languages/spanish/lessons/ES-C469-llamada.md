@@ -6,7 +6,7 @@ sequence: 12900
 chapter: 469
 type: word
 headword: la llamada
-gloss: the call — the word el pedido's table already showed you, handed over now with the part that table left out: the gender is not predictable
+gloss: 'the call — the word el pedido''s table already showed you, handed over now with the part that table left out: the gender is not predictable'
 concept_tag: ES-ASK-LLAMADA
 prerequisites: [ES-C469-conectar, ES-C431-devolver, ES-C431-pedido]
 sounds: [ll-y, stress-penultimate]

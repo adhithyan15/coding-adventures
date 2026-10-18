@@ -12,6 +12,9 @@ Before the new one: say the Persian for winter, then the Persian for a season.
 You'll want to know: شنبه.
 شنبه — shanbe — "Saturday".
 
+The word, taken apart.
+shanbe is the Sabbath word: it is usually traced through Middle Persian šambad to the Aramaic and Hebrew word for the Sabbath. Saturday was the Sabbath, and the next weekdays are counted from it.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Persian for a season, then the Persian for Saturday.
 
 You'll want to know: یکشنبه.
 یکشنبه — yekshanbe — "Sunday".
+
+The word, taken apart.
+yekshanbe is yek, "one", with shanbe, "Saturday" (EtymDB): the first day after the Sabbath. yek is inherited; shanbe is the Sabbath word, usually traced through Middle Persian to Aramaic.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Persian for Saturday, then the Persian for Sunday.
 You'll want to know: دوشنبه.
 دوشنبه — doshanbe — "Monday".
 
+The word, taken apart.
+doshanbe is do, "two", with shanbe, "Saturday" (EtymDB): the second day after the Sabbath. do is inherited, from Middle Persian dō (EtymDB).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Persian for Sunday, then the Persian for Monday.
 You'll want to know: چهارشنبه.
 چهارشنبه — chahârshanbe — "Wednesday".
 
+The word, taken apart.
+chahârshanbe is chahâr, "four", with shanbe, "Saturday" (EtymDB): the fourth day after the Sabbath. chahâr is inherited from Middle Persian (EtymDB).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Persian for Monday, then the Persian for Wednesday.
 
 You'll want to know: پنجشنبه.
 پنجشنبه — panjshanbe — "Thursday".
+
+The word, taken apart.
+panjshanbe is panj, "five", with shanbe, "Saturday" (EtymDB): the fifth day after the Sabbath. panj is an inherited Persian number.
 
 What you've built.
 One more word for this chapter.

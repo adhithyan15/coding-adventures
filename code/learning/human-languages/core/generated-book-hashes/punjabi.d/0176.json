@@ -1,0 +1,11 @@
+{
+  "language": "punjabi",
+  "chapter": 176,
+  "sourceHash": "fnv1a64:af4ad14d995214c1",
+  "lessonIds": [
+    "PA-C176-eh",
+    "PA-C176-vich",
+    "PA-C176-location-frame"
+  ],
+  "tex": "punjabi/book/chapters/ch176-this-here-and-in-a-place.tex"
+}

@@ -14,7 +14,8 @@ romanization: "bukhār"
 concept_tag: PA-BODY51-BUKHAR
 prerequisites: [PA-C51-latt, PA-C51-goda]
 sounds: []
-roots: []
+roots: [arabic-bukhar]
+etymology_hook: "bukhār ← Arabic bukhār 'vapour, steam', through Persian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C51-goda]
 <!-- hl-knowledge: introduces=[PA-LEX-C51-BODY51-03]; assesses=[] -->
 
 **ਬੁਖ਼ਾਰ** — *bukhār* — "a fever".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਬੁਖ਼ਾਰ** (*bukhār*) is a loan from Arabic *bukhār*, "vapour, steam", which reached Punjabi through Persian. Its Arabic root is *b-kh-r* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

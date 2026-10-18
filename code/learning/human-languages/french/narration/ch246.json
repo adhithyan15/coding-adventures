@@ -4,7 +4,7 @@
   "chapter": 246,
   "title": "Generous, Lazy, Hard-working, Talkative, Angry",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:be867d838115fbf9",
+  "sourceHash": "fnv1a64:3f32a9025347f840",
   "lessons": [
     {
       "id": "FR-C246-genereux-genereuse",
@@ -287,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c1661a10933fc901",
+      "sourceHash": "fnv1a64:7a436df0b1058975",
       "notice": null,
       "blocks": [
         {
@@ -325,7 +325,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "travailleur — travailler, \"to work\", with -eur, \"one who\"."
+              "text": "travailleur — travailler, \"to work\", with -eur, \"one who\". Travailler from Vulgar Latin tripaliāre, \"to torture\" (EtymDB 2.1)."
             }
           ]
         },
@@ -555,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e1b3ebe6eba9d580",
+      "sourceHash": "fnv1a64:203a6b466643abc8",
       "notice": null,
       "blocks": [
         {
@@ -593,7 +593,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "fâché is the past participle of the verb in se fâcher, \"to get angry\": angered."
+              "text": "fâché is the past participle of the verb in se fâcher, \"to get angry\": angered. Fâcher is of uncertain origin, usually traced to Latin fastīdium, \"disgust\"."
             }
           ]
         },

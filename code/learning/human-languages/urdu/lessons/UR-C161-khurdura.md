@@ -15,6 +15,7 @@ concept_tag: UR-SIFAT161-KHURDURA
 prerequisites: [UR-C161-nazuk, UR-C161-chikna]
 sounds: []
 roots: []
+etymology_hook: "khurdurā: origin uncertain; CDIAL has no entry"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C161-chikna]
 <!-- hl-knowledge: introduces=[UR-LEX-C161-SIFAT161-04]; assesses=[] -->
 
 **کھردرا** — *khurdurā* — "rough".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **کھردرا** (*khurdurā*) is uncertain. CDIAL has no entry for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

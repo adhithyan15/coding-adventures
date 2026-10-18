@@ -46,7 +46,7 @@ reviews_of: [FR-C230-echelle]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**retour** — formed from the verb for "to return", *re-* with *tourner*, "to turn".
+**retour** — formed from the verb for "to return", *re-* with *tourner*, "to turn". *Tourner* ← Latin *tornāre*, "to turn" (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

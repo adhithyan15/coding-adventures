@@ -15,6 +15,7 @@ concept_tag: BN-THINGS126-MUDI
 prerequisites: [BN-C126-dorji, BN-C126-dhopa]
 sounds: []
 roots: []
+etymology_hook: "mudi: origin not settled; CDIAL has no entry for it"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C126-dhopa]
 <!-- hl-knowledge: introduces=[BN-LEX-C126-THINGS126-04]; assesses=[] -->
 
 **মুদি** — *mudi* — "a grocer".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **মুদি** (*mudi*) is not settled: CDIAL has no entry for it, and a search by form and by the gloss "grocer" finds nothing close.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

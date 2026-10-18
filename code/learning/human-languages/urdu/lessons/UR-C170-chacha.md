@@ -14,7 +14,8 @@ romanization: "chachā"
 concept_tag: UR-CHIZ170-CHACHA
 prerequisites: [UR-C170-buzurg, UR-C170-validain]
 sounds: []
-roots: []
+roots: [indo-aryan-cacca]
+etymology_hook: "chachā ← *cācca 'uncle', a reconstructed form; a tadbhava (CDIAL 4734)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C170-validain]
 <!-- hl-knowledge: introduces=[UR-LEX-C170-CHIZ170-04]; assesses=[] -->
 
 **چچا** — *chachā* — "an uncle (father's brother)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**چچا** (*chachā*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*cācca*, "uncle", a form CDIAL reconstructs from its descendants (CDIAL 4734). CDIAL suggests, with a query, a nursery word.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

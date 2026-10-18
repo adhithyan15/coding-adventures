@@ -14,7 +14,8 @@ romanization: "nachchṇā"
 concept_tag: PA-VERB-NACHCHNA
 prerequisites: [PA-C59-rona, PA-C59-gauna]
 sounds: []
-roots: []
+roots: [sanskrit-nrtyati]
+etymology_hook: "nachchṇā ← Sanskrit nṛtyati 'dances', a tadbhava (CDIAL 7583)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C59-gauna]
 <!-- hl-knowledge: introduces=[PA-LEX-C59-VERBS59-05]; assesses=[] -->
 
 **ਨੱਚਣਾ** — *nachchṇā* — "to dance".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਨੱਚਣਾ** (*nachchṇā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *nṛtyati*, "dances" (CDIAL 7583).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -46,7 +46,7 @@ reviews_of: [LA-C232-detego]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**videor** is the passive of *videō*, "to see": to be seen, so to seem.
+**videor** is the passive of *videō*, "to see": to be seen, so to seem. *Videō* is inherited from Proto-Indo-European *\*weyd-*, "to see, to know" (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -7,12 +7,12 @@ chapter: 1
 type: phrase
 headword: جی ہاں
 romanization: jī hā̃
-gloss: yes
+gloss: 'yes'
 concept_tag: RESPONSE-YES
 prerequisites: [UR-C01-shukriya]
 sounds: [rtl, long-i, nasal-vowel]
-roots: []
-etymology_hook: Urdu pairs respectful jī with hā̃, making affirmation carry social warmth as well as meaning.
+roots: [sanskrit-jiva, haan]
+etymology_hook: "jī ← Sanskrit jīva 'long live!' (CDIAL 5240); hā̃ ← Sanskrit ām 'yes', with an added h- (CDIAL 1235)"
 duration:
   max_seconds: 240
 requires:
@@ -54,6 +54,11 @@ the final sign **ں** marks a nasal vowel: let some air pass through your nose
 as you say *ā*. It is not a full English *n* at the end.
 
 That sign has a name — **nūn ghunna** — and you will meet it again.
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**جی ہاں** (*jī hā̃*) joins two inherited words. *jī* is Sanskrit *jīva*, "long live!", the command form of *jīvati*, "lives" (CDIAL 5240). *hā̃* comes from Sanskrit *ām*, "yes", with an *h-* that CDIAL calls emphatic or taken from the verb "to be" (CDIAL 1235).
 
 ## Grammar Lens: respect inside “yes”
 <!-- hl-knowledge: introduces=[UR-REGISTER-JI-RESPECT]; assesses=[] -->

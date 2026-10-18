@@ -14,7 +14,8 @@ romanization: "mama nāma … asti"
 concept_tag: INTRO-MY-NAME-IS
 prerequisites: [SA-C02-mama, SA-C02-nama, SA-C02-asti]
 sounds: []
-roots: []
+roots: [ma-first-person, naaman-sanskrit, as-be]
+etymology_hook: "mama, nāma, asti: three inherited words, cousins of English my, name and is (MW)"
 reviews_of: [SA-C02-mama, SA-C02-nama, SA-C02-asti]
 duration:
   max_seconds: 210

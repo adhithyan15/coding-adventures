@@ -46,7 +46,7 @@ reviews_of: [FR-C159-confortable]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**inconfortable** — *in-*, "not", and *confortable*.
+**inconfortable** — *in-*, "not", and *confortable*. *Confortable* is borrowed from English *comfortable*, built on Old French *conforter*, "to strengthen" (EtymDB 2.1); *in-* is Latin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

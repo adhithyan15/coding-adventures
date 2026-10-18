@@ -14,7 +14,8 @@ romanization: "ghanī"
 concept_tag: AR-ADJ84-GHANI
 prerequisites: [AR-C83-rakhis, AR-C84-farigh]
 sounds: []
-roots: []
+roots: [gh-n-y]
+etymology_hook: "ghanī: built on the root gh-n-y, 'to be free from want, to be rich' (Lane); ghanī is the faʿīl adjective, 'rich'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C84-farigh]
 <!-- hl-knowledge: introduces=[AR-LEX-C84-ADJ84-02]; assesses=[] -->
 
 **غني** — *ghanī* — "rich".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**غني** (*ghanī*) is built on the native Arabic root *gh-n-y*, "to be free from want, to be rich" (Lane). *Ghanī* is the *faʿīl* adjective, "rich".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

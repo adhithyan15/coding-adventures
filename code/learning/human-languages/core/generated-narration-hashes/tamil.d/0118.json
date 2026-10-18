@@ -1,7 +1,7 @@
 {
   "language": "tamil",
   "chapter": 118,
-  "sourceHash": "fnv1a64:84f85c948bd1a56d",
+  "sourceHash": "fnv1a64:2dd3b3a2dac39ead",
   "lessonIds": [
     "TA-C118-atuppu",
     "TA-C118-pattiram",
@@ -14,6 +14,6 @@
   "text": "tamil/narration/ch118.txt",
   "json": "tamil/narration/ch118.json",
   "textHash": "fnv1a64:4df1c8009b9fb236",
-  "jsonHash": "fnv1a64:fedec6e9225899b3",
+  "jsonHash": "fnv1a64:d18284cd5fb31a72",
   "findings": []
 }

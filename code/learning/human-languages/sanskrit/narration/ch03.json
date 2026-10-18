@@ -4,7 +4,7 @@
   "chapter": 3,
   "title": "How Are You?",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:7a943b55c71b80f6",
+  "sourceHash": "fnv1a64:e31d25bdc990f8ca",
   "lessons": [
     {
       "id": "SA-C03-katham",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5342a61f7293bb2e",
+      "sourceHash": "fnv1a64:1736b2411d2ade09",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "katham (\"how, in what way\") is from the interrogative stem ka-, PIE kʷo- — the same root that gave kim and, in the west, English wh- and Latin qu-. It heads the same ka- question-family: kim (what), kaḥ (who), kadā (when), kutra (where), katham (how). From katham comes the abstract noun kathā (\"a telling, a story\" — \"the how of a thing\"), and, worn down, Hindi's kaise."
+              "text": "katham (\"how, in what way\") is from the interrogative stem ka-, PIE kʷo- — the same root that gave kim and, in the west, English wh- and Latin qu-. It heads the same ka- question-family: kim (what), kaḥ (who), kadā (when), kutra (where), katham (how). From katham comes the abstract noun kathā (\"a telling, a story\" — \"the how of a thing\"). Hindi's kaise looks like its descendant but comes from kīdṛśa, \"of what kind\" (CDIAL 3197)."
             }
           ]
         },
@@ -124,7 +124,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1320572ed69c3099",
+      "sourceHash": "fnv1a64:ed93068c578f3175",
       "notice": null,
       "blocks": [
         {
@@ -162,7 +162,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "You now hold the \"to be\" verb across persons: asmi (\"I am\"), asi (\"you are\"), asti (\"is\") — the ancestors, respectively, of English am, and (through Latin/Greek) of is/est. \"How are you?\" simply asks after a state, and Sanskrit, unlike Tamil, has always kept a verb for it."
+              "text": "You now hold the \"to be\" verb across persons: asmi (\"I am\"), asi (\"you are\"), asti (\"is\") — the cousins, respectively, of English am, and of English is and Latin est. \"How are you?\" simply asks after a state, and Sanskrit, unlike Tamil, has always kept a verb for it."
             }
           ]
         },
@@ -405,7 +405,7 @@
     {
       "id": "SA-C03-aham",
       "sequence": 170,
-      "title": "अहम् (aham) — \"I,\" the ancestor of ego and I",
+      "title": "अहम् (aham) — \"I,\" a cousin of ego and I",
       "headword": "अहम्",
       "romanization": "aham",
       "gloss": "I",
@@ -415,7 +415,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4eedae248c1ce078",
+      "sourceHash": "fnv1a64:2db5aa684f0cf06a",
       "notice": null,
       "blocks": [
         {
@@ -431,7 +431,7 @@
             },
             {
               "kind": "speech",
-              "text": "To answer \"how are you?\" you first need \"I\" — and it is the grandparent of both English I and the word ego."
+              "text": "To answer \"how are you?\" you first need \"I\" — and it is a cousin of both English I and the word ego."
             }
           ]
         },
@@ -540,7 +540,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:12f4b9a3c8edcac5",
+      "sourceHash": "fnv1a64:53edfd65eed39cdf",
       "notice": null,
       "blocks": [
         {
@@ -556,7 +556,7 @@
             },
             {
               "kind": "speech",
-              "text": "The word that answers \"how are you?\" — one that once meant, of all things, \"skill in cutting sacred grass.\""
+              "text": "The word that answers \"how are you?\" — and an old word whose origin is still not settled."
             }
           ]
         },
@@ -578,7 +578,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Kuśalam (\"well-being, welfare, all-being-well\") is native Sanskrit, famously derived from kuśa (the sacred grass) + a root of \"cutting\" — so it first meant \"skilled [at gathering kuśa grass properly],\" hence \"adept, fit, in good order,\" hence \"well.\" A whole idea of wellness grew from a ritual skill. Its adjective is kuśalī (\"one who is well\")."
+              "text": "Kuśalam (\"well-being, welfare, all-being-well\") is native Sanskrit, and its origin is not settled: CDIAL 3365 calls the one modern derivation it cites \"very doubtful\". A popular explanation takes it from kuśa (the sacred grass) + a root of \"cutting\", \"skilled at gathering the grass\", hence \"well\"; but no dictionary we checked (MW, Apte, CDIAL) supports that story. Its senses run from \"right, proper\" to \"skilful\" and \"healthy\" (MW). Its adjective is kuśalī (\"one who is well\")."
             }
           ]
         },
@@ -614,11 +614,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the surprising root (kuśa, the sacred grass becomes \"skilled\" becomes \"well\")",
+              "instruction": "whether its origin is known (no; the kuśa-grass story is only a popular explanation)",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the surprising root (*kuśa*, the sacred grass → \"skilled\" → \"well\")]"
+              "source": "[YOU SAY: whether its origin is known (no; the *kuśa*-grass story is only a popular explanation)]"
             }
           ]
         },
@@ -635,7 +635,7 @@
             },
             {
               "kind": "speech",
-              "text": "What does kuśalam mean, and where does it come from? (\"Well-being\"; from kuśa grass becomes \"skilled\" becomes \"well.\")"
+              "text": "What does kuśalam mean, and is its origin known? (\"Well-being\"; not settled, and the kuśa-grass story has no dictionary support.)"
             }
           ]
         }
@@ -1064,7 +1064,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8a598a69a4dfa2c6",
+      "sourceHash": "fnv1a64:399675191f4a4278",
       "notice": null,
       "blocks": [
         {
@@ -1631,7 +1631,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f4a84d26ee79e615",
+      "sourceHash": "fnv1a64:753c575ba00f58af",
       "notice": null,
       "blocks": [
         {
@@ -1745,7 +1745,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:10031a151651f245",
+      "sourceHash": "fnv1a64:a85635cbc9791a6d",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -1895,11 +1895,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the surprising source of kuśalam (kuśa, the sacred grass becomes \"skilled\" becomes \"well\")",
+              "instruction": "whether the origin of kuśalam is known (not settled; the kuśa-grass story is only a popular explanation)",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the surprising source of *kuśalam* (*kuśa*, the sacred grass → \"skilled\" → \"well\")]"
+              "source": "[YOU SAY: whether the origin of *kuśalam* is known (not settled; the *kuśa*-grass story is only a popular explanation)]"
             },
             {
               "kind": "prompt",

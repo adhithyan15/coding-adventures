@@ -1,7 +1,7 @@
 {
   "language": "sanskrit",
   "chapter": 234,
-  "sourceHash": "fnv1a64:0ed8df1c5375c78f",
+  "sourceHash": "fnv1a64:e2e81b3b1a4ad3a4",
   "lessonIds": [
     "SA-C234-susyati",
     "SA-C234-plavate",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "sanskrit/narration/ch234.txt",
   "json": "sanskrit/narration/ch234.json",
-  "textHash": "fnv1a64:e4db00ceb02227f8",
-  "jsonHash": "fnv1a64:e0c4472402a761bf",
+  "textHash": "fnv1a64:373ac1cfe5661677",
+  "jsonHash": "fnv1a64:32cc028857af2108",
   "findings": []
 }

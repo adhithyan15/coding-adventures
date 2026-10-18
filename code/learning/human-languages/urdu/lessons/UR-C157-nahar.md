@@ -14,7 +14,8 @@ romanization: "nahar"
 concept_tag: UR-JAGAH157-NAHAR
 prerequisites: [UR-C157-futpath, UR-C157-chauk]
 sounds: []
-roots: []
+roots: [arabic-nahr]
+etymology_hook: "nahar ← Arabic nahr 'a river', through Persian (Lane, root n-h-r)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C157-chauk]
 <!-- hl-knowledge: introduces=[UR-LEX-C157-JAGAH157-05]; assesses=[] -->
 
 **نہر** — *nahar* — "a canal".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**نہر** (*nahar*) is a loan from Arabic *nahr*, "a river", which reached Urdu through Persian. Its Arabic root is *n-h-r* (Lane). Urdu uses it for a canal.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

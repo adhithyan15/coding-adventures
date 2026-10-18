@@ -12,6 +12,9 @@ Before the new one: say the Urdu for love, then the Urdu for music.
 You'll want to know: یہی.
 یہی — yihī — "this very one".
 
+The word, taken apart.
+یہی (yihī) is yih, "this", with the emphatic -hī: "this one and no other". CDIAL lists Hindi yah, "this", under Sanskrit eṣa, "this" (CDIAL 2530).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Urdu for music, then the Urdu for this very one.
 
 You'll want to know: وہی.
 وہی — vahī — "that very one".
+
+The word, taken apart.
+وہی (vahī) is voh, "that", with the emphatic -hī: "that one and no other". CDIAL lists Hindi wah, "that", under Sanskrit asau, "that" (CDIAL 972).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Urdu for this very one, then the Urdu for that very 
 You'll want to know: ایسا.
 ایسا — aisā — "like this, such".
 
+The word, taken apart.
+ایسا (aisā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from īdṛśa, "such, like this" (CDIAL 1611).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Urdu for that very one, then the Urdu for like this.
 You'll want to know: ویسا.
 ویسا — vaisā — "like that".
 
+The word, taken apart.
+ویسا (vaisā) is the far partner of aisā, "such, like this", which comes from Sanskrit īdṛśa, "such" (CDIAL 1611). CDIAL has no entry for vaisā itself, but it notes under tādṛśa, "suchlike", that aisā and waisā were shaped after Hindi taisā, "such" (CDIAL 5760). Where the v- came from it does not say.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Urdu for like this, then the Urdu for like that.
 
 You'll want to know: اتنا.
 اتنا — itnā — "this much, so much".
+
+The word, taken apart.
+اتنا (itnā) is inherited. CDIAL lists it under Sanskrit iyattaka, glossed "so little", a form built on iyant, "so much" (CDIAL 1589).
 
 What you've built.
 One more word for this chapter.

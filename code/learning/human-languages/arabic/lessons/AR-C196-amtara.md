@@ -14,7 +14,8 @@ romanization: "amṭara"
 concept_tag: AR-VERB-AMTARA
 prerequisites: [AR-C196-zaraa, AR-C196-qatafa]
 sounds: []
-roots: []
+roots: [m-ṭ-r]
+etymology_hook: "amṭara: built on the root m-ṭ-r, 'rain' (Lane); amṭara is Form IV, 'to rain'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C196-qatafa]
 <!-- hl-knowledge: introduces=[AR-LEX-C196-ACT196-03]; assesses=[] -->
 
 **أمطر** — *amṭara* — "to rain".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**أمطر** (*amṭara*) is built on the native Arabic root *m-ṭ-r*, "rain; to rain" (Lane). *Amṭara* is Form IV, "to rain".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

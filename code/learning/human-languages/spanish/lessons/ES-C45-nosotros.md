@@ -6,7 +6,7 @@ sequence: 1227
 chapter: 88
 type: etymology
 headword: nosotros
-gloss: "we" — the word you have been leaving out since hablamos
+gloss: '"we" — the word you have been leaving out since hablamos'
 concept_tag: ES-PRONOUN-NOS
 prerequisites: [ES-C45-nos, ES-C13-plurales-cambio]
 sounds: []

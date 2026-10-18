@@ -14,7 +14,8 @@ romanization: "yathā"
 concept_tag: SA-REPLY4-YATHA
 prerequisites: [SA-C49-then, SA-C47-window, SA-C48-wolf]
 sounds: []
-roots: []
+roots: [sanskrit-ya-relative]
+etymology_hook: "yathā 'as, in which way' ← the relative base ya- + the manner ending -thā, partner of tathā (MW; CDIAL 10407)"
 duration:
   max_seconds: 210
 requires:
@@ -47,6 +48,12 @@ reviews_of: [SA-C49-then]
 You already say तथा, "so, in that way". **यथा** is its partner, and the two travel together: *yathā ... tathā*, "as ... so". Holding one of the pair, you now hold both.
 
 Said back to somebody on its own, it works as "just so, as you say" — an agreement rather than a description.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*Yathā* is built from the relative base *ya-*, "which", with the manner ending
+*-thā* that also ends *tathā* (MW, CDIAL 10407).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

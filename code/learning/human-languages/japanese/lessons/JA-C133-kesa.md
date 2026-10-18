@@ -14,7 +14,8 @@ romanization: "kesa"
 concept_tag: JA-THING133-KESA
 prerequisites: [JA-W133-ke, JA-W03-sa, JA-C133-eki, JA-C133-kinou, JA-C131-chotto, JA-C120-hima]
 sounds: [mora]
-roots: []
+roots: [japanese-kesa]
+etymology_hook: "kesa: native, ending in asa 'morning'; 今朝 read as a whole; konchō is Sino-Japanese"
 duration:
   max_seconds: 200
 requires:
@@ -51,6 +52,11 @@ Then say *a station* — **R2**, five lessons back.
 The new sign is spent at once. **け** with **さ** after it: two beats, *ke–sa*,
 and both signs are ones you write. **きのう** was yesterday; **けさ** is earlier
 today.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**けさ** (*kesa*) is a native word, inherited rather than borrowed, usually explained as ending in a form of *asa*, "morning". JMdict writes it with "now" and "morning", read as a whole; read *konchō*, the same characters are Sino-Japanese.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-C133-KESA, JA-LEX-C133-KINOU, JA-SCRIPT-KE-01, JA-SCRIPT-SA-01] -->

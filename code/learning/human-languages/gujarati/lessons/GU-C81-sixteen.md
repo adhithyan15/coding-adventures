@@ -14,7 +14,8 @@ romanization: "soḷ"
 concept_tag: GU-NUM1-SIXTEEN
 prerequisites: [GU-C81-thirteen, GU-C81-fifteen]
 sounds: []
-roots: []
+roots: [sanskrit-shodasha]
+etymology_hook: "soḷ ← Sanskrit ṣoḍaśa 'sixteen', a tadbhava (CDIAL 12812)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C81-fifteen]
 <!-- hl-knowledge: introduces=[GU-LEX-C81-NUM1-05]; assesses=[] -->
 
 **સોળ** (*soḷ*) — "sixteen".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**સોળ** (*soḷ*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *ṣoḍaśa*, "sixteen" (CDIAL 12812).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,0 +1,15 @@
+{
+  "id": "SA-A1-L-07",
+  "category": "Lipi — the script and its orthography",
+  "label": "the five Devanagari characters the track shows and never teaches",
+  "probe": null,
+  "anchorIds": [
+    "ES-A1-PROXY",
+    "SA-CORPUS",
+    "SA-SCRIPT-DATA",
+    "ED-SANSKRIT"
+  ],
+  "derivedFrom": [],
+  "sanskritSpecific": true,
+  "note": "Sanskrit-specific, and a measurement rather than a demand. The track now teaches 49 of the 53 Devanagari characters it shows. THE FIVE ARE NOW FOUR: ऋ is taught in chapter 61, and ई, घ, ङ and ँ remain. Still uncovered, and it cannot close while ङ and ँ stand -- see SA-A1-L-08 for why two of the four are a different kind of blocked from the other two."
+}

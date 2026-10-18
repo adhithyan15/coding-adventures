@@ -14,7 +14,8 @@ romanization: "beṭī"
 concept_tag: UR-FAMILY43-BETI
 prerequisites: [UR-C43-ammi, UR-C43-beta]
 sounds: []
-roots: []
+roots: [indo-aryan-bitta]
+etymology_hook: "beṭī: feminine of beṭā 'son'; CDIAL lists both under a reconstructed *beṭṭa, beside Prakrit biṭṭa 'boy' (CDIAL 9238)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C43-beta]
 <!-- hl-knowledge: introduces=[UR-LEX-C43-FAMILY43-03]; assesses=[] -->
 
 **بیٹی** — *beṭī* — "a daughter".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**بیٹی** (*beṭī*) is the feminine of *beṭā*, "son". CDIAL lists both under a reconstructed *\*beṭṭa*, in an entry headed *\*biḍḍa*, "defective", beside Prakrit *biṭṭa*, "boy" (CDIAL 9238). No Sanskrit source is agreed.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

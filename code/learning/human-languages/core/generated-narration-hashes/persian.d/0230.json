@@ -1,7 +1,7 @@
 {
   "language": "persian",
   "chapter": 230,
-  "sourceHash": "fnv1a64:47c4d02d354285f1",
+  "sourceHash": "fnv1a64:6d76212d6d5bdb62",
   "lessonIds": [
     "FA-C230-shomal",
     "FA-C230-jonub",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "persian/narration/ch230.txt",
   "json": "persian/narration/ch230.json",
-  "textHash": "fnv1a64:163fdbea26ef22cb",
-  "jsonHash": "fnv1a64:dbb5029a175431a6",
+  "textHash": "fnv1a64:b665f3631e331717",
+  "jsonHash": "fnv1a64:a321b1250b9812a7",
   "findings": []
 }

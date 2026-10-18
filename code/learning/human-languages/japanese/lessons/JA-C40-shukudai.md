@@ -14,7 +14,8 @@ romanization: "shukudai"
 concept_tag: JA-HOME40-SHUKUDAI
 prerequisites: [JA-C40-kasa, JA-C40-gakkou]
 sounds: []
-roots: []
+roots: [middle-chinese-sjuwk, middle-chinese-dej]
+etymology_hook: "shukudai: Sino-Japanese 宿 'lodge' + 題 'title', on'yomi borrowed from Chinese"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C40-gakkou]
 <!-- hl-knowledge: introduces=[JA-LEX-C40-HOME40-03]; assesses=[] -->
 
 **しゅくだい** — *shukudai* — "homework".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**しゅくだい** (*shukudai*) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are *shuku*, "lodge, stay overnight" (Middle Chinese *sjuwk*) and *dai*, "title, theme" (*dej*) (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription). Read literally, it is a theme kept overnight.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

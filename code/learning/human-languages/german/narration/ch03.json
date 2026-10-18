@@ -4,7 +4,7 @@
   "chapter": 3,
   "title": "How Are You?",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:cbd6c29e798bcc87",
+  "sourceHash": "fnv1a64:c85e52ca5924d9b4",
   "lessons": [
     {
       "id": "GE-C03-danke",
@@ -308,7 +308,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5bc4525f331e12ea",
+      "sourceHash": "fnv1a64:33906895c2e96c34",
       "notice": null,
       "blocks": [
         {
@@ -350,7 +350,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "viel means \"much,\" and it is English full — a full measure of something. Put it in front of Dank and you get the phrase Germans reach for when danke alone feels too thin:"
+              "text": "viel means \"much,\" inherited from Old High German filu, \"many\" (EtymDB 2.1). English full is not the same word; viel's English match, Old English fela, died out. Put it in front of Dank and you get the phrase Germans reach for when danke alone feels too thin:"
             },
             {
               "kind": "speech",
@@ -419,7 +419,7 @@
             },
             {
               "kind": "speech",
-              "text": "What is the noun behind danke? (Der Dank.) What English word is viel? (Full — a full measure.) Say \"many thanks.\" (Vielen Dank.)"
+              "text": "What is the noun behind danke? (Der Dank.) What does viel mean, and where does it come from? (Much — Old High German filu.) Say \"many thanks.\" (Vielen Dank.)"
             }
           ]
         }
@@ -438,7 +438,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:09993d9c7068fdb5",
+      "sourceHash": "fnv1a64:8a988c4467c6d1a5",
       "notice": null,
       "blocks": [
         {
@@ -491,7 +491,7 @@
             },
             {
               "kind": "speech",
-              "text": "That verb is a close cousin of two English words:"
+              "text": "That verb, inherited from Proto-Germanic bidjaną (EtymDB 2.1), is a cousin of two English words:"
             },
             {
               "kind": "speech",
@@ -503,7 +503,7 @@
             },
             {
               "kind": "speech",
-              "text": "That single idea, I ask, is what lets one word cover so much ground:"
+              "text": "That single idea, I ask, lets one word cover so much ground:"
             },
             {
               "kind": "table",
@@ -909,7 +909,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:11fdb2f724241cf7",
+      "sourceHash": "fnv1a64:229cfa9132997cbd",
       "notice": null,
       "blocks": [
         {
@@ -970,7 +970,7 @@
             },
             {
               "kind": "speech",
-              "text": "English merged the last two into one word, me, and now signals the difference by word order instead: \"she gave me the book\" — me is the to-whom there, even though it looks identical to the done-to me in \"she saw me.\" German never merged them, so it can put the to-whom anywhere and still be clear."
+              "text": "English merged the last two into one word, me, and now signals the difference by word order instead: \"she gave me the book\" — me is the to-whom there, even though it looks identical to the done-to me in \"she saw me.\" German never merged them, so it can put the to-whom anywhere and still be clear. Mir is inherited: EtymDB 2.1 traces Old High German mir and English me to the same Proto-Germanic miz."
             },
             {
               "kind": "speech",

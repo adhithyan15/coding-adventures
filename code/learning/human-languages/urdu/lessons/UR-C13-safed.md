@@ -12,7 +12,7 @@ concept_tag: UR-WHITE
 prerequisites: [UR-C13-lal]
 sounds: [rtl, short-vowels-unwritten]
 roots: [middle-persian-sped, pie-kweyt]
-etymology_hook: safed continues Middle Persian spēt, from Old Iranian *spaita-, from Proto-Indo-Iranian *ćwaytás, from Proto-Indo-European *ḱweyt- "to shine, white." That is the exact same root behind Sanskrit śvetá and, through Proto-Germanic, English white -- so safed and śvetá are two roads from one root, the same shape as دل and hṛdaya, and this time English is family too.
+etymology_hook: "safed: usually traced to Persian safed 'white', from Middle Persian spēt; the root of Sanskrit śveta and English white"
 duration:
   max_seconds: 280
 requires:

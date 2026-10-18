@@ -14,7 +14,8 @@ romanization: "bhaviṣyati"
 concept_tag: SA-FUT139-BHAVISYATI
 prerequisites: [SA-C139-svah, SA-C139-agami]
 sounds: []
-roots: []
+roots: [sanskrit-bhavati, pie-bheu]
+etymology_hook: "bhaviṣyati ← √bhū 'be, become' + future -iṣya- (MW); √bhū is English be's cousin"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C139-agami]
 <!-- hl-knowledge: introduces=[SA-LEX-C139-FUT139-04]; assesses=[] -->
 
 **भविष्यति** — *bhaviṣyati* — "will be". The future of **भवति**, "is, becomes": **श्वः रविवासरः भविष्यति।** — "Tomorrow will be Sunday."
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*bhaviṣyati* is built from the root √bhū "be, become" with the future marker *-iṣya-* (MW). MW sets √bhū beside Latin *fuit* "was" and English *be*: an inherited Indo-European root.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

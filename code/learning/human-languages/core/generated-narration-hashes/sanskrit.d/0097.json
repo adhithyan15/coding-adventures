@@ -1,7 +1,7 @@
 {
   "language": "sanskrit",
   "chapter": 97,
-  "sourceHash": "fnv1a64:cbecdbace3111c2e",
+  "sourceHash": "fnv1a64:5d0dc48f99da2593",
   "lessonIds": [
     "SA-C97-karyalayah",
     "SA-C97-bhojanalayah",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "sanskrit/narration/ch97.txt",
   "json": "sanskrit/narration/ch97.json",
-  "textHash": "fnv1a64:4cd78a890d9904b4",
-  "jsonHash": "fnv1a64:af38902055cdd7c2",
+  "textHash": "fnv1a64:e9196225b7d039fd",
+  "jsonHash": "fnv1a64:73b784318c1d91cb",
   "findings": []
 }

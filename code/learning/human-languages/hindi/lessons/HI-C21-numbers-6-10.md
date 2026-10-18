@@ -14,7 +14,7 @@ romanization: "chhah sāt āṭh nau das"
 concept_tag: HI-NUMBERS-6-10
 prerequisites: [HI-C06-paanch-nasal]
 sounds: [matra-au, retroflex-tha]
-roots: [sanskrit-sas, sanskrit-sapta, sanskrit-ashta, sanskrit-nava, sanskrit-dasa]
+roots: [sanskrit-sas, sanskrit-sapta, sanskrit-ashta, sanskrit-nava-nine, sanskrit-dasa]
 etymology_hook: "sāt ← Sanskrit sapta (CDIAL 13139); chhah, āṭh, nau, das ← *kṣaṭ, aṣṭā, nava, daśa: all tadbhavas"
 duration:
   max_seconds: 214

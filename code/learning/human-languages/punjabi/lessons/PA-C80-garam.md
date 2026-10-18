@@ -14,7 +14,8 @@ romanization: "garam"
 concept_tag: PA-ADJ80-GARAM
 prerequisites: [PA-C80-bura, PA-C80-lamma]
 sounds: []
-roots: []
+roots: [persian-garm]
+etymology_hook: "garam: usually traced to Persian garm 'warm, hot'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C80-lamma]
 <!-- hl-knowledge: introduces=[PA-LEX-C80-ADJ80-03]; assesses=[] -->
 
 **ਗਰਮ** — *garam* — "hot".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਗਰਮ** (*garam*) is a loan, usually traced to Persian *garm*, "warm, hot". Punjabi breaks up the *-rm* with a vowel.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "andâkhtan"
 concept_tag: FA-VERB-ANDAKHTAN
 prerequisites: [FA-C253-kharej-shodan, FA-C253-hel-dadan]
 sounds: []
-roots: []
+roots: [persian-andaza]
+etymology_hook: "andâkhtan: inherited, usually traced to Middle Persian handāxtan"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C253-hel-dadan]
 <!-- hl-knowledge: introduces=[FA-LEX-C253-KONESH253-05]; assesses=[] -->
 
 **انداختن** — *andâkhtan* — "to throw".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*andâkhtan* is a native Persian word, inherited rather than borrowed; it is usually traced to Middle Persian *handāxtan*, "to throw; to measure".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

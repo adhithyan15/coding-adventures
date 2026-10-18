@@ -1,7 +1,7 @@
 {
   "language": "bengali",
   "chapter": 258,
-  "sourceHash": "fnv1a64:25ebf740bae2e403",
+  "sourceHash": "fnv1a64:bafd47f211717596",
   "lessonIds": [
     "BN-C258-imel",
     "BN-C258-barta",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "bengali/narration/ch258.txt",
   "json": "bengali/narration/ch258.json",
-  "textHash": "fnv1a64:20a2494c1017da8d",
-  "jsonHash": "fnv1a64:3d2dab371b91f741",
+  "textHash": "fnv1a64:f864ab53dafe7cad",
+  "jsonHash": "fnv1a64:e7367fcc401e84cd",
   "findings": []
 }

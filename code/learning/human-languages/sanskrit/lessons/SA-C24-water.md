@@ -14,7 +14,8 @@ romanization: "jalam"
 concept_tag: SA-NOUN-WATER-JALA
 prerequisites: [SA-C23-daughter, SA-C22-hear, SA-C23-father]
 sounds: []
-roots: []
+roots: [sanskrit-jala]
+etymology_hook: "jala 'water' is in the Mahābhārata; its origin is not settled (CDIAL 5155); Hindi jal"
 duration:
   max_seconds: 210
 requires:
@@ -46,6 +47,12 @@ reviews_of: [SA-C23-daughter]
 You already have one water-word: **पानीयम्** (*pānīyam*), which names water by what you do with it — "the thing to be drunk". **जलम्** names the stuff. Rain is *jalam*; the river is full of *jalam*; nobody offers you a cup of it in that word.
 
 Sanskrit keeps several words here — *jalam*, *pānīyam*, *udakam*, *āpaḥ* — and a poet chooses between them the way an English poet chooses between water, drink, and the waters. The ending puts जलम् in the neuter family you met with अन्नम् and गृहम्: **-अम्**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*Jala* is an old word for water, but its origin is not settled: MW gives no root
+for it. It lives on as Hindi and Bengali *jal* (CDIAL 5155).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -11,8 +11,8 @@ gloss: eye — the body part behind the family a doctor's question would ask abo
 concept_tag: FA-BODY-EYE
 prerequisites: [FA-C10-dokhtar]
 sounds: [rtl, persian-che, sh, short-vowels-unwritten]
-roots: [middle-persian-casm, pie-spek]
-etymology_hook: cheshm continues Middle Persian čašm, tracing to the Indo-European root *spek'-, "to look, to observe" — the same root Latin kept as specere, giving English spy, spectacle, and species; hâl and chetor, Chapter 4's wellbeing words, return here as the questions this chapter's words could actually answer.
+roots: [middle-persian-casm]
+etymology_hook: "cheshm ← Middle Persian čašm, Old Persian čašman- 'eye' (EtymDB); a cousin of Sanskrit cakṣus 'eye'"
 duration:
   max_seconds: 260
 requires:
@@ -51,22 +51,20 @@ parts of you that state belongs to. This chapter does.
 Three letters, all already yours: **چ** *ch*, from *chist*; **ش** *sh*, from
 **شما**; **م** *m*.
 
-## The word, taken apart — the root behind spying, not seeing
+## The word, taken apart — an old Iranian word for the eye
 <!-- hl-knowledge: introduces=[FA-ETYMON-CHESHM]; assesses=[] -->
 
-**چشم** continues Middle Persian **čašm**, tracing back through Old Iranian to
-the Indo-European root \**spek'-*, “to look at, to observe.” English never
-inherited this root directly for its everyday word **eye** — that word comes
-from a different ancient root entirely — but it kept \**spek'-* through Latin
-*specere*, “to look at”: **spy**, **spectacle**, **species**, **inspect**, and
-**suspect** are all this same root, arriving sideways rather than head-on.
+**چشم** continues Middle Persian **čašm**, and Old Persian had *čašman-*, “eye”
+(EtymDB). EtymDB takes it back to an Indo-Iranian word for the eye; its cousin
+is Sanskrit *cakṣus*, “eye,” from a verb meaning “to see.” English **eye** comes
+from a different root, and so do *spy* and *spectacle*: no English cousin is
+claimed here.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[FA-LEX-CHESHM, FA-ETYMON-CHESHM, FA-LEX-DOKHTAR] -->
 
 - [YOU SAY: **cheshm** — eye]
-- [YOU CONNECT: **cheshm** ← \**spek'-* → Latin **specere** → English **spy**,
-  **spectacle**, **species**]
+- [YOU CONNECT: **cheshm** ← Middle Persian **čašm** ← Old Persian *čašman-*]
 - [YOU RETRIEVE: *hâl-e shomâ chetor ast?* — the question this chapter's body
   words could actually answer]
 - [YOU RUN: **mâdar, pedar, barâdar, dokhtar, cheshm** — five family and body
@@ -76,8 +74,8 @@ from a different ancient root entirely — but it kept \**spek'-* through Latin
 <!-- hl-knowledge: introduces=[]; assesses=[FA-LEX-CHESHM, FA-ETYMON-CHESHM] -->
 <!-- hl-activity: {"id":"FA-C11-cheshm-meaning","kind":"text","assesses":["FA-LEX-CHESHM"],"prompt":"Type the Persian word for 'eye'.","answer":"چشم","accepted":["cheshm","chashm"],"feedback":{"correct":"Right: چشم cheshm.","incorrect":"Use چشم — cheshm."},"response_seconds":8} -->
 
-[PAUSE 3s] What does **چشم** mean? (**Eye.**) Which three English words share
-its root, none of them meaning “eye”? (**Spy, spectacle, species.**) Which
+[PAUSE 3s] What does **چشم** mean? (**Eye.**) Which Middle Persian word does it
+continue? (**Čašm.**) Which
 earlier question could a body-part chapter actually answer? (*Hâl-e shomâ
 chetor ast?*)
 

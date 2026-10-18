@@ -14,7 +14,8 @@ romanization: "sārārāt"
 concept_tag: BN-TIME95-SARARAT
 prerequisites: [BN-C95-idaning, BN-C95-saradin]
 sounds: []
-roots: []
+roots: [sanskrit-sara, sanskrit-ratri]
+etymology_hook: "sārārāt: sārā 'whole' ← Sanskrit sāra 'best part' (CDIAL 13355) + rāt 'night' ← rātrī (CDIAL 10702)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C95-saradin]
 <!-- hl-knowledge: introduces=[BN-LEX-C95-TIME95-03]; assesses=[] -->
 
 **সারারাত** — *sārārāt* — "all night".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**সারারাত** (*sārārāt*) is *sārā*, "whole", + *rāt*, "night". CDIAL lists Bengali *sārā*, "whole", under Sanskrit *sāra*, "hardness, best part" (CDIAL 13355), and *rāt* under *rātrī*, "night" (CDIAL 10702).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

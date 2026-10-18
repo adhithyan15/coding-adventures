@@ -14,7 +14,8 @@ romanization: "kasara"
 concept_tag: AR-VERB-KASARA
 prerequisites: [AR-C161-atasa, AR-C161-tanaffasa]
 sounds: []
-roots: []
+roots: [k-s-r]
+etymology_hook: "kasara: built on the root k-s-r, 'to break' (Lane); kasara is the plain verb, 'he broke'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C161-tanaffasa]
 <!-- hl-knowledge: introduces=[AR-LEX-C161-ACT161-03]; assesses=[] -->
 
 **كسر** — *kasara* — "to break".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**كسر** (*kasara*) is built on the native Arabic root *k-s-r*, "to break" (Lane). *Kasara* is the plain verb, "he broke".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

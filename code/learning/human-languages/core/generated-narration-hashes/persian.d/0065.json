@@ -1,7 +1,7 @@
 {
   "language": "persian",
   "chapter": 65,
-  "sourceHash": "fnv1a64:fdca8ed71522e180",
+  "sourceHash": "fnv1a64:d4f69b3834011cbe",
   "lessonIds": [
     "FA-C65-daghighe",
     "FA-C65-emruz",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "persian/narration/ch65.txt",
   "json": "persian/narration/ch65.json",
-  "textHash": "fnv1a64:1442046bc620bc8b",
-  "jsonHash": "fnv1a64:638619086af6af33",
+  "textHash": "fnv1a64:638d6b4de571f8cb",
+  "jsonHash": "fnv1a64:4352db093bdb652b",
   "findings": []
 }

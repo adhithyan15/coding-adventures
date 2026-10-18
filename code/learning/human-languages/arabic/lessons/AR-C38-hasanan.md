@@ -12,7 +12,7 @@ concept_tag: RESPONSE-OKAY
 prerequisites: [AR-C38-lakin, AR-C03-bi-khayr, AR-C05-naam]
 sounds: [tanwin-fath]
 roots: [h-s-n]
-etymology_hook: "حسنًا is the adjective حَسَن, 'good, beautiful', wearing the -an ending that turns an Arabic adjective into an adverb — the same ending already met in شكرًا and عفوًا, so the reader owns the shape and only the root is new"
+etymology_hook: "ḥasanan: ḥasan 'good', root ḥ-s-n (Lane), with the adverb ending -an: 'well, all right'"
 duration:
   max_seconds: 240
 requires:
@@ -66,6 +66,11 @@ So *ḥasanan* is literally *goodly*.
 The third row is the shape almost every real disagreement takes. A learner who
 can only say **نعم** or **لا** has to accept or refuse whole; this is the first
 thing in the book that lets them do neither.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**حسنًا** (*ḥasanan*) is *ḥasan*, "good", on the native root *ḥ-s-n*, "to be good, beautiful" (Lane), with the adverb ending *-an*: "well".
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[AR-FUNC-C38-HASANAN-01, AR-LEX-C38-LAKIN-01, AR-CONCEPT-C03-BI-KHAYR-01, AR-CONCEPT-SHUKRAN-21] -->

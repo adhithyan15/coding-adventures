@@ -6,7 +6,7 @@ sequence: 218
 chapter: 7
 type: grammar
 headword: ein / eine
-gloss: "a" is the number one with its counting -s taken off
+gloss: '"a" is the number one with its counting -s taken off'
 concept_tag: GE-GRAMMAR-INDEFINITE-ARTICLE
 prerequisites: [GE-C06-zahlen-1-5, GE-C01-der-die-das, GE-C01-tag, GE-C01-nacht]
 sounds: [diphthong-ei]

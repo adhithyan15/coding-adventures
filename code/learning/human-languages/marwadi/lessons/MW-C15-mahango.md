@@ -11,8 +11,8 @@ gloss: expensive, written with familiar signs
 concept_tag: MW-SHOPPING-EXPENSIVE-WRITTEN
 prerequisites: [MW-C15-hear-mahango]
 sounds: [nasal, voiced-g, long-o]
-roots: []
-etymology_hook: Every sign in the high-price word is already familiar.
+roots: [sanskrit-mahargha]
+etymology_hook: "mahaṅgo ← Sanskrit mahārgha 'high-priced', a tadbhava (CDIAL 9954, Hindi row)"
 duration:
   max_seconds: 165
 requires:
@@ -44,6 +44,11 @@ reviews_of: [MW-C15-hear-mahango, MW-C14-sasta]
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-MAHANGO-01, MW-SCRIPT-MAHANGO-01] -->
 
 > **महं** + **गो** → **महंगो** — *mahaṅgo* — expensive
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**महंगो** (*mahaṅgo*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *mahārgha*, "high-priced". CDIAL gives no Marwari form in this entry (CDIAL 9954); the match is through Hindi *mahãgā*. It is built from *mahā*, "great", and *argha*, "price".
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-MAHANGO-01] -->

@@ -43,7 +43,7 @@ identically to its closest cousin, Tamil.
 
 Malayalam's teens echo **പത്ത്** (*pattŭ*, "**ten**") plus each digit.
 **പതിനൊന്ന്** (*patinonnŭ*) is 11, **പന്ത്രണ്ട്** (*pantraṇṭŭ*) is 12,
-and the pattern continues through **പത്തൊമ്പത്** (*pattombatŭ*, 19) — the
+and the pattern continues through **പത്തൊമ്പത്** (*pattompatŭ*, 19) — the
 same digit-plus-ten-echo compounding as its Dravidian cousins.
 
 ## The word, taken apart
@@ -54,7 +54,8 @@ same digit-plus-ten-echo compounding as its Dravidian cousins.
 "**two-tens**" today. This matches **Tamil's own** *irupatu* almost
 letter-for-letter, both languages having kept this compound transparent —
 unlike Telugu's *iravai*, which most likely continues the same underlying
-pattern but has worn down past the point of visibly splitting apart.
+pattern but has worn down past the point of visibly splitting apart. Both
+parts are native Dravidian (DEDR 474, 3918).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C20-PATHINONNU-IRUPATHU-01, ML-CONCEPT-C20-PATHINONNU-IRUPATHU-02, ML-CONCEPT-C14-KAALANGAL-01, ML-CONCEPT-C14-KAALANGAL-02, ML-CONCEPT-C15-VELLAM-ARI-01, ML-CONCEPT-C15-VELLAM-ARI-02] -->

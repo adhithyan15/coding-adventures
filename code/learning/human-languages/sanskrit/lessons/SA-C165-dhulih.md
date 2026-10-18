@@ -14,7 +14,8 @@ romanization: "dhūliḥ"
 concept_tag: SA-THG165-DHULIH
 prerequisites: [SA-C164-kridanganam, SA-C164-vimanapattanam]
 sounds: []
-roots: []
+roots: [sanskrit-dhuli]
+etymology_hook: "dhūli 'dust' is inherited from Indo-European (EtymDB), cousin of Latin fūlīgō 'soot'; Hindi dhūl (CDIAL 6835)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C164-vimanapattanam]
 <!-- hl-knowledge: introduces=[SA-LEX-C165-THG165-01]; assesses=[] -->
 
 **धूलिः** — *dhūliḥ* — "dust".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*dhūli* "dust, powder, pollen" is inherited from Indo-European, with Latin *fūlīgō* "soot" as a cousin (EtymDB); MW queries a link with √dhū "shake". It lives on as Hindi *dhūl* and Marathi *dhūḷ* "dust" (CDIAL 6835).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

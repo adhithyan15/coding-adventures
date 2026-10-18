@@ -11,8 +11,8 @@ gloss: this — the word that points at one thing in front of you
 concept_tag: MW-DEMONSTRATIVE-THIS
 prerequisites: [MW-R20-script-close]
 sounds: [semivowel-y, long-e]
-roots: []
-etymology_hook: Nineteen nouns are already secure and not one of them can be pointed at yet.
+roots: [sanskrit-esha]
+etymology_hook: "ye 'this': CDIAL lists Hindi yah under Sanskrit eṣa 'this' (CDIAL 2530); no Marwari form, path not settled"
 duration:
   max_seconds: 150
 requires:
@@ -52,6 +52,11 @@ chapters will use it: *ye vastu*, this item.
 
 Every word this book has taught so far names a thing. *ye* does not name
 anything. It is the first Marwadi word here whose whole job is to pick one out.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+CDIAL lists Hindi *yah*, "this", under Sanskrit *eṣa*, "this" (CDIAL 2530). It gives no Marwari form, so the exact path to *ye* is not settled.
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-YE-01] -->

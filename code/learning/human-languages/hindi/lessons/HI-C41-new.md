@@ -15,7 +15,7 @@ concept_tag: HI-ADJ-NEW
 prerequisites: [HI-C41-good, HI-C39-aurat, HI-C40-who]
 sounds: []
 roots: [sanskrit-navya]
-etymology_hook: "nayā ← Sanskrit navya 'new', a tadbhava (CDIAL 7025)"
+etymology_hook: "nayā ← Sanskrit naviya, a Vedic by-form of navya 'new' (CDIAL 7025)"
 duration:
   max_seconds: 210
 requires:
@@ -55,7 +55,7 @@ adjective you will ever meet here.
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**नया** (*nayā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *navya*, "new" (CDIAL 7025).
+**नया** (*nayā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *naviya*, a by-form of Sanskrit *navya*, "new", which the Rigveda uses where the metre needs an extra syllable. CDIAL lists Hindi *nayā* and its feminine *naī* under *naviya* (CDIAL 7025).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C41-ADJ-04, HI-CONCEPT-C39-AURAT-01, HI-CONCEPT-C39-AURAT-02, HI-CONCEPT-C39-AURAT-03, HI-LEX-C40-DEIXIS-05] -->

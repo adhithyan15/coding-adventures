@@ -14,7 +14,8 @@ romanization: "bâtri"
 concept_tag: FA-THINGS112-BATRI
 prerequisites: [FA-C112-chamedan, FA-C112-kuleposhti]
 sounds: []
-roots: []
+roots: [french-batterie]
+etymology_hook: "bâtri: a loan, usually traced to French batterie 'battery'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C112-kuleposhti]
 <!-- hl-knowledge: introduces=[FA-LEX-C112-THINGS112-05]; assesses=[] -->
 
 **باتری** — *bâtri* — "a battery".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*bâtri* is a loan, usually traced to French *batterie*, "battery"; English *battery* is the same word.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

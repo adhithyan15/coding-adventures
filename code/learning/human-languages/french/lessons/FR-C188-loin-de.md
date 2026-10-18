@@ -46,7 +46,7 @@ reviews_of: [FR-C188-pres-de]
 ## The phrase, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**loin de** — *loin*, "far", and *de*, "from".
+**loin de** — *loin*, "far", and *de*, "from". *Loin* comes from Latin *longē*, "far off", and *de* from *dē*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

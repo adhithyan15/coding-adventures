@@ -14,7 +14,8 @@ romanization: "ṭūthpesṭ"
 concept_tag: UR-CHIZ197-TUTHPEST
 prerequisites: [UR-C197-chatai, UR-C197-shaimpu]
 sounds: []
-roots: []
+roots: [english-toothpaste]
+etymology_hook: "ṭūthpesṭ ← English toothpaste"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C197-shaimpu]
 <!-- hl-knowledge: introduces=[UR-LEX-C197-CHIZ197-03]; assesses=[] -->
 
 **ٹوتھ پیسٹ** — *ṭūthpesṭ* — "toothpaste".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ٹوتھ پیسٹ** (*ṭūthpesṭ*) is a loan from English *toothpaste*. It is built from *tooth* and *paste*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

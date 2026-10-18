@@ -1,7 +1,7 @@
 {
   "language": "sanskrit",
   "chapter": 113,
-  "sourceHash": "fnv1a64:6d8cb9f76f0a172a",
+  "sourceHash": "fnv1a64:22fc4cc3707773a1",
   "lessonIds": [
     "SA-C113-sasakah",
     "SA-C113-gardabhah",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "sanskrit/narration/ch113.txt",
   "json": "sanskrit/narration/ch113.json",
-  "textHash": "fnv1a64:cc66cd0c03b11b80",
-  "jsonHash": "fnv1a64:ea1138ffc55c2e22",
+  "textHash": "fnv1a64:168902cb5e5cd7af",
+  "jsonHash": "fnv1a64:f6ea3f8f1c8e4957",
   "findings": []
 }

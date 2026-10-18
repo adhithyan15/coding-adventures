@@ -14,7 +14,8 @@ romanization: "bibheti"
 concept_tag: SA-VERB-BIBHETI
 prerequisites: [SA-C143-sete, SA-C143-aste]
 sounds: []
-roots: []
+roots: [sanskrit-bibheti, sanskrit-bhaya]
+etymology_hook: "bibheti ← √bhī 'fear', reduplicated; MW compares German beben 'tremble'; bhaya 'fear' is kin"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C143-aste]
 <!-- hl-knowledge: introduces=[SA-LEX-C143-ACT143-04]; assesses=[] -->
 
 **बिभेति** — *bibheti* — "is afraid".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*bibheti* comes from the root √bhī "fear", with the doubled syllable *bi-* of class-3 verbs (MW; CDIAL 9241). MW compares German *beben* "tremble", and *bhaya* "fear", which you met in *bhayaṅkara*, comes from the same root.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -4,7 +4,7 @@
   "chapter": 176,
   "title": "To come back, To be late, To hurry, To rest, To get tired",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:d4fc9a91c63fb469",
+  "sourceHash": "fnv1a64:83671e2fe7df9735",
   "lessons": [
     {
       "id": "RU-C176-vozvrashchatsya",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:39cdf9ff2cd00fd1",
+      "sourceHash": "fnv1a64:50f2a1ff4e72aab3",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "возвращаться (vozvrashchátsya) is воз-, \"back\", with вращать, \"to turn\", and -ся: to turn yourself back. вращать is the Church Slavonic shape of native ворочать, on the root of вертеть, \"to turn\"."
+              "text": "возвращаться (vozvrashchátsya) is воз-, \"back\", with вращать, \"to turn\", and -ся: to turn yourself back. вращать is the Church Slavonic shape of native ворочать (Vasmer), on the root of вертеть, \"to turn\"."
             }
           ]
         },

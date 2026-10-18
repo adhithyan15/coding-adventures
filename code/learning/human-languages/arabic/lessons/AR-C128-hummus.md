@@ -14,7 +14,8 @@ romanization: "ḥummuṣ"
 concept_tag: AR-THINGS128-HUMMUS
 prerequisites: [AR-C128-qamh, AR-C128-adas]
 sounds: []
-roots: []
+roots: [ḥ-m-ṣ]
+etymology_hook: "ḥummuṣ: built on the root ḥ-m-ṣ, 'chickpeas' (Lane); Lane lists ḥimmaṣ, ḥummuṣ, the chickpea, under ḥ-m-ṣ"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C128-adas]
 <!-- hl-knowledge: introduces=[AR-LEX-C128-THINGS128-05]; assesses=[] -->
 
 **حمص** — *ḥummuṣ* — "chickpeas".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**حمص** (*ḥummuṣ*) is built on the native Arabic root *ḥ-m-ṣ*, "chickpeas" (Lane). Lane lists *ḥimmaṣ*, *ḥummuṣ*, the chickpea, under *ḥ-m-ṣ*; English *hummus* comes from it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

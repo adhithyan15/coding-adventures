@@ -14,7 +14,8 @@ romanization: "dakṣiṇaḥ"
 concept_tag: SA-TIME93-DAKSINAH
 prerequisites: [SA-C93-vilambah, SA-C93-vamah]
 sounds: []
-roots: []
+roots: [sanskrit-dakshina]
+etymology_hook: "dakṣiṇa ← an Indo-European word for 'right' (EtymDB), cf. Latin dexter; facing east, south is on the right (MW)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C93-vamah]
 <!-- hl-knowledge: introduces=[SA-LEX-C93-TIME93-04]; assesses=[] -->
 
 **दक्षिणः** — *dakṣiṇaḥ* — "right; south".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*dakṣiṇa* is inherited from an Indo-European word for "right" that also gave Latin *dexter* (English *dexterous*) and Greek *dexios* (EtymDB). It means "south" because someone facing east has the south on the right hand (MW). It lives on as Hindi *dakkhin* "the south" (CDIAL 6119).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

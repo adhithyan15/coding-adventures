@@ -1,7 +1,7 @@
 {
   "language": "sanskrit",
   "chapter": 105,
-  "sourceHash": "fnv1a64:a79f6fc1a43bf79f",
+  "sourceHash": "fnv1a64:c456e1cebdb8e613",
   "lessonIds": [
     "SA-C105-duradarsanam",
     "SA-C105-sanganakam",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "sanskrit/narration/ch105.txt",
   "json": "sanskrit/narration/ch105.json",
-  "textHash": "fnv1a64:0f3c00f17c136a7a",
-  "jsonHash": "fnv1a64:67d76c3761c2aff6",
+  "textHash": "fnv1a64:93cd7bc567385823",
+  "jsonHash": "fnv1a64:9c374b2c80c42174",
   "findings": []
 }

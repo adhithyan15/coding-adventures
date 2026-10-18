@@ -14,7 +14,8 @@ romanization: "istgâh"
 concept_tag: FA-TOWN70-ISTGAH
 prerequisites: [FA-C69-khiyaban, FA-C70-bank]
 sounds: []
-roots: []
+roots: [pie-steh2, persian-gah]
+etymology_hook: "istgâh: Persian ist- 'stand' + gâh 'place'; native"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C70-bank]
 <!-- hl-knowledge: introduces=[FA-LEX-C70-TOWN70-02]; assesses=[] -->
 
 **ایستگاه** — *istgâh* — "a station, a stop".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*istgâh* is built from *ist-*, "stand" (the stem of *istâdan*, "to stand"), and *gâh*, "place": "standing place". Both parts are native Persian.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

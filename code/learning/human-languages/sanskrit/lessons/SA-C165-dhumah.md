@@ -14,7 +14,8 @@ romanization: "dhūmaḥ"
 concept_tag: SA-THG165-DHUMAH
 prerequisites: [SA-C164-vimanapattanam, SA-C165-dhulih]
 sounds: []
-roots: []
+roots: [sanskrit-dhuma]
+etymology_hook: "dhūma 'smoke' (RV) is inherited, cousin of Latin fumus (MW; EtymDB); Hindi dhūāṁ (CDIAL 6849)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C165-dhulih]
 <!-- hl-knowledge: introduces=[SA-LEX-C165-THG165-02]; assesses=[] -->
 
 **धूमः** — *dhūmaḥ* — "smoke".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*dhūma* "smoke" is old, in the Rigveda, and is inherited from Indo-European: MW sets it beside Latin *fumus*, the source of English *fume* (EtymDB agrees). It lives on as Hindi *dhūāṁ* "smoke" (CDIAL 6849).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

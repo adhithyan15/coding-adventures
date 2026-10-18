@@ -14,7 +14,8 @@ romanization: "dar zadan"
 concept_tag: FA-VERB-DAR-ZADAN
 prerequisites: [FA-C260-surakh-kardan, FA-C260-gereh-zadan]
 sounds: []
-roots: []
+roots: [persian-dar-door, persian-zadan]
+etymology_hook: "dar zadan: Persian dar 'door' (Old Persian duvara-, EtymDB) + zadan"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C260-gereh-zadan]
 <!-- hl-knowledge: introduces=[FA-LEX-C260-KONESH260-04]; assesses=[] -->
 
 **در زدن** — *dar zadan* — "to knock at the door".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*dar zadan* is "to strike the door": *dar*, "door", is inherited; Old Persian had *duvara-* (EtymDB). *zadan*, "to strike", is an inherited verb; it is usually traced to Middle Persian *zadan*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "midkhana"
 concept_tag: AR-MAKAN266-MIDKHANA
 prerequisites: [AR-C265-rif, AR-C266-qabw]
 sounds: []
-roots: []
+roots: [d-kh-n]
+etymology_hook: "midkhana: built on the root d-kh-n, 'smoke' (Lane); midkhana is a thing for smoke: a chimney"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C266-qabw]
 <!-- hl-knowledge: introduces=[AR-LEX-C266-MAKAN266-02]; assesses=[] -->
 
 **مدخنة** — *midkhana* — "a chimney".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**مدخنة** (*midkhana*) is built on the native Arabic root *d-kh-n*, "smoke" (Lane). *Midkhana* is a thing for smoke: a chimney.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

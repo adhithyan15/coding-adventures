@@ -14,7 +14,8 @@ romanization: "kandukaḥ"
 concept_tag: SA-THINGS103-KANDUKAH
 prerequisites: [SA-C102-culli, SA-C102-vartika]
 sounds: []
-roots: []
+roots: [sanskrit-kanduka]
+etymology_hook: "kanduka 'ball' is often taken to be borrowed from Dravidian (CDIAL 2727, 4248, after Burrow); Hindi gẽd 'ball' is kin"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C102-vartika]
 <!-- hl-knowledge: introduces=[SA-LEX-C103-THINGS103-01]; assesses=[] -->
 
 **कन्दुकः** — *kandukaḥ* — "a ball".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*kanduka* "a ball to play with" is often taken to be borrowed from Dravidian: CDIAL 2727 and 4248, after Burrow and Mayrhofer, put it and its twin *genduka* down to a Dravidian source. The twin lives on as Hindi *gẽd* "ball" (CDIAL 4248).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

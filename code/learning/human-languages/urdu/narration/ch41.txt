@@ -12,6 +12,9 @@ Before the new one: say the Urdu for a knee, then the Urdu for a fever.
 You'll want to know: ہسپتال.
 ہسپتال — haspatāl — "a hospital".
 
+The word, taken apart.
+ہسپتال (haspatāl) is a loan from English hospital.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Urdu for a fever, then the Urdu for a hospital.
 
 You'll want to know: بیمار.
 بیمار — bīmār — "ill, sick".
+
+The word, taken apart.
+بیمار (bīmār) is a loan, usually traced to Persian bīmār, "ill, sick".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Urdu for a hospital, then the Urdu for ill.
 You'll want to know: درد.
 درد — dard — "pain".
 
+The word, taken apart.
+درد (dard) is a loan, usually traced to Persian dard, "pain".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Urdu for ill, then the Urdu for pain.
 You'll want to know: دوا.
 دوا — davā — "medicine".
 
+The word, taken apart.
+دوا (davā) is a loan from Arabic dawāʾ, "remedy, medicine", which reached Urdu through Persian. Its Arabic root is d-w-y (Lane).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Urdu for pain, then the Urdu for medicine.
 
 You'll want to know: پیاس.
 پیاس — pyās — "thirst".
+
+The word, taken apart.
+پیاس (pyās) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from pipāsā, "thirst" (CDIAL 8199).
 
 What you've built.
 One more word for this chapter.

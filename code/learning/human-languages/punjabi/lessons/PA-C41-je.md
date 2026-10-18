@@ -11,8 +11,8 @@ gloss: if - the word that makes a sentence conditional
 concept_tag: PA-JOIN-JE
 prerequisites: [PA-C40-kyunki, PA-C39-par]
 sounds: [laava-e]
-roots: []
-etymology_hook: ਜੇ opens its clause, where English also puts if - unusual in a book whose small words mostly follow what they apply to.
+roots: [sanskrit-yadi]
+etymology_hook: "je ← Sanskrit yadi 'if', inherited (CDIAL 10410)"
 duration:
   max_seconds: 240
 requires:
@@ -54,6 +54,8 @@ something that **might not be**.
 That is worth noticing: most of the small words in this book — the postpositions,
 **ਮੈਨੂੰ**'s ending — come **after** what they apply to. **ਜੇ** comes first, and
 that alone tells the ear a condition is starting.
+
+*Je* is inherited from Sanskrit *yadi*, "if", which CDIAL lists with Punjabi *je* (CDIAL 10410).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[PA-JOIN-JE-01] -->

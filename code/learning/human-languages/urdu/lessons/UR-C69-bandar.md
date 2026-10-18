@@ -14,7 +14,8 @@ romanization: "bandar"
 concept_tag: UR-ANIMALS69-BANDAR
 prerequisites: [UR-C68-sher, UR-C69-hathi]
 sounds: []
-roots: []
+roots: [sanskrit-vanara]
+etymology_hook: "bandar ← Sanskrit vānara 'monkey', which CDIAL derives from vana- 'forest' (CDIAL 11515)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C69-hathi]
 <!-- hl-knowledge: introduces=[UR-LEX-C69-ANIMALS69-02]; assesses=[] -->
 
 **بندر** — *bandar* — "a monkey".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**بندر** (*bandar*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *vānara*, "monkey" (CDIAL 11515). CDIAL derives the Sanskrit word from *vana-*, "forest".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

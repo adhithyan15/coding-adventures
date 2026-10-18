@@ -14,7 +14,8 @@ romanization: "smarati"
 concept_tag: SA-VERB-REMEMBER
 prerequisites: [SA-C21-stand, SA-C19-ten]
 sounds: []
-roots: []
+roots: [sanskrit-smarati]
+etymology_hook: "smarati ← the root √smṛ 'remember'; MW compares Latin memor 'mindful' (CDIAL 13863)"
 duration:
   max_seconds: 210
 requires:
@@ -44,6 +45,12 @@ reviews_of: [SA-C21-stand]
 **स्मरति** (*smarati*) — "he, she or it remembers".
 
 From **√स्मृ** (*smṛ*), 'to remember'. It gives *smṛti*, 'that which is remembered' — the name for a whole class of texts, as against *śruti*, 'that which is heard'. A memory word doing bibliographic work.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*Smarati* is the present of the root √smṛ, "to remember" (MW, CDIAL 13863). MW
+compares Latin *memor*, "mindful", the source of English **memory**.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

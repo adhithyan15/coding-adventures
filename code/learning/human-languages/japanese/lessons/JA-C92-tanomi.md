@@ -14,7 +14,8 @@ romanization: "tanomi"
 concept_tag: JA-WANT92-TANOMI
 prerequisites: [JA-C92-negai, JA-C92-negau]
 sounds: []
-roots: []
+roots: [japanese-tanomu]
+etymology_hook: "tanomi: native, the noun from tanomu 'to ask, rely on'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C92-negau]
 <!-- hl-knowledge: introduces=[JA-LEX-C92-WANT92-04]; assesses=[] -->
 
 **たのみ** — *tanomi* — "a request".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**たのみ** (*tanomi*) is native: the noun made from *tanomu*, "to ask, to rely on", by its stem (JMdict). It is inherited rather than borrowed.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

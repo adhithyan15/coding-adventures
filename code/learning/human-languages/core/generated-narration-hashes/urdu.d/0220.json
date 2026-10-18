@@ -1,7 +1,7 @@
 {
   "language": "urdu",
   "chapter": 220,
-  "sourceHash": "fnv1a64:b3033e53408d4d1a",
+  "sourceHash": "fnv1a64:546c39ba21fc500a",
   "lessonIds": [
     "UR-C220-khush-qismati-se",
     "UR-C220-bad-qismati-se",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "urdu/narration/ch220.txt",
   "json": "urdu/narration/ch220.json",
-  "textHash": "fnv1a64:bd01d524e1094e09",
-  "jsonHash": "fnv1a64:537c763f1b7b0fe1",
+  "textHash": "fnv1a64:4934a4654e93a98c",
+  "jsonHash": "fnv1a64:f2c6dc64f0b06702",
   "findings": []
 }

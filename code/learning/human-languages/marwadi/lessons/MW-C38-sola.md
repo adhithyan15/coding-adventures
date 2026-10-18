@@ -11,7 +11,8 @@ gloss: sixteen, on the page — the new letter between two old marks
 concept_tag: MW-NUMBER-SIXTEEN-WRITTEN
 prerequisites: [MW-C38-hear-sola]
 sounds: [retroflex-l]
-roots: []
+roots: [sanskrit-shodasha]
+etymology_hook: "soḷā ← Sanskrit ṣoḍaśa 'sixteen', a tadbhava (CDIAL 12812, Gujarati row)"
 duration:
   max_seconds: 180
 requires:
@@ -51,6 +52,11 @@ reviews_of: [MW-C38-hear-sola, MW-C37-chauda, MW-W01-sa, MW-W05-o-matra, MW-C25-
 
 Write **सो** and **सोळा** one above the other. Two signs apart, a hundred and
 sixteen.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**सोळा** (*soḷā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *ṣoḍaśa*, "sixteen". CDIAL gives no Marwari form in this entry (CDIAL 12812); the match is through Gujarati *soḷ*. Gujarati, like Marwadi, says the *l* curled back.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-SOLA-01, MW-SCRIPT-SO-01, MW-SCRIPT-LLA-01] -->

@@ -4,7 +4,7 @@
   "chapter": 222,
   "title": "Thrifty, Sporty, Strict, Likeable, Dead",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:88ffe4bae1afec3a",
+  "sourceHash": "fnv1a64:5ff8783ba9611c9d",
   "lessons": [
     {
       "id": "GE-C222-sparsam",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:065458874eed4145",
+      "sourceHash": "fnv1a64:9e0d19afff079ded",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "sparsam is sparen, \"to save\", + -sam, the ending of English -some: given to saving."
+              "text": "sparsam is sparen, \"to save\", + -sam, a cousin of English -some: given to saving."
             }
           ]
         },

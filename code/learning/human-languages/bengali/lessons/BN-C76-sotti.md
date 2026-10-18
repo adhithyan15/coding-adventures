@@ -14,7 +14,8 @@ romanization: "sôtti"
 concept_tag: BN-ADJ76-SOTTI
 prerequisites: [BN-C76-halka, BN-C76-bhari]
 sounds: []
-roots: []
+roots: [satya]
+etymology_hook: "sôtti ← Sanskrit satya 'true', a semi-tatsama; CDIAL lists the inherited form sāṁcā (CDIAL 13112)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C76-bhari]
 <!-- hl-knowledge: introduces=[BN-LEX-C76-ADJ76-05]; assesses=[] -->
 
 **সত্যি** — *sôtti* — "true".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**সত্যি** (*sôtti*) is a semi-tatsama: Sanskrit *satya*, "true", borrowed after the old sound changes had run their course and then lightly reshaped (CDIAL 13112). The word inherited from it is *sāṁcā*, which CDIAL lists.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

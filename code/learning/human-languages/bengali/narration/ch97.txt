@@ -12,6 +12,9 @@ Before the new one: say the Bengali for a need, then the Bengali for a necessity
 You'll want to know: লোভ.
 লোভ — lobh — "greed".
 
+The word, taken apart.
+লোভ (lobh) is Sanskrit lobha, "eager desire, greed", taken over whole as a learned loan, a tatsama.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Bengali for a necessity, then the Bengali for greed.
 
 You'll want to know: পছন্দ.
 পছন্দ — pôchhôndô — "a liking, a choice".
+
+The word, taken apart.
+পছন্দ (pôchhôndô) is a loan, usually traced to Persian pasand, "liking, approval".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Bengali for greed, then the Bengali for a liking.
 You'll want to know: শখ.
 শখ — shôkh — "a hobby".
 
+The word, taken apart.
+শখ (shôkh) is a loan from Arabic shawq, "longing, desire", which reached Bengali through Persian. Its Arabic root is sh-w-q (Lane). In Bengali it has come to mean "a hobby".
+
 What you've built.
 One more word for this chapter.
 
@@ -98,6 +107,9 @@ Before the new one: say the Bengali for a liking, then the Bengali for a hobby.
 
 You'll want to know: আবদার.
 আবদার — ābdār — "a pleading request".
+
+The word, taken apart.
+The origin of আবদার (ābdār) is not settled: neither CDIAL nor DEDR has an entry for it, and a search of their word lists by form and by gloss finds nothing close.
 
 What you've built.
 One more word for this chapter.
@@ -129,6 +141,9 @@ Before the new one: say the Bengali for a hobby, then the Bengali for a pleading
 
 You'll want to know: দাবি.
 দাবি — dābi — "a demand".
+
+The word, taken apart.
+দাবি (dābi) is a loan from Arabic daʿwā, "claim, lawsuit", which reached Bengali through Persian. Its Arabic root is d-ʿ-w (Lane).
 
 What you've built.
 One more word for this chapter.

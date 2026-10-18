@@ -4,7 +4,7 @@
   "chapter": 18,
   "title": "Telling Time",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:71525a25a462744d",
+  "sourceHash": "fnv1a64:4c1ba15c7b89209a",
   "lessons": [
     {
       "id": "TA-C18-mani",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9b7e2478fc3712ef",
+      "sourceHash": "fnv1a64:17a8bba3224e9505",
       "notice": null,
       "blocks": [
         {
@@ -35,7 +35,7 @@
             },
             {
               "kind": "speech",
-              "text": "You've just watched Kannada and Telugu both borrow Sanskrit's \"bell\" word for \"hour,\" matching Hindi exactly. Tamil goes its own way again here — with a genuinely tricky twist along the way."
+              "text": "You've watched Kannada and Telugu both borrow Sanskrit's \"bell\" word for \"hour,\" matching Hindi exactly. Tamil goes its own way again here — with a genuinely tricky twist along the way."
             }
           ]
         },
@@ -46,7 +46,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "மணி (maṇi) = \"hour, o'clock\" — and it also means \"bell, gong,\" the same double duty you've now seen several times. Wiktionary's Tamil entry gives this maṇi its own etymology, separate from a Sanskrit-loan entry of the same spelling — most likely a native Dravidian word, not the Sanskrit घण्टा (ghaṇṭā) behind Kannada's gaṇṭe, Telugu's ganṭa, and Hindi's ghanṭā. On this account, Tamil underwent the same \"a bell announces the hour, so the bell-word becomes the hour-word\" shift on its own, from a different starting point — though even the comparative Dravidian dictionary (DEDR) flags a possible Sanskrit connection for this whole word-family as unresolved, so hold \"native\" as the best current account rather than a settled fact."
+              "text": "மணி (maṇi) = \"hour, o'clock\" — and it also means \"bell, gong,\" the same double duty you've now seen several times. Wiktionary's Tamil entry gives this maṇi its own etymology, separate from a Sanskrit-loan entry of the same spelling — most likely a native Dravidian word, not the Sanskrit घण्टा (ghaṇṭā) behind Kannada's gaṇṭe, Telugu's ganṭa, and Hindi's ghanṭā. On this account, Tamil underwent the same \"a bell announces the hour, so the bell-word becomes the hour-word\" shift on its own, from a different starting point — though even the comparative Dravidian dictionary (DEDR 4672) flags a possible Sanskrit connection for this whole word-family as unresolved, so hold \"native\" as the best current account rather than a settled fact."
             }
           ]
         },
@@ -469,7 +469,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:97ad5350a822f623",
+      "sourceHash": "fnv1a64:29207a15fe374960",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -509,7 +509,7 @@
             },
             {
               "kind": "speech",
-              "text": "Malayalam dictionaries analyze their cognate differently, treating bell/hour and gem as one Sanskrit-derived word. Closely related languages do not always settle the same etymological question in the same way."
+              "text": "The comparative Dravidian dictionary lists the bell/hour word with Malayalam maṇi, \"little bells, gong, hour\", and Kota, Toda and Tulu bell words (DEDR 4672). It adds a query about a source in Sanskrit maṇi, \"jewel\", and leaves it open."
             }
           ]
         },

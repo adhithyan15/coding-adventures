@@ -49,7 +49,7 @@ you were handed: find the god, and English will tell you the day.
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**mercredi** is **Mercuriī diēs**, "the day of **Mercury**" — the messenger of
+**mercredi** is Latin **Mercuriī diēs**, "the day of **Mercury**" — the messenger of
 the gods, and the swiftest planet. English kept the god's name in **mercurial**,
 "quick-changing," and gave it to the metal that runs like water.
 

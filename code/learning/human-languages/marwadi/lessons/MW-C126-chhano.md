@@ -14,7 +14,8 @@ romanization: "chhāṇo"
 concept_tag: MW-THINGS126-CHHANO
 prerequisites: [MW-C125-lakri, MW-C126-koylo]
 sounds: []
-roots: []
+roots: [indo-aryan-chakana]
+etymology_hook: "chhāṇo ← *chakana 'dung', reconstructed (CDIAL 4952, Gujarati row)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C126-koylo]
 <!-- hl-knowledge: introduces=[MW-LEX-C126-THINGS126-02]; assesses=[] -->
 
 **छाणो** — *chhāṇo* — "a dung cake".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**छाणो** (*chhāṇo*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*chakana*, "dung", a form CDIAL reconstructs from its descendants. CDIAL gives no Marwari form in this entry (CDIAL 4952); the match is through Gujarati *chāṇ*. CDIAL sets it beside *\*śakana*, "dung".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

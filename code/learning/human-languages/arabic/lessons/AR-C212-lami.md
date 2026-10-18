@@ -14,7 +14,8 @@ romanization: "lāmiʿ"
 concept_tag: AR-SIFA212-LAMI
 prerequisites: [AR-C212-hashsh, AR-C212-shaffaf]
 sounds: []
-roots: []
+roots: [l-m-ʿ]
+etymology_hook: "lāmiʿ: built on the root l-m-ʿ, 'to shine, to glitter' (Lane); lāmiʿ is the active participle, 'shining'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C212-shaffaf]
 <!-- hl-knowledge: introduces=[AR-LEX-C212-SIFA212-05]; assesses=[] -->
 
 **لامع** — *lāmiʿ* — "shiny".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**لامع** (*lāmiʿ*) is built on the native Arabic root *l-m-ʿ*, "to shine, to glitter" (Lane). *Lāmiʿ* is the active participle, "shining".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

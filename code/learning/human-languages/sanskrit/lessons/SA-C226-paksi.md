@@ -14,7 +14,8 @@ romanization: "pakṣī"
 concept_tag: SA-THG226-PAKSI
 prerequisites: [SA-C226-pasuh, SA-C226-jantuh]
 sounds: []
-roots: []
+roots: [sanskrit-pakshin, sanskrit-paksha]
+etymology_hook: "pakṣin = pakṣa 'wing' + -in 'having': 'winged one', a bird (MW); Gujarati paṅkhī (CDIAL 7636)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C226-jantuh]
 <!-- hl-knowledge: introduces=[SA-LEX-C226-THG226-05]; assesses=[] -->
 
 **पक्षी** — *pakṣī* — "a winged creature, a bird".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*pakṣī* is the nominative of *pakṣin*, "winged", built on *pakṣa*, "wing", with *-in*, "having" (MW): a bird is the winged one. It lives on as Gujarati and Punjabi *paṅkhī*, "bird" (CDIAL 7636).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

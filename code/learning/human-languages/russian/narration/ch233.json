@@ -4,7 +4,7 @@
   "chapter": 233,
   "title": "To decide, To choose, To change, To show, To bring",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:f6e9f50e783738a0",
+  "sourceHash": "fnv1a64:8e75a56cfcf0aac3",
   "lessons": [
     {
       "id": "RU-C233-reshat",
@@ -555,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:fc23355d59d616f6",
+      "sourceHash": "fnv1a64:1bfeb1f586615540",
       "notice": null,
       "blocks": [
         {
@@ -593,7 +593,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "приносить (prinosít) is при-, \"to, toward\", with носить, \"to carry\": to carry to someone."
+              "text": "приносить (prinosít) is при-, \"to, toward\", with носить, \"to carry\": to carry to someone. Носить goes with нести, \"to carry\", which Vasmer relates to Lithuanian nèšti, \"to carry\"."
             }
           ]
         },

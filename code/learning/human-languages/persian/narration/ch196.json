@@ -4,7 +4,7 @@
   "chapter": 196,
   "title": "Drainpipe, Column, Surroundings, Edge, Ground floor",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:593918f7fc8390d2",
+  "sourceHash": "fnv1a64:f1528d3592cc6b46",
   "lessons": [
     {
       "id": "FA-C196-navdan",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:59a084f7dba6963a",
+      "sourceHash": "fnv1a64:b6c727ca4a7a83de",
       "notice": null,
       "blocks": [
         {
@@ -52,6 +52,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "nâvdân is built from nâv, \"trough, channel\", and -dân, \"holder\": the channel for water. Both are native Persian words, inherited rather than borrowed."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -62,7 +73,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -111,7 +122,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -142,7 +153,7 @@
       "modalityReasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:2275e137d1736c66",
+      "sourceHash": "fnv1a64:78ae104bf8901918",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -182,6 +193,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "sotun is a native Persian word, inherited rather than borrowed; it is usually traced to Middle Persian stūn, \"pillar\". It is usually set beside Sanskrit sthūṇā, \"post, pillar\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -192,7 +214,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -241,7 +263,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -272,7 +294,7 @@
       "modalityReasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:e675130ae21005c3",
+      "sourceHash": "fnv1a64:7f6911de225ee4d3",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -312,6 +334,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "atrâf is borrowed from Arabic aṭrāf, \"ends, sides\". Its Arabic root is ṭ-r-f (Lane). It is the plural of ṭaraf, \"side\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -322,7 +355,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -371,7 +404,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -402,7 +435,7 @@
       "modalityReasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:63b9d1903d2b2f3d",
+      "sourceHash": "fnv1a64:5f67d3fd02073f85",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -442,6 +475,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "labe is built from lab, \"lip\", with the ending -e: the lip of a thing, its rim. lab is inherited; EtymDB links it to the Indo-European root leb-, \"lip\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -452,7 +496,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -501,7 +545,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -532,7 +576,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d19e6d8416018897",
+      "sourceHash": "fnv1a64:e337e131342b2c34",
       "notice": null,
       "blocks": [
         {
@@ -565,6 +609,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "hamkaf is ham-, \"same\", with kaf, \"floor\": level with the floor. ham- is native Persian; kaf is usually taken as Arabic kaff, \"palm, flat of the hand\" (root k-f-f, Lane)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -575,7 +630,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -624,7 +679,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

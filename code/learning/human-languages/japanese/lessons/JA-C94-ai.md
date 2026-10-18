@@ -14,7 +14,8 @@ romanization: "ai"
 concept_tag: JA-LIKE94-AI
 prerequisites: [JA-C94-shumi, JA-C94-tanoshimi]
 sounds: []
-roots: []
+roots: [middle-chinese-ojh-love]
+etymology_hook: "ai: Sino-Japanese, the on'yomi of 愛 'love', from Middle Chinese 'ojH"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C94-tanoshimi]
 <!-- hl-knowledge: introduces=[JA-LEX-C94-LIKE94-05]; assesses=[] -->
 
 **あい** — *ai* — "love".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**あい** (*ai*) is Sino-Japanese (kango): the on'yomi of a character meaning "love", a reading borrowed from Chinese (Middle Chinese *'ojH* in Baxter's transcription; Unihan, KANJIDIC2).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

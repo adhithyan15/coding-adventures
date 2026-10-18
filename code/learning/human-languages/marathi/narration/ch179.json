@@ -4,7 +4,7 @@
   "chapter": 179,
   "title": "Court, Judge, Mayor, Election, Politics",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:cd6dd84696982e49",
+  "sourceHash": "fnv1a64:784420622c67761c",
   "lessons": [
     {
       "id": "MR-C179-nyayalay",
@@ -555,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:28a02de78b4a659a",
+      "sourceHash": "fnv1a64:6a7d41b33a65d726",
       "notice": null,
       "blocks": [
         {

@@ -14,7 +14,8 @@ romanization: "kashu"
 concept_tag: JA-THINGS112-KASHU
 prerequisites: [JA-C112-nouka, JA-C112-daiku]
 sounds: []
-roots: []
+roots: [middle-chinese-ka, middle-chinese-syuwx]
+etymology_hook: "kashu: Sino-Japanese 歌 'song' + 手 'hand', on'yomi borrowed from Chinese"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C112-daiku]
 <!-- hl-knowledge: introduces=[JA-LEX-C112-THINGS112-03]; assesses=[] -->
 
 **かしゅ** — *kashu* — "a singer".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**かしゅ** (*kashu*) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are *ka*, "song" (Middle Chinese *ka*) and *shu*, "hand; person" (*syuwX*) (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

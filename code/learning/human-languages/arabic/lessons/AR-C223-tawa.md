@@ -14,7 +14,8 @@ romanization: "ṭawā"
 concept_tag: AR-VERB-TAWA
 prerequisites: [AR-C223-kanasa, AR-C223-kawa]
 sounds: []
-roots: []
+roots: [ṭ-w-y]
+etymology_hook: "ṭawā: built on the root ṭ-w-y, 'to fold' (Lane); ṭawā is the plain verb, 'he folded'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C223-kawa]
 <!-- hl-knowledge: introduces=[AR-LEX-C223-ACT223-04]; assesses=[] -->
 
 **طوى** — *ṭawā* — "to fold".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**طوى** (*ṭawā*) is built on the native Arabic root *ṭ-w-y*, "to fold" (Lane). *Ṭawā* is the plain verb, "he folded".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

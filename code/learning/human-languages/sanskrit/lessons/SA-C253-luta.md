@@ -14,7 +14,8 @@ romanization: "lūtā"
 concept_tag: SA-THG253-LUTA
 prerequisites: [SA-C252-tulasi, SA-C253-kitah]
 sounds: []
-roots: []
+roots: [sanskrit-luta]
+etymology_hook: "lūtā 'spider' (MW; CDIAL 11093); neither derives it, so uncertain; Hindi lūtā, a skin disease"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C253-kitah]
 <!-- hl-knowledge: introduces=[SA-LEX-C253-THG253-02]; assesses=[] -->
 
 **लूता** — *lūtā* — "a spider".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*lūtā* is a spider in Manu (CDIAL 11093). Neither MW nor CDIAL derives it, so its origin is uncertain. It also named a skin disease said to come from spiders, and Hindi *lūtā* keeps that sense.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

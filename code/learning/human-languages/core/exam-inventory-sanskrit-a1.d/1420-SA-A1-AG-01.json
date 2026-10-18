@@ -1,0 +1,20 @@
+{
+  "id": "SA-A1-AG-01",
+  "category": "Agreement and the phrase",
+  "label": "agreement inside the noun phrase, and between subject and verb",
+  "probe": [
+    "SA-GRAMMAR-C15-ADJ-SYSTEM",
+    "SA-GRAMMAR-COPULA-THREE-PERSONS",
+    "SA-GRAMMAR-SINGULAR-DUAL-PLURAL"
+  ],
+  "anchorIds": [
+    "ES-A1-PROXY",
+    "SA-CORPUS",
+    "ED-SANSKRIT"
+  ],
+  "derivedFrom": [
+    "A1-SN-02",
+    "A1-SN-03"
+  ],
+  "note": "The adjective agrees in gender, number and case; the verb agrees in person and number. Sanskrit demands both more strictly than Spanish, and chapters 3, 5 and 15 are where each is stated."
+}

@@ -6,7 +6,7 @@ sequence: 780
 chapter: 39
 type: word
 headword: adiuvō, adiuvāre
-gloss: "I help" — the verb hiding inside English aid, aide and adjutant, and no relation to juvenile
+gloss: '"I help" — the verb hiding inside English aid, aide and adjutant, and no relation to juvenile'
 concept_tag: VERB-HELP
 prerequisites: [LA-C39-rogo]
 sounds: [v-as-w, macron-long-vowel]

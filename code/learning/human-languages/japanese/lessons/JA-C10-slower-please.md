@@ -11,8 +11,8 @@ gloss: please say it a little more slowly
 concept_tag: JA-REPAIR-SLOWER-PLEASE
 prerequisites: [JA-C10-koko]
 sounds: [mora, long-o, geminate, dakuten]
-roots: []
-etymology_hook: Three independently learned pieces become one repair turn; no new grammar is introduced at the payoff.
+roots: [japanese-mou, japanese-sukoshi, japanese-yukkuri, japanese-iu-say, japanese-kudasaru]
+etymology_hook: "mō sukoshi, yukkuri itte kudasai: every word native; none borrowed from Chinese or English"
 duration:
   max_seconds: 210
 requires:
@@ -49,6 +49,11 @@ three new spoken pieces *mō sukoshi*, *yukkuri*, and *itte kudasai*.
 No new rule arrives here. The first block is independently readable and
 writable. The second and third remain sound-first exposure where their small
 **っ**, **て**, and **だ** have not yet received individual writing lessons.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**もうすこし、ゆっくりいってください** (*mō sukoshi, yukkuri itte kudasai*) is built only from native words you already own: *mō*, *sukoshi*, the mimetic *yukkuri*, *itte* from *iu*, "to say", and *kudasai* from *kudasaru*, "to give". None of them is borrowed (JMdict).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-SLOWER-PLEASE, JA-LEX-SUMIMASEN, JA-LEX-WAKARIMASHITA] -->

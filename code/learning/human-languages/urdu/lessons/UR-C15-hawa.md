@@ -12,7 +12,7 @@ concept_tag: UR-WIND
 prerequisites: [UR-C15-dhoop, UR-C11-dil]
 sounds: [rtl, alif-madd, long-a]
 roots: [classical-persian-hawa, arabic-hawa]
-etymology_hook: hawā is borrowed from Classical Persian hawā, itself borrowed from Arabic هَوَاء (hawā). Unlike دل or سفید, which split from one PIE root into two independent Indo-Iranian roads, ہوا is a single word passed twice: Arabic to Persian, Persian to Urdu -- a loan of a loan, not a shared inheritance.
+etymology_hook: "hawā ← Arabic hawāʾ 'air', through Persian (Lane, root h-w-y): a loan of a loan"
 duration:
   max_seconds: 270
 requires:

@@ -12,6 +12,9 @@ Before the new one: say the Bengali for a village, then the Bengali for a city.
 You'll want to know: প্যান্ট.
 প্যান্ট — pænṭ — "trousers".
 
+The word, taken apart.
+প্যান্ট (pænṭ) is a loan from English pants.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Bengali for a city, then the Bengali for trousers.
 
 You'll want to know: মোজা.
 মোজা — mojā — "a sock".
+
+The word, taken apart.
+মোজা (mojā) is a loan, usually traced to Persian mōza, "sock, stocking".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Bengali for trousers, then the Bengali for a sock.
 You'll want to know: পকেট.
 পকেট — pôkeṭ — "a pocket".
 
+The word, taken apart.
+পকেট (pôkeṭ) is a loan from English pocket.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Bengali for a sock, then the Bengali for a pocket.
 You'll want to know: আংটি.
 আংটি — āngṭi — "a ring".
 
+The word, taken apart.
+আংটি (āngṭi) is a tadbhava, a word inherited and reshaped by sound change. It comes from aṅguṣṭhiya, "of the thumb", a form CDIAL reconstructs from its descendants (CDIAL 138). CDIAL writes the Bengali form āṅṭi.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Bengali for a pocket, then the Bengali for a ring.
 
 You'll want to know: টুপি.
 টুপি — ṭupi — "a cap".
+
+The word, taken apart.
+টুপি (ṭupi) is a tadbhava, a word inherited and reshaped by sound change. It comes from ṭoppa, "hat, covering", a form CDIAL reconstructs from its descendants (CDIAL 5481). Late Sanskrit has ṭōpikā, "turban".
 
 What you've built.
 One more word for this chapter.

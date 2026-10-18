@@ -12,6 +12,9 @@ Before the new one: say the Sanskrit for a thought, then the Sanskrit for an opi
 You'll want to know: सीमान्तः.
 सीमान्तः — sīmāntaḥ — "a border".
 
+The word, taken apart.
+sīmānta is a compound of sīmā, "boundary", and anta, "end, edge" (CDIAL 13437): the outer line of a boundary. MW glosses it "a border, boundary", and also the boundary of a village.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Sanskrit for an opinion, then the Sanskrit for a bor
 
 You'll want to know: लोकयानम्.
 लोकयानम् — lokayānam — "a bus".
+
+The word, taken apart.
+lokayāna is a compound of loka, "people, the public", and yāna, "vehicle", from the root √yā, "to go" (MW; CDIAL 10459): the people's vehicle. MW does not list the compound, so it is a modern coinage for the bus.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Sanskrit for a border, then the Sanskrit for a bus.
 You'll want to know: कारयानम्.
 कारयानम् — kārayānam — "a car".
 
+The word, taken apart.
+kārayāna is a modern coinage, not in MW. Its second part is yāna, "vehicle", from the root √yā, "to go" (CDIAL 10459). Its first part is not settled: it echoes English car, but no dictionary we follow explains it.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Sanskrit for a bus, then the Sanskrit for a car.
 You'll want to know: आगमनम्.
 आगमनम् — āgamanam — "arrival".
 
+The word, taken apart.
+āgamana is built on ā-, "towards", and the root √gam, "to go" (MW): going towards is coming, so "arrival" (CDIAL 1046). MW compares √gam with English come, and āgacchati, "comes", is its verb.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Sanskrit for a car, then the Sanskrit for arrival.
 
 You'll want to know: प्रस्थानम्.
 प्रस्थानम् — prasthānam — "departure".
+
+The word, taken apart.
+prasthāna is built on pra, "forth", and the root √sthā, "to stand" (MW): to stand forth is to set out, so "departure" (CDIAL 8872). It is the opposite of āgamana, "arrival".
 
 What you've built.
 One more word for this chapter.

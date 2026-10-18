@@ -14,7 +14,8 @@ romanization: "yavaḥ"
 concept_tag: SA-THG190-YAVAH
 prerequisites: [SA-C189-astaranam, SA-C190-masah]
 sounds: []
-roots: []
+roots: [sanskrit-yava]
+etymology_hook: "yava 'barley', inherited: MW compares Avestan yava and Greek zeia; Hindi jau (CDIAL 10431)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C190-masah]
 <!-- hl-knowledge: introduces=[SA-LEX-C190-THG190-02]; assesses=[] -->
 
 **यवः** — *yavaḥ* — "barley".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*yava* is an inherited grain word: MW compares Avestan *yava* and Greek *zeia*, a kind of wheat, and says it first meant any grain. It lives on as Hindi *jau*, "barley" (CDIAL 10431).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

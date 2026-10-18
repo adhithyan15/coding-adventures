@@ -14,7 +14,8 @@ romanization: "maʿlūmāt"
 concept_tag: AR-AMAL281-MALUMAT
 prerequisites: [AR-C281-raqm, AR-C281-mukalama]
 sounds: []
-roots: []
+roots: [ʿ-l-m]
+etymology_hook: "maʿlūmāt: built on the root ʿ-l-m, 'to know' (Lane); maʿlūmāt is the plural of the passive participle, 'things known'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C281-mukalama]
 <!-- hl-knowledge: introduces=[AR-LEX-C281-AMAL281-03]; assesses=[] -->
 
 **معلومات** — *maʿlūmāt* — "information".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**معلومات** (*maʿlūmāt*) is built on the native Arabic root *ʿ-l-m*, "to know" (Lane). *Maʿlūmāt* is the plural of the passive participle, "things known".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

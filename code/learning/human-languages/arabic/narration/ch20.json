@@ -4,7 +4,7 @@
   "chapter": 20,
   "title": "Numbers Eleven to Twenty",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:c8b4c12d7a2301fd",
+  "sourceHash": "fnv1a64:d658b6ee590d0625",
   "lessons": [
     {
       "id": "AR-C20-ahada-ashar-ishrun",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5d88a9e67dd8f8ad",
+      "sourceHash": "fnv1a64:7d28290821860c55",
       "notice": null,
       "blocks": [
         {
@@ -83,6 +83,17 @@
         },
         {
           "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ʿAshar and ʿishrūn are built on the native root ʿ-sh-r, \"ten\" (Lane), a cousin of Hebrew ʿeser, \"ten\"; aḥada, \"one\", is listed by Lane under ʾ-ḥ-d."
+            }
+          ]
+        },
+        {
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -122,7 +133,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

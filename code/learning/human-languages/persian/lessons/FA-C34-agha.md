@@ -14,7 +14,8 @@ romanization: "âghâ"
 concept_tag: FA-FAMILY34-AGHA
 prerequisites: [FA-C34-mehman, FA-C34-daneshju]
 sounds: []
-roots: []
+roots: [turkic-aqa]
+etymology_hook: "âghâ: a loan, usually traced to Turkic aqa 'elder brother'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C34-daneshju]
 <!-- hl-knowledge: introduces=[FA-LEX-C34-FAMILY34-04]; assesses=[] -->
 
 **آقا** — *âghâ* — "a gentleman; Mr".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*âghâ* is a loan, usually traced to Turkic *aqa*, "elder brother". It became a title of respect, and Persian uses it as "Mr".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

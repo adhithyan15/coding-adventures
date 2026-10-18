@@ -14,7 +14,8 @@ romanization: "gakkou"
 concept_tag: JA-HOME40-GAKKOU
 prerequisites: [JA-C39-hako, JA-C40-kasa]
 sounds: []
-roots: []
+roots: [middle-chinese-haewk, middle-chinese-haewh]
+etymology_hook: "gakkou: Sino-Japanese 学 'learning' + 校 'school', on'yomi borrowed from Chinese"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C40-kasa]
 <!-- hl-knowledge: introduces=[JA-LEX-C40-HOME40-02]; assesses=[] -->
 
 **がっこう** — *gakkou* — "a school".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**がっこう** (*gakkou*) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are *gaku*, "learning" (Middle Chinese *haewk*) and *kō*, "school" (*haewH*) (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "pavan"
 concept_tag: GU-WEATHER-WIND
 prerequisites: [GU-C65-sand, GU-C65-soil]
 sounds: []
-roots: []
+roots: [sanskrit-pavana]
+etymology_hook: "pavan ← Sanskrit pavana 'wind', a tatsama (CDIAL 7978)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C65-soil]
 <!-- hl-knowledge: introduces=[GU-LEX-C66-WEATHER-01]; assesses=[] -->
 
 **પવન** (*pavan*) — "wind".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**પવન** (*pavan*) is Sanskrit *pavana*, "wind", taken over whole as a learned loan, a tatsama (CDIAL 7978).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

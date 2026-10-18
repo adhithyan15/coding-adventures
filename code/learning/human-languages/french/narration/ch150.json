@@ -4,7 +4,7 @@
   "chapter": 150,
   "title": "To move away, To come near, To chat, To plug in, To deliver",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:867e32a2c9b5fd80",
+  "sourceHash": "fnv1a64:217f79343943fee9",
   "lessons": [
     {
       "id": "FR-C150-eloigner",
@@ -555,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:995989802c28d87c",
+      "sourceHash": "fnv1a64:0723c8fcbe1d7815",
       "notice": null,
       "blocks": [
         {

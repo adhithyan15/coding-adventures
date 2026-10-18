@@ -14,7 +14,8 @@ romanization: "bôstā"
 concept_tag: BN-JINIS233-BOSTA
 prerequisites: [BN-C233-pket, BN-C233-tin]
 sounds: []
-roots: []
+roots: [persian-basta]
+etymology_hook: "bôstā: usually traced to Persian basta 'bound; a bundle'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C233-tin]
 <!-- hl-knowledge: introduces=[BN-LEX-C233-JINIS233-04]; assesses=[] -->
 
 **বস্তা** — *bôstā* — "a sack".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**বস্তা** (*bôstā*) is a loan, usually traced to Persian *basta*, "bound; a bundle".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

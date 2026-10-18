@@ -14,7 +14,8 @@ romanization: "chā̃d"
 concept_tag: MW-NATURE69-CHAD
 prerequisites: [MW-C69-taro, MW-C69-suraj]
 sounds: []
-roots: []
+roots: [sanskrit-candra]
+etymology_hook: "chā̃d ← Sanskrit candra 'shining; moon', a tadbhava (CDIAL 4661, Hindi and Gujarati rows)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C69-suraj]
 <!-- hl-knowledge: introduces=[MW-LEX-C69-NATURE69-03]; assesses=[] -->
 
 **चांद** — *chā̃d* — "the moon".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**चांद** (*chā̃d*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *candra*, "shining; moon". CDIAL gives no Marwari form in this entry (CDIAL 4661); the match is through Hindi *cā̃d* and Gujarati *cā̃d*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

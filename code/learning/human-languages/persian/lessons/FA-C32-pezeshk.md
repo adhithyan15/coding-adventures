@@ -14,7 +14,8 @@ romanization: "pezeshk"
 concept_tag: FA-HEALTH32-PEZESHK
 prerequisites: [FA-C31-khoshhal, FA-C32-narahat]
 sounds: []
-roots: []
+roots: [persian-pezeshk]
+etymology_hook: "pezeshk: inherited, usually traced to Middle Persian bizešk"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C32-narahat]
 <!-- hl-knowledge: introduces=[FA-LEX-C32-HEALTH32-02]; assesses=[] -->
 
 **پزشک** — *pezeshk* — "a doctor".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*pezeshk* is a native Persian word, inherited rather than borrowed; it is usually traced to Middle Persian *bizešk*, "physician".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

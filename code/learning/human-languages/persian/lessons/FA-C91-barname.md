@@ -14,7 +14,8 @@ romanization: "barnâme"
 concept_tag: FA-WANT91-BARNAME
 prerequisites: [FA-C90-arezu, FA-C90-omid]
 sounds: []
-roots: []
+roots: [persian-nama]
+etymology_hook: "barnâme: Persian bar 'on' + nâme 'writing'; EtymDB lists Middle Persian barnāmag"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C90-omid]
 <!-- hl-knowledge: introduces=[FA-LEX-C91-WANT91-01]; assesses=[] -->
 
 **برنامه** — *barnâme* — "a plan".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*barnâme* is built from *bar*, "on, up", and *nâme*, "writing, letter" (Middle Persian *nāmag*); EtymDB lists a Middle Persian *barnāmag*. Both parts are native Persian.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

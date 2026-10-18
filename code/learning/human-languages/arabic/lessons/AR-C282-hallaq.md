@@ -14,7 +14,8 @@ romanization: "ḥallāq"
 concept_tag: AR-AMAL282-HALLAQ
 prerequisites: [AR-C282-safha, AR-C282-jumla]
 sounds: []
-roots: []
+roots: [ḥ-l-q]
+etymology_hook: "ḥallāq: built on the root ḥ-l-q, 'to shave' (Lane); ḥallāq is the faʿʿāl trade noun, 'barber'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C282-jumla]
 <!-- hl-knowledge: introduces=[AR-LEX-C282-AMAL282-05]; assesses=[] -->
 
 **حلاق** — *ḥallāq* — "a barber".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**حلاق** (*ḥallāq*) is built on the native Arabic root *ḥ-l-q*, "to shave" (Lane). *Ḥallāq* is the *faʿʿāl* trade noun, "barber".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

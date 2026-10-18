@@ -1,7 +1,7 @@
 {
   "language": "french",
   "chapter": 150,
-  "sourceHash": "fnv1a64:867e32a2c9b5fd80",
+  "sourceHash": "fnv1a64:217f79343943fee9",
   "lessonIds": [
     "FR-C150-eloigner",
     "FR-C150-approcher",
@@ -14,6 +14,6 @@
   "text": "french/narration/ch150.txt",
   "json": "french/narration/ch150.json",
   "textHash": "fnv1a64:64e5b9f8910d128f",
-  "jsonHash": "fnv1a64:f7068bce9069c15c",
+  "jsonHash": "fnv1a64:d29ff19a530ac757",
   "findings": []
 }

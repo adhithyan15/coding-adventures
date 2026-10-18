@@ -14,7 +14,8 @@ romanization: "sthālī"
 concept_tag: SA-THINGS102-STHALI
 prerequisites: [SA-C101-upanetram, SA-C101-syutah]
 sounds: []
-roots: []
+roots: [sanskrit-sthali]
+etymology_hook: "sthālī 'earthen dish, pot' is old (AV); MW gives no derivation; it lives on as Hindi thālī (CDIAL 13766)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C101-syutah]
 <!-- hl-knowledge: introduces=[SA-LEX-C102-THINGS102-01]; assesses=[] -->
 
 **स्थाली** — *sthālī* — "a plate, a pot".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*sthālī* "an earthen dish, a cooking pot" is already in the Atharvaveda, and MW gives no derivation for it, so its origin is uncertain. It lives on as Hindi *thālī* and Marathi *thāḷī*, the plate a whole meal is served on (CDIAL 13766).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

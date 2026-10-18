@@ -14,7 +14,8 @@ romanization: "sefid"
 concept_tag: FA-ADJ64-SEFID
 prerequisites: [FA-C64-abi, FA-C64-siyah]
 sounds: []
-roots: []
+roots: [safed-persian]
+etymology_hook: "sefid: inherited, usually traced to Middle Persian spēd"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C64-siyah]
 <!-- hl-knowledge: introduces=[FA-LEX-C64-ADJ64-03]; assesses=[] -->
 
 **سفید** — *sefid* — "white".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*sefid* is a native Persian word, inherited rather than borrowed; it is usually traced to Middle Persian *spēd*, "white".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

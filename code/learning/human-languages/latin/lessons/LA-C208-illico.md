@@ -46,7 +46,7 @@ reviews_of: [LA-C208-postremo]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**illicō** is usually explained as *in locō*, "on the spot", run together.
+**illicō** is usually explained as *in locō*, "on the spot", run together (Lewis & Short, which prefers the spelling *īlicō*).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

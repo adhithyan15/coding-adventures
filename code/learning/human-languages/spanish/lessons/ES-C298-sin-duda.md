@@ -6,7 +6,7 @@ sequence: 4050
 chapter: 298
 type: phrase
 headword: sin duda
-gloss: no doubt — duda is dubitare, and behind that duo, two: to doubt is to be caught between a pair of answers
+gloss: 'no doubt — duda is dubitare, and behind that duo, two: to doubt is to be caught between a pair of answers'
 concept_tag: ES-ANSWER-NO-DOUBT
 prerequisites: [ES-C298-en-efecto]
 sounds: [nasal-n, d-soft]

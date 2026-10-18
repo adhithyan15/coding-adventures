@@ -11,8 +11,8 @@ gloss: and, joining two whole sentences — the first two-clause sentence in thi
 concept_tag: PA-JOIN-ATE-CLAUSE
 prerequisites: [PA-C38-ate, PA-C37-nahin-vaak]
 sounds: [laava-e]
-roots: []
-etymology_hook: The same one word joins two nouns and two sentences, and asks nothing extra of either.
+roots: [sanskrit-tathapi]
+etymology_hook: "ate: CDIAL lists its short twin te 'and' under Sanskrit tathāpi 'even so, nevertheless' (CDIAL 5647)"
 duration:
   max_seconds: 240
 requires:
@@ -61,6 +61,8 @@ negative:
 That is a two-clause sentence, and it is the first one this book has been able
 to make. Until now the longest thing the track taught was a single clause of
 four slots.
+
+*Ate* goes with its short twin *te*, which CDIAL lists under Sanskrit *tathāpi*, "even so, nevertheless" (CDIAL 5647); it has no entry for *ate* itself.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[PA-JOIN-ATE-CLAUSE-01, PA-NEG-CLAUSE-01] -->

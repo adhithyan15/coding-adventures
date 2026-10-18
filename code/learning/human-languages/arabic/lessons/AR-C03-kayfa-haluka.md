@@ -12,7 +12,7 @@ concept_tag: STATE-HOW-ARE-YOU
 prerequisites: [AR-C03-hal, AR-C02-ii-my, AR-C02-anta-anti]
 sounds: [rtl-known-letters, harakat]
 roots: [h-w-l, k-y-f]
-etymology_hook: "the -ka/-ki 'your' suffix is the SAME gender split as anta/anti, attached the SAME way as the -ī 'my' suffix — so kayfa ḥāluka is assembled entirely from Chapter 2 machinery, with zero copula: 'how your-state?'"
+etymology_hook: "kayfa ḥāluka: kayfa 'how' + ḥāl 'state', root ḥ-w-l 'to turn' (Lane), + -ka 'your'"
 duration:
   max_seconds: 240
 requires:
@@ -73,6 +73,11 @@ mark, both meanings.**
 Notice what is **missing**: there is no "is," no "are." Just *how — your-state*.
 This is the **zero copula** you met with **اسمي** ("my name [is] …"): Arabic
 simply doesn't need a verb to join a thing to its description.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**كيف حالك** (*kayfa ḥāluka*) is built from *kayfa*, "how", an inherited question word, and *ḥāluka*, "your state": *ḥāl*, on the native root *ḥ-w-l*, "to turn, to change" (Lane), with *-ka*, "your".
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[AR-CONCEPT-C03-KAYFA-HALUKA-01, AR-CONCEPT-C03-KAYFA-HALUKA-02] -->

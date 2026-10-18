@@ -14,7 +14,8 @@ romanization: "utsu"
 concept_tag: JA-VERB-UTSU
 prerequisites: [JA-C84-kouiu, JA-C84-aaiu]
 sounds: []
-roots: []
+roots: [japanese-utsu]
+etymology_hook: "utsu: native Japanese, inherited, not borrowed; kanji 打つ attached later as kun'yomi"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C84-aaiu]
 <!-- hl-knowledge: introduces=[JA-LEX-C85-ACT85-01]; assesses=[] -->
 
 **うつ** — *utsu* — "to hit".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**うつ** (*utsu*) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

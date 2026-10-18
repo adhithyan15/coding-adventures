@@ -1,7 +1,7 @@
 {
   "language": "urdu",
   "chapter": 181,
-  "sourceHash": "fnv1a64:c5dc0a73521bb382",
+  "sourceHash": "fnv1a64:bd66768b0bb1caee",
   "lessonIds": [
     "UR-C181-kharch-karna",
     "UR-C181-chukana",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "urdu/narration/ch181.txt",
   "json": "urdu/narration/ch181.json",
-  "textHash": "fnv1a64:14deb6f9361abc1a",
-  "jsonHash": "fnv1a64:83477d2e50b696c8",
+  "textHash": "fnv1a64:2d0a722792d33653",
+  "jsonHash": "fnv1a64:95ef8c8f2dd9f38f",
   "findings": []
 }

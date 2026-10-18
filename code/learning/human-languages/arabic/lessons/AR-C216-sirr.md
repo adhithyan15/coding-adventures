@@ -14,7 +14,8 @@ romanization: "sirr"
 concept_tag: AR-SHAY216-SIRR
 prerequisites: [AR-C216-qasida, AR-C216-hadith]
 sounds: []
-roots: []
+roots: [s-r-r]
+etymology_hook: "sirr: built on the root s-r-r, 'to conceal; to gladden' (Lane); sirr is a secret, a thing kept within"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C216-hadith]
 <!-- hl-knowledge: introduces=[AR-LEX-C216-SHAY216-03]; assesses=[] -->
 
 **سر** — *sirr* — "a secret".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**سر** (*sirr*) is built on the native Arabic root *s-r-r*, "to conceal; to gladden" (Lane). *Sirr* is a secret, a thing kept within.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

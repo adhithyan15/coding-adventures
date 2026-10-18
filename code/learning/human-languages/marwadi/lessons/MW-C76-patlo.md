@@ -14,7 +14,8 @@ romanization: "patḷo"
 concept_tag: MW-ADJ76-PATLO
 prerequisites: [MW-C75-mailo, MW-C75-moto]
 sounds: []
-roots: []
+roots: [sanskrit-pattrala]
+etymology_hook: "patḷo ← Sanskrit pattrala 'leafy; leaf-like, thin', a tadbhava (CDIAL 7736, Hindi and Gujarati rows)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C75-moto]
 <!-- hl-knowledge: introduces=[MW-LEX-C76-ADJ76-01]; assesses=[] -->
 
 **पतळो** — *patḷo* — "thin".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**पतळो** (*patḷo*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *pattrala*, "leafy; leaf-like, thin". CDIAL gives no Marwari form in this entry (CDIAL 7736); the match is through Hindi *patlā* and Gujarati *pātḷũ*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

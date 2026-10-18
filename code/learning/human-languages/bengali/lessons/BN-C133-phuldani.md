@@ -14,7 +14,8 @@ romanization: "phuldāni"
 concept_tag: BN-THINGS133-PHULDANI
 prerequisites: [BN-C133-kombol, BN-C133-porda]
 sounds: []
-roots: []
+roots: [sanskrit-phulla, persian-dan]
+etymology_hook: "phuldāni: phul 'flower' ← phulla (CDIAL 9092) + -dāni 'holder', usually traced to Persian -dān"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C133-porda]
 <!-- hl-knowledge: introduces=[BN-LEX-C133-THINGS133-04]; assesses=[] -->
 
 **ফুলদানি** — *phuldāni* — "a vase".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ফুলদানি** (*phuldāni*) is *phul*, "flower", from Sanskrit *phulla* (CDIAL 9092), + *-dāni*, "holder", usually traced to Persian *-dān*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

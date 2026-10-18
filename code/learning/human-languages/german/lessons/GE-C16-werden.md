@@ -76,7 +76,8 @@ its bones are still in the language:
 | **worth** | what a thing turns out to be |
 
 So *werden* means "to turn into," and every time you say *toward* you are using
-the same root without knowing it.
+the same root without knowing it. *Werden* ← Old High German *werdan*, "to
+turn" (EtymDB 2.1).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-WERDEN-01, GE-LEX-MUEDE-01] -->

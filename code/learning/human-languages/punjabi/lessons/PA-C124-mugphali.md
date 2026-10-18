@@ -14,7 +14,8 @@ romanization: "mū̃gphalī"
 concept_tag: PA-THINGS124-MUGPHALI
 prerequisites: [PA-C123-papita, PA-C124-amrud]
 sounds: []
-roots: []
+roots: [sanskrit-mudga, sanskrit-phala]
+etymology_hook: "mūṁgphalī: mūṁg 'mung bean' (CDIAL 10198) + phalī 'pod', from phala (CDIAL 9051)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C124-amrud]
 <!-- hl-knowledge: introduces=[PA-LEX-C124-THINGS124-02]; assesses=[] -->
 
 **ਮੂੰਗਫਲੀ** — *mū̃gphalī* — "peanuts".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਮੂੰਗਫਲੀ** (*mūṁgphalī*) is built in Punjabi from two old words: *mūṁg*, "mung bean", from Sanskrit *mudga* (CDIAL 10198), and *phalī*, "pod", from *phala*, "fruit" (CDIAL 9051). CDIAL marks Punjabi *mūṁg*, with a query, as perhaps taken from Hindi.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

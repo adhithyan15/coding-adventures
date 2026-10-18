@@ -14,7 +14,8 @@ romanization: "aḍhār"
 concept_tag: GU-NUM2-EIGHTEEN
 prerequisites: [GU-C81-sixteen, GU-C82-seventeen]
 sounds: []
-roots: []
+roots: [sanskrit-ashtadasha]
+etymology_hook: "aḍhār ← Sanskrit aṣṭādaśa 'eighteen', a tadbhava (CDIAL 946)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C82-seventeen]
 <!-- hl-knowledge: introduces=[GU-LEX-C82-NUM2-02]; assesses=[] -->
 
 **અઢાર** (*aḍhār*) — "eighteen".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**અઢાર** (*aḍhār*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *aṣṭādaśa*, "eighteen" (CDIAL 946). It is *aṣṭā*, "eight", and *daśa*, "ten".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

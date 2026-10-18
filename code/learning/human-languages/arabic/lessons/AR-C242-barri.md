@@ -14,7 +14,8 @@ romanization: "barrī"
 concept_tag: AR-SIFA242-BARRI
 prerequisites: [AR-C242-sakhib, AR-C242-mayyit]
 sounds: []
-roots: []
+roots: [b-r-r]
+etymology_hook: "barrī: barr 'land, the wild' + -ī; Lane lists barr under b-r-r, which also gives birr 'piety'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C242-mayyit]
 <!-- hl-knowledge: introduces=[AR-LEX-C242-SIFA242-03]; assesses=[] -->
 
 **بري** — *barrī* — "wild".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**بري** (*barrī*) is *barr*, "the land, the wild", with the adjective ending *-ī*. *barr* is filed under the native Arabic root *b-r-r* (Lane), which also gives *birr*, "piety".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

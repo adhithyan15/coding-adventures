@@ -14,7 +14,8 @@ romanization: "tīkṣṇaḥ"
 concept_tag: SA-QUAL215-TIKSNAH
 prerequisites: [SA-C215-calah, SA-C215-mandah]
 sounds: []
-roots: []
+roots: [sanskrit-tikshna]
+etymology_hook: "tīkṣṇa 'sharp' ← root √tij 'be sharp'; MW compares Latin dis-tinguere; Hindi tīkhā (CDIAL 5839)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C215-mandah]
 <!-- hl-knowledge: introduces=[SA-LEX-C215-QUAL215-03]; assesses=[] -->
 
 **तीक्ष्णः** — *tīkṣṇaḥ* — "sharp".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*tīkṣṇa* is built on the root √tij, "to be or become sharp" (MW). In the Rigveda it means "sharp", later also "hot, pungent" (CDIAL 5839). It lives on as Hindi *tīkhā*, "sharp, pungent". MW compares √tij with Greek *stizō*, "I prick".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

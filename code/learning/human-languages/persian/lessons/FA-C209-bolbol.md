@@ -14,7 +14,8 @@ romanization: "bolbol"
 concept_tag: FA-CHIZ209-BOLBOL
 prerequisites: [FA-C208-saye, FA-C208-dama]
 sounds: []
-roots: []
+roots: [arabic-bulbul]
+etymology_hook: "bolbol ← Arabic bulbul 'nightingale' (EtymDB), imitating its song"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C208-dama]
 <!-- hl-knowledge: introduces=[FA-LEX-C209-CHIZ209-01]; assesses=[] -->
 
 **بلبل** — *bolbol* — "a nightingale".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*bolbol* is borrowed from Arabic *bulbul*, "nightingale" (EtymDB), a name that imitates the bird's song.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

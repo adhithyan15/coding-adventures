@@ -14,7 +14,8 @@ romanization: "dyūtam"
 concept_tag: SA-THG163-DYUTAM
 prerequisites: [SA-C162-vyaparah, SA-C163-krida]
 sounds: []
-roots: []
+roots: [sanskrit-dyuta]
+etymology_hook: "dyūta 'gambling, dice' ← √div 'play, gamble' (CDIAL 6608), already in the Atharvaveda; Hindi jūā"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C163-krida]
 <!-- hl-knowledge: introduces=[SA-LEX-C163-THG163-02]; assesses=[] -->
 
 **द्यूतम्** — *dyūtam* — "gambling, dice".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*dyūta* "gambling, play with dice" comes from the root √div "play, gamble" (CDIAL 6608), already in the Atharvaveda. It lives on as Hindi *jūā* and Bengali *juyā* "gambling" (CDIAL 6608).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

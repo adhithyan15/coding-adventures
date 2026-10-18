@@ -14,7 +14,8 @@ romanization: "dard"
 concept_tag: UR-HEALTH41-DARD
 prerequisites: [UR-C41-haspatal, UR-C41-bimar]
 sounds: []
-roots: []
+roots: [persian-dard]
+etymology_hook: "dard: usually traced to Persian dard 'pain'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C41-bimar]
 <!-- hl-knowledge: introduces=[UR-LEX-C41-HEALTH41-03]; assesses=[] -->
 
 **درد** — *dard* — "pain".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**درد** (*dard*) is a loan, usually traced to Persian *dard*, "pain".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

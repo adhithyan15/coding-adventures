@@ -44,7 +44,9 @@ reviews_of: [HI-C44-family]
 
 **लोग** (*log*) — "people".
 
-From Sanskrit लोक (*loka*), 'world, realm': the word for the world slid across to mean the people in it. Latin *lucus*, a clearing in a forest, and *lux*, 'light', grow from the same ancient root — an open, lit space first, then whoever stands in it. Hindi hears लोग as already plural, so it needs no further ending.
+Usually traced to Sanskrit लोक (*loka*), 'open space, world', which already meant 'people' in Manu: the word for the world slid across to mean the people in it. Latin *lucus*, a clearing in a forest, and *lux*, 'light', grow from the same ancient root — an open, lit space first, then whoever stands in it. Hindi hears लोग as already plural, so it needs no further ending.
+
+The road is not the plain inherited one, though. CDIAL lists the worn-down Hindi descendants of *loka* as *loī* and *loe*, 'people', and not *log* (CDIAL 11119). *Log* keeps the shape of Prakrit *loga*, so it may be a semi-learned word, one that stayed closer to the older form than ordinary speech would have left it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

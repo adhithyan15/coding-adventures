@@ -14,7 +14,8 @@ romanization: "suṇnā"
 concept_tag: PA-VERB-SUNNA
 prerequisites: [PA-C56-mahiman, PA-C56-pina]
 sounds: []
-roots: []
+roots: [sanskrit-shrnoti]
+etymology_hook: "suṇnā: inherited; CDIAL lists Lahnda suṇaṇ and Hindi sunnā under Sanskrit śṛṇoti 'hears' (CDIAL 12598)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C56-pina]
 <!-- hl-knowledge: introduces=[PA-LEX-C56-FAMILY56-03]; assesses=[] -->
 
 **ਸੁਣਨਾ** — *suṇnā* — "to hear, to listen".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਸੁਣਨਾ** (*suṇnā*) is inherited. CDIAL lists no Punjabi form, but gives the matching Lahnda *suṇaṇ* and Hindi *sunnā* under Sanskrit *śṛṇoti*, "hears" (CDIAL 12598).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

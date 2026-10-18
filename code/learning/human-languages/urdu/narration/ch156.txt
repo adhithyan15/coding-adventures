@@ -12,6 +12,9 @@ Before the new one: say the Urdu for February, then the Urdu for March.
 You'll want to know: تہوار.
 تہوار — tahvār — "a festival".
 
+The word, taken apart.
+تہوار (tahvār) is a tadbhava, a word inherited and reshaped by sound change. It comes from tithivāra, "a festival", a form CDIAL reconstructs from its descendants (CDIAL 5811). It is built from tithi, "lunar day", and vāra, "day".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Urdu for March, then the Urdu for a festival.
 
 You'll want to know: نیا سال.
 نیا سال — nayā sāl — "New Year".
+
+The phrase, taken apart.
+نیا سال (nayā sāl) joins nayā, "new", and sāl, "year". nayā comes from Sanskrit naviya, a variant of navya, "new" (CDIAL 7025); sāl is usually traced to Persian sāl, "year".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Urdu for a festival, then the Urdu for New Year.
 You'll want to know: زمانہ.
 زمانہ — zamānā — "an era, the times".
 
+The word, taken apart.
+زمانہ (zamānā) is a loan from Arabic zamān, "time, a period", which reached Urdu through Persian. Its Arabic root is z-m-n (Lane).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Urdu for New Year, then the Urdu for an era.
 You'll want to know: ہر ہفتے.
 ہر ہفتے — har hafte — "every week".
 
+The phrase, taken apart.
+ہر ہفتے (har hafte) joins har, "every", and hafte, a form of haftā, "week", both usually traced to Persian. Persian hafta is built on haft, "seven".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Urdu for an era, then the Urdu for every week.
 
 You'll want to know: ہر سال.
 ہر سال — har sāl — "every year".
+
+The phrase, taken apart.
+ہر سال (har sāl) joins har, "every", and sāl, "year", both usually traced to Persian.
 
 What you've built.
 One more word for this chapter.

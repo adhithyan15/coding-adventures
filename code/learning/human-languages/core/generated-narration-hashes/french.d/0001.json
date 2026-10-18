@@ -1,7 +1,7 @@
 {
   "language": "french",
   "chapter": 1,
-  "sourceHash": "fnv1a64:545171f0ee08ff61",
+  "sourceHash": "fnv1a64:d88cd54d53d43415",
   "lessonIds": [
     "FR-C01-salut",
     "FR-W01-salut-observe",
@@ -23,7 +23,7 @@
   "drivablePrefix": 1,
   "text": "french/narration/ch01.txt",
   "json": "french/narration/ch01.json",
-  "textHash": "fnv1a64:72ce6acabd02ed1d",
-  "jsonHash": "fnv1a64:7cd7e60add390cc8",
+  "textHash": "fnv1a64:57cae63d32a34636",
+  "jsonHash": "fnv1a64:37dbb31f76f1e24a",
   "findings": []
 }

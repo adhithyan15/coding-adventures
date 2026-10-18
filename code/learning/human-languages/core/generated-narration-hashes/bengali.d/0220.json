@@ -1,7 +1,7 @@
 {
   "language": "bengali",
   "chapter": 220,
-  "sourceHash": "fnv1a64:b76f658e94972ca8",
+  "sourceHash": "fnv1a64:85a2453a78f18f79",
   "lessonIds": [
     "BN-C220-soman",
     "BN-C220-prodhan",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "bengali/narration/ch220.txt",
   "json": "bengali/narration/ch220.json",
-  "textHash": "fnv1a64:8f437143b67f808a",
-  "jsonHash": "fnv1a64:6a4984481b85a44c",
+  "textHash": "fnv1a64:30f612f374ae794e",
+  "jsonHash": "fnv1a64:b658f6f35217796d",
   "findings": []
 }

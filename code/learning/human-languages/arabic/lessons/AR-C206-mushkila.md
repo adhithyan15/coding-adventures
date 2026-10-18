@@ -14,7 +14,8 @@ romanization: "mushkila"
 concept_tag: AR-SABAB206-MUSHKILA
 prerequisites: [AR-C205-kawkab, AR-C206-rubbama]
 sounds: []
-roots: []
+roots: [sh-k-l]
+etymology_hook: "mushkila: built on the root sh-k-l, 'to resemble' (Lane); mushkila is the Form IV participle, 'a matter that confuses'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C206-rubbama]
 <!-- hl-knowledge: introduces=[AR-LEX-C206-SABAB206-02]; assesses=[] -->
 
 **مشكلة** — *mushkila* — "a problem".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**مشكلة** (*mushkila*) is built on the native Arabic root *sh-k-l*, "to resemble; to be confused" (Lane). *Mushkila* is the Form IV participle, "a matter that confuses".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

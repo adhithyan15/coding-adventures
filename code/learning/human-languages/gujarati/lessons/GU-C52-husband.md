@@ -14,7 +14,8 @@ romanization: "pati"
 concept_tag: GU-FAMILY2-HUSBAND
 prerequisites: [GU-C52-mama, GU-C52-mami]
 sounds: []
-roots: []
+roots: [sanskrit-pati]
+etymology_hook: "pati ← Sanskrit pati 'master, husband', a tatsama (CDIAL 7727)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C52-mami]
 <!-- hl-knowledge: introduces=[GU-LEX-C52-FAMILY2-05]; assesses=[] -->
 
 **પતિ** (*pati*) — "a husband".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**પતિ** (*pati*) is Sanskrit *pati*, "master, husband", taken over whole as a learned loan, a tatsama (CDIAL 7727).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

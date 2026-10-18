@@ -1,7 +1,7 @@
 {
   "language": "urdu",
   "chapter": 124,
-  "sourceHash": "fnv1a64:51d97e4f17c4af97",
+  "sourceHash": "fnv1a64:c3e385ad215f518e",
   "lessonIds": [
     "UR-C124-shakh",
     "UR-C124-chattan",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "urdu/narration/ch124.txt",
   "json": "urdu/narration/ch124.json",
-  "textHash": "fnv1a64:7f5be699a3e1641a",
-  "jsonHash": "fnv1a64:89be5d30c2242e8a",
+  "textHash": "fnv1a64:623177a77eebb1fd",
+  "jsonHash": "fnv1a64:85fc84c447bbfa91",
   "findings": []
 }

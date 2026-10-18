@@ -1,7 +1,7 @@
 {
   "language": "gujarati",
   "chapter": 98,
-  "sourceHash": "fnv1a64:40d0c7f3ab328d89",
+  "sourceHash": "fnv1a64:0508070fe0f3765d",
   "lessonIds": [
     "GU-C98-vaisakh",
     "GU-C98-jeth",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "gujarati/narration/ch98.txt",
   "json": "gujarati/narration/ch98.json",
-  "textHash": "fnv1a64:e1ca9f707b438951",
-  "jsonHash": "fnv1a64:99d8b73276b3cea6",
+  "textHash": "fnv1a64:3158d6ddc31ef7a2",
+  "jsonHash": "fnv1a64:6a7c3c332fd80b6a",
   "findings": []
 }

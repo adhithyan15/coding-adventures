@@ -11,8 +11,8 @@ gloss: star
 concept_tag: FA-SKY-STAR
 prerequisites: [FA-C13-mah]
 sounds: [rtl, long-a, heh-e, short-vowels-unwritten]
-roots: [old-persian-star, pie-h2ster]
-etymology_hook: setâre continues Old Persian star-, from Indo-European *h₂stḗr, "star" — one more of the corpus's best-attested cognate sets, shared by English star, Latin stella, and Greek astron.
+roots: [iranian-star, pie-h2ster]
+etymology_hook: "setâre ← Middle Persian stārag; Avestan star-, Indo-European *h₂stḗr 'star': English star, Latin stella"
 duration:
   max_seconds: 260
 requires:
@@ -52,7 +52,8 @@ first time this track has met **ه** doing that particular job.
 ## The word, taken apart — a cognate this well attested is rare
 <!-- hl-knowledge: introduces=[FA-ETYMON-SETARE]; assesses=[] -->
 
-**ستاره** continues Old Persian **star-**, from Indo-European \**h₂stḗr*,
+**ستاره** continues Middle Persian **stārag**, built on the old Iranian *star-* that
+Avestan records, from Indo-European \**h₂stḗr*,
 "star." Few Indo-European roots survive this cleanly across the whole
 family: English **star**, Latin **stella** (→ **stellar**, **constellation**),
 Greek **astron** (→ **astronomy**, **disaster** — "ill-starred"), and

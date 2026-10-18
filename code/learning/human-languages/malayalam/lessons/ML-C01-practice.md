@@ -46,7 +46,7 @@ other two stay in romanization until their letters arrive in later chapters:
 |---|---|---|
 | **നമസ്കാരം** *namaskāraṁ* | hello / greetings | Sanskrit |
 | **നന്ദി** *nandi* | thank you | native (= Tamil *naṉṟi*) |
-| **അതെ** *athe* | yes | native ("that [is so]") |
+| **അതെ** *ate* | yes | native ("that [is so]") |
 | *illa* | no / there isn't | native (= Tamil *illai*) |
 | *śari* | okay | native (= *sari*) |
 
@@ -57,7 +57,7 @@ written *before* its consonant); the **anusvāram** (ം) adds a final nasal; an
 a word-initial vowel gets a **full letter** (അ in അതെ).
 
 Notice how **Tamil-like** the native core is: four of the five everyday words
-(*nandi, athe, illa, śari*) are shared with Tamil — because Malayalam *is*
+(*nandi, ate, illa, śari*) are shared with Tamil — because Malayalam *is*
 Tamil's closest sister — while only the formal greeting reached for Sanskrit.
 
 ## Why it's said this way — a promise for later
@@ -71,7 +71,7 @@ now, repeating the greeting is enough when you part.
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-NAMASKARAM-01, ML-SCRIPT-NAMASKARAM-READ-01] -->
 
 [PAUSE 1s]
-- [YOU SAY: all five — namaskāraṁ · nandi · athe · illa · śari]
+- [YOU SAY: all five — namaskāraṁ · nandi · ate · illa · śari]
 - [YOU SAY: greet and thank — "namaskāraṁ!" … "nandi."]
 
 ## Writing checkpoint
@@ -96,7 +96,7 @@ above, then say the word it sits in.
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-NAMASKARAM-01, ML-ETYMON-NAMASKARAM-BOW-01, ML-SCRIPT-NAMASKARAM-READ-01] -->
 
 [PAUSE 3s] Read all five aloud. Which one is Sanskrit, and which four are native
-Dravidian shared with Tamil? (Sanskrit: *namaskāraṁ*. Native: *nandi, athe,
+Dravidian shared with Tamil? (Sanskrit: *namaskāraṁ*. Native: *nandi, ate,
 illa, śari*.) Which word can mean both "okay" and a casual sign-off? (*śari*.)
 
 That completes the four Dravidian first chapters — Tamil, Kannada, Telugu,

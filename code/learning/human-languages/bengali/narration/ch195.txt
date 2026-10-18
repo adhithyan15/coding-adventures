@@ -12,6 +12,9 @@ Before the new one: say the Bengali for a kettle, then the Bengali for a basket.
 You'll want to know: জ্যাকেট.
 জ্যাকেট — jækeṭ — "a jacket".
 
+The word, taken apart.
+জ্যাকেট (jækeṭ) is a loan from English jacket.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Bengali for a basket, then the Bengali for a jacket.
 
 You'll want to know: রেনকোট.
 রেনকোট — renkoṭ — "a raincoat".
+
+The word, taken apart.
+রেনকোট (renkoṭ) is a loan from English raincoat.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Bengali for a jacket, then the Bengali for a raincoa
 You'll want to know: বেল্ট.
 বেল্ট — belṭ — "a belt".
 
+The word, taken apart.
+বেল্ট (belṭ) is a loan from English belt.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Bengali for a raincoat, then the Bengali for a belt.
 You'll want to know: বোতাম.
 বোতাম — botām — "a button".
 
+The word, taken apart.
+বোতাম (botām) is a loan from Portuguese botão, "button".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Bengali for a belt, then the Bengali for a button.
 
 You'll want to know: দুল.
 দুল — dul — "an earring".
+
+The word, taken apart.
+দুল (dul), "an earring", belongs with the verb dulā, "to swing", which CDIAL lists under dulati, "swings", a form it reconstructs (CDIAL 6453): "the thing that swings".
 
 What you've built.
 One more word for this chapter.

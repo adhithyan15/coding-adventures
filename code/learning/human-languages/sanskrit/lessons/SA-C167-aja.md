@@ -14,7 +14,8 @@ romanization: "ajā"
 concept_tag: SA-THG167-AJA
 prerequisites: [SA-C167-mahisi, SA-C167-vatsah]
 sounds: []
-roots: []
+roots: [sanskrit-aja]
+etymology_hook: "ajā 'she-goat' is the feminine of aja 'goat', which MW compares with Greek aix and Lithuanian ožys"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C167-vatsah]
 <!-- hl-knowledge: introduces=[SA-LEX-C167-THG167-04]; assesses=[] -->
 
 **अजा** — *ajā* — "a she-goat".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*ajā* is the feminine of *aja* "a goat" (MW). MW sets *aja* beside Greek *aix* "goat" and Lithuanian *ožys* "he-goat": an inherited Indo-European word.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

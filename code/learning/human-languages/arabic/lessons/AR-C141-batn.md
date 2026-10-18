@@ -14,7 +14,8 @@ romanization: "baṭn"
 concept_tag: AR-THINGS141-BATN
 prerequisites: [AR-C140-shafa, AR-C141-lisan]
 sounds: []
-roots: []
+roots: [b-ṭ-n]
+etymology_hook: "baṭn: built on the root b-ṭ-n, 'the belly' (Lane); Hebrew beten, 'belly', is its cousin"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C141-lisan]
 <!-- hl-knowledge: introduces=[AR-LEX-C141-THINGS141-02]; assesses=[] -->
 
 **بطن** — *baṭn* — "a belly".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**بطن** (*baṭn*) is built on the native Arabic root *b-ṭ-n*, "the belly; the inside" (Lane). Hebrew *beten*, "belly", is its cousin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

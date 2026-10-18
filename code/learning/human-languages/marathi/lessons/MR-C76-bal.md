@@ -14,7 +14,7 @@ romanization: "bāḷ"
 concept_tag: MR-FAMILY76-BAL
 prerequisites: [MR-C76-navra, MR-C76-bayko]
 sounds: []
-roots: [sanskrit-bala]
+roots: [sanskrit-bala-child]
 etymology_hook: "bāḷ ← Sanskrit bāla 'young; boy', a tadbhava (CDIAL 9216)"
 duration:
   max_seconds: 200

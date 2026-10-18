@@ -14,7 +14,8 @@ romanization: "môlôm"
 concept_tag: BN-SVASTHYO215-MOLOM
 prerequisites: [BN-C214-jhakano, BN-C214-narano]
 sounds: []
-roots: []
+roots: [arabic-marham]
+etymology_hook: "môlôm: usually traced, through Persian, to Arabic marham 'ointment'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C214-narano]
 <!-- hl-knowledge: introduces=[BN-LEX-C215-SVASTHYO215-01]; assesses=[] -->
 
 **মলম** — *môlôm* — "an ointment".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**মলম** (*môlôm*) is usually traced, through Persian, to Arabic *marham*, "ointment".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

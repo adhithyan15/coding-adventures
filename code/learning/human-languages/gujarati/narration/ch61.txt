@@ -12,6 +12,9 @@ Before the new one: say the Gujarati for jalebi, then the Gujarati for puri.
 You'll want to know: થાળી.
 થાળી (thāḷī) — "a plate, a thali".
 
+The word, taken apart.
+થાળી (thāḷī) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from sthālī, "earthen dish" (CDIAL 13766).
+
 What you've built.
 One more word for plate, bowl and spoon.
 
@@ -40,6 +43,9 @@ Before the new one: say the Gujarati for puri, then the Gujarati for a plate.
 
 You'll want to know: વાટકી.
 વાટકી (vāṭkī) — "a small bowl".
+
+The word, taken apart.
+વાટકી (vāṭkī) is a tadbhava. CDIAL lists Gujarati vāṭukī, "cup", under a reconstructed vartu, "something round", built on vṛt, "to turn" (CDIAL 11364).
 
 What you've built.
 One more word for plate, bowl and spoon.
@@ -70,6 +76,9 @@ Before the new one: say the Gujarati for a plate, then the Gujarati for a small 
 You'll want to know: ચમચી.
 ચમચી (camcī) — "a spoon".
 
+The word, taken apart.
+ચમચી (camcī) is a loan, usually traced to Persian chamcha, "spoon, ladle", a word Persian itself took from Turkic.
+
 What you've built.
 One more word for plate, bowl and spoon.
 
@@ -99,6 +108,9 @@ Before the new one: say the Gujarati for a small bowl, then the Gujarati for a s
 You'll want to know: પ્યાલો.
 પ્યાલો (pyālo) — "a cup, a glass". For ચા or પાણી.
 
+The word, taken apart.
+પ્યાલો (pyālo) is a loan, usually traced to Persian piyāla, "cup".
+
 What you've built.
 One more word for plate, bowl and spoon.
 
@@ -127,6 +139,9 @@ Before the new one: say the Gujarati for a spoon, then the Gujarati for a cup.
 
 You'll want to know: તપેલી.
 તપેલી (tapelī) — "a cooking pot".
+
+The word, taken apart.
+The origin of તપેલી (tapelī) is not settled; CDIAL has no entry for it. It matches Gujarati pātelũ, "brass cooking pot", and Hindi patīlā, "copper pot", which CDIAL lists under Sanskrit pātra, "drinking vessel, dish" (CDIAL 8055). Whether તપેલી (tapelī) is the same word with two sounds swapped is not known.
 
 What you've built.
 One more word for plate, bowl and spoon.

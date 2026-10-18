@@ -14,7 +14,8 @@ romanization: "ghaṛā"
 concept_tag: PA-THINGS117-GHARA
 prerequisites: [PA-C117-tokri, PA-C117-dabba]
 sounds: []
-roots: []
+roots: [sanskrit-ghata-pot]
+etymology_hook: "ghaṛā ← Sanskrit ghaṭa 'pot', a tadbhava (CDIAL 4406)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C117-dabba]
 <!-- hl-knowledge: introduces=[PA-LEX-C117-THINGS117-04]; assesses=[] -->
 
 **ਘੜਾ** — *ghaṛā* — "a clay water pot".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਘੜਾ** (*ghaṛā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *ghaṭa*, "pot" (CDIAL 4406).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

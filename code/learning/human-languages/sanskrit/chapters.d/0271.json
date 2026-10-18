@@ -1,0 +1,18 @@
+{
+  "chapter": 271,
+  "title": "Two spoken requests, gently joined",
+  "label": "ch:sa-person-and-quiet-requests",
+  "canDo": "I can retrieve one person request and one quiet request from meaning.",
+  "spineNodes": [
+    "SPINE-POLITE-REQUEST-REPAIR"
+  ],
+  "payoff": {
+    "lesson": "SA-C271-spoken-requests-final-retrieval",
+    "kind": "production",
+    "summary": "Complete chapter 271 by independently retrieving both spoken requests a second time.",
+    "assesses": [
+      "SA-PATTERN-C271-ASK-FOR-PERSON-01",
+      "SA-PATTERN-C271-REQUEST-QUIET-02"
+    ]
+  }
+}

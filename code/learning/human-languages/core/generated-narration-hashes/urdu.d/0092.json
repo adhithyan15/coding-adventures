@@ -1,7 +1,7 @@
 {
   "language": "urdu",
   "chapter": 92,
-  "sourceHash": "fnv1a64:8da847c9beaeb67c",
+  "sourceHash": "fnv1a64:4c0571fb2fd0ea65",
   "lessonIds": [
     "UR-C92-mangal",
     "UR-C92-budh",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "urdu/narration/ch92.txt",
   "json": "urdu/narration/ch92.json",
-  "textHash": "fnv1a64:b386d3436fcc5012",
-  "jsonHash": "fnv1a64:130a60a70c31f5c6",
+  "textHash": "fnv1a64:8020edfa80c8fd5b",
+  "jsonHash": "fnv1a64:51b48d11ee599595",
   "findings": []
 }

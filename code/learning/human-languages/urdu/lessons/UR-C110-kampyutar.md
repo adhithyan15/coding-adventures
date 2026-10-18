@@ -14,7 +14,8 @@ romanization: "kampyūṭar"
 concept_tag: UR-THINGS110-KAMPYUTAR
 prerequisites: [UR-C109-friij, UR-C110-tivi]
 sounds: []
-roots: []
+roots: [english-computer]
+etymology_hook: "kampyūṭar ← English computer"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C110-tivi]
 <!-- hl-knowledge: introduces=[UR-LEX-C110-THINGS110-02]; assesses=[] -->
 
 **کمپیوٹر** — *kampyūṭar* — "a computer".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**کمپیوٹر** (*kampyūṭar*) is a loan from English *computer*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

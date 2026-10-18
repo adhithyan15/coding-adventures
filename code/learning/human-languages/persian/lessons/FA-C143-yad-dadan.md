@@ -14,7 +14,8 @@ romanization: "yâd dâdan"
 concept_tag: FA-VERB-YAD-DADAN
 prerequisites: [FA-C143-qurt-dadan, FA-C143-faramush-kardan]
 sounds: []
-roots: []
+roots: [persian-yad, pie-deh3]
+etymology_hook: "yâd dâdan: Persian yâd 'memory' (Middle Persian ayād) + dâdan 'to give'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C143-faramush-kardan]
 <!-- hl-knowledge: introduces=[FA-LEX-C143-KONESH143-03]; assesses=[] -->
 
 **یاد دادن** — *yâd dâdan* — "to teach".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*yâd dâdan* pairs *yâd*, "memory", with *dâdan*, "to give": "to give memory", to teach. *yâd* is native, usually traced to Middle Persian *ayād*. *dâdan*, "to give", is an inherited verb; EtymDB takes it back to the Indo-European root *\*deh₃-*, "to give".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

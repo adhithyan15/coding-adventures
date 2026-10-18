@@ -14,7 +14,8 @@ romanization: "tvam"
 concept_tag: PRONOUN-YOU
 prerequisites: [SA-C02-bhavan]
 sounds: [halant]
-roots: [tvam-second-person]
+roots: [tvam-second-person, sanskrit-tvam]
+etymology_hook: "tvam 'you' is inherited: MW compares Latin tū, and it is the same pronoun as English thou"
 reviews_of: [SA-C02-bhavan]
 duration:
   max_seconds: 210
@@ -37,7 +38,7 @@ variety: classical
 
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-BHAVAN] -->
 
-[PAUSE 2s] The other "you" — the one you use with friends, and the ancestor of
+[PAUSE 2s] The other "you" — the one you use with friends, and a cousin of
 English *thou*.
 
 ## Sounds you'll need

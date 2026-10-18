@@ -4,7 +4,7 @@
   "chapter": 25,
   "title": "Good Night",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:81113a2a23489289",
+  "sourceHash": "fnv1a64:b7e0bf26d3f15375",
   "lessons": [
     {
       "id": "KA-C25-shubha-ratri",
@@ -12,14 +12,14 @@
       "title": "ಶುಭ ರಾತ್ರಿ (śubha rātri) — \"good night,\" auspicious to the end",
       "headword": "ಶುಭ ರಾತ್ರಿ",
       "romanization": "śubha rātri",
-      "gloss": "good night\" — literally \"auspicious night,\" pairing rātri (already met) with shubha, a word that started life meaning \"to be beautiful",
+      "gloss": "\"good night\" — literally \"auspicious night,\" pairing rātri (already met) with shubha, a word that started life meaning \"to be beautiful\"",
       "script": "kannada",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6c8aec35b231b411",
+      "sourceHash": "fnv1a64:f7870d7b34df03d9",
       "notice": null,
       "blocks": [
         {

@@ -50,7 +50,7 @@ sound most people get wrong on their first attempt at French.
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**jeudi** is **Jovis diēs**, "the day of **Jove**" — Jove being the other name
+**jeudi** is Latin **Jovis diēs**, "the day of **Jove**" — Jove being the other name
 of **Jupiter**, king of the gods and the largest planet. English keeps *Jove* in
 the phrase *by Jove*, and keeps the god's temperament in **jovial**: cheerful,
 the way people born under Jupiter were said to be.

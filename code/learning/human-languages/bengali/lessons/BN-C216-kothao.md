@@ -14,7 +14,8 @@ romanization: "kothāo"
 concept_tag: BN-JAYGA216-KOTHAO
 prerequisites: [BN-C216-charpashe, BN-C216-opore]
 sounds: []
-roots: []
+roots: [ka-interrogative]
+etymology_hook: "kothāo: kothā 'where' + -o 'also'; kothā has no CDIAL entry, so it is not settled"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C216-opore]
 <!-- hl-knowledge: introduces=[BN-LEX-C216-JAYGA216-05]; assesses=[] -->
 
 **কোথাও** — *kothāo* — "somewhere".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**কোথাও** (*kothāo*) is *kothā*, "where", + *-o*, "also, even". Its head is the question stem *ka-* (CDIAL 2574); CDIAL has no entry for *kothā*, so the rest is not settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

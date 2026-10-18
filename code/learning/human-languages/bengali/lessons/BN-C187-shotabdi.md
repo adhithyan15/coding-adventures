@@ -14,7 +14,8 @@ romanization: "shôtābdī"
 concept_tag: BN-SOMOY187-SHOTABDI
 prerequisites: [BN-C186-peshi, BN-C187-somoymoto]
 sounds: []
-roots: []
+roots: [sanskrit-shata, sanskrit-abda]
+etymology_hook: "shôtābdī: Sanskrit śata 'hundred' + abda 'year', built from Sanskrit parts"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C187-somoymoto]
 <!-- hl-knowledge: introduces=[BN-LEX-C187-SOMOY187-02]; assesses=[] -->
 
 **শতাব্দী** — *shôtābdī* — "a century".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**শতাব্দী** (*shôtābdī*) is built from Sanskrit *śata*, "hundred", and *abda*, "year", with the ending *-ī*: "a span of a hundred years".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

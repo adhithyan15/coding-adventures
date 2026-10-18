@@ -11,8 +11,8 @@ gloss: where - the question the interview paper exists to ask
 concept_tag: QUESTION-WHERE
 prerequisites: [PA-W10-thatha, PA-C43-kaun]
 sounds: [addak-doubling, laava-e]
-roots: []
-etymology_hook: The only word in seven chapters that needed a new letter, and it needed exactly one.
+roots: [sanskrit-ittham]
+etymology_hook: "kitthe: CDIAL lists itthe 'here' and utthe 'there' under Sanskrit ittham 'thus' (1564); kitthe has the question k-"
 duration:
   max_seconds: 260
 requires:
@@ -60,6 +60,8 @@ The addak is doing real work. It doubles the **ਥ**, which is why the word is
 This is the question that asks where somebody lives, and asking that is most of
 what a spoken interview at this level is for. The book has taught house, city and
 village for many chapters and could not ask where any of them was.
+
+CDIAL has no entry for *kitthe* itself, but it lists its partners *itthe*, "here", and *utthe*, "there", under Sanskrit *ittham*, "thus" (CDIAL 1564); *kitthe* is the same shape with the question *k-*.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[PA-Q-KITTHE-01, PA-SCRIPT-KITTHE-01, PA-Q-KAUN-01] -->

@@ -1,0 +1,21 @@
+{
+  "id": "SA-A1-L-01",
+  "category": "Lipi — the script and its orthography",
+  "label": "the writing system: Devanagari, an abugida with an inherent vowel",
+  "probe": [
+    "SA-SCRIPT-RECOG-01",
+    "SA-SCRIPT-RECOG-03",
+    "SA-SCRIPT-RECOG-06"
+  ],
+  "anchorIds": [
+    "ES-A1-PROXY",
+    "SA-CORPUS",
+    "SA-SCRIPT-DATA",
+    "ED-SANSKRIT"
+  ],
+  "derivedFrom": [
+    "A1-O1-01",
+    "A1-O1-02"
+  ],
+  "note": "The proxy asks for an alphabet and the names of its letters. Devanagari is not an alphabet: every consonant carries an inherent a, and a vowel after a consonant is written as a sign rather than a letter. The track teaches ma, the independent a and the ā sign in chapters 1-3, which is where a learner meets the distinction."
+}

@@ -14,7 +14,8 @@ romanization: "ādu"
 concept_tag: GU-THINGS115-ADU
 prerequisites: [GU-C115-gajar, GU-C115-lasan]
 sounds: []
-roots: []
+roots: [sanskrit-ardraka]
+etymology_hook: "ādu ← Sanskrit ārdraka 'fresh ginger', a tadbhava (CDIAL 1341)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C115-lasan]
 <!-- hl-knowledge: introduces=[GU-LEX-C115-THINGS115-03]; assesses=[] -->
 
 **આદુ** (*ādu*) — "ginger".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**આદુ** (*ādu*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *ārdraka*, "fresh ginger" (CDIAL 1341).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

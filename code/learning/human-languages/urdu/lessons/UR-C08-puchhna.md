@@ -12,7 +12,7 @@ concept_tag: VERB-ASK
 prerequisites: [UR-C08-lena]
 sounds: [rtl, long-u, do-chashmi-he, be-vs-pe-dots]
 roots: [sanskrit-prcchati, pie-prsketi, persian-porsidan]
-etymology_hook: pūchhnā is Sanskrit pṛcchati from the PIE root *prek- "to ask" — the root behind Latin precārī and so English pray and precarious, and behind German fragen; and Persian porsīdan is the SAME root, so Urdu's borrowed pursish "inquiry" and its inherited pūchhnā are one ancestor arriving by two different roads.
+etymology_hook: "pūchhnā ← Sanskrit pṛcchati 'asks' (CDIAL 8352), root *prek-; Persian pursīdan is the same root"
 duration:
   max_seconds: 296
 requires:
@@ -70,7 +70,7 @@ A written question still ends in the mirrored **؟**, closing **آپ کا نام
 ## The word, taken apart — one root, two roads into Urdu
 <!-- hl-knowledge: introduces=[UR-ETYMON-PUCHHNA-ASK, UR-REGISTER-TWO-ROADS-ONE-ROOT]; assesses=[UR-LEX-PUCHHNA, UR-ETYMON-KYA-QUESTION-FAMILY, UR-LEX-WELLBEING-QUESTION] -->
 
-**pūchhnā** is Sanskrit **pṛcchati**, “asks,” on the Indo-European root
+**pūchhnā** is Sanskrit **pṛcchati**, “asks” (CDIAL 8352), on the Indo-European root
 \**prek-*, “to ask.” Latin took it as *precārī*, “to beg, to pray” — hence English
 **pray**, **prayer**, and **precarious**, a thing held only as long as someone is
 willing to be asked. German still asks with it: *fragen*. English's own inherited

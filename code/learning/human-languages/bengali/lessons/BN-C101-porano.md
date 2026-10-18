@@ -14,7 +14,8 @@ romanization: "poṛāno"
 concept_tag: BN-VERB-PORANO
 prerequisites: [BN-C101-jora, BN-C101-bhorano]
 sounds: []
-roots: []
+roots: [indo-aryan-pod]
+etymology_hook: "poṛāno ← *poḍ 'burn', a reconstructed form; a tadbhava (CDIAL 8397)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C101-bhorano]
 <!-- hl-knowledge: introduces=[BN-LEX-C101-ACT101-04]; assesses=[] -->
 
 **পোড়ানো** — *poṛāno* — "to burn".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**পোড়ানো** (*poṛāno*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*poḍ*, "burn", a form CDIAL reconstructs from its descendants (CDIAL 8397). *Poṛāno* is the causing form of *poṛā*, "to burn", which CDIAL lists.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

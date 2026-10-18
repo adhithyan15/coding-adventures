@@ -14,7 +14,8 @@ romanization: "chābi"
 concept_tag: BN-HOME62-CHABI
 prerequisites: [BN-C61-bati, BN-C62-pakha]
 sounds: []
-roots: []
+roots: [portuguese-chave]
+etymology_hook: "chābi ← Portuguese chave 'key'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C62-pakha]
 <!-- hl-knowledge: introduces=[BN-LEX-C62-HOME62-02]; assesses=[] -->
 
 **চাবি** — *chābi* — "a key".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**চাবি** (*chābi*) is a loan from Portuguese *chave*, "key".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -12,6 +12,9 @@ Before the new one: say the Marwadi for to see, then the Marwadi for to hear.
 You'll want to know: बैठणो.
 बैठणो — baiṭhṇo — "to sit".
 
+The word, taken apart.
+बैठणो (baiṭhṇo) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from upaviśati, "sits down". CDIAL lists Old Marwari baiṭhaï under it (CDIAL 2245). The ṭh comes from its past participle, upaviṣṭa, "seated".
+
 What you've built.
 One more word for this chapter.
 
@@ -42,6 +45,9 @@ Before the new one: say the Marwadi for to hear, then the Marwadi for to sit.
 
 You'll want to know: सोवणो.
 सोवणो — sovṇo — "to sleep".
+
+The word, taken apart.
+सोवणो (sovṇo) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from svapati, "sleeps". CDIAL lists Old Marwari soaï under it (CDIAL 13902).
 
 What you've built.
 One more word for this chapter.
@@ -74,6 +80,9 @@ Before the new one: say the Marwadi for to sit, then the Marwadi for to sleep.
 You'll want to know: उठणो.
 उठणो — uṭhṇo — "to get up".
 
+The word, taken apart.
+उठणो (uṭhṇo) is a tadbhava, a word inherited and reshaped by sound change. It comes from ut-sthāti, "stands up", a form CDIAL reconstructs from its descendants. CDIAL lists Old Marwari ūṭhaï under it (CDIAL 1900). It is built on ud, "up", and sthā, "stand".
+
 What you've built.
 One more word for this chapter.
 
@@ -105,6 +114,9 @@ Before the new one: say the Marwadi for to sleep, then the Marwadi for to get up
 You'll want to know: चालणो.
 चालणो — chālṇo — "to walk".
 
+The word, taken apart.
+चालणो (chālṇo) is a tadbhava, a word inherited and reshaped by sound change. It comes from calyati, "goes", a form CDIAL reconstructs from its descendants. CDIAL lists Marwari cālṇo under it (CDIAL 4721).
+
 What you've built.
 One more word for this chapter.
 
@@ -135,6 +147,9 @@ Before the new one: say the Marwadi for to get up, then the Marwadi for to walk.
 
 You'll want to know: दौड़णो.
 दौड़णो — dauṛṇo — "to run".
+
+The word, taken apart.
+दौड़णो (dauṛṇo) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from dravati, "runs". CDIAL lists Marwari doṛṇo under it (CDIAL 6624). CDIAL explains the ṛ as an added suffix.
 
 What you've built.
 One more word for this chapter.

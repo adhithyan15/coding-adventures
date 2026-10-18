@@ -12,6 +12,9 @@ Before the new one: say the Urdu for to walk, then the Urdu for to run.
 You'll want to know: کھیلنا.
 کھیلنا — khelnā — "to play".
 
+The word, taken apart.
+کھیلنا (khelnā) is inherited from a reconstructed khel-, "play" (CDIAL 3918), the verb behind khel, "a game". CDIAL links it with Sanskrit krīḍati, "plays": if that verb has a non-Aryan source, these forms may share it.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Urdu for to run, then the Urdu for to play.
 
 You'll want to know: خریدنا.
 خریدنا — kharīdnā — "to buy".
+
+The word, taken apart.
+خریدنا (kharīdnā) is a loan, usually traced to Persian kharīdan, "to buy". Urdu took its stem kharīd- and added the verb ending -nā.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Urdu for to play, then the Urdu for to buy.
 You'll want to know: بیچنا.
 بیچنا — bechnā — "to sell".
 
+The word, taken apart.
+بیچنا (bechnā) is a tadbhava, a word inherited and reshaped by sound change. It comes from vetyayati, "makes a price", a form CDIAL reconstructs from its descendants (CDIAL 12100). CDIAL builds it on a word for "hire, price", akin to vetana, "wages", and calls other proposals less probable.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Urdu for to buy, then the Urdu for to sell.
 You'll want to know: دینا.
 دینا — denā — "to give".
 
+The word, taken apart.
+دینا (denā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from dadāti, "gives" (CDIAL 6141).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Urdu for to sell, then the Urdu for to give.
 
 You'll want to know: رکھنا.
 رکھنا — rakhnā — "to put, to keep".
+
+The word, taken apart.
+رکھنا (rakhnā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from rakṣati, "guards" (CDIAL 10547).
 
 What you've built.
 One more word for this chapter.

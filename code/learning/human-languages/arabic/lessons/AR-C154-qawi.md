@@ -14,7 +14,8 @@ romanization: "qawī"
 concept_tag: AR-QUAL154-QAWI
 prerequisites: [AR-C154-shabb, AR-C154-ajuz, AR-C32-saada, AR-C32-saada, AR-C42-first-passage]
 sounds: []
-roots: []
+roots: [q-w-y]
+etymology_hook: "qawī: built on the root q-w-y, 'to be strong' (Lane); qawī is the faʿīl adjective, 'strong'"
 duration:
   max_seconds: 200
 requires:
@@ -45,6 +46,11 @@ reviews_of: [AR-C154-ajuz]
 <!-- hl-knowledge: introduces=[AR-LEX-C154-QUAL154-04]; assesses=[] -->
 
 **قوي** — *qawī* — "strong".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**قوي** (*qawī*) is built on the native Arabic root *q-w-y*, "to be strong" (Lane). *Qawī* is the *faʿīl* adjective, "strong".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

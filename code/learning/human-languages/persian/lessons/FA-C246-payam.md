@@ -14,7 +14,8 @@ romanization: "payâm"
 concept_tag: FA-CHIZ246-PAYAM
 prerequisites: [FA-C245-futbal, FA-C246-safhe]
 sounds: []
-roots: []
+roots: [persian-payam]
+etymology_hook: "payâm: inherited, usually traced to Middle Persian paygām"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C246-safhe]
 <!-- hl-knowledge: introduces=[FA-LEX-C246-CHIZ246-02]; assesses=[] -->
 
 **پیام** — *payâm* — "a message".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*payâm* is a native Persian word, inherited rather than borrowed; it is usually traced to Middle Persian *paygām*, "message".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

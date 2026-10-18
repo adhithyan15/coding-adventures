@@ -1,7 +1,7 @@
 {
   "language": "bengali",
   "chapter": 224,
-  "sourceHash": "fnv1a64:b41c39457e05410c",
+  "sourceHash": "fnv1a64:3e52a849aa257b91",
   "lessonIds": [
     "BN-C224-salad",
     "BN-C224-jontu",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "bengali/narration/ch224.txt",
   "json": "bengali/narration/ch224.json",
-  "textHash": "fnv1a64:f7edfd4e295134c8",
-  "jsonHash": "fnv1a64:efdca2dfad05880c",
+  "textHash": "fnv1a64:18c8e300e363bafd",
+  "jsonHash": "fnv1a64:ac4c981fbc6e9224",
   "findings": []
 }

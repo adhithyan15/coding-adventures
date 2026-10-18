@@ -12,6 +12,9 @@ Before the new one: say the Punjabi for a ring, then the Punjabi for a watch.
 You'll want to know: ਪੱਗ.
 ਪੱਗ — pagg — "a turban".
 
+The word, taken apart.
+ਪੱਗ (pagg) is a tadbhava, a word inherited and reshaped by sound change. It comes from paggā, "headdress", a form CDIAL reconstructs from its descendants (CDIAL 7644). CDIAL doubts a link with Sanskrit pragraha, "rein, bridle".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Punjabi for a watch, then the Punjabi for a turban.
 
 You'll want to know: ਜੁੱਤੀ.
 ਜੁੱਤੀ — juttī — "a shoe".
+
+The word, taken apart.
+ਜੁੱਤੀ (juttī) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from yukta, "joined, yoked" (CDIAL 10479). CDIAL lists Punjabi juttī, "shoe".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Punjabi for a turban, then the Punjabi for a shoe.
 You'll want to know: ਟੋਪੀ.
 ਟੋਪੀ — ṭopī — "a cap".
 
+The word, taken apart.
+ਟੋਪੀ (ṭopī) is a tadbhava, a word inherited and reshaped by sound change. It comes from ṭoppa, "hat, covering", a form CDIAL reconstructs from its descendants (CDIAL 5481). CDIAL calls a link with Sanskrit āṭopa very doubtful.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Punjabi for a shoe, then the Punjabi for a cap.
 You'll want to know: ਕਮੀਜ਼.
 ਕਮੀਜ਼ — kamīz — "a shirt".
 
+The word, taken apart.
+ਕਮੀਜ਼ (kamīz) is a loan from Arabic qamīṣ, "shirt", which reached Punjabi through Persian. Its Arabic root is q-m-ṣ (Lane). The Arabic word is itself probably from Late Latin camisia.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Punjabi for a cap, then the Punjabi for a shirt.
 
 You'll want to know: ਛੇ.
 ਛੇ — chhe — "six".
+
+The word, taken apart.
+ਛੇ (chhe) is inherited. CDIAL lists it under kṣaṭ, the third of the forms it gives beside Sanskrit ṣaṣ, "six" (CDIAL 12803).
 
 What you've built.
 One more word for this chapter.

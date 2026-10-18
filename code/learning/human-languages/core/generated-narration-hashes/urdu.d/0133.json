@@ -1,7 +1,7 @@
 {
   "language": "urdu",
   "chapter": 133,
-  "sourceHash": "fnv1a64:a485ee41b3db201b",
+  "sourceHash": "fnv1a64:7ae1e507ecbf5858",
   "lessonIds": [
     "UR-C133-javan",
     "UR-C133-burha",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "urdu/narration/ch133.txt",
   "json": "urdu/narration/ch133.json",
-  "textHash": "fnv1a64:f0c61153deb832bd",
-  "jsonHash": "fnv1a64:b60063d19d08eca1",
+  "textHash": "fnv1a64:16f4429ac2f8c15c",
+  "jsonHash": "fnv1a64:a3df154f3ff7508c",
   "findings": []
 }

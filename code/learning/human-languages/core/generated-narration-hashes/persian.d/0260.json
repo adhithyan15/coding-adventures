@@ -1,7 +1,7 @@
 {
   "language": "persian",
   "chapter": 260,
-  "sourceHash": "fnv1a64:4bd4a7b29344db45",
+  "sourceHash": "fnv1a64:cc3b613319756be1",
   "lessonIds": [
     "FA-C260-rande-kardan",
     "FA-C260-surakh-kardan",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "persian/narration/ch260.txt",
   "json": "persian/narration/ch260.json",
-  "textHash": "fnv1a64:7ace12696bb84538",
-  "jsonHash": "fnv1a64:c0353a531e538535",
+  "textHash": "fnv1a64:5f08afcbbbe8973f",
+  "jsonHash": "fnv1a64:1e65919383433976",
   "findings": []
 }

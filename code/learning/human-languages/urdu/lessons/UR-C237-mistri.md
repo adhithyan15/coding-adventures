@@ -14,7 +14,8 @@ romanization: "mistrī"
 concept_tag: UR-KAM237-MISTRI
 prerequisites: [UR-C236-gahak, UR-C236-karobar]
 sounds: []
-roots: []
+roots: [portuguese-mestre]
+etymology_hook: "mistrī: usually traced to Portuguese mestre 'master'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C236-karobar]
 <!-- hl-knowledge: introduces=[UR-LEX-C237-KAM237-01]; assesses=[] -->
 
 **مستری** — *mistrī* — "a mechanic".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**مستری** (*mistrī*) is usually traced to Portuguese *mestre*, "master, master craftsman".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

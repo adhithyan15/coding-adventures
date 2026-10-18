@@ -14,7 +14,8 @@ romanization: "tolṇo"
 concept_tag: MW-VERB-TOLNO
 prerequisites: [MW-C110-pugno, MW-C110-urno]
 sounds: []
-roots: []
+roots: [sanskrit-tolayati]
+etymology_hook: "tolṇo ← Sanskrit tolayati 'lifts, weighs', a tadbhava (CDIAL 5979, Hindi and Gujarati rows)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C110-urno]
 <!-- hl-knowledge: introduces=[MW-LEX-C110-ACT110-05]; assesses=[] -->
 
 **तोलणो** — *tolṇo* — "to weigh".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**तोलणो** (*tolṇo*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *tolayati*, "lifts, weighs". CDIAL gives no Marwari form in this entry (CDIAL 5979); the match is through Hindi *tolnā* and Gujarati *toḷvũ*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

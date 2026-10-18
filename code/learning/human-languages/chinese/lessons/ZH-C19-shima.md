@@ -11,8 +11,8 @@ romanization: shì ma
 gloss: is that so, written from two characters already yours
 prerequisites: [ZH-C19-hear-shima]
 sounds: [tone-4, tone-neutral]
-roots: []
-etymology_hook: Two known characters, and the shortest way in the language to check something you have just been told.
+roots: [middle-chinese-dzyex]
+etymology_hook: "shì ma: shì, from Middle Chinese dzyeX, + the question particle ma, whose origin is not settled"
 duration:
   max_seconds: 145
 requires:
@@ -48,6 +48,10 @@ It is the shortest sentence in the book and it is a complete turn in a
 conversation. Somebody says something; you say 是吗; they keep going. Nothing
 about it is a fixed phrase to memorise — it is the yes-or-no rule applied to a
 one-word sentence.
+
+Chinese built it from 是, inherited from Middle Chinese *dzyeX* (Guangyun, in
+Baxter's transcription), and the question particle 吗, whose origin is not
+settled.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-ORTHO-SHIMA-01, ZH-SCRIPT-MA-01] -->

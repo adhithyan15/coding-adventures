@@ -11,8 +11,8 @@ gloss: eight, on the page — two signs, and neither of them new
 concept_tag: MW-NUMBER-EIGHT-WRITTEN
 prerequisites: [MW-C33-hear-aath]
 sounds: [long-aa, retroflex-tth]
-roots: []
-etymology_hook: The standing aa of chapter 2 and the retroflex ttha of chapter 17 meet for the first time.
+roots: [sanskrit-ashta]
+etymology_hook: "āṭh ← Sanskrit aṣṭā 'eight', a tadbhava (CDIAL 941, Marwari row)"
 duration:
   max_seconds: 160
 requires:
@@ -49,6 +49,11 @@ chapter 2 and **ठ** from chapter 17. Nothing is joined, nothing is marked.
 Compare **सात** and **आठ** side by side. Seven takes the vowel as a mark on a
 consonant; eight takes the same vowel as a letter, because there is no
 consonant for it to sit on.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**आठ** (*āṭh*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *aṣṭā*, "eight". CDIAL lists Marwari *āṭh* under it (CDIAL 941). English *eight* is the same ancient word.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-AATH-01, MW-SCRIPT-SAAT-01] -->

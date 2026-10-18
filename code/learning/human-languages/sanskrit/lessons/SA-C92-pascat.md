@@ -14,7 +14,8 @@ romanization: "paścāt"
 concept_tag: SA-TIME92-PASCAT
 prerequisites: [SA-C92-nimesah, SA-C92-purvam]
 sounds: []
-roots: []
+roots: [sanskrit-pashcat]
+etymology_hook: "paścāt 'from behind, after', ablative of paśca; MW compares Latin post (CDIAL 7999)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,12 @@ reviews_of: [SA-C92-purvam]
 <!-- hl-knowledge: introduces=[SA-LEX-C92-TIME92-03]; assesses=[] -->
 
 **पश्चात्** — *paścāt* — "after, later".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*Paścāt* is the ablative of *paśca*, "behind": "from behind", and so "afterwards"
+(CDIAL 7999). It is inherited: MW compares Latin *post*, "after".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

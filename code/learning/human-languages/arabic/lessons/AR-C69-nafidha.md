@@ -14,7 +14,8 @@ romanization: "nāfidha"
 concept_tag: AR-FOOD69-NAFIDHA
 prerequisites: [AR-C69-manzil, AR-C69-ghurfa]
 sounds: []
-roots: []
+roots: [n-f-dh]
+etymology_hook: "nāfidha: built on the root n-f-dh, 'to pass through, to pierce' (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C69-ghurfa]
 <!-- hl-knowledge: introduces=[AR-LEX-C69-FOOD69-05]; assesses=[] -->
 
 **نافذة** — *nāfidha* — "a window".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**نافذة** (*nāfidha*) is built on the native Arabic root *n-f-dh*, "to pass through, to pierce" (Lane). *Nāfidha* is the feminine active participle, "one that passes through"; the window sense is not among Lane's.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

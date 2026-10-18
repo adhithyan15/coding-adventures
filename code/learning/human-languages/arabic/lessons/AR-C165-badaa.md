@@ -14,7 +14,8 @@ romanization: "badaʾa"
 concept_tag: AR-VERB-BADAA
 prerequisites: [AR-C164-tadhakkara, AR-C165-hadhafa]
 sounds: []
-roots: []
+roots: [b-d-ʾ]
+etymology_hook: "badaʾa: built on the root b-d-ʾ, 'to begin' (Lane); badaʾa is the plain verb, 'he began'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C165-hadhafa]
 <!-- hl-knowledge: introduces=[AR-LEX-C165-ACT165-02]; assesses=[] -->
 
 **بدأ** — *badaʾa* — "to begin, to start".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**بدأ** (*badaʾa*) is built on the native Arabic root *b-d-ʾ*, "to begin" (Lane). *Badaʾa* is the plain verb, "he began".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

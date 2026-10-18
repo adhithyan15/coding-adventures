@@ -14,7 +14,8 @@ romanization: "pratyaham"
 concept_tag: SA-TIME240-PRATYAHAM
 prerequisites: [SA-C240-sanaih, SA-C240-pratidinam]
 sounds: []
-roots: []
+roots: [sanskrit-ahna-day]
+etymology_hook: "pratyaham = prati 'each' + ahan 'day': 'day by day' (MW)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C240-pratidinam]
 <!-- hl-knowledge: introduces=[SA-LEX-C240-TIME240-04]; assesses=[] -->
 
 **प्रत्यहम्** — *pratyaham* — "daily".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*pratyaham* is built on *prati*, "each", and *ahan*, "day" (MW): "day by day". It means the same as *pratidinam* but uses the older Vedic word for day, *ahar* or *ahan*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

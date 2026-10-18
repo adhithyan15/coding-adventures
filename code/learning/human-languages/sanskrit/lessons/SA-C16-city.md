@@ -14,7 +14,8 @@ romanization: "nagaram"
 concept_tag: SA-NOUN-CITY
 prerequisites: [SA-C16-forest, SA-C05-vasami]
 sounds: []
-roots: []
+roots: [sanskrit-nagara]
+etymology_hook: "nagara 'town': origin not settled; DEDR 3568 compares Tamil nakar 'town', a possible Dravidian source"
 duration:
   max_seconds: 210
 requires:
@@ -53,6 +54,13 @@ subcontinent before Sanskrit arrived. Others resist that reading. The honest
 position is that nobody knows.
 
 Whatever its history, it ends in *-am*, like *गृहम्* and *वनम्*.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+DEDR 3568 sets *nagara* beside Tamil *nakar*, "house, town", and a Dravidian
+source is one proposal; MW doubts a split into *naga* + *-ra*. It lives on
+as Sinhala *nuvara*, "city" (CDIAL 6924).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "tôblā"
 concept_tag: BN-THINGS131-TOBLA
 prerequisites: [BN-C131-bol, BN-C131-bashi]
 sounds: []
-roots: []
+roots: [arabic-tabl]
+etymology_hook: "tôblā ← Arabic ṭabl 'drum', through Persian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C131-bashi]
 <!-- hl-knowledge: introduces=[BN-LEX-C131-THINGS131-03]; assesses=[] -->
 
 **তবলা** — *tôblā* — "a tabla".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**তবলা** (*tôblā*) is a loan from Arabic *ṭabl*, "drum", which reached Bengali through Persian. Its Arabic root is *ṭ-b-l* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

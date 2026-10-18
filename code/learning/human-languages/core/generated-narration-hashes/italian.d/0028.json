@@ -1,7 +1,7 @@
 {
   "language": "italian",
   "chapter": 28,
-  "sourceHash": "fnv1a64:d58eb46beaa05f4b",
+  "sourceHash": "fnv1a64:9840ecda45f8518d",
   "lessonIds": [
     "IT-C28-undicesimo",
     "IT-C28-prima",
@@ -12,7 +12,7 @@
   "drivablePrefix": 4,
   "text": "italian/narration/ch28.txt",
   "json": "italian/narration/ch28.json",
-  "textHash": "fnv1a64:410a0ce4635a9cc6",
-  "jsonHash": "fnv1a64:9d2e62a18760c401",
+  "textHash": "fnv1a64:1cbefcafdbcefd07",
+  "jsonHash": "fnv1a64:21cccd1b135d48dd",
   "findings": []
 }

@@ -14,7 +14,8 @@ romanization: "emshab"
 concept_tag: FA-TIME79-EMSHAB
 prerequisites: [FA-C79-zohr, FA-C79-pariruz]
 sounds: []
-roots: []
+roots: [persian-shab]
+etymology_hook: "emshab: Persian em- 'this' + shab 'night'; native"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C79-pariruz]
 <!-- hl-knowledge: introduces=[FA-LEX-C79-TIME79-03]; assesses=[] -->
 
 **امشب** — *emshab* — "tonight".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*emshab* is *em-*, "this", with *shab*, "night": "this night". Both are native Persian; *shab* is usually traced to Middle Persian *šab*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

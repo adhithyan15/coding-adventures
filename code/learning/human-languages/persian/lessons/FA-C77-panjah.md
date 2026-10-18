@@ -14,7 +14,8 @@ romanization: "panjâh"
 concept_tag: FA-NUMBERS77-PANJAH
 prerequisites: [FA-C76-si, FA-C76-chehel]
 sounds: []
-roots: []
+roots: [persian-panjah]
+etymology_hook: "panjâh: inherited, usually traced to Middle Persian panjāh"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C76-chehel]
 <!-- hl-knowledge: introduces=[FA-LEX-C77-NUMBERS77-01]; assesses=[] -->
 
 **پنجاه** — *panjâh* — "fifty".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*panjâh* is a native Persian word, inherited rather than borrowed; it is usually traced to Middle Persian *panjāh*, "fifty". It is built on *panj*, "five".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

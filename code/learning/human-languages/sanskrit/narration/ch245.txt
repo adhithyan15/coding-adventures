@@ -12,6 +12,9 @@ Before the new one: say the Sanskrit for other, then the Sanskrit for alone.
 You'll want to know: नालिका.
 नालिका — nālikā — "a tube, a pipe".
 
+The word, taken apart.
+nālikā is built on nāla, "hollow stalk, tube", which MW derives from nala or naḍa, "reed". CDIAL 7047 lists nālikā "stalk" under nāḍī, "tube", the word for the pulse: a pipe is a hollow reed.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Sanskrit for alone, then the Sanskrit for a tube.
 
 You'll want to know: तक्रम्.
 तक्रम् — takram — "buttermilk".
+
+The word, taken apart.
+takra is buttermilk thinned with water (MW). MW and CDIAL 5617 both link it to the root √tañc, "to contract", as milk curdles, and CDIAL compares Persian talx, "bitter". It lives on as Marathi and Gujarati tāk, "buttermilk".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Sanskrit for a tube, then the Sanskrit for buttermil
 You'll want to know: फलरसः.
 फलरसः — phalarasaḥ — "fruit juice".
 
+The word, taken apart.
+phalarasa is a compound of phala, "fruit", and rasa, "sap, juice" (MW). Rasa is a Rigvedic word for the juice of plants, later also "taste" (CDIAL 10650), and it lives on as Hindi ras, "juice".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Sanskrit for buttermilk, then the Sanskrit for fruit
 You'll want to know: लवंगम्.
 लवंगम् — lavaṅgam — "a clove".
 
+The word, taken apart.
+lavaṅga names the clove tree and its buds, first in the poets (CDIAL 10977). MW gives no derivation, so its origin is uncertain. It lives on as Hindi laũg, "clove".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Sanskrit for fruit juice, then the Sanskrit for a cl
 
 You'll want to know: एला.
 एला — elā — "cardamom".
+
+The word, taken apart.
+elā is probably borrowed from Dravidian: CDIAL 2522 follows Mayrhofer in taking it from a Dravidian source. It lives on as Marathi eḷā, "cardamom".
 
 What you've built.
 One more word for this chapter.

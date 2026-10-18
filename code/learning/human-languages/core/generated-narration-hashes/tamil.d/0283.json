@@ -1,0 +1,15 @@
+{
+  "language": "tamil",
+  "chapter": 283,
+  "sourceHash": "fnv1a64:f7f49969b7015ab7",
+  "lessonIds": [
+    "TA-W283-a2-connected-composition"
+  ],
+  "voiceLessons": 0,
+  "drivablePrefix": 0,
+  "text": "tamil/narration/ch283.txt",
+  "json": "tamil/narration/ch283.json",
+  "textHash": "fnv1a64:567264d273557ab7",
+  "jsonHash": "fnv1a64:4f43aad9e4efa78c",
+  "findings": []
+}

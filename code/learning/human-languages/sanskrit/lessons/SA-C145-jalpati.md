@@ -14,7 +14,8 @@ romanization: "jalpati"
 concept_tag: SA-VERB-JALPATI
 prerequisites: [SA-C145-garjati, SA-C145-kujati]
 sounds: []
-roots: []
+roots: [sanskrit-jalpati]
+etymology_hook: "jalpati 'murmurs, chatters' ← √jalp, which MW thinks may be a reduplicated √lap 'prate' (CDIAL 5163)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C145-kujati]
 <!-- hl-knowledge: introduces=[SA-LEX-C145-ACT145-05]; assesses=[] -->
 
 **जल्पति** — *jalpati* — "chatters".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*jalpati* comes from the root √jalp "murmur, chatter" (CDIAL 5163), already in the Śatapatha Brāhmaṇa. MW suggests, with a query, that it is a reduplicated form of √lap "prate, talk".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

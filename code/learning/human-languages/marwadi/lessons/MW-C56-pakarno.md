@@ -14,7 +14,8 @@ romanization: "pakaṛṇo"
 concept_tag: MW-VERB-PAKARNO
 prerequisites: [MW-C55-bhejno, MW-C56-ginno]
 sounds: []
-roots: []
+roots: [indo-aryan-pakkad]
+etymology_hook: "pakaṛṇo ← *pakkaḍ 'seize', reconstructed; a link with pragraha is doubtful (CDIAL 7619)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C56-ginno]
 <!-- hl-knowledge: introduces=[MW-LEX-C56-VERBS56-02]; assesses=[] -->
 
 **पकड़णो** — *pakaṛṇo* — "to catch".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**पकड़णो** (*pakaṛṇo*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*pakkaḍ*, "seize", a form CDIAL reconstructs from its descendants. CDIAL lists Marwari *pakaṛṇo* under it (CDIAL 7619). CDIAL calls a link with Sanskrit *pragraha*, "holding", obscure and doubtful.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "mandiram"
 concept_tag: SA-PLACE-TEMPLE
 prerequisites: [SA-C83-lesson, SA-C83-exam]
 sounds: []
-roots: []
+roots: [sanskrit-mandira]
+etymology_hook: "mandira 'dwelling, palace, temple', filed under the root √mand 'tarry, stay' (MW; CDIAL 9852)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,12 @@ reviews_of: [SA-C83-exam]
 <!-- hl-knowledge: introduces=[SA-LEX-C84-PLACES-01]; assesses=[] -->
 
 **मन्दिरम्** (*mandiram*) — "a temple". **मन्दिरम् कुत्र?** — "where is the temple?"
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*Mandira* first meant any place where one stays, a dwelling or a palace, and only
+then a temple. MW and CDIAL 9852 file it under the root √mand, "to tarry, stay".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

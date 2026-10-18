@@ -14,7 +14,8 @@ romanization: "yuvakaḥ"
 concept_tag: SA-PEOPLE-YOUNG-MAN
 prerequisites: [SA-C87-thousand, SA-C88-girl]
 sounds: []
-roots: []
+roots: [sanskrit-yuvan]
+etymology_hook: "yuvaka 'youth' ← yuvan 'young'; MW compares Latin juvenis and English young (CDIAL 10508)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,12 @@ reviews_of: [SA-C88-girl]
 <!-- hl-knowledge: introduces=[SA-LEX-C88-PEOPLE-02]; assesses=[] -->
 
 **युवकः** (*yuvakaḥ*) — "a young man", between a **बालः** and a **वृद्धः**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*Yuvaka* is built from *yuvan*, "young". It is inherited: MW compares Latin
+*juvenis*, Gothic *juggs* and English **young** (CDIAL 10508).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

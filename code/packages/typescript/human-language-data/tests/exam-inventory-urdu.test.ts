@@ -15,7 +15,7 @@
 // corpus as every block in the shared file.
 // ---------------------------------------------------------------------------
 import { describe, expect, it } from "vitest";
-import { loadEverything, loadExamInventory } from "../src/loader.js";
+import { loadExamInventory, loadLessons } from "../src/loader.js";
 import {
   EXAM_CONTENT_DIMENSIONS,
   measureExamCoverage,
@@ -23,6 +23,10 @@ import {
   isExamInventoryComplete,
   trackIntroducedAtoms,
 } from "../src/exam-inventory.js";
+
+// One read-only lesson snapshot serves every assertion in this suite. Loading
+// the entire corpus per case obscures the inventory claim with Windows I/O.
+const lessons = loadLessons();
 
 describe("the committed Urdu A1 inventory", () => {
   const inventory = loadExamInventory("urdu", "A1");
@@ -36,7 +40,6 @@ describe("the committed Urdu A1 inventory", () => {
   });
 
   it("probes only atoms that EXIST, so a guessed id cannot under-report", () => {
-    const { lessons } = loadEverything();
     const taught = trackIntroducedAtoms(lessons, "urdu");
     const unknown: string[] = [];
     for (const point of inventory.points) {
@@ -137,7 +140,6 @@ describe("the committed Urdu A1 inventory", () => {
   });
 
   it("reports FOUR full columns, a numeral column now CLOSED, and a flattering script closure that is not one", () => {
-    const { lessons } = loadEverything();
     const coverage = measureExamCoverage(inventory, lessons);
     expect(coverage.enumerated).toBe(234);
     // 101 -> 116: the negation-and-joining tranche (chapters 19-22). Fifteen

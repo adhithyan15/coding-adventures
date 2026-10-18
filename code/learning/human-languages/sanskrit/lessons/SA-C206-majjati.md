@@ -14,7 +14,8 @@ romanization: "majjati"
 concept_tag: SA-VERB-MAJJATI
 prerequisites: [SA-C205-svikaroti, SA-C205-vikasati]
 sounds: []
-roots: []
+roots: [sanskrit-majjati]
+etymology_hook: "majjati ← root √majj 'sink, dive'; MW compares Latin mergere 'to dip' (CDIAL 9711)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C205-vikasati]
 <!-- hl-knowledge: introduces=[SA-LEX-C206-ACT206-01]; assesses=[] -->
 
 **मज्जति** — *majjati* — "sinks, dives".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*majjati* is the present of the root √majj, "to sink, dive" (MW). In the Rigveda it means "sinks, perishes" (CDIAL 9711). MW compares Latin *mergere*, "to dip, sink", the source of English *merge* and *submerge*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

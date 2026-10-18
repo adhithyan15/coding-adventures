@@ -14,7 +14,8 @@ romanization: "sāfara"
 concept_tag: AR-VERB-SAFARA
 prerequisites: [AR-C159-saida, AR-C159-wasala]
 sounds: []
-roots: []
+roots: [s-f-r]
+etymology_hook: "sāfara: built on the root s-f-r, 'to travel' (Lane); sāfara is Form III, 'to travel'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C159-wasala]
 <!-- hl-knowledge: introduces=[AR-LEX-C159-ACT159-04]; assesses=[] -->
 
 **سافر** — *sāfara* — "to travel".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**سافر** (*sāfara*) is built on the native Arabic root *s-f-r*, "to travel; to uncover" (Lane). *Sāfara* is Form III, "to travel".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

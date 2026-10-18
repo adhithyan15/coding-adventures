@@ -14,7 +14,8 @@ romanization: "haṭāvṇo"
 concept_tag: MW-VERB-HATAVNO
 prerequisites: [MW-C107-rangno, MW-C107-lagavno]
 sounds: []
-roots: []
+roots: [indo-aryan-hatt]
+etymology_hook: "haṭāvṇo ← *haṭṭ 'move', reconstructed (CDIAL 13943, Hindi row)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C107-lagavno]
 <!-- hl-knowledge: introduces=[MW-LEX-C107-ACT107-04]; assesses=[] -->
 
 **हटावणो** — *haṭāvṇo* — "to remove".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**हटावणो** (*haṭāvṇo*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*haṭṭ*, "move", a form CDIAL reconstructs from its descendants. CDIAL gives no Marwari form in this entry (CDIAL 13943); the match is through Hindi *haṭnā*. It is the causing form, "make move aside".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

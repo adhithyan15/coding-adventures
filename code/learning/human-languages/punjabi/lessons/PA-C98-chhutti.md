@@ -14,7 +14,8 @@ romanization: "chhuṭṭī"
 concept_tag: PA-WORLD98-CHHUTTI
 prerequisites: [PA-C97-git, PA-C97-safar]
 sounds: []
-roots: []
+roots: [indo-aryan-kshutyate]
+etymology_hook: "chhuṭṭī ← *kṣuṭyate 'is released', a reconstructed form; a tadbhava (CDIAL 3707)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C97-safar]
 <!-- hl-knowledge: introduces=[PA-LEX-C98-WORLD98-01]; assesses=[] -->
 
 **ਛੁੱਟੀ** — *chhuṭṭī* — "a holiday, time off".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਛੁੱਟੀ** (*chhuṭṭī*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*kṣuṭyate*, "is released", a form CDIAL reconstructs from its descendants (CDIAL 3707). CDIAL says Hindi and Gujarati *chuṭṭī* were taken from Punjabi.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

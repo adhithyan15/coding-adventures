@@ -7,7 +7,7 @@ chapter: 4
 type: word
 headword: येतो / येते
 romanization: yeto / yete
-gloss: "I'll be going" (yeto m. / yete f.)
+gloss: '"I''ll be going" (yeto m. / yete f.)'
 concept_tag: FAREWELL
 prerequisites: [MR-C01-nahi]
 sounds: []

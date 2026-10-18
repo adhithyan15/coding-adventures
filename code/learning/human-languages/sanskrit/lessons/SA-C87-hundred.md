@@ -14,7 +14,8 @@ romanization: "śatam"
 concept_tag: SA-NUMBER-HUNDRED
 prerequisites: [SA-C87-twelve, SA-C87-twenty]
 sounds: []
-roots: []
+roots: [sanskrit-shata]
+etymology_hook: "śata 'hundred' is inherited: MW compares Latin centum, Greek hekaton and English hund-red; Hindi sau (CDIAL 12278)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,12 @@ reviews_of: [SA-C87-twenty]
 <!-- hl-knowledge: introduces=[SA-LEX-C87-NUMBERS-04]; assesses=[] -->
 
 **शतम्** (*śatam*) — "a hundred". The English word *hundred* is its distant cousin.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*Śata* is inherited: MW compares Latin *centum*, Greek *hekaton* and the *hund-*
+of English **hundred**. It lives on as Hindi *sau*, "hundred" (CDIAL 12278).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

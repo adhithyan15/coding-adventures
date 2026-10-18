@@ -14,7 +14,8 @@ romanization: "ḥādd"
 concept_tag: AR-QUAL148-HADD
 prerequisites: [AR-C148-amiq, AR-C148-mustadir]
 sounds: []
-roots: []
+roots: [ḥ-d-d]
+etymology_hook: "ḥādd: built on the root ḥ-d-d, 'to sharpen' (Lane); ḥādd is the active participle, 'sharp'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C148-mustadir]
 <!-- hl-knowledge: introduces=[AR-LEX-C148-QUAL148-05]; assesses=[] -->
 
 **حاد** — *ḥādd* — "sharp".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**حاد** (*ḥādd*) is built on the native Arabic root *ḥ-d-d*, "to sharpen; a limit" (Lane). *Ḥādd* is the active participle, "sharp".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "qāʿida"
 concept_tag: AR-SABAB208-QAIDA
 prerequisites: [AR-C208-mithal, AR-C208-hurriyya]
 sounds: []
-roots: []
+roots: [q-ʿ-d]
+etymology_hook: "qāʿida: built on the root q-ʿ-d, 'to sit' (Lane); Lane's qawāʿid are the foundations a house sits on"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C208-hurriyya]
 <!-- hl-knowledge: introduces=[AR-LEX-C208-SABAB208-04]; assesses=[] -->
 
 **قاعدة** — *qāʿida* — "a rule".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**قاعدة** (*qāʿida*) is built on the native Arabic root *q-ʿ-d*, "to sit" (Lane). Lane's *qawāʿid* are the foundations a house sits on; *qāʿida* is a base, a rule.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -12,6 +12,9 @@ Before the new one: say the Sanskrit for the forehead, then the Sanskrit for the
 You'll want to know: नखः.
 नखः (nakhaḥ) — "a nail", at the tip of every finger.
 
+The word, taken apart.
+Nakha is inherited: MW compares Greek onux, Latin unguis and English nail (CDIAL 6914). It is already in the Rigveda.
+
 What you've built.
 The end of a finger.
 
@@ -40,6 +43,9 @@ Before the new one: say the Sanskrit for the tongue, then the Sanskrit for a fin
 
 You'll want to know: जानु.
 जानु (jānu) — "the knee", halfway down the पादः.
+
+The word, taken apart.
+Jānu is inherited: MW compares Greek gonu, Latin genū and Gothic kniu, the cousin of English knee (CDIAL 5195).
 
 What you've built.
 Where the leg bends.
@@ -70,6 +76,9 @@ Before the new one: say the Sanskrit for a fingernail, then the Sanskrit for the
 You'll want to know: पृष्ठम्.
 पृष्ठम् (pṛṣṭham) — "the back". The same word names the back of a page.
 
+The word, taken apart.
+MW explains pṛṣṭha as probably pra-stha, "standing forth": the back is the prominent part of an animal (CDIAL 8371).
+
 What you've built.
 The side you cannot see.
 
@@ -99,6 +108,9 @@ Before the new one: say the Sanskrit for the knee, then the Sanskrit for the bac
 You'll want to know: स्कन्धः.
 स्कन्धः (skandhaḥ) — "the shoulder", where a load is carried.
 
+The word, taken apart.
+The native grammarians derive skandha from the root √skand, "to rise", a reading MW marks with a question (CDIAL 13627). It lives on as Hindi kandhā, "shoulder".
+
 What you've built.
 Where the arm begins.
 
@@ -127,6 +139,9 @@ Before the new one: say the Sanskrit for the back, then the Sanskrit for the sho
 
 You'll want to know: ओष्ठः.
 ओष्ठः (oṣṭhaḥ) — "the lip". The sounds प and म are made with both lips.
+
+The word, taken apart.
+Oṣṭha is Rigvedic. MW calls its etymology doubtful and compares Avestan aoshtra and Old Prussian austa, "mouth". It lives on as Hindi oṭh, "lip" (CDIAL 2563).
 
 What you've built.
 The edge of the mouth.

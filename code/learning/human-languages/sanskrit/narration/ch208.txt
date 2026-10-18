@@ -12,6 +12,9 @@ Before the new one: say the Sanskrit for advises, then the Sanskrit for honours.
 You'll want to know: परिवारः.
 परिवारः — parivāraḥ — "a household, a family".
 
+The word, taken apart.
+parivāra is built on pari, "around", and the root √vṛ, "to cover, surround" (MW). It first meant "cover, surroundings", then "followers" (CDIAL 7876), and Hindi took it as parivār, "family".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Sanskrit for honours, then the Sanskrit for a househ
 
 You'll want to know: बन्धुः.
 बन्धुः — bandhuḥ — "a relative".
+
+The word, taken apart.
+bandhu is built on the root √bandh, "to bind, tie" (MW): a relative is someone bound to you. The root is inherited from Indo-European, and MW compares English bind. It is a Rigvedic word for "kinsman" (CDIAL 9144).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Sanskrit for a household, then the Sanskrit for a re
 You'll want to know: सखा.
 सखा — sakhā — "a companion, a (male) friend".
 
+The word, taken apart.
+sakhā is the nominative of sakhi, "friend, companion", which MW files under the root √sac, "to accompany". MW compares Latin socius, "companion". Its feminine sakhī lives on as Hindi sahelī (CDIAL 13074).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Sanskrit for a relative, then the Sanskrit for a com
 You'll want to know: शत्रुः.
 शत्रुः — śatruḥ — "an enemy".
 
+The word, taken apart.
+śatru is a Rigvedic word for "enemy" (CDIAL 12286). MW reports that it is said to come from √śad, "the overthrower", and compares Greek kotos, "grudge", and English hate; the derivation is only reported, not settled.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Sanskrit for a companion, then the Sanskrit for an e
 
 You'll want to know: प्रतिवेशी.
 प्रतिवेशी — prativeśī — "a neighbour".
+
+The word, taken apart.
+prativeśī comes from prativeśa, "a neighbouring house", built on prati, "facing", and veśa, "dwelling" (MW). A related form, prativeśya, lives on as Hindi paṛosī, "neighbour" (CDIAL 8599).
 
 What you've built.
 One more word for this chapter.

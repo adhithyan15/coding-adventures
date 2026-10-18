@@ -4,7 +4,7 @@
   "chapter": 150,
   "title": "Rarely, Every, At first, At last, Still",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:f5aec8732d0ebd82",
+  "sourceHash": "fnv1a64:a1158ae6f7d0b6e5",
   "lessons": [
     {
       "id": "RU-C150-redko",
@@ -287,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a6b2705c351fa30c",
+      "sourceHash": "fnv1a64:1a8e4d8b47b86cd4",
       "notice": null,
       "blocks": [
         {
@@ -325,7 +325,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "сначала (snachála) is с, \"from\", with начала, a form of начало, \"the beginning\": \"from the start\"."
+              "text": "сначала (snachála) is с, \"from\", with начала, a form of начало, \"the beginning\": \"from the start\". Начало comes from начать, \"to begin\", which Vasmer puts in one family with конец, \"end\"."
             }
           ]
         },

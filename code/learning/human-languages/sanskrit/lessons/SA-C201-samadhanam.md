@@ -14,7 +14,8 @@ romanization: "samādhānam"
 concept_tag: SA-WRK201-SAMADHANAM
 prerequisites: [SA-C201-upayah, SA-C201-samasya]
 sounds: []
-roots: []
+roots: [sanskrit-samadhana]
+etymology_hook: "samādhāna ← sam-ā- + √dhā 'put': 'putting together, settling' (MW; CDIAL 13210)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C201-samasya]
 <!-- hl-knowledge: introduces=[SA-LEX-C201-WRK201-05]; assesses=[] -->
 
 **समाधानम्** — *samādhānam* — "a solution".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*samādhāna* is built on *sam-ā-* and the root √dhā, "to put, place" (MW): "putting together, adjusting, settling" (CDIAL 13210). Settling a difficulty is solving it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

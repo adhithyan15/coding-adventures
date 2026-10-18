@@ -14,7 +14,8 @@ romanization: "goḍo"
 concept_tag: MW-BODY45-GODO
 prerequisites: [MW-C45-hoth, MW-C45-mudo]
 sounds: []
-roots: []
+roots: [indo-aryan-godda]
+etymology_hook: "goḍo ← *gōḍḍa 'foot, leg, knee', reconstructed (CDIAL 4272, Punjabi and Hindi rows)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C45-mudo]
 <!-- hl-knowledge: introduces=[MW-LEX-C45-BODY45-05]; assesses=[] -->
 
 **गोडो** — *goḍo* — "a knee".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**गोडो** (*goḍo*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*goḍḍa*, "foot, leg, knee", a form CDIAL reconstructs from its descendants. CDIAL gives no Marwari form in this entry (CDIAL 4272); the match is through Punjabi *goḍḍā* and Hindi *goṛ*. CDIAL sets it in a group of words for "heel, ankle, knee, wrist".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

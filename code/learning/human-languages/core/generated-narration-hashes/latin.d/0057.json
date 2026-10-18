@@ -1,7 +1,7 @@
 {
   "language": "latin",
   "chapter": 57,
-  "sourceHash": "fnv1a64:ab7073f40c70b41e",
+  "sourceHash": "fnv1a64:4f980119fcb67061",
   "lessonIds": [
     "LA-C57-ante",
     "LA-C57-post",
@@ -11,7 +11,7 @@
   "drivablePrefix": 3,
   "text": "latin/narration/ch57.txt",
   "json": "latin/narration/ch57.json",
-  "textHash": "fnv1a64:a06a871c7a3f428b",
-  "jsonHash": "fnv1a64:3d516aa7f646199e",
+  "textHash": "fnv1a64:c7ebd185bf791a6f",
+  "jsonHash": "fnv1a64:3fe964fa2730f78e",
   "findings": []
 }

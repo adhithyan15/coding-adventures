@@ -14,7 +14,8 @@ romanization: "forudgâh"
 concept_tag: FA-TOWN73-FORUDGAH
 prerequisites: [FA-C72-rusta, FA-C72-shahr]
 sounds: []
-roots: []
+roots: [persian-gah]
+etymology_hook: "forudgâh: Persian forud 'landing' + gâh 'place'; native"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C72-shahr]
 <!-- hl-knowledge: introduces=[FA-LEX-C73-TOWN73-01]; assesses=[] -->
 
 **فرودگاه** — *forudgâh* — "an airport".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*forudgâh* is built from *forud*, "descent, landing", and *gâh*, "place": "landing place". Both parts are native Persian.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

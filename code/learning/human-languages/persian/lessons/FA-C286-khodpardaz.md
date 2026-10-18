@@ -14,7 +14,8 @@ romanization: "khodpardâz"
 concept_tag: FA-KAR286-KHODPARDAZ
 prerequisites: [FA-C286-sanduqdar, FA-C286-faktor]
 sounds: []
-roots: []
+roots: [persian-pardakhtan]
+etymology_hook: "khodpardâz: modern coinage: Persian khod 'self' + pardâz 'paying'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C286-faktor]
 <!-- hl-knowledge: introduces=[FA-LEX-C286-KAR286-05]; assesses=[] -->
 
 **خودپرداز** — *khodpardâz* — "a cash machine".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*khodpardâz* is built from *khod*, "self", and *pardâz*, "paying" (from *pardâkhtan*, "to pay"): the self-payer, a modern Persian coinage. *pardâkhtan* is inherited, usually traced to Middle Persian *pardāxtan*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "khushi"
 concept_tag: BN-HEALTH45-KHUSHI
 prerequisites: [BN-C44-btha, BN-C44-khide]
 sounds: []
-roots: []
+roots: [khush-persian]
+etymology_hook: "khushi: usually traced to Persian khushī 'happiness, joy'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C44-khide]
 <!-- hl-knowledge: introduces=[BN-LEX-C45-HEALTH45-01]; assesses=[] -->
 
 **খুশি** — *khushi* — "happy".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**খুশি** (*khushi*) is a loan, usually traced to Persian *khushī*, "happiness, joy". It is built on Persian *khush*, "happy".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

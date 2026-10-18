@@ -14,7 +14,8 @@ romanization: "cumbati"
 concept_tag: SA-VERB-CUMBATI
 prerequisites: [SA-C235-calayati, SA-C235-alingati]
 sounds: []
-roots: []
+roots: [sanskrit-cumbati]
+etymology_hook: "cumbati ← root √cumb 'kiss' (MW); Hindi cūmnā 'to kiss' (CDIAL 4870)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C235-alingati]
 <!-- hl-knowledge: introduces=[SA-LEX-C235-ACT235-05]; assesses=[] -->
 
 **चुम्बति** — *cumbati* — "kisses".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*cumbati* is the present of the root √cumb, "to kiss, touch with the mouth" (MW). MW gives no older source for the root, so its origin is uncertain. It lives on as Hindi *cūmnā* and Gujarati *cumvũ*, "to kiss" (CDIAL 4870).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

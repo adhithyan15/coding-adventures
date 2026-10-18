@@ -14,7 +14,8 @@ romanization: "ḥabl"
 concept_tag: AR-SHAY187-HABL
 prerequisites: [AR-C187-unbub, AR-C187-silk]
 sounds: []
-roots: []
+roots: [ḥ-b-l]
+etymology_hook: "ḥabl: an old native noun listed by Lane under ḥ-b-l, beside a verb meaning 'to bind with a rope'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C187-silk]
 <!-- hl-knowledge: introduces=[AR-LEX-C187-SHAY187-05]; assesses=[] -->
 
 **حبل** — *ḥabl* — "a rope".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**حبل** (*ḥabl*), "a rope", is an old native noun, listed under the root *ḥ-b-l* (Lane) beside a verb meaning "to bind with a rope".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

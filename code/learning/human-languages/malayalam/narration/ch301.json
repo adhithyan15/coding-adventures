@@ -4,7 +4,7 @@
   "chapter": 301,
   "title": "Contract, Tax, Fine, Stapler, Ruler",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:4a1a59c57cb6ea85",
+  "sourceHash": "fnv1a64:7ba886f8de776cb5",
   "lessons": [
     {
       "id": "ML-C301-karar",
@@ -689,7 +689,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f9215ff75fee37da",
+      "sourceHash": "fnv1a64:974c6e78c2a0fe46",
       "notice": null,
       "blocks": [
         {
@@ -753,7 +753,7 @@
             },
             {
               "kind": "speech",
-              "text": "Refined white flour? (മൈദ, maida.) Flattened rice? (അവൽ, aval.) A mushroom? (കൂൺ, kūṇ.) A guava? (പേരയ്ക്ക, pēraykka.) An Indian gooseberry? (നെല്ലിക്ക, nellikka.) Groceries? (പലചരക്ക്, palacarakkŭ.) A packet? (പാക്കറ്റ്, pākkaṟṟŭ.) A salary? (ശമ്പളം, śambaḷaṁ.) Wages? (കൂലി, kūli.) A worker? (തൊഴിലാളി, toḻilāḷi.)"
+              "text": "Refined white flour? (മൈദ, maida.) Flattened rice? (അവൽ, aval.) A mushroom? (കൂൺ, kūṇ.) A guava? (പേരയ്ക്ക, pēraykka.) An Indian gooseberry? (നെല്ലിക്ക, nellikka.) Groceries? (പലചരക്ക്, palacarakkŭ.) A packet? (പാക്കറ്റ്, pākkaṟṟŭ.) A salary? (ശമ്പളം, śampaḷaṁ.) Wages? (കൂലി, kūli.) A worker? (തൊഴിലാളി, toḻilāḷi.)"
             }
           ]
         }

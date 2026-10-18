@@ -14,7 +14,8 @@ romanization: "kaṅkatikā"
 concept_tag: SA-THINGS101-KANKATIKA
 prerequisites: [SA-C100-sucih, SA-C100-sutram]
 sounds: []
-roots: []
+roots: [sanskrit-kankata]
+etymology_hook: "kaṅkatikā ← kaṅkata 'comb' (AV), of doubtful origin (CDIAL 2598); Hindi kaṅghī 'comb'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C100-sutram]
 <!-- hl-knowledge: introduces=[SA-LEX-C101-THINGS101-01]; assesses=[] -->
 
 **कंकतिका** — *kaṅkatikā* — "a comb".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*kaṅkatikā* is *kaṅkata* "comb", already in the Atharvaveda (MW), with the small-thing suffix *-ikā*. CDIAL 2598 calls *kaṅkata* of doubtful Indo-European origin, and it lives on as Hindi *kaṅghī* "comb" (CDIAL 2598).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

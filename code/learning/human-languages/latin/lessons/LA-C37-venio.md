@@ -6,7 +6,7 @@ sequence: 670
 chapter: 37
 type: word
 headword: veniō, venīre
-gloss: "I come" — a Latin verb that really is the same inherited word as English come
+gloss: '"I come" — a Latin verb that really is the same inherited word as English come'
 concept_tag: VERB-COME
 prerequisites: [LA-C37-eo]
 sounds: [macron-long-vowel, v-as-w]

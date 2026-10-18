@@ -14,7 +14,8 @@ romanization: "āshā kôrā"
 concept_tag: BN-VERB-ASHA-KORA
 prerequisites: [BN-C146-porikolpona, BN-C146-sthir-kora]
 sounds: []
-roots: []
+roots: [sanskrit-asha, sanskrit-karoti]
+etymology_hook: "āshā kôrā: āshā 'hope', Sanskrit āśā (CDIAL 1456) + kôrā 'to do' ← karoti (CDIAL 2814)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C146-sthir-kora]
 <!-- hl-knowledge: introduces=[BN-LEX-C146-AGAMI146-05]; assesses=[] -->
 
 **আশা করা** — *āshā kôrā* — "to hope". **আশা করি তুমি ভালো আছ** — *āshā kôri tumi bhālo āchhô* — "I hope you are well." The present for "I" is **করি**.
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**আশা করা** (*āshā kôrā*) is *āshā*, "hope", Sanskrit *āśā* taken over whole (CDIAL 1456), + *kôrā*, "to do", from Sanskrit *karoti*, "does" (CDIAL 2814).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

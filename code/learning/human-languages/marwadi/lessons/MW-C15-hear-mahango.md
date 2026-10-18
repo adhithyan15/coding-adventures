@@ -11,8 +11,8 @@ gloss: expensive
 concept_tag: MW-SHOPPING-EXPENSIVE
 prerequisites: [MW-C15-kapda]
 sounds: [nasal, voiced-g, long-o]
-roots: []
-etymology_hook: The opposite of cheap arrives by ear before familiar signs spell it.
+roots: [sanskrit-mahargha]
+etymology_hook: "mahaṅgo ← Sanskrit mahārgha 'high-priced', a tadbhava (CDIAL 9954, Hindi row)"
 duration:
   max_seconds: 145
 requires:
@@ -46,6 +46,11 @@ reviews_of: [MW-C15-kapda, MW-C14-hear-sasta]
 
 Hear the price contrast: *sastā* is cheap; *mahaṅgo* is expensive. Say only
 the word that matches a high-price cue.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*mahaṅgo* is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *mahārgha*, "high-priced". CDIAL gives no Marwari form in this entry (CDIAL 9954); the match is through Hindi *mahãgā*. It is built from *mahā*, "great", and *argha*, "price".
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-MAHANGO-01] -->

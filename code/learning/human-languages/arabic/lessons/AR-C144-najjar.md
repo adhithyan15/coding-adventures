@@ -14,7 +14,8 @@ romanization: "najjār"
 concept_tag: AR-THINGS144-NAJJAR
 prerequisites: [AR-C143-ratib, AR-C144-khayyat]
 sounds: []
-roots: []
+roots: [n-j-r]
+etymology_hook: "najjār: built on the root n-j-r, 'to hew wood' (Lane); najjār is the faʿʿāl trade noun, 'carpenter'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C144-khayyat]
 <!-- hl-knowledge: introduces=[AR-LEX-C144-THINGS144-02]; assesses=[] -->
 
 **نجار** — *najjār* — "a carpenter".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**نجار** (*najjār*) is built on the native Arabic root *n-j-r*, "to hew wood" (Lane). *Najjār* is the *faʿʿāl* trade noun, "carpenter".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

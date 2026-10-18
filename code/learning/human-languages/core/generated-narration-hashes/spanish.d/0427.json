@@ -1,7 +1,7 @@
 {
   "language": "spanish",
   "chapter": 427,
-  "sourceHash": "fnv1a64:fa10775f08b3ce11",
+  "sourceHash": "fnv1a64:287f164e7eebcf00",
   "lessonIds": [
     "ES-C427-vendedor",
     "ES-C427-comprador",
@@ -16,7 +16,7 @@
   "drivablePrefix": 6,
   "text": "spanish/narration/ch427.txt",
   "json": "spanish/narration/ch427.json",
-  "textHash": "fnv1a64:ad0654a854d2003d",
-  "jsonHash": "fnv1a64:39326ca135908c20",
+  "textHash": "fnv1a64:d2057d3a1bced399",
+  "jsonHash": "fnv1a64:b164bdfe92d54794",
   "findings": []
 }

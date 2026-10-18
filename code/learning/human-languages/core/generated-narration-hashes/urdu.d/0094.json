@@ -1,7 +1,7 @@
 {
   "language": "urdu",
   "chapter": 94,
-  "sourceHash": "fnv1a64:13eb82f022b0be74",
+  "sourceHash": "fnv1a64:7ed1da3b924181f9",
   "lessonIds": [
     "UR-C94-roz",
     "UR-C94-mausam",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "urdu/narration/ch94.txt",
   "json": "urdu/narration/ch94.json",
-  "textHash": "fnv1a64:ebe698dc03e0b0e4",
-  "jsonHash": "fnv1a64:ff049a8c0b5eb9cd",
+  "textHash": "fnv1a64:5b398ea845836381",
+  "jsonHash": "fnv1a64:99d1e9b1b99d09ac",
   "findings": []
 }

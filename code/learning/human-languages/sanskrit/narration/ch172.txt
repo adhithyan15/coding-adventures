@@ -12,6 +12,9 @@ Before the new one: say the Sanskrit for a programme, then the Sanskrit for a co
 You'll want to know: यात्री.
 यात्री — yātrī — "a passenger".
 
+The word, taken apart.
+yātrī is the nominative of yātrin "being on a march or in a procession", built from yātrā "journey, pilgrimage" with the suffix -in "having" (MW). "A passenger" is its modern use. yātrā comes from the root √yā "go".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Sanskrit for a competition, then the Sanskrit for a 
 
 You'll want to know: यानपत्रम्.
 यानपत्रम् — yānapatram — "a ticket".
+
+The word, taken apart.
+yānapatra is built from yāna "vehicle, journey", from √yā "go", and patra "a leaf, a document": "the travel paper". It is a modern coinage, not to be confused with MW's yānapātra "a ship".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Sanskrit for a passenger, then the Sanskrit for a ti
 You'll want to know: भ्रमणम्.
 भ्रमणम् — bhramaṇam — "a tour, travel".
 
+The word, taken apart.
+bhramaṇa comes from the root √bhram "wander, whirl" (CDIAL 9647): "wandering, roaming about", so "a tour, travel". bhramati "wanders" is the verb of the same root.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Sanskrit for a ticket, then the Sanskrit for a tour.
 You'll want to know: पर्यटनम्.
 पर्यटनम् — paryaṭanam — "tourism".
 
+The word, taken apart.
+paryaṭana comes from pari-√aṭ "roam about, travel over", the root √aṭ "wander" with pari "around" (MW): "wandering about". Using it for tourism is modern.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Sanskrit for a tour, then the Sanskrit for tourism.
 
 You'll want to know: पर्यटकः.
 पर्यटकः — paryaṭakaḥ — "a tourist".
+
+The word, taken apart.
+paryaṭaka comes from pari-√aṭ "roam about" with the agent suffix -aka. MW knows it only as "a tramp, a vagabond", so "a tourist" is a modern use.
 
 What you've built.
 One more word for this chapter.

@@ -11,8 +11,8 @@ gloss: horse
 concept_tag: MW-TRANSPORT-HORSE-WRITTEN
 prerequisites: [MW-C17-hear-ghodo]
 sounds: [aspirated-gh, long-o, retroflex-flap]
-roots: []
-etymology_hook: Familiar घ, ो, and ड़ write the whole horse word.
+roots: [sanskrit-ghotaka]
+etymology_hook: "ghoṛo ← Sanskrit ghoṭa 'horse', non-Aryan, prob. Dravidian (CDIAL 4516, Marwari row)"
 duration:
   max_seconds: 165
 requires:
@@ -43,6 +43,11 @@ reviews_of: [MW-C17-hear-ghodo, MW-C16-gaadi]
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-GHODO-01, MW-SCRIPT-GHODO-01] -->
 
 > **घो** + **ड़ो** → **घोड़ो** — *ghoṛo* — horse
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**घोड़ो** (*ghoṛo*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *ghoṭa*, "horse". CDIAL lists Marwari *ghoṛo* under it (CDIAL 4516). CDIAL calls the Sanskrit word non-Aryan, probably Dravidian.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-GHODO-01] -->

@@ -12,6 +12,9 @@ Before the new one: say the Bengali for to set off, then the Bengali for to ride
 You'll want to know: ছবি তোলা.
 ছবি তোলা — chhôbi tolā — "to take a photo".
 
+The phrase, taken apart.
+ছবি তোলা (chhôbi tolā) is chhôbi, "a picture", Sanskrit chavi, "skin, colour, beauty", taken over whole, + tolā, "to raise", from Sanskrit tōlayati, "lifts, weighs" (CDIAL 5979).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Bengali for to ride, then the Bengali for to take a 
 
 You'll want to know: পাস করা.
 পাস করা — pās kôrā — "to pass (an exam)".
+
+The phrase, taken apart.
+পাস করা (pās kôrā) is pās, from English pass, + kôrā, "to do", from Sanskrit karoti, "does" (CDIAL 2814).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Bengali for to take a photo, then the Bengali for to
 You'll want to know: ফেল করা.
 ফেল করা — phel kôrā — "to fail (an exam)".
 
+The phrase, taken apart.
+ফেল করা (phel kôrā) is phel, from English fail, + kôrā, "to do", from Sanskrit karoti, "does" (CDIAL 2814).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Bengali for to pass, then the Bengali for to fail.
 You'll want to know: ঝাঁকানো.
 ঝাঁকানো — jhā̃kāno — "to shake".
 
+The word, taken apart.
+ঝাঁকানো (jhā̃kāno) (jhāṁkāno) is a tadbhava, a word inherited and reshaped by sound change. It comes from jhakk, "sudden movement", a form CDIAL reconstructs from its descendants (CDIAL 5316). CDIAL lists Bengali jhāṁkan, "jerking".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Bengali for to fail, then the Bengali for to shake.
 
 You'll want to know: নাড়ানো.
 নাড়ানো — nāṛāno — "to stir, to wave".
+
+The word, taken apart.
+নাড়ানো (nāṛāno) is a tadbhava, a word inherited and reshaped by sound change. It comes from naṭati, "trembles, totters", a form CDIAL reconstructs from its descendants (CDIAL 6934). CDIAL lists Bengali nāṛā, "to shake, agitate", and takes the group as probably Dravidian.
 
 What you've built.
 One more word for this chapter.

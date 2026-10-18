@@ -47,7 +47,7 @@ reviews_of: [RU-C89-traffic-lights]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**стоянка** is *стоять*, "to stand", with *-нка*: a place where something stands.
+**стоянка** is *стоять*, "to stand", with *-нка*: a place where something stands. *Стоять* ← Proto-Slavic *\*stojati* — inherited; Vasmer compares Latin *stō*, "I stand".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

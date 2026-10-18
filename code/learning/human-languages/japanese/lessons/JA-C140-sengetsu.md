@@ -14,7 +14,8 @@ romanization: "sengetsu"
 concept_tag: JA-PAST140-SENGETSU
 prerequisites: [JA-C140-senshuu, JA-C139-janai, JA-W137-pi, JA-W131-wo]
 sounds: []
-roots: []
+roots: [middle-chinese-sen, middle-chinese-ngjwot]
+etymology_hook: "sengetsu: Sino-Japanese 先 'before' + 月 'moon', on'yomi borrowed from Chinese"
 duration:
   max_seconds: 200
 requires:
@@ -53,6 +54,11 @@ same as in **せんしゅう**: "the one before".
 > to the sea last month."
 
 **いく**, *iku*, "to go", gives **いきます** and then **いきました**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**せんげつ** (*sengetsu*) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are *sen*, "before, previous" (Middle Chinese *sen*) and *getsu*, "moon, month" (*ngjwot*) (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-C140-SENGETSU, JA-LEX-C140-SENSHUU] -->

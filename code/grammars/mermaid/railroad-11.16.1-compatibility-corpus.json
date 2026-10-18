@@ -1,0 +1,187 @@
+{
+  "schema_version": 1,
+  "upstream": "mermaid@11.16.1",
+  "upstream_commit": "7ecca0cd7f1658ef74f4e7e91f925724ef403bbf",
+  "level": "full",
+  "scope": "complete upstream renderer corpus plus all four pinned native notation corpora",
+  "valid": [
+    {
+      "id": "native-constructor-sequence",
+      "source": "railroad-beta\ntitle Expression\nexpression = sequence(nonterminal(\"term\"), terminal(\"+\"), nonterminal(\"term\"));"
+    },
+    {
+      "id": "native-constructor-choice-and-repeat",
+      "source": "railroad-beta\naccTitle: Digit syntax\ndigit = choice(terminal(\"0\"), terminal(\"1\"));\nnumber = oneOrMore(nonterminal(\"digit\"));"
+    },
+    {
+      "id": "native-constructor-optional-and-special",
+      "source": "railroad-beta\nvalue = sequence(optional(terminal(\"-\")), special(\"integer\"));"
+    },
+    {
+      "id": "native-constructor-layout-spacing-config",
+      "source": "---\nconfig:\n  railroad:\n    compactMode: true\n    padding: 24\n    verticalSeparation: 30\n    horizontalSeparation: 36\n    arcRadius: 18\n---\nrailroad-beta\nvalue = sequence(terminal(\"a\"), choice(terminal(\"b\"), terminal(\"c\")));"
+    },
+    {
+      "id": "native-constructor-portable-style-config",
+      "source": "---\nconfig:\n  railroad:\n    fontSize: 18\n    fontFamily: Courier New\n    terminalFill: '#dcfce7'\n    terminalStroke: '#166534'\n    terminalTextColor: '#14532d'\n    nonTerminalFill: '#dbeafe'\n    nonTerminalStroke: '#1d4ed8'\n    nonTerminalTextColor: '#172554'\n    lineColor: '#dc2626'\n    strokeWidth: 3\n    markerFill: '#7c2d12'\n    specialFill: '#fef3c7'\n    specialStroke: '#b45309'\n    ruleNameColor: '#581c87'\n    showMarkers: true\n    markerRadius: 8\n---\nrailroad-beta\nvalue = sequence(terminal(\"x\"), nonterminal(\"item\"), special(\"end\"));"
+    },
+    {
+      "id": "native-constructor-theme-variable-fallbacks",
+      "source": "---\nthemeVariables:\n  fontFamily: Georgia\n  fontSize: 17px\n  secondBkg: '#fef3c7'\n  secondaryBorderColor: '#b45309'\n  secondaryTextColor: '#78350f'\n  mainBkg: '#dbeafe'\n  primaryBorderColor: '#1d4ed8'\n  primaryTextColor: '#172554'\n  lineColor: '#15803d'\n  tertiaryColor: '#fce7f3'\n  tertiaryBorderColor: '#be185d'\n  titleColor: '#581c87'\nconfig:\n  railroad:\n    terminalFill: '#dcfce7'\n---\nrailroad-beta\nvalue = sequence(terminal(\"x\"), nonterminal(\"item\"), special(\"end\"));"
+    },
+    {
+      "id": "native-constructor-sanitized-style-fallbacks",
+      "source": "---\nthemeVariables:\n  secondBkg: '#aabbcc'\n  lineColor: '#12zzzz'\nconfig:\n  railroad:\n    fontFamily: 'Georgia; color: red'\n    terminalFill: 'url(javascript:alert(1))'\n---\nrailroad-beta\nvalue = terminal(\"x\");"
+    },
+    {
+      "id": "native-ebnf-terminal-and-reference",
+      "source": "railroad-ebnf-beta\nexpression = term;\nterm = 'value';"
+    },
+    {
+      "id": "native-ebnf-choice-sequence-and-group",
+      "source": "railroad-ebnf-beta\nexpression = term, ( '+' term | '-' term )*;"
+    },
+    {
+      "id": "native-ebnf-iso-optional-and-repetition",
+      "source": "railroad-ebnf-beta\nvalue ::= [ '-' ], { digit };"
+    },
+    {
+      "id": "native-ebnf-postfixes-and-special",
+      "source": "railroad-ebnf-beta\nvalue = prefix? digit+ suffix* ? implementation defined ?;"
+    },
+    {
+      "id": "native-ebnf-exception",
+      "source": "railroad-ebnf-beta\nletter = alpha - 'x';"
+    },
+    {
+      "id": "native-ebnf-metadata-and-comments",
+      "source": "railroad-ebnf-beta\ntitle 'Expression grammar'\naccTitle: Grammar\naccDescr {\n  EBNF grammar\n}\n(* ISO comment *)\nexpression = term; %% trailing comment"
+    },
+    {
+      "id": "native-abnf-terminal-numval-and-reference",
+      "source": "railroad-abnf-beta\nrule = other-rule \"value\" %x41;"
+    },
+    {
+      "id": "native-abnf-alternation-and-group",
+      "source": "railroad-abnf-beta\nrule = prefix (ALPHA / DIGIT / \"-\");"
+    },
+    {
+      "id": "native-abnf-optional-group",
+      "source": "railroad-abnf-beta\nrule = [ \"optional\" ];"
+    },
+    {
+      "id": "native-abnf-unbounded-repetition",
+      "source": "railroad-abnf-beta\nzero = *DIGIT;\none = 1*DIGIT;"
+    },
+    {
+      "id": "native-abnf-bounded-and-exact-repetition",
+      "source": "railroad-abnf-beta\nbounded = 2*4DIGIT;\nexact = 3ALPHA;\noptional = *1\"x\";"
+    },
+    {
+      "id": "native-abnf-numeric-ranges-and-sequences",
+      "source": "railroad-abnf-beta\nhex = %x41-5A;\ndecimal = %d48.49.50;\nbinary = %b0.1;"
+    },
+    {
+      "id": "native-abnf-metadata-and-comments",
+      "source": "railroad-abnf-beta\ntitle \"URI grammar\"\naccTitle: URI\naccDescr {\n  ABNF grammar\n}\n; ABNF comment\nURI = scheme \":\" hier-part;\nscheme = ALPHA *(ALPHA / DIGIT / \"+\" / \"-\" / \".\");"
+    },
+    {
+      "id": "native-peg-literals-and-identifiers",
+      "source": "railroad-peg-beta\nvalue <- identifier \"literal\" 'single';"
+    },
+    {
+      "id": "native-peg-ordered-choice-and-group",
+      "source": "railroad-peg-beta\nexpression <- term ((\"+\" / \"-\") term)*;"
+    },
+    {
+      "id": "native-peg-suffix-operators",
+      "source": "railroad-peg-beta\noptional <- item?;\nzero <- item*;\none <- item+;"
+    },
+    {
+      "id": "native-peg-lookahead-prefixes",
+      "source": "railroad-peg-beta\npositive <- &\"a\" .;\nnegative <- !\"b\" item;\ngrouped <- &(item / other) item;"
+    },
+    {
+      "id": "native-peg-any-character",
+      "source": "railroad-peg-beta\nany <- .;"
+    },
+    {
+      "id": "native-peg-metadata-and-comments",
+      "source": "railroad-peg-beta\ntitle \"Path grammar\"\naccTitle: Path\naccDescr {\n  PEG grammar\n}\n# PEG comment\npath <- segment (\"/\" segment)*;\nsegment <- !\"/\" .+;"
+    },
+    {
+      "id": "upstream-render-1-renders-a-simple-rule",
+      "source": "railroad-beta\ndigit = terminal(\"0\") ;"
+    },
+    {
+      "id": "upstream-render-2-renders-sequences-and-choices",
+      "source": "railroad-beta\nexpression = sequence(\n    nonterminal(\"term\"),\n    zeroOrMore(choice(\n        sequence(terminal(\"+\"), nonterminal(\"term\")),\n        sequence(terminal(\"-\"), nonterminal(\"term\"))\n    ))\n) ;\nterm = choice(nonterminal(\"number\"), sequence(terminal(\"(\"), nonterminal(\"expression\"), terminal(\")\"))) ;\nnumber = oneOrMore(nonterminal(\"digit\")) ;\ndigit = choice(terminal(\"0\"), terminal(\"1\"), terminal(\"2\")) ;"
+    },
+    {
+      "id": "upstream-render-3-renders-optional-and-repetition-operators",
+      "source": "railroad-beta\nsign = choice(terminal(\"+\"), terminal(\"-\")) ;\nnumber = sequence(optional(nonterminal(\"sign\")), oneOrMore(nonterminal(\"digit\"))) ;\nlist = sequence(terminal(\"[\"), optional(sequence(nonterminal(\"number\"), zeroOrMore(sequence(terminal(\",\"), nonterminal(\"number\"))))), terminal(\"]\")) ;\ndigit = choice(terminal(\"0\"), terminal(\"1\"), terminal(\"2\"), terminal(\"3\")) ;"
+    },
+    {
+      "id": "upstream-render-4-renders-multiple-rules-in-one-diagram",
+      "source": "railroad-beta\njson = nonterminal(\"element\") ;\nelement = choice(nonterminal(\"object\"), nonterminal(\"array\"), nonterminal(\"string\"), nonterminal(\"number\"), terminal(\"true\"), terminal(\"false\"), terminal(\"null\")) ;\nobject = sequence(terminal(\"{\"), optional(sequence(nonterminal(\"member\"), zeroOrMore(sequence(terminal(\",\"), nonterminal(\"member\"))))), terminal(\"}\")) ;\narray = sequence(terminal(\"[\"), optional(sequence(nonterminal(\"element\"), zeroOrMore(sequence(terminal(\",\"), nonterminal(\"element\"))))), terminal(\"]\")) ;\nmember = sequence(nonterminal(\"string\"), terminal(\":\"), nonterminal(\"element\")) ;\nnumber = oneOrMore(nonterminal(\"digit\")) ;\ndigit = choice(terminal(\"0\"), terminal(\"1\"), terminal(\"2\"), terminal(\"3\"), terminal(\"4\"), terminal(\"5\"), terminal(\"6\"), terminal(\"7\"), terminal(\"8\"), terminal(\"9\")) ;"
+    },
+    {
+      "id": "upstream-render-5-adapts-to-dark-theme-colors",
+      "source": "railroad-beta\nvalue = choice(nonterminal(\"string\"), nonterminal(\"number\"), nonterminal(\"object\"), nonterminal(\"array\"), terminal(\"true\"), terminal(\"false\"), terminal(\"null\")) ;\nnumber = oneOrMore(nonterminal(\"digit\")) ;\ndigit = choice(terminal(\"0\"), terminal(\"1\"), terminal(\"2\"), terminal(\"3\")) ;"
+    },
+    {
+      "id": "upstream-render-6-renders-sequences-and-choices",
+      "source": "railroad-ebnf-beta\nexpression = term ( \"+\" term | \"-\" term )* ;\nterm = number | \"(\" expression \")\" ;\nnumber = digit+ ;\ndigit = \"0\" | \"1\" | \"2\" ;"
+    },
+    {
+      "id": "upstream-render-7-renders-iso-14977-notation",
+      "source": "railroad-ebnf-beta\nidentifier = letter , { letter | digit | \"_\" } ;\nletter = \"a\" | \"b\" | \"c\" ;\ndigit = \"0\" | \"1\" | \"2\" ;"
+    },
+    {
+      "id": "upstream-render-8-renders-alternation-and-repetition",
+      "source": "railroad-abnf-beta\nscheme = ALPHA *( ALPHA / DIGIT / \"+\" / \"-\" / \".\" ) ;\ndigit = \"0\" / \"1\" / \"2\" / \"3\" ;"
+    },
+    {
+      "id": "upstream-render-9-renders-ordered-choice-and-suffixes",
+      "source": "railroad-peg-beta\nExpression <- Term ((\"+\" / \"-\") Term)* ;\nTerm <- Factor ((\"*\" / \"/\") Factor)* ;\nFactor <- Number / \"(\" Expression \")\" ;\nNumber <- Digit+ ;\nDigit <- \"0\" / \"1\" / \"2\" / \"3\" ;"
+    }
+  ],
+  "invalid": [
+    {
+      "id": "constructor-unknown-call",
+      "source": "railroad-beta\nvalue = unknown(\"x\");"
+    },
+    {
+      "id": "constructor-wrong-arity",
+      "source": "railroad-beta\nvalue = optional(terminal(\"x\"), terminal(\"y\"));"
+    },
+    {
+      "id": "constructor-unterminated",
+      "source": "railroad-beta\nvalue = sequence(terminal(\"x\");"
+    },
+    {
+      "id": "ebnf-missing-expression",
+      "source": "railroad-ebnf-beta\nvalue = ;"
+    },
+    {
+      "id": "ebnf-unterminated-group",
+      "source": "railroad-ebnf-beta\nvalue = ('x';"
+    },
+    {
+      "id": "abnf-missing-expression",
+      "source": "railroad-abnf-beta\nvalue ="
+    },
+    {
+      "id": "abnf-invalid-repeat",
+      "source": "railroad-abnf-beta\nvalue = 4*2DIGIT;"
+    },
+    {
+      "id": "peg-missing-expression",
+      "source": "railroad-peg-beta\nvalue <- ;"
+    },
+    {
+      "id": "peg-unterminated-group",
+      "source": "railroad-peg-beta\nvalue <- (item / other;"
+    }
+  ]
+}

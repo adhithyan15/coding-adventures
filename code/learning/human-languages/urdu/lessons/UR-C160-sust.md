@@ -14,7 +14,8 @@ romanization: "sust"
 concept_tag: UR-SIFAT160-SUST
 prerequisites: [UR-C160-samajhdar, UR-C160-bevaquf]
 sounds: []
-roots: []
+roots: [persian-sust]
+etymology_hook: "sust: usually traced to Persian sust 'weak, slack'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C160-bevaquf]
 <!-- hl-knowledge: introduces=[UR-LEX-C160-SIFAT160-04]; assesses=[] -->
 
 **سست** — *sust* — "lazy, sluggish".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**سست** (*sust*) is a loan, usually traced to Persian *sust*, "weak, slack".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

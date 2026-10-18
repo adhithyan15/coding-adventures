@@ -12,6 +12,9 @@ Before the new one: say the Marwadi for to fill, then the Marwadi for to pull.
 You'll want to know: ठेलणो.
 ठेलणो — ṭhelṇo — "to push".
 
+The word, taken apart.
+ठेलणो (ṭhelṇo) is a tadbhava, a word inherited and reshaped by sound change. It comes from ṭhell, "push", a form CDIAL reconstructs from its descendants. CDIAL lists Old Marwari ṭhelijaï under it (CDIAL 5512).
+
 What you've built.
 One more word for this chapter.
 
@@ -42,6 +45,9 @@ Before the new one: say the Marwadi for to pull, then the Marwadi for to push.
 
 You'll want to know: उठावणो.
 उठावणो — uṭhāvṇo — "to lift".
+
+The word, taken apart.
+उठावणो (uṭhāvṇo) is a tadbhava, a word inherited and reshaped by sound change. It comes from ut-sthāpayati, "raises", a form CDIAL reconstructs from its descendants. CDIAL lists Old Marwari uṭhāi under it (CDIAL 1903). It is the causing form of uṭhṇo, "to get up".
 
 What you've built.
 One more word for this chapter.
@@ -74,6 +80,9 @@ Before the new one: say the Marwadi for to push, then the Marwadi for to lift.
 You'll want to know: गेरणो.
 गेरणो — gerṇo — "to drop".
 
+The word, taken apart.
+गेरणो (gerṇo) is probably a causing form, "make fall", of girati, "drips, falls", a form CDIAL reconstructs. CDIAL lists Old Marwari giraï, "falls", under it, with Old Hindi gernā, "to throw", and Gujarati geravvũ, causing forms with the same e as गेरणो (gerṇo) (CDIAL 4159).
+
 What you've built.
 One more word for this chapter.
 
@@ -105,6 +114,9 @@ Before the new one: say the Marwadi for to lift, then the Marwadi for to drop.
 You'll want to know: बाळणो.
 बाळणो — bāḷṇo — "to burn".
 
+The word, taken apart.
+बाळणो (bāḷṇo) is a tadbhava, a word inherited and reshaped by sound change. It comes from dvālayati, "kindles", a form CDIAL reconstructs from its descendants. CDIAL gives no Marwari form in this entry (CDIAL 6671); the match is through Hindi bālnā and Gujarati bāḷvũ. CDIAL sets it beside Sanskrit jvālayati, "kindles". Its plain partner dvalati, "burns", has Old Marwari balaï (CDIAL 6654).
+
 What you've built.
 One more word for this chapter.
 
@@ -135,6 +147,9 @@ Before the new one: say the Marwadi for to drop, then the Marwadi for to burn.
 
 You'll want to know: सीवणो.
 सीवणो — sīvṇo — "to sew".
+
+The word, taken apart.
+सीवणो (sīvṇo) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from sīvyati, "sews". CDIAL gives no Marwari form in this entry (CDIAL 13444); the match is through Hindi sīnā and Gujarati sivvũ. English sew is the same ancient word.
 
 What you've built.
 One more word for this chapter.

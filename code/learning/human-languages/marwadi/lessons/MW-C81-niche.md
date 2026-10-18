@@ -14,7 +14,8 @@ romanization: "nīche"
 concept_tag: MW-PLACE81-NICHE
 prerequisites: [MW-C81-may, MW-C81-barai]
 sounds: []
-roots: []
+roots: [sanskrit-nica]
+etymology_hook: "nīche ← Sanskrit nīca 'low', a tadbhava (CDIAL 7540, Old Marwari row)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C81-barai]
 <!-- hl-knowledge: introduces=[MW-LEX-C81-PLACE81-05]; assesses=[] -->
 
 **नीचे** — *nīche* — "below, down".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**नीचे** (*nīche*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *nīca*, "low". CDIAL lists Old Marwari *nīcaï* under it (CDIAL 7540). **नीचे** (*nīche*) is the adverb of *nīcho*, "low"; the Old Marwari row means "below".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

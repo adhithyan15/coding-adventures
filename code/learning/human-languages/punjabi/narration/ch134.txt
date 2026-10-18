@@ -12,6 +12,9 @@ Before the new one: say the Punjabi for an owl, then the Punjabi for a crow.
 You'll want to know: ਗੱਲ੍ਹ.
 ਗੱਲ੍ਹ — gallh — "a cheek".
 
+The word, taken apart.
+ਗੱਲ੍ਹ (gallh) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from galla, "cheek" (CDIAL 4089). CDIAL cites Mayrhofer for a Dravidian source.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Punjabi for a crow, then the Punjabi for a cheek.
 
 You'll want to know: ਮੱਥਾ.
 ਮੱਥਾ — matthā — "a forehead".
+
+The word, taken apart.
+ਮੱਥਾ (matthā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from mastaka, "head, skull" (CDIAL 9926).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Punjabi for a cheek, then the Punjabi for a forehead
 You'll want to know: ਭਰਵੱਟਾ.
 ਭਰਵੱਟਾ — bharavaṭṭā — "an eyebrow".
 
+The word, taken apart.
+Where ਭਰਵੱਟਾ (bharavaṭṭā) comes from is not settled. CDIAL has no entry for it, though it lists the shorter Punjabi bhaũh, "eyebrow", under Sanskrit bhrū, "eyebrow" (CDIAL 9688).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Punjabi for a forehead, then the Punjabi for an eyeb
 You'll want to know: ਦਾੜ੍ਹੀ.
 ਦਾੜ੍ਹੀ — dāṛhī — "a beard".
 
+The word, taken apart.
+ਦਾੜ੍ਹੀ (dāṛhī) is a tadbhava, a word inherited and reshaped by sound change. It comes from dāṁṣṭra, "fang, tusk, beard", a form CDIAL reconstructs from its descendants (CDIAL 6250). CDIAL sets it beside Sanskrit daṁṣṭra, "tusk, fang".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Punjabi for an eyebrow, then the Punjabi for a beard
 
 You'll want to know: ਮੁੱਛ.
 ਮੁੱਛ — mucch — "a moustache".
+
+The word, taken apart.
+ਮੁੱਛ (mucch) is a tadbhava, a word inherited and reshaped by sound change. It comes from mucchā, "moustache", a form CDIAL reconstructs from its descendants (CDIAL 10180). Its deeper source is uncertain.
 
 What you've built.
 One more word for this chapter.

@@ -14,7 +14,8 @@ romanization: "osu"
 concept_tag: JA-VERB-OSU
 prerequisites: [JA-C29-yasumu, JA-C29-tanoshimu]
 sounds: []
-roots: []
+roots: [japanese-osu]
+etymology_hook: "osu: native Japanese, inherited, not borrowed; kanji 押す attached later as kun'yomi"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C29-tanoshimu]
 <!-- hl-knowledge: introduces=[JA-LEX-C30-VERBS30-01]; assesses=[] -->
 
 **おす** — *osu* — "to push".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**おす** (*osu*) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "tooi"
 concept_tag: JA-PLACE57-TOOI
 prerequisites: [JA-C56-hidari, JA-C57-chikai]
 sounds: []
-roots: []
+roots: [japanese-tooi]
+etymology_hook: "tooi: native Japanese, inherited, not borrowed; kanji 遠い attached later as kun'yomi"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C57-chikai]
 <!-- hl-knowledge: introduces=[JA-LEX-C57-PLACE57-02]; assesses=[] -->
 
 **とおい** — *tooi* — "far".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**とおい** (*tooi*) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

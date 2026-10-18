@@ -6,13 +6,13 @@ sequence: 1000
 chapter: 36
 type: word
 headword: ملعقة
-gloss: "a spoon" — the closing payoff, where the mi- tool shape stands beside the ma- place shape you already own, and where sound and broken plurals finally sort themselves out
+gloss: '"a spoon" — the closing payoff, where the mi- tool shape stands beside the ma- place shape you already own, and where sound and broken plurals finally sort themselves out'
 concept_tag: AR-OBJECT-SPOON
 romanization: milʿaqa
 prerequisites: [AR-C36-tabaq, AR-W11-ha-and-ta-marbuta]
 sounds: [ayn, ta-marbuta, rtl-known-letters]
 roots: [l-a-q]
-etymology_hook: "مِلْعَقة (milʿaqa, 'a spoon') is the root ل-ع-ق, 'to lick, to lap', in the مِفْعَلة tool shape — the same mi- shape that made مِرْآة (mirʾāh, 'a mirror') the thing you see with, standing against the ma- place shape of مَطْعَم (maṭʿam) and مَكْتَب (maktab); its plural مَلاعِق (malāʿiq) is broken like أكواب and أطباق, while the ة nouns قهوة and صديقة take the added ending of قهوات and صديقات instead, which is the sound plural"
+etymology_hook: "milʿaqa: the mi- tool shape on the root l-ʿ-q 'to lick, to lap' (Lane): a thing to lap with"
 duration:
   max_seconds: 240
 requires:
@@ -78,6 +78,8 @@ Now the plurals this chapter has been circling.
 The rule of thumb: a noun in **ة** usually takes the added ending, and most
 other everyday nouns break. *Milʿaqa* is the honest reminder that "usually" is
 doing work — it ends in **ة** and breaks anyway.
+
+*Milʿaqa* is built on this native root (Lane).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[AR-CONCEPT-C36-MILAQA-01, AR-CONCEPT-C36-MILAQA-02, AR-CONCEPT-C36-TABAQ-01, AR-CONCEPT-C36-TABAQ-02, AR-CONCEPT-C36-KUB-02, AR-CONCEPT-C36-ZAYT-02, AR-CONCEPT-C34-TAAM-02, AR-CONCEPT-C33-QAHWA-02, AR-CONCEPT-C29-RAA-02, AR-CONCEPT-W11-HA-AND-TA-MARBUTA-02, AR-CONCEPT-C06-MIN-FADLIK-01, AR-CONCEPT-C36-KUB-01] -->

@@ -4,7 +4,7 @@
   "chapter": 233,
   "title": "O --- One Letter, One Catch",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:e2fb2d5142119eb2",
+  "sourceHash": "fnv1a64:9eaf72e177f8098c",
   "lessons": [
     {
       "id": "ES-C61-o",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c6e0ee0cf83dfc75",
+      "sourceHash": "fnv1a64:89c1e00e0fa394f5",
       "notice": null,
       "blocks": [
         {
@@ -60,7 +60,7 @@
             },
             {
               "kind": "speech",
-              "text": "o is the whole word. Latin's was aut, and it wore all the way down to a single letter — which is about as far as a word can go without disappearing."
+              "text": "o is the whole word. It comes from Latin aut, and it wore all the way down to a single letter — which is about as far as a word can go without disappearing."
             }
           ]
         },

@@ -1,24 +1,35 @@
 {
+  "schema_version": 1,
   "upstream": "mermaid@11.16.1",
   "upstream_commit": "7ecca0cd7f1658ef74f4e7e91f925724ef403bbf",
+  "source": "packages/mermaid/src/diagrams/kanban/kanban.spec.ts",
   "family": "kanban",
-  "level": "partial",
-  "fixtures": [
-    { "id": "plain", "source": "kanban\n  Todo\n    Write grammar\n    Add tests\n  Done\n    Ship" },
-    { "id": "explicit-ids", "source": "kanban\n  todo[Todo]\n    parser[Grammar parser]\n  done[Done]\n    paint[Native paint]" },
-    { "id": "inline-card-metadata", "source": "kanban\n  todo[Todo]\n    parser[Grammar parser]@{ ticket: MC-42, assigned: Ada, priority: high }" },
-    { "id": "multiline-card-metadata", "source": "kanban\n  todo[Todo]\n    parser@{\n      label: \"Grammar parser\"\n      ticket: MC-42\n      assigned: Ada\n      priority: high\n      icon: heart\n    }" },
-    { "id": "card-icon-decoration", "source": "kanban\n  todo[Todo]\n    parser[Grammar parser]\n      ::icon(heart)" },
-    { "id": "class-decorations", "source": "kanban\n  todo[Todo]\n    :::backlog\n    parser[Grammar parser]\n      :::urgent blocked" },
-    { "id": "ticket-base-url", "source": "%%{init: {'kanban': {'ticketBaseUrl': 'https://tracker.example/issues/#TICKET#'}}}%%\nkanban\n  todo[Todo]\n    parser[Grammar parser]@{ ticket: MC-42 }" },
-    { "id": "layout-config", "source": "%%{init: {'kanban': {'sectionWidth': 300, 'padding': 32}}}%%\nkanban\n  todo[Todo]\n    parser[Grammar parser]" },
-    { "id": "section-ticket-metadata", "source": "kanban\n  todo[Todo]@{ ticket: KB-7 }\n    parser[Grammar parser]" },
+  "level": "full",
+  "valid": [
+    { "id": "simple-section", "source": "kanban\n    root" },
+    { "id": "hierarchy", "source": "kanban\n    root\n      child1\n      child2" },
+    { "id": "deeper-indentation-flattens", "source": "kanban\n    root\n      child1\n        leaf1\n      child2" },
+    { "id": "multiple-sections", "source": "kanban\n    section1\n    section2" },
+    { "id": "explicit-ids", "source": "kanban\n  todo[Todo]\n    parser(Grammar parser)\n  done[Done]\n    paint[Native paint]" },
     { "id": "shape-delimited-labels", "source": "kanban\n  todo((Todo))\n    rounded(Rounded card)\n    hex{{Hex card}}\n  plain[Plain]\n    circle((Circle card))" },
     { "id": "cloud-and-bang-labels", "source": "kanban\n  todo)Cloud section(\n    bang))Bang card((\n    cloud(-Cloud card-)\n    burst-)Burst card(-" },
-    { "id": "quoted-labels", "source": "kanban\n  todo[\"Todo queue\"]\n    card[\"Quoted card\"]" },
+    { "id": "decorations", "source": "kanban\n  todo[Todo]\n    :::backlog\n    ::icon(board)\n    parser[Grammar parser]\n      :::urgent blocked\n      ::icon(heart)" },
+    { "id": "quoted-delimiters", "source": "kanban\n  todo[\"String containing []\"]\n    card[\"String containing ()\"]" },
+    { "id": "child-after-decoration", "source": "kanban\n  root(Root)\n    Child(Child)\n    :::hot\n      a(a)\n      b[New Stuff]" },
+    { "id": "blank-lines-and-comments", "source": "\n \nkanban\n  root(Root)\n    Child(Child)\n      a(a) %% trailing comment\n\n      %% full-line comment\n      b[New Stuff]" },
+    { "id": "section-metadata", "source": "kanban\n  todo@{ icon: star, assigned: knsv, priority: high, label: 'Todo queue', ticket: KB-7 }\n    parser[Grammar parser]" },
+    { "id": "inline-card-metadata", "source": "kanban\n  todo[Todo]\n    parser[Grammar parser]@{ ticket: MC-42, assigned: Ada, priority: high }" },
+    { "id": "multiline-card-metadata", "source": "kanban\n  todo[Todo]\n    parser@{\n      label: \"Grammar parser\"\n      ticket: MC-42\n      assigned: Ada\n      priority: high\n      icon: heart\n    }" },
+    { "id": "ticket-base-url", "source": "%%{init: {'kanban': {'ticketBaseUrl': 'https://tracker.example/issues/#TICKET#'}}}%%\nkanban\n  todo[Todo]@{ ticket: KB-7 }\n    parser[Grammar parser]@{ ticket: MC-42 }" },
+    { "id": "layout-config", "source": "%%{init: {'kanban': {'sectionWidth': 300, 'padding': 32}}}%%\nkanban\n  todo[Todo]\n    parser[Grammar parser]" },
     { "id": "markdown-labels", "source": "kanban\n  todo[\"`**Todo** queue`\"]\n    card[\"`Quoted *card*`\"]" },
     { "id": "inline-markdown-labels", "source": "kanban\n  todo[**Todo** queue]\n    card[Quoted *card*]" },
     { "id": "multiline-labels", "source": "kanban\n  todo[Todo\\nqueue]\n    card[Line 1\\nLine 2\\nLine 3]" },
     { "id": "priority-markers", "source": "kanban\n  todo[Todo]\n    urgent[Urgent]@{ priority: Very High }\n    someday[Someday]@{ priority: Very Low }" }
+  ],
+  "invalid": [
+    { "id": "outdented-section", "source": "kanban\n          root\n        fakeRoot\n    realRootWrongPlace" },
+    { "id": "missing-section", "source": "kanban" },
+    { "id": "unterminated-metadata", "source": "kanban\n  todo[Todo]\n    card[Card]@{ ticket: MC-42" }
   ]
 }

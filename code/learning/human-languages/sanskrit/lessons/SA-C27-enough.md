@@ -14,7 +14,8 @@ romanization: "alam"
 concept_tag: SA-REPLY-ENOUGH
 prerequisites: [SA-C27-well-done, SA-C25-head, SA-C26-king]
 sounds: []
-roots: []
+roots: [sanskrit-alam]
+etymology_hook: "alam 'enough' is the later form of Vedic aram 'fittingly' (MW); its deeper origin is not settled"
 duration:
   max_seconds: 210
 requires:
@@ -45,12 +46,18 @@ reviews_of: [SA-C27-well-done]
 
 **अलम्** is *enough*. Enough food, enough talking, enough of that. It is short, common, and does a lot of work for its size.
 
-Set beside it a small word you have not been given yet and will hear constantly — *alam* can also mean *able*, *equal to the task*. So the same two syllables cover "that will do" and "that is up to it", which is roughly the distance English travels between *enough* and *sufficient*. No secure cousin outside India, so this one sits with केशः.
+Set beside it a small word you have not been given yet and will hear constantly — *alam* can also mean *able*, *equal to the task*. So the same two syllables cover "that will do" and "that is up to it", which is roughly the distance English travels between *enough* and *sufficient*. Its deeper history is not settled, so this one sits with केशः.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*Alam* is the later form of Vedic *aram*, "fittingly, enough" (MW). MW sets Greek
+*ara* beside *aram*, but its deeper origin is not settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-A one-word answer, and a second word with no travel history.
+A one-word answer, and a second word with an unsettled history.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C27-REPLY-01, SA-LEX-C27-REPLY-02, SA-LEX-C27-REPLY-03, SA-LEX-C25-BODY-03, SA-LEX-C26-ROLE-03] -->

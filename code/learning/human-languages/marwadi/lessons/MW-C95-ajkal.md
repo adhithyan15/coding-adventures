@@ -14,7 +14,8 @@ romanization: "ājkāl"
 concept_tag: MW-TIME95-AJKAL
 prerequisites: [MW-C95-bagat, MW-C95-roj]
 sounds: []
-roots: []
+roots: [sanskrit-adya, sanskrit-kalya]
+etymology_hook: "ājkāl: āj 'today' ← adya (CDIAL 242) + kāl 'tomorrow' ← kālya (CDIAL 3104)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C95-roj]
 <!-- hl-knowledge: introduces=[MW-LEX-C95-TIME95-05]; assesses=[] -->
 
 **आजकाल** — *ājkāl* — "nowadays".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**आजकाल** (*ājkāl*) joins two words with their own lessons: *āj*, "today", from Sanskrit *adya* (CDIAL 242), and *kāl*, "yesterday, tomorrow", from Sanskrit *kālya*, "at dawn" (CDIAL 3104).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

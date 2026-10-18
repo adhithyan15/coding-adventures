@@ -14,7 +14,8 @@ romanization: "dariā"
 concept_tag: PA-NATURE74-DARIA
 prerequisites: [PA-C74-pahar, PA-C74-jangal]
 sounds: []
-roots: []
+roots: [persian-darya]
+etymology_hook: "dariā: usually traced to Persian daryā 'sea, great river'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C74-jangal]
 <!-- hl-knowledge: introduces=[PA-LEX-C74-NATURE74-03]; assesses=[] -->
 
 **ਦਰਿਆ** — *dariā* — "a river".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਦਰਿਆ** (*dariā*) is a loan, usually traced to Persian *daryā*, "sea, great river".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

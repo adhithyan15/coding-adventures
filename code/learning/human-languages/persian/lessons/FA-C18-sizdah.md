@@ -12,7 +12,7 @@ concept_tag: FA-NUMBER-THIRTEEN
 prerequisites: [FA-C18-yazdah]
 sounds: [rtl, long-i, short-vowels-unwritten]
 roots: [pie-treyes]
-etymology_hook: "sizdah is se worn to si plus dah: the unit changes shape a little and the ten never does, which is how the reader learns to hear the join."
+etymology_hook: "sizdah: inherited, usually traced to Middle Persian sēzdah: se 'three' + dah 'ten'"
 duration:
   max_seconds: 245
 requires:
@@ -49,6 +49,11 @@ becomes *thir*- in **thirteen**, and *five* becomes *fif*- in **fifteen**.
 
 Listen past the bending, then, and hear what does not bend: **the ten stays the
 same**, on the end, every time.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*sizdah* is inherited: it is usually traced to Middle Persian *sēzdah*, built from *se*, "three", and *dah*, "ten".
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[FA-LEX-SIZDAH, FA-LEX-SE, FA-GRAMMAR-TEENS-DAH] -->

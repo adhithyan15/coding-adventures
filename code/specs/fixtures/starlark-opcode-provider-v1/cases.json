@@ -1,0 +1,1781 @@
+{
+  "schema_version": 1,
+  "profile": "standalone-provider-v1",
+  "opcodes": [
+    {
+      "symbol": "LoadConst",
+      "byte": 1,
+      "category": "stack"
+    },
+    {
+      "symbol": "Pop",
+      "byte": 2,
+      "category": "stack"
+    },
+    {
+      "symbol": "Dup",
+      "byte": 3,
+      "category": "stack"
+    },
+    {
+      "symbol": "LoadNone",
+      "byte": 4,
+      "category": "stack"
+    },
+    {
+      "symbol": "LoadTrue",
+      "byte": 5,
+      "category": "stack"
+    },
+    {
+      "symbol": "LoadFalse",
+      "byte": 6,
+      "category": "stack"
+    },
+    {
+      "symbol": "StoreName",
+      "byte": 16,
+      "category": "variable"
+    },
+    {
+      "symbol": "LoadName",
+      "byte": 17,
+      "category": "variable"
+    },
+    {
+      "symbol": "StoreLocal",
+      "byte": 18,
+      "category": "variable"
+    },
+    {
+      "symbol": "LoadLocal",
+      "byte": 19,
+      "category": "variable"
+    },
+    {
+      "symbol": "StoreClosure",
+      "byte": 20,
+      "category": "variable"
+    },
+    {
+      "symbol": "LoadClosure",
+      "byte": 21,
+      "category": "variable"
+    },
+    {
+      "symbol": "Add",
+      "byte": 32,
+      "category": "arithmetic"
+    },
+    {
+      "symbol": "Sub",
+      "byte": 33,
+      "category": "arithmetic"
+    },
+    {
+      "symbol": "Mul",
+      "byte": 34,
+      "category": "arithmetic"
+    },
+    {
+      "symbol": "Div",
+      "byte": 35,
+      "category": "arithmetic"
+    },
+    {
+      "symbol": "FloorDiv",
+      "byte": 36,
+      "category": "arithmetic"
+    },
+    {
+      "symbol": "Mod",
+      "byte": 37,
+      "category": "arithmetic"
+    },
+    {
+      "symbol": "Power",
+      "byte": 38,
+      "category": "arithmetic"
+    },
+    {
+      "symbol": "Negate",
+      "byte": 39,
+      "category": "arithmetic"
+    },
+    {
+      "symbol": "BitAnd",
+      "byte": 40,
+      "category": "arithmetic"
+    },
+    {
+      "symbol": "BitOr",
+      "byte": 41,
+      "category": "arithmetic"
+    },
+    {
+      "symbol": "BitXor",
+      "byte": 42,
+      "category": "arithmetic"
+    },
+    {
+      "symbol": "BitNot",
+      "byte": 43,
+      "category": "arithmetic"
+    },
+    {
+      "symbol": "LShift",
+      "byte": 44,
+      "category": "arithmetic"
+    },
+    {
+      "symbol": "RShift",
+      "byte": 45,
+      "category": "arithmetic"
+    },
+    {
+      "symbol": "CmpEq",
+      "byte": 48,
+      "category": "comparison"
+    },
+    {
+      "symbol": "CmpNe",
+      "byte": 49,
+      "category": "comparison"
+    },
+    {
+      "symbol": "CmpLt",
+      "byte": 50,
+      "category": "comparison"
+    },
+    {
+      "symbol": "CmpGt",
+      "byte": 51,
+      "category": "comparison"
+    },
+    {
+      "symbol": "CmpLe",
+      "byte": 52,
+      "category": "comparison"
+    },
+    {
+      "symbol": "CmpGe",
+      "byte": 53,
+      "category": "comparison"
+    },
+    {
+      "symbol": "CmpIn",
+      "byte": 54,
+      "category": "comparison"
+    },
+    {
+      "symbol": "CmpNotIn",
+      "byte": 55,
+      "category": "comparison"
+    },
+    {
+      "symbol": "Not",
+      "byte": 56,
+      "category": "comparison"
+    },
+    {
+      "symbol": "Jump",
+      "byte": 64,
+      "category": "control_flow"
+    },
+    {
+      "symbol": "JumpIfFalse",
+      "byte": 65,
+      "category": "control_flow"
+    },
+    {
+      "symbol": "JumpIfTrue",
+      "byte": 66,
+      "category": "control_flow"
+    },
+    {
+      "symbol": "JumpIfFalseOrPop",
+      "byte": 67,
+      "category": "control_flow"
+    },
+    {
+      "symbol": "JumpIfTrueOrPop",
+      "byte": 68,
+      "category": "control_flow"
+    },
+    {
+      "symbol": "MakeFunction",
+      "byte": 80,
+      "category": "function"
+    },
+    {
+      "symbol": "CallFunction",
+      "byte": 81,
+      "category": "function"
+    },
+    {
+      "symbol": "CallFunctionKw",
+      "byte": 82,
+      "category": "function"
+    },
+    {
+      "symbol": "Return",
+      "byte": 83,
+      "category": "function"
+    },
+    {
+      "symbol": "BuildList",
+      "byte": 96,
+      "category": "collection"
+    },
+    {
+      "symbol": "BuildDict",
+      "byte": 97,
+      "category": "collection"
+    },
+    {
+      "symbol": "BuildTuple",
+      "byte": 98,
+      "category": "collection"
+    },
+    {
+      "symbol": "ListAppend",
+      "byte": 99,
+      "category": "collection"
+    },
+    {
+      "symbol": "DictSet",
+      "byte": 100,
+      "category": "collection"
+    },
+    {
+      "symbol": "LoadSubscript",
+      "byte": 112,
+      "category": "subscript_attribute"
+    },
+    {
+      "symbol": "StoreSubscript",
+      "byte": 113,
+      "category": "subscript_attribute"
+    },
+    {
+      "symbol": "LoadAttr",
+      "byte": 114,
+      "category": "subscript_attribute"
+    },
+    {
+      "symbol": "StoreAttr",
+      "byte": 115,
+      "category": "subscript_attribute"
+    },
+    {
+      "symbol": "LoadSlice",
+      "byte": 116,
+      "category": "subscript_attribute"
+    },
+    {
+      "symbol": "GetIter",
+      "byte": 128,
+      "category": "iteration"
+    },
+    {
+      "symbol": "ForIter",
+      "byte": 129,
+      "category": "iteration"
+    },
+    {
+      "symbol": "UnpackSequence",
+      "byte": 130,
+      "category": "iteration"
+    },
+    {
+      "symbol": "LoadModule",
+      "byte": 144,
+      "category": "module"
+    },
+    {
+      "symbol": "ImportFrom",
+      "byte": 145,
+      "category": "module"
+    },
+    {
+      "symbol": "Print",
+      "byte": 160,
+      "category": "io"
+    },
+    {
+      "symbol": "Halt",
+      "byte": 255,
+      "category": "vm_control"
+    }
+  ],
+  "decode": [
+    {
+      "byte": 0,
+      "symbol": null,
+      "category": null
+    },
+    {
+      "byte": 1,
+      "symbol": "LoadConst",
+      "category": "stack"
+    },
+    {
+      "byte": 2,
+      "symbol": "Pop",
+      "category": "stack"
+    },
+    {
+      "byte": 3,
+      "symbol": "Dup",
+      "category": "stack"
+    },
+    {
+      "byte": 4,
+      "symbol": "LoadNone",
+      "category": "stack"
+    },
+    {
+      "byte": 5,
+      "symbol": "LoadTrue",
+      "category": "stack"
+    },
+    {
+      "byte": 6,
+      "symbol": "LoadFalse",
+      "category": "stack"
+    },
+    {
+      "byte": 7,
+      "symbol": null,
+      "category": null
+    },
+    {
+      "byte": 8,
+      "symbol": null,
+      "category": null
+    },
+    {
+      "byte": 9,
+      "symbol": null,
+      "category": null
+    },
+    {
+      "byte": 10,
+      "symbol": null,
+      "category": null
+    },
+    {
+      "byte": 11,
+      "symbol": null,
+      "category": null
+    },
+    {
+      "byte": 12,
+      "symbol": null,
+      "category": null
+    },
+    {
+      "byte": 13,
+      "symbol": null,
+      "category": null
+    },
+    {
+      "byte": 14,
+      "symbol": null,
+      "category": null
+    },
+    {
+      "byte": 15,
+      "symbol": null,
+      "category": null
+    },
+    {
+      "byte": 16,
+      "symbol": "StoreName",
+      "category": "variable"
+    },
+    {
+      "byte": 17,
+      "symbol": "LoadName",
+      "category": "variable"
+    },
+    {
+      "byte": 18,
+      "symbol": "StoreLocal",
+      "category": "variable"
+    },
+    {
+      "byte": 19,
+      "symbol": "LoadLocal",
+      "category": "variable"
+    },
+    {
+      "byte": 20,
+      "symbol": "StoreClosure",
+      "category": "variable"
+    },
+    {
+      "byte": 21,
+      "symbol": "LoadClosure",
+      "category": "variable"
+    },
+    {
+      "byte": 22,
+      "symbol": null,
+      "category": null
+    },
+    {
+      "byte": 23,
+      "symbol": null,
+      "category": null
+    },
+    {
+      "byte": 24,
+      "symbol": null,
+      "category": null
+    },
+    {
+      "byte": 25,
+      "symbol": null,
+      "category": null
+    },
+    {
+      "byte": 26,
+      "symbol": null,
+      "category": null
+    },
+    {
+      "byte": 27,
+      "symbol": null,
+      "category": null
+    },
+    {
+      "byte": 28,
+      "symbol": null,
+      "category": null
+    },
+    {
+      "byte": 29,
+      "symbol": null,
+      "category": null
+    },
+    {
+      "byte": 30,
+      "symbol": null,
+      "category": null
+    },
+    {
+      "byte": 31,
+      "symbol": null,
+      "category": null
+    },
+    {
+      "byte": 32,
+      "symbol": "Add",
+      "category": "arithmetic"
+    },
+    {
+      "byte": 33,
+      "symbol": "Sub",
+      "category": "arithmetic"
+    },
+    {
+      "byte": 34,
+      "symbol": "Mul",
+      "category": "arithmetic"
+    },
+    {
+      "byte": 35,
+      "symbol": "Div",
+      "category": "arithmetic"
+    },
+    {
+      "byte": 36,
+      "symbol": "FloorDiv",
+      "category": "arithmetic"
+    },
+    {
+      "byte": 37,
+      "symbol": "Mod",
+      "category": "arithmetic"
+    },
+    {
+      "byte": 38,
+      "symbol": "Power",
+      "category": "arithmetic"
+    },
+    {
+      "byte": 39,
+      "symbol": "Negate",
+      "category": "arithmetic"
+    },
+    {
+      "byte": 40,
+      "symbol": "BitAnd",
+      "category": "arithmetic"
+    },
+    {
+      "byte": 41,
+      "symbol": "BitOr",
+      "category": "arithmetic"
+    },
+    {
+      "byte": 42,
+      "symbol": "BitXor",
+      "category": "arithmetic"
+    },
+    {
+      "byte": 43,
+      "symbol": "BitNot",
+      "category": "arithmetic"
+    },
+    {
+      "byte": 44,
+      "symbol": "LShift",
+      "category": "arithmetic"
+    },
+    {
+      "byte": 45,
+      "symbol": "RShift",
+      "category": "arithmetic"
+    },
+    {
+      "byte": 46,
+      "symbol": null,
+      "category": null
+    },
+    {
+      "byte": 47,
+      "symbol": null,
+      "category": null
+    },
+    {
+      "byte": 48,
+      "symbol": "CmpEq",
+      "category": "comparison"
+    },
+    {
+      "byte": 49,
+      "symbol": "CmpNe",
+      "category": "comparison"
+    },
+    {
+      "byte": 50,
+      "symbol": "CmpLt",
+      "category": "comparison"
+    },
+    {
+      "byte": 51,
+      "symbol": "CmpGt",
+      "category": "comparison"
+    },
+    {
+      "byte": 52,
+      "symbol": "CmpLe",
+      "category": "comparison"
+    },
+    {
+      "byte": 53,
+      "symbol": "CmpGe",
+      "category": "comparison"
+    },
+    {
+      "byte": 54,
+      "symbol": "CmpIn",
+      "category": "comparison"
+    },
+    {
+      "byte": 55,
+      "symbol": "CmpNotIn",
+      "category": "comparison"
+    },
+    {
+      "byte": 56,
+      "symbol": "Not",
+      "category": "comparison"
+    },
+    {
+      "byte": 57,
+      "symbol": null,
+      "category": null
+    },
+    {
+      "byte": 58,
+      "symbol": null,
+      "category": null
+    },
+    {
+      "byte": 59,
+      "symbol": null,
+      "category": null
+    },
+    {
+      "byte": 60,
+      "symbol": null,
+      "category": null
+    },
+    {
+      "byte": 61,
+      "symbol": null,
+      "category": null
+    },
+    {
+      "byte": 62,
+      "symbol": null,
+      "category": null
+    },
+    {
+      "byte": 63,
+      "symbol": null,
+      "category": null
+    },
+    {
+      "byte": 64,
+      "symbol": "Jump",
+      "category": "control_flow"
+    },
+    {
+      "byte": 65,
+      "symbol": "JumpIfFalse",
+      "category": "control_flow"
+    },
+    {
+      "byte": 66,
+      "symbol": "JumpIfTrue",
+      "category": "control_flow"
+    },
+    {
+      "byte": 67,
+      "symbol": "JumpIfFalseOrPop",
+      "category": "control_flow"
+    },
+    {
+      "byte": 68,
+      "symbol": "JumpIfTrueOrPop",
+      "category": "control_flow"
+    },
+    {
+      "byte": 69,
+      "symbol": null,
+      "category": null
+    },
+    {
+      "byte": 70,
+      "symbol": null,
+      "category": null
+    },
+    {
+      "byte": 71,
+      "symbol": null,
+      "category": null
+    },
+    {
+      "byte": 72,
+      "symbol": null,
+      "category": null
+    },
+    {
+      "byte": 73,
+      "symbol": null,
+      "category": null
+    },
+    {
+      "byte": 74,
+      "symbol": null,
+      "category": null
+    },
+    {
+      "byte": 75,
+      "symbol": null,
+      "category": null
+    },
+    {
+      "byte": 76,
+      "symbol": null,
+      "category": null
+    },
+    {
+      "byte": 77,
+      "symbol": null,
+      "category": null
+    },
+    {
+      "byte": 78,
+      "symbol": null,
+      "category": null
+    },
+    {
+      "byte": 79,
+      "symbol": null,
+      "category": null
+    },
+    {
+      "byte": 80,
+      "symbol": "MakeFunction",
+      "category": "function"
+    },
+    {
+      "byte": 81,
+      "symbol": "CallFunction",
+      "category": "function"
+    },
+    {
+      "byte": 82,
+      "symbol": "CallFunctionKw",
+      "category": "function"
+    },
+    {
+      "byte": 83,
+      "symbol": "Return",
+      "category": "function"
+    },
+    {
+      "byte": 84,
+      "symbol": null,
+      "category": null
+    },
+    {
+      "byte": 85,
+      "symbol": null,
+      "category": null
+    },
+    {
+      "byte": 86,
+      "symbol": null,
+      "category": null
+    },
+    {
+      "byte": 87,
+      "symbol": null,
+      "category": null
+    },
+    {
+      "byte": 88,
+      "symbol": null,
+      "category": null
+    },
+    {
+      "byte": 89,
+      "symbol": null,
+      "category": null
+    },
+    {
+      "byte": 90,
+      "symbol": null,
+      "category": null
+    },
+    {
+      "byte": 91,
+      "symbol": null,
+      "category": null
+    },
+    {
+      "byte": 92,
+      "symbol": null,
+      "category": null
+    },
+    {
+      "byte": 93,
+      "symbol": null,
+      "category": null
+    },
+    {
+      "byte": 94,
+      "symbol": null,
+      "category": null
+    },
+    {
+      "byte": 95,
+      "symbol": null,
+      "category": null
+    },
+    {
+      "byte": 96,
+      "symbol": "BuildList",
+      "category": "collection"
+    },
+    {
+      "byte": 97,
+      "symbol": "BuildDict",
+      "category": "collection"
+    },
+    {
+      "byte": 98,
+      "symbol": "BuildTuple",
+      "category": "collection"
+    },
+    {
+      "byte": 99,
+      "symbol": "ListAppend",
+      "category": "collection"
+    },
+    {
+      "byte": 100,
+      "symbol": "DictSet",
+      "category": "collection"
+    },
+    {
+      "byte": 101,
+      "symbol": null,
+      "category": null
+    },
+    {
+      "byte": 102,
+      "symbol": null,
+      "category": null
+    },
+    {
+      "byte": 103,
+      "symbol": null,
+      "category": null
+    },
+    {
+      "byte": 104,
+      "symbol": null,
+      "category": null
+    },
+    {
+      "byte": 105,
+      "symbol": null,
+      "category": null
+    },
+    {
+      "byte": 106,
+      "symbol": null,
+      "category": null
+    },
+    {
+      "byte": 107,
+      "symbol": null,
+      "category": null
+    },
+    {
+      "byte": 108,
+      "symbol": null,
+      "category": null
+    },
+    {
+      "byte": 109,
+      "symbol": null,
+      "category": null
+    },
+    {
+      "byte": 110,
+      "symbol": null,
+      "category": null
+    },
+    {
+      "byte": 111,
+      "symbol": null,
+      "category": null
+    },
+    {
+      "byte": 112,
+      "symbol": "LoadSubscript",
+      "category": "subscript_attribute"
+    },
+    {
+      "byte": 113,
+      "symbol": "StoreSubscript",
+      "category": "subscript_attribute"
+    },
+    {
+      "byte": 114,
+      "symbol": "LoadAttr",
+      "category": "subscript_attribute"
+    },
+    {
+      "byte": 115,
+      "symbol": "StoreAttr",
+      "category": "subscript_attribute"
+    },
+    {
+      "byte": 116,
+      "symbol": "LoadSlice",
+      "category": "subscript_attribute"
+    },
+    {
+      "byte": 117,
+      "symbol": null,
+      "category": null
+    },
+    {
+      "byte": 118,
+      "symbol": null,
+      "category": null
+    },
+    {
+      "byte": 119,
+      "symbol": null,
+      "category": null
+    },
+    {
+      "byte": 120,
+      "symbol": null,
+      "category": null
+    },
+    {
+      "byte": 121,
+      "symbol": null,
+      "category": null
+    },
+    {
+      "byte": 122,
+      "symbol": null,
+      "category": null
+    },
+    {
+      "byte": 123,
+      "symbol": null,
+      "category": null
+    },
+    {
+      "byte": 124,
+      "symbol": null,
+      "category": null
+    },
+    {
+      "byte": 125,
+      "symbol": null,
+      "category": null
+    },
+    {
+      "byte": 126,
+      "symbol": null,
+      "category": null
+    },
+    {
+      "byte": 127,
+      "symbol": null,
+      "category": null
+    },
+    {
+      "byte": 128,
+      "symbol": "GetIter",
+      "category": "iteration"
+    },
+    {
+      "byte": 129,
+      "symbol": "ForIter",
+      "category": "iteration"
+    },
+    {
+      "byte": 130,
+      "symbol": "UnpackSequence",
+      "category": "iteration"
+    },
+    {
+      "byte": 131,
+      "symbol": null,
+      "category": null
+    },
+    {
+      "byte": 132,
+      "symbol": null,
+      "category": null
+    },
+    {
+      "byte": 133,
+      "symbol": null,
+      "category": null
+    },
+    {
+      "byte": 134,
+      "symbol": null,
+      "category": null
+    },
+    {
+      "byte": 135,
+      "symbol": null,
+      "category": null
+    },
+    {
+      "byte": 136,
+      "symbol": null,
+      "category": null
+    },
+    {
+      "byte": 137,
+      "symbol": null,
+      "category": null
+    },
+    {
+      "byte": 138,
+      "symbol": null,
+      "category": null
+    },
+    {
+      "byte": 139,
+      "symbol": null,
+      "category": null
+    },
+    {
+      "byte": 140,
+      "symbol": null,
+      "category": null
+    },
+    {
+      "byte": 141,
+      "symbol": null,
+      "category": null
+    },
+    {
+      "byte": 142,
+      "symbol": null,
+      "category": null
+    },
+    {
+      "byte": 143,
+      "symbol": null,
+      "category": null
+    },
+    {
+      "byte": 144,
+      "symbol": "LoadModule",
+      "category": "module"
+    },
+    {
+      "byte": 145,
+      "symbol": "ImportFrom",
+      "category": "module"
+    },
+    {
+      "byte": 146,
+      "symbol": null,
+      "category": null
+    },
+    {
+      "byte": 147,
+      "symbol": null,
+      "category": null
+    },
+    {
+      "byte": 148,
+      "symbol": null,
+      "category": null
+    },
+    {
+      "byte": 149,
+      "symbol": null,
+      "category": null
+    },
+    {
+      "byte": 150,
+      "symbol": null,
+      "category": null
+    },
+    {
+      "byte": 151,
+      "symbol": null,
+      "category": null
+    },
+    {
+      "byte": 152,
+      "symbol": null,
+      "category": null
+    },
+    {
+      "byte": 153,
+      "symbol": null,
+      "category": null
+    },
+    {
+      "byte": 154,
+      "symbol": null,
+      "category": null
+    },
+    {
+      "byte": 155,
+      "symbol": null,
+      "category": null
+    },
+    {
+      "byte": 156,
+      "symbol": null,
+      "category": null
+    },
+    {
+      "byte": 157,
+      "symbol": null,
+      "category": null
+    },
+    {
+      "byte": 158,
+      "symbol": null,
+      "category": null
+    },
+    {
+      "byte": 159,
+      "symbol": null,
+      "category": null
+    },
+    {
+      "byte": 160,
+      "symbol": "Print",
+      "category": "io"
+    },
+    {
+      "byte": 161,
+      "symbol": null,
+      "category": null
+    },
+    {
+      "byte": 162,
+      "symbol": null,
+      "category": null
+    },
+    {
+      "byte": 163,
+      "symbol": null,
+      "category": null
+    },
+    {
+      "byte": 164,
+      "symbol": null,
+      "category": null
+    },
+    {
+      "byte": 165,
+      "symbol": null,
+      "category": null
+    },
+    {
+      "byte": 166,
+      "symbol": null,
+      "category": null
+    },
+    {
+      "byte": 167,
+      "symbol": null,
+      "category": null
+    },
+    {
+      "byte": 168,
+      "symbol": null,
+      "category": null
+    },
+    {
+      "byte": 169,
+      "symbol": null,
+      "category": null
+    },
+    {
+      "byte": 170,
+      "symbol": null,
+      "category": null
+    },
+    {
+      "byte": 171,
+      "symbol": null,
+      "category": null
+    },
+    {
+      "byte": 172,
+      "symbol": null,
+      "category": null
+    },
+    {
+      "byte": 173,
+      "symbol": null,
+      "category": null
+    },
+    {
+      "byte": 174,
+      "symbol": null,
+      "category": null
+    },
+    {
+      "byte": 175,
+      "symbol": null,
+      "category": null
+    },
+    {
+      "byte": 176,
+      "symbol": null,
+      "category": null
+    },
+    {
+      "byte": 177,
+      "symbol": null,
+      "category": null
+    },
+    {
+      "byte": 178,
+      "symbol": null,
+      "category": null
+    },
+    {
+      "byte": 179,
+      "symbol": null,
+      "category": null
+    },
+    {
+      "byte": 180,
+      "symbol": null,
+      "category": null
+    },
+    {
+      "byte": 181,
+      "symbol": null,
+      "category": null
+    },
+    {
+      "byte": 182,
+      "symbol": null,
+      "category": null
+    },
+    {
+      "byte": 183,
+      "symbol": null,
+      "category": null
+    },
+    {
+      "byte": 184,
+      "symbol": null,
+      "category": null
+    },
+    {
+      "byte": 185,
+      "symbol": null,
+      "category": null
+    },
+    {
+      "byte": 186,
+      "symbol": null,
+      "category": null
+    },
+    {
+      "byte": 187,
+      "symbol": null,
+      "category": null
+    },
+    {
+      "byte": 188,
+      "symbol": null,
+      "category": null
+    },
+    {
+      "byte": 189,
+      "symbol": null,
+      "category": null
+    },
+    {
+      "byte": 190,
+      "symbol": null,
+      "category": null
+    },
+    {
+      "byte": 191,
+      "symbol": null,
+      "category": null
+    },
+    {
+      "byte": 192,
+      "symbol": null,
+      "category": null
+    },
+    {
+      "byte": 193,
+      "symbol": null,
+      "category": null
+    },
+    {
+      "byte": 194,
+      "symbol": null,
+      "category": null
+    },
+    {
+      "byte": 195,
+      "symbol": null,
+      "category": null
+    },
+    {
+      "byte": 196,
+      "symbol": null,
+      "category": null
+    },
+    {
+      "byte": 197,
+      "symbol": null,
+      "category": null
+    },
+    {
+      "byte": 198,
+      "symbol": null,
+      "category": null
+    },
+    {
+      "byte": 199,
+      "symbol": null,
+      "category": null
+    },
+    {
+      "byte": 200,
+      "symbol": null,
+      "category": null
+    },
+    {
+      "byte": 201,
+      "symbol": null,
+      "category": null
+    },
+    {
+      "byte": 202,
+      "symbol": null,
+      "category": null
+    },
+    {
+      "byte": 203,
+      "symbol": null,
+      "category": null
+    },
+    {
+      "byte": 204,
+      "symbol": null,
+      "category": null
+    },
+    {
+      "byte": 205,
+      "symbol": null,
+      "category": null
+    },
+    {
+      "byte": 206,
+      "symbol": null,
+      "category": null
+    },
+    {
+      "byte": 207,
+      "symbol": null,
+      "category": null
+    },
+    {
+      "byte": 208,
+      "symbol": null,
+      "category": null
+    },
+    {
+      "byte": 209,
+      "symbol": null,
+      "category": null
+    },
+    {
+      "byte": 210,
+      "symbol": null,
+      "category": null
+    },
+    {
+      "byte": 211,
+      "symbol": null,
+      "category": null
+    },
+    {
+      "byte": 212,
+      "symbol": null,
+      "category": null
+    },
+    {
+      "byte": 213,
+      "symbol": null,
+      "category": null
+    },
+    {
+      "byte": 214,
+      "symbol": null,
+      "category": null
+    },
+    {
+      "byte": 215,
+      "symbol": null,
+      "category": null
+    },
+    {
+      "byte": 216,
+      "symbol": null,
+      "category": null
+    },
+    {
+      "byte": 217,
+      "symbol": null,
+      "category": null
+    },
+    {
+      "byte": 218,
+      "symbol": null,
+      "category": null
+    },
+    {
+      "byte": 219,
+      "symbol": null,
+      "category": null
+    },
+    {
+      "byte": 220,
+      "symbol": null,
+      "category": null
+    },
+    {
+      "byte": 221,
+      "symbol": null,
+      "category": null
+    },
+    {
+      "byte": 222,
+      "symbol": null,
+      "category": null
+    },
+    {
+      "byte": 223,
+      "symbol": null,
+      "category": null
+    },
+    {
+      "byte": 224,
+      "symbol": null,
+      "category": null
+    },
+    {
+      "byte": 225,
+      "symbol": null,
+      "category": null
+    },
+    {
+      "byte": 226,
+      "symbol": null,
+      "category": null
+    },
+    {
+      "byte": 227,
+      "symbol": null,
+      "category": null
+    },
+    {
+      "byte": 228,
+      "symbol": null,
+      "category": null
+    },
+    {
+      "byte": 229,
+      "symbol": null,
+      "category": null
+    },
+    {
+      "byte": 230,
+      "symbol": null,
+      "category": null
+    },
+    {
+      "byte": 231,
+      "symbol": null,
+      "category": null
+    },
+    {
+      "byte": 232,
+      "symbol": null,
+      "category": null
+    },
+    {
+      "byte": 233,
+      "symbol": null,
+      "category": null
+    },
+    {
+      "byte": 234,
+      "symbol": null,
+      "category": null
+    },
+    {
+      "byte": 235,
+      "symbol": null,
+      "category": null
+    },
+    {
+      "byte": 236,
+      "symbol": null,
+      "category": null
+    },
+    {
+      "byte": 237,
+      "symbol": null,
+      "category": null
+    },
+    {
+      "byte": 238,
+      "symbol": null,
+      "category": null
+    },
+    {
+      "byte": 239,
+      "symbol": null,
+      "category": null
+    },
+    {
+      "byte": 240,
+      "symbol": null,
+      "category": null
+    },
+    {
+      "byte": 241,
+      "symbol": null,
+      "category": null
+    },
+    {
+      "byte": 242,
+      "symbol": null,
+      "category": null
+    },
+    {
+      "byte": 243,
+      "symbol": null,
+      "category": null
+    },
+    {
+      "byte": 244,
+      "symbol": null,
+      "category": null
+    },
+    {
+      "byte": 245,
+      "symbol": null,
+      "category": null
+    },
+    {
+      "byte": 246,
+      "symbol": null,
+      "category": null
+    },
+    {
+      "byte": 247,
+      "symbol": null,
+      "category": null
+    },
+    {
+      "byte": 248,
+      "symbol": null,
+      "category": null
+    },
+    {
+      "byte": 249,
+      "symbol": null,
+      "category": null
+    },
+    {
+      "byte": 250,
+      "symbol": null,
+      "category": null
+    },
+    {
+      "byte": 251,
+      "symbol": null,
+      "category": null
+    },
+    {
+      "byte": 252,
+      "symbol": null,
+      "category": null
+    },
+    {
+      "byte": 253,
+      "symbol": null,
+      "category": null
+    },
+    {
+      "byte": 254,
+      "symbol": null,
+      "category": null
+    },
+    {
+      "byte": 255,
+      "symbol": "Halt",
+      "category": "vm_control"
+    }
+  ],
+  "operators": {
+    "binary": [
+      {
+        "operator": "+",
+        "symbol": "Add"
+      },
+      {
+        "operator": "-",
+        "symbol": "Sub"
+      },
+      {
+        "operator": "*",
+        "symbol": "Mul"
+      },
+      {
+        "operator": "/",
+        "symbol": "Div"
+      },
+      {
+        "operator": "//",
+        "symbol": "FloorDiv"
+      },
+      {
+        "operator": "%",
+        "symbol": "Mod"
+      },
+      {
+        "operator": "**",
+        "symbol": "Power"
+      },
+      {
+        "operator": "&",
+        "symbol": "BitAnd"
+      },
+      {
+        "operator": "|",
+        "symbol": "BitOr"
+      },
+      {
+        "operator": "^",
+        "symbol": "BitXor"
+      },
+      {
+        "operator": "<<",
+        "symbol": "LShift"
+      },
+      {
+        "operator": ">>",
+        "symbol": "RShift"
+      }
+    ],
+    "compare": [
+      {
+        "operator": "==",
+        "symbol": "CmpEq"
+      },
+      {
+        "operator": "!=",
+        "symbol": "CmpNe"
+      },
+      {
+        "operator": "<",
+        "symbol": "CmpLt"
+      },
+      {
+        "operator": ">",
+        "symbol": "CmpGt"
+      },
+      {
+        "operator": "<=",
+        "symbol": "CmpLe"
+      },
+      {
+        "operator": ">=",
+        "symbol": "CmpGe"
+      },
+      {
+        "operator": "in",
+        "symbol": "CmpIn"
+      },
+      {
+        "operator": "not in",
+        "symbol": "CmpNotIn"
+      }
+    ],
+    "augmented_assign": [
+      {
+        "operator": "+=",
+        "symbol": "Add"
+      },
+      {
+        "operator": "-=",
+        "symbol": "Sub"
+      },
+      {
+        "operator": "*=",
+        "symbol": "Mul"
+      },
+      {
+        "operator": "/=",
+        "symbol": "Div"
+      },
+      {
+        "operator": "//=",
+        "symbol": "FloorDiv"
+      },
+      {
+        "operator": "%=",
+        "symbol": "Mod"
+      },
+      {
+        "operator": "**=",
+        "symbol": "Power"
+      },
+      {
+        "operator": "&=",
+        "symbol": "BitAnd"
+      },
+      {
+        "operator": "|=",
+        "symbol": "BitOr"
+      },
+      {
+        "operator": "^=",
+        "symbol": "BitXor"
+      },
+      {
+        "operator": "<<=",
+        "symbol": "LShift"
+      },
+      {
+        "operator": ">>=",
+        "symbol": "RShift"
+      }
+    ],
+    "unary": [
+      {
+        "operator": "-",
+        "symbol": "Negate"
+      },
+      {
+        "operator": "~",
+        "symbol": "BitNot"
+      }
+    ]
+  },
+  "unknown_lookups": [
+    {
+      "group": "binary",
+      "operator": "@",
+      "symbol": null
+    },
+    {
+      "group": "binary",
+      "operator": "++",
+      "symbol": null
+    },
+    {
+      "group": "binary",
+      "operator": "\uff0b",
+      "symbol": null
+    },
+    {
+      "group": "compare",
+      "operator": "IN",
+      "symbol": null
+    },
+    {
+      "group": "compare",
+      "operator": "not  in",
+      "symbol": null
+    },
+    {
+      "group": "augmented_assign",
+      "operator": ":=",
+      "symbol": null
+    },
+    {
+      "group": "unary",
+      "operator": "+",
+      "symbol": null
+    },
+    {
+      "group": "unary",
+      "operator": "not",
+      "symbol": null
+    }
+  ]
+}

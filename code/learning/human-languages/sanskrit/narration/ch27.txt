@@ -14,6 +14,9 @@ You'll want to know: अस्तु.
 You have had आम् and न for yes and no since the first chapter, and they are blunt. अस्तु (astu) is the agreeable middle: let it be so, all right, fine.
 It is not a new word so much as a new face on one you know. अस्ति (asti), "is", was the third person of the root as, "to be". अस्तु (astu) is the same verb in the commanding form: let it be. Sanskrit answers a request by ordering the world to comply.
 
+The word, taken apart.
+Astu is the third-person command form of the root √as, "to be" (MW), the same root as asti. That root is inherited: MW compares Greek esti and Latin est.
+
 What you've built.
 A reply softer than yes, built out of the be-verb you already had.
 
@@ -83,6 +86,9 @@ You'll want to know: साधु.
 साधु (sādhu) is what you call out when something has been done well — good, well said, the Sanskrit bravo. An audience says it aloud at a concert.
 Its root means "to accomplish, to reach the goal", so the word praises a thing for having arrived where it was going. The same word, standing on its own as a noun, names a holy man: a sādhu is someone who has accomplished. English borrowed that sense and left the everyday one behind, exactly as it did with गुरुः.
 
+The word, taken apart.
+Sādhu is built on the root √sādh, "to go straight to a goal, succeed" (MW): first "straight, hitting the mark", then "good", and as a cry, "well done" (CDIAL 13337).
+
 What you've built.
 A second borrowed word restored to its ordinary use.
 
@@ -113,10 +119,13 @@ Before the new word: what did sādhu mean?
 You'll want to know: अलम्.
 अलम् (alam) — "enough".
 अलम् (alam) is enough. Enough food, enough talking, enough of that. It is short, common, and does a lot of work for its size.
-Set beside it a small word you have not been given yet and will hear constantly — alam can also mean able, equal to the task. So the same two syllables cover "that will do" and "that is up to it", which is roughly the distance English travels between enough and sufficient. No secure cousin outside India, so this one sits with केशः.
+Set beside it a small word you have not been given yet and will hear constantly — alam can also mean able, equal to the task. So the same two syllables cover "that will do" and "that is up to it", which is roughly the distance English travels between enough and sufficient. Its deeper history is not settled, so this one sits with केशः.
+
+The word, taken apart.
+Alam is the later form of Vedic aram, "fittingly, enough" (MW). MW sets Greek ara beside aram, but its deeper origin is not settled.
 
 What you've built.
-A one-word answer, and a second word with no travel history.
+A one-word answer, and a second word with an unsettled history.
 
 Guided Practice.
 [pause 1 second]
@@ -146,6 +155,9 @@ You'll want to know: सत्यम्.
 सत्यम् (satyam) — "true; the truth".
 सत्यम् answers a claim: true. As a noun it is the truth, and it is the word on the national emblem of India — satyam eva jayate, "truth alone conquers".
 Look at what it is made of. Sat- is the being-form of that same root as you met in अस्ति and अस्तु (astu): what is. Add an ending and truth is simply the state of being what is. English has a cousin, well hidden: sooth, as in soothsayer — a truth-sayer — and forsooth.
+
+The word, taken apart.
+Satya is built on sat, "being, real", the present participle of the root √as "to be" (MW). It lives on as Hindi saccā, "true" (CDIAL 13112).
 
 What you've built.
 A third word from the be-verb, and truth defined as what is.
@@ -178,6 +190,9 @@ You'll want to know: एवम्.
 एवम् (evam) — "thus, so".
 एवम् (evam) means thus, so, in this way. On its own it answers a question: just so.
 Its real value is that it combines. Put it in front of the first word of this run and you get एवम् अस्तु (evam astu) — "so be it", the whole formula, made of two words you now own separately. That is what a small vocabulary buys: not five answers, but the joins between them.
+
+The word, taken apart.
+Evam is an old adverb, built on the pronoun base e- and probably connected with eva, "exactly so" (MW, CDIAL 2527).
 
 What you've built.
 Five replies past yes and no: so be it, well done, enough, true, thus.

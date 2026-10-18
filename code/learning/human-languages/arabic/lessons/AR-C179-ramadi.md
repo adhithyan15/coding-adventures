@@ -14,7 +14,8 @@ romanization: "ramādī"
 concept_tag: AR-SIFA179-RAMADI
 prerequisites: [AR-C178-wadih, AR-C178-mujtahid]
 sounds: []
-roots: []
+roots: [r-m-d]
+etymology_hook: "ramādī: built on the root r-m-d, 'ashes' (Lane); ramādī is ramād, 'ashes', with the adjective ending -ī: 'ash-coloured'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C178-mujtahid]
 <!-- hl-knowledge: introduces=[AR-LEX-C179-SIFA179-01]; assesses=[] -->
 
 **رمادي** — *ramādī* — "grey".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**رمادي** (*ramādī*) is built on the native Arabic root *r-m-d*, "ashes" (Lane). *Ramādī* is *ramād*, "ashes", with the adjective ending *-ī*: "ash-coloured".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

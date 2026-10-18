@@ -6,7 +6,7 @@ sequence: 520
 chapter: 28
 type: word
 headword: diēs
-gloss: "day" — the word you've already been using all along, inside diēs Lūnae and medius diēs, now on its own
+gloss: '"day" — the word you''ve already been using all along, inside diēs Lūnae and medius diēs, now on its own'
 concept_tag: TIME-DAY
 prerequisites: [LA-C05-dies-lunae-veneris, LA-C12-medius-dies-nox]
 sounds: [macron-long-vowel, diphthong-ie]

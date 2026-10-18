@@ -11,8 +11,8 @@ gloss: money
 concept_tag: MW-TRAVEL-MONEY
 prerequisites: [MW-C10-haath]
 sounds: [unaspirated-p, ai-diphthong, unaspirated-s]
-roots: []
-etymology_hook: A travel-cost word arrives by ear and reuses the existing writing inventory.
+roots: [indo-aryan-padamsha]
+etymology_hook: "paisā ← *padāṃśa 'quarter part', reconstructed (CDIAL 7761, Hindi row)"
 duration:
   max_seconds: 135
 requires:
@@ -48,6 +48,11 @@ Then recall the ten-label four-skill checkpoint.
 
 The source uses this word when asking travel cost. Hear the opening *pai* and
 say the whole word. Writing waits until the next step.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*paisā* is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*padāṃśa*, "quarter part", a form CDIAL reconstructs from its descendants. CDIAL gives no Marwari form in this entry (CDIAL 7761); the match is through Hindi *paisā*. CDIAL treats it as a Hindi word that spread to the neighbouring languages; it first named a quarter of an anna.
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-PAISA-01] -->

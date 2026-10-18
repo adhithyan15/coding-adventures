@@ -11,7 +11,7 @@ concept_tag: LA-MONTHS
 prerequisites: [LA-C10-panis, LA-C10-aqua-vinum]
 sounds: [macron-long-vowel, qu-as-kw]
 roots: [ianus-latin, mars-latin, numbering-months]
-etymology_hook: "Quintilis and Sextilis, 'the 5th and 6th months,' were later RENAMED Iulius and Augustus in honor of Caesar and the emperor — Rome didn't add two new months, it just relabeled two old ones"
+etymology_hook: "Quintilis and Sextilis, the 'fifth' and 'sixth' months, were RENAMED Iulius and Augustus, not added"
 duration:
   max_seconds: 240
 requires:
@@ -58,6 +58,9 @@ of these months used to have completely different names.**
 | **November** | "**the ninth**" (*novem*) |
 | **December** | "**the tenth**" (*decem*) |
 
+Each name comes from the god, festival or number beside it; *Aprīlis* is the
+least certain.
+
 ## Why it's said this way: Be honest about the renaming — a popular myth, corrected
 <!-- hl-knowledge: introduces=[LA-PRAGMATICS-MENSES-02]; assesses=[] -->
 
@@ -70,10 +73,10 @@ earlier, had already been expanded from ten months to twelve by adding
 
 *Quīntīlis* ("the fifth") and *Sextīlis* ("the sixth") already existed as
 ordinary, plainly-numbered months, right alongside *September* through
-*December*. Long after Julius Caesar's death, the Senate simply **renamed**
+*December*. In 44 BC, the year Julius Caesar was killed, Rome **renamed**
 *Quīntīlis* to **Iūlius** in his honor; decades later, Augustus received
 the same honor, and *Sextīlis* became **Augustus**. No months were
-created — two old, numbered ones just got new names, and Latin's fifth and
+created — two old, numbered ones got new names, and Latin's fifth and
 sixth months quietly disappeared from view, hiding inside *julio/juillet*
 and *agosto/août* in every daughter language.
 

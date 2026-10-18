@@ -14,7 +14,8 @@ romanization: "qassâbi"
 concept_tag: FA-MAKAN154-QASSABI
 prerequisites: [FA-C154-forushgah, FA-C154-supermarket]
 sounds: []
-roots: []
+roots: [arabic-qassab]
+etymology_hook: "qassâbi: qassâb ← Arabic qaṣṣāb 'butcher', root q-ṣ-b (Lane), + Persian -i"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C154-supermarket]
 <!-- hl-knowledge: introduces=[FA-LEX-C154-MAKAN154-03]; assesses=[] -->
 
 **قصابی** — *qassâbi* — "a butcher's shop".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*qassâbi* is *qassâb*, "butcher", with the ending *-i*, "shop of". *qassâb* is borrowed from Arabic *qaṣṣāb*, "butcher" (root *q-ṣ-b*, Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

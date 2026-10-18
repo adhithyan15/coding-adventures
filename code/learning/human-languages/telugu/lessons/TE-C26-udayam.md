@@ -6,7 +6,7 @@ sequence: 540
 chapter: 26
 type: word
 headword: ఉదయం
-gloss: "morning" (udayam) — Sanskrit tatsama from udaya ("rise") + Telugu -mu, Telugu's most general everyday word, though genuine native competitors (poddu/podduna, vēkuva) also do real everyday work; unlike Kannada, where the same Sanskrit root (udaya) shows up ONLY inside the greeting śubhōdaya, Telugu's everyday noun and its greeting-root are the SAME word
+gloss: '"morning" (udayam) — Sanskrit tatsama from udaya ("rise") + Telugu -mu, Telugu''s most general everyday word, though genuine native competitors (poddu/podduna, vēkuva) also do real everyday work; unlike Kannada, where the same Sanskrit root (udaya) shows up ONLY inside the greeting śubhōdaya, Telugu''s everyday noun and its greeting-root are the SAME word'
 romanization: "udayam"
 concept_tag: TIME-MORNING
 prerequisites: [TE-C17-madhyaahnam-ardharaatri, TE-C23-roju]

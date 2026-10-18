@@ -14,7 +14,8 @@ romanization: "murgī"
 concept_tag: PA-THINGS133-MURGI
 prerequisites: [PA-C132-galhar, PA-C133-kukkar, PA-C43-kitthe]
 sounds: []
-roots: []
+roots: [persian-murgh]
+etymology_hook: "murgī: usually traced to Persian murgh 'bird, fowl'"
 duration:
   max_seconds: 200
 requires:
@@ -47,6 +48,11 @@ What does the small mark before **ਥ** do? (The addak doubles it: *kit-the*,
 <!-- hl-knowledge: introduces=[PA-LEX-C133-THINGS133-02]; assesses=[] -->
 
 **ਮੁਰਗੀ** — *murgī* — "a hen".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਮੁਰਗੀ** (*murgī*) is a loan, usually traced to Persian *murgh*, "bird, fowl". Punjabi adds the ending *-ī*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "jog kôrā"
 concept_tag: BN-VERB-JOG-KORA
 prerequisites: [BN-C182-joro-kora, BN-C182-bhag-kora]
 sounds: []
-roots: []
+roots: [sanskrit-yoga, sanskrit-karoti]
+etymology_hook: "jog kôrā: jog 'joining', Sanskrit yoga, + kôrā ← karoti (CDIAL 2814)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C182-bhag-kora]
 <!-- hl-knowledge: introduces=[BN-LEX-C182-ACT182-05]; assesses=[] -->
 
 **যোগ করা** — *jog kôrā* — "to add".
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**যোগ করা** (*jog kôrā*) is *jog*, "joining, adding", Sanskrit *yoga* taken over whole, + *kôrā*, "to do", from Sanskrit *karoti*, "does" (CDIAL 2814).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

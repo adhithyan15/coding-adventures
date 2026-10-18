@@ -14,7 +14,8 @@ romanization: "tej"
 concept_tag: MW-ADJ74-TEJ
 prerequisites: [MW-C74-garam, MW-C74-thando]
 sounds: []
-roots: []
+roots: [persian-tez]
+etymology_hook: "tej: usually traced to Persian tēz 'sharp, swift'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C74-thando]
 <!-- hl-knowledge: introduces=[MW-LEX-C74-ADJ74-03]; assesses=[] -->
 
 **तेज** — *tej* — "fast".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**तेज** (*tej*) is a loan, usually traced to Persian *tēz*, "sharp, swift". Marwadi says the *z* as *j*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

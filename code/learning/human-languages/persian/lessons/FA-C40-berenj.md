@@ -15,6 +15,7 @@ concept_tag: FA-VERBS40-BERENJ
 prerequisites: [FA-C40-sakhtan, FA-C40-mahi]
 sounds: []
 roots: []
+etymology_hook: "berenj: usually traced to Middle Persian brinj; deeper origin not settled"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C40-mahi]
 <!-- hl-knowledge: introduces=[FA-LEX-C40-VERBS40-04]; assesses=[] -->
 
 **برنج** — *berenj* — "rice".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*berenj* is usually traced to Middle Persian *brinj*, "rice", and set beside Sanskrit *vrīhi*, "rice"; the deeper origin of the rice word is not settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -97,6 +97,78 @@ mod apple {
         env!("CARGO_MANIFEST_DIR"),
         "/../../../grammars/mermaid/swimlane-11.16.1-visual-corpus.json"
     ));
+    const TIMELINE_CORPUS: &str = include_str!(concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/../../../grammars/mermaid/timeline-11.16.1-corpus.json"
+    ));
+    const TIMELINE_VISUAL_CORPUS: &str = include_str!(concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/../../../grammars/mermaid/timeline-11.16.1-visual-corpus.json"
+    ));
+    const MINDMAP_CORPUS: &str = include_str!(concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/../../../grammars/mermaid/mindmap-11.16.1-corpus.json"
+    ));
+    const MINDMAP_VISUAL_CORPUS: &str = include_str!(concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/../../../grammars/mermaid/mindmap-11.16.1-visual-corpus.json"
+    ));
+    const KANBAN_CORPUS: &str = include_str!(concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/../../../grammars/mermaid/kanban-11.16.1-corpus.json"
+    ));
+    const KANBAN_VISUAL_CORPUS: &str = include_str!(concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/../../../grammars/mermaid/kanban-11.16.1-visual-corpus.json"
+    ));
+    const ARCHITECTURE_CORPUS: &str = include_str!(concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/../../../grammars/mermaid/architecture-11.16.1-corpus.json"
+    ));
+    const ARCHITECTURE_VISUAL_CORPUS: &str = include_str!(concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/../../../grammars/mermaid/architecture-11.16.1-visual-corpus.json"
+    ));
+    const TREEMAP_CORPUS: &str = include_str!(concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/../../../grammars/mermaid/treemap-11.16.1-corpus.json"
+    ));
+    const TREEMAP_VISUAL_CORPUS: &str = include_str!(concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/../../../grammars/mermaid/treemap-11.16.1-visual-corpus.json"
+    ));
+    const VENN_CORPUS: &str = include_str!(concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/../../../grammars/mermaid/venn-11.16.1-corpus.json"
+    ));
+    const VENN_VISUAL_CORPUS: &str = include_str!(concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/../../../grammars/mermaid/venn-11.16.1-visual-corpus.json"
+    ));
+    const ISHIKAWA_CORPUS: &str = include_str!(concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/../../../grammars/mermaid/ishikawa-11.16.1-corpus.json"
+    ));
+    const ISHIKAWA_VISUAL_CORPUS: &str = include_str!(concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/../../../grammars/mermaid/ishikawa-11.16.1-visual-corpus.json"
+    ));
+    const WARDLEY_CORPUS: &str = include_str!(concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/../../../grammars/mermaid/wardley-11.16.1-corpus.json"
+    ));
+    const WARDLEY_VISUAL_CORPUS: &str = include_str!(concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/../../../grammars/mermaid/wardley-11.16.1-visual-corpus.json"
+    ));
+    const RAILROAD_COMPATIBILITY_CORPUS: &str = include_str!(concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/../../../grammars/mermaid/railroad-11.16.1-compatibility-corpus.json"
+    ));
+    const RAILROAD_VISUAL_CORPUS: &str = include_str!(concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/../../../grammars/mermaid/railroad-11.16.1-visual-corpus.json"
+    ));
 
     #[test]
     fn render_dot_diagram_to_png() {
@@ -357,6 +429,44 @@ mod apple {
     }
 
     #[test]
+    fn render_pinned_mermaid_mindmap_visual_corpus_to_png() {
+        let syntax: Value = serde_json::from_str(MINDMAP_CORPUS).expect("mindmap corpus JSON");
+        let visual: Value = serde_json::from_str(MINDMAP_VISUAL_CORPUS)
+            .expect("mindmap visual corpus JSON");
+        assert_eq!(visual["upstream_commit"], syntax["upstream_commit"]);
+
+        let valid = syntax["valid"].as_array().expect("valid mindmap fixtures");
+        let fixture_ids = visual["fixtures"].as_array().expect("visual fixture ids");
+        assert_eq!(fixture_ids.len(), valid.len(), "visual corpus must cover every valid fixture");
+        let unique = fixture_ids.iter().filter_map(Value::as_str).collect::<BTreeSet<_>>();
+        assert_eq!(unique.len(), fixture_ids.len(), "visual fixture ids must be unique");
+
+        let shaper = CoreTextShaper;
+        let metrics = CoreTextMetrics;
+        let resolver = CoreTextResolver::new();
+        for fixture_id in fixture_ids {
+            let id = fixture_id.as_str().expect("visual fixture id");
+            let fixture = valid.iter().find(|fixture| fixture["id"] == id)
+                .unwrap_or_else(|| panic!("visual fixture {id} must exist in the syntax corpus"));
+            let graph = parse_mindmap(fixture["source"].as_str().expect("mindmap fixture source"))
+                .unwrap_or_else(|error| panic!("mindmap visual fixture {id} failed: {error}"));
+            let layout = layout_graph_diagram(&graph, None, None);
+            let scene = diagram_to_paint(&layout, &DiagramToPaintOptions {
+                background: layout_ir::Color { r: 255, g: 255, b: 255, a: 255 },
+                device_pixel_ratio: 2.0,
+                label_font: font_spec("Helvetica", 12.0),
+                title_font: font_spec("Helvetica", 16.0),
+                shaper: &shaper,
+                metrics: &metrics,
+                resolver: &resolver,
+            });
+            assert!(!scene.instructions.is_empty(), "visual fixture {id} must lower to paint");
+            let pixels = render(&scene);
+            assert!(pixels.width > 0 && pixels.height > 0, "visual fixture {id} must render");
+        }
+    }
+
+    #[test]
     fn render_mermaid_block_to_png() {
         let grid = parse_block(
             "block-beta\ntitle Native block grid\naccTitle: Native block pipeline\naccDescr {\nGrammar through semantic IR\ninto backend-neutral paint\n}\ncolumns 3\nblock:pipeline[\"Processing Pipeline\"]:2\ncolumns 2\nA{{\"Grammar UI\"}} B([\"Semantic IR\"])\nend\nC(((Paint)))\nD[[Metal]] E[(PNG)] F>Backend flag]\nG<[\"Flow\"]>(right)\nH(\"Inline source\") -- \"routes\" --> I[\"Inline target\"]\nspace\nJ[\"Tilde source\"] ~~~ K(\"Tilde target\")\nspace\nL[\"Thick source\"] == \"thick route\" ==> M(\"Thick target\")\nspace\nN[\"Dotted source\"] -. \"dotted route\" -.-> O(\"Dotted target\")\nspace\nclassDef default fill:#e0f2fe,stroke:#0369a1,color:#0c4a6e\nclassDef pipelineNode fill:#dbeafe,stroke:#1d4ed8,color:#172554,stroke-width:3px,stroke-dasharray:5 3\nclass A,C pipelineNode\nstyle pipeline fill:#fef3c7,stroke:#b45309,color:#78350f,stroke-width:4px,stroke-dasharray:7 2,font-weight:bold\nstyle E fill:#dcfce7,stroke:#166534,font-weight:bold\nA-- \"lowers\" -->B\nB --> C\nC --- D\nD --> E\nE --> F\nA -.-> E\nB ==> F\nC <--> G\nG o--x |returns| D\nF--oA",
@@ -604,6 +714,44 @@ mod apple {
         let pixels = render(&scene);
         write_png(&pixels, "/tmp/mermaid_kanban_e2e.png").expect("PNG write failed");
         assert!(pixels.width > 0 && pixels.height > 0);
+    }
+
+    #[test]
+    fn render_pinned_mermaid_kanban_visual_corpus_to_png() {
+        let syntax: Value = serde_json::from_str(KANBAN_CORPUS).expect("kanban corpus JSON");
+        let visual: Value = serde_json::from_str(KANBAN_VISUAL_CORPUS)
+            .expect("kanban visual corpus JSON");
+        assert_eq!(visual["upstream_commit"], syntax["upstream_commit"]);
+
+        let valid = syntax["valid"].as_array().expect("valid kanban fixtures");
+        let fixture_ids = visual["fixtures"].as_array().expect("visual fixture ids");
+        assert_eq!(fixture_ids.len(), valid.len(), "visual corpus must cover every valid fixture");
+        let unique = fixture_ids.iter().filter_map(Value::as_str).collect::<BTreeSet<_>>();
+        assert_eq!(unique.len(), fixture_ids.len(), "visual fixture ids must be unique");
+
+        let shaper = CoreTextShaper;
+        let metrics = CoreTextMetrics;
+        let resolver = CoreTextResolver::new();
+        for fixture_id in fixture_ids {
+            let id = fixture_id.as_str().expect("visual fixture id");
+            let fixture = valid.iter().find(|fixture| fixture["id"] == id)
+                .unwrap_or_else(|| panic!("visual fixture {id} must exist in the syntax corpus"));
+            let board = parse_kanban(fixture["source"].as_str().expect("kanban fixture source"))
+                .unwrap_or_else(|error| panic!("kanban visual fixture {id} failed: {error}"));
+            let layout = layout_board_diagram(&board);
+            let scene = diagram_to_paint_board(&layout, &DiagramToPaintOptions {
+                background: layout_ir::Color { r: 255, g: 255, b: 255, a: 255 },
+                device_pixel_ratio: 2.0,
+                label_font: font_spec("Helvetica", 14.0),
+                title_font: font_spec("Helvetica", 18.0),
+                shaper: &shaper,
+                metrics: &metrics,
+                resolver: &resolver,
+            });
+            assert!(!scene.instructions.is_empty(), "visual fixture {id} must lower to paint");
+            let pixels = render(&scene);
+            assert!(pixels.width > 0 && pixels.height > 0, "visual fixture {id} must render");
+        }
     }
 
     #[test]
@@ -1959,6 +2107,52 @@ line "Target" [35, 50, 68, 82]"##,
     }
 
     #[test]
+    fn render_pinned_mermaid_architecture_visual_corpus_to_png() {
+        let syntax: Value = serde_json::from_str(ARCHITECTURE_CORPUS)
+            .expect("architecture corpus JSON");
+        let visual: Value = serde_json::from_str(ARCHITECTURE_VISUAL_CORPUS)
+            .expect("architecture visual corpus JSON");
+        assert_eq!(visual["upstream_commit"], syntax["upstream_commit"]);
+
+        let valid = syntax["valid"].as_array().expect("valid architecture fixtures");
+        let fixture_ids = visual["fixtures"].as_array().expect("visual fixture ids");
+        assert_eq!(fixture_ids.len(), valid.len(), "visual corpus must cover every valid fixture");
+        let unique = fixture_ids.iter().filter_map(Value::as_str).collect::<BTreeSet<_>>();
+        assert_eq!(unique.len(), fixture_ids.len(), "visual fixture ids must be unique");
+
+        let shaper = CoreTextShaper;
+        let metrics = CoreTextMetrics;
+        let resolver = CoreTextResolver::new();
+        for fixture_id in fixture_ids {
+            let id = fixture_id.as_str().expect("visual fixture id");
+            let fixture = valid.iter().find(|fixture| fixture["id"] == id)
+                .unwrap_or_else(|| panic!("visual fixture {id} must exist in the syntax corpus"));
+            let diagram = parse_architecture(
+                fixture["source"].as_str().expect("architecture fixture source"),
+            ).unwrap_or_else(|error| panic!("architecture visual fixture {id} failed: {error}"));
+            let layout = layout_structural_diagram(&diagram);
+            let scene = diagram_to_paint_structural(&layout, &DiagramToPaintOptions {
+                background: layout_ir::Color { r: 255, g: 255, b: 255, a: 255 },
+                device_pixel_ratio: 2.0,
+                label_font: font_spec("Helvetica", 14.0),
+                title_font: font_spec("Helvetica", 18.0),
+                shaper: &shaper,
+                metrics: &metrics,
+                resolver: &resolver,
+            });
+            if id != "empty" {
+                assert!(!scene.instructions.is_empty(), "visual fixture {id} must lower to paint");
+            }
+            if id == "layout-config" {
+                assert_eq!(scene.metadata.as_ref().and_then(|metadata|
+                    metadata.get("architecture.numIter")), Some(&"5000".to_string()));
+            }
+            let pixels = render(&scene);
+            assert!(pixels.width > 0 && pixels.height > 0, "visual fixture {id} must render");
+        }
+    }
+
+    #[test]
     fn render_mermaid_c4_to_png() {
         let diagram = parse_c4_diagram(
             "C4Context\nPerson(customer, \"Customer\", \"Uses online banking\")\nSystem_Boundary(bank, \"Bank\") {\nSystem(web, \"Internet Banking\", \"Handles accounts\")\n}\nRel(customer, web, \"Uses\", \"HTTPS\")",
@@ -2228,8 +2422,9 @@ line "Target" [35, 50, 68, 82]"##,
     #[test]
     fn render_mermaid_timeline_to_png() {
         let (title, timeline) = parse_timeline(
-            "timeline TD\naccTitle: Product history\naccDescr: Native release milestones\ntitle Native timeline\nsection Foundation\n2024 : Prototype\n     : First customer\nsection Growth\n2025 : General availability",
+            "%%{init: {\"fontSize\": 18, \"timeline\": {\"padding\": 64, \"leftMargin\": 90, \"useMaxWidth\": true}, \"themeVariables\": {\"fontFamily\": \"Helvetica\", \"cScale0\": \"#d8f3dc\", \"cScaleLabel0\": \"#173b24\", \"cScaleInv0\": \"#40916c\", \"cScale1\": \"#dbeafe\", \"cScaleLabel1\": \"#172554\", \"cScaleInv1\": \"#2563eb\"}}}%%\ntimeline\naccTitle: Product history\naccDescr: Native release milestones\ntitle Native timeline\nsection Foundation\n2024 : Prototype\n     : First customer\n2025 : General availability\nsection Growth\n2026 : Global launch",
         ).expect("timeline parse failed");
+        assert_eq!(timeline.direction, diagram_ir::TimelineDirection::LeftRight);
         let layout = layout_temporal_diagram(&TemporalDiagram {
             kind: TemporalKind::Timeline,
             title,
@@ -2251,10 +2446,61 @@ line "Target" [35, 50, 68, 82]"##,
             scene.metadata.as_ref().and_then(|metadata| metadata.get("accessibility.title")),
             Some(&"Product history".to_string())
         );
+        assert_eq!(
+            scene.metadata.as_ref().and_then(|metadata| metadata.get("timeline.disableMulticolor")),
+            Some(&"false".to_string())
+        );
+        assert_eq!(
+            scene.metadata.as_ref().and_then(|metadata| metadata.get("timeline.fontSize")),
+            Some(&"18".to_string())
+        );
         assert!(!scene.instructions.is_empty());
         let pixels = render(&scene);
         write_png(&pixels, "/tmp/mermaid_timeline_e2e.png").expect("PNG write failed");
         assert!(pixels.width > 0 && pixels.height > 0);
+    }
+
+    #[test]
+    fn render_pinned_mermaid_timeline_visual_corpus_to_png() {
+        let syntax: Value = serde_json::from_str(TIMELINE_CORPUS).expect("timeline corpus JSON");
+        let visual: Value = serde_json::from_str(TIMELINE_VISUAL_CORPUS)
+            .expect("timeline visual corpus JSON");
+        assert_eq!(visual["upstream_commit"], syntax["upstream_commit"]);
+
+        let valid = syntax["valid"].as_array().expect("valid timeline fixtures");
+        let fixture_ids = visual["fixtures"].as_array().expect("visual fixture ids");
+        assert_eq!(fixture_ids.len(), valid.len(), "visual corpus must cover every valid fixture");
+        let unique = fixture_ids.iter().filter_map(Value::as_str).collect::<BTreeSet<_>>();
+        assert_eq!(unique.len(), fixture_ids.len(), "visual fixture ids must be unique");
+
+        let shaper = CoreTextShaper;
+        let metrics = CoreTextMetrics;
+        let resolver = CoreTextResolver::new();
+        for fixture_id in fixture_ids {
+            let id = fixture_id.as_str().expect("visual fixture id");
+            let fixture = valid.iter().find(|fixture| fixture["id"] == id)
+                .unwrap_or_else(|| panic!("visual fixture {id} must exist in the syntax corpus"));
+            let (title, timeline) = parse_timeline(
+                fixture["source"].as_str().expect("timeline fixture source"),
+            ).unwrap_or_else(|error| panic!("timeline visual fixture {id} failed: {error}"));
+            let layout = layout_temporal_diagram(&TemporalDiagram {
+                kind: TemporalKind::Timeline,
+                title,
+                body: TemporalBody::Timeline(timeline),
+            }, 800.0);
+            let scene = diagram_to_paint_temporal(&layout, &DiagramToPaintOptions {
+                background: layout_ir::Color { r: 255, g: 255, b: 255, a: 255 },
+                device_pixel_ratio: 2.0,
+                label_font: font_spec("Helvetica", 12.0),
+                title_font: font_spec("Helvetica", 16.0),
+                shaper: &shaper,
+                metrics: &metrics,
+                resolver: &resolver,
+            });
+            assert!(!scene.instructions.is_empty(), "visual fixture {id} must lower to paint");
+            let pixels = render(&scene);
+            assert!(pixels.width > 0 && pixels.height > 0, "visual fixture {id} must render");
+        }
     }
 
     #[test]
@@ -2432,6 +2678,50 @@ line "Target" [35, 50, 68, 82]"##,
         let pixels = render(&scene);
         write_png(&pixels, "/tmp/mermaid_treemap_e2e.png").expect("PNG write failed");
         assert!(pixels.width > 0 && pixels.height > 0);
+    }
+
+    #[test]
+    fn render_pinned_mermaid_treemap_visual_corpus_to_png() {
+        let syntax: Value =
+            serde_json::from_str(TREEMAP_CORPUS).expect("treemap corpus JSON");
+        let visual: Value = serde_json::from_str(TREEMAP_VISUAL_CORPUS)
+            .expect("treemap visual corpus JSON");
+        assert_eq!(visual["upstream_commit"], syntax["upstream_commit"]);
+
+        let valid = syntax["valid"].as_array().expect("valid treemap fixtures");
+        let fixture_ids = visual["fixtures"].as_array().expect("visual fixture ids");
+        assert_eq!(fixture_ids.len(), valid.len(), "visual corpus must cover every valid fixture");
+        let unique = fixture_ids.iter().filter_map(Value::as_str).collect::<BTreeSet<_>>();
+        assert_eq!(unique.len(), fixture_ids.len(), "visual fixture ids must be unique");
+
+        let shaper = CoreTextShaper;
+        let metrics = CoreTextMetrics;
+        let resolver = CoreTextResolver::new();
+        for fixture_id in fixture_ids {
+            let id = fixture_id.as_str().expect("visual fixture id");
+            let fixture = valid.iter().find(|fixture| fixture["id"] == id)
+                .unwrap_or_else(|| panic!("visual fixture {id} must exist in syntax corpus"));
+            let diagram = parse_treemap(
+                fixture["source"].as_str().expect("treemap fixture source"),
+            ).unwrap_or_else(|error| panic!("treemap visual fixture {id} failed: {error}"));
+            let layout = layout_treemap(&diagram, 720.0);
+            let scene = diagram_to_paint_treemap(&layout, &DiagramToPaintOptions {
+                background: layout_ir::Color { r: 255, g: 255, b: 255, a: 255 },
+                device_pixel_ratio: 2.0,
+                label_font: font_spec("Helvetica", 12.0),
+                title_font: font_spec("Helvetica", 17.0),
+                shaper: &shaper,
+                metrics: &metrics,
+                resolver: &resolver,
+            });
+            if id != "empty" {
+                assert!(!scene.instructions.is_empty(), "visual fixture {id} must lower to paint");
+            }
+            let pixels = render(&scene);
+            assert!(pixels.width > 0 && pixels.height > 0, "visual fixture {id} must render");
+            write_png(&pixels, &format!("/tmp/mermaid_treemap_11_16_1_{id}.png"))
+                .unwrap_or_else(|error| panic!("visual fixture {id} PNG failed: {error}"));
+        }
     }
 
     #[test]
@@ -3547,6 +3837,161 @@ line "Target" [35, 50, 68, 82]"##,
                     matches!(instruction, PaintInstruction::Rect(_))
                 ).count() >= 4, "the default lane and both nodes must lower to paint rectangles");
             }
+            if fixture_name == "theme-variables" {
+                assert_eq!(layout.theme.main_background, "#ffe1ef");
+                assert!(scene.instructions.iter().filter(|instruction| matches!(instruction,
+                    PaintInstruction::Rect(rect) if rect.fill.as_deref() == Some("#ffe1ef")
+                        && rect.stroke.as_deref() == Some("#225577")
+                )).count() >= 2, "theme variables must style default Swimlane nodes");
+                assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
+                    PaintInstruction::Path(path) if path.stroke.as_deref() == Some("#118844")
+                )), "theme lineColor must lower to backend-neutral edge paint");
+                assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("swimlane.theme.nodeBorder")),
+                    Some(&"#225577".to_string()));
+            }
+            if fixture_name == "theme-typography-variables" {
+                assert_eq!(layout.theme.font_size, Some(19.0));
+                assert!(layout.nodes[0].width > 132.0,
+                    "theme font size must participate in backend-neutral node measurement");
+                assert!(layout.nodes.iter().all(|node|
+                    node.x + node.width < layout.lanes[0].x + layout.lanes[0].width
+                ), "theme-sized nodes must remain inside their ownership lane");
+                assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
+                    PaintInstruction::GlyphRun(run) if run.font_size == 19.0
+                        && run.fill.as_deref() == Some("rgb(124, 45, 18)")
+                )), "theme typography must lower to backend-neutral glyph runs");
+                assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("swimlane.theme.fontFamily")),
+                    Some(&"Helvetica Neue".to_string()));
+            }
+            if fixture_name == "theme-edge-label-variables" {
+                assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
+                    PaintInstruction::Rect(rect) if rect.fill.as_deref() == Some("#dbeafe")
+                        && rect.stroke.is_none() && rect.width == 104.0 && rect.height == 22.0
+                )), "edgeLabelBackground must lower behind the edge label");
+                assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
+                    PaintInstruction::GlyphRun(run) if run.fill.as_deref() == Some("rgb(23, 37, 84)")
+                )), "textColor must lower to the themed edge label glyph run");
+                assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("swimlane.theme.edgeLabelBackground")),
+                    Some(&"#dbeafe".to_string()));
+            }
+            if fixture_name == "theme-cluster-variables" {
+                assert_eq!(layout.theme.cluster_background.as_deref(), Some("#fef3c7"));
+                assert!(scene.instructions.iter().filter(|instruction| matches!(instruction,
+                    PaintInstruction::Rect(rect) if rect.fill.as_deref() == Some("#fef3c7")
+                        && rect.stroke.as_deref() == Some("#b45309")
+                )).count() >= 2, "cluster theme must style both lane and nested group paint");
+                assert!(scene.instructions.iter().filter(|instruction| matches!(instruction,
+                    PaintInstruction::GlyphRun(run) if run.fill.as_deref() == Some("rgb(124, 45, 18)")
+                )).count() >= 3, "titleColor must style the diagram, lane, and nested group labels");
+                assert_eq!(scene.metadata.as_ref().and_then(|metadata|
+                    metadata.get("swimlane.theme.clusterBkg")), Some(&"#fef3c7".to_string()));
+                assert_eq!(scene.metadata.as_ref().and_then(|metadata|
+                    metadata.get("swimlane.theme.clusterBorder")), Some(&"#b45309".to_string()));
+                assert_eq!(scene.metadata.as_ref().and_then(|metadata|
+                    metadata.get("swimlane.theme.titleColor")), Some(&"#7c2d12".to_string()));
+            }
+            if fixture_name == "theme-node-edge-variables" {
+                assert_eq!(layout.theme.stroke_width, Some(4.0));
+                assert!(scene.instructions.iter().filter(|instruction| matches!(instruction,
+                    PaintInstruction::Rect(rect) if rect.stroke_width == Some(4.0)
+                )).count() >= 2, "strokeWidth must lower to default node rectangle paint");
+                assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
+                    PaintInstruction::Path(path) if path.stroke.as_deref() == Some("#455a64")
+                        && path.stroke_width == Some(4.0)
+                )), "strokeWidth must lower to default edge path paint");
+                assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
+                    PaintInstruction::Path(path) if path.fill.as_deref() == Some("#dc2626")
+                )), "arrowheadColor must lower to endpoint marker paint");
+                assert!(scene.instructions.iter().filter(|instruction| matches!(instruction,
+                    PaintInstruction::GlyphRun(run) if run.fill.as_deref() == Some("rgb(20, 83, 45)")
+                )).count() >= 2, "nodeTextColor must lower to default node glyph paint");
+                assert_eq!(scene.metadata.as_ref().and_then(|metadata|
+                    metadata.get("swimlane.theme.nodeTextColor")), Some(&"#14532d".to_string()));
+                assert_eq!(scene.metadata.as_ref().and_then(|metadata|
+                    metadata.get("swimlane.theme.arrowheadColor")), Some(&"#dc2626".to_string()));
+                assert_eq!(scene.metadata.as_ref().and_then(|metadata|
+                    metadata.get("swimlane.theme.strokeWidth")), Some(&"4".to_string()));
+            }
+            if fixture_name == "flowchart-spacing-config" {
+                assert_eq!(layout.flowchart_config.node_spacing, Some(96.0));
+                assert_eq!(layout.flowchart_config.rank_spacing, Some(28.0));
+                assert_eq!(layout.flowchart_config.diagram_padding, Some(32.0));
+                assert_eq!(layout.lanes[0].x, 32.0,
+                    "diagramPadding must place lanes inside the portable scene bounds");
+                assert_eq!(layout.lanes[1].y - layout.lanes[0].y - layout.lanes[0].height, 96.0,
+                    "nodeSpacing must separate same-rank ownership lanes");
+                let first = layout.nodes.iter().find(|node| node.id == "receive").expect("receive node");
+                let second = layout.nodes.iter().find(|node| node.id == "validate").expect("validate node");
+                assert_eq!(second.x - first.x - first.width, 28.0,
+                    "rankSpacing must separate consecutive ranks");
+                assert_eq!(scene.metadata.as_ref().and_then(|metadata|
+                    metadata.get("swimlane.flowchart.nodeSpacing")), Some(&"96".to_string()));
+                assert_eq!(scene.metadata.as_ref().and_then(|metadata|
+                    metadata.get("swimlane.flowchart.rankSpacing")), Some(&"28".to_string()));
+                assert_eq!(scene.metadata.as_ref().and_then(|metadata|
+                    metadata.get("swimlane.flowchart.diagramPadding")), Some(&"32".to_string()));
+            }
+            if fixture_name == "flowchart-wrapping-width" {
+                assert_eq!(layout.flowchart_config.wrapping_width, Some(180.0));
+                assert_eq!(layout.nodes[0].width, 180.0,
+                    "wrappingWidth must cap backend-neutral horizontal node width");
+                assert_eq!(scene.metadata.as_ref().and_then(|metadata|
+                    metadata.get("swimlane.flowchart.wrappingWidth")), Some(&"180".to_string()));
+                assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
+                    PaintInstruction::GlyphRun(run) if run.glyphs.len() > 20
+                )), "wrapped node text must lower to backend-neutral glyph paint");
+            }
+            if fixture_name == "flowchart-node-padding" {
+                assert_eq!(layout.flowchart_config.padding, Some(24.0));
+                assert_eq!((layout.nodes[0].width, layout.nodes[0].height), (152.0, 74.0),
+                    "padding must expand backend-neutral process-node geometry");
+                assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
+                    PaintInstruction::Rect(rect) if rect.width == 152.0 && rect.height == 74.0
+                )), "padded process geometry must lower to portable rectangle paint");
+                assert_eq!(scene.metadata.as_ref().and_then(|metadata|
+                    metadata.get("swimlane.flowchart.padding")), Some(&"24".to_string()));
+            }
+            if fixture_name == "flowchart-title-top-margin" {
+                assert_eq!(layout.flowchart_config.title_top_margin, Some(26.0));
+                assert_eq!(layout.lanes[0].y, 70.0,
+                    "titleTopMargin must reserve portable layout space above ownership lanes");
+                assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
+                    PaintInstruction::GlyphRun(run) if !run.glyphs.is_empty()
+                        && run.glyphs.iter().all(|glyph| glyph.y > 26.0 && glyph.y < 70.0)
+                )), "the shifted title must lower to positioned glyph paint");
+                assert_eq!(scene.metadata.as_ref().and_then(|metadata|
+                    metadata.get("swimlane.flowchart.titleTopMargin")), Some(&"26".to_string()));
+            }
+            if fixture_name == "flowchart-subgraph-title-margins" {
+                assert_eq!(layout.flowchart_config.subgraph_title_margin_top, Some(12.0));
+                assert_eq!(layout.flowchart_config.subgraph_title_margin_bottom, Some(18.0));
+                assert_eq!(layout.nodes[0].x, 100.0,
+                    "subgraph title margins must reserve header space before horizontal nodes");
+                assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
+                    PaintInstruction::GlyphRun(run) if !run.glyphs.is_empty()
+                        && run.glyphs.iter().all(|glyph| glyph.y > 28.0 && glyph.y < 70.0)
+                )), "the shifted lane title must lower to positioned glyph paint");
+                assert_eq!(scene.metadata.as_ref().and_then(|metadata|
+                    metadata.get("swimlane.flowchart.subGraphTitleMargin.top")), Some(&"12".to_string()));
+                assert_eq!(scene.metadata.as_ref().and_then(|metadata|
+                    metadata.get("swimlane.flowchart.subGraphTitleMargin.bottom")), Some(&"18".to_string()));
+            }
+            if fixture_name == "flowchart-curve-config" {
+                assert_eq!(layout.flowchart_config.curve,
+                    Some(diagram_ir::SwimlaneEdgeCurve::StepAfter));
+                assert_eq!(layout.edges[0].curve, Some(diagram_ir::SwimlaneEdgeCurve::StepAfter));
+                assert_eq!(layout.edges[1].curve, Some(diagram_ir::SwimlaneEdgeCurve::Linear),
+                    "a per-edge curve must override the shared Flowchart curve");
+                assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
+                    PaintInstruction::Path(path) if path.commands.len() == 3
+                )), "the global step-after curve must lower to an orthogonal paint path");
+                assert_eq!(scene.metadata.as_ref().and_then(|metadata|
+                    metadata.get("swimlane.flowchart.curve")), Some(&"stepAfter".to_string()));
+                assert_eq!(scene.metadata.as_ref().and_then(|metadata|
+                    metadata.get("swimlane.edge.0.curve")), Some(&"stepAfter".to_string()));
+                assert_eq!(scene.metadata.as_ref().and_then(|metadata|
+                    metadata.get("swimlane.edge.1.curve")), Some(&"linear".to_string()));
+            }
             if fixture_name == "node-typography-styles" {
                 assert!(layout.nodes[0].width > layout.nodes[1].width,
                     "larger bold text must reserve more backend-neutral node width");
@@ -4090,6 +4535,38 @@ line "Target" [35, 50, 68, 82]"##,
                 assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("swimlane.group.1.parent")),
                     Some(&"Platform".to_string()));
             }
+            if fixture_name == "styled-subgraphs" {
+                assert_eq!(layout.lanes[0].style.corner_radius, Some(14.0));
+                assert_eq!(layout.groups[0].style.font_size, Some(17.0));
+                assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
+                    PaintInstruction::Rect(rect) if rect.fill.as_deref() == Some("#ecfdf5")
+                        && rect.stroke.as_deref() == Some("#047857")
+                        && rect.corner_radius == Some(14.0)
+                )), "direct lane styles must lower to backend-neutral rectangle paint");
+                assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
+                    PaintInstruction::Rect(rect) if rect.fill.as_deref() == Some("#fef3c7")
+                        && rect.stroke.as_deref() == Some("#b45309")
+                        && rect.stroke_dash.as_deref() == Some(&[5.0, 3.0])
+                )), "class group styles must lower to backend-neutral rectangle paint");
+                assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
+                    PaintInstruction::GlyphRun(run) if run.font_size == 17.0
+                        && run.fill.as_deref() == Some("rgb(124, 45, 18)")
+                )), "group title typography must lower to backend-neutral glyph runs");
+            }
+            if fixture_name == "subgraph-class-decorators" {
+                assert_eq!(layout.lanes[0].classes, ["laneStyle"]);
+                assert_eq!(layout.groups[0].classes, ["phaseStyle"]);
+                assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
+                    PaintInstruction::Rect(rect) if rect.fill.as_deref() == Some("#eff6ff")
+                        && rect.stroke.as_deref() == Some("#1d4ed8")
+                        && rect.corner_radius == Some(14.0)
+                )), "lane decorators must lower through semantic and layout IR to paint");
+                assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
+                    PaintInstruction::Rect(rect) if rect.fill.as_deref() == Some("#fef3c7")
+                        && rect.stroke.as_deref() == Some("#b45309")
+                        && rect.stroke_dash.as_deref() == Some(&[5.0, 3.0])
+                )), "group decorators must lower through semantic and layout IR to paint");
+            }
             if fixture_name == "state-choice-note-shapes" {
                 assert_eq!(layout.nodes.iter().map(|node| &node.shape).collect::<Vec<_>>(), vec![
                     &diagram_ir::DiagramShape::RoundedRect,
@@ -4193,7 +4670,7 @@ line "Target" [35, 50, 68, 82]"##,
 
     #[test]
     fn render_mermaid_railroad_to_png() {
-        let diagram = parse_railroad("railroad-beta\ntitle Numeric literal\naccTitle: Numeric grammar\nsign = optional(terminal(\"-\"));\ndigit = choice(terminal(\"0\"), terminal(\"1\"));\nnumber = sequence(nonterminal(\"sign\"), oneOrMore(nonterminal(\"digit\")), special(\"integer\"));").expect("railroad parse failed");
+        let diagram = parse_railroad("---\nconfig:\n  railroad:\n    compactMode: true\n    padding: 24\n    verticalSeparation: 30\n    horizontalSeparation: 36\n    arcRadius: 18\n    fontSize: 18\n    fontFamily: Courier New\n    terminalFill: '#dcfce7'\n    terminalStroke: '#166534'\n    terminalTextColor: '#14532d'\n    nonTerminalFill: '#dbeafe'\n    nonTerminalStroke: '#1d4ed8'\n    nonTerminalTextColor: '#172554'\n    lineColor: '#dc2626'\n    strokeWidth: 3\n    markerFill: '#7c2d12'\n    specialFill: '#fef3c7'\n    specialStroke: '#b45309'\n    ruleNameColor: '#581c87'\n    showMarkers: true\n    markerRadius: 8\n---\nrailroad-beta\ntitle Numeric literal\naccTitle: Numeric grammar\nsign = optional(terminal(\"-\"));\ndigit = choice(terminal(\"0\"), terminal(\"1\"));\nnumber = sequence(nonterminal(\"sign\"), oneOrMore(nonterminal(\"digit\")), special(\"integer\"));").expect("railroad parse failed");
         let layout = layout_railroad(&diagram);
         let shaper = CoreTextShaper; let metrics = CoreTextMetrics; let resolver = CoreTextResolver::new();
         let scene = diagram_to_paint_railroad(&layout, &DiagramToPaintOptions {
@@ -4202,9 +4679,70 @@ line "Target" [35, 50, 68, 82]"##,
             shaper: &shaper, metrics: &metrics, resolver: &resolver,
         });
         assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("accessibility.title")), Some(&"Numeric grammar".to_string()));
+        assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("railroad.compactMode")), Some(&"true".to_string()));
+        assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("railroad.padding")), Some(&"24".to_string()));
+        assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("railroad.verticalSeparation")), Some(&"30".to_string()));
+        assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("railroad.horizontalSeparation")), Some(&"36".to_string()));
+        assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("railroad.arcRadius")), Some(&"18".to_string()));
+        assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("railroad.fontFamily")), Some(&"Courier New".to_string()));
+        assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("railroad.strokeWidth")), Some(&"3".to_string()));
+        assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("railroad.markerRadius")), Some(&"8".to_string()));
         assert!(scene.instructions.iter().any(|instruction| matches!(instruction, PaintInstruction::Path(_))));
         assert!(scene.instructions.iter().any(|instruction| matches!(instruction, PaintInstruction::Rect(_))));
+        assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
+            PaintInstruction::Path(path) if path.stroke.as_deref() == Some("#dc2626") && path.stroke_width == Some(3.0))));
+        assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
+            PaintInstruction::Path(path) if path.commands.iter().any(|command| matches!(command, paint_instructions::PathCommand::CubicTo { .. })))));
+        assert!(scene.instructions.iter().all(|instruction| !matches!(instruction,
+            PaintInstruction::Path(path) if path.commands.iter().any(|command| matches!(command, paint_instructions::PathCommand::QuadTo { .. })))));
+        assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
+            PaintInstruction::Ellipse(marker) if marker.fill.as_deref() == Some("#7c2d12") && marker.rx == 8.0)));
+        assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
+            PaintInstruction::Ellipse(marker) if marker.cx == layout.rules[0].start_marker.x
+                && marker.cy == layout.rules[0].start_marker.y)));
+        assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
+            PaintInstruction::Ellipse(marker) if marker.cx == layout.rules[2].end_marker.x
+                && marker.cy == layout.rules[2].end_marker.y)));
+        assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
+            PaintInstruction::Rect(rect) if rect.fill.as_deref() == Some("#dcfce7") && rect.stroke.as_deref() == Some("#166534"))));
+        assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
+            PaintInstruction::GlyphRun(run) if run.font_size == 18.0
+                && run.fill.as_deref() == Some("rgb(20, 83, 45)"))));
+        assert!(layout.rules[2].elements.iter().any(|element|
+            element.kind == diagram_ir::RailroadElementKind::Special && element.label == "? integer ?"));
         let pixels = render(&scene); write_png(&pixels, "/tmp/mermaid_railroad_e2e.png").expect("PNG write failed");
+        assert!(pixels.width > 0 && pixels.height > 0);
+    }
+
+    #[test]
+    fn render_mermaid_railroad_theme_fallbacks_to_png() {
+        let diagram = parse_railroad("---\nthemeVariables:\n  fontFamily: Georgia\n  fontSize: 17px\n  secondBkg: '#fef3c7'\n  secondaryBorderColor: '#b45309'\n  secondaryTextColor: '#78350f'\n  mainBkg: '#dbeafe'\n  primaryBorderColor: '#1d4ed8'\n  primaryTextColor: '#172554'\n  lineColor: '#15803d'\n  tertiaryColor: '#fce7f3'\n  tertiaryBorderColor: '#be185d'\n  titleColor: '#581c87'\nconfig:\n  railroad:\n    terminalFill: '#dcfce7'\n    terminalStroke: 'url(javascript:alert(1))'\n---\nrailroad-beta\nvalue = sequence(terminal(\"x\"), nonterminal(\"item\"), special(\"end\"));")
+            .expect("railroad theme fallback parse failed");
+        let layout = layout_railroad(&diagram);
+        assert_eq!(layout.config.font_size, 17.0);
+        assert!(layout.rules[0].elements[1].width > 70.0);
+        let shaper = CoreTextShaper; let metrics = CoreTextMetrics; let resolver = CoreTextResolver::new();
+        let scene = diagram_to_paint_railroad(&layout, &DiagramToPaintOptions {
+            background: layout_ir::Color { r: 255, g: 255, b: 255, a: 255 }, device_pixel_ratio: 2.0,
+            label_font: font_spec("Helvetica", 13.0), title_font: font_spec("Helvetica", 18.0),
+            shaper: &shaper, metrics: &metrics, resolver: &resolver,
+        });
+        assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("railroad.fontFamily")), Some(&"Georgia".to_string()));
+        assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
+            PaintInstruction::Path(path) if path.stroke.as_deref() == Some("#15803d"))));
+        assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
+            PaintInstruction::Ellipse(marker) if marker.fill.as_deref() == Some("#15803d"))));
+        assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
+            PaintInstruction::Rect(rect) if rect.fill.as_deref() == Some("#dcfce7") && rect.stroke.as_deref() == Some("#b45309"))));
+        assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
+            PaintInstruction::Rect(rect) if rect.fill.as_deref() == Some("#dbeafe") && rect.stroke.as_deref() == Some("#1d4ed8"))));
+        assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
+            PaintInstruction::Rect(rect) if rect.fill.as_deref() == Some("#fce7f3") && rect.stroke.as_deref() == Some("#be185d"))));
+        assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
+            PaintInstruction::GlyphRun(run) if run.font_size == 17.0
+                && run.fill.as_deref() == Some("rgb(88, 28, 135)"))));
+        let pixels = render(&scene);
+        write_png(&pixels, "/tmp/mermaid_railroad_theme_e2e.png").expect("PNG write failed");
         assert!(pixels.width > 0 && pixels.height > 0);
     }
 
@@ -4257,6 +4795,48 @@ line "Target" [35, 50, 68, 82]"##,
     }
 
     #[test]
+    fn render_pinned_mermaid_railroad_visual_corpus_to_png() {
+        let syntax: Value = serde_json::from_str(RAILROAD_COMPATIBILITY_CORPUS)
+            .expect("railroad compatibility corpus JSON");
+        let visual: Value = serde_json::from_str(RAILROAD_VISUAL_CORPUS)
+            .expect("railroad visual corpus JSON");
+        assert_eq!(visual["upstream_commit"], syntax["upstream_commit"]);
+
+        let valid = syntax["valid"].as_array().expect("valid railroad fixtures");
+        let fixture_ids = visual["fixtures"].as_array().expect("visual fixture ids");
+        assert_eq!(fixture_ids.len(), valid.len(), "visual corpus must cover every valid fixture");
+        let unique = fixture_ids.iter().filter_map(Value::as_str).collect::<BTreeSet<_>>();
+        assert_eq!(unique.len(), fixture_ids.len(), "visual fixture ids must be unique");
+
+        let shaper = CoreTextShaper;
+        let metrics = CoreTextMetrics;
+        let resolver = CoreTextResolver::new();
+        for fixture_id in fixture_ids {
+            let id = fixture_id.as_str().expect("visual fixture id");
+            let fixture = valid.iter().find(|fixture| fixture["id"] == id)
+                .unwrap_or_else(|| panic!("visual fixture {id} must exist in syntax corpus"));
+            let diagram = parse_railroad(
+                fixture["source"].as_str().expect("railroad fixture source"),
+            ).unwrap_or_else(|error| panic!("railroad visual fixture {id} failed: {error}"));
+            let layout = layout_railroad(&diagram);
+            let scene = diagram_to_paint_railroad(&layout, &DiagramToPaintOptions {
+                background: layout_ir::Color { r: 255, g: 255, b: 255, a: 255 },
+                device_pixel_ratio: 2.0,
+                label_font: font_spec("Helvetica", 13.0),
+                title_font: font_spec("Helvetica", 18.0),
+                shaper: &shaper,
+                metrics: &metrics,
+                resolver: &resolver,
+            });
+            assert!(!scene.instructions.is_empty(), "visual fixture {id} must lower to paint");
+            let pixels = render(&scene);
+            assert!(pixels.width > 0 && pixels.height > 0, "visual fixture {id} must render");
+            write_png(&pixels, &format!("/tmp/mermaid_railroad_11_16_1_{id}.png"))
+                .unwrap_or_else(|error| panic!("visual fixture {id} PNG failed: {error}"));
+        }
+    }
+
+    #[test]
     fn render_mermaid_info_to_png() {
         let diagram = parse_info("info showInfo").expect("info parse failed");
         let layout = layout_info(&diagram);
@@ -4290,26 +4870,86 @@ line "Target" [35, 50, 68, 82]"##,
 
     #[test]
     fn render_mermaid_venn_to_png() {
-        let diagram = parse_venn("venn-beta\ntitle Product Skills\nset Design[\"Design\"]:20\n  text research[\"Research\"]\nset Engineering[\"Engineering\"]:18\n  text systems[\"Systems\"]\nunion Design,Engineering[\"Product\"]:6\n  text shared[\"Prototyping\"]").expect("venn parse failed");
-        let layout = layout_venn(&diagram, 720.0);
+        let diagram = parse_venn("---\nthemeVariables:\n  fontFamily: Georgia\n  vennTitleTextColor: '#123456'\n  vennSetTextColor: '#654321'\n  venn1: '#0f766e'\n  venn2: '#f97316'\nconfig:\n  venn:\n    width: 720\n    height: 420\n    padding: 24\n    useMaxWidth: false\n    useDebugLayout: true\n---\nvenn-beta\ntitle Product Skills\nset Design[\"Design\"]:20\n  text research[\"Research\"]\nset Engineering[\"Engineering\"]:18\n  text systems[\"Systems\"]\nunion Design,Engineering[\"Product\"]:6\n  text shared[\"Prototyping\"]\nstyle Engineering stroke:#123456\nstyle Engineering stroke-width:4").expect("venn parse failed");
+        let layout = layout_venn(&diagram);
         let shaper = CoreTextShaper; let metrics = CoreTextMetrics; let resolver = CoreTextResolver::new();
         let scene = diagram_to_paint_venn(&layout, &DiagramToPaintOptions {
             background: layout_ir::Color { r: 255, g: 255, b: 255, a: 255 }, device_pixel_ratio: 2.0,
             label_font: font_spec("Helvetica", 13.0), title_font: font_spec("Helvetica", 18.0),
             shaper: &shaper, metrics: &metrics, resolver: &resolver,
         });
-        assert_eq!(scene.instructions.iter().filter(|instruction| matches!(instruction, PaintInstruction::Ellipse(_))).count(), 2);
+        assert_eq!((scene.width, scene.height), (720.0, 420.0));
+        assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("venn.padding")), Some(&"24".to_string()));
+        assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("venn.useMaxWidth")), Some(&"false".to_string()));
+        assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("venn.useDebugLayout")), Some(&"true".to_string()));
+        assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("venn.fontFamily")), Some(&"Georgia".to_string()));
+        assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("venn.titleTextColor")), Some(&"#123456".to_string()));
+        assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("venn.themeColor1")), Some(&"#0f766e".to_string()));
+        assert_eq!(scene.instructions.iter().filter(|instruction| matches!(instruction, PaintInstruction::Ellipse(_))).count(), 5);
+        assert_eq!(scene.instructions.iter().filter(|instruction| matches!(instruction, PaintInstruction::Rect(_))).count(), 3);
+        assert!(scene.instructions.iter().any(|instruction| matches!(instruction, PaintInstruction::Ellipse(ellipse)
+            if ellipse.fill.as_deref() == Some("rgba(15,118,110,0.1)")
+                && ellipse.stroke.as_deref() == Some("#0f766e") && ellipse.stroke_width == Some(2.25))));
+        assert!(scene.instructions.iter().any(|instruction| matches!(instruction, PaintInstruction::Ellipse(ellipse)
+            if ellipse.stroke.as_deref() == Some("#123456") && ellipse.stroke_width == Some(4.0))));
+        assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
+            PaintInstruction::GlyphRun(run) if (run.font_size - 14.4).abs() < 0.001)));
+        assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
+            PaintInstruction::GlyphRun(run) if (run.font_size - 21.6).abs() < 0.001)));
+        assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
+            PaintInstruction::GlyphRun(run) if (run.font_size - 18.0).abs() < 0.001)));
         let pixels = render(&scene);
         write_png(&pixels, "/tmp/mermaid_venn_e2e.png").expect("PNG write failed");
         assert!(pixels.width > 0 && pixels.height > 0);
     }
 
     #[test]
+    fn render_pinned_mermaid_venn_visual_corpus_to_png() {
+        let syntax: Value = serde_json::from_str(VENN_CORPUS).expect("venn corpus JSON");
+        let visual: Value =
+            serde_json::from_str(VENN_VISUAL_CORPUS).expect("venn visual corpus JSON");
+        assert_eq!(visual["upstream_commit"], syntax["upstream_commit"]);
+
+        let valid = syntax["valid"].as_array().expect("valid venn fixtures");
+        let fixture_ids = visual["fixtures"].as_array().expect("visual fixture ids");
+        assert_eq!(fixture_ids.len(), valid.len(), "visual corpus must cover every valid fixture");
+        let unique = fixture_ids.iter().filter_map(Value::as_str).collect::<BTreeSet<_>>();
+        assert_eq!(unique.len(), fixture_ids.len(), "visual fixture ids must be unique");
+
+        let shaper = CoreTextShaper;
+        let metrics = CoreTextMetrics;
+        let resolver = CoreTextResolver::new();
+        for fixture_id in fixture_ids {
+            let id = fixture_id.as_str().expect("visual fixture id");
+            let fixture = valid.iter().find(|fixture| fixture["id"] == id)
+                .unwrap_or_else(|| panic!("visual fixture {id} must exist in syntax corpus"));
+            let diagram = parse_venn(fixture["source"].as_str().expect("venn fixture source"))
+                .unwrap_or_else(|error| panic!("venn visual fixture {id} failed: {error}"));
+            let layout = layout_venn(&diagram);
+            let scene = diagram_to_paint_venn(&layout, &DiagramToPaintOptions {
+                background: layout_ir::Color { r: 255, g: 255, b: 255, a: 255 },
+                device_pixel_ratio: 2.0,
+                label_font: font_spec("Helvetica", 13.0),
+                title_font: font_spec("Helvetica", 18.0),
+                shaper: &shaper,
+                metrics: &metrics,
+                resolver: &resolver,
+            });
+            assert!(!scene.instructions.is_empty(), "visual fixture {id} must lower to paint");
+            let pixels = render(&scene);
+            assert!(pixels.width > 0 && pixels.height > 0, "visual fixture {id} must render");
+            write_png(&pixels, &format!("/tmp/mermaid_venn_11_16_1_{id}.png"))
+                .unwrap_or_else(|error| panic!("visual fixture {id} PNG failed: {error}"));
+        }
+    }
+
+    #[test]
     fn render_mermaid_ishikawa_to_png() {
-        let diagram = parse_ishikawa("%%{init: {\"ishikawa\": {\"diagramPadding\": 64}}}%%\nishikawa-beta\nLate delivery\n  People\n    Staffing\n  Process\n    Reviews\n  Tools\n    Slow builds").expect("ishikawa parse failed");
+        let diagram = parse_ishikawa("%%{init: {\"fontSize\": 22, \"look\": \"handDrawn\", \"handDrawnSeed\": 17, \"ishikawa\": {\"diagramPadding\": 64, \"useMaxWidth\": true}, \"themeVariables\": {\"fontFamily\": \"Georgia\", \"lineColor\": \"#123456\", \"mainBkg\": \"#abcdef\", \"textColor\": \"#654321\"}}}%%\nishikawa-beta\nLate delivery\n  People\n    Staffing\n  Process\n    Reviews\n  Tools\n    Slow builds").expect("ishikawa parse failed");
         let layout = layout_ishikawa(&diagram, 720.0);
-        assert_eq!(diagram.diagram_padding, 64.0);
-        assert_eq!(layout.spine_from.x, 80.0);
+        assert_eq!(diagram.config.diagram_padding, 64.0);
+        assert!(diagram.config.use_max_width);
+        assert!(layout.spine_from.x >= 80.0);
         assert_eq!(layout.width - (layout.effect_x + layout.effect_width), 64.0);
         let shaper = CoreTextShaper; let metrics = CoreTextMetrics; let resolver = CoreTextResolver::new();
         let scene = diagram_to_paint_ishikawa(&layout, &DiagramToPaintOptions {
@@ -4317,24 +4957,169 @@ line "Target" [35, 50, 68, 82]"##,
             label_font: font_spec("Helvetica", 13.0), title_font: font_spec("Helvetica", 15.0),
             shaper: &shaper, metrics: &metrics, resolver: &resolver,
         });
-        assert!(scene.instructions.iter().any(|instruction| matches!(instruction, PaintInstruction::Path(_))));
+        assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
+            PaintInstruction::Path(path) if path.stroke.as_deref() == Some("#123456"))));
+        assert_eq!(scene.instructions.iter().filter(|instruction| matches!(instruction,
+            PaintInstruction::Path(path) if path.fill.as_deref() == Some("#123456")
+                && path.commands.last() == Some(&paint_instructions::PathCommand::Close))).count(), diagram.causes.len());
+        assert_eq!(scene.instructions.iter().filter(|instruction| matches!(instruction,
+            PaintInstruction::Path(path) if path.fill.as_deref() == Some("none")
+                && path.commands.last() == Some(&paint_instructions::PathCommand::Close))).count(), diagram.causes.len() + 1);
+        assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
+            PaintInstruction::Path(path) if path.stroke.as_deref() == Some("#abcdef")
+                && path.stroke_width == Some(2.5))));
+        assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("ishikawa.useMaxWidth")), Some(&"true".to_string()));
+        assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("ishikawa.fontFamily")), Some(&"Georgia".to_string()));
+        assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("ishikawa.fontSize")), Some(&"22".to_string()));
+        assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("ishikawa.look")), Some(&"handDrawn".to_string()));
+        assert_eq!(layout.spine_path.len(), 5);
+        for (index, left) in layout.bones.iter().enumerate() {
+            assert!(layout.bones.iter().skip(index + 1).all(|right|
+                (left.label_position.x - right.label_position.x).abs() >= (left.label_width + right.label_width) / 2.0
+                || (left.label_position.y - right.label_position.y).abs() >= (left.label_height + right.label_height) / 2.0));
+        }
+        assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
+            PaintInstruction::GlyphRun(run) if (run.font_size - 22.0).abs() < 0.001)));
         let pixels = render(&scene);
         write_png(&pixels, "/tmp/mermaid_ishikawa_e2e.png").expect("PNG write failed");
         assert!(pixels.width > 0 && pixels.height > 0);
     }
 
     #[test]
+    fn render_pinned_mermaid_ishikawa_visual_corpus_to_png() {
+        let syntax: Value =
+            serde_json::from_str(ISHIKAWA_CORPUS).expect("ishikawa corpus JSON");
+        let visual: Value = serde_json::from_str(ISHIKAWA_VISUAL_CORPUS)
+            .expect("ishikawa visual corpus JSON");
+        assert_eq!(visual["upstream_commit"], syntax["upstream_commit"]);
+
+        let valid = syntax["valid"].as_array().expect("valid ishikawa fixtures");
+        let fixture_ids = visual["fixtures"].as_array().expect("visual fixture ids");
+        assert_eq!(fixture_ids.len(), valid.len(), "visual corpus must cover every valid fixture");
+        let unique = fixture_ids.iter().filter_map(Value::as_str).collect::<BTreeSet<_>>();
+        assert_eq!(unique.len(), fixture_ids.len(), "visual fixture ids must be unique");
+
+        let shaper = CoreTextShaper;
+        let metrics = CoreTextMetrics;
+        let resolver = CoreTextResolver::new();
+        for fixture_id in fixture_ids {
+            let id = fixture_id.as_str().expect("visual fixture id");
+            let fixture = valid.iter().find(|fixture| fixture["id"] == id)
+                .unwrap_or_else(|| panic!("visual fixture {id} must exist in syntax corpus"));
+            let diagram = parse_ishikawa(
+                fixture["source"].as_str().expect("ishikawa fixture source"),
+            ).unwrap_or_else(|error| panic!("ishikawa visual fixture {id} failed: {error}"));
+            let layout = layout_ishikawa(&diagram, 720.0);
+            let scene = diagram_to_paint_ishikawa(&layout, &DiagramToPaintOptions {
+                background: layout_ir::Color { r: 255, g: 255, b: 255, a: 255 },
+                device_pixel_ratio: 2.0,
+                label_font: font_spec("Helvetica", 14.0),
+                title_font: font_spec("Helvetica", 16.0),
+                shaper: &shaper,
+                metrics: &metrics,
+                resolver: &resolver,
+            });
+            assert!(!scene.instructions.is_empty(), "visual fixture {id} must lower to paint");
+            let pixels = render(&scene);
+            assert!(pixels.width > 0 && pixels.height > 0, "visual fixture {id} must render");
+            write_png(&pixels, &format!("/tmp/mermaid_ishikawa_11_16_1_{id}.png"))
+                .unwrap_or_else(|error| panic!("visual fixture {id} PNG failed: {error}"));
+        }
+    }
+
+    #[test]
     fn render_mermaid_wardley_to_png() {
-        let diagram = parse_wardley("wardley-beta\ntitle Tea Shop\nanchor Business [0.95, 0.63]\ncomponent Cup of Tea [0.79, 0.61]\ncomponent Kettle [0.43, 0.35]\ncomponent Power [0.10, 0.70]\nBusiness -> Cup of Tea\nCup of Tea -> Kettle\nKettle -> Power\nevolve Kettle 0.62").expect("wardley parse failed");
+        let diagram = parse_wardley("%%{init: {\"wardley-beta\": {\"width\": 760, \"height\": 480, \"padding\": 36, \"nodeRadius\": 9, \"nodeLabelOffset\": 12, \"axisFontSize\": 15, \"labelFontSize\": 13, \"showGrid\": true, \"useMaxWidth\": false}, \"themeVariables\": {\"wardley\": {\"backgroundColor\": \"#f8fafc\", \"axisColor\": \"#123456\", \"axisTextColor\": \"#234567\", \"gridColor\": \"#345678\", \"componentFill\": \"#abcdef\", \"componentStroke\": \"#456789\", \"componentLabelColor\": \"#56789a\", \"linkStroke\": \"#6789ab\", \"evolutionStroke\": \"#dc2626\"}}}}%%\nwardley-beta\ntitle Tea Shop\nevolution Genesis@0.2 / Concept -> Custom@0.4 / Emerging -> Product@0.75 / Converging -> Commodity@1.0 / Accepted\nanchor Business [0.95, 0.63]\ncomponent Cup of Tea [0.79, 0.61] (build)\ncomponent Kettle [0.43, 0.35] (buy) (inertia)\ncomponent Power [0.10, 0.70] label [-55, 12] (market)\npipeline Kettle {\n  component Gas [0.18]\n  component Electric [0.35] label [-25, 10]\n  component Induction [0.55]\n}\nBusiness +'demand'> Cup of Tea\nCup of Tea -.-> Kettle\nKettle +<> Power\nevolve Kettle 0.62\nnote \"Standardising power accelerates evolution\" [0.30, 0.49]\nannotations [0.10, 0.90]\nannotation 1,[0.60, 0.65] \"Critical component\"\nannotation 1,[0.50, 0.50] \"Critical component\"\naccelerator \"AI Adoption\" [0.55, 0.25]\ndeaccelerator \"Legacy Constraints\" [0.15, 0.75]").expect("wardley parse failed");
+        let mut diagram = diagram;
+        diagram.config.theme.annotation_stroke = "#7c3aed".into();
+        diagram.config.theme.annotation_text_color = "#f97316".into();
+        diagram.config.theme.annotation_fill = "#fef3c7".into();
+        diagram.accessibility_title = Some("Tea shop strategy map".into());
+        diagram.accessibility_description = Some("Components and dependencies across the value chain".into());
         let layout = layout_wardley(&diagram);
+        assert_eq!((layout.width, layout.height), (760.0, 480.0));
         let shaper = CoreTextShaper; let metrics = CoreTextMetrics; let resolver = CoreTextResolver::new();
         let scene = diagram_to_paint_wardley(&layout, &DiagramToPaintOptions {
             background: layout_ir::Color { r: 255, g: 255, b: 255, a: 255 }, device_pixel_ratio: 2.0,
             label_font: font_spec("Helvetica", 13.0), title_font: font_spec("Helvetica", 18.0), shaper: &shaper, metrics: &metrics, resolver: &resolver,
         });
         assert!(scene.instructions.iter().any(|instruction| matches!(instruction, PaintInstruction::Ellipse(_))));
+        assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
+            PaintInstruction::Path(path) if path.stroke_dash.as_deref() == Some(&[2.0, 6.0]))));
+        assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("wardley.nodeRadius")), Some(&"9".to_string()));
+        assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("wardley.useMaxWidth")), Some(&"false".to_string()));
+        assert_eq!(scene.background, "#f8fafc");
+        assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
+            PaintInstruction::Ellipse(ellipse) if ellipse.fill.as_deref() == Some("#abcdef")
+                && ellipse.stroke.as_deref() == Some("#456789"))));
+        assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("wardley.noteCount")), Some(&"1".to_string()));
+        assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("wardley.annotationCount")), Some(&"1".to_string()));
+        assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("wardley.forceCount")), Some(&"2".to_string()));
+        assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("wardley.pipelineCount")), Some(&"1".to_string()));
+        assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("wardley.stageBoundaryCount")), Some(&"4".to_string()));
+        assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("wardley.customLabelCount")), Some(&"2".to_string()));
+        assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("wardley.strategyCount")), Some(&"3".to_string()));
+        assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("wardley.inertiaCount")), Some(&"1".to_string()));
+        assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("wardley.flowLinkCount")), Some(&"2".to_string()));
+        assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("wardley.dashedLinkCount")), Some(&"1".to_string()));
+        assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("wardley.labeledLinkCount")), Some(&"1".to_string()));
+        assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("wardley.annotationStroke")), Some(&"#7c3aed".to_string()));
+        assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("wardley.annotationTextColor")), Some(&"#f97316".to_string()));
+        assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("wardley.annotationFill")), Some(&"#fef3c7".to_string()));
+        assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("accessibility.title")), Some(&"Tea shop strategy map".to_string()));
+        assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("accessibility.description")),
+            Some(&"Components and dependencies across the value chain".to_string()));
+        assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
+            PaintInstruction::Ellipse(ellipse) if ellipse.fill.as_deref() == Some("#fef3c7")
+                && ellipse.stroke.as_deref() == Some("#7c3aed"))));
+        assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
+            PaintInstruction::Path(path) if path.stroke_dash.as_deref() == Some(&[4.0, 4.0]))));
+        assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
+            PaintInstruction::Path(path) if path.stroke_dash.as_deref() == Some(&[6.0, 6.0]))));
         let pixels = render(&scene); write_png(&pixels, "/tmp/mermaid_wardley_e2e.png").expect("PNG write failed");
         assert!(pixels.width > 0 && pixels.height > 0);
+    }
+
+    #[test]
+    fn render_pinned_mermaid_wardley_visual_corpus_to_png() {
+        let syntax: Value =
+            serde_json::from_str(WARDLEY_CORPUS).expect("wardley corpus JSON");
+        let visual: Value = serde_json::from_str(WARDLEY_VISUAL_CORPUS)
+            .expect("wardley visual corpus JSON");
+        assert_eq!(visual["upstream_commit"], syntax["upstream_commit"]);
+
+        let valid = syntax["valid"].as_array().expect("valid wardley fixtures");
+        let fixture_ids = visual["fixtures"].as_array().expect("visual fixture ids");
+        assert_eq!(fixture_ids.len(), valid.len(), "visual corpus must cover every valid fixture");
+        let unique = fixture_ids.iter().filter_map(Value::as_str).collect::<BTreeSet<_>>();
+        assert_eq!(unique.len(), fixture_ids.len(), "visual fixture ids must be unique");
+
+        let shaper = CoreTextShaper;
+        let metrics = CoreTextMetrics;
+        let resolver = CoreTextResolver::new();
+        for fixture_id in fixture_ids {
+            let id = fixture_id.as_str().expect("visual fixture id");
+            let fixture = valid.iter().find(|fixture| fixture["id"] == id)
+                .unwrap_or_else(|| panic!("visual fixture {id} must exist in syntax corpus"));
+            let diagram = parse_wardley(
+                fixture["source"].as_str().expect("wardley fixture source"),
+            ).unwrap_or_else(|error| panic!("wardley visual fixture {id} failed: {error}"));
+            let layout = layout_wardley(&diagram);
+            let scene = diagram_to_paint_wardley(&layout, &DiagramToPaintOptions {
+                background: layout_ir::Color { r: 255, g: 255, b: 255, a: 255 },
+                device_pixel_ratio: 2.0,
+                label_font: font_spec("Helvetica", 13.0),
+                title_font: font_spec("Helvetica", 18.0),
+                shaper: &shaper,
+                metrics: &metrics,
+                resolver: &resolver,
+            });
+            assert!(!scene.instructions.is_empty(), "visual fixture {id} must lower to paint");
+            let pixels = render(&scene);
+            assert!(pixels.width > 0 && pixels.height > 0, "visual fixture {id} must render");
+            write_png(&pixels, &format!("/tmp/mermaid_wardley_11_16_1_{id}.png"))
+                .unwrap_or_else(|error| panic!("visual fixture {id} PNG failed: {error}"));
+        }
     }
 
     #[test]

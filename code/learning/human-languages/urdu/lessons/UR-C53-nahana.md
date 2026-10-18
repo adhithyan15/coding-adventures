@@ -14,7 +14,8 @@ romanization: "nahānā"
 concept_tag: UR-VERB-NAHANA
 prerequisites: [UR-C52-khona, UR-C53-pahanna]
 sounds: []
-roots: []
+roots: [sanskrit-snati]
+etymology_hook: "nahānā ← Sanskrit snāti 'bathes', a tadbhava (CDIAL 13786)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C53-pahanna]
 <!-- hl-knowledge: introduces=[UR-LEX-C53-VERBS53-02]; assesses=[] -->
 
 **نہانا** — *nahānā* — "to bathe".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**نہانا** (*nahānā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *snāti*, "bathes" (CDIAL 13786).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

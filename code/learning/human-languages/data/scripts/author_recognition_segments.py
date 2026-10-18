@@ -102,9 +102,9 @@ import os
 import re
 import sys
 import unicodedata
-from sharded_ledger import load_script
 
-from sharded_ledger import load_curriculum, write_curriculum
+from authoring_frontmatter import decode_scalar
+from sharded_ledger import load_curriculum, load_script, write_curriculum
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 HL = os.path.normpath(os.path.join(HERE, "..", ".."))
@@ -165,11 +165,12 @@ def fm_of(text):
         top = re.match(r"^([A-Za-z0-9_]+):\s*(.*)$", line)
         if top:
             parent = top.group(1)
-            out[parent] = top.group(2).strip()
+            out[parent] = decode_scalar(top.group(2), parent)
             continue
         child = re.match(r"^\s+([A-Za-z0-9_]+):\s*(.*)$", line)
         if child and parent:
-            out[f"{parent}.{child.group(1)}"] = child.group(2).strip()
+            key = f"{parent}.{child.group(1)}"
+            out[key] = decode_scalar(child.group(2), key)
     return out
 
 
@@ -188,9 +189,9 @@ def load_lessons(track):
             seq=seq,
             chapter=int(h.get("chapter", "0") or 0),
             spine=h.get("spine_node", ""),
-            headword=h.get("headword", "").strip().strip('"'),
-            roman=h.get("romanization", "").strip().strip('"'),
-            gloss=h.get("gloss", "").strip().strip('"'),
+            headword=h.get("headword", ""),
+            roman=h.get("romanization", ""),
+            gloss=h.get("gloss", ""),
             # `introduces.knowledge` is FLAT and DOTTED in this corpus, never
             # nested. Read as nested it returns nothing for every lesson, and a
             # chapter's atom count comes out zero -- which would make every
@@ -288,6 +289,27 @@ def voicing(entry, sound):
                 answer=f"***{sound}***.")
 
 
+def taught_alone_glyphs(track):
+    """Read already-taught script glyphs through the same decoded frontmatter.
+
+    A quoted one-glyph headword is still one glyph. Counting its YAML quote
+    marks as letters would make the authoring pass propose a duplicate lesson.
+    """
+    taught = set()
+    lessons = os.path.join(HL, track, "lessons")
+    for filename in os.listdir(lessons):
+        if not filename.endswith(".md"):
+            continue
+        with open(os.path.join(lessons, filename), encoding="utf-8") as lesson_file:
+            fields = fm_of(lesson_file.read())
+        if fields.get("delivery") != "script":
+            continue
+        headword = fields.get("headword", "").replace("\u25cc", "")
+        if len([char for char in headword if not char.isspace()]) == 1:
+            taught.add(headword)
+    return taught
+
+
 def build(cfg):
     S = load_script(HL, cfg["script"])
     L = json.load(open(os.path.join(HL, f"data/scripts/{cfg['ledger']}-ledger.json"), encoding="utf-8"))
@@ -366,19 +388,7 @@ def build(cfg):
     #
     # Skipping is selection FROM the ledger, never a rewrite of it: the order is
     # authored intent and the file is not touched here.
-    import re as _re
-    taught_alone = set()
-    for _f in os.listdir(os.path.join(HL, cfg["track"], "lessons")):
-        if not _f.endswith(".md"):
-            continue
-        _b = open(os.path.join(HL, cfg["track"], "lessons", _f), encoding="utf-8").read()
-        if not _re.search(r"^delivery: script", _b, _re.M):
-            continue
-        _h = _re.search(r"^headword: (.*)$", _b, _re.M)
-        if _h:
-            _hw = _h.group(1).strip().strip('"').replace("\u25cc", "")
-            if len([c for c in _hw if not c.isspace()]) == 1:
-                taught_alone.add(_hw)
+    taught_alone = taught_alone_glyphs(cfg["track"])
 
     out = []
     pending = [e for e in L["letters"] if e["glyph"] not in taught_alone]

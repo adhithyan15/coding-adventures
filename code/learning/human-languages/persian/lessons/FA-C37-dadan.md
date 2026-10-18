@@ -14,7 +14,8 @@ romanization: "dâdan"
 concept_tag: FA-VERB-DADAN
 prerequisites: [FA-C36-kharidan, FA-C36-forukhtan]
 sounds: []
-roots: []
+roots: [pie-deh3]
+etymology_hook: "dâdan: inherited; EtymDB: Indo-European *deh₃- 'to give', as in Latin dare"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C36-forukhtan]
 <!-- hl-knowledge: introduces=[FA-LEX-C37-VERBS37-01]; assesses=[] -->
 
 **دادن** — *dâdan* — "to give".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*dâdan* is a native Persian verb, inherited rather than borrowed; it is usually traced to Middle Persian *dādan*. EtymDB takes it back to the Indo-European root *\*deh₃-*, "to give", the root of Latin *dare*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

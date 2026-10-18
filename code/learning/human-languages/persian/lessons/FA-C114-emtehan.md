@@ -14,7 +14,8 @@ romanization: "emtehân"
 concept_tag: FA-THINGS114-EMTEHAN
 prerequisites: [FA-C114-takhte, FA-C114-kelas]
 sounds: []
-roots: []
+roots: [arabic-imtihan]
+etymology_hook: "emtehân ← Arabic imtiḥān 'examination, test', root m-ḥ-n (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C114-kelas]
 <!-- hl-knowledge: introduces=[FA-LEX-C114-THINGS114-04]; assesses=[] -->
 
 **امتحان** — *emtehân* — "an exam".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*emtehân* is borrowed from Arabic *imtiḥān*, "examination, test". Its Arabic root is *m-ḥ-n* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

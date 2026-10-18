@@ -14,7 +14,8 @@ romanization: "shiro"
 concept_tag: JA-THINGS111-SHIRO
 prerequisites: [JA-C111-hitai, JA-C111-kangoshi]
 sounds: []
-roots: []
+roots: [japanese-shiro-castle, japanese-shiroi]
+etymology_hook: "shiro: two native words, 'castle' (城) and 'white' (白), with their own kanji"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C111-kangoshi]
 <!-- hl-knowledge: introduces=[JA-LEX-C111-THINGS111-03]; assesses=[] -->
 
 **しろ** — *shiro* — "a castle; the colour white".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**しろ** (*shiro*) is two native words that sound alike: *shiro*, "castle", and *shiro*, "white", each with its own kanji (JMdict). Both are inherited rather than borrowed.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

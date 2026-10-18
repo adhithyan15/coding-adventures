@@ -14,7 +14,8 @@ romanization: "gaddā"
 concept_tag: PA-THINGS114-GADDA
 prerequisites: [PA-C114-saban, PA-C114-taulia]
 sounds: []
-roots: []
+roots: [indo-aryan-garda]
+etymology_hook: "gaddā: CDIAL lists Punjabi gaddī 'seat' under *garda 'seat', probably Dravidian; Hindi gaddā came from Punjabi (4053)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C114-taulia]
 <!-- hl-knowledge: introduces=[PA-LEX-C114-THINGS114-03]; assesses=[] -->
 
 **ਗੱਦਾ** — *gaddā* — "a mattress".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਗੱਦਾ** (*gaddā*) is inherited. CDIAL lists Punjabi *gaddī*, "cushion, pad, seat", under a reconstructed *\*garda*, "seat", which it takes, probably, from Dravidian, and says Hindi *gaddā*, "quilted mattress", was taken from Punjabi (CDIAL 4053).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

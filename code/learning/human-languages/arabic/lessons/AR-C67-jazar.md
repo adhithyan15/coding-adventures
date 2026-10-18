@@ -14,7 +14,8 @@ romanization: "jazar"
 concept_tag: AR-FOOD67-JAZAR
 prerequisites: [AR-C66-batatis, AR-C67-tamatim]
 sounds: []
-roots: []
+roots: [persian-gazar]
+etymology_hook: "jazar: arabicized from Persian gazar 'carrot' (Lane); a look-alike of the root j-z-r 'to cut'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C67-tamatim]
 <!-- hl-knowledge: introduces=[AR-LEX-C67-FOOD67-02]; assesses=[] -->
 
 **جزر** — *jazar* — "carrots".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**جزر** (*jazar*) is a loan: Lane records it as arabicized from Persian *gazar*, "carrot", the Arabic *j* standing for the Persian *g*. It only looks like the root *j-z-r*, "to cut".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

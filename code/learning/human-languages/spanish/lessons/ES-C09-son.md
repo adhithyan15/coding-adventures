@@ -6,7 +6,7 @@ sequence: 954
 chapter: 50
 type: grammar
 headword: son
-gloss: "they are," and "ustedes are" — the most common verb form in Spanish
+gloss: '"they are," and "ustedes are" — the most common verb form in Spanish'
 concept_tag: ES-GRAMMAR-SER-PRESENT-PLURAL
 prerequisites: [ES-C09-somos, ES-C07-hablan]
 sounds: []

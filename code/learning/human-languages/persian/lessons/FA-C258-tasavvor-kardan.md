@@ -14,7 +14,8 @@ romanization: "tasavvor kardan"
 concept_tag: FA-VERB-TASAVVOR-KARDAN
 prerequisites: [FA-C258-dorost-kardan, FA-C258-movafeq-budan]
 sounds: []
-roots: []
+roots: [arabic-tasawwur]
+etymology_hook: "tasavvor ← Arabic taṣawwur 'picturing, imagining', root ṣ-w-r (Lane), + Persian kardan"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C258-movafeq-budan]
 <!-- hl-knowledge: introduces=[FA-LEX-C258-KONESH258-05]; assesses=[] -->
 
 **تصور کردن** — *tasavvor kardan* — "to imagine".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*tasavvor kardan* pairs *tasavvor*, borrowed from Arabic *taṣawwur*, "picturing, imagining" (root *ṣ-w-r*, Lane), with the Persian verb *kardan*, "to do, to make". *kardan*, "to do", is an inherited verb, from Middle Persian *kardan* (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

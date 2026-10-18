@@ -12,6 +12,7 @@ concept_tag: PA-VERB-MILNA
 prerequisites: [PA-C03-main, PA-C04-phir]
 sounds: [kanna-aa, bindi-nasal]
 roots: [mil-meet]
+etymology_hook: "milāṁge, from milṇā 'to meet' ← Sanskrit milati 'meets, encounters' (CDIAL 10133)"
 duration:
   max_seconds: 200
 requires:

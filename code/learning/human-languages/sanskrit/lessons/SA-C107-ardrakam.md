@@ -14,7 +14,8 @@ romanization: "ārdrakam"
 concept_tag: SA-THINGS107-ARDRAKAM
 prerequisites: [SA-C107-maricam, SA-C107-haridra]
 sounds: []
-roots: []
+roots: [sanskrit-ardraka]
+etymology_hook: "ārdraka 'fresh ginger' ← ārdra 'wet, moist' + -ka: 'ginger in its undried state' (MW); Hindi ādā (CDIAL 1341)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C107-haridra]
 <!-- hl-knowledge: introduces=[SA-LEX-C107-THINGS107-04]; assesses=[] -->
 
 **आर्द्रकम्** — *ārdrakam* — "ginger".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*ārdraka* is built on *ārdra* "wet, moist" with the suffix *-ka*: "the moist one", ginger in its undried state (MW). It lives on as Hindi and Bengali *ādā* "ginger" (CDIAL 1341).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

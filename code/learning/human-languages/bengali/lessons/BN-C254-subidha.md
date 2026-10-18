@@ -14,7 +14,8 @@ romanization: "subidhā"
 concept_tag: BN-JINIS254-SUBIDHA
 prerequisites: [BN-C253-bondhutvo, BN-C254-nirbachon]
 sounds: []
-roots: []
+roots: [sanskrit-suvidha]
+etymology_hook: "subidhā ← Sanskrit suvidhā 'ease, facility', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C254-nirbachon]
 <!-- hl-knowledge: introduces=[BN-LEX-C254-JINIS254-02]; assesses=[] -->
 
 **সুবিধা** — *subidhā* — "an advantage".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**সুবিধা** (*subidhā*) is Sanskrit *suvidhā*, "ease, facility", taken over whole as a learned loan, a tatsama.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

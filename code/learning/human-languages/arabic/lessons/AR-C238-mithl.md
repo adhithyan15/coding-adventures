@@ -14,7 +14,8 @@ romanization: "mithl"
 concept_tag: AR-SABAB238-MITHL
 prerequisites: [AR-C237-akhlaq, AR-C237-shakhsiyya]
 sounds: []
-roots: []
+roots: [m-th-l]
+etymology_hook: "mithl: built on the root m-th-l, 'to be like' (Lane); mithl is 'a like, a match'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C237-shakhsiyya]
 <!-- hl-knowledge: introduces=[AR-LEX-C238-SABAB238-01]; assesses=[] -->
 
 **مثل** — *mithl* — "like, such as".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**مثل** (*mithl*) is built on the native Arabic root *m-th-l*, "to be like" (Lane). *Mithl* is "a like, a match".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

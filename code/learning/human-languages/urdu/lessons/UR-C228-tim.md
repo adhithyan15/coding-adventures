@@ -14,7 +14,8 @@ romanization: "ṭīm"
 concept_tag: UR-CHIZ228-TIM
 prerequisites: [UR-C227-gilahri, UR-C228-tairaki]
 sounds: []
-roots: []
+roots: [english-team]
+etymology_hook: "ṭīm ← English team"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C228-tairaki]
 <!-- hl-knowledge: introduces=[UR-LEX-C228-CHIZ228-02]; assesses=[] -->
 
 **ٹیم** — *ṭīm* — "a team".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ٹیم** (*ṭīm*) is a loan from English *team*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

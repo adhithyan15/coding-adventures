@@ -14,7 +14,8 @@ romanization: "vīṇā"
 concept_tag: SA-THINGS121-VINA
 prerequisites: [SA-C120-citram, SA-C121-vadyam]
 sounds: []
-roots: []
+roots: [sanskrit-vina-lute]
+etymology_hook: "vīṇā 'lute' is of doubtful derivation (MW); EtymDB links a Middle Persian word; Hindi bīn (CDIAL 12048)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C121-vadyam]
 <!-- hl-knowledge: introduces=[SA-LEX-C121-THINGS121-02]; assesses=[] -->
 
 **वीणा** — *vīṇā* — "a veena".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+MW calls *vīṇā* "the Indian lute" of doubtful derivation; EtymDB traces it to an Indo-Iranian word that Middle Persian also kept, so its source is not settled. It lives on as Hindi *bīn* "lute" (CDIAL 12048).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

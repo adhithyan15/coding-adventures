@@ -60,7 +60,8 @@ is where they meet.
 When you learned **el actor**, the *-tor* ending was set out as Latin's way of
 naming the doer: take a verb, add *-tor*, get the one who does it. That lesson
 listed *agere → actor*, *docere → doctor* — and **dirigere → director**.
-The word was printed in front of you before you needed it.
+The word was printed in front of you before you needed it. Spanish borrowed
+it from Late Latin *director* (EtymDB 2.1).
 
 And *dirigere* came earlier still, under **la derecha** and again under
 **directo**: *dis-*, apart, plus *regere*, to rule — to set something straight,

@@ -1,7 +1,7 @@
 {
   "language": "punjabi",
   "chapter": 86,
-  "sourceHash": "fnv1a64:5dcb9fd6a891fbf4",
+  "sourceHash": "fnv1a64:e17d1c19e904150d",
   "lessonIds": [
     "PA-C86-mahina",
     "PA-C86-sal",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "punjabi/narration/ch86.txt",
   "json": "punjabi/narration/ch86.json",
-  "textHash": "fnv1a64:a8040593a3d95a5f",
-  "jsonHash": "fnv1a64:0004d938630807fc",
+  "textHash": "fnv1a64:e263f96062fd8765",
+  "jsonHash": "fnv1a64:bcd359989a04fefd",
   "findings": []
 }

@@ -1,7 +1,7 @@
 {
   "language": "urdu",
   "chapter": 196,
-  "sourceHash": "fnv1a64:96b89c8f100618eb",
+  "sourceHash": "fnv1a64:34538f3a4fe8cc92",
   "lessonIds": [
     "UR-C196-bechain",
     "UR-C196-badnam",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "urdu/narration/ch196.txt",
   "json": "urdu/narration/ch196.json",
-  "textHash": "fnv1a64:be39b33b2618980a",
-  "jsonHash": "fnv1a64:d115becc3fd46580",
+  "textHash": "fnv1a64:4901727d3e96ff31",
+  "jsonHash": "fnv1a64:42007eb51004323c",
   "findings": []
 }

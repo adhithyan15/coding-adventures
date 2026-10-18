@@ -14,7 +14,8 @@ romanization: "râst"
 concept_tag: FA-PLACE69-RAST
 prerequisites: [FA-C69-inja, FA-C69-anja]
 sounds: []
-roots: []
+roots: [persian-rast]
+etymology_hook: "râst: inherited, usually traced to Middle Persian rāst"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C69-anja]
 <!-- hl-knowledge: introduces=[FA-LEX-C69-PLACE69-03]; assesses=[] -->
 
 **راست** — *râst* — "right; true".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*râst* is a native Persian word, inherited rather than borrowed; it is usually traced to Middle Persian *rāst*, "right, straight". Old Persian had *rāsta-* (EtymDB), and EtymDB takes it back to the Indo-European root of Latin *rectus* and English *right*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

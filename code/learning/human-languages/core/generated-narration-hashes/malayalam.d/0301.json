@@ -1,7 +1,7 @@
 {
   "language": "malayalam",
   "chapter": 301,
-  "sourceHash": "fnv1a64:4a1a59c57cb6ea85",
+  "sourceHash": "fnv1a64:7ba886f8de776cb5",
   "lessonIds": [
     "ML-C301-karar",
     "ML-C301-nikuti",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "malayalam/narration/ch301.txt",
   "json": "malayalam/narration/ch301.json",
-  "textHash": "fnv1a64:5823338bdb5ae564",
-  "jsonHash": "fnv1a64:52c593820e15008c",
+  "textHash": "fnv1a64:671b67fe2e46a1fe",
+  "jsonHash": "fnv1a64:084e52f69320d21b",
   "findings": []
 }

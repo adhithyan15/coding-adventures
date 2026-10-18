@@ -14,7 +14,8 @@ romanization: "ṭev"
 concept_tag: GU-CAN104-TEV
 prerequisites: [GU-C103-malik, GU-C104-anubhav]
 sounds: []
-roots: []
+roots: [indo-aryan-tev]
+etymology_hook: "ṭev ← *ṭev 'appoint, fix', a reconstructed form; a tadbhava (CDIAL 5475)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C104-anubhav]
 <!-- hl-knowledge: introduces=[GU-LEX-C104-CAN104-02]; assesses=[] -->
 
 **ટેવ** (*ṭev*) — "a habit".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ટેવ** (*ṭev*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*ṭev*, "appoint, fix", a form CDIAL reconstructs from its descendants (CDIAL 5475). CDIAL lists Gujarati *ṭev*, "habit", under it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

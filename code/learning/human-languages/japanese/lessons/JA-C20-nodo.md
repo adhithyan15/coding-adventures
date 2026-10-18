@@ -14,7 +14,8 @@ romanization: "nodo"
 concept_tag: JA-BODY20-NODO
 prerequisites: [JA-C20-hiji, JA-C20-hiza]
 sounds: []
-roots: []
+roots: [japanese-nodo]
+etymology_hook: "nodo: native Japanese, inherited, not borrowed; usually kana, kanji 喉 as kun'yomi"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C20-hiza]
 <!-- hl-knowledge: introduces=[JA-LEX-C20-BODY20-04]; assesses=[] -->
 
 **のど** — *nodo* — "the throat".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**のど** (*nodo*) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. It is usually written in kana; its kanji, when used, is a kun'yomi attached later (JMdict, KANJIDIC2).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

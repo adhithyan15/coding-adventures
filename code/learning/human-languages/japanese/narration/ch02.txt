@@ -156,6 +156,9 @@ Say it: wani.
 [once you have stopped driving — look: at its shape as you say it.]
 The lessons that follow take pieces of it, わ (wa), and write each one on its own.
 
+The word, taken apart.
+わに (wani) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. It is usually written in kana; its kanji, when used, is a kun'yomi attached later (JMdict, KANJIDIC2). In older Japanese the same word also named the shark (JMdict).
+
 Guided Practice.
 [pause 1 second]
 [your turn — say: wani]
@@ -273,6 +276,9 @@ Here は is the topic particle, roughly "as for ___." It keeps an older spelling
 Why it's said this way.
 こんにちは (konnichiwa) is the daytime greeting. It began as an unfinished sentence: konnichi wa…, "as for today …" The rest fell away and the topic marker stayed.
 The older phrase is often written with two kanji for "this day." You do not need to decode those yet. This chapter keeps the whole greeting in the hiragana signs you have already learned.
+
+The word, taken apart.
+こんにちは (konnichiwa) is a sentence cut short. Konnichi, "today", is Sino-Japanese: kon, "now" (Middle Chinese kim), and nichi, "day" (nyit), on'yomi borrowed from Chinese; the native particle wa, "as for", stayed on the end (JMdict; Unihan; Middle Chinese in Baxter's transcription).
 
 Guided Practice.
 [your turn — say: こんにちは (konnichiwa) — ko-n-ni-chi-wa, five beats]

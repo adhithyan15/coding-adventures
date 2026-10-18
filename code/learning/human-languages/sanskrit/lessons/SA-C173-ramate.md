@@ -14,7 +14,8 @@ romanization: "ramate"
 concept_tag: SA-VERB-RAMATE
 prerequisites: [SA-C173-labhate, SA-C173-sevate]
 sounds: []
-roots: []
+roots: [sanskrit-ramate]
+etymology_hook: "ramate 'stays still, delights in' ← √ram 'rest, rejoice', inherited (EtymDB); Gujarati ramvũ (CDIAL 10628)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C173-sevate]
 <!-- hl-knowledge: introduces=[SA-LEX-C173-ACT173-05]; assesses=[] -->
 
 **रमते** — *ramate* — "enjoys, delights in".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*ramate* comes from the root √ram "stop, rest, take pleasure in" (CDIAL 10628), inherited from Indo-European (EtymDB); MW compares Greek *eramai* "love". It lives on as Gujarati *ramvũ* "to enjoy oneself, saunter about" (CDIAL 10628).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

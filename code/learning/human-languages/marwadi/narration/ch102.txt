@@ -12,6 +12,9 @@ Before the new one: say the Marwadi for which, then the Marwadi for who.
 You'll want to know: सगळा.
 सगळा — sagḷā — "all, everyone".
 
+The word, taken apart.
+सगळा (sagḷā) is usually linked with Sanskrit sakala, "whole", under which CDIAL lists Old Gujarati sayala, "all" (CDIAL 13066). CDIAL gives no Marwari form, and that entry does not explain the g and ḷ of सगळा (sagḷā), so the link is not settled.
+
 What you've built.
 One more word for this chapter.
 
@@ -42,6 +45,9 @@ Before the new one: say the Marwadi for who, then the Marwadi for all.
 
 You'll want to know: दूजो.
 दूजो — dūjo — "another, the second".
+
+The word, taken apart.
+दूजो (dūjo) is a tadbhava, a word inherited and reshaped by sound change. It comes from dutīya, "second", a form CDIAL reconstructs from its descendants. CDIAL gives no Marwari form in this entry (CDIAL 6402); the match is through Hindi dūjā and Gujarati dujũ. CDIAL sets it beside Sanskrit dvitīya, "second".
 
 What you've built.
 One more word for this chapter.
@@ -74,6 +80,9 @@ Before the new one: say the Marwadi for all, then the Marwadi for another.
 You'll want to know: आपणो.
 आपणो — āpṇo — "our own, one's own".
 
+The word, taken apart.
+आपणो (āpṇo) is a tadbhava, a word inherited and reshaped by sound change. It comes from ātmanaka, "own", a form CDIAL reconstructs from its descendants. CDIAL lists Old Marwari āpaṇau under it (CDIAL 1135). CDIAL reconstructs ātmanaka from Sanskrit ātman, "self".
+
 What you've built.
 One more word for this chapter.
 
@@ -105,6 +114,9 @@ Before the new one: say the Marwadi for another, then the Marwadi for our own.
 You'll want to know: कोई.
 कोई — koī — "someone, any".
 
+The word, taken apart.
+कोई (koī) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from kaścid, "some one, anyone". CDIAL lists Old Marwari koi under it (CDIAL 2967). CDIAL notes that it partly ran together with ko'pi, "whoever".
+
 What you've built.
 One more word for this chapter.
 
@@ -135,6 +147,9 @@ Before the new one: say the Marwadi for our own, then the Marwadi for someone.
 
 You'll want to know: हरेक.
 हरेक — harek — "each, every".
+
+The word, taken apart.
+हरेक (harek) joins har, "every", usually traced to Persian har, with ek, "one", from Sanskrit eka (CDIAL 2462).
 
 What you've built.
 One more word for this chapter.

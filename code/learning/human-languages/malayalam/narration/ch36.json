@@ -4,7 +4,7 @@
   "chapter": 36,
   "title": "Child, Son, Daughter",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:2d7fca275add6918",
+  "sourceHash": "fnv1a64:1c37c26583fa2a0b",
   "lessons": [
     {
       "id": "ML-C36-kutti",
@@ -168,7 +168,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:606997d457ad6640",
+      "sourceHash": "fnv1a64:96afb677b50c216d",
       "notice": null,
       "blocks": [
         {
@@ -210,7 +210,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "മകൻ continues Proto-Dravidian makan, \"son.\" Tamil keeps almost the identical shape, மகன் (makan) — same consonants, same vowels, same final -n. Kannada moved further: the -k- between vowels softened to -g-, and the final -n dropped, giving ಮಗ (maga). So on this word it is Malayalam and Tamil that hold the older, more conservative shape, and Kannada that innovated — the same closeness the very first greetings already showed in nandi, athe, illa and śari, this time in a family word rather than a greeting."
+              "text": "മകൻ continues Proto-Dravidian makan, \"son.\" Tamil keeps almost the identical shape, மகன் (makan) — same consonants, same vowels, same final -n. Kannada moved further: the -k- between vowels softened to -g-, and the final -n dropped, giving ಮಗ (maga). So on this word it is Malayalam and Tamil that hold the older, more conservative shape, and Kannada that innovated — the same closeness the very first greetings already showed in nandi, ate, illa and śari, this time in a family word rather than a greeting."
             }
           ]
         },

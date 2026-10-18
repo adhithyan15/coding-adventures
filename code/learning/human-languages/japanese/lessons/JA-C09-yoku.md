@@ -11,8 +11,8 @@ gloss: well; fully, as an adverb
 concept_tag: JA-DEGREE-WELL
 prerequisites: [JA-W09-me]
 sounds: [mora]
-roots: []
-etymology_hook: Yoku is the adverbial partner of yoi, good; in the repair line it measures how fully understanding happened.
+roots: [japanese-yoi-good]
+etymology_hook: "yoku: native, the adverb form of yoi 'good' (JMdict); inherited, not borrowed"
 duration:
   max_seconds: 165
 requires:
@@ -47,6 +47,11 @@ itself mean “understand.”
 
 You already write **よ**. Treat **く** as visible support for now; its own tiny
 writing lesson follows.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**よく** (*yoku*) is the adverb form of native *yoi*, "good" (JMdict): the *-i* of the adjective becomes *-ku*. It is inherited rather than borrowed, and the older origin of *yoi* is not settled.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-YOKU] -->

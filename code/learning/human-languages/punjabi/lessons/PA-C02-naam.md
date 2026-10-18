@@ -12,6 +12,7 @@ concept_tag: WORD-NAME
 prerequisites: [PA-C01-practice]
 sounds: [kanna-aa, bindi-nasal]
 roots: [naaman-sanskrit]
+etymology_hook: "nāṁ ← Sanskrit nāman 'name', inherited (CDIAL 7067), the same ancient word as English name"
 duration:
   max_seconds: 220
 requires:

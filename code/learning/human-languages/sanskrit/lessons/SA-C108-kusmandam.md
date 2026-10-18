@@ -14,7 +14,8 @@ romanization: "kūṣmāṇḍam"
 concept_tag: SA-THINGS108-KUSMANDAM
 prerequisites: [SA-C108-alukam, SA-C108-vrntakam]
 sounds: []
-roots: []
+roots: [sanskrit-kushmanda]
+etymology_hook: "kūṣmāṇḍa 'pumpkin-gourd' Sanskritizes a Prakrit word of non-Aryan origin (CDIAL 3374); Hindi kohṛā"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C108-vrntakam]
 <!-- hl-knowledge: introduces=[SA-LEX-C108-THINGS108-04]; assesses=[] -->
 
 **कूष्माण्डम्** — *kūṣmāṇḍam* — "a pumpkin".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*kūṣmāṇḍa*, also *kuṣmāṇḍa* (MW), is a pumpkin-gourd. CDIAL 3374 explains it as a Sanskritized form of a Prakrit word of non-Aryan origin. That Prakrit word lives on as Hindi *kohṛā* and Bengali *kumṛā* "pumpkin" (CDIAL 3374).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

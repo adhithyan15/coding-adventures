@@ -1,0 +1,11 @@
+{
+  "id": "SA-C262-object-pronoun-retrieval",
+  "pathSegment": "SA-PATH-262-OBJ262",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "SA-EXT-262-OBJ262",
+      "order": 3
+    }
+  ]
+}

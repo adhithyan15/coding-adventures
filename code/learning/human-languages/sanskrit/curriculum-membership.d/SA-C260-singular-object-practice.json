@@ -1,0 +1,11 @@
+{
+  "id": "SA-C260-singular-object-practice",
+  "pathSegment": "SA-PATH-260-OBJ260",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "SA-EXT-260-OBJ260",
+      "order": 2
+    }
+  ]
+}

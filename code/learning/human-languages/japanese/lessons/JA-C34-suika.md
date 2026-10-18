@@ -14,7 +14,8 @@ romanization: "suika"
 concept_tag: JA-FOOD34-SUIKA
 prerequisites: [JA-C33-momo, JA-C33-nashi]
 sounds: []
-roots: []
+roots: [middle-chinese-sej, middle-chinese-kwae]
+etymology_hook: "suika: Sino-Japanese 西 'west' + 瓜 'melon'; sui is a later Chinese reading of 西"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C33-nashi]
 <!-- hl-knowledge: introduces=[JA-LEX-C34-FOOD34-01]; assesses=[] -->
 
 **すいか** — *suika* — "a watermelon".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**すいか** (*suika*) is Sino-Japanese, borrowed from Chinese, "western melon": *sui*, "west", and *ka*, "melon" (Middle Chinese *kwae*). *Sui* is a later Chinese reading of the character for west, not the usual *sei* (JMdict; Unihan, KANJIDIC2).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

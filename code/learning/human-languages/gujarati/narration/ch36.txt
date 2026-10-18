@@ -47,6 +47,7 @@ Nothing is added to the verbs, nothing moves, and no ending appears. This is why
 And it composes with what you learned last chapter — the second half is free to be a negative:
 … અને (ane) … નથી — "… and … is not".
 That is a two-clause sentence, and it is the first one this book has been able to make.
+અને (ane) itself is inherited: CDIAL lists it, as the word for "and", under Sanskrit anya, "other", comparing anyac ca, "moreover" (CDIAL 399).
 
 Guided Practice.
 [pause 1 second]
@@ -131,6 +132,7 @@ The word, taken apart.
 પણ (paṇ) sets one thing against another. It joins two clauses the way ane does, and it warns that the second will pull against the first:
 (first sentence) પણ (paṇ) (second sentence) — "… but …"
 It works especially well with what you learned last chapter, because the sharpest contrast a beginner can draw is between something that is and something that નથી.
+CDIAL lists પણ (paṇ) under Sanskrit punar, "back, again, moreover, however" (CDIAL 8273): the "moreover" and the "however" are the two jobs it still does.
 
 Grammar Lens: the same word, moved, means "also".
 Put પણ (paṇ) between two clauses and it is but. Put it directly after a noun and it becomes also:

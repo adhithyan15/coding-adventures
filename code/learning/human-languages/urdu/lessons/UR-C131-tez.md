@@ -14,7 +14,8 @@ romanization: "tez"
 concept_tag: UR-QUAL131-TEZ
 prerequisites: [UR-C131-khatta, UR-C131-namkin]
 sounds: []
-roots: []
+roots: [persian-tez]
+etymology_hook: "tez: usually traced to Persian tēz 'sharp, swift'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C131-namkin]
 <!-- hl-knowledge: introduces=[UR-LEX-C131-QUAL131-04]; assesses=[] -->
 
 **تیز** — *tez* — "fast, sharp".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**تیز** (*tez*) is a loan, usually traced to Persian *tēz*, "sharp, swift".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

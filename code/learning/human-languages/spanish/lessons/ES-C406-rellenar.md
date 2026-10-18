@@ -41,7 +41,8 @@ lleno*.) The action that connects them is **rellenar**.
 
 **Rellenar** shows its construction on the surface: **re-** + **llenar**, “to
 fill.” Its broad sense is to fill something again or completely. In an office,
-it has the practical meaning “to fill in” or “to fill out.”
+it has the practical meaning “to fill in” or “to fill out.” *Llenar* belongs
+with *lleno*, “full”, inherited from Latin *plēnus*, with *pl-* turned to *ll-*.
 
 The DLE gives the form sense precisely: putting the necessary data into blank
 spaces in forms or documents. That is why the noun chain from this chapter ends

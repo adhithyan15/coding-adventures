@@ -4,7 +4,7 @@
   "chapter": 27,
   "title": "How Much Is This? No New Signs",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:f29d1c90613d7885",
+  "sourceHash": "fnv1a64:4bc2abd1cfa9cdc6",
   "lessons": [
     {
       "id": "MW-C22-hear-kitno",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:17aec40c0963d2c6",
+      "sourceHash": "fnv1a64:4e1d3fe6c65091b1",
       "notice": null,
       "blocks": [
         {
@@ -69,6 +69,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "kitṇo is a tadbhava, a word inherited and reshaped by sound change. It comes from kiyatta, \"how great\", a form CDIAL reconstructs from its descendants. CDIAL lists Old Marwari kītarāka under it (CDIAL 3167). The -ṇ- matches Hindi kitnā and Lahnda kitṇā, whose -n- CDIAL explains as an added suffix."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -115,7 +126,7 @@
         "sight-cue",
         "eyes-or-hands-step"
       ],
-      "sourceHash": "fnv1a64:5d3d2e3113579f24",
+      "sourceHash": "fnv1a64:e3e2235e2578be13",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -165,6 +176,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "कितणो (kitṇo) is a tadbhava, a word inherited and reshaped by sound change. It comes from kiyatta, \"how great\", a form CDIAL reconstructs from its descendants. CDIAL lists Old Marwari kītarāka under it (CDIAL 3167). The -ṇ- matches Hindi kitnā and Lahnda kitṇā, whose -n- CDIAL explains as an added suffix."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -175,7 +197,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -220,7 +242,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7f5a10131402e2a5",
+      "sourceHash": "fnv1a64:20eb891b6189f757",
       "notice": null,
       "blocks": [
         {
@@ -274,6 +296,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The phrase, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The new piece in ye kitṇe kū hai is kū, which CDIAL does not list, so its history is not settled; compare Hindi ko (CDIAL 14342). kitṇe, \"how much\", is from kiyatta (CDIAL 3167); ye and hai are older (CDIAL 2530, 1031)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -319,7 +352,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a403d0bd350b05b8",
+      "sourceHash": "fnv1a64:dfc5ef4e262c3c37",
       "notice": null,
       "blocks": [
         {
@@ -365,6 +398,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The phrase, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ये कितणे कू है (ye kitṇe kū hai) is built from words with their own lessons: ye, \"this\" (CDIAL 2530); kitṇe, a form of kitṇo, \"how much\", from kiyatta, \"how great\" (CDIAL 3167); and hai, \"is\" (CDIAL 1031). The small word kū is the new piece; CDIAL gives no Marwari row for it, so its history is not settled. It does the work of Hindi ko, which CDIAL lists under kakṣa, \"armpit\" (CDIAL 14342)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -389,7 +433,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -542,7 +586,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b3a157be53d8ef9f",
+      "sourceHash": "fnv1a64:61232f4f3b21d4a0",
       "notice": null,
       "blocks": [
         {
@@ -592,6 +636,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The phrase, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "In ye kitṇo huā, the new word is huā, \"became, came to\". CDIAL lists it as Hindi huā and Old Marwari hūvo, \"became\", under Sanskrit bhūta, \"become, been\" (CDIAL 9552). ye and kitṇo have their own lessons (CDIAL 2530, 3167)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -637,7 +692,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c8363ea5759099b3",
+      "sourceHash": "fnv1a64:3ddffebcd2c34776",
       "notice": null,
       "blocks": [
         {
@@ -679,6 +734,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The phrase, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "In ये कितणो हुआ (ye kitṇo huā), the new word is huā, \"became, came to\". CDIAL lists it as Hindi huā and Old Marwari hūvo, \"became\", under Sanskrit bhūta, \"become, been\" (CDIAL 9552). ye and kitṇo have their own lessons (CDIAL 2530, 3167)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -703,7 +769,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

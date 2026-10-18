@@ -12,6 +12,9 @@ Before the new one: say the Bengali for pain, then the Bengali for hunger.
 You'll want to know: খুশি.
 খুশি — khushi — "happy".
 
+The word, taken apart.
+খুশি (khushi) is a loan, usually traced to Persian khushī, "happiness, joy". It is built on Persian khush, "happy".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Bengali for hunger, then the Bengali for happy.
 
 You'll want to know: ডাক্তার.
 ডাক্তার — ḍāktār — "a doctor".
+
+The word, taken apart.
+ডাক্তার (ḍāktār) is a loan from English doctor.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Bengali for happy, then the Bengali for a doctor.
 You'll want to know: বাবা.
 বাবা — bābā — "a father".
 
+The word, taken apart.
+বাবা (bābā) is a tadbhava, a word inherited and reshaped by sound change. It comes from bābba, "father", a form CDIAL reconstructs from its descendants (CDIAL 9209). CDIAL calls these nursery words.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Bengali for a doctor, then the Bengali for a father.
 You'll want to know: ছেলে.
 ছেলে — chhele — "a son; a boy".
 
+The word, taken apart.
+CDIAL, in its addenda, lists ছেলে (chhele), "boy", under Sanskrit chagala, "goat", beside the form chēlaka, "goat" (CDIAL 4963): the word for a boy seems to have begun as a word for a young goat.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Bengali for a father, then the Bengali for a son; a 
 
 You'll want to know: মেয়ে.
 মেয়ে — meye — "a daughter; a girl".
+
+The word, taken apart.
+CDIAL lists মেয়ে (meye), "girl", under Sanskrit mātṛ, "mother", the same entry that gives Bengali mā, "mother" (CDIAL 10016).
 
 What you've built.
 One more word for this chapter.

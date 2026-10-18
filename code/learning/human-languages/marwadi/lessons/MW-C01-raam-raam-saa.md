@@ -12,7 +12,7 @@ concept_tag: GREETING-HELLO
 prerequisites: [MW-W01-saa]
 sounds: [tap-r, long-aa]
 roots: [rāma]
-etymology_hook: The greeting repeats राम and adds respectful सा; an official Rajasthan literary magazine prints the exchange exactly that way.
+etymology_hook: "rām-rām sā: Sanskrit Rāma twice, then honorific sā, origin not settled (cf. CDIAL 13930)"
 duration:
   max_seconds: 210
 requires:
@@ -55,6 +55,11 @@ Repeat **राम**, then add respectful **सा**. Rajasthan Sahitya Akademi'
 
 That attestation is why this track begins here rather than substituting a Hindi
 greeting merely because the scripts are shared.
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**राम-राम सा** (*rām-rām sā*) says the Sanskrit name *Rāma*, a tatsama, twice and adds *sā*, a mark of respect. The origin of *sā* is not settled. CDIAL gives no Marwari form for it, but lists Gujarati *sā̃*, "a term of respectful address", under Sanskrit *svāmin*, "owner, master" (CDIAL 13930), a possible relative.
 
 ## Guided Practice — use and write it
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-RAAM-RAAM-SAA, MW-REGISTER-SAA] -->

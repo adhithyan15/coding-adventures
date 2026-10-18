@@ -6,13 +6,13 @@ sequence: 790
 chapter: 31
 type: word
 headword: قرأ
-gloss: "he read, he recited" — hamza's three seats sorted out at last, and the one root in this chapter that really did give English a word
+gloss: '"he read, he recited" — hamza''s three seats sorted out at last, and the one root in this chapter that really did give English a word'
 concept_tag: VERB-READ
 romanization: qaraʾa
 prerequisites: [AR-C31-fahima]
 sounds: [hamza-seats, hamza-final, rtl-known-letters]
 roots: [q-r-a]
-etymology_hook: "قرأ (qaraʾa) is 'he read' by way of 'he recited aloud', root ق-ر-أ, and it fills the shapes already owned — قارِئ (qāriʾ, 'a reader'), مَقْروء (maqrūʾ, 'read'), قِراءة (qirāʾa, 'reading') — and one more that English owns outright: قُرْآن (qurʾān), 'the recitation', written Quran or Koran; Hebrew's twin קָרָא (qara), 'he called, he read', is the closer relative, since what crossed into English from this root was the name of a book, never the verb"
+etymology_hook: "qaraʾa: root q-r-ʾ 'to recite, to read' (Lane), giving qurʾān 'recitation'; Hebrew qārā 'called' is a cousin"
 duration:
   max_seconds: 240
 requires:

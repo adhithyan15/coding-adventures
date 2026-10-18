@@ -12,6 +12,9 @@ Before the new one: say the Gujarati for a lemon, then the Gujarati for a coconu
 You'll want to know: તરબૂચ.
 તરબૂચ (tarbūc) — "a watermelon".
 
+The word, taken apart.
+તરબૂચ (tarbūc) is a loan, usually traced to Persian tarbuz, "watermelon". Gujarati ends it in c.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Gujarati for a coconut, then the Gujarati for a wate
 
 You'll want to know: પપૈયું.
 પપૈયું (papaiyũ) — "a papaya".
+
+The word, taken apart.
+પપૈયું (papaiyũ) is usually linked with papaya, a Caribbean word that Spanish and Portuguese sailors carried round the world. CDIAL has no entry for it, so the road it took into Gujarati is not settled.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Gujarati for a watermelon, then the Gujarati for a p
 You'll want to know: જામફળ.
 જામફળ (jāmphaḷ) — "a guava".
 
+The word, taken apart.
+જામફળ (jāmphaḷ) appears to be jām, which CDIAL lists as the fruit of the rose-apple tree under Sanskrit jambu (CDIAL 5131), with phaḷ, "fruit" (CDIAL 9051). CDIAL lists a different Gujarati word for the guava, jamrukh (CDIAL 5135).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Gujarati for a papaya, then the Gujarati for a guava
 You'll want to know: મગફળી.
 મગફળી (magphaḷī) — "peanuts".
 
+The word, taken apart.
+મગફળી (magphaḷī) is mag, "mung bean", from Sanskrit mudga (CDIAL 10198), and phaḷī, "pod", which CDIAL lists under Sanskrit phala, "fruit" (CDIAL 9051).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Gujarati for a guava, then the Gujarati for peanuts.
 
 You'll want to know: ઢોકળાં.
 ઢોકળાં (ḍhokḷā̃) — "dhokla".
+
+The word, taken apart.
+The origin of ઢોકળાં (ḍhokḷā̃) (ḍhokḷāṁ) is not settled. CDIAL, searched by form and by meaning, has no entry for it.
 
 What you've built.
 One more word for this chapter.

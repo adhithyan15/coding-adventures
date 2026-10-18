@@ -14,7 +14,8 @@ romanization: "khordan"
 concept_tag: FA-VERB-KHORDAN
 prerequisites: [FA-C34-agha, FA-C34-khanom]
 sounds: []
-roots: []
+roots: [persian-khurdan]
+etymology_hook: "khordan ← Middle Persian xwar- 'to eat' (EtymDB); inherited"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C34-khanom]
 <!-- hl-knowledge: introduces=[FA-LEX-C35-VERBS35-01]; assesses=[] -->
 
 **خوردن** — *khordan* — "to eat".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*khordan* is a native Persian verb, inherited rather than borrowed: EtymDB traces it to the Middle Persian stem *xwar-*, "to eat", and further to Proto-Iranian *\*hwar-*, "to eat, to consume".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

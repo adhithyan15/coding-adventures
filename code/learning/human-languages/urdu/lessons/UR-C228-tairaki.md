@@ -14,7 +14,8 @@ romanization: "tairākī"
 concept_tag: UR-CHIZ228-TAIRAKI
 prerequisites: [UR-C227-bheriya, UR-C227-gilahri]
 sounds: []
-roots: []
+roots: [sanskrit-tirate]
+etymology_hook: "tairākī: built on tairnā 'to swim', listed under Sanskrit tirate 'crosses over' (CDIAL 5821)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C227-gilahri]
 <!-- hl-knowledge: introduces=[UR-LEX-C228-CHIZ228-01]; assesses=[] -->
 
 **تیراکی** — *tairākī* — "swimming".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**تیراکی** (*tairākī*) is built on *tairnā*, "to swim", with the ending *-ākī*. CDIAL lists *tairnā* under Sanskrit *tirate*, "crosses over", and explains its *ai* as a blend with another verb (CDIAL 5821).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

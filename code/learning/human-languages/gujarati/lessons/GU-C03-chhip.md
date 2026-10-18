@@ -14,7 +14,8 @@ gloss: "a seashell"
 concept_tag: GU-ANCHOR-CHHIP
 prerequisites: [GU-C01-practice]
 sounds: []
-roots: []
+roots: [indo-aryan-sippi]
+etymology_hook: "chīp ← *sippī 'shell', a reconstructed form CDIAL takes from Dravidian, comparing Tamil cippi (CDIAL 13417)"
 duration:
   max_seconds: 120
 requires:
@@ -45,6 +46,11 @@ variety: standard
 **છીપ** — *chīp* — "a seashell".
 
 Say it: *chīp*. [YOU LOOK: at its shape as you say it.] The lessons that follow take pieces of it, **છ**, **ી** and, a little later, **પ**, and write each one on its own.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**છીપ** (*chīp*) goes back to *\*sippī*, "shell", a form CDIAL reconstructs from its descendants (CDIAL 13417). CDIAL takes the word from Dravidian, comparing Tamil *cippi*.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[GU-LEX-ANCHOR-CHHIP] -->

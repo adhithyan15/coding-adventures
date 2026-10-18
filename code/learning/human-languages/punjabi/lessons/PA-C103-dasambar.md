@@ -14,7 +14,8 @@ romanization: "dasambar"
 concept_tag: PA-TIME103-DASAMBAR
 prerequisites: [PA-C103-aktubar, PA-C103-navambar]
 sounds: []
-roots: []
+roots: [english-december]
+etymology_hook: "dasambar ← English December"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C103-navambar]
 <!-- hl-knowledge: introduces=[PA-LEX-C103-TIME103-03]; assesses=[] -->
 
 **ਦਸੰਬਰ** — *dasambar* — "December".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਦਸੰਬਰ** (*dasambar*) is a loan from English *December*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

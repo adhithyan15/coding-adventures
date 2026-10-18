@@ -12,7 +12,7 @@ concept_tag: UR-MILK
 prerequisites: [UR-C12-chai]
 sounds: [rtl, long-u, do-chashmi-he]
 roots: [sanskrit-dugdha, pie-dheugh]
-etymology_hook: dudh continues Sanskrit dugdhá, "milked," from Proto-Indo-European *dhewgh- "to be fit, to yield, to produce" -- the same root gives Sanskrit duh-, "to milk," and English doughty, "brave, capable"; it does NOT give English dough, which comes from the unrelated PIE root *dheigh-, "to knead, to form" -- a tempting false match worth naming precisely so it is not repeated.
+etymology_hook: "dūdh ← Sanskrit dugdha 'milked' (CDIAL 6391), from PIE *dʰewgʰ-; English dough is not related"
 duration:
   max_seconds: 280
 requires:
@@ -61,7 +61,7 @@ letter: it has now aspirated *jīm, ṭe, ṛe, che, kāf*, and here it aspirate
 ## The word, taken apart — the cousin you'd guess wrong
 <!-- hl-knowledge: introduces=[UR-ETYMON-DOODH-DOUGHTY]; assesses=[UR-LEX-DOODH] -->
 
-**dūdh** continues Sanskrit *dugdhá*, literally "milked," from
+**dūdh** continues Sanskrit *dugdhá*, literally "milked" (CDIAL 6391), from
 Proto-Indo-European **\*dʰewgʰ-**, "to be fit, to yield, to produce." That
 root also gives Sanskrit **duh-**, "to milk" — the verb sitting directly
 under this noun.

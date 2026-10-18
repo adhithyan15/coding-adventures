@@ -12,6 +12,9 @@ Before the new one: say the Urdu for a college, then the Urdu for a dwelling.
 You'll want to know: چائے خانہ.
 چائے خانہ — chāe khānā — "a tea house".
 
+The phrase, taken apart.
+چائے خانہ (chāe khānā) is "tea house". chāe, "tea", came through Persian chāy from Chinese chá, and khānā is Persian khāna, "house, room".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Urdu for a dwelling, then the Urdu for a tea house.
 
 You'll want to know: گرجا گھر.
 گرجا گھر — girjā ghar — "a church".
+
+The phrase, taken apart.
+گرجا گھر (girjā ghar) is "church house". girjā is usually traced to Portuguese igreja, "church". ghar, "house", is inherited; it is usually taken as a popular form of Sanskrit gṛha, a link CDIAL calls phonetically difficult (CDIAL 4428).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Urdu for a tea house, then the Urdu for a church.
 You'll want to know: گوردوارہ.
 گوردوارہ — gurdvārā — "a gurdwara".
 
+The word, taken apart.
+گوردوارہ (gurdvārā) is "the guru's gateway", the Sikh place of worship. It joins Sanskrit guru, "teacher", and dvārā, "door, gateway", from Sanskrit dvāra, "door"; CDIAL lists the inherited Hindi duār under a form duvāra (CDIAL 6459).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Urdu for a church, then the Urdu for a gurdwara.
 You'll want to know: قبرستان.
 قبرستان — qabristān — "a graveyard".
 
+The word, taken apart.
+قبرستان (qabristān) is "place of graves". It joins Arabic qabr, "a grave" (Lane, root q-b-r), and the Persian ending -istān, "place".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Urdu for a gurdwara, then the Urdu for a graveyard.
 
 You'll want to know: مینار.
 مینار — mīnār — "a minaret, a tower".
+
+The word, taken apart.
+مینار (mīnār) is a loan from Arabic manār, "a lighthouse, a minaret", which reached Urdu through Persian. Its Arabic root is n-w-r (Lane). It is built on the same root as nūr, "light".
 
 What you've built.
 One more word for this chapter.

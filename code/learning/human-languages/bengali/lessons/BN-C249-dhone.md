@@ -14,7 +14,8 @@ romanization: "dhône"
 concept_tag: BN-JINIS249-DHONE
 prerequisites: [BN-C249-moshla, BN-C249-jire]
 sounds: []
-roots: []
+roots: [sanskrit-dhanaka]
+etymology_hook: "dhône ← Sanskrit dhānaka 'coriander', a tadbhava (CDIAL 6776)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C249-jire]
 <!-- hl-knowledge: introduces=[BN-LEX-C249-JINIS249-03]; assesses=[] -->
 
 **ধনে** — *dhône* — "coriander".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ধনে** (*dhône*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *dhānaka*, "coriander" (CDIAL 6776). CDIAL lists Bengali *dhaniyā*, "coriander".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

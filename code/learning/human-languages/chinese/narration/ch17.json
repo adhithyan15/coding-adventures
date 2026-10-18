@@ -4,7 +4,7 @@
   "chapter": 17,
   "title": "Language or country?",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:001a9f94e4fbfd0c",
+  "sourceHash": "fnv1a64:c6fae28e96bfdbfe",
   "lessons": [
     {
       "id": "ZH-C17-hear-zhongwen",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5b00116650ee716e",
+      "sourceHash": "fnv1a64:c0622efd49371903",
       "notice": null,
       "blocks": [
         {
@@ -51,6 +51,10 @@
             {
               "kind": "speech",
               "text": "Keep the level first tone in zhōng. Let wén rise in second tone. The new second character stays hidden for now; this step is only sound and meaning."
+            },
+            {
+              "kind": "speech",
+              "text": "Zhōngwén is built from Middle Chinese trjuwng, \"middle\", and mjun, \"writing\"."
             }
           ]
         },
@@ -416,7 +420,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a9a651e35261693d",
+      "sourceHash": "fnv1a64:e74a9dd29efd79ac",
       "notice": null,
       "blocks": [
         {
@@ -479,6 +483,10 @@
             {
               "kind": "speech",
               "text": "It joins China or middle + writing or language: zhōngwén, Chinese."
+            },
+            {
+              "kind": "speech",
+              "text": "Both are inherited from Middle Chinese: trjuwng, \"middle\", and mjun, \"writing\" (Guangyun, in Baxter's transcription)."
             }
           ]
         },
@@ -660,7 +668,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7c9d44a7b0885cae",
+      "sourceHash": "fnv1a64:3db09297ddfab286",
       "notice": null,
       "blocks": [
         {
@@ -692,6 +700,10 @@
             {
               "kind": "speech",
               "text": "The first syllable stays zhōng. Change the rising ending: wén names writing or language; guó names a country. The new written ending waits one lesson."
+            },
+            {
+              "kind": "speech",
+              "text": "Zhōngguó is built from Middle Chinese trjuwng, \"middle\", and kwok, \"state\"."
             }
           ]
         },
@@ -1057,7 +1069,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f8d5087c0007683e",
+      "sourceHash": "fnv1a64:b1554950488fc97b",
       "notice": null,
       "blocks": [
         {
@@ -1098,6 +1110,10 @@
             {
               "kind": "speech",
               "text": "The shared 中 is followed by 国 (guó), country: zhōngguó, China."
+            },
+            {
+              "kind": "speech",
+              "text": "Both are inherited from Middle Chinese, trjuwng and kwok (Guangyun, in Baxter's transcription). The pair is very old and first meant the central states, the realm at the middle; it became the country's name much later."
             }
           ]
         },

@@ -14,7 +14,8 @@ romanization: "sardiyāṅ"
 concept_tag: UR-TIME94-SARDIYAN
 prerequisites: [UR-C94-bahar, UR-C94-garmiyan]
 sounds: []
-roots: []
+roots: [persian-sardi]
+etymology_hook: "sardiyāṅ: plural of sardī, usually traced to Persian sardī 'cold'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C94-garmiyan]
 <!-- hl-knowledge: introduces=[UR-LEX-C94-TIME94-05]; assesses=[] -->
 
 **سردیاں** — *sardiyāṅ* — "winter".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**سردیاں** (*sardiyāṅ*) is the plural of *sardī*, "cold", which is usually traced to Persian *sardī*, "coldness", built on *sard*, "cold".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

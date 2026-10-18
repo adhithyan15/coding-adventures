@@ -14,7 +14,8 @@ romanization: "kishtī"
 concept_tag: PA-TOWN92-KISHTI
 prerequisites: [PA-C91-hotal, PA-C92-pulis]
 sounds: []
-roots: []
+roots: [persian-kishti]
+etymology_hook: "kishtī: usually traced to Persian kishtī 'boat, ship'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C92-pulis]
 <!-- hl-knowledge: introduces=[PA-LEX-C92-TOWN92-02]; assesses=[] -->
 
 **ਕਿਸ਼ਤੀ** — *kishtī* — "a boat".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਕਿਸ਼ਤੀ** (*kishtī*) is a loan, usually traced to Persian *kishtī*, "boat, ship".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

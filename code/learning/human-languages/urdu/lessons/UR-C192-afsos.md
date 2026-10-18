@@ -14,7 +14,8 @@ romanization: "afsos"
 concept_tag: UR-VAJAH192-AFSOS
 prerequisites: [UR-C192-zarur, UR-C192-beshak]
 sounds: []
-roots: []
+roots: [persian-afsos]
+etymology_hook: "afsos: usually traced to Persian afsōs 'regret, sorrow'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C192-beshak]
 <!-- hl-knowledge: introduces=[UR-LEX-C192-VAJAH192-05]; assesses=[] -->
 
 **افسوس** — *afsos* — "regret; a pity".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**افسوس** (*afsos*) is a loan, usually traced to Persian *afsōs*, "regret, sorrow".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,7 +1,7 @@
 {
   "language": "sanskrit",
   "chapter": 249,
-  "sourceHash": "fnv1a64:2c3251c3a7eaffb7",
+  "sourceHash": "fnv1a64:6c483bcd3b55e8ae",
   "lessonIds": [
     "SA-C249-varta",
     "SA-C249-natakam",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "sanskrit/narration/ch249.txt",
   "json": "sanskrit/narration/ch249.json",
-  "textHash": "fnv1a64:dfdacb563080b205",
-  "jsonHash": "fnv1a64:51468fd6772924b6",
+  "textHash": "fnv1a64:4e9c41b6d5f98ad3",
+  "jsonHash": "fnv1a64:46f0f6ba79802b8a",
   "findings": []
 }

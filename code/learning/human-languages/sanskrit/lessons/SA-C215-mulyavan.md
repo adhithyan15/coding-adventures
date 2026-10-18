@@ -14,7 +14,8 @@ romanization: "mūlyavān"
 concept_tag: SA-QUAL215-MULYAVAN
 prerequisites: [SA-C215-tiksnah, SA-C215-kunthah]
 sounds: []
-roots: []
+roots: [sanskrit-mulya]
+etymology_hook: "mūlyavat = mūlya 'price' (from mūla 'root') + -vat 'having' (MW; CDIAL 10257)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C215-kunthah]
 <!-- hl-knowledge: introduces=[SA-LEX-C215-QUAL215-05]; assesses=[] -->
 
 **मूल्यवान्** — *mūlyavān* — "valuable".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*mūlyavān* is the nominative of *mūlyavat*, built on *mūlya*, "original value, price", and the suffix *-vat*, "having" (MW). *Mūlya* comes from *mūla*, "root", so a price is the root value of a thing (CDIAL 10257). Gujarati *mūl*, "price", comes from it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

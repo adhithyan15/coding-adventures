@@ -14,7 +14,8 @@ romanization: "sargarmi"
 concept_tag: FA-CHIZ243-SARGARMI
 prerequisites: [FA-C243-mosabeqe, FA-C243-film]
 sounds: []
-roots: []
+roots: [persian-sar, persian-garm]
+etymology_hook: "sargarmi: Persian sar 'head' + garm 'warm' + -i; inherited"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C243-film]
 <!-- hl-knowledge: introduces=[FA-LEX-C243-CHIZ243-04]; assesses=[] -->
 
 **سرگرمی** — *sargarmi* — "a hobby, a pastime".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*sargarmi* is built from *sar*, "head", *garm*, "warm", and *-i*: what keeps the head warm, so a pastime. Both words are inherited: *sar* continues Middle Persian *sar* (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

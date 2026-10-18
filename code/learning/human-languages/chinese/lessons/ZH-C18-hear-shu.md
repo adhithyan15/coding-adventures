@@ -10,8 +10,8 @@ romanization: shū
 gloss: book
 prerequisites: [ZH-R18-looking-three-r1]
 sounds: [tone-1]
-roots: []
-etymology_hook: The level first-tone noun will soon become the object after kàn in the everyday action read a book.
+roots: [middle-chinese-syo]
+etymology_hook: "shū 'book': inherited, from Middle Chinese syo 'writing'"
 duration:
   max_seconds: 115
 requires:
@@ -42,6 +42,8 @@ reviews_of: [ZH-R18-looking-three-r1]
 
 Hold one level first tone. Do not add *kàn* yet; this step is only the object,
 **book**. Its four-stroke written form waits until the next lesson.
+
+*Shū* is inherited from Middle Chinese *syo*, "writing".
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-SHU-01] -->

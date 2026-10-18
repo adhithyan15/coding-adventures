@@ -4,7 +4,7 @@
   "chapter": 12,
   "title": "Family",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:53ccb6bc97c18b4c",
+  "sourceHash": "fnv1a64:2a8a8dbb4b40ac1d",
   "lessons": [
     {
       "id": "HI-C12-pitaa-maataa",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3f082f144e42dfd3",
+      "sourceHash": "fnv1a64:84a27b22ac624ca1",
       "notice": null,
       "blocks": [
         {
@@ -65,7 +65,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "पिता/माता are correct, respectable Hindi — but the words you'll hear most often in daily life are different: बाप (bāp, \"father,\" an everyday/colloquial word) and माँ (māṁ, \"mother,\" universally the warm, everyday word — closer to English \"mom\" than \"mother\"). These aren't uncertain outliers, either — they're also Sanskrit-descended, just by a different path than pitā/mātā: बाप traces through Prakrit to Sanskrit वप्तृ (vaptṛ, \"father,\" a different Sanskrit root from pitṛ), while माँ is a genuine doublet of mātā — both come from the very same Sanskrit mātṛ, just worn down along a more colloquial Prakrit line."
+              "text": "पिता/माता are correct, respectable Hindi — but the words you'll hear most often in daily life are different: बाप (bāp, \"father,\" an everyday/colloquial word) and माँ (māṁ, \"mother,\" universally the warm, everyday word — closer to English \"mom\" than \"mother\"). They came by different roads. बाप has nothing to do with pitṛ: CDIAL traces it to bāppa, \"father\", a nursery word of the baby-talk kind that it reconstructs from its descendants, with bābū beside it (CDIAL 9209). माँ does belong with mātā: CDIAL lists Hindi mā, \"mother\", under Sanskrit mātṛ (CDIAL 10016), worn down in speech while mātā kept the fuller shape."
             }
           ]
         },
@@ -122,7 +122,7 @@
             },
             {
               "kind": "speech",
-              "text": "What are पिता and माता cousins of, in Latin and English? (Pater/ father and māter/mother — all from the same PIE roots.) What are the everyday, spoken words instead? (बाप bāp and माँ māṁ.) Are bāp and māṁ also Sanskrit-descended? (Yes — bāp traces to Sanskrit vaptṛ, a different root from pitṛ; māṁ is a genuine doublet of mātā, both from mātṛ.)"
+              "text": "What are पिता and माता cousins of, in Latin and English? (Pater/ father and māter/mother — all from the same PIE roots.) What are the everyday, spoken words instead? (बाप bāp and माँ māṁ.) Where do bāp and māṁ come from? (bāp from bāppa, a nursery word, not from pitṛ; māṁ from mātṛ, like mātā.)"
             }
           ]
         }

@@ -14,7 +14,8 @@ romanization: "nek"
 concept_tag: UR-SIFAT196-NEK
 prerequisites: [UR-C196-bechain, UR-C196-badnam]
 sounds: []
-roots: []
+roots: [persian-nek]
+etymology_hook: "nek: usually traced to Persian nēk 'good'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C196-badnam]
 <!-- hl-knowledge: introduces=[UR-LEX-C196-SIFAT196-03]; assesses=[] -->
 
 **نیک** — *nek* — "virtuous, good".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**نیک** (*nek*) is a loan, usually traced to Persian *nēk*, "good".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

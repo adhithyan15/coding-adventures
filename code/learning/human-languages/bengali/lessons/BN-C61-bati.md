@@ -14,7 +14,8 @@ romanization: "bāti"
 concept_tag: BN-HOME61-BATI
 prerequisites: [BN-C61-siri, BN-C61-ayna]
 sounds: []
-roots: []
+roots: [sanskrit-varti]
+etymology_hook: "bāti ← Sanskrit varti 'wick, lamp', a tadbhava (CDIAL 11359)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C61-ayna]
 <!-- hl-knowledge: introduces=[BN-LEX-C61-HOME61-05]; assesses=[] -->
 
 **বাতি** — *bāti* — "a lamp".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**বাতি** (*bāti*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *varti*, "wick, lamp" (CDIAL 11359).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

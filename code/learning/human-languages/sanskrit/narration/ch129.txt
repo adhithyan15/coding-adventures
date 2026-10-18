@@ -12,6 +12,9 @@ Before the new one: say the Sanskrit for sour, then the Sanskrit for bitter.
 You'll want to know: शीतलः.
 शीतलः — śītalaḥ — "cool".
 
+The word, taken apart.
+śītala is built on śīta "cold" (CDIAL 12487), which MW derives from the root √śyai "congeal, freeze", with the suffix -la: "cool, cooling". It lives on as Marathi śiḷā "cold, stale" (CDIAL 12487).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Sanskrit for bitter, then the Sanskrit for cool.
 
 You'll want to know: नवीनः.
 नवीनः — navīnaḥ — "new".
+
+The word, taken apart.
+navīna is built on nava "new" with the suffix -īna (CDIAL 7023). MW sets nava beside Greek neos, Latin novus and English new: one inherited Indo-European word.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Sanskrit for cool, then the Sanskrit for new.
 You'll want to know: प्राचीनः.
 प्राचीनः — prācīnaḥ — "ancient".
 
+The word, taken apart.
+prācīna is built on prāñc "turned forward, facing east" (CDIAL 8920): in the Rigveda it means "eastern", and later "former, ancient" (MW), since what lies in front lies before in time.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Sanskrit for new, then the Sanskrit for ancient.
 You'll want to know: वीरः.
 वीरः — vīraḥ — "brave".
 
+The word, taken apart.
+vīra "a man, a hero" is inherited from Indo-European: Latin vir "man", the source of English virile, is the same word (EtymDB). It lives on as Punjabi vīr "hero" and vīrā "brother" (CDIAL 12056).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Sanskrit for ancient, then the Sanskrit for brave.
 
 You'll want to know: चतुरः.
 चतुरः — caturaḥ — "clever".
+
+The word, taken apart.
+catura first meant "swift, quick" and then "dexterous, clever" (MW). MW cites only a grammarians' root √cat, and CDIAL 4594 compares caṭula "fickle", so its origin is uncertain. Pali kept it as catura "clever" (CDIAL 4594).
 
 What you've built.
 One more word for this chapter.

@@ -14,7 +14,8 @@ romanization: "ânjâ"
 concept_tag: FA-PLACE69-ANJA
 prerequisites: [FA-C68-jolow, FA-C69-inja]
 sounds: []
-roots: []
+roots: [persian-ja]
+etymology_hook: "ânjâ: Persian ân 'that' + jâ 'place'; native"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C69-inja]
 <!-- hl-knowledge: introduces=[FA-LEX-C69-PLACE69-02]; assesses=[] -->
 
 **آنجا** — *ânjâ* — "there".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*ânjâ* is *ân*, "that", with *jâ*, "place": "that place". Both are native Persian; *jâ* is usually traced to Middle Persian *gyāg*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

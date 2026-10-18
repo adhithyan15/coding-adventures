@@ -14,7 +14,8 @@ romanization: "jīvvũ"
 concept_tag: GU-VERB-JIVVU
 prerequisites: [GU-C141-ganvu, GU-C142-kahevu]
 sounds: []
-roots: []
+roots: [sanskrit-jivati]
+etymology_hook: "jīvvũ ← Sanskrit jīvati 'is alive', a tadbhava (CDIAL 5241)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C142-kahevu]
 <!-- hl-knowledge: introduces=[GU-LEX-C142-ACT142-02]; assesses=[] -->
 
 **જીવવું** (*jīvvũ*) — "to live".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**જીવવું** (*jīvvũ*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *jīvati*, "is alive" (CDIAL 5241).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

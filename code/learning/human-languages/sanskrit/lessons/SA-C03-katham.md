@@ -15,6 +15,7 @@ concept_tag: QUESTION-HOW
 prerequisites: [SA-C02-kim]
 sounds: [inherent-a, halant]
 roots: [ka-interrogative]
+etymology_hook: "katham 'how' ← the question stem ka- (MW); Hindi kaise is from kīdṛśa instead (CDIAL 3197)"
 reviews_of: [SA-C02-kim]
 duration:
   max_seconds: 210
@@ -54,8 +55,8 @@ the *th* of English *thin*.
 *katham* ("how, in what way") is from the interrogative stem *ka-*, PIE **\*kʷo-** — the same root that gave *kim* and, in the west, English
 **wh-** and Latin *qu-*. It heads the same *ka-* question-family: *kim* (what),
 *kaḥ* (who), *kadā* (when), *kutra* (where), *katham* (how). From *katham* comes
-the abstract noun *kathā* ("a telling, a story" — "the how of a thing"), and,
-worn down, Hindi's *kaise*.
+the abstract noun *kathā* ("a telling, a story" — "the how of a thing"). Hindi's *kaise*
+looks like its descendant but comes from *kīdṛśa*, "of what kind" (CDIAL 3197).
 
 ## Guided Practice
 

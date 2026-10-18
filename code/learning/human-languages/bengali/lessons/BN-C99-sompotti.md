@@ -14,7 +14,8 @@ romanization: "sômpôtti"
 concept_tag: BN-CAN99-SOMPOTTI
 prerequisites: [BN-C98-malik, BN-C98-jomi]
 sounds: []
-roots: []
+roots: [sanskrit-sampatti]
+etymology_hook: "sômpôtti ← Sanskrit saṁpatti 'acquisition, prosperity', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C98-jomi]
 <!-- hl-knowledge: introduces=[BN-LEX-C99-CAN99-01]; assesses=[] -->
 
 **সম্পত্তি** — *sômpôtti* — "property".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**সম্পত্তি** (*sômpôtti*) is Sanskrit *saṁpatti*, "acquisition, prosperity", taken over whole as a learned loan, a tatsama.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

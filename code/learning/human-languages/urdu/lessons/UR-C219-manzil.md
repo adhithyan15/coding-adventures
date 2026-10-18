@@ -14,7 +14,8 @@ romanization: "manzil"
 concept_tag: UR-JAGAH219-MANZIL
 prerequisites: [UR-C218-somvar, UR-C219-flait]
 sounds: []
-roots: []
+roots: [arabic-manzil]
+etymology_hook: "manzil ← Arabic manzil 'a stopping place, a dwelling', through Persian (Lane, root n-z-l)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C219-flait]
 <!-- hl-knowledge: introduces=[UR-LEX-C219-JAGAH219-02]; assesses=[] -->
 
 **منزل** — *manzil* — "a storey; a destination".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**منزل** (*manzil*) is a loan from Arabic *manzil*, "a stopping place, a dwelling", which reached Urdu through Persian. Its Arabic root is *n-z-l* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "pāṣāṇaḥ"
 concept_tag: SA-THG196-PASANAH
 prerequisites: [SA-C195-sima, SA-C196-tamram]
 sounds: []
-roots: []
+roots: [sanskrit-pashana]
+etymology_hook: "pāṣāṇa 'stone', of uncertain origin (MW, CDIAL 8138); Hindi pāhan"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C196-tamram]
 <!-- hl-knowledge: introduces=[SA-LEX-C196-THG196-02]; assesses=[] -->
 
 **पाषाणः** — *pāṣāṇaḥ* — "a rock, a stone".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*pāṣāṇa* is of uncertain origin: MW reports a grammarian's derivation from a root √paṣ, and CDIAL 8138 finds its later sound changes unexplained. It lives on as Hindi *pāhan*, "stone".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

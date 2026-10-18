@@ -14,7 +14,8 @@ romanization: "pir"
 concept_tag: FA-QUAL125-PIR
 prerequisites: [FA-C125-zesht, FA-C125-javan, FA-C20-practice]
 sounds: []
-roots: []
+roots: [persian-pir]
+etymology_hook: "pir: inherited, usually traced to Middle Persian pīr"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [FA-C125-javan]
 <!-- hl-knowledge: introduces=[FA-LEX-C125-QUAL125-04]; assesses=[] -->
 
 **پیر** — *pir* — "old (of people)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*pir* is a native Persian word, inherited rather than borrowed; it is usually traced to Middle Persian *pīr*, "old". (EtymDB connects it with *pedar*, "father", but that link is not settled.)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

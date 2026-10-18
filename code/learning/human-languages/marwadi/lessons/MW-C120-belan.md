@@ -14,7 +14,8 @@ romanization: "belaṇ"
 concept_tag: MW-THINGS120-BELAN
 prerequisites: [MW-C120-chakki, MW-C120-musal]
 sounds: []
-roots: []
+roots: [sanskrit-vellana]
+etymology_hook: "belaṇ ← Sanskrit vellana 'shaking; rolling-pin', a tadbhava (CDIAL 12120, Hindi and Gujarati rows)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C120-musal]
 <!-- hl-knowledge: introduces=[MW-LEX-C120-THINGS120-05]; assesses=[] -->
 
 **बेलण** — *belaṇ* — "a rolling pin".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**बेलण** (*belaṇ*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *vellana*, "shaking; rolling-pin". CDIAL gives no Marwari form in this entry (CDIAL 12120); the match is through Hindi *belan* and Gujarati *velaṇ*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

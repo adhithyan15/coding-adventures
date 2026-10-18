@@ -14,7 +14,8 @@ romanization: "qāma"
 concept_tag: AR-VERB-QAMA
 prerequisites: [AR-C57-jalasa, AR-C57-nama]
 sounds: []
-roots: []
+roots: [q-w-m]
+etymology_hook: "qāma: built on the root q-w-m, 'to stand up, to rise' (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C57-nama]
 <!-- hl-knowledge: introduces=[AR-LEX-C58-VERBS58-01]; assesses=[] -->
 
 **قام** — *qāma* — "to stand up (he stood up)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**قام** (*qāma*) is built on the native Arabic root *q-w-m*, "to stand up, to rise" (Lane). The same root gives *qawm*, "a people", and *mustaqīm*, "straight".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

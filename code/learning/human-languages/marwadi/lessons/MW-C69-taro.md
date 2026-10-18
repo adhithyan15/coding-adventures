@@ -14,7 +14,8 @@ romanization: "tāro"
 concept_tag: MW-NATURE69-TARO
 prerequisites: [MW-C68-ret, MW-C68-khet]
 sounds: []
-roots: []
+roots: [sanskrit-tara]
+etymology_hook: "tāro: as Gujarati tāro, listed under tāraka 'of the stars', beside Sanskrit tārā 'fixed star' (CDIAL 5798)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C68-khet]
 <!-- hl-knowledge: introduces=[MW-LEX-C69-NATURE69-01]; assesses=[] -->
 
 **तारो** — *tāro* — "a star".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**तारो** (*tāro*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. CDIAL lists Hindi *tārā* and Gujarati *tāro*, "star", under *tāraka*, "belonging to the stars", a form beside Sanskrit *tārā*, "fixed star" (CDIAL 5798); it gives no Marwari form there. English *star* is a distant cousin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

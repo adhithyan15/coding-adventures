@@ -14,7 +14,8 @@ romanization: "rukkh"
 concept_tag: PA-SCHOOL73-RUKKH
 prerequisites: [PA-C73-khed, PA-C73-chitthi]
 sounds: []
-roots: []
+roots: [indo-aryan-ruksha]
+etymology_hook: "rukkh ← *rukṣa 'tree', a reconstructed form; a tadbhava (CDIAL 10757)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C73-chitthi]
 <!-- hl-knowledge: introduces=[PA-LEX-C73-SCHOOL73-03]; assesses=[] -->
 
 **ਰੁੱਖ** — *rukkh* — "a tree".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਰੁੱਖ** (*rukkh*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*rukṣa*, "tree", a form CDIAL reconstructs from its descendants (CDIAL 10757). CDIAL sets it beside Sanskrit *vṛkṣa*, "tree".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

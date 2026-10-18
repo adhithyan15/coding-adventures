@@ -14,7 +14,8 @@ romanization: "mārc"
 concept_tag: PA-TIME101-MARC
 prerequisites: [PA-C101-janvari, PA-C101-farvari]
 sounds: []
-roots: []
+roots: [english-march]
+etymology_hook: "mārc ← English March"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C101-farvari]
 <!-- hl-knowledge: introduces=[PA-LEX-C101-TIME101-04]; assesses=[] -->
 
 **ਮਾਰਚ** — *mārc* — "March".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਮਾਰਚ** (*mārc*) is a loan from English *March*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "doro"
 concept_tag: JA-THINGS107-DORO
 prerequisites: [JA-C106-iwa, JA-C106-koishi]
 sounds: []
-roots: []
+roots: [japanese-doro]
+etymology_hook: "doro: native Japanese, inherited, not borrowed; kanji 泥 attached later as kun'yomi"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C106-koishi]
 <!-- hl-knowledge: introduces=[JA-LEX-C107-THINGS107-01]; assesses=[] -->
 
 **どろ** — *doro* — "mud".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**どろ** (*doro*) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

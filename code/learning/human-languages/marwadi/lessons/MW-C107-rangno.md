@@ -14,7 +14,8 @@ romanization: "raṅgṇo"
 concept_tag: MW-VERB-RANGNO
 prerequisites: [MW-C106-sivno, MW-C107-bunno]
 sounds: []
-roots: []
+roots: [sanskrit-ranga, persian-rang]
+etymology_hook: "raṅgṇo 'to dye': the verb of raṅg 'colour', from Sanskrit raṅga 'dye' (CDIAL 10560) or Persian rang"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C107-bunno]
 <!-- hl-knowledge: introduces=[MW-LEX-C107-ACT107-02]; assesses=[] -->
 
 **रंगणो** — *raṅgṇo* — "to dye".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**रंगणो** (*raṅgṇo*), "to dye", is the verb made from *raṅg*, "colour". That word may come from Sanskrit *raṅga*, "dye, colour", under which CDIAL lists Hindi *rā̃g*, "dye" (CDIAL 10560), or from Persian *rang*, "colour"; the two may have merged.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

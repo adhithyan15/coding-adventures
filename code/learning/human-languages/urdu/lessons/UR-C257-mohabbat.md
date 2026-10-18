@@ -14,7 +14,8 @@ romanization: "mohabbat"
 concept_tag: UR-CHIZ257-MOHABBAT
 prerequisites: [UR-C257-asu, UR-C257-muskurahat]
 sounds: []
-roots: []
+roots: [arabic-mahabba]
+etymology_hook: "mohabbat ← Arabic maḥabba 'love, affection', through Persian (Lane, root ḥ-b-b)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C257-muskurahat]
 <!-- hl-knowledge: introduces=[UR-LEX-C257-CHIZ257-03]; assesses=[] -->
 
 **محبت** — *mohabbat* — "affection, love".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**محبت** (*mohabbat*) is a loan from Arabic *maḥabba*, "love, affection", which reached Urdu through Persian. Its Arabic root is *ḥ-b-b* (Lane). It is built on the same root as *ḥubb*, "love".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

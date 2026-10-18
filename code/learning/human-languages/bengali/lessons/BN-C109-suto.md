@@ -14,7 +14,8 @@ romanization: "sutô"
 concept_tag: BN-THINGS109-SUTO
 prerequisites: [BN-C109-gamchha, BN-C109-sui]
 sounds: []
-roots: []
+roots: [sanskrit-sutra]
+etymology_hook: "sutô ← Sanskrit sūtra 'thread', a tadbhava (CDIAL 13561)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C109-sui]
 <!-- hl-knowledge: introduces=[BN-LEX-C109-THINGS109-05]; assesses=[] -->
 
 **সুতো** — *sutô* — "thread".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**সুতো** (*sutô*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *sūtra*, "thread" (CDIAL 13561). CDIAL writes the Bengali form *sutā*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

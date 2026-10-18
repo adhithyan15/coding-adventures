@@ -12,6 +12,9 @@ Before the new one: say the Bengali for to sink, then the Bengali for to float.
 You'll want to know: হারিয়ে যাওয়া.
 হারিয়ে যাওয়া — hāriye jāoyā — "to get lost".
 
+The phrase, taken apart.
+হারিয়ে যাওয়া (hāriye jāoyā) is hāriye, "losing", a form of hārā, "to lose", from Sanskrit hārayati, "loses" (CDIAL 14061), + jāoyā, "to go", from Sanskrit yāti, "goes" (CDIAL 10452).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Bengali for to float, then the Bengali for to get lo
 
 You'll want to know: খুঁজে পাওয়া.
 খুঁজে পাওয়া — khũje pāoyā — "to find".
+
+The phrase, taken apart.
+খুঁজে পাওয়া (khũje pāoyā) is khũje, "searching", a form of khũjā, "to search for", which CDIAL lists under khōjjati, "seeks" (CDIAL 3929), + pāoyā, "to get", from Sanskrit prāpayati, "causes to reach" (CDIAL 8943).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Bengali for to get lost, then the Bengali for to fin
 You'll want to know: খেয়াল করা.
 খেয়াল করা — kheyāl kôrā — "to notice".
 
+The phrase, taken apart.
+খেয়াল করা (kheyāl kôrā) is kheyāl, "attention, notice", from Arabic khayāl, "an image in the mind", which reached Bengali through Persian (Lane), + kôrā, "to do", from Sanskrit karoti, "does" (CDIAL 2814).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Bengali for to find, then the Bengali for to notice.
 You'll want to know: জানানো.
 জানানো — jānāno — "to inform".
 
+The word, taken apart.
+জানানো (jānāno) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from jānāti, "knows" (CDIAL 5193). CDIAL lists Bengali jānā, "to know"; jānāno is its causing form, "to make know".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Bengali for to notice, then the Bengali for to infor
 
 You'll want to know: গল্প করা.
 গল্প করা — gôlpô kôrā — "to chat".
+
+The phrase, taken apart.
+গল্প করা (gôlpô kôrā) is gôlpô, "a story, a chat", which appears to belong with Bengali gappa, "tittle-tattle", listed under gappa, "talk", which CDIAL calls imitative and compares with Sanskrit jalpati, "chatters" (CDIAL 4022), + kôrā, "to do", from Sanskrit karoti, "does" (CDIAL 2814).
 
 What you've built.
 One more word for this chapter.

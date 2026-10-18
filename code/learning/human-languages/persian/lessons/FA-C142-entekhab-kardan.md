@@ -14,7 +14,8 @@ romanization: "entekhâb kardan"
 concept_tag: FA-VERB-ENTEKHAB-KARDAN
 prerequisites: [FA-C142-sabr-kardan, FA-C142-pishnahad-kardan]
 sounds: []
-roots: []
+roots: [arabic-intihab]
+etymology_hook: "entekhâb ← Arabic intiḫāb 'choosing, selection', root n-ḫ-b (Lane), + Persian kardan"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C142-pishnahad-kardan]
 <!-- hl-knowledge: introduces=[FA-LEX-C142-KONESH142-03]; assesses=[] -->
 
 **انتخاب کردن** — *entekhâb kardan* — "to choose".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*entekhâb kardan* pairs *entekhâb*, borrowed from Arabic *intiḫāb*, "choosing, selection" (root *n-ḫ-b*, Lane), with the Persian verb *kardan*, "to do, to make". *kardan*, "to do", is an inherited verb, from Middle Persian *kardan* (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

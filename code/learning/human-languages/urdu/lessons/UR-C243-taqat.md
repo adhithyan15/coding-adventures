@@ -14,7 +14,8 @@ romanization: "tāqat"
 concept_tag: UR-SEHAT243-TAQAT
 prerequisites: [UR-C242-jari-rakhna, UR-C243-thakan]
 sounds: []
-roots: []
+roots: [arabic-taqa]
+etymology_hook: "tāqat ← Arabic ṭāqa 'power, ability', through Persian (Lane, root ṭ-w-q)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C243-thakan]
 <!-- hl-knowledge: introduces=[UR-LEX-C243-SEHAT243-02]; assesses=[] -->
 
 **طاقت** — *tāqat* — "strength".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**طاقت** (*tāqat*) is a loan from Arabic *ṭāqa*, "power, ability", which reached Urdu through Persian. Its Arabic root is *ṭ-w-q* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

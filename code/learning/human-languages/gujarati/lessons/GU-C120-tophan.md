@@ -14,7 +14,8 @@ romanization: "tophān"
 concept_tag: GU-THINGS120-TOPHAN
 prerequisites: [GU-C120-ran, GU-C120-vijli]
 sounds: []
-roots: []
+roots: [arabic-tufan]
+etymology_hook: "tophān ← Arabic ṭūfān 'a flood, a deluge', through Persian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C120-vijli]
 <!-- hl-knowledge: introduces=[GU-LEX-C120-THINGS120-03]; assesses=[] -->
 
 **તોફાન** (*tophān*) — "a storm".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**તોફાન** (*tophān*) is a loan from Arabic *ṭūfān*, "a flood, a deluge", which reached Gujarati through Persian. Its Arabic root is *ṭ-w-f* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

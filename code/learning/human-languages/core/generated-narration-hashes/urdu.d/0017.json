@@ -1,7 +1,7 @@
 {
   "language": "urdu",
   "chapter": 17,
-  "sourceHash": "fnv1a64:1604ec5a19d2d2fe",
+  "sourceHash": "fnv1a64:1712cf5f4fb55745",
   "lessonIds": [
     "UR-C17-yih",
     "UR-C17-kaam",
@@ -15,7 +15,7 @@
   "drivablePrefix": 3,
   "text": "urdu/narration/ch17.txt",
   "json": "urdu/narration/ch17.json",
-  "textHash": "fnv1a64:b3ed209c7b9e2bdb",
-  "jsonHash": "fnv1a64:787570a7e90a4a6c",
+  "textHash": "fnv1a64:349b6992a6ed0b29",
+  "jsonHash": "fnv1a64:3720862229c43816",
   "findings": []
 }

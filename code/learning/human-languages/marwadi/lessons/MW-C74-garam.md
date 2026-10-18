@@ -14,7 +14,8 @@ romanization: "garam"
 concept_tag: MW-ADJ74-GARAM
 prerequisites: [MW-C73-maro, MW-C73-labo]
 sounds: []
-roots: []
+roots: [persian-garm]
+etymology_hook: "garam: usually traced to Persian garm 'warm, hot'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C73-labo]
 <!-- hl-knowledge: introduces=[MW-LEX-C74-ADJ74-01]; assesses=[] -->
 
 **गरम** — *garam* — "hot".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**गरम** (*garam*) is a loan, usually traced to Persian *garm*, "warm, hot".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

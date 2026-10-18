@@ -14,7 +14,8 @@ romanization: "malābis"
 concept_tag: AR-CLOTHES94-MALABIS
 prerequisites: [AR-C93-madina, AR-C93-matam]
 sounds: []
-roots: []
+roots: [l-b-s]
+etymology_hook: "malābis: built on the root l-b-s, 'to put on, to wear' (Lane); malābis is the plural of malbas, 'a thing worn'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C93-matam]
 <!-- hl-knowledge: introduces=[AR-LEX-C94-CLOTHES94-01]; assesses=[] -->
 
 **ملابس** — *malābis* — "clothes".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ملابس** (*malābis*) is built on the native Arabic root *l-b-s*, "to put on, to wear" (Lane). *Malābis* is the plural of *malbas*, "a thing worn".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

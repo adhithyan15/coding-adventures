@@ -14,7 +14,8 @@ romanization: "ghasīl"
 concept_tag: AR-SHAY213-GHASIL
 prerequisites: [AR-C213-ghita, AR-C213-athath]
 sounds: []
-roots: []
+roots: [gh-s-l]
+etymology_hook: "ghasīl: built on the root gh-s-l, 'to wash' (Lane); ghasīl is 'washed things', the laundry"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C213-athath]
 <!-- hl-knowledge: introduces=[AR-LEX-C213-SHAY213-05]; assesses=[] -->
 
 **غسيل** — *ghasīl* — "laundry, washing".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**غسيل** (*ghasīl*) is built on the native Arabic root *gh-s-l*, "to wash" (Lane). *Ghasīl* is "washed things", the laundry.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -12,6 +12,9 @@ Before the new one: say the Bengali for a grocer, then the Bengali for a nurse.
 You'll want to know: রাজা.
 রাজা — rājā — "a king".
 
+The word, taken apart.
+রাজা (rājā) is Sanskrit rājan, "chieftain, king", taken over whole as a learned loan, a tatsama (CDIAL 10679). The word inherited from it is rāy, "prince", which CDIAL lists.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Bengali for a nurse, then the Bengali for a king.
 
 You'll want to know: রানি.
 রানি — rāni — "a queen".
+
+The word, taken apart.
+রানি (rāni) goes back to Sanskrit rājñī, "queen". CDIAL gives no Bengali form under that entry, but it lists Assamese rāni and Oriya rāṇi, "queen", the forms nearest to Bengali (CDIAL 10692).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Bengali for a king, then the Bengali for a queen.
 You'll want to know: পুজারি.
 পুজারি — pujāri — "a priest".
 
+The word, taken apart.
+পুজারি (pujāri) is pujā, "worship", Sanskrit pūjā, + -āri, "one who does it".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Bengali for a queen, then the Bengali for a priest.
 You'll want to know: কারখানা.
 কারখানা — kārkhānā — "a factory".
 
+The word, taken apart.
+কারখানা (kārkhānā) is a loan, usually traced to Persian kārkhāna, "workshop".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Bengali for a priest, then the Bengali for a factory
 
 You'll want to know: মজুর.
 মজুর — mojur — "a labourer".
+
+The word, taken apart.
+মজুর (mojur) is a loan, usually traced to Persian muzdūr, "a hired labourer".
 
 What you've built.
 One more word for this chapter.

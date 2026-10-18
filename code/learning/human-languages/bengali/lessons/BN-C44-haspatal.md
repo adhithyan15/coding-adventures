@@ -14,7 +14,8 @@ romanization: "hāspātāl"
 concept_tag: BN-BODY44-HASPATAL
 prerequisites: [BN-C44-kan, BN-C44-jbor]
 sounds: []
-roots: []
+roots: [english-hospital]
+etymology_hook: "hāspātāl ← English hospital"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C44-jbor]
 <!-- hl-knowledge: introduces=[BN-LEX-C44-BODY44-03]; assesses=[] -->
 
 **হাসপাতাল** — *hāspātāl* — "a hospital".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**হাসপাতাল** (*hāspātāl*) is a loan from English *hospital*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,7 +1,7 @@
 {
   "language": "marwadi",
   "chapter": 123,
-  "sourceHash": "fnv1a64:ab9f0409a62f28e7",
+  "sourceHash": "fnv1a64:28c695480fd74025",
   "lessonIds": [
     "MW-C123-takiyo",
     "MW-C123-chadar",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "marwadi/narration/ch123.txt",
   "json": "marwadi/narration/ch123.json",
-  "textHash": "fnv1a64:60e3b4edb3a2a7d5",
-  "jsonHash": "fnv1a64:16ae08aa358f956d",
+  "textHash": "fnv1a64:e90caaf117e60812",
+  "jsonHash": "fnv1a64:8039e4446bb322ec",
   "findings": []
 }

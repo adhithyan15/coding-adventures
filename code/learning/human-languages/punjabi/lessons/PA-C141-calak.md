@@ -14,7 +14,8 @@ romanization: "calāk"
 concept_tag: PA-QUAL141-CALAK
 prerequisites: [PA-C140-haula, PA-C140-bhara]
 sounds: []
-roots: []
+roots: [persian-chalak]
+etymology_hook: "calāk: usually traced to Persian chālāk 'quick, clever'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C140-bhara]
 <!-- hl-knowledge: introduces=[PA-LEX-C141-QUAL141-01]; assesses=[] -->
 
 **ਚਲਾਕ** — *calāk* — "cunning".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਚਲਾਕ** (*calāk*) is a loan, usually traced to Persian *chālāk*, "quick, clever".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

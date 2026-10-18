@@ -1,7 +1,7 @@
 {
   "language": "spanish",
   "chapter": 305,
-  "sourceHash": "fnv1a64:94ed80c6fd9c72dc",
+  "sourceHash": "fnv1a64:7a2f199ed3dc91a9",
   "lessonIds": [
     "ES-C305-nombre",
     "ES-C305-apellido",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "spanish/narration/ch305.txt",
   "json": "spanish/narration/ch305.json",
-  "textHash": "fnv1a64:be046a4011a98b90",
-  "jsonHash": "fnv1a64:85f937fc608ffeb6",
+  "textHash": "fnv1a64:be866218e06ba54e",
+  "jsonHash": "fnv1a64:9927edb7ae824898",
   "findings": []
 }

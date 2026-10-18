@@ -1,0 +1,9 @@
+{
+  "id": "PA-PATH-177-NOUN-PHRASE-AGREEMENT",
+  "spine_node": "SPINE-DESCRIBE-QUALITIES",
+  "before": [],
+  "inline": [
+    "PA-EXT-177-NOUN-PHRASE-AGREEMENT"
+  ],
+  "after": []
+}

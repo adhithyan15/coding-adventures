@@ -14,7 +14,8 @@ romanization: "kamīz"
 concept_tag: PA-CLOTHES94-KAMIZ
 prerequisites: [PA-C94-jutti, PA-C94-topi]
 sounds: []
-roots: []
+roots: [arabic-qamis]
+etymology_hook: "kamīz ← Arabic qamīṣ 'shirt', through Persian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C94-topi]
 <!-- hl-knowledge: introduces=[PA-LEX-C94-CLOTHES94-04]; assesses=[] -->
 
 **ਕਮੀਜ਼** — *kamīz* — "a shirt".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਕਮੀਜ਼** (*kamīz*) is a loan from Arabic *qamīṣ*, "shirt", which reached Punjabi through Persian. Its Arabic root is *q-m-ṣ* (Lane). The Arabic word is itself probably from Late Latin *camisia*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -4,7 +4,7 @@
   "chapter": 5,
   "title": "Four More Forms Before Your Name",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:0c0e86fd66a8e587",
+  "sourceHash": "fnv1a64:767f4a1753b68b18",
   "lessons": [
     {
       "id": "GU-C05-chappal",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:569d386baef536cc",
+      "sourceHash": "fnv1a64:a9499e563f22b185",
       "notice": null,
       "blocks": [
         {
@@ -88,6 +88,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "CDIAL has no entry for ચપ્પલ (cappal). DEDR compares Hindi cappal, with a \"Cf.\", to the Dravidian words for a sandal, such as Telugu ceppu (DEDR 1963)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -118,7 +129,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -149,7 +160,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:bbc32206e0a12d26",
+      "sourceHash": "fnv1a64:468bf5fd76d75aab",
       "notice": null,
       "blocks": [
         {
@@ -209,6 +220,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "બગલો (bagalo) belongs with Gujarati bag, \"crane\", which CDIAL lists under Sanskrit baka, a heron or crane (CDIAL 9115). CDIAL thinks the word was probably imitative in origin. It does not list the longer Gujarati form."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -239,7 +261,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

@@ -14,7 +14,8 @@ romanization: "sovṇo"
 concept_tag: MW-VERB-SOVNO
 prerequisites: [MW-C51-sunno, MW-C52-baithno]
 sounds: []
-roots: []
+roots: [sanskrit-svapati]
+etymology_hook: "sovṇo ← Sanskrit svapati 'sleeps', a tadbhava (CDIAL 13902, Old Marwari row)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C52-baithno]
 <!-- hl-knowledge: introduces=[MW-LEX-C52-VERBS52-02]; assesses=[] -->
 
 **सोवणो** — *sovṇo* — "to sleep".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**सोवणो** (*sovṇo*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *svapati*, "sleeps". CDIAL lists Old Marwari *soaï* under it (CDIAL 13902).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

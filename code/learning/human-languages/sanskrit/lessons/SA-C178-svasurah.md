@@ -14,7 +14,8 @@ romanization: "śvaśuraḥ"
 concept_tag: SA-PPL178-SVASURAH
 prerequisites: [SA-C177-lajjate, SA-C178-matulani]
 sounds: []
-roots: []
+roots: [sanskrit-shvashura]
+etymology_hook: "śvaśura ← inherited Indo-European kin word: MW compares Latin socer and Greek hekyros; Hindi sasur (CDIAL 12753)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C178-matulani]
 <!-- hl-knowledge: introduces=[SA-LEX-C178-PPL178-02]; assesses=[] -->
 
 **श्वशुरः** — *śvaśuraḥ* — "a father-in-law".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*śvaśura* is an inherited Indo-European kin word: MW compares Latin *socer* and Greek *hekyros*, both "father-in-law". It lives on as Hindi *sasur* (CDIAL 12753).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

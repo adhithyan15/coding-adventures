@@ -14,7 +14,8 @@ romanization: "upanetram"
 concept_tag: SA-THINGS101-UPANETRAM
 prerequisites: [SA-C101-phenakam, SA-C101-pronchanam]
 sounds: []
-roots: []
+roots: [sanskrit-netra]
+etymology_hook: "upanetra ← upa 'near, extra' + netra 'eye' (√nī 'lead': 'the guiding organ', MW); a modern coinage"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C101-pronchanam]
 <!-- hl-knowledge: introduces=[SA-LEX-C101-THINGS101-04]; assesses=[] -->
 
 **उपनेत्रम्** — *upanetram* — "glasses, spectacles".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*upanetra* is built from *upa* "near, additional" and *netra* "eye"; MW explains *netra* as "the guiding organ", from the root √nī "lead". The pairing for spectacles is modern.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

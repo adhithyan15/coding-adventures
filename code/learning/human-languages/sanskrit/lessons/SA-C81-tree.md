@@ -14,7 +14,8 @@ romanization: "vṛkṣaḥ"
 concept_tag: SA-PLANT-TREE
 prerequisites: [SA-C80-tortoise, SA-C80-frog]
 sounds: []
-roots: []
+roots: [sanskrit-vrksha]
+etymology_hook: "vṛkṣa 'tree' is Rigvedic; MW offers three guesses (√bṛh 'grow', √bṛh 'root up', √vraśc 'fell'); not settled"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,13 @@ reviews_of: [SA-C80-frog]
 <!-- hl-knowledge: introduces=[SA-LEX-C81-PLANTS-01]; assesses=[] -->
 
 **वृक्षः** (*vṛkṣaḥ*) — "a tree", the everyday word beside **तरुः**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*Vṛkṣa* is already in the Rigveda (CDIAL 12067). MW offers three guesses, a root
+√bṛh "to grow", another √bṛh "to root up", or √vraśc "to fell", so its origin is
+not settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

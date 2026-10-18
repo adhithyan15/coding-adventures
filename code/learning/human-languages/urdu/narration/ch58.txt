@@ -12,6 +12,9 @@ Before the new one: say the Urdu for coffee, then the Urdu for a house.
 You'll want to know: کھڑکی.
 کھڑکی — khiṛkī — "a window".
 
+The word, taken apart.
+کھڑکی (khiṛkī) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from khaṭakkikā, "side door" (CDIAL 3770). The Sanskrit word is known only from the old word-lists.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Urdu for a house, then the Urdu for a window.
 
 You'll want to know: کرسی.
 کرسی — kursī — "a chair".
+
+The word, taken apart.
+کرسی (kursī) is a loan from Arabic kursī, "chair, throne", which reached Urdu through Persian. Its Arabic root is k-r-s (Lane). Arabic itself most likely took it from Aramaic.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Urdu for a window, then the Urdu for a chair.
 You'll want to know: دیوار.
 دیوار — dīvār — "a wall".
 
+The word, taken apart.
+دیوار (dīvār) is a loan, usually traced to Persian dīvār, "wall".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Urdu for a chair, then the Urdu for a wall.
 You'll want to know: چھت.
 چھت — chhat — "a roof; a ceiling".
 
+The word, taken apart.
+چھت (chhat) is a tadbhava, a word inherited and reshaped by sound change. It comes from chatti, "covering", a form CDIAL reconstructs from its descendants (CDIAL 4971). It is built on chad-, "to cover", the root of chattra, "parasol".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Urdu for a wall, then the Urdu for a roof; a ceiling
 
 You'll want to know: بستر.
 بستر — bistar — "a bed".
+
+The word, taken apart.
+بستر (bistar) is a loan, usually traced to Persian bistar, "bedding, bed".
 
 What you've built.
 One more word for this chapter.

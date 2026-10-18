@@ -14,7 +14,8 @@ romanization: "silk"
 concept_tag: AR-SHAY187-SILK
 prerequisites: [AR-C187-sunbur, AR-C187-unbub]
 sounds: []
-roots: []
+roots: [s-l-k]
+etymology_hook: "silk: built on the root s-l-k, 'to go in' (Lane); Lane's silk is a thread"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C187-unbub]
 <!-- hl-knowledge: introduces=[AR-LEX-C187-SHAY187-04]; assesses=[] -->
 
 **سلك** — *silk* — "a wire".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**سلك** (*silk*) is built on the native Arabic root *s-l-k*, "to go in; a thread" (Lane). Lane's *silk* is a thread; the wire is a later sense.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

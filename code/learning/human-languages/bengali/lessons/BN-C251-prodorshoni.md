@@ -14,7 +14,8 @@ romanization: "prôdôrshônī"
 concept_tag: BN-JINIS251-PRODORSHONI
 prerequisites: [BN-C250-chil, BN-C251-nach]
 sounds: []
-roots: []
+roots: [sanskrit-pradarshana]
+etymology_hook: "prôdôrshônī: Sanskrit pradarśana 'showing', a tatsama, + -ī"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C251-nach]
 <!-- hl-knowledge: introduces=[BN-LEX-C251-JINIS251-02]; assesses=[] -->
 
 **প্রদর্শনী** — *prôdôrshônī* — "an exhibition".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**প্রদর্শনী** (*prôdôrshônī*) is Sanskrit *pradarśana*, "a showing", taken over whole, + the ending *-ī*: "a show".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

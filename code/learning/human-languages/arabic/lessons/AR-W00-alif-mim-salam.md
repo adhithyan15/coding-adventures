@@ -10,7 +10,7 @@ gloss: add alif and mim, then guided-copy salām
 romanization: alif, mīm — salām
 prerequisites: [AR-W00-sin-lam]
 sounds: [arabic-alif, arabic-mim, long-a]
-roots: [phoenician-aleph, phoenician-mem, semitic-s-l-m]
+roots: [phoenician-aleph, phoenician-mem, s-l-m]
 duration:
   max_seconds: 240
 requires:

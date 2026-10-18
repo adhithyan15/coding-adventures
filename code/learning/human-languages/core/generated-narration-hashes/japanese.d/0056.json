@@ -1,7 +1,7 @@
 {
   "language": "japanese",
   "chapter": 56,
-  "sourceHash": "fnv1a64:5d491961a98affc1",
+  "sourceHash": "fnv1a64:45338bb2129915f9",
   "lessonIds": [
     "JA-C56-ato",
     "JA-C56-mae",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "japanese/narration/ch56.txt",
   "json": "japanese/narration/ch56.json",
-  "textHash": "fnv1a64:c3321aa015081b4b",
-  "jsonHash": "fnv1a64:1d705d453b8d6e4c",
+  "textHash": "fnv1a64:ed49559716462469",
+  "jsonHash": "fnv1a64:f78b064cf4eb2bc0",
   "findings": []
 }

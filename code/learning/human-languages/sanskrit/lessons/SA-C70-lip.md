@@ -14,7 +14,8 @@ romanization: "oṣṭhaḥ"
 concept_tag: SA-BODY-LIP
 prerequisites: [SA-C70-back, SA-C70-shoulder]
 sounds: []
-roots: []
+roots: [sanskrit-oshtha]
+etymology_hook: "oṣṭha 'lip': MW calls the etymology doubtful and compares Avestan aoshtra; Hindi oṭh (CDIAL 2563)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,13 @@ reviews_of: [SA-C70-shoulder]
 <!-- hl-knowledge: introduces=[SA-LEX-C70-BODY2-05]; assesses=[] -->
 
 **ओष्ठः** (*oṣṭhaḥ*) — "the lip". The sounds **प** and **म** are made with both lips.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*Oṣṭha* is Rigvedic. MW calls its etymology doubtful and compares Avestan
+*aoshtra* and Old Prussian *austa*, "mouth". It lives on as Hindi *oṭh*, "lip"
+(CDIAL 2563).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

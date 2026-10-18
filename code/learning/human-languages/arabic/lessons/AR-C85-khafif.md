@@ -14,7 +14,8 @@ romanization: "khafīf"
 concept_tag: AR-ADJ85-KHAFIF
 prerequisites: [AR-C84-nazif, AR-C84-wasikh]
 sounds: []
-roots: []
+roots: [kh-f-f]
+etymology_hook: "khafīf: built on the root kh-f-f, 'to be light' (Lane); khafīf is the faʿīl adjective, 'light'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C84-wasikh]
 <!-- hl-knowledge: introduces=[AR-LEX-C85-ADJ85-01]; assesses=[] -->
 
 **خفيف** — *khafīf* — "light (in weight)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**خفيف** (*khafīf*) is built on the native Arabic root *kh-f-f*, "to be light" (Lane). *Khafīf* is the *faʿīl* adjective, "light".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

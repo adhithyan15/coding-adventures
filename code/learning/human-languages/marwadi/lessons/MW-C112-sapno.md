@@ -14,7 +14,8 @@ romanization: "sapno"
 concept_tag: MW-WANT112-SAPNO
 prerequisites: [MW-C112-jarurat, MW-C112-lalach]
 sounds: []
-roots: []
+roots: [sanskrit-svapna]
+etymology_hook: "sapno: from Sanskrit svapna 'sleep, dream' (CDIAL 13904); CDIAL does not list the Marwari form"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C112-lalach]
 <!-- hl-knowledge: introduces=[MW-LEX-C112-WANT112-03]; assesses=[] -->
 
 **सपनो** — *sapno* — "a dream".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**सपनो** (*sapno*) goes back to Sanskrit *svapna*, "sleep, dream" (CDIAL 13904), with the *sv* worn down to *s*. CDIAL gives no Marwari form there, and it takes forms like Nepali *sapanā*, "dream", as early loans from Sanskrit or possibly inherited words.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

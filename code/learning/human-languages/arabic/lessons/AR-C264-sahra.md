@@ -14,7 +14,8 @@ romanization: "sahra"
 concept_tag: AR-WAQT264-SAHRA
 prerequisites: [AR-C264-fasl, AR-C264-tufula]
 sounds: []
-roots: []
+roots: [s-h-r]
+etymology_hook: "sahra: built on the root s-h-r, 'to stay awake at night' (Lane); sahra is an evening spent awake"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C264-tufula]
 <!-- hl-knowledge: introduces=[AR-LEX-C264-WAQT264-03]; assesses=[] -->
 
 **سهرة** — *sahra* — "an evening out, a soirée".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**سهرة** (*sahra*) is built on the native Arabic root *s-h-r*, "to stay awake at night" (Lane). *Sahra* is an evening spent awake.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -12,6 +12,9 @@ Before the new one: say the Gujarati for hot, then the Gujarati for cheap.
 You'll want to know: મોંઘું.
 મોંઘું (moṅghũ) — "expensive". The opposite of સસ્તું.
 
+The word, taken apart.
+મોંઘું (moṅghũ) is a tadbhava of Sanskrit mahārgha, "high-priced", from mahā, "great", and argha, "price" (CDIAL 9954).
+
 What you've built.
 One more word for dear, near, far, up and down.
 
@@ -40,6 +43,9 @@ Before the new one: say the Gujarati for cheap, then the Gujarati for expensive.
 
 You'll want to know: નજીક.
 નજીક (najīk) — "near".
+
+The word, taken apart.
+નજીક (najīk) is a loan, usually traced to Persian nazdīk, "near". Gujarati writes the z as j and drops the d.
 
 What you've built.
 One more word for dear, near, far, up and down.
@@ -70,6 +76,9 @@ Before the new one: say the Gujarati for expensive, then the Gujarati for near.
 You'll want to know: દૂર.
 દૂર (dūr) — "far".
 
+The word, taken apart.
+દૂર (dūr) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from dūra, "distant" (CDIAL 6495).
+
 What you've built.
 One more word for dear, near, far, up and down.
 
@@ -99,6 +108,9 @@ Before the new one: say the Gujarati for near, then the Gujarati for far.
 You'll want to know: ઉપર.
 ઉપર (upar) — "up, above".
 
+The word, taken apart.
+ઉપર (upar) is a tadbhava, a word inherited and reshaped by sound change. It comes from uppari, "above", a form CDIAL reconstructs from its descendants (CDIAL 2333). It is Sanskrit upari, "above", with the consonant doubled for emphasis.
+
 What you've built.
 One more word for dear, near, far, up and down.
 
@@ -127,6 +139,9 @@ Before the new one: say the Gujarati for far, then the Gujarati for up.
 
 You'll want to know: નીચે.
 નીચે (nīce) — "down, below".
+
+The word, taken apart.
+નીચે (nīce) is the adverb of nīcũ, "low", which CDIAL lists under Sanskrit nīca, "low" (CDIAL 7540). CDIAL explains the form as shaped by its opposite, ucca, "high".
 
 What you've built.
 One more word for dear, near, far, up and down.

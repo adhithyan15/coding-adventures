@@ -14,7 +14,8 @@ romanization: "kutra"
 concept_tag: SA-DEIXIS-WHERE
 prerequisites: [SA-C14-who]
 sounds: []
-roots: []
+roots: [ka-interrogative]
+etymology_hook: "kutra 'where' ← the question base ku- + the place suffix -tra (MW)"
 duration:
   max_seconds: 210
 requires:
@@ -50,6 +51,12 @@ Its partner is **कः** *kaḥ*, which you have just met: both open with
 **k-**, the asking sound. Its other partners, **अत्र** *atra* and **तत्र**
 *tatra*, differ from it only at the front. That is the whole system, and the
 last lesson of this chapter says so.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*Kutra* is built from the question base *ku-*, a side form of *ka-*, with the
+place ending *-tra* of *atra* and *tatra* (MW).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C14-DEIXIS-06] -->

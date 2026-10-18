@@ -14,7 +14,8 @@ romanization: "kāglo"
 concept_tag: MW-THINGS139-KAGLO
 prerequisites: [MW-C138-lukri, MW-C138-siyal]
 sounds: []
-roots: []
+roots: [sanskrit-kaka]
+etymology_hook: "kāglo ← Sanskrit kāka 'crow', a tadbhava (CDIAL 2993, Hindi row)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C138-siyal]
 <!-- hl-knowledge: introduces=[MW-LEX-C139-THINGS139-01]; assesses=[] -->
 
 **कागलो** — *kāglo* — "a crow".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**कागलो** (*kāglo*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *kāka*, "crow". CDIAL gives no Marwari form in this entry (CDIAL 2993); the match is through Hindi *kāg*. CDIAL calls the word partly imitative of the bird's call; **कागलो** (*kāglo*) adds the suffix *-l-*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,7 +1,7 @@
 {
   "language": "urdu",
   "chapter": 131,
-  "sourceHash": "fnv1a64:09382c65838a49a2",
+  "sourceHash": "fnv1a64:9609fa359a55c361",
   "lessonIds": [
     "UR-C131-karva",
     "UR-C131-khatta",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "urdu/narration/ch131.txt",
   "json": "urdu/narration/ch131.json",
-  "textHash": "fnv1a64:b872ba931fc6cdd5",
-  "jsonHash": "fnv1a64:30a710b18ea14388",
+  "textHash": "fnv1a64:1d4269889d67bb51",
+  "jsonHash": "fnv1a64:6fd9a939db90ecf0",
   "findings": []
 }

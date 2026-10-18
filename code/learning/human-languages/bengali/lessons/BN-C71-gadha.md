@@ -14,7 +14,8 @@ romanization: "gādhā"
 concept_tag: BN-ANIMALS71-GADHA
 prerequisites: [BN-C70-kak, BN-C71-bhaluk]
 sounds: []
-roots: []
+roots: [sanskrit-gardabha]
+etymology_hook: "gādhā ← Sanskrit gardabha 'ass', a tadbhava (CDIAL 4054)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C71-bhaluk]
 <!-- hl-knowledge: introduces=[BN-LEX-C71-ANIMALS71-02]; assesses=[] -->
 
 **গাধা** — *gādhā* — "a donkey".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**গাধা** (*gādhā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *gardabha*, "ass" (CDIAL 4054).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "melā"
 concept_tag: BN-JINIS251-MELA
 prerequisites: [BN-C251-nach, BN-C251-prodorshoni]
 sounds: []
-roots: []
+roots: [sanskrit-mela]
+etymology_hook: "melā ← Sanskrit mela 'meeting', a tadbhava (CDIAL 10331)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C251-prodorshoni]
 <!-- hl-knowledge: introduces=[BN-LEX-C251-JINIS251-03]; assesses=[] -->
 
 **মেলা** — *melā* — "a fair".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**মেলা** (*melā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *mela*, "meeting" (CDIAL 10331). CDIAL lists Bengali *mel*, "meeting, fair".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

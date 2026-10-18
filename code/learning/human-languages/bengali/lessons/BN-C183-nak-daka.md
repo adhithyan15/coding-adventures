@@ -14,7 +14,8 @@ romanization: "nāk ḍākā"
 concept_tag: BN-VERB-NAK-DAKA
 prerequisites: [BN-C183-chulkano, BN-C183-hai-tola]
 sounds: []
-roots: []
+roots: [indo-aryan-nakka, indo-aryan-dakk]
+etymology_hook: "nāk ḍākā: nāk 'nose' ← *nakka (CDIAL 6909) + ḍākā 'to call' ← *ḍakk 'shout' (CDIAL 5516)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C183-hai-tola]
 <!-- hl-knowledge: introduces=[BN-LEX-C183-ACT183-03]; assesses=[] -->
 
 **নাক ডাকা** — *nāk ḍākā* — "to snore".
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**নাক ডাকা** (*nāk ḍākā*) is *nāk*, "nose", from *\*nakka*, "nose" (CDIAL 6909), + *ḍākā*, "to call", from *\*ḍakk*, "shout" (CDIAL 5516), both forms CDIAL reconstructs: "the nose calls".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

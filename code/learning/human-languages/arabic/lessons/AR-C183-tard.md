@@ -14,7 +14,8 @@ romanization: "ṭard"
 concept_tag: AR-SHAY183-TARD
 prerequisites: [AR-C182-tannura, AR-C183-tabi]
 sounds: []
-roots: []
+roots: [ṭ-r-d]
+etymology_hook: "ṭard: built on the root ṭ-r-d, 'to drive away' (Lane); ṭard is the verbal noun, 'a sending off'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C183-tabi]
 <!-- hl-knowledge: introduces=[AR-LEX-C183-SHAY183-02]; assesses=[] -->
 
 **طرد** — *ṭard* — "a parcel".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**طرد** (*ṭard*) is built on the native Arabic root *ṭ-r-d*, "to drive away" (Lane). *Ṭard* is the verbal noun, "a sending off"; the parcel is a modern sense.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

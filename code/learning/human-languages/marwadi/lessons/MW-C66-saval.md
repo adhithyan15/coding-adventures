@@ -14,7 +14,8 @@ romanization: "savāl"
 concept_tag: MW-SCHOOL66-SAVAL
 prerequisites: [MW-C66-akhbar, MW-C66-skul]
 sounds: []
-roots: []
+roots: [arabic-sual]
+etymology_hook: "savāl ← Arabic suʾāl 'a question', through Persian (Lane, root s-ʾ-l)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C66-skul]
 <!-- hl-knowledge: introduces=[MW-LEX-C66-SCHOOL66-03]; assesses=[] -->
 
 **सवाल** — *savāl* — "a question".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**सवाल** (*savāl*) is a loan from Arabic *suʾāl*, "a question", which reached Marwadi through Persian. Its Arabic root is *s-ʾ-l* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "fumoto"
 concept_tag: JA-LOC81-FUMOTO
 prerequisites: [JA-C80-mawari, JA-C81-atari]
 sounds: []
-roots: []
+roots: [japanese-fumoto]
+etymology_hook: "fumoto: native Japanese, inherited, not borrowed; usually kana, kanji 麓 as kun'yomi"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C81-atari]
 <!-- hl-knowledge: introduces=[JA-LEX-C81-LOC81-02]; assesses=[] -->
 
 **ふもと** — *fumoto* — "the foot of a mountain".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ふもと** (*fumoto*) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. It is usually written in kana; its kanji, when used, is a kun'yomi attached later (JMdict, KANJIDIC2).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

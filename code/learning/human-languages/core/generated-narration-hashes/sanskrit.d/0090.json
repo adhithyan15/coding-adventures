@@ -1,7 +1,7 @@
 {
   "language": "sanskrit",
   "chapter": 90,
-  "sourceHash": "fnv1a64:585b14521303097f",
+  "sourceHash": "fnv1a64:93f2a0dd466b7316",
   "lessonIds": [
     "SA-C90-ahah",
     "SA-C90-pradosah",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "sanskrit/narration/ch90.txt",
   "json": "sanskrit/narration/ch90.json",
-  "textHash": "fnv1a64:f3ee7acc48229a1f",
-  "jsonHash": "fnv1a64:8352cccc32213cca",
+  "textHash": "fnv1a64:e8524f8e9951d6bd",
+  "jsonHash": "fnv1a64:db64cb19e9552711",
   "findings": []
 }

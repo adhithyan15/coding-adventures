@@ -4,7 +4,7 @@
   "chapter": 2,
   "title": "Courtesy and Responses",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:dccd82571bbd3f00",
+  "sourceHash": "fnv1a64:b00808d7793d251e",
   "lessons": [
     {
       "id": "GU-W02-ra",
@@ -957,7 +957,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:78fefe7066890d65",
+      "sourceHash": "fnv1a64:5832e6a0024148be",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -1005,7 +1005,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "આભાર (ābhār, \"thanks, gratitude\") is from Sanskrit આભાર (ābhāra, \"a burden, an obligation\"), from આ- (ā-, \"toward\") + the root ભૃ (bhṛ, \"to bear, carry\"). To thank someone is to acknowledge you now bear an obligation to them — the same idea as English oblige (Latin ob- + ligāre \"to bind\") and Portuguese obrigado. That root bhṛ is Proto-Indo-European bʰer-, the ancestor of English bear (to carry) and Latin ferre. (The more Sanskritic ધન્યવાદ dhanyavād is also used, but ābhār is the warm, everyday Gujarati word.)"
+              "text": "આભાર (ābhār, \"thanks, gratitude\") is from Sanskrit આભાર (ābhāra, \"a load, a burden\"), from આ- (ā-, \"toward\") + the root ભૃ (bhṛ, \"to bear, carry\"). To thank someone is to acknowledge you now bear an obligation to them — the same idea as English oblige (Latin ob- + ligāre \"to bind\") and Portuguese obrigado. That root bhṛ is Proto-Indo-European bʰer-, the ancestor of English bear (to carry) and Latin ferre. (The more Sanskritic ધન્યવાદ dhanyavād is also used, but ābhār is the warm, everyday Gujarati word.)"
             }
           ]
         },
@@ -1111,7 +1111,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:07fb079af88deea5",
+      "sourceHash": "fnv1a64:dfbcd45e47741c99",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -1160,6 +1160,10 @@
             {
               "kind": "speech",
               "text": "આવજો (āvjo) is the polite imperative of āvvũ, \"to come\" — literally \"[please] come [again].\" A Gujarati never signs off by saying \"I'm leaving\"; the parting word is come. It is the same \"promise of return\" that runs through the whole subcontinent — Tamil pōy varugiṟēṉ (\"I'll go and come back\"), Bengali āshi (\"I'll come\"), Hindi phir milenge (\"we'll meet again\") — here made into a single warm word built on the verb to come. (To one person, familiarly: આવજે āvje.)"
+            },
+            {
+              "kind": "speech",
+              "text": "The verb itself is inherited: CDIAL lists āvvũ under Sanskrit āpayati, \"causes to reach\", whose Prakrit form āvaï already meant \"comes\" (CDIAL 1200)."
             }
           ]
         },
@@ -1265,7 +1269,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:2f9f3fde72a054b7",
+      "sourceHash": "fnv1a64:491dbcf2f8d47278",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -1314,6 +1318,10 @@
             {
               "kind": "speech",
               "text": "હા (hā, \"yes\") and ના (nā, \"no\"). The \"no\" rides the ancient negative na- — the very same Proto-Indo-European ne behind English no, not, none, Latin nōn, Hindi nahīṁ, and Bengali nā. Of all the words in this book, this \"no\" reaches furthest unchanged: one syllable spoken, in some form, from Iceland to Gujarat for five thousand years."
+            },
+            {
+              "kind": "speech",
+              "text": "The \"yes\" is inherited too: CDIAL lists Gujarati hāṁ under Sanskrit ām, \"yes\", its h- added either for emphasis or from the verb \"to be\" (CDIAL 1235). The \"no\" goes with Gujarati na, \"not\", which CDIAL lists under Sanskrit na (CDIAL 6906)."
             }
           ]
         },
@@ -1755,7 +1763,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:e8a2c9935cde0c08",
+      "sourceHash": "fnv1a64:002a4e6f46b850e7",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -1802,7 +1810,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "સારું (sārũ, \"good, fine, okay\") is from Sanskrit સાર (sāra, \"essence, substance, the best part\") — the same sāra behind Bengali's sāramilla (\"no matter\"). As \"okay/agreed\" it oils every Gujarati conversation, the way English uses \"alright.\""
+              "text": "સારું (sārũ, \"good, fine, okay\") is from Sanskrit સાર (sāra, \"essence, substance, the best part\"; CDIAL 13355). As \"okay/agreed\" it oils every Gujarati conversation, the way English uses \"alright.\""
             }
           ]
         },

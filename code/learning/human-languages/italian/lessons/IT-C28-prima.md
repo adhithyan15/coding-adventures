@@ -60,7 +60,7 @@ Before a noun or a verb it takes **di**: *prima di cena*, "before dinner".
 You have seen this word already, and not as an adverb. **Prima** is the feminine
 of ***primo***.
 
-Latin froze it in an old case form — *prīmā*, "**at the first**", where "the first
+It comes from Latin, which froze it in an old case form — *prīmā*, "**at the first**", where "the first
 time" was understood and never said — and the frozen phrase became a plain word
 meaning "before". So Italian's ordinary word for *before* is, underneath, the
 ordinal for *first*.

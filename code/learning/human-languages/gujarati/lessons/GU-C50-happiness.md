@@ -14,7 +14,8 @@ romanization: "khuśī"
 concept_tag: GU-FEEL-HAPPINESS
 prerequisites: [GU-C49-hunger, GU-C49-thirst]
 sounds: []
-roots: []
+roots: [khush-persian]
+etymology_hook: "khuśī: usually traced to Persian khushī 'happiness', from khush 'happy, pleasant'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C49-thirst]
 <!-- hl-knowledge: introduces=[GU-LEX-C50-FEEL-01]; assesses=[] -->
 
 **ખુશી** (*khuśī*) — "happiness, joy".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ખુશી** (*khuśī*) is a loan, usually traced to Persian *khushī*, "happiness", built on *khush*, "happy, pleasant".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

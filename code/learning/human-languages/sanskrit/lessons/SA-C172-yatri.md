@@ -14,7 +14,8 @@ romanization: "yātrī"
 concept_tag: SA-TRV172-YATRI
 prerequisites: [SA-C171-karyakramah, SA-C171-pratiyogita]
 sounds: []
-roots: []
+roots: [sanskrit-yatrin, sanskrit-yatra]
+etymology_hook: "yātrin 'on a march, in a procession' ← yātrā 'journey' (√yā 'go') + -in 'having' (MW)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C171-pratiyogita]
 <!-- hl-knowledge: introduces=[SA-LEX-C172-TRV172-01]; assesses=[] -->
 
 **यात्री** — *yātrī* — "a passenger".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*yātrī* is the nominative of *yātrin* "being on a march or in a procession", built from *yātrā* "journey, pilgrimage" with the suffix *-in* "having" (MW). "A passenger" is its modern use. *yātrā* comes from the root √yā "go".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -21,10 +21,11 @@
 //! * **It measures the runtime, not the NIC.** Everything is loopback
 //!   (`127.0.0.1`), so there is no wire — this isolates the reactor/scheduling
 //!   cost.  Real-NIC numbers will differ.
-//! * **`SO_REUSEPORT` fairness differs by OS.** Linux distributes new connections
-//!   across reuseport sockets with a kernel hash (fairly even).  macOS/BSD is more
-//!   last-bind / uneven, so the per-shard *shard balance* column can skew on
-//!   macOS and the `2 → 4 → 8` curve will look worse there than on Linux.  The
+//! * **Connection distribution differs by OS.** Linux distributes new
+//!   connections across `SO_REUSEPORT` sockets with a kernel hash (fairly even).
+//!   macOS/BSD and Windows have no load-balancing reuseport, so `tcp-runtime`
+//!   uses one acceptor thread that round-robins accepted sockets to the shards;
+//!   that thread is one more hop, and one more core, than Linux needs.  The
 //!   benchmark prints the observed per-shard accept counts precisely so skew is
 //!   *visible* rather than silently blamed on the runtime.
 //! * **Client threads compete with server threads for the same cores.** Because

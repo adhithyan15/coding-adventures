@@ -1,7 +1,7 @@
 {
   "language": "bengali",
   "chapter": 257,
-  "sourceHash": "fnv1a64:5c9b444f6d8dc271",
+  "sourceHash": "fnv1a64:f8b8ae76aaecfe6c",
   "lessonIds": [
     "BN-C257-chhana",
     "BN-C257-ponir",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "bengali/narration/ch257.txt",
   "json": "bengali/narration/ch257.json",
-  "textHash": "fnv1a64:0370e71b5aeebe9f",
-  "jsonHash": "fnv1a64:8952452f5a183f08",
+  "textHash": "fnv1a64:4bd34c5ae1c10222",
+  "jsonHash": "fnv1a64:dd364349ed77f5ca",
   "findings": []
 }

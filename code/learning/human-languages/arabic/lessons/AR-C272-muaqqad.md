@@ -14,7 +14,8 @@ romanization: "muʿaqqad"
 concept_tag: AR-SIFA272-MUAQQAD
 prerequisites: [AR-C272-mutaakkid, AR-C272-muthir]
 sounds: []
-roots: []
+roots: [ʿ-q-d]
+etymology_hook: "muʿaqqad: built on the root ʿ-q-d, 'to tie a knot' (Lane); muʿaqqad is the Form II passive participle, 'knotted'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C272-muthir]
 <!-- hl-knowledge: introduces=[AR-LEX-C272-SIFA272-04]; assesses=[] -->
 
 **معقد** — *muʿaqqad* — "complicated".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**معقد** (*muʿaqqad*) is built on the native Arabic root *ʿ-q-d*, "to tie a knot" (Lane). *Muʿaqqad* is the Form II passive participle, "knotted".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "hālua"
 concept_tag: BN-THINGS119-HALUA
 prerequisites: [BN-C118-kophi, BN-C119-sorbot]
 sounds: []
-roots: []
+roots: [arabic-halwa]
+etymology_hook: "hālua ← Arabic ḥalwā 'a sweetmeat', through Persian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C119-sorbot]
 <!-- hl-knowledge: introduces=[BN-LEX-C119-THINGS119-02]; assesses=[] -->
 
 **হালুয়া** — *hālua* — "halwa".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**হালুয়া** (*hālua*) is a loan from Arabic *ḥalwā*, "a sweetmeat", which reached Bengali through Persian. Its Arabic root is *ḥ-l-w* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

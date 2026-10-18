@@ -46,7 +46,7 @@ reviews_of: [FR-C189-malgre]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**malheureusement** — *heureux*, "lucky", with *mal-*, "badly", in front and the adverb ending *-ment*: unluckily.
+**malheureusement** — *heureux*, "lucky", with *mal-*, "badly", in front and the adverb ending *-ment*: unluckily. *Heureux* is built on Old French *eur*, "luck", from Latin *augurium*, "an omen", and *mal-* ← Latin *male*, "badly" (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

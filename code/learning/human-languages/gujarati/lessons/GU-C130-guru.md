@@ -14,7 +14,8 @@ romanization: "guru"
 concept_tag: GU-THINGS130-GURU
 prerequisites: [GU-C129-pensil, GU-C130-varg]
 sounds: []
-roots: []
+roots: [sanskrit-guru]
+etymology_hook: "guru: Sanskrit guru 'heavy', then 'venerable; teacher', a tatsama (CDIAL 4209)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C130-varg]
 <!-- hl-knowledge: introduces=[GU-LEX-C130-THINGS130-02]; assesses=[] -->
 
 **ગુરુ** (*guru*) — "a teacher".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ગુરુ** (*guru*) is Sanskrit *guru*, "heavy", which came to mean "venerable" and "teacher", taken over whole as a learned loan, a tatsama (CDIAL 4209).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

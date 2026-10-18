@@ -4,7 +4,7 @@
   "chapter": 28,
   "title": "Xihuan — What You Like",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:fdd5b315a084d8bc",
+  "sourceHash": "fnv1a64:91bab772ca1a7c71",
   "lessons": [
     {
       "id": "ZH-W28-xi",
@@ -411,7 +411,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7f2a16ed5bab6c85",
+      "sourceHash": "fnv1a64:c667ddb65723dabf",
       "notice": null,
       "blocks": [
         {
@@ -528,6 +528,17 @@
         },
         {
           "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "喜欢 (xǐhuan) is a Chinese compound of two words for joy, both inherited from Middle Chinese: xiX, \"glad\", and xwan, \"joy\" (Guangyun, in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -561,7 +572,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -592,7 +603,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b1e1bc66040930ca",
+      "sourceHash": "fnv1a64:01765a9e1e0a5a4d",
       "notice": null,
       "blocks": [
         {
@@ -702,6 +713,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Chinese built the question from words it already had: nǐ, xǐhuan, from Middle Chinese xiX and xwan, and shénme, whose origin is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -735,7 +757,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

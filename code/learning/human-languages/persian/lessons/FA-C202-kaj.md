@@ -14,7 +14,8 @@ romanization: "kaj"
 concept_tag: FA-SEFAT202-KAJ
 prerequisites: [FA-C201-barani, FA-C202-pare]
 sounds: []
-roots: []
+roots: [persian-kaj]
+etymology_hook: "kaj: inherited, usually traced to Middle Persian kaž"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C202-pare]
 <!-- hl-knowledge: introduces=[FA-LEX-C202-SEFAT202-02]; assesses=[] -->
 
 **کج** — *kaj* — "crooked".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*kaj* is a native Persian word, inherited rather than borrowed; it is usually traced to Middle Persian *kaž*, "crooked".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -10,11 +10,11 @@ Warm-up.
 Put est-ce que in front of a statement and it becomes a question. Hold that; you will need it in a moment.
 
 The word, taken apart.
-vouloir — to want. Here are the singular forms, which is what you need first:
+vouloir — to want. It comes from Latin velle, through Vulgar Latin volēre (EtymDB 2.1). The singular forms first:
 Say it as a chant, three beats:
 je veux — tu veux — il veut.
 I want, you want, he wants. And notice what your ear reports: all three sound identical. veux, veux, veut — the spelling distinguishes them and the mouth does not. That is why French keeps the subject pronoun in front: without je or tu, nothing tells a listener who wants what.
-Then a want needs something wanted, and it follows directly:
+A want needs something wanted:
 Je veux un café. — I want a coffee.
 Tu veux le pain? — Do you want the bread?
 
@@ -46,11 +46,11 @@ Warm-up.
 Say je voudrais un café. That was a want, softened.
 
 The word, taken apart.
-pouvoir — to be able, and in practice can. The singular:
+pouvoir — to be able, and in practice can. It comes from Old French povoir (EtymDB 2.1), from Vulgar Latin potēre. The singular:
 Same chant, three beats:
 je peux — tu peux — il peut.
 I can, you can, he can. The same pattern you just met: all three sound alike, and the pronoun carries the person.
-That final t is silent — until you invert. Peut-il? wakes it, and needs no added -t- the way parle-t-il did, because this verb already has one. Peux, peux, peut — and note it rhymes with nothing in vouloir, but behaves identically.
+That final t is silent — until you invert. Peut-il? wakes it, and needs no added -t- the way parle-t-il did, because this verb already has one.
 What follows pouvoir is a plain, unchanged verb:
 Je peux parler français. — I can speak French.
 Tu peux aider? — Can you help?

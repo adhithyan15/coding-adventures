@@ -1,7 +1,7 @@
 {
   "language": "sanskrit",
   "chapter": 96,
-  "sourceHash": "fnv1a64:70a5a31877a24023",
+  "sourceHash": "fnv1a64:8a6a71bfb3982d30",
   "lessonIds": [
     "SA-C96-rajamargah",
     "SA-C96-catuspathah",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "sanskrit/narration/ch96.txt",
   "json": "sanskrit/narration/ch96.json",
-  "textHash": "fnv1a64:73fb30216805318a",
-  "jsonHash": "fnv1a64:2e6f31fbf51708a8",
+  "textHash": "fnv1a64:d487af5d58266331",
+  "jsonHash": "fnv1a64:b11ea9de5ad27f48",
   "findings": []
 }

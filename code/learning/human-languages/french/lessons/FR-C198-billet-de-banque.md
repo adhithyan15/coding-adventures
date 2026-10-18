@@ -46,7 +46,7 @@ reviews_of: [FR-C198-piece]
 ## The phrase, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**billet de banque** — *billet*, "a note", *de*, "of", and *banque*, "bank".
+**billet de banque** — *billet*, "a note", *de*, "of", and *banque*, "bank". *Billet* ← Old French *billette*, from Latin *bulla* (EtymDB 2.1); *banque* is borrowed from Italian *banca*, "a bench", the money-changer's table.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

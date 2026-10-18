@@ -14,7 +14,8 @@ romanization: "hamin"
 concept_tag: FA-DEF83-HAMIN
 prerequisites: [FA-C82-inha, FA-C83-anha]
 sounds: []
-roots: []
+roots: [persian-ham, persian-in]
+etymology_hook: "hamin: Persian ham- 'same' + in 'this' (Middle Persian ēn, EtymDB)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C83-anha]
 <!-- hl-knowledge: introduces=[FA-LEX-C83-DEF83-02]; assesses=[] -->
 
 **همین** — *hamin* — "this very".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*hamin* is *ham-*, "same, very", with *in*, "this": "this very". Both pieces are native; *in* continues Middle Persian *ēn* (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

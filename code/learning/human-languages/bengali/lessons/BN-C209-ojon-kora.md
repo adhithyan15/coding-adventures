@@ -14,7 +14,8 @@ romanization: "ojôn kôrā"
 concept_tag: BN-VERB-OJON-KORA
 prerequisites: [BN-C209-jomano, BN-C209-khoroch-kora]
 sounds: []
-roots: []
+roots: [arabic-wazn, sanskrit-karoti]
+etymology_hook: "ojôn kôrā: ojôn 'weight' ← Arabic wazn, through Persian, + kôrā (CDIAL 2814)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C209-khoroch-kora]
 <!-- hl-knowledge: introduces=[BN-LEX-C209-ACT209-05]; assesses=[] -->
 
 **ওজন করা** — *ojôn kôrā* — "to weigh".
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ওজন করা** (*ojôn kôrā*) is *ojôn*, "weight", from Arabic *wazn*, "weight", which reached Bengali through Persian (Lane), + *kôrā*, "to do", from Sanskrit *karoti*, "does" (CDIAL 2814).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "svasthaḥ"
 concept_tag: SA-QUAL243-SVASTHAH
 prerequisites: [SA-C243-balavan, SA-C243-rugnah]
 sounds: []
-roots: []
+roots: [sanskrit-svastha]
+etymology_hook: "svastha = sva 'self' + stha 'standing': 'abiding in oneself', healthy (MW; CDIAL 13917)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C243-rugnah]
 <!-- hl-knowledge: introduces=[SA-LEX-C243-QUAL243-03]; assesses=[] -->
 
 **स्वस्थः** — *svasthaḥ* — "healthy".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*svastha* is a compound of *sva*, "self", and *stha*, "standing" (MW; CDIAL 13917): "being in one's own natural state", and so "well, healthy". It is the base of *svāsthya*, "health", which you have already met.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

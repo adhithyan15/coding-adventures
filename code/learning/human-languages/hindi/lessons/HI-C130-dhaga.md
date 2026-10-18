@@ -15,7 +15,7 @@ concept_tag: HI-THINGS130-DHAGA
 prerequisites: [HI-C130-kil, HI-C130-kaici]
 sounds: []
 roots: [indo-aryan-dhagga]
-etymology_hook: "dhāgā ← *dhāgga 'thread', a reconstructed form; a tadbhava (CDIAL 6770)"
+etymology_hook: "dhāgā ← *dhāgga 'thread', a reconstructed form whose own source CDIAL leaves open (CDIAL 6770)"
 duration:
   max_seconds: 200
 requires:
@@ -47,7 +47,7 @@ reviews_of: [HI-C130-kaici]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**धागा** (*dhāgā*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*dhāgga*, "thread", a form CDIAL reconstructs from its descendants (CDIAL 6770).
+**धागा** (*dhāgā*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*dhāgga*, "thread", a form CDIAL reconstructs from its descendants (CDIAL 6770). Where *\*dhāgga* came from is not settled: CDIAL says it was possibly crossed with *dhara*, "a flock of raw cotton", but points as well to a second thread-word, *\*trāgga*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

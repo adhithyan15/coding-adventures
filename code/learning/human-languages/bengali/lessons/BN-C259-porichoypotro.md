@@ -14,7 +14,8 @@ romanization: "pôrichôypôtrô"
 concept_tag: BN-JINIS259-PORICHOYPOTRO
 prerequisites: [BN-C259-phorm, BN-C259-abedon]
 sounds: []
-roots: []
+roots: [sanskrit-paricaya, sanskrit-patra]
+etymology_hook: "pôrichôypôtrô: Sanskrit paricaya 'acquaintance' + pattra 'leaf, letter', tatsama parts"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C259-abedon]
 <!-- hl-knowledge: introduces=[BN-LEX-C259-JINIS259-05]; assesses=[] -->
 
 **পরিচয়পত্র** — *pôrichôypôtrô* — "an identity card".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**পরিচয়পত্র** (*pôrichôypôtrô*) is built from Sanskrit *paricaya*, "acquaintance", and *pattra*, "leaf, letter", both taken over whole: "acquaintance letter".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

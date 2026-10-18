@@ -14,7 +14,8 @@ romanization: "kendram"
 concept_tag: SA-THG224-KENDRAM
 prerequisites: [SA-C223-asramah, SA-C223-mathah]
 sounds: []
-roots: []
+roots: [kentron-greek]
+etymology_hook: "kendra 'centre' ← borrowed from Greek kentron (MW), the source of English centre"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C223-mathah]
 <!-- hl-knowledge: introduces=[SA-LEX-C224-THG224-01]; assesses=[] -->
 
 **केन्द्रम्** — *kendram* — "a centre".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*kendra* was borrowed from Greek *kentron*, "point, centre of a circle" (MW), with Greek astronomy. English *centre* comes from the same Greek word through Latin *centrum*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

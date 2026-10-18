@@ -14,7 +14,8 @@ romanization: "khet"
 concept_tag: MW-NATURE68-KHET
 prerequisites: [MW-C68-bhato, MW-C68-ret]
 sounds: []
-roots: []
+roots: [sanskrit-kshetra]
+etymology_hook: "khet ← Sanskrit kṣetra 'land', a tadbhava (CDIAL 3735, Marwari row)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C68-ret]
 <!-- hl-knowledge: introduces=[MW-LEX-C68-NATURE68-05]; assesses=[] -->
 
 **खेत** — *khet* — "a field".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**खेत** (*khet*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *kṣetra*, "land". CDIAL lists Marwari *khet* under it (CDIAL 3735).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

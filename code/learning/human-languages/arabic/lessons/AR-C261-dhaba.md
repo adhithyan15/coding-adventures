@@ -14,7 +14,8 @@ romanization: "dhāba"
 concept_tag: AR-VERB-DHABA
 prerequisites: [AR-C260-harraka, AR-C260-laffa]
 sounds: []
-roots: []
+roots: [dh-w-b]
+etymology_hook: "dhāba: built on the root dh-w-b, 'to melt' (Lane); dhāba is the plain verb, 'it melted'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C260-laffa]
 <!-- hl-knowledge: introduces=[AR-LEX-C261-ACT261-01]; assesses=[] -->
 
 **ذاب** — *dhāba* — "to melt".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ذاب** (*dhāba*) is built on the native Arabic root *dh-w-b*, "to melt" (Lane). *Dhāba* is the plain verb, "it melted".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

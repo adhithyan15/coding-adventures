@@ -14,7 +14,8 @@ romanization: "taraf"
 concept_tag: FA-LOC86-TARAF
 prerequisites: [FA-C86-beyn, FA-C86-samt]
 sounds: []
-roots: []
+roots: [arabic-taraf]
+etymology_hook: "taraf ← Arabic ṭaraf 'edge, side', root ṭ-r-f (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C86-samt]
 <!-- hl-knowledge: introduces=[FA-LEX-C86-LOC86-04]; assesses=[] -->
 
 **طرف** — *taraf* — "a side".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*taraf* is borrowed from Arabic *ṭaraf*, "edge, side". Its Arabic root is *ṭ-r-f* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

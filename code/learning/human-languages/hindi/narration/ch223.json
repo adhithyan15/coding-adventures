@@ -4,7 +4,7 @@
   "chapter": 223,
   "title": "A habit, A hobby, A dream, Sport, A ball",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:822f1f3bb4edec8b",
+  "sourceHash": "fnv1a64:192fde101650bd5c",
   "lessons": [
     {
       "id": "HI-C223-adat",
@@ -287,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:dbcbd26d8f9c1a7c",
+      "sourceHash": "fnv1a64:27230d633ea25b16",
       "notice": null,
       "blocks": [
         {
@@ -325,7 +325,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "सपना (sapnā) goes back to Sanskrit svapna, \"sleep, dream\" (CDIAL 13904), though CDIAL does not list the Hindi form."
+              "text": "सपना (sapnā) goes back to Sanskrit svapna, \"sleep, dream\" (CDIAL 13904), though CDIAL does not list the Hindi form. The dream-words of the sister languages, such as Gujarati samṇũ, sit under a separate form supna, \"dream\" (CDIAL 13481), and Hindi is not among them either."
             }
           ]
         },

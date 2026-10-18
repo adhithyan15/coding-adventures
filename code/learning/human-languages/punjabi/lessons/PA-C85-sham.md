@@ -14,7 +14,8 @@ romanization: "shām"
 concept_tag: PA-ADJ85-SHAM
 prerequisites: [PA-C85-bhura, PA-C85-din]
 sounds: []
-roots: []
+roots: [persian-sham-evening]
+etymology_hook: "shām: usually traced to Persian shām 'evening'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C85-din]
 <!-- hl-knowledge: introduces=[PA-LEX-C85-ADJ85-03]; assesses=[] -->
 
 **ਸ਼ਾਮ** — *shām* — "evening".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਸ਼ਾਮ** (*shām*) is a loan, usually traced to Persian *shām*, "evening".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

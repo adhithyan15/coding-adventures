@@ -14,7 +14,8 @@ romanization: "iu"
 concept_tag: JA-VERB-IU
 prerequisites: [JA-C28-tsukau, JA-C28-utau]
 sounds: []
-roots: []
+roots: [japanese-iu-say]
+etymology_hook: "iu: native Japanese, inherited, not borrowed; kanji 言う attached later as kun'yomi"
 duration:
   max_seconds: 200
 requires:
@@ -45,6 +46,11 @@ reviews_of: [JA-C28-utau, JA-W05-gen-component]
 
 Its first sign is **言**, the speech side of **語** that you have written since
 chapter five; the **う** after it is hiragana.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**言う** (*iu*) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

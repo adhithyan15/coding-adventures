@@ -14,7 +14,8 @@ romanization: "barq"
 concept_tag: AR-THINGS133-BARQ
 prerequisites: [AR-C133-sahra, AR-C133-buhayra]
 sounds: []
-roots: []
+roots: [b-r-q]
+etymology_hook: "barq: built on the root b-r-q, 'lightning' (Lane); Hebrew baraq, 'lightning', is its cousin"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C133-buhayra]
 <!-- hl-knowledge: introduces=[AR-LEX-C133-THINGS133-03]; assesses=[] -->
 
 **برق** — *barq* — "lightning".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**برق** (*barq*) is built on the native Arabic root *b-r-q*, "lightning; to shine" (Lane). Hebrew *baraq*, "lightning", is its cousin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

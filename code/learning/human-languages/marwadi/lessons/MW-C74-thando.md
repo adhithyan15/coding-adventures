@@ -14,7 +14,8 @@ romanization: "ṭhaṇḍo"
 concept_tag: MW-ADJ74-THANDO
 prerequisites: [MW-C73-labo, MW-C74-garam]
 sounds: []
-roots: []
+roots: [indo-aryan-thandha]
+etymology_hook: "ṭhaṇḍo: on *ṭhaṇḍha 'cold', listed by CDIAL under Sanskrit stabdha 'stiff' (CDIAL 13676)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C74-garam]
 <!-- hl-knowledge: introduces=[MW-LEX-C74-ADJ74-02]; assesses=[] -->
 
 **ठंडो** — *ṭhaṇḍo* — "cold".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+CDIAL lists Hindi *ṭhaṇḍā*, "cold", under a reconstructed *\*ṭhaṇḍha*, which it sets under Sanskrit *stabdha*, "stiff, solidified", tracing the sense from "firm" through "sluggish" to "cold" (CDIAL 13676); it gives no Marwari form. DEDR compares Dravidian words for "cool", such as Tamil *taṇ* (DEDR 3045).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

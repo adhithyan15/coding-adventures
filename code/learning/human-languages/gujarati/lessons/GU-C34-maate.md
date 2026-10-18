@@ -12,7 +12,7 @@ concept_tag: GU-JOIN-MAATE
 prerequisites: [GU-C34-kemke, GU-C32-ane]
 sounds: []
 roots: []
-etymology_hook: "કેમકે looks back at a cause; માટે looks forward to a purpose. Gujarati keeps the two apart."
+etymology_hook: "māṭe 'for': origin not settled; CDIAL has no entry for it"
 duration:
   max_seconds: 240
 requires:
@@ -56,6 +56,8 @@ Gujarati habit you have already met with the postpositions.
 The two are worth holding apart from the start. A cause and a purpose are
 different answers to the same *why*, and languages that use one word for both
 make their learners guess.
+
+CDIAL has no entry for **માટે** (*māṭe*), searched by form and by meaning, so its origin is not settled.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[GU-JOIN-MAATE-01, GU-JOIN-KEMKE-01] -->

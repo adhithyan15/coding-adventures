@@ -11,8 +11,8 @@ gloss: I do not understand
 concept_tag: JA-REPAIR-NOT-UNDERSTAND
 prerequisites: [JA-W09-ku]
 sounds: [mora, japanese-r]
-roots: []
-etymology_hook: Wakari carries understand and the polite negative ending masen turns the whole predicate into do not understand.
+roots: [japanese-wakaru]
+etymology_hook: "wakarimasen: native wakaru 'understand' (kanji 分 'divide') + polite negative -masen"
 duration:
   max_seconds: 180
 requires:
@@ -50,6 +50,11 @@ makes the experiencer obvious.
 Combine the two known pieces only in sound for now:
 
 > *yoku wakarimasen* — I do not understand well / fully
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**わかりません** (*wakarimasen*) is native *wakaru*, "to understand", with the polite negative *-masen*. JMdict writes *wakaru* with a character meaning "divide", as if to understand were to sort things apart; the verb is inherited, and its older origin is not settled.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-WAKARIMASEN, JA-LEX-YOKU] -->

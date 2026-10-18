@@ -14,7 +14,8 @@ romanization: "janmadivas"
 concept_tag: GU-LIFE-BIRTHDAY
 prerequisites: [GU-C89-shikhavvu, GU-C90-wedding]
 sounds: []
-roots: []
+roots: [sanskrit-janman, sanskrit-divasa-day]
+etymology_hook: "janmadivas: Sanskrit janman 'birth' (CDIAL 5113) + divasa 'day' (CDIAL 6333), a tatsama compound"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C90-wedding]
 <!-- hl-knowledge: introduces=[GU-LEX-C90-LIFE-02]; assesses=[] -->
 
 **જન્મદિવસ** (*janmadivas*) — "a birthday". Birth plus **દિવસ**, day.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**જન્મદિવસ** (*janmadivas*) is a Sanskrit compound, a tatsama: *janman*, "birth" (CDIAL 5113), and *divasa*, "day" (CDIAL 6333).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

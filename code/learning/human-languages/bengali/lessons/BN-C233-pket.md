@@ -14,7 +14,8 @@ romanization: "pækeṭ"
 concept_tag: BN-JINIS233-PKET
 prerequisites: [BN-C232-intarnet, BN-C233-mitar]
 sounds: []
-roots: []
+roots: [english-packet]
+etymology_hook: "pækeṭ ← English packet"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C233-mitar]
 <!-- hl-knowledge: introduces=[BN-LEX-C233-JINIS233-02]; assesses=[] -->
 
 **প্যাকেট** — *pækeṭ* — "a packet".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**প্যাকেট** (*pækeṭ*) is a loan from English *packet*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "ijtimāʿī"
 concept_tag: AR-SIFA210-IJTIMAI
 prerequisites: [AR-C210-bakhil, AR-C210-khajul]
 sounds: []
-roots: []
+roots: [jamaa-gather]
+etymology_hook: "ijtimāʿī: built on the root j-m-ʿ, 'to gather' (Lane); ijtimāʿī is ijtimāʿ, 'gathering', with the adjective ending -ī"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C210-khajul]
 <!-- hl-knowledge: introduces=[AR-LEX-C210-SIFA210-05]; assesses=[] -->
 
 **اجتماعي** — *ijtimāʿī* — "sociable".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**اجتماعي** (*ijtimāʿī*) is built on the native Arabic root *j-m-ʿ*, "to gather" (Lane). *Ijtimāʿī* is *ijtimāʿ*, "gathering", with the adjective ending *-ī*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

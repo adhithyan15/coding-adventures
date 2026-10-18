@@ -14,7 +14,8 @@ romanization: "āsmānī"
 concept_tag: UR-SIFAT195-ASMANI
 prerequisites: [UR-C194-basi, UR-C194-tikha]
 sounds: []
-roots: []
+roots: [persian-asman]
+etymology_hook: "āsmānī: āsmān 'sky', usually traced to Persian, + -ī"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C194-tikha]
 <!-- hl-knowledge: introduces=[UR-LEX-C195-SIFAT195-01]; assesses=[] -->
 
 **آسمانی** — *āsmānī* — "sky blue".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**آسمانی** (*āsmānī*) is "sky-coloured": *āsmān*, "sky", usually traced to Persian *āsmān*, with the ending *-ī*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

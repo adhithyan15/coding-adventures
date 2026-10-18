@@ -14,7 +14,8 @@ romanization: "nāti"
 concept_tag: BN-JINIS252-NATI
 prerequisites: [BN-C252-kakima, BN-C252-bhaipo]
 sounds: []
-roots: []
+roots: [sanskrit-naptr]
+etymology_hook: "nāti ← Sanskrit naptṛ 'grandson', a tadbhava (CDIAL 6955b)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C252-bhaipo]
 <!-- hl-knowledge: introduces=[BN-LEX-C252-JINIS252-03]; assesses=[] -->
 
 **নাতি** — *nāti* — "a grandson".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**নাতি** (*nāti*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *naptṛ*, "grandson" (CDIAL 6955b). CDIAL lists Bengali *nāti*, "grandson".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

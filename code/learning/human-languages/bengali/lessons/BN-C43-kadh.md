@@ -14,7 +14,8 @@ romanization: "kā̃dh"
 concept_tag: BN-BODY43-KADH
 prerequisites: [BN-C42-gola, BN-C42-pet]
 sounds: []
-roots: []
+roots: [sanskrit-skandha]
+etymology_hook: "kāṁdh ← Sanskrit skandha 'shoulder', a tadbhava (CDIAL 13627)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C42-pet]
 <!-- hl-knowledge: introduces=[BN-LEX-C43-BODY43-01]; assesses=[] -->
 
 **কাঁধ** — *kā̃dh* — "a shoulder".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**কাঁধ** (*kāṁdh*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *skandha*, "shoulder" (CDIAL 13627).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

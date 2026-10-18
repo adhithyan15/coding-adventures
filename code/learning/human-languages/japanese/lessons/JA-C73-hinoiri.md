@@ -14,7 +14,8 @@ romanization: "hinoiri"
 concept_tag: JA-TIME73-HINOIRI
 prerequisites: [JA-C72-yuuhan, JA-C72-asahi]
 sounds: []
-roots: []
+roots: [japanese-hi-sun, japanese-iru-enter]
+etymology_hook: "hinoiri: native hi 'sun' + no 'of' + iri 'going in' (from iru 'enter')"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C72-asahi]
 <!-- hl-knowledge: introduces=[JA-LEX-C73-TIME73-01]; assesses=[] -->
 
 **ひのいり** — *hinoiri* — "sunset".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ひのいり** (*hinoiri*) is native: *hi*, "sun", the particle *no*, "of", and *iri*, "going in", from *iru*, "to enter": "the going-in of the sun" (JMdict, KANJIDIC2). It is inherited rather than borrowed.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

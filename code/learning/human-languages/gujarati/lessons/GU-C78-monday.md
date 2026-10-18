@@ -14,7 +14,8 @@ romanization: "somvār"
 concept_tag: GU-WEEK1-MONDAY
 prerequisites: [GU-C77-later, GU-C77-before]
 sounds: []
-roots: []
+roots: [sanskrit-soma, sanskrit-vara-day]
+etymology_hook: "somvār: Sanskrit soma 'the moon' + vāra 'day of the week' (CDIAL 11547), a tatsama compound"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C77-before]
 <!-- hl-knowledge: introduces=[GU-LEX-C78-WEEK1-01]; assesses=[] -->
 
 **સોમવાર** (*somvār*) — "Monday". Every day name ends in **વાર**, day.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**સોમવાર** (*somvār*) is a Sanskrit compound, a tatsama: *soma*, "the moon", and *vāra*, "day of the week" (CDIAL 11547).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

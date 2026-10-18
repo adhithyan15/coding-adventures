@@ -14,7 +14,8 @@ romanization: "varas"
 concept_tag: GU-TIME92-VARAS
 prerequisites: [GU-C92-parodh, GU-C92-paramdivas]
 sounds: []
-roots: []
+roots: [sanskrit-varsha]
+etymology_hook: "varas ← Sanskrit varṣa 'rain; year', a tadbhava (CDIAL 11392)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C92-paramdivas]
 <!-- hl-knowledge: introduces=[GU-LEX-C92-TIME92-04]; assesses=[] -->
 
 **વરસ** (*varas*) — "a year".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**વરસ** (*varas*) is a tadbhava of Sanskrit *varṣa*, "rain", which also meant "year" (CDIAL 11392).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

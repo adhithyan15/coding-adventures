@@ -14,7 +14,8 @@ romanization: "farvarī"
 concept_tag: PA-TIME101-FARVARI
 prerequisites: [PA-C101-hune, PA-C101-janvari]
 sounds: []
-roots: []
+roots: [english-february]
+etymology_hook: "farvarī ← English February"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C101-janvari]
 <!-- hl-knowledge: introduces=[PA-LEX-C101-TIME101-03]; assesses=[] -->
 
 **ਫ਼ਰਵਰੀ** — *farvarī* — "February".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਫ਼ਰਵਰੀ** (*farvarī*) is a loan from English *February*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

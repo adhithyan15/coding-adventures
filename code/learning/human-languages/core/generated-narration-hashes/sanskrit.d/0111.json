@@ -1,7 +1,7 @@
 {
   "language": "sanskrit",
   "chapter": 111,
-  "sourceHash": "fnv1a64:c7ff33adb0023fd6",
+  "sourceHash": "fnv1a64:af75547cf9acdf9d",
   "lessonIds": [
     "SA-C111-vatya",
     "SA-C111-niharah",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "sanskrit/narration/ch111.txt",
   "json": "sanskrit/narration/ch111.json",
-  "textHash": "fnv1a64:73fadc6f6b457419",
-  "jsonHash": "fnv1a64:98c5d40a10a571ad",
+  "textHash": "fnv1a64:371d44a7f0c1251e",
+  "jsonHash": "fnv1a64:c26e51c18a776176",
   "findings": []
 }

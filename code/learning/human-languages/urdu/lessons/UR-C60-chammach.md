@@ -14,7 +14,8 @@ romanization: "chammach"
 concept_tag: UR-HOME60-CHAMMACH
 prerequisites: [UR-C60-chabi, UR-C60-pyali]
 sounds: []
-roots: []
+roots: [persian-chamcha]
+etymology_hook: "chammach: usually traced to Persian chamcha 'spoon, ladle', which Persian took from Turkic"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C60-pyali]
 <!-- hl-knowledge: introduces=[UR-LEX-C60-HOME60-03]; assesses=[] -->
 
 **چمچ** — *chammach* — "a spoon".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**چمچ** (*chammach*) is a loan, usually traced to Persian *chamcha*, "spoon, ladle". Persian itself took the word from Turkic.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,7 +1,7 @@
 {
   "language": "urdu",
   "chapter": 207,
-  "sourceHash": "fnv1a64:d810d3c024c5cf84",
+  "sourceHash": "fnv1a64:33cb138c60239d3c",
   "lessonIds": [
     "UR-C207-laung",
     "UR-C207-ilaichi",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "urdu/narration/ch207.txt",
   "json": "urdu/narration/ch207.json",
-  "textHash": "fnv1a64:bec9cd34e8ea0b4d",
-  "jsonHash": "fnv1a64:5f6ab30f59381e3a",
+  "textHash": "fnv1a64:ec62fb61911d5a8a",
+  "jsonHash": "fnv1a64:8f5b625efd98f774",
   "findings": []
 }

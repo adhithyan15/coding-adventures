@@ -14,7 +14,8 @@ romanization: "koṭ"
 concept_tag: PA-THINGS120-KOT
 prerequisites: [PA-C120-rumal, PA-C120-savaitar]
 sounds: []
-roots: []
+roots: [english-coat]
+etymology_hook: "koṭ ← English coat"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C120-savaitar]
 <!-- hl-knowledge: introduces=[PA-LEX-C120-THINGS120-03]; assesses=[] -->
 
 **ਕੋਟ** — *koṭ* — "a coat".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਕੋਟ** (*koṭ*) is a loan from English *coat*. Punjabi has an older, unrelated *koṭ*, "fort".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -7,10 +7,10 @@ Lesson 1 of 1.
 
 Warm-up.
 [pause 2 seconds]
-Arabic's word for "hour" isn't native Arabic at all — it's a very old borrowing, and it still carries three meanings at once.
+Arabic's word for "hour" is very probably an old borrowing, and it still carries three meanings at once.
 
 Why it's said this way — ساعة.
-ساعة (sāʿa) = "hour" — but also "clock/watch" (as an object) and "a while, a moment" (as in "wait a sāʿa"). According to the historical linguist Theodor Nöldeke, Arabic ساعة was borrowed from Aramaic شָׁעְתָא (šāʿəṯā) — the same Semitic root that gives Hebrew its word for hour, שָׁעָה (šāʿā). This borrowing happened long before Islam, deep in Arabic's pre-Islamic contact with Aramaic-speaking communities — so unlike some of the religiously-tied vocabulary you've seen (like aẓ-ẓuhr), sāʿa is simply an old, everyday loanword, carrying no special religious weight.
+ساعة (sāʿa) = "hour" — but also "clock/watch" (as an object) and "a while, a moment" (as in "wait a sāʿa"). According to the historical linguist Theodor Nöldeke, Arabic ساعة was borrowed from Aramaic šāʿəṯā — the same Semitic root that gives Hebrew its word for hour, שָׁעָה (šāʿā). Lane files it under s-w-ʿ as native, so the loan is likely, not certain. Unlike some religiously-tied vocabulary you've seen (like aẓ-ẓuhr), sāʿa is an old, everyday word, carrying no special religious weight.
 
 Grammar Lens: كم الساعة؟ — "how much is the hour?"
 Arabic asks the time with كم الساعة؟ (kam as-sāʿa?), literally "how much/ how many is the hour" — and answers with الساعة + an ordinal number ("the second," "the third"...):

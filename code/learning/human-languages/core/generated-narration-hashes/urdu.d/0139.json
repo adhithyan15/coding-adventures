@@ -1,7 +1,7 @@
 {
   "language": "urdu",
   "chapter": 139,
-  "sourceHash": "fnv1a64:0b8985f5229bdb55",
+  "sourceHash": "fnv1a64:06935c3c381334fc",
   "lessonIds": [
     "UR-C139-banana",
     "UR-C139-torna",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "urdu/narration/ch139.txt",
   "json": "urdu/narration/ch139.json",
-  "textHash": "fnv1a64:9ddf9720f28e69b4",
-  "jsonHash": "fnv1a64:a9b38ad6da127fa9",
+  "textHash": "fnv1a64:83e2b4eaf1fad2dc",
+  "jsonHash": "fnv1a64:a0ce7b515184e800",
   "findings": []
 }

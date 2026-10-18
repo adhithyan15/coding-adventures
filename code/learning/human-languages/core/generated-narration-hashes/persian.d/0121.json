@@ -1,7 +1,7 @@
 {
   "language": "persian",
   "chapter": 121,
-  "sourceHash": "fnv1a64:5f85fca8f119f5f4",
+  "sourceHash": "fnv1a64:113ed2299598ca1c",
   "lessonIds": [
     "FA-C121-gavmish",
     "FA-C121-susk",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "persian/narration/ch121.txt",
   "json": "persian/narration/ch121.json",
-  "textHash": "fnv1a64:ff2aa6054144e1ad",
-  "jsonHash": "fnv1a64:7272b60e8f0edf0e",
+  "textHash": "fnv1a64:89035ebdb0ad98b8",
+  "jsonHash": "fnv1a64:85b8ee604dffb3fa",
   "findings": []
 }

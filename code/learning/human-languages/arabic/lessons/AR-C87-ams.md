@@ -14,7 +14,8 @@ romanization: "ams"
 concept_tag: AR-TIME87-AMS
 prerequisites: [AR-C86-shahr, AR-C86-daqiqa]
 sounds: []
-roots: []
+roots: [ʾ-m-s]
+etymology_hook: "ams: built on the root ʾ-m-s, 'yesterday' (Lane); Hebrew emesh, 'last night', is usually compared"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C86-daqiqa]
 <!-- hl-knowledge: introduces=[AR-LEX-C87-TIME87-01]; assesses=[] -->
 
 **أمس** — *ams* — "yesterday".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**أمس** (*ams*) is built on the native Arabic root *ʾ-m-s*, "yesterday" (Lane). Hebrew *emesh*, "last night", is usually compared.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

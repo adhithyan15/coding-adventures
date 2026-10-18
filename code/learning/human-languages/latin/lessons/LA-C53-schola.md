@@ -58,7 +58,7 @@ discussion happened, then to the building children are sent to.
 
 A word that meant *free time* now means *the place you must be at nine*.
 
-Latin took it as **schola**, and every daughter kept it: Spanish *escuela*,
+Latin borrowed it as **schola**, and every daughter kept it: Spanish *escuela*,
 Italian *scuola*, French *école*, Portuguese *escola* — and each of them props up
 the *sc-* with a vowel in front, exactly the way Portuguese props up *escrever*. English **school**, **scholar** and **scholastic** are
 loans; **schedule** is not, and the resemblance is a coincidence.

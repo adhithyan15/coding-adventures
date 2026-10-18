@@ -14,7 +14,8 @@ romanization: "ladā"
 concept_tag: AR-CAN108-LADA
 prerequisites: [AR-C107-qadara, AR-C108-yumkin]
 sounds: []
-roots: []
+roots: [ladun-at]
+etymology_hook: "ladā: an old preposition 'at, with', beside ladun 'near'; deeper origin not settled"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C108-yumkin]
 <!-- hl-knowledge: introduces=[AR-LEX-C108-CAN108-02]; assesses=[] -->
 
 **لدى** — *ladā* — "with, in one's possession".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**لدى** (*ladā*) is an old preposition of place, "at, with". The grammarians set it beside *ladun*, "at, near", and it is not built on a verbal root; its deeper origin is not settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

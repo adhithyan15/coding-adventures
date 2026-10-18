@@ -14,7 +14,8 @@ romanization: "ittifāq"
 concept_tag: AR-SABAB239-ITTIFAQ
 prerequisites: [AR-C238-khususan, AR-C239-hazz]
 sounds: []
-roots: []
+roots: [w-f-q]
+etymology_hook: "ittifāq: built on the root w-f-q, 'to suit, to agree' (Lane); ittifāq is the verbal noun of Form VIII, 'agreement'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C239-hazz]
 <!-- hl-knowledge: introduces=[AR-LEX-C239-SABAB239-02]; assesses=[] -->
 
 **اتفاق** — *ittifāq* — "an agreement".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**اتفاق** (*ittifāq*) is built on the native Arabic root *w-f-q*, "to suit, to agree" (Lane). *Ittifāq* is the verbal noun of Form VIII, "agreement".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

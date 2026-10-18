@@ -14,7 +14,8 @@ romanization: "mahāra"
 concept_tag: AR-CAN109-MAHARA
 prerequisites: [AR-C109-khibra, AR-C109-ada]
 sounds: []
-roots: []
+roots: [m-h-r]
+etymology_hook: "mahāra: built on the root m-h-r, 'to be skilful' (Lane); mahāra is skill"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C109-ada]
 <!-- hl-knowledge: introduces=[AR-LEX-C109-CAN109-04]; assesses=[] -->
 
 **مهارة** — *mahāra* — "a skill".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**مهارة** (*mahāra*) is built on the native Arabic root *m-h-r*, "to be skilful" (Lane). *Mahāra* is skill; the same root gives *māhir*, "skilled".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

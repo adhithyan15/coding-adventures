@@ -14,7 +14,8 @@ romanization: "khāfa"
 concept_tag: AR-VERB-KHAFA
 prerequisites: [AR-C257-takharraja, AR-C257-fariha]
 sounds: []
-roots: []
+roots: [kh-w-f]
+etymology_hook: "khāfa: built on the root kh-w-f, 'to fear' (Lane); khāfa is the plain verb, 'he feared'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C257-fariha]
 <!-- hl-knowledge: introduces=[AR-LEX-C257-ACT257-04]; assesses=[] -->
 
 **خاف** — *khāfa* — "to be afraid".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**خاف** (*khāfa*) is built on the native Arabic root *kh-w-f*, "to fear" (Lane). *Khāfa* is the plain verb, "he feared".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

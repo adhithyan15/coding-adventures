@@ -14,7 +14,8 @@ romanization: "mustaqīm"
 concept_tag: AR-LOC105-MUSTAQIM
 prerequisites: [AR-C105-madkhal, AR-C105-makhraj]
 sounds: []
-roots: []
+roots: [q-w-m]
+etymology_hook: "mustaqīm: built on the root q-w-m, 'to stand up, to be upright' (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C105-makhraj]
 <!-- hl-knowledge: introduces=[AR-LEX-C105-LOC105-03]; assesses=[] -->
 
 **مستقيم** — *mustaqīm* — "straight ahead".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**مستقيم** (*mustaqīm*) is built on the native Arabic root *q-w-m*, "to stand up, to be upright" (Lane). *Mustaqīm* is the Form X participle, "standing upright", hence "straight".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

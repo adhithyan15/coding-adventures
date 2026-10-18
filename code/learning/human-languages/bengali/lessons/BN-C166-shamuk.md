@@ -14,7 +14,8 @@ romanization: "shāmuk"
 concept_tag: BN-JINIS166-SHAMUK
 prerequisites: [BN-C166-timi, BN-C166-kakra]
 sounds: []
-roots: []
+roots: [sanskrit-shambuka]
+etymology_hook: "shāmuk ← Sanskrit śambūka 'bivalve shell', a tadbhava (CDIAL 12316)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C166-kakra]
 <!-- hl-knowledge: introduces=[BN-LEX-C166-JINIS166-04]; assesses=[] -->
 
 **শামুক** — *shāmuk* — "a snail".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**শামুক** (*shāmuk*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *śambūka*, "bivalve shell" (CDIAL 12316). CDIAL lists Bengali *sāmuk*, "bivalve shell, snail".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

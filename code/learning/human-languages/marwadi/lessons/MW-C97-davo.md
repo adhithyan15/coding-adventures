@@ -14,7 +14,8 @@ romanization: "ḍāvo"
 concept_tag: MW-LOC97-DAVO
 prerequisites: [MW-C97-kanai, MW-C97-sami]
 sounds: []
-roots: []
+roots: [indo-aryan-davva]
+etymology_hook: "ḍāvo ← *ḍāva 'lefthand', in a group headed *ḍavva; non-Aryan, perhaps Dravidian (CDIAL 5539)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C97-sami]
 <!-- hl-knowledge: introduces=[MW-LEX-C97-LOC97-05]; assesses=[] -->
 
 **डावो** — *ḍāvo* — "left".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**डावो** (*ḍāvo*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*ḍāva*, "lefthand", one of a group of forms CDIAL reconstructs from their descendants and heads *\*ḍavva*, "lefthand, crosswise". CDIAL gives no Marwari form in this entry (CDIAL 5539); the match is through Hindi *ḍāwā*, which it lists under *\*ḍāva*. CDIAL calls the word non-Aryan, and cites a view that it is Dravidian.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

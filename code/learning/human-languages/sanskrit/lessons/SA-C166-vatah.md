@@ -14,7 +14,8 @@ romanization: "vaṭaḥ"
 concept_tag: SA-THG166-VATAH
 prerequisites: [SA-C166-nimbah, SA-C166-amravrksah]
 sounds: []
-roots: []
+roots: [sanskrit-vata-banyan]
+etymology_hook: "vaṭa 'banyan' (MBh), perhaps a Prakrit form of vṛta 'surrounded' (MW); uncertain; Hindi baṛ (CDIAL 11211)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C166-amravrksah]
 <!-- hl-knowledge: introduces=[SA-LEX-C166-THG166-04]; assesses=[] -->
 
 **वटः** — *vaṭaḥ* — "a banyan tree".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*vaṭa* "the banyan" appears from the Mahābhārata on. MW thinks it perhaps a Prakrit form of *vṛta* "surrounded, covered", but marks that as a guess, so its origin is uncertain. It lives on as Hindi *baṛ* "banyan" (CDIAL 11211).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

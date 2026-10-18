@@ -14,7 +14,8 @@ romanization: "hayashi"
 concept_tag: JA-THINGS106-HAYASHI
 prerequisites: [JA-C105-hikari, JA-C106-mon]
 sounds: []
-roots: []
+roots: [japanese-hayashi]
+etymology_hook: "hayashi: native Japanese, inherited, not borrowed; kanji 林 attached later as kun'yomi"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C106-mon]
 <!-- hl-knowledge: introduces=[JA-LEX-C106-THINGS106-02]; assesses=[] -->
 
 **はやし** — *hayashi* — "a wood, a grove".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**はやし** (*hayashi*) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

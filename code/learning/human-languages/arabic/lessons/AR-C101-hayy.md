@@ -14,7 +14,8 @@ romanization: "ḥayy"
 concept_tag: AR-LOC101-HAYY
 prerequisites: [AR-C100-matar, AR-C100-mina]
 sounds: []
-roots: []
+roots: [ḥ-y-y]
+etymology_hook: "ḥayy: built on the root ḥ-y-y, 'to live' (Lane); ḥayy is 'living', and also a living community, a tribe"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C100-mina]
 <!-- hl-knowledge: introduces=[AR-LEX-C101-LOC101-01]; assesses=[] -->
 
 **حي** — *ḥayy* — "a neighbourhood".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**حي** (*ḥayy*) is built on the native Arabic root *ḥ-y-y*, "to live" (Lane). *Ḥayy* is "living", and also a living community, a tribe; the quarter of a town is a later sense.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

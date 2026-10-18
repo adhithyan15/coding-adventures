@@ -1,9 +1,183 @@
 {
+  "schema_version": 1,
   "upstream": "mermaid@11.16.1",
-  "scope": "native strategic-map core subset",
-  "fixtures": [
-    {"name":"basic","source":"wardley-beta\ntitle Tea Shop\nanchor Business [0.95, 0.63]\ncomponent Cup of Tea [0.79, 0.61]\ncomponent Kettle [0.43, 0.35]\nBusiness -> Cup of Tea\nCup of Tea -> Kettle"},
-    {"name":"size-and-evolution","source":"wardley-beta\nsize [800, 500]\nevolution Genesis -> Custom -> Product -> Commodity\ncomponent API [0.6, 0.7]\ncomponent Database [0.4, 0.5]\nAPI -> Database"},
-    {"name":"quoted-and-evolve","source":"wardley-beta\ncomponent \"Mobile App\" [0.8, 0.85]\ncomponent API [0.6, 0.65]\n\"Mobile App\" -> API\nevolve API 0.82"}
+  "upstream_commit": "7ecca0cd7f1658ef74f4e7e91f925724ef403bbf",
+  "level": "full",
+  "scope": "complete upstream parser and renderer acceptance corpus plus native backend-neutral configuration",
+  "valid": [
+    {
+      "id": "upstream-parser-parses-components-and-links",
+      "source": "wardley-beta\ntitle Example\ncomponent Alpha [0.2, 0.1]\ncomponent Beta [0.4, 0.3]\nAlpha -> Beta"
+    },
+    {
+      "id": "upstream-parser-parses-custom-evolution-stages",
+      "source": "wardley-beta\ntitle Test\nevolution Genesis -> Custom -> Product -> Commodity\ncomponent A [0.5, 0.5]"
+    },
+    {
+      "id": "upstream-parser-parses-dual-label-evolution-stages-with-slashes",
+      "source": "wardley-beta\ntitle Test\nevolution Genesis / Concept -> Custom / Emerging -> Product / Converging -> Commodity / Accepted\ncomponent A [0.5, 0.5]"
+    },
+    {
+      "id": "upstream-parser-parses-pipeline-blocks-with-single-coordinate-components",
+      "source": "wardley-beta\ntitle Test Pipeline\ncomponent Kettle [0.45, 0.57]\npipeline Kettle {\n  component Campfire Kettle [0.35] label [-60, 35]\n  component Electric Kettle [0.53]\n}"
+    },
+    {
+      "id": "upstream-parser-parses-custom-stage-widths-with-boundary-notation",
+      "source": "wardley-beta\ntitle Test Custom Widths\nevolution Genesis@0.3 -> Custom@0.6 -> Product@0.85 -> Commodity@1.0\ncomponent A [0.5, 0.5]"
+    },
+    {
+      "id": "upstream-parser-parses-notes-with-quoted-text",
+      "source": "wardley-beta\ntitle Test Notes\ncomponent API [0.6, 0.7]\nnote \"Critical decision point\" [0.65, 0.55]"
+    },
+    {
+      "id": "upstream-parser-parses-annotations-with-quoted-text",
+      "source": "wardley-beta\ntitle Test Annotations\ncomponent API [0.6, 0.7]\nannotations [0.1, 0.9]\nannotation 1,[0.6, 0.65] \"Critical component\"\nannotation 2,[0.5, 0.5] \"Performance layer\""
+    },
+    {
+      "id": "upstream-parser-parses-anchors",
+      "source": "wardley-beta\ntitle Test Anchors\nanchor Business [0.95, 0.63]\nanchor Public [0.95, 0.78]\ncomponent Tea [0.63, 0.81]"
+    },
+    {
+      "id": "upstream-parser-parses-evolve-statements",
+      "source": "wardley-beta\ntitle Test Evolve\ncomponent Kettle [0.35, 0.43]\nevolve Kettle 0.62"
+    },
+    {
+      "id": "upstream-parser-parses-component-decorators",
+      "source": "wardley-beta\ntitle Test Decorators\ncomponent API [0.6, 0.7] (build)\ncomponent Database [0.4, 0.5] (buy)\ncomponent Cache [0.5, 0.6] (outsource)"
+    },
+    {
+      "id": "upstream-parser-parses-size-directive",
+      "source": "wardley-beta\ntitle Test Size\nsize [1200, 900]\ncomponent A [0.5, 0.5]"
+    },
+    {
+      "id": "upstream-parser-handles-quoted-identifiers-inline-labels-and-converts-coordinates-to-percentages",
+      "source": "wardley-beta\ntitle Coordinate Handling\ncomponent \"Mobile App\" [0.2, 0.4] (build) (inertia)\ncomponent API [0.3, 0.5]\n\"Mobile App\" +<> API; constraint\nnote \"Check dependencies\" [0.25, 0.45]\nannotations [0.10, 0.90]\nannotation 1,[0.60, 0.65] \"Critical component\"\naccelerator \"Cloud Native\" [0.20, 0.85]\ndeaccelerator \"Legacy Data\" [0.40, 0.35]"
+    },
+    {
+      "id": "upstream-parser-accepts-hyphens-in-unquoted-component-names",
+      "source": "wardley-beta\ncomponent real-time processing [0.5, 0.5]\ncomponent end-user [0.8, 0.9]"
+    },
+    {
+      "id": "upstream-parser-accepts-hyphens-in-link-endpoints",
+      "source": "wardley-beta\ncomponent real-time processing [0.5, 0.5]\ncomponent end-user [0.8, 0.9]\nreal-time processing -> end-user"
+    },
+    {
+      "id": "upstream-parser-accepts-hyphens-in-anchor-names",
+      "source": "wardley-beta\nanchor on-call engineer [0.9, 0.95]"
+    },
+    {
+      "id": "upstream-parser-still-tokenises-a-to-b-as-an-arrow-no-space-regression",
+      "source": "wardley-beta\ncomponent A [0.1, 0.1]\ncomponent B [0.2, 0.2]\nA->B"
+    },
+    {
+      "id": "upstream-parser-parses-foo-bar-to-baz-as-link-from-foo-bar-to-baz",
+      "source": "wardley-beta\ncomponent foo-bar [0.3, 0.3]\ncomponent baz [0.6, 0.6]\nfoo-bar->baz"
+    },
+    {
+      "id": "upstream-parser-accepts-hyphens-in-pipeline-component-names-with-label-overrides",
+      "source": "wardley-beta\ncomponent Data Store [0.5, 0.5]\npipeline Data Store {\n  component real-time queue [0.3] label [-40, 20]\n  component batch-loader [0.7]\n}"
+    },
+    {
+      "id": "upstream-parser-accepts-consecutive-hyphens-inside-a-name",
+      "source": "wardley-beta\ncomponent foo--bar [0.3, 0.4]"
+    },
+    {
+      "id": "upstream-parser-accepts-a-trailing-hyphen-in-a-name",
+      "source": "wardley-beta\ncomponent foo- [0.2, 0.3]"
+    },
+    {
+      "id": "upstream-render-1-should-render-tea-shop",
+      "source": "wardley-beta\ntitle Tea Shop\nsize [1100, 800]\n\nanchor Business [0.95, 0.63]\nanchor Public [0.95, 0.78]\ncomponent Cup of Tea [0.79, 0.61] label [19, -4]\ncomponent Cup [0.73, 0.78]\ncomponent Tea [0.63, 0.81]\ncomponent Hot Water [0.52, 0.80]\ncomponent Water [0.38, 0.82]\ncomponent Kettle [0.43, 0.35] label [-57, 4]\ncomponent Power [0.1, 0.7] label [-27, 20]\n\nBusiness -> Cup of Tea\nPublic -> Cup of Tea\nCup of Tea -> Cup\nCup of Tea -> Tea\nCup of Tea -> Hot Water\nHot Water -> Water\nHot Water -> Kettle\nKettle -> Power\n\nevolve Kettle 0.62\nevolve Power 0.89\n\nnote \"Standardising power allows Kettles to evolve faster\" [0.30, 0.49]\nnote \"Hot water is obvious and well known\" [0.48, 0.80]\nnote \"A generic note appeared\" [0.23, 0.33]"
+    },
+    {
+      "id": "upstream-render-2-should-render-data-evolution-stages",
+      "source": "wardley-beta\ntitle Data Evolution Pipeline\nsize [1100, 800]\n\nevolution Unmodelled -> Divergent -> Convergent -> Modelled\n\ncomponent User Needs [0.95, 0.05]\ncomponent Data Collection [0.80, 0.15]\ncomponent Custom Analytics [0.70, 0.35]\ncomponent Standardized Reports [0.65, 0.65]\ncomponent Commodity Storage [0.60, 0.85]\n\nUser Needs -> Data Collection\nData Collection -> Custom Analytics\nCustom Analytics -> Standardized Reports\nStandardized Reports -> Commodity Storage\n\nevolve Custom Analytics 0.60\nevolve Standardized Reports 0.85"
+    },
+    {
+      "id": "upstream-render-3-should-render-pipelines",
+      "source": "wardley-beta\ntitle Kettle Evolution Pipeline\nsize [1100, 800]\n\ncomponent Kettle [0.57, 0.45]\ncomponent Power [0.10, 0.70]\ncomponent User [0.95, 0.50]\n\nKettle -> Power\nUser -> Electric Kettle\n\npipeline Kettle {\n  component Campfire Kettle [0.35] label [-60, 35]\n  component Electric Kettle [0.53] label [-60, 35]\n  component Smart Kettle [0.72] label [-30, 35]\n}\n\nCampfire Kettle -> Kettle\nElectric Kettle -> Kettle\nSmart Kettle -> Kettle"
+    },
+    {
+      "id": "upstream-render-4-should-render-link-types-and-annotations",
+      "source": "wardley-beta\ntitle Link Features Demo\nsize [1100, 800]\n\ncomponent User [0.95, 0.90]\ncomponent App [0.75, 0.75]\ncomponent API [0.60, 0.60]\ncomponent Cache [0.65, 0.45]\ncomponent Database [0.15, 0.80]\ncomponent Service [0.45, 0.50]\n\nUser -> App\nApp +> API; +>\nAPI -> Database; constraint\nAPI +<> Cache; +<>\nCache +< Service; +<\nService +'backup'> Database"
+    },
+    {
+      "id": "upstream-render-5-should-render-custom-canvas-size",
+      "source": "wardley-beta\ntitle Custom Size Map\nsize [600, 800]\n\nanchor User [0.95, 0.90]\ncomponent App [0.75, 0.85]\ncomponent API [0.50, 0.70]\ncomponent Database [0.30, 0.50]\ncomponent Cloud [0.15, 0.30]\n\nUser -> App\nApp -> API\nAPI -> Database\nDatabase -> Cloud\n\nevolve Database 0.60"
+    },
+    {
+      "id": "upstream-render-6-should-render-gpt-tokeniser-architecture",
+      "source": "wardley-beta\ntitle GPT Tokeniser\nsize [1100, 800]\n\nanchor GPT Tokeniser [0.90, 0.58]\n\ncomponent tokeniser [0.81, 0.58]\ncomponent encoder [0.60, 0.32] label [1, -9]\ncomponent decoder [0.60, 0.72]\ncomponent methodology [0.72, 0.53]\ncomponent training code [0.68, 0.26] label [-90, 2]\ncomponent inference code [0.65, 0.37] label [-50, -12]\ncomponent algo [0.53, 0.50] label [-15, -17]\ncomponent GPT2 [0.81, 0.65] label [-14, 27]\ncomponent GPT3 [0.81, 0.73] label [-15, 27]\ncomponent GPT4 [0.81, 0.77] label [-14, 28]\ncomponent GPT5 [0.81, 0.37] label [-10, 28]\ncomponent GPT6 [0.81, 0.17] label [-20, 28]\ncomponent GPT7 [0.81, 0.13] label [-13, 27]\ncomponent tokeniser training data [0.29, 0.34] label [-74, -32]\ncomponent special tokens [0.59, 0.26] label [-61, 15]\ncomponent UTF8 [0.17, 0.74]\ncomponent token vocabulary [0.41, 0.56] label [-25, 16]\ncomponent byte pair encoding (BPE) [0.53, 0.76] label [-27, 19]\ncomponent english text data [0.15, 0.37] label [0, 10]\ncomponent code data [0.15, 0.30] label [-31, 23]\ncomponent foreign text data [0.15, 0.23] label [-51, 18]\ncomponent python [0.35, 0.84]\ncomponent sentencepiece [0.25, 0.80] label [-49, 19]\ncomponent IDE [0.27, 0.86]\ncomponent MEGABYTE [0.53, 0.18] label [-28, 28]\ncomponent text merging rules [0.60, 0.21] label [-64, -10]\ncomponent security framework [0.67, 0.58] label [-27, 10]\ncomponent Unicode Consortium [0.06, 0.55]\ncomponent Unicode License v3 [0.13, 0.72] label [-29, 11]\n\nGPT Tokeniser -> tokeniser\n\ntokeniser -> methodology\nmethodology -> training code\nmethodology -> inference code\nmethodology -> security framework\n\ntraining code -> special tokens\ntraining code -> python\n\nalgo -> tokeniser training data\ntraining code -> text merging rules\n\ntraining code -> encoder\ninference code -> decoder\nencoder -> algo\ndecoder -> algo\n\nalgo -> token vocabulary\n\nbyte pair encoding (BPE) -> UTF8\nMEGABYTE -> UTF8\nUTF8 -> Unicode License v3\nUnicode License v3 -> Unicode Consortium\n\ntokeniser training data -> english text data\ntokeniser training data -> code data\ntokeniser training data -> foreign text data\n\npython -> IDE\npython -> sentencepiece\n\npipeline tokeniser {\n  component tokeniser v1 [0.11]\n  component tokeniser v2 [0.80]\n}\n\npipeline methodology {\n  component methodology v1 [0.20]\n  component methodology v2 [0.80]\n}\n\npipeline algo {\n  component algo v1 [0.14]\n  component algo v2 [0.80]\n}\n\ndeaccelerator License Play [0.13, 0.78]\n\nannotations [1, 0]\nannotation 1,[0.57, 0.16] \"Alternative algos in research\"\nannotation 2,[0.57, 0.76] \"Most popular, but not the most efficient\"\nannotation 3,[0.20, 0.3] \"Ensure balanced token vocabulary\"\nannotation 4,[0.60, 0.28] \"Required for delimiters\"\nannotation 5,[0.70, 0.50] \"A structured approach for achieving a goal\"\n\nnote \"Voting members: Adobe, Amazon, Apple, Google, Meta, Microsoft, Netflix, Salesforce\" [0.04, 0.35]"
+    },
+    {
+      "id": "upstream-render-theme-dark",
+      "source": "wardley-beta\ntitle Theme Test - dark\nsize [1100, 800]\n\nanchor User [0.95, 0.85]\ncomponent App [0.75, 0.70]\ncomponent API [0.55, 0.55]\ncomponent Database [0.30, 0.60]\ncomponent Cache [0.50, 0.40]\n\nUser -> App\nApp -> API\nAPI -> Database\nAPI -> Cache\n\nevolve Database 0.80"
+    },
+    {
+      "id": "upstream-render-theme-forest",
+      "source": "wardley-beta\ntitle Theme Test - forest\nsize [1100, 800]\n\nanchor User [0.95, 0.85]\ncomponent App [0.75, 0.70]\ncomponent API [0.55, 0.55]\ncomponent Database [0.30, 0.60]\ncomponent Cache [0.50, 0.40]\n\nUser -> App\nApp -> API\nAPI -> Database\nAPI -> Cache\n\nevolve Database 0.80"
+    },
+    {
+      "id": "upstream-render-theme-neutral",
+      "source": "wardley-beta\ntitle Theme Test - neutral\nsize [1100, 800]\n\nanchor User [0.95, 0.85]\ncomponent App [0.75, 0.70]\ncomponent API [0.55, 0.55]\ncomponent Database [0.30, 0.60]\ncomponent Cache [0.50, 0.40]\n\nUser -> App\nApp -> API\nAPI -> Database\nAPI -> Cache\n\nevolve Database 0.80"
+    },
+    {
+      "id": "upstream-render-theme-base",
+      "source": "wardley-beta\ntitle Theme Test - base\nsize [1100, 800]\n\nanchor User [0.95, 0.85]\ncomponent App [0.75, 0.70]\ncomponent API [0.55, 0.55]\ncomponent Database [0.30, 0.60]\ncomponent Cache [0.50, 0.40]\n\nUser -> App\nApp -> API\nAPI -> Database\nAPI -> Cache\n\nevolve Database 0.80"
+    },
+    {
+      "id": "native-config-theme-accessibility",
+      "source": "%%{init: {\"wardley-beta\": {\"width\": 760, \"height\": 480, \"padding\": 36, \"nodeRadius\": 9, \"nodeLabelOffset\": 12, \"axisFontSize\": 15, \"labelFontSize\": 13, \"showGrid\": true, \"useMaxWidth\": false}, \"themeVariables\": {\"wardley\": {\"backgroundColor\": \"#f8fafc\", \"axisColor\": \"#123456\", \"axisTextColor\": \"#234567\", \"gridColor\": \"#345678\", \"componentFill\": \"#abcdef\", \"componentStroke\": \"#456789\", \"componentLabelColor\": \"#56789a\", \"linkStroke\": \"#6789ab\", \"evolutionStroke\": \"#dc2626\", \"annotationStroke\": \"#7c3aed\", \"annotationTextColor\": \"#f97316\", \"annotationFill\": \"#fef3c7\"}}}}%%\nwardley-beta\naccTitle: Accessible strategy map\naccDescr {\nComponents and dependencies\nacross the value chain\n}\ntitle Configured Map\nanchor User [0.9, 0.2]\ncomponent API [0.6, 0.7] (market) (inertia)\nUser -> API\nannotations [0.1, 0.9]\nannotation 1,[0.5,0.6] \"Theme-aware annotation\"\naccelerator \"AI Adoption\" [0.55, 0.25]"
+    }
+  ],
+  "invalid": [
+    {
+      "id": "missing-header",
+      "source": "component API [0.6, 0.7]"
+    },
+    {
+      "id": "component-missing-coordinates",
+      "source": "wardley-beta\ncomponent API"
+    },
+    {
+      "id": "component-coordinate-out-of-range",
+      "source": "wardley-beta\ncomponent API [1.1, 0.7]"
+    },
+    {
+      "id": "size-not-positive",
+      "source": "wardley-beta\nsize [0, 800]\ncomponent API [0.6, 0.7]"
+    },
+    {
+      "id": "unknown-link-endpoint",
+      "source": "wardley-beta\ncomponent API [0.6, 0.7]\nAPI -> Missing"
+    },
+    {
+      "id": "unknown-evolve-component",
+      "source": "wardley-beta\ncomponent API [0.6, 0.7]\nevolve Missing 0.8"
+    },
+    {
+      "id": "evolve-out-of-range",
+      "source": "wardley-beta\ncomponent API [0.6, 0.7]\nevolve API 1.2"
+    },
+    {
+      "id": "pipeline-missing-parent",
+      "source": "wardley-beta\npipeline Missing {\ncomponent Child [0.4]\n}"
+    },
+    {
+      "id": "pipeline-empty",
+      "source": "wardley-beta\ncomponent API [0.6, 0.7]\npipeline API {\n}"
+    },
+    {
+      "id": "pipeline-unterminated",
+      "source": "wardley-beta\ncomponent API [0.6, 0.7]\npipeline API {\ncomponent Child [0.4]"
+    },
+    {
+      "id": "unquoted-note",
+      "source": "wardley-beta\ncomponent API [0.6, 0.7]\nnote unquoted [0.5, 0.5]"
+    },
+    {
+      "id": "annotation-missing-coordinates",
+      "source": "wardley-beta\ncomponent API [0.6, 0.7]\nannotation 1 \"Missing coordinates\""
+    }
   ]
 }

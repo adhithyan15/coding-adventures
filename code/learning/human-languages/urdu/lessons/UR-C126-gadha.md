@@ -14,7 +14,8 @@ romanization: "gadhā"
 concept_tag: UR-THINGS126-GADHA
 prerequisites: [UR-C126-titli, UR-C126-chyunti]
 sounds: []
-roots: []
+roots: [sanskrit-gardabha]
+etymology_hook: "gadhā ← Sanskrit gardabha 'ass', a tadbhava (CDIAL 4054)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C126-chyunti]
 <!-- hl-knowledge: introduces=[UR-LEX-C126-THINGS126-05]; assesses=[] -->
 
 **گدھا** — *gadhā* — "a donkey".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**گدھا** (*gadhā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *gardabha*, "ass" (CDIAL 4054).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

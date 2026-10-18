@@ -4,7 +4,7 @@
   "chapter": 51,
   "title": "More of the Family",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:4c15399c8b995dd1",
+  "sourceHash": "fnv1a64:955fac146cabf68d",
   "lessons": [
     {
       "id": "SA-C51-husband",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:80eed8cd6a999f1e",
+      "sourceHash": "fnv1a64:26b389d9818945f4",
       "notice": null,
       "blocks": [
         {
@@ -163,7 +163,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3ff274a21270faa3",
+      "sourceHash": "fnv1a64:91a87635fc0f0a5c",
       "notice": null,
       "blocks": [
         {
@@ -307,7 +307,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:948c0791432cddb9",
+      "sourceHash": "fnv1a64:3bc6d2699624a14d",
       "notice": null,
       "blocks": [
         {
@@ -352,6 +352,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Pitāmaha is built from pitā, \"father\", and maha, \"great\", a Vedic adjective beside mahat (MW): the great father. It is already in the Atharvaveda."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -362,7 +373,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -420,7 +431,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -451,7 +462,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:06f04703bcccbbd8",
+      "sourceHash": "fnv1a64:f5e503fe72d9c670",
       "notice": null,
       "blocks": [
         {
@@ -496,6 +507,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Mātāmahī is built from mātā, \"mother\", and mahī, the feminine of maha, \"great\" (MW), exactly as pitāmaha is."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -506,7 +528,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -564,7 +586,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -595,7 +617,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:cce652ef8f996918",
+      "sourceHash": "fnv1a64:decce9b30de511ac",
       "notice": null,
       "blocks": [
         {
@@ -640,6 +662,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Mātula is built from mātṛ, \"mother\" (MW, CDIAL 10009). It lives on as Marathi māvḷā, \"mother's brother\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -650,7 +683,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -708,7 +741,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

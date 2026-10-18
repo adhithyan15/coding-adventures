@@ -14,7 +14,8 @@ romanization: "asthi"
 concept_tag: SA-LIMB-ASTHI
 prerequisites: [SA-C34-neck, SA-C32-grass, SA-C33-mountain]
 sounds: []
-roots: []
+roots: [sanskrit-asthi]
+etymology_hook: "asthi 'bone' is inherited: MW compares Latin os, ossis and Greek osteon (CDIAL 982)"
 duration:
   max_seconds: 210
 requires:

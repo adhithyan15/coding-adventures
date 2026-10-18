@@ -14,7 +14,8 @@ romanization: "baḷad"
 concept_tag: MW-THINGS138-BALAD
 prerequisites: [MW-C137-khajur, MW-C137-narel]
 sounds: []
-roots: []
+roots: [sanskrit-balivarda]
+etymology_hook: "baḷad ← Sanskrit balivarda 'ox, bull', a tadbhava (CDIAL 9176, Gujarati and Hindi rows)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C137-narel]
 <!-- hl-knowledge: introduces=[MW-LEX-C138-THINGS138-01]; assesses=[] -->
 
 **बळद** — *baḷad* — "an ox".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**बळद** (*baḷad*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *balivarda*, "ox, bull". CDIAL gives no Marwari form in this entry (CDIAL 9176); the match is through Gujarati *baḷad* and Hindi *balad*. CDIAL records a view that the Sanskrit word joins *balin*, "strong", with a non-Aryan word for "ox".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

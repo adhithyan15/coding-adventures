@@ -14,7 +14,8 @@ romanization: "doushite"
 concept_tag: JA-WHY98-DOUSHITE
 prerequisites: [JA-C97-houhou, JA-C97-yarikata]
 sounds: []
-roots: []
+roots: [japanese-dou, japanese-suru]
+etymology_hook: "dōshite: native dō 'how' + shite, linking form of suru 'do'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C97-yarikata]
 <!-- hl-knowledge: introduces=[JA-LEX-C98-WHY98-01]; assesses=[] -->
 
 **どうして** — *doushite* — "why".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**どうして** (*dōshite*) is native: *dō*, "how", built on the *do-* of "which", with *shite*, the linking form of *suru*, "to do": "having done how" (JMdict). It is inherited rather than borrowed.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

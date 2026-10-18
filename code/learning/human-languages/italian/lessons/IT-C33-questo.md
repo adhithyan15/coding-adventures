@@ -68,7 +68,7 @@ Latin's pointing words were **hic** (this, near me), **iste** (that, near you) a
 reinforced them with **eccum**, "behold, look" — the same gesture-word that is
 inside *ecce homo*.
 
-**Eccu(m) istum** → **questo**. Literally: *look, that one of yours.*
+**Questo** grew from **eccu(m) istum**. Literally: *look, that one of yours.*
 
 You have met that reinforcing *eccu-* twice already without being told.
 **Così** is *eccu(m) sīc*, "behold, thus." And the article **il, la,

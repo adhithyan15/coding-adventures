@@ -14,7 +14,8 @@ romanization: "adhī rāt"
 concept_tag: PA-TIME99-ADHIRAT
 prerequisites: [PA-C98-rasta, PA-C98-desh, PA-C05-rahna, PA-C05-rahna]
 sounds: []
-roots: []
+roots: [sanskrit-ardha, sanskrit-ratri]
+etymology_hook: "adhī ← ardha 'half' (CDIAL 644); rāt ← Sanskrit rātrī 'night' (CDIAL 10702): both inherited"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [PA-C98-desh]
 <!-- hl-knowledge: introduces=[PA-LEX-C99-TIME99-01]; assesses=[] -->
 
 **ਅੱਧੀ ਰਾਤ** — *adhī rāt* — "midnight".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+Both words are inherited. *Adhī*, "half", goes with Punjabi *addhā*, which CDIAL lists under Sanskrit *ardha*, "half" (CDIAL 644), and *rāt* comes from *rātrī*, "night" (CDIAL 10702).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

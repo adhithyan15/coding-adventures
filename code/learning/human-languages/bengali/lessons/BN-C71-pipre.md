@@ -14,7 +14,8 @@ romanization: "pĩpṛe"
 concept_tag: BN-ANIMALS71-PIPRE
 prerequisites: [BN-C71-gadha, BN-C71-projapoti]
 sounds: []
-roots: []
+roots: [sanskrit-pipila]
+etymology_hook: "pĩpṛe ← Sanskrit pipīla 'ant', a tadbhava (CDIAL 8201)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C71-projapoti]
 <!-- hl-knowledge: introduces=[BN-LEX-C71-ANIMALS71-04]; assesses=[] -->
 
 **পিঁপড়ে** — *pĩpṛe* — "an ant".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**পিঁপড়ে** (*pĩpṛe*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *pipīla*, "ant" (CDIAL 8201). CDIAL writes the Bengali form *pĩpiṛā*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,7 +1,7 @@
 {
   "language": "sanskrit",
   "chapter": 236,
-  "sourceHash": "fnv1a64:584344f979c4cd77",
+  "sourceHash": "fnv1a64:16d5ab13a7bebffe",
   "lessonIds": [
     "SA-C236-sisuh",
     "SA-C236-kumarah",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "sanskrit/narration/ch236.txt",
   "json": "sanskrit/narration/ch236.json",
-  "textHash": "fnv1a64:f8a743a7446087bd",
-  "jsonHash": "fnv1a64:d251f369569e90c8",
+  "textHash": "fnv1a64:a8a6655ce8d9d676",
+  "jsonHash": "fnv1a64:833de560c212f5af",
   "findings": []
 }

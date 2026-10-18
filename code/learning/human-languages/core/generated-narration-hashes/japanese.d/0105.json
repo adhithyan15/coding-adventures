@@ -1,7 +1,7 @@
 {
   "language": "japanese",
   "chapter": 105,
-  "sourceHash": "fnv1a64:ce79a02f649467f9",
+  "sourceHash": "fnv1a64:cff29cce32649f49",
   "lessonIds": [
     "JA-C105-hakama",
     "JA-C105-yukata",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "japanese/narration/ch105.txt",
   "json": "japanese/narration/ch105.json",
-  "textHash": "fnv1a64:45ceee77db8a7cc2",
-  "jsonHash": "fnv1a64:a6e601f79272acc6",
+  "textHash": "fnv1a64:b6f80f8e18e247f4",
+  "jsonHash": "fnv1a64:fd63dc85bfe06775",
   "findings": []
 }

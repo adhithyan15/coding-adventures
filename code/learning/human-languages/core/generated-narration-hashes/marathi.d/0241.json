@@ -1,7 +1,7 @@
 {
   "language": "marathi",
   "chapter": 241,
-  "sourceHash": "fnv1a64:33ebba4f31bed72a",
+  "sourceHash": "fnv1a64:e8d86c3f27a1132b",
   "lessonIds": [
     "MR-C241-kundi",
     "MR-C241-rop",
@@ -14,6 +14,6 @@
   "text": "marathi/narration/ch241.txt",
   "json": "marathi/narration/ch241.json",
   "textHash": "fnv1a64:55fdd124ddafa6ad",
-  "jsonHash": "fnv1a64:79c3bafc1078cec2",
+  "jsonHash": "fnv1a64:8376b24592817b2c",
   "findings": []
 }

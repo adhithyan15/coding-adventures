@@ -14,7 +14,8 @@ romanization: "ṣayyād"
 concept_tag: AR-AMAL191-SAYYAD
 prerequisites: [AR-C191-sabbak, AR-C191-baqqal]
 sounds: []
-roots: []
+roots: [ṣ-y-d]
+etymology_hook: "ṣayyād: built on the root ṣ-y-d, 'to hunt' (Lane); ṣayyād is the faʿʿāl trade noun, 'hunter'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C191-baqqal]
 <!-- hl-knowledge: introduces=[AR-LEX-C191-AMAL191-03]; assesses=[] -->
 
 **صياد** — *ṣayyād* — "a fisherman, a hunter".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**صياد** (*ṣayyād*) is built on the native Arabic root *ṣ-y-d*, "to hunt" (Lane). *Ṣayyād* is the *faʿʿāl* trade noun, "hunter".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

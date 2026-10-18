@@ -12,6 +12,9 @@ Before the new one: say the Gujarati for false, then the Gujarati for rich.
 You'll want to know: ગરીબ.
 ગરીબ (garīb) — "poor".
 
+The word, taken apart.
+ગરીબ (garīb) is a loan from Arabic gharīb, "a stranger", which reached Gujarati through Persian. Its Arabic root is gh-r-b (Lane).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Gujarati for rich, then the Gujarati for poor.
 
 You'll want to know: જુવાન.
 જુવાન (juvān) — "young".
+
+The word, taken apart.
+જુવાન (juvān) is a loan, usually traced to Persian javān, "young".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Gujarati for poor, then the Gujarati for young.
 You'll want to know: મજબૂત.
 મજબૂત (majbūt) — "strong".
 
+The word, taken apart.
+મજબૂત (majbūt) is a loan from Arabic maḍbūṭ, "held firm, secured", which reached Gujarati through Persian. Its Arabic root is ḍ-b-ṭ (Lane).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Gujarati for young, then the Gujarati for strong.
 You'll want to know: નબળું.
 નબળું (nabaḷũ) — "weak".
 
+The word, taken apart.
+નબળું (nabaḷũ) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from nirbala, "weak" (CDIAL 7356). It is nir-, "without", and bala, "strength".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Gujarati for strong, then the Gujarati for weak.
 
 You'll want to know: જરૂરી.
 જરૂરી (jarūrī) — "necessary".
+
+The word, taken apart.
+જરૂરી (jarūrī) is a loan from Arabic ḍarūrī, "necessary", which reached Gujarati through Persian. Its Arabic root is ḍ-r-r (Lane).
 
 What you've built.
 One more word for this chapter.

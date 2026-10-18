@@ -14,7 +14,8 @@ romanization: "mīlād"
 concept_tag: AR-WAQT233-MILAD
 prerequisites: [AR-C233-shuruq, AR-C233-ghurub]
 sounds: []
-roots: []
+roots: [w-l-d]
+etymology_hook: "mīlād: built on the root w-l-d, 'to give birth' (Lane); mīlād is the time of birth"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C233-ghurub]
 <!-- hl-knowledge: introduces=[AR-LEX-C233-WAQT233-05]; assesses=[] -->
 
 **ميلاد** — *mīlād* — "birth".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ميلاد** (*mīlād*) is built on the native Arabic root *w-l-d*, "to give birth" (Lane). *Mīlād* is the time of birth.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

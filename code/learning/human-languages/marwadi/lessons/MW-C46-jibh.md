@@ -14,7 +14,8 @@ romanization: "jībh"
 concept_tag: MW-BODY46-JIBH
 prerequisites: [MW-C45-godo, MW-C46-pith]
 sounds: []
-roots: []
+roots: [sanskrit-jihva]
+etymology_hook: "jībh ← Sanskrit jihvā 'tongue', a tadbhava (CDIAL 5228, Hindi and Gujarati rows)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C46-pith]
 <!-- hl-knowledge: introduces=[MW-LEX-C46-BODY46-02]; assesses=[] -->
 
 **जीभ** — *jībh* — "the tongue".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**जीभ** (*jībh*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *jihvā*, "tongue". CDIAL gives no Marwari form in this entry (CDIAL 5228); the match is through Hindi *jībh* and Gujarati *jībh*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

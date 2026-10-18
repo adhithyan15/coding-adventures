@@ -15,6 +15,7 @@ concept_tag: FA-THINGS99-ASH
 prerequisites: [FA-C98-kabab, FA-C99-polow]
 sounds: []
 roots: []
+etymology_hook: "âsh: sometimes linked with Turkic aš 'food'; origin not settled"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C99-polow]
 <!-- hl-knowledge: introduces=[FA-LEX-C99-THINGS99-02]; assesses=[] -->
 
 **آش** — *âsh* — "a thick soup".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*âsh* is sometimes linked with Turkic *aš*, "food", but no source used here confirms it, and its origin is not settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "fayaḍān"
 concept_tag: AR-MAKAN236-FAYADAN
 prerequisites: [AR-C235-sifara, AR-C236-zilzal]
 sounds: []
-roots: []
+roots: [f-y-ḍ]
+etymology_hook: "fayaḍān: built on the root f-y-ḍ, 'to overflow' (Lane); fayaḍān is the verbal noun, 'overflowing'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C236-zilzal]
 <!-- hl-knowledge: introduces=[AR-LEX-C236-MAKAN236-02]; assesses=[] -->
 
 **فيضان** — *fayaḍān* — "a flood".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**فيضان** (*fayaḍān*) is built on the native Arabic root *f-y-ḍ*, "to overflow" (Lane). *Fayaḍān* is the verbal noun, "overflowing".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

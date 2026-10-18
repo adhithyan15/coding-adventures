@@ -47,6 +47,9 @@ that gets the introduction going.
 > **comment vous appelez-vous?** = literally "**how do you call yourself?**" =
 > the polite **"what's your name?"**
 
+*Comment* ← Latin *quōmodo*, "in what manner", *vous* ← Latin *vōs*, and
+*appeler* ← Latin *appellāre*, "to call" (EtymDB 2.1).
+
 ## Grammar Lens: asking by inversion
 <!-- hl-knowledge: introduces=[FR-GRAM-INVERSION-NAME-11]; assesses=[FR-GRAM-REFLEXIVE-SET-04, FR-LEX-JEMAPPELLE-07] -->
 

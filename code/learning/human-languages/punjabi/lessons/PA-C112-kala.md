@@ -14,7 +14,8 @@ romanization: "kalā"
 concept_tag: PA-CAN112-KALA
 prerequisites: [PA-C111-adat, PA-C111-hunar]
 sounds: []
-roots: []
+roots: [sanskrit-kala-art]
+etymology_hook: "kalā ← Sanskrit kalā 'any practical art', a tatsama (CDIAL 2927)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C111-hunar]
 <!-- hl-knowledge: introduces=[PA-LEX-C112-CAN112-01]; assesses=[] -->
 
 **ਕਲਾ** — *kalā* — "an art".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਕਲਾ** (*kalā*) is Sanskrit *kalā*, "any practical art", taken over whole as a learned loan, a tatsama (CDIAL 2927). CDIAL takes the Sanskrit word itself from Dravidian. The inherited Punjabi form is *kaḷ*, "machine, art".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

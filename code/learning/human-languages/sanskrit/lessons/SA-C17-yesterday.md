@@ -14,7 +14,8 @@ romanization: "hyaḥ"
 concept_tag: SA-ADV-YESTERDAY
 prerequisites: [SA-C17-today]
 sounds: []
-roots: []
+roots: [sanskrit-hyas]
+etymology_hook: "hyas 'yesterday' is inherited: MW compares Latin heri, Greek khthes and English yester-day"
 duration:
   max_seconds: 210
 requires:

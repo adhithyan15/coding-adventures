@@ -14,7 +14,8 @@ romanization: "kuttā"
 concept_tag: UR-NATURE67-KUTTA
 prerequisites: [UR-C66-barf, UR-C67-registan]
 sounds: []
-roots: []
+roots: [uncertain-kutta]
+etymology_hook: "kuttā ← *kutta 'dog', a reconstructed form that CDIAL calls imitative (CDIAL 3275)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C67-registan]
 <!-- hl-knowledge: introduces=[UR-LEX-C67-NATURE67-02]; assesses=[] -->
 
 **کتا** — *kuttā* — "a dog".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**کتا** (*kuttā*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*kutta*, "dog", a form CDIAL reconstructs from its descendants (CDIAL 3275). CDIAL calls it imitative, a word made from the sound used to call a dog.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

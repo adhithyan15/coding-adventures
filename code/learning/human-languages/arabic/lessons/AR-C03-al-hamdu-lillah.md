@@ -12,7 +12,7 @@ concept_tag: AR-PRAISE-GOD
 prerequisites: [AR-C03-bi-khayr, AR-C01-al]
 sounds: [rtl-known-letters, deep-h]
 roots: [h-m-d]
-etymology_hook: "root ḥ-m-d 'to praise' also produces the name Muḥammad ('the much-praised one') and Aḥmad — the commonest given name on earth and the commonest phrase in the language, from three shared consonants; lillāh = li- ('to') + allāh (al- + ilāh, 'the god'), cousin of Hebrew El/Elohim"
+etymology_hook: "al-ḥamdu lillāh: ḥamd 'praise' (root ḥ-m-d, as in Muḥammad) + li- 'to' + allāh, from al- + ilāh 'god'"
 duration:
   max_seconds: 240
 requires:

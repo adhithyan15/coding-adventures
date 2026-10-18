@@ -4,7 +4,7 @@
   "chapter": 80,
   "title": "Hours, Minutes and Holidays",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:8ad7456a7d40362c",
+  "sourceHash": "fnv1a64:d64d63d32d453e7b",
   "lessons": [
     {
       "id": "GU-C80-hour",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8fc79aca3fafb10b",
+      "sourceHash": "fnv1a64:4c31b7d02d29bd7c",
       "notice": null,
       "blocks": [
         {
@@ -52,6 +52,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The origin of કલાક (kalāk) is not settled. CDIAL, searched by form and by meaning, has no entry for it."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -62,7 +73,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -111,7 +122,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -142,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ef0e84ceb8ef7cb0",
+      "sourceHash": "fnv1a64:fd671ce178ffa564",
       "notice": null,
       "blocks": [
         {
@@ -265,7 +276,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:817386d14e8fec42",
+      "sourceHash": "fnv1a64:faba5263982fcbaf",
       "notice": null,
       "blocks": [
         {
@@ -298,6 +309,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "રજા (rajā) is a loan, usually traced through Persian razā, \"consent, leave\", to Arabic riḍā, \"contentment, approval\". Its Arabic root is r-ḍ-w (Lane)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -308,7 +330,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -357,7 +379,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -388,7 +410,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:00c78c9d5bb20cec",
+      "sourceHash": "fnv1a64:b7c50bed3514a1b5",
       "notice": null,
       "blocks": [
         {
@@ -421,6 +443,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "તહેવાર (tahevār) is a tadbhava, a word inherited and reshaped by sound change. It comes from tithivāra, \"a festival\", a form CDIAL reconstructs from its descendants (CDIAL 5811). It is tithi, \"lunar day\", and vāra, \"day, turn\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -431,7 +464,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -480,7 +513,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -511,7 +544,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:58de5a9fd555a423",
+      "sourceHash": "fnv1a64:69553e26b42ab341",
       "notice": null,
       "blocks": [
         {
@@ -544,6 +577,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "હોળી (hoḷī) is a tadbhava of Sanskrit holā, \"spring festival\", also written holī (CDIAL 14182)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -554,7 +598,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -603,7 +647,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

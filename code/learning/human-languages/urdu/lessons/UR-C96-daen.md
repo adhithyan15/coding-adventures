@@ -14,7 +14,8 @@ romanization: "dāeṅ"
 concept_tag: UR-TIME96-DAEN
 prerequisites: [UR-C96-jab, UR-C96-kidhar]
 sounds: []
-roots: []
+roots: [sanskrit-dakshina]
+etymology_hook: "dāeṅ: a form of dāyāṅ 'right' ← Sanskrit dākṣiṇa, crossed with vāma 'left' (CDIAL 6251)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C96-kidhar]
 <!-- hl-knowledge: introduces=[UR-LEX-C96-TIME96-04]; assesses=[] -->
 
 **دائیں** — *dāeṅ* — "to the right".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**دائیں** (*dāeṅ*) is a form of *dāyāṅ*, "right", which comes from Sanskrit *dākṣiṇa*, "relating to the right; southern". CDIAL notes that its form was crossed with *vāma*, "left" (CDIAL 6251).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -12,6 +12,9 @@ Before the new one: say the Persian for left, then the Persian for a street.
 You'll want to know: بانک.
 بانک — bânk — "a bank".
 
+The word, taken apart.
+bânk is borrowed from French banque, "bank" (EtymDB). The French word goes back to Italian banco, "bench" (EtymDB).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Persian for a street, then the Persian for a bank.
 
 You'll want to know: ایستگاه.
 ایستگاه — istgâh — "a station, a stop".
+
+The word, taken apart.
+istgâh is built from ist-, "stand" (the stem of istâdan, "to stand"), and gâh, "place": "standing place". Both parts are native Persian.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Persian for a bank, then the Persian for a station.
 You'll want to know: ماشین.
 ماشین — mâshin — "a car".
 
+The word, taken apart.
+mâshin is borrowed from French machine, "machine" (EtymDB).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Persian for a station, then the Persian for a car.
 You'll want to know: اتوبوس.
 اتوبوس — otobus — "a bus".
 
+The word, taken apart.
+otobus is borrowed from French autobus, "bus" (EtymDB).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Persian for a car, then the Persian for a bus.
 
 You'll want to know: قطار.
 قطار — ghatâr — "a train".
+
+The word, taken apart.
+ghatâr is borrowed from Arabic qiṭār, "line of camels". Its Arabic root is q-ṭ-r (Lane). Lane describes camels tied one behind another; Persian moved the word to the train.
 
 What you've built.
 One more word for this chapter.

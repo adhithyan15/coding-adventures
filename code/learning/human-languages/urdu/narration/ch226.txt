@@ -12,6 +12,9 @@ Before the new one: say the Urdu for a rubber, then the Urdu for a file.
 You'll want to know: دھنیا.
 دھنیا — dhaniyā — "coriander".
 
+The word, taken apart.
+دھنیا (dhaniyā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from dhāneyaka, "coriander" (CDIAL 6776). CDIAL lists it beside dhānaka, "coriander".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Urdu for a file, then the Urdu for coriander.
 
 You'll want to know: پودینہ.
 پودینہ — pudīnā — "mint".
+
+The word, taken apart.
+پودینہ (pudīnā) is a loan, usually traced to Persian pūdina, "mint".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Urdu for coriander, then the Urdu for mint.
 You'll want to know: بینگن.
 بینگن — baiṅgan — "an aubergine".
 
+The word, taken apart.
+بینگن (baiṅgan) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from vātiṅgaṇa, "the egg-plant" (CDIAL 11503). CDIAL thinks the plant names go back to one source, perhaps Dravidian, and notes that Persian badingān came from here.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Urdu for mint, then the Urdu for an aubergine.
 You'll want to know: کدو.
 کدو — kaddū — "a pumpkin".
 
+The word, taken apart.
+کدو (kaddū) is a loan, usually traced to Persian kadū, "gourd".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Urdu for an aubergine, then the Urdu for a pumpkin.
 
 You'll want to know: پالک.
 پالک — pālak — "spinach".
+
+The word, taken apart.
+پالک (pālak) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from pālakyā, "Beta bengalensis, a leaf vegetable" (CDIAL 8126).
 
 What you've built.
 One more word for this chapter.

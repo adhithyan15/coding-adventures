@@ -4,7 +4,7 @@
   "chapter": 26,
   "title": "Show It To Me: The First Transaction",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:63b0c4e301d7d4ce",
+  "sourceHash": "fnv1a64:4278b1529b7b6f47",
   "lessons": [
     {
       "id": "MW-C21-hear-ye",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d171aaed86471e4f",
+      "sourceHash": "fnv1a64:89767f5f82eb67bd",
       "notice": null,
       "blocks": [
         {
@@ -73,6 +73,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "CDIAL lists Hindi yah, \"this\", under Sanskrit eṣa, \"this\" (CDIAL 2530). It gives no Marwari form, so the exact path to ye is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -119,7 +130,7 @@
         "sight-cue",
         "eyes-or-hands-step"
       ],
-      "sourceHash": "fnv1a64:9e644a6745d47ccc",
+      "sourceHash": "fnv1a64:7158ce756f91cc46",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -168,6 +179,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "CDIAL lists Hindi yah, \"this\", under Sanskrit eṣa, \"this\" (CDIAL 2530). It gives no Marwari form, so the exact path to ये (ye) is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -178,7 +200,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -223,7 +245,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0bec016613191b2a",
+      "sourceHash": "fnv1a64:963ac739e5f70f6c",
       "notice": null,
       "blocks": [
         {
@@ -282,6 +304,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "dikhāvo, \"show\", is the causing form of the verb \"to see\". CDIAL lists Marwari dekhṇo, \"to see\", and Old Marwari dikhāṛaï under dṛkṣati, \"sees\", and its variant dekṣati, present stems it reconstructs from Sanskrit (CDIAL 6507)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -438,7 +471,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e60f02a86078e25a",
+      "sourceHash": "fnv1a64:006e747a52550439",
       "notice": null,
       "blocks": [
         {
@@ -484,6 +517,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "दिखावो (dikhāvo), \"show\", is the causing form of the verb \"to see\". CDIAL lists Marwari dekhṇo, \"to see\", and Old Marwari dikhāṛaï under dṛkṣati, \"sees\", and its variant dekṣati, present stems it reconstructs from Sanskrit (CDIAL 6507)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -517,7 +561,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -667,7 +711,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5e511e020d2463d1",
+      "sourceHash": "fnv1a64:7a80b2c8124ed2c0",
       "notice": null,
       "blocks": [
         {
@@ -721,6 +765,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The phrase, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ye kapṛā dikhāvo joins three words with their own lessons: ye, \"this\", which CDIAL sets beside Hindi yah under Sanskrit eṣa (CDIAL 2530); kapṛā, \"cloth\", from Sanskrit karpaṭa, \"rag\", which CDIAL takes from Austroasiatic (CDIAL 2871); and dikhāvo, \"show\", the causing form of the verb CDIAL lists under dṛkṣati, \"sees\" (CDIAL 6507)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -766,7 +821,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:08810b144b3baff6",
+      "sourceHash": "fnv1a64:9481fbac849bbdf0",
       "notice": null,
       "blocks": [
         {
@@ -812,6 +867,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The phrase, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ये कपड़ा दिखावो (ye kapṛā dikhāvo) joins three words with their own lessons: ye, \"this\", which CDIAL sets beside Hindi yah under Sanskrit eṣa (CDIAL 2530); kapṛā, \"cloth\", from Sanskrit karpaṭa, \"rag\", which CDIAL takes from Austroasiatic (CDIAL 2871); and dikhāvo, \"show\", the causing form of the verb CDIAL lists under dṛkṣati, \"sees\" (CDIAL 6507)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -836,7 +902,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

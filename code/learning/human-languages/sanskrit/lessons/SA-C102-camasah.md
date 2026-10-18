@@ -14,7 +14,8 @@ romanization: "camasaḥ"
 concept_tag: SA-THINGS102-CAMASAH
 prerequisites: [SA-C102-sthali, SA-C102-casakah]
 sounds: []
-roots: []
+roots: [sanskrit-camasa]
+etymology_hook: "camasa ← √cam 'sip, drink' (MW): the Rigveda's wooden cup or ladle for drinking Soma"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C102-casakah]
 <!-- hl-knowledge: introduces=[SA-LEX-C102-THINGS102-03]; assesses=[] -->
 
 **चमसः** — *camasaḥ* — "a spoon".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*camasa* comes from the root √cam "sip, drink" (MW). In the Rigveda it is the wooden cup or ladle the Soma was drunk from; "spoon" is its everyday sense today.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

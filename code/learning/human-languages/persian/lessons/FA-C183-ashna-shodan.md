@@ -14,7 +14,8 @@ romanization: "âshnâ shodan"
 concept_tag: FA-VERB-ASHNA-SHODAN
 prerequisites: [FA-C183-tabrik-goftan, FA-C183-molaqat-kardan]
 sounds: []
-roots: []
+roots: [persian-ashna, persian-shudan]
+etymology_hook: "âshnâ shodan: Persian âshnâ 'acquainted' (Middle Persian āšnāg) + shodan"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C183-molaqat-kardan]
 <!-- hl-knowledge: introduces=[FA-LEX-C183-KONESH183-05]; assesses=[] -->
 
 **آشنا شدن** — *âshnâ shodan* — "to get to know, to become acquainted".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*âshnâ shodan* pairs *âshnâ*, "acquainted", with *shodan*, "to become". *âshnâ* is native, usually traced to Middle Persian *āšnāg*, "known". *shodan*, "to become", is an inherited verb; it is usually traced to Middle Persian *šudan*, "to go".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

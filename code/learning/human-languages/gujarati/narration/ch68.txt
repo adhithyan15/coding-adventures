@@ -12,6 +12,9 @@ Before the new one: say the Gujarati for a dog, then the Gujarati for a mouse.
 You'll want to know: વાઘ.
 વાઘ (vāgh) — "a tiger".
 
+The word, taken apart.
+વાઘ (vāgh) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from vyāghra, "tiger" (CDIAL 12193).
+
 What you've built.
 One more word for tiger, lion and elephant.
 
@@ -40,6 +43,9 @@ Before the new one: say the Gujarati for a mouse, then the Gujarati for a tiger.
 
 You'll want to know: સિંહ.
 સિંહ (siṃh) — "a lion". Wild lions still live in Gujarat's Gir forest.
+
+The word, taken apart.
+સિંહ (siṃh) is Sanskrit siṁha, "lion", taken over whole as a learned loan, a tatsama (CDIAL 13384). CDIAL lists the inherited Gujarati form as sīha.
 
 What you've built.
 One more word for tiger, lion and elephant.
@@ -70,6 +76,9 @@ Before the new one: say the Gujarati for a tiger, then the Gujarati for a lion.
 You'll want to know: હાથી.
 હાથી (hāthī) — "an elephant".
 
+The word, taken apart.
+હાથી (hāthī) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from hastin, "having hands; elephant" (CDIAL 14039).
+
 What you've built.
 One more word for tiger, lion and elephant.
 
@@ -99,6 +108,9 @@ Before the new one: say the Gujarati for a lion, then the Gujarati for an elepha
 You'll want to know: વાંદરો.
 વાંદરો (vā̃dro) — "a monkey".
 
+The word, taken apart.
+વાંદરો (vā̃dro) (vāṁdro) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from vānara, "monkey" (CDIAL 11515).
+
 What you've built.
 One more word for tiger, lion and elephant.
 
@@ -127,6 +139,9 @@ Before the new one: say the Gujarati for an elephant, then the Gujarati for a mo
 
 You'll want to know: સાપ.
 સાપ (sāp) — "a snake".
+
+The word, taken apart.
+સાપ (sāp) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from sarpa, "snake" (CDIAL 13271).
 
 What you've built.
 One more word for tiger, lion and elephant.

@@ -12,6 +12,9 @@ Before the new one: say the Punjabi for the sun, then the Punjabi for the moon.
 You'll want to know: ਸਮੁੰਦਰ.
 ਸਮੁੰਦਰ — samundar — "the sea".
 
+The word, taken apart.
+ਸਮੁੰਦਰ (samundar) is a semi-tatsama: Sanskrit samudra, "sea", borrowed after the old sound changes had run their course and then lightly reshaped (CDIAL 13236). Punjabi adds an n and breaks up the dr; CDIAL lists no Punjabi form.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Punjabi for the moon, then the Punjabi for the sea.
 
 You'll want to know: ਅੱਗ.
 ਅੱਗ — agg — "fire".
+
+The word, taken apart.
+ਅੱਗ (agg) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from agni, "fire" (CDIAL 55).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Punjabi for the sea, then the Punjabi for fire.
 You'll want to know: ਬਰਫ਼.
 ਬਰਫ਼ — baraf — "snow; ice".
 
+The word, taken apart.
+ਬਰਫ਼ (baraf) is a loan, usually traced to Persian barf, "snow, ice".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Punjabi for fire, then the Punjabi for snow; ice.
 You'll want to know: ਮੀਂਹ.
 ਮੀਂਹ — mīṁh — "rain".
 
+The word, taken apart.
+ਮੀਂਹ (mīṁh) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from megha, "cloud, rain" (CDIAL 10302). Punjabi kept the sense "rain".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Punjabi for snow; ice, then the Punjabi for rain.
 
 You'll want to know: ਹਵਾ.
 ਹਵਾ — havā — "wind, air".
+
+The word, taken apart.
+ਹਵਾ (havā) is a loan from Arabic hawāʾ, "air", which reached Punjabi through Persian. Its Arabic root is h-w-y (Lane).
 
 What you've built.
 One more word for this chapter.

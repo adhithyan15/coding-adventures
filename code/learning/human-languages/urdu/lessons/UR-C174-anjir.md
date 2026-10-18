@@ -14,7 +14,8 @@ romanization: "anjīr"
 concept_tag: UR-CHIZ174-ANJIR
 prerequisites: [UR-C174-chane, UR-C174-rajma]
 sounds: []
-roots: []
+roots: [persian-anjir, sanskrit-anjira]
+etymology_hook: "anjīr: usually traced to Persian anjīr 'fig'; CDIAL marks Sanskrit añjīra as itself from Persian (CDIAL 174)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C174-rajma]
 <!-- hl-knowledge: introduces=[UR-LEX-C174-CHIZ174-05]; assesses=[] -->
 
 **انجیر** — *anjīr* — "a fig".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**انجیر** (*anjīr*) is usually traced to Persian *anjīr*, "fig". CDIAL lists Hindi *añjīr* under Sanskrit *añjīra*, "fig tree", and marks that word as itself taken from Persian (CDIAL 174).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

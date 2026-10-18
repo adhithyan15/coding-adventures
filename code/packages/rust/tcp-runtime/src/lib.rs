@@ -156,7 +156,7 @@ pub struct ShardedTcpRuntime<P, S = ()> {
     mailbox: TcpMailbox,
     stop_handles: Vec<StopHandle>,
     runtimes: Vec<TcpRuntime<P, S>>,
-    /// The fan-out acceptor (macOS/BSD only).  `None` on platforms where
+    /// The fan-out acceptor (macOS/BSD and Windows).  `None` on platforms where
     /// `SO_REUSEPORT` already load-balances accepts across the per-shard listeners
     /// (Linux); there the workers accept on their own listeners and no separate
     /// acceptor is needed.  `take`n and run by [`serve`](Self::serve).
@@ -222,7 +222,7 @@ where
     pub fn serve(&mut self) -> Result<(), PlatformError> {
         // Start the fan-out acceptor (if any) first, so it is ready to distribute
         // connections the instant the workers begin serving.  Each worker reactor
-        // serves on its own thread; the acceptor (macOS/BSD) runs on one more.
+        // serves on its own thread; the acceptor (macOS/BSD, Windows) runs on one more.
         let acceptor = self.acceptor.take().and_then(FanoutAcceptor::spawn);
 
         let runtimes = std::mem::take(&mut self.runtimes);
@@ -258,13 +258,16 @@ where
     }
 }
 
-/// The macOS/BSD accept fan-out: a single listener whose accepted connections are
-/// round-robined to the worker reactors.  Plain `SO_REUSEPORT` does not
-/// load-balance on Darwin/BSD (it delivers every connection to one socket), so
-/// instead one acceptor owns the listener and hands each accepted socket to a
-/// worker via [`StreamMailbox::adopt_connection`].  On Linux the kernel already
-/// balances the reuseport group, so this is unused there.
-#[cfg_attr(not(unix), allow(dead_code))]
+/// The accept fan-out (macOS/BSD and Windows): a single listener whose accepted
+/// connections are round-robined to the worker reactors.  Plain `SO_REUSEPORT`
+/// does not load-balance on Darwin/BSD (it delivers every connection to one
+/// socket), and Windows has no load-balancing reuseport at all (its
+/// `SO_REUSEADDR` lets a second socket *steal* the port, which the Windows
+/// provider rightly refuses).  So one acceptor owns the listener and hands
+/// each accepted socket to a worker via [`StreamMailbox::adopt_connection`].
+/// On Linux the kernel already balances the reuseport group, so this is
+/// unused there.
+#[cfg_attr(not(any(unix, windows)), allow(dead_code))]
 struct FanoutAcceptor {
     /// The single listener clients connect to (set non-blocking so the loop can
     /// poll the stop flag).
@@ -276,31 +279,22 @@ struct FanoutAcceptor {
 }
 
 impl FanoutAcceptor {
-    /// Spawn the accept-and-distribute loop on its own thread.  Returns `None` on
-    /// non-Unix targets (where the fan-out is never constructed).
-    #[cfg(unix)]
+    /// Spawn the accept-and-distribute loop on its own thread.
     fn spawn(self) -> Option<thread::JoinHandle<()>> {
         Some(thread::spawn(move || self.run()))
     }
 
-    #[cfg(not(unix))]
-    fn spawn(self) -> Option<thread::JoinHandle<()>> {
-        None
-    }
-
-    #[cfg(unix)]
     fn run(self) {
-        use std::os::fd::OwnedFd;
-
         let worker_count = self.mailboxes.len().max(1);
         let mut next = 0usize;
         while !self.stop.load(Ordering::SeqCst) {
             match self.listener.accept() {
                 Ok((stream, peer_addr)) => {
                     // Transfer the accepted socket to the next worker (round-robin).
-                    // `adopt_connection` wakes that reactor, which adopts the fd and
-                    // serves it.  `AdoptableFd` is `OwnedFd` on Unix.
-                    let fd = OwnedFd::from(stream);
+                    // `adopt_connection` wakes that reactor, which adopts the socket
+                    // and serves it.  `AdoptableFd` is `OwnedFd` on Unix and
+                    // `OwnedSocket` on Windows; both convert from a `TcpStream`.
+                    let fd = transport_platform::AdoptableFd::from(stream);
                     self.mailboxes[next % worker_count].adopt_connection(fd, peer_addr);
                     next = next.wrapping_add(1);
                 }
@@ -310,8 +304,27 @@ impl FanoutAcceptor {
                 Err(error) if error.kind() == std::io::ErrorKind::WouldBlock => {
                     thread::sleep(std::time::Duration::from_millis(1));
                 }
-                // Listener error (e.g. closed on shutdown): stop accepting.
-                Err(_) => break,
+                // Everything else is about *one* connection or a passing shortage,
+                // never about the listener, so the loop must survive it.  This
+                // acceptor is the only way in for a fan-out runtime: a `break`
+                // here would leave the workers running and every later client
+                // unanswered, and any remote peer can provoke these errors
+                // (connect, then reset before the accept: ECONNABORTED on
+                // Unix, WSAECONNRESET on Windows).  Out of descriptors or
+                // buffers (EMFILE, ENFILE, ENOBUFS) clears as connections close,
+                // so back off a little longer instead of spinning.  Shutdown is
+                // signalled by `stop`, which the loop condition checks.
+                Err(error) => {
+                    let pause = match error.kind() {
+                        std::io::ErrorKind::ConnectionAborted
+                        | std::io::ErrorKind::ConnectionReset
+                        | std::io::ErrorKind::Interrupted => 0,
+                        _ => 10,
+                    };
+                    if pause > 0 {
+                        thread::sleep(std::time::Duration::from_millis(pause));
+                    }
+                }
             }
         }
     }
@@ -573,16 +586,18 @@ where
     > = Arc::new(handler);
     let on_close: Arc<dyn Fn(TcpConnectionInfo, S) + Send + Sync> = Arc::new(on_close);
 
-    // macOS/BSD: plain `SO_REUSEPORT` does not load-balance accepts, so instead of
-    // N reuseport listeners we use an explicit acceptor fan-out — one listener
-    // distributing accepted sockets to the workers.  (Linux's reuseport does
-    // balance, so it keeps the simpler N-listener path below.)
+    // macOS/BSD: plain `SO_REUSEPORT` does not load-balance accepts; Windows has
+    // no reuseport at all.  So instead of N reuseport listeners we use an
+    // explicit acceptor fan-out — one listener distributing accepted sockets to
+    // the workers.  (Linux's reuseport does balance, so it keeps the simpler
+    // N-listener path below.)
     #[cfg(any(
         target_os = "macos",
         target_os = "freebsd",
         target_os = "openbsd",
         target_os = "netbsd",
-        target_os = "dragonfly"
+        target_os = "dragonfly",
+        target_os = "windows"
     ))]
     {
         if worker_count > 1 {
@@ -655,20 +670,22 @@ where
     })
 }
 
-/// Build a sharded runtime using an explicit **accept fan-out** (macOS/BSD).
+/// Build a sharded runtime using an explicit **accept fan-out** (macOS/BSD, Windows).
 ///
 /// The worker reactors bind throwaway loopback listeners — they never accept real
 /// traffic, they only *serve* connections handed to them by adoption — while a
 /// single [`FanoutAcceptor`] owns the client-facing listener and round-robins each
 /// accepted socket to a worker via `adopt_connection`.  This is what makes the
 /// runtime actually scale across cores on Darwin/BSD, where plain `SO_REUSEPORT`
-/// would deliver every connection to one socket.
+/// would deliver every connection to one socket, and what makes it work at all
+/// on Windows, which has no load-balancing reuseport.
 #[cfg(any(
     target_os = "macos",
     target_os = "freebsd",
     target_os = "openbsd",
     target_os = "netbsd",
-    target_os = "dragonfly"
+    target_os = "dragonfly",
+    target_os = "windows"
 ))]
 #[allow(clippy::too_many_arguments, clippy::type_complexity)]
 fn build_fanout_runtime<P, S>(
@@ -686,12 +703,17 @@ where
     S: Send + 'static,
 {
     // Workers don't accept client traffic.  They still bind a listener (the
-    // constructor requires one), but `accept_connections = false` means they never
-    // enable accept interest on it — so a direct connect to a worker's throwaway
-    // loopback port is left in the kernel backlog, never served, and can't be used
-    // to bypass the acceptor.  reuse_port is irrelevant (each is a separate port).
+    // constructor requires one), but `accept_connections = false` makes the
+    // reactor switch its accept interest off and ignore its accept readiness —
+    // so a direct connect to a worker's throwaway loopback port is never served
+    // and can't be used to bypass the acceptor.  reuse_port is irrelevant (each
+    // is a separate port).
     options.listener.reuse_port = false;
     options.accept_connections = false;
+    // The smallest backlog: nothing should ever wait on these listeners, and on
+    // Windows the backlog also sets how many AcceptEx operations the IOCP
+    // provider pre-posts at bind (before interest is switched off).
+    options.listener.backlog = 1;
     let throwaway: SocketAddr = "127.0.0.1:0".parse().expect("valid loopback address");
 
     let mut runtimes = Vec::with_capacity(worker_count);
@@ -1220,6 +1242,75 @@ mod windows_tests {
             "connect client before deadline: {:?}",
             last_error.expect("last transient connect error")
         );
+    }
+
+    #[test]
+    fn sharded_runtime_spreads_connections_across_shards_through_the_fanout() {
+        // Windows has no load-balancing SO_REUSEPORT (the provider refuses it),
+        // so a multi-worker runtime used to fail at bind.  It now uses the same
+        // accept fan-out as macOS/BSD: one std listener accepts and hands each
+        // socket to a worker, whose IOCP provider adopts it.  Each ConnectionId
+        // carries its shard in its low bits, so the handler records which worker
+        // served it; every client must get its echo, and more than one shard
+        // must have been used.
+        use std::sync::Mutex;
+
+        let worker_count = 3usize;
+        let shard_mask = (1u64 << shard_bits_for(worker_count)) - 1;
+        let shards_seen = Arc::new(Mutex::new(std::collections::BTreeSet::<u64>::new()));
+        let shards_in_handler = Arc::clone(&shards_seen);
+        let mut runtime = TcpRuntime::bind_windows_sharded(
+            ("127.0.0.1", 0),
+            TcpRuntimeOptions::default(),
+            worker_count,
+            move |info, bytes| {
+                shards_in_handler
+                    .lock()
+                    .expect("shards mutex poisoned")
+                    .insert(info.id.0 & shard_mask);
+                TcpHandlerResult::write(bytes.to_vec())
+            },
+        )
+        .expect("bind sharded runtime");
+        assert_eq!(runtime.worker_count(), worker_count);
+        let addr = runtime.local_addr();
+        let stop = runtime.stop_handle();
+        let server = thread::spawn(move || runtime.serve());
+
+        let client_count = 12usize;
+        let mut clients = Vec::new();
+        for i in 0..client_count {
+            // Retry briefly while the acceptor and reactors come up.
+            let mut stream = None;
+            for _ in 0..200 {
+                if let Ok(s) = TcpStream::connect(addr) {
+                    stream = Some(s);
+                    break;
+                }
+                thread::sleep(Duration::from_millis(5));
+            }
+            let mut stream = stream.expect("connect to sharded runtime");
+            stream
+                .set_read_timeout(Some(Duration::from_secs(5)))
+                .expect("read timeout");
+            let payload = (i as u32).to_le_bytes();
+            stream.write_all(&payload).expect("write payload");
+            let mut echoed = [0u8; 4];
+            stream.read_exact(&mut echoed).expect("read echo");
+            assert_eq!(echoed, payload, "echo mismatch for client {i}");
+            clients.push(stream);
+        }
+
+        let distinct = shards_seen.lock().expect("shards mutex poisoned").len();
+        assert!(
+            distinct >= 2,
+            "connections should spread across shards, but all landed on {distinct} shard(s)"
+        );
+
+        drop(clients);
+        stop.stop();
+        let result = server.join().expect("server thread");
+        assert!(result.is_ok(), "server should exit cleanly: {result:?}");
     }
 }
 

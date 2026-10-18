@@ -14,7 +14,8 @@ romanization: "bā̃dro"
 concept_tag: MW-ANIMALS72-BADRO
 prerequisites: [MW-C71-nahar, MW-C71-hathi]
 sounds: []
-roots: []
+roots: [sanskrit-vanara]
+etymology_hook: "bā̃dro ← Sanskrit vānara 'monkey', a tadbhava (CDIAL 11515, Marwari row)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C71-hathi]
 <!-- hl-knowledge: introduces=[MW-LEX-C72-ANIMALS72-01]; assesses=[] -->
 
 **बांदरो** — *bā̃dro* — "a monkey".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**बांदरो** (*bā̃dro*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *vānara*, "monkey". CDIAL lists Marwari *bā̃dro* under it (CDIAL 11515).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

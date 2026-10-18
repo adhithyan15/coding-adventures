@@ -14,7 +14,8 @@ romanization: "miz"
 concept_tag: FA-HOME45-MIZ
 prerequisites: [FA-C45-panjere, FA-C45-sandali]
 sounds: []
-roots: []
+roots: [persian-miz]
+etymology_hook: "miz ← Middle Persian mēzd (EtymDB); inherited, native Iranian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C45-sandali]
 <!-- hl-knowledge: introduces=[FA-LEX-C45-HOME45-05]; assesses=[] -->
 
 **میز** — *miz* — "a table".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*miz* is a native Persian word, inherited rather than borrowed: it continues Middle Persian *mēzd*, "offering, ritual meal" (EtymDB). The word for a ritual meal is usually said to have come to mean the table it was served on.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

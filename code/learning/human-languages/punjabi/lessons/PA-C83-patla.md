@@ -14,7 +14,8 @@ romanization: "patlā"
 concept_tag: PA-ADJ83-PATLA
 prerequisites: [PA-C82-mittha, PA-C82-mota]
 sounds: []
-roots: []
+roots: [sanskrit-pattrala]
+etymology_hook: "patlā: CDIAL marks it as taken from Hindi patlā, from pattrala 'leafy', so 'leaf-like, thin' (CDIAL 7736)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C82-mota]
 <!-- hl-knowledge: introduces=[PA-LEX-C83-ADJ83-01]; assesses=[] -->
 
 **ਪਤਲਾ** — *patlā* — "thin".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਪਤਲਾ** (*patlā*) came into Punjabi from Hindi. CDIAL lists Hindi *patlā*, "thin, weak", under Sanskrit *pattrala*, "leafy", and so "leaf-like, thin", and marks the Punjabi word as taken from it (CDIAL 7736).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

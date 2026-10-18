@@ -4,7 +4,7 @@
   "chapter": 46,
   "title": "When the Verb Steps to the Front",
   "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:5951b7a42713cbe9",
+  "sourceHash": "fnv1a64:8e76feb423bb2627",
   "lessons": [
     {
       "id": "GE-C33-ja-nein-frage",
@@ -706,7 +706,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e509daf9e643045e",
+      "sourceHash": "fnv1a64:ff10aac555b05d21",
       "notice": null,
       "blocks": [
         {
@@ -765,7 +765,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "warum is two words that stopped being two. The first half, war-, is an old shape of was; the second, -um, is the ordinary German um, \"about\". About what."
+              "text": "warum is two words that stopped being two. It is Old High German wār umbe (EtymDB 2.1): war- is the old form of wo, \"where\", here meaning \"what\"; -um is um, \"about\". About what."
             },
             {
               "kind": "speech",
@@ -773,7 +773,7 @@
             },
             {
               "kind": "speech",
-              "text": "So both languages fused a question word to a small preposition, and both ended up with a why that once meant about what or for what. German's fusion went further and hid the seam; English's is still visible, which is why wherefore looks quaint and warum looks like a single word."
+              "text": "So both languages fused a question word to a small preposition, and both ended up with a why that once meant about what or for what. German's fusion went further and hid the seam; English's is still visible."
             }
           ]
         },
@@ -857,7 +857,7 @@
             },
             {
               "kind": "speech",
-              "text": "Which syllable of warum is stressed? (The second — va-ROOM.) What two words are welded inside it? (An old was and um, \"about\".) Which English word was built the same way? (Wherefore — where plus for.) Say all six W-words. Next: the chapter, run cold."
+              "text": "Which syllable of warum is stressed? (The second — va-ROOM.) What two words are welded inside it? (An old wo, \"where\", and um, \"about\".) Which English word was built the same way? (Wherefore — where plus for.) Say all six W-words. Next: the chapter, run cold."
             }
           ]
         }
@@ -876,7 +876,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:da03ff39c3c6ff9e",
+      "sourceHash": "fnv1a64:9e96c349bc1693a8",
       "notice": null,
       "blocks": [
         {
@@ -1046,7 +1046,7 @@
             },
             {
               "kind": "speech",
-              "text": "What turns a statement into a yes-or-no question? (The verb moves to first place.) What does a command leave out? (The pronoun.) Which sound law lines German w- up with English wh-? (Grimm's.) And which of the six W-words is two words welded together? (Warum — an old was plus um.)"
+              "text": "What turns a statement into a yes-or-no question? (The verb moves to first place.) What does a command leave out? (The pronoun.) Which sound law lines German w- up with English wh-? (Grimm's.) And which of the six W-words is two words welded together? (Warum — an old wo plus um.)"
             }
           ]
         }

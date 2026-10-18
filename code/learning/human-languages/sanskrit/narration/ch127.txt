@@ -12,6 +12,9 @@ Before the new one: say the Sanskrit for wet, then the Sanskrit for dry.
 You'll want to know: दरिद्रः.
 दरिद्रः — daridraḥ — "poor".
 
+The word, taken apart.
+daridra comes from the intensive of the root √drā "run" (MW; CDIAL 6195): in the Vedas it means "roving, strolling", and later "poor, needy". Punjabi kept it as dariddar "poverty" (CDIAL 6195).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Sanskrit for dry, then the Sanskrit for poor.
 
 You'll want to know: धनिकः.
 धनिकः — dhanikaḥ — "rich".
+
+The word, taken apart.
+dhanika is built from dhana "wealth" with the suffix -ika "having": "a rich man" (MW). In the Rigveda dhana means the prize of a contest, and then property and wealth (CDIAL 6717); Hindi dhan "wealth" is the same word.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Sanskrit for poor, then the Sanskrit for rich.
 You'll want to know: तरुणः.
 तरुणः — taruṇaḥ — "young".
 
+The word, taken apart.
+taruṇa "young, tender" is old, in the Rigveda, and is inherited from Indo-European: Greek terēn "tender" is a cousin (EtymDB). It lives on as Hindi tarun "a youth" (CDIAL 5712).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Sanskrit for rich, then the Sanskrit for young.
 You'll want to know: प्रसिद्धः.
 प्रसिद्धः — prasiddhaḥ — "famous".
 
+The word, taken apart.
+prasiddha is the past participle of pra-√sidh "be accomplished, be made clear", the root √sidh "succeed" with pra "forth" (MW; CDIAL 8842): "brought about", then "well known, famous".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Sanskrit for young, then the Sanskrit for famous.
 
 You'll want to know: सुरक्षितः.
 सुरक्षितः — surakṣitaḥ — "safe".
+
+The word, taken apart.
+surakṣita is built from su "well" and rakṣita "protected", from the root √rakṣ "protect, guard" (CDIAL 13499): "well protected", so "safe" (MW).
 
 What you've built.
 One more word for this chapter.

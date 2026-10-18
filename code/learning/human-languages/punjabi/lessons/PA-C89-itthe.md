@@ -14,7 +14,8 @@ romanization: "itthe"
 concept_tag: PA-PLACE89-ITTHE
 prerequisites: [PA-C89-sahmane, PA-C89-pichchhe]
 sounds: []
-roots: []
+roots: [sanskrit-ittham]
+etymology_hook: "itthe: inherited; CDIAL lists Punjabi itthe 'here' under Sanskrit ittham 'thus' (CDIAL 1564)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C89-pichchhe]
 <!-- hl-knowledge: introduces=[PA-LEX-C89-PLACE89-03]; assesses=[] -->
 
 **ਇੱਥੇ** — *itthe* — "here".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਇੱਥੇ** (*itthe*) is inherited: CDIAL lists it under Sanskrit *ittham*, "thus" (CDIAL 1564).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

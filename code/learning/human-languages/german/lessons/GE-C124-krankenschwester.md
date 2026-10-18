@@ -46,7 +46,7 @@ reviews_of: [GE-C124-joghurt]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**Krankenschwester** is *krank*, "ill", + *Schwester*, "sister": the sister who tends the sick, a title from nursing orders.
+**Krankenschwester** is *krank*, "ill", + *Schwester*, "sister": the sister who tends the sick, a title from nursing orders. *Schwester* ← Proto-Germanic *\*swestēr* (EtymDB 2.1), the same word as English *sister*; *krank* ← Old High German *krank*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "sapp"
 concept_tag: PA-ANIMALS79-SAPP
 prerequisites: [PA-C78-hathi, PA-C78-bandar]
 sounds: []
-roots: []
+roots: [sanskrit-sarpa]
+etymology_hook: "sapp ← Sanskrit sarpa 'snake', a tadbhava (CDIAL 13271)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C78-bandar]
 <!-- hl-knowledge: introduces=[PA-LEX-C79-ANIMALS79-01]; assesses=[] -->
 
 **ਸੱਪ** — *sapp* — "a snake".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਸੱਪ** (*sapp*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *sarpa*, "snake" (CDIAL 13271).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

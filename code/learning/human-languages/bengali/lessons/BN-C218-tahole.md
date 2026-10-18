@@ -14,7 +14,8 @@ romanization: "tāhôle"
 concept_tag: BN-KARON218-TAHOLE
 prerequisites: [BN-C218-jmon, BN-C218-jate]
 sounds: []
-roots: []
+roots: [sanskrit-ta, sanskrit-bhavati]
+etymology_hook: "tāhôle: tā 'that' (CDIAL 5612) + hôle 'if it is' ← bhavati (CDIAL 9416)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C218-jate]
 <!-- hl-knowledge: introduces=[BN-LEX-C218-KARON218-04]; assesses=[] -->
 
 **তাহলে** — *tāhôle* — "then, in that case".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**তাহলে** (*tāhôle*) is *tā*, "that", listed under the Sanskrit pronoun base *ta-* (CDIAL 5612), + *hôle*, "if it is", from *hôoyā*, "to be", from Sanskrit *bhavati* (CDIAL 9416): "if that is so".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

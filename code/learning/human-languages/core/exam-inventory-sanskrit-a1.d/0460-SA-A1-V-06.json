@@ -1,0 +1,24 @@
+{
+  "id": "SA-A1-V-06",
+  "category": "Dhātu and kriyāpada — the verb",
+  "label": "past tense",
+  "probe": [
+    "SA-GRAMMAR-PAST-AUGMENT-01",
+    "SA-GRAMMAR-PAST-PATTERN-01"
+  ],
+  "anchorIds": [
+    "ES-A1-PROXY",
+    "SA-CORPUS",
+    "ED-SANSKRIT"
+  ],
+  "derivedFrom": [
+    "A1-V-04",
+    "A1-V-05",
+    "A1-V-06",
+    "A1-V-07",
+    "A1-V-08",
+    "A1-V-09",
+    "A1-V-10"
+  ],
+  "note": "Closed by SA-C56-agacchat and SA-C56-apathat: the imperfect, taught as two changes to a present a learner already says -- the augment on the front and the shortened ending at the back. The other past tenses of the classical language remain untaught and are named as such on the page."
+}

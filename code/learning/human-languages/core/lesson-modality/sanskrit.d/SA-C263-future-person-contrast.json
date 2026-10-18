@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C263-future-person-contrast",
+    "language": "sanskrit",
+    "chapter": 263,
+    "sequence": 15630,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e2b6bbe5c5a0c07b"
+  },
+  "findings": []
+}

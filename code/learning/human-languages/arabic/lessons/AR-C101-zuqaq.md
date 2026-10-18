@@ -14,7 +14,8 @@ romanization: "zuqāq"
 concept_tag: AR-LOC101-ZUQAQ
 prerequisites: [AR-C100-mina, AR-C101-hayy, AR-C01-al]
 sounds: []
-roots: []
+roots: [z-q-q]
+etymology_hook: "zuqāq: an old native noun Lane files under z-q-q; Lane's zuqāq is a by-street narrower than a sikka"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [AR-C101-hayy]
 <!-- hl-knowledge: introduces=[AR-LEX-C101-LOC101-02]; assesses=[] -->
 
 **زقاق** — *zuqāq* — "an alley".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**زقاق** (*zuqāq*), "a lane, a narrow street", is an old native noun, filed under the root *z-q-q* (Lane). Lane's *zuqāq* is a by-street narrower than a *sikka*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

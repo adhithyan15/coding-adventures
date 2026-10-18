@@ -6,7 +6,7 @@ sequence: 1195
 chapter: 78
 type: grammar
 headword: las casas
-gloss: "the houses" — the plural article, which does exactly what the noun does
+gloss: '"the houses" — the plural article, which does exactly what the noun does'
 concept_tag: ES-GRAMMAR-DEFINITE-PLURAL-FEMININE
 prerequisites: [ES-C43-comida, ES-C01-dia, ES-C02-concordancia, ES-C10-futuro-simple]
 sounds: [s-final]

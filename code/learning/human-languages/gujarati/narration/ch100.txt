@@ -12,6 +12,9 @@ Before the new one: say the Gujarati for every, then the Gujarati for someone.
 You'll want to know: કંઈક.
 કંઈક (kaīk) — "something".
 
+The word, taken apart.
+કંઈક (kaīk) is kaī, "several", with ek, "one". CDIAL lists Gujarati kaīk, "some", under Sanskrit katipaya, "several" (CDIAL 2696).
+
 What you've built.
 One more word for this chapter.
 
@@ -41,6 +44,9 @@ Before the new one: say the Gujarati for someone, then the Gujarati for somethin
 You'll want to know: કશું.
 કશું (kaśũ) — "anything".
 
+The word, taken apart.
+The origin of કશું (kaśũ) is not settled. CDIAL, searched by form and by meaning, has no entry for it.
+
 What you've built.
 One more word for this chapter.
 
@@ -69,6 +75,9 @@ Before the new one: say the Gujarati for something, then the Gujarati for anythi
 
 You'll want to know: પોતે.
 પોતે (pote) — "oneself".
+
+The word, taken apart.
+The origin of પોતે (pote) is not settled. CDIAL, searched by form and by meaning, has no entry for it.
 
 What you've built.
 One more word for this chapter.
@@ -101,6 +110,9 @@ Say "I speak Gujarati." (Hũ gujarātī bolũ chhũ.)
 You'll want to know: પોતાનું.
 પોતાનું (potānũ) — "one's own".
 
+The word, taken apart.
+પોતાનું (potānũ) is built on pote, "oneself". The origin of that word is not settled: CDIAL, searched by form and by meaning, has no entry for it.
+
 What you've built.
 One more word for this chapter.
 
@@ -129,6 +141,9 @@ Before the new one: say the Gujarati for oneself, then the Gujarati for one's ow
 
 You'll want to know: બંને.
 બંને (banne) — "both".
+
+The word, taken apart.
+બંને (banne) appears to be built on be, "two", which CDIAL lists under Sanskrit dva, "two" (CDIAL 6648). CDIAL has no entry for બંને (banne) itself, so the rest of its history is not settled.
 
 What you've built.
 One more word for this chapter.

@@ -4,7 +4,7 @@
   "chapter": 70,
   "title": "Hand, Foot, Hair, Tooth, Throat",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:eceb57e5ab29a931",
+  "sourceHash": "fnv1a64:ff233b4503670ec9",
   "lessons": [
     {
       "id": "MR-C70-hat",
@@ -153,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d98863cc8599f6c4",
+      "sourceHash": "fnv1a64:ba7a160730d7c727",
       "notice": null,
       "blocks": [
         {

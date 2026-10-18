@@ -14,7 +14,8 @@ romanization: "shbāmi"
 concept_tag: BN-FAMILY47-SHBAMI
 prerequisites: [BN-C46-mashi, BN-C47-pishi]
 sounds: []
-roots: []
+roots: [sanskrit-svamin]
+etymology_hook: "shbāmi ← Sanskrit svāmin 'owner, master, husband', a tatsama; CDIAL lists inherited sāṁi 'master' (CDIAL 13930)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C47-pishi]
 <!-- hl-knowledge: introduces=[BN-LEX-C47-FAMILY47-02]; assesses=[] -->
 
 **স্বামী** — *shbāmi* — "a husband".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**স্বামী** (*shbāmi*) is Sanskrit *svāmin*, "owner, master; husband", taken over whole as a learned loan, a tatsama (CDIAL 13930). The word inherited from it is *sāṁi*, "master", which CDIAL lists.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

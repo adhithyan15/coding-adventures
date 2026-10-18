@@ -1,7 +1,7 @@
 {
   "language": "marwadi",
   "chapter": 126,
-  "sourceHash": "fnv1a64:1aa647366edecba1",
+  "sourceHash": "fnv1a64:1d908791f6a803fb",
   "lessonIds": [
     "MW-C126-koylo",
     "MW-C126-chhano",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "marwadi/narration/ch126.txt",
   "json": "marwadi/narration/ch126.json",
-  "textHash": "fnv1a64:25fe1a9339033b41",
-  "jsonHash": "fnv1a64:e8495e1549f68304",
+  "textHash": "fnv1a64:eb754d4ab0319637",
+  "jsonHash": "fnv1a64:964326377bb25a0c",
   "findings": []
 }

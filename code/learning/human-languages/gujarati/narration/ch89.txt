@@ -12,6 +12,9 @@ Before the new one: say the Gujarati for a letter, then the Gujarati for a gift.
 You'll want to know: વિદ્યાર્થી.
 વિદ્યાર્થી (vidyārthī) — "a student". Built on વિદ્યા, learning.
 
+The word, taken apart.
+વિદ્યાર્થી (vidyārthī) is a Sanskrit compound, taken over whole as a learned loan, a tatsama: vidyā, "knowledge", and arthin, "seeking". A student is one who seeks knowledge.
+
 What you've built.
 One more word for questions and answers.
 
@@ -40,6 +43,9 @@ Before the new one: say the Gujarati for a gift, then the Gujarati for a student
 
 You'll want to know: પ્રશ્ન.
 પ્રશ્ન (praśna) — "a question".
+
+The word, taken apart.
+પ્રશ્ન (praśna) is Sanskrit praśna, "question, astrological inquiry into the future", taken over whole as a learned loan, a tatsama (CDIAL 8818).
 
 What you've built.
 One more word for questions and answers.
@@ -70,6 +76,9 @@ Before the new one: say the Gujarati for a student, then the Gujarati for a ques
 You'll want to know: જવાબ.
 જવાબ (javāb) — "an answer".
 
+The word, taken apart.
+જવાબ (javāb) is a loan from Arabic jawāb, "an answer", which reached Gujarati through Persian. Its Arabic root is j-w-b (Lane).
+
 What you've built.
 One more word for questions and answers.
 
@@ -99,6 +108,9 @@ Before the new one: say the Gujarati for a question, then the Gujarati for an an
 You'll want to know: ભણવું.
 ભણવું (bhaṇvũ) — "to study".
 
+The word, taken apart.
+ભણવું (bhaṇvũ) is a tadbhava of Sanskrit bhaṇati, "calls aloud, speaks" (CDIAL 9383). CDIAL lists the Gujarati verb with the senses "to say, repeat, study", and notes that a Munda origin has also been proposed for the verb.
+
 What you've built.
 One more word for questions and answers.
 
@@ -127,6 +139,9 @@ Before the new one: say the Gujarati for an answer, then the Gujarati for to stu
 
 You'll want to know: શીખવવું.
 શીખવવું (śīkhavvũ) — "to teach". The causative of શીખવું, to learn.
+
+The word, taken apart.
+શીખવવું (śīkhavvũ) is the causing form of śīkhvũ, "to learn": to teach is to make someone learn. CDIAL lists both under Sanskrit śikṣate, "learns" (CDIAL 12430).
 
 What you've built.
 One more word for questions and answers.

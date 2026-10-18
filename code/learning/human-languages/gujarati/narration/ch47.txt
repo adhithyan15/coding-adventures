@@ -12,6 +12,9 @@ Before the new one: say the Gujarati for a tooth, then the Gujarati for hair.
 You'll want to know: આંગળી.
 આંગળી (ā̃gaḷī) — "a finger". Five on each હાથ.
 
+The word, taken apart.
+આંગળી (ā̃gaḷī) (āṁgaḷī) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from aṅguli, "finger, toe" (CDIAL 135).
+
 What you've built.
 One more word for finger, throat and tongue.
 
@@ -40,6 +43,9 @@ Before the new one: say the Gujarati for hair, then the Gujarati for a finger.
 
 You'll want to know: ગળું.
 ગળું (gaḷũ) — "the throat, the neck".
+
+The word, taken apart.
+ગળું (gaḷũ) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from gala, "throat, neck" (CDIAL 4070).
 
 What you've built.
 One more word for finger, throat and tongue.
@@ -70,6 +76,9 @@ Before the new one: say the Gujarati for a finger, then the Gujarati for the thr
 You'll want to know: ખભો.
 ખભો (khabho) — "a shoulder".
 
+The word, taken apart.
+CDIAL lists ખભો (khabho) under a reconstructed khavaka, "shoulder-blade", and asks whether it was crossed with skambha, "shoulder-blade, wing" (CDIAL 3852, 13640).
+
 What you've built.
 One more word for finger, throat and tongue.
 
@@ -99,6 +108,9 @@ Before the new one: say the Gujarati for the throat, then the Gujarati for a sho
 You'll want to know: હોઠ.
 હોઠ (hoṭh) — "a lip, the lips".
 
+The word, taken apart.
+હોઠ (hoṭh) is a tadbhava of Sanskrit oṣṭha, "lip" (CDIAL 2563). Its h- may come from a compound adhaoṣṭha, "lower lip", which K. R. Norman suggested and CDIAL records (CDIAL 245a).
+
 What you've built.
 One more word for finger, throat and tongue.
 
@@ -127,6 +139,9 @@ Before the new one: say the Gujarati for a shoulder, then the Gujarati for a lip
 
 You'll want to know: જીભ.
 જીભ (jībh) — "the tongue".
+
+The word, taken apart.
+જીભ (jībh) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from jihvā, "tongue" (CDIAL 5228).
 
 What you've built.
 One more word for finger, throat and tongue.

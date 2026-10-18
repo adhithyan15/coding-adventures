@@ -12,6 +12,9 @@ Before the new one: say the Marwadi for a fan, then the Marwadi for a key.
 You'll want to know: प्यालो.
 प्यालो — pyālo — "a cup".
 
+The word, taken apart.
+प्यालो (pyālo) is a loan, usually traced to Persian piyāla, "cup".
+
 What you've built.
 One more word for this chapter.
 
@@ -42,6 +45,9 @@ Before the new one: say the Marwadi for a key, then the Marwadi for a cup.
 
 You'll want to know: थाळी.
 थाळी — thāḷī — "a plate".
+
+The word, taken apart.
+थाळी (thāḷī) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from sthālī, "earthen dish". CDIAL lists Old Marwari thālī under it (CDIAL 13766).
 
 What you've built.
 One more word for this chapter.
@@ -74,6 +80,9 @@ Before the new one: say the Marwadi for a cup, then the Marwadi for a plate.
 You'll want to know: चमचो.
 चमचो — chamcho — "a spoon".
 
+The word, taken apart.
+चमचो (chamcho) is a loan, usually traced to Persian čamča, "spoon, ladle". Persian took the word from a Turkic language.
+
 What you've built.
 One more word for this chapter.
 
@@ -105,6 +114,9 @@ Before the new one: say the Marwadi for a plate, then the Marwadi for a spoon.
 You'll want to know: छुरी.
 छुरी — chhurī — "a knife".
 
+The word, taken apart.
+छुरी (chhurī) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from kṣurī, "knife, dagger". CDIAL gives no Marwari form in this entry (CDIAL 3727); the match is through Hindi churī. It is built on kṣura, "razor".
+
 What you've built.
 One more word for this chapter.
 
@@ -135,6 +147,9 @@ Before the new one: say the Marwadi for a spoon, then the Marwadi for a knife.
 
 You'll want to know: बोतल.
 बोतल — botal — "a bottle".
+
+The word, taken apart.
+बोतल (botal) is usually traced to English bottle, or to Portuguese botelha; CDIAL has no entry for it.
 
 What you've built.
 One more word for this chapter.

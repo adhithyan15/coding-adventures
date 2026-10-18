@@ -15,6 +15,7 @@ concept_tag: FA-THINGS120-KAPSHAN
 prerequisites: [FA-C119-dastband, FA-C119-keravat]
 sounds: []
 roots: []
+etymology_hook: "kâpshan: origin not settled"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C119-keravat]
 <!-- hl-knowledge: introduces=[FA-LEX-C120-THINGS120-01]; assesses=[] -->
 
 **کاپشن** — *kâpshan* — "a jacket".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*kâpshan* is the word for a jacket, but no source used here gives its origin, which is not settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

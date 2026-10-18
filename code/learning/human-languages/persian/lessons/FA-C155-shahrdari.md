@@ -14,7 +14,8 @@ romanization: "shahrdâri"
 concept_tag: FA-MAKAN155-SHAHRDARI
 prerequisites: [FA-C155-dabirestan, FA-C155-kalantari]
 sounds: []
-roots: []
+roots: [persian-shahr, persian-dar-holder]
+etymology_hook: "shahrdâri: Persian shahr 'city' (EtymDB) + dâr 'holding' + -i; native"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C155-kalantari]
 <!-- hl-knowledge: introduces=[FA-LEX-C155-MAKAN155-03]; assesses=[] -->
 
 **شهرداری** — *shahrdâri* — "the town hall".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*shahrdâri* is *shahr*, "city" (Middle Persian *šahr*, EtymDB), with *dâr*, "holding" (from *dâshtan*), and *-i*: the office that holds the city. All are native.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

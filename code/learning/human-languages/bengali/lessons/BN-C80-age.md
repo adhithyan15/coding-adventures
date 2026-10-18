@@ -14,7 +14,8 @@ romanization: "āge"
 concept_tag: BN-TIME80-AGE
 prerequisites: [BN-C79-sobsomoy, BN-C80-deri]
 sounds: []
-roots: []
+roots: [sanskrit-agra]
+etymology_hook: "āge ← Sanskrit agra 'top, front', a tadbhava (CDIAL 68)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C80-deri]
 <!-- hl-knowledge: introduces=[BN-LEX-C80-TIME80-02]; assesses=[] -->
 
 **আগে** — *āge* — "before".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**আগে** (*āge*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *agra*, "top, front" (CDIAL 68). CDIAL lists *āge* under the locative *agre*, "in front".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "pārsel"
 concept_tag: BN-JINIS248-PARSEL
 prerequisites: [BN-C248-pasport, BN-C248-bhisa]
 sounds: []
-roots: []
+roots: [english-parcel]
+etymology_hook: "pārsel ← English parcel"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C248-bhisa]
 <!-- hl-knowledge: introduces=[BN-LEX-C248-JINIS248-04]; assesses=[] -->
 
 **পার্সেল** — *pārsel* — "a parcel".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**পার্সেল** (*pārsel*) is a loan from English *parcel*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

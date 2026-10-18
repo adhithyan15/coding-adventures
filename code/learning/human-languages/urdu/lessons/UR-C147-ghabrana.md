@@ -14,7 +14,8 @@ romanization: "ghabrānā"
 concept_tag: UR-VERB-GHABRANA
 prerequisites: [UR-C147-chikhna, UR-C147-muskurana]
 sounds: []
-roots: []
+roots: [indo-aryan-ghabbhara]
+etymology_hook: "ghabrānā: CDIAL lists ghābrā 'startled' under *ghabbhara 'confused' (CDIAL 4427)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C147-muskurana]
 <!-- hl-knowledge: introduces=[UR-LEX-C147-ACT147-05]; assesses=[] -->
 
 **گھبرانا** — *ghabrānā* — "to panic, to get flustered".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**گھبرانا** (*ghabrānā*) belongs with *ghābrā*, "startled", which CDIAL lists under a reconstructed *\*ghabbhara*, "confused" (CDIAL 4427).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

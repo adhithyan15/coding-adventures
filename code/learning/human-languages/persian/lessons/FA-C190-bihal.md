@@ -14,7 +14,8 @@ romanization: "bihâl"
 concept_tag: FA-SALAMAT190-BIHAL
 prerequisites: [FA-C190-behdasht, FA-C190-feshar-e-khun]
 sounds: []
-roots: []
+roots: [arabic-hal]
+etymology_hook: "bihâl: Persian bi- 'without' + hâl ← Arabic ḥāl 'state' (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C190-feshar-e-khun]
 <!-- hl-knowledge: introduces=[FA-LEX-C190-SALAMAT190-05]; assesses=[] -->
 
 **بیحال** — *bihâl* — "listless, run-down".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*bihâl* is *bi-*, "without", with *hâl*, "state, health": out of sorts. *bi-* is native Persian; *hâl* is borrowed from Arabic *ḥāl* (root *ḥ-w-l*, Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "bedānā"
 concept_tag: BN-JINIS204-BEDANA
 prerequisites: [BN-C203-somman, BN-C204-ata]
 sounds: []
-roots: []
+roots: [persian-bedana]
+etymology_hook: "bedānā: usually traced to Persian bēdāna 'seedless', a name for a fine pomegranate"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C204-ata]
 <!-- hl-knowledge: introduces=[BN-LEX-C204-JINIS204-02]; assesses=[] -->
 
 **বেদানা** — *bedānā* — "a pomegranate".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**বেদানা** (*bedānā*) is usually traced to Persian *bēdāna*, "seedless", a name given to a fine kind of pomegranate.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

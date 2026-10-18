@@ -1,7 +1,7 @@
 {
   "language": "marwadi",
   "chapter": 132,
-  "sourceHash": "fnv1a64:94a8f0d070cc633f",
+  "sourceHash": "fnv1a64:3423a32d4eb08aef",
   "lessonIds": [
     "MW-C132-achar",
     "MW-C132-lapsi",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "marwadi/narration/ch132.txt",
   "json": "marwadi/narration/ch132.json",
-  "textHash": "fnv1a64:d27e8245b3efda44",
-  "jsonHash": "fnv1a64:e03f2bda2c82efc6",
+  "textHash": "fnv1a64:7b553f8792c8b862",
+  "jsonHash": "fnv1a64:59987bfbcb0c8d8f",
   "findings": []
 }

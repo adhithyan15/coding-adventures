@@ -14,7 +14,8 @@ romanization: "din"
 concept_tag: BN-ADJ77-DIN
 prerequisites: [BN-C77-badami, BN-C77-sundor]
 sounds: []
-roots: []
+roots: [sanskrit-dina]
+etymology_hook: "din ← Sanskrit dina 'day', inherited (CDIAL 6328)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C77-sundor]
 <!-- hl-knowledge: introduces=[BN-LEX-C77-ADJ77-05]; assesses=[] -->
 
 **দিন** — *din* — "a day".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**দিন** (*din*) is inherited from Sanskrit *dina*, "day", and has come down with almost no change (CDIAL 6328).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

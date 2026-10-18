@@ -14,7 +14,8 @@ romanization: "arbaʿūn"
 concept_tag: AR-NUMBERS97-ARBAUN
 prerequisites: [AR-C97-ashara, AR-C97-thalathun]
 sounds: []
-roots: []
+roots: [arbaa]
+etymology_hook: "arbaʿūn: built on the root r-b-ʿ, 'four' (Lane); arbaʿūn is arbaʿ, 'four', with the tens ending -ūn"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C97-thalathun]
 <!-- hl-knowledge: introduces=[AR-LEX-C97-NUMBERS97-03]; assesses=[] -->
 
 **أربعون** — *arbaʿūn* — "forty".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**أربعون** (*arbaʿūn*) is built on the native Arabic root *r-b-ʿ*, "four" (Lane). *Arbaʿūn* is *arbaʿ*, "four", with the tens ending *-ūn*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

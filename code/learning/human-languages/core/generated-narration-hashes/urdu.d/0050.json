@@ -1,7 +1,7 @@
 {
   "language": "urdu",
   "chapter": 50,
-  "sourceHash": "fnv1a64:31d4d207b8b6cf89",
+  "sourceHash": "fnv1a64:a146dabf08c60901",
   "lessonIds": [
     "UR-C50-gana",
     "UR-C50-nachna",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "urdu/narration/ch50.txt",
   "json": "urdu/narration/ch50.json",
-  "textHash": "fnv1a64:0b8f09de6f8520f4",
-  "jsonHash": "fnv1a64:23f1428f7c34b56d",
+  "textHash": "fnv1a64:1c26788928478428",
+  "jsonHash": "fnv1a64:f7b52b229565f2b9",
   "findings": []
 }

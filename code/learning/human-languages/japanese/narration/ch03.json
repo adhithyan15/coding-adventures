@@ -4,7 +4,7 @@
   "chapter": 3,
   "title": "Plain Thanks, One Sign at a Time",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:52ad87da8fd47a6c",
+  "sourceHash": "fnv1a64:2a9008616ea5c3ed",
   "lessons": [
     {
       "id": "JA-W03-a",
@@ -1208,7 +1208,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:79bf3d097e9fa120",
+      "sourceHash": "fnv1a64:4896df84a7e6e0fc",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -1280,6 +1280,10 @@
             {
               "kind": "speech",
               "text": "So the memory hook is inside the word, not inside English: saying ありがとう (arigatō) is saying this was not a thing that had to happen. No English cousin exists, and inventing one would be worse than admitting that."
+            },
+            {
+              "kind": "speech",
+              "text": "It is a native word, inherited rather than borrowed: JMdict notes that arigatō comes from arigataku, the adverb form of arigatai. It does not come from Portuguese obrigado, a popular story: arigatashi was in Japanese long before Portuguese ships arrived."
             }
           ]
         },

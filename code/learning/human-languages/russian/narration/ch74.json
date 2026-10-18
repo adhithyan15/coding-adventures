@@ -4,7 +4,7 @@
   "chapter": 74,
   "title": "Always, Sometimes, Never, Now, Later",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:5b9fcf46e3966120",
+  "sourceHash": "fnv1a64:bb5a755c0c64337b",
   "lessons": [
     {
       "id": "RU-C74-always",
@@ -287,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1042a6a363b5f38f",
+      "sourceHash": "fnv1a64:9ce5cbe73995ad91",
       "notice": null,
       "blocks": [
         {
@@ -325,7 +325,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "никогда (nikogdá) is ни, \"not even\", with когда, \"when\": \"at no time\". Its к- is the old question stem of кто, \"who\"."
+              "text": "никогда (nikogdá) is ни, \"not even\", with когда, \"when\": \"at no time\". Its к- is the old question stem of кто, \"who\". Vasmer sets ни beside Latin nī and Gothic nei, \"not\"."
             }
           ]
         },
@@ -421,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:67a8f962e782f508",
+      "sourceHash": "fnv1a64:7f34836d924a2f42",
       "notice": null,
       "blocks": [
         {
@@ -459,7 +459,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "сейчас (seychás) is сей, an old word for \"this\", with час, \"hour\": \"this hour\"."
+              "text": "сейчас (seychás) is сей, an old word for \"this\", with час, \"hour\": \"this hour\". Vasmer traces сей to an Indo-European pointing word kept in Lithuanian šìs, \"this\", and час to Proto-Slavic časŭ."
             }
           ]
         },
@@ -555,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:dad99f78c6ad07e6",
+      "sourceHash": "fnv1a64:283f8f523eafa858",
       "notice": null,
       "blocks": [
         {
@@ -593,7 +593,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "потом (potóm) is по, \"after\", with том, a form of тот, \"that\": \"after that\"."
+              "text": "потом (potóm) is по, \"after\", with том, a form of тот, \"that\": \"after that\". Vasmer traces тот to Proto-Slavic tŭ, kin to Lithuanian tàs, \"that\"."
             }
           ]
         },

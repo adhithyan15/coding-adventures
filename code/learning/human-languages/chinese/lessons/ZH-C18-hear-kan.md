@@ -10,8 +10,8 @@ romanization: kàn
 gloss: to look at or watch
 prerequisites: [ZH-C17-practice]
 sounds: [tone-4]
-roots: []
-etymology_hook: This short falling-tone verb covers looking at, watching, and reading when its object supplies the context.
+roots: [middle-chinese-khanh]
+etymology_hook: "kàn 'to look': inherited, from Middle Chinese khanH, also read khan"
 duration:
   max_seconds: 120
 requires:
@@ -43,6 +43,8 @@ answers separate. [YOU COVER: the cards, and put them away.]
 
 Start high and let the tone fall cleanly. The written form stays hidden in this
 first step so sound and meaning can settle before handwriting begins.
+
+*Kàn* is inherited from Middle Chinese *khanH*, "to look", also read *khan*.
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-KAN-01] -->

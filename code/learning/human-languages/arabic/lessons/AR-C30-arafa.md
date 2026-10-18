@@ -6,13 +6,13 @@ sequence: 760
 chapter: 30
 type: word
 headword: عرف
-gloss: "he knew, he recognised" — one of Arabic's two words for knowing, whose root reached Spain and named a palace in Granada
+gloss: '"he knew, he recognised" — one of Arabic''s two words for knowing, whose root reached Spain and named a palace in Granada'
 concept_tag: VERB-KNOW
 romanization: ʿarafa
 prerequisites: [AR-C29-raa]
 sounds: [faa, ayn-pharyngeal, rtl-known-letters]
 roots: [a-r-f]
-etymology_hook: "عرف (ʿarafa) is knowing a person or place — recognising — as against عَلِمَ (ʿalima), knowing a fact, a split Spanish and French also make and English does not; its root gives مَعْرِفة (maʿrifa, 'knowledge') and العَرِيف (al-ʿarīf, 'the one who knows'), which Spanish borrowed as alarife, 'master builder', and which is usually read inside the name of the Generalife palace in Granada"
+etymology_hook: "ʿarafa: root ʿ-r-f 'to know, to recognise' (Lane); Spanish alarife comes from al-ʿarīf"
 duration:
   max_seconds: 240
 requires:

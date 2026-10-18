@@ -14,7 +14,8 @@ romanization: "polis"
 concept_tag: FA-TOWN71-POLIS
 prerequisites: [FA-C71-hotel, FA-C71-edare]
 sounds: []
-roots: []
+roots: [french-police]
+etymology_hook: "polis: a loan, usually traced to French police 'police'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C71-edare]
 <!-- hl-knowledge: introduces=[FA-LEX-C71-TOWN71-05]; assesses=[] -->
 
 **پلیس** — *polis* — "the police".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*polis* is a loan, usually traced to French *police*, "police".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

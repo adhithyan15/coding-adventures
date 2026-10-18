@@ -1,6 +1,6 @@
 //! Grammar-driven lexers for Mermaid diagram families.
 
-pub const VERSION: &str = "0.80.0";
+pub const VERSION: &str = "0.81.0";
 
 use grammar_tools::token_grammar::parse_token_grammar;
 use lexer::grammar_lexer::GrammarLexer;
@@ -759,7 +759,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(VERSION, "0.80.0");
+        assert_eq!(VERSION, "0.81.0");
     }
 
     #[test]
@@ -1675,5 +1675,24 @@ A\\-B: reverse stick bottom
             "sequenceDiagram\nparticipant Alice=Wonderland\nAlice=Wonderland->>Bob: Submit\n",
         );
         assert_eq!(tokens.iter().filter(|token| token.value == "=").count(), 2);
+    }
+
+    #[test]
+    fn tokenizes_wardley_flow_links_as_grammar_lines() {
+        let tokens = try_tokenize_mermaid_wardley(
+            "wardley-beta\nA -.-> B\nA +> B\nA +'demand'<> B\n",
+        ).unwrap();
+        let links = tokens.iter().filter(|token| token.type_name.as_deref() == Some("LINK_LINE"))
+            .map(|token| token.value.trim()).collect::<Vec<_>>();
+        assert_eq!(links, ["A -.-> B", "A +> B", "A +'demand'<> B"]);
+    }
+
+    #[test]
+    fn tokenizes_wardley_accessibility_metadata_as_grammar_lines() {
+        let tokens = try_tokenize_mermaid_wardley(
+            "wardley-beta\naccTitle: Strategy map\naccDescr: Components and dependencies\n",
+        ).unwrap();
+        assert!(tokens.iter().any(|token| token.type_name.as_deref() == Some("ACC_TITLE_LINE")));
+        assert!(tokens.iter().any(|token| token.type_name.as_deref() == Some("ACC_DESCR_LINE")));
     }
 }

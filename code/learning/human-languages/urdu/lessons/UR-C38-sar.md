@@ -14,7 +14,8 @@ romanization: "sar"
 concept_tag: UR-BODY38-SAR
 prerequisites: [UR-C32-chautha, UR-C38-hath]
 sounds: []
-roots: []
+roots: [persian-sar, sanskrit-shiras]
+etymology_hook: "sar: usually traced to Persian sar 'head'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C38-hath]
 <!-- hl-knowledge: introduces=[UR-LEX-C38-BODY38-02]; assesses=[] -->
 
 **سر** — *sar* — "the head".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**سر** (*sar*) is a loan, usually traced to Persian *sar*, "head". Persian *sar* and Sanskrit *śiras*, the source of Hindi *sir* (CDIAL 12452), are usually taken to be the same ancient word, kept separately by the two branches.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

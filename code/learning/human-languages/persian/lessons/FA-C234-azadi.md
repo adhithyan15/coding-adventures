@@ -14,7 +14,8 @@ romanization: "âzâdi"
 concept_tag: FA-CHERA234-AZADI
 prerequisites: [FA-C233-kheyli, FA-C234-ravesh]
 sounds: []
-roots: []
+roots: [persian-azad]
+etymology_hook: "âzâdi: Persian âzâd 'free' (Middle Persian āzād) + -i"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C234-ravesh]
 <!-- hl-knowledge: introduces=[FA-LEX-C234-CHERA234-02]; assesses=[] -->
 
 **آزادی** — *âzâdi* — "freedom".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*âzâdi* is *âzâd*, "free", with the noun ending *-i*. *âzâd* is native, usually traced to Middle Persian *āzād*, "free, noble".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

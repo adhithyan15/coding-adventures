@@ -14,7 +14,8 @@ romanization: "tarasyũ"
 concept_tag: GU-QUAL135-TARASYU
 prerequisites: [GU-C134-udas, GU-C134-bhukhyu]
 sounds: []
-roots: []
+roots: [sanskrit-trshita]
+etymology_hook: "tarasyũ ← Sanskrit tṛṣita 'thirsty', a tadbhava (CDIAL 5937)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C134-bhukhyu]
 <!-- hl-knowledge: introduces=[GU-LEX-C135-QUAL135-01]; assesses=[] -->
 
 **તરસ્યું** (*tarasyũ*) — "thirsty".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**તરસ્યું** (*tarasyũ*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *tṛṣita*, "thirsty" (CDIAL 5937).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

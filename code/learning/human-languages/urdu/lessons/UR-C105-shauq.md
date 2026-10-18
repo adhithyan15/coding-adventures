@@ -14,7 +14,8 @@ romanization: "shauq"
 concept_tag: UR-WANT105-SHAUQ
 prerequisites: [UR-C104-khvahish, UR-C104-zarurat]
 sounds: []
-roots: []
+roots: [arabic-shawq]
+etymology_hook: "shauq ← Arabic shawq 'longing, desire', through Persian (Lane, root sh-w-q)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C104-zarurat]
 <!-- hl-knowledge: introduces=[UR-LEX-C105-WANT105-01]; assesses=[] -->
 
 **شوق** — *shauq* — "a keen interest, a hobby".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**شوق** (*shauq*) is a loan from Arabic *shawq*, "longing, desire", which reached Urdu through Persian. Its Arabic root is *sh-w-q* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

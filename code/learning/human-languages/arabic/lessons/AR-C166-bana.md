@@ -14,7 +14,8 @@ romanization: "banā"
 concept_tag: AR-VERB-BANA
 prerequisites: [AR-C165-anha, AR-C166-sada]
 sounds: []
-roots: []
+roots: [b-n-y]
+etymology_hook: "banā: built on the root b-n-y, 'to build' (Lane); banā is the plain verb, 'he built'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C166-sada]
 <!-- hl-knowledge: introduces=[AR-LEX-C166-ACT166-02]; assesses=[] -->
 
 **بنى** — *banā* — "to build".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**بنى** (*banā*) is built on the native Arabic root *b-n-y*, "to build" (Lane). *Banā* is the plain verb, "he built".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

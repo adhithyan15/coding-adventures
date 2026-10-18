@@ -14,7 +14,8 @@ romanization: "vālidain"
 concept_tag: UR-CHIZ170-VALIDAIN
 prerequisites: [UR-C170-insan, UR-C170-buzurg]
 sounds: []
-roots: []
+roots: [arabic-walid]
+etymology_hook: "vālidain ← Arabic wālidayn 'the two parents', through Persian (Lane, root w-l-d)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C170-buzurg]
 <!-- hl-knowledge: introduces=[UR-LEX-C170-CHIZ170-03]; assesses=[] -->
 
 **والدین** — *vālidain* — "parents".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**والدین** (*vālidain*) is a loan from Arabic *wālidayn*, "the two parents", which reached Urdu through Persian. Its Arabic root is *w-l-d* (Lane). It is the dual of *wālid*, "father, parent".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

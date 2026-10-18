@@ -4,12 +4,12 @@
   "chapter": 2,
   "title": "Introducing Yourself",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:f8ee1d06cd8079df",
+  "sourceHash": "fnv1a64:7bb7476eead3c68d",
   "lessons": [
     {
       "id": "SA-C02-nama",
       "sequence": 70,
-      "title": "नाम (nāma) — \"name,\" the source of a word half the world shares",
+      "title": "नाम (nāma) — \"name,\" a word half the world shares",
       "headword": "नाम",
       "romanization": "nāma",
       "gloss": "name",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:613783fb7f311cd0",
+      "sourceHash": "fnv1a64:59a9e40bdffed63f",
       "notice": null,
       "blocks": [
         {
@@ -35,7 +35,7 @@
             },
             {
               "kind": "speech",
-              "text": "The first word of the introduction — and, since this is Sanskrit, the source of the word half the world uses."
+              "text": "The first word of the introduction — and an old cousin of the word half the world uses."
             }
           ]
         },
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "nāma (\"name,\" neuter) is from the stem nāman, from Proto-Indo-European h₃nomn-. This is not a borrowing from anywhere — it is the ancestor: the same root surfaces as English name, Latin nōmen ( becomes noun, nominate), Greek onoma, and, worn down, as Hindi nām, Bengali nām, Punjabi nāṁ. When you say Sanskrit nāma, you are standing near the headwaters of a word that flowed to both Europe and modern India."
+              "text": "nāma (\"name,\" neuter) is from the stem nāman, from Proto-Indo-European h₃nomn-. This is not a borrowing from anywhere — it is inherited: the same root surfaces as English name, Latin nōmen ( becomes noun, nominate), Greek onoma, and, worn down, as Hindi nām, Bengali nām, Punjabi nāṁ. Sanskrit nāma is the ancestor of the Indian forms and a cousin of the European ones: one root that flowed to both Europe and modern India."
             }
           ]
         },
@@ -84,11 +84,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "its children, west and east — English name, Latin nōmen; Hindi nām",
+              "instruction": "its cousins west and its children east — English name, Latin nōmen; Hindi nām",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: its children, west and east — English *name*, Latin *nōmen*; Hindi *nām*]"
+              "source": "[YOU SAY: its cousins west and its children east — English *name*, Latin *nōmen*; Hindi *nām*]"
             }
           ]
         },
@@ -114,7 +114,7 @@
     {
       "id": "SA-C02-mama",
       "sequence": 80,
-      "title": "मम (mama) — \"my,\" the ancestor of me and my",
+      "title": "मम (mama) — \"my,\" a cousin of me and my",
       "headword": "मम",
       "romanization": "mama",
       "gloss": "my",
@@ -124,7 +124,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e4bf8621637043ee",
+      "sourceHash": "fnv1a64:8a95c6f9f38ed465",
       "notice": null,
       "blocks": [
         {
@@ -140,7 +140,7 @@
             },
             {
               "kind": "speech",
-              "text": "The word that makes the name yours — and it is, quite literally, the grandparent of English my."
+              "text": "The word that makes the name yours — and it shares its root with English my."
             }
           ]
         },
@@ -162,7 +162,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "mama (\"my, of me\") is the genitive of aham (\"I\"), on the first-person root ma-, from Proto-Indo-European me-. This is the source of the whole first-person family: English me, my, mine, Latin meus, Greek emou, and Hindi merā. Sanskrit mama and English my are not merely similar — they are the same ancient word, one still in its old form, the other worn smooth by five thousand years."
+              "text": "mama (\"my, of me\") is the genitive of aham (\"I\"), on the first-person root ma-, from Proto-Indo-European me-. The same PIE stem runs through the whole first-person family: English me, my, mine, Latin meus, Greek emou, and Hindi merā. Sanskrit mama and English my are not merely similar — they are built on the same ancient stem, one kept close to its old form, the other worn smooth by five thousand years."
             }
           ]
         },
@@ -388,7 +388,7 @@
     {
       "id": "SA-C02-asti",
       "sequence": 90,
-      "title": "अस्ति (asti) — \"is,\" the ancestor of is and est",
+      "title": "अस्ति (asti) — \"is,\" a cousin of is and est",
       "headword": "अस्ति",
       "romanization": "asti",
       "gloss": "is",
@@ -398,7 +398,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a0ca13dd1c7506b3",
+      "sourceHash": "fnv1a64:65f0a9ab51f79d38",
       "notice": null,
       "blocks": [
         {
@@ -414,7 +414,7 @@
             },
             {
               "kind": "speech",
-              "text": "The little verb \"is\" — and here you meet it in the form that fathered half the \"to be\" words on earth."
+              "text": "The little verb \"is\" — and here you meet it in a form whose root is shared by half the \"to be\" words on earth."
             }
           ]
         },
@@ -436,7 +436,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "asti (\"is\") is the third-person singular of the root as- (\"to be\"), from Proto-Indo-European h₁es-. It is the source of the family's copula: English is, German ist, Latin est, Greek esti, and Hindi hai ( from asti directly). Unlike its Dravidian neighbours — Tamil and Bengali drop \"is\" in the present — Sanskrit keeps an explicit copula, and it is the very word Europe kept too."
+              "text": "asti (\"is\") is the third-person singular of the root as- (\"to be\"), from Proto-Indo-European h₁es-. The same root gives the family's copula elsewhere: English is, German ist, Latin est, Greek esti. Hindi hai is often linked to asti, but CDIAL puts Old Hindi āhaï \"is\" under a different verb, ākṣeti \"dwells\" (CDIAL 1031). Unlike Tamil and Bengali, which drop \"is\" in the present, Sanskrit keeps an explicit copula, built on the very root Europe kept too."
             }
           ]
         },
@@ -463,11 +463,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the family — asti / English is / Latin est / Greek esti / Hindi hai",
+              "instruction": "the family — asti / English is / Latin est / Greek esti",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the family — *asti* / English *is* / Latin *est* / Greek *esti* / Hindi *hai*]"
+              "source": "[YOU SAY: the family — *asti* / English *is* / Latin *est* / Greek *esti*]"
             }
           ]
         },
@@ -484,7 +484,7 @@
             },
             {
               "kind": "speech",
-              "text": "What root is asti from, and its cousins across the family? (As- / PIE h₁es-; English is, Latin est, Hindi hai.)"
+              "text": "What root is asti from, and its cousins across the family? (As- / PIE h₁es-; English is, Latin est.)"
             }
           ]
         }
@@ -503,7 +503,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:75936553885f4e5d",
+      "sourceHash": "fnv1a64:9c4b03b3bf635400",
       "notice": null,
       "blocks": [
         {
@@ -817,7 +817,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ca23b644c9b84157",
+      "sourceHash": "fnv1a64:3512b45fff1c2c70",
       "notice": null,
       "blocks": [
         {
@@ -855,7 +855,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Bhavān (\"you,\" respectful) is not really a second-person word at all: it is a third-person honorific — \"your honour,\" from bhavat (\"being, gracious one\") — and so it takes a third-person verb (bhavān asti, \"your honour is\"). For a first meeting, use bhavān."
+              "text": "Bhavān (\"you,\" respectful) is not really a second-person word at all: it is a third-person honorific — \"your honour,\" from bhavat (\"being, present,\" of the root √bhū \"be\") — and so it takes a third-person verb (bhavān asti, \"your honour is\"). For a first meeting, use bhavān."
             }
           ]
         },
@@ -942,7 +942,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:48afa585ba31ac6c",
+      "sourceHash": "fnv1a64:cf990d265f84e1fe",
       "notice": null,
       "blocks": [
         {
@@ -958,7 +958,7 @@
             },
             {
               "kind": "speech",
-              "text": "The other \"you\" — the one you use with friends, and the ancestor of English thou."
+              "text": "The other \"you\" — the one you use with friends, and a cousin of English thou."
             }
           ]
         },
@@ -1056,7 +1056,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:aee379fbd11d3a69",
+      "sourceHash": "fnv1a64:7e050c5d4b12695c",
       "notice": null,
       "blocks": [
         {
@@ -1072,7 +1072,7 @@
             },
             {
               "kind": "speech",
-              "text": "The question-word — and the fountainhead of a whole family of \"wh-\" words, east and west."
+              "text": "The question-word — and a cousin of a whole family of \"wh-\" words in the west."
             }
           ]
         },
@@ -1094,7 +1094,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "kim (\"what\") is from the interrogative stem ka-, from Proto-Indo-European kʷo- — the ancestor of the whole question-family: English what, who, which, Latin quis / quid, Greek tis, and Hindi kyā / kaun. Sanskrit's own questions all grow from this ka-: kim (what), kaḥ (who), kadā (when), kutra (where), katham (how). It is the single seed from which both Europe's qu-/wh- words and India's k- words grew."
+              "text": "kim (\"what\") is from the interrogative stem ka-, from Proto-Indo-European kʷo- — the ancestor of the whole question-family: English what, who, which, Latin quis / quid, Greek tis, and Hindi kyā / kaun. Sanskrit's own questions all grow from this ka-: kim (what), kaḥ (who), kadā (when), kutra (where), katham (how). Its PIE ancestor is the single seed from which both Europe's qu-/wh- words and India's k- words grew."
             }
           ]
         },
@@ -1130,11 +1130,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "its western children (English what, Latin quis)",
+              "instruction": "its western cousins (English what, Latin quis)",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: its western children (English *what*, Latin *quis*)]"
+              "source": "[YOU SAY: its western cousins (English *what*, Latin *quis*)]"
             }
           ]
         },
@@ -1367,7 +1367,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:fd0e0dbc9aa7217f",
+      "sourceHash": "fnv1a64:bb7c548ea2ebf044",
       "notice": null,
       "blocks": [
         {
@@ -1395,6 +1395,10 @@
             {
               "kind": "speech",
               "text": "tava (\"your,\" the genitive of tvam) + nāma (name) + kim (what) becomes \"your name what?\" Here Sanskrit often drops the asti: tava nāma kim? stands complete, the question-word alone doing the work."
+            },
+            {
+              "kind": "speech",
+              "text": "Tava comes from the same inherited second-person stem as tvam, the stem behind Latin tū and English thou; kim is built on the old question stem ka- (MW)."
             }
           ]
         },
@@ -1481,7 +1485,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4d51914107059f1e",
+      "sourceHash": "fnv1a64:12bb9b69e1eb9322",
       "notice": null,
       "blocks": [
         {
@@ -1520,6 +1524,10 @@
             {
               "kind": "speech",
               "text": "To say \"pleased to meet you,\" Sanskrit can say bhavantaṁ dṛṣṭvā ānandaḥ — \"seeing you, [there is] joy.\" The key word ānandaḥ (\"joy, bliss, delight\") is from ā- (\"fully\") + the root nand (\"to rejoice\"). It is one of Sanskrit's most beloved words — the ānanda of sat-cit-ānanda (\"being-consciousness-bliss\"), and the name Ānanda, the Buddha's devoted disciple. So a simple greeting reaches for the word Indian thought uses for the deepest happiness."
+            },
+            {
+              "kind": "speech",
+              "text": "The noun is built on the root √nand \"to rejoice\" with the prefix ā-, and it is already in the Rigveda (MW, CDIAL 1172)."
             }
           ]
         },
@@ -1772,7 +1780,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:8c3c46468b708817",
+      "sourceHash": "fnv1a64:6da126217e533b03",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -1999,23 +2007,23 @@
             },
             {
               "kind": "speech",
-              "text": "Every word in that exchange is an ancestor, not a borrowing:"
+              "text": "Every word in that exchange is inherited, not borrowed, and each is a cousin of words you know:"
             },
             {
               "kind": "speech",
-              "text": "nāma becomes English name, Latin nōmen."
+              "text": "nāma: English name, Latin nōmen."
             },
             {
               "kind": "speech",
-              "text": "mama becomes English my, me."
+              "text": "mama: English my, me."
             },
             {
               "kind": "speech",
-              "text": "asti becomes English is, Latin est, Hindi hai."
+              "text": "asti: English is, Latin est."
             },
             {
               "kind": "speech",
-              "text": "kim becomes English what, Latin quid."
+              "text": "kim: English what, Latin quid."
             },
             {
               "kind": "speech",
@@ -2036,7 +2044,7 @@
             },
             {
               "kind": "speech",
-              "text": "Give your name in Sanskrit, ask for someone else's, and name two English words this chapter's vocabulary is the ancestor of. (Mama nāma … asti; tava nāma kim?; any two of name, my, is, what.)"
+              "text": "Give your name in Sanskrit, ask for someone else's, and name two English cousins of this chapter's vocabulary. (Mama nāma … asti; tava nāma kim?; any two of name, my, is, what.)"
             }
           ]
         }

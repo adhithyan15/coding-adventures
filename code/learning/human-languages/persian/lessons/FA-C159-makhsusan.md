@@ -14,7 +14,8 @@ romanization: "makhsusan"
 concept_tag: FA-CHERA159-MAKHSUSAN
 prerequisites: [FA-C159-vagarna, FA-C159-dar-hali-ke]
 sounds: []
-roots: []
+roots: [arabic-mahsusan]
+etymology_hook: "makhsusan ← Arabic maḫṣūṣan 'specially', root ḫ-ṣ-ṣ (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C159-dar-hali-ke]
 <!-- hl-knowledge: introduces=[FA-LEX-C159-CHERA159-05]; assesses=[] -->
 
 **مخصوصا** — *makhsusan* — "especially".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*makhsusan* is borrowed from Arabic *maḫṣūṣan*, "specially". Its Arabic root is *ḫ-ṣ-ṣ* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

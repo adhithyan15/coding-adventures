@@ -14,7 +14,8 @@ romanization: "manānā"
 concept_tag: UR-VERB-MANANA
 prerequisites: [UR-C180-sharmana, UR-C180-jhagarna]
 sounds: []
-roots: []
+roots: [sanskrit-manyate]
+etymology_hook: "manānā ← Sanskrit manyate 'thinks, honours; agrees', a tadbhava (CDIAL 9857)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C180-jhagarna]
 <!-- hl-knowledge: introduces=[UR-LEX-C180-ACT180-03]; assesses=[] -->
 
 **منانا** — *manānā* — "to celebrate; to win round".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**منانا** (*manānā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *manyate*, "thinks, honours; agrees" (CDIAL 9857). It is the causing form of *mānnā*, "to accept": to win someone round is to make them agree.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

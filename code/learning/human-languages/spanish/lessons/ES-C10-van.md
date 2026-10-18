@@ -6,7 +6,7 @@ sequence: 1054
 chapter: 68
 type: grammar
 headword: van
-gloss: "they go" — three letters, and the high-frequency verbs are complete
+gloss: '"they go" — three letters, and the high-frequency verbs are complete'
 concept_tag: ES-GRAMMAR-GO-PRESENT-PLURAL
 prerequisites: [ES-C10-vamos, ES-C09-repaso-ser-estar]
 sounds: []

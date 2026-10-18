@@ -15,6 +15,7 @@ concept_tag: PA-THINGS132-GALHAR
 prerequisites: [PA-C132-titli, PA-C132-makkari]
 sounds: []
 roots: []
+etymology_hook: "gālhaṛ 'squirrel': its origin is not settled; CDIAL has no entry for it"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C132-makkari]
 <!-- hl-knowledge: introduces=[PA-LEX-C132-THINGS132-05]; assesses=[] -->
 
 **ਗਾਲ੍ਹੜ** — *gālhaṛ* — "a squirrel".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+Where **ਗਾਲ੍ਹੜ** (*gālhaṛ*) comes from is not settled: CDIAL has no entry for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

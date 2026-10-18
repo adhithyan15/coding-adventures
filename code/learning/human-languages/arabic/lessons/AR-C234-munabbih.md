@@ -14,7 +14,8 @@ romanization: "munabbih"
 concept_tag: AR-WAQT234-MUNABBIH
 prerequisites: [AR-C234-duha, AR-C234-qariban]
 sounds: []
-roots: []
+roots: [n-b-h]
+etymology_hook: "munabbih: built on the root n-b-h, 'to take notice' (Lane); the Form II participle, 'one that gives notice'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C234-qariban]
 <!-- hl-knowledge: introduces=[AR-LEX-C234-WAQT234-04]; assesses=[] -->
 
 **منبه** — *munabbih* — "an alarm clock".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**منبه** (*munabbih*) is built on the native Arabic root *n-b-h*, "to take notice, to be aware" (Lane). *Munabbih* is the Form II participle, "one that gives notice"; the alarm clock is a modern sense.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

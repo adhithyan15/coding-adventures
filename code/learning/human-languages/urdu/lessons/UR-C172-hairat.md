@@ -14,7 +14,8 @@ romanization: "hairat"
 concept_tag: UR-CHIZ172-HAIRAT
 prerequisites: [UR-C171-harf, UR-C171-matlab]
 sounds: []
-roots: []
+roots: [arabic-hayra]
+etymology_hook: "hairat ← Arabic ḥayra 'perplexity, bewilderment', through Persian (Lane, root ḥ-y-r)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C171-matlab]
 <!-- hl-knowledge: introduces=[UR-LEX-C172-CHIZ172-01]; assesses=[] -->
 
 **حیرت** — *hairat* — "surprise".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**حیرت** (*hairat*) is a loan from Arabic *ḥayra*, "perplexity, bewilderment", which reached Urdu through Persian. Its Arabic root is *ḥ-y-r* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

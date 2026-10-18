@@ -14,7 +14,8 @@ romanization: "svāmī"
 concept_tag: SA-PPL147-SVAMI
 prerequisites: [SA-C146-matamahah, SA-C146-pitrvyah]
 sounds: []
-roots: []
+roots: [sanskrit-svamin]
+etymology_hook: "svāmin 'owner, master' ← sva 'own' + -min (MW); MW sets sva beside Latin suus 'his own'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C146-pitrvyah]
 <!-- hl-knowledge: introduces=[SA-LEX-C147-PPL147-01]; assesses=[] -->
 
 **स्वामी** — *svāmī* — "a master, an owner".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*svāmī* is the nominative of *svāmin*, built from *sva* "own" with the suffix *-min* (MW; CDIAL 13930): "one who has property", an owner, a master. MW sets *sva* beside Latin *suus* "his own".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

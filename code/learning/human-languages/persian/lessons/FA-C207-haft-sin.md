@@ -14,7 +14,8 @@ romanization: "haft-sin"
 concept_tag: FA-CHIZ207-HAFT-SIN
 prerequisites: [FA-C206-printer, FA-C206-adres]
 sounds: []
-roots: []
+roots: [persian-haft]
+etymology_hook: "haft-sin: Persian haft 'seven' (EtymDB) + sin 'the letter s' (from Arabic)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C206-adres]
 <!-- hl-knowledge: introduces=[FA-LEX-C207-CHIZ207-01]; assesses=[] -->
 
 **هفت سین** — *haft-sin* — "the haft-sin (Nowruz table of seven S-items)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*haft-sin* is *haft*, "seven" (inherited, EtymDB), with *sin*, the name of the letter *s*: seven things whose names begin with *s*. The letter name *sin* comes from Arabic.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

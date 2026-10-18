@@ -1,7 +1,7 @@
 {
   "language": "sanskrit",
   "chapter": 201,
-  "sourceHash": "fnv1a64:4e124f66ef145741",
+  "sourceHash": "fnv1a64:a7cd4c3967dc181f",
   "lessonIds": [
     "SA-C201-yojana",
     "SA-C201-laksyam",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "sanskrit/narration/ch201.txt",
   "json": "sanskrit/narration/ch201.json",
-  "textHash": "fnv1a64:a8c0c4faf16096b7",
-  "jsonHash": "fnv1a64:ecbd776e523d77ed",
+  "textHash": "fnv1a64:2ca819c9d0e3e61b",
+  "jsonHash": "fnv1a64:e76619caf693ce0f",
   "findings": []
 }

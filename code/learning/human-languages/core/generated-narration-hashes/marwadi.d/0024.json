@@ -1,7 +1,7 @@
 {
   "language": "marwadi",
   "chapter": 24,
-  "sourceHash": "fnv1a64:699c468422e7e55c",
+  "sourceHash": "fnv1a64:65fe8124d17e1738",
   "lessonIds": [
     "MW-C19-hear-roti",
     "MW-W19-tta",
@@ -16,7 +16,7 @@
   "drivablePrefix": 1,
   "text": "marwadi/narration/ch24.txt",
   "json": "marwadi/narration/ch24.json",
-  "textHash": "fnv1a64:c90d917ceffc4791",
-  "jsonHash": "fnv1a64:fc3a5631b1c3e426",
+  "textHash": "fnv1a64:2b164ad46cc76048",
+  "jsonHash": "fnv1a64:1ed9139170a47ad9",
   "findings": []
 }

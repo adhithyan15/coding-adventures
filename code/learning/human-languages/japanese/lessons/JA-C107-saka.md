@@ -14,7 +14,8 @@ romanization: "saka"
 concept_tag: JA-THINGS107-SAKA
 prerequisites: [JA-C107-awa, JA-C107-tsuyu]
 sounds: []
-roots: []
+roots: [japanese-saka]
+etymology_hook: "saka: native Japanese, inherited, not borrowed; kanji 坂 attached later as kun'yomi"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C107-tsuyu]
 <!-- hl-knowledge: introduces=[JA-LEX-C107-THINGS107-05]; assesses=[] -->
 
 **さか** — *saka* — "a slope".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**さか** (*saka*) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

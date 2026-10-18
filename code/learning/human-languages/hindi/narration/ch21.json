@@ -4,7 +4,7 @@
   "chapter": 21,
   "title": "Numbers Six to Ten",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:172bae6ee439cf97",
+  "sourceHash": "fnv1a64:e1138e0d559a346d",
   "lessons": [
     {
       "id": "HI-S130-letter-chha",
@@ -232,7 +232,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:263e273b9b3c2f09",
+      "sourceHash": "fnv1a64:6b71da5df1b7328a",
       "notice": null,
       "blocks": [
         {
@@ -391,7 +391,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3f6ff0584b70122a",
+      "sourceHash": "fnv1a64:867a6edde40e9bb3",
       "notice": null,
       "blocks": [
         {

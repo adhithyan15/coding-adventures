@@ -1,7 +1,7 @@
 {
   "language": "urdu",
   "chapter": 247,
-  "sourceHash": "fnv1a64:df1a261478c14c47",
+  "sourceHash": "fnv1a64:7cbaa95498624712",
   "lessonIds": [
     "UR-C247-nata",
     "UR-C247-mumkin",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "urdu/narration/ch247.txt",
   "json": "urdu/narration/ch247.json",
-  "textHash": "fnv1a64:bab1f0b0f75b94f0",
-  "jsonHash": "fnv1a64:4d294954ca94f181",
+  "textHash": "fnv1a64:3bb2086952225fed",
+  "jsonHash": "fnv1a64:2568463b0d956dcb",
   "findings": []
 }

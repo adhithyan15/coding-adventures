@@ -14,7 +14,8 @@ romanization: "ruyidan"
 concept_tag: FA-VERB-RUYIDAN
 prerequisites: [FA-C184-vazidan, FA-C184-tabidan]
 sounds: []
-roots: []
+roots: [persian-ruyidan]
+etymology_hook: "ruyidan: inherited, usually traced to Middle Persian rōyīdan"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C184-tabidan]
 <!-- hl-knowledge: introduces=[FA-LEX-C184-KONESH184-05]; assesses=[] -->
 
 **روییدن** — *ruyidan* — "to grow (of plants)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*ruyidan* is a native Persian word, inherited rather than borrowed; it is usually traced to Middle Persian *rōyīdan*, "to grow".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

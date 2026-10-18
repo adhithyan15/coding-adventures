@@ -14,7 +14,8 @@ romanization: "miqlāh"
 concept_tag: AR-THINGS116-MIQLAH
 prerequisites: [AR-C115-niyya, AR-C116-ibriq]
 sounds: []
-roots: []
+roots: [q-l-y]
+etymology_hook: "miqlāh: built on the root q-l-y, 'to fry' (Lane); miqlāh is an instrument noun, 'a thing to fry in'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C116-ibriq]
 <!-- hl-knowledge: introduces=[AR-LEX-C116-THINGS116-02]; assesses=[] -->
 
 **مقلاة** — *miqlāh* — "a frying pan".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**مقلاة** (*miqlāh*) is built on the native Arabic root *q-l-y*, "to fry" (Lane). *Miqlāh* is an instrument noun, "a thing to fry in".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

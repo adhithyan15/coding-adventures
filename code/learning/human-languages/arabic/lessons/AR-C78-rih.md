@@ -14,7 +14,8 @@ romanization: "rīḥ"
 concept_tag: AR-NATURE78-RIH
 prerequisites: [AR-C78-nar, AR-C78-thalj]
 sounds: []
-roots: []
+roots: [r-w-ḥ]
+etymology_hook: "rīḥ: built on the root r-w-ḥ, 'wind' (Lane); the same root gives rūḥ, 'spirit'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C78-thalj]
 <!-- hl-knowledge: introduces=[AR-LEX-C78-NATURE78-03]; assesses=[] -->
 
 **ريح** — *rīḥ* — "wind".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ريح** (*rīḥ*) is built on the native Arabic root *r-w-ḥ*, "wind; breath" (Lane). The same root gives *rūḥ*, "spirit"; Hebrew *ruaḥ*, "wind, spirit", is its cousin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

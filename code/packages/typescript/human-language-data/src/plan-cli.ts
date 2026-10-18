@@ -20,6 +20,7 @@ import {
   loadEverything,
   loadExamInventory,
   listTaskShapeInventories,
+  defaultCurriculumRoot,
 } from "./loader.js";
 import { buildLevelGateSections } from "./report.js";
 import {
@@ -31,6 +32,8 @@ import {
 import { measureExamCoverage } from "./exam-inventory.js";
 import { isExamInventoryComplete } from "./exam-inventory.js";
 import { CEFR_LEVELS, type CefrLevel } from "./levels.js";
+import { measureAssessmentPrerequisites } from "./assessment-prerequisites.js";
+import { listMockAssessmentStatuses } from "./mock-assessment.js";
 
 interface PlanOptions {
   root?: string;
@@ -91,11 +94,12 @@ export function runCompletionPlan(args = process.argv.slice(2)): number {
   // report would have carried, byte for byte. (That is also why this no longer reads
   // the chapter ledgers or the narration table-width policy: only the discarded
   // sections did.)
+  const assessmentPolicy = loadAssessmentPolicy(options.root);
   const report = buildLevelGateSections({
     registry,
     lessons,
     chapterPolicy: loadChapterPolicy(options.root),
-    assessmentPolicy: loadAssessmentPolicy(options.root),
+    assessmentPolicy,
     curricula,
     spine,
   });
@@ -175,19 +179,33 @@ export function runCompletionPlan(args = process.argv.slice(2)): number {
     process.stderr.write(`plan: ${bad.language} ${bad.level} inventory exists but could not be read -- ${bad.reason}\n`);
   }
 
+  const taskShapes = listTaskShapeInventories(options.root).flatMap<InventoryPresence>((entry) => {
+    const level = CEFR_LEVELS.find((candidate) => candidate === entry.level);
+    return level ? [{ language: entry.language, level }] : [];
+  });
+  const assessmentContracts = listAssessmentContracts(options.root);
+  const uncontracted = registry.languages
+    .map((track) => track.id)
+    .filter((language) => !assessmentContracts.includes(language));
+  const assessmentPrerequisites = measureAssessmentPrerequisites(
+    options.root ?? defaultCurriculumRoot(),
+    uncontracted,
+    taskShapes,
+    assessmentPolicy.passEvidence.minimumFullMocksPerLevel,
+  );
+
   const plan = buildCompletionPlan({
     levelGate: report.levelGate,
     scriptClosure: report.scriptClosure,
     writingStages: report.writingStages,
-    assessmentContracts: listAssessmentContracts(options.root),
+    assessmentContracts,
+    assessmentPrerequisites,
     humanValidation: listHumanValidationStatuses(options.root),
     externalCapstones: listExternalExamCapstones(options.root),
     inventories: readable,
     partialInventories: partial,
-    taskShapes: listTaskShapeInventories(options.root).flatMap<InventoryPresence>((entry) => {
-      const level = CEFR_LEVELS.find((candidate) => candidate === entry.level);
-      return level ? [{ language: entry.language, level }] : [];
-    }),
+    taskShapes,
+    mockAssessments: listMockAssessmentStatuses(options.root),
     examCoverage,
     unreadableInventories: unreadable.length,
     ceiling: options.ceiling,

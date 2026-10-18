@@ -4,7 +4,7 @@
   "chapter": 71,
   "title": "Goat, Sheep, Sparrow, Lion, Elephant",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:aaa2bb005657caa2",
+  "sourceHash": "fnv1a64:7964e2e7a2af1843",
   "lessons": [
     {
       "id": "MW-C71-bakri",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ca8e14450086abb6",
+      "sourceHash": "fnv1a64:abc1c5857fa3a93e",
       "notice": null,
       "blocks": [
         {
@@ -52,6 +52,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "बकरी (bakrī) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from barkara, \"kid, lamb; goat\". CDIAL gives no Marwari form in this entry (CDIAL 9153); the match is through Hindi bakrī."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -62,7 +73,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -111,7 +122,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -161,7 +172,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:23654408705a0814",
+      "sourceHash": "fnv1a64:a2c5acc260094ccf",
       "notice": null,
       "blocks": [
         {
@@ -194,6 +205,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "भेड़ (bheṛ) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from bheḍra, \"ram\". CDIAL gives no Marwari form in this entry (CDIAL 9606); the match is through Hindi bheṛ. CDIAL takes the Sanskrit word itself from an Austroasiatic language."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -204,7 +226,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -253,7 +275,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -303,7 +325,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5c046556902c4875",
+      "sourceHash": "fnv1a64:bd9572569e2ffc61",
       "notice": null,
       "blocks": [
         {
@@ -336,6 +358,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "चिड़ी (chiṛī) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from caṭaka, \"sparrow\". CDIAL gives no Marwari form in this entry (CDIAL 4571); the match is through Hindi ciṛī. CDIAL calls the word imitative and lists ciṛī under a variant it reconstructs, ciṭaka."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -346,7 +379,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -395,7 +428,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -445,7 +478,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:673b1f30f776278e",
+      "sourceHash": "fnv1a64:a6526264db6c4783",
       "notice": null,
       "blocks": [
         {
@@ -478,6 +511,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "CDIAL lists Hindi nāhar, \"tiger\", under two reconstructions, nakhadara, \"tearing with the claws\" (CDIAL 6919), and nakharin, \"having claws\" (CDIAL 6921). Both are built on Sanskrit nakha, \"claw\"; which one is the source is not settled, and CDIAL gives no Marwari form."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -488,7 +532,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -537,7 +581,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -587,7 +631,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d79ebfc4e459ac5a",
+      "sourceHash": "fnv1a64:e7ad6a6e7c035b06",
       "notice": null,
       "blocks": [
         {
@@ -620,6 +664,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "हाथी (hāthī) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from hastin, \"having hands; elephant\". CDIAL lists Marwari hāthī under it (CDIAL 14039). CDIAL asks whether the Sanskrit word reshaped an older karin, perhaps of non-Aryan origin, tied to hasta, \"hand\", by popular etymology."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -630,7 +685,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -679,7 +734,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

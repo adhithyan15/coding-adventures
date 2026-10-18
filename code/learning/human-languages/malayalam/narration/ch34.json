@@ -4,7 +4,7 @@
   "chapter": 34,
   "title": "Taking, Asking, Helping, Liking",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:dfca8f35972e05f8",
+  "sourceHash": "fnv1a64:56766489a86d03c4",
   "lessons": [
     {
       "id": "ML-C34-edukkuka",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:4af91d6d1e569adc",
+      "sourceHash": "fnv1a64:408157e2a942eff2",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -85,7 +85,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Gundert glosses it \"to raise, lift, take up,\" and the lifting came first. Tamil எடு (eṭu) is the same word again — and the etymological dictionary gives this root no entry of its own, filing eṭu inside the family of എഴു (eḻu), \"to rise.\" Rise, then raise, then take. Kannada and Telugu say ಎತ್ತು / ఎత్తు (eṭṭŭ) for lifting; whether that is the same word the dictionaries argue over, so take the resemblance and leave the verdict."
+              "text": "Gundert glosses it \"to raise, lift, take up,\" and the lifting came first. Tamil எடு (eṭu) is the same word again — and DEDR 851 gives this root no entry of its own, filing eṭu inside the family of എഴു (eḻu), \"to rise.\" Rise, then raise, then take. Kannada and Telugu say ಎತ್ತು / ఎత్తు (eṭṭŭ) for lifting; whether that is the same word the dictionaries argue over, so take the resemblance and leave the verdict."
             },
             {
               "kind": "speech",

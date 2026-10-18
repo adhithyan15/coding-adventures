@@ -12,6 +12,9 @@ Before the new one: say the Bengali for a vase, then the Bengali for a cup.
 You'll want to know: বেঁটে.
 বেঁটে — beṭe — "short (of height)".
 
+The word, taken apart.
+The origin of বেঁটে (beṭe) is not settled: CDIAL has no entry for it, and a search by form and by the glosses "short" and "stunted" finds nothing of this shape in Bengali.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Bengali for a cup, then the Bengali for short.
 
 You'll want to know: ঝাল.
 ঝাল — jhāl — "spicy".
+
+The word, taken apart.
+ঝাল (jhāl) is a tadbhava, a word inherited and reshaped by sound change. It comes from jhāla, "burning, pungent", a form CDIAL reconstructs from its descendants (CDIAL 5379). Late Sanskrit has jhāli, a dish of fried green mango.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Bengali for short, then the Bengali for spicy.
 You'll want to know: নোনতা.
 নোনতা — nontā — "salty".
 
+The word, taken apart.
+নোনতা (nontā) is non, "salt", with the ending -tā. The word for salt goes back to Sanskrit lavaṇa, "salt": CDIAL lists Oriya nuṇa under it (CDIAL 10978), and Bengali alonā, "not salty", under alavaṇa, "not salty" (CDIAL 707).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Bengali for spicy, then the Bengali for salty.
 You'll want to know: শক্ত.
 শক্ত — shôktô — "hard".
 
+The word, taken apart.
+শক্ত (shôktô) is spelled as Sanskrit śakta, "able, strong"; its sense "hard" also matches Persian sakht, "hard, firm", and the two may have run together.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Bengali for salty, then the Bengali for hard.
 
 You'll want to know: নরম.
 নরম — nôrôm — "soft".
+
+The word, taken apart.
+নরম (nôrôm) is a loan, usually traced to Persian narm, "soft".
 
 What you've built.
 One more word for this chapter.

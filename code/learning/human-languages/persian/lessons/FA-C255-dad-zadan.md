@@ -14,7 +14,8 @@ romanization: "dâd zadan"
 concept_tag: FA-VERB-DAD-ZADAN
 prerequisites: [FA-C254-ta-kardan, FA-C254-avizan-kardan]
 sounds: []
-roots: []
+roots: [persian-dad, persian-zadan]
+etymology_hook: "dâd zadan: dâd ← Middle Persian dād 'justice' (EtymDB) + zadan"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C254-avizan-kardan]
 <!-- hl-knowledge: introduces=[FA-LEX-C255-KONESH255-01]; assesses=[] -->
 
 **داد زدن** — *dâd zadan* — "to shout".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*dâd zadan* pairs *dâd*, "cry", with *zadan*, "to strike". *dâd* is the old word for "justice" (Middle Persian *dād*, "law, justice", EtymDB), and a shout is usually explained as first a cry for justice. *zadan*, "to strike", is an inherited verb; it is usually traced to Middle Persian *zadan*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

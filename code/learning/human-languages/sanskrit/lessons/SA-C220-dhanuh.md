@@ -14,7 +14,8 @@ romanization: "dhanuḥ"
 concept_tag: SA-THG220-DHANUH
 prerequisites: [SA-C220-dandah, SA-C220-yastih]
 sounds: []
-roots: []
+roots: [sanskrit-dhanus]
+etymology_hook: "dhanus 'bow', a Rigvedic word (CDIAL 6726); MW gives no derivation, so its origin is uncertain"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C220-yastih]
 <!-- hl-knowledge: introduces=[SA-LEX-C220-THG220-05]; assesses=[] -->
 
 **धनुः** — *dhanuḥ* — "an archer's bow".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*dhanuḥ* is the nominative of *dhanus*, "bow", already in the Rigveda (CDIAL 6726). MW gives no derivation, so its origin is uncertain. It is the second half of *indradhanus*, "rainbow", which you have already met.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

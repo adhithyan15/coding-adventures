@@ -1,5 +1,5 @@
 Sanskrit, chapter 88: Girls, Boys and Friends.
-5 lessons. All 5 can be done entirely by ear.
+5 lessons. You can do the first 4 of them in the car; after that you will want to have stopped.
 
 
 Lesson 1 of 5.
@@ -11,6 +11,9 @@ Before the new one: say the Sanskrit for a hundred, then the Sanskrit for a thou
 
 You'll want to know: बालिका.
 बालिका (bālikā) — "a girl". बालः is "a boy"; -इका makes the girl.
+
+The word, taken apart.
+Bālikā is built from bāla, "young, a child", with the feminine ending -ikā; the origin of bāla itself is not settled (CDIAL 9216).
 
 What you've built.
 The boy word, made feminine.
@@ -41,6 +44,9 @@ Before the new one: say the Sanskrit for a thousand, then the Sanskrit for a gir
 You'll want to know: युवकः.
 युवकः (yuvakaḥ) — "a young man", between a बालः and a वृद्धः.
 
+The word, taken apart.
+Yuvaka is built from yuvan, "young". It is inherited: MW compares Latin juvenis, Gothic juggs and English young (CDIAL 10508).
+
 What you've built.
 Between boy and old man.
 
@@ -69,6 +75,9 @@ Before the new one: say the Sanskrit for a girl, then the Sanskrit for a young m
 
 You'll want to know: सखी.
 सखी (sakhī) — "a friend", said of a woman or a girl; मित्रम् is any friend.
+
+The word, taken apart.
+Sakhī is the feminine of sakhi, "companion", which MW files under the root √sac, "to follow, accompany", and compares Latin socius, "companion". It lives on as Hindi sahelī, "a woman's friend" (CDIAL 13074).
 
 What you've built.
 A friend, in the feminine.
@@ -99,6 +108,9 @@ Before the new one: say the Sanskrit for a young man, then the Sanskrit for a wo
 You'll want to know: पुत्रः.
 पुत्रः (putraḥ) — "a son", the everyday word beside सूनुः.
 
+The word, taken apart.
+MW calls the etymology of putra doubtful: perhaps the root √puṣ, "to nourish"; the old story of put + tra, "saving from the hell Put", is a traditional reading. MW compares Avestan puthra, so the word is shared with Iranian. It lives on as Hindi pūt (CDIAL 8265).
+
 What you've built.
 A second word for son.
 
@@ -121,12 +133,17 @@ What does पुत्रः (putraḥ) mean? ("A son".) Say it once more.
 Lesson 5 of 5.
 पुत्री (putrī) — a daughter.
 
+Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped.
+
 Warm-up.
 [pause 2 seconds]
 Before the new one: say the Sanskrit for a woman's friend, then the Sanskrit for a son.
 
 You'll want to know: पुत्री.
 पुत्री (putrī) — "a daughter", पुत्रः (putraḥ) ending in a long ी: the everyday word beside दुहिता.
+
+The word, taken apart.
+Putrī is the feminine of putra, "son", built with the ending -ī (MW, CDIAL 8271); see the lesson on putra for its doubtful origin.
 
 What you've built.
 Son, made feminine.

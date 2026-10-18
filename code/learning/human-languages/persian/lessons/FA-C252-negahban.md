@@ -14,7 +14,8 @@ romanization: "negahbân"
 concept_tag: FA-KAR252-NEGAHBAN
 prerequisites: [FA-C252-qannadi, FA-C252-atashneshan]
 sounds: []
-roots: []
+roots: [persian-negah]
+etymology_hook: "negahbân: Persian negah 'watch' + -bân 'keeper'; native"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C252-atashneshan]
 <!-- hl-knowledge: introduces=[FA-LEX-C252-KAR252-04]; assesses=[] -->
 
 **نگهبان** — *negahbân* — "a guard".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*negahbân* is *negah*, "watch", with *-bân*, "keeper": the watch-keeper. Both are native; *negah* is usually traced to Middle Persian *nigāh*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

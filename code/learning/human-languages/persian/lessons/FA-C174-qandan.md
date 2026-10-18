@@ -14,7 +14,8 @@ romanization: "qandân"
 concept_tag: FA-CHIZ174-QANDAN
 prerequisites: [FA-C174-zarfshuyi, FA-C174-abkesh]
 sounds: []
-roots: []
+roots: [sanskrit-khanda, persian-dan]
+etymology_hook: "qandân: qand (usually traced to Sanskrit khaṇḍa) + Persian -dân 'container'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C174-abkesh]
 <!-- hl-knowledge: introduces=[FA-LEX-C174-CHIZ174-04]; assesses=[] -->
 
 **قندان** — *qandân* — "a sugar bowl".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*qandân* is *qand*, "lump sugar", with *-dân*, "container". *qand* is usually traced to Sanskrit *khaṇḍa*, "piece, candied sugar", the word behind English *candy*; *-dân* is native Persian.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "pucchaḥ"
 concept_tag: SA-THG227-PUCCHAH
 prerequisites: [SA-C226-paksi, SA-C227-paksah]
 sounds: []
-roots: []
+roots: [sanskrit-puccha]
+etymology_hook: "puccha 'tail', in the Atharvaveda (CDIAL 8249); origin uncertain; Gujarati pũch"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C227-paksah]
 <!-- hl-knowledge: introduces=[SA-LEX-C227-THG227-02]; assesses=[] -->
 
 **पुच्छः** — *pucchaḥ* — "a tail".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*puccha* is the tail or hinder part, a word of the Atharvaveda (CDIAL 8249). MW gives no derivation, and CDIAL only compares *piccha*, "tail feather", so its origin is uncertain. It lives on as Gujarati *pũch*, "tail".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

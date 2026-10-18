@@ -14,7 +14,8 @@ romanization: "ājkal"
 concept_tag: UR-TIME95-AJKAL
 prerequisites: [UR-C95-khizan, UR-C95-tarikh]
 sounds: []
-roots: []
+roots: [sanskrit-adya, kalya-time]
+etymology_hook: "ājkal: āj 'today' ← adya (CDIAL 242) + kal ← kalya 'dawn, tomorrow' (CDIAL 3104)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C95-tarikh]
 <!-- hl-knowledge: introduces=[UR-LEX-C95-TIME95-03]; assesses=[] -->
 
 **آجکل** — *ājkal* — "these days, nowadays".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**آجکل** (*ājkal*) is "today-tomorrow": *āj*, "today", from Sanskrit *adya* (CDIAL 242), and *kal*, from *kalya*, "dawn, tomorrow" (CDIAL 3104).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

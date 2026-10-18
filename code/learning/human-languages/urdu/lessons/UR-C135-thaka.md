@@ -14,7 +14,8 @@ romanization: "thakā"
 concept_tag: UR-QUAL135-THAKA
 prerequisites: [UR-C135-bahadur, UR-C135-hoshiyar]
 sounds: []
-roots: []
+roots: [indo-aryan-sthakk]
+etymology_hook: "thakā: the past form of thaknā 'to get tired' ← *sthakk 'stop, halt' (CDIAL 13737)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C135-hoshiyar]
 <!-- hl-knowledge: introduces=[UR-LEX-C135-QUAL135-04]; assesses=[] -->
 
 **تھکا** — *thakā* — "tired".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**تھکا** (*thakā*) is the past form of *thaknā*, "to get tired". CDIAL lists *thaknā* under a reconstructed *\*sthakk*, "stop, halt", and calls its link with *sthā-*, "to stand", probable but not clear (CDIAL 13737).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

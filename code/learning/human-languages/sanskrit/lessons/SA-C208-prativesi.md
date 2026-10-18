@@ -14,7 +14,8 @@ romanization: "prativeśī"
 concept_tag: SA-PPL208-PRATIVESI
 prerequisites: [SA-C208-sakha, SA-C208-satruh]
 sounds: []
-roots: []
+roots: [sanskrit-prativesha]
+etymology_hook: "prativeśin ← prativeśa 'neighbouring house': prati 'facing' + veśa 'dwelling'; Hindi paṛosī (CDIAL 8599)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C208-satruh]
 <!-- hl-knowledge: introduces=[SA-LEX-C208-PPL208-05]; assesses=[] -->
 
 **प्रतिवेशी** — *prativeśī* — "a neighbour".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*prativeśī* comes from *prativeśa*, "a neighbouring house", built on *prati*, "facing", and *veśa*, "dwelling" (MW). A related form, *prativeśya*, lives on as Hindi *paṛosī*, "neighbour" (CDIAL 8599).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

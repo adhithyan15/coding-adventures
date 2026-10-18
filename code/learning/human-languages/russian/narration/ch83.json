@@ -4,7 +4,7 @@
   "chapter": 83,
   "title": "Midday, Midnight, Early, Late, In the morning",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:55d5eec084822a74",
+  "sourceHash": "fnv1a64:9c0ae2b2f6e430fd",
   "lessons": [
     {
       "id": "RU-C83-midday",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0f2e237b23355412",
+      "sourceHash": "fnv1a64:004a1e524e9f20e8",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "полдень (pólden) is пол-, \"half\", with день, \"day\": the middle of the day."
+              "text": "полдень (pólden) is пол-, \"half\", with день, \"day\": the middle of the day. Vasmer relates день to Lithuanian dienà, \"day\", and thinks пол- probably kin to Albanian palë, \"side\"."
             }
           ]
         },

@@ -4,7 +4,7 @@
   "chapter": 130,
   "title": "Forehead ornament, Nose ring, Anklet, Millet, Millet porridge",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:8eda140aebe4533a",
+  "sourceHash": "fnv1a64:da92f66def2d2d43",
   "lessons": [
     {
       "id": "MW-C130-borlo",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:bd6aa455100e829c",
+      "sourceHash": "fnv1a64:dcd602d6c30e3b67",
       "notice": null,
       "blocks": [
         {
@@ -52,6 +52,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The origin of बोरलो (borlo) is not settled. CDIAL, searched by form and by meaning, has no entry for it."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -62,7 +73,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -111,7 +122,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -161,7 +172,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0b6db4caf90c28c4",
+      "sourceHash": "fnv1a64:e23c1535a4a887c1",
       "notice": null,
       "blocks": [
         {
@@ -194,6 +205,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "नथ (nath) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from nasta, \"nose\". CDIAL gives no Marwari form in this entry (CDIAL 7031); the match is through Gujarati nath. CDIAL lists Gujarati nath, \"nose ring for women\", and Hindi nāth, \"nose rope\", under it."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -204,7 +226,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -253,7 +275,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -303,7 +325,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f2cbb185e0c394da",
+      "sourceHash": "fnv1a64:015d487010635947",
       "notice": null,
       "blocks": [
         {
@@ -336,6 +358,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "पायल (pāyal) is a tadbhava, a word inherited and reshaped by sound change. It comes from pādala, \"appertaining to the feet\", a form CDIAL reconstructs from its descendants. CDIAL gives no Marwari form in this entry (CDIAL 8066); the match is through Hindi pāyal, though CDIAL glosses that form only \"sure-footed\", not \"anklet\". It is built on pāda, \"foot\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -346,7 +379,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -395,7 +428,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -445,7 +478,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1485dcff540a0e6d",
+      "sourceHash": "fnv1a64:3d27c35c64c44153",
       "notice": null,
       "blocks": [
         {
@@ -478,6 +511,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "बाजरो (bājro) is a tadbhava, a word inherited and reshaped by sound change. It comes from bājjara, \"millet\", a form CDIAL reconstructs from its descendants. CDIAL gives no Marwari form in this entry (CDIAL 9201); the match is through Hindi bājrā and Gujarati bājro."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -488,7 +532,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -537,7 +581,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -587,7 +631,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:add8c7fc25c68d2c",
+      "sourceHash": "fnv1a64:5bfcd8efefbcae40",
       "notice": null,
       "blocks": [
         {
@@ -620,6 +664,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "राबड़ी (rābṛī) is a tadbhava, a word inherited and reshaped by sound change. It comes from rabbā, \"gruel, thickened juice\", a form CDIAL reconstructs from its descendants. CDIAL gives no Marwari form in this entry (CDIAL 10623); the match is through Hindi rābṛī and Gujarati rābṛī. The ṛ is an added suffix."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -630,7 +685,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -679,7 +734,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

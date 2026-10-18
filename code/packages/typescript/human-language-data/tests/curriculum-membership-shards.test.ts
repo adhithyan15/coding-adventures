@@ -1,4 +1,4 @@
-import { existsSync, mkdirSync, mkdtempSync, rmSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, mkdtempSync, readdirSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -13,7 +13,7 @@ import {
 import {
   defaultCurriculumRoot,
   loadAuthoredLanguageCurricula,
-  loadLanguageCurricula,
+  loadTrackLanguageCurriculum,
 } from "../src/loader.js";
 
 const roots: string[] = [];
@@ -63,6 +63,15 @@ function authored(): AuthoredLanguageCurriculum {
   };
 }
 
+const realRoot = defaultCurriculumRoot();
+const realTracks = readdirSync(realRoot, { withFileTypes: true })
+  .filter((entry) => entry.isDirectory() && (
+    existsSync(join(realRoot, entry.name, "curriculum.json")) ||
+    existsSync(join(realRoot, entry.name, "curriculum.d"))
+  ))
+  .map((entry) => entry.name)
+  .sort();
+
 describe("direct curriculum lesson owners", () => {
   // The canonical membership shards are already direct owners in git. A
   // tracked hash of their assembled graph is derived state, and every lesson
@@ -70,18 +79,23 @@ describe("direct curriculum lesson owners", () => {
   // Prove the useful property directly instead: repeated assembly is stable,
   // every loaded lesson is uniquely owned, and the loader's fail-closed checks
   // below remain the authority for malformed ownership.
-  it("assembles every real track deterministically from unique direct owners", () => {
-    const first = loadLanguageCurricula(defaultCurriculumRoot());
-    const second = loadLanguageCurricula(defaultCurriculumRoot());
-
-    expect(first.length).toBeGreaterThan(0);
-    expect(second).toEqual(first);
-    for (const curriculum of first) {
-      const lessons = curriculum.path.flatMap((path) => path.lessons);
-      expect(new Set(lessons).size, `${curriculum.language}: duplicate lesson owner`)
-        .toBe(lessons.length);
-    }
+  it("covers every real authored track", () => {
+    expect(realTracks.length).toBeGreaterThan(0);
+    expect(loadAuthoredLanguageCurricula(realRoot).map((track) => track.language))
+      .toEqual(realTracks);
   });
+
+  for (const language of realTracks) {
+    it(`${language}: assembles deterministically from unique direct owners`, () => {
+      const first = loadTrackLanguageCurriculum(language, realRoot);
+      const second = loadTrackLanguageCurriculum(language, realRoot);
+      expect(first).toBeDefined();
+      expect(second).toEqual(first);
+      const lessons = first!.path.flatMap((path) => path.lessons);
+      expect(new Set(lessons).size, `${language}: duplicate lesson owner`)
+        .toBe(lessons.length);
+    });
+  }
 
   it("does not reintroduce mutable whole-track digest snapshots", () => {
     const retired = fileURLToPath(new URL("./curriculum-digests/", import.meta.url));
@@ -110,6 +124,23 @@ describe("direct curriculum lesson owners", () => {
       }, null, 2)}\n`,
     );
     expect(readCurriculumMembershipOwners(root, "toy").owners).toHaveLength(1);
+  });
+
+  it("rejects a shard directory beside a direct owner before reading it", () => {
+    const root = fixture();
+    writeFileSync(
+      join(root, "toy", "curriculum-membership.d", "TOY-L1.json"),
+      `${JSON.stringify({
+        id: "TOY-L1",
+        pathSegment: "TOY-PATH-1",
+        pathOrder: 0,
+        extensions: [],
+      }, null, 2)}\n`,
+    );
+    mkdirSync(join(root, "toy", "curriculum-membership.d", "TOY-L1.d"));
+    expect(() => readCurriculumMembershipOwners(root, "toy")).toThrow(
+      /must be a real direct-child regular file/,
+    );
   });
 
   it("rejects aggregate lesson-array resurrection", () => {

@@ -14,7 +14,8 @@ romanization: "rugṇaḥ"
 concept_tag: SA-QUAL243-RUGNAH
 prerequisites: [SA-C242-duskarah, SA-C243-balavan]
 sounds: []
-roots: []
+roots: [sanskrit-rugna]
+etymology_hook: "rugṇa 'broken', then 'sick' ← past participle of √ruj 'break' (MW; CDIAL 10760)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C243-balavan]
 <!-- hl-knowledge: introduces=[SA-LEX-C243-QUAL243-02]; assesses=[] -->
 
 **रुग्णः** — *rugṇaḥ* — "sick".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*rugṇa* is the past participle of the root √ruj, "to break, shatter" (MW): "broken", and then "diseased, sick" (CDIAL 10760). The sick person is one who is broken.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

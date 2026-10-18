@@ -12,6 +12,9 @@ Before the new one: say the Marwadi for hope, then the Marwadi for a demand.
 You'll want to know: जरूरत.
 जरूरत — jarūrat — "a need".
 
+The word, taken apart.
+जरूरत (jarūrat) is a loan from Arabic ḍarūra, "need, necessity", which reached Marwadi through Persian. Its Arabic root is ḍ-r-r (Lane). Marwadi says the ḍ, which Persian pronounces z, as j.
+
 What you've built.
 One more word for this chapter.
 
@@ -42,6 +45,9 @@ Before the new one: say the Marwadi for a demand, then the Marwadi for a need.
 
 You'll want to know: लालच.
 लालच — lālach — "greed".
+
+The word, taken apart.
+लालच (lālach) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from lālitya, "amorousness". CDIAL gives no Marwari form in this entry (CDIAL 11029); the match is through Hindi lālac. It is built on lalita, "amorous".
 
 What you've built.
 One more word for this chapter.
@@ -74,6 +80,9 @@ Before the new one: say the Marwadi for a need, then the Marwadi for greed.
 You'll want to know: सपनो.
 सपनो — sapno — "a dream".
 
+The word, taken apart.
+सपनो (sapno) goes back to Sanskrit svapna, "sleep, dream" (CDIAL 13904), with the sv worn down to s. CDIAL gives no Marwari form there, and it takes forms like Nepali sapanā, "dream", as early loans from Sanskrit or possibly inherited words.
+
 What you've built.
 One more word for this chapter.
 
@@ -105,6 +114,9 @@ Before the new one: say the Marwadi for greed, then the Marwadi for a dream.
 You'll want to know: उम्मीद.
 उम्मीद — ummīd — "an expectation".
 
+The word, taken apart.
+उम्मीद (ummīd) is a loan, usually traced to Persian ummēd, "hope".
+
 What you've built.
 One more word for this chapter.
 
@@ -135,6 +147,9 @@ Before the new one: say the Marwadi for a dream, then the Marwadi for an expecta
 
 You'll want to know: मरजी.
 मरजी — marjī — "one's will, a choice".
+
+The word, taken apart.
+मरजी (marjī) is a loan from Arabic marḍī, "pleasing, approved", which reached Marwadi through Persian. Its Arabic root is r-ḍ-w (Lane). Persian says it marzī; Marwadi says the z as j.
 
 What you've built.
 One more word for this chapter.

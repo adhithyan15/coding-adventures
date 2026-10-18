@@ -14,7 +14,8 @@ romanization: "haulā"
 concept_tag: PA-QUAL140-HAULA
 prerequisites: [PA-C140-kimti, PA-C140-dugha]
 sounds: []
-roots: []
+roots: [sanskrit-laghu]
+etymology_hook: "haulā ← Sanskrit laghu 'light', a tadbhava (CDIAL 10896)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C140-dugha]
 <!-- hl-knowledge: introduces=[PA-LEX-C140-QUAL140-04]; assesses=[] -->
 
 **ਹੌਲਾ** — *haulā* — "light (not heavy)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਹੌਲਾ** (*haulā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *laghu*, "light" (CDIAL 10896). Its sounds have been swapped.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "kallafa"
 concept_tag: AR-VERB-KALLAFA
 prerequisites: [AR-C192-waffara, AR-C192-istalama]
 sounds: []
-roots: []
+roots: [k-l-f]
+etymology_hook: "kallafa: built on the root k-l-f, 'to impose a burden' (Lane); kallafa is Form II, 'to impose a cost'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C192-istalama]
 <!-- hl-knowledge: introduces=[AR-LEX-C192-ACT192-05]; assesses=[] -->
 
 **كلف** — *kallafa* — "to cost".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**كلف** (*kallafa*) is built on the native Arabic root *k-l-f*, "to impose a burden" (Lane). *Kallafa* is Form II, "to impose a cost".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "sattar"
 concept_tag: UR-NUMBERS86-SATTAR
 prerequisites: [UR-C85-pachas, UR-C85-sath]
 sounds: []
-roots: []
+roots: [sanskrit-saptati]
+etymology_hook: "sattar ← Sanskrit saptati 'seventy', a tadbhava (CDIAL 13143)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C85-sath]
 <!-- hl-knowledge: introduces=[UR-LEX-C86-NUMBERS86-01]; assesses=[] -->
 
 **ستر** — *sattar* — "seventy".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ستر** (*sattar*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *saptati*, "seventy" (CDIAL 13143).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

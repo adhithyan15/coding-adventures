@@ -1,7 +1,7 @@
 {
   "language": "punjabi",
   "chapter": 60,
-  "sourceHash": "fnv1a64:b26023536cfd6451",
+  "sourceHash": "fnv1a64:ee499cc8383342dc",
   "lessonIds": [
     "PA-C60-sikkhna",
     "PA-C60-bhullna",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "punjabi/narration/ch60.txt",
   "json": "punjabi/narration/ch60.json",
-  "textHash": "fnv1a64:2478281944ccd646",
-  "jsonHash": "fnv1a64:ae9861aae0518dc4",
+  "textHash": "fnv1a64:3bbf7337c104848c",
+  "jsonHash": "fnv1a64:9031ad8a61b49d7a",
   "findings": []
 }

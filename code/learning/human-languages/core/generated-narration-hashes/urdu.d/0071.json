@@ -1,7 +1,7 @@
 {
   "language": "urdu",
   "chapter": 71,
-  "sourceHash": "fnv1a64:53ae00e6640c1c28",
+  "sourceHash": "fnv1a64:90521c5ec979f115",
   "lessonIds": [
     "UR-C71-garm",
     "UR-C71-ahista",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "urdu/narration/ch71.txt",
   "json": "urdu/narration/ch71.json",
-  "textHash": "fnv1a64:5f5e1c3a10b915c5",
-  "jsonHash": "fnv1a64:82be7607fc675bce",
+  "textHash": "fnv1a64:916077e3779ab5bd",
+  "jsonHash": "fnv1a64:17a67816cef37a37",
   "findings": []
 }

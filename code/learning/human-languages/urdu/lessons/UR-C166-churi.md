@@ -14,7 +14,8 @@ romanization: "chūṛī"
 concept_tag: UR-CHIZ166-CHURI
 prerequisites: [UR-C166-bali, UR-C166-har]
 sounds: []
-roots: []
+roots: [sanskrit-cuda]
+etymology_hook: "chūṛī ← Sanskrit cūḍa 'bracelet', a tadbhava (CDIAL 4884)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C166-har]
 <!-- hl-knowledge: introduces=[UR-LEX-C166-CHIZ166-05]; assesses=[] -->
 
 **چوڑی** — *chūṛī* — "a bangle".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**چوڑی** (*chūṛī*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *cūḍa*, "bracelet" (CDIAL 4884). The Sanskrit word is known only from the old word-lists.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

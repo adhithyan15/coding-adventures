@@ -14,8 +14,8 @@ romanization: "sochnā / soch / sochtā / sochtī / sochte"
 concept_tag: VERB-THINK
 prerequisites: [HI-C05-bolta-hun, HI-C07-nahin]
 sounds: [matra-o, dental-na]
-roots: [shoc-grieve]
-etymology_hook: "सोचना (sochnā, 'to think') descends from Sanskrit शोचति (śocati, 'burns, grieves, mourns'), root शुच् (śuc-) — Hindi's word for thinking began as a word for GRIEVING, and the noun सोच still means both 'thought' and 'worry'; the root has no secure English cousin and the lesson says so, but the SHAPE of the change is everywhere — English think and thank are one Germanic root, and Latin pēnsāre 'to weigh' is behind pensive, so three families each built their mind-verb out of something that was not thinking"
+roots: [sanskrit-shocyate, sanskrit-shuc]
+etymology_hook: "sochnā: CDIAL 12621 lists it under Sanskrit śocyate 'is made to feel pain', from the root śuc- 'burn, grieve'"
 duration:
   max_seconds: 250
 requires:
@@ -50,27 +50,24 @@ infinitive ends in **-ना** like every Hindi verb, and the stem is **सो�
 (*sochtī*, f.) — "I think." Respectfully, **आप सोचते हैं** (*āp sochte haiṁ*).
 
 The stem is also a noun on its own. **सोच** (*soch*) means "**a thought**" —
-and, just as ordinarily, "**worry**." Hold on to that double meaning; the word's
-history is the reason for it.
+and, as often, "**worry**." Hold on to that double meaning.
 
 ## You'll want to know — thinking that started out as grieving
 <!-- hl-knowledge: introduces=[HI-CONCEPT-C34-SOCHNA-02]; assesses=[HI-CONCEPT-C34-SOCHNA-01] -->
 
-**सोचना** comes down from Sanskrit **शोचति** (*śocati*) — "**burns; grieves;
-mourns**" — on the root **शुच्** (*śuc-*). Through Prakrit the sound softened
-and the sense drifted: *burn* → *be consumed by something* → *brood on it* →
+**सोचना** comes down from Sanskrit *śocyate*, "**is made to feel pain**"
+(CDIAL 12621), on the root **शुच्** (*śuc-*), "burn, grieve". Through Prakrit the sound softened and
+the sense drifted: *burn* → *be consumed by something* → *brood on it* →
 plain *think*. Hindi's ordinary word for thinking is an old word for sorrow
 that cooled down.
 
-Be honest about the limits: **शुच्** has **no secure English cousin**. Nothing
-*think*-shaped waits at the other end of this trail, and inventing one would be
-worse than saying so.
+Be honest about the limits: **शुच्** has **no secure English cousin**, and
+inventing one would be worse than saying so.
 
 What travels instead is the **shape** of the change. English **think** and
 **thank** are one Germanic root — to thank someone was to *think well of* them.
 Latin **pēnsāre** meant "**to weigh**," which is why English has **pensive**.
-Three unrelated families, three mind-verbs, not one of them starting out
-meaning "to think."
+Three families, and no mind-verb that began as "think."
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[HI-CONCEPT-C34-SOCHNA-01, HI-CONCEPT-C34-SOCHNA-02, HI-CONCEPT-C07-NAHIN-01] -->
@@ -86,8 +83,8 @@ meaning "to think."
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-CONCEPT-C34-SOCHNA-01, HI-CONCEPT-C34-SOCHNA-02, HI-CONCEPT-C07-NAHIN-01] -->
 
-[PAUSE 3s] What did *śocati* mean before it meant "think"? (**To burn, to
-grieve**.)
+[PAUSE 3s] What did the root *śuc-* mean before it meant "think"? (**To burn,
+to grieve**.)
 Which everyday Hindi noun still carries both halves, and where does *nahīṁ* sit
 in *maiṁ nahīṁ sochtā*? (**सोच**, a thought *and* a worry; *nahīṁ* goes
 **before the verb**.)

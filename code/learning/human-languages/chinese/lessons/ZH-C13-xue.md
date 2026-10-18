@@ -11,8 +11,8 @@ concept_tag: ZH-SCHOOL-STUDY
 gloss: study; learn, now read and written
 prerequisites: [ZH-W13-xue]
 sounds: [tone-2]
-roots: []
-etymology_hook: The spoken action now attaches to its top-cover-child writing plan.
+roots: [middle-chinese-haewk]
+etymology_hook: "xué 'to learn': inherited, from Middle Chinese haewk; Mandarin lost the final k"
 duration:
   max_seconds: 155
 requires:
@@ -42,6 +42,9 @@ reviews_of: [ZH-C13-hear-xue, ZH-W13-xue]
 > **学** — *xué* — **study; learn**
 
 [YOU READ: **学** without pinyin, then give the syllable a clear rise]
+
+**学** is inherited from Middle Chinese *haewk*, "to learn" (Guangyun, in
+Baxter's transcription); Mandarin lost the final *k*.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-XUE-01, ZH-SCRIPT-XUE-01] -->

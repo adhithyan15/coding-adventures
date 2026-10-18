@@ -14,7 +14,8 @@ romanization: "vāḷ"
 concept_tag: GU-BODY1-HAIR
 prerequisites: [GU-C46-belly, GU-C46-tooth]
 sounds: []
-roots: []
+roots: [sanskrit-vala-hair]
+etymology_hook: "vāḷ ← Sanskrit vāla 'hair of tail, tail, hair', a tadbhava (CDIAL 11572)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C46-tooth]
 <!-- hl-knowledge: introduces=[GU-LEX-C46-BODY1-05]; assesses=[] -->
 
 **વાળ** (*vāḷ*) — "hair". The hair on the **માથું**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**વાળ** (*vāḷ*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *vāla*, "hair of tail, tail, hair" (CDIAL 11572).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

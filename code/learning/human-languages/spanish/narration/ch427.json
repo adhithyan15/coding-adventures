@@ -4,7 +4,7 @@
   "chapter": 427,
   "title": "People Named By What They Do",
   "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:fa10775f08b3ce11",
+  "sourceHash": "fnv1a64:287f164e7eebcf00",
   "lessons": [
     {
       "id": "ES-C427-vendedor",
@@ -488,7 +488,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b556d0aa4f153140",
+      "sourceHash": "fnv1a64:1dd22fb76e62344c",
       "notice": null,
       "blocks": [
         {
@@ -549,7 +549,7 @@
             },
             {
               "kind": "speech",
-              "text": "Bomba is usually taken to imitate the sound of a boom."
+              "text": "Bomba is usually taken to imitate the sound of a boom, through Latin bombus, \"a booming noise\", from Greek (EtymDB 2.1)."
             }
           ]
         },

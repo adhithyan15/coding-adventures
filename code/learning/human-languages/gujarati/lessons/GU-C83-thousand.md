@@ -14,7 +14,8 @@ romanization: "hajār"
 concept_tag: GU-NUM3-THOUSAND
 prerequisites: [GU-C83-fifty, GU-C83-hundred]
 sounds: []
-roots: []
+roots: [persian-hazar]
+etymology_hook: "hajār: usually traced to Persian hazār 'thousand'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C83-hundred]
 <!-- hl-knowledge: introduces=[GU-LEX-C83-NUM3-03]; assesses=[] -->
 
 **હજાર** (*hajār*) — "a thousand".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**હજાર** (*hajār*) is a loan, usually traced to Persian *hazār*, "thousand". Gujarati writes the *z* as *j*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

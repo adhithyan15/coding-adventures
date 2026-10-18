@@ -14,7 +14,8 @@ romanization: "morakhkhasi"
 concept_tag: FA-KAR177-MORAKHKHASI
 prerequisites: [FA-C177-mosafer, FA-C177-rahnama]
 sounds: []
-roots: []
+roots: [arabic-murakhkhas]
+etymology_hook: "morakhkhasi: Arabic muraḫḫaṣ 'permitted', root r-ḫ-ṣ (Lane), + Persian -i"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C177-rahnama]
 <!-- hl-knowledge: introduces=[FA-LEX-C177-KAR177-03]; assesses=[] -->
 
 **مرخصی** — *morakhkhasi* — "leave, time off work".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*morakhkhasi* is *morakhkhas*, "released, given leave", with the ending *-i*. *morakhkhas* is borrowed from Arabic *muraḫḫaṣ*, "permitted, licensed" (root *r-ḫ-ṣ*, Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

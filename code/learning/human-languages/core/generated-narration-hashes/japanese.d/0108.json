@@ -1,7 +1,7 @@
 {
   "language": "japanese",
   "chapter": 108,
-  "sourceHash": "fnv1a64:1a8beb4680d52ff9",
+  "sourceHash": "fnv1a64:f8141600aad85613",
   "lessonIds": [
     "JA-C108-kai",
     "JA-C108-tai",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "japanese/narration/ch108.txt",
   "json": "japanese/narration/ch108.json",
-  "textHash": "fnv1a64:99b624de0034c5f6",
-  "jsonHash": "fnv1a64:e500fa966ff480ab",
+  "textHash": "fnv1a64:1708ec28c0fe3e3d",
+  "jsonHash": "fnv1a64:a4f87eeececdfa25",
   "findings": []
 }

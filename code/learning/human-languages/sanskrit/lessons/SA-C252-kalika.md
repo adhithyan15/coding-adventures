@@ -14,7 +14,8 @@ romanization: "kalikā"
 concept_tag: SA-THG252-KALIKA
 prerequisites: [SA-C252-valli, SA-C252-kantakah]
 sounds: []
-roots: []
+roots: [sanskrit-kali]
+etymology_hook: "kalikā 'bud' ← kali 'unblown bud' (CDIAL 2934); Hindi kalī 'bud'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C252-kantakah]
 <!-- hl-knowledge: introduces=[SA-LEX-C252-THG252-03]; assesses=[] -->
 
 **कलिका** — *kalikā* — "a bud".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*kalikā* is *kali*, "unblown bud", with the suffix *-kā*, first found in Kālidāsa (CDIAL 2934). Its origin is uncertain, but it lives on as Hindi *kalī*, "bud".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

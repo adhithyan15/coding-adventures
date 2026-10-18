@@ -14,7 +14,8 @@ romanization: "bāsi"
 concept_tag: BN-QUAL140-BASI
 prerequisites: [BN-C140-bhota, BN-C140-tatka]
 sounds: []
-roots: []
+roots: [sanskrit-vasita]
+etymology_hook: "bāsi ← Sanskrit vāsita 'infused, scented', a tadbhava (CDIAL 11604)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C140-tatka]
 <!-- hl-knowledge: introduces=[BN-LEX-C140-QUAL140-04]; assesses=[] -->
 
 **বাসি** — *bāsi* — "stale".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**বাসি** (*bāsi*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *vāsita*, "infused, scented" (CDIAL 11604). CDIAL lists Bengali *bāsi*, "stale".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "durdāntô"
 concept_tag: BN-GUN220-DURDANTO
 prerequisites: [BN-C220-prodhan, BN-C220-bhoyongkor]
 sounds: []
-roots: []
+roots: [sanskrit-durdanta]
+etymology_hook: "durdāntô ← Sanskrit durdānta 'hard to tame', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C220-bhoyongkor]
 <!-- hl-knowledge: introduces=[BN-LEX-C220-GUN220-04]; assesses=[] -->
 
 **দুর্দান্ত** — *durdāntô* — "excellent".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**দুর্দান্ত** (*durdāntô*) is Sanskrit *durdānta*, "hard to tame", taken over whole as a learned loan, a tatsama. In Bengali it has come to mean "excellent".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

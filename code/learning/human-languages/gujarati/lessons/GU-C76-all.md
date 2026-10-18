@@ -14,7 +14,8 @@ romanization: "badhũ"
 concept_tag: GU-HOWMUCH-ALL
 prerequisites: [GU-C75-between, GU-C76-alot]
 sounds: []
-roots: []
+roots: [sanskrit-baddha]
+etymology_hook: "badhũ: matches bādhũ 'whole, entire', listed under Sanskrit baddha 'bound' (CDIAL 9126)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C76-alot]
 <!-- hl-knowledge: introduces=[GU-LEX-C76-HOWMUCH-02]; assesses=[] -->
 
 **બધું** (*badhũ*) — "all, everything".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**બધું** (*badhũ*) matches Gujarati *bādhũ*, "whole, entire", which CDIAL lists under Sanskrit *baddha*, "bound" (CDIAL 9126).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

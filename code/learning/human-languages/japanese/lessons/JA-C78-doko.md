@@ -14,7 +14,8 @@ romanization: "doko"
 concept_tag: JA-LOC78-DOKO
 prerequisites: [JA-C77-itsuka, JA-C77-muika]
 sounds: []
-roots: []
+roots: [japanese-do-which, japanese-ko-place]
+etymology_hook: "doko: native do- 'which' + -ko 'place', like koko 'here'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C77-muika]
 <!-- hl-knowledge: introduces=[JA-LEX-C78-LOC78-01]; assesses=[] -->
 
 **どこ** — *doko* — "where".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**どこ** (*doko*) is native: *do-*, the root of "which", with *-ko*, "place", as in *koko*, "here". It is inherited rather than borrowed, and JMdict marks it as usually written in kana.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

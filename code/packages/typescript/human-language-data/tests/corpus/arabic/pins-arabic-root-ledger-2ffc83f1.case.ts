@@ -12,10 +12,28 @@ it("pins Arabic's root ledger", () => {
     // Chapters 37-41 brought the root set to 107. Retiring the superseded
     // AR-W01/W02/W03 ladder preserved its origin prose but removed several
     // downstream declaration spends, so that honest cost remains pinned here.
-    roots: 107,
-    underspent: 105,
-    neverSpent: 94,
-    payoffDistribution: { "0": 94, "1": 10, "2": 1, "3": 1, "5": 1 },
-    underspentPercent: 98,
+    //
+    // The etymology pass (HL24 section 9) gave every word lesson the root or
+    // donor its "taken apart" block names, checked against Lane's Lexicon:
+    // 107 -> 943 roots. The new payoffs are reuses of one Arabic root as
+    // Lane files it (maktab and kitab on k-t-b, mustaqbal and qabla on q-b-l);
+    // loans that only look like a root (jazar 'carrot', khiyar 'cucumber')
+    // keep slugs of their own. Most roots are still spent once or not at
+    // all, which is the honest state of a vocabulary list.
+    //
+    // The independent review then moved two lessons off native-root slugs:
+    // miqlama joins qalam on greek-kalamos (one more payoff), and tawabil
+    // takes aramaic-tabla, so 943 -> 942 roots.
+    //
+    // The etymology-hygiene pass unified two spellings of one root: the six
+    // lessons on `semitic-s-l-m` (AR-C04's salāma and the AR-W00/W12 greeting
+    // writing lessons) moved onto the bare `s-l-m` that AR-C01-salam already
+    // introduced. 942 -> 941 roots; the root's payoffs go 2 + 5 -> 8 in one
+    // entry, which is the reuse the split had been hiding.
+    roots: 941,
+    underspent: 913,
+    neverSpent: 695,
+    payoffDistribution: { "0": 695, "1": 166, "2": 52, "3": 19, "4": 7, "6": 1, "8": 1 },
+    underspentPercent: 97,
   });
 });

@@ -14,7 +14,8 @@ romanization: "kawaii"
 concept_tag: JA-QUAL129-KAWAII
 prerequisites: [JA-C128-komakai, JA-C128-minikui]
 sounds: []
-roots: []
+roots: [japanese-kawaii]
+etymology_hook: "kawaii: native; JMdict lists kawayui as another form; the kanji 可愛い are ateji"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C128-minikui]
 <!-- hl-knowledge: introduces=[JA-LEX-C129-QUAL129-01]; assesses=[] -->
 
 **かわいい** — *kawaii* — "cute".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**かわいい** (*kawaii*) is a native word; JMdict lists *kawayui* as another reading of it, the older shape of the word. JMdict marks its kanji, "can" and "love", as ateji. It is inherited rather than borrowed.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

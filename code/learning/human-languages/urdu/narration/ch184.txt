@@ -12,6 +12,9 @@ Before the new one: say the Urdu for to die, then the Urdu for to increase.
 You'll want to know: بیمار پڑنا.
 بیمار پڑنا — bīmār paṛnā — "to fall ill".
 
+The phrase, taken apart.
+بیمار پڑنا (bīmār paṛnā) is "to fall ill". bīmār, "ill", is usually traced to Persian bīmār, and paṛnā, "to fall, to happen", comes from Sanskrit patati, "flies; falls" (CDIAL 7722).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Urdu for to increase, then the Urdu for to fall ill.
 
 You'll want to know: سوجنا.
 سوجنا — sūjnā — "to swell".
+
+The word, taken apart.
+سوجنا (sūjnā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from śūyate, "is swollen" (CDIAL 12568).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Urdu for to fall ill, then the Urdu for to swell.
 You'll want to know: کانپنا.
 کانپنا — kāṅpnā — "to shiver, to tremble".
 
+The word, taken apart.
+کانپنا (kāṅpnā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from kampate, "trembles, shivers" (CDIAL 2767).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Urdu for to swell, then the Urdu for to shiver.
 You'll want to know: بھیگنا.
 بھیگنا — bhīgnā — "to get wet".
 
+The word, taken apart.
+بھیگنا (bhīgnā) is a tadbhava, a word inherited and reshaped by sound change. It comes from bhiyagna, "smeared, wet", a form CDIAL reconstructs from its descendants (CDIAL 9500). CDIAL builds it on Sanskrit añj-, "to anoint".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Urdu for to shiver, then the Urdu for to get wet.
 
 You'll want to know: سفر کرنا.
 سفر کرنا — safar karnā — "to travel".
+
+The phrase, taken apart.
+سفر کرنا (safar karnā) joins safar, "a journey", and karnā, "to do". safar is Arabic, "a journey", and reached Urdu through Persian (Lane, root s-f-r); karnā comes from Sanskrit karoti, "does" (CDIAL 2814).
 
 What you've built.
 One more word for this chapter.

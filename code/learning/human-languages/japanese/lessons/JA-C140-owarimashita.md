@@ -14,7 +14,8 @@ romanization: "owarimashita"
 concept_tag: JA-VERB-OWARU
 prerequisites: [JA-C140-sakki, JA-C139-dokonimo, JA-W137-pu, JA-W132-so]
 sounds: []
-roots: []
+roots: [japanese-owaru, japanese-masu-polite]
+etymology_hook: "owarimashita: native owaru 'end' + polite past -mashita"
 duration:
   max_seconds: 200
 requires:
@@ -59,6 +60,11 @@ Now you can say what you did, and when:
 >
 > **きょねん どこにも いきませんでした。** — "Last year I didn't go
 > anywhere."
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**おわりました** (*owarimashita*) is native *owaru*, "to end", with *-mashita*, the past of the polite ending *-masu*. The verb is inherited rather than borrowed (JMdict).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-C140-OWARIMASHITA, JA-LEX-C140-SENSHUU, JA-LEX-C140-SENGETSU, JA-LEX-C140-KYONEN, JA-LEX-C140-SAKKI] -->

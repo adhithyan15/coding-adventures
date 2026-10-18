@@ -14,7 +14,8 @@ romanization: "dā̃ṛāno"
 concept_tag: BN-VERB-DARANO
 prerequisites: [BN-C103-bhag, BN-C104-mapa]
 sounds: []
-roots: []
+roots: [sanskrit-danda]
+etymology_hook: "dāṁṛāno: apparently with daṇḍa 'stick', where CDIAL lists Maithili ḍāṁṛab 'to stand upright' (CDIAL 6128)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C104-mapa]
 <!-- hl-knowledge: introduces=[BN-LEX-C104-ACT104-02]; assesses=[] -->
 
 **দাঁড়ানো** — *dā̃ṛāno* — "to stand".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **দাঁড়ানো** (*dāṁṛāno*) is not certain, but it appears to belong with Sanskrit *daṇḍa*, "stick", a word CDIAL thinks probably non-Aryan. CDIAL has no entry for the Bengali verb, but under *daṇḍa* it lists Maithili *ḍāṁṛab*, "to stand upright", beside Bengali *dāṁṛā*, "stick, backbone" (CDIAL 6128).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

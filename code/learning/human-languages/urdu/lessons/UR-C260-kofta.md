@@ -14,7 +14,8 @@ romanization: "koftā"
 concept_tag: UR-CHIZ260-KOFTA
 prerequisites: [UR-C259-maida, UR-C259-suji]
 sounds: []
-roots: []
+roots: [persian-kofta]
+etymology_hook: "koftā: usually traced to Persian kōfta 'pounded'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C259-suji]
 <!-- hl-knowledge: introduces=[UR-LEX-C260-CHIZ260-01]; assesses=[] -->
 
 **کوفتہ** — *koftā* — "a meatball".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**کوفتہ** (*koftā*) is a loan, usually traced to Persian *kōfta*, "pounded". It is the past participle of *kōftan*, "to pound".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

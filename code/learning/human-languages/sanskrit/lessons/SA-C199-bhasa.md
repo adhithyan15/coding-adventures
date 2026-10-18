@@ -14,7 +14,8 @@ romanization: "bhāṣā"
 concept_tag: SA-SCH199-BHASA
 prerequisites: [SA-C198-andam, SA-C199-vakyam]
 sounds: []
-roots: []
+roots: [sanskrit-bhasha]
+etymology_hook: "bhāṣā 'speech, language' ← root √bhāṣ 'speak' (MW; CDIAL 9479)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C199-vakyam]
 <!-- hl-knowledge: introduces=[SA-LEX-C199-SCH199-02]; assesses=[] -->
 
 **भाषा** — *bhāṣā* — "a language".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*bhāṣā* is built on the root √bhāṣ, "to speak" (MW). MW notes it meant everyday spoken language, as opposed to the language of the Veda; CDIAL 9479 lists it, and Hindi and Telugu still use it for "language".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

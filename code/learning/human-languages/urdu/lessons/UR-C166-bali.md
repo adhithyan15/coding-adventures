@@ -14,7 +14,8 @@ romanization: "bālī"
 concept_tag: UR-CHIZ166-BALI
 prerequisites: [UR-C166-sari, UR-C166-belt]
 sounds: []
-roots: []
+roots: [sanskrit-valaka]
+etymology_hook: "bālī ← Sanskrit vālikā 'ear ornament', a tadbhava (CDIAL 11573)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C166-belt]
 <!-- hl-knowledge: introduces=[UR-LEX-C166-CHIZ166-03]; assesses=[] -->
 
 **بالی** — *bālī* — "an earring".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**بالی** (*bālī*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *vālikā*, "ear ornament" (CDIAL 11573). It is a form of Sanskrit *vālaka*, "bracelet; finger-ring", which CDIAL gives beside it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

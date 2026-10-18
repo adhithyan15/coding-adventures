@@ -1,0 +1,19 @@
+{
+  "id": "SA-A1-V-07",
+  "category": "Dhātu and kriyāpada — the verb",
+  "label": "the imperative: giving an instruction",
+  "probe": [
+    "SA-LEX-C27-REPLY-01",
+    "SA-LEX-C29-COURTESY-02"
+  ],
+  "anchorIds": [
+    "ES-A1-PROXY",
+    "SA-CORPUS",
+    "ED-SANSKRIT"
+  ],
+  "derivedFrom": [
+    "A1-V-11",
+    "A1-F4-01"
+  ],
+  "note": "astu ('so be it') and kṣamyatām ('let it be forgiven') are both imperatives and both taught as whole words. The FORM is never taught as a paradigm, so a learner has two frozen imperatives and no way to build a third. Counted covered on the exponent and flagged here as not covered on the rule."
+}

@@ -14,7 +14,8 @@ romanization: "sanduqdâr"
 concept_tag: FA-KAR286-SANDUQDAR
 prerequisites: [FA-C286-khoshkshuyi, FA-C286-pishkhan]
 sounds: []
-roots: []
+roots: [arabic-sunduq, persian-dar-holder]
+etymology_hook: "sanduqdâr: sanduq ← Arabic ṣundūq 'chest' (Lane) + Persian -dâr 'holder'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C286-pishkhan]
 <!-- hl-knowledge: introduces=[FA-LEX-C286-KAR286-03]; assesses=[] -->
 
 **صندوقدار** — *sanduqdâr* — "a cashier".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*sanduqdâr* is *sanduq*, "chest, till", with *-dâr*, "holder": the keeper of the till. *sanduq* is borrowed from Arabic *ṣundūq* (root *ṣ-n-d-q*, Lane); *-dâr* is native.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

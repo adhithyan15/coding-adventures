@@ -15,7 +15,7 @@
 // corpus as every block in the shared file.
 // ---------------------------------------------------------------------------
 import { describe, expect, it } from "vitest";
-import { loadEverything, loadExamInventory } from "../src/loader.js";
+import { loadExamInventory, loadLessons } from "../src/loader.js";
 import {
   EXAM_CONTENT_DIMENSIONS,
   measureExamCoverage,
@@ -23,6 +23,10 @@ import {
   isExamInventoryComplete,
   trackIntroducedAtoms,
 } from "../src/exam-inventory.js";
+
+// One read-only lesson snapshot serves every assertion in this suite. Loading
+// the entire corpus per case obscures the inventory claim with Windows I/O.
+const lessons = loadLessons();
 
 describe("the committed Italian A1 inventory", () => {
   const inventory = loadExamInventory("italian", "A1");
@@ -43,7 +47,6 @@ describe("the committed Italian A1 inventory", () => {
   });
 
   it("probes only atoms that EXIST, so a guessed id cannot under-report", () => {
-    const { lessons } = loadEverything();
     const taught = trackIntroducedAtoms(lessons, "italian");
     const unknown: string[] = [];
     for (const point of inventory.points) {
@@ -141,7 +144,6 @@ describe("the committed Italian A1 inventory", () => {
   });
 
   it("reports the tranche that closed four columns outright, and what it did not touch", () => {
-    const { lessons } = loadEverything();
     const coverage = measureExamCoverage(inventory, lessons);
     expect(coverage.enumerated).toBe(292);
     expect(coverage.covered).toBe(164);

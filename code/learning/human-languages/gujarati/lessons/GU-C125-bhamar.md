@@ -14,7 +14,8 @@ romanization: "bhamar"
 concept_tag: GU-THINGS125-BHAMAR
 prerequisites: [GU-C124-gal, GU-C124-kapal]
 sounds: []
-roots: []
+roots: [sanskrit-bhru]
+etymology_hook: "bhamar 'eyebrow': CDIAL lists bhammar under Sanskrit bhrū 'eyebrow'; its -m- is not fully explained (CDIAL 9688)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C124-kapal]
 <!-- hl-knowledge: introduces=[GU-LEX-C125-THINGS125-01]; assesses=[] -->
 
 **ભમર** (*bhamar*) — "an eyebrow".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ભમર** (*bhamar*) is a tadbhava. CDIAL lists it, as *bhammar*, under Sanskrit *bhrū*, "eyebrow" (CDIAL 9688). Its *-m-* is not fully explained; CDIAL thinks it scarcely comes from the verb *bhram*, "to whirl".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "sūraj"
 concept_tag: UR-NATURE66-SURAJ
 prerequisites: [UR-C65-sitara, UR-C65-badal]
 sounds: []
-roots: []
+roots: [sanskrit-surya]
+etymology_hook: "sūraj: usually traced to Sanskrit sūrya 'sun' (CDIAL 13574 lists no Hindi or Urdu form)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C65-badal]
 <!-- hl-knowledge: introduces=[UR-LEX-C66-NATURE66-01]; assesses=[] -->
 
 **سورج** — *sūraj* — "the sun".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**سورج** (*sūraj*) is usually traced to Sanskrit *sūrya*, "sun". CDIAL lists that word, but no Hindi or Urdu form under it (CDIAL 13574).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

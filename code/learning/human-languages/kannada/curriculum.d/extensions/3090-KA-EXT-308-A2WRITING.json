@@ -1,0 +1,10 @@
+{
+  "id": "KA-EXT-308-A2WRITING",
+  "stage": "A2",
+  "kind": "required",
+  "category": "writing",
+  "canDo": "I can independently write a model-free connected 70–90 word Kannada message in Kannada script for a named reader and practical purpose.",
+  "prerequisites": [
+    "KA-EXT-307-KELASA307"
+  ]
+}

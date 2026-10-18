@@ -15,7 +15,7 @@ You'll want to know first — one word.
 کان (kān) is masculine, so merā keeps the form you already know from bhāī and khāndān.
 
 The word, taken apart — honestly, not fully traced.
-kān continues Sanskrit karṇa by way of Prakrit and Apabhramsa kaṇṇa. That much is solid. Where karṇa itself comes from is not: the trail runs out inside Indo-Aryan, with only a loose, unconfirmed suggestion linking it to Persian کر (kar), "deaf." No English cousin, no settled Indo-European root — the same honest dead end paṛhnā's paṭh- hit two chapters ago.
+kān continues Sanskrit karṇa, "ear", by way of Prakrit and Apabhramsa kaṇṇa (CDIAL 2830). That much is solid. Where karṇa itself comes from is not: the trail runs out inside Indo-Aryan, with only a loose, unconfirmed suggestion linking it to Persian کر (kar), "deaf." No English cousin, no settled Indo-European root — the same honest dead end paṛhnā's paṭh- hit two chapters ago.
 Notice the pattern from last chapter still holds: کان (kān) is inherited, straight from Sanskrit, the same road as bhāī and bahan. khāndān, the word that closed that chapter, was Persian instead — the body's own words stay native even where their history goes quiet.
 
 Guided Practice.
@@ -53,7 +53,7 @@ The letters in this word.
 کان (kān) is ک ا ن — k, ā, n. ناک (nāk) is ن ا ک — n, ā, k. The same three letters, in exactly the opposite order. Ear and nose, spelled as mirror images of each other — a coincidence of Urdu's script, not of its history; the two words are not related.
 
 The word, taken apart — a real cousin, and English agrees.
-nāk continues Sauraseni Prakrit ṇakka, from Proto-Indo-Iranian náHs, from Proto-Indo-European néh₂s, "nose." English nose comes from that very root. Where کان (kān)'s ancestry ran out unanswered — recall karṇa's own origin was left unsettled last lesson — ناک's does not: nāk and nose are genuine cousins, joining bhāī and brother as this book's settled Indo-European matches.
+nāk continues Sauraseni Prakrit ṇakka, which CDIAL derives, possibly, from nas-ka-, built on Sanskrit nas-, "nose" (CDIAL 6909); nas- comes from Proto-Indo-Iranian náHs, from Proto-Indo-European néh₂s, "nose." English nose comes from that very root. Where کان (kān)'s ancestry ran out unanswered — recall karṇa's own origin was left unsettled last lesson — ناک's does not: nāk and nose are genuine cousins, joining bhāī and brother as this book's settled Indo-European matches.
 
 Guided Practice.
 [your turn — say: nāk — nose; then merī nāk]
@@ -95,7 +95,7 @@ From the right edge: آ, alif carrying long ā (the same mark you already read i
 The ن in this word is not pronounced as its own consonant. It marks the آ before it as nasal — the vowel said through the nose, with no separate n sound following it. Say āṅkh by nasalizing the ā, not by adding a clean n.
 
 The word, taken apart — a third real cousin.
-āṅkh continues Sanskrit ákṣi, from Proto-Indo-European h₃ekʷ-, "eye, to see." English eye descends from that same root. This chapter has now found two settled Indo-European cousins in a row — ناک (nāk)/nose, آنکھ/eye — after کان (kān)'s honest dead end.
+āṅkh continues Sanskrit ákṣi, "eye" (CDIAL 43), from Proto-Indo-European h₃ekʷ-, "eye, to see." English eye descends from that same root. This chapter has now found two settled Indo-European cousins in a row — ناک (nāk)/nose, آنکھ/eye — after کان (kān)'s honest dead end.
 
 Guided Practice.
 [your turn — say: āṅkh — eye; then merī āṅkh]
@@ -136,7 +136,7 @@ That middle ن does the same job it did in āṅkh, unglossed at the time: it ma
 Keep this apart from میں maiṅ and ہوں hūṅ, whose nasal ending is written with a different letter entirely: ں, nūn ghunna, a dedicated nasalization mark. منہ (muṅh) and āṅkh nasalize with a plain ن doing double duty; میں and ہوں nasalize with ں, a letter built for exactly that job and nothing else. Same sound, two different letters, depending on which word you are in.
 
 The word, taken apart — a word possibly behind myth.
-muṅh continues Sanskrit múkha, "mouth, face." One proposal, from the Sanskrit etymologist Manfred Mayrhofer, ties it to a Proto-Indo-European gesture-root mu-, "pressed lips" — the same root that would sit behind Greek mŷthos ("word," behind English myth) and German Maul, "mouth." Mayrhofer himself calls a non-Indo-European origin less likely but does not rule it out. Hold this one the way you held bahan's link to bhaj- — a real proposal, not a verdict.
+muṅh continues Sanskrit múkha, "mouth, face" (CDIAL 10158). One proposal, from the Sanskrit etymologist Manfred Mayrhofer, ties it to a Proto-Indo-European gesture-root mu-, "pressed lips" — the same root that would sit behind Greek mŷthos ("word," behind English myth) and German Maul, "mouth." Mayrhofer himself calls a non-Indo-European origin less likely but does not rule it out. Hold this one the way you held bahan's link to bhaj- — a real proposal, not a verdict.
 
 Guided Practice.
 [your turn — say: muṅh — mouth; then merā muṅh]

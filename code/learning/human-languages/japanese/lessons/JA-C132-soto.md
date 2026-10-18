@@ -14,7 +14,8 @@ romanization: "soto"
 concept_tag: JA-THING132-SOTO
 prerequisites: [JA-W132-so, JA-W03-to, JA-C131-ocha-o-kudasai, JA-C118-nawa, JA-C129-atsukamashii]
 sounds: [mora]
-roots: []
+roots: [japanese-soto]
+etymology_hook: "soto: native Japanese, inherited, not borrowed; kanji 外 attached later as kun'yomi"
 duration:
   max_seconds: 200
 requires:
@@ -51,6 +52,11 @@ Then ask for tea politely — **R2**, five lessons back.
 The new sign is spent at once. **そ** with **と** after it: two beats, *so–to*, and
 both signs are ones you write. **そこ** is a spot by the listener; **そと** is
 anywhere beyond the walls, out of doors.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**そと** (*soto*) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-C132-SOTO, JA-SCRIPT-SO-01, JA-SCRIPT-TO-01] -->

@@ -14,7 +14,8 @@ romanization: "itami"
 concept_tag: JA-HEALTH24-ITAMI
 prerequisites: [JA-C23-tanoshii, JA-C23-kowai]
 sounds: []
-roots: []
+roots: [japanese-itamu]
+etymology_hook: "itami: native, the noun from the verb itamu 'to hurt', beside itai 'painful' (JMdict)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C23-kowai]
 <!-- hl-knowledge: introduces=[JA-LEX-C24-HEALTH24-01]; assesses=[] -->
 
 **いたみ** — *itami* — "pain".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**いたみ** (*itami*) is native: the noun made from the verb *itamu*, "to hurt", by its stem, beside the adjective *itai*, "painful" (JMdict). It is inherited rather than borrowed; its kanji is a kun'yomi attached later.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "waẓīfa"
 concept_tag: AR-THINGS143-WAZIFA
 prerequisites: [AR-C143-saff, AR-C143-talib]
 sounds: []
-roots: []
+roots: [w-ẓ-f]
+etymology_hook: "waẓīfa: built on the root w-ẓ-f, 'a daily allowance' (Lane); Lane's waẓīfa is a daily allowance or fixed portion"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C143-talib]
 <!-- hl-knowledge: introduces=[AR-LEX-C143-THINGS143-04]; assesses=[] -->
 
 **وظيفة** — *waẓīfa* — "a job".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**وظيفة** (*waẓīfa*) is built on the native Arabic root *w-ẓ-f*, "a daily allowance" (Lane). Lane's *waẓīfa* is a daily allowance or fixed portion; the job is a later sense.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

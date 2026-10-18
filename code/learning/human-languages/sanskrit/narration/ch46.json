@@ -4,7 +4,7 @@
   "chapter": 46,
   "title": "Sun and Shade",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:0bfadb195b1f2216",
+  "sourceHash": "fnv1a64:69854023c78ba1b2",
   "lessons": [
     {
       "id": "SA-C46-sun",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ef59a2b443a34e06",
+      "sourceHash": "fnv1a64:d3f33bc9bce7323f",
       "notice": null,
       "blocks": [
         {
@@ -58,12 +58,23 @@
             },
             {
               "kind": "speech",
-              "text": "Sanskrit keeps several sun-words and this one has no agreed cousin outside India, so its history stops at the border. Its life since then has not: Hindi still calls Sunday ravivār, so the word gets said once a week by people who have never studied it."
+              "text": "Sanskrit keeps several sun-words, and this one has only one proposed cousin outside India, an Armenian word for the sun, so its history beyond the border is thin. Its life since then has not: Hindi still calls Sunday ravivār, so the word gets said once a week by people who have never studied it."
             }
           ]
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Ravi is a classical word for the sun (CDIAL 10646). The native grammarians derive it from the root √ru, \"to roar\" (MW). EtymDB compares an Armenian word for the sun, but its origin is not settled. It survives in ravivāra, \"Sunday\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -74,7 +85,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -132,7 +143,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -163,7 +174,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8ebba537498ccbf3",
+      "sourceHash": "fnv1a64:b66243a3b59454e0",
       "notice": null,
       "blocks": [
         {
@@ -208,6 +219,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Raśmi first meant a rope or a rein, already in the Rigveda, and then a ray of light (MW, CDIAL 10648). It lives on as Punjabi rassī, \"rope\", which Hindi borrowed."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -218,7 +240,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -276,7 +298,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -307,7 +329,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:341e21e6c6ae763f",
+      "sourceHash": "fnv1a64:cc59eea57a45f103",
       "notice": null,
       "blocks": [
         {
@@ -352,6 +374,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Prakāśa is built from the prefix pra, \"forth\", and the root √kāś, \"to shine, be visible\" (MW, CDIAL 8437), the root inside ākāśa."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -362,7 +395,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -420,7 +453,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -451,7 +484,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:afed1e49c2cdf10b",
+      "sourceHash": "fnv1a64:0c27e9cf5072a83a",
       "notice": null,
       "blocks": [
         {
@@ -490,7 +523,7 @@
             },
             {
               "kind": "speech",
-              "text": "Greek skiā, \"shadow\", is the same word, and English shine is usually put in the family too — brightness and the dark it casts named from one root. Feminine, ending in -आ."
+              "text": "Greek skiā, \"shadow\", is the same word, and so is Persian sāya. Feminine, ending in -आ."
             }
           ]
         },
@@ -595,7 +628,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:fd2d62fde72ec815",
+      "sourceHash": "fnv1a64:7e7b0ae3ef3d1a16",
       "notice": null,
       "blocks": [
         {

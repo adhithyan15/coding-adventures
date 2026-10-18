@@ -14,7 +14,8 @@ romanization: "kuṭhāraḥ"
 concept_tag: SA-THG218-KUTHARAH
 prerequisites: [SA-C217-visamah, SA-C218-sammarjani]
 sounds: []
-roots: []
+roots: [sanskrit-kuthara]
+etymology_hook: "kuṭhāra 'axe', probably borrowed from Dravidian (CDIAL 3244); Hindi kulhāṛī"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C218-sammarjani]
 <!-- hl-knowledge: introduces=[SA-LEX-C218-THG218-02]; assesses=[] -->
 
 **कुठारः** — *kuṭhāraḥ* — "an axe".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*kuṭhāra* is probably borrowed from Dravidian: CDIAL 3244, following Mayrhofer, connects it with *kuṭṭ-*, "to break, cut" (CDIAL 3236). It lives on as Hindi *kulhāṛā* and *kulhāṛī*, "axe".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "tāpaḥ"
 concept_tag: SA-LIGHT-TAPA
 prerequisites: [SA-C46-shade, SA-C44-blue, SA-C45-year]
 sounds: []
-roots: []
+roots: [sanskrit-tapa]
+etymology_hook: "tāpa 'heat' ← the root √tap 'be hot'; MW compares Latin tepeō 'be warm' (CDIAL 5767)"
 duration:
   max_seconds: 210
 requires:

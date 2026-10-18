@@ -4,8 +4,33 @@ All notable changes to the `task-app` web program are documented here.
 
 ## [Unreleased]
 
-Entries added after `task-app-v0.5.5` accumulate here until the next version is
+### Fixed — Qt milestone diamonds retain their authored rotation (#17675)
+
+Timeline milestone markers and their legend swatches retain centered 45-degree
+rotation in Qt. Both themes now measure 81 Qt style drops instead of 83;
+unsupported transforms remain reported. Release artifact coverage is unchanged.
+
+Entries added after `task-app-v0.5.7` accumulate here until the next version is
 cut.
+
+## [0.5.7] - 2026-10-16
+
+### Fixed — SwiftUI milestone markers retain their diamond rotation (#17502)
+
+TaskApp's timeline and calendar milestone squares now rotate by their authored
+45 degrees in SwiftUI. Single finite degree rotations preserve centered visual
+rotation and the original layout footprint; unsupported units, transform chains,
+and invalid angles remain explicit debt. The measured SwiftUI inventory falls
+from 59 to 57 style drops.
+
+## [0.5.6] - 2026-10-14
+
+### Fixed — SwiftUI drag-body gaps leave the degradation report (#17481)
+
+SwiftUI now recognizes the authored spacing already emitted by drag and drop
+body stacks. All four TaskApp gap false positives leave the measured inventory,
+reducing SwiftUI from 63 to 59 style drops. Unsupported values and parts reused
+on non-spacing primitives remain reported; drag behavior is unchanged.
 
 ## [0.5.5] - 2026-10-13
 

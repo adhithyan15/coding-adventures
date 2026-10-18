@@ -12,6 +12,9 @@ Before the new one: say the Arabic for lentils, then the Arabic for chickpeas.
 You'll want to know: فول.
 فول — fūl — "beans".
 
+The word, taken apart.
+فول (fūl) is built on the native Arabic root f-w-l, "beans" (Lane). Lane lists fūl under f-w-l; Hebrew pol, "bean", is a cousin.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Arabic for chickpeas, then the Arabic for beans.
 
 You'll want to know: ثوم.
 ثوم — thūm — "garlic".
+
+The word, taken apart.
+ثوم (thūm) is built on the native Arabic root th-w-m, "garlic" (Lane). Hebrew shum, "garlic", is its cousin.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Arabic for beans, then the Arabic for garlic.
 You'll want to know: خيار.
 خيار — khiyār — "a cucumber".
 
+The word, taken apart.
+خيار (khiyār) is a loan: Lane's sources call it arabicized from Persian khiyār, "cucumber", not Arabic. It only looks like the root kh-y-r, "good, choice".
+
 What you've built.
 One more word for this chapter.
 
@@ -98,6 +107,9 @@ Before the new one: say the Arabic for garlic, then the Arabic for a cucumber.
 
 You'll want to know: تفاح.
 تفاح — tuffāḥ — "apples".
+
+The word, taken apart.
+تفاح (tuffāḥ) is built on the native Arabic root t-f-ḥ, "the apple" (Lane). Lane quotes a source calling it an Arabic word, not arabicized; Hebrew tappuaḥ is a cousin.
 
 What you've built.
 One more word for this chapter.
@@ -130,6 +142,9 @@ Where does the hamza sit? (On an alif seat, أ, closing the word: qaraʾa.)
 
 You'll want to know: تمر.
 تمر — tamr — "dates".
+
+The word, taken apart.
+تمر (tamr) is built on the native Arabic root t-m-r, "dates" (Lane). Hebrew tamar, "date palm", is its cousin.
 
 What you've built.
 One more word for this chapter.
@@ -197,4 +212,4 @@ Guided Practice.
 
 Wrap-up Recall.
 [pause 3 seconds]
-A bucket? (دلو, dalw.) A broom? (مكنسة, miknasa.) Rubbish? (قمامة, qumāma.) A basket? (سلة, salla.) A box? (صندوق, ṣundūq.) A candle? (شمعة, shamʿa.) A carpet? (سجادة, sajjāda.) A doll? (دمية, dumya.) A toy? (لعبة, luʿba.) A fridge? (ثلاجة, thallāja.) A curtain? (ستارة, sitāra.) A lock? (قفل, qifl.) A handkerchief? (منديل, mindīl.) A bracelet? (سوار, siwār.) An earring? (قرط, qurṭ.) Glasses? (نظارة, naẓẓāra.) Pepper? (فلفل, filfil.) Wheat? (قمح, qamḥ.) Lentils? (عدس, ʿadas.) Chickpeas? (حمص, ḥummuṣ.) Beans? (فول, fūl.) Garlic? (ثوم, thūm.) A cucumber? (خيار, khiyār.) Apples? (تفاح, tuffāḥ.) Dates? (تمر, tamr.)
+A bucket? (دلو, dalw.) A broom? (مكنسة, miknasa.) Rubbish? (قمامة, qumāma.) A basket? (سلة, salla.) A box? (صندوق, ṣundūq.) A candle? (شمعة, shamʿa.) A carpet? (سجادة, sajjāda.) A doll? (دمية, dumya.) A toy? (لعبة, luʿba.) A fridge? (ثلاجة, thallāja.) A curtain? (ستارة, sitāra.) A lock? (قفل, qufl.) A handkerchief? (منديل, mindīl.) A bracelet? (سوار, siwār.) An earring? (قرط, qurṭ.) Glasses? (نظارة, naẓẓāra.) Pepper? (فلفل, filfil.) Wheat? (قمح, qamḥ.) Lentils? (عدس, ʿadas.) Chickpeas? (حمص, ḥummuṣ.) Beans? (فول, fūl.) Garlic? (ثوم, thūm.) A cucumber? (خيار, khiyār.) Apples? (تفاح, tuffāḥ.) Dates? (تمر, tamr.)

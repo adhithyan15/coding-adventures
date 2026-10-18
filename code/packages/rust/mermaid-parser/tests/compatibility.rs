@@ -32,9 +32,17 @@ const TIMELINE_CORPUS: &str = include_str!(concat!(
     env!("CARGO_MANIFEST_DIR"),
     "/../../../grammars/mermaid/timeline-11.16.1-corpus.json"
 ));
+const TIMELINE_VISUAL_CORPUS: &str = include_str!(concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/../../../grammars/mermaid/timeline-11.16.1-visual-corpus.json"
+));
 const MINDMAP_CORPUS: &str = include_str!(concat!(
     env!("CARGO_MANIFEST_DIR"),
     "/../../../grammars/mermaid/mindmap-11.16.1-corpus.json"
+));
+const MINDMAP_VISUAL_CORPUS: &str = include_str!(concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/../../../grammars/mermaid/mindmap-11.16.1-visual-corpus.json"
 ));
 const BLOCK_CORPUS: &str = include_str!(concat!(
     env!("CARGO_MANIFEST_DIR"),
@@ -48,9 +56,17 @@ const KANBAN_CORPUS: &str = include_str!(concat!(
     env!("CARGO_MANIFEST_DIR"),
     "/../../../grammars/mermaid/kanban-11.16.1-corpus.json"
 ));
+const KANBAN_VISUAL_CORPUS: &str = include_str!(concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/../../../grammars/mermaid/kanban-11.16.1-visual-corpus.json"
+));
 const ARCHITECTURE_CORPUS: &str = include_str!(concat!(
     env!("CARGO_MANIFEST_DIR"),
     "/../../../grammars/mermaid/architecture-11.16.1-corpus.json"
+));
+const ARCHITECTURE_VISUAL_CORPUS: &str = include_str!(concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/../../../grammars/mermaid/architecture-11.16.1-visual-corpus.json"
 ));
 const RADAR_CORPUS: &str = include_str!(concat!(
     env!("CARGO_MANIFEST_DIR"),
@@ -68,9 +84,16 @@ const TREEMAP_CORPUS: &str = include_str!(concat!(
     env!("CARGO_MANIFEST_DIR"),
     "/../../../grammars/mermaid/treemap-11.16.1-corpus.json"
 ));
+const TREEMAP_VISUAL_CORPUS: &str = include_str!(concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/../../../grammars/mermaid/treemap-11.16.1-visual-corpus.json"
+));
 const VENN_CORPUS: &str = include_str!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../../grammars/mermaid/venn-11.16.1-corpus.json"));
+const VENN_VISUAL_CORPUS: &str = include_str!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../../grammars/mermaid/venn-11.16.1-visual-corpus.json"));
 const ISHIKAWA_CORPUS: &str = include_str!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../../grammars/mermaid/ishikawa-11.16.1-corpus.json"));
+const ISHIKAWA_VISUAL_CORPUS: &str = include_str!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../../grammars/mermaid/ishikawa-11.16.1-visual-corpus.json"));
 const WARDLEY_CORPUS: &str = include_str!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../../grammars/mermaid/wardley-11.16.1-corpus.json"));
+const WARDLEY_VISUAL_CORPUS: &str = include_str!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../../grammars/mermaid/wardley-11.16.1-visual-corpus.json"));
 const CYNEFIN_CORPUS: &str = include_str!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../../grammars/mermaid/cynefin-11.16.1-corpus.json"));
 const CYNEFIN_VISUAL_CORPUS: &str = include_str!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../../grammars/mermaid/cynefin-11.16.1-visual-corpus.json"));
 const TREEVIEW_CORPUS: &str = include_str!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../../grammars/mermaid/treeview-11.16.1-corpus.json"));
@@ -79,6 +102,8 @@ const RAILROAD_CORPUS: &str = include_str!(concat!(env!("CARGO_MANIFEST_DIR"), "
 const RAILROAD_EBNF_CORPUS: &str = include_str!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../../grammars/mermaid/railroad-ebnf-11.16.1-corpus.json"));
 const RAILROAD_ABNF_CORPUS: &str = include_str!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../../grammars/mermaid/railroad-abnf-11.16.1-corpus.json"));
 const RAILROAD_PEG_CORPUS: &str = include_str!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../../grammars/mermaid/railroad-peg-11.16.1-corpus.json"));
+const RAILROAD_COMPATIBILITY_CORPUS: &str = include_str!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../../grammars/mermaid/railroad-11.16.1-compatibility-corpus.json"));
+const RAILROAD_VISUAL_CORPUS: &str = include_str!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../../grammars/mermaid/railroad-11.16.1-visual-corpus.json"));
 const INFO_CORPUS: &str = include_str!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../../grammars/mermaid/info-11.16.1-corpus.json"));
 const ZENUML_CORPUS: &str = include_str!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../../grammars/mermaid/zenuml-11.16.1-corpus.json"));
 
@@ -158,6 +183,49 @@ fn pinned_railroad_peg_corpus_parses_to_recursive_ir() {
             assert_eq!(diagram.accessibility_description.as_deref(), Some("PEG grammar"));
         }
     }
+}
+
+#[test]
+fn pinned_railroad_corpus_matches_upstream_and_native_acceptance() {
+    let corpus: Value = serde_json::from_str(RAILROAD_COMPATIBILITY_CORPUS)
+        .expect("railroad compatibility corpus must be JSON");
+    assert_eq!(corpus["upstream"].as_str(), Some("mermaid@11.16.1"));
+    assert_eq!(corpus["level"].as_str(), Some("full"));
+    assert_eq!(corpus["upstream_commit"].as_str(), Some("7ecca0cd7f1658ef74f4e7e91f925724ef403bbf"));
+    for fixture in corpus["valid"].as_array().expect("valid fixtures") {
+        let id = fixture["id"].as_str().expect("fixture id");
+        let diagram = parse_railroad(fixture["source"].as_str().expect("fixture source"))
+            .unwrap_or_else(|error| panic!("railroad fixture {id} failed: {error}"));
+        assert!(!diagram.rules.is_empty(), "railroad fixture {id} must contain rules");
+    }
+    for fixture in corpus["invalid"].as_array().expect("invalid fixtures") {
+        let id = fixture["id"].as_str().expect("fixture id");
+        assert!(parse_railroad(fixture["source"].as_str().expect("fixture source")).is_err(),
+            "invalid railroad fixture {id} parsed");
+    }
+}
+
+#[test]
+fn railroad_full_status_is_backed_by_pinned_syntax_and_visual_corpora() {
+    let manifest: Value = serde_json::from_str(COMPATIBILITY_MANIFEST)
+        .expect("compatibility manifest must be JSON");
+    let railroad = manifest["families"].as_array().expect("families").iter()
+        .find(|family| family["id"] == "railroad").expect("railroad family");
+    assert_eq!(railroad["status"].as_str(), Some("full"));
+
+    let syntax: Value = serde_json::from_str(RAILROAD_COMPATIBILITY_CORPUS)
+        .expect("railroad compatibility corpus JSON");
+    let visual: Value = serde_json::from_str(RAILROAD_VISUAL_CORPUS)
+        .expect("railroad visual corpus JSON");
+    assert_eq!(syntax["upstream_commit"], visual["upstream_commit"]);
+    let expected = syntax["valid"].as_array().expect("valid fixtures").iter()
+        .map(|fixture| fixture["id"].as_str().expect("fixture id"))
+        .collect::<BTreeSet<_>>();
+    let actual = visual["fixtures"].as_array().expect("visual fixtures").iter()
+        .map(|id| id.as_str().expect("visual fixture id"))
+        .collect::<BTreeSet<_>>();
+    assert_eq!(actual, expected);
+    assert!(!syntax["invalid"].as_array().expect("invalid fixtures").is_empty());
 }
 
 #[test]
@@ -398,51 +466,170 @@ fn cynefin_full_status_is_backed_by_pinned_syntax_and_visual_corpora() {
 }
 
 #[test]
-fn pinned_wardley_subset_corpus_parses_to_strategic_map_ir() {
+fn pinned_wardley_corpus_matches_upstream_acceptance() {
     let corpus: Value = serde_json::from_str(WARDLEY_CORPUS).expect("wardley corpus must be JSON");
     assert_eq!(corpus["upstream"].as_str(), Some("mermaid@11.16.1"));
-    for fixture in corpus["fixtures"].as_array().expect("fixture array") {
-        let name = fixture["name"].as_str().expect("fixture name");
+    assert_eq!(corpus["level"].as_str(), Some("full"));
+    assert_eq!(corpus["upstream_commit"].as_str(), Some("7ecca0cd7f1658ef74f4e7e91f925724ef403bbf"));
+    for fixture in corpus["valid"].as_array().expect("valid fixture array") {
+        let name = fixture["id"].as_str().expect("fixture id");
         let diagram = parse_wardley(fixture["source"].as_str().expect("fixture source"))
             .unwrap_or_else(|error| panic!("wardley fixture {name} failed: {error}"));
         assert!(!diagram.nodes.is_empty());
+        if name == "native-config-theme-accessibility" {
+            assert_eq!((diagram.config.width, diagram.config.height, diagram.config.padding), (760.0, 480.0, 36.0));
+            assert_eq!((diagram.config.node_radius, diagram.config.node_label_offset), (9.0, 12.0));
+            assert_eq!((diagram.config.axis_font_size, diagram.config.label_font_size), (15.0, 13.0));
+            assert!(diagram.config.show_grid); assert!(!diagram.config.use_max_width);
+            assert_eq!((&diagram.config.theme.background_color, &diagram.config.theme.axis_color,
+                &diagram.config.theme.component_fill, &diagram.config.theme.link_stroke),
+                (&"#f8fafc".to_string(), &"#123456".to_string(), &"#abcdef".to_string(), &"#6789ab".to_string()));
+            assert_eq!((&diagram.config.theme.annotation_stroke, &diagram.config.theme.annotation_text_color,
+                &diagram.config.theme.annotation_fill), (&"#7c3aed".to_string(), &"#f97316".to_string(),
+                &"#fef3c7".to_string()));
+            assert_eq!(diagram.accessibility_title.as_deref(), Some("Accessible strategy map"));
+            assert_eq!(diagram.accessibility_description.as_deref(),
+                Some("Components and dependencies\nacross the value chain"));
+        }
+    }
+    for fixture in corpus["invalid"].as_array().expect("invalid fixture array") {
+        let name = fixture["id"].as_str().expect("invalid fixture id");
+        assert!(parse_wardley(fixture["source"].as_str().expect("invalid fixture source")).is_err(),
+            "invalid wardley fixture {name} parsed");
     }
 }
 
 #[test]
-fn pinned_ishikawa_subset_corpus_parses_to_causal_tree_ir() {
+fn wardley_full_status_is_backed_by_pinned_syntax_and_visual_corpora() {
+    let manifest: Value = serde_json::from_str(COMPATIBILITY_MANIFEST)
+        .expect("compatibility manifest must be JSON");
+    let wardley = manifest["families"].as_array().expect("families array").iter()
+        .find(|family| family["id"] == "wardley").expect("wardley family");
+    assert_eq!(wardley["status"].as_str(), Some("full"));
+
+    let syntax: Value = serde_json::from_str(WARDLEY_CORPUS).expect("wardley corpus JSON");
+    let visual: Value = serde_json::from_str(WARDLEY_VISUAL_CORPUS)
+        .expect("wardley visual corpus JSON");
+    assert_eq!(syntax["upstream_commit"], visual["upstream_commit"]);
+    let expected = syntax["valid"].as_array().expect("valid fixtures").iter()
+        .map(|fixture| fixture["id"].as_str().expect("fixture id"))
+        .collect::<BTreeSet<_>>();
+    let actual = visual["fixtures"].as_array().expect("visual fixtures").iter()
+        .map(|id| id.as_str().expect("visual fixture id"))
+        .collect::<BTreeSet<_>>();
+    assert_eq!(actual, expected);
+    assert!(!syntax["invalid"].as_array().expect("invalid fixtures").is_empty());
+}
+
+#[test]
+fn pinned_ishikawa_corpus_matches_upstream_acceptance() {
     let corpus: Value = serde_json::from_str(ISHIKAWA_CORPUS).expect("ishikawa corpus must be JSON");
     assert_eq!(corpus["upstream"].as_str(), Some("mermaid@11.16.1"));
-    for fixture in corpus["fixtures"].as_array().expect("fixture array") {
-        let name = fixture["name"].as_str().expect("fixture name");
+    assert_eq!(corpus["level"].as_str(), Some("full"));
+    for fixture in corpus["valid"].as_array().expect("valid fixture array") {
+        let name = fixture["id"].as_str().expect("fixture id");
         let diagram = parse_ishikawa(fixture["source"].as_str().expect("fixture source"))
             .unwrap_or_else(|error| panic!("ishikawa fixture {name} failed: {error}"));
         assert!(!diagram.effect.is_empty());
-        assert!(!diagram.causes.is_empty());
-        if name == "diagram-padding-config" {
-            assert_eq!(diagram.diagram_padding, 64.0);
+        if name == "upstream-render-5-root-only" {
+            assert!(diagram.causes.is_empty());
+        }
+        if name == "configured-theme-and-canvas" {
+            assert_eq!(diagram.config.diagram_padding, 64.0);
+            assert!(diagram.config.use_max_width);
+            assert_eq!(diagram.config.font_size, 22.0);
+            assert_eq!(diagram.config.font_family, "Georgia");
+            assert_eq!(diagram.config.line_color, "#123456");
+            assert_eq!(diagram.config.fill_color, "#abcdef");
+            assert_eq!(diagram.config.text_color, "#654321");
+        }
+        if name == "upstream-render-6-hand-drawn" {
+            assert_eq!(diagram.config.look, diagram_ir::IshikawaLook::HandDrawn);
+        }
+        if name == "first-cause-baseline-clamps-shallower-indent" {
+            assert!(diagram.causes.iter().all(|cause| cause.parent_id.is_none()));
+        }
+        if name == "header-prefix-becomes-inline-effect" {
+            assert_eq!(diagram.effect, "-diagram");
+            assert_eq!(diagram.causes[0].label, "Problem");
         }
     }
-}
-
-#[test]
-fn pinned_venn_subset_corpus_parses_to_set_ir() {
-    let corpus: Value = serde_json::from_str(VENN_CORPUS).expect("venn corpus must be JSON");
-    assert_eq!(corpus["upstream"].as_str(), Some("mermaid@11.16.1"));
-    for fixture in corpus["fixtures"].as_array().expect("fixture array") {
-        let name = fixture["name"].as_str().expect("fixture name");
-        let diagram = parse_venn(fixture["source"].as_str().expect("fixture source"))
-            .unwrap_or_else(|error| panic!("venn fixture {name} failed: {error}"));
-        assert!(diagram.regions.iter().any(|region| region.sets.len() == 1));
+    for fixture in corpus["invalid"].as_array().expect("invalid fixture array") {
+        let name = fixture["id"].as_str().expect("fixture id");
+        assert!(parse_ishikawa(fixture["source"].as_str().expect("fixture source")).is_err(),
+            "invalid ishikawa fixture {name} parsed");
     }
 }
 
 #[test]
-fn pinned_treemap_subset_corpus_parses_to_hierarchy_ir() {
+fn ishikawa_full_status_is_backed_by_pinned_syntax_and_visual_corpora() {
+    let manifest: Value =
+        serde_json::from_str(COMPATIBILITY_MANIFEST).expect("compatibility manifest must be JSON");
+    let ishikawa = manifest["families"].as_array().expect("families array").iter()
+        .find(|family| family["id"] == "ishikawa").expect("ishikawa family");
+    assert_eq!(ishikawa["status"].as_str(), Some("full"));
+
+    let syntax: Value = serde_json::from_str(ISHIKAWA_CORPUS).expect("ishikawa corpus JSON");
+    let visual: Value = serde_json::from_str(ISHIKAWA_VISUAL_CORPUS)
+        .expect("ishikawa visual corpus JSON");
+    assert_eq!(syntax["upstream_commit"], visual["upstream_commit"]);
+    let expected = syntax["valid"].as_array().expect("valid fixtures").iter()
+        .map(|fixture| fixture["id"].as_str().expect("fixture id"))
+        .collect::<BTreeSet<_>>();
+    let actual = visual["fixtures"].as_array().expect("visual fixtures").iter()
+        .map(|id| id.as_str().expect("visual fixture id"))
+        .collect::<BTreeSet<_>>();
+    assert_eq!(actual, expected);
+    assert!(!syntax["invalid"].as_array().expect("invalid fixtures").is_empty());
+}
+
+#[test]
+fn pinned_venn_corpus_matches_upstream_acceptance() {
+    let corpus: Value = serde_json::from_str(VENN_CORPUS).expect("venn corpus must be JSON");
+    assert_eq!(corpus["upstream"].as_str(), Some("mermaid@11.16.1"));
+    assert_eq!(corpus["level"].as_str(), Some("full"));
+    for fixture in corpus["valid"].as_array().expect("valid fixture array") {
+        let id = fixture["id"].as_str().expect("fixture id");
+        let diagram = parse_venn(fixture["source"].as_str().expect("fixture source"))
+            .unwrap_or_else(|error| panic!("venn fixture {id} failed: {error}"));
+        assert!(diagram.regions.iter().any(|region| region.sets.len() == 1));
+    }
+    for fixture in corpus["invalid"].as_array().expect("invalid fixture array") {
+        let id = fixture["id"].as_str().expect("fixture id");
+        assert!(parse_venn(fixture["source"].as_str().expect("fixture source")).is_err(),
+            "invalid venn fixture {id} parsed");
+    }
+}
+
+#[test]
+fn venn_full_status_is_backed_by_pinned_syntax_and_visual_corpora() {
+    let manifest: Value =
+        serde_json::from_str(COMPATIBILITY_MANIFEST).expect("compatibility manifest must be JSON");
+    let venn = manifest["families"].as_array().expect("families array").iter()
+        .find(|family| family["id"] == "venn").expect("venn family");
+    assert_eq!(venn["status"].as_str(), Some("full"));
+
+    let syntax: Value = serde_json::from_str(VENN_CORPUS).expect("venn corpus JSON");
+    let visual: Value = serde_json::from_str(VENN_VISUAL_CORPUS)
+        .expect("venn visual corpus JSON");
+    assert_eq!(syntax["upstream_commit"], visual["upstream_commit"]);
+    let expected = syntax["valid"].as_array().expect("valid fixtures").iter()
+        .map(|fixture| fixture["id"].as_str().expect("fixture id"))
+        .collect::<BTreeSet<_>>();
+    let actual = visual["fixtures"].as_array().expect("visual fixtures").iter()
+        .map(|id| id.as_str().expect("visual fixture id"))
+        .collect::<BTreeSet<_>>();
+    assert_eq!(actual, expected);
+    assert!(!syntax["invalid"].as_array().expect("invalid fixtures").is_empty());
+}
+
+#[test]
+fn pinned_treemap_corpus_matches_upstream_acceptance() {
     let corpus: Value = serde_json::from_str(TREEMAP_CORPUS).expect("treemap corpus must be JSON");
     assert_eq!(corpus["upstream"].as_str(), Some("mermaid@11.16.1"));
-    for fixture in corpus["fixtures"].as_array().expect("fixture array") {
-        let name = fixture["name"].as_str().expect("fixture name");
+    assert_eq!(corpus["level"].as_str(), Some("full"));
+    for fixture in corpus["valid"].as_array().expect("valid fixture array") {
+        let name = fixture["id"].as_str().expect("fixture id");
         let source = fixture["source"].as_str().expect("fixture source");
         let diagram = parse_treemap(source)
             .unwrap_or_else(|error| panic!("treemap fixture {name} failed: {error}"));
@@ -453,14 +640,32 @@ fn pinned_treemap_subset_corpus_parses_to_hierarchy_ir() {
         }
     }
     for fixture in corpus["invalid"].as_array().expect("invalid fixture array") {
-        let name = fixture["name"].as_str().expect("fixture name");
+        let name = fixture["id"].as_str().expect("fixture id");
         let source = fixture["source"].as_str().expect("fixture source");
-        let error = match parse_treemap(source) {
-            Ok(_) => panic!("invalid treemap fixture {name} parsed"),
-            Err(error) => error,
-        };
-        assert!(error.message.contains("Multiple root nodes"));
+        assert!(parse_treemap(source).is_err(), "invalid treemap fixture {name} parsed");
     }
+}
+
+#[test]
+fn treemap_full_status_is_backed_by_pinned_syntax_and_visual_corpora() {
+    let manifest: Value =
+        serde_json::from_str(COMPATIBILITY_MANIFEST).expect("compatibility manifest must be JSON");
+    let treemap = manifest["families"].as_array().expect("families array").iter()
+        .find(|family| family["id"] == "treemap").expect("treemap family");
+    assert_eq!(treemap["status"].as_str(), Some("full"));
+
+    let syntax: Value = serde_json::from_str(TREEMAP_CORPUS).expect("treemap corpus JSON");
+    let visual: Value = serde_json::from_str(TREEMAP_VISUAL_CORPUS)
+        .expect("treemap visual corpus JSON");
+    assert_eq!(syntax["upstream_commit"], visual["upstream_commit"]);
+    let expected = syntax["valid"].as_array().expect("valid fixtures").iter()
+        .map(|fixture| fixture["id"].as_str().expect("fixture id"))
+        .collect::<BTreeSet<_>>();
+    let actual = visual["fixtures"].as_array().expect("visual fixtures").iter()
+        .map(|id| id.as_str().expect("visual fixture id"))
+        .collect::<BTreeSet<_>>();
+    assert_eq!(actual, expected);
+    assert!(!syntax["invalid"].as_array().expect("invalid fixtures").is_empty());
 }
 
 #[test]
@@ -656,35 +861,75 @@ fn radar_full_status_is_backed_by_the_pinned_corpus() {
 }
 
 #[test]
-fn pinned_architecture_subset_corpus_parses_to_structural_ir() {
+fn pinned_architecture_corpus_matches_upstream_acceptance() {
     let corpus: Value = serde_json::from_str(ARCHITECTURE_CORPUS)
         .expect("architecture corpus must be JSON");
     assert_eq!(corpus["upstream"].as_str(), Some("mermaid@11.16.1"));
-    for fixture in corpus["fixtures"].as_array().expect("fixture array") {
+    assert_eq!(corpus["upstream_commit"].as_str(),
+        Some("7ecca0cd7f1658ef74f4e7e91f925724ef403bbf"));
+    for fixture in corpus["valid"].as_array().expect("valid fixture array") {
         let id = fixture["id"].as_str().expect("fixture id");
         let source = fixture["source"].as_str().expect("fixture source");
         let diagram = parse_architecture(source)
             .unwrap_or_else(|error| panic!("architecture fixture {id} failed: {error}"));
-        assert!(!diagram.nodes.is_empty());
-        if id == "edge-elasticity-config" {
-            assert_eq!(
-                diagram.architecture_config.as_ref().unwrap().edge_elasticity,
-                0.8
-            );
+        if id == "empty" {
+            assert!(diagram.nodes.is_empty());
+            assert_eq!(diagram.architecture_config.as_ref().unwrap().num_iter, 2500);
         }
-        if id == "seeded-random-layout-config" {
+        if id == "quoted-titles" {
+            assert_eq!(diagram.groups[0].label, "Platform's API");
+            assert_eq!(diagram.nodes[0].label, "The \"Main\" API");
+        }
+        if id == "layout-config" {
             let config = diagram.architecture_config.as_ref().unwrap();
+            assert_eq!(config.edge_elasticity, 0.8);
+            assert_eq!(config.num_iter, 5000);
             assert!(config.randomize);
             assert_eq!(config.seed, 17);
         }
+        if id == "front-matter-config" {
+            let config = diagram.architecture_config.as_ref().unwrap();
+            assert_eq!(config.num_iter, 3200);
+            assert_eq!(config.node_separation, 104.0);
+        }
+    }
+    for fixture in corpus["invalid"].as_array().expect("invalid fixture array") {
+        let id = fixture["id"].as_str().expect("fixture id");
+        let source = fixture["source"].as_str().expect("fixture source");
+        assert!(parse_architecture(source).is_err(), "invalid architecture fixture {id} parsed");
     }
 }
 
 #[test]
-fn pinned_kanban_subset_corpus_parses_to_board_ir() {
+fn architecture_full_status_is_backed_by_pinned_syntax_and_visual_corpora() {
+    let manifest: Value =
+        serde_json::from_str(COMPATIBILITY_MANIFEST).expect("compatibility manifest must be JSON");
+    let architecture = manifest["families"].as_array().expect("families array").iter()
+        .find(|family| family["id"] == "architecture").expect("architecture family");
+    assert_eq!(architecture["status"].as_str(), Some("full"));
+
+    let syntax: Value = serde_json::from_str(ARCHITECTURE_CORPUS)
+        .expect("architecture corpus JSON");
+    let visual: Value = serde_json::from_str(ARCHITECTURE_VISUAL_CORPUS)
+        .expect("architecture visual corpus JSON");
+    assert_eq!(syntax["upstream_commit"], visual["upstream_commit"]);
+    let expected = syntax["valid"].as_array().expect("valid fixtures").iter()
+        .map(|fixture| fixture["id"].as_str().expect("fixture id"))
+        .collect::<BTreeSet<_>>();
+    let actual = visual["fixtures"].as_array().expect("visual fixtures").iter()
+        .map(|id| id.as_str().expect("visual fixture id"))
+        .collect::<BTreeSet<_>>();
+    assert_eq!(actual, expected);
+    assert!(!syntax["invalid"].as_array().expect("invalid fixtures").is_empty());
+}
+
+#[test]
+fn pinned_kanban_corpus_matches_upstream_acceptance() {
     let corpus: Value = serde_json::from_str(KANBAN_CORPUS).expect("kanban corpus must be JSON");
     assert_eq!(corpus["upstream"].as_str(), Some("mermaid@11.16.1"));
-    for fixture in corpus["fixtures"].as_array().expect("fixture array") {
+    assert_eq!(corpus["upstream_commit"].as_str(),
+        Some("7ecca0cd7f1658ef74f4e7e91f925724ef403bbf"));
+    for fixture in corpus["valid"].as_array().expect("valid fixture array") {
         let id = fixture["id"].as_str().expect("fixture id");
         let source = fixture["source"].as_str().expect("fixture source");
         let board = parse_kanban(source)
@@ -700,12 +945,10 @@ fn pinned_kanban_subset_corpus_parses_to_board_ir() {
             assert_eq!(board.columns[0].cards[0].label.text, "Grammar parser");
             assert_eq!(board.columns[0].cards[0].icon.as_deref(), Some("heart"));
         }
-        if id == "card-icon-decoration" {
-            assert_eq!(board.columns[0].cards[0].icon.as_deref(), Some("heart"));
-        }
-        if id == "class-decorations" {
+        if id == "decorations" {
             assert_eq!(board.columns[0].classes, ["backlog"]);
             assert_eq!(board.columns[0].cards[0].classes, ["urgent", "blocked"]);
+            assert_eq!(board.columns[0].cards[0].icon.as_deref(), Some("heart"));
         }
         if id == "ticket-base-url" {
             assert_eq!(
@@ -717,7 +960,8 @@ fn pinned_kanban_subset_corpus_parses_to_board_ir() {
             assert_eq!(board.config.section_width, 300.0);
             assert_eq!(board.config.padding, 32.0);
         }
-        if id == "section-ticket-metadata" {
+        if id == "section-metadata" {
+            assert_eq!(board.columns[0].label.text, "Todo queue");
             assert_eq!(board.columns[0].ticket.as_deref(), Some("KB-7"));
         }
         if id == "shape-delimited-labels" {
@@ -732,9 +976,9 @@ fn pinned_kanban_subset_corpus_parses_to_board_ir() {
             assert_eq!(board.columns[0].cards[1].label.text, "Cloud card");
             assert_eq!(board.columns[0].cards[2].label.text, "Burst card");
         }
-        if id == "quoted-labels" {
-            assert_eq!(board.columns[0].label.text, "Todo queue");
-            assert_eq!(board.columns[0].cards[0].label.text, "Quoted card");
+        if id == "quoted-delimiters" {
+            assert_eq!(board.columns[0].label.text, "String containing []");
+            assert_eq!(board.columns[0].cards[0].label.text, "String containing ()");
         }
         if id == "markdown-labels" {
             let column = &board.columns[0];
@@ -760,6 +1004,33 @@ fn pinned_kanban_subset_corpus_parses_to_board_ir() {
             assert_eq!(board.columns[0].cards[1].priority.as_deref(), Some("Very Low"));
         }
     }
+    for fixture in corpus["invalid"].as_array().expect("invalid fixture array") {
+        let id = fixture["id"].as_str().expect("fixture id");
+        let source = fixture["source"].as_str().expect("fixture source");
+        assert!(parse_kanban(source).is_err(), "invalid kanban fixture {id} parsed");
+    }
+}
+
+#[test]
+fn kanban_full_status_is_backed_by_pinned_syntax_and_visual_corpora() {
+    let manifest: Value =
+        serde_json::from_str(COMPATIBILITY_MANIFEST).expect("compatibility manifest must be JSON");
+    let kanban = manifest["families"].as_array().expect("families array").iter()
+        .find(|family| family["id"] == "kanban").expect("kanban family");
+    assert_eq!(kanban["status"].as_str(), Some("full"));
+
+    let syntax: Value = serde_json::from_str(KANBAN_CORPUS).expect("kanban corpus JSON");
+    let visual: Value = serde_json::from_str(KANBAN_VISUAL_CORPUS)
+        .expect("kanban visual corpus JSON");
+    assert_eq!(syntax["upstream_commit"], visual["upstream_commit"]);
+    let expected = syntax["valid"].as_array().expect("valid fixtures").iter()
+        .map(|fixture| fixture["id"].as_str().expect("fixture id"))
+        .collect::<BTreeSet<_>>();
+    let actual = visual["fixtures"].as_array().expect("visual fixtures").iter()
+        .map(|id| id.as_str().expect("visual fixture id"))
+        .collect::<BTreeSet<_>>();
+    assert_eq!(actual, expected);
+    assert!(!syntax["invalid"].as_array().expect("invalid fixtures").is_empty());
 }
 
 #[test]
@@ -818,16 +1089,45 @@ fn block_full_status_is_backed_by_the_complete_pinned_corpus() {
 }
 
 #[test]
-fn pinned_mindmap_subset_corpus_parses_to_tree_edges() {
+fn pinned_mindmap_corpus_matches_upstream_acceptance() {
     let corpus: Value = serde_json::from_str(MINDMAP_CORPUS).expect("mindmap corpus must be JSON");
     assert_eq!(corpus["upstream"].as_str(), Some("mermaid@11.16.1"));
-    for fixture in corpus["fixtures"].as_array().expect("fixture array") {
+    assert_eq!(corpus["upstream_commit"].as_str(),
+        Some("7ecca0cd7f1658ef74f4e7e91f925724ef403bbf"));
+    for fixture in corpus["valid"].as_array().expect("valid fixture array") {
         let id = fixture["id"].as_str().expect("fixture id");
         let source = fixture["source"].as_str().expect("fixture source");
         let diagram = parse_mindmap(source)
             .unwrap_or_else(|error| panic!("mindmap fixture {id} failed: {error}"));
         assert_eq!(diagram.edges.len() + 1, diagram.nodes.len());
     }
+    for fixture in corpus["invalid"].as_array().expect("invalid fixture array") {
+        let id = fixture["id"].as_str().expect("fixture id");
+        let source = fixture["source"].as_str().expect("fixture source");
+        assert!(parse_mindmap(source).is_err(), "invalid mindmap fixture {id} parsed");
+    }
+}
+
+#[test]
+fn mindmap_full_status_is_backed_by_pinned_syntax_and_visual_corpora() {
+    let manifest: Value =
+        serde_json::from_str(COMPATIBILITY_MANIFEST).expect("compatibility manifest must be JSON");
+    let mindmap = manifest["families"].as_array().expect("families array").iter()
+        .find(|family| family["id"] == "mindmap").expect("mindmap family");
+    assert_eq!(mindmap["status"].as_str(), Some("full"));
+
+    let syntax: Value = serde_json::from_str(MINDMAP_CORPUS).expect("mindmap corpus JSON");
+    let visual: Value = serde_json::from_str(MINDMAP_VISUAL_CORPUS)
+        .expect("mindmap visual corpus JSON");
+    assert_eq!(syntax["upstream_commit"], visual["upstream_commit"]);
+    let expected = syntax["valid"].as_array().expect("valid fixtures").iter()
+        .map(|fixture| fixture["id"].as_str().expect("fixture id"))
+        .collect::<BTreeSet<_>>();
+    let actual = visual["fixtures"].as_array().expect("visual fixtures").iter()
+        .map(|id| id.as_str().expect("visual fixture id"))
+        .collect::<BTreeSet<_>>();
+    assert_eq!(actual, expected);
+    assert!(!syntax["invalid"].as_array().expect("invalid fixtures").is_empty());
 }
 const REQUIREMENT_CORPUS: &str = include_str!(concat!(
     env!("CARGO_MANIFEST_DIR"),
@@ -883,6 +1183,39 @@ fn pinned_timeline_core_corpus_matches_upstream_acceptance() {
         assert!(parse_timeline(source).is_err(),
             "invalid upstream fixture {id} unexpectedly parsed");
     }
+}
+
+#[test]
+fn pinned_timeline_visual_corpus_covers_every_valid_fixture() {
+    let syntax: Value = serde_json::from_str(TIMELINE_CORPUS).expect("timeline corpus must be JSON");
+    let visual: Value = serde_json::from_str(TIMELINE_VISUAL_CORPUS)
+        .expect("timeline visual corpus must be JSON");
+    assert_eq!(visual["upstream_commit"], syntax["upstream_commit"]);
+
+    let expected = syntax["valid"].as_array().expect("valid corpus array").iter()
+        .map(|fixture| fixture["id"].as_str().expect("fixture id"))
+        .collect::<BTreeSet<_>>();
+    let actual = visual["fixtures"].as_array().expect("visual fixture array").iter()
+        .map(|id| id.as_str().expect("visual fixture id"))
+        .collect::<BTreeSet<_>>();
+    assert_eq!(actual, expected);
+    assert_eq!(actual.len(), syntax["valid"].as_array().unwrap().len());
+}
+
+#[test]
+fn timeline_full_status_is_backed_by_pinned_syntax_and_visual_corpora() {
+    let manifest: Value =
+        serde_json::from_str(COMPATIBILITY_MANIFEST).expect("compatibility manifest must be JSON");
+    let timeline = manifest["families"].as_array().expect("families array").iter()
+        .find(|family| family["id"] == "timeline").expect("timeline family");
+    assert_eq!(timeline["status"].as_str(), Some("full"));
+
+    let syntax: Value = serde_json::from_str(TIMELINE_CORPUS).expect("timeline corpus must be JSON");
+    let visual: Value = serde_json::from_str(TIMELINE_VISUAL_CORPUS)
+        .expect("timeline visual corpus must be JSON");
+    assert_eq!(syntax["upstream_commit"], visual["upstream_commit"]);
+    assert!(!syntax["valid"].as_array().expect("valid corpus").is_empty());
+    assert!(!syntax["invalid"].as_array().expect("invalid corpus").is_empty());
 }
 
 #[test]
@@ -1375,6 +1708,12 @@ fn venn_dispatches_to_dedicated_set_ir_and_validates_unions() {
     let styled = parse_venn("venn-beta\nset A\nstyle A fill:rgba(255, 0, 128, 0.5), stroke-width:3px").unwrap();
     assert_eq!(styled.regions[0].style.fill.as_deref(), Some("rgba(255, 0, 128, 0.5)"));
     assert_eq!(styled.regions[0].style.stroke_width, Some(3.0));
+    let configured = parse_venn("---\nthemeVariables:\n  fontFamily: Georgia\n  vennTitleTextColor: '#123456'\n  vennSetTextColor: '#654321'\nconfig:\n  venn:\n    width: 640\n    height: 360\n    padding: 24\n    useMaxWidth: false\n    useDebugLayout: true\n---\nvenn-beta\nset A").unwrap();
+    assert_eq!((configured.config.width, configured.config.height, configured.config.padding), (640.0, 360.0, 24.0));
+    assert!(!configured.config.use_max_width);
+    assert!(configured.config.use_debug_layout);
+    assert_eq!((&configured.config.font_family, &configured.config.title_text_color, &configured.config.set_text_color),
+        (&"Georgia".to_string(), &"#123456".to_string(), &"#654321".to_string()));
 }
 
 #[test]
@@ -1395,10 +1734,17 @@ fn ishikawa_dispatches_to_dedicated_causal_tree_ir() {
     assert_eq!(indented_effect.causes[1].parent_id.as_deref(), Some("cause-1"));
 
     let configured = parse_ishikawa(
-        "---\nconfig:\n  ishikawa:\n    diagramPadding: 52\n---\nishikawa\nFailure\n  People",
+        "---\nconfig:\n  fontSize: 20px\n  look: handDrawn\n  handDrawnSeed: -9\n  ishikawa:\n    diagramPadding: 52\n    useMaxWidth: true\nthemeVariables:\n  fontFamily: Georgia\n  lineColor: '#123456'\n  mainBkg: '#abcdef'\n  textColor: '#654321'\n---\nishikawa\nFailure\n  People",
     )
     .unwrap();
-    assert_eq!(configured.diagram_padding, 52.0);
+    assert_eq!(configured.config.diagram_padding, 52.0);
+    assert!(configured.config.use_max_width);
+    assert_eq!(configured.config.font_size, 20.0);
+    assert_eq!(configured.config.look, diagram_ir::IshikawaLook::HandDrawn);
+    assert_eq!(configured.config.hand_drawn_seed, -9);
+    assert_eq!((&configured.config.font_family, &configured.config.line_color, &configured.config.fill_color,
+        &configured.config.text_color), (&"Georgia".to_string(), &"#123456".to_string(),
+        &"#abcdef".to_string(), &"#654321".to_string()));
 }
 
 #[test]
@@ -1413,6 +1759,12 @@ fn wardley_dispatches_to_dedicated_strategic_map_ir() {
         _ => panic!("wardley should lower to dedicated strategic map IR"),
     }
     assert!(parse_wardley("wardley-beta\ncomponent API [0.6, 0.5]\nAPI -> Missing").is_err());
+    assert!(parse_wardley("wardley-beta\ncomponent API [0.6, 0.5]\nnote unquoted [0.4, 0.5]").is_err());
+    assert!(parse_wardley("wardley-beta\ncomponent API [0.6, 0.5]\nannotation one,[0.4, 0.5] \"Bad\"").is_err());
+    assert!(parse_wardley("wardley-beta\ncomponent API [0.6, 0.5]\ncomponent DB [0.4, 0.7]\nAPI -> DB;").is_err());
+    assert!(parse_wardley("wardley-beta\naccDescr {\nmissing close\ncomponent API [0.6, 0.5]").is_err());
+    let sized = parse_wardley("%%{init: {\"wardley-beta\": {\"width\": 700, \"height\": 420}}}%%\nwardley-beta\nsize [640, 360]\ncomponent API [0.6, 0.5]").unwrap();
+    assert_eq!((sized.config.width, sized.config.height), (640.0, 360.0));
 }
 
 #[test]
@@ -2013,6 +2365,67 @@ fn swimlane_metadata_entities_decode_into_semantic_ir() {
 }
 
 #[test]
+fn swimlane_theme_variables_reach_semantic_ir() {
+    let diagram = parse_swimlane(
+        "%%{init: {\"themeVariables\": {\"mainBkg\": \"#ffe1ef\", \"nodeBorder\": \"#225577\", \"lineColor\": \"#118844\"}}}%%\nswimlane-beta LR\nsubgraph ThemeLane\n  themed[Themed node]\n  next[Next node]\nend\nthemed --> next",
+    ).expect("Swimlane theme variables should parse");
+
+    assert_eq!(diagram.theme.main_background, "#ffe1ef");
+    assert_eq!(diagram.theme.node_border, "#225577");
+    assert_eq!(diagram.theme.line_color, "#118844");
+
+    let front_matter = parse_swimlane(
+        "---\nthemeVariables:\n  mainBkg: '#fef3c7'\n  nodeBorder: '#b45309'\n  lineColor: '#166534'\n---\nswimlane-beta\nsubgraph A\n  one[One]\nend",
+    ).expect("front-matter Swimlane theme variables should parse");
+    assert_eq!(front_matter.theme.main_background, "#fef3c7");
+}
+
+#[test]
+fn swimlane_theme_typography_reaches_semantic_ir() {
+    let diagram = parse_swimlane(
+        "%%{init: {\"themeVariables\": {\"primaryTextColor\": \"#7c2d12\", \"fontFamily\": \"Helvetica Neue\", \"fontSize\": \"19px\"}}}%%\nswimlane-beta LR\nsubgraph ThemeLane\n  themed[Themed typography]\n  next[Next node]\nend\nthemed --> next",
+    ).expect("Swimlane theme typography should parse");
+
+    assert_eq!(diagram.theme.primary_text_color, "#7c2d12");
+    assert_eq!(diagram.theme.font_family.as_deref(), Some("Helvetica Neue"));
+    assert_eq!(diagram.theme.font_size, Some(19.0));
+}
+
+#[test]
+fn swimlane_edge_label_theme_reaches_semantic_ir() {
+    let diagram = parse_swimlane(
+        "%%{init: {\"themeVariables\": {\"textColor\": \"#172554\", \"edgeLabelBackground\": \"#dbeafe\"}}}%%\nswimlane-beta LR\nsubgraph ThemeLane\n  request[Request]\n  done[Done]\nend\nrequest -->|themed handoff| done",
+    ).expect("Swimlane edge label theme should parse");
+
+    assert_eq!(diagram.theme.text_color, "#172554");
+    assert_eq!(diagram.theme.edge_label_background.as_deref(), Some("#dbeafe"));
+    assert_eq!(diagram.edges[0].label.as_deref(), Some("themed handoff"));
+}
+
+#[test]
+fn swimlane_cluster_theme_reaches_semantic_ir() {
+    let diagram = parse_swimlane(
+        "%%{init: {\"themeVariables\": {\"clusterBkg\": \"#fef3c7\", \"clusterBorder\": \"#b45309\", \"titleColor\": \"#7c2d12\"}}}%%\nswimlane-beta LR\ntitle Themed workflow\nsubgraph Review[Review lane]\n  subgraph Approval[Approval phase]\n    request[Request]\n    done[Done]\n  end\nend\nrequest --> done",
+    ).expect("Swimlane cluster theme should parse");
+
+    assert_eq!(diagram.theme.cluster_background.as_deref(), Some("#fef3c7"));
+    assert_eq!(diagram.theme.cluster_border.as_deref(), Some("#b45309"));
+    assert_eq!(diagram.theme.title_color.as_deref(), Some("#7c2d12"));
+    assert_eq!(diagram.groups.len(), 1);
+}
+
+#[test]
+fn swimlane_node_and_edge_theme_reaches_semantic_ir() {
+    let diagram = parse_swimlane(
+        "%%{init: {\"themeVariables\": {\"nodeTextColor\": \"#14532d\", \"arrowheadColor\": \"#dc2626\", \"strokeWidth\": \"4px\"}}}%%\nswimlane-beta LR\nsubgraph ThemeLane\n  request[Request]\n  done[Done]\nend\nrequest --> done",
+    ).expect("Swimlane node and edge theme should parse");
+
+    assert_eq!(diagram.theme.node_text_color.as_deref(), Some("#14532d"));
+    assert_eq!(diagram.theme.arrowhead_color.as_deref(), Some("#dc2626"));
+    assert_eq!(diagram.theme.stroke_width, Some(4.0));
+}
+
+#[test]
 fn swimlane_inline_node_styles_lower_to_semantic_ir() {
     let diagram = parse_swimlane(
         "swimlane-beta LR\nsubgraph Intake\n  request[Request]\nend\nsubgraph Support\n  done[Done]\nend\nstyle request fill:#fef3c7,stroke:#b45309,color:#78350f,stroke-width:4px,stroke-dasharray:5 3\nrequest --> done",
@@ -2548,6 +2961,119 @@ fn swimlane_optimize_ranks_by_crossings_config_lowers_to_semantic_ir() {
 }
 
 #[test]
+fn swimlane_flowchart_spacing_config_lowers_to_semantic_ir() {
+    let source = "swimlane-beta LR\nsubgraph A\n  first[First]\n  second[Second]\nend\nfirst --> second";
+    let front_matter = parse_swimlane(&format!(
+        "---\nconfig:\n  flowchart:\n    nodeSpacing: 96\n    rankSpacing: 28\n    diagramPadding: 32\n---\n{source}"
+    )).expect("Flowchart spacing front matter should parse for Swimlane");
+    let directive = parse_swimlane(&format!(
+        "%%{{init: {{\"flowchart\": {{\"nodeSpacing\": 72, \"rankSpacing\": 24, \"diagramPadding\": 18}}}}}}%%\n{source}"
+    )).expect("Flowchart spacing init directive should parse for Swimlane");
+
+    assert_eq!(front_matter.flowchart_config.node_spacing, Some(96.0));
+    assert_eq!(front_matter.flowchart_config.rank_spacing, Some(28.0));
+    assert_eq!(front_matter.flowchart_config.diagram_padding, Some(32.0));
+    assert_eq!(directive.flowchart_config.node_spacing, Some(72.0));
+    assert_eq!(directive.flowchart_config.rank_spacing, Some(24.0));
+    assert_eq!(directive.flowchart_config.diagram_padding, Some(18.0));
+    assert!(parse_swimlane(&format!(
+        "---\nconfig:\n  flowchart:\n    rankSpacing: -1\n---\n{source}"
+    )).is_err(), "negative Flowchart spacing must be rejected");
+}
+
+#[test]
+fn swimlane_flowchart_wrapping_width_lowers_to_semantic_ir() {
+    let source = "swimlane-beta LR\nsubgraph A\n  first[Review a substantially longer customer request label]\nend";
+    let front_matter = parse_swimlane(&format!(
+        "---\nconfig:\n  flowchart:\n    wrappingWidth: 180\n---\n{source}"
+    )).expect("Flowchart wrapping width front matter should parse for Swimlane");
+    let directive = parse_swimlane(&format!(
+        "%%{{init: {{\"flowchart\": {{\"wrappingWidth\": 220}}}}}}%%\n{source}"
+    )).expect("Flowchart wrapping width init directive should parse for Swimlane");
+
+    assert_eq!(front_matter.flowchart_config.wrapping_width, Some(180.0));
+    assert_eq!(directive.flowchart_config.wrapping_width, Some(220.0));
+    assert!(parse_swimlane(&format!(
+        "---\nconfig:\n  flowchart:\n    wrappingWidth: -1\n---\n{source}"
+    )).is_err(), "negative Flowchart wrapping width must be rejected");
+}
+
+#[test]
+fn swimlane_flowchart_node_padding_lowers_to_semantic_ir() {
+    let source = "swimlane-beta LR\nsubgraph A\n  first[Review]\nend";
+    let front_matter = parse_swimlane(&format!(
+        "---\nconfig:\n  flowchart:\n    padding: 24\n---\n{source}"
+    )).expect("Flowchart node padding front matter should parse for Swimlane");
+    let directive = parse_swimlane(&format!(
+        "%%{{init: {{\"flowchart\": {{\"padding\": 20}}}}}}%%\n{source}"
+    )).expect("Flowchart node padding init directive should parse for Swimlane");
+
+    assert_eq!(front_matter.flowchart_config.padding, Some(24.0));
+    assert_eq!(directive.flowchart_config.padding, Some(20.0));
+    assert!(parse_swimlane(&format!(
+        "---\nconfig:\n  flowchart:\n    padding: -1\n---\n{source}"
+    )).is_err(), "negative Flowchart node padding must be rejected");
+}
+
+#[test]
+fn swimlane_flowchart_title_margin_lowers_to_semantic_ir() {
+    let source = "swimlane-beta LR\ntitle Approval flow\nsubgraph A\n  first[Review]\nend";
+    let front_matter = parse_swimlane(&format!(
+        "---\nconfig:\n  flowchart:\n    titleTopMargin: 26\n---\n{source}"
+    )).expect("Flowchart title margin front matter should parse for Swimlane");
+    let directive = parse_swimlane(&format!(
+        "%%{{init: {{\"flowchart\": {{\"titleTopMargin\": 18}}}}}}%%\n{source}"
+    )).expect("Flowchart title margin init directive should parse for Swimlane");
+
+    assert_eq!(front_matter.flowchart_config.title_top_margin, Some(26.0));
+    assert_eq!(directive.flowchart_config.title_top_margin, Some(18.0));
+    assert!(parse_swimlane(&format!(
+        "---\nconfig:\n  flowchart:\n    titleTopMargin: -1\n---\n{source}"
+    )).is_err(), "negative Flowchart title margin must be rejected");
+}
+
+#[test]
+fn swimlane_flowchart_subgraph_title_margins_lower_to_semantic_ir() {
+    let source = "swimlane-beta LR\nsubgraph Review\n  first[Review]\nend";
+    let front_matter = parse_swimlane(&format!(
+        "---\nconfig:\n  flowchart:\n    subGraphTitleMargin:\n      top: 12\n      bottom: 18\n---\n{source}"
+    )).expect("Flowchart subgraph title margins should parse from Swimlane front matter");
+    let directive = parse_swimlane(&format!(
+        "%%{{init: {{\"flowchart\": {{\"subGraphTitleMargin\": {{\"top\": 8, \"bottom\": 14}}}}}}}}%%\n{source}"
+    )).expect("Flowchart subgraph title margins should parse from a Swimlane init directive");
+
+    assert_eq!(front_matter.flowchart_config.subgraph_title_margin_top, Some(12.0));
+    assert_eq!(front_matter.flowchart_config.subgraph_title_margin_bottom, Some(18.0));
+    assert_eq!(directive.flowchart_config.subgraph_title_margin_top, Some(8.0));
+    assert_eq!(directive.flowchart_config.subgraph_title_margin_bottom, Some(14.0));
+    assert!(parse_swimlane(&format!(
+        "---\nconfig:\n  flowchart:\n    subGraphTitleMargin:\n      top: -1\n---\n{source}"
+    )).is_err(), "negative Flowchart subgraph title margins must be rejected");
+}
+
+#[test]
+fn swimlane_flowchart_curve_config_lowers_to_semantic_ir() {
+    use diagram_ir::SwimlaneEdgeCurve;
+
+    let source = "swimlane-beta LR\nsubgraph A\n  first[First]\n  second[Second]\n  third[Third]\nend\nfirst --> second\nsecond override@--> third\noverride@{ curve: linear }";
+    let front_matter = parse_swimlane(&format!(
+        "---\nconfig:\n  flowchart:\n    curve: stepAfter\n---\n{source}"
+    )).expect("Flowchart curve front matter should parse for Swimlane");
+    let directive = parse_swimlane(&format!(
+        "%%{{init: {{\"flowchart\": {{\"curve\": \"basis\"}}}}}}%%\n{source}"
+    )).expect("Flowchart curve init directive should parse for Swimlane");
+
+    assert_eq!(front_matter.flowchart_config.curve, Some(SwimlaneEdgeCurve::StepAfter));
+    assert_eq!(directive.flowchart_config.curve, Some(SwimlaneEdgeCurve::Basis));
+    assert_eq!(front_matter.edges[0].curve, None,
+        "the parser must keep the global curve separate from per-edge overrides");
+    assert_eq!(front_matter.edges[1].curve, Some(SwimlaneEdgeCurve::Linear));
+    assert!(parse_swimlane(&format!(
+        "---\nconfig:\n  flowchart:\n    curve: unsupported\n---\n{source}"
+    )).is_err(), "unsupported Flowchart curves must be rejected");
+}
+
+#[test]
 fn swimlane_nested_subgraphs_reach_semantic_ir() {
     let diagram = parse_swimlane("swimlane-beta LR\nsubgraph Engineering\n  subgraph Platform[Platform]\n    plan[Plan]\n    subgraph Runtime[Runtime]\n      build[Build]\n    end\n  end\n  deploy[Deploy]\nend\nsubgraph Operations\n  observe[Observe]\nend\nplan --> build --> deploy --> observe")
         .expect("nested Swimlane subgraphs should parse");
@@ -2560,6 +3086,34 @@ fn swimlane_nested_subgraphs_reach_semantic_ir() {
     assert_eq!(diagram.groups[0].node_ids, vec!["plan"]);
     assert_eq!(diagram.groups[1].parent_id.as_deref(), Some("Platform"));
     assert_eq!(diagram.groups[1].node_ids, vec!["build"]);
+}
+
+#[test]
+fn swimlane_subgraph_styles_reach_semantic_ir() {
+    let diagram = parse_swimlane(
+        "swimlane-beta LR\nsubgraph Review[Review lane]\n  subgraph Approval[Approval phase]\n    request[Request]\n    approve[Approve]\n  end\nend\nclassDef phase fill:#fef3c7,stroke:#b45309,stroke-width:3px,stroke-dasharray:5 3,color:#7c2d12,font-size:17px,font-weight:bold,rx:12px,ry:12px\nclass Approval phase\nstyle Review fill:#ecfdf5,stroke:#047857,stroke-width:2px,color:#064e3b,font-size:20px,rx:14px,ry:14px\nrequest --> approve",
+    ).expect("Swimlane subgraph styles should parse");
+
+    assert_eq!(diagram.lanes[0].style.fill.as_deref(), Some("#ecfdf5"));
+    assert_eq!(diagram.lanes[0].style.corner_radius, Some(14.0));
+    assert_eq!(diagram.groups[0].classes, ["phase"]);
+    assert_eq!(diagram.groups[0].style.stroke_width, Some(3.0));
+    assert_eq!(diagram.groups[0].style.font_weight, Some(700));
+}
+
+#[test]
+fn swimlane_subgraph_class_decorators_reach_semantic_ir() {
+    let diagram = parse_swimlane(
+        "swimlane-beta LR\nsubgraph Review[Review lane]:::laneStyle\n  subgraph Approval[Approval phase]:::phaseStyle\n    request[Request]\n    approve[Approve]\n  end\nend\nclassDef laneStyle fill:#eff6ff,stroke:#1d4ed8,stroke-width:2px,color:#172554,rx:14px,ry:14px\nclassDef phaseStyle fill:#fef3c7,stroke:#b45309,stroke-width:3px,stroke-dasharray:5 3,color:#7c2d12,font-size:17px,font-weight:bold,rx:12px,ry:12px\nrequest --> approve",
+    ).expect("Swimlane subgraph class decorators should parse");
+
+    assert_eq!(diagram.lanes[0].classes, ["laneStyle"]);
+    assert_eq!(diagram.lanes[0].style.stroke.as_deref(), Some("#1d4ed8"));
+    assert_eq!(diagram.groups[0].classes, ["phaseStyle"]);
+    assert_eq!(diagram.groups[0].style.corner_radius, Some(12.0));
+    assert!(parse_swimlane(
+        "swimlane-beta\nsubgraph Review:::missing\n  request[Request]\nend"
+    ).is_err());
 }
 
 #[test]
@@ -2621,6 +3175,91 @@ fn railroad_dispatches_all_notations_to_recursive_ir() {
     assert!(matches!(&elements[0], diagram_ir::RailroadExpression::Special(label) if label == "!\"x\""));
     assert!(matches!(elements[1], diagram_ir::RailroadExpression::Repetition { min: 1, max: None, .. }));
     assert!(parse_railroad("railroad-beta\nvalue = optional(terminal(\"x\"), terminal(\"y\"));").is_err());
+}
+
+#[test]
+fn railroad_preserves_layout_spacing_config_for_every_notation() {
+    let constructor = parse_railroad(
+        "---\nconfig:\n  railroad:\n    compactMode: true\n    padding: 24\n    verticalSeparation: 30\n    horizontalSeparation: 36\n    arcRadius: 18\n---\nrailroad-beta\nvalue = terminal(\"x\");",
+    ).expect("Railroad front matter config should parse");
+    assert!(constructor.config.compact_mode);
+    assert_eq!(constructor.config.padding, 24.0);
+    assert_eq!(constructor.config.vertical_separation, 30.0);
+    assert_eq!(constructor.config.horizontal_separation, 36.0);
+    assert_eq!(constructor.config.arc_radius, 18.0);
+
+    let ebnf = parse_railroad(
+        "%%{init: {\"railroad\": {\"padding\": 18, \"verticalSeparation\": 20, \"horizontalSeparation\": 22}}}%%\nrailroad-ebnf-beta\nvalue = 'x';",
+    ).expect("Railroad init config should parse");
+    assert_eq!(ebnf.config.padding, 18.0);
+    assert_eq!(ebnf.config.vertical_separation, 20.0);
+    assert_eq!(ebnf.config.horizontal_separation, 22.0);
+    assert!(parse_railroad(
+        "---\nconfig:\n  railroad:\n    horizontalSeparation: -1\n---\nrailroad-beta\nvalue = terminal(\"x\");",
+    ).is_err());
+    assert!(parse_railroad(
+        "---\nconfig:\n  railroad:\n    compactMode: sometimes\n---\nrailroad-beta\nvalue = terminal(\"x\");",
+    ).is_err());
+}
+
+#[test]
+fn railroad_preserves_backend_neutral_style_config() {
+    let diagram = parse_railroad(
+        "---\nconfig:\n  railroad:\n    fontSize: 18\n    fontFamily: Courier New\n    terminalFill: '#dcfce7'\n    terminalStroke: '#166534'\n    terminalTextColor: '#14532d'\n    nonTerminalFill: '#dbeafe'\n    nonTerminalStroke: '#1d4ed8'\n    nonTerminalTextColor: '#172554'\n    lineColor: '#dc2626'\n    strokeWidth: 3\n    markerFill: '#7c2d12'\n    specialFill: '#fef3c7'\n    specialStroke: '#b45309'\n    ruleNameColor: '#581c87'\n    showMarkers: false\n    markerRadius: 8\n---\nrailroad-beta\nvalue = sequence(terminal(\"x\"), nonterminal(\"item\"), special(\"end\"));",
+    ).expect("Railroad style config should parse");
+    assert_eq!(diagram.config.font_size, 18.0);
+    assert_eq!(diagram.config.font_family, "Courier New");
+    assert_eq!(diagram.config.terminal_fill, "#dcfce7");
+    assert_eq!(diagram.config.non_terminal_stroke, "#1d4ed8");
+    assert_eq!(diagram.config.line_color, "#dc2626");
+    assert_eq!(diagram.config.stroke_width, 3.0);
+    assert_eq!(diagram.config.marker_fill, "#7c2d12");
+    assert_eq!(diagram.config.special_stroke, "#b45309");
+    assert_eq!(diagram.config.rule_name_color, "#581c87");
+    assert!(!diagram.config.show_markers);
+    assert_eq!(diagram.config.marker_radius, 8.0);
+    assert!(parse_railroad(
+        "%%{init: {\"railroad\": {\"showMarkers\": \"sometimes\"}}}%%\nrailroad-beta\nvalue = terminal(\"x\");",
+    ).is_err());
+}
+
+#[test]
+fn railroad_resolves_theme_variables_before_explicit_style_overrides() {
+    let diagram = parse_railroad(
+        "---\nthemeVariables:\n  fontFamily: Georgia\n  fontSize: 17px\n  secondBkg: '#fef3c7'\n  secondaryBorderColor: '#b45309'\n  secondaryTextColor: '#78350f'\n  mainBkg: '#dbeafe'\n  primaryBorderColor: '#1d4ed8'\n  primaryTextColor: '#172554'\n  lineColor: '#15803d'\n  tertiaryColor: '#fce7f3'\n  tertiaryBorderColor: '#be185d'\n  titleColor: '#581c87'\nconfig:\n  railroad:\n    terminalFill: '#dcfce7'\n---\nrailroad-beta\nvalue = sequence(terminal(\"x\"), nonterminal(\"item\"), special(\"end\"));",
+    ).expect("Railroad theme variables should resolve into semantic config");
+    assert_eq!(diagram.config.font_family, "Georgia");
+    assert_eq!(diagram.config.font_size, 17.0);
+    assert_eq!(diagram.config.terminal_fill, "#dcfce7");
+    assert_eq!(diagram.config.terminal_stroke, "#b45309");
+    assert_eq!(diagram.config.terminal_text_color, "#78350f");
+    assert_eq!(diagram.config.non_terminal_fill, "#dbeafe");
+    assert_eq!(diagram.config.non_terminal_stroke, "#1d4ed8");
+    assert_eq!(diagram.config.non_terminal_text_color, "#172554");
+    assert_eq!(diagram.config.line_color, "#15803d");
+    assert_eq!(diagram.config.marker_fill, "#15803d");
+    assert_eq!(diagram.config.special_fill, "#fce7f3");
+    assert_eq!(diagram.config.special_stroke, "#be185d");
+    assert_eq!(diagram.config.rule_name_color, "#581c87");
+
+    let init = parse_railroad(
+        "%%{init: {\"themeVariables\": {\"secondaryColor\": \"#aabbcc\", \"lineColor\": \"#112233\"}, \"railroad\": {\"lineColor\": \"#334455\"}}}%%\nrailroad-beta\nvalue = terminal(\"x\");",
+    ).expect("Railroad init theme variables should parse");
+    assert_eq!(init.config.terminal_fill, "#aabbcc");
+    assert_eq!(init.config.marker_fill, "#112233");
+    assert_eq!(init.config.line_color, "#334455");
+}
+
+#[test]
+fn railroad_sanitizes_portable_colors_and_font_families() {
+    let diagram = parse_railroad(
+        "---\nthemeVariables:\n  fontFamily: 'Georgia; color: red'\n  secondBkg: '#aabbcc'\n  lineColor: '#12zzzz'\nconfig:\n  railroad:\n    terminalFill: 'url(javascript:alert(1))'\n    terminalTextColor: 'hsl(120 50% 50%)'\n---\nrailroad-beta\nvalue = terminal(\"x\");",
+    ).expect("Railroad invalid styles should fall back safely");
+    assert_eq!(diagram.config.font_family, "monospace");
+    assert_eq!(diagram.config.terminal_fill, "#aabbcc");
+    assert_eq!(diagram.config.terminal_text_color, "hsl(120 50% 50%)");
+    assert_eq!(diagram.config.line_color, "#000000");
+    assert_eq!(diagram.config.marker_fill, "#000000");
 }
 
 #[test]

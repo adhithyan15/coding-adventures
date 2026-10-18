@@ -14,7 +14,8 @@ romanization: "dā̃ter ḍāktār"
 concept_tag: BN-KAJ178-DATER-DAKTAR
 prerequisites: [BN-C177-bigyani, BN-C177-gayok]
 sounds: []
-roots: []
+roots: [danta-sanskrit, english-doctor]
+etymology_hook: "dāṁter ḍāktār: dāṁt 'tooth' ← danta (CDIAL 6152) + -er 'of' + English doctor"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C177-gayok]
 <!-- hl-knowledge: introduces=[BN-LEX-C178-KAJ178-01]; assesses=[] -->
 
 **দাঁতের ডাক্তার** — *dā̃ter ḍāktār* — "a dentist".
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**দাঁতের ডাক্তার** (*dāṁter ḍāktār*) is *dāṁter*, "of the tooth", from *dāṁt*, "tooth", inherited from Sanskrit *danta* (CDIAL 6152), + *ḍāktār*, from English *doctor*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

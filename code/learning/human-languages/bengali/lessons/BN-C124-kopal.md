@@ -14,7 +14,8 @@ romanization: "kopāl"
 concept_tag: BN-THINGS124-KOPAL
 prerequisites: [BN-C124-nokh, BN-C124-gal]
 sounds: []
-roots: []
+roots: [sanskrit-kapala]
+etymology_hook: "kopāl ← Sanskrit kapāla 'skull, cranium', a tadbhava (CDIAL 2744)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C124-gal]
 <!-- hl-knowledge: introduces=[BN-LEX-C124-THINGS124-03]; assesses=[] -->
 
 **কপাল** — *kopāl* — "the forehead".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**কপাল** (*kopāl*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *kapāla*, "skull, cranium" (CDIAL 2744). CDIAL glosses the Bengali form "forehead, fate".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

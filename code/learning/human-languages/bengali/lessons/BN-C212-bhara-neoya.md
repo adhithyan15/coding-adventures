@@ -14,7 +14,8 @@ romanization: "bhāṛā neoyā"
 concept_tag: BN-VERB-BHARA-NEOYA
 prerequisites: [BN-C211-joriye-dhora, BN-C212-tulona-kora]
 sounds: []
-roots: []
+roots: [indo-aryan-bharta, sanskrit-nayati]
+etymology_hook: "bhāṛā neoyā: bhāṛā 'hire, rent' ← *bhārta (CDIAL 9468) + neoyā 'to take' ← nayati (CDIAL 6966)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C212-tulona-kora]
 <!-- hl-knowledge: introduces=[BN-LEX-C212-ACT212-02]; assesses=[] -->
 
 **ভাড়া নেওয়া** — *bhāṛā neoyā* — "to rent (from someone)".
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ভাড়া নেওয়া** (*bhāṛā neoyā*) is *bhāṛā*, "hire, rent", which CDIAL lists under *\*bhārta*, "pertaining to servants" (CDIAL 9468), + *neoyā*, "to take", from Sanskrit *nayati*, "leads, carries off" (CDIAL 6966).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

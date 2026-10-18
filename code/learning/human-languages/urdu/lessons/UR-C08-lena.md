@@ -11,8 +11,8 @@ gloss: to take — a verb worn down to one syllable, and the third job Urdu give
 concept_tag: VERB-TAKE
 prerequisites: [UR-C07-likhna]
 sounds: [rtl, majhul-e, final-ye]
-roots: [sanskrit-labh, greek-lambanein]
-etymology_hook: lenā comes from Sanskrit labh- "to gain, obtain" by way of Prakrit lahaï — the -bh- dissolved entirely — and Prakrit levelled it against de- "give", which is why lenā and denā still rhyme; on the standard comparison labh- matches Greek lambánein, behind English syllable, lemma and epilepsy.
+roots: [sanskrit-labh, greek-lambanein, sanskrit-labhate]
+etymology_hook: "lenā ← Sanskrit labhate 'takes' (CDIAL 10948), its shape levelled against denā 'to give'"
 duration:
   max_seconds: 294
 requires:
@@ -76,7 +76,7 @@ No stem is too small for the machine. **le-** plus **-tā/-tī** plus **hūṅ**
 ## The word, taken apart — a verb that lost a consonant
 <!-- hl-knowledge: introduces=[UR-ETYMON-LENA-TAKE]; assesses=[UR-LEX-LENA] -->
 
-**lenā** goes back to Sanskrit **labh-**, “**to gain, to obtain**.” Prakrit
+**lenā** goes back to Sanskrit **labh-**, “**to gain, to obtain**”: CDIAL lists it under *labhate*, “catches, takes” (CDIAL 10948). Prakrit
 softened it to *lahaï*, then the *-h-* went too and the vowels fused into a
 single *le*. A three-consonant root worn down to one syllable — the erosion that
 makes a language's commonest words its shortest.

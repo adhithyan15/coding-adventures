@@ -14,7 +14,8 @@ romanization: "vahshi"
 concept_tag: FA-SEFAT237-VAHSHI
 prerequisites: [FA-C236-vafadar, FA-C237-barfi]
 sounds: []
-roots: []
+roots: [arabic-wahsi]
+etymology_hook: "vahshi ← Arabic waḥšī 'wild, of the wilderness', root w-ḥ-š (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C237-barfi]
 <!-- hl-knowledge: introduces=[FA-LEX-C237-SEFAT237-02]; assesses=[] -->
 
 **وحشی** — *vahshi* — "wild".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*vahshi* is borrowed from Arabic *waḥšī*, "wild, of the wilderness". Its Arabic root is *w-ḥ-š* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

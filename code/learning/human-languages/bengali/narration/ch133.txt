@@ -12,6 +12,9 @@ Before the new one: say the Bengali for a bed, then the Bengali for a mattress.
 You'll want to know: মশারি.
 মশারি — môshāri — "a mosquito net".
 
+The word, taken apart.
+মশারি (môshāri) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from maśakaharī, "bed curtain" (CDIAL 9918). It is maśaka, "mosquito", + hara, "taking away".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Bengali for a mattress, then the Bengali for a mosqu
 
 You'll want to know: কম্বল.
 কম্বল — kômbôl — "a blanket".
+
+The word, taken apart.
+কম্বল (kômbôl) is Sanskrit kambala, "woollen blanket", taken over whole as a learned loan, a tatsama (CDIAL 2771). CDIAL suggests that kambala itself may be Austroasiatic.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Bengali for a mosquito net, then the Bengali for a b
 You'll want to know: পর্দা.
 পর্দা — pôrdā — "a curtain".
 
+The word, taken apart.
+পর্দা (pôrdā) is a loan, usually traced to Persian parda, "curtain, veil".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Bengali for a blanket, then the Bengali for a curtai
 You'll want to know: ফুলদানি.
 ফুলদানি — phuldāni — "a vase".
 
+The word, taken apart.
+ফুলদানি (phuldāni) is phul, "flower", from Sanskrit phulla (CDIAL 9092), + -dāni, "holder", usually traced to Persian -dān.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Bengali for a curtain, then the Bengali for a vase.
 
 You'll want to know: কাপ.
 কাপ — kāp — "a cup".
+
+The word, taken apart.
+কাপ (kāp) is a loan from English cup.
 
 What you've built.
 One more word for this chapter.

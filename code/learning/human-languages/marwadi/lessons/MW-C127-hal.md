@@ -14,7 +14,8 @@ romanization: "haḷ"
 concept_tag: MW-THINGS127-HAL
 prerequisites: [MW-C127-hathoro, MW-C127-kulhari]
 sounds: []
-roots: []
+roots: [sanskrit-hala]
+etymology_hook: "haḷ ← Sanskrit hala 'plough', a tadbhava (CDIAL 14000, Hindi and Gujarati rows)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C127-kulhari]
 <!-- hl-knowledge: introduces=[MW-LEX-C127-THINGS127-04]; assesses=[] -->
 
 **हळ** — *haḷ* — "a plough".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**हळ** (*haḷ*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *hala*, "plough". CDIAL gives no Marwari form in this entry (CDIAL 14000); the match is through Hindi *hal* and Gujarati *haḷ*. Marwadi, like Gujarati, says the *l* curled back.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

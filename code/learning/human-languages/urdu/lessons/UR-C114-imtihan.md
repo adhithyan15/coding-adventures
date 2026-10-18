@@ -14,7 +14,8 @@ romanization: "imtihān"
 concept_tag: UR-THINGS114-IMTIHAN
 prerequisites: [UR-C113-pensil, UR-C113-kapi, UR-C33-lines, UR-C33-pehla-sabaq]
 sounds: []
-roots: []
+roots: [arabic-imtihan]
+etymology_hook: "imtihān ← Arabic imtiḥān 'a test, a trial', through Persian (Lane, root m-ḥ-n)"
 duration:
   max_seconds: 200
 requires:
@@ -45,6 +46,11 @@ reviews_of: [UR-C113-kapi]
 <!-- hl-knowledge: introduces=[UR-LEX-C114-THINGS114-01]; assesses=[] -->
 
 **امتحان** — *imtihān* — "an exam".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**امتحان** (*imtihān*) is a loan from Arabic *imtiḥān*, "a test, a trial", which reached Urdu through Persian. Its Arabic root is *m-ḥ-n* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

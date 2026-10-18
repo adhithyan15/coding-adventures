@@ -14,7 +14,8 @@ romanization: "mondir"
 concept_tag: BN-TOWN83-MONDIR
 prerequisites: [BN-C83-bas, BN-C83-setu]
 sounds: []
-roots: []
+roots: [sanskrit-mandira]
+etymology_hook: "mondir ← Sanskrit mandira 'dwelling, temple', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C83-setu]
 <!-- hl-knowledge: introduces=[BN-LEX-C83-TOWN83-04]; assesses=[] -->
 
 **মন্দির** — *mondir* — "a temple".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**মন্দির** (*mondir*) is Sanskrit *mandira*, "dwelling, temple", taken over whole as a learned loan, a tatsama.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

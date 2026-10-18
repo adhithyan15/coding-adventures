@@ -14,7 +14,8 @@ romanization: "janvarī"
 concept_tag: UR-VAQT155-JANVARI
 prerequisites: [UR-C155-savere, UR-C155-adha-ghanta]
 sounds: []
-roots: []
+roots: [english-january]
+etymology_hook: "janvarī ← English January"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C155-adha-ghanta]
 <!-- hl-knowledge: introduces=[UR-LEX-C155-VAQT155-03]; assesses=[] -->
 
 **جنوری** — *janvarī* — "January".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**جنوری** (*janvarī*) is a loan from English *January*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

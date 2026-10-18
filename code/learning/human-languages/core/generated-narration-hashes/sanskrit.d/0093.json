@@ -1,7 +1,7 @@
 {
   "language": "sanskrit",
   "chapter": 93,
-  "sourceHash": "fnv1a64:5409c7a23d0e3f9a",
+  "sourceHash": "fnv1a64:64e934c6b44c31d1",
   "lessonIds": [
     "SA-C93-kadapi",
     "SA-C93-vilambah",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "sanskrit/narration/ch93.txt",
   "json": "sanskrit/narration/ch93.json",
-  "textHash": "fnv1a64:3f9a0c97541443d6",
-  "jsonHash": "fnv1a64:1d7d64ab83ce2ad1",
+  "textHash": "fnv1a64:43036327ee3e5807",
+  "jsonHash": "fnv1a64:d0098ee2bdc5d744",
   "findings": []
 }

@@ -12,7 +12,7 @@ concept_tag: WORD-WELL
 prerequisites: [AR-C03-kayfa-haluka, AR-C01-sabah-al-khayr]
 sounds: [rtl-known-letters, ay-diphthong]
 roots: [kh-y-r]
-etymology_hook: "khayr ('good') is NOT new — it's the word already inside the Chapter 1 greeting ṣabāḥ al-khayr; bi- is a one-letter preposition that attaches like al-, so 'I'm well' is literally 'in goodness'"
+etymology_hook: "bi-khayr: bi- 'in', an inherited preposition (Hebrew bə-), + khayr 'good', root kh-y-r (Lane): 'in goodness'"
 duration:
   max_seconds: 240
 requires:
@@ -76,6 +76,11 @@ Literally: "*In goodness, thanks.*" Not "I am fine" — Arabic doesn't need the
 
 That same **بـ** opens the most-spoken phrase in the language: *bismillāh* ("**in** the name of God") — *bi-* + *ism* (the very word from
 Chapter 2!) + *allāh*. One tiny letter, doing the same job.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**بخير** (*bi-khayr*) is built from *bi-*, "in, with", an inherited Semitic preposition that Hebrew has as *bə-*, and *khayr*, "good", on the native root *kh-y-r* (Lane): "in goodness".
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[AR-CONCEPT-C03-BI-KHAYR-01, AR-CONCEPT-C03-BI-KHAYR-02] -->

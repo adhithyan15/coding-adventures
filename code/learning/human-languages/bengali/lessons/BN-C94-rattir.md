@@ -14,7 +14,8 @@ romanization: "rāttir"
 concept_tag: BN-TIME94-RATTIR
 prerequisites: [BN-C93-ajkal, BN-C94-dinkal]
 sounds: []
-roots: []
+roots: [sanskrit-ratri]
+etymology_hook: "rāttir ← Sanskrit rātri 'night', a semi-tatsama; the inherited form is rāt (CDIAL 10702)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C94-dinkal]
 <!-- hl-knowledge: introduces=[BN-LEX-C94-TIME94-02]; assesses=[] -->
 
 **রাত্তির** — *rāttir* — "night-time".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**রাত্তির** (*rāttir*) is a semi-tatsama: Sanskrit *rātri*, "night", borrowed after the old sound changes had run their course and then lightly reshaped (CDIAL 10702). The word inherited from it is *rāt*, which CDIAL lists.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

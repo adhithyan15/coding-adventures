@@ -14,7 +14,8 @@ romanization: "muskurāhaṭ"
 concept_tag: UR-CHIZ257-MUSKURAHAT
 prerequisites: [UR-C256-log, UR-C257-asu]
 sounds: []
-roots: []
+roots: [indo-aryan-muss]
+etymology_hook: "muskurāhaṭ: the noun of muskurānā 'to smile' ← *muss 'smile, sob' (CDIAL 10227)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C257-asu]
 <!-- hl-knowledge: introduces=[UR-LEX-C257-CHIZ257-02]; assesses=[] -->
 
 **مسکراہٹ** — *muskurāhaṭ* — "a smile".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**مسکراہٹ** (*muskurāhaṭ*) is the noun of *muskurānā*, "to smile", which CDIAL lists under a reconstructed *\*muss*, "smile, sob" (CDIAL 10227).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

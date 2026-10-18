@@ -14,7 +14,8 @@ romanization: "upavanam"
 concept_tag: SA-THG164-UPAVANAM
 prerequisites: [SA-C164-pranganam, SA-C164-vatika]
 sounds: []
-roots: []
+roots: [sanskrit-upavana, sanskrit-vana]
+etymology_hook: "upavana ← upa 'near, lesser' + vana 'forest': 'a small wood, a grove, a garden' (MW)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C164-vatika]
 <!-- hl-knowledge: introduces=[SA-LEX-C164-THG164-03]; assesses=[] -->
 
 **उपवनम्** — *upavanam* — "a park, a grove".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*upavana* is built from *upa* "near, lesser" and *vana* "forest" (MW): "a small forest, a grove, a garden". *vana* lives on as Hindi and Bengali *ban* "forest" (CDIAL 11258).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

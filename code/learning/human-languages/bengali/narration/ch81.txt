@@ -12,6 +12,9 @@ Before the new one: say the Bengali for time, then the Bengali for midday.
 You'll want to know: কাছে.
 কাছে — kāchhe — "near".
 
+The word, taken apart.
+কাছে (kāchhe), "near", probably goes back to Sanskrit kakṣa, "armpit, side", through Middle Indo-Aryan kaccha (CDIAL 2588). CDIAL has no Bengali row for it, but under that entry it lists Nepali kāch, "side, edge", and Assamese kāxe, "by the side of", and says some postpositions probably grew from the sense "side". The ending -e means "at".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Bengali for midday, then the Bengali for near.
 
 You'll want to know: ভিতরে.
 ভিতরে — bhitôre — "inside".
+
+The word, taken apart.
+ভিতরে (bhitôre) is a tadbhava, a word inherited and reshaped by sound change. It comes from bhiyantara, "inner", a form CDIAL reconstructs from its descendants (CDIAL 9504). It stands beside Sanskrit abhyantara, "inner"; CDIAL lists Bengali bhitar, "inside".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Bengali for near, then the Bengali for inside.
 You'll want to know: বাইরে.
 বাইরে — bāire — "outside".
 
+The word, taken apart.
+বাইরে (bāire) is a tadbhava, a word inherited and reshaped by sound change. It comes from bāhira, "external", a form CDIAL reconstructs from its descendants (CDIAL 9226). CDIAL lists Bengali bāhir and bār; bāire has the ending -e.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Bengali for inside, then the Bengali for outside.
 You'll want to know: নিচে.
 নিচে — niche — "below".
 
+The word, taken apart.
+নিচে (niche) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from nīca, "low" (CDIAL 7540). Niche adds the ending -e, "below".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Bengali for outside, then the Bengali for below.
 
 You'll want to know: সামনে.
 সামনে — sāmne — "in front".
+
+The word, taken apart.
+সামনে (sāmne) goes back to Sanskrit saṁmukha, "facing, present". CDIAL gives no modern Bengali form under that entry, but it lists Middle Bengali chāmu, "in front", and Oriya sāmanā, "being in front", the forms nearest to Bengali (CDIAL 12982).
 
 What you've built.
 One more word for this chapter.

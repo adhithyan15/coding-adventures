@@ -14,7 +14,8 @@ romanization: "wazn"
 concept_tag: AR-SHAY218-WAZN
 prerequisites: [AR-C218-mizan, AR-C218-qita]
 sounds: []
-roots: []
+roots: [w-z-n]
+etymology_hook: "wazn: built on the root w-z-n, 'to weigh' (Lane); wazn is the verbal noun, 'weighing, weight'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C218-qita]
 <!-- hl-knowledge: introduces=[AR-LEX-C218-SHAY218-05]; assesses=[] -->
 
 **وزن** — *wazn* — "weight".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**وزن** (*wazn*) is built on the native Arabic root *w-z-n*, "to weigh" (Lane). *Wazn* is the verbal noun, "weighing, weight".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "ṭāyār"
 concept_tag: BN-JINIS174-TAYAR
 prerequisites: [BN-C174-injin, BN-C174-chaka]
 sounds: []
-roots: []
+roots: [english-tyre]
+etymology_hook: "ṭāyār ← English tyre"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C174-chaka]
 <!-- hl-knowledge: introduces=[BN-LEX-C174-JINIS174-04]; assesses=[] -->
 
 **টায়ার** — *ṭāyār* — "a tyre".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**টায়ার** (*ṭāyār*) is a loan from English *tyre*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -59,6 +59,8 @@ import re
 import sys
 import unicodedata
 from collections import Counter
+
+from authoring_frontmatter import decode_scalar
 from sharded_ledger import load_script
 
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -153,9 +155,10 @@ def read_frontmatter(text):
                 prefix = key + "."
                 continue
             prefix = ""
-            out[key] = val
+            out[key] = decode_scalar(val, key)
         else:
-            out[prefix + key] = val
+            dotted_key = prefix + key
+            out[dotted_key] = decode_scalar(val, dotted_key)
     return out
 
 
@@ -177,9 +180,9 @@ def load_lessons(track):
         rows.append({
             "id": fm.get("id", fn[:-3]),
             "seq": seq,
-            "headword": fm.get("headword", "").strip("\"'"),
-            "romanization": fm.get("romanization", "").strip("\"'"),
-            "gloss": fm.get("gloss", "").strip("\"'"),
+            "headword": fm.get("headword", ""),
+            "romanization": fm.get("romanization", ""),
+            "gloss": fm.get("gloss", ""),
         })
     # None sorts last, not first: a lesson with no declared order cannot be
     # allowed to masquerade as the first one.

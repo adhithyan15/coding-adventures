@@ -11,8 +11,8 @@ gloss: window, heard and said before it is ever shown
 concept_tag: GU-HOUSE-WINDOW-HEARD
 prerequisites: [GU-C28-hear-baarnun]
 sounds: [voiced-b, long-aa, long-ii]
-roots: []
-etymology_hook: Door and window differ by one sound at the end, which makes them the cheapest possible minimal pair in the chapter.
+roots: [sanskrit-dvara]
+etymology_hook: "bārī ← Sanskrit dvāra 'door', through its feminine dvārī (CDIAL 6663)"
 duration:
   max_seconds: 120
 requires:
@@ -39,6 +39,11 @@ reviews_of: [GU-C28-hear-baarnun]
 
 [PAUSE 3s] Say the word for door. Now listen twice: **bārī**. It means
 **window** — the same opening in a wall, only smaller, and one sound away from *bārṇũ*.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**બારી** (*bārī*) is a tadbhava. CDIAL lists it under Sanskrit *dvāra*, "door", which also had a feminine *dvārī* (CDIAL 6663): a window is a small door.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[GU-LEX-BAARI-01, GU-LEX-BAARNUN-01] -->

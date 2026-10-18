@@ -14,7 +14,8 @@ romanization: "prāṅgaṇam"
 concept_tag: SA-THG164-PRANGANAM
 prerequisites: [SA-C163-vivahah, SA-C163-upaharah]
 sounds: []
-roots: []
+roots: [sanskrit-angana]
+etymology_hook: "prāṅgaṇa ← pra + aṅgaṇa 'yard, court' (MW); aṅgaṇa ← √aṅg 'go' (CDIAL 118); Hindi āṁgan"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C163-upaharah]
 <!-- hl-knowledge: introduces=[SA-LEX-C164-THG164-01]; assesses=[] -->
 
 **प्रांगणम्** — *prāṅgaṇam* — "a courtyard".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*prāṅgaṇa* is built from *pra* "forth, before" and *aṅgaṇa* "a yard, a court" (MW), which CDIAL 118 sets under the root √aṅg "go". *aṅgaṇa* lives on as Hindi *āṁgan* "courtyard" (CDIAL 118).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

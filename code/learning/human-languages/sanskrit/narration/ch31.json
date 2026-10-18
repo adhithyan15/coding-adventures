@@ -4,7 +4,7 @@
   "chapter": 31,
   "title": "The Sky and Its Lights",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:0ab407183a9920ca",
+  "sourceHash": "fnv1a64:4a96e34639f763f0",
   "lessons": [
     {
       "id": "SA-C31-sky",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:fd91240e569bea05",
+      "sourceHash": "fnv1a64:cf1444a1387d98e1",
       "notice": null,
       "blocks": [
         {
@@ -60,6 +60,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Ākāśa is built from the prefix ā- and the root √kāś, \"to shine, be visible\" (MW, CDIAL 1008). It first meant open space, and later the sky."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -70,7 +81,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -128,7 +139,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -159,7 +170,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a0b6ca18dbcc16f2",
+      "sourceHash": "fnv1a64:4fe347a4093a4ac6",
       "notice": null,
       "blocks": [
         {
@@ -200,6 +211,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Candra first meant \"shining\" and is built on the root √cand, \"to shine\", which MW compares with Latin candeō, \"I glow\" (CDIAL 4661). It lives on as Hindi cāṃd, \"moon\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -210,7 +232,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -268,7 +290,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -299,7 +321,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0d966db021e7f4b5",
+      "sourceHash": "fnv1a64:3c2fc7857759b753",
       "notice": null,
       "blocks": [
         {
@@ -334,7 +356,7 @@
             },
             {
               "kind": "speech",
-              "text": "Sanskrit dropped the s- at the front and kept the rest. Ends in -आ, like माला and यात्रा."
+              "text": "Sanskrit tārā is usually taken to have dropped the s- at the front and kept the rest (EtymDB); the Rigveda still has stṛ, \"star\", with the s-, and MW and CDIAL 5798 compare it. Ends in -आ, like माला and यात्रा."
             }
           ]
         },
@@ -439,7 +461,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:431f1526608cb150",
+      "sourceHash": "fnv1a64:acd6187359ca9157",
       "notice": null,
       "blocks": [
         {
@@ -474,7 +496,7 @@
             },
             {
               "kind": "speech",
-              "text": "English wind is the same word worn down, and so are German Wind, Gothic winds and Latin ventus, which gives vent and ventilate. Ends in -uḥ, the ending you had on गुरुः."
+              "text": "English wind grows from the same root, and so do German Wind, Gothic winds and Latin ventus, which gives vent and ventilate. Ends in -uḥ, the ending you had on गुरुः."
             }
           ]
         },
@@ -579,7 +601,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6dfb61e018dc7cc0",
+      "sourceHash": "fnv1a64:bc76759a2703e5c0",
       "notice": null,
       "blocks": [
         {

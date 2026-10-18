@@ -14,7 +14,8 @@ romanization: "tīkho"
 concept_tag: MW-QUAL143-TIKHO
 prerequisites: [MW-C143-khato, MW-C143-karvo]
 sounds: []
-roots: []
+roots: [sanskrit-tikshna]
+etymology_hook: "tīkho ← Sanskrit tīkṣṇa 'sharp; hot, pungent', a tadbhava (CDIAL 5839, Hindi and Gujarati rows)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C143-karvo]
 <!-- hl-knowledge: introduces=[MW-LEX-C143-QUAL143-05]; assesses=[] -->
 
 **तीखो** — *tīkho* — "spicy, sharp".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**तीखो** (*tīkho*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *tīkṣṇa*, "sharp; hot, pungent". CDIAL gives no Marwari form in this entry (CDIAL 5839); the match is through Hindi *tīkhā* and Gujarati *tīkhũ*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

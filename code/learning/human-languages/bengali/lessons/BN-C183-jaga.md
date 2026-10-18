@@ -14,7 +14,8 @@ romanization: "jāgā"
 concept_tag: BN-VERB-JAGA
 prerequisites: [BN-C183-hai-tola, BN-C183-nak-daka]
 sounds: []
-roots: []
+roots: [sanskrit-jagrati]
+etymology_hook: "jāgā ← Sanskrit jāgrati 'are awake', a tadbhava (CDIAL 5175)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C183-nak-daka]
 <!-- hl-knowledge: introduces=[BN-LEX-C183-ACT183-04]; assesses=[] -->
 
 **জাগা** — *jāgā* — "to wake up".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**জাগা** (*jāgā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *jāgrati*, "are awake" (CDIAL 5175). CDIAL lists Bengali *jāgā*, "to wake, watch".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

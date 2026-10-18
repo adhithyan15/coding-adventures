@@ -14,7 +14,8 @@ romanization: "nāḷiyer"
 concept_tag: GU-THINGS115-NALIYER
 prerequisites: [GU-C115-adu, GU-C115-libu]
 sounds: []
-roots: []
+roots: [sanskrit-narikela]
+etymology_hook: "nāḷiyer ← Sanskrit nārikela 'coconut palm and fruit', which CDIAL takes from Dravidian (CDIAL 7075)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C115-libu]
 <!-- hl-knowledge: introduces=[GU-LEX-C115-THINGS115-05]; assesses=[] -->
 
 **નાળિયેર** (*nāḷiyer*) — "a coconut".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**નાળિયેર** (*nāḷiyer*) is a tadbhava of Sanskrit *nārikela*, "coconut palm and fruit" (CDIAL 7075). CDIAL lists it as *nāriyaḷ* and *nariyeḷ*, and takes the Sanskrit word, with J. Bloch, from a Dravidian compound.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

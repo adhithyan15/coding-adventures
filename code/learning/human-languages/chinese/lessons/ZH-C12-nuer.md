@@ -11,8 +11,8 @@ concept_tag: ZH-FAMILY-DAUGHTER
 gloss: daughter, now read and written
 prerequisites: [ZH-C12-hear-nuer]
 sounds: [tone-3, tone-2]
-roots: []
-etymology_hook: Two individually known characters now combine transparently into the kinship word daughter.
+roots: [middle-chinese-nrjox, middle-chinese-nye]
+etymology_hook: "nǚ'ér 'daughter': 'woman' + 'infant', inherited from Middle Chinese nrjoX and nye"
 duration:
   max_seconds: 175
 requires:
@@ -43,6 +43,9 @@ reviews_of: [ZH-C12-hear-nuer, ZH-W12-er, ZH-C12-erzi]
 
 Nothing is hidden: 女 gives female and 儿 gives child. Read the two characters
 without the pinyin, then say the whole word without a pause.
+
+Both are inherited from Middle Chinese: *nrjoX*, "woman", and *nye*, "infant"
+(Guangyun, in Baxter's transcription).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-NUER-01, ZH-SCRIPT-NU-01, ZH-SCRIPT-ER-CHAR-01] -->

@@ -4,7 +4,7 @@
   "chapter": 193,
   "title": "A teacher, A lawyer, A soldier, A tailor, A barber",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:4d43c85a7a6b880b",
+  "sourceHash": "fnv1a64:4a47ab816e09170a",
   "lessons": [
     {
       "id": "HI-C193-adhyapak",
@@ -555,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4fc0ce71f88f7fb3",
+      "sourceHash": "fnv1a64:2ac6df493a1b8db4",
       "notice": null,
       "blocks": [
         {
@@ -593,7 +593,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "नाई (nāī) is a tadbhava, inherited and reshaped by sound change. CDIAL lists it, with nāū, \"barber\", under Sanskrit nāpita, \"barber\" (CDIAL 13792)."
+              "text": "नाई (nāī) is a tadbhava, inherited and reshaped by sound change. CDIAL lists it, as a dialect form, under Sanskrit nāpita, \"barber\". The by-form nāū, \"barber\", sits in the same entry under a second word, snāpaka, \"bath attendant\", built on snā-, \"to bathe\" (CDIAL 13792)."
             }
           ]
         },

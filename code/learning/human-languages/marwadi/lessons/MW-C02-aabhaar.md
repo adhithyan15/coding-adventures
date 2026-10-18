@@ -11,8 +11,8 @@ gloss: formal thanks; gratitude
 concept_tag: COURTESY-THANKS
 prerequisites: [MW-W02-bha]
 sounds: [long-aa, aspirated-b, tap-r]
-roots: []
-etymology_hook: Formal आभार is Sanskrit-derived; Rajasthan Sahitya Akademi uses it for expressed gratitude in Rajasthani prose.
+roots: [sanskrit-abhara]
+etymology_hook: "ābhār ← Sanskrit ābhāra 'a load, a burden', a tatsama; its root is in bhāra 'burden' (CDIAL 9459)"
 duration:
   max_seconds: 180
 requires:
@@ -53,6 +53,11 @@ Rajasthan Sahitya Akademi's *Jāgtī Jot* uses **आभार** when expressing 
 in Rajasthani prose. It is a formal, Sanskrit-derived word. This lesson keeps
 that register visible rather than pretending every kind of thanks sounds the
 same.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**आभार** (*ābhār*) is Sanskrit *ābhāra*, "a load, a burden", taken over whole, a tatsama; the sense of thanks came later. CDIAL has no entry for *ābhāra* itself, but lists the inherited family of its root under *bhāra*, "burden, weight", among them Old Marwari *bhāra*, "load" (CDIAL 9459).
 
 ## Writing — from guided to delayed copy
 <!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-AABHAAR-01, MW-LEX-AABHAAR-01] -->

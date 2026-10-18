@@ -14,7 +14,8 @@ romanization: "kapitthaḥ"
 concept_tag: SA-THG219-KAPITTHAH
 prerequisites: [SA-C219-bilvam, SA-C219-narangam]
 sounds: []
-roots: []
+roots: [sanskrit-kapittha]
+etymology_hook: "kapittha: MW reads kapi 'monkey' + -ttha 'dwelling'; CDIAL 2749: probably folk etymology"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C219-narangam]
 <!-- hl-knowledge: introduces=[SA-LEX-C219-THG219-03]; assesses=[] -->
 
 **कपित्थः** — *kapitthaḥ* — "a wood apple".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+MW reads *kapittha* as *kapi*, "monkey", with *-ttha*, a form of *stha*, "standing, dwelling": the tree monkeys live in. CDIAL 2749 disagrees: it compares the ending of *aśvattha*, the sacred fig, and thinks the link with *kapi* is probably only folk etymology, so the origin is not settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

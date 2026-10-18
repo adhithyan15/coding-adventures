@@ -1,0 +1,20 @@
+{
+  "language": "sanskrit",
+  "chapter": 269,
+  "sourceHash": "fnv1a64:e1e25797000ca50b",
+  "lessonIds": [
+    "SA-C269-media-recall",
+    "SA-C269-akasavani",
+    "SA-C269-antarjalam",
+    "SA-C269-six-channel-practice",
+    "SA-C269-media-first-retrieval",
+    "SA-C269-media-final-retrieval"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "sanskrit/narration/ch269.txt",
+  "json": "sanskrit/narration/ch269.json",
+  "textHash": "fnv1a64:7103f01576a70fc4",
+  "jsonHash": "fnv1a64:c8d4baec280a286b",
+  "findings": []
+}

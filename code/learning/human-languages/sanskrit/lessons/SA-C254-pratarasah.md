@@ -14,7 +14,8 @@ romanization: "prātarāśaḥ"
 concept_tag: SA-THG254-PRATARASAH
 prerequisites: [SA-C254-cakravakah, SA-C254-syenah]
 sounds: []
-roots: []
+roots: [sanskrit-pratar, sanskrit-asha-eating]
+etymology_hook: "prātarāśa = prātar 'early morning' + āśa 'eating', from √aś 'eat'; MW compares German früh"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C254-syenah]
 <!-- hl-knowledge: introduces=[SA-LEX-C254-THG254-03]; assesses=[] -->
 
 **प्रातराशः** — *prātarāśaḥ* — "breakfast".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*prātarāśa* is a compound of *prātar*, "early in the morning", and *āśa*, "eating, food", from the root √aś, "to eat" (MW): the morning meal. MW compares *prātar* with Greek *prōi* and German *früh*, "early".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

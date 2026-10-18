@@ -14,7 +14,8 @@ romanization: "himam"
 concept_tag: SA-SKY-HIMA
 prerequisites: [SA-C31-wind, SA-C29-fortunate, SA-C30-anjali]
 sounds: []
-roots: []
+roots: [sanskrit-hima]
+etymology_hook: "hima 'cold, snow' is inherited: MW compares Greek kheimōn and Latin hiems 'winter' (CDIAL 14096)"
 duration:
   max_seconds: 210
 requires:

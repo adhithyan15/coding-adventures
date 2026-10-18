@@ -14,7 +14,8 @@ romanization: "lep"
 concept_tag: BN-THINGS108-LEP
 prerequisites: [BN-C108-balish, BN-C108-chador]
 sounds: []
-roots: []
+roots: [sanskrit-lepya]
+etymology_hook: "lep 'quilt': same shape as lep 'a plaster' ← lēpya 'to be smeared' (CDIAL 11114); the sense 'quilt' is not listed"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C108-chador]
 <!-- hl-knowledge: introduces=[BN-LEX-C108-THINGS108-04]; assesses=[] -->
 
 **লেপ** — *lep* — "a quilt".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**লেপ** (*lep*) has the same shape as Bengali *lep*, "a smearing, a plaster", which CDIAL lists under Sanskrit *lēpya*, "to be smeared" (CDIAL 11114). CDIAL does not list the sense "quilt", so the link is not confirmed.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

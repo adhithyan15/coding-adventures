@@ -14,7 +14,8 @@ romanization: "nirṇayaḥ"
 concept_tag: SA-WRK256-NIRNAYAH
 prerequisites: [SA-C256-prasiksanam, SA-C256-sammelanam]
 sounds: []
-roots: []
+roots: [sanskrit-nirnaya]
+etymology_hook: "nirṇaya ← nis 'out' + √nī 'lead': 'leading out', then 'settling, decision' (MW)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C256-sammelanam]
 <!-- hl-knowledge: introduces=[SA-LEX-C256-WRK256-03]; assesses=[] -->
 
 **निर्णयः** — *nirṇayaḥ* — "a decision".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*nirṇaya* is built on *nis*, "out", and the root √nī, "to lead" (MW). The verb means "to carry off" and then "to find out, settle, decide", and the noun means "complete ascertainment, decision".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

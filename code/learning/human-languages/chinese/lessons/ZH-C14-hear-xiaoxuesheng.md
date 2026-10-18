@@ -11,8 +11,8 @@ gloss: primary-school student
 concept_tag: ZH-SCHOOL-PRIMARY-STUDENT
 prerequisites: [ZH-C14-xiaoxue]
 sounds: [tone-3, tone-2, tone-neutral]
-roots: []
-etymology_hook: Primary school plus student overlaps at 学, just as university student did.
+roots: [middle-chinese-sjewx, middle-chinese-haewk, middle-chinese-srjaeng]
+etymology_hook: "xiǎoxuésheng: built from Middle Chinese sjewX, haewk and srjaeng, 'small', 'learning', 'life'"
 duration:
   max_seconds: 130
 requires:
@@ -43,6 +43,9 @@ reviews_of: [ZH-C14-xiaoxue, ZH-C13-xuesheng, ZH-C13-daxuesheng]
 
 Say three beats: low *xiǎo*, rising *xué*, light *sheng*. 学 appears only once
 where the two familiar words overlap.
+
+*Xiǎoxuésheng* is built from Middle Chinese *sjewX*, *haewk* and *srjaeng*:
+small, learning, life.
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-XIAOXUESHENG-01] -->

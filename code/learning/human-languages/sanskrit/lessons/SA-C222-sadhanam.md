@@ -14,7 +14,8 @@ romanization: "sādhanam"
 concept_tag: SA-THG222-SADHANAM
 prerequisites: [SA-C221-granthih, SA-C221-pithika]
 sounds: []
-roots: []
+roots: [sanskrit-sadhana]
+etymology_hook: "sādhana ← root √sādh 'go straight to the goal, accomplish': 'means' (MW; CDIAL 13334)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C221-pithika]
 <!-- hl-knowledge: introduces=[SA-LEX-C222-THG222-01]; assesses=[] -->
 
 **साधनम्** — *sādhanam* — "an instrument, a means".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*sādhana* is built on the root √sādh, "to go straight to a goal, accomplish" (MW). In the Rigveda it means "furthering", and later "completion" and "means" (CDIAL 13334): the instrument that gets something done.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

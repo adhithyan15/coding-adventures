@@ -14,7 +14,8 @@ romanization: "nirāpôttā"
 concept_tag: BN-JINIS254-NIRAPOTTA
 prerequisites: [BN-C254-subidha, BN-C254-bipod]
 sounds: []
-roots: []
+roots: [sanskrit-nirapad]
+etymology_hook: "nirāpôttā: Sanskrit nirāpad 'free from danger' + -tā '-ness'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C254-bipod]
 <!-- hl-knowledge: introduces=[BN-LEX-C254-JINIS254-04]; assesses=[] -->
 
 **নিরাপত্তা** — *nirāpôttā* — "safety, security".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**নিরাপত্তা** (*nirāpôttā*) is built on Sanskrit *nirāpad*, "free from danger", with the ending *-tā*, "-ness": "freedom from danger".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "bhāratīyaḥ"
 concept_tag: SA-LEX-BHARATIYA-INDIAN
 prerequisites: [SA-C59-bharatam, SA-C15-adjective-system, SA-C53-sah]
 sounds: []
-roots: []
+roots: [sanskrit-bharatiya, sanskrit-bharata]
+etymology_hook: "bhāratīya 'Indian' ← bhārata + the suffix -īya 'belonging to'; MW lists the word only as a book title"
 duration:
   max_seconds: 260
 requires:
@@ -60,6 +61,13 @@ describing exactly as **महत्** and **नव** do.
 Notice what the sentence does **not** have. There is no **अस्ति** in it. Sanskrit
 can leave the *is* out when its only work is to link two things, and here it does — *he,
 Indian*. You have seen that before in **न चिन्ता**; this is the same economy.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*Bhāratīya* is built from *bhārata* with the suffix *-īya*, "belonging to". MW
+records the word only as the name of a book, so its everyday sense, "Indian", is a
+modern use of an old pattern.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

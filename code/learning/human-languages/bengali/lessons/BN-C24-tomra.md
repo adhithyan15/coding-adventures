@@ -11,8 +11,8 @@ gloss: you, more than one — and the respect ladder keeps its second rung in th
 concept_tag: BN-LEX-TOMRA
 prerequisites: [BN-C24-amra, BN-C02-tumi-apni, BN-C11-bondhu, BN-C22-ra]
 sounds: []
-roots: []
-etymology_hook: "English used to do this: thou for one, you for many, and then you swallowed both and the distinction died. Bengali kept it, and kept the respect grade on top of it, so it needs four words where modern English has one."
+roots: [sanskrit-yushmad]
+etymology_hook: "tomrā: tumi, from yuṣmad 'you' (CDIAL 10511), + the plural -rā, whose origin is not settled"
 duration:
   max_seconds: 230
 requires:
@@ -50,6 +50,11 @@ The careful rung pluralises too:
 - **আপনি** → **আপনারা** — you, respectfully
 
 Four words where English has one, and every one of them is that same **-রা**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**তুমি** goes back to Sanskrit *yuṣmad-*, "you" (CDIAL 10511); where the plural **-রা** comes from is not settled.
 
 ## Grammar Lens: the grid, complete for two of three persons
 <!-- hl-knowledge: introduces=[]; assesses=[BN-LEX-C24-TOMRA-01, BN-LEX-C24-AMRA-01, BN-LEX-C23-TINI-01] -->

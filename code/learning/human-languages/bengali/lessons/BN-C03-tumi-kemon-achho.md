@@ -11,9 +11,10 @@ gloss: how are you? (familiar)
 concept_tag: STATE-HOW-ARE-YOU
 prerequisites: [BN-C03-kemon, BN-C02-tumi-apni]
 sounds: [chh-conjunct, o-ending]
-roots: [aachha-be]
+roots: [aachha-be, sanskrit-yushmad, ka-interrogative, sanskrit-akseti]
+etymology_hook: "tumi ← yuṣmad 'you' (CDIAL 10511); kēmon on the stem ka-; āchho ← ākṣēti 'abides' (CDIAL 1031)"
 duration:
-  max_seconds: 240
+  max_seconds: 255
 requires:
   knowledge: [BN-CONCEPT-C03-KEMON-01, BN-CONCEPT-C02-TUMIAPNI-01]
 introduces:
@@ -48,6 +49,8 @@ be, to exist, to have") + the familiar-you ending *-o*. Note the **ছ**
 
 **তুমি কেমন আছো?** = **তুমি** (*tumi*, familiar "you") + **কেমন** (*kēmon*, "how")
 + **আছো** (*āchho*, "are") — "you how are?", the verb **last**.
+
+All three are inherited: *tumi* from *yuṣmad-*, "you" (CDIAL 10511), *kēmon* on the stem *ka-*, *āchho* from *ākṣēti*, "abides" (CDIAL 1031).
 
 ## Grammar Lens: now the copula returns
 <!-- hl-knowledge: introduces=[]; assesses=[BN-CONCEPT-C02-TUMIAPNI-01, BN-CONCEPT-C03-KEMON-01, BN-CONCEPT-C03-TUMIKEMONACHHO-01] -->

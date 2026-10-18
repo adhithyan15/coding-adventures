@@ -11,8 +11,8 @@ gloss: maternal grandmother
 concept_tag: MW-FAMILY-MATERNAL-GRANDMOTHER
 prerequisites: [MW-C09-nana]
 sounds: [dental-n, long-aa, long-ii]
-roots: []
-etymology_hook: One final vowel changes grandfather to grandmother before the spelling is shown.
+roots: [indo-aryan-nanna]
+etymology_hook: "nānī: feminine of nānā ← *nānna 'respected older relative', reconstructed (CDIAL 7059)"
 duration:
   max_seconds: 135
 requires:
@@ -46,6 +46,11 @@ the new word.
 <!-- hl-knowledge: introduces=[MW-LEX-NANI-01]; assesses=[] -->
 
 > *nānī* — **maternal grandmother**
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*nānī* is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*nānna*, "term of respect for an older relative", a form CDIAL reconstructs from its descendants. CDIAL gives no Marwari form in this entry (CDIAL 7059); the match is through Hindi *nānī*. It is the feminine of *nānā*.
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-NANI-01, MW-LEX-NANA-01] -->

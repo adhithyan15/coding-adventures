@@ -11,8 +11,8 @@ gloss: to go — the verb that shows the two agreements an Urdu present tense ma
 concept_tag: VERB-GO
 prerequisites: [UR-C06-hona]
 sounds: [rtl, long-a, nasal-vowel]
-roots: [sanskrit-ya, indo-aryan-ja]
-etymology_hook: jānā continues Sanskrit yāti “goes”; the initial y- became j- on the regular road from Sanskrit into the middle stage Urdu descends from.
+roots: [indo-aryan-ja, sanskrit-yati]
+etymology_hook: "jānā ← Sanskrit yāti 'goes' (CDIAL 10452); Sanskrit y- regularly became j-"
 duration:
   max_seconds: 260
 requires:
@@ -74,7 +74,7 @@ sit in the ear rather than on paper.
 ## The word, taken apart — a sound-law you can reuse
 <!-- hl-knowledge: introduces=[]; assesses=[UR-LEX-JANA, UR-SCRIPT-JANA] -->
 
-**jānā** continues Sanskrit *yāti*, “goes,” from the root *yā-*,
+**jānā** continues Sanskrit *yāti*, “goes” (CDIAL 10452), from the root *yā-*,
 “travel.” The change from *y-* to *j-* is not a quirk of this word: initial
 *y-* regularly hardened to *j-* on the road from Sanskrit into the middle
 stage of Indo-Aryan that Urdu descends from. Meet the law once and it decodes

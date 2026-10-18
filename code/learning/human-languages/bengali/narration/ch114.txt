@@ -12,6 +12,9 @@ Before the new one: say the Bengali for thunder, then the Bengali for a rainbow.
 You'll want to know: কুয়াশা.
 কুয়াশা — kuyāshā — "fog".
 
+The word, taken apart.
+কুয়াশা (kuyāshā) appears to belong with Bengali kohāṛā, "mist, fog", which CDIAL lists under kuha, "fog, mist", a form it reconstructs beside lexical Sanskrit kuhēḍī (CDIAL 3386). CDIAL does not list কুয়াশা (kuyāshā) itself.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Bengali for a rainbow, then the Bengali for fog.
 
 You'll want to know: শিশির.
 শিশির — shishir — "dew".
+
+The word, taken apart.
+শিশির (shishir) is Sanskrit śiśira, "cold; dew", taken over whole as a learned loan, a tatsama.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Bengali for fog, then the Bengali for dew.
 You'll want to know: শিকড়.
 শিকড় — shikôṛ — "a root".
 
+The word, taken apart.
+শিকড় (shikôṛ) appears to belong with Sanskrit śiphā, "fibrous root". CDIAL has no entry for the modern word, but under śiphā it lists Old Bengali śihaḍa, "root", and Assamese xihari, "rootlet", both with an added -ḍ- (CDIAL 12443). How shikôṛ came by its k is not explained there.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Bengali for dew, then the Bengali for a root.
 You'll want to know: বীজ.
 বীজ — bij — "a seed".
 
+The word, taken apart.
+বীজ (bij) is Sanskrit bīja, "seed", taken over whole as a learned loan, a tatsama (CDIAL 9250). The word inherited from it is biā, "seed", which CDIAL lists.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Bengali for a root, then the Bengali for a seed.
 
 You'll want to know: কাঁটা.
 কাঁটা — kā̃ṭā — "a thorn".
+
+The word, taken apart.
+কাঁটা (kā̃ṭā) (kāṁṭā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from kaṇṭaka, "thorn" (CDIAL 2668).
 
 What you've built.
 One more word for this chapter.

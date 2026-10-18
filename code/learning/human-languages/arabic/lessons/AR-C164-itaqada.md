@@ -14,7 +14,8 @@ romanization: "iʿtaqada"
 concept_tag: AR-VERB-ITAQADA
 prerequisites: [AR-C164-salla, AR-C164-mazaha]
 sounds: []
-roots: []
+roots: [ʿ-q-d]
+etymology_hook: "iʿtaqada: built on the root ʿ-q-d, 'to tie a knot' (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C164-mazaha]
 <!-- hl-knowledge: introduces=[AR-LEX-C164-ACT164-04]; assesses=[] -->
 
 **اعتقد** — *iʿtaqada* — "to believe".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**اعتقد** (*iʿtaqada*) is built on the native Arabic root *ʿ-q-d*, "to tie a knot" (Lane). *Iʿtaqada* is Form VIII, "to bind one's heart to a thing", to believe.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

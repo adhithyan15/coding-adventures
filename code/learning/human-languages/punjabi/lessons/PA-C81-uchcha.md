@@ -14,7 +14,8 @@ romanization: "uchchā"
 concept_tag: PA-ADJ81-UCHCHA
 prerequisites: [PA-C81-mahinga, PA-C81-sasta]
 sounds: []
-roots: []
+roots: [sanskrit-ucca]
+etymology_hook: "uchchā ← Sanskrit ucca 'tall, lofty', a tadbhava (CDIAL 1634)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C81-sasta]
 <!-- hl-knowledge: introduces=[PA-LEX-C81-ADJ81-04]; assesses=[] -->
 
 **ਉੱਚਾ** — *uchchā* — "high".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਉੱਚਾ** (*uchchā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *ucca*, "tall, lofty" (CDIAL 1634).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "besin"
 concept_tag: BN-JINIS201-BESIN
 prerequisites: [BN-C200-kortobyo, BN-C200-sapholyo]
 sounds: []
-roots: []
+roots: [english-basin]
+etymology_hook: "besin ← English basin"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C200-sapholyo]
 <!-- hl-knowledge: introduces=[BN-LEX-C201-JINIS201-01]; assesses=[] -->
 
 **বেসিন** — *besin* — "a basin".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**বেসিন** (*besin*) is a loan from English *basin*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "tarhi"
 concept_tag: SA-REPLY4-TARHI
 prerequisites: [SA-C48-goose, SA-C47-wall, SA-C48-lion]
 sounds: []
-roots: []
+roots: [sanskrit-tarhi]
+etymology_hook: "tarhi 'then, in that case' ← the pointing base ta-, the base of tat (MW; CDIAL 5730)"
 duration:
   max_seconds: 210
 requires:
@@ -47,6 +48,13 @@ reviews_of: [SA-C48-goose]
 Said on its own it answers a condition. Somebody tells you how matters stand; **तर्हि** is your "then, all right".
 
 It is built on the same *t-* that points for you in तत् and in तत्र. Those two point at a thing and at a place; **तर्हि** points at a moment — at that time, and so, therefore.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*Tarhi* is built on the pointing base *ta-*, the base of *tat* (MW, CDIAL 5730).
+It is the partner of *yarhi*, "when", in the same way that *tathā* partners
+*yathā*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

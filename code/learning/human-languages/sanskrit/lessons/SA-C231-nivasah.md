@@ -14,7 +14,8 @@ romanization: "nivāsaḥ"
 concept_tag: SA-TRV231-NIVASAH
 prerequisites: [SA-C231-manacitram, SA-C231-sthanam]
 sounds: []
-roots: []
+roots: [sanskrit-nivasa, vas-dwell]
+etymology_hook: "nivāsa ← ni- + √vas 'dwell': 'dwelling, night quarters' (MW; CDIAL 7421)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C231-sthanam]
 <!-- hl-knowledge: introduces=[SA-LEX-C231-TRV231-03]; assesses=[] -->
 
 **निवासः** — *nivāsaḥ* — "a stay, a residence".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*nivāsa* is built on *ni-* and the root √vas, "to dwell, stay" (MW), the root of *vasāmi*, "I live", which you have already met. In the Mahābhārata it means "resting place, night quarters" (CDIAL 7421).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

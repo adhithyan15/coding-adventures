@@ -14,7 +14,8 @@ romanization: "muwāṭin"
 concept_tag: AR-MAKAN236-MUWATIN
 prerequisites: [AR-C236-fayadan, AR-C236-jalid]
 sounds: []
-roots: []
+roots: [w-ṭ-n]
+etymology_hook: "muwāṭin: built on the root w-ṭ-n, 'a homeland' (Lane); muwāṭin is the Form III participle, 'a fellow-dweller'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C236-jalid]
 <!-- hl-knowledge: introduces=[AR-LEX-C236-MAKAN236-04]; assesses=[] -->
 
 **مواطن** — *muwāṭin* — "a citizen".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**مواطن** (*muwāṭin*) is built on the native Arabic root *w-ṭ-n*, "a homeland; to dwell" (Lane). *Muwāṭin* is the Form III participle, "a fellow-dweller"; the citizen is a modern sense.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

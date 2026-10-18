@@ -14,7 +14,8 @@ romanization: "lômbā"
 concept_tag: BN-ADJ73-LOMBA
 prerequisites: [BN-C72-purono, BN-C72-kharap]
 sounds: []
-roots: []
+roots: [sanskrit-lamba]
+etymology_hook: "lômbā ← Sanskrit lamba 'pendent; long'; CDIAL lists Assamese lambā, 'long', and Oriya lambā, 'long, tall' (CDIAL 10951)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C72-kharap]
 <!-- hl-knowledge: introduces=[BN-LEX-C73-ADJ73-01]; assesses=[] -->
 
 **লম্বা** — *lômbā* — "long, tall".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**লম্বা** (*lômbā*) goes back to Sanskrit *lamba*, "pendent; long". CDIAL gives no Bengali form under that entry, but it lists Assamese *lambā*, "long", and Oriya *lambā*, "long, tall", the forms nearest to Bengali (CDIAL 10951).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

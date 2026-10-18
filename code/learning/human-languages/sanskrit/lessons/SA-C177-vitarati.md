@@ -14,7 +14,8 @@ romanization: "vitarati"
 concept_tag: SA-VERB-VITARATI
 prerequisites: [SA-C176-purayati, SA-C177-pracchadayati]
 sounds: []
-roots: []
+roots: [sanskrit-vitarati]
+etymology_hook: "vitarati ← vi- + √tṝ 'cross over'; MW gives 'pass across' and later 'give away, grant' (CDIAL 11719)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C177-pracchadayati]
 <!-- hl-knowledge: introduces=[SA-LEX-C177-ACT177-02]; assesses=[] -->
 
 **वितरति** — *vitarati* — "distributes, hands out".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*vitarati* is built on *vi-* "apart" and the root √tṝ, "to cross over" (MW). In the Rigveda it means "traverses"; in the Mahābhārata it already means "gives" (CDIAL 11719), the sense of handing out that you are learning here.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

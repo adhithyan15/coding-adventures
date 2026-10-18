@@ -1,7 +1,7 @@
 {
   "language": "punjabi",
   "chapter": 106,
-  "sourceHash": "fnv1a64:ab25f9f820645259",
+  "sourceHash": "fnv1a64:edbec99e79edba11",
   "lessonIds": [
     "PA-C106-kite",
     "PA-C106-kade",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "punjabi/narration/ch106.txt",
   "json": "punjabi/narration/ch106.json",
-  "textHash": "fnv1a64:c8980794ae48dded",
-  "jsonHash": "fnv1a64:926c2922b518fd2a",
+  "textHash": "fnv1a64:dda2326844921435",
+  "jsonHash": "fnv1a64:ffc3cc372c2c38f1",
   "findings": []
 }

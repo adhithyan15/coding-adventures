@@ -14,7 +14,8 @@ romanization: "hoṭh"
 concept_tag: MW-BODY45-HOTH
 prerequisites: [MW-C45-pet, MW-C45-angli]
 sounds: []
-roots: []
+roots: [sanskrit-oshtha]
+etymology_hook: "hoṭh ← Sanskrit oṣṭha 'lip'; the h- may come from *adhaoṣṭha 'lower lip' (CDIAL 2563, 245a)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C45-angli]
 <!-- hl-knowledge: introduces=[MW-LEX-C45-BODY45-03]; assesses=[] -->
 
 **होठ** — *hoṭh* — "a lip".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**होठ** (*hoṭh*) is a tadbhava of Sanskrit *oṣṭha*, "lip", under which CDIAL lists Hindi and Gujarati *hoṭh* (CDIAL 2563). Where the *h-* came from is not settled: a proposal CDIAL records traces it to *\*adhaoṣṭha*, "lower lip" (CDIAL 245a).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

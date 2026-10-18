@@ -6,7 +6,7 @@ sequence: 840
 chapter: 41
 type: word
 headword: ambulō, ambulāre
-gloss: "I walk" — the verb behind ambulance, preamble and the pram, and a rare case where the front half is clear and the back half is not
+gloss: '"I walk" — the verb behind ambulance, preamble and the pram, and a rare case where the front half is clear and the back half is not'
 concept_tag: VERB-WALK
 prerequisites: [LA-C40-sto]
 sounds: [macron-long-vowel, macron-none-short-vowel]

@@ -14,7 +14,8 @@ romanization: "hiṅgu"
 concept_tag: SA-THG159-HINGU
 prerequisites: [SA-C159-jirakam, SA-C159-sarsapah]
 sounds: []
-roots: []
+roots: [sanskrit-hingu]
+etymology_hook: "hiṅgu 'asafoetida' (MBh); EtymDB says borrowed from Iranian, MW and CDIAL 14079 are silent; Hindi hīṅg"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C159-sarsapah]
 <!-- hl-knowledge: introduces=[SA-LEX-C159-THG159-03]; assesses=[] -->
 
 **हिंगु** — *hiṅgu* — "asafoetida".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*hiṅgu* "asafoetida" appears from the Mahābhārata on. EtymDB lists it as borrowed from Iranian, but neither MW nor CDIAL 14079 gives a derivation, so its origin is not settled. It lives on as Punjabi *hiṅg* and Hindi *hīṅg* (CDIAL 14079).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "navīnaḥ"
 concept_tag: SA-QUAL129-NAVINAH
 prerequisites: [SA-C128-tiktah, SA-C129-sitalah]
 sounds: []
-roots: []
+roots: [sanskrit-nava-new]
+etymology_hook: "navīna ← nava 'new' + -īna (CDIAL 7023); MW sets nava beside Latin novus and English new"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C129-sitalah]
 <!-- hl-knowledge: introduces=[SA-LEX-C129-QUAL129-02]; assesses=[] -->
 
 **नवीनः** — *navīnaḥ* — "new".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*navīna* is built on *nava* "new" with the suffix *-īna* (CDIAL 7023). MW sets *nava* beside Greek *neos*, Latin *novus* and English *new*: one inherited Indo-European word.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

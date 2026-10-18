@@ -14,7 +14,8 @@ romanization: "machchhī"
 concept_tag: PA-VERBS63-MACHCHHI
 prerequisites: [PA-C63-suttna, PA-C63-mit]
 sounds: []
-roots: []
+roots: [sanskrit-matsya]
+etymology_hook: "machchhī ← Sanskrit matsya 'fish', a tadbhava (CDIAL 9758)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C63-mit]
 <!-- hl-knowledge: introduces=[PA-LEX-C63-VERBS63-04]; assesses=[] -->
 
 **ਮੱਛੀ** — *machchhī* — "a fish".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਮੱਛੀ** (*machchhī*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *matsya*, "fish" (CDIAL 9758).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

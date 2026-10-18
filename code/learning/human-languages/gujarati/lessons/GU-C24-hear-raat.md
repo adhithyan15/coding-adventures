@@ -11,8 +11,8 @@ gloss: night, the fourth and last part of the day cycle
 concept_tag: GU-TIME-NIGHT-HEARD
 prerequisites: [GU-C24-hear-saanj]
 sounds: [rolled-r, long-aa]
-roots: []
-etymology_hook: Night closes the four-part cycle by ear, and it is the shortest of the four to say.
+roots: [sanskrit-ratri]
+etymology_hook: "rāt ← Sanskrit rātrī 'night', a tadbhava (CDIAL 10702)"
 duration:
   max_seconds: 120
 requires:
@@ -39,6 +39,11 @@ reviews_of: [GU-C24-hear-bapor, GU-C24-hear-saanj]
 
 [PAUSE 2s] Say *bapor*, then *sānj*. Now listen twice: **rāt**. It means
 **night**. Three sounds, one beat.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**રાત** (*rāt*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *rātrī*, "night" (CDIAL 10702).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[GU-LEX-RAAT-01, GU-LEX-SAANJ-01, GU-LEX-BAPOR-01] -->

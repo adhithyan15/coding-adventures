@@ -1,7 +1,7 @@
 {
   "language": "urdu",
   "chapter": 234,
-  "sourceHash": "fnv1a64:d1a17acfbb1c49c6",
+  "sourceHash": "fnv1a64:5d4539f4d4ac9ce6",
   "lessonIds": [
     "UR-C234-papar",
     "UR-C234-puri",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "urdu/narration/ch234.txt",
   "json": "urdu/narration/ch234.json",
-  "textHash": "fnv1a64:bb9ad2db24986042",
-  "jsonHash": "fnv1a64:93832d1523450ea5",
+  "textHash": "fnv1a64:e093eda7f9f80d5d",
+  "jsonHash": "fnv1a64:35cb477c44d1274c",
   "findings": []
 }

@@ -14,7 +14,8 @@ romanization: "negâh kardan"
 concept_tag: FA-VERB-NEGAH-KARDAN
 prerequisites: [FA-C179-bardashtan, FA-C179-tamasha-kardan]
 sounds: []
-roots: []
+roots: [persian-negah, pie-kwer]
+etymology_hook: "negâh kardan: Persian negâh 'look' (Middle Persian nigāh) + kardan"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C179-tamasha-kardan]
 <!-- hl-knowledge: introduces=[FA-LEX-C179-KONESH179-04]; assesses=[] -->
 
 **نگاه کردن** — *negâh kardan* — "to look at".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*negâh kardan* pairs *negâh*, "look", with *kardan*, "to do": to do a look. *negâh* is native, usually traced to Middle Persian *nigāh*. *kardan*, "to do", is an inherited verb, from Middle Persian *kardan* (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

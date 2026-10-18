@@ -14,7 +14,8 @@ romanization: "jônmôdin"
 concept_tag: BN-SOMOY156-JONMODIN
 prerequisites: [BN-C156-prothome, BN-C156-tarikh]
 sounds: []
-roots: []
+roots: [sanskrit-janman, sanskrit-dina]
+etymology_hook: "jônmôdin: jônmô 'birth', Sanskrit janman (CDIAL 5113), + din 'day' ← dina (CDIAL 6328)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C156-tarikh]
 <!-- hl-knowledge: introduces=[BN-LEX-C156-SOMOY156-04]; assesses=[] -->
 
 **জন্মদিন** — *jônmôdin* — "a birthday".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**জন্মদিন** (*jônmôdin*) is *jônmô*, "birth", Sanskrit *janman* taken over whole (CDIAL 5113), + *din*, "day", inherited from Sanskrit *dina*, "day" (CDIAL 6328).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

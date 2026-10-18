@@ -14,7 +14,8 @@ romanization: "kaerimasu"
 concept_tag: JA-VERB-KAERU
 prerequisites: [JA-C138-arukimasu, JA-W137-pe, JA-W136-zu]
 sounds: []
-roots: []
+roots: [japanese-kaeru-return, japanese-masu-polite]
+etymology_hook: "kaerimasu: native kaeru 'go back' + polite -masu"
 duration:
   max_seconds: 200
 requires:
@@ -56,6 +57,11 @@ a word list marks them.
 
 > **うちに かえります。** — *uchi ni kaerimasu* — "I go home." The particle
 > **に** marks where you are going.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**かえります** (*kaerimasu*) is native *kaeru*, "to go back", with the polite ending *-masu*. The verb is inherited rather than borrowed; its kanji is a kun'yomi attached later (JMdict, KANJIDIC2).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-C138-KAERIMASU, JA-LEX-C138-ARUKIMASU] -->

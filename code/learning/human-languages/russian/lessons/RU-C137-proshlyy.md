@@ -14,8 +14,8 @@ romanization: "próshlyy"
 concept_tag: RU-PAS137-PROSHLYY
 prerequisites: [RU-C137-davno, RU-C137-ranshe]
 sounds: []
-roots: [pie-hei]
-etymology_hook: "прошлый is from пройти 'to pass by': what has passed"
+roots: [slavic-khoditi]
+etymology_hook: "прошлый is from прошёл 'passed', the past of пройти; шёл goes with ходить 'to walk' (Vasmer)"
 duration:
   max_seconds: 200
 requires:
@@ -47,7 +47,7 @@ reviews_of: [RU-C137-ranshe]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**прошлый** is built on *прошёл*, "passed", from *пройти*, "to go past": *про-*, "past", with *идти*, "to go". What is past has gone by.
+**прошлый** is built on *прошёл*, "passed", the past tense of *пройти*, "to go past". Its *-шёл* is not from *идти*, "to go": Vasmer puts *шёл* with *ходить*, "to walk". What is past has gone by.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

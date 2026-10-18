@@ -14,7 +14,8 @@ romanization: "sangin"
 concept_tag: FA-ADJ62-SANGIN
 prerequisites: [FA-C62-chagh, FA-C62-sabok]
 sounds: []
-roots: []
+roots: [persian-sang]
+etymology_hook: "sangin: Persian sang 'stone' + -in 'like'; native"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C62-sabok]
 <!-- hl-knowledge: introduces=[FA-LEX-C62-ADJ62-04]; assesses=[] -->
 
 **سنگین** — *sangin* — "heavy".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*sangin* is *sang*, "stone", with the ending *-in*, "made of, like": "stony", and so heavy. Both pieces are native; *sang* is usually traced to Middle Persian *sang*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

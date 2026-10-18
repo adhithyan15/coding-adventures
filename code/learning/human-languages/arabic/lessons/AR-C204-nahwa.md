@@ -14,7 +14,8 @@ romanization: "naḥwa"
 concept_tag: AR-MAKAN204-NAHWA
 prerequisites: [AR-C203-qarn, AR-C203-usbui]
 sounds: []
-roots: []
+roots: [n-ḥ-w]
+etymology_hook: "naḥwa: built on the root n-ḥ-w, 'to go towards' (Lane); naḥwa is 'towards'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C203-usbui]
 <!-- hl-knowledge: introduces=[AR-LEX-C204-MAKAN204-01]; assesses=[] -->
 
 **نحو** — *naḥwa* — "towards".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**نحو** (*naḥwa*) is built on the native Arabic root *n-ḥ-w*, "to go towards" (Lane). *Naḥwa* is "towards"; the same word names Arabic grammar, *naḥw*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

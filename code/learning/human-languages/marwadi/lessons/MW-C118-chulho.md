@@ -14,7 +14,8 @@ romanization: "chūlho"
 concept_tag: MW-THINGS118-CHULHO
 prerequisites: [MW-C117-khatar, MW-C117-kyukai]
 sounds: []
-roots: []
+roots: [sanskrit-culli]
+etymology_hook: "chūlho ← Sanskrit cullī 'fireplace', itself from Dravidian (CDIAL 4879, Hindi row)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C117-kyukai]
 <!-- hl-knowledge: introduces=[MW-LEX-C118-THINGS118-01]; assesses=[] -->
 
 **चूल्हो** — *chūlho* — "a hearth, a stove".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**चूल्हो** (*chūlho*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *cullī*, "fireplace". CDIAL gives no Marwari form in this entry (CDIAL 4879); the match is through Hindi *cūlhā*. CDIAL takes the Sanskrit word itself from Dravidian.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

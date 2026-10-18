@@ -4,7 +4,7 @@
   "chapter": 189,
   "title": "Until, Till then, So far, Right away, Late",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:70f518f4bf12143c",
+  "sourceHash": "fnv1a64:58b807bbc61213b2",
   "lessons": [
     {
       "id": "UR-C189-jab-tak",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f2c43e34feaa19b0",
+      "sourceHash": "fnv1a64:520c0ce688874c61",
       "notice": null,
       "blocks": [
         {
@@ -52,6 +52,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The phrase, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "جب تک (jab tak) is \"when, up to\". CDIAL lists jab, \"when\", under Sanskrit evam eva, \"exactly so\", crossed with the relative stem ya- (CDIAL 2528), and tak, \"till\", under Sanskrit tāvatka, built on tāvant, \"so much\" (CDIAL 5805)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -62,7 +73,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -111,7 +122,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -142,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8aba3d8a7c57624d",
+      "sourceHash": "fnv1a64:dcf854138cd32fe0",
       "notice": null,
       "blocks": [
         {
@@ -175,6 +186,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The phrase, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "تب تک (tab tak) is \"then, up to\". CDIAL lists tab, \"then\", under Sanskrit evam eva, \"exactly so\", crossed with the pointing stem ta- (CDIAL 2528), and tak, \"till\", under Sanskrit tāvatka, built on tāvant, \"so much\" (CDIAL 5805)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -185,7 +207,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -234,7 +256,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -265,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f6cc23054187b685",
+      "sourceHash": "fnv1a64:975e68c49db98843",
       "notice": null,
       "blocks": [
         {
@@ -298,6 +320,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The phrase, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ابھی تک (abhī tak) is \"right now, up to\". CDIAL lists abhī under Sanskrit evam eva, \"exactly so\", crossed with the pointing stem a- (CDIAL 2528), and tak, \"till\", under Sanskrit tāvatka, built on tāvant, \"so much\" (CDIAL 5805)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -308,7 +341,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -357,7 +390,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -388,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:82731c93124a0246",
+      "sourceHash": "fnv1a64:4067865659448920",
       "notice": null,
       "blocks": [
         {
@@ -421,6 +454,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The phrase, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "اسی وقت (isī vaqt) is \"at this very time\". isī is is, \"this\", with the emphatic -ī; CDIAL lists is under Sanskrit eṣa, \"this\" (CDIAL 2530). vaqt is Arabic waqt, \"a time\", which reached Urdu through Persian (Lane, root w-q-t)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -431,7 +475,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -480,7 +524,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -511,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:bef3dae4c23bb1c4",
+      "sourceHash": "fnv1a64:c1737f559554c026",
       "notice": null,
       "blocks": [
         {
@@ -544,6 +588,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The phrase, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "دیر سے (der se) is \"from lateness\". der is usually traced to Persian dēr, \"late\". CDIAL lists se under Sanskrit sahita, \"together with\" (CDIAL 13310), and sama, \"equal\", has also been suggested (CDIAL 13173)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -554,7 +609,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -603,7 +658,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

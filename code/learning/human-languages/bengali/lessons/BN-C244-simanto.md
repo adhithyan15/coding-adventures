@@ -14,7 +14,8 @@ romanization: "sīmāntô"
 concept_tag: BN-JAYGA244-SIMANTO
 prerequisites: [BN-C243-goph, BN-C243-chibuk]
 sounds: []
-roots: []
+roots: [sanskrit-simanta]
+etymology_hook: "sīmāntô ← Sanskrit sīmānta 'boundary', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C243-chibuk]
 <!-- hl-knowledge: introduces=[BN-LEX-C244-JAYGA244-01]; assesses=[] -->
 
 **সীমান্ত** — *sīmāntô* — "a border".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**সীমান্ত** (*sīmāntô*) is Sanskrit *sīmānta*, "boundary", taken over whole as a learned loan, a tatsama.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "khaṭaʾ"
 concept_tag: AR-ADJ85-KHATA
 prerequisites: [AR-C85-thaqil, AR-C85-sahih]
 sounds: []
-roots: []
+roots: [kh-ṭ-ʾ]
+etymology_hook: "khaṭaʾ: built on the root kh-ṭ-ʾ, 'to err, to sin' (Lane); Hebrew ḥeṭ, 'sin', is usually counted a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C85-sahih]
 <!-- hl-knowledge: introduces=[AR-LEX-C85-ADJ85-04]; assesses=[] -->
 
 **خطأ** — *khaṭaʾ* — "a mistake; wrong".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**خطأ** (*khaṭaʾ*) is built on the native Arabic root *kh-ṭ-ʾ*, "to err, to sin" (Lane). Hebrew *ḥeṭ*, "sin", is usually counted a cousin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "dastkhat karnā"
 concept_tag: UR-VERB-DASTKHAT-KARNA
 prerequisites: [UR-C150-mitana, UR-C150-chhapna]
 sounds: []
-roots: []
+roots: [persian-dast, arabic-khatt, kr-do]
+etymology_hook: "dastkhat: Persian dast 'hand' + Arabic khaṭṭ 'writing' (Lane, root kh-ṭ-ṭ); karnā (CDIAL 2814)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C150-chhapna]
 <!-- hl-knowledge: introduces=[UR-LEX-C150-ACT150-04]; assesses=[] -->
 
 **دستخط کرنا** — *dastkhat karnā* — "to sign".
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**دستخط کرنا** (*dastkhat karnā*) is "to do the hand-writing". *dastkhat*, "a signature", joins Persian *dast*, "hand", and Arabic *khaṭṭ*, "a line, writing" (Lane, root *kh-ṭ-ṭ*), put together in Persian. *karnā* comes from Sanskrit *karoti*, "does" (CDIAL 2814).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

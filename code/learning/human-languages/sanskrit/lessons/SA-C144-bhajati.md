@@ -14,7 +14,8 @@ romanization: "bhajati"
 concept_tag: SA-VERB-BHAJATI
 prerequisites: [SA-C143-bibheti, SA-C143-dhyayati]
 sounds: []
-roots: []
+roots: [sanskrit-bhajati]
+etymology_hook: "bhajati ← √bhaj 'share out, apportion', inherited from Indo-European (EtymDB); bhakti and bhāga are kin"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C143-dhyayati]
 <!-- hl-knowledge: introduces=[SA-LEX-C144-ACT144-01]; assesses=[] -->
 
 **भजति** — *bhajati* — "shares, worships".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*bhajati* comes from the root √bhaj "share out, allot", and then "receive one's share, enjoy, revere" (CDIAL 9359), inherited from Indo-European (EtymDB). *bhāga* "share" and *bhakti* "devotion" come from the same root (MW).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

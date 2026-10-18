@@ -14,7 +14,8 @@ romanization: "uttarīyam"
 concept_tag: SA-THINGS103-UTTARIYAM
 prerequisites: [SA-C103-anguliyakam, SA-C103-kankanam]
 sounds: []
-roots: []
+roots: [sanskrit-uttara]
+etymology_hook: "uttarīya ← uttara 'upper' + -īya 'belonging to': 'the upper garment' (MW; CDIAL 1781)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C103-kankanam]
 <!-- hl-knowledge: introduces=[SA-LEX-C103-THINGS103-05]; assesses=[] -->
 
 **उत्तरीयम्** — *uttarīyam* — "a shawl, an upper garment".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*uttarīya* is built from *uttara* "upper, higher" with the suffix *-īya* "belonging to": the garment that belongs on the upper body (MW; CDIAL 1781). Marathi kept it as *uttarī* "scarf" (CDIAL 1781).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

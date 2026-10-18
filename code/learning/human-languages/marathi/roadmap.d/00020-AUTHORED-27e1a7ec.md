@@ -34,7 +34,7 @@
   present-tense ending that declares the subject's gender; *jāṇe* and *yeṇe* from
   two Sanskrit verbs of going (*yāti*; *ā-* "toward here" + *eti*); the *-णे* infinitive as
   a **neuter** noun, which is where Marathi's third gender becomes visible;
-  *paś-* ← Indo-European *\*spek-* and its English cousin-web; and the dative
+  *pāhṇe* ← *\*pracāh* (CDIAL 8492), not the look-alike *\*spek-*; and the dative
   knower, *malā māhīt āhe*, with **माहीत** marked as the Persian/Arabic
   Deccan-layer loan it is beside inherited **जाणणे** (*jñā-*, cousin of *know*).
   All six lessons are `voice` — the chapter is fully drivable. **Authored.**

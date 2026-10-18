@@ -14,7 +14,8 @@ romanization: "murr"
 concept_tag: AR-QUAL152-MURR
 prerequisites: [AR-C151-mutassikh, AR-C152-hamid, AR-C25-yawm, AR-C26-layl, AR-C26-layl]
 sounds: []
-roots: []
+roots: [m-r-r]
+etymology_hook: "murr: built on the root m-r-r, 'to be bitter' (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [AR-C152-hamid]
 <!-- hl-knowledge: introduces=[AR-LEX-C152-QUAL152-02]; assesses=[] -->
 
 **مر** — *murr* — "bitter".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**مر** (*murr*) is built on the native Arabic root *m-r-r*, "to be bitter" (Lane). English *myrrh*, the bitter resin, came through Greek from a Semitic word of this kind; Hebrew *mar*, "bitter", is a cousin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

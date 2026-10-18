@@ -14,7 +14,8 @@ romanization: "bhā̃ḍā"
 concept_tag: PA-THINGS115-BHADA
 prerequisites: [PA-C115-rajai, PA-C115-cullha]
 sounds: []
-roots: []
+roots: [sanskrit-bhanda]
+etymology_hook: "bhāṁḍā: CDIAL marks it as taken from Hindi bhāṁḍā, from Sanskrit bhāṇḍa 'pot, dish, vessel' (CDIAL 9440)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C115-cullha]
 <!-- hl-knowledge: introduces=[PA-LEX-C115-THINGS115-03]; assesses=[] -->
 
 **ਭਾਂਡਾ** — *bhā̃ḍā* — "a vessel, a utensil".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਭਾਂਡਾ** (*bhāṁḍā*) came into Punjabi from Hindi: CDIAL lists Hindi *bhāṁḍā*, "earthen pot", under Sanskrit *bhāṇḍa*, "pot, dish, vessel", and marks the Punjabi word as taken from it (CDIAL 9440).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

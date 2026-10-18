@@ -35,7 +35,7 @@ reviews_of: [ML-C68-eleventh, ML-C68-seventh, ML-C67-first, ML-C65-permission, M
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C68-ORDINAL-06, ML-GRAMMAR-C68-ORDINAL-07, ML-LEX-C68-ORDINAL-02, ML-LEX-C65-ASK-02, ML-LEX-C53-SKY-02] -->
 
 [PAUSE 2s]
-- [YOU RECALL: say *patinonnāṁ*, and say why *irupathāṁ* needs no lesson — **R1**]
+- [YOU RECALL: say *patinonnāṁ*, and say why *irupatāṁ* needs no lesson — **R1**]
 - [YOU RECALL: say *ēḻāṁ* — **R2**]
 - [YOU RECALL: say *anuvādaṁ* — **R3**]
 - [YOU RECALL: say *sūryan* — **R4**]

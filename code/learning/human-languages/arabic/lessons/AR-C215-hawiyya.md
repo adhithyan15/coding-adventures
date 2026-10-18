@@ -14,7 +14,8 @@ romanization: "hawiyya"
 concept_tag: AR-SHAY215-HAWIYYA
 prerequisites: [AR-C214-qutn, AR-C214-suf]
 sounds: []
-roots: []
+roots: [huwa-he]
+etymology_hook: "hawiyya: built from huwa 'he' + -iyya 'he-ness', a philosophers' coinage for identity"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C214-suf]
 <!-- hl-knowledge: introduces=[AR-LEX-C215-SHAY215-01]; assesses=[] -->
 
 **هوية** — *hawiyya* — "an identity card".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**هوية** (*hawiyya*) is built from the pronoun *huwa*, "he", with the abstract ending *-iyya*: "he-ness", usually explained as a coinage of the medieval philosophers for identity.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

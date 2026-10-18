@@ -14,7 +14,8 @@ romanization: "palāṇḍuḥ"
 concept_tag: SA-THINGS108-PALANDUH
 prerequisites: [SA-C107-ardrakam, SA-C107-lasunam]
 sounds: []
-roots: []
+roots: [sanskrit-palandu]
+etymology_hook: "palāṇḍu 'onion' (Manu); MW gives no derivation, and its origin is uncertain; Pali palaṇḍuka (CDIAL 7954)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C107-lasunam]
 <!-- hl-knowledge: introduces=[SA-LEX-C108-THINGS108-01]; assesses=[] -->
 
 **पलाण्डुः** — *palāṇḍuḥ* — "an onion".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*palāṇḍu* "an onion" appears from the law book of Manu on (MW). MW gives no derivation beyond the grammarians, so its origin is uncertain. Pali kept it as *palaṇḍuka* (CDIAL 7954).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

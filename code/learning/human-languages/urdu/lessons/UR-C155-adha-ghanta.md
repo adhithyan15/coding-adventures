@@ -14,7 +14,8 @@ romanization: "ādhā ghanṭā"
 concept_tag: UR-VAQT155-ADHA-GHANTA
 prerequisites: [UR-C154-chakkar, UR-C155-savere]
 sounds: []
-roots: []
+roots: [sanskrit-ardha, sanskrit-ghanta-bell]
+etymology_hook: "ādhā ← Sanskrit ardha 'half' (CDIAL 644); ghanṭā ← ghaṇṭā 'bell' (CDIAL 4421)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C155-savere]
 <!-- hl-knowledge: introduces=[UR-LEX-C155-VAQT155-02]; assesses=[] -->
 
 **آدھا گھنٹہ** — *ādhā ghanṭā* — "half an hour".
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**آدھا گھنٹہ** (*ādhā ghanṭā*) joins *ādhā*, "half", from Sanskrit *ardha*, "half" (CDIAL 644), and *ghanṭā*, "hour", from Sanskrit *ghaṇṭā*, "bell" (CDIAL 4421): the hour was once struck on a bell.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

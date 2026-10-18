@@ -14,7 +14,8 @@ romanization: "ārdraḥ"
 concept_tag: SA-QUAL126-ARDRAH
 prerequisites: [SA-C126-sankirnah, SA-C126-gabhirah]
 sounds: []
-roots: []
+roots: [sanskrit-ardra]
+etymology_hook: "ārdra 'wet, moist' (RV); MW cites a grammarians' root √ard; origin uncertain; Hindi ālā 'damp' (CDIAL 1340)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C126-gabhirah]
 <!-- hl-knowledge: introduces=[SA-LEX-C126-QUAL126-04]; assesses=[] -->
 
 **आर्द्रः** — *ārdraḥ* — "wet".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*ārdra* "wet, moist, fresh" is old, in the Rigveda; MW cites only a grammarians' root √ard for it, so its origin is uncertain. It lives on as Hindi *ālā* "damp" (CDIAL 1340), and *ārdraka* "ginger" is built on it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

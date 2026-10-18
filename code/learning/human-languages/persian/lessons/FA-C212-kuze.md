@@ -14,7 +14,8 @@ romanization: "kuze"
 concept_tag: FA-CHIZ212-KUZE
 prerequisites: [FA-C212-karton, FA-C212-kise]
 sounds: []
-roots: []
+roots: [persian-kuza]
+etymology_hook: "kuze: inherited, usually traced to Middle Persian kōzag"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C212-kise]
 <!-- hl-knowledge: introduces=[FA-LEX-C212-CHIZ212-04]; assesses=[] -->
 
 **کوزه** — *kuze* — "a clay jar".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*kuze* is a native Persian word, inherited rather than borrowed; it is usually traced to Middle Persian *kōzag*, "jug".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

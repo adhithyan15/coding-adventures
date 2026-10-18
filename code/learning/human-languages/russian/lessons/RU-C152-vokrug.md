@@ -47,7 +47,7 @@ reviews_of: [RU-C152-okolo]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**вокруг** is *в*, "in", with *круг*, "a circle": "in a ring around".
+**вокруг** is *в*, "in", with *круг*, "a circle": "in a ring around". Vasmer relates *круг* to Old Norse *hringr*, "a ring".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

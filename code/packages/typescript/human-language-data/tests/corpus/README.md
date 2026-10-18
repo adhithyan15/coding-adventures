@@ -24,6 +24,14 @@ Hindi and Malayalam A1 point-specific audit history now lives with the
 corresponding direct owner under `core/exam-inventory-<language>-a1.d/`; chapter
 agents must not recreate either retired aggregate inventory.
 
+Sanskrit A1 also keeps its exact non-covered set in
+`corpus/sanskrit/a1-coverage-gaps.d/`. Every inventory point without a gap owner
+must measure covered; an unmapped or partial point owns its own canonical JSON
+file. Closing a point removes that one file instead of editing shared totals,
+category counters, percentages, or cumulative commentary. The census derives
+all of those reports from the direct inventory and gap identities and fails if
+either side changes alone.
+
 The ten other Indian tracks use the stricter discovered-owner layout described
 above. Their top-level entrypoints must stay declarative; chapter agents add a
 new hashed case owner and never append executable assertions to the entrypoint.

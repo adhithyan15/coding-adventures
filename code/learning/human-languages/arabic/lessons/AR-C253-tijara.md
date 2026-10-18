@@ -14,7 +14,8 @@ romanization: "tijāra"
 concept_tag: AR-AMAL253-TIJARA
 prerequisites: [AR-C252-rusum, AR-C252-barid]
 sounds: []
-roots: []
+roots: [t-j-r]
+etymology_hook: "tijāra: built on the root t-j-r, 'to trade' (Lane); tijāra is the fiʿāla noun of a trade, 'commerce'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C252-barid]
 <!-- hl-knowledge: introduces=[AR-LEX-C253-AMAL253-01]; assesses=[] -->
 
 **تجارة** — *tijāra* — "trade, commerce".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**تجارة** (*tijāra*) is built on the native Arabic root *t-j-r*, "to trade" (Lane). *Tijāra* is the *fiʿāla* noun of a trade, "commerce".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

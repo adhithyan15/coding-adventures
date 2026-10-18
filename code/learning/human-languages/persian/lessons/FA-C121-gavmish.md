@@ -14,7 +14,8 @@ romanization: "gâvmish"
 concept_tag: FA-THINGS121-GAVMISH
 prerequisites: [FA-C120-cheshme, FA-C120-kavir]
 sounds: []
-roots: []
+roots: [persian-gav]
+etymology_hook: "gâvmish: usually explained as Persian gâv 'cow' + mish 'sheep'; native"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C120-kavir]
 <!-- hl-knowledge: introduces=[FA-LEX-C121-THINGS121-01]; assesses=[] -->
 
 **گاومیش** — *gâvmish* — "a buffalo".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*gâvmish* is usually explained as *gâv*, "cow, ox" (inherited, Middle Persian *gāw*), with *mish*, "ewe, sheep": the buffalo named from two kinds of cattle.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

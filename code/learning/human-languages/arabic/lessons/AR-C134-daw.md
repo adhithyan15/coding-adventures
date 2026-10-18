@@ -14,7 +14,8 @@ romanization: "ḍawʾ"
 concept_tag: AR-THINGS134-DAW
 prerequisites: [AR-C133-rad, AR-C133-asifa]
 sounds: []
-roots: []
+roots: [ḍ-w-ʾ]
+etymology_hook: "ḍawʾ: built on the root ḍ-w-ʾ, 'light, brightness' (Lane); the word ḍawʾ is the noun, 'light'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C133-asifa]
 <!-- hl-knowledge: introduces=[AR-LEX-C134-THINGS134-01]; assesses=[] -->
 
 **ضوء** — *ḍawʾ* — "light".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ضوء** (*ḍawʾ*) is built on the native Arabic root *ḍ-w-ʾ*, "light, brightness" (Lane). The word *ḍawʾ* is the noun, "light".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

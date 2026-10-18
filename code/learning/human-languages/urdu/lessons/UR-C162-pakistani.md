@@ -14,7 +14,8 @@ romanization: "pākistānī"
 concept_tag: UR-SIFAT162-PAKISTANI
 prerequisites: [UR-C162-maqami, UR-C162-angrezi]
 sounds: []
-roots: []
+roots: [persian-pak, persian-stan]
+etymology_hook: "pākistānī: Pākistān + -ī; the name, coined in 1933, is read as Persian pāk 'pure' + -stān 'land'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C162-angrezi]
 <!-- hl-knowledge: introduces=[UR-LEX-C162-SIFAT162-03]; assesses=[] -->
 
 **پاکستانی** — *pākistānī* — "Pakistani".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**پاکستانی** (*pākistānī*) is *Pākistān* with the ending *-ī*, "of". The name was coined in 1933, and is read as Persian *pāk*, "pure", and *-stān*, "land".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

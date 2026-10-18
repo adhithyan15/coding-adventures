@@ -14,7 +14,8 @@ romanization: "yācakaḥ"
 concept_tag: SA-PPL180-YACAKAH
 prerequisites: [SA-C180-vyadhah, SA-C180-caurah]
 sounds: []
-roots: []
+roots: [sanskrit-yacate]
+etymology_hook: "yācaka ← root √yāc 'ask, beg' + agent suffix -aka: 'one who asks' (MW)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C180-caurah]
 <!-- hl-knowledge: introduces=[SA-LEX-C180-PPL180-03]; assesses=[] -->
 
 **याचकः** — *yācakaḥ* — "a beggar".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*yācaka* is built on the root √yāc, "to ask, beg, entreat", with the agent suffix *-aka* (MW): "one who asks". The verb itself is old; CDIAL 10447 finds *yācate* already in the Rigveda.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

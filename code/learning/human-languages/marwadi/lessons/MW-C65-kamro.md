@@ -14,7 +14,8 @@ romanization: "kamro"
 concept_tag: MW-HOME65-KAMRO
 prerequisites: [MW-C65-kivar, MW-C65-rasoi]
 sounds: []
-roots: []
+roots: [portuguese-camara]
+etymology_hook: "kamro ← Portuguese câmara 'room, chamber'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C65-rasoi]
 <!-- hl-knowledge: introduces=[MW-LEX-C65-HOME65-03]; assesses=[] -->
 
 **कमरो** — *kamro* — "a room".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**कमरो** (*kamro*) is a loan from Portuguese *câmara*, "room, chamber". It goes back to Latin *camera*, "vaulted room".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

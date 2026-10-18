@@ -14,7 +14,8 @@ romanization: "din"
 concept_tag: UR-ADJ74-DIN
 prerequisites: [UR-C74-pila, UR-C74-bhura]
 sounds: []
-roots: []
+roots: [sanskrit-dina]
+etymology_hook: "din ← Sanskrit dina 'day', a tadbhava (CDIAL 6328)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C74-bhura]
 <!-- hl-knowledge: introduces=[UR-LEX-C74-ADJ74-04]; assesses=[] -->
 
 **دن** — *din* — "a day".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**دن** (*din*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *dina*, "day" (CDIAL 6328).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

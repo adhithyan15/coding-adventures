@@ -14,7 +14,8 @@ romanization: "prakāś"
 concept_tag: GU-THINGS121-PRAKAS
 prerequisites: [GU-C120-cadni, GU-C121-andharu]
 sounds: []
-roots: []
+roots: [sanskrit-prakasha]
+etymology_hook: "prakāś ← Sanskrit prakāśa 'clearness, lustre', a tatsama (CDIAL 8437)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C121-andharu]
 <!-- hl-knowledge: introduces=[GU-LEX-C121-THINGS121-02]; assesses=[] -->
 
 **પ્રકાશ** (*prakāś*) — "light".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**પ્રકાશ** (*prakāś*) is Sanskrit *prakāśa*, "clearness, lustre", taken over whole as a learned loan, a tatsama (CDIAL 8437).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

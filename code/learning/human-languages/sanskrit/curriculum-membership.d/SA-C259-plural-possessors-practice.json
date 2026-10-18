@@ -1,0 +1,11 @@
+{
+  "id": "SA-C259-plural-possessors-practice",
+  "pathSegment": "SA-PATH-259-POS259",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "SA-EXT-259-POS259",
+      "order": 2
+    }
+  ]
+}

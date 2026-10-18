@@ -14,7 +14,8 @@ romanization: "pyārā"
 concept_tag: UR-QUAL133-PYARA
 prerequisites: [UR-C133-javan, UR-C133-burha]
 sounds: []
-roots: []
+roots: [sanskrit-priyakara]
+etymology_hook: "pyārā ← Sanskrit priyakāra 'doing a kindness', a tadbhava (CDIAL 8975)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C133-burha]
 <!-- hl-knowledge: introduces=[UR-LEX-C133-QUAL133-03]; assesses=[] -->
 
 **پیارا** — *pyārā* — "lovely, dear".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**پیارا** (*pyārā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *priyakāra*, "doing a kindness" (CDIAL 8975). It is built from *priya*, "dear", and *kāra*, "doing".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

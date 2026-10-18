@@ -55,7 +55,7 @@ last lesson of this chapter says so.
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**कहाँ** (*kahāṁ*) pairs the question stem *k-* of **क्या** and **कौन** with the place ending *-hāṁ* of **यहाँ**, "here", and **वहाँ**, "there". CDIAL has no entry for it, so its older history is left open here.
+**कहाँ** (*kahāṁ*) pairs the question stem *k-* of **क्या** and **कौन** with the place ending *-hāṁ* of **यहाँ**, "here", and **वहाँ**, "there". CDIAL has no entry for it, so its older history is uncertain.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C40-DEIXIS-06] -->

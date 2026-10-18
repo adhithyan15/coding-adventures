@@ -14,7 +14,8 @@ romanization: "sâkhtemân"
 concept_tag: FA-MAKAN266-SAKHTEMAN
 prerequisites: [FA-C266-chaharrah, FA-C266-mahalle]
 sounds: []
-roots: []
+roots: [persian-sakhtan]
+etymology_hook: "sâkhtemân: Persian sâkht 'built' (sâkhtan, inherited) + -emân"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C266-mahalle]
 <!-- hl-knowledge: introduces=[FA-LEX-C266-MAKAN266-03]; assesses=[] -->
 
 **ساختمان** — *sâkhtemân* — "a building".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*sâkhtemân* is built from *sâkht*, "made, built" (from *sâkhtan*, "to build"), and the ending *-emân*: a built thing. *sâkhtan* is inherited, usually traced to Middle Persian *sāxtan*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "saṅgaṇakam"
 concept_tag: SA-THINGS105-SANGANAKAM
 prerequisites: [SA-C104-durabhasah, SA-C105-duradarsanam]
 sounds: []
-roots: []
+roots: [sanskrit-sanganaka]
+etymology_hook: "saṅgaṇaka ← sam 'together' + √gaṇ 'count' + -aka 'one who': 'the reckoner'; a modern coinage"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C105-duradarsanam]
 <!-- hl-knowledge: introduces=[SA-LEX-C105-THINGS105-02]; assesses=[] -->
 
 **संगणकम्** — *saṅgaṇakam* — "a computer".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*saṅgaṇaka* is built from *sam* "together" and the root √gaṇ "count, reckon" (MW), with the agent suffix *-aka*: "the one that reckons it all up". It is a modern coinage for the computer, made the way English made *computer* from *compute*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

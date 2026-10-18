@@ -14,7 +14,8 @@ romanization: "fākiha"
 concept_tag: AR-FOOD66-FAKIHA
 prerequisites: [AR-C65-samak, AR-C66-aruzz]
 sounds: []
-roots: []
+roots: [f-k-h]
+etymology_hook: "fākiha: built on the root f-k-h, 'fruit' (Lane); Lane explains fākiha as fruit of any kind, a thing eaten for enjoyment"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C66-aruzz]
 <!-- hl-knowledge: introduces=[AR-LEX-C66-FOOD66-02]; assesses=[] -->
 
 **فاكهة** — *fākiha* — "fruit".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**فاكهة** (*fākiha*) is built on the native Arabic root *f-k-h*, "fruit; to enjoy" (Lane). Lane explains *fākiha* as fruit of any kind, a thing eaten for enjoyment.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
