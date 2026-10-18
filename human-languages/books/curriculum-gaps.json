@@ -12,7 +12,7 @@
   },
   "summary": {
     "registeredTracks": 23,
-    "totalLessons": 29651,
+    "totalLessons": 29655,
     "authoredBooks": 23,
     "durationViolations": 0,
     "unknownPrerequisites": 0,
@@ -30,13 +30,13 @@
     "scriptExposureExemptedGlyphs": 1686,
     "tracksTeachingNoScript": 0,
     "headwordsWithoutRomanization": 3,
-    "wordLessons": 25698,
+    "wordLessons": 25702,
     "wordLessonsWithoutEtymologyHook": 0,
     "wordLessonsWithoutVisibleEtymology": 0,
     "wordLessonsWithEmptyEtymologyBlock": 0,
     "lessonsWithoutSequence": 0,
     "forwardReviews": 0,
-    "atomsNeverRevisited": 2,
+    "atomsNeverRevisited": 3,
     "forwardReferences": 788,
     "chaptersWithoutCapability": 0,
     "chapterPayoffsNotRepresentative": 0,
@@ -44,7 +44,7 @@
     "tracksWithoutWritingStageEvidence": 0,
     "missingWritingStagePairs": 102,
     "invalidWritingStageEvidence": 0,
-    "drivableLessons": 27823,
+    "drivableLessons": 27827,
     "drivablePercent": 94,
     "chaptersWithoutDrivablePrefix": 196,
     "chaptersWithoutDrivablePrefixByType": 188,
@@ -8322,7 +8322,8 @@
           147,
           148,
           149,
-          150
+          150,
+          151
         ],
         "bookChapters": [
           1,
@@ -8474,7 +8475,8 @@
           147,
           148,
           149,
-          150
+          150,
+          151
         ],
         "missingBookChapters": [],
         "orphanBookChapters": [],
@@ -12358,9 +12360,9 @@
       {
         "language": "marwadi",
         "status": "version-2",
-        "lessonCount": 897,
+        "lessonCount": 901,
         "versions": {
-          "2": 897
+          "2": 901
         }
       },
       {
@@ -12546,8 +12548,8 @@
       },
       {
         "language": "marwadi",
-        "bookChapters": 150,
-        "declaredChapters": 150,
+        "bookChapters": 151,
+        "declaredChapters": 151,
         "missingCapability": 0,
         "findings": 0,
         "clean": true
@@ -12626,8 +12628,8 @@
       }
     ],
     "summary": {
-      "bookChapters": 5873,
-      "declaredChapters": 5873,
+      "bookChapters": 5874,
+      "declaredChapters": 5874,
       "chaptersWithoutCapability": 0,
       "payoffsNotClosed": 0,
       "payoffsNotRepresentative": 0,
@@ -12639,10 +12641,10 @@
     }
   },
   "levels": {
-    "totalLessons": 29651,
+    "totalLessons": 29655,
     "byLevel": {
       "pre-A1": 9460,
-      "A1": 18589,
+      "A1": 18593,
       "A2": 1518,
       "B1": 39,
       "B2": 17,
@@ -12849,10 +12851,10 @@
       },
       {
         "language": "marwadi",
-        "lessonCount": 897,
+        "lessonCount": 901,
         "byLevel": {
           "pre-A1": 528,
-          "A1": 368,
+          "A1": 372,
           "A2": 1,
           "B1": 0,
           "B2": 0,
@@ -13548,8 +13550,8 @@
       },
       {
         "language": "marwadi",
-        "lessonCount": 897,
-        "measurable": 896,
+        "lessonCount": 901,
+        "measurable": 900,
         "unmeasurable": 1,
         "lessonViolations": 0,
         "chapterViolations": 0
@@ -13769,7 +13771,7 @@
           "language": "marwadi",
           "script": "devanagari",
           "latinScript": false,
-          "lessonCount": 897,
+          "lessonCount": 901,
           "totalGlyphs": 55,
           "lessonViolations": 0,
           "systemViolations": 0,
@@ -73081,7 +73083,7 @@
           "R3",
           "R4"
         ],
-        "revisits": 3
+        "revisits": 4
       },
       {
         "atom": "MW-LEX-C74-ADJ74-03",
@@ -229670,17 +229672,6 @@
         "revisits": 3
       },
       {
-        "atom": "MW-LEX-C118-THINGS118-02",
-        "language": "marwadi",
-        "introducedBy": "MW-C118-tavo",
-        "introducedAt": 729,
-        "missed": [
-          "R3",
-          "R4"
-        ],
-        "revisits": 3
-      },
-      {
         "atom": "MW-LEX-C118-THINGS118-03",
         "language": "marwadi",
         "introducedBy": "MW-C118-karahi",
@@ -230484,6 +230475,50 @@
         "revisits": 3
       },
       {
+        "atom": "MW-LEX-C135-THINGS135-01",
+        "language": "marwadi",
+        "introducedBy": "MW-C135-matiro",
+        "introducedAt": 817,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C135-THINGS135-02",
+        "language": "marwadi",
+        "introducedBy": "MW-C135-kakri",
+        "introducedAt": 818,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C135-THINGS135-03",
+        "language": "marwadi",
+        "introducedBy": "MW-C135-bhidi",
+        "introducedAt": 819,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C135-THINGS135-04",
+        "language": "marwadi",
+        "introducedBy": "MW-C135-baingan",
+        "introducedAt": 820,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
         "atom": "MW-LEX-C136-THINGS136-03",
         "language": "marwadi",
         "introducedBy": "MW-C136-adrak",
@@ -230565,6 +230600,39 @@
         "language": "marwadi",
         "introducedBy": "MW-C146-husiyar",
         "introducedAt": 876,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C146-QUAL146-04",
+        "language": "marwadi",
+        "introducedBy": "MW-C146-bavalo",
+        "introducedAt": 877,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C146-QUAL146-05",
+        "language": "marwadi",
+        "introducedBy": "MW-C146-alsi",
+        "introducedAt": 878,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C147-QUAL147-01",
+        "language": "marwadi",
+        "introducedBy": "MW-C147-mehanti",
+        "introducedAt": 879,
         "missed": [
           "R2",
           "R3"
@@ -231724,7 +231792,7 @@
           "R2",
           "R3"
         ],
-        "revisits": 3
+        "revisits": 4
       },
       {
         "atom": "MW-LEX-C70-NATURE70-03",
@@ -231735,7 +231803,7 @@
           "R2",
           "R3"
         ],
-        "revisits": 3
+        "revisits": 4
       },
       {
         "atom": "MW-LEX-C70-NATURE70-04",
@@ -231933,7 +232001,7 @@
           "R2",
           "R3"
         ],
-        "revisits": 3
+        "revisits": 5
       },
       {
         "atom": "MW-LEX-C78-TIME78-02",
@@ -324898,47 +324966,17 @@
         "missed": [
           "R3"
         ],
+        "revisits": 5
+      },
+      {
+        "atom": "MW-LEX-C118-THINGS118-02",
+        "language": "marwadi",
+        "introducedBy": "MW-C118-tavo",
+        "introducedAt": 729,
+        "missed": [
+          "R3"
+        ],
         "revisits": 4
-      },
-      {
-        "atom": "MW-LEX-C135-THINGS135-01",
-        "language": "marwadi",
-        "introducedBy": "MW-C135-matiro",
-        "introducedAt": 817,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "MW-LEX-C135-THINGS135-02",
-        "language": "marwadi",
-        "introducedBy": "MW-C135-kakri",
-        "introducedAt": 818,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "MW-LEX-C135-THINGS135-03",
-        "language": "marwadi",
-        "introducedBy": "MW-C135-bhidi",
-        "introducedAt": 819,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "MW-LEX-C135-THINGS135-04",
-        "language": "marwadi",
-        "introducedBy": "MW-C135-baingan",
-        "introducedAt": 820,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 3
       },
       {
         "atom": "MW-LEX-C135-THINGS135-05",
@@ -325401,32 +325439,12 @@
         "revisits": 3
       },
       {
-        "atom": "MW-LEX-C146-QUAL146-04",
+        "atom": "MW-LEX-C147-QUAL147-02",
         "language": "marwadi",
-        "introducedBy": "MW-C146-bavalo",
-        "introducedAt": 877,
+        "introducedBy": "MW-C147-imandar",
+        "introducedAt": 880,
         "missed": [
-          "R2"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "MW-LEX-C146-QUAL146-05",
-        "language": "marwadi",
-        "introducedBy": "MW-C146-alsi",
-        "introducedAt": 878,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "MW-LEX-C147-QUAL147-01",
-        "language": "marwadi",
-        "introducedBy": "MW-C147-mehanti",
-        "introducedAt": 879,
-        "missed": [
-          "R2"
+          "R3"
         ],
         "revisits": 3
       },
@@ -325439,6 +325457,26 @@
           "R2"
         ],
         "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C149-QUAL149-04",
+        "language": "marwadi",
+        "introducedBy": "MW-C149-bahadur",
+        "introducedAt": 892,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C149-QUAL149-05",
+        "language": "marwadi",
+        "introducedBy": "MW-C149-gailo",
+        "introducedAt": 893,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 2
       },
       {
         "atom": "MW-LEX-CHAAR-01",
@@ -341580,12 +341618,12 @@
       },
       {
         "language": "marwadi",
-        "lessonCount": 897,
+        "lessonCount": 901,
         "lessonsWithoutSequence": 0,
         "forwardPrerequisites": 0,
         "forwardReviews": 0,
-        "atomsTaught": 831,
-        "atomsNeverRevisited": 0,
+        "atomsTaught": 838,
+        "atomsNeverRevisited": 1,
         "forwardReferences": 0
       },
       {
@@ -341684,14 +341722,14 @@
       "tracksWithUnorderedLessons": 0,
       "forwardPrerequisites": 0,
       "forwardReviews": 0,
-      "atomsTaught": 29997,
-      "atomsNeverRevisited": 2,
+      "atomsTaught": 30004,
+      "atomsNeverRevisited": 3,
       "neverRevisitedPercent": 0,
       "missedByWindow": {
         "R1": 1554,
-        "R2": 19860,
-        "R3": 16013,
-        "R4": 24404
+        "R2": 19862,
+        "R3": 16017,
+        "R4": 24407
       },
       "forwardReferences": 788
     }
@@ -341818,7 +341856,7 @@
       {
         "language": "marwadi",
         "script": "devanagari",
-        "lessonCount": 897,
+        "lessonCount": 901,
         "scriptLessons": 54,
         "taughtGlyphs": 55,
         "shownGlyphs": 55,
@@ -342040,7 +342078,7 @@
       },
       {
         "language": "marwadi",
-        "wordLessons": 718,
+        "wordLessons": 722,
         "wordLessonsWithoutEtymologyHook": 0,
         "wordLessonsWithoutVisibleEtymology": 0,
         "wordLessonsWithoutAnyEtymology": 0,
@@ -342120,7 +342158,7 @@
       }
     ],
     "summary": {
-      "wordLessons": 25698,
+      "wordLessons": 25702,
       "wordLessonsWithoutEtymologyHook": 0,
       "wordLessonsWithoutVisibleEtymology": 0,
       "wordLessonsWithoutAnyEtymology": 0,
@@ -363599,8 +363637,8 @@
       },
       {
         "language": "marwadi",
-        "lessonCount": 897,
-        "atomMeasurableLessons": 896,
+        "lessonCount": 901,
+        "atomMeasurableLessons": 900,
         "atomMeasurementBlindLessons": 1,
         "durationViolations": 0,
         "atomLessonSpikes": 0,
@@ -363615,14 +363653,14 @@
         "forwardPrerequisites": 0,
         "forwardReviews": 0,
         "forwardReferences": 0,
-        "atomsTaught": 831,
-        "atomsNeverRevisited": 0,
-        "reinforcementWindowMisses": 1148,
+        "atomsTaught": 838,
+        "atomsNeverRevisited": 1,
+        "reinforcementWindowMisses": 1157,
         "reinforcementMissesByWindow": {
           "R1": 1,
-          "R2": 445,
-          "R3": 257,
-          "R4": 445
+          "R2": 447,
+          "R3": 261,
+          "R4": 448
         },
         "payoffSurprises": 0,
         "writingPracticeLessons": 60,
@@ -363632,7 +363670,7 @@
           {
             "language": "marwadi",
             "kind": "reinforcement",
-            "count": 1148,
+            "count": 1157,
             "unit": "missed window(s)",
             "detail": "add retrieval at the expanding R1-R4 intervals"
           },
@@ -363647,7 +363685,7 @@
         "next": {
           "language": "marwadi",
           "kind": "reinforcement",
-          "count": 1148,
+          "count": 1157,
           "unit": "missed window(s)",
           "detail": "add retrieval at the expanding R1-R4 intervals"
         }
@@ -364579,7 +364617,7 @@
       {
         "language": "marwadi",
         "kind": "reinforcement",
-        "count": 1148,
+        "count": 1157,
         "unit": "missed window(s)",
         "detail": "add retrieval at the expanding R1-R4 intervals"
       },
@@ -365038,8 +365076,8 @@
           },
           {
             "criterion": "vocabulary",
-            "detail": "teaches 624 distinct headwords at or below A2, against 1200",
-            "shortfall": 576
+            "detail": "teaches 628 distinct headwords at or below A2, against 1200",
+            "shortfall": 572
           },
           {
             "criterion": "verb-vocabulary",
@@ -365047,7 +365085,7 @@
             "shortfall": 34
           }
         ],
-        "vocabulary": 624
+        "vocabulary": 628
       },
       {
         "language": "persian",
@@ -365242,11 +365280,11 @@
   },
   "modality": {
     "maxLinearisableTableColumns": 3,
-    "totalLessons": 29651,
-    "voice": 27253,
+    "totalLessons": 29655,
+    "voice": 27257,
     "sight": 899,
     "pen": 1499,
-    "coreVoice": 27823,
+    "coreVoice": 27827,
     "lessonsWithWritingSegments": 964,
     "drivablePercent": 94,
     "tracks": [
@@ -412502,13 +412540,13 @@
       },
       {
         "language": "marwadi",
-        "lessonCount": 897,
-        "voice": 797,
+        "lessonCount": 901,
+        "voice": 801,
         "sight": 42,
         "pen": 58,
-        "coreVoice": 797,
+        "coreVoice": 801,
         "drivablePercent": 89,
-        "drivablePrefixTotal": 635,
+        "drivablePrefixTotal": 639,
         "chapters": [
           {
             "language": "marwadi",
@@ -414819,6 +414857,21 @@
             "drivablePrefix": 0,
             "firstNonVoiceLesson": "MW-W44-a2-connected-composition",
             "unstartable": "lesson-type"
+          },
+          {
+            "language": "marwadi",
+            "chapter": 151,
+            "lessonCount": 4,
+            "voice": 4,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 4,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 4,
+            "firstNonVoiceLesson": null,
+            "unstartable": null
           }
         ]
       },
@@ -455187,7 +455240,7 @@
     "underspentPercent": 95
   },
   "infoDump": {
-    "lessons": 29651,
+    "lessons": 29655,
     "lessonsWithFindings": 120,
     "ruleStatements": 32,
     "paradigmTables": 91,
@@ -455195,11 +455248,11 @@
     "overBudget": 2
   },
   "lessonBudgets": {
-    "lessons": 29651,
-    "measuredLessons": 25259,
-    "idiomMeasuredLessons": 25259,
-    "senseMeasuredLessons": 25260,
-    "cultureClaimMeasuredLessons": 25259,
+    "lessons": 29655,
+    "measuredLessons": 25263,
+    "idiomMeasuredLessons": 25263,
+    "senseMeasuredLessons": 25264,
+    "cultureClaimMeasuredLessons": 25263,
     "idioms": 101,
     "senses": 103,
     "cultureClaims": 208,
@@ -455208,10 +455261,10 @@
   "metalanguage": {
     "terms": 54,
     "termsUsed": 54,
-    "lessonsUsingTerms": 29259,
-    "usesBeforeIntroduction": 55716,
-    "technicalUsesBeforeIntroduction": 9667,
-    "technicalLessons": 6480,
+    "lessonsUsingTerms": 29263,
+    "usesBeforeIntroduction": 55723,
+    "technicalUsesBeforeIntroduction": 9669,
+    "technicalLessons": 6482,
     "worstTerms": [
       {
         "term": "verb",
@@ -455219,7 +455272,7 @@
       },
       {
         "term": "noun",
-        "lessons": 2049
+        "lessons": 2050
       },
       {
         "term": "participle",
@@ -455240,12 +455293,12 @@
     ]
   },
   "literalMarkup": {
-    "lessonsScanned": 29651,
+    "lessonsScanned": 29655,
     "sourceFindings": 0,
     "renderedFindings": 0
   },
   "glyphCoverage": {
-    "filesScanned": 5942,
+    "filesScanned": 5943,
     "mainCharacters": 154,
     "scriptCharacters": 829,
     "gaps": 0
