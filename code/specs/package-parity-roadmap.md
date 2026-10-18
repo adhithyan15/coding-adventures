@@ -3030,7 +3030,7 @@ directory inventory cannot express:
 
 - `semantic-ir-sys-write-portable-conformance` owns SIR28 stream selection,
   terminators, recursive unpacking, frontend lowering, and backend/runtime
-  behavior. SIR28 §7 (removal of the legacy bare `print`/`puts` paths) is
+  behavior. SIR28 Â§7 (removal of the legacy bare `print`/`puts` paths) is
   now complete across all 7 backends, including the JavaScript backend's
   load-bearing SIR23 evaluator special-case and the 6 external CAS-frontend
   crates whose test harnesses depended on it.
@@ -8934,9 +8934,9 @@ Dependent Scytale conformance now owns the split among UTF-16 units, Unicode
 scalars, grapheme clusters, and UTF-8 bytes plus four lanes that trim more than
 the literal U+0020 padding character. Dependent Vigenere conformance owns the
 Go/Python Unicode-key divergence and the Kotlin/Swift Unicode-analysis hazards.
-The current Dart tranche follows the tightened portable contract—Unicode
+The current Dart tranche follows the tightened portable contractâ€”Unicode
 scalars and literal-space removal for Scytale, ASCII-only Vigenere processing,
-and key length 1 for insufficient analysis signal—without expanding into those
+and key length 1 for insufficient analysis signalâ€”without expanding into those
 cross-lane remediations.
 
 At selection time, the reconciled graph was complete and acyclic at 529 owners
@@ -16641,11 +16641,11 @@ before the next selection. These are backlog records, not completed ports:
 | Source-collection fixture CI | `build-tool-source-collection-fixture-native-ci-selection` | Twenty flat cases have twelve native reader fronts, including Elixir's local-case test; use the 7 local / 9 repository / 4 shared-input reader maps, not a blanket all-front fanout. All selector prerequisites are merged. |
 | Hashing-cache fixture CI | `build-tool-hashing-cache-fixture-native-ci-selection` | Eleven cases have nine native reader fronts; distinguish fixture-only scheduling from existing Lua/Perl evaluator owners. |
 | Validation fixture CI | `build-tool-validation-fixture-native-ci-selection` | Select only 14 native-read cases, including five Go-only cases; eight other one-off cases remain neutral-only until readers exist. |
-| D19 actor | `actor-d19-portable-core-neutral-conformance` → `actor-d19-seven-lane-parity` | Eight of fifteen lanes exist; isolate deterministic mailbox/round-robin core from clock, ID, and persistence adapters. |
-| Generic IR optimizer | `ir-optimizer-neutral-ir-to-ir-conformance` → `ir-optimizer-nine-lane-parity` | Six lanes exist; reconcile identity, NOP-only, and multipass behavior after the compiler-IR contract. |
-| Intel 4004 IR validator | `intel-4004-ir-validator-neutral-hardware-conformance` → `intel-4004-ir-validator-ten-lane-parity` | Five lanes exist; freeze pure hardware checks separately from assembler/simulator and same-lane compiler-IR prerequisites. |
-| JVM class-file | `jvm-class-file-neutral-byte-conformance` → `jvm-class-file-eleven-lane-parity` | Four lanes exist; pure class-byte parser/builder is prerequisite to JVM lowering and wrapper ports. |
-| IR-to-JVM class-file | `ir-to-jvm-class-file-neutral-byte-lowering-conformance` → `ir-to-jvm-class-file-eleven-lane-parity` | Four lanes exist; pure lowering depends on compiler-IR and class-file contracts. Optional disk writers have separate filesystem/process-capability concerns and are not silently included. |
+| D19 actor | `actor-d19-portable-core-neutral-conformance` â†’ `actor-d19-seven-lane-parity` | Eight of fifteen lanes exist; isolate deterministic mailbox/round-robin core from clock, ID, and persistence adapters. |
+| Generic IR optimizer | `ir-optimizer-neutral-ir-to-ir-conformance` â†’ `ir-optimizer-nine-lane-parity` | Six lanes exist; reconcile identity, NOP-only, and multipass behavior after the compiler-IR contract. |
+| Intel 4004 IR validator | `intel-4004-ir-validator-neutral-hardware-conformance` â†’ `intel-4004-ir-validator-ten-lane-parity` | Five lanes exist; freeze pure hardware checks separately from assembler/simulator and same-lane compiler-IR prerequisites. |
+| JVM class-file | `jvm-class-file-neutral-byte-conformance` â†’ `jvm-class-file-eleven-lane-parity` | Four lanes exist; pure class-byte parser/builder is prerequisite to JVM lowering and wrapper ports. |
+| IR-to-JVM class-file | `ir-to-jvm-class-file-neutral-byte-lowering-conformance` â†’ `ir-to-jvm-class-file-eleven-lane-parity` | Four lanes exist; pure lowering depends on compiler-IR and class-file contracts. Optional disk writers have separate filesystem/process-capability concerns and are not silently included. |
 
 Dependency/leverage ranking favors the source-collection fixture selector next:
 its neutral and CI-selector prerequisites are merged, its 20 checked cases
@@ -16687,11 +16687,11 @@ Parallel audits registered newly discovered work before the next selection:
 | --- | --- | --- |
 | Resolution fixture CI | `build-tool-resolution-fixture-native-ci-selection` | 26 flat cases, nine heterogeneous native readers, exact per-case map needed; after merged fixture and CI-gate prerequisites. |
 | JavaScript LANG78 IIR | `javascript-lang78-iir-compiler-portability-classification` | Selection-blocked Rust pilot classification: separate pure bounded lowering from `jsvm` file/process/stdio authority and the LANG-VM queue; do not infer fourteen port obligations. |
-| IR-to-Intel-4004 compiler | `ir-to-intel-4004-compiler-neutral-assembly-conformance` → `ir-to-intel-4004-compiler-eleven-lane-parity` | 4/15; wait for compiler-IR and 4004-validator neutral contracts, then split children by local prerequisites. |
-| Intel 8008 simulator and gate level | `intel8008-simulator-neutral-lifecycle-conformance` → `intel8008-simulator-ten-lane-parity`; `intel8008-gatelevel-neutral-state-conformance` → `intel8008-gatelevel-ten-lane-parity` | Both 5/15; 07f bounded full-state simulator precedes 07f2 differential gate-level work, with same-lane simulator and arithmetic prerequisites. |
-| ARM1 simulator and gate level | `arm1-simulator-07e-neutral-full-state-conformance` → `arm1-simulator-seven-lane-parity`; `arm1-gatelevel-07e2-neutral-differential-conformance` → `arm1-gatelevel-seven-lane-parity` | Both 8/15; 599-vector full-state reference precedes gate-backed differential and same-lane simulator/arithmetic ports. |
-| Branch predictor | `branch-predictor-d02-neutral-conformance` → `branch-predictor-seven-lane-parity` | 8/15; reconcile D02 logical clock language with existing clock-free state-machine/directed-graph manifests. |
-| Mermaid Swimlane parser | `mermaid-swimlane-quoted-label-parser-neutral-conformance` → `mermaid-swimlane-entity-label-parser-neutral-conformance` | DG04 quoted Unicode labels and their interaction with entity decoding precede remaining entity-label behavior. Merged #17038 owns unquoted lane/node/pipe-edge entity baselines and #17049 owns metadata title/accTitle/accDescr entity baselines; the later child should classify residual inline edges and malformed/unknown or broader numeric entities without duplication. Neither parser owner overlaps the layout hierarchy. |
+| IR-to-Intel-4004 compiler | `ir-to-intel-4004-compiler-neutral-assembly-conformance` â†’ `ir-to-intel-4004-compiler-eleven-lane-parity` | 4/15; wait for compiler-IR and 4004-validator neutral contracts, then split children by local prerequisites. |
+| Intel 8008 simulator and gate level | `intel8008-simulator-neutral-lifecycle-conformance` â†’ `intel8008-simulator-ten-lane-parity`; `intel8008-gatelevel-neutral-state-conformance` â†’ `intel8008-gatelevel-ten-lane-parity` | Both 5/15; 07f bounded full-state simulator precedes 07f2 differential gate-level work, with same-lane simulator and arithmetic prerequisites. |
+| ARM1 simulator and gate level | `arm1-simulator-07e-neutral-full-state-conformance` â†’ `arm1-simulator-seven-lane-parity`; `arm1-gatelevel-07e2-neutral-differential-conformance` â†’ `arm1-gatelevel-seven-lane-parity` | Both 8/15; 599-vector full-state reference precedes gate-backed differential and same-lane simulator/arithmetic ports. |
+| Branch predictor | `branch-predictor-d02-neutral-conformance` â†’ `branch-predictor-seven-lane-parity` | 8/15; reconcile D02 logical clock language with existing clock-free state-machine/directed-graph manifests. |
+| Mermaid Swimlane parser | `mermaid-swimlane-quoted-label-parser-neutral-conformance` â†’ `mermaid-swimlane-entity-label-parser-neutral-conformance` | DG04 quoted Unicode labels and their interaction with entity decoding precede remaining entity-label behavior. Merged #17038 owns unquoted lane/node/pipe-edge entity baselines and #17049 owns metadata title/accTitle/accDescr entity baselines; the later child should classify residual inline edges and malformed/unknown or broader numeric entities without duplication. Neither parser owner overlaps the layout hierarchy. |
 | Mermaid Swimlane classes | `mermaid-swimlane-class-terminator-parser-neutral-conformance`; `mermaid-swimlane-class-decorator-parser-neutral-conformance` | Merged #17054/#17059 own inline and named/default class style projection. Merged #17065 owns `:::class` grammar, Rust semantics, and a Metal visual fixture, so the decorator item now only classifies residual language-neutral semantic expectations and implementation lanes; it must not repeat the Rust feature. The pinned upstream example's terminal `;` is still not accepted correctly for `class`/`classDef`, and remains an independent parser gap. |
 
 Correct the pending validation-fixture selector's inventory to 22 checked
@@ -16800,14 +16800,14 @@ no parity PR remains open. From `bedf869390378fde9a0443090da080416caaf400`,
 the schema-3 collision-gated reporter still finds 15 established lanes,
 1,497 implementation identities, 4,767 occupied slots, 1,539 all-reported
 identities, zero canonical collisions, and zero unknown buckets. The
-high-consensus band remains 178 identities and 262 missing slots; the 5–9,
-2–4, and singleton bands remain 123/934, 181/2,282, and 1,015/14,210.
+high-consensus band remains 178 identities and 262 missing slots; the 5â€“9,
+2â€“4, and singleton bands remain 123/934, 181/2,282, and 1,015/14,210.
 OCaml remains five emerging roots outside the all-language denominator. No
 new package-root identity was introduced since #17028.
 
 Classify intervening merged behavior under existing owners: #17030/#17043
 ALGOL bounded sqrt/cos sign widening; #17040 emitting-only preprocessor
-`Undef`; #17036 deterministic Vault F1–F9 freshness under its portable core
+`Undef`; #17036 deterministic Vault F1â€“F9 freshness under its portable core
 while F10 external anchoring remains native authority; #17035/#17047 partial
 Perl release-grammar fixtures under the existing frontend owner; and
 #17038/#17049 Mermaid label and metadata entity baselines under the two
@@ -16830,7 +16830,7 @@ checks, then auto-merged as `16a8c24016e1d17f71dd115180ca3429b89b8280`;
 the fetched `origin/main` contains that merge. The schema-3 parity report at
 this revision again has 15 established lanes, 1,497 implementation identities,
 4,767 implementation slots, zero canonical collisions, and zero unknown
-language buckets. The high-consensus, 5–9, 2–4, and singleton bands remain
+language buckets. The high-consensus, 5â€“9, 2â€“4, and singleton bands remain
 178/262, 123/934, 181/2,282, and 1,015/14,210 identities/missing slots.
 OCaml retains five emerging roots outside the all-language denominator.
 
@@ -17094,7 +17094,7 @@ The one newly added identity outside #17136 is Rust
 boundary is native host-security work, not a portable parity candidate; a
 selection-blocked review owner records it separately before choosing the next
 portable item. Read-only G2D03 audits found that Go's 100-sample bounds miss
-three off-grid neutral extrema by roughly 4–5e-5, a full turn emits five
+three off-grid neutral extrema by roughly 4â€“5e-5, a full turn emits five
 cubics, and direct center forms have no finite/one-turn fail-stop. The
 existing Go center-form owner is now the smallest high-leverage prerequisite
 for its separately owned SVG endpoint API. Its current package tests and vet
@@ -17566,3 +17566,15 @@ admission before tests. This tranche delivers only neutral data/text fixtures
 and their independent validator. Source maps, all native adopters and backend
 execution remain separate. Fourteen live open PR file inventories clear the
 direct product scope; shared workflow/journal hunks are unrelated and retained.
+
+Local foundation validation on source `ccef78f8cf5`: all 50 cases and 25 core
+opcodes pass across 11 tests. Validator coverage is 333/341 statements (97.65%)
+and 180/188 branches (95.74%). CI registry (19), parity reporter (10), STP01
+neutral (15), and lessons (31) tests pass, as do Ruff, Bandit, compilation,
+and the lessons validator. The actual Go build-tool BUILD passes all 15
+package suites; vet and build pass. Its repository plan validates 45 Starlark
+BUILD files and discovers 5,328 packages with no affected native packages
+for this neutral-only change. Both independent security reviews pass the
+exact source head. The Git-visible inventory equals the immutable main
+report. These observations qualify the neutral foundation only; nine existing
+IR lane adopters and six missing-lane ports remain pending.
