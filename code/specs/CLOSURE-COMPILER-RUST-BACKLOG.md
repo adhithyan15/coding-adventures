@@ -1,6 +1,44 @@
 # Closure Compiler on Rust — parity backlog
 
-## Current bounded checkpoint — checked cumulative Timeline events
+## Current local checkpoint — event-height specification and compiled red
+
+Per-event scalar-height estimates are specified before implementation in
+[CV04b event heights](CV04b-current-main-timeline-event-height.md). Production
+remains the published cumulative-cursor implementation below. No new green or
+publication is claimed. Local authored tests retain all previous fixtures and
+add43 prospective whole typed products plus6 whole authored source/IR/layout/
+Scene/ordered FontQuery products. These49 cells are not yet passing acceptance.
+
+Clean tests-only source `1a9b16562d5d265991e68699d9abe61c09a506b5` completed
+metadata0, temporal101 (102PASS/3newFAIL), painter101 (190PASS/1newFAIL), with
+no ignores or filters. All292 previous functions passed; all4 intended new
+functions compiled and failed their new complete-layout expectations. A failing
+loop does not establish completion of its remaining cells. Receipt SHA256
+`5234895475158242297c7a7060efc136a9cc5efc19e69fc968bcaae28d55da97`;
+2executables/6raw streams copied, immutable manifest SHA256
+`e1f130164a73e62e56fcdf2a4076906ebb31fb96d61c727cc90e2037e8c2773b`.
+Source/index/tool/clean guards passed. This is compiled semantic red only.
+Earlier runner path/namespace refusals and a lesson-created dirty-worktree
+hold deviation remain unaccepted, with raw evidence and filled lessons retained.
+The clean initial three-test red and its copies are separately preserved.
+
+The pinned-baseline independent impact audit identified9 native functions/
+24 constructor products and4 painter functions/80 products requiring explicit
+old/new migration. These are prospective static classifications. Preserve every
+old full authored source, IR, layout, Scene and ordered query vector; direct
+forged/legacy controls and size24 products remain exact. Separately retain
+p54/p55 full direct controls and p56/p57 refusals. Close and review each changed
+constructor oracle before production, then run all affected suites/doctests/
+strict checks, security and documentation gates. No actual-output normalization.
+
+Sole PR17288 remains published at b8be8a68aabd83322226508ab8878b3139f6219e;
+this successor is UNPUBLISHED. Main/conflicts, required exact-head hosted
+checks/review and actual merge remain OPEN; auto-merge OFF. Full Closure parity,
+stable identities/spans, output-byte/source joins and all transformation lineage
+remain OPEN. Miri DEFERRED/PENDING, never passed; frozen run/checkout/inputs/
+receipts/target untouched and unpolled. Genuine final-source Miri follows delivery.
+
+## Historical bounded checkpoint — checked cumulative Timeline events
 
 Timeline events now use an absolute cursor and checked addition of the existing
 finite event pitch after every event, including the final advance. TD row height
