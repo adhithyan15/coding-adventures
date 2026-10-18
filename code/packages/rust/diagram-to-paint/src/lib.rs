@@ -8799,6 +8799,19 @@ fn git_commit_symbol_instructions(
     }
 }
 
+// The family is one opaque resolver name, not a CSS fallback parser. Match
+// the source reader's existing trim-then-ASCII allowlist for forged typed input.
+// No font sizes, geometry, other temporal font roles or scalar guards change.
+fn timeline_effective_font_family(value: &str) -> &str {
+    let value = value.trim();
+    if !value.is_empty() && value.chars().all(|c| c.is_ascii_alphanumeric()
+        || c == '_' || " \"',.-".contains(c)) {
+        value
+    } else {
+        "\"trebuchet ms\", verdana, arial, sans-serif"
+    }
+}
+
 fn timeline_color<'a>(colors: &'a [String], index: usize, fallback: &'a str) -> &'a str {
     colors.get(index % colors.len().max(1)).map(String::as_str).unwrap_or(fallback)
 }
@@ -8818,6 +8831,15 @@ where
     let lf = options.label_font.clone();
     let ls = lf.size;
     let timeline_config = diagram.timeline_config.clone().unwrap_or_default();
+    // A Timeline configuration selects only the Timeline font clones. Keep
+    // ordinary temporal/caller fonts and every numeric font attribute intact.
+    let mut timeline_label_font = lf.clone();
+    let mut timeline_title_font = options.title_font.clone();
+    if let Some(config) = &diagram.timeline_config {
+        let family = timeline_effective_font_family(&config.font_family);
+        timeline_label_font.family = family.into();
+        timeline_title_font.family = family.into();
+    }
 
     for item in &diagram.items {
         match item {
@@ -8834,7 +8856,7 @@ where
                     *y + 6.0,
                     *width - 16.0,
                     *height - 12.0,
-                    options.title_font.clone(),
+                    timeline_title_font.clone(),
                     Color {
                         r: 17,
                         g: 24,
@@ -8861,7 +8883,7 @@ where
                     corner_radius: Some(15.0), stroke_dash: None, stroke_dash_offset: None,
                 }));
                 text_children.push(text_node(
-                    label, *x + 10.0, *y + 6.0, *width - 20.0, *height - 12.0, lf.clone(),
+                    label, *x + 10.0, *y + 6.0, *width - 20.0, *height - 12.0, timeline_label_font.clone(),
                     css_to_color(timeline_color(
                         &timeline_config.section_label_colors, *color_index, "#ffffff",
                     )),
@@ -8883,7 +8905,7 @@ where
                 }));
                 text_children.push(text_node(
                     label, *x + 12.0, *y + 8.0, *width - 24.0, 22.0,
-                    options.title_font.clone(), css_to_color(timeline_color(
+                    timeline_title_font.clone(), css_to_color(timeline_color(
                         &timeline_config.section_label_colors, *color_index, "#0f172a",
                     )),
                 ));
@@ -8892,7 +8914,7 @@ where
                         .collect::<Vec<_>>().join("\n");
                     text_children.push(text_node(
                         &event_text, *x + 12.0, *y + 32.0, *width - 24.0,
-                        (*height - 38.0).max(12.0), lf.clone(),
+                        (*height - 38.0).max(12.0), timeline_label_font.clone(),
                         css_to_color(timeline_color(
                             &timeline_config.section_label_colors, *color_index, "#334155",
                         )),
@@ -8952,7 +8974,7 @@ where
                     *y + 6.0,
                     *width - 20.0,
                     *height - 12.0,
-                    lf.clone(),
+                    timeline_label_font.clone(),
                     css_to_color(timeline_color(
                         &timeline_config.section_label_colors, *color_index, "#0f172a",
                     )),
@@ -9540,6 +9562,7 @@ where
     if let Some(config) = &diagram.timeline_config {
         metadata.insert("timeline.padding".into(), config.padding.to_string());
         metadata.insert("timeline.leftMargin".into(), config.left_margin.to_string());
+        metadata.insert("timeline.fontFamily".into(), timeline_effective_font_family(&config.font_family).into());
         metadata.insert("timeline.useMaxWidth".into(), config.use_max_width.to_string());
         metadata.insert(
             "timeline.disableMulticolor".into(),
