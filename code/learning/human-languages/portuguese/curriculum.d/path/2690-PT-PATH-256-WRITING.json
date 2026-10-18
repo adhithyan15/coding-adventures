@@ -1,0 +1,9 @@
+{
+  "id": "PT-PATH-256-WRITING",
+  "spine_node": "SPINE-SAY-WHY",
+  "before": [],
+  "inline": [
+    "PT-EXT-256-WRITING"
+  ],
+  "after": []
+}

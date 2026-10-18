@@ -1,0 +1,21 @@
+{
+  "chapter": 288,
+  "title": "Writing --- With A Clock",
+  "label": "ch:fa-with-a-clock",
+  "canDo": "I can fill in a short practical form in Persian script against a three-minute clock, and I know what this track's A1 writing paper asks for.",
+  "spineNodes": [
+    "SPINE-SAY-WHY"
+  ],
+  "payoff": {
+    "lesson": "FA-W288-ba-saat",
+    "kind": "task",
+    "summary": "Complete FA-W288-ba-saat: all six form fields in Persian script before the three-minute timer rings, then stop.",
+    "assesses": [
+      "FA-LEX-ESM-E-MAN-AST",
+      "FA-LEX-KHUBAM-REPLY",
+      "FA-LEX-CHAY",
+      "FA-LEX-KHODAHAFEZ"
+    ],
+    "note": "This book found no widely used international A1 Persian writing paper, and the SAMFA provider source it checked publishes no CEFR mapping, so the A1 paper is this track's own: 20 minutes, a practical form and a 30 to 40 word message, 60/100 needed on every paper with no averaging. This checkpoint rehearses the form for three minutes and is not that paper."
+  }
+}

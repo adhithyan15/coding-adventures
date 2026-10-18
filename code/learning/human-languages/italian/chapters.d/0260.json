@@ -1,0 +1,21 @@
+{
+  "chapter": 260,
+  "title": "Writing --- My Own Line",
+  "label": "ch:it-my-own-line",
+  "canDo": "I can write one line about myself from a closed supply of known words, with nothing to copy, and put the accent on every è that means is.",
+  "spineNodes": [
+    "SPINE-SAY-WHY"
+  ],
+  "payoff": {
+    "lesson": "IT-W260-my-own-line",
+    "kind": "task",
+    "summary": "Complete IT-W260-my-own-line: a name and one more fact, chosen rather than copied, with every e checked for is or and before anything else.",
+    "assesses": [
+      "IT-GRAMMAR-MI-CHIAMO-04",
+      "IT-GRAMMAR-IL-MIO-NOME-02",
+      "IT-LEX-ESSERE-02",
+      "IT-GRAMMAR-ESSERE-03"
+    ],
+    "note": "The first writing step with nothing to reach for. The Italian-specific check arrives with it: the accent on è is part of the letter, and a hand that drops it writes and where it meant is."
+  }
+}

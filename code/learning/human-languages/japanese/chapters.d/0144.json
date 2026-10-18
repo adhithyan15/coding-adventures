@@ -1,0 +1,20 @@
+{
+  "chapter": 144,
+  "title": "Writing: With a Clock",
+  "label": "ch:ja-writing-with-a-clock",
+  "canDo": "I can fill in a five-field form inside a three-minute clock, I know the 30-40 sign message this book's A1 paper adds, and I know that the JLPT has no writing paper to rehearse.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-WANT"
+  ],
+  "payoff": {
+    "lesson": "JA-W144-with-a-clock",
+    "kind": "task",
+    "summary": "Complete JA-W144-with-a-clock: five form fields against a three-minute timer, then at most one minute checking the small signs.",
+    "assesses": [
+      "JA-LEX-C41-SCHOOL41-03",
+      "JA-LEX-C94-LIKE94-03",
+      "JA-LEX-C25-FAMILY25-01"
+    ],
+    "note": "JLPT tests vocabulary, grammar, reading and listening and scores no writing at any level. The task follows the JF Standard A1 Can-dos (a small form and a short personal message); the 30-40 sign length is japanese/assessment-spec.md#a1, and the three-minute clock is the book's own, which keeps the lesson inside the five-minute cap. The N5 pass rule the lesson ends on is JLPT's: 80/180 overall plus 38/120 and 19/60 sectional minimums."
+  }
+}

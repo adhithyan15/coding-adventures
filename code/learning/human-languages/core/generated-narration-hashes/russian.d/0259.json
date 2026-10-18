@@ -1,0 +1,15 @@
+{
+  "language": "russian",
+  "chapter": 259,
+  "sourceHash": "fnv1a64:bc3c7a13fc68e686",
+  "lessonIds": [
+    "RU-W259-with-a-clock"
+  ],
+  "voiceLessons": 0,
+  "drivablePrefix": 0,
+  "text": "russian/narration/ch259.txt",
+  "json": "russian/narration/ch259.json",
+  "textHash": "fnv1a64:2adda29d5979c9f8",
+  "jsonHash": "fnv1a64:55fc1fe06b1f716b",
+  "findings": []
+}

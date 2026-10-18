@@ -1,0 +1,158 @@
+{
+  "version": 1,
+  "language": "russian",
+  "chapter": 258,
+  "title": "Writing --- My Own Line",
+  "drivablePrefix": 0,
+  "sourceHash": "fnv1a64:d3dbcc1e0b2318a7",
+  "lessons": [
+    {
+      "id": "RU-W258-own-line",
+      "sequence": 15880,
+      "title": "Your own line — the first writing with no model",
+      "headword": "(my own line)",
+      "romanization": "",
+      "gloss": "one line about yourself, chosen from words you already own, with nothing to copy",
+      "script": "cyrillic",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block"
+      ],
+      "sourceHash": "fnv1a64:bb3a8ce69e61ebc2",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Everything you have written so far had something to reach for — a letter to trace, a word to copy, a word you heard."
+            },
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "This does not. You choose the words, from a supply that is closed: only what this book has taught you."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "writing",
+          "title": "Writing — controlled composition",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Write one line about yourself, by hand, on paper. Start with я, then a verb you own with its I-ending, then the rest. End on a dot."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Copying hid one thing from you: the model always had the right shapes in it. Now your hand chooses them, and three are worth checking on purpose."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "л and м — л comes to a point, м has a dip."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "т — if your hand writes it like an m, give it the bar over the top. The bar is a habit, not a rule, but it keeps the shape apart from ш in a run of humps."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "я — it faces the other way from Latin R. A hand that knows English will try to turn it round."
+            },
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Write the line. Then read it back and check those three letters before you check anything else."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What tells л from м by hand? (The top — a point or a dip.)"
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "And what did you choose here that the earlier lessons chose for you? (The words, and so the shapes.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

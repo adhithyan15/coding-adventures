@@ -1,0 +1,20 @@
+{
+  "chapter": 257,
+  "title": "Writing --- With A Clock",
+  "label": "ch:pt-with-a-clock",
+  "canDo": "I can fill the six fields of a practical form in Portuguese inside a three-minute clock, and I know how CAPLE's ACESSO pass rule differs from this book's.",
+  "spineNodes": [
+    "SPINE-SAY-WHY"
+  ],
+  "payoff": {
+    "lesson": "PT-W257-with-a-clock",
+    "kind": "task",
+    "summary": "Complete PT-W257-with-a-clock: six form fields against a three-minute timer, stopping when it rings, then one minute on the marks.",
+    "assesses": [
+      "PT-GRAMMAR-ME-CHAMO-04",
+      "PT-GRAMMAR-MORAR-04",
+      "PT-LEX-FALO-PORTUGUES-02"
+    ],
+    "note": "The ACESSO facts are the ones portuguese/assessment-spec.md records from CAPLE's pages: A1, four components, about one hour thirty-five minutes, results scaled 55-100% and a single 55% overall pass. ACESSO's writing minutes and word counts are not quoted because they were not verified. The twenty-minute form-and-message shape is the project's own task-shapes/a1.json, and its 60%-per-paper rule is stricter than CAPLE's."
+  }
+}

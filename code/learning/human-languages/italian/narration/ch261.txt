@@ -1,0 +1,36 @@
+Italian, chapter 261: Writing --- With A Clock.
+1 lesson. It needs your eyes or your hands, so save it for when you have stopped.
+
+
+Lesson 1 of 1.
+The same writing, with a clock — the form part of this book's A1 writing paper against a three-minute clock, and the CILS rule that one weak part cannot be carried.
+
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped.
+
+Warm-up.
+[pause 2 seconds]
+You wrote your own line with as long as you liked.
+[pause 1 second]
+A task you can only do untimed is not yet a task you can do.
+
+Writing — timed production.
+Whose numbers these are. This book's A1 writing paper is its own: a project-defined step towards CILS A1, not a copy of it. Its numbers are in task-shapes/a1.json. The paper runs 20 minutes and holds two parts: a practical form of six to eight short fields, then a message of 30 to 40 words to a named reader, such as il nonno, for a stated purpose. The message has a floor and a ceiling: under thirty words it is not done, and past forty you spend time the task did not ask for. Spelling is marked in both parts, and a held double consonant changes the word: nono is not nonno.
+[pause 2 seconds]
+Today you rehearse the first part only, against a short clock. Set a three-minute timer, then fill six fields, in Italian:
+your name;
+your surname;
+your age with ho … anni (in figures if it is past twenty: this book has spelled numbers only that far);
+one person in your family;
+one fact about you with è;
+one more fact you can already write.
+[pause 2 seconds]
+When the three-minute timer rings, stop, even mid-word.
+
+Wrap-up recall.
+[pause 2 seconds]
+Spend at most one minute checking, and do not rewrite the timed answer. Make it one pass for spelling, which the paper marks in both parts. Italian spelling asks two things above all. A doubled consonant is held, and it changes the word: nono is ninth, nonno is grandfather. And a final stressed vowel carries its accent: è.
+[pause 2 seconds]
+Now the rule worth carrying out of this lesson. CILS A1, the real examination this book points at, from the Università per Stranieri di Siena, has five parts: listening, reading, a part on the structures of communication, writing and speaking.
+[pause 2 seconds]
+Each part is scored out of 12, and you need 7 in every one. A strong reading part does not carry a weak writing part. So the part that decides your result is the one you are worst at, not the average.
+This book does not repeat how many minutes or words CILS sets for its own writing part. Check the current guide from Siena before you book.

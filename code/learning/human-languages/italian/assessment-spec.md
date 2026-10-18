@@ -137,6 +137,25 @@ drops the letter it never heard), and the dictation is where that stops being a
 fact about one word and becomes a habit — *ch* before *a*, *o* or *u* puts an
 **i** on the page, and nothing in the sound will remind you.
 
+### The three cumulative stages, at A1
+
+The stages after dictation are cumulative and inherited upward, so proving them
+once on an A1 node proves them for every level above it. Chapters 260-262 do
+that on `SPINE-SAY-WHY`, the node `perché` is taught on, and introduce no
+knowledge atom:
+
+| stage | lesson | what the hand is asked to do |
+|---|---|---|
+| controlled-composition | `IT-W260-my-own-line` | one line about yourself, nothing to copy; check every *e* for *is* (**è**) or *and* (**e**) |
+| timed-assessment-production | `IT-W261-with-a-clock` | the form part of this book's 20-minute A1 writing paper, against a three-minute timer; the paper's 30–40 word message is described, not run, so the lesson stays inside the five-minute cap |
+| connected-composition | `IT-W262-four-lines` | four lines joined with *e*, *ma* and *perché*; a reason ends with a full stop, not a question mark |
+
+The timed lesson reads its numbers from `task-shapes/a1.json` and says they are
+this project's, not CILS's. The only CILS facts it states are the ones recorded
+above: five parts, each out of 12 at A1, with 7 needed in every part. It does not
+restate CILS's own writing-part minutes or word counts, which were not
+re-checked against the awarding body when the lesson was written.
+
 ## Administration rules
 
 - Listening recordings use Italian speakers. Words-per-minute bands below are

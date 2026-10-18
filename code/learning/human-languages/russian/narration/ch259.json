@@ -1,0 +1,146 @@
+{
+  "version": 1,
+  "language": "russian",
+  "chapter": 259,
+  "title": "Writing --- With A Clock",
+  "drivablePrefix": 0,
+  "sourceHash": "fnv1a64:bc3c7a13fc68e686",
+  "lessons": [
+    {
+      "id": "RU-W259-with-a-clock",
+      "sequence": 15890,
+      "title": "The same writing, with a clock",
+      "headword": "(with a clock)",
+      "romanization": "",
+      "gloss": "the same writing against a clock, and the TORFL rule that makes the weakest of five papers the one that decides",
+      "script": "cyrillic",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block"
+      ],
+      "sourceHash": "fnv1a64:af3b5898c9292e7c",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "You wrote your own line with as long as you liked."
+            },
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A task you can only do untimed is not yet a task you can do."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "writing",
+          "title": "Writing — timed production",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "What the target publishes. Russian's A1 exam is the state test TORFL at its Elementary Level, ТЭУ. The Pushkin Institute describes it as five separate subtests — Lexis and Grammar, Reading, Writing, Listening and Speaking — taking about three and a half hours in all."
+            },
+            {
+              "kind": "speech",
+              "text": "What this book does not quote is the writing paper's own minutes or length. It has not yet transcribed the current paper into task-shapes/a1.json, so check the provider's current materials before the exam you book."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "So the clock here is this book's, not the exam's, and it is short. Set a three-minute timer. Write by hand to one reader you name: who you are, what you do, what you like. Lines you own, a dot at the end of each."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "When the three-minute timer rings, stop, even mid-word."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Spend at most one minute checking, and do not rewrite the timed lines. Hurry shows in the hand first: check л against м, and the bar over т, before you check anything else."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Now the rule worth carrying out of this lesson, because it changes how you study rather than how you write today."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "TORFL scores each subtest on its own, and this book's target is 66 percent in every one of the five. Some TORFL materials describe a narrower allowance for one subtest; this book does not plan around it."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "So the paper that decides your result is the one you are worst at, and there are five of them, not four. Strong reading cannot carry weak writing."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

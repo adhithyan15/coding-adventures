@@ -1,0 +1,15 @@
+{
+  "language": "italian",
+  "chapter": 261,
+  "sourceHash": "fnv1a64:32df4ab25f3652ba",
+  "lessonIds": [
+    "IT-W261-with-a-clock"
+  ],
+  "voiceLessons": 0,
+  "drivablePrefix": 0,
+  "text": "italian/narration/ch261.txt",
+  "json": "italian/narration/ch261.json",
+  "textHash": "fnv1a64:2d43c2092237efd6",
+  "jsonHash": "fnv1a64:a76991abf5e257ef",
+  "findings": []
+}

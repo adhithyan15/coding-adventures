@@ -1,0 +1,9 @@
+{
+  "language": "portuguese",
+  "chapter": 256,
+  "sourceHash": "fnv1a64:bfe960a670d8a54b",
+  "lessonIds": [
+    "PT-W256-my-own-line"
+  ],
+  "tex": "portuguese/book/chapters/ch256-writing-my-own-line.tex"
+}

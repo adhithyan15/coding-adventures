@@ -1,0 +1,15 @@
+{
+  "language": "russian",
+  "chapter": 258,
+  "sourceHash": "fnv1a64:d3dbcc1e0b2318a7",
+  "lessonIds": [
+    "RU-W258-own-line"
+  ],
+  "voiceLessons": 0,
+  "drivablePrefix": 0,
+  "text": "russian/narration/ch258.txt",
+  "json": "russian/narration/ch258.json",
+  "textHash": "fnv1a64:908a377367e5a27f",
+  "jsonHash": "fnv1a64:65388f44ef3945f4",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "RU-W260-four-lines",
+  "pathSegment": "RU-PATH-258-WRITING",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "RU-EXT-258-WRITING",
+      "order": 2
+    }
+  ]
+}

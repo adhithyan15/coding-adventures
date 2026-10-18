@@ -1,0 +1,177 @@
+{
+  "version": 1,
+  "language": "portuguese",
+  "chapter": 258,
+  "title": "Writing --- Four Lines, And The Joiner That Points Back",
+  "drivablePrefix": 0,
+  "sourceHash": "fnv1a64:22735d6c6be8de8a",
+  "lessons": [
+    {
+      "id": "PT-W258-four-lines",
+      "sequence": 15390,
+      "title": "Four lines, and the joiner that points back",
+      "headword": "por isso",
+      "romanization": "por isso",
+      "gloss": "four lines to one reader, and the joiner that points back at the reason",
+      "script": "latin",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block",
+        "eyes-or-hands-step"
+      ],
+      "sourceHash": "fnv1a64:61d7127937d04360",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
+        ],
+        "waitUntilStopped": [
+          "Wrap-up recall"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Wrap-up recall."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The last lesson asked for writing finished on time. This one asks for writing that holds together."
+            },
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Pick one person who will read it."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Connected writing is not longer writing. Four short lines can be connected; one long line can fail to be. What makes it connected is that a line stops standing on its own."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "You hold more joiners than this lesson needs. Use two: e adds, and por isso gives a result. This book has not yet given you a word for because; por isso does that job from the other side."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Notice which way it points. por isso is \"for that\", and the isso, \"that\", points back at what came before it. So the reason comes first, and what follows por isso is what the reason led to."
+            },
+            {
+              "kind": "speech",
+              "text": "Moro em Lisboa, por isso falo português. — \"I live in Lisbon, that is why I speak Portuguese.\""
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Swap the two halves and it is still good Portuguese, but now speaking Portuguese is why you live in Lisbon. Nothing in the grammar warns you. Only the order carries the meaning."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "writing",
+          "title": "Writing — connected composition",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Write four lines to the person you picked."
+            },
+            {
+              "kind": "speech",
+              "text": "At least one must use e. At least one must use por isso, with the reason before it and the result after it."
+            },
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Use only words you already write, and not the Lisbon line above. This lesson adds no vocabulary; the whole exercise is the joining."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Cover your first line and read the second alone. Does it still make sense without the first? If it does, you wrote a list, which is where you were two lessons ago."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Then find your por isso line and say what led to what. If the reason sits after por isso, you have written the reverse of what you meant."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

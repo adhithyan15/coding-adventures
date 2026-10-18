@@ -1,0 +1,15 @@
+{
+  "language": "italian",
+  "chapter": 262,
+  "sourceHash": "fnv1a64:72b42588067cd0b7",
+  "lessonIds": [
+    "IT-W262-four-lines"
+  ],
+  "voiceLessons": 0,
+  "drivablePrefix": 0,
+  "text": "italian/narration/ch262.txt",
+  "json": "italian/narration/ch262.json",
+  "textHash": "fnv1a64:520b14ddc3061573",
+  "jsonHash": "fnv1a64:591ae966769d5902",
+  "findings": []
+}
