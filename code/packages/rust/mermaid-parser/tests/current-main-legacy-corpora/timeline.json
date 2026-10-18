@@ -1,0 +1,21 @@
+{
+  "upstream": "mermaid@11.16.1",
+  "upstream_commit": "7ecca0cd7f1658ef74f4e7e91f925724ef403bbf",
+  "source": "packages/mermaid/src/diagrams/timeline/parser/timeline.jison",
+  "valid": [
+    {
+      "id": "periods-and-events",
+      "source": "timeline\n  title Product history\n  section Foundation\n  2024 : Prototype\n       : First customer\n  section Growth\n  2025 : General availability"
+    },
+    {
+      "id": "direction-and-accessibility",
+      "source": "timeline LR\naccTitle: Release history\naccDescr: Milestones by year\n2025 : Public beta"
+    }
+  ],
+  "invalid": [
+    {
+      "id": "event-without-period",
+      "source": "timeline\n: Orphan event"
+    }
+  ]
+}
