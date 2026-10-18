@@ -15,3 +15,10 @@ set and all dependency edges, derive the selected executable targets from
 actual metadata, join successful builds and completed harness summaries to
 those targets, and require final source, helper, lock and executable identity
 in the acceptance predicate. A zero exit alone is not test coverage.
+
+A subsequent CLOC41 preflight strengthened the red expectations without
+changing the runner: exact failure counts plus one required failure could
+permit a previously passing control to fail while another failure disappeared.
+The final plan requires every intended failure identity as well as exact
+counts, forcing all declared safety/decline controls to pass. The earlier
+partial-failure plan was never executed or accepted.

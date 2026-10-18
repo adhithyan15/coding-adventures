@@ -312,6 +312,33 @@ impl FoldState<'_> {
         self.fork_unique_operand_cvs(&unique, before, after)
     }
 
+    /// CLOC41 has a fixed semantic frontier: call, folded member, receiver,
+    /// property and numeric argument. Five borrowed stack slots preserve the
+    /// declared order without a generic subtree walk or frontier allocation.
+    /// The prefix comparison costs at most 25 equalities, independently of
+    /// source size. Equal spellings with distinct identities stay distinct.
+    fn fork_unary_math_cvs(
+        &mut self,
+        parents: [Option<&str>; 5],
+        before: &str,
+        after: &str,
+    ) -> Option<String> {
+        // A failed child owns the first error. In particular, do not reach the
+        // merge path in fork_unique_operand_cvs after that error is latched.
+        if self.cv_error.is_some() {
+            return None;
+        }
+        let mut unique = [""; 5];
+        let mut count = 0;
+        for parent in parents.into_iter().flatten() {
+            if !unique[..count].contains(&parent) {
+                unique[count] = parent;
+                count += 1;
+            }
+        }
+        self.fork_unique_operand_cvs(&unique[..count], before, after)
+    }
+
     /// The wide array frontier has already deduplicated under its own budget.
     /// Reuse checked CV mutation without repeating a quadratic membership scan.
     fn fork_unique_operand_cvs(
@@ -2930,10 +2957,19 @@ fn fold_call(c: &CallExpression, st: &mut FoldState) -> Expression {
                         let neg_zero_result = result == 0.0
                             && (result.is_sign_negative() || x.is_sign_negative());
                         if result.is_finite() && !neg_zero_result {
-                            let parent = c.cv.clone();
                             let before = format!("Math.{}({})", prop.name, x);
                             let after = format_js_number(result);
-                            let new_cv = st.fork_cv(&parent, &before, &after);
+                            let new_cv = st.fork_unary_math_cvs(
+                                [
+                                    c.cv.as_deref(),
+                                    m.cv.as_deref(),
+                                    obj.cv.as_deref(),
+                                    prop.cv.as_deref(),
+                                    n.cv.as_deref(),
+                                ],
+                                &before,
+                                &after,
+                            );
                             return stamp_literal_cv(FoldedLiteral::Number(result), new_cv);
                         }
                     }
