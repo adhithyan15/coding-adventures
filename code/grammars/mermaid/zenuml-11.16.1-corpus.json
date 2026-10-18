@@ -25,17 +25,17 @@
     },
     {
       "name": "nested synchronous message",
-      "compatible": false,
+      "compatible": true,
       "source": "zenuml\nA.SyncMessage() {\n  B.nestedSyncMessage()\n}"
     },
     {
       "name": "control fragment",
-      "compatible": false,
+      "compatible": true,
       "source": "zenuml\nwhile(true) {\n  Alice->Bob: Hello\n}"
     },
     {
       "name": "creation message",
-      "compatible": false,
+      "compatible": true,
       "source": "zenuml\nnew A1"
     }
   ]
