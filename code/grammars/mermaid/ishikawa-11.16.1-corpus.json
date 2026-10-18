@@ -1,12 +1,108 @@
 {
+  "schema_version": 1,
+  "family": "ishikawa",
   "upstream": "mermaid@11.16.1",
-  "scope": "native causal subset",
-  "fixtures": [
-    {"name":"basic","source":"ishikawa-beta\nBlurry Photo\n  Process\n    Out of focus\n  User\n    Shaky hands"},
-    {"name":"unindented-causes","source":"ishikawa\nProblem\nCause A\n  Subcause A1\nCause B"},
-    {"name":"indented-effect","source":"ishikawa-beta\n    Problem\nCause A\n  Subcause A1\nCause B"},
-    {"name":"diagram-padding-config","source":"%%{init: {\"fontSize\": 22, \"ishikawa\": {\"diagramPadding\": 64, \"useMaxWidth\": true}, \"themeVariables\": {\"fontFamily\": \"Georgia\", \"lineColor\": \"#123456\", \"mainBkg\": \"#abcdef\", \"textColor\": \"#654321\"}}}%%\nishikawa-beta\nLate delivery\n  People\n    Staffing\n  Process\n    Reviews"},
-    {"name":"hand-drawn-config","source":"%%{init: {\"look\": \"handDrawn\", \"handDrawnSeed\": 17}}%%\nishikawa\nRelease delay\n  People\n    Staffing\n  Process\n    Reviews"},
-    {"name":"deep-long-labels","source":"ishikawa-beta\nDelayed customer onboarding\n  Organizational readiness and staffing capacity\n    Regional training materials require localization\n      Legal approval queues delay publication\n  Delivery process\n    Manual quality review"}
+  "upstream_commit": "7ecca0cd7f1658ef74f4e7e91f925724ef403bbf",
+  "source": "packages/mermaid/src/diagrams/ishikawa/ishikawa.spec.ts, packages/mermaid/src/diagrams/ishikawa/parser/ishikawa.jison, and cypress/integration/rendering/ishikawa/ishikawa.spec.ts",
+  "level": "full",
+  "valid": [
+    {
+      "id": "upstream-parser-basic",
+      "source": "ishikawa-beta\n    Blurry Photo\n        Process\n            Out of focus\n        User\n            Shaky hands\n"
+    },
+    {
+      "id": "upstream-parser-unindented-root",
+      "source": "ishikawa-beta\nProblem\nCause A\n  Subcause A1\nCause B\n"
+    },
+    {
+      "id": "upstream-parser-effect-indented-more-than-causes",
+      "source": "ishikawa-beta\n    Problem\nCause A\n  Subcause A1\nCause B\n"
+    },
+    {
+      "id": "upstream-render-1-simple",
+      "source": "ishikawa-beta\n    Blurry Photo\n        Process\n            Out of focus\n        User\n            Shaky hands\n      "
+    },
+    {
+      "id": "upstream-render-2-many-causes-both-sides",
+      "source": "ishikawa-beta\n    Manufacturing Defect\n        Machine\n            Worn tooling\n            Calibration\n        Method\n            Missing step\n        Material\n            Contamination\n            Wrong grade\n        Manpower\n            Insufficient training\n      "
+    },
+    {
+      "id": "upstream-render-3-deeply-nested",
+      "source": "ishikawa-beta\n    Server Outage\n        Hardware\n            Disk\n                Bad sectors\n                Full capacity\n            Memory\n                Leak detected\n        Software\n            Bug\n                Race condition\n      "
+    },
+    {
+      "id": "upstream-render-4-single-cause",
+      "source": "ishikawa-beta\n    Problem\n        Cause A\n      "
+    },
+    {
+      "id": "upstream-render-5-root-only",
+      "source": "ishikawa-beta\n    Problem\n      "
+    },
+    {
+      "id": "upstream-render-6-hand-drawn",
+      "source": "%%{init: {\"look\": \"handDrawn\"}}%%\nishikawa-beta\n    Blurry Photo\n        Process\n            Out of focus\n        User\n            Shaky hands\n      "
+    },
+    {
+      "id": "upstream-render-7-forest-theme",
+      "source": "%%{init: {\"theme\": \"forest\"}}%%\nishikawa-beta\n    Blurry Photo\n        Process\n            Out of focus\n        User\n            Shaky hands\n      "
+    },
+    {
+      "id": "upstream-render-8-dark-theme",
+      "source": "%%{init: {\"theme\": \"dark\"}}%%\nishikawa-beta\n    Blurry Photo\n        Process\n            Out of focus\n        User\n            Shaky hands\n      "
+    },
+    {
+      "id": "upstream-render-9-diagram-padding",
+      "source": "%%{init: {\"ishikawa\": {\"diagramPadding\": 50}}}%%\nishikawa-beta\n    Blurry Photo\n        Process\n            Out of focus\n        User\n            Shaky hands\n      "
+    },
+    {
+      "id": "upstream-render-10-use-max-width",
+      "source": "%%{init: {\"ishikawa\": {\"useMaxWidth\": true}}}%%\nishikawa-beta\n    Blurry Photo\n        Process\n            Out of focus\n        User\n            Shaky hands\n      "
+    },
+    {
+      "id": "upstream-render-11-fixed-width",
+      "source": "%%{init: {\"ishikawa\": {\"useMaxWidth\": false}}}%%\nishikawa-beta\n    Blurry Photo\n        Process\n            Out of focus\n        User\n            Shaky hands\n      "
+    },
+    {
+      "id": "upstream-render-12-effect-indented-more-than-causes",
+      "source": "ishikawa-beta\n    Problem\nCause A\n  Subcause A1\n  Subcause A2\nCause B\n  Subcause B1\nCause C\n      "
+    },
+    {
+      "id": "upstream-render-13-very-deep",
+      "source": "ishikawa-beta\n    Very deep\n    Cause 1\n      1-1\n      1-2\n      1-3\n          1-3-1\n          1-3-2\n          1-3-3\n          1-3-4\n    Cause 2\n      2-1\n        2-1-1\n        2-1-2\n      2-2\n        2-2-1\n        2-2-2\n          2-2-2-1\n            2-2-2-1-1\n            2-2-2-1-2\n              2-2-2-1-2-1\n          2-2-2-1\n      2-3\n        2-3-1\n    Cause 3\n       3-1\n         3-1-1\n            3-1-1-1\n              3-1-1-1-1\n                3-1-1-1-1-1\n                  3-1-1-1-1-1-1\n    Cause 4\n        4-1\n          4-1-1\n          4-1-2\n          4-1-3\n          4-1-4\n          4-1-5\n          4-1-6\n          4-1-7\n          4-1-8\n        4-2\n          4-2-1\n          4-2-2\n    Cause 5\n        5-1\n    Cause 6\n        6-1\n        6-2\n        6-3\n        6-4\n        6-5\n        6-6\n      "
+    },
+    {
+      "id": "configured-theme-and-canvas",
+      "source": "---\nconfig:\n  fontSize: 22px\n  look: handDrawn\n  handDrawnSeed: 17\n  ishikawa:\n    diagramPadding: 64\n    useMaxWidth: true\nthemeVariables:\n  fontFamily: Georgia\n  lineColor: '#123456'\n  mainBkg: '#abcdef'\n  textColor: '#654321'\n---\nishikawa\nLate delivery\n  People\n    Staffing\n  Process\n    Reviews"
+    },
+    {
+      "id": "first-cause-baseline-clamps-shallower-indent",
+      "source": "ishikawa\nProblem\n    First cause\n  Second cause\n   Also a root cause"
+    },
+    {
+      "id": "same-line-effect",
+      "source": "ishikawa Problem\n  Cause"
+    },
+    {
+      "id": "percent-prefixed-label",
+      "source": "ishikawa-beta\nProblem\n  % availability"
+    },
+    {
+      "id": "header-prefix-becomes-inline-effect",
+      "source": "ishikawa-diagram\nProblem"
+    }
+  ],
+  "invalid": [
+    {
+      "id": "missing-header",
+      "source": "Problem\n  Cause"
+    },
+    {
+      "id": "missing-effect",
+      "source": "ishikawa-beta"
+    },
+    {
+      "id": "unknown-header",
+      "source": "fishbone\nProblem"
+    }
   ]
 }

@@ -145,6 +145,14 @@ mod apple {
         env!("CARGO_MANIFEST_DIR"),
         "/../../../grammars/mermaid/venn-11.16.1-visual-corpus.json"
     ));
+    const ISHIKAWA_CORPUS: &str = include_str!(concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/../../../grammars/mermaid/ishikawa-11.16.1-corpus.json"
+    ));
+    const ISHIKAWA_VISUAL_CORPUS: &str = include_str!(concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/../../../grammars/mermaid/ishikawa-11.16.1-visual-corpus.json"
+    ));
 
     #[test]
     fn render_dot_diagram_to_png() {
@@ -4883,7 +4891,7 @@ line "Target" [35, 50, 68, 82]"##,
         let layout = layout_ishikawa(&diagram, 720.0);
         assert_eq!(diagram.config.diagram_padding, 64.0);
         assert!(diagram.config.use_max_width);
-        assert_eq!(layout.spine_from.x, 80.0);
+        assert!(layout.spine_from.x >= 80.0);
         assert_eq!(layout.width - (layout.effect_x + layout.effect_width), 64.0);
         let shaper = CoreTextShaper; let metrics = CoreTextMetrics; let resolver = CoreTextResolver::new();
         let scene = diagram_to_paint_ishikawa(&layout, &DiagramToPaintOptions {
@@ -4917,6 +4925,48 @@ line "Target" [35, 50, 68, 82]"##,
         let pixels = render(&scene);
         write_png(&pixels, "/tmp/mermaid_ishikawa_e2e.png").expect("PNG write failed");
         assert!(pixels.width > 0 && pixels.height > 0);
+    }
+
+    #[test]
+    fn render_pinned_mermaid_ishikawa_visual_corpus_to_png() {
+        let syntax: Value =
+            serde_json::from_str(ISHIKAWA_CORPUS).expect("ishikawa corpus JSON");
+        let visual: Value = serde_json::from_str(ISHIKAWA_VISUAL_CORPUS)
+            .expect("ishikawa visual corpus JSON");
+        assert_eq!(visual["upstream_commit"], syntax["upstream_commit"]);
+
+        let valid = syntax["valid"].as_array().expect("valid ishikawa fixtures");
+        let fixture_ids = visual["fixtures"].as_array().expect("visual fixture ids");
+        assert_eq!(fixture_ids.len(), valid.len(), "visual corpus must cover every valid fixture");
+        let unique = fixture_ids.iter().filter_map(Value::as_str).collect::<BTreeSet<_>>();
+        assert_eq!(unique.len(), fixture_ids.len(), "visual fixture ids must be unique");
+
+        let shaper = CoreTextShaper;
+        let metrics = CoreTextMetrics;
+        let resolver = CoreTextResolver::new();
+        for fixture_id in fixture_ids {
+            let id = fixture_id.as_str().expect("visual fixture id");
+            let fixture = valid.iter().find(|fixture| fixture["id"] == id)
+                .unwrap_or_else(|| panic!("visual fixture {id} must exist in syntax corpus"));
+            let diagram = parse_ishikawa(
+                fixture["source"].as_str().expect("ishikawa fixture source"),
+            ).unwrap_or_else(|error| panic!("ishikawa visual fixture {id} failed: {error}"));
+            let layout = layout_ishikawa(&diagram, 720.0);
+            let scene = diagram_to_paint_ishikawa(&layout, &DiagramToPaintOptions {
+                background: layout_ir::Color { r: 255, g: 255, b: 255, a: 255 },
+                device_pixel_ratio: 2.0,
+                label_font: font_spec("Helvetica", 14.0),
+                title_font: font_spec("Helvetica", 16.0),
+                shaper: &shaper,
+                metrics: &metrics,
+                resolver: &resolver,
+            });
+            assert!(!scene.instructions.is_empty(), "visual fixture {id} must lower to paint");
+            let pixels = render(&scene);
+            assert!(pixels.width > 0 && pixels.height > 0, "visual fixture {id} must render");
+            write_png(&pixels, &format!("/tmp/mermaid_ishikawa_11_16_1_{id}.png"))
+                .unwrap_or_else(|error| panic!("visual fixture {id} PNG failed: {error}"));
+        }
     }
 
     #[test]

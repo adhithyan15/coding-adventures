@@ -9,7 +9,7 @@
 use std::collections::{HashMap, HashSet};
 use diagram_ir::{CubicCurveSegment, CynefinDiagram, GeoElement, GeometricDiagram, InfoDiagram, IshikawaDiagram, IshikawaLook, LayoutedCynefinBoundary, LayoutedCynefinDiagram, LayoutedCynefinDomain, LayoutedCynefinItem, LayoutedCynefinTransition, LayoutedGeometricDiagram, LayoutedInfoDiagram, LayoutedIshikawaBone, LayoutedIshikawaDiagram, LayoutedIshikawaHatch, LayoutedVennCircle, LayoutedVennDebugCell, LayoutedVennDebugCircle, LayoutedVennDiagram, LayoutedVennLabel, LayoutedWardleyDiagram, LayoutedWardleyEvolution, LayoutedWardleyForce, LayoutedWardleyLink, LayoutedWardleyNode, LayoutedWardleyPipeline, Point, VennDiagram, WardleyDiagram};
 
-pub const VERSION: &str = "0.3.0";
+pub const VERSION: &str = "0.4.0";
 
 const MARGIN: f64 = 20.0;
 
@@ -177,7 +177,7 @@ pub fn layout_ishikawa(diagram: &IshikawaDiagram, canvas_width: f64) -> Layouted
         let path = ishikawa_line_path(&tip, &attach, hand_drawn, diagram.config.hand_drawn_seed, index + 1);
         let arrowhead = ishikawa_arrowhead(&path);
         let label_position = Point { x: tip.x + spacing * 0.24, y: (tip.y + spine_y) / 2.0 + sign * 42.0 };
-        let label_width = ishikawa_label_width(&cause.label, font_scale); let label_height = 28.0 * font_scale;
+        let (label_width, label_height) = ishikawa_label_size(&cause.label, font_scale);
         let label_outline = ishikawa_box_outline(label_position.x - label_width / 2.0,
             label_position.y - label_height / 2.0, label_width, label_height, hand_drawn,
             diagram.config.hand_drawn_seed, 2_000 + index);
@@ -194,7 +194,7 @@ pub fn layout_ishikawa(diagram: &IshikawaDiagram, canvas_width: f64) -> Layouted
         let path = ishikawa_line_path(&tip, &parent, hand_drawn, diagram.config.hand_drawn_seed, bones.len() + 1);
         let arrowhead = ishikawa_arrowhead(&path);
         let label_position = Point { x: tip.x, y: tip.y - sign * 18.0 };
-        let label_width = ishikawa_label_width(&cause.label, font_scale); let label_height = 28.0 * font_scale;
+        let (label_width, label_height) = ishikawa_label_size(&cause.label, font_scale);
         let label_outline = ishikawa_box_outline(label_position.x - label_width / 2.0,
             label_position.y - label_height / 2.0, label_width, label_height, hand_drawn,
             diagram.config.hand_drawn_seed, 2_000 + bones.len());
@@ -205,8 +205,47 @@ pub fn layout_ishikawa(diagram: &IshikawaDiagram, canvas_width: f64) -> Layouted
         anchors.insert(&cause.id, tip);
     }
     resolve_ishikawa_label_collisions(&mut bones, spine_y, hand_drawn, diagram.config.hand_drawn_seed);
-    LayoutedIshikawaDiagram { width, height, effect: diagram.effect.clone(), config: diagram.config.clone(), effect_x, effect_y,
-        effect_width, effect_height, spine_from, spine_to, spine_path, effect_outline, effect_hatches, bones }
+    let mut layout = LayoutedIshikawaDiagram { width, height, effect: diagram.effect.clone(), config: diagram.config.clone(), effect_x, effect_y,
+        effect_width, effect_height, spine_from, spine_to, spine_path, effect_outline, effect_hatches, bones };
+    fit_ishikawa_content(&mut layout);
+    layout
+}
+
+fn fit_ishikawa_content(layout: &mut LayoutedIshikawaDiagram) {
+    let mut min_x = layout.effect_x;
+    let mut min_y = layout.effect_y;
+    let mut max_x = layout.effect_x + layout.effect_width;
+    let mut max_y = layout.effect_y + layout.effect_height;
+    let mut include = |point: &Point| {
+        min_x = min_x.min(point.x); min_y = min_y.min(point.y);
+        max_x = max_x.max(point.x); max_y = max_y.max(point.y);
+    };
+    for point in layout.spine_path.iter().chain(&layout.effect_outline) { include(point); }
+    for bone in &layout.bones {
+        for point in bone.path.iter().chain(&bone.arrowhead).chain(&bone.label_outline) { include(point); }
+        include(&Point { x: bone.label_position.x - bone.label_width / 2.0, y: bone.label_position.y - bone.label_height / 2.0 });
+        include(&Point { x: bone.label_position.x + bone.label_width / 2.0, y: bone.label_position.y + bone.label_height / 2.0 });
+    }
+    let margin = layout.config.diagram_padding.max(4.0);
+    let dx = (margin - min_x).max(0.0);
+    let dy = (margin - min_y).max(0.0);
+    if dx > 0.0 || dy > 0.0 {
+        let shift = |point: &mut Point| { point.x += dx; point.y += dy; };
+        shift(&mut layout.spine_from); shift(&mut layout.spine_to);
+        for point in &mut layout.spine_path { shift(point); }
+        for point in &mut layout.effect_outline { shift(point); }
+        for hatch in &mut layout.effect_hatches { shift(&mut hatch.from); shift(&mut hatch.to); }
+        layout.effect_x += dx; layout.effect_y += dy;
+        for bone in &mut layout.bones {
+            shift(&mut bone.from); shift(&mut bone.to); shift(&mut bone.label_position);
+            for point in &mut bone.path { shift(point); }
+            for point in &mut bone.arrowhead { shift(point); }
+            for point in &mut bone.label_outline { shift(point); }
+            for hatch in &mut bone.hatches { shift(&mut hatch.from); shift(&mut hatch.to); }
+        }
+    }
+    layout.width = layout.width.max(max_x + dx + margin);
+    layout.height = layout.height.max(max_y + dy + margin);
 }
 
 fn resolve_ishikawa_label_collisions(bones: &mut [LayoutedIshikawaBone], spine_y: f64, hand_drawn: bool, seed: i64) {
@@ -320,8 +359,21 @@ fn ishikawa_hatches(outline: &[Point]) -> Vec<LayoutedIshikawaHatch> {
     hatches
 }
 
-fn ishikawa_label_width(label: &str, font_scale: f64) -> f64 {
-    (label.chars().count() as f64 * 7.0 * font_scale + 20.0).clamp(72.0 * font_scale, 180.0 * font_scale)
+fn ishikawa_label_size(label: &str, font_scale: f64) -> (f64, f64) {
+    let mut lines = Vec::<String>::new();
+    for word in label.split_whitespace() {
+        if lines.last().is_some_and(|line| line.chars().count() + 1 + word.chars().count() <= 15) {
+            let line = lines.last_mut().expect("checked above");
+            line.push(' '); line.push_str(word);
+        } else {
+            lines.push(word.to_string());
+        }
+    }
+    if lines.is_empty() { lines.push(String::new()); }
+    let max_chars = lines.iter().map(|line| line.chars().count()).max().unwrap_or(0) as f64;
+    let width = (max_chars * 7.0 + 40.0).clamp(72.0, 240.0) * font_scale;
+    let height = ((lines.len() as f64 * 16.0 * 1.05) + 4.0).max(28.0) * font_scale;
+    (width, height)
 }
 
 /// Map Wardley visibility/evolution coordinates onto a deterministic Cartesian canvas.
@@ -600,7 +652,7 @@ mod tests {
         }
     }
 
-    #[test] fn version_exists() { assert_eq!(crate::VERSION, "0.3.0"); }
+    #[test] fn version_exists() { assert_eq!(crate::VERSION, "0.4.0"); }
 
     #[test]
     fn auto_size_includes_all_elements() {
@@ -752,8 +804,8 @@ mod tests {
         deep.causes.push(IshikawaCause { id: "c".into(), label: "A deliberately long nested cause label".into(),
             parent_id: Some("a".into()), depth: 3 });
         let deep_layout = layout_ishikawa(&deep, 560.0);
-        assert_eq!(deep_layout.height, 470.0);
-        assert_eq!(deep_layout.bones[2].label_width, 180.0);
+        assert!(deep_layout.height >= 470.0);
+        assert!(deep_layout.bones[2].label_height > 28.0);
         for (index, left) in deep_layout.bones.iter().enumerate() {
             for right in deep_layout.bones.iter().skip(index + 1) {
                 let horizontal_overlap = (left.label_position.x - right.label_position.x).abs()
@@ -763,6 +815,8 @@ mod tests {
                 assert!(!(horizontal_overlap && vertical_overlap));
             }
         }
+        assert!(deep_layout.bones.iter().all(|bone| bone.label_outline.iter().all(|point|
+            point.x >= 0.0 && point.x <= deep_layout.width && point.y >= 0.0 && point.y <= deep_layout.height)));
     }
 
 
