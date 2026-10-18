@@ -1,5 +1,16 @@
 # diagram-to-paint
 
+Checked separate timeline event cards now retain authored event order and
+per-period palette ordinals. Actual Event text frames and the unchanged painter's
+rounded arrow triangles must remain finite and nondegenerate; invalid geometry
+returns TimelineGeometry before a layout is published. Chronology spines retain
+their single-point exception. Legacy embedded-event painter payloads remain
+supported. At dc842d0c, all258 affected tests passed, including32 complete authored
+source/IR/layout/Scene/query cells and four complete legacy Scenes; both strict
+checks passed. Apple rendering remains separately unexecuted here.
+Miri DEFERRED/PENDING; full Closure parity and transformation lineage remain OPEN.
+
+
 ## Normal Venn text at shared grid centers
 
 Attached Venn text uses row-major cell centers from one shared normal/debug

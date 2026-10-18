@@ -82,3 +82,19 @@ Scene instructions before calling the painter; deriving gold from actual layout
 output does not establish the contract. A compiled red must demonstrate an
 ordinary valid card refused by the current default arm; invalid-frame/arrow
 controls initially pass because this missing admission is fail-closed.
+
+Bounded execution checkpoint: `dc842d0c31e78a55141a663db1bb232abb8f78b1`. The affected graph rederives1293 manifests,
+two reverse consumers and50 forward input packages with unchanged registry
+declarations. Actual full84 native+174 painter tests pass, Windows e2e harness
+is correctly empty, both doctests are empty and both strict commands pass.
+Runtime verifies11 frame and12 arrow controls, public2^55 positive/2^56/57
+refusals,32 complete source Scenes and four complete legacy Scenes. The original
+48 typed palette cases remain exact. Historical835's painter strict failure is
+preserved; its test success is not final acceptance. The old large-padding
+period width is raw640-1156-52=-568; the separately retained24-wide frame is a
+forged inner-zero control. No clamp existed in the retired constructor.
+
+This documentation carrier adds no Rust execution. Independent final source and
+terminal security plus current PR/main/review/hosted/merge gates remain required
+for publication/delivery. Miri DEFERRED/PENDING, frozen work untouched; full
+Closure parity, output-byte/source and all transformation lineage remain OPEN.

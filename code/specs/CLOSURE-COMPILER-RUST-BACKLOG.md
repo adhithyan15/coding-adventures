@@ -1,29 +1,29 @@
 # Closure Compiler on Rust — parity backlog
 
-<!-- Closure current concise checkpoint: CV04b normal Venn -->
-Bounded execution `6c4b9ec8d8719719677e021d3ec495bcab2520cb` validates shared normal Venn grid centers:
-261P/0F/0I/0filters, all17 actual harnesses plus2 empty doctests; both strict
-checks and independent exact source/terminal review PASS. Graph1,293 manifests,
-reverse affected2/forward inputs50. Current-main audit `42c3b66fa9275d9190409b4a073fa6b0b0257f6d`
-inspected all12 open PR file lists; sole Closure/shared PR17288 remains OPEN,
-auto-merge OFF. Its published CLOC41 head was fbb2bd93 at that audit; this
-docs child adds no Rust execution and requires its own reviewed progress push.
-Normal positions/order now share the owned structural debug grid; old debug,
-typed admission,136 source/96 direct complete Scenes and retained corpora stay.
-Full parity, ingestion IDs, output-byte/source maps and fold/rename/inline/
-motion/merge/delete lineage, pass/sweep order, stable IDs and spans remain OPEN.
-Raw native33/34/35, Timeline/parser/ABI/CI/attribute/checker overlaps and a closed
-whole-tree conflict recipe remain separately unaccepted. Do not cap-chase.
-Miri DEFERRED/PENDING, never passed; frozen run/inputs/target/receipts untouched.
+<!-- Closure current concise checkpoint: CV04b timeline events -->
+Bounded source execution `dc842d0c31e78a55141a663db1bb232abb8f78b1` restores checked separate timeline events:
+84 native+174 painter tests PASS, zero failures/ignores/filters, two empty
+doctests and both strict commands PASS. Graph1293 manifests/reverse2/forward50;
+11 actual-frame/12 actual-arrow controls,2^55 positive versus2^56/57 refusals,
+32 complete source/IR/layout/Scene/query cells and four complete legacy Scenes.
+Original48 typed palette controls, prior Venn/CLOC41 source and all old guards
+remain. Historical835 strict failure/incorrect legacy-width model are preserved
+and corrected; no lint allowance or production-limit weakening.
+Current audited main42c3b66f has20 changed shared paths/10 actual conflicts.
+Sole PR17288 remains OPEN/unmerged/autoOFF; current hosted/review/conflict and
+actual-merge gates still apply. No raw-main integration is accepted by this slice.
+Full Closure parity, ingestion IDs, output-byte/source maps, stable IDs/spans,
+pass/sweep order and fold/rename/inline/motion/merge/delete lineage remain OPEN.
+Miri DEFERRED/PENDING, never passed; frozen run/inputs/receipts/target untouched.
 <!-- Closure current concise checkpoint end -->
 
 ## Next reconciliation audit
 
-Recompute the actual current-main conflict set and preserve every owned hunk
-before choosing the next bounded Timeline/parser/ABI reconciliation. No raw
-helper or whole-main acceptance follows from this normal-grid slice. Keep one
-active PR; current exact-head hosted/review/conflict/actual-merge gates still
-control merging. Genuine final-source Miri follows implementation delivery.
+Use the complete20-path endpoint inventory and independent retention recipes;
+refresh actual main/PR heads before resolving the remaining Timeline/parser/ABI
+and auto-merged overlaps. Native33/34/35 and whole-main acceptance remain OPEN;
+do not cap-chase. Current conflict-free reviewed terminal checks and actual merge
+reachability still control delivery. Genuine final-source Miri follows delivery.
 
 ## Historical bounded CLOC41 checkpoint
 

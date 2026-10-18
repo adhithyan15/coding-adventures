@@ -1,5 +1,16 @@
 # Changelog
 
+## Unreleased — checked separate timeline events
+
+- Admit dedicated Event and EventLink items through actual outer/text frames
+  and the painter's represented arrow determinant; preserve all old guards.
+- dc842d0c passes258 affected tests, two empty doctests and both strict checks;
+  keep all48 old typed palette Scenes and add32 complete source Scenes plus
+  four legacy embedded-event Scenes. No Apple rendering claim.
+- Historical835f9767 passed258 tests but failed painter strict on some_filter;
+  its aggregate remains false. Miri DEFERRED/PENDING; full Closure goal OPEN.
+
+
 
 ## Unreleased — checked timeline geometry
 
