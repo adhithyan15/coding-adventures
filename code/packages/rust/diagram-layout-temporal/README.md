@@ -1,5 +1,28 @@
 # diagram-layout-temporal
 
+## Checked cumulative Timeline events
+
+Timeline events now use an absolute cursor and checked addition of the existing
+finite event pitch after every event, including the final advance. TD row height
+uses the represented cursor span minus8, clamped to zero; LR retains its grouped
+initial origin and adds the represented span to grouped card_height+24. This
+replaces indexed multiplication, so some fractional or large-coordinate products
+change by represented f64 bits. Event minima/heights/pitch, period estimates,
+widths, palette ordinals, authored strings/IR, metadata/fonts, raw/eager error
+priorities and actual rectangle/rounded-arrow guards remain. No public API,
+dependency, arbitrary cap, shaping or glyph-fit guarantee is introduced.
+
+Event scalar-height estimation/default30-to31.2 product migration is next and
+remains separately unimplemented. Whole-main/conflict reconciliation, required
+exact-head hosted checks/review and actual merge remain OPEN; sole PR17288 is
+unmerged and auto-mergeOFF. Miri DEFERRED/PENDING, never passed; frozen run,
+checkout, inputs, receipts and target untouched and unpolled. Full Closure
+parity/stable identities/spans/output-byte-source joins/all fold-rename-inline-
+motion-merge-delete/pass-sweep lineage remain OPEN. Genuine final-source Miri
+follows implementation delivery. No compiler-wide or platform-renderer execution
+is claimed. Older sections are historical evidence for their named source heads.
+
+
 ## Checked Timeline period-card estimates
 
 Period cards now estimate vertical space from Unicode scalar counts, owned
