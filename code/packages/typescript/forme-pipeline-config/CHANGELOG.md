@@ -7,6 +7,9 @@
   and control-character diagnostic injection while preserving explicit input
   bounds. Token limits are enforced during both lexer passes before an
   oversized token array can be allocated.
+- Reject non-canonical numeric spellings and JSON-only escapes, validate raw
+  source controls even inside comments, and restrict multiline continuation
+  trimming to TOML-defined whitespace.
 
 ### Added
 

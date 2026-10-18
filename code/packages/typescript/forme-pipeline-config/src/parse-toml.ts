@@ -73,6 +73,7 @@ export function parseTomlConfig(source: string): PipelineConfig {
   if (bytes > MAX_TOML_CONFIG_BYTES) {
     fail(`source exceeds ${MAX_TOML_CONFIG_BYTES}-byte limit (got ${bytes})`);
   }
+  validateSourceScalars(source);
 
   let tokens: readonly TomlToken[];
   try {
@@ -103,6 +104,28 @@ function preflight(tokens: readonly TomlToken[]): void {
       if (nesting > MAX_NESTING) fail(`nesting exceeds ${MAX_NESTING}-level limit`);
     } else if (token.type === "RBRACKET" || token.type === "RBRACE") {
       nesting -= 1;
+    }
+  }
+}
+
+function validateSourceScalars(source: string): void {
+  for (let index = 0; index < source.length; index += 1) {
+    const code = source.charCodeAt(index);
+    if (code >= 0xd800 && code <= 0xdbff) {
+      const next = source.charCodeAt(index + 1);
+      if (next >= 0xdc00 && next <= 0xdfff) {
+        index += 1;
+        continue;
+      }
+      fail("source contains an invalid Unicode scalar");
+    }
+    if (code >= 0xdc00 && code <= 0xdfff) {
+      fail("source contains an invalid Unicode scalar");
+    }
+    if (code === 0x09 || code === 0x0a) continue;
+    if (code === 0x0d && source.charCodeAt(index + 1) === 0x0a) continue;
+    if (code <= 0x1f || code === 0x7f) {
+      fail("source contains a forbidden raw control character");
     }
   }
 }
@@ -360,7 +383,17 @@ function decodeBasicEscapes(raw: string, line: number, multiline = false): strin
       else if (raw[continuation] === "\n") continuation += 1;
       else continuation = -1;
       if (continuation !== -1) {
-        while (/\s/u.test(raw[continuation] ?? "")) continuation += 1;
+        while (continuation < raw.length) {
+          if (raw[continuation] === " " || raw[continuation] === "\t" || raw[continuation] === "\n") {
+            continuation += 1;
+            continue;
+          }
+          if (raw[continuation] === "\r" && raw[continuation + 1] === "\n") {
+            continuation += 2;
+            continue;
+          }
+          break;
+        }
         index = continuation - 1;
         continue;
       }
@@ -368,7 +401,7 @@ function decodeBasicEscapes(raw: string, line: number, multiline = false): strin
     const escape = raw[++index];
     if (escape === undefined) fail(`trailing string escape on line ${line}`);
     const simple: Readonly<Record<string, string>> = {
-      "\\": "\\", '"': '"', n: "\n", t: "\t", r: "\r", b: "\b", f: "\f", "/": "/",
+      "\\": "\\", '"': '"', n: "\n", t: "\t", r: "\r", b: "\b", f: "\f",
     };
     if (Object.hasOwn(simple, escape)) { result += simple[escape]!; continue; }
     if (escape === "u" || escape === "U") {
