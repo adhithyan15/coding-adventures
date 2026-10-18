@@ -245,6 +245,37 @@ describe("completion plan", () => {
     expect(complete.projection.find((entry) => entry.kind === "human-validation")?.items).toBe(0);
   });
 
+  it("keeps missing full-mock evidence and its task-shape prerequisite on the queue", () => {
+    const levelGate = gate([{ language: "alpha", inProgressAt: "pre-A1" }]);
+    const mockAssessments = [
+      { language: "alpha", level: "pre-A1" as const, requiredMocks: 2, completeMocks: 0,
+        missingMocks: ["mock-1", "mock-2"], blockedBy: ["task-shape/alpha/pre-A1"] },
+      { language: "alpha", level: "A1" as const, requiredMocks: 2, completeMocks: 1,
+        missingMocks: ["mock-2"], blockedBy: [] },
+    ];
+    const missing = plan({ levelGate, mockAssessments });
+    expect(missing.blocked.find((item) => item.id === "mock-assessment/alpha/pre-A1")).toMatchObject({
+      id: "mock-assessment/alpha/pre-A1", outstanding: 2,
+      blockedBy: ["task-shape/alpha/pre-A1"],
+    });
+    expect(missing.projection.find((entry) => entry.kind === "mock-assessment")?.items).toBe(2);
+
+    mockAssessments[0] = { ...mockAssessments[0]!, completeMocks: 2, missingMocks: [], blockedBy: [] };
+    const partial = plan({ levelGate, mockAssessments });
+    expect(partial.head.some((item) => item.id === "mock-assessment/alpha/pre-A1")).toBe(false);
+    expect(partial.head.some((item) => item.id === "mock-assessment/alpha/A1")).toBe(true);
+
+    const advancedGate = gate([{ language: "alpha", inProgressAt: "A2" }]);
+    expect(plan({ levelGate: advancedGate, mockAssessments }).head).toContainEqual(
+      expect.objectContaining({ id: "mock-assessment/alpha/A1" }),
+    );
+
+    const finishedGate = gate([{ language: "alpha", inProgressAt: null }]);
+    expect(plan({ levelGate: finishedGate, mockAssessments }).head).toContainEqual(
+      expect.objectContaining({ id: "mock-assessment/alpha/A1" }),
+    );
+  });
+
   it("measures pre-A1 task shapes without inventing a pre-A1 exam inventory", () => {
     const levelGate = gate([{ language: "alpha", inProgressAt: "pre-A1" }]);
     const missing = plan({ levelGate, taskShapes: [] });

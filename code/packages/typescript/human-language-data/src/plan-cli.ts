@@ -33,6 +33,7 @@ import { measureExamCoverage } from "./exam-inventory.js";
 import { isExamInventoryComplete } from "./exam-inventory.js";
 import { CEFR_LEVELS, type CefrLevel } from "./levels.js";
 import { measureAssessmentPrerequisites } from "./assessment-prerequisites.js";
+import { listMockAssessmentStatuses } from "./mock-assessment.js";
 
 interface PlanOptions {
   root?: string;
@@ -204,6 +205,7 @@ export function runCompletionPlan(args = process.argv.slice(2)): number {
     inventories: readable,
     partialInventories: partial,
     taskShapes,
+    mockAssessments: listMockAssessmentStatuses(options.root),
     examCoverage,
     unreadableInventories: unreadable.length,
     ceiling: options.ceiling,

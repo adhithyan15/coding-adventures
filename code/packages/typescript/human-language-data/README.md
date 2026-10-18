@@ -28,6 +28,15 @@ omissions visible in exact per-track pins under
 `core/assessment-paper-omission-ceiling/`. These pins cannot grow; an omitted
 paper is unfinished evidence, not exam readiness. See the
 [full-mock paper contract](docs/feature-contracts/full-mock-paper-artifacts.md).
+Each level mock can additionally declare a JSON `manifest` naming its four
+skill timings and task-shape part IDs. A declared manifest must be a real file
+in its track and must match one complete published form per skill, with
+visible per-part spans in the learner paper, rubric, and answer key. The plan's
+`mock-assessment/<language>/<level>` family counts mocks still missing a
+distinct paper, rubric, key, or valid manifest; undeclared legacy manifests
+remain visible debt rather than becoming a parse error.
+See the [structure-manifest contract](docs/feature-contracts/full-mock-structure-manifests.md)
+for the JSON shape and migration rule.
 
 ```
 lessons/*.md frontmatter    ─┐
@@ -286,6 +295,8 @@ contract. This is a conservative planning screen, not permission to publish a
 contract: the assessment-contract and artifact gates remain authoritative, and
 new contracts must never name missing evidence. See
 [`HL15`](../../../specs/HL15-the-completion-plan.md).
+The separate `mock-assessment` item is blocked on an absent task-shape
+inventory; it cannot infer a complete timed paper from `timed: true` alone.
 
 ## Scope note
 

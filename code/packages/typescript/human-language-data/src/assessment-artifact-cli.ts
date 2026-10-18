@@ -21,6 +21,7 @@ import {
   generatedCeilings,
   renderArtifactCheck,
 } from "./assessment-artifacts.js";
+import { validateDeclaredMockManifests } from "./mock-assessment.js";
 import { defaultCurriculumRoot } from "./loader.js";
 
 /** `lstat`, or `undefined` if there is nothing there. Never follows a link. */
@@ -152,6 +153,7 @@ const KIND_ORDER = [
   "new-dangling-reference",
   "new-paper-omission",
   "paper-may-not-be-pinned",
+  "manifest-may-not-be-pinned",
   "ceiling-has-fallen",
   "paper-omission-ceiling-has-fallen",
   "stale-ceiling-file",
@@ -174,6 +176,8 @@ export function runAssessmentArtifactCli(
     err("usage: assessment-artifact-cli (--check | --write)\n");
     return 2;
   }
+
+  validateDeclaredMockManifests(root);
 
   if (mode === "--write") {
     const audit = auditAssessmentArtifacts(root);

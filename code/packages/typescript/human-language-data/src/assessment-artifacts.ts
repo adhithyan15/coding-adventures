@@ -123,6 +123,7 @@ export function collectArtifactReferences(contract: AssessmentContract): Artifac
     }
     for (const mock of level.fullMocks) {
       if (mock.paper !== undefined) add(`${level.level}.fullMocks[${mock.id}].paper`, mock.paper);
+      if (mock.manifest !== undefined) add(`${level.level}.fullMocks[${mock.id}].manifest`, mock.manifest);
       add(`${level.level}.fullMocks[${mock.id}].rubric`, mock.rubric);
       add(`${level.level}.fullMocks[${mock.id}].answerKey`, mock.answerKey);
       if (mock.humanValidation !== undefined) {
@@ -304,6 +305,7 @@ export type ArtifactDiagnosticKind =
   /** The audit examined nothing. A gate that cannot see is not a gate that passed. */
   | "audit-went-blind"
   | "paper-may-not-be-pinned"
+  | "manifest-may-not-be-pinned"
   | PaperOmissionDiagnosticKind;
 
 export interface ArtifactDiagnostic {
@@ -364,6 +366,9 @@ export function checkAssessmentArtifacts(
     const paperPaths = new Set(track.references
       .filter((reference) => reference.where.endsWith(".paper"))
       .map((reference) => reference.path));
+    const manifestPaths = new Set(track.references
+      .filter((reference) => reference.where.endsWith(".manifest"))
+      .map((reference) => reference.path));
 
     for (const path of paperPaths) {
       if (pinned.has(path)) diagnostics.push({
@@ -371,6 +376,14 @@ export function checkAssessmentArtifacts(
         language: track.language,
         message: `${ARTIFACT_CEILING_DIR}/${track.language}.json pins paper '${path}'. ` +
           "Full-mock papers are new evidence and may not enlarge the grandfathered artifact ceiling.",
+      });
+    }
+    for (const path of manifestPaths) {
+      if (pinned.has(path)) diagnostics.push({
+        kind: "manifest-may-not-be-pinned",
+        language: track.language,
+        message: `${ARTIFACT_CEILING_DIR}/${track.language}.json pins manifest '${path}'. ` +
+          "Full-mock manifests are new evidence and may not enlarge the grandfathered artifact ceiling.",
       });
     }
 
