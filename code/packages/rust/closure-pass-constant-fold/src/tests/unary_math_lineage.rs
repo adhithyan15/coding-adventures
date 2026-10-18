@@ -326,6 +326,47 @@ fn c41_positive_zero_bits_and_canonical_raw_survive_all_six_methods() {
 }
 
 #[test]
+fn c41_sign_infinities_keep_existing_admission_and_exact_five_parent_lineage() {
+    // Literal expectations preserve the two original native NumericLiteral
+    // inputs; this does not claim a JavaScript parser admits an infinity token.
+    let cases = [
+        (f64::INFINITY, "inf", "Math.sign(inf)", 1.0f64, "1"),
+        (f64::NEG_INFINITY, "-inf", "Math.sign(-inf)", -1.0f64, "-1"),
+    ];
+    let mut completed = 0;
+    for (input, input_raw, before, output, raw) in cases {
+        let mut cv = CVLog::new_checked_compact(GraphLimits::default()).unwrap();
+        let ids = roots(&mut cv, 6);
+        let slots = std::array::from_fn(|i| Some(ids[i].as_str()));
+        let expression = call("sign", slots, num(input, slots[4]));
+        let Expression::CallExpression(c) = &expression else {
+            unreachable!()
+        };
+        let Expression::NumericLiteral(n) = &c.arguments[0] else {
+            unreachable!()
+        };
+        assert_eq!(n.value.to_bits(), input.to_bits());
+        assert_eq!(n.raw, input_raw);
+        let out = run(expression, &mut cv);
+        let root = owned(
+            &cv,
+            extract_expr(&out.program),
+            &ids[..5],
+            before,
+            output,
+            raw,
+        )
+        .unwrap();
+        assert_eq!(out.contributions.len(), 1);
+        let history = ancestors(&cv, &root);
+        assert!(ids[..5].iter().all(|id| history.contains(id)));
+        assert!(!history.contains(&ids[5]));
+        completed += 1;
+    }
+    assert_eq!(completed, 2);
+}
+
+#[test]
 fn c41_zero_and_single_parent_operation_clocks_are_not_fake_merges() {
     for present in [false, true] {
         let mut cv = CVLog::new_checked_chronology(GraphLimits::default()).unwrap();
@@ -799,6 +840,11 @@ fn c41_declined_arity_receiver_nonliteral_nonfinite_and_signed_zero_keep_data() 
     let mut completed = 0;
     for case in cases() {
         for kind in 0..10 {
+            // Existing admission is result-finite, not input-finite: sign(±Inf)
+            // is tested separately as the two preserved positive fixtures.
+            if case.method == "sign" && (kind == 5 || kind == 6) {
+                continue;
+            }
             let mut cv = CVLog::new_checked_chronology(GraphLimits::default()).unwrap();
             let ids = roots(&mut cv, 5);
             let slots = std::array::from_fn(|i| Some(ids[i].as_str()));
@@ -876,7 +922,7 @@ fn c41_declined_arity_receiver_nonliteral_nonfinite_and_signed_zero_keep_data() 
         assert!(!out.changed);
         assert_eq!(snapshot(&cv), before);
     }
-    assert_eq!(completed, 60);
+    assert_eq!(completed, 58);
 }
 
 #[test]
