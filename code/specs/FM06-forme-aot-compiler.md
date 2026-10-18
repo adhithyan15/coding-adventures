@@ -51,6 +51,11 @@ every authored element reference against the rendered body, and preserves
 declaration order in `usedIslands`. An explicitly authorized, reviewed-content
 allowlist maps each selected `(packageName, export)` pair to one script `Asset`
 identity and exact SHA-256 bytes; this stage does not claim FM02 authentication.
+Element-reference resolution MUST retain HTML5 tree-construction semantics for
+ignored start tags, foreign content, raw-text elements, and detached HTML
+`template` contents. It MUST also handle at least 10,000 nested elements within
+the ordinary test deadline; implementations may optimize parser bookkeeping
+only when they can prove that the resulting element tree is unchanged.
 Neither the renderer nor the AOT layer imports executable code while deciding.
 
 `RenderedPage` carries the exact `IslandId` to script-asset and digest bindings.

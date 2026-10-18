@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+import { parseFragment } from "parse5";
 import {
   collectElementIdCounts,
   prepareInteractivity,
@@ -41,17 +42,63 @@ describe("element ID collection", () => {
     const ids = collectElementIdCounts([
       '<div id="first" id="second"></div>',
       '<i id="&#115;econd"></i>',
+      '<select><div id="ignored"></div><option id="option">x</option></select>',
+      '<svg><template id="svg-template"><g id="svg-child"></g></template></svg>',
       '<plaintext><b id="not-markup"></b>',
     ].join(""));
-    expect([...ids]).toEqual([["first", 1], ["second", 1]]);
+    expect([...ids]).toEqual([
+      ["first", 1],
+      ["second", 1],
+      ["option", 1],
+      ["svg-template", 1],
+      ["svg-child", 1],
+    ]);
   });
 
-  it("walks deeply nested HTML iteratively", () => {
-    const depth = 10_000;
-    const html = `${"<div>".repeat(depth)}<button id=deep></button>${"</div>".repeat(depth)}`;
+  it("resolves deeply nested HTML within the default test deadline", () => {
+    // Four times the FM06 minimum keeps enough headroom for loaded CI workers.
+    const depth = 40_000;
+    const decoys = [
+      "<!-- <p> -->",
+      '<meta data-example="<p>">',
+      '<script>"<p>"</script>',
+      "<template><p></p></template>",
+      "<svg><p></p></svg>",
+      "</p>",
+    ].join("");
+    const html = `${decoys}${"<div>".repeat(depth)}<button id=deep></button>${"</div>".repeat(depth)}`;
     expect([...collectElementIdCounts(html)]).toEqual([["deep", 1]]);
   });
+
+  it("matches unmodified parse5 across malformed and foreign-content scope changes", () => {
+    const cases = [
+      "</p><div id=after-malformed-p></div>",
+      "<p id=outer><button><p id=inner></button></p>",
+      "<template><p id=detached></template><main id=active>",
+      "<svg><title><p id=html-integration></p></title><g id=svg></g></svg>",
+      "<math><mtext><p id=math-integration></p></mtext><mi id=math></mi></math>",
+      '<p id=outer><math><annotation-xml encoding="text/html"></p><svg id=k></math><td id=g></annotation-xml></math><span id=tail>',
+      "<table><p id=fostered><tr><td id=cell></table>",
+    ];
+    for (const html of cases) {
+      expect([...collectElementIdCounts(html)]).toEqual([...referenceElementIdCounts(html)]);
+    }
+  });
 });
+
+function referenceElementIdCounts(html: string): ReadonlyMap<string, number> {
+  const counts = new Map<string, number>();
+  const stack: Array<ReturnType<typeof parseFragment> | ReturnType<typeof parseFragment>["childNodes"][number]> = [parseFragment(html)];
+  while (stack.length !== 0) {
+    const node = stack.pop()!;
+    const id = "attrs" in node ? node.attrs.find(attribute => attribute.name === "id")?.value : undefined;
+    if (id !== undefined) counts.set(id, (counts.get(id) ?? 0) + 1);
+    if ("childNodes" in node) {
+      for (let index = node.childNodes.length - 1; index >= 0; index--) stack.push(node.childNodes[index]);
+    }
+  }
+  return counts;
+}
 
 describe("interactivity composition config", () => {
   const emptyDocument = {
