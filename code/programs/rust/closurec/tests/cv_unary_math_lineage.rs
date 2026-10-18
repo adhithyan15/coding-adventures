@@ -29,7 +29,6 @@ impl Fixture {
             SEQ.fetch_add(1, Ordering::Relaxed)
         ));
         std::fs::create_dir(&dir).unwrap();
-        let dir = dir.canonicalize().unwrap();
         let input = dir.join("input.js");
         std::fs::write(&input, source.as_bytes()).unwrap();
         let paths = ["out.js", "out.map", "manifest.txt", "trace.json"].map(|p| dir.join(p));
@@ -105,8 +104,8 @@ impl Fixture {
 impl Drop for Fixture {
     fn drop(&mut self) {
         assert_eq!(
-            self.dir.parent(),
-            Some(std::env::temp_dir().canonicalize().unwrap().as_path())
+            self.dir.parent().unwrap().canonicalize().unwrap(),
+            std::env::temp_dir().canonicalize().unwrap()
         );
         std::fs::remove_dir_all(&self.dir).unwrap();
     }
