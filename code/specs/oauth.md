@@ -476,9 +476,17 @@ OAuth production dependency graphs must contain only workspace-owned
 libraries; operating-system APIs and wire protocols are the lowest trusted
 boundary.
 
-Before the concrete HTTPS adapter, replace `tls-platform`'s `rustls` and
-`webpki-roots` dependency chain with repository-owned TLS, certificate parsing,
-path validation, hostname verification, and a reviewed trust-root source. This
+Before the concrete HTTPS adapter, replace `tls-platform`'s `rustls` dependency
+chain with repository-owned TLS, certificate parsing, path validation,
+hostname verification, and signature verification. `webpki-roots` is the sole
+approved external production data dependency and may supply only a reviewed
+Mozilla public-Web-PKI trust-root snapshot. Its integration must pin one exact
+reviewed release, record the official upstream tag or commit, crates.io
+checksum, root count, and root-set digest, and add CI that rejects unreviewed
+root-set changes. The integration must also document that OS enterprise and
+local roots are excluded and define a deployed-client update cadence.
+`webpki-roots` supplies no TLS, certificate parsing, path or hostname
+validation, signature verification, revocation, or platform-trust logic. This
 is prerequisite work, not permission to weaken HTTPS or certificate checks.
 The first independently reviewable prerequisite is now shipped as
 `tls-server-identity`: a zero-external-dependency RFC 9525 matcher for already
@@ -498,10 +506,10 @@ itself. The typed `der-asn1` layer is now shipped above that framing primitive:
 it provides allocation-free canonical BOOLEAN, INTEGER, BIT STRING, OCTET
 STRING, NULL, and OBJECT IDENTIFIER decoding plus exact SEQUENCE, SET, and
 explicit context-wrapper traversal under one shared depth and total-element
-budget. It also validates universal IA5String and schema-selected implicit
-OCTET STRING, IA5String, and OBJECT IDENTIFIER values under exact primitive
-context-specific tags, providing the typed value prerequisite for later
-GeneralName decoding without claiming any name semantics. A separate
+budget. It also validates universal IA5String and schema-selected implicit BIT
+STRING, OCTET STRING, IA5String, and OBJECT IDENTIFIER values under exact
+primitive context-specific tags, providing typed value prerequisites for
+later X.509 schemas without claiming their semantics. A separate
 `x509-time` profile layer now validates exact RFC 5280
 UTCTime and GeneralizedTime tags, fixed Zulu forms, the 1950/2050 century
 split, and Gregorian fields without a clock or platform calendar. A bounded
@@ -569,6 +577,16 @@ non-empty DER-ordered RDN sets, and OID-plus-opaque-value attributes under
 shared limits. It retains exact borrowed values and RDN boundaries without
 claiming DirectoryString normalization, semantic name equality, issuer/subject
 relationship decisions, or path validation.
+A bounded `x509-certificate` structural composition now decodes complete RFC
+5280 `Certificate` and `TBSCertificate` values under one shared DER budget. It
+retains the exact signed bytes, composes the shipped field decoders, validates
+the required non-empty issuer and canonical implicit unique identifiers,
+enforces optional-field ordering and version constraints, and requires exact
+inner/outer signature-algorithm encoding agreement. It does not recognize or
+enable algorithms, verify signatures, interpret extension policy, compare
+names, validate paths or
+hostnames, check revocation, select trust roots, perform TLS, read a clock, or
+open a network connection.
 
 The current slices intentionally stop before provider HTTPS transport. The
 loopback host owns only local TCP and injected browser authority; custody owns
