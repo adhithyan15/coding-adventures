@@ -1,30 +1,56 @@
 # Closure Compiler on Rust — parity backlog
 
-## Current bounded work — whole-main conflict reconciliation
+## Current bounded work - whole-main conflict reconciliation
 
-The validated event-height slice is published in sole PR #17288 at
-690950ee47541af6e022febcf36129199d2b9041. Fresh main
-4d6b02699425232f924dbf9356410f9884641f19 still has11actual conflicts.
-Reconciliation is specified before production in
-[CV04b whole-main reconciliation](CV04b-whole-main-reconciliation.md).
+Sole PR #17288 remains published at690950ee47541af6e022febcf36129199d2b9041,
+unmerged with auto-merge OFF. Fresh main5c5ad45e26fc9302668e11558ce6a107a781a92c
+advances9 ALGOL/lang-aot endpoints from prior4d6b0269. The fresh virtual merge
+still reports11 actual conflicts. No incoming source is installed or executed.
+Reconciliation is specified in [CV04b whole-main reconciliation](CV04b-whole-main-reconciliation.md).
 
-The incoming endpoint inventory now closes1162paths, including1142main-only
-paths,20three-way overlaps and52rename-source deletions omitted from the
-earlier1110path rename-detected list. All1221incoming blobs were saved as
-inert data and checked against full Git object identity; incoming source is
-UNREVIEWED/UNINTEGRATED and has not been executed. Preserve old receipts and
-all owned safety/production-limit/oracle controls; review automatic overlaps too.
-No further geometry expansion or independent cap increase is selected.
+The full current inventory closes1164 paths:1144 main-only and20 overlaps,
+1223 distinct incoming blobs /27884425 bytes. SHA256
+`a954b6d63195927b7c163d948ff91c9783a914b3aebe62fc2ca937adc9895ac7`.
+All1155 unchanged incoming endpoints match the previous complete inventory by
+absence/mode/Git ID and saved body. Three sealed independent static reviews
+cover the prior1162 endpoints, with integration WITHHELD; the new9 endpoint
+security review is pending. Previous1110 was a rename-detected destination
+list, corrected by the full old/new52 rename-source map, not full coverage.
 
-Native event-height source d90aa53183df1ab2935b56f34bcd4bc90ad9002c remains
-accepted at296functions/521exact completion identities/8actualcommands0; its
-repaired Markdown carrier passed3actualcommands0 and exact-head review. These
-are historical execution receipts, not post-integration acceptance. Current-main
-adoption requires fresh affected native/compiler/downstream/lint and docs tests,
-exact-head independent review and required CI. PR remains unmerged, auto-mergeOFF.
-Miri DEFERRED/PENDING, never passed; frozen run/checkout/inputs/receipts/target
-untouched and unpolled. Full Closure parity/output-byte-source/full transformation
-lineage and genuine final-source Miri remain OPEN.
+Test-first retained source8531f28db0aa13f58a25cba86dff6b2e53e9f524 adds eight
+exact original corpora and nine verbatim consumers, preserving44 authored
+sources replaced by incoming fixtures. Actual focused baseline9P0F and full
+owned parser655P0F over29 unfiltered harnesses passed; strict all-target lint
+passed. Full-suite metadata/native/strict commands all returned0. No ignored,
+measured or filtered cases; no doctest or cross-platform claim. Exact-source
+and actual-terminal independent security reviews PASS/RELEASED. These are
+original consuming assertions, not new full IR or compiler lineage oracles.
+Suite receipt SHA256 `a44daa91f5b491881d613ca05bbe4d1850a509e85b702ae25763c117808f501e`;
+6raw/29EXE immutable manifest `04f6a28c8394188d55c0419655ef61bcacebec0154db22ca9b8df08a69b33ac2`;
+terminal review `5deee8b044f96f3f328c3a872259d1f4ab6ff7cae8a9ebda42752828282e6199`.
+The first offline metadata attempt failed101 before tests; actual outer1 and
+raw failure remain preserved, never relabeled. Corrected --no-deps metadata
+checks workspace target identity; actual tests compile their locked dependency
+cone. Every native target is RELEASED_DO_NOT_REREAD.
+
+Next: review the saved current9 endpoints, then close explicit full-body
+resolutions for the20 overlaps. Preserve owned proof bounds, production-limit
+controls, Timeline geometry/font/palette products, Venn structural/grid proofs
+and original assertions. Remove duplicate automatic IR fields with a complete
+constructor census; new Ishikawa dimensions/fit require bounded full products.
+Old-main version candidates are stale; no independent cap chase is selected.
+Main-only bytes remain exact. Unrelated human-data assessment-loop risk U1
+remains qualified outside the selected doc-shard/owned Closure dependency cone;
+no unrelated feature correctness is claimed. Integration still requires fresh
+affected native/compiler/downstream/lint/docs checks and exact-head review.
+
+Historical event-height native source d90aa531 passed296 functions/521exact
+completion identities/8commands0, with its repaired carrier3commands0. These
+receipts are not post-integration acceptance and counts are not added together.
+Required CI/review, actual merge and full Closure parity/output-byte-source/full
+fold/rename/inline/motion/merge/delete/pass-sweep lineage remain OPEN.
+Miri DEFERRED/PENDING, never passed; frozen checkout/run/inputs/receipts/target
+untouched, unpolled and unterminated. Genuine final-source Miri follows delivery.
 
 
 ## Historical bounded checkpoint — per-event Timeline height

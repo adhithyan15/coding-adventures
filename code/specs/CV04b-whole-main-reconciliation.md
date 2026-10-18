@@ -1,5 +1,20 @@
 # CV04b — closed whole-main reconciliation
 
+Current audit update: main is now5c5ad45e26fc9302668e11558ce6a107a781a92c.
+The prior4d6b frame below is historical. Full current inventory has1164 endpoints
+(1144 main-only/20 overlaps);1155 are identical to the prior inventory and9
+ALGOL/lang-aot endpoints require fresh review. Saved inventory SHA256
+`a954b6d63195927b7c163d948ff91c9783a914b3aebe62fc2ca937adc9895ac7`.
+No incoming integration or execution is accepted. Preserve all previous reviews
+at their actual frames; do not transfer old manifest-version candidates.
+
+Original-corpus retention was committed before integration: eight exact bodies,
+nine complete original consumer functions and44 authored sources. At8531f28d,
+focused9 and full parser655 tests/29 harnesses passed with strict all-target lint;
+independent source and actual-terminal reviews passed. This preserves original
+assertions, without claiming complete IR or compiler transformation lineage.
+No production incoming changes have begun. All native targets are released.
+
 This specification precedes production integration. The sole implementation PR
 remains #17288. Its published owned frame is
 `690950ee47541af6e022febcf36129199d2b9041`; the observed main frame is
@@ -80,11 +95,13 @@ not claims that an uninstalled candidate has passed. Review immutable preimages.
 - Resolve duplicate automatic TimelineConfig fields/defaults to one copy in
   owned field order. Union new architecture fields only with a full constructor
   census and explicit None/default changes in every affected old whole product.
-- Reconcile inherited main offset40 through the existing dedicated iterative
-  outer-entier proof. Do not replace the shared sign/exp/log classifier with the
-  broader recursive main classifier. Retain the old32 contract as an explicit
-  direct legacy-budget control, add exact new33..40 positives/current41 refusals,
-  preserve zero/near2^53/alias/work controls and do not add an independent cap41.
+- The previous main frame proposed inherited offset40 through the dedicated
+  iterative outer-entier proof; this was never implemented or accepted. New main
+  moves its registration to41 and must be reviewed before selecting a migration.
+  Do not chase an independent bound or broaden the shared sign/exp/log classifier.
+  Preserve explicit legacy32 controls, frozen prior-main controls and exact new
+  current-boundary positives/refusals, including zero/near2^53/alias/work controls.
+  Any inherited-bound migration needs new test-first full-product evidence.
 - Main-only fixture/data/TypeScript endpoints stay exactly main. Preserve old
   replaced authored corpora and original semantic assertions separately. Classify
   genuine non-safety domain extensions, such as multi-root treemap acceptance,

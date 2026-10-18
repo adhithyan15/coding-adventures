@@ -1,5 +1,16 @@
 # mermaid-parser
 
+Current reconciliation retains eight original corpus files and nine complete
+original consuming test functions, including44 authored sources displaced by
+incoming fixture updates. Run `cargo test -p mermaid-parser --test current_main_legacy_corpora`
+from the Rust packages workspace for this companion baseline. At8531f28d the
+focused9 tests and full655-test/29-harness owned parser suite passed, with strict
+all-target lint and independent exact-source/actual-terminal security review.
+These preserve original assertions; they do not establish full IR or compiler
+transformation lineage. Incoming main is uninstalled and remains under review.
+PR17288 is unmerged, auto-merge OFF; Miri DEFERRED/PENDING, never passed. Earlier
+validation notes below retain their original source and scope.
+
 TimelineConfig now carries font_size with a16.0 default. Only direct fontSize
 in the first closed init root, with absent-member fallback to config.fontSize
 YAML, supplies the value. Existing decoding/unit scales and ownership remain;
