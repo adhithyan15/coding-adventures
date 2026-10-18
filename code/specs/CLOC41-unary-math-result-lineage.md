@@ -17,6 +17,10 @@ Preserve folding callee then arguments, admission guards, labels, numeric
 value bits, raw formatting, finite checks, negative-zero refusals and all
 declined cases. The existing textual Math matcher does not certify a global
 binding; this slice neither broadens admission nor claims scope certification.
+The finite check applies to the result, not every input: existing Math.sign
+of positive/negative Infinity yields positive/negative one and remains admitted.
+Retain both complete cases as exact positive value/lineage tests; do not turn
+their input nonfiniteness into a new refusal or assert a blanket decline.
 
 For the actual folded shapes, first-seen distinct available parents are:
 
@@ -60,7 +64,8 @@ production-limit, parser/source-ownership and CLOC31–40 controls stay intact.
   binary child history, unrelated exclusion and acyclic/dangling-free graphs.
 - Genuine missing-parent, merge/derive/contribution budget refusals and prior
   child failure; assert no outer work after a latched error. Preserve wrong
-  arity/nonliteral/non-Math/nonfinite/signed-zero declines and child effects.
+  arity/nonliteral/non-Math/nonfinite-result/signed-zero declines and child
+  effects, with the existing sign-of-Infinity admissions above preserved.
 - Actual SIMPLE/ADVANCED CLI ingestion with Unicode/CRLF prefixes and repeated
   Math expressions: exact physical source intervals/coordinate ownership,
   member-prefix evidence, result-owned events, child/outer pass/sweep clocks,
