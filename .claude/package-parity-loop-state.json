@@ -2775,7 +2775,7 @@
       "merged_head_revision": "2b991cffd982c359935d38017103f3b673c22534",
       "merged_at": "2026-09-01T06:43:28Z",
       "merge_revision": "bbba51a7d4a7a3d2a3338bc6c15458eba39db82f",
-      "merge_notes": "The first hosted macOS run exposed pre-10.15 unavailability of JSONSerialization.WritingOptions.withoutEscapingSlashes; the focused same-branch repair normalized only JSON's escaped slash spelling and added a literal-backslash regression. The next macOS run exposed APFS normalization of the decomposable test-only filename Ã©.swift; the smallest repair used non-decomposable Î².swift while preserving Unicode ordering and raw-byte coverage. All 45 final-head checks then reached terminal acceptable conclusions, GitHub reported the branch clean and mergeable, the loop enabled squash auto-merge, and GitHub merged PR #13799 without a manual merge command.",
+      "merge_notes": "The first hosted macOS run exposed pre-10.15 unavailability of JSONSerialization.WritingOptions.withoutEscapingSlashes; the focused same-branch repair normalized only JSON's escaped slash spelling and added a literal-backslash regression. The next macOS run exposed APFS normalization of the decomposable test-only filename é.swift; the smallest repair used non-decomposable β.swift while preserving Unicode ordering and raw-byte coverage. All 45 final-head checks then reached terminal acceptable conclusions, GitHub reported the branch clean and mergeable, the loop enabled squash auto-merge, and GitHub merged PR #13799 without a manual merge command.",
       "notes": "Production Swift has the strongest existing 23-language package-local registry but still omits reviewed Rust companions in several hybrid lanes, Swift C-family headers and module maps, path-scoped resources, and universal required_capabilities.json. Project the complete neutral language registry into production and preserve its checked package-root filesystem boundaries. Read-only conformance and security audits discovered that the separate repository-relative boundary registry also needs native hashing and reverse-diff integration; that newly classified behavior belongs to the dependent build-tool-swift-repository-source-input-boundary-adoption owner rather than widening this finite package-local slice."
     },
     {
@@ -15624,7 +15624,7 @@
       "rebase_notes": "Rebased conflict-free over merged unrelated ALGOL PR #17116. Re-ran the exact-main schema-3 inventory: all package, slot, band, OCaml, collision, and unknown-bucket counts remain unchanged. No other open parity PR exists.",
       "selection_notes": "Selected only after #17117 merged, exact-main inventory refresh and new gap registration. This spec/fixture prerequisite prevents the downstream Java/Kotlin/Dart Arc2D port from inheriting sampled off-grid bounds or unbounded center-form cubic allocation. No active parity PR exists; the Go and existing-lane implementation owners remain separate.",
       "validation_notes": "Neutral validator accepts 23 cases; 11 focused schema/oracle tests pass with 97% validator line coverage. Ruff check/format, Python 3.13 Arc2D (19 tests), Rust Arc2D (20 tests), TypeScript Arc2D tsc plus Vitest (19 tests), collision-gated inventory, diff hygiene, and independent security/contract review pass. No BUILD front changed; native readers filter prior operation families. Initial CI is queued.",
-      "notes": "New post-#17117 cross-lane contract gap: G2D03's raw candidate-angle quotient omits extrema across 2Ï€ and negative sweeps, while direct CenterArc cubic conversion has no finite or one-turn bound before allocating. Add a closed additive neutral corpus/schema with two off-grid wrapped analytic bounds, zero/full/over-turn segment cases, an independent analytic validator, native nonfinite guidance, and explicit 1-4 cubic fail-stop contract. Preserve existing Go implementation ownership separately."
+      "notes": "New post-#17117 cross-lane contract gap: G2D03's raw candidate-angle quotient omits extrema across 2π and negative sweeps, while direct CenterArc cubic conversion has no finite or one-turn bound before allocating. Add a closed additive neutral corpus/schema with two off-grid wrapped analytic bounds, zero/full/over-turn segment cases, an independent analytic validator, native nonfinite guidance, and explicit 1-4 cubic fail-stop contract. Preserve existing Go implementation ownership separately."
     },
     {
       "id": "geometry-arc2d-go-center-form-spec-reconciliation",
@@ -17229,7 +17229,7 @@
       "depends_on": [],
       "branch": null,
       "pr_number": null,
-      "notes": "Audit includes diagram IR/DOT/layout/paint, document ASTâ†’layout, layout IRâ†’paint, HTMLâ†’layout, CFB, OPC, DOCX/PPTX, format-doc. Split pure fixtures from host painting/storage.",
+      "notes": "Audit includes diagram IR/DOT/layout/paint, document AST→layout, layout IR→paint, HTML→layout, CFB, OPC, DOCX/PPTX, format-doc. Split pure fixtures from host painting/storage.",
       "pending_main_spline_classification": "parity-pending-main-e7c6-inventory-audit.md: newest immutable Mermaid/DG04 delta adds cardinal/catmullRom/natural parsing and curve IR/collinear cubic paint lowering. Existing classifier owns diagram IR/layout/paint and Mermaid frontend splitting; exact pure spline contract/case/decomposition coverage is still unqualified. Narrow Swimlane quoted/entity/class owners do not imply spline behavior closure; layout typed-IR geometry/metadata excludes parsing/paint backend. No native backend/security delivery or new overlapping umbrella/selection in this refresh.",
       "reference_refresh_5526f94f": {
         "revision": "5526f94f956ac390fc667af525dabef602ec7fce",
@@ -17249,7 +17249,7 @@
       "depends_on": [],
       "branch": null,
       "pr_number": null,
-      "notes": "Audit includes RAW/TIFF/camera RAW, GIF/JPEG/JXL/ICO/PNG; DSP complexâ†’FFTâ†’filters/STFT/DCT/wavelets; range/RANS. Split malformed-input security bounds, native GPU/FFI exceptions and lane ports."
+      "notes": "Audit includes RAW/TIFF/camera RAW, GIF/JPEG/JXL/ICO/PNG; DSP complex→FFT→filters/STFT/DCT/wavelets; range/RANS. Split malformed-input security bounds, native GPU/FFI exceptions and lane ports."
     },
     {
       "id": "storage-network-and-job-rust-singleton-foundation",
@@ -17326,7 +17326,7 @@
       "depends_on": [],
       "branch": null,
       "pr_number": null,
-      "notes": "Audit includes numeric/date/number-format, lookup, FSRSâ†’Engramâ†’Anki, engineering/financial core and R-vector NA. Split clock/storage host seams; resolve SML02 serial-60 conflict."
+      "notes": "Audit includes numeric/date/number-format, lookup, FSRS→Engram→Anki, engineering/financial core and R-vector NA. Split clock/storage host seams; resolve SML02 serial-60 conflict."
     },
     {
       "id": "treap-dt10-neutral-priority-and-lane-conformance",
