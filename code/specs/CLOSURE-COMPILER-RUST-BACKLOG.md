@@ -3356,3 +3356,18 @@ Base ESTree, owned types and no new crates.io dependencies remain owner decision
 Miri DEFERRED/PENDING, never passed. Frozen run/checkout/inputs/target/receipts
 remain untouched and unpolled; genuine final-source Miri follows implementation
 delivery. Full objective OPEN; heartbeat ACTIVE.
+
+
+### 2026-10-18: CLOC41 unary Math result lineage selected
+
+Specification664e3257 precedes tests/implementation. Audited source51cfed62 retains
+CLOC27 token CVs/CLOC35 member occurrences, while the existing six-method unary
+Math replacement derives only from call.cv (ordinary bridge calls lack it).
+Select abs/floor/ceil/round/trunc/sign: fixed available call/member/receiver/
+property/folded-argument frontier, exact result-owned join/derive/contribution,
+child-before-outer chronology and checked refusals. No admission/value/limit
+widening or invented source identity; textual Math is not scope certification.
+Compiled semantic red, implementation and complete affected validation/review
+are PENDING. Other folds/transform roles/identities/source-output joins/Closure
+parity/current-main reconciliation/CI/merge/full objective remain OPEN.
+Miri DEFERRED/PENDING; frozen run/checkout/inputs/receipts/target untouched.

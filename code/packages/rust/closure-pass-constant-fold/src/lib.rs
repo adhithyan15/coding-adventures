@@ -7079,6 +7079,7 @@ mod tests {
     use coding_adventures_type_sidecar::Sidecar;
 
     mod array_length_lineage;
+    mod unary_math_lineage;
     mod selected_array_root;
 
     fn program() -> Program {
