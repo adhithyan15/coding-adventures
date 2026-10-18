@@ -102,6 +102,8 @@ const RAILROAD_CORPUS: &str = include_str!(concat!(env!("CARGO_MANIFEST_DIR"), "
 const RAILROAD_EBNF_CORPUS: &str = include_str!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../../grammars/mermaid/railroad-ebnf-11.16.1-corpus.json"));
 const RAILROAD_ABNF_CORPUS: &str = include_str!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../../grammars/mermaid/railroad-abnf-11.16.1-corpus.json"));
 const RAILROAD_PEG_CORPUS: &str = include_str!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../../grammars/mermaid/railroad-peg-11.16.1-corpus.json"));
+const RAILROAD_COMPATIBILITY_CORPUS: &str = include_str!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../../grammars/mermaid/railroad-11.16.1-compatibility-corpus.json"));
+const RAILROAD_VISUAL_CORPUS: &str = include_str!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../../grammars/mermaid/railroad-11.16.1-visual-corpus.json"));
 const INFO_CORPUS: &str = include_str!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../../grammars/mermaid/info-11.16.1-corpus.json"));
 const ZENUML_CORPUS: &str = include_str!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../../grammars/mermaid/zenuml-11.16.1-corpus.json"));
 
@@ -181,6 +183,49 @@ fn pinned_railroad_peg_corpus_parses_to_recursive_ir() {
             assert_eq!(diagram.accessibility_description.as_deref(), Some("PEG grammar"));
         }
     }
+}
+
+#[test]
+fn pinned_railroad_corpus_matches_upstream_and_native_acceptance() {
+    let corpus: Value = serde_json::from_str(RAILROAD_COMPATIBILITY_CORPUS)
+        .expect("railroad compatibility corpus must be JSON");
+    assert_eq!(corpus["upstream"].as_str(), Some("mermaid@11.16.1"));
+    assert_eq!(corpus["level"].as_str(), Some("full"));
+    assert_eq!(corpus["upstream_commit"].as_str(), Some("7ecca0cd7f1658ef74f4e7e91f925724ef403bbf"));
+    for fixture in corpus["valid"].as_array().expect("valid fixtures") {
+        let id = fixture["id"].as_str().expect("fixture id");
+        let diagram = parse_railroad(fixture["source"].as_str().expect("fixture source"))
+            .unwrap_or_else(|error| panic!("railroad fixture {id} failed: {error}"));
+        assert!(!diagram.rules.is_empty(), "railroad fixture {id} must contain rules");
+    }
+    for fixture in corpus["invalid"].as_array().expect("invalid fixtures") {
+        let id = fixture["id"].as_str().expect("fixture id");
+        assert!(parse_railroad(fixture["source"].as_str().expect("fixture source")).is_err(),
+            "invalid railroad fixture {id} parsed");
+    }
+}
+
+#[test]
+fn railroad_full_status_is_backed_by_pinned_syntax_and_visual_corpora() {
+    let manifest: Value = serde_json::from_str(COMPATIBILITY_MANIFEST)
+        .expect("compatibility manifest must be JSON");
+    let railroad = manifest["families"].as_array().expect("families").iter()
+        .find(|family| family["id"] == "railroad").expect("railroad family");
+    assert_eq!(railroad["status"].as_str(), Some("full"));
+
+    let syntax: Value = serde_json::from_str(RAILROAD_COMPATIBILITY_CORPUS)
+        .expect("railroad compatibility corpus JSON");
+    let visual: Value = serde_json::from_str(RAILROAD_VISUAL_CORPUS)
+        .expect("railroad visual corpus JSON");
+    assert_eq!(syntax["upstream_commit"], visual["upstream_commit"]);
+    let expected = syntax["valid"].as_array().expect("valid fixtures").iter()
+        .map(|fixture| fixture["id"].as_str().expect("fixture id"))
+        .collect::<BTreeSet<_>>();
+    let actual = visual["fixtures"].as_array().expect("visual fixtures").iter()
+        .map(|id| id.as_str().expect("visual fixture id"))
+        .collect::<BTreeSet<_>>();
+    assert_eq!(actual, expected);
+    assert!(!syntax["invalid"].as_array().expect("invalid fixtures").is_empty());
 }
 
 #[test]

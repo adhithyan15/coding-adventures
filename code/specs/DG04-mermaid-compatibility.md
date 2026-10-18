@@ -959,7 +959,7 @@ parser and renderer cases, so TreeView is `full` in the compatibility manifest.
 Automatic Iconify pack loading remains host-owned and exact typography remains
 backend-specific; resolved icon identities and geometry stay backend-neutral.
 
-### Railroad Native Slice
+### Railroad Native Compatibility
 
 The initial Mermaid 11.16.1 Railroad slice recognizes `railroad-beta` and
 parses the upstream explicit constructor notation into dedicated recursive
@@ -1008,6 +1008,12 @@ Root `themeVariables` now provide Mermaid-compatible typography and color
 fallbacks for terminals, non-terminals, specials, connections, markers, and
 rule names. Explicit Railroad options retain precedence, and the resolved
 values continue through layout and backend-neutral PaintScene lowering.
+The pinned compatibility corpus covers every active Mermaid 11.16.1 Railroad
+renderer fixture plus the complete constructor, EBNF, ABNF, and PEG native
+notation corpora. Every valid fixture lowers through `PaintScene` and renders
+to PNG through Metal. Browser DOM text measurement, responsive SVG sizing, and
+interaction remain outside the portable native contract, so Railroad is full
+at the pinned native compatibility level.
 Color and font-family options now follow the pinned Mermaid allowlists before
 entering semantic IR: supported CSS colors and portable family lists survive,
 while unsafe or malformed values fall back to the resolved theme defaults.
