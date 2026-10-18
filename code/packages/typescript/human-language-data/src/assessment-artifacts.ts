@@ -42,11 +42,12 @@
 // thirteen independent authors closing thirteen independent debts must not
 // collide on one file.
 // ---------------------------------------------------------------------------
-import { readdirSync } from "node:fs";
-import { join, resolve } from "node:path";
+import { readdirSync, realpathSync } from "node:fs";
+import { isAbsolute, join, relative, resolve, sep } from "node:path";
 
 import type { AssessmentContract, AssessmentSkill } from "./assessment.js";
 import { artifactExists, type StatProbe } from "./artifact-presence.js";
+import { checkPaperOmissions, type PaperOmissionDiagnosticKind } from "./assessment-paper-omissions.js";
 import { defaultCurriculumRoot, loadAssessmentContracts } from "./loader.js";
 import { readLedgerFile } from "./shard.js";
 
@@ -121,6 +122,7 @@ export function collectArtifactReferences(contract: AssessmentContract): Artifac
       });
     }
     for (const mock of level.fullMocks) {
+      if (mock.paper !== undefined) add(`${level.level}.fullMocks[${mock.id}].paper`, mock.paper);
       add(`${level.level}.fullMocks[${mock.id}].rubric`, mock.rubric);
       add(`${level.level}.fullMocks[${mock.id}].answerKey`, mock.answerKey);
       if (mock.humanValidation !== undefined) {
@@ -141,6 +143,7 @@ export function collectArtifactReferences(contract: AssessmentContract): Artifac
       });
     }
     for (const mock of capstone.fullMocks) {
+      if (mock.paper !== undefined) add(`capstone[${capstone.id}].fullMocks[${mock.id}].paper`, mock.paper);
       add(`capstone[${capstone.id}].fullMocks[${mock.id}].rubric`, mock.rubric);
       add(`capstone[${capstone.id}].fullMocks[${mock.id}].answerKey`, mock.answerKey);
       if (mock.humanValidation !== undefined) {
@@ -173,9 +176,22 @@ export function auditTrackArtifacts(
   const references = collectArtifactReferences(contract);
   const present: string[] = [];
   const missing: string[] = [];
+  const canonicalTrack = resolve(realpathSync(root), language);
   for (const path of [...new Set(references.map((reference) => reference.path))].sort()) {
-    if (artifactExists(join(root, language, path), probe)) present.push(path);
-    else missing.push(path);
+    const target = join(root, language, path);
+    if (!artifactExists(target, probe)) {
+      missing.push(path);
+      continue;
+    }
+    // `lstat` protects the final file, but cannot see a symlinked ancestor.
+    // Resolve the whole chain before accepting the artifact as THIS track's
+    // evidence; a junction from `mocks/` to a sibling or outside directory
+    // otherwise makes an unrelated paper satisfy the contract.
+    const fromTrack = relative(canonicalTrack, realpathSync(target));
+    if (fromTrack === ".." || fromTrack.startsWith(`..${sep}`) || isAbsolute(fromTrack)) {
+      throw new Error(`assessment artifacts: '${target}' resolves outside the track directory`);
+    }
+    present.push(path);
   }
   return { language, references, present, missing };
 }
@@ -283,7 +299,9 @@ export type ArtifactDiagnosticKind =
   /** A pin file for a track with no contract, or none at all. */
   | "stale-ceiling-file"
   /** The audit examined nothing. A gate that cannot see is not a gate that passed. */
-  | "audit-went-blind";
+  | "audit-went-blind"
+  | "paper-may-not-be-pinned"
+  | PaperOmissionDiagnosticKind;
 
 export interface ArtifactDiagnostic {
   kind: ArtifactDiagnosticKind;
@@ -296,6 +314,8 @@ export interface ArtifactCheckResult {
   diagnostics: ArtifactDiagnostic[];
   /** Pinned, still-unbuilt artifacts — printed on success so a green run says a number. */
   pinnedUnbuilt: number;
+  /** Legacy mock identities still lacking an explicit paper declaration. */
+  pinnedPaperOmissions: number;
 }
 
 /**
@@ -326,7 +346,7 @@ export function checkAssessmentArtifacts(
         `audited ${report.summary.tracksAudited} contract(s) and ${report.summary.referencesChecked} ` +
         `reference(s). A run that inspects nothing cannot pass.`,
     });
-    return { report, diagnostics, pinnedUnbuilt: 0 };
+    return { report, diagnostics, pinnedUnbuilt: 0, pinnedPaperOmissions: 0 };
   }
 
   let pinnedUnbuilt = 0;
@@ -338,6 +358,18 @@ export function checkAssessmentArtifacts(
     const ceiling = readCeiling(root, track.language);
     const pinned = new Set(ceiling?.unbuiltArtifacts ?? []);
     const missing = new Set(track.missing);
+    const paperPaths = new Set(track.references
+      .filter((reference) => reference.where.endsWith(".paper"))
+      .map((reference) => reference.path));
+
+    for (const path of paperPaths) {
+      if (pinned.has(path)) diagnostics.push({
+        kind: "paper-may-not-be-pinned",
+        language: track.language,
+        message: `${ARTIFACT_CEILING_DIR}/${track.language}.json pins paper '${path}'. ` +
+          "Full-mock papers are new evidence and may not enlarge the grandfathered artifact ceiling.",
+      });
+    }
 
     for (const path of track.missing) {
       if (pinned.has(path)) {
@@ -409,7 +441,9 @@ export function checkAssessmentArtifacts(
   // diagnostic per path, which is the right granularity: the author needs the
   // list of files, not the fact that a file is absent.
 
-  return { report, diagnostics, pinnedUnbuilt };
+  const papers = checkPaperOmissions(root, loadAssessmentContracts(root));
+  diagnostics.push(...papers.diagnostics);
+  return { report, diagnostics, pinnedUnbuilt, pinnedPaperOmissions: papers.pinnedOmissions };
 }
 
 /** One line per track plus a corpus total — the positive reading a green run must print. */
@@ -422,6 +456,7 @@ export function renderArtifactCheck(result: ArtifactCheckResult): string[] {
       `${report.summary.distinctArtifactsDeclared} distinct artifact(s) declared`,
     `  ${report.summary.distinctArtifactsMissing} unbuilt across ` +
       `${report.summary.tracksWithMissingArtifacts} track(s); ${result.pinnedUnbuilt} of them pinned`,
+    `  ${result.pinnedPaperOmissions} legacy full mock(s) still omit a paper declaration`,
   ];
   for (const track of report.tracks) {
     lines.push(

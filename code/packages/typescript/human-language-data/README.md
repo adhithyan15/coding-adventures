@@ -21,6 +21,14 @@ prints the current registry-ordered table on demand without rewriting tracked
 documentation; CI runs `npm run check:progress` so the 23 retired progress-card
 rollups cannot return.
 
+Full assessment mocks name a learner-facing `paper` separately from their
+rubric and answer key. `npm run check:assessment-artifacts` verifies every
+declared file, rejects path and symlink escapes, and keeps legacy paper
+omissions visible in exact per-track pins under
+`core/assessment-paper-omission-ceiling/`. These pins cannot grow; an omitted
+paper is unfinished evidence, not exam readiness. See the
+[full-mock paper contract](docs/feature-contracts/full-mock-paper-artifacts.md).
+
 ```
 lessons/*.md frontmatter    ─┐
 <track>/curriculum.d/**/*   ─┤

@@ -13,8 +13,8 @@
       },
       "writingStages": ["observe-trace", "guided-copy", "delayed-copy", "dictation-transcription"],
       "fullMocks": [
-        { "id": "pre-a1-mock-1", "timed": true, "rubric": "mocks/pre-a1/rubric.md", "answerKey": "mocks/pre-a1/mock-1-answer-key.md" },
-        { "id": "pre-a1-mock-2", "timed": true, "rubric": "mocks/pre-a1/rubric.md", "answerKey": "mocks/pre-a1/mock-2-answer-key.md" }
+        { "id": "pre-a1-mock-1", "timed": true, "paper": "mocks/pre-a1/mock-1.md", "rubric": "mocks/pre-a1/rubric.md", "answerKey": "mocks/pre-a1/mock-1-answer-key.md" },
+        { "id": "pre-a1-mock-2", "timed": true, "paper": "mocks/pre-a1/mock-2.md", "rubric": "mocks/pre-a1/rubric.md", "answerKey": "mocks/pre-a1/mock-2-answer-key.md" }
       ]
     },
     {
@@ -28,8 +28,8 @@
       },
       "writingStages": ["observe-trace", "guided-copy", "delayed-copy", "dictation-transcription", "controlled-composition", "timed-assessment-production"],
       "fullMocks": [
-        { "id": "a1-mock-1", "timed": true, "rubric": "mocks/a1/rubric.md", "answerKey": "mocks/a1/mock-1-answer-key.md" },
-        { "id": "a1-mock-2", "timed": true, "rubric": "mocks/a1/rubric.md", "answerKey": "mocks/a1/mock-2-answer-key.md" }
+        { "id": "a1-mock-1", "timed": true, "paper": "mocks/a1/mock-1.md", "rubric": "mocks/a1/rubric.md", "answerKey": "mocks/a1/mock-1-answer-key.md" },
+        { "id": "a1-mock-2", "timed": true, "paper": "mocks/a1/mock-2.md", "rubric": "mocks/a1/rubric.md", "answerKey": "mocks/a1/mock-2-answer-key.md" }
       ]
     },
     {
@@ -43,8 +43,8 @@
       },
       "writingStages": ["observe-trace", "guided-copy", "delayed-copy", "dictation-transcription", "controlled-composition", "connected-composition", "timed-assessment-production"],
       "fullMocks": [
-        { "id": "a2-mock-1", "timed": true, "rubric": "mocks/a2/rubric.md", "answerKey": "mocks/a2/mock-1-answer-key.md" },
-        { "id": "a2-mock-2", "timed": true, "rubric": "mocks/a2/rubric.md", "answerKey": "mocks/a2/mock-2-answer-key.md" }
+        { "id": "a2-mock-1", "timed": true, "paper": "mocks/a2/mock-1.md", "rubric": "mocks/a2/rubric.md", "answerKey": "mocks/a2/mock-1-answer-key.md" },
+        { "id": "a2-mock-2", "timed": true, "paper": "mocks/a2/mock-2.md", "rubric": "mocks/a2/rubric.md", "answerKey": "mocks/a2/mock-2-answer-key.md" }
       ]
     },
     {
@@ -58,8 +58,8 @@
       },
       "writingStages": ["observe-trace", "guided-copy", "delayed-copy", "dictation-transcription", "controlled-composition", "connected-composition", "timed-assessment-production"],
       "fullMocks": [
-        { "id": "b1-mock-1", "timed": true, "rubric": "mocks/b1/rubric.md", "answerKey": "mocks/b1/mock-1-answer-key.md" },
-        { "id": "b1-mock-2", "timed": true, "rubric": "mocks/b1/rubric.md", "answerKey": "mocks/b1/mock-2-answer-key.md" }
+        { "id": "b1-mock-1", "timed": true, "paper": "mocks/b1/mock-1.md", "rubric": "mocks/b1/rubric.md", "answerKey": "mocks/b1/mock-1-answer-key.md" },
+        { "id": "b1-mock-2", "timed": true, "paper": "mocks/b1/mock-2.md", "rubric": "mocks/b1/rubric.md", "answerKey": "mocks/b1/mock-2-answer-key.md" }
       ]
     },
     {
@@ -73,8 +73,8 @@
       },
       "writingStages": ["observe-trace", "guided-copy", "delayed-copy", "dictation-transcription", "controlled-composition", "connected-composition", "timed-assessment-production"],
       "fullMocks": [
-        { "id": "b2-mock-1", "timed": true, "rubric": "mocks/b2/rubric.md", "answerKey": "mocks/b2/mock-1-answer-key.md" },
-        { "id": "b2-mock-2", "timed": true, "rubric": "mocks/b2/rubric.md", "answerKey": "mocks/b2/mock-2-answer-key.md" }
+        { "id": "b2-mock-1", "timed": true, "paper": "mocks/b2/mock-1.md", "rubric": "mocks/b2/rubric.md", "answerKey": "mocks/b2/mock-1-answer-key.md" },
+        { "id": "b2-mock-2", "timed": true, "paper": "mocks/b2/mock-2.md", "rubric": "mocks/b2/rubric.md", "answerKey": "mocks/b2/mock-2-answer-key.md" }
       ]
     },
     {
@@ -88,8 +88,8 @@
       },
       "writingStages": ["observe-trace", "guided-copy", "delayed-copy", "dictation-transcription", "controlled-composition", "connected-composition", "timed-assessment-production"],
       "fullMocks": [
-        { "id": "c1-mock-1", "timed": true, "rubric": "mocks/c1/rubric.md", "answerKey": "mocks/c1/mock-1-answer-key.md" },
-        { "id": "c1-mock-2", "timed": true, "rubric": "mocks/c1/rubric.md", "answerKey": "mocks/c1/mock-2-answer-key.md" }
+        { "id": "c1-mock-1", "timed": true, "paper": "mocks/c1/mock-1.md", "rubric": "mocks/c1/rubric.md", "answerKey": "mocks/c1/mock-1-answer-key.md" },
+        { "id": "c1-mock-2", "timed": true, "paper": "mocks/c1/mock-2.md", "rubric": "mocks/c1/rubric.md", "answerKey": "mocks/c1/mock-2-answer-key.md" }
       ]
     },
     {
@@ -103,8 +103,8 @@
       },
       "writingStages": ["observe-trace", "guided-copy", "delayed-copy", "dictation-transcription", "controlled-composition", "connected-composition", "timed-assessment-production"],
       "fullMocks": [
-        { "id": "c2-mock-1", "timed": true, "rubric": "mocks/c2/rubric.md", "answerKey": "mocks/c2/mock-1-answer-key.md" },
-        { "id": "c2-mock-2", "timed": true, "rubric": "mocks/c2/rubric.md", "answerKey": "mocks/c2/mock-2-answer-key.md" }
+        { "id": "c2-mock-1", "timed": true, "paper": "mocks/c2/mock-1.md", "rubric": "mocks/c2/rubric.md", "answerKey": "mocks/c2/mock-1-answer-key.md" },
+        { "id": "c2-mock-2", "timed": true, "paper": "mocks/c2/mock-2.md", "rubric": "mocks/c2/rubric.md", "answerKey": "mocks/c2/mock-2-answer-key.md" }
       ]
     }
   ]

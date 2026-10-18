@@ -29,6 +29,8 @@ export interface AssessmentPolicy {
 export interface AssessmentFullMock {
   id: string;
   timed: boolean;
+  /** The learner-facing question paper. Legacy omissions are separately pinned debt. */
+  paper?: string;
   rubric: string;
   answerKey: string;
   /**
@@ -293,17 +295,27 @@ export function parseAssessmentContract(
     const fullMocks = item.fullMocks.map((mock, mockIndex) => {
       const mockRaw = object(mock, `${expectedLanguage}.${current}.fullMocks[${mockIndex}]`);
       if (mockRaw.timed !== true) throw new Error(`assessment: ${expectedLanguage}.${current} mock must be timed`);
+      const paper = mockRaw.paper === undefined
+        ? undefined
+        : artifactReference(mockRaw.paper, `${expectedLanguage}.${current}.fullMocks[${mockIndex}].paper`);
       const humanValidation = mockRaw.humanValidation === undefined
         ? undefined
         : artifactReference(
             mockRaw.humanValidation,
             `${expectedLanguage}.${current}.fullMocks[${mockIndex}].humanValidation`,
           );
+      const rubric = artifactReference(mockRaw.rubric, `${expectedLanguage}.${current}.mock.rubric`);
+      const answerKey = artifactReference(mockRaw.answerKey, `${expectedLanguage}.${current}.mock.answerKey`);
+      if (paper !== undefined && [rubric, answerKey].some((reference) =>
+        reference.split("#", 1)[0] === paper.split("#", 1)[0])) {
+        throw new Error(`assessment: ${expectedLanguage}.${current}.fullMocks[${mockIndex}].paper must be distinct from rubric and answerKey`);
+      }
       return {
         id: nonEmpty(mockRaw.id, `${expectedLanguage}.${current}.mock.id`),
         timed: true,
-        rubric: artifactReference(mockRaw.rubric, `${expectedLanguage}.${current}.mock.rubric`),
-        answerKey: artifactReference(mockRaw.answerKey, `${expectedLanguage}.${current}.mock.answerKey`),
+        ...(paper === undefined ? {} : { paper }),
+        rubric,
+        answerKey,
         ...(humanValidation === undefined ? {} : { humanValidation }),
       };
     });
@@ -406,14 +418,24 @@ export function parseAssessmentContract(
     const fullMocks = item.fullMocks.map((mock, mockIndex) => {
       const mockRaw = object(mock, `${where}.fullMocks[${mockIndex}]`);
       if (mockRaw.timed !== true) throw new Error(`assessment: ${where} mock must be timed`);
+      const paper = mockRaw.paper === undefined
+        ? undefined
+        : artifactReference(mockRaw.paper, `${where}.fullMocks[${mockIndex}].paper`);
       const humanValidation = mockRaw.humanValidation === undefined
         ? undefined
         : artifactReference(mockRaw.humanValidation, `${where}.fullMocks[${mockIndex}].humanValidation`);
+      const rubric = artifactReference(mockRaw.rubric, `${where}.fullMocks[${mockIndex}].rubric`);
+      const answerKey = artifactReference(mockRaw.answerKey, `${where}.fullMocks[${mockIndex}].answerKey`);
+      if (paper !== undefined && [rubric, answerKey].some((reference) =>
+        reference.split("#", 1)[0] === paper.split("#", 1)[0])) {
+        throw new Error(`assessment: ${where}.fullMocks[${mockIndex}].paper must be distinct from rubric and answerKey`);
+      }
       return {
         id: nonEmpty(mockRaw.id, `${where}.fullMocks[${mockIndex}].id`),
         timed: true,
-        rubric: artifactReference(mockRaw.rubric, `${where}.fullMocks[${mockIndex}].rubric`),
-        answerKey: artifactReference(mockRaw.answerKey, `${where}.fullMocks[${mockIndex}].answerKey`),
+        ...(paper === undefined ? {} : { paper }),
+        rubric,
+        answerKey,
         ...(humanValidation === undefined ? {} : { humanValidation }),
       };
     });

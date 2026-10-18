@@ -286,6 +286,7 @@ export function listExternalExamCapstones(root = defaultCurriculumRoot()): Exter
         ...Object.values(capstone.skills).flatMap((skill) => skill.taskInventory),
         ...Object.values(capstone.additionalComponents).flatMap((component) => component.taskInventory),
         ...capstone.fullMocks.flatMap((mock) => [
+          ...(mock.paper === undefined ? [] : [mock.paper]),
           mock.rubric,
           mock.answerKey,
           ...(mock.humanValidation === undefined ? [] : [mock.humanValidation]),
@@ -294,8 +295,12 @@ export function listExternalExamCapstones(root = defaultCurriculumRoot()): Exter
       // `artifactExists`, not `existsSync`: an EACCES here would have reported a
       // capstone's artifacts as missing on the strength of never having looked.
       const missingDeclarations = capstone.fullMocks
-        .filter((mock) => mock.humanValidation === undefined)
-        .map((mock) => `fullMocks[${mock.id}].humanValidation (not declared)`);
+        .flatMap((mock) => [
+          ...(mock.paper === undefined ? [`fullMocks[${mock.id}].paper (not declared)`] : []),
+          ...(mock.humanValidation === undefined
+            ? [`fullMocks[${mock.id}].humanValidation (not declared)`]
+            : []),
+        ]);
       const missingArtifacts = [...new Set([
         ...missingDeclarations,
         ...references
