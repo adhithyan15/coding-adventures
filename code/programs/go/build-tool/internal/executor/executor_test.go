@@ -1393,3 +1393,79 @@ func TestPruneLeafCargoTarget(t *testing.T) {
 		t.Error("a symlinked target/ must not be followed or removed")
 	}
 }
+
+func TestBuildResourceKeysSerializeEveryOpamSwitchUser(t *testing.T) {
+	root := makeFixture(t, map[string]string{"pkg/BUILD": "true"})
+	paths := map[string]string{filepath.Join(root, "pkg"): "pkg"}
+
+	for _, tc := range []struct {
+		name     string
+		language string
+		command  string
+		want     bool
+	}{
+		// Any OCaml package, even one whose first command is plain dune: it
+		// still compiles against the shared switch.
+		{"ocaml dune", "ocaml", "dune build", true},
+		{"ocaml opam install", "ocaml", "opam install . --deps-only --with-test -y", true},
+		{"opam exec after cd", "python", "cd fixture && opam exec -- dune runtest", true},
+		{"opam in a subshell", "go", "(opam pin add --no-action -y x ../x)", true},
+		{"word containing opam", "python", "python check_opamfile.py", false},
+		{"path containing opam", "rust", "cargo test -p opam-lockfile-parser", false},
+	} {
+		t.Run(tc.name, func(t *testing.T) {
+			pkg := discovery.Package{
+				Name:          "pkg",
+				Path:          filepath.Join(root, "pkg"),
+				BuildCommands: []string{tc.command},
+				Language:      tc.language,
+			}
+			got := false
+			for _, key := range buildResourceKeys(pkg, paths) {
+				got = got || key == OpamSwitchLockKey
+			}
+			if got != tc.want {
+				t.Fatalf("opam-switch lock for %q (%s) = %v, want %v", tc.command, tc.language, got, tc.want)
+			}
+		})
+	}
+}
+
+// TestExecuteBuildsRunsOCamlOneAtATimeAndEverythingElseAlongside pins the
+// opam-switch lock where it matters -- in ExecuteBuilds -- rather than only in
+// the key helper. Each OCaml package claims a mkdir mutex that fails if the
+// other already holds it, so concurrent OCaml builds fail. The Python
+// package succeeds only if it sees the marker an OCaml build holds while it
+// runs, so a return to whole-run serialization (CI's old `-jobs 1`) fails too.
+func TestExecuteBuildsRunsOCamlOneAtATimeAndEverythingElseAlongside(t *testing.T) {
+	if runtime.GOOS == "windows" {
+		t.Skip("uses shell commands that are only asserted on Unix runners")
+	}
+
+	shared := t.TempDir()
+	ocaml := "mkdir " + shared + "/switch && touch " + shared + "/seen && sleep 1 && rm " + shared + "/seen && rmdir " + shared + "/switch"
+	python := "for i in $(seq 1 50); do [ -e " + shared + "/seen ] && exit 0; sleep 0.1; done; exit 1"
+	root := makeFixture(t, map[string]string{
+		"a/BUILD": ocaml,
+		"b/BUILD": ocaml,
+		"c/BUILD": python,
+	})
+	packages := []discovery.Package{
+		{Name: "ocaml/a", Path: filepath.Join(root, "a"), BuildCommands: []string{ocaml}, Language: "ocaml"},
+		{Name: "ocaml/b", Path: filepath.Join(root, "b"), BuildCommands: []string{ocaml}, Language: "ocaml"},
+		{Name: "python/c", Path: filepath.Join(root, "c"), BuildCommands: []string{python}, Language: "python"},
+	}
+	graph := directedgraph.New()
+	hashes := map[string]string{}
+	for _, pkg := range packages {
+		graph.AddNode(pkg.Name)
+		hashes[pkg.Name] = pkg.Name
+	}
+
+	results := ExecuteBuilds(packages, graph, cache.New(), hashes, hashes, true, false, 3, nil, nil, false)
+	for _, pkg := range packages {
+		if results[pkg.Name].Status != "built" {
+			t.Fatalf("%s: %s (stderr: %s)", pkg.Name, results[pkg.Name].Status, results[pkg.Name].Stderr)
+		}
+	}
+}

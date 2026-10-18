@@ -1015,6 +1015,20 @@ func buildResourceKeysForOS(pkg discovery.Package, pathToPkg map[string]string, 
 			keys["global:cabal-store"] = true
 		}
 
+		if pkg.Language == "ocaml" || opamCommandRe.MatchString(command) {
+			// opam keeps ONE switch under ~/.opam, and OCaml BUILDs both
+			// mutate it (`opam pin add`, `opam install --deps-only`) and read
+			// it for the rest of the build (`opam exec -- dune runtest`). Two
+			// at once can install over a switch another package is compiling
+			// against. Every OCaml package takes the lock for its whole build,
+			// so OCaml packages run one at a time while the rest of the shard
+			// keeps every worker. This replaces CI's old `-jobs 1` whenever an
+			// OCaml switch was active, which serialized ~1,000 unrelated
+			// packages on every shard that happened to hold one OCaml package
+			// and ran them past the 150-minute ceiling (#17631; OCAML05).
+			keys[OpamSwitchLockKey] = true
+		}
+
 		if (pkg.Language == "csharp" || pkg.Language == "fsharp") && strings.Contains(command, "dotnet ") {
 			// NuGet first-run migrations use global process mutex state outside
 			// DOTNET_CLI_HOME. Parallel dotnet package builds can race there on CI.
@@ -1036,6 +1050,16 @@ func buildResourceKeysForOS(pkg discovery.Package, pathToPkg map[string]string, 
 	}
 	return result
 }
+
+// OpamSwitchLockKey is the resource lock every opam-touching build holds.
+// code/scripts/ocaml_toolchain_lock.py pins this name: CI runs OCaml in
+// parallel with other languages only because this lock exists.
+const OpamSwitchLockKey = "global:opam-switch"
+
+// opamCommandRe matches `opam` as a command word, so a non-OCaml BUILD that
+// drives opam (a scaffold fixture, say) is serialized with the OCaml ones,
+// while a path or name merely containing "opam" is not.
+var opamCommandRe = regexp.MustCompile(`(^|[\s;&|(])opam(\s|$)`)
 
 func isGradleCommand(command string) bool {
 	trimmed := strings.TrimSpace(command)
