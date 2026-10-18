@@ -17,8 +17,8 @@
       },
       "writingStages": ["observe-trace", "guided-copy", "delayed-copy", "dictation-transcription"],
       "fullMocks": [
-        { "id": "pre-a1-mock-1", "timed": true, "rubric": "mocks/pre-a1/rubric.md", "answerKey": "mocks/pre-a1/mock-1-answer-key.md" },
-        { "id": "pre-a1-mock-2", "timed": true, "rubric": "mocks/pre-a1/rubric.md", "answerKey": "mocks/pre-a1/mock-2-answer-key.md" }
+        { "id": "pre-a1-mock-1", "timed": true, "paper": "mocks/pre-a1/mock-1-paper.md", "rubric": "mocks/pre-a1/mock-1-rubric.md", "answerKey": "mocks/pre-a1/mock-1-answer-key.md", "manifest": "mocks/pre-a1/mock-1-manifest.json" },
+        { "id": "pre-a1-mock-2", "timed": true, "paper": "mocks/pre-a1/mock-2-paper.md", "rubric": "mocks/pre-a1/mock-2-rubric.md", "answerKey": "mocks/pre-a1/mock-2-answer-key.md", "manifest": "mocks/pre-a1/mock-2-manifest.json" }
       ]
     },
     {
