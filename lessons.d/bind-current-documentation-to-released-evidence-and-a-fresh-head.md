@@ -16,3 +16,8 @@ preimages immediately before the first write. Update the bounded current
 backlog attribution while preserving older checkpoint bytes under a clear
 historical label. Keep v1 and its refusal unexecuted and separate from any
 reviewed successor; later documentation must not claim new Rust execution.
+
+An inline PowerShell/Python successor-runner preparer then failed shell parsing
+before Python or file writes. The replacement is a saved Python script with
+ordinary literal strings and an exact inverse check. Keep multiline generated
+code out of nested shell quoting; execute the reviewed file by its path.
