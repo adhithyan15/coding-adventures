@@ -18,12 +18,12 @@ fn current_main_finite_twenty_one_units_preserves_seventeen_and_eighteen() {
 
 #[test]
 fn current_main_twenty_two_units_still_refuses_at_typed_output_boundary() {
-    let error = compile_source(&source(26), "integration").unwrap_err();
+    let error = compile_source(&source(32), "integration").unwrap_err();
     assert!(
         matches!(&error, CompileError::Type(message) if message == "standard output procedure \"output\" cannot print a real value"),
         "{error:?}"
     );
-    println!("CV04_MAIN_NATIVE_REFUSE 26");
+    println!("CV04_MAIN_NATIVE_REFUSE 32");
 }
 
 #[test]
