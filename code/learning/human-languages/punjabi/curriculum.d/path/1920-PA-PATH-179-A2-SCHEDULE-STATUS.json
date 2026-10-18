@@ -1,0 +1,9 @@
+{
+  "id": "PA-PATH-179-A2-SCHEDULE-STATUS",
+  "spine_node": "SPINE-READ-PRACTICAL-TEXTS",
+  "before": [],
+  "inline": [
+    "PA-EXT-179-A2-SCHEDULE-STATUS"
+  ],
+  "after": []
+}
