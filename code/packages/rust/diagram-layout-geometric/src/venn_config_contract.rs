@@ -73,7 +73,7 @@ fn venn_complete_two_set_geometry_and_boolean_transport_are_exact() {
                 LayoutedVennLabel {font_size:12.0, text: "Alpha".into(), x: 276.25, y: 150.0, style: Default::default() },
                 LayoutedVennLabel {font_size:12.0, text: "B".into(), x: 123.75, y: 150.0, style: Default::default() },
                 LayoutedVennLabel {font_size:12.0, text: "AB".into(), x: 200.0, y: 150.0, style: Default::default() },
-                LayoutedVennLabel {font_size:10.0, text: "Both".into(), x: 200.0, y: 170.0, style: Default::default() }], debug_circles: if debug {vec![LayoutedVennDebugCircle {cx:200.0,cy:150.0,radius:22.5}]} else {vec![]},
+                LayoutedVennLabel {font_size:10.0, text: "Both".into(), x: 200.0, y: 163.125, style: Default::default() }], debug_circles: if debug {vec![LayoutedVennDebugCircle {cx:200.0,cy:150.0,radius:22.5}]} else {vec![]},
             debug_cells: if debug {vec![LayoutedVennDebugCell {x:178.625,y:141.75,width:42.75,height:42.75}]} else {vec![]} };
         assert_eq!(try_layout_venn(&d), Ok(expected.clone()));
         assert_eq!(layout_venn(&d), expected);
@@ -87,7 +87,7 @@ fn venn_admitted_padding_is_retained_while_placement_uses_canvas_quarter() {
     assert_eq!(g.config, d.config);
     assert_eq!((g.circles[0].cx, g.circles[1].cx, g.circles[0].radius), (224.0, 176.0, 37.5));
     assert_eq!(g.labels.iter().map(|l| (l.x,l.y)).collect::<Vec<_>>(),
-        vec![(245.75,150.0),(154.25,150.0),(200.0,150.0),(200.0,170.0)]);
+        vec![(245.75,150.0),(154.25,150.0),(200.0,150.0),(200.0,160.875)]);
     for value in [f64::MIN_POSITIVE, 1.0, MAX_VENN_CANVAS] {
         for title in [None, Some("Small".into())] {
             d.config.width=value; d.config.height=value; d.config.padding=0.0; d.title=title;

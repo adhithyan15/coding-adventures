@@ -20,7 +20,8 @@ fn venn_typography_sources_have_complete_scenes_and_ordered_queries() {
             instructions.push(glyph('A',left_label,cy-12.0,set_size,if authored {"rgb(255, 0, 0)"} else {"rgb(15, 23, 42)"}));
             instructions.push(glyph('B',right_label,cy-12.0,set_size,"rgb(15, 23, 42)"));
             instructions.push(glyph('U',width/2.0,cy-12.0,set_size,"rgb(15, 23, 42)"));
-            instructions.push(glyph('N',width/2.0,cy+8.0,text_size,if authored {"rgb(0, 255, 0)"} else {"rgb(15, 23, 42)"}));
+            let normal_y=match (width,titled) { (400.0,false)=>163.125,(800.0,false)=>170.625,(1600.0,false)=>185.625,(400.0,true)=>f64::from_bits(0x40666b851eb851eb),(800.0,true)=>f64::from_bits(0x40675b851eb851eb),(1600.0,true)=>f64::from_bits(0x40693b851eb851ec),_=>panic!("undeclared old source fixture") };
+            instructions.push(glyph('N',width/2.0,normal_y-12.0,text_size,if authored {"rgb(0, 255, 0)"} else {"rgb(15, 23, 42)"}));
             let expected=PaintScene {width,height:300.0,background:"rgb(255,255,255)".into(),instructions,id:None,metadata:Some(venn_debug_metadata(width,300.0,25.0,false,family,&palette))};
             let resolver=VennDebugRecordingResolver(std::cell::RefCell::new(vec![]));
             let defaults=make_opts(&FakeShaper,&FakeMetrics,&FakeResolver);

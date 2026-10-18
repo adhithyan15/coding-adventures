@@ -13715,6 +13715,7 @@ emphasized --> direct
                 let parsed=mermaid_parser::parse_venn(&source).unwrap();
                 assert_eq!(parsed.config,config,"complete source config: {source}");
                 let actual_layout=diagram_layout_geometric::try_layout_venn(&parsed).unwrap();
+                let normal_y=if titled {f64::from_bits(0x40666b851eb851eb)} else {163.125};
                 let (cx_a,cx_b,cy,radius,label_a,label_b)=if titled {(234.56,165.44,167.0,54.0,265.88,134.12)}
                     else {(240.0,160.0,150.0,62.5,276.25,123.75)};
                 let special=diagram_ir::VennStyle {fill:Some("#ff0000".into()),stroke:Some("#123456".into()),
@@ -13725,7 +13726,7 @@ emphasized --> direct
                     labels:vec![diagram_ir::LayoutedVennLabel {font_size:12.0,text:"A".into(),x:label_a,y:cy,style:special},
                         diagram_ir::LayoutedVennLabel {font_size:12.0,text:"B".into(),x:label_b,y:cy,style:Default::default()},
                         diagram_ir::LayoutedVennLabel {font_size:12.0,text:"U".into(),x:200.0,y:cy,style:Default::default()},
-                        diagram_ir::LayoutedVennLabel {font_size:10.0,text:"N".into(),x:200.0,y:cy+20.0,style:Default::default()}],debug_circles:vec![],debug_cells:vec![]};
+                        diagram_ir::LayoutedVennLabel {font_size:10.0,text:"N".into(),x:200.0,y:normal_y,style:Default::default()}],debug_circles:vec![],debug_cells:vec![]};
                 assert_eq!(actual_layout,layout,"complete checked layout transport");
                 let resolver=RecordingResolver(RefCell::new(Vec::new()));
                 let defaults=make_opts(&FakeShaper,&FakeMetrics,&FakeResolver);
@@ -13741,7 +13742,7 @@ emphasized --> direct
                     glyphs:vec![GlyphPosition {glyph_id:c as u32,x,y}],font_ref:"fake:test".into(),font_size:size,fill:Some(fill.into())});
                 if titled {instructions.push(glyph('T',config.width/2.0-4.5,19.4,18.0,"rgb(17, 34, 51)"));}
                 for (c,x,y,color) in [('A',label_a-3.5,cy,if authored {"rgb(255, 0, 0)"} else {"rgb(68, 85, 102)"}),
-                    ('B',label_b-3.5,cy,"rgb(68, 85, 102)"),('U',196.5,cy,"rgb(68, 85, 102)"),('N',196.5,cy+20.0,"rgb(68, 85, 102)")] {
+                    ('B',label_b-3.5,cy,"rgb(68, 85, 102)"),('U',196.5,cy,"rgb(68, 85, 102)"),('N',196.5,normal_y,"rgb(68, 85, 102)")] {
                     instructions.push(glyph(c,x,y-12.0+11.2,14.0,color));
                 }
                 let mut expected=PaintScene {width:config.width,height:config.height,background:"rgb(255,255,255)".into(),instructions,id:None,
@@ -13791,6 +13792,7 @@ emphasized --> direct
                 let parsed=mermaid_parser::parse_venn(&source).unwrap();
                 assert_eq!(parsed.config,config,"complete source config: {source}");
                 let actual_layout=diagram_layout_geometric::try_layout_venn(&parsed).unwrap();
+                let normal_y=if titled {f64::from_bits(0x40666b851eb851eb)} else {163.125};
                 let (cx_a,cx_b,cy,radius,label_a,label_b)=if titled {(234.56,165.44,167.0,54.0,265.88,134.12)}
                     else {(240.0,160.0,150.0,62.5,276.25,123.75)};
                 let special=diagram_ir::VennStyle {fill:authored.then(||"#ff0000".into()),stroke:Some("#123456".into()),
@@ -13801,7 +13803,7 @@ emphasized --> direct
                     labels:vec![diagram_ir::LayoutedVennLabel {font_size:12.0,text:"A".into(),x:label_a,y:cy,style:special},
                         diagram_ir::LayoutedVennLabel {font_size:12.0,text:"B".into(),x:label_b,y:cy,style:Default::default()},
                         diagram_ir::LayoutedVennLabel {font_size:12.0,text:"U".into(),x:200.0,y:cy,style:Default::default()},
-                        diagram_ir::LayoutedVennLabel {font_size:10.0,text:"N".into(),x:200.0,y:cy+20.0,style:Default::default()}],debug_circles:vec![],debug_cells:vec![]};
+                        diagram_ir::LayoutedVennLabel {font_size:10.0,text:"N".into(),x:200.0,y:normal_y,style:Default::default()}],debug_circles:vec![],debug_cells:vec![]};
                 assert_eq!(actual_layout,layout,"complete checked layout transport");
                 let resolver=RecordingResolver(RefCell::new(Vec::new()));
                 let defaults=make_opts(&FakeShaper,&FakeMetrics,&FakeResolver);
@@ -13817,7 +13819,7 @@ emphasized --> direct
                     glyphs:vec![GlyphPosition {glyph_id:c as u32,x,y}],font_ref:"fake:test".into(),font_size:size,fill:Some(fill.into())});
                 if titled {instructions.push(glyph('T',config.width/2.0-4.5,19.4,18.0,"rgb(17, 34, 51)"));}
                 for (c,x,y,color) in [('A',label_a-3.5,cy,if authored {"rgb(255, 0, 0)"} else {"rgb(68, 85, 102)"}),
-                    ('B',label_b-3.5,cy,"rgb(68, 85, 102)"),('U',196.5,cy,"rgb(68, 85, 102)"),('N',196.5,cy+20.0,"rgb(68, 85, 102)")] {
+                    ('B',label_b-3.5,cy,"rgb(68, 85, 102)"),('U',196.5,cy,"rgb(68, 85, 102)"),('N',196.5,normal_y,"rgb(68, 85, 102)")] {
                     instructions.push(glyph(c,x,y-12.0+11.2,14.0,color));
                 }
                 let mut expected=PaintScene {width:config.width,height:config.height,background:"rgb(255,255,255)".into(),instructions,id:None,
