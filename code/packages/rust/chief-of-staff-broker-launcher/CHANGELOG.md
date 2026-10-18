@@ -2,6 +2,28 @@
 
 ## Unreleased
 
+### Added
+
+- **The broker on Windows** (D18S P2.8b-2).
+  - `BrokerProgram::new(broker)` exists on Windows, as on Linux, with no
+    shim.
+  - `launch` on Windows prepares the broker with
+    `WindowsConfinement::prepare_verified_broker`, under `broker_plan()`
+    for `OsFamily::Windows`. The broker runs in its own
+    `chief-of-staff-broker.<hex>` AppContainer. Its key files are opened
+    owner-only and passed as handles on the applier's handle list, named
+    in `CHIEF_OF_STAFF_HANDLES` in slot order. The steps run in the same
+    order as on Linux and macOS: secret directories, slots, confinement,
+    keys, spawn, Bootstrap, the `Ready` check.
+  - `BrokerChild` is the running broker on every OS: std's `Child` on
+    Unix, the applier's `ConfinedChild` on Windows. It offers `id`,
+    `has_exited` (seen without reaping) and `end` (kill, then reap; on
+    Windows, end the job and wait up to ten seconds). Bootstrapping a
+    started broker and checking its `Ready` is one shared function on
+    every platform.
+  - **Breaking:** `start_relay` returns `(BrokerChild, BrokerRelay)`, and
+    `LaunchedBroker::child` returns `&mut BrokerChild`.
+
 ### Changed
 
 - The broker is spawned through `chief_of_staff_spawn_isolation::spawn`,

@@ -2543,14 +2543,34 @@ through S-I3 before two weeks are spent on Windows.
           refusals, the lock's exclusion, two containers for one agent,
           and the broker binary, confined by the applier, loading keys
           from handles and answering `Ready`.
-      - **P2.8b-2, the wiring.** The launcher gains a Windows
-        `BrokerProgram` (the broker alone: no shim) and launches through
-        the applier, its plan for `OsFamily::Windows`. The launcher's and
-        supervisor's broker child is a small trait over std's `Child` and
-        the applier's `ConfinedChild` (id, kill, wait, and the two
-        pipes), so `LaunchedBroker`, the relay and `OwnedBroker` are the
-        same code on every OS. The daemon verifies `[hosts.broker]` on
-        Windows. `broker-e2e`'s supervised tests run on `windows-2025`.
+      - **P2.8b-2, the wiring.**
+        - *The launch.* The launcher gains a Windows `BrokerProgram`: the
+          broker alone, with no shim. It launches through the applier with
+          the plan for `OsFamily::Windows`, in the order Linux and macOS
+          use:
+          1. secret directories;
+          2. slots;
+          3. `prepare_verified_broker` over the agent's id, which
+             re-verifies the binary;
+          4. the key files, opened owner-only;
+          5. the spawn, with the files as the handle list;
+          6. Bootstrap and the `Ready` check.
+
+          Bootstrapping a started broker and checking its `Ready` is one
+          function, shared by every platform.
+        - *One broker child.* The broker child is one type,
+          `BrokerChild`: std's `Child` on Unix, the applier's
+          `ConfinedChild` on Windows. It offers its id, whether it has
+          exited (seen without reaping) and its end. On Unix the end kills
+          the session, then reaps. On Windows it ends the job and waits up
+          to ten seconds; a broker that outlives that keeps its
+          container's claim for good. So `LaunchedBroker`, the relay and
+          `OwnedBroker` are the same code on every OS. (An earlier draft
+          planned a trait here. One cfg'd type does the same with less.)
+        - *The daemon* verifies `[hosts.broker]` on Windows as on Linux.
+        - *The end-to-end tests.* `broker-e2e`'s supervised tests run on
+          `windows-2025`, with an agent per test, because a container
+          runs one instance at a time.
    3. **P2.8c:** `Direct` file grants, as per-object ACEs for the agent's
       SID, checked as on macOS and removed when the agent ends.
 9. **Wire into `spawn_verified`.** Deno becomes one supported runtime rather

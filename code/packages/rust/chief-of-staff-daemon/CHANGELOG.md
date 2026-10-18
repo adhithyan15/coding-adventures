@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+- `[hosts.broker]` is accepted on Windows (D18S P2.8b-2). The broker is
+  verified at startup as on Linux (`BrokerExecutable` on a mismatch) and
+  launched by the launcher through the AppContainer applier.
+  `the_broker_binary_is_verified_at_startup` runs on Windows too, with its
+  TOML paths escaped. `BrokerUnsupported` remains for platforms with no
+  applier.
+
 - `channel_keys_become_the_broker_s_slots_with_home_resolved` names its
   unused broker `C:/unused` on Windows, where `/unused` is not absolute
   and the config refused it (`UnsafePath`). It failed the first time this

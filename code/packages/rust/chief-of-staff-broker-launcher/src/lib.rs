@@ -6,9 +6,12 @@
 //!   BrokerKeyFiles::slots_for(binding)   which key file goes on which descriptor
 //!   abandon_pending_on_write_channels    give back what a dead broker reserved
 //!   launch(program, binding, keys, ..)   open the key files, exec the verified
-//!                                        binary with them on 3..3+n, Bootstrap,
-//!                                        and check Ready's public keys against
-//!                                        the channel definitions
+//!                                        binary with them on 3..3+n (on Windows,
+//!                                        on its handle list), Bootstrap, and
+//!                                        check Ready's public keys against the
+//!                                        channel definitions
+//!   BrokerChild                          the running broker, on any OS: its id,
+//!                                        whether it has exited, and its end
 //!   start_relay(broker, ..)              one thread: relay each channel request,
 //!                                        answer each callback with the daemon's
 //!                                        CallbackServer, deliver the response
@@ -35,7 +38,6 @@
 
 use std::collections::BTreeMap;
 use std::path::PathBuf;
-use std::process::{Child, ChildStdin};
 use std::sync::mpsc::{self, Receiver, RecvTimeoutError, SyncSender, TrySendError};
 use std::sync::Arc;
 use std::thread::JoinHandle;
@@ -56,8 +58,8 @@ use chief_of_staff_host_control_protocol::{
 use chief_of_staff_pipeline_bindings::{HostPipelineBinding, PipelineId};
 use storage_core::StorageBackend;
 
-/// A binary verified against its pinned digest (Linux and macOS).
-#[cfg(any(target_os = "linux", target_os = "macos"))]
+/// A binary verified against its pinned digest (Linux, macOS and Windows).
+#[cfg(any(target_os = "linux", target_os = "macos", windows))]
 pub use chief_of_staff_spawn_isolation::{VerifiedExecutable, VerifyError};
 
 // ---------------------------------------------------------------------------
@@ -68,27 +70,31 @@ pub use chief_of_staff_spawn_isolation::{VerifiedExecutable, VerifyError};
 /// Seatbelt shim that installs its profile (D18S P2.7b).
 ///
 /// ```text
-///   Linux   broker                 the applier confines it between fork
-///                                  and execveat
-///   macOS   broker + shim          the shim, a fresh image, installs the
-///                                  profile and then execs the broker
-///   other   (no value can exist)   no verified launch yet (S-P3)
+///   Linux     broker                 the applier confines it between fork
+///                                    and execveat
+///   macOS     broker + shim          the shim, a fresh image, installs the
+///                                    profile and then execs the broker
+///   Windows   broker                 the applier creates it suspended in
+///                                    its own AppContainer (P2.8b-2)
+///   other     (no value can exist)   no verified launch yet (S-P3)
 /// ```
 ///
 /// Both binaries are re-verified through their descriptors at every launch.
 #[derive(Debug)]
 pub struct BrokerProgram {
-    #[cfg(any(target_os = "linux", target_os = "macos"))]
+    #[cfg(any(target_os = "linux", target_os = "macos", windows))]
     broker: VerifiedExecutable,
     #[cfg(target_os = "macos")]
     shim: VerifiedExecutable,
-    #[cfg(not(any(target_os = "linux", target_os = "macos")))]
+    #[cfg(not(any(target_os = "linux", target_os = "macos", windows)))]
     never: std::convert::Infallible,
 }
 
 impl BrokerProgram {
-    /// The broker alone: the Linux applier needs no shim.
-    #[cfg(target_os = "linux")]
+    /// The broker alone: neither the Linux nor the Windows applier needs a
+    /// shim. On Windows the applier refuses a path that is not the file's
+    /// final path at each launch, as it re-verifies the digest there.
+    #[cfg(any(target_os = "linux", windows))]
     pub fn new(broker: VerifiedExecutable) -> Self {
         Self { broker }
     }
@@ -399,17 +405,86 @@ pub fn check_ready(
 // Launch
 // ---------------------------------------------------------------------------
 
+/// A running broker process, on any platform (D18S P2.8b-2).
+///
+/// ```text
+///   Unix      std's Child, in a session of its own: ending it kills the
+///             session's group, then reaps
+///   Windows   the applier's ConfinedChild, alone in a job: ending it
+///             ends the job, then waits (bounded) for the exit
+/// ```
+///
+/// The launcher, the relay and the supervisor hold this one type, so what
+/// they do with a broker is the same code on every OS. It is created only
+/// by [`launch`].
+#[derive(Debug)]
+pub struct BrokerChild {
+    #[cfg(unix)]
+    process: std::process::Child,
+    #[cfg(windows)]
+    process: chief_of_staff_windows_sandbox::ConfinedChild,
+    #[cfg(not(any(unix, windows)))]
+    never: std::convert::Infallible,
+}
+
+impl BrokerChild {
+    /// The broker's process id: for the audit record and for tests.
+    pub fn id(&self) -> u32 {
+        #[cfg(any(unix, windows))]
+        return self.process.id();
+        #[cfg(not(any(unix, windows)))]
+        match self.never {}
+    }
+
+    /// Whether the broker has exited, seen without reaping it. On Unix its
+    /// pid, and so its group id, stays reserved for the kill in
+    /// [`Self::end`]; on Windows the process handle is held until then.
+    /// An error counts as not exited: [`Self::end`] still runs.
+    pub fn has_exited(&mut self) -> bool {
+        #[cfg(unix)]
+        return matches!(
+            chief_of_staff_spawn_isolation::has_exited(&self.process),
+            Ok(true)
+        );
+        #[cfg(windows)]
+        return matches!(self.process.try_wait(), Ok(Some(_)));
+        #[cfg(not(any(unix, windows)))]
+        match self.never {}
+    }
+
+    /// Kill the broker and anything it left behind, then reap it.
+    ///
+    /// On Unix: kill its session's group, then the child itself, then
+    /// wait. On Windows, dropping the `ConfinedChild` ends its job and
+    /// waits up to ten seconds for the exit; a broker that has not exited
+    /// by then keeps its container's one-instance claim for good, so its
+    /// agent's next broker is refused rather than run beside it.
+    pub fn end(self) {
+        #[cfg(unix)]
+        {
+            let mut child = self.process;
+            let _ = chief_of_staff_spawn_isolation::kill_session(&child);
+            let _ = child.kill();
+            let _ = child.wait();
+        }
+        #[cfg(windows)]
+        drop(self.process);
+        #[cfg(not(any(unix, windows)))]
+        match self.never {}
+    }
+}
+
 /// A broker that has started and passed the `Ready` check.
 pub struct LaunchedBroker {
-    child: Child,
-    stdin: ChildStdin,
+    child: BrokerChild,
+    stdin: Box<dyn std::io::Write + Send>,
     frames: Frames,
     reader: Option<JoinHandle<()>>,
 }
 
 impl LaunchedBroker {
     /// The broker process, for the supervisor to watch, kill and reap.
-    pub fn child(&mut self) -> &mut Child {
+    pub fn child(&mut self) -> &mut BrokerChild {
         &mut self.child
     }
 
@@ -417,16 +492,16 @@ impl LaunchedBroker {
     /// its pipes.
     pub fn discard(self) {
         let (child, io) = self.into_parts();
-        discard(child);
+        child.end();
         io.close();
     }
 
     /// Split into the process and the relay's I/O.
-    fn into_parts(self) -> (Child, BrokerIo) {
+    fn into_parts(self) -> (BrokerChild, BrokerIo) {
         (
             self.child,
             BrokerIo {
-                stdin: Box::new(self.stdin),
+                stdin: self.stdin,
                 frames: self.frames,
                 reader: self.reader,
             },
@@ -522,12 +597,12 @@ fn join_bounded(thread: JoinHandle<()>) -> bool {
     true
 }
 
-#[cfg(any(target_os = "linux", target_os = "macos"))]
+#[cfg(any(target_os = "linux", target_os = "macos", windows))]
 /// Read the broker's frames on a thread of their own, so the relay can wait
 /// on them with a deadline. The channel closes when the broker's stdout
 /// does.
 fn spawn_reader(
-    mut stdout: std::process::ChildStdout,
+    mut stdout: impl std::io::Read + Send + 'static,
 ) -> std::io::Result<(Frames, JoinHandle<()>)> {
     use chief_of_staff_broker_protocol::{decode_from_broker, read_frame};
     let (frames, receiver) = mpsc::sync_channel(4);
@@ -541,13 +616,6 @@ fn spawn_reader(
             }
         })?;
     Ok((receiver, reader))
-}
-
-/// Kill and reap a broker that will not be used.
-fn discard(mut child: Child) {
-    let _ = chief_of_staff_spawn_isolation::kill_session(&child);
-    let _ = child.kill();
-    let _ = child.wait();
 }
 
 /// Check the secret directories, open `binding`'s key files, start
@@ -609,53 +677,142 @@ pub fn launch(
     // The command holds the parked key descriptors; dropping it closes
     // this process's last copies.
     drop(command);
-    let mut child = spawned.map_err(|_| LaunchError::Spawn)?;
-    let (Some(stdin), Some(stdout)) = (child.stdin.take(), child.stdout.take()) else {
-        discard(child);
+    let mut process = spawned.map_err(|_| LaunchError::Spawn)?;
+    let pipes = (process.stdin.take(), process.stdout.take());
+    bootstrap(
+        BrokerChild { process },
+        pipes,
+        binding,
+        &slots,
+        backend,
+        ready_timeout,
+    )
+}
+
+/// The same on Windows (D18S P2.8b-2): the applier creates the broker
+/// suspended in its own AppContainer (`chief-of-staff-broker.<hex>`, never
+/// its agent's), alone in a job, holding exactly the key handles on its
+/// handle list, their values named in `CHIEF_OF_STAFF_HANDLES` in slot
+/// order. Its token and image are checked before its first instruction.
+///
+/// ```text
+///   Windows (P2.8b-2)  chief-of-staff-windows-sandbox: an LPAC container
+///                      with no capabilities: no network, no file outside
+///                      what every LPAC may read, no child process, its
+///                      own one-process job
+/// ```
+#[cfg(windows)]
+pub fn launch(
+    program: &BrokerProgram,
+    binding: &HostPipelineBinding,
+    keys: &BrokerKeyFiles,
+    backend: &dyn StorageBackend,
+    ready_timeout: Duration,
+) -> Result<LaunchedBroker, LaunchError> {
+    use chief_of_staff_windows_sandbox::{SpawnRequest, WindowsConfinement};
+    use std::os::windows::io::OwnedHandle;
+
+    keys.check_secret_directories()?;
+    let slotted = keys.slots_for(binding)?;
+    // Prepared from the verified handle, which it re-verifies; the
+    // container is the broker's, over the agent's id.
+    let confinement = WindowsConfinement::prepare_verified_broker(
+        &broker_plan()?,
+        &program.broker,
+        binding.agent_id().as_bytes(),
+    )
+    .map_err(|_| LaunchError::Confinement)?;
+    // Each opened under the owner-only policy, sharing read only; the
+    // broker checks that policy again on the handle it inherits.
+    let handles = slotted
+        .iter()
+        .map(|(_, path)| {
+            chief_of_staff_daemon_secret_file::open_owner_only_secret(path)
+                .map(OwnedHandle::from)
+                .map_err(|_| LaunchError::KeyFile)
+        })
+        .collect::<Result<Vec<_>, _>>()?;
+    let slots: Vec<KeySlot> = slotted.into_iter().map(|(slot, _)| slot).collect();
+    // The applier takes the spawn lock itself, over its whole inheritable
+    // span, and closes this process's copies of the handles before
+    // releasing it (P2.8b-1).
+    let mut process = confinement
+        .spawn(SpawnRequest {
+            inherited: handles,
+            ..SpawnRequest::default()
+        })
+        .map_err(|_| LaunchError::Spawn)?;
+    let pipes = (process.stdin.take(), process.stdout.take());
+    bootstrap(
+        BrokerChild { process },
+        pipes,
+        binding,
+        &slots,
+        backend,
+        ready_timeout,
+    )
+}
+
+/// Bootstrap a started broker and wait up to `ready_timeout` for a `Ready`
+/// that passes [`check_ready`]: the part of [`launch`] every platform
+/// shares. On any failure the broker is ended and its pipes closed.
+#[cfg(any(target_os = "linux", target_os = "macos", windows))]
+fn bootstrap(
+    child: BrokerChild,
+    pipes: (
+        Option<impl std::io::Write + Send + 'static>,
+        Option<impl std::io::Read + Send + 'static>,
+    ),
+    binding: &HostPipelineBinding,
+    slots: &[KeySlot],
+    backend: &dyn StorageBackend,
+    ready_timeout: Duration,
+) -> Result<LaunchedBroker, LaunchError> {
+    let (Some(stdin), Some(stdout)) = pipes else {
+        child.end();
         return Err(LaunchError::Spawn);
     };
     let Ok((frames, reader)) = spawn_reader(stdout) else {
-        discard(child);
+        child.end();
         return Err(LaunchError::Spawn);
     };
-    let broker = LaunchedBroker {
+    let mut broker = LaunchedBroker {
         child,
-        stdin,
+        stdin: Box::new(stdin),
         frames,
         reader: Some(reader),
     };
     let bootstrap = encode_to_broker(&ToBroker::Bootstrap {
         binding: binding.clone(),
-        slots: slots.clone(),
+        slots: slots.to_vec(),
     })
     .map_err(|_| LaunchError::Spawn);
-    let mut broker = broker;
     let ready = bootstrap
         .and_then(|body| write_frame(&mut broker.stdin, &body).map_err(|_| LaunchError::NotReady))
         .and_then(|()| match broker.frames.recv_timeout(ready_timeout) {
             Ok(Ok(FromBroker::Ready { public_keys })) => {
-                check_ready(backend, binding, &slots, &public_keys)
+                check_ready(backend, binding, slots, &public_keys)
             }
             _ => Err(LaunchError::NotReady),
         });
     if let Err(error) = ready {
-        let (child, io) = broker.into_parts();
-        discard(child);
-        io.close();
+        broker.discard();
         return Err(error);
     }
     Ok(broker)
 }
 
 /// The broker's sandbox plan: a manifest with no capabilities, for this
-/// platform (P2.6d-3 on Linux, P2.7b on macOS). Everything the broker
-/// needs it already holds when it starts.
-#[cfg(any(target_os = "linux", target_os = "macos"))]
+/// platform (P2.6d-3 on Linux, P2.7b on macOS, P2.8b-2 on Windows).
+/// Everything the broker needs it already holds when it starts.
+#[cfg(any(target_os = "linux", target_os = "macos", windows))]
 pub fn broker_plan() -> Result<capability_os_sandbox::SandboxPlan, LaunchError> {
     #[cfg(target_os = "linux")]
     let os = capability_os_sandbox::OsFamily::Linux;
     #[cfg(target_os = "macos")]
     let os = capability_os_sandbox::OsFamily::Macos;
+    #[cfg(windows)]
+    let os = capability_os_sandbox::OsFamily::Windows;
     capability_os_sandbox::plan_from_json(
         r#"{"version":1,"package":"rust/chief-of-staff-agent-broker","capabilities":[],"justification":"A per-agent channel broker holds its keys on inherited descriptors and talks to its supervisor over its pipes. It needs nothing else."}"#,
         os,
@@ -692,7 +849,7 @@ fn prepare_confinement(
 
 /// Elsewhere there is no verified launch yet, and no [`BrokerProgram`] can
 /// exist to call this with.
-#[cfg(not(any(target_os = "linux", target_os = "macos")))]
+#[cfg(not(any(target_os = "linux", target_os = "macos", windows)))]
 pub fn launch(
     program: &BrokerProgram,
     _binding: &HostPipelineBinding,
@@ -854,14 +1011,14 @@ pub fn start_relay(
     resolver: Box<dyn BindingResolver + Send>,
     sink: Box<dyn ResponseSink>,
     config: RelayConfig,
-) -> std::io::Result<(Child, BrokerRelay)> {
+) -> std::io::Result<(BrokerChild, BrokerRelay)> {
     let (child, io) = broker.into_parts();
     // The relay thread owns the I/O; if it cannot start, the broker is
     // killed and reaped here rather than left running unrelayed.
     match spawn_relay(io, backend, metadata, resolver, sink, config) {
         Ok(relay) => Ok((child, relay)),
         Err(error) => {
-            discard(child);
+            child.end();
             Err(error)
         }
     }
