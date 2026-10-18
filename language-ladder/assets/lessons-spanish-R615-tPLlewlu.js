@@ -1,0 +1,54 @@
+import{t as e}from"./rolldown-runtime-DK3Fl9T5.js";var t=e({default:()=>n}),n=`---
+schema_version: 2
+id: ES-R615-repaso-608-615
+spine_node: SPINE-EXPRESS-CONDITION
+sequence: 20540
+chapter: 615
+type: review
+headword: (dialogue)
+gloss: a review of chapters 608-615
+concept_tag: REVIEW
+prerequisites: [ES-C608-aumentar, ES-C608-disminuir, ES-C608-aumento, ES-C608-crecimiento, ES-C608-tendencia, ES-C609-progreso, ES-C609-perfeccionar, ES-C609-desafio, ES-C609-afrontar, ES-C609-perseverar, ES-C610-tolerancia, ES-C610-tolerar, ES-C610-integracion, ES-C610-inmigracion, ES-C610-convivencia, ES-C611-condicion, ES-C611-siempre-que, ES-C611-a-menos-que, ES-C611-con-tal-de-que, ES-C611-en-caso-de-que, ES-C612-a-no-ser-que, ES-C612-a-condicion-de-que, ES-C612-de-lo-contrario, ES-C612-en-ese-caso, ES-C612-en-todo-caso, ES-C613-requerir, ES-C613-requisito, ES-C613-incertidumbre, ES-C613-probable, ES-C613-probabilidad, ES-C614-prevenir, ES-C614-arriesgar, ES-C614-garantizar, ES-C614-garantia, ES-C614-proteccion, ES-C615-programar, ES-C615-planificar, ES-C615-proposito, ES-C615-intencion, ES-C615-proponerse]
+sounds: []
+roots: []
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [ES-LEX-C608-AUMENTA-01, ES-LEX-C608-AUMENTA-02, ES-LEX-C608-AUMENTA-03, ES-LEX-C608-AUMENTA-04, ES-LEX-C608-AUMENTA-05, ES-LEX-C609-PROGRESO-01, ES-LEX-C609-PROGRESO-02, ES-LEX-C609-PROGRESO-03, ES-LEX-C609-PROGRESO-04, ES-LEX-C609-PROGRESO-05, ES-LEX-C610-CONVIVIR-01, ES-LEX-C610-CONVIVIR-02, ES-LEX-C610-CONVIVIR-03, ES-LEX-C610-CONVIVIR-04, ES-LEX-C610-CONVIVIR-05, ES-LEX-C611-CONDIC-01, ES-LEX-C611-CONDIC-02, ES-LEX-C611-CONDIC-03, ES-LEX-C611-CONDIC-04, ES-LEX-C611-CONDIC-05, ES-LEX-C612-SINO-01, ES-LEX-C612-SINO-02, ES-LEX-C612-SINO-03, ES-LEX-C612-SINO-04, ES-LEX-C612-SINO-05, ES-LEX-C613-REQUIERE-01, ES-LEX-C613-REQUIERE-02, ES-LEX-C613-REQUIERE-03, ES-LEX-C613-REQUIERE-04, ES-LEX-C613-REQUIERE-05, ES-LEX-C614-RIESGO-01, ES-LEX-C614-RIESGO-02, ES-LEX-C614-RIESGO-03, ES-LEX-C614-RIESGO-04, ES-LEX-C614-RIESGO-05, ES-LEX-C615-PLAN-01, ES-LEX-C615-PLAN-02, ES-LEX-C615-PLAN-03, ES-LEX-C615-PLAN-04, ES-LEX-C615-PLAN-05]
+introduces:
+  knowledge: []
+practises:
+  knowledge: [ES-LEX-C608-AUMENTA-01, ES-LEX-C608-AUMENTA-02, ES-LEX-C608-AUMENTA-03, ES-LEX-C608-AUMENTA-04, ES-LEX-C608-AUMENTA-05, ES-LEX-C609-PROGRESO-01, ES-LEX-C609-PROGRESO-02, ES-LEX-C609-PROGRESO-03, ES-LEX-C609-PROGRESO-04, ES-LEX-C609-PROGRESO-05, ES-LEX-C610-CONVIVIR-01, ES-LEX-C610-CONVIVIR-02, ES-LEX-C610-CONVIVIR-03, ES-LEX-C610-CONVIVIR-04, ES-LEX-C610-CONVIVIR-05, ES-LEX-C611-CONDIC-01, ES-LEX-C611-CONDIC-02, ES-LEX-C611-CONDIC-03, ES-LEX-C611-CONDIC-04, ES-LEX-C611-CONDIC-05, ES-LEX-C612-SINO-01, ES-LEX-C612-SINO-02, ES-LEX-C612-SINO-03, ES-LEX-C612-SINO-04, ES-LEX-C612-SINO-05, ES-LEX-C613-REQUIERE-01, ES-LEX-C613-REQUIERE-02, ES-LEX-C613-REQUIERE-03, ES-LEX-C613-REQUIERE-04, ES-LEX-C613-REQUIERE-05, ES-LEX-C614-RIESGO-01, ES-LEX-C614-RIESGO-02, ES-LEX-C614-RIESGO-03, ES-LEX-C614-RIESGO-04, ES-LEX-C614-RIESGO-05, ES-LEX-C615-PLAN-01, ES-LEX-C615-PLAN-02, ES-LEX-C615-PLAN-03, ES-LEX-C615-PLAN-04, ES-LEX-C615-PLAN-05]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: general
+reviews_of: [ES-C608-aumentar, ES-C608-disminuir, ES-C608-aumento, ES-C608-crecimiento, ES-C608-tendencia, ES-C609-progreso, ES-C609-perfeccionar, ES-C609-desafio, ES-C609-afrontar, ES-C609-perseverar, ES-C610-tolerancia, ES-C610-tolerar, ES-C610-integracion, ES-C610-inmigracion, ES-C610-convivencia, ES-C611-condicion, ES-C611-siempre-que, ES-C611-a-menos-que, ES-C611-con-tal-de-que, ES-C611-en-caso-de-que, ES-C612-a-no-ser-que, ES-C612-a-condicion-de-que, ES-C612-de-lo-contrario, ES-C612-en-ese-caso, ES-C612-en-todo-caso, ES-C613-requerir, ES-C613-requisito, ES-C613-incertidumbre, ES-C613-probable, ES-C613-probabilidad, ES-C614-prevenir, ES-C614-arriesgar, ES-C614-garantizar, ES-C614-garantia, ES-C614-proteccion, ES-C615-programar, ES-C615-planificar, ES-C615-proposito, ES-C615-intencion, ES-C615-proponerse]
+---
+
+# Repaso de los capítulos 608–615
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C608-AUMENTA-01, ES-LEX-C608-AUMENTA-02] -->
+
+[PAUSE 3s] Say the Spanish for to increase and to decrease.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C608-AUMENTA-01, ES-LEX-C608-AUMENTA-02, ES-LEX-C608-AUMENTA-03, ES-LEX-C608-AUMENTA-04, ES-LEX-C608-AUMENTA-05, ES-LEX-C609-PROGRESO-01, ES-LEX-C609-PROGRESO-02, ES-LEX-C609-PROGRESO-03, ES-LEX-C609-PROGRESO-04, ES-LEX-C609-PROGRESO-05, ES-LEX-C610-CONVIVIR-01, ES-LEX-C610-CONVIVIR-02, ES-LEX-C610-CONVIVIR-03, ES-LEX-C610-CONVIVIR-04, ES-LEX-C610-CONVIVIR-05, ES-LEX-C611-CONDIC-01, ES-LEX-C611-CONDIC-02, ES-LEX-C611-CONDIC-03, ES-LEX-C611-CONDIC-04, ES-LEX-C611-CONDIC-05, ES-LEX-C612-SINO-01, ES-LEX-C612-SINO-02, ES-LEX-C612-SINO-03, ES-LEX-C612-SINO-04, ES-LEX-C612-SINO-05, ES-LEX-C613-REQUIERE-01, ES-LEX-C613-REQUIERE-02, ES-LEX-C613-REQUIERE-03, ES-LEX-C613-REQUIERE-04, ES-LEX-C613-REQUIERE-05, ES-LEX-C614-RIESGO-01, ES-LEX-C614-RIESGO-02, ES-LEX-C614-RIESGO-03, ES-LEX-C614-RIESGO-04, ES-LEX-C614-RIESGO-05, ES-LEX-C615-PLAN-01, ES-LEX-C615-PLAN-02, ES-LEX-C615-PLAN-03, ES-LEX-C615-PLAN-04, ES-LEX-C615-PLAN-05] -->
+
+[PAUSE 2s each]
+- [YOU SAY: to increase, to decrease, the increase, the growth, the trend]
+- [YOU SAY: the progress, to perfect, the challenge, to face, to persevere]
+- [YOU SAY: the tolerance, to tolerate, the integration, the immigration, the living together]
+- [YOU SAY: the condition, as long as, unless, provided that, in case]
+- [YOU SAY: except if, on condition that, otherwise, in that case, in any case]
+- [YOU SAY: to require, the requirement, the uncertainty, likely, the probability]
+- [YOU SAY: to prevent, to risk, to guarantee, the guarantee, the protection]
+- [YOU SAY: to schedule, to plan, the purpose, the intention, to set out to]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C608-AUMENTA-01, ES-LEX-C608-AUMENTA-02, ES-LEX-C608-AUMENTA-03, ES-LEX-C608-AUMENTA-04, ES-LEX-C608-AUMENTA-05, ES-LEX-C609-PROGRESO-01, ES-LEX-C609-PROGRESO-02, ES-LEX-C609-PROGRESO-03, ES-LEX-C609-PROGRESO-04, ES-LEX-C609-PROGRESO-05, ES-LEX-C610-CONVIVIR-01, ES-LEX-C610-CONVIVIR-02, ES-LEX-C610-CONVIVIR-03, ES-LEX-C610-CONVIVIR-04, ES-LEX-C610-CONVIVIR-05, ES-LEX-C611-CONDIC-01, ES-LEX-C611-CONDIC-02, ES-LEX-C611-CONDIC-03, ES-LEX-C611-CONDIC-04, ES-LEX-C611-CONDIC-05, ES-LEX-C612-SINO-01, ES-LEX-C612-SINO-02, ES-LEX-C612-SINO-03, ES-LEX-C612-SINO-04, ES-LEX-C612-SINO-05, ES-LEX-C613-REQUIERE-01, ES-LEX-C613-REQUIERE-02, ES-LEX-C613-REQUIERE-03, ES-LEX-C613-REQUIERE-04, ES-LEX-C613-REQUIERE-05, ES-LEX-C614-RIESGO-01, ES-LEX-C614-RIESGO-02, ES-LEX-C614-RIESGO-03, ES-LEX-C614-RIESGO-04, ES-LEX-C614-RIESGO-05, ES-LEX-C615-PLAN-01, ES-LEX-C615-PLAN-02, ES-LEX-C615-PLAN-03, ES-LEX-C615-PLAN-04, ES-LEX-C615-PLAN-05] -->
+
+[PAUSE 3s] To increase? (**aumentar**.) To decrease? (**disminuir**.) The increase? (**el aumento**.) The growth? (**el crecimiento**.) The trend? (**la tendencia**.) The progress? (**el progreso**.) To perfect? (**perfeccionar**.) The challenge? (**el desafío**.) To face? (**afrontar**.) To persevere? (**perseverar**.) The tolerance? (**la tolerancia**.) To tolerate? (**tolerar**.) The integration? (**la integración**.) The immigration? (**la inmigración**.) The living together? (**la convivencia**.) The condition? (**la condición**.) As long as? (**siempre que**.) Unless? (**a menos que**.) Provided that? (**con tal de que**.) In case? (**en caso de que**.) Except if? (**a no ser que**.) On condition that? (**a condición de que**.) Otherwise? (**de lo contrario**.) In that case? (**en ese caso**.) In any case? (**en todo caso**.) To require? (**requerir**.) The requirement? (**el requisito**.) The uncertainty? (**la incertidumbre**.) Likely? (**probable**.) The probability? (**la probabilidad**.) To prevent? (**prevenir**.) To risk? (**arriesgar**.) To guarantee? (**garantizar**.) The guarantee? (**la garantía**.) The protection? (**la protección**.) To schedule? (**programar**.) To plan? (**planificar**.) The purpose? (**el propósito**.) The intention? (**la intención**.) To set out to? (**proponerse**.)
+`;export{t};

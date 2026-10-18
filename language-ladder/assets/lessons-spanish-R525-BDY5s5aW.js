@@ -1,0 +1,54 @@
+import{t as e}from"./rolldown-runtime-DK3Fl9T5.js";var t=e({default:()=>n}),n=`---
+schema_version: 2
+id: ES-R527-repaso-520-527
+spine_node: SPINE-NARRATE-EVENTS
+sequence: 15990
+chapter: 527
+type: review
+headword: (dialogue)
+gloss: a review of chapters 520-527
+concept_tag: REVIEW
+prerequisites: [ES-C520-delito, ES-C520-crimen, ES-C520-delincuente, ES-C520-victima, ES-C520-investigacion, ES-C521-investigar, ES-C521-pista, ES-C521-prueba, ES-C521-averiguar, ES-C521-sospechar, ES-C522-juicio, ES-C522-juez, ES-C522-juzgar, ES-C522-condenar, ES-C522-carcel, ES-C523-preso, ES-C523-acusar, ES-C523-confesar, ES-C523-testificar, ES-C523-liberar, ES-C524-incendio, ES-C524-incendiar, ES-C524-arder, ES-C524-alarma, ES-C524-evacuar, ES-C525-herida, ES-C525-herir, ES-C525-ambulancia, ES-C525-socorrer, ES-C525-herido, ES-C526-rescatar, ES-C526-rescate, ES-C526-salvar, ES-C526-sobrevivir, ES-C526-atrapar, ES-C527-chocar, ES-C527-choque, ES-C527-atropellar, ES-C527-ileso, ES-C527-caer]
+sounds: []
+roots: []
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [ES-LEX-C520-DELITO-01, ES-LEX-C520-DELITO-02, ES-LEX-C520-DELITO-03, ES-LEX-C520-DELITO-04, ES-LEX-C520-DELITO-05, ES-LEX-C521-PISTA-01, ES-LEX-C521-PISTA-02, ES-LEX-C521-PISTA-03, ES-LEX-C521-PISTA-04, ES-LEX-C521-PISTA-05, ES-LEX-C522-JUEZ-01, ES-LEX-C522-JUEZ-02, ES-LEX-C522-JUEZ-03, ES-LEX-C522-JUEZ-04, ES-LEX-C522-JUEZ-05, ES-LEX-C523-PRESO-01, ES-LEX-C523-PRESO-02, ES-LEX-C523-PRESO-03, ES-LEX-C523-PRESO-04, ES-LEX-C523-PRESO-05, ES-LEX-C524-FUEGO-01, ES-LEX-C524-FUEGO-02, ES-LEX-C524-FUEGO-03, ES-LEX-C524-FUEGO-04, ES-LEX-C524-FUEGO-05, ES-LEX-C525-HERIDA-01, ES-LEX-C525-HERIDA-02, ES-LEX-C525-HERIDA-03, ES-LEX-C525-HERIDA-04, ES-LEX-C525-HERIDA-05, ES-LEX-C526-RESCATE-01, ES-LEX-C526-RESCATE-02, ES-LEX-C526-RESCATE-03, ES-LEX-C526-RESCATE-04, ES-LEX-C526-RESCATE-05, ES-LEX-C527-CHOQUE-01, ES-LEX-C527-CHOQUE-02, ES-LEX-C527-CHOQUE-03, ES-LEX-C527-CHOQUE-04, ES-LEX-C527-CHOQUE-05]
+introduces:
+  knowledge: []
+practises:
+  knowledge: [ES-LEX-C520-DELITO-01, ES-LEX-C520-DELITO-02, ES-LEX-C520-DELITO-03, ES-LEX-C520-DELITO-04, ES-LEX-C520-DELITO-05, ES-LEX-C521-PISTA-01, ES-LEX-C521-PISTA-02, ES-LEX-C521-PISTA-03, ES-LEX-C521-PISTA-04, ES-LEX-C521-PISTA-05, ES-LEX-C522-JUEZ-01, ES-LEX-C522-JUEZ-02, ES-LEX-C522-JUEZ-03, ES-LEX-C522-JUEZ-04, ES-LEX-C522-JUEZ-05, ES-LEX-C523-PRESO-01, ES-LEX-C523-PRESO-02, ES-LEX-C523-PRESO-03, ES-LEX-C523-PRESO-04, ES-LEX-C523-PRESO-05, ES-LEX-C524-FUEGO-01, ES-LEX-C524-FUEGO-02, ES-LEX-C524-FUEGO-03, ES-LEX-C524-FUEGO-04, ES-LEX-C524-FUEGO-05, ES-LEX-C525-HERIDA-01, ES-LEX-C525-HERIDA-02, ES-LEX-C525-HERIDA-03, ES-LEX-C525-HERIDA-04, ES-LEX-C525-HERIDA-05, ES-LEX-C526-RESCATE-01, ES-LEX-C526-RESCATE-02, ES-LEX-C526-RESCATE-03, ES-LEX-C526-RESCATE-04, ES-LEX-C526-RESCATE-05, ES-LEX-C527-CHOQUE-01, ES-LEX-C527-CHOQUE-02, ES-LEX-C527-CHOQUE-03, ES-LEX-C527-CHOQUE-04, ES-LEX-C527-CHOQUE-05]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: general
+reviews_of: [ES-C520-delito, ES-C520-crimen, ES-C520-delincuente, ES-C520-victima, ES-C520-investigacion, ES-C521-investigar, ES-C521-pista, ES-C521-prueba, ES-C521-averiguar, ES-C521-sospechar, ES-C522-juicio, ES-C522-juez, ES-C522-juzgar, ES-C522-condenar, ES-C522-carcel, ES-C523-preso, ES-C523-acusar, ES-C523-confesar, ES-C523-testificar, ES-C523-liberar, ES-C524-incendio, ES-C524-incendiar, ES-C524-arder, ES-C524-alarma, ES-C524-evacuar, ES-C525-herida, ES-C525-herir, ES-C525-ambulancia, ES-C525-socorrer, ES-C525-herido, ES-C526-rescatar, ES-C526-rescate, ES-C526-salvar, ES-C526-sobrevivir, ES-C526-atrapar, ES-C527-chocar, ES-C527-choque, ES-C527-atropellar, ES-C527-ileso, ES-C527-caer]
+---
+
+# Repaso de los capítulos 520–527
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C520-DELITO-01, ES-LEX-C520-DELITO-02] -->
+
+[PAUSE 3s] Say the Spanish for the offence and the crime.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C520-DELITO-01, ES-LEX-C520-DELITO-02, ES-LEX-C520-DELITO-03, ES-LEX-C520-DELITO-04, ES-LEX-C520-DELITO-05, ES-LEX-C521-PISTA-01, ES-LEX-C521-PISTA-02, ES-LEX-C521-PISTA-03, ES-LEX-C521-PISTA-04, ES-LEX-C521-PISTA-05, ES-LEX-C522-JUEZ-01, ES-LEX-C522-JUEZ-02, ES-LEX-C522-JUEZ-03, ES-LEX-C522-JUEZ-04, ES-LEX-C522-JUEZ-05, ES-LEX-C523-PRESO-01, ES-LEX-C523-PRESO-02, ES-LEX-C523-PRESO-03, ES-LEX-C523-PRESO-04, ES-LEX-C523-PRESO-05, ES-LEX-C524-FUEGO-01, ES-LEX-C524-FUEGO-02, ES-LEX-C524-FUEGO-03, ES-LEX-C524-FUEGO-04, ES-LEX-C524-FUEGO-05, ES-LEX-C525-HERIDA-01, ES-LEX-C525-HERIDA-02, ES-LEX-C525-HERIDA-03, ES-LEX-C525-HERIDA-04, ES-LEX-C525-HERIDA-05, ES-LEX-C526-RESCATE-01, ES-LEX-C526-RESCATE-02, ES-LEX-C526-RESCATE-03, ES-LEX-C526-RESCATE-04, ES-LEX-C526-RESCATE-05, ES-LEX-C527-CHOQUE-01, ES-LEX-C527-CHOQUE-02, ES-LEX-C527-CHOQUE-03, ES-LEX-C527-CHOQUE-04, ES-LEX-C527-CHOQUE-05] -->
+
+[PAUSE 2s each]
+- [YOU SAY: the offence, the crime, the offender, the victim, the investigation]
+- [YOU SAY: to investigate, the clue, the proof, to find out, to suspect]
+- [YOU SAY: the trial, the judge, to judge, to sentence, the prison]
+- [YOU SAY: the prisoner, to accuse, to confess, to testify, to free]
+- [YOU SAY: the fire, to set on fire, to burn, the alarm, to evacuate]
+- [YOU SAY: the wound, to wound, the ambulance, to help, the injured person]
+- [YOU SAY: to rescue, the rescue, to save, to survive, to trap]
+- [YOU SAY: to crash, the crash, to run over, unhurt, to fall]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C520-DELITO-01, ES-LEX-C520-DELITO-02, ES-LEX-C520-DELITO-03, ES-LEX-C520-DELITO-04, ES-LEX-C520-DELITO-05, ES-LEX-C521-PISTA-01, ES-LEX-C521-PISTA-02, ES-LEX-C521-PISTA-03, ES-LEX-C521-PISTA-04, ES-LEX-C521-PISTA-05, ES-LEX-C522-JUEZ-01, ES-LEX-C522-JUEZ-02, ES-LEX-C522-JUEZ-03, ES-LEX-C522-JUEZ-04, ES-LEX-C522-JUEZ-05, ES-LEX-C523-PRESO-01, ES-LEX-C523-PRESO-02, ES-LEX-C523-PRESO-03, ES-LEX-C523-PRESO-04, ES-LEX-C523-PRESO-05, ES-LEX-C524-FUEGO-01, ES-LEX-C524-FUEGO-02, ES-LEX-C524-FUEGO-03, ES-LEX-C524-FUEGO-04, ES-LEX-C524-FUEGO-05, ES-LEX-C525-HERIDA-01, ES-LEX-C525-HERIDA-02, ES-LEX-C525-HERIDA-03, ES-LEX-C525-HERIDA-04, ES-LEX-C525-HERIDA-05, ES-LEX-C526-RESCATE-01, ES-LEX-C526-RESCATE-02, ES-LEX-C526-RESCATE-03, ES-LEX-C526-RESCATE-04, ES-LEX-C526-RESCATE-05, ES-LEX-C527-CHOQUE-01, ES-LEX-C527-CHOQUE-02, ES-LEX-C527-CHOQUE-03, ES-LEX-C527-CHOQUE-04, ES-LEX-C527-CHOQUE-05] -->
+
+[PAUSE 3s] The offence? (**el delito**.) The crime? (**el crimen**.) The offender? (**el delincuente**.) The victim? (**la víctima**.) The investigation? (**la investigación**.) To investigate? (**investigar**.) The clue? (**la pista**.) The proof? (**la prueba**.) To find out? (**averiguar**.) To suspect? (**sospechar**.) The trial? (**el juicio**.) The judge? (**el juez**.) To judge? (**juzgar**.) To sentence? (**condenar**.) The prison? (**la cárcel**.) The prisoner? (**el preso**.) To accuse? (**acusar**.) To confess? (**confesar**.) To testify? (**testificar**.) To free? (**liberar**.) The fire? (**el incendio**.) To set on fire? (**incendiar**.) To burn? (**arder**.) The alarm? (**la alarma**.) To evacuate? (**evacuar**.) The wound? (**la herida**.) To wound? (**herir**.) The ambulance? (**la ambulancia**.) To help? (**socorrer**.) The injured person? (**el herido**.) To rescue? (**rescatar**.) The rescue? (**el rescate**.) To save? (**salvar**.) To survive? (**sobrevivir**.) To trap? (**atrapar**.) To crash? (**chocar**.) The crash? (**el choque**.) To run over? (**atropellar**.) Unhurt? (**ileso**.) To fall? (**caer**.)
+`;export{t};

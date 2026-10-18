@@ -1,0 +1,54 @@
+import{t as e}from"./rolldown-runtime-DK3Fl9T5.js";var t=e({default:()=>n}),n=`---
+schema_version: 2
+id: ES-R671-repaso-664-671
+spine_node: SPINE-HANDLE-TRAVEL
+sequence: 23430
+chapter: 671
+type: review
+headword: (dialogue)
+gloss: a review of chapters 664-671
+concept_tag: REVIEW
+prerequisites: [ES-C664-sabana, ES-C664-balcon, ES-C664-vista, ES-C664-enchufe, ES-C664-grifo, ES-C665-queja, ES-C665-desperfecto, ES-C665-compensar, ES-C665-gerente, ES-C665-dueno, ES-C666-saco-de-dormir, ES-C666-acampar, ES-C666-esterilla, ES-C666-caravana, ES-C666-linterna, ES-C667-apartamento, ES-C667-propietario, ES-C667-anfitrion, ES-C667-inquilino, ES-C667-alquilar, ES-C668-deshacer, ES-C668-empaquetar, ES-C668-bascula, ES-C668-exceso, ES-C668-arrastrar, ES-C669-plano, ES-C669-orientarse, ES-C669-ubicacion, ES-C669-senalar, ES-C669-situado, ES-C670-indicar, ES-C670-indicacion, ES-C670-doblar, ES-C670-atravesar, ES-C670-desviarse, ES-C671-cercano, ES-C671-lejano, ES-C671-atajo, ES-C671-adelante, ES-C671-rodeo]
+sounds: []
+roots: []
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [ES-LEX-C664-HABITACION-01, ES-LEX-C664-HABITACION-02, ES-LEX-C664-HABITACION-03, ES-LEX-C664-HABITACION-04, ES-LEX-C664-HABITACION-05, ES-LEX-C665-QUEJA-01, ES-LEX-C665-QUEJA-02, ES-LEX-C665-QUEJA-03, ES-LEX-C665-QUEJA-04, ES-LEX-C665-QUEJA-05, ES-LEX-C666-CAMPING-01, ES-LEX-C666-CAMPING-02, ES-LEX-C666-CAMPING-03, ES-LEX-C666-CAMPING-04, ES-LEX-C666-CAMPING-05, ES-LEX-C667-APARTAMENTO-01, ES-LEX-C667-APARTAMENTO-02, ES-LEX-C667-APARTAMENTO-03, ES-LEX-C667-APARTAMENTO-04, ES-LEX-C667-APARTAMENTO-05, ES-LEX-C668-EQUIPAJE-01, ES-LEX-C668-EQUIPAJE-02, ES-LEX-C668-EQUIPAJE-03, ES-LEX-C668-EQUIPAJE-04, ES-LEX-C668-EQUIPAJE-05, ES-LEX-C669-PLANO-01, ES-LEX-C669-PLANO-02, ES-LEX-C669-PLANO-03, ES-LEX-C669-PLANO-04, ES-LEX-C669-PLANO-05, ES-LEX-C670-INDICAR-01, ES-LEX-C670-INDICAR-02, ES-LEX-C670-INDICAR-03, ES-LEX-C670-INDICAR-04, ES-LEX-C670-INDICAR-05, ES-LEX-C671-LEJOS-01, ES-LEX-C671-LEJOS-02, ES-LEX-C671-LEJOS-03, ES-LEX-C671-LEJOS-04, ES-LEX-C671-LEJOS-05]
+introduces:
+  knowledge: []
+practises:
+  knowledge: [ES-LEX-C664-HABITACION-01, ES-LEX-C664-HABITACION-02, ES-LEX-C664-HABITACION-03, ES-LEX-C664-HABITACION-04, ES-LEX-C664-HABITACION-05, ES-LEX-C665-QUEJA-01, ES-LEX-C665-QUEJA-02, ES-LEX-C665-QUEJA-03, ES-LEX-C665-QUEJA-04, ES-LEX-C665-QUEJA-05, ES-LEX-C666-CAMPING-01, ES-LEX-C666-CAMPING-02, ES-LEX-C666-CAMPING-03, ES-LEX-C666-CAMPING-04, ES-LEX-C666-CAMPING-05, ES-LEX-C667-APARTAMENTO-01, ES-LEX-C667-APARTAMENTO-02, ES-LEX-C667-APARTAMENTO-03, ES-LEX-C667-APARTAMENTO-04, ES-LEX-C667-APARTAMENTO-05, ES-LEX-C668-EQUIPAJE-01, ES-LEX-C668-EQUIPAJE-02, ES-LEX-C668-EQUIPAJE-03, ES-LEX-C668-EQUIPAJE-04, ES-LEX-C668-EQUIPAJE-05, ES-LEX-C669-PLANO-01, ES-LEX-C669-PLANO-02, ES-LEX-C669-PLANO-03, ES-LEX-C669-PLANO-04, ES-LEX-C669-PLANO-05, ES-LEX-C670-INDICAR-01, ES-LEX-C670-INDICAR-02, ES-LEX-C670-INDICAR-03, ES-LEX-C670-INDICAR-04, ES-LEX-C670-INDICAR-05, ES-LEX-C671-LEJOS-01, ES-LEX-C671-LEJOS-02, ES-LEX-C671-LEJOS-03, ES-LEX-C671-LEJOS-04, ES-LEX-C671-LEJOS-05]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: general
+reviews_of: [ES-C664-sabana, ES-C664-balcon, ES-C664-vista, ES-C664-enchufe, ES-C664-grifo, ES-C665-queja, ES-C665-desperfecto, ES-C665-compensar, ES-C665-gerente, ES-C665-dueno, ES-C666-saco-de-dormir, ES-C666-acampar, ES-C666-esterilla, ES-C666-caravana, ES-C666-linterna, ES-C667-apartamento, ES-C667-propietario, ES-C667-anfitrion, ES-C667-inquilino, ES-C667-alquilar, ES-C668-deshacer, ES-C668-empaquetar, ES-C668-bascula, ES-C668-exceso, ES-C668-arrastrar, ES-C669-plano, ES-C669-orientarse, ES-C669-ubicacion, ES-C669-senalar, ES-C669-situado, ES-C670-indicar, ES-C670-indicacion, ES-C670-doblar, ES-C670-atravesar, ES-C670-desviarse, ES-C671-cercano, ES-C671-lejano, ES-C671-atajo, ES-C671-adelante, ES-C671-rodeo]
+---
+
+# Repaso de los capítulos 664–671
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C664-HABITACION-01, ES-LEX-C664-HABITACION-02] -->
+
+[PAUSE 3s] Say the Spanish for the sheet and the balcony.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C664-HABITACION-01, ES-LEX-C664-HABITACION-02, ES-LEX-C664-HABITACION-03, ES-LEX-C664-HABITACION-04, ES-LEX-C664-HABITACION-05, ES-LEX-C665-QUEJA-01, ES-LEX-C665-QUEJA-02, ES-LEX-C665-QUEJA-03, ES-LEX-C665-QUEJA-04, ES-LEX-C665-QUEJA-05, ES-LEX-C666-CAMPING-01, ES-LEX-C666-CAMPING-02, ES-LEX-C666-CAMPING-03, ES-LEX-C666-CAMPING-04, ES-LEX-C666-CAMPING-05, ES-LEX-C667-APARTAMENTO-01, ES-LEX-C667-APARTAMENTO-02, ES-LEX-C667-APARTAMENTO-03, ES-LEX-C667-APARTAMENTO-04, ES-LEX-C667-APARTAMENTO-05, ES-LEX-C668-EQUIPAJE-01, ES-LEX-C668-EQUIPAJE-02, ES-LEX-C668-EQUIPAJE-03, ES-LEX-C668-EQUIPAJE-04, ES-LEX-C668-EQUIPAJE-05, ES-LEX-C669-PLANO-01, ES-LEX-C669-PLANO-02, ES-LEX-C669-PLANO-03, ES-LEX-C669-PLANO-04, ES-LEX-C669-PLANO-05, ES-LEX-C670-INDICAR-01, ES-LEX-C670-INDICAR-02, ES-LEX-C670-INDICAR-03, ES-LEX-C670-INDICAR-04, ES-LEX-C670-INDICAR-05, ES-LEX-C671-LEJOS-01, ES-LEX-C671-LEJOS-02, ES-LEX-C671-LEJOS-03, ES-LEX-C671-LEJOS-04, ES-LEX-C671-LEJOS-05] -->
+
+[PAUSE 2s each]
+- [YOU SAY: the sheet, the balcony, the view, the socket, the tap]
+- [YOU SAY: the complaint, the minor damage, to compensate, the manager, the owner]
+- [YOU SAY: the sleeping bag, to camp, the sleeping mat, the caravan, the torch]
+- [YOU SAY: the flat, the proprietor, the host, the tenant, to rent]
+- [YOU SAY: to undo, to pack up, the scales, the excess, to drag]
+- [YOU SAY: the street map, to find your way, the location, to point to, located]
+- [YOU SAY: to show, the instruction, to turn, to cross, to turn off]
+- [YOU SAY: nearby, distant, the short cut, forward, the detour]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C664-HABITACION-01, ES-LEX-C664-HABITACION-02, ES-LEX-C664-HABITACION-03, ES-LEX-C664-HABITACION-04, ES-LEX-C664-HABITACION-05, ES-LEX-C665-QUEJA-01, ES-LEX-C665-QUEJA-02, ES-LEX-C665-QUEJA-03, ES-LEX-C665-QUEJA-04, ES-LEX-C665-QUEJA-05, ES-LEX-C666-CAMPING-01, ES-LEX-C666-CAMPING-02, ES-LEX-C666-CAMPING-03, ES-LEX-C666-CAMPING-04, ES-LEX-C666-CAMPING-05, ES-LEX-C667-APARTAMENTO-01, ES-LEX-C667-APARTAMENTO-02, ES-LEX-C667-APARTAMENTO-03, ES-LEX-C667-APARTAMENTO-04, ES-LEX-C667-APARTAMENTO-05, ES-LEX-C668-EQUIPAJE-01, ES-LEX-C668-EQUIPAJE-02, ES-LEX-C668-EQUIPAJE-03, ES-LEX-C668-EQUIPAJE-04, ES-LEX-C668-EQUIPAJE-05, ES-LEX-C669-PLANO-01, ES-LEX-C669-PLANO-02, ES-LEX-C669-PLANO-03, ES-LEX-C669-PLANO-04, ES-LEX-C669-PLANO-05, ES-LEX-C670-INDICAR-01, ES-LEX-C670-INDICAR-02, ES-LEX-C670-INDICAR-03, ES-LEX-C670-INDICAR-04, ES-LEX-C670-INDICAR-05, ES-LEX-C671-LEJOS-01, ES-LEX-C671-LEJOS-02, ES-LEX-C671-LEJOS-03, ES-LEX-C671-LEJOS-04, ES-LEX-C671-LEJOS-05] -->
+
+[PAUSE 3s] The sheet? (**la sábana**.) The balcony? (**el balcón**.) The view? (**la vista**.) The socket? (**el enchufe**.) The tap? (**el grifo**.) The complaint? (**la queja**.) The minor damage? (**el desperfecto**.) To compensate? (**compensar**.) The manager? (**el gerente**.) The owner? (**el dueño**.) The sleeping bag? (**el saco de dormir**.) To camp? (**acampar**.) The sleeping mat? (**la esterilla**.) The caravan? (**la caravana**.) The torch? (**la linterna**.) The flat? (**el apartamento**.) The proprietor? (**el propietario**.) The host? (**el anfitrión**.) The tenant? (**el inquilino**.) To rent? (**alquilar**.) To undo? (**deshacer**.) To pack up? (**empaquetar**.) The scales? (**la báscula**.) The excess? (**el exceso**.) To drag? (**arrastrar**.) The street map? (**el plano**.) To find your way? (**orientarse**.) The location? (**la ubicación**.) To point to? (**señalar**.) Located? (**situado**.) To show? (**indicar**.) The instruction? (**la indicación**.) To turn? (**doblar**.) To cross? (**atravesar**.) To turn off? (**desviarse**.) Nearby? (**cercano**.) Distant? (**lejano**.) The short cut? (**el atajo**.) Forward? (**adelante**.) The detour? (**el rodeo**.)
+`;export{t};

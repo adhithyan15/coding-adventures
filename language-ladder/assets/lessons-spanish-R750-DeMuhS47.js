@@ -1,0 +1,54 @@
+import{t as e}from"./rolldown-runtime-DK3Fl9T5.js";var t=e({default:()=>n}),n=`---
+schema_version: 2
+id: ES-R751-repaso-744-751
+spine_node: SPINE-DESCRIBE-EXPERIENCE
+sequence: 27550
+chapter: 751
+type: review
+headword: (dialogue)
+gloss: a review of chapters 744-751
+concept_tag: REVIEW
+prerequisites: [ES-C744-flechazo, ES-C744-piropo, ES-C744-noviazgo, ES-C744-pretendiente, ES-C744-complicidad, ES-C745-relacion, ES-C745-ruptura, ES-C745-infiel, ES-C745-traicionar, ES-C745-traicion, ES-C746-acariciar, ES-C746-engano, ES-C746-ligar, ES-C746-coquetear, ES-C746-amante, ES-C747-cunado, ES-C747-suegro, ES-C747-suegra, ES-C747-yerno, ES-C747-nuera, ES-C748-adoptar, ES-C748-acoger, ES-C748-adopcion, ES-C748-madrastra, ES-C748-padrastro, ES-C749-gemelo, ES-C749-hermanastro, ES-C749-adolescente, ES-C749-bisabuelo, ES-C749-huerfano, ES-C750-vinculo, ES-C750-mimar, ES-C750-convivir, ES-C750-colega, ES-C750-apoyo, ES-C751-aficion, ES-C751-pasatiempo, ES-C751-coleccionar, ES-C751-coleccion, ES-C751-acuarela]
+sounds: []
+roots: []
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [ES-LEX-C744-NOVIOS-01, ES-LEX-C744-NOVIOS-02, ES-LEX-C744-NOVIOS-03, ES-LEX-C744-NOVIOS-04, ES-LEX-C744-NOVIOS-05, ES-LEX-C745-RUPTURA-01, ES-LEX-C745-RUPTURA-02, ES-LEX-C745-RUPTURA-03, ES-LEX-C745-RUPTURA-04, ES-LEX-C745-RUPTURA-05, ES-LEX-C746-ENGANO-01, ES-LEX-C746-ENGANO-02, ES-LEX-C746-ENGANO-03, ES-LEX-C746-ENGANO-04, ES-LEX-C746-ENGANO-05, ES-LEX-C747-POLITICA-01, ES-LEX-C747-POLITICA-02, ES-LEX-C747-POLITICA-03, ES-LEX-C747-POLITICA-04, ES-LEX-C747-POLITICA-05, ES-LEX-C748-NIETOS-01, ES-LEX-C748-NIETOS-02, ES-LEX-C748-NIETOS-03, ES-LEX-C748-NIETOS-04, ES-LEX-C748-NIETOS-05, ES-LEX-C749-EDADES-01, ES-LEX-C749-EDADES-02, ES-LEX-C749-EDADES-03, ES-LEX-C749-EDADES-04, ES-LEX-C749-EDADES-05, ES-LEX-C750-CONVIVIR-01, ES-LEX-C750-CONVIVIR-02, ES-LEX-C750-CONVIVIR-03, ES-LEX-C750-CONVIVIR-04, ES-LEX-C750-CONVIVIR-05, ES-LEX-C751-AFICION-01, ES-LEX-C751-AFICION-02, ES-LEX-C751-AFICION-03, ES-LEX-C751-AFICION-04, ES-LEX-C751-AFICION-05]
+introduces:
+  knowledge: []
+practises:
+  knowledge: [ES-LEX-C744-NOVIOS-01, ES-LEX-C744-NOVIOS-02, ES-LEX-C744-NOVIOS-03, ES-LEX-C744-NOVIOS-04, ES-LEX-C744-NOVIOS-05, ES-LEX-C745-RUPTURA-01, ES-LEX-C745-RUPTURA-02, ES-LEX-C745-RUPTURA-03, ES-LEX-C745-RUPTURA-04, ES-LEX-C745-RUPTURA-05, ES-LEX-C746-ENGANO-01, ES-LEX-C746-ENGANO-02, ES-LEX-C746-ENGANO-03, ES-LEX-C746-ENGANO-04, ES-LEX-C746-ENGANO-05, ES-LEX-C747-POLITICA-01, ES-LEX-C747-POLITICA-02, ES-LEX-C747-POLITICA-03, ES-LEX-C747-POLITICA-04, ES-LEX-C747-POLITICA-05, ES-LEX-C748-NIETOS-01, ES-LEX-C748-NIETOS-02, ES-LEX-C748-NIETOS-03, ES-LEX-C748-NIETOS-04, ES-LEX-C748-NIETOS-05, ES-LEX-C749-EDADES-01, ES-LEX-C749-EDADES-02, ES-LEX-C749-EDADES-03, ES-LEX-C749-EDADES-04, ES-LEX-C749-EDADES-05, ES-LEX-C750-CONVIVIR-01, ES-LEX-C750-CONVIVIR-02, ES-LEX-C750-CONVIVIR-03, ES-LEX-C750-CONVIVIR-04, ES-LEX-C750-CONVIVIR-05, ES-LEX-C751-AFICION-01, ES-LEX-C751-AFICION-02, ES-LEX-C751-AFICION-03, ES-LEX-C751-AFICION-04, ES-LEX-C751-AFICION-05]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: general
+reviews_of: [ES-C744-flechazo, ES-C744-piropo, ES-C744-noviazgo, ES-C744-pretendiente, ES-C744-complicidad, ES-C745-relacion, ES-C745-ruptura, ES-C745-infiel, ES-C745-traicionar, ES-C745-traicion, ES-C746-acariciar, ES-C746-engano, ES-C746-ligar, ES-C746-coquetear, ES-C746-amante, ES-C747-cunado, ES-C747-suegro, ES-C747-suegra, ES-C747-yerno, ES-C747-nuera, ES-C748-adoptar, ES-C748-acoger, ES-C748-adopcion, ES-C748-madrastra, ES-C748-padrastro, ES-C749-gemelo, ES-C749-hermanastro, ES-C749-adolescente, ES-C749-bisabuelo, ES-C749-huerfano, ES-C750-vinculo, ES-C750-mimar, ES-C750-convivir, ES-C750-colega, ES-C750-apoyo, ES-C751-aficion, ES-C751-pasatiempo, ES-C751-coleccionar, ES-C751-coleccion, ES-C751-acuarela]
+---
+
+# Repaso de los capítulos 744–751
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C744-NOVIOS-01, ES-LEX-C744-NOVIOS-02] -->
+
+[PAUSE 3s] Say the Spanish for love at first sight and the compliment.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C744-NOVIOS-01, ES-LEX-C744-NOVIOS-02, ES-LEX-C744-NOVIOS-03, ES-LEX-C744-NOVIOS-04, ES-LEX-C744-NOVIOS-05, ES-LEX-C745-RUPTURA-01, ES-LEX-C745-RUPTURA-02, ES-LEX-C745-RUPTURA-03, ES-LEX-C745-RUPTURA-04, ES-LEX-C745-RUPTURA-05, ES-LEX-C746-ENGANO-01, ES-LEX-C746-ENGANO-02, ES-LEX-C746-ENGANO-03, ES-LEX-C746-ENGANO-04, ES-LEX-C746-ENGANO-05, ES-LEX-C747-POLITICA-01, ES-LEX-C747-POLITICA-02, ES-LEX-C747-POLITICA-03, ES-LEX-C747-POLITICA-04, ES-LEX-C747-POLITICA-05, ES-LEX-C748-NIETOS-01, ES-LEX-C748-NIETOS-02, ES-LEX-C748-NIETOS-03, ES-LEX-C748-NIETOS-04, ES-LEX-C748-NIETOS-05, ES-LEX-C749-EDADES-01, ES-LEX-C749-EDADES-02, ES-LEX-C749-EDADES-03, ES-LEX-C749-EDADES-04, ES-LEX-C749-EDADES-05, ES-LEX-C750-CONVIVIR-01, ES-LEX-C750-CONVIVIR-02, ES-LEX-C750-CONVIVIR-03, ES-LEX-C750-CONVIVIR-04, ES-LEX-C750-CONVIVIR-05, ES-LEX-C751-AFICION-01, ES-LEX-C751-AFICION-02, ES-LEX-C751-AFICION-03, ES-LEX-C751-AFICION-04, ES-LEX-C751-AFICION-05] -->
+
+[PAUSE 2s each]
+- [YOU SAY: love at first sight, the compliment, the courtship, the suitor, closeness]
+- [YOU SAY: the relationship, the break-up, unfaithful, to betray, betrayal]
+- [YOU SAY: to stroke, the deception, to chat up, to flirt, the lover]
+- [YOU SAY: the brother-in-law, the father-in-law, the mother-in-law, the son-in-law, the daughter-in-law]
+- [YOU SAY: to adopt, to take in, adoption, the stepmother, the stepfather]
+- [YOU SAY: the twin, the stepbrother, the teenager, the great-grandfather, the orphan]
+- [YOU SAY: the bond, to spoil, to live together, the colleague, support]
+- [YOU SAY: the hobby, the pastime, to collect, the collection, watercolour]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C744-NOVIOS-01, ES-LEX-C744-NOVIOS-02, ES-LEX-C744-NOVIOS-03, ES-LEX-C744-NOVIOS-04, ES-LEX-C744-NOVIOS-05, ES-LEX-C745-RUPTURA-01, ES-LEX-C745-RUPTURA-02, ES-LEX-C745-RUPTURA-03, ES-LEX-C745-RUPTURA-04, ES-LEX-C745-RUPTURA-05, ES-LEX-C746-ENGANO-01, ES-LEX-C746-ENGANO-02, ES-LEX-C746-ENGANO-03, ES-LEX-C746-ENGANO-04, ES-LEX-C746-ENGANO-05, ES-LEX-C747-POLITICA-01, ES-LEX-C747-POLITICA-02, ES-LEX-C747-POLITICA-03, ES-LEX-C747-POLITICA-04, ES-LEX-C747-POLITICA-05, ES-LEX-C748-NIETOS-01, ES-LEX-C748-NIETOS-02, ES-LEX-C748-NIETOS-03, ES-LEX-C748-NIETOS-04, ES-LEX-C748-NIETOS-05, ES-LEX-C749-EDADES-01, ES-LEX-C749-EDADES-02, ES-LEX-C749-EDADES-03, ES-LEX-C749-EDADES-04, ES-LEX-C749-EDADES-05, ES-LEX-C750-CONVIVIR-01, ES-LEX-C750-CONVIVIR-02, ES-LEX-C750-CONVIVIR-03, ES-LEX-C750-CONVIVIR-04, ES-LEX-C750-CONVIVIR-05, ES-LEX-C751-AFICION-01, ES-LEX-C751-AFICION-02, ES-LEX-C751-AFICION-03, ES-LEX-C751-AFICION-04, ES-LEX-C751-AFICION-05] -->
+
+[PAUSE 3s] Love at first sight? (**el flechazo**.) The compliment? (**el piropo**.) The courtship? (**el noviazgo**.) The suitor? (**el pretendiente**.) Closeness? (**la complicidad**.) The relationship? (**la relación**.) The break-up? (**la ruptura**.) Unfaithful? (**infiel**.) To betray? (**traicionar**.) Betrayal? (**la traición**.) To stroke? (**acariciar**.) The deception? (**el engaño**.) To chat up? (**ligar**.) To flirt? (**coquetear**.) The lover? (**el amante**.) The brother-in-law? (**el cuñado**.) The father-in-law? (**el suegro**.) The mother-in-law? (**la suegra**.) The son-in-law? (**el yerno**.) The daughter-in-law? (**la nuera**.) To adopt? (**adoptar**.) To take in? (**acoger**.) Adoption? (**la adopción**.) The stepmother? (**la madrastra**.) The stepfather? (**el padrastro**.) The twin? (**el gemelo**.) The stepbrother? (**el hermanastro**.) The teenager? (**el adolescente**.) The great-grandfather? (**el bisabuelo**.) The orphan? (**el huérfano**.) The bond? (**el vínculo**.) To spoil? (**mimar**.) To live together? (**convivir**.) The colleague? (**el colega**.) Support? (**el apoyo**.) The hobby? (**la afición**.) The pastime? (**el pasatiempo**.) To collect? (**coleccionar**.) The collection? (**la colección**.) Watercolour? (**la acuarela**.)
+`;export{t};

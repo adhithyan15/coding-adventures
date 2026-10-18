@@ -1,0 +1,54 @@
+import{t as e}from"./rolldown-runtime-DK3Fl9T5.js";var t=e({default:()=>n}),n=`---
+schema_version: 2
+id: ES-R711-repaso-704-711
+spine_node: SPINE-DESCRIBE-EXPERIENCE
+sequence: 25500
+chapter: 711
+type: review
+headword: (dialogue)
+gloss: a review of chapters 704-711
+concept_tag: REVIEW
+prerequisites: [ES-C704-alegria, ES-C704-melancolia, ES-C704-dicha, ES-C704-emocionarse, ES-C704-llorar, ES-C705-orgullo, ES-C705-orgulloso, ES-C705-verguenza, ES-C705-avergonzado, ES-C705-avergonzarse, ES-C706-asustar, ES-C706-asustado, ES-C706-susto, ES-C706-panico, ES-C706-temer, ES-C707-enfadado, ES-C707-enojado, ES-C707-rabia, ES-C707-ira, ES-C707-fastidiar, ES-C708-celos, ES-C708-celoso, ES-C708-envidia, ES-C708-envidiar, ES-C708-rencor, ES-C709-aislamiento, ES-C709-solitario, ES-C709-extranar, ES-C709-nostalgia, ES-C709-anorar, ES-C710-nervios, ES-C710-estres, ES-C710-ansiedad, ES-C710-tension, ES-C710-calmar, ES-C711-emocion, ES-C711-emocionado, ES-C711-emocionante, ES-C711-emotivo, ES-C711-conmover]
+sounds: []
+roots: []
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [ES-LEX-C704-ALEGRIA-01, ES-LEX-C704-ALEGRIA-02, ES-LEX-C704-ALEGRIA-03, ES-LEX-C704-ALEGRIA-04, ES-LEX-C704-ALEGRIA-05, ES-LEX-C705-ORGULLO-01, ES-LEX-C705-ORGULLO-02, ES-LEX-C705-ORGULLO-03, ES-LEX-C705-ORGULLO-04, ES-LEX-C705-ORGULLO-05, ES-LEX-C706-SUSTO-01, ES-LEX-C706-SUSTO-02, ES-LEX-C706-SUSTO-03, ES-LEX-C706-SUSTO-04, ES-LEX-C706-SUSTO-05, ES-LEX-C707-ENFADO-01, ES-LEX-C707-ENFADO-02, ES-LEX-C707-ENFADO-03, ES-LEX-C707-ENFADO-04, ES-LEX-C707-ENFADO-05, ES-LEX-C708-CELOS-01, ES-LEX-C708-CELOS-02, ES-LEX-C708-CELOS-03, ES-LEX-C708-CELOS-04, ES-LEX-C708-CELOS-05, ES-LEX-C709-SOLEDAD-01, ES-LEX-C709-SOLEDAD-02, ES-LEX-C709-SOLEDAD-03, ES-LEX-C709-SOLEDAD-04, ES-LEX-C709-SOLEDAD-05, ES-LEX-C710-NERVIOS-01, ES-LEX-C710-NERVIOS-02, ES-LEX-C710-NERVIOS-03, ES-LEX-C710-NERVIOS-04, ES-LEX-C710-NERVIOS-05, ES-LEX-C711-EMOCION-01, ES-LEX-C711-EMOCION-02, ES-LEX-C711-EMOCION-03, ES-LEX-C711-EMOCION-04, ES-LEX-C711-EMOCION-05]
+introduces:
+  knowledge: []
+practises:
+  knowledge: [ES-LEX-C704-ALEGRIA-01, ES-LEX-C704-ALEGRIA-02, ES-LEX-C704-ALEGRIA-03, ES-LEX-C704-ALEGRIA-04, ES-LEX-C704-ALEGRIA-05, ES-LEX-C705-ORGULLO-01, ES-LEX-C705-ORGULLO-02, ES-LEX-C705-ORGULLO-03, ES-LEX-C705-ORGULLO-04, ES-LEX-C705-ORGULLO-05, ES-LEX-C706-SUSTO-01, ES-LEX-C706-SUSTO-02, ES-LEX-C706-SUSTO-03, ES-LEX-C706-SUSTO-04, ES-LEX-C706-SUSTO-05, ES-LEX-C707-ENFADO-01, ES-LEX-C707-ENFADO-02, ES-LEX-C707-ENFADO-03, ES-LEX-C707-ENFADO-04, ES-LEX-C707-ENFADO-05, ES-LEX-C708-CELOS-01, ES-LEX-C708-CELOS-02, ES-LEX-C708-CELOS-03, ES-LEX-C708-CELOS-04, ES-LEX-C708-CELOS-05, ES-LEX-C709-SOLEDAD-01, ES-LEX-C709-SOLEDAD-02, ES-LEX-C709-SOLEDAD-03, ES-LEX-C709-SOLEDAD-04, ES-LEX-C709-SOLEDAD-05, ES-LEX-C710-NERVIOS-01, ES-LEX-C710-NERVIOS-02, ES-LEX-C710-NERVIOS-03, ES-LEX-C710-NERVIOS-04, ES-LEX-C710-NERVIOS-05, ES-LEX-C711-EMOCION-01, ES-LEX-C711-EMOCION-02, ES-LEX-C711-EMOCION-03, ES-LEX-C711-EMOCION-04, ES-LEX-C711-EMOCION-05]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: general
+reviews_of: [ES-C704-alegria, ES-C704-melancolia, ES-C704-dicha, ES-C704-emocionarse, ES-C704-llorar, ES-C705-orgullo, ES-C705-orgulloso, ES-C705-verguenza, ES-C705-avergonzado, ES-C705-avergonzarse, ES-C706-asustar, ES-C706-asustado, ES-C706-susto, ES-C706-panico, ES-C706-temer, ES-C707-enfadado, ES-C707-enojado, ES-C707-rabia, ES-C707-ira, ES-C707-fastidiar, ES-C708-celos, ES-C708-celoso, ES-C708-envidia, ES-C708-envidiar, ES-C708-rencor, ES-C709-aislamiento, ES-C709-solitario, ES-C709-extranar, ES-C709-nostalgia, ES-C709-anorar, ES-C710-nervios, ES-C710-estres, ES-C710-ansiedad, ES-C710-tension, ES-C710-calmar, ES-C711-emocion, ES-C711-emocionado, ES-C711-emocionante, ES-C711-emotivo, ES-C711-conmover]
+---
+
+# Sentimientos y experiencias
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C704-ALEGRIA-01, ES-LEX-C704-ALEGRIA-02] -->
+
+[PAUSE 3s] Say the Spanish for joy and melancholy.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C704-ALEGRIA-01, ES-LEX-C704-ALEGRIA-02, ES-LEX-C704-ALEGRIA-03, ES-LEX-C704-ALEGRIA-04, ES-LEX-C704-ALEGRIA-05, ES-LEX-C705-ORGULLO-01, ES-LEX-C705-ORGULLO-02, ES-LEX-C705-ORGULLO-03, ES-LEX-C705-ORGULLO-04, ES-LEX-C705-ORGULLO-05, ES-LEX-C706-SUSTO-01, ES-LEX-C706-SUSTO-02, ES-LEX-C706-SUSTO-03, ES-LEX-C706-SUSTO-04, ES-LEX-C706-SUSTO-05, ES-LEX-C707-ENFADO-01, ES-LEX-C707-ENFADO-02, ES-LEX-C707-ENFADO-03, ES-LEX-C707-ENFADO-04, ES-LEX-C707-ENFADO-05, ES-LEX-C708-CELOS-01, ES-LEX-C708-CELOS-02, ES-LEX-C708-CELOS-03, ES-LEX-C708-CELOS-04, ES-LEX-C708-CELOS-05, ES-LEX-C709-SOLEDAD-01, ES-LEX-C709-SOLEDAD-02, ES-LEX-C709-SOLEDAD-03, ES-LEX-C709-SOLEDAD-04, ES-LEX-C709-SOLEDAD-05, ES-LEX-C710-NERVIOS-01, ES-LEX-C710-NERVIOS-02, ES-LEX-C710-NERVIOS-03, ES-LEX-C710-NERVIOS-04, ES-LEX-C710-NERVIOS-05, ES-LEX-C711-EMOCION-01, ES-LEX-C711-EMOCION-02, ES-LEX-C711-EMOCION-03, ES-LEX-C711-EMOCION-04, ES-LEX-C711-EMOCION-05] -->
+
+[PAUSE 2s each]
+- [YOU SAY: joy, melancholy, happiness, to be moved, to cry]
+- [YOU SAY: pride, proud, shame, ashamed, to be ashamed]
+- [YOU SAY: to frighten, frightened, the fright, panic, to fear]
+- [YOU SAY: angry, cross, rage, anger, to annoy]
+- [YOU SAY: jealousy, jealous, envy, to envy, resentment]
+- [YOU SAY: isolation, lonely, to miss, nostalgia, to long for]
+- [YOU SAY: nerves, stress, anxiety, tension, to calm]
+- [YOU SAY: emotion, excited, exciting, moving, to move]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C704-ALEGRIA-01, ES-LEX-C704-ALEGRIA-02, ES-LEX-C704-ALEGRIA-03, ES-LEX-C704-ALEGRIA-04, ES-LEX-C704-ALEGRIA-05, ES-LEX-C705-ORGULLO-01, ES-LEX-C705-ORGULLO-02, ES-LEX-C705-ORGULLO-03, ES-LEX-C705-ORGULLO-04, ES-LEX-C705-ORGULLO-05, ES-LEX-C706-SUSTO-01, ES-LEX-C706-SUSTO-02, ES-LEX-C706-SUSTO-03, ES-LEX-C706-SUSTO-04, ES-LEX-C706-SUSTO-05, ES-LEX-C707-ENFADO-01, ES-LEX-C707-ENFADO-02, ES-LEX-C707-ENFADO-03, ES-LEX-C707-ENFADO-04, ES-LEX-C707-ENFADO-05, ES-LEX-C708-CELOS-01, ES-LEX-C708-CELOS-02, ES-LEX-C708-CELOS-03, ES-LEX-C708-CELOS-04, ES-LEX-C708-CELOS-05, ES-LEX-C709-SOLEDAD-01, ES-LEX-C709-SOLEDAD-02, ES-LEX-C709-SOLEDAD-03, ES-LEX-C709-SOLEDAD-04, ES-LEX-C709-SOLEDAD-05, ES-LEX-C710-NERVIOS-01, ES-LEX-C710-NERVIOS-02, ES-LEX-C710-NERVIOS-03, ES-LEX-C710-NERVIOS-04, ES-LEX-C710-NERVIOS-05, ES-LEX-C711-EMOCION-01, ES-LEX-C711-EMOCION-02, ES-LEX-C711-EMOCION-03, ES-LEX-C711-EMOCION-04, ES-LEX-C711-EMOCION-05] -->
+
+[PAUSE 3s] Joy? (**la alegría**.) Melancholy? (**la melancolía**.) Happiness? (**la dicha**.) To be moved? (**emocionarse**.) To cry? (**llorar**.) Pride? (**el orgullo**.) Proud? (**orgulloso**.) Shame? (**la vergüenza**.) Ashamed? (**avergonzado**.) To be ashamed? (**avergonzarse**.) To frighten? (**asustar**.) Frightened? (**asustado**.) The fright? (**el susto**.) Panic? (**el pánico**.) To fear? (**temer**.) Angry? (**enfadado**.) Cross? (**enojado**.) Rage? (**la rabia**.) Anger? (**la ira**.) To annoy? (**fastidiar**.) Jealousy? (**los celos**.) Jealous? (**celoso**.) Envy? (**la envidia**.) To envy? (**envidiar**.) Resentment? (**el rencor**.) Isolation? (**el aislamiento**.) Lonely? (**solitario**.) To miss? (**extrañar**.) Nostalgia? (**la nostalgia**.) To long for? (**añorar**.) Nerves? (**los nervios**.) Stress? (**el estrés**.) Anxiety? (**la ansiedad**.) Tension? (**la tensión**.) To calm? (**calmar**.) Emotion? (**la emoción**.) Excited? (**emocionado**.) Exciting? (**emocionante**.) Moving? (**emotivo**.) To move? (**conmover**.)
+`;export{t};

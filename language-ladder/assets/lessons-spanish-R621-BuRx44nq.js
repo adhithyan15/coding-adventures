@@ -1,0 +1,54 @@
+import{t as e}from"./rolldown-runtime-DK3Fl9T5.js";var t=e({default:()=>n}),n=`---
+schema_version: 2
+id: ES-R623-repaso-616-623
+spine_node: SPINE-EXPRESS-CONDITION
+sequence: 20950
+chapter: 623
+type: review
+headword: (dialogue)
+gloss: a review of chapters 616-623
+concept_tag: REVIEW
+prerequisites: [ES-C616-imprevisto, ES-C616-anticipar, ES-C616-posponer, ES-C616-contratiempo, ES-C616-alternativa, ES-C617-decision, ES-C617-opcion, ES-C617-dilema, ES-C617-prioridad, ES-C617-criterio, ES-C618-imaginar, ES-C618-hipotesis, ES-C618-en-teoria, ES-C618-posiblemente, ES-C618-seguramente, ES-C619-a-lo-mejor, ES-C619-previsible, ES-C619-oportunidad, ES-C619-perspectiva, ES-C619-predecir, ES-C620-solucion, ES-C620-solucionar, ES-C620-obstaculo, ES-C620-complicado, ES-C620-plantear, ES-C621-impedir, ES-C621-facilitar, ES-C621-dificultar, ES-C621-exento, ES-C621-prohibido, ES-C622-normativa, ES-C622-reglamento, ES-C622-prohibicion, ES-C622-obligar, ES-C622-obligacion, ES-C623-castigo, ES-C623-castigar, ES-C623-sancion, ES-C623-sancionar, ES-C623-multar]
+sounds: []
+roots: []
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [ES-LEX-C616-IMPREV-01, ES-LEX-C616-IMPREV-02, ES-LEX-C616-IMPREV-03, ES-LEX-C616-IMPREV-04, ES-LEX-C616-IMPREV-05, ES-LEX-C617-DECIDE-01, ES-LEX-C617-DECIDE-02, ES-LEX-C617-DECIDE-03, ES-LEX-C617-DECIDE-04, ES-LEX-C617-DECIDE-05, ES-LEX-C618-SUPONE-01, ES-LEX-C618-SUPONE-02, ES-LEX-C618-SUPONE-03, ES-LEX-C618-SUPONE-04, ES-LEX-C618-SUPONE-05, ES-LEX-C619-QUIZA-01, ES-LEX-C619-QUIZA-02, ES-LEX-C619-QUIZA-03, ES-LEX-C619-QUIZA-04, ES-LEX-C619-QUIZA-05, ES-LEX-C620-SOLUCION-01, ES-LEX-C620-SOLUCION-02, ES-LEX-C620-SOLUCION-03, ES-LEX-C620-SOLUCION-04, ES-LEX-C620-SOLUCION-05, ES-LEX-C621-IMPIDE-01, ES-LEX-C621-IMPIDE-02, ES-LEX-C621-IMPIDE-03, ES-LEX-C621-IMPIDE-04, ES-LEX-C621-IMPIDE-05, ES-LEX-C622-REGLA-01, ES-LEX-C622-REGLA-02, ES-LEX-C622-REGLA-03, ES-LEX-C622-REGLA-04, ES-LEX-C622-REGLA-05, ES-LEX-C623-SANCION-01, ES-LEX-C623-SANCION-02, ES-LEX-C623-SANCION-03, ES-LEX-C623-SANCION-04, ES-LEX-C623-SANCION-05]
+introduces:
+  knowledge: []
+practises:
+  knowledge: [ES-LEX-C616-IMPREV-01, ES-LEX-C616-IMPREV-02, ES-LEX-C616-IMPREV-03, ES-LEX-C616-IMPREV-04, ES-LEX-C616-IMPREV-05, ES-LEX-C617-DECIDE-01, ES-LEX-C617-DECIDE-02, ES-LEX-C617-DECIDE-03, ES-LEX-C617-DECIDE-04, ES-LEX-C617-DECIDE-05, ES-LEX-C618-SUPONE-01, ES-LEX-C618-SUPONE-02, ES-LEX-C618-SUPONE-03, ES-LEX-C618-SUPONE-04, ES-LEX-C618-SUPONE-05, ES-LEX-C619-QUIZA-01, ES-LEX-C619-QUIZA-02, ES-LEX-C619-QUIZA-03, ES-LEX-C619-QUIZA-04, ES-LEX-C619-QUIZA-05, ES-LEX-C620-SOLUCION-01, ES-LEX-C620-SOLUCION-02, ES-LEX-C620-SOLUCION-03, ES-LEX-C620-SOLUCION-04, ES-LEX-C620-SOLUCION-05, ES-LEX-C621-IMPIDE-01, ES-LEX-C621-IMPIDE-02, ES-LEX-C621-IMPIDE-03, ES-LEX-C621-IMPIDE-04, ES-LEX-C621-IMPIDE-05, ES-LEX-C622-REGLA-01, ES-LEX-C622-REGLA-02, ES-LEX-C622-REGLA-03, ES-LEX-C622-REGLA-04, ES-LEX-C622-REGLA-05, ES-LEX-C623-SANCION-01, ES-LEX-C623-SANCION-02, ES-LEX-C623-SANCION-03, ES-LEX-C623-SANCION-04, ES-LEX-C623-SANCION-05]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: general
+reviews_of: [ES-C616-imprevisto, ES-C616-anticipar, ES-C616-posponer, ES-C616-contratiempo, ES-C616-alternativa, ES-C617-decision, ES-C617-opcion, ES-C617-dilema, ES-C617-prioridad, ES-C617-criterio, ES-C618-imaginar, ES-C618-hipotesis, ES-C618-en-teoria, ES-C618-posiblemente, ES-C618-seguramente, ES-C619-a-lo-mejor, ES-C619-previsible, ES-C619-oportunidad, ES-C619-perspectiva, ES-C619-predecir, ES-C620-solucion, ES-C620-solucionar, ES-C620-obstaculo, ES-C620-complicado, ES-C620-plantear, ES-C621-impedir, ES-C621-facilitar, ES-C621-dificultar, ES-C621-exento, ES-C621-prohibido, ES-C622-normativa, ES-C622-reglamento, ES-C622-prohibicion, ES-C622-obligar, ES-C622-obligacion, ES-C623-castigo, ES-C623-castigar, ES-C623-sancion, ES-C623-sancionar, ES-C623-multar]
+---
+
+# Repaso de los capítulos 616–623
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C616-IMPREV-01, ES-LEX-C616-IMPREV-02] -->
+
+[PAUSE 3s] Say the Spanish for the unexpected problem and to bring forward.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C616-IMPREV-01, ES-LEX-C616-IMPREV-02, ES-LEX-C616-IMPREV-03, ES-LEX-C616-IMPREV-04, ES-LEX-C616-IMPREV-05, ES-LEX-C617-DECIDE-01, ES-LEX-C617-DECIDE-02, ES-LEX-C617-DECIDE-03, ES-LEX-C617-DECIDE-04, ES-LEX-C617-DECIDE-05, ES-LEX-C618-SUPONE-01, ES-LEX-C618-SUPONE-02, ES-LEX-C618-SUPONE-03, ES-LEX-C618-SUPONE-04, ES-LEX-C618-SUPONE-05, ES-LEX-C619-QUIZA-01, ES-LEX-C619-QUIZA-02, ES-LEX-C619-QUIZA-03, ES-LEX-C619-QUIZA-04, ES-LEX-C619-QUIZA-05, ES-LEX-C620-SOLUCION-01, ES-LEX-C620-SOLUCION-02, ES-LEX-C620-SOLUCION-03, ES-LEX-C620-SOLUCION-04, ES-LEX-C620-SOLUCION-05, ES-LEX-C621-IMPIDE-01, ES-LEX-C621-IMPIDE-02, ES-LEX-C621-IMPIDE-03, ES-LEX-C621-IMPIDE-04, ES-LEX-C621-IMPIDE-05, ES-LEX-C622-REGLA-01, ES-LEX-C622-REGLA-02, ES-LEX-C622-REGLA-03, ES-LEX-C622-REGLA-04, ES-LEX-C622-REGLA-05, ES-LEX-C623-SANCION-01, ES-LEX-C623-SANCION-02, ES-LEX-C623-SANCION-03, ES-LEX-C623-SANCION-04, ES-LEX-C623-SANCION-05] -->
+
+[PAUSE 2s each]
+- [YOU SAY: the unexpected problem, to bring forward, to postpone, the setback, the alternative]
+- [YOU SAY: the decision, the option, the dilemma, the priority, the criterion]
+- [YOU SAY: to imagine, the hypothesis, in theory, possibly, most likely]
+- [YOU SAY: maybe, predictable, the opportunity, the prospect, to predict]
+- [YOU SAY: the solution, to solve, the obstacle, complicated, to raise]
+- [YOU SAY: to stop, to make easier, to make difficult, exempt, forbidden]
+- [YOU SAY: the set of rules, the regulations, the ban, to force, the obligation]
+- [YOU SAY: the punishment, to punish, the penalty, to penalise, to fine]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C616-IMPREV-01, ES-LEX-C616-IMPREV-02, ES-LEX-C616-IMPREV-03, ES-LEX-C616-IMPREV-04, ES-LEX-C616-IMPREV-05, ES-LEX-C617-DECIDE-01, ES-LEX-C617-DECIDE-02, ES-LEX-C617-DECIDE-03, ES-LEX-C617-DECIDE-04, ES-LEX-C617-DECIDE-05, ES-LEX-C618-SUPONE-01, ES-LEX-C618-SUPONE-02, ES-LEX-C618-SUPONE-03, ES-LEX-C618-SUPONE-04, ES-LEX-C618-SUPONE-05, ES-LEX-C619-QUIZA-01, ES-LEX-C619-QUIZA-02, ES-LEX-C619-QUIZA-03, ES-LEX-C619-QUIZA-04, ES-LEX-C619-QUIZA-05, ES-LEX-C620-SOLUCION-01, ES-LEX-C620-SOLUCION-02, ES-LEX-C620-SOLUCION-03, ES-LEX-C620-SOLUCION-04, ES-LEX-C620-SOLUCION-05, ES-LEX-C621-IMPIDE-01, ES-LEX-C621-IMPIDE-02, ES-LEX-C621-IMPIDE-03, ES-LEX-C621-IMPIDE-04, ES-LEX-C621-IMPIDE-05, ES-LEX-C622-REGLA-01, ES-LEX-C622-REGLA-02, ES-LEX-C622-REGLA-03, ES-LEX-C622-REGLA-04, ES-LEX-C622-REGLA-05, ES-LEX-C623-SANCION-01, ES-LEX-C623-SANCION-02, ES-LEX-C623-SANCION-03, ES-LEX-C623-SANCION-04, ES-LEX-C623-SANCION-05] -->
+
+[PAUSE 3s] The unexpected problem? (**el imprevisto**.) To bring forward? (**anticipar**.) To postpone? (**posponer**.) The setback? (**el contratiempo**.) The alternative? (**la alternativa**.) The decision? (**la decisión**.) The option? (**la opción**.) The dilemma? (**el dilema**.) The priority? (**la prioridad**.) The criterion? (**el criterio**.) To imagine? (**imaginar**.) The hypothesis? (**la hipótesis**.) In theory? (**en teoría**.) Possibly? (**posiblemente**.) Most likely? (**seguramente**.) Maybe? (**a lo mejor**.) Predictable? (**previsible**.) The opportunity? (**la oportunidad**.) The prospect? (**la perspectiva**.) To predict? (**predecir**.) The solution? (**la solución**.) To solve? (**solucionar**.) The obstacle? (**el obstáculo**.) Complicated? (**complicado**.) To raise? (**plantear**.) To stop? (**impedir**.) To make easier? (**facilitar**.) To make difficult? (**dificultar**.) Exempt? (**exento**.) Forbidden? (**prohibido**.) The set of rules? (**la normativa**.) The regulations? (**el reglamento**.) The ban? (**la prohibición**.) To force? (**obligar**.) The obligation? (**la obligación**.) The punishment? (**el castigo**.) To punish? (**castigar**.) The penalty? (**la sanción**.) To penalise? (**sancionar**.) To fine? (**multar**.)
+`;export{t};

@@ -1,0 +1,54 @@
+import{t as e}from"./rolldown-runtime-DK3Fl9T5.js";var t=e({default:()=>n}),n=`---
+schema_version: 2
+id: ES-R543-repaso-536-543
+spine_node: SPINE-NARRATE-EVENTS
+sequence: 16810
+chapter: 543
+type: review
+headword: (dialogue)
+gloss: a review of chapters 536-543
+concept_tag: REVIEW
+prerequisites: [ES-C536-mientras-tanto, ES-C536-al-mismo-tiempo, ES-C536-a-la-vez, ES-C536-en-cuanto, ES-C536-tan-pronto-como, ES-C537-desde-entonces, ES-C537-hasta-entonces, ES-C537-al-dia-siguiente, ES-C537-hace-poco, ES-C537-anteayer, ES-C538-anteriormente, ES-C538-posteriormente, ES-C538-previamente, ES-C538-recientemente, ES-C538-ultimamente, ES-C539-semestre, ES-C539-quincena, ES-C539-lustro, ES-C539-milenio, ES-C539-periodo, ES-C540-a-principios-de, ES-C540-a-mediados-de, ES-C540-a-finales-de, ES-C540-semanal, ES-C540-anual, ES-C541-fase, ES-C541-transcurso, ES-C541-duracion, ES-C541-prolongarse, ES-C541-transcurrir, ES-C542-comenzar, ES-C542-iniciar, ES-C542-comienzo, ES-C542-arranque, ES-C542-finalizar, ES-C543-reanudar, ES-C543-retrasar, ES-C543-aplazar, ES-C543-adelantar, ES-C543-permanecer]
+sounds: []
+roots: []
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [ES-LEX-C536-MIENTRAS-01, ES-LEX-C536-MIENTRAS-02, ES-LEX-C536-MIENTRAS-03, ES-LEX-C536-MIENTRAS-04, ES-LEX-C536-MIENTRAS-05, ES-LEX-C537-ENTONCES-01, ES-LEX-C537-ENTONCES-02, ES-LEX-C537-ENTONCES-03, ES-LEX-C537-ENTONCES-04, ES-LEX-C537-ENTONCES-05, ES-LEX-C538-ANTES-01, ES-LEX-C538-ANTES-02, ES-LEX-C538-ANTES-03, ES-LEX-C538-ANTES-04, ES-LEX-C538-ANTES-05, ES-LEX-C539-ANYO-01, ES-LEX-C539-ANYO-02, ES-LEX-C539-ANYO-03, ES-LEX-C539-ANYO-04, ES-LEX-C539-ANYO-05, ES-LEX-C540-TEMPORADA-01, ES-LEX-C540-TEMPORADA-02, ES-LEX-C540-TEMPORADA-03, ES-LEX-C540-TEMPORADA-04, ES-LEX-C540-TEMPORADA-05, ES-LEX-C541-DURAR-01, ES-LEX-C541-DURAR-02, ES-LEX-C541-DURAR-03, ES-LEX-C541-DURAR-04, ES-LEX-C541-DURAR-05, ES-LEX-C542-COMIENZO-01, ES-LEX-C542-COMIENZO-02, ES-LEX-C542-COMIENZO-03, ES-LEX-C542-COMIENZO-04, ES-LEX-C542-COMIENZO-05, ES-LEX-C543-RETRASO-01, ES-LEX-C543-RETRASO-02, ES-LEX-C543-RETRASO-03, ES-LEX-C543-RETRASO-04, ES-LEX-C543-RETRASO-05]
+introduces:
+  knowledge: []
+practises:
+  knowledge: [ES-LEX-C536-MIENTRAS-01, ES-LEX-C536-MIENTRAS-02, ES-LEX-C536-MIENTRAS-03, ES-LEX-C536-MIENTRAS-04, ES-LEX-C536-MIENTRAS-05, ES-LEX-C537-ENTONCES-01, ES-LEX-C537-ENTONCES-02, ES-LEX-C537-ENTONCES-03, ES-LEX-C537-ENTONCES-04, ES-LEX-C537-ENTONCES-05, ES-LEX-C538-ANTES-01, ES-LEX-C538-ANTES-02, ES-LEX-C538-ANTES-03, ES-LEX-C538-ANTES-04, ES-LEX-C538-ANTES-05, ES-LEX-C539-ANYO-01, ES-LEX-C539-ANYO-02, ES-LEX-C539-ANYO-03, ES-LEX-C539-ANYO-04, ES-LEX-C539-ANYO-05, ES-LEX-C540-TEMPORADA-01, ES-LEX-C540-TEMPORADA-02, ES-LEX-C540-TEMPORADA-03, ES-LEX-C540-TEMPORADA-04, ES-LEX-C540-TEMPORADA-05, ES-LEX-C541-DURAR-01, ES-LEX-C541-DURAR-02, ES-LEX-C541-DURAR-03, ES-LEX-C541-DURAR-04, ES-LEX-C541-DURAR-05, ES-LEX-C542-COMIENZO-01, ES-LEX-C542-COMIENZO-02, ES-LEX-C542-COMIENZO-03, ES-LEX-C542-COMIENZO-04, ES-LEX-C542-COMIENZO-05, ES-LEX-C543-RETRASO-01, ES-LEX-C543-RETRASO-02, ES-LEX-C543-RETRASO-03, ES-LEX-C543-RETRASO-04, ES-LEX-C543-RETRASO-05]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: general
+reviews_of: [ES-C536-mientras-tanto, ES-C536-al-mismo-tiempo, ES-C536-a-la-vez, ES-C536-en-cuanto, ES-C536-tan-pronto-como, ES-C537-desde-entonces, ES-C537-hasta-entonces, ES-C537-al-dia-siguiente, ES-C537-hace-poco, ES-C537-anteayer, ES-C538-anteriormente, ES-C538-posteriormente, ES-C538-previamente, ES-C538-recientemente, ES-C538-ultimamente, ES-C539-semestre, ES-C539-quincena, ES-C539-lustro, ES-C539-milenio, ES-C539-periodo, ES-C540-a-principios-de, ES-C540-a-mediados-de, ES-C540-a-finales-de, ES-C540-semanal, ES-C540-anual, ES-C541-fase, ES-C541-transcurso, ES-C541-duracion, ES-C541-prolongarse, ES-C541-transcurrir, ES-C542-comenzar, ES-C542-iniciar, ES-C542-comienzo, ES-C542-arranque, ES-C542-finalizar, ES-C543-reanudar, ES-C543-retrasar, ES-C543-aplazar, ES-C543-adelantar, ES-C543-permanecer]
+---
+
+# Repaso de los capítulos 536–543
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C536-MIENTRAS-01, ES-LEX-C536-MIENTRAS-02] -->
+
+[PAUSE 3s] Say the Spanish for meanwhile and at the same time.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C536-MIENTRAS-01, ES-LEX-C536-MIENTRAS-02, ES-LEX-C536-MIENTRAS-03, ES-LEX-C536-MIENTRAS-04, ES-LEX-C536-MIENTRAS-05, ES-LEX-C537-ENTONCES-01, ES-LEX-C537-ENTONCES-02, ES-LEX-C537-ENTONCES-03, ES-LEX-C537-ENTONCES-04, ES-LEX-C537-ENTONCES-05, ES-LEX-C538-ANTES-01, ES-LEX-C538-ANTES-02, ES-LEX-C538-ANTES-03, ES-LEX-C538-ANTES-04, ES-LEX-C538-ANTES-05, ES-LEX-C539-ANYO-01, ES-LEX-C539-ANYO-02, ES-LEX-C539-ANYO-03, ES-LEX-C539-ANYO-04, ES-LEX-C539-ANYO-05, ES-LEX-C540-TEMPORADA-01, ES-LEX-C540-TEMPORADA-02, ES-LEX-C540-TEMPORADA-03, ES-LEX-C540-TEMPORADA-04, ES-LEX-C540-TEMPORADA-05, ES-LEX-C541-DURAR-01, ES-LEX-C541-DURAR-02, ES-LEX-C541-DURAR-03, ES-LEX-C541-DURAR-04, ES-LEX-C541-DURAR-05, ES-LEX-C542-COMIENZO-01, ES-LEX-C542-COMIENZO-02, ES-LEX-C542-COMIENZO-03, ES-LEX-C542-COMIENZO-04, ES-LEX-C542-COMIENZO-05, ES-LEX-C543-RETRASO-01, ES-LEX-C543-RETRASO-02, ES-LEX-C543-RETRASO-03, ES-LEX-C543-RETRASO-04, ES-LEX-C543-RETRASO-05] -->
+
+[PAUSE 2s each]
+- [YOU SAY: meanwhile, at the same time, at once, as soon as, the moment that]
+- [YOU SAY: since then, until then, the next day, a short time ago, the day before yesterday]
+- [YOU SAY: previously, subsequently, beforehand, recently, lately]
+- [YOU SAY: the semester, the fortnight, the five-year period, the millennium, the period]
+- [YOU SAY: at the beginning of, in the middle of, at the end of, weekly, yearly]
+- [YOU SAY: the phase, the passing, the length, to go on, to go by]
+- [YOU SAY: to begin, to launch, the beginning, the start, to end]
+- [YOU SAY: to resume, to delay, to postpone, to bring forward, to remain]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C536-MIENTRAS-01, ES-LEX-C536-MIENTRAS-02, ES-LEX-C536-MIENTRAS-03, ES-LEX-C536-MIENTRAS-04, ES-LEX-C536-MIENTRAS-05, ES-LEX-C537-ENTONCES-01, ES-LEX-C537-ENTONCES-02, ES-LEX-C537-ENTONCES-03, ES-LEX-C537-ENTONCES-04, ES-LEX-C537-ENTONCES-05, ES-LEX-C538-ANTES-01, ES-LEX-C538-ANTES-02, ES-LEX-C538-ANTES-03, ES-LEX-C538-ANTES-04, ES-LEX-C538-ANTES-05, ES-LEX-C539-ANYO-01, ES-LEX-C539-ANYO-02, ES-LEX-C539-ANYO-03, ES-LEX-C539-ANYO-04, ES-LEX-C539-ANYO-05, ES-LEX-C540-TEMPORADA-01, ES-LEX-C540-TEMPORADA-02, ES-LEX-C540-TEMPORADA-03, ES-LEX-C540-TEMPORADA-04, ES-LEX-C540-TEMPORADA-05, ES-LEX-C541-DURAR-01, ES-LEX-C541-DURAR-02, ES-LEX-C541-DURAR-03, ES-LEX-C541-DURAR-04, ES-LEX-C541-DURAR-05, ES-LEX-C542-COMIENZO-01, ES-LEX-C542-COMIENZO-02, ES-LEX-C542-COMIENZO-03, ES-LEX-C542-COMIENZO-04, ES-LEX-C542-COMIENZO-05, ES-LEX-C543-RETRASO-01, ES-LEX-C543-RETRASO-02, ES-LEX-C543-RETRASO-03, ES-LEX-C543-RETRASO-04, ES-LEX-C543-RETRASO-05] -->
+
+[PAUSE 3s] Meanwhile? (**mientras tanto**.) At the same time? (**al mismo tiempo**.) At once? (**a la vez**.) As soon as? (**en cuanto**.) The moment that? (**tan pronto como**.) Since then? (**desde entonces**.) Until then? (**hasta entonces**.) The next day? (**al día siguiente**.) A short time ago? (**hace poco**.) The day before yesterday? (**anteayer**.) Previously? (**anteriormente**.) Subsequently? (**posteriormente**.) Beforehand? (**previamente**.) Recently? (**recientemente**.) Lately? (**últimamente**.) The semester? (**el semestre**.) The fortnight? (**la quincena**.) The five-year period? (**el lustro**.) The millennium? (**el milenio**.) The period? (**el período**.) At the beginning of? (**a principios de**.) In the middle of? (**a mediados de**.) At the end of? (**a finales de**.) Weekly? (**semanal**.) Yearly? (**anual**.) The phase? (**la fase**.) The passing? (**el transcurso**.) The length? (**la duración**.) To go on? (**prolongarse**.) To go by? (**transcurrir**.) To begin? (**comenzar**.) To launch? (**iniciar**.) The beginning? (**el comienzo**.) The start? (**el arranque**.) To end? (**finalizar**.) To resume? (**reanudar**.) To delay? (**retrasar**.) To postpone? (**aplazar**.) To bring forward? (**adelantar**.) To remain? (**permanecer**.)
+`;export{t};

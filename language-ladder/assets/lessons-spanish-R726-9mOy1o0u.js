@@ -1,0 +1,54 @@
+import{t as e}from"./rolldown-runtime-DK3Fl9T5.js";var t=e({default:()=>n}),n=`---
+schema_version: 2
+id: ES-R727-repaso-720-727
+spine_node: SPINE-DESCRIBE-EXPERIENCE
+sequence: 26320
+chapter: 727
+type: review
+headword: (dialogue)
+gloss: a review of chapters 720-727
+concept_tag: REVIEW
+prerequisites: [ES-C720-admiracion, ES-C720-admirar, ES-C720-agradecido, ES-C720-gratitud, ES-C720-apreciar, ES-C721-rasgo, ES-C721-personalidad, ES-C721-temperamento, ES-C721-defecto, ES-C721-valorar, ES-C722-valor, ES-C722-coraje, ES-C722-valentia, ES-C722-cobarde, ES-C722-atreverse, ES-C723-generoso, ES-C723-egoista, ES-C723-amabilidad, ES-C723-tacano, ES-C723-cruel, ES-C724-sinceridad, ES-C724-cotillear, ES-C724-mentiroso, ES-C724-sincero, ES-C724-honestidad, ES-C725-fiel, ES-C725-leal, ES-C725-lealtad, ES-C725-reconciliarse, ES-C725-fingir, ES-C726-humilde, ES-C726-humildad, ES-C726-vanidad, ES-C726-modesto, ES-C726-presumir, ES-C727-sensible, ES-C727-sensibilidad, ES-C727-ofender, ES-C727-educado, ES-C727-grosero]
+sounds: []
+roots: []
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [ES-LEX-C720-GRACIAS-01, ES-LEX-C720-GRACIAS-02, ES-LEX-C720-GRACIAS-03, ES-LEX-C720-GRACIAS-04, ES-LEX-C720-GRACIAS-05, ES-LEX-C721-CARACTER-01, ES-LEX-C721-CARACTER-02, ES-LEX-C721-CARACTER-03, ES-LEX-C721-CARACTER-04, ES-LEX-C721-CARACTER-05, ES-LEX-C722-VALOR-01, ES-LEX-C722-VALOR-02, ES-LEX-C722-VALOR-03, ES-LEX-C722-VALOR-04, ES-LEX-C722-VALOR-05, ES-LEX-C723-GENEROSO-01, ES-LEX-C723-GENEROSO-02, ES-LEX-C723-GENEROSO-03, ES-LEX-C723-GENEROSO-04, ES-LEX-C723-GENEROSO-05, ES-LEX-C724-MENTIRA-01, ES-LEX-C724-MENTIRA-02, ES-LEX-C724-MENTIRA-03, ES-LEX-C724-MENTIRA-04, ES-LEX-C724-MENTIRA-05, ES-LEX-C725-FIEL-01, ES-LEX-C725-FIEL-02, ES-LEX-C725-FIEL-03, ES-LEX-C725-FIEL-04, ES-LEX-C725-FIEL-05, ES-LEX-C726-HUMILDE-01, ES-LEX-C726-HUMILDE-02, ES-LEX-C726-HUMILDE-03, ES-LEX-C726-HUMILDE-04, ES-LEX-C726-HUMILDE-05, ES-LEX-C727-SENSIBLE-01, ES-LEX-C727-SENSIBLE-02, ES-LEX-C727-SENSIBLE-03, ES-LEX-C727-SENSIBLE-04, ES-LEX-C727-SENSIBLE-05]
+introduces:
+  knowledge: []
+practises:
+  knowledge: [ES-LEX-C720-GRACIAS-01, ES-LEX-C720-GRACIAS-02, ES-LEX-C720-GRACIAS-03, ES-LEX-C720-GRACIAS-04, ES-LEX-C720-GRACIAS-05, ES-LEX-C721-CARACTER-01, ES-LEX-C721-CARACTER-02, ES-LEX-C721-CARACTER-03, ES-LEX-C721-CARACTER-04, ES-LEX-C721-CARACTER-05, ES-LEX-C722-VALOR-01, ES-LEX-C722-VALOR-02, ES-LEX-C722-VALOR-03, ES-LEX-C722-VALOR-04, ES-LEX-C722-VALOR-05, ES-LEX-C723-GENEROSO-01, ES-LEX-C723-GENEROSO-02, ES-LEX-C723-GENEROSO-03, ES-LEX-C723-GENEROSO-04, ES-LEX-C723-GENEROSO-05, ES-LEX-C724-MENTIRA-01, ES-LEX-C724-MENTIRA-02, ES-LEX-C724-MENTIRA-03, ES-LEX-C724-MENTIRA-04, ES-LEX-C724-MENTIRA-05, ES-LEX-C725-FIEL-01, ES-LEX-C725-FIEL-02, ES-LEX-C725-FIEL-03, ES-LEX-C725-FIEL-04, ES-LEX-C725-FIEL-05, ES-LEX-C726-HUMILDE-01, ES-LEX-C726-HUMILDE-02, ES-LEX-C726-HUMILDE-03, ES-LEX-C726-HUMILDE-04, ES-LEX-C726-HUMILDE-05, ES-LEX-C727-SENSIBLE-01, ES-LEX-C727-SENSIBLE-02, ES-LEX-C727-SENSIBLE-03, ES-LEX-C727-SENSIBLE-04, ES-LEX-C727-SENSIBLE-05]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: general
+reviews_of: [ES-C720-admiracion, ES-C720-admirar, ES-C720-agradecido, ES-C720-gratitud, ES-C720-apreciar, ES-C721-rasgo, ES-C721-personalidad, ES-C721-temperamento, ES-C721-defecto, ES-C721-valorar, ES-C722-valor, ES-C722-coraje, ES-C722-valentia, ES-C722-cobarde, ES-C722-atreverse, ES-C723-generoso, ES-C723-egoista, ES-C723-amabilidad, ES-C723-tacano, ES-C723-cruel, ES-C724-sinceridad, ES-C724-cotillear, ES-C724-mentiroso, ES-C724-sincero, ES-C724-honestidad, ES-C725-fiel, ES-C725-leal, ES-C725-lealtad, ES-C725-reconciliarse, ES-C725-fingir, ES-C726-humilde, ES-C726-humildad, ES-C726-vanidad, ES-C726-modesto, ES-C726-presumir, ES-C727-sensible, ES-C727-sensibilidad, ES-C727-ofender, ES-C727-educado, ES-C727-grosero]
+---
+
+# Repaso de los capítulos 720–727
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C720-GRACIAS-01, ES-LEX-C720-GRACIAS-02] -->
+
+[PAUSE 3s] Say the Spanish for admiration and to admire.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C720-GRACIAS-01, ES-LEX-C720-GRACIAS-02, ES-LEX-C720-GRACIAS-03, ES-LEX-C720-GRACIAS-04, ES-LEX-C720-GRACIAS-05, ES-LEX-C721-CARACTER-01, ES-LEX-C721-CARACTER-02, ES-LEX-C721-CARACTER-03, ES-LEX-C721-CARACTER-04, ES-LEX-C721-CARACTER-05, ES-LEX-C722-VALOR-01, ES-LEX-C722-VALOR-02, ES-LEX-C722-VALOR-03, ES-LEX-C722-VALOR-04, ES-LEX-C722-VALOR-05, ES-LEX-C723-GENEROSO-01, ES-LEX-C723-GENEROSO-02, ES-LEX-C723-GENEROSO-03, ES-LEX-C723-GENEROSO-04, ES-LEX-C723-GENEROSO-05, ES-LEX-C724-MENTIRA-01, ES-LEX-C724-MENTIRA-02, ES-LEX-C724-MENTIRA-03, ES-LEX-C724-MENTIRA-04, ES-LEX-C724-MENTIRA-05, ES-LEX-C725-FIEL-01, ES-LEX-C725-FIEL-02, ES-LEX-C725-FIEL-03, ES-LEX-C725-FIEL-04, ES-LEX-C725-FIEL-05, ES-LEX-C726-HUMILDE-01, ES-LEX-C726-HUMILDE-02, ES-LEX-C726-HUMILDE-03, ES-LEX-C726-HUMILDE-04, ES-LEX-C726-HUMILDE-05, ES-LEX-C727-SENSIBLE-01, ES-LEX-C727-SENSIBLE-02, ES-LEX-C727-SENSIBLE-03, ES-LEX-C727-SENSIBLE-04, ES-LEX-C727-SENSIBLE-05] -->
+
+[PAUSE 2s each]
+- [YOU SAY: admiration, to admire, grateful, gratitude, to appreciate]
+- [YOU SAY: the trait, personality, temperament, the fault, to value]
+- [YOU SAY: courage, guts, bravery, cowardly, to dare]
+- [YOU SAY: generous, selfish, kindness, stingy, cruel]
+- [YOU SAY: sincerity, to gossip, lying, sincere, honesty]
+- [YOU SAY: faithful, loyal, loyalty, to make up, to pretend]
+- [YOU SAY: humble, humility, vanity, modest, to show off]
+- [YOU SAY: sensitive, sensitivity, to offend, polite, rude]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C720-GRACIAS-01, ES-LEX-C720-GRACIAS-02, ES-LEX-C720-GRACIAS-03, ES-LEX-C720-GRACIAS-04, ES-LEX-C720-GRACIAS-05, ES-LEX-C721-CARACTER-01, ES-LEX-C721-CARACTER-02, ES-LEX-C721-CARACTER-03, ES-LEX-C721-CARACTER-04, ES-LEX-C721-CARACTER-05, ES-LEX-C722-VALOR-01, ES-LEX-C722-VALOR-02, ES-LEX-C722-VALOR-03, ES-LEX-C722-VALOR-04, ES-LEX-C722-VALOR-05, ES-LEX-C723-GENEROSO-01, ES-LEX-C723-GENEROSO-02, ES-LEX-C723-GENEROSO-03, ES-LEX-C723-GENEROSO-04, ES-LEX-C723-GENEROSO-05, ES-LEX-C724-MENTIRA-01, ES-LEX-C724-MENTIRA-02, ES-LEX-C724-MENTIRA-03, ES-LEX-C724-MENTIRA-04, ES-LEX-C724-MENTIRA-05, ES-LEX-C725-FIEL-01, ES-LEX-C725-FIEL-02, ES-LEX-C725-FIEL-03, ES-LEX-C725-FIEL-04, ES-LEX-C725-FIEL-05, ES-LEX-C726-HUMILDE-01, ES-LEX-C726-HUMILDE-02, ES-LEX-C726-HUMILDE-03, ES-LEX-C726-HUMILDE-04, ES-LEX-C726-HUMILDE-05, ES-LEX-C727-SENSIBLE-01, ES-LEX-C727-SENSIBLE-02, ES-LEX-C727-SENSIBLE-03, ES-LEX-C727-SENSIBLE-04, ES-LEX-C727-SENSIBLE-05] -->
+
+[PAUSE 3s] Admiration? (**la admiración**.) To admire? (**admirar**.) Grateful? (**agradecido**.) Gratitude? (**la gratitud**.) To appreciate? (**apreciar**.) The trait? (**el rasgo**.) Personality? (**la personalidad**.) Temperament? (**el temperamento**.) The fault? (**el defecto**.) To value? (**valorar**.) Courage? (**el valor**.) Guts? (**el coraje**.) Bravery? (**la valentía**.) Cowardly? (**cobarde**.) To dare? (**atreverse**.) Generous? (**generoso**.) Selfish? (**egoísta**.) Kindness? (**la amabilidad**.) Stingy? (**tacaño**.) Cruel? (**cruel**.) Sincerity? (**la sinceridad**.) To gossip? (**cotillear**.) Lying? (**mentiroso**.) Sincere? (**sincero**.) Honesty? (**la honestidad**.) Faithful? (**fiel**.) Loyal? (**leal**.) Loyalty? (**la lealtad**.) To make up? (**reconciliarse**.) To pretend? (**fingir**.) Humble? (**humilde**.) Humility? (**la humildad**.) Vanity? (**la vanidad**.) Modest? (**modesto**.) To show off? (**presumir**.) Sensitive? (**sensible**.) Sensitivity? (**la sensibilidad**.) To offend? (**ofender**.) Polite? (**educado**.) Rude? (**grosero**.)
+`;export{t};
