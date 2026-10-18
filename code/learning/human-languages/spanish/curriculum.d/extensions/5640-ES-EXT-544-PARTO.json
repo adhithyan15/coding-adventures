@@ -1,0 +1,8 @@
+{
+  "id": "ES-EXT-544-PARTO",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can talk about a pregnancy and a birth: the newborn baby and how the birth went.",
+  "prerequisites": []
+}

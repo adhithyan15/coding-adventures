@@ -1,0 +1,11 @@
+{
+  "id": "ES-C646-deposito",
+  "pathSegment": "ES-PATH-646-GASOLINA",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ES-EXT-646-GASOLINA",
+      "order": 2
+    }
+  ]
+}

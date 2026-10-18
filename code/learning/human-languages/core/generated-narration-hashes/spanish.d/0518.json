@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 518,
+  "sourceHash": "fnv1a64:b89946b9212d8b41",
+  "lessonIds": [
+    "ES-C518-robar",
+    "ES-C518-robo",
+    "ES-C518-sospechoso",
+    "ES-C518-atracar",
+    "ES-C518-huir"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch518.txt",
+  "json": "spanish/narration/ch518.json",
+  "textHash": "fnv1a64:234037b407609132",
+  "jsonHash": "fnv1a64:262956b34724f690",
+  "findings": []
+}

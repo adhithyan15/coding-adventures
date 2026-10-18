@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C646-deposito",
+    "language": "spanish",
+    "chapter": 646,
+    "sequence": 22120,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:053b38a0fae21cdf"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 634,
+  "title": "Llegar a un acuerdo",
+  "label": "ch:es-llegar-a-un-acuerdo",
+  "canDo": "I can negotiate, persuade, give way on a point and reach an agreement.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "ES-C634-persuadir",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 634: I can negotiate, persuade, give way on a point and reach an agreement.",
+    "assesses": [
+      "ES-LEX-C634-PACTO-03",
+      "ES-LEX-C634-PACTO-04",
+      "ES-LEX-C634-PACTO-05"
+    ]
+  }
+}

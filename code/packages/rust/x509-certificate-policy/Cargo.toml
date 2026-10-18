@@ -1,0 +1,9 @@
+[package]
+name = "x509-certificate-policy"
+version = "0.1.0"
+edition = "2021"
+description = "Data-driven RFC 5280 certificate policy gates"
+
+[dependencies]
+der-asn1 = { path = "../der-asn1" }
+x509-certificate = { path = "../x509-certificate" }

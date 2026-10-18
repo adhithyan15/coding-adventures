@@ -1,0 +1,11 @@
+{
+  "id": "ES-C742-sobrepeso",
+  "pathSegment": "ES-PATH-742-DIETA",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ES-EXT-742-DIETA",
+      "order": 1
+    }
+  ]
+}

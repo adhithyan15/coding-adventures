@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C757-victoria",
+    "language": "spanish",
+    "chapter": 757,
+    "sequence": 27830,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3304e557b72d21f1"
+  },
+  "findings": []
+}

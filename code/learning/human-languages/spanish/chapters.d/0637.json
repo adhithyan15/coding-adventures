@@ -1,0 +1,19 @@
+{
+  "chapter": 637,
+  "title": "A favor o en contra",
+  "label": "ch:es-a-favor-o-en-contra",
+  "canDo": "I can say what favours or harms someone and what suits them.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "ES-C637-convenir",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 637: I can say what favours or harms someone and what suits them.",
+    "assesses": [
+      "ES-LEX-C637-FAVOR-03",
+      "ES-LEX-C637-FAVOR-04",
+      "ES-LEX-C637-FAVOR-05"
+    ]
+  }
+}

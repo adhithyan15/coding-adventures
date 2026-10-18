@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C629-perdida",
+    "language": "spanish",
+    "chapter": 629,
+    "sequence": 21220,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:db37916b386d7a84"
+  },
+  "findings": []
+}

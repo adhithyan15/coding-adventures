@@ -1,0 +1,8 @@
+{
+  "id": "ES-EXT-665-QUEJA",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can complain about damage or a problem, ask for the manager or the owner and ask to be compensated.",
+  "prerequisites": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 520,
+  "title": "El delito",
+  "label": "ch:es-el-delito",
+  "canDo": "I can talk about an offence and an offender, a crime, the victim and the investigation.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "ES-C520-investigacion",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 520: I can talk about an offence and an offender, a crime, the victim and the investigation.",
+    "assesses": [
+      "ES-LEX-C520-DELITO-03",
+      "ES-LEX-C520-DELITO-04",
+      "ES-LEX-C520-DELITO-05"
+    ]
+  }
+}

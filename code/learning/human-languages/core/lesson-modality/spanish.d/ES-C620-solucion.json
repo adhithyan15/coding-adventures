@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C620-solucion",
+    "language": "spanish",
+    "chapter": 620,
+    "sequence": 20750,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:bce4865941f8b095"
+  },
+  "findings": []
+}

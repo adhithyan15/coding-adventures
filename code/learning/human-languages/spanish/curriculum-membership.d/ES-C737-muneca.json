@@ -1,0 +1,11 @@
+{
+  "id": "ES-C737-muneca",
+  "pathSegment": "ES-PATH-737-CUERPO",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ES-EXT-737-CUERPO",
+      "order": 1
+    }
+  ]
+}

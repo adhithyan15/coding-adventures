@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 741,
+  "sourceHash": "fnv1a64:3b97b9cbc9df774b",
+  "lessonIds": [
+    "ES-C741-cansancio",
+    "ES-C741-agotado",
+    "ES-C741-dormirse",
+    "ES-C741-insomnio",
+    "ES-C741-siesta"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch741.txt",
+  "json": "spanish/narration/ch741.json",
+  "textHash": "fnv1a64:bbdf32c044efcdc0",
+  "jsonHash": "fnv1a64:9f8e401f54bafa81",
+  "findings": []
+}

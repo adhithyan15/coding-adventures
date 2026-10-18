@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C576-sostener",
+    "language": "spanish",
+    "chapter": 576,
+    "sequence": 18510,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a6d25d1a6733d75e"
+  },
+  "findings": []
+}

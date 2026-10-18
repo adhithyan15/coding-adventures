@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C635-cuestionar",
+    "language": "spanish",
+    "chapter": 635,
+    "sequence": 21530,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0d031681472ce3c0"
+  },
+  "findings": []
+}

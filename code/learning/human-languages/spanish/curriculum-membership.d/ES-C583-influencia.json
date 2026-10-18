@@ -1,0 +1,11 @@
+{
+  "id": "ES-C583-influencia",
+  "pathSegment": "ES-PATH-583-INFLUYE",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ES-EXT-583-INFLUYE",
+      "order": 1
+    }
+  ]
+}

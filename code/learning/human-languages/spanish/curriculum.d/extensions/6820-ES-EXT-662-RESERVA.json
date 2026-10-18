@@ -1,0 +1,8 @@
+{
+  "id": "ES-EXT-662-RESERVA",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can change and cancel a booking: the booking reference, the confirmation and any penalty.",
+  "prerequisites": []
+}

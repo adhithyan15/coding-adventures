@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 649,
+  "sourceHash": "fnv1a64:11fbba8639c9fabf",
+  "lessonIds": [
+    "ES-C649-moto",
+    "ES-C649-motorista",
+    "ES-C649-patinete",
+    "ES-C649-pedalear",
+    "ES-C649-ciclista"
+  ],
+  "tex": "spanish/book/chapters/ch649-sobre-dos-ruedas.tex"
+}

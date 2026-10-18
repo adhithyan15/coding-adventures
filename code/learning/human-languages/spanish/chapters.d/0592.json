@@ -1,0 +1,19 @@
+{
+  "chapter": 592,
+  "title": "La empresa",
+  "label": "ch:es-la-empresa",
+  "canDo": "I can say what kind of company someone works for and where its head office and branches are.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "ES-C592-sucursal",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 592: I can say what kind of company someone works for and where its head office and branches are.",
+    "assesses": [
+      "ES-LEX-C592-EMPRESA-03",
+      "ES-LEX-C592-EMPRESA-04",
+      "ES-LEX-C592-EMPRESA-05"
+    ]
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 768,
+  "sourceHash": "fnv1a64:e5fc8a289d19656d",
+  "lessonIds": [
+    "ES-C768-hervir",
+    "ES-C768-freir",
+    "ES-C768-pelar",
+    "ES-C768-batir",
+    "ES-C768-ingrediente"
+  ],
+  "tex": "spanish/book/chapters/ch768-lo-que-cocine.tex"
+}

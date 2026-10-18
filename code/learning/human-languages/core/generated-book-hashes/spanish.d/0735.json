@@ -1,0 +1,14 @@
+{
+  "language": "spanish",
+  "chapter": 735,
+  "sourceHash": "fnv1a64:8c5289fb29a3ac72",
+  "lessonIds": [
+    "ES-C735-esqueleto",
+    "ES-C735-pulmon",
+    "ES-C735-estomago",
+    "ES-C735-cerebro",
+    "ES-C735-latir",
+    "ES-R735-repaso-728-735"
+  ],
+  "tex": "spanish/book/chapters/ch735-por-dentro-del-cuerpo.tex"
+}

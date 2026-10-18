@@ -1,0 +1,19 @@
+{
+  "chapter": 681,
+  "title": "De compras",
+  "label": "ch:es-de-compras",
+  "canDo": "I can shop around a town: the street market, the shopping centre, the department store, holiday opening and who serves me.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "ES-C681-atender",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 681: I can shop around a town: the street market, the shopping centre, the department store, holiday opening and who serves me.",
+    "assesses": [
+      "ES-LEX-C681-COMERCIO-03",
+      "ES-LEX-C681-COMERCIO-04",
+      "ES-LEX-C681-COMERCIO-05"
+    ]
+  }
+}

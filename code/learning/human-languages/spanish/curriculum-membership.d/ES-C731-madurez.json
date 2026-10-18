@@ -1,0 +1,11 @@
+{
+  "id": "ES-C731-madurez",
+  "pathSegment": "ES-PATH-731-MADUREZ",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ES-EXT-731-MADUREZ",
+      "order": 1
+    }
+  ]
+}

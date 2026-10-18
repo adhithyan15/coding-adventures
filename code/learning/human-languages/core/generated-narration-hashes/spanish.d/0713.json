@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 713,
+  "sourceHash": "fnv1a64:b422c3cb5dc1f875",
+  "lessonIds": [
+    "ES-C713-diversion",
+    "ES-C713-divertido",
+    "ES-C713-gracioso",
+    "ES-C713-aburrirse",
+    "ES-C713-aburrimiento"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch713.txt",
+  "json": "spanish/narration/ch713.json",
+  "textHash": "fnv1a64:2bfb30dcd2cd92ea",
+  "jsonHash": "fnv1a64:a2b06b3861fd23f5",
+  "findings": []
+}

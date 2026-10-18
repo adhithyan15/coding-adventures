@@ -1,0 +1,19 @@
+{
+  "chapter": 636,
+  "title": "Decir la verdad",
+  "label": "ch:es-decir-la-verdad",
+  "canDo": "I can talk about lies, honesty and what someone deserves.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "ES-C636-merecer",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 636: I can talk about lies, honesty and what someone deserves.",
+    "assesses": [
+      "ES-LEX-C636-VERDAD-03",
+      "ES-LEX-C636-VERDAD-04",
+      "ES-LEX-C636-VERDAD-05"
+    ]
+  }
+}

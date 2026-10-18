@@ -196,6 +196,61 @@ C1 out 0 1u IC=0
 }
 
 #[test]
+fn runs_two_axis_dc_sweep_with_second_source_as_outer_axis() {
+    let corpus: serde_json::Value = serde_json::from_str(include_str!(
+        "../../../../grammars/spice/nested-dc-sweep-v1-corpus.json"
+    ))
+    .unwrap();
+    let case = &corpus["cases"][0];
+    let expected = &case["expected"];
+    let parsed = parse_netlist(case["deck"].as_str().unwrap()).unwrap();
+
+    assert_eq!(
+        parsed.dc_cards()[0],
+        &DcAnalysis {
+            source_name: expected["primarySource"].as_str().unwrap().to_string(),
+            start: 0.0,
+            stop: 1.0,
+            step: 1.0,
+            secondary_source_name: Some(expected["secondarySource"].as_str().unwrap().to_string()),
+            secondary_start: Some(0.0),
+            secondary_stop: Some(2.0),
+            secondary_step: Some(2.0),
+        }
+    );
+    let results = parsed.run_analysis_plan().unwrap();
+    let AnalysisResult::Dc(points) = &results[0].result else {
+        panic!("expected .dc result");
+    };
+    assert_eq!(
+        points
+            .iter()
+            .map(|point| (point.value, point.secondary_value))
+            .collect::<Vec<_>>(),
+        expected["points"].as_array().unwrap().iter().map(|point| (
+            point[0].as_f64().unwrap(),
+            Some(point[1].as_f64().unwrap()),
+        )).collect::<Vec<_>>(),
+    );
+    assert_close(
+        points.last().unwrap().result.voltage("out").unwrap(),
+        expected["finalOut"].as_f64().unwrap(),
+    );
+    let outputs = parsed.select_outputs(&results).unwrap();
+    assert_eq!(
+        outputs[0]
+            .rows
+            .iter()
+            .map(|row| (row.axis_value, row.secondary_axis_value))
+            .collect::<Vec<_>>(),
+        expected["points"].as_array().unwrap().iter().map(|point| (
+            Some(point[0].as_f64().unwrap()),
+            Some(point[1].as_f64().unwrap()),
+        )).collect::<Vec<_>>(),
+    );
+}
+
+#[test]
 fn runs_shared_berkeley_v1_core_corpus() {
     let corpus: serde_json::Value = serde_json::from_str(include_str!(
         "../../../../grammars/spice/berkeley-v1-op-corpus.json"
@@ -363,6 +418,10 @@ G1 out 0 in 0 2m
                 start: 0.0,
                 stop: 1.0,
                 step: 0.5,
+                secondary_source_name: None,
+                secondary_start: None,
+                secondary_stop: None,
+                secondary_step: None,
             }),
             Analysis::Ac(AcAnalysis {
                 mode: "dec".to_string(),

@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 521,
+  "sourceHash": "fnv1a64:6f55681fc03c8a4e",
+  "lessonIds": [
+    "ES-C521-investigar",
+    "ES-C521-pista",
+    "ES-C521-prueba",
+    "ES-C521-averiguar",
+    "ES-C521-sospechar"
+  ],
+  "tex": "spanish/book/chapters/ch521-siguiendo-la-pista.tex"
+}

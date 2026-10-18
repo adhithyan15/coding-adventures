@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C600-pertenecer",
+    "language": "spanish",
+    "chapter": 600,
+    "sequence": 19770,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e1f1ee0b1c92c3b9"
+  },
+  "findings": []
+}

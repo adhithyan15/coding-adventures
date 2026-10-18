@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C766-reto",
+    "language": "spanish",
+    "chapter": 766,
+    "sequence": 28270,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:053b7370f4ef1887"
+  },
+  "findings": []
+}

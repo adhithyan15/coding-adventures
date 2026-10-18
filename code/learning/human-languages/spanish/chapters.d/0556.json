@@ -1,0 +1,19 @@
+{
+  "chapter": 556,
+  "title": "El entierro",
+  "label": "ch:es-el-entierro",
+  "canDo": "I can talk about a funeral and a burial in a cemetery.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "ES-C556-cementerio",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 556: I can talk about a funeral and a burial in a cemetery.",
+    "assesses": [
+      "ES-LEX-C556-ENTIERRO-03",
+      "ES-LEX-C556-ENTIERRO-04",
+      "ES-LEX-C556-ENTIERRO-05"
+    ]
+  }
+}

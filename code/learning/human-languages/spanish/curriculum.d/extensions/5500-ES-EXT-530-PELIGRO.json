@@ -1,0 +1,8 @@
+{
+  "id": "ES-EXT-530-PELIGRO",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say that there was a risk or a threat, that something was risky, and that someone attacked.",
+  "prerequisites": []
+}

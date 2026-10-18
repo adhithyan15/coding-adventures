@@ -1,0 +1,11 @@
+{
+  "id": "PA-C179-band",
+  "pathSegment": "PA-PATH-179-A2-SCHEDULE-STATUS",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PA-EXT-179-A2-SCHEDULE-STATUS",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 540,
+  "sourceHash": "fnv1a64:d0e34f04c2cf60af",
+  "lessonIds": [
+    "ES-C540-a-principios-de",
+    "ES-C540-a-mediados-de",
+    "ES-C540-a-finales-de",
+    "ES-C540-semanal",
+    "ES-C540-anual"
+  ],
+  "tex": "spanish/book/chapters/ch540-a-finales-de-ano.tex"
+}

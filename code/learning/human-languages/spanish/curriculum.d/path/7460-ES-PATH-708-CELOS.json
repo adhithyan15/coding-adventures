@@ -1,0 +1,9 @@
+{
+  "id": "ES-PATH-708-CELOS",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "ES-EXT-708-CELOS"
+  ],
+  "after": []
+}

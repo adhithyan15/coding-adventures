@@ -1,0 +1,9 @@
+{
+  "id": "ES-PATH-738-CONSULTA",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "ES-EXT-738-CONSULTA"
+  ],
+  "after": []
+}

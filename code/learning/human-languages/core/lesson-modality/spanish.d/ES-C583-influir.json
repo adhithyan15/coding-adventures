@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C583-influir",
+    "language": "spanish",
+    "chapter": 583,
+    "sequence": 18850,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1d56f0064b0f7ab1"
+  },
+  "findings": []
+}

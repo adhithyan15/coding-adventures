@@ -1,0 +1,850 @@
+{
+  "version": 1,
+  "language": "spanish",
+  "chapter": 567,
+  "title": "La guerra",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:527ef1d1b85380ba",
+  "lessons": [
+    {
+      "id": "ES-C567-combate",
+      "sequence": 17990,
+      "title": "el combate — the fight, the combat",
+      "headword": "el combate",
+      "romanization": "el combate",
+      "gloss": "the fight, the combat",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f1266eb18df5ce94",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Spanish for the record, then the Spanish for the novelty."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: el combate",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "el combate — \"the fight, the combat\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Murieron cien hombres en el combate. A hundred men died in the fighting."
+            },
+            {
+              "kind": "speech",
+              "text": "Fuera de combate — out of action, knocked out."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "combate is built on combatir 'to fight', which comes from spoken Latin combattere (EtymDB), built on com- and battuere 'to beat'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el combate",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el combate*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el combate, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el combate*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with el combate",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *el combate*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Spanish for the record, then the Spanish for the novelty, then say el combate again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Spanish for the record, then the Spanish for the novelty, then say *el combate* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does el combate mean? (\"The fight, the combat\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C567-tregua",
+      "sequence": 18000,
+      "title": "la tregua — the truce",
+      "headword": "la tregua",
+      "romanization": "la tregua",
+      "gloss": "the truce",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e1252f2e41768eab",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Spanish for the novelty, then the Spanish for the fight."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: la tregua",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la tregua — \"the truce\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Los dos países firmaron una tregua. The two countries signed a truce."
+            },
+            {
+              "kind": "speech",
+              "text": "Also a break in anything hard: La lluvia no dio tregua."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "tregua comes from Gothic triggwa 'a treaty, a covenant' (EtymDB), a Germanic word of the same family as English true and truce."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la tregua",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la tregua*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la tregua, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la tregua*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with la tregua",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *la tregua*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Spanish for the novelty, then the Spanish for the fight, then say la tregua again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Spanish for the novelty, then the Spanish for the fight, then say *la tregua* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does la tregua mean? (\"The truce\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C567-batalla",
+      "sequence": 18010,
+      "title": "la batalla — the battle",
+      "headword": "la batalla",
+      "romanization": "la batalla",
+      "gloss": "the battle",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ca8e4eb527fe80af",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Spanish for the fight, then the Spanish for the truce."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: la batalla",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la batalla — \"the battle\"."
+            },
+            {
+              "kind": "speech",
+              "text": "La batalla duró tres días. The battle lasted three days."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "batalla comes from Late Latin battuālia 'fighting and fencing drills' (EtymDB), from battuere 'to beat', probably through Occitan."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la batalla",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la batalla*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la batalla, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la batalla*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with la batalla",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *la batalla*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Spanish for the fight, then the Spanish for the truce, then say la batalla again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Spanish for the fight, then the Spanish for the truce, then say *la batalla* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does la batalla mean? (\"The battle\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C567-soldado",
+      "sequence": 18020,
+      "title": "el soldado — the soldier",
+      "headword": "el soldado",
+      "romanization": "el soldado",
+      "gloss": "the soldier",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7eaf0ac185f25862",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Spanish for the truce, then the Spanish for the battle."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: el soldado",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "el soldado — \"the soldier\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Los soldados volvieron a casa. The soldiers came home."
+            },
+            {
+              "kind": "speech",
+              "text": "A woman is la soldado."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "soldado is usually traced to Italian soldato 'paid', from soldo 'pay', from Latin solidus, a gold coin; EtymDB lists the two words as cousins. A soldier was a man paid to fight."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el soldado",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el soldado*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el soldado, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el soldado*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with el soldado",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *el soldado*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Spanish for the truce, then the Spanish for the battle, then say el soldado again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Spanish for the truce, then the Spanish for the battle, then say *el soldado* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does el soldado mean? (\"The soldier\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C567-ejercito",
+      "sequence": 18030,
+      "title": "el ejército — the army",
+      "headword": "el ejército",
+      "romanization": "el ejército",
+      "gloss": "the army",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f557bf6bf61ddfe9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Spanish for the battle, then the Spanish for the soldier."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: el ejército",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "el ejército — \"the army\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Mi tío estuvo en el ejército. My uncle was in the army."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ejército is a learned borrowing from Latin exercitus 'a trained army' (EtymDB), from exercēre 'to train, to exercise'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el ejército",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el ejército*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el ejército, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el ejército*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with el ejército",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *el ejército*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Spanish for the battle, then the Spanish for the soldier, then say el ejército again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Spanish for the battle, then the Spanish for the soldier, then say *el ejército* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does el ejército mean? (\"The army\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-R567-repaso-560-567",
+      "sequence": 18040,
+      "title": "Repaso de los capítulos 560–567",
+      "headword": "(dialogue)",
+      "romanization": "(dialogue)",
+      "gloss": "a review of chapters 560-567",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1c41016b1bbc4fb2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Spanish for to gather and to get together."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to gather, to get together, to call, the get-together, the reunion",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to gather, to get together, to call, the get-together, the reunion]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to leave, to set sail, the departure, the return, the absence",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to leave, to set sail, the departure, the return, the absence]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to do again, to end up, to start, to burst out, to move away",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to do again, to end up, to start, to burst out, to move away]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the fable, the account, to narrate, to relate, the narrator",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the fable, the account, to narrate, to relate, the narrator]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the character, the main character, the hero, the legend, the myth",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the character, the main character, the hero, the legend, the myth]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the plot, the storyline, the chapter, the episode, the ending",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the plot, the storyline, the chapter, the episode, the ending]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the anecdote, the adventure, the feat, the record, the novelty",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the anecdote, the adventure, the feat, the record, the novelty]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the fight, the truce, the battle, the soldier, the army",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the fight, the truce, the battle, the soldier, the army]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "To gather? (congregarse.) To get together? (juntarse.) To call? (convocar.) The get-together? (la tertulia.) The reunion? (el reencuentro.) To leave? (marcharse.) To set sail? (zarpar.) The departure? (la partida.) The return? (el regreso.) The absence? (la ausencia.) To do again? (volver a.) To end up? (acabar por.) To start? (ponerse a.) To burst out? (echarse a.) To move away? (alejarse.) The fable? (la fábula.) The account? (el relato.) To narrate? (narrar.) To relate? (relatar.) The narrator? (el narrador.) The character? (el personaje.) The main character? (el protagonista.) The hero? (el héroe.) The legend? (la leyenda.) The myth? (el mito.) The plot? (la trama.) The storyline? (el argumento.) The chapter? (el capítulo.) The episode? (el episodio.) The ending? (el desenlace.) The anecdote? (la anécdota.) The adventure? (la aventura.) The feat? (la hazaña.) The record? (el récord.) The novelty? (la novedad.) The fight? (el combate.) The truce? (la tregua.) The battle? (la batalla.) The soldier? (el soldado.) The army? (el ejército.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

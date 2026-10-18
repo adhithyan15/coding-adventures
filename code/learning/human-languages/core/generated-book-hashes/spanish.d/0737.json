@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 737,
+  "sourceHash": "fnv1a64:bafd1405fe2712b6",
+  "lessonIds": [
+    "ES-C737-codo",
+    "ES-C737-muneca",
+    "ES-C737-cintura",
+    "ES-C737-cadera",
+    "ES-C737-costilla"
+  ],
+  "tex": "spanish/book/chapters/ch737-del-codo-a-la-cadera.tex"
+}

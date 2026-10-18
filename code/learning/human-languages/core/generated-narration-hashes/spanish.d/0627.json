@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 627,
+  "sourceHash": "fnv1a64:23cf6266e9e3a0b7",
+  "lessonIds": [
+    "ES-C627-derrochar",
+    "ES-C627-ingreso",
+    "ES-C627-deuda",
+    "ES-C627-endeudarse",
+    "ES-C627-invertir"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch627.txt",
+  "json": "spanish/narration/ch627.json",
+  "textHash": "fnv1a64:2f306f5b2c53e12e",
+  "jsonHash": "fnv1a64:5ddbac73d0542103",
+  "findings": []
+}

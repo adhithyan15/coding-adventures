@@ -1,0 +1,11 @@
+{
+  "id": "ES-C759-espectaculo",
+  "pathSegment": "ES-PATH-759-ESCENARIO",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ES-EXT-759-ESCENARIO",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "ES-C598-capacidad",
+  "pathSegment": "ES-PATH-598-SABER",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ES-EXT-598-SABER",
+      "order": 2
+    }
+  ]
+}

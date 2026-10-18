@@ -1,0 +1,9 @@
+{
+  "id": "ES-PATH-737-CUERPO",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "ES-EXT-737-CUERPO"
+  ],
+  "after": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "ES-C737-cintura",
+  "pathSegment": "ES-PATH-737-CUERPO",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ES-EXT-737-CUERPO",
+      "order": 2
+    }
+  ]
+}

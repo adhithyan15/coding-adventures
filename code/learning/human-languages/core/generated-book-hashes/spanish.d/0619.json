@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 619,
+  "sourceHash": "fnv1a64:14746ebe303d6d29",
+  "lessonIds": [
+    "ES-C619-a-lo-mejor",
+    "ES-C619-previsible",
+    "ES-C619-oportunidad",
+    "ES-C619-perspectiva",
+    "ES-C619-predecir"
+  ],
+  "tex": "spanish/book/chapters/ch619-a-lo-mejor.tex"
+}

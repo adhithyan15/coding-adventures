@@ -1,0 +1,11 @@
+{
+  "id": "ES-C674-paseo",
+  "pathSegment": "ES-PATH-674-PASEO",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ES-EXT-674-PASEO",
+      "order": 1
+    }
+  ]
+}

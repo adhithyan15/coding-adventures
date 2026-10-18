@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 520,
+  "sourceHash": "fnv1a64:cdf4f7588f783e67",
+  "lessonIds": [
+    "ES-C520-delito",
+    "ES-C520-crimen",
+    "ES-C520-delincuente",
+    "ES-C520-victima",
+    "ES-C520-investigacion"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch520.txt",
+  "json": "spanish/narration/ch520.json",
+  "textHash": "fnv1a64:dda748f0ddc6c878",
+  "jsonHash": "fnv1a64:6b7ac47f936780e1",
+  "findings": []
+}

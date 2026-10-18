@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 672,
+  "sourceHash": "fnv1a64:cefa266f32d6992b",
+  "lessonIds": [
+    "ES-C672-indicador",
+    "ES-C672-letrero",
+    "ES-C672-flecha",
+    "ES-C672-senalizacion",
+    "ES-C672-desvio"
+  ],
+  "tex": "spanish/book/chapters/ch672-carteles-y-flechas.tex"
+}

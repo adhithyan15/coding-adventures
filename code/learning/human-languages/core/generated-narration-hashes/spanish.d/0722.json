@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 722,
+  "sourceHash": "fnv1a64:6132a7232fe6edf4",
+  "lessonIds": [
+    "ES-C722-valor",
+    "ES-C722-coraje",
+    "ES-C722-valentia",
+    "ES-C722-cobarde",
+    "ES-C722-atreverse"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch722.txt",
+  "json": "spanish/narration/ch722.json",
+  "textHash": "fnv1a64:595bd0146473a067",
+  "jsonHash": "fnv1a64:f557f439f9961721",
+  "findings": []
+}

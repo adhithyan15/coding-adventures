@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 590,
+  "sourceHash": "fnv1a64:82f8870f884d1053",
+  "lessonIds": [
+    "ES-C590-vacante",
+    "ES-C590-seleccionar",
+    "ES-C590-empleado",
+    "ES-C590-formacion",
+    "ES-C590-perfil"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch590.txt",
+  "json": "spanish/narration/ch590.json",
+  "textHash": "fnv1a64:f96fea19b30eb0b3",
+  "jsonHash": "fnv1a64:d61f28083b1d3180",
+  "findings": []
+}

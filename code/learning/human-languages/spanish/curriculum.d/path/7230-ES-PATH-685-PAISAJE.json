@@ -1,0 +1,9 @@
+{
+  "id": "ES-PATH-685-PAISAJE",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "ES-EXT-685-PAISAJE"
+  ],
+  "after": []
+}

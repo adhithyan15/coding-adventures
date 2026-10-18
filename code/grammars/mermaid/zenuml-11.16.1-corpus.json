@@ -37,6 +37,41 @@
       "name": "creation message",
       "compatible": true,
       "source": "zenuml\nnew A1"
+    },
+    {
+      "name": "reply assignments and annotator",
+      "compatible": true,
+      "source": "zenuml\nClient->A.SyncMessage() {\n  a = B.lookup()\n  SomeType result = B.compute()\n  @return\n  A->Client: result\n}"
+    },
+    {
+      "name": "if else-if else branches",
+      "compatible": true,
+      "source": "zenuml\nif(condition1) {\n  A->B: one\n} else if(condition2) {\n  A->B: two\n} else {\n  A->B: three\n}"
+    },
+    {
+      "name": "try catch finally branches",
+      "compatible": true,
+      "source": "zenuml\ntry {\n  Consumer->API: Book\n} catch {\n  API->Consumer: failure\n} finally {\n  API->Service: rollback\n}"
+    },
+    {
+      "name": "comments above messages",
+      "compatible": true,
+      "source": "zenuml\nA\n// **Markdown** comment\nA.method()"
+    },
+    {
+      "name": "documented participant annotators",
+      "compatible": true,
+      "source": "zenuml\n@Boundary API\n@Control Controller\n@Entity Order\n@Collections Items\n@Queue Jobs\n@Starter Client\nClient->API: begin"
+    },
+    {
+      "name": "assigned and typed creation",
+      "compatible": true,
+      "source": "zenuml\nClient.start() {\n  worker = new Worker(config)\n  Worker helper = new Worker() {\n    helper.init()\n  }\n}"
+    },
+    {
+      "name": "semicolon terminators",
+      "compatible": true,
+      "source": "zenuml\n@Actor Client;\nClient->API: request;\nAPI.handle();\nreturn result;"
     }
   ]
 }

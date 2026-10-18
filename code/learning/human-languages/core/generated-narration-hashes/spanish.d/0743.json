@@ -1,0 +1,20 @@
+{
+  "language": "spanish",
+  "chapter": 743,
+  "sourceHash": "fnv1a64:3fd35f67447ab4f8",
+  "lessonIds": [
+    "ES-C743-terapeuta",
+    "ES-C743-terapia",
+    "ES-C743-psicologo",
+    "ES-C743-bienestar",
+    "ES-C743-autoestima",
+    "ES-R743-repaso-736-743"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "spanish/narration/ch743.txt",
+  "json": "spanish/narration/ch743.json",
+  "textHash": "fnv1a64:b9ef3b2c15104ee5",
+  "jsonHash": "fnv1a64:a2c350c5c7726c2e",
+  "findings": []
+}

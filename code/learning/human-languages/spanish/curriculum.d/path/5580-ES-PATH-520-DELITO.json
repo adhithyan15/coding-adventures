@@ -1,0 +1,9 @@
+{
+  "id": "ES-PATH-520-DELITO",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "ES-EXT-520-DELITO"
+  ],
+  "after": []
+}

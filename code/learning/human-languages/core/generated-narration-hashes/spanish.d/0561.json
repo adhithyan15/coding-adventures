@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 561,
+  "sourceHash": "fnv1a64:98978abf68b6a29f",
+  "lessonIds": [
+    "ES-C561-marcharse",
+    "ES-C561-zarpar",
+    "ES-C561-partida",
+    "ES-C561-regreso",
+    "ES-C561-ausencia"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch561.txt",
+  "json": "spanish/narration/ch561.json",
+  "textHash": "fnv1a64:39fea164f7e93fcb",
+  "jsonHash": "fnv1a64:fa5ea642a253bba3",
+  "findings": []
+}

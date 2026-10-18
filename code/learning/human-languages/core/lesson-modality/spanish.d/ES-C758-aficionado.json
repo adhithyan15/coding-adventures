@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C758-aficionado",
+    "language": "spanish",
+    "chapter": 758,
+    "sequence": 27900,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2d0fd4ac08ff1a2c"
+  },
+  "findings": []
+}

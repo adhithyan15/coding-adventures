@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C732-enfermedad",
+    "language": "spanish",
+    "chapter": 732,
+    "sequence": 26550,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:34fbfd4829f39ac7"
+  },
+  "findings": []
+}

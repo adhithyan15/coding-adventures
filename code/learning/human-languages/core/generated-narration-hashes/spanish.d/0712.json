@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 712,
+  "sourceHash": "fnv1a64:794db567bf3b4b39",
+  "lessonIds": [
+    "ES-C712-sensacion",
+    "ES-C712-animo",
+    "ES-C712-desanimado",
+    "ES-C712-animar",
+    "ES-C712-alivio"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch712.txt",
+  "json": "spanish/narration/ch712.json",
+  "textHash": "fnv1a64:bf7c55499ca90510",
+  "jsonHash": "fnv1a64:9bd0b0f971529962",
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C604-expresar",
+    "language": "spanish",
+    "chapter": 604,
+    "sequence": 19940,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9588d39eb74e5000"
+  },
+  "findings": []
+}

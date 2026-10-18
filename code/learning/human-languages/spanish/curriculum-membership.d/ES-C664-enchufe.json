@@ -1,0 +1,11 @@
+{
+  "id": "ES-C664-enchufe",
+  "pathSegment": "ES-PATH-664-HABITACION",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ES-EXT-664-HABITACION",
+      "order": 3
+    }
+  ]
+}

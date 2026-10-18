@@ -1,0 +1,19 @@
+{
+  "chapter": 763,
+  "title": "En el museo",
+  "label": "ch:es-en-el-museo",
+  "canDo": "I can talk about sculptures, portraits, canvases and painters, and about taking photos.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "ES-C763-fotografiar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 763: I can talk about sculptures, portraits, canvases and painters, and about taking photos.",
+    "assesses": [
+      "ES-LEX-C763-ARTE-03",
+      "ES-LEX-C763-ARTE-04",
+      "ES-LEX-C763-ARTE-05"
+    ]
+  }
+}

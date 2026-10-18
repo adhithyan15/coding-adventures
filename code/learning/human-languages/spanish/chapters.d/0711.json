@@ -1,0 +1,19 @@
+{
+  "chapter": 711,
+  "title": "Emociones fuertes",
+  "label": "ch:es-emociones-fuertes",
+  "canDo": "I can describe an exciting moment and the feelings it gave me.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "ES-R711-repaso-704-711",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 711: I can describe an exciting moment and the feelings it gave me.",
+    "assesses": [
+      "ES-LEX-C711-EMOCION-03",
+      "ES-LEX-C711-EMOCION-04",
+      "ES-LEX-C711-EMOCION-05"
+    ]
+  }
+}

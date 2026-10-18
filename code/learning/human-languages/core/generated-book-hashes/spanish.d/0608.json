@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 608,
+  "sourceHash": "fnv1a64:4d647f12f6bfe5b2",
+  "lessonIds": [
+    "ES-C608-aumentar",
+    "ES-C608-disminuir",
+    "ES-C608-aumento",
+    "ES-C608-crecimiento",
+    "ES-C608-tendencia"
+  ],
+  "tex": "spanish/book/chapters/ch608-sube-y-baja.tex"
+}

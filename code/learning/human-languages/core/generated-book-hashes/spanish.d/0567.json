@@ -1,0 +1,14 @@
+{
+  "language": "spanish",
+  "chapter": 567,
+  "sourceHash": "fnv1a64:cc09e8faf328d533",
+  "lessonIds": [
+    "ES-C567-combate",
+    "ES-C567-tregua",
+    "ES-C567-batalla",
+    "ES-C567-soldado",
+    "ES-C567-ejercito",
+    "ES-R567-repaso-560-567"
+  ],
+  "tex": "spanish/book/chapters/ch567-la-guerra.tex"
+}

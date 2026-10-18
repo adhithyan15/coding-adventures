@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 746,
+  "sourceHash": "fnv1a64:4a670d7db6002c32",
+  "lessonIds": [
+    "ES-C746-acariciar",
+    "ES-C746-engano",
+    "ES-C746-ligar",
+    "ES-C746-coquetear",
+    "ES-C746-amante"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch746.txt",
+  "json": "spanish/narration/ch746.json",
+  "textHash": "fnv1a64:7d30ac1649a16a32",
+  "jsonHash": "fnv1a64:22def4fba2c170f0",
+  "findings": []
+}

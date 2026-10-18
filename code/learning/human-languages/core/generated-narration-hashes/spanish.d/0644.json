@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 644,
+  "sourceHash": "fnv1a64:95252f5e6a5b3443",
+  "lessonIds": [
+    "ES-C644-motor",
+    "ES-C644-volante",
+    "ES-C644-maletero",
+    "ES-C644-cinturon",
+    "ES-C644-abrocharse"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch644.txt",
+  "json": "spanish/narration/ch644.json",
+  "textHash": "fnv1a64:6704c1c72107ab46",
+  "jsonHash": "fnv1a64:cd75ff588999bddd",
+  "findings": []
+}

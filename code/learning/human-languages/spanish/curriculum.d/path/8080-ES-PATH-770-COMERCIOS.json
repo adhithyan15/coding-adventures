@@ -1,0 +1,9 @@
+{
+  "id": "ES-PATH-770-COMERCIOS",
+  "spine_node": "SPINE-GIVE-REASONS",
+  "before": [],
+  "inline": [
+    "ES-EXT-770-COMERCIOS"
+  ],
+  "after": []
+}

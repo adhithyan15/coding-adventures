@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 603,
+  "sourceHash": "fnv1a64:f804c40bdaef6d52",
+  "lessonIds": [
+    "ES-C603-privilegio",
+    "ES-C603-igualdad",
+    "ES-C603-desigualdad",
+    "ES-C603-justicia",
+    "ES-C603-injusto"
+  ],
+  "tex": "spanish/book/chapters/ch603-derechos.tex"
+}

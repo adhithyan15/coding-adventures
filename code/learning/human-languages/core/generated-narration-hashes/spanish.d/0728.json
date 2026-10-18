@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 728,
+  "sourceHash": "fnv1a64:65af1b5c7bb69ee0",
+  "lessonIds": [
+    "ES-C728-sabio",
+    "ES-C728-sabiduria",
+    "ES-C728-astuto",
+    "ES-C728-habil",
+    "ES-C728-ingenio"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch728.txt",
+  "json": "spanish/narration/ch728.json",
+  "textHash": "fnv1a64:d60659a131397948",
+  "jsonHash": "fnv1a64:743559e90ff23025",
+  "findings": []
+}

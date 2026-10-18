@@ -1,0 +1,11 @@
+{
+  "id": "ES-C654-aterrizar",
+  "pathSegment": "ES-PATH-654-AVION",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ES-EXT-654-AVION",
+      "order": 1
+    }
+  ]
+}

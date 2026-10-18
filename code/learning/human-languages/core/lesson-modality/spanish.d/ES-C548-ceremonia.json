@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C548-ceremonia",
+    "language": "spanish",
+    "chapter": 548,
+    "sequence": 17030,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a0c4ec414c15f213"
+  },
+  "findings": []
+}

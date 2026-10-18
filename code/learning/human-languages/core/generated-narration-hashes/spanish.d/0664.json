@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 664,
+  "sourceHash": "fnv1a64:d3f96a18678d8c9d",
+  "lessonIds": [
+    "ES-C664-sabana",
+    "ES-C664-balcon",
+    "ES-C664-vista",
+    "ES-C664-enchufe",
+    "ES-C664-grifo"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch664.txt",
+  "json": "spanish/narration/ch664.json",
+  "textHash": "fnv1a64:c404f9d141701c34",
+  "jsonHash": "fnv1a64:893ea6415e35f6a7",
+  "findings": []
+}

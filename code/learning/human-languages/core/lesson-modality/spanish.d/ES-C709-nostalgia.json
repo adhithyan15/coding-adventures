@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C709-nostalgia",
+    "language": "spanish",
+    "chapter": 709,
+    "sequence": 25380,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2fe140dd4296ce1b"
+  },
+  "findings": []
+}

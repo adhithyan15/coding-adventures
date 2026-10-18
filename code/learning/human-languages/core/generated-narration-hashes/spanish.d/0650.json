@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 650,
+  "sourceHash": "fnv1a64:80f5f7a8d5d188b3",
+  "lessonIds": [
+    "ES-C650-autocar",
+    "ES-C650-tranvia",
+    "ES-C650-bonobus",
+    "ES-C650-transbordo",
+    "ES-C650-validar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch650.txt",
+  "json": "spanish/narration/ch650.json",
+  "textHash": "fnv1a64:a45aa2fa348dd34a",
+  "jsonHash": "fnv1a64:6e32652ed855073e",
+  "findings": []
+}

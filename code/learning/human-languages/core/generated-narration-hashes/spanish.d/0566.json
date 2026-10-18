@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 566,
+  "sourceHash": "fnv1a64:cde4b439eaa77366",
+  "lessonIds": [
+    "ES-C566-anecdota",
+    "ES-C566-aventura",
+    "ES-C566-hazana",
+    "ES-C566-record",
+    "ES-C566-novedad"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch566.txt",
+  "json": "spanish/narration/ch566.json",
+  "textHash": "fnv1a64:cdc8ae215e803738",
+  "jsonHash": "fnv1a64:2ff5c0d08b003dd6",
+  "findings": []
+}

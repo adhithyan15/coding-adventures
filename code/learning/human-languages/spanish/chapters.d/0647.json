@@ -1,0 +1,19 @@
+{
+  "chapter": 647,
+  "title": "Cruzar la calle",
+  "label": "ch:es-cruzar-la-calle",
+  "canDo": "I can get across town safely: traffic lights, turnings, the roadway, pedestrians and roundabouts.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "ES-R647-repaso-640-647",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 647: I can get across town safely: traffic lights, turnings, the roadway, pedestrians and roundabouts.",
+    "assesses": [
+      "ES-LEX-C647-CRUZAR-03",
+      "ES-LEX-C647-CRUZAR-04",
+      "ES-LEX-C647-CRUZAR-05"
+    ]
+  }
+}

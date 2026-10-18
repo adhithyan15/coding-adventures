@@ -1,0 +1,11 @@
+{
+  "id": "ES-C704-dicha",
+  "pathSegment": "ES-PATH-704-ALEGRIA",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ES-EXT-704-ALEGRIA",
+      "order": 2
+    }
+  ]
+}

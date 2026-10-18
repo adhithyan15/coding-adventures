@@ -1,0 +1,19 @@
+{
+  "chapter": 558,
+  "title": "Un homenaje",
+  "label": "ch:es-un-homenaje",
+  "canDo": "I can talk about public celebrations: a tribute, an anniversary that is commemorated and a new building that is opened.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "ES-C558-inaugurar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 558: I can talk about public celebrations: a tribute, an anniversary that is commemorated and a new building that is opened.",
+    "assesses": [
+      "ES-LEX-C558-HOMENAJE-03",
+      "ES-LEX-C558-HOMENAJE-04",
+      "ES-LEX-C558-HOMENAJE-05"
+    ]
+  }
+}

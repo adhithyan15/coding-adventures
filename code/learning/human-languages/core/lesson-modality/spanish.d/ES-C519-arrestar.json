@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C519-arrestar",
+    "language": "spanish",
+    "chapter": 519,
+    "sequence": 15540,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4df747df073036e4"
+  },
+  "findings": []
+}

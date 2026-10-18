@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 621,
+  "sourceHash": "fnv1a64:878b2ab1f6c782da",
+  "lessonIds": [
+    "ES-C621-impedir",
+    "ES-C621-facilitar",
+    "ES-C621-dificultar",
+    "ES-C621-exento",
+    "ES-C621-prohibido"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch621.txt",
+  "json": "spanish/narration/ch621.json",
+  "textHash": "fnv1a64:e6407931b02289e4",
+  "jsonHash": "fnv1a64:ca410971e7ca3c5c",
+  "findings": []
+}

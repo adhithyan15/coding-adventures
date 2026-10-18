@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 745,
+  "sourceHash": "fnv1a64:cf3e23ea416e68fb",
+  "lessonIds": [
+    "ES-C745-relacion",
+    "ES-C745-ruptura",
+    "ES-C745-infiel",
+    "ES-C745-traicionar",
+    "ES-C745-traicion"
+  ],
+  "tex": "spanish/book/chapters/ch745-cuando-se-acaba.tex"
+}

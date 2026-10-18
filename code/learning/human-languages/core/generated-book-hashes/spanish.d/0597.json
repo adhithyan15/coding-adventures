@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 597,
+  "sourceHash": "fnv1a64:dd771b50758493e8",
+  "lessonIds": [
+    "ES-C597-aprendizaje",
+    "ES-C597-ensenanza",
+    "ES-C597-educar",
+    "ES-C597-evaluar",
+    "ES-C597-evaluacion"
+  ],
+  "tex": "spanish/book/chapters/ch597-aprender-y-evaluar.tex"
+}

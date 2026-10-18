@@ -1,0 +1,858 @@
+{
+  "version": 1,
+  "language": "spanish",
+  "chapter": 583,
+  "title": "Lo que influye",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:87e4e36c5971f5d9",
+  "lessons": [
+    {
+      "id": "ES-C583-influir",
+      "sequence": 18850,
+      "title": "influir — to influence, to have an effect",
+      "headword": "influir",
+      "romanization": "influir",
+      "gloss": "to influence, to have an effect",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1d56f0064b0f7ab1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Spanish for consequently, then the Spanish for so."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: influir",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "influir — \"to influence, to have an effect\"."
+            },
+            {
+              "kind": "speech",
+              "text": "El tiempo influye en mi humor. The weather influences my mood."
+            },
+            {
+              "kind": "speech",
+              "text": "Like construir: influyo, influye. With en: influir en algo."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "influir is a learned borrowing from Latin influere 'to flow in', built from in and fluere 'to flow' (Lewis & Short)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "influir",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *influir*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "influir, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *influir*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with influir",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *influir*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Spanish for consequently, then the Spanish for so, then say influir again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Spanish for consequently, then the Spanish for so, then say *influir* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does influir mean? (\"To influence, to have an effect\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C583-influencia",
+      "sequence": 18860,
+      "title": "la influencia — the influence",
+      "headword": "la influencia",
+      "romanization": "la influencia",
+      "gloss": "the influence",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:aeda834ce74840ac",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Spanish for so, then the Spanish for to influence."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: la influencia",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la influencia — \"the influence\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Sus padres tienen mucha influencia en él. His parents have a lot of influence on him."
+            },
+            {
+              "kind": "speech",
+              "text": "Tener influencia en or sobre someone."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "influencia is a learned word usually traced to Medieval Latin influentia, first the power thought to flow in from the stars; it is built on Latin influere 'to flow in' (Lewis & Short)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la influencia",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la influencia*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la influencia, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la influencia*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with la influencia",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *la influencia*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Spanish for so, then the Spanish for to influence, then say la influencia again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Spanish for so, then the Spanish for to influence, then say *la influencia* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does la influencia mean? (\"The influence\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C583-afectar",
+      "sequence": 18870,
+      "title": "afectar — to affect",
+      "headword": "afectar",
+      "romanization": "afectar",
+      "gloss": "to affect",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8458b98ba5fb28a5",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Spanish for to influence, then the Spanish for the influence."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: afectar",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "afectar — \"to affect\"."
+            },
+            {
+              "kind": "speech",
+              "text": "La crisis afecta a todos. The crisis affects everyone."
+            },
+            {
+              "kind": "speech",
+              "text": "With a before people: afecta a los jóvenes."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "afectar is a learned borrowing from Latin affectare, a form of afficere 'to act upon', built from ad and facere 'to do' (EtymDB)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "afectar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *afectar*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "afectar, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *afectar*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with afectar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *afectar*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Spanish for to influence, then the Spanish for the influence, then say afectar again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Spanish for to influence, then the Spanish for the influence, then say *afectar* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does afectar mean? (\"To affect\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C583-factor",
+      "sequence": 18880,
+      "title": "el factor — the factor",
+      "headword": "el factor",
+      "romanization": "el factor",
+      "gloss": "the factor",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:890f2bdd94ca82bc",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Spanish for the influence, then the Spanish for to affect."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: el factor",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "el factor — \"the factor\"."
+            },
+            {
+              "kind": "speech",
+              "text": "El precio es un factor importante. The price is an important factor."
+            },
+            {
+              "kind": "speech",
+              "text": "Un factor clave — a key factor."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "factor is a learned borrowing from Latin factor 'maker, doer', built on facere 'to make, to do' (EtymDB)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el factor",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el factor*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el factor, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el factor*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with el factor",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *el factor*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Spanish for the influence, then the Spanish for to affect, then say el factor again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Spanish for the influence, then the Spanish for to affect, then say *el factor* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does el factor mean? (\"The factor\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C583-generar",
+      "sequence": 18890,
+      "title": "generar — to generate, to create",
+      "headword": "generar",
+      "romanization": "generar",
+      "gloss": "to generate, to create",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:eedf61baed510d89",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Spanish for to affect, then the Spanish for the factor."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: generar",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "generar — \"to generate, to create\"."
+            },
+            {
+              "kind": "speech",
+              "text": "La nueva fábrica genera empleo. The new factory creates jobs."
+            },
+            {
+              "kind": "speech",
+              "text": "Common in news: generar dinero, generar problemas."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "generar is a learned borrowing from Latin generare 'to beget, to produce', built on genus 'birth, kind' (EtymDB)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "generar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *generar*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "generar, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *generar*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with generar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *generar*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Spanish for to affect, then the Spanish for the factor, then say generar again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Spanish for to affect, then the Spanish for the factor, then say *generar* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does generar mean? (\"To generate, to create\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-R583-repaso-576-583",
+      "sequence": 18900,
+      "title": "Opiniones y razones",
+      "headword": "(dialogue)",
+      "romanization": "(dialogue)",
+      "gloss": "a review of chapters 576-583",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:78d8b20e0bbacd95",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Spanish for to consider and to maintain."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to consider, to maintain, the belief, the conviction, the stance",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to consider, to maintain, the belief, the conviction, the stance]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to argue, the objection, convinced, reasonable, logical",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to argue, the objection, convinced, reasonable, logical]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the disagreement, to disagree, to oppose, in favour, opposed",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the disagreement, to disagree, to oppose, in favour, opposed]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to criticise, the criticism, to contradict, to admit, absurd",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to criticise, the criticism, to contradict, to admit, absurd]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the reason, as a result of, since, seeing as, given that",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the reason, as a result of, since, seeing as, given that]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to cause, to bring about, due to, because of, thanks to",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to cause, to bring about, due to, because of, thanks to]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the consequence, the impact, to involve, consequently, so",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the consequence, the impact, to involve, consequently, so]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to influence, the influence, to affect, the factor, to generate",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to influence, the influence, to affect, the factor, to generate]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "To consider? (considerar.) To maintain? (sostener.) The belief? (la creencia.) The conviction? (la convicción.) The stance? (la postura.) To argue? (argumentar.) The objection? (la objeción.) Convinced? (convencido.) Reasonable? (razonable.) Logical? (lógico.) The disagreement? (el desacuerdo.) To disagree? (discrepar.) To oppose? (oponerse.) In favour? (partidario.) Opposed? (contrario.) To criticise? (criticar.) The criticism? (la crítica.) To contradict? (contradecir.) To admit? (reconocer.) Absurd? (absurdo.) The reason? (el motivo.) As a result of? (a raíz de.) Since? (ya que.) Seeing as? (puesto que.) Given that? (dado que.) To cause? (causar.) To bring about? (provocar.) Due to? (debido a.) Because of? (a causa de.) Thanks to? (gracias a.) The consequence? (la consecuencia.) The impact? (el impacto.) To involve? (conllevar.) Consequently? (por consiguiente.) So? (de modo que.) To influence? (influir.) The influence? (la influencia.) To affect? (afectar.) The factor? (el factor.) To generate? (generar.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -1,0 +1,9 @@
+{
+  "id": "ES-PATH-513-PRENSA",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "ES-EXT-513-PRENSA"
+  ],
+  "after": []
+}

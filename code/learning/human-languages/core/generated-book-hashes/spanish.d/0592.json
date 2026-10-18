@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 592,
+  "sourceHash": "fnv1a64:878a3cb17dea4194",
+  "lessonIds": [
+    "ES-C592-empresario",
+    "ES-C592-multinacional",
+    "ES-C592-industria",
+    "ES-C592-sede",
+    "ES-C592-sucursal"
+  ],
+  "tex": "spanish/book/chapters/ch592-la-empresa.tex"
+}

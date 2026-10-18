@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 635,
+  "sourceHash": "fnv1a64:80db1428585c750c",
+  "lessonIds": [
+    "ES-C635-pacto",
+    "ES-C635-cuestionar",
+    "ES-C635-avalar",
+    "ES-C635-coherencia",
+    "ES-C635-dispuesto"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch635.txt",
+  "json": "spanish/narration/ch635.json",
+  "textHash": "fnv1a64:43e015ecd1cf49f7",
+  "jsonHash": "fnv1a64:9b9c1e57de992328",
+  "findings": []
+}

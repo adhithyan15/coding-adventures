@@ -1,0 +1,11 @@
+{
+  "id": "ES-C525-ambulancia",
+  "pathSegment": "ES-PATH-525-HERIDA",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ES-EXT-525-HERIDA",
+      "order": 2
+    }
+  ]
+}

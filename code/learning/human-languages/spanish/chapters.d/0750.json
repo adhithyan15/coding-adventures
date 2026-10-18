@@ -1,0 +1,19 @@
+{
+  "chapter": 750,
+  "title": "Bajo el mismo techo",
+  "label": "ch:es-bajo-el-mismo-techo",
+  "canDo": "I can talk about sharing a home, pampering each other and the bonds that support us.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "ES-C750-apoyo",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 750: I can talk about sharing a home, pampering each other and the bonds that support us.",
+    "assesses": [
+      "ES-LEX-C750-CONVIVIR-03",
+      "ES-LEX-C750-CONVIVIR-04",
+      "ES-LEX-C750-CONVIVIR-05"
+    ]
+  }
+}

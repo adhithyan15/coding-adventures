@@ -1,0 +1,19 @@
+{
+  "chapter": 573,
+  "title": "Lo consiguió",
+  "label": "ch:es-lo-consiguio",
+  "canDo": "I can say that someone reached a goal, failed, suffered and how things turned out.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "ES-C573-resultar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 573: I can say that someone reached a goal, failed, suffered and how things turned out.",
+    "assesses": [
+      "ES-LEX-C573-LOGRO-03",
+      "ES-LEX-C573-LOGRO-04",
+      "ES-LEX-C573-LOGRO-05"
+    ]
+  }
+}

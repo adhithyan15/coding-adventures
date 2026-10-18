@@ -1,0 +1,11 @@
+{
+  "id": "ES-C586-excusa",
+  "pathSegment": "ES-PATH-586-JUSTIF",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ES-EXT-586-JUSTIF",
+      "order": 2
+    }
+  ]
+}

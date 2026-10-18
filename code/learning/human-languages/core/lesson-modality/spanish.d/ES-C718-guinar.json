@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C718-guinar",
+    "language": "spanish",
+    "chapter": 718,
+    "sequence": 25810,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e76a2b2879c01659"
+  },
+  "findings": []
+}

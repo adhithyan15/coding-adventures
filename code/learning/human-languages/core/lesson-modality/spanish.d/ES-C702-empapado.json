@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C702-empapado",
+    "language": "spanish",
+    "chapter": 702,
+    "sequence": 24980,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4ce361fe5e7cd264"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "ES-C643-arrancar",
+  "pathSegment": "ES-PATH-643-VOLANTE",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ES-EXT-643-VOLANTE",
+      "order": 1
+    }
+  ]
+}

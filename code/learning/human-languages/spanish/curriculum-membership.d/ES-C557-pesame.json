@@ -1,0 +1,11 @@
+{
+  "id": "ES-C557-pesame",
+  "pathSegment": "ES-PATH-557-LUTO",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ES-EXT-557-LUTO",
+      "order": 2
+    }
+  ]
+}

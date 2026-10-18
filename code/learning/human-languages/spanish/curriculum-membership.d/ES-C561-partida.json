@@ -1,0 +1,11 @@
+{
+  "id": "ES-C561-partida",
+  "pathSegment": "ES-PATH-561-PARTIDA",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ES-EXT-561-PARTIDA",
+      "order": 2
+    }
+  ]
+}

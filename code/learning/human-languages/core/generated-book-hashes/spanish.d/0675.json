@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 675,
+  "sourceHash": "fnv1a64:c048293a40bb5989",
+  "lessonIds": [
+    "ES-C675-afueras",
+    "ES-C675-cuadra",
+    "ES-C675-callejon",
+    "ES-C675-soportal",
+    "ES-C675-adoquin"
+  ],
+  "tex": "spanish/book/chapters/ch675-las-partes-de-la-ciudad.tex"
+}

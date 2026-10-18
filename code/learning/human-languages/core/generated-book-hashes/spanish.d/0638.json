@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 638,
+  "sourceHash": "fnv1a64:f884b82bcaf0655e",
+  "lessonIds": [
+    "ES-C638-margen",
+    "ES-C638-limitar",
+    "ES-C638-control",
+    "ES-C638-controlar",
+    "ES-C638-excepto"
+  ],
+  "tex": "spanish/book/chapters/ch638-limites.tex"
+}

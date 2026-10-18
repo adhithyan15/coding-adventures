@@ -1,0 +1,11 @@
+{
+  "id": "ES-R679-repaso-672-679",
+  "pathSegment": "ES-PATH-679-SERVICIOS",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "ES-EXT-679-SERVICIOS",
+      "order": 5
+    }
+  ]
+}

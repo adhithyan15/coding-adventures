@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 637,
+  "sourceHash": "fnv1a64:e13e639dbe72f9ed",
+  "lessonIds": [
+    "ES-C637-favorecer",
+    "ES-C637-perjudicar",
+    "ES-C637-rentable",
+    "ES-C637-conveniente",
+    "ES-C637-convenir"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch637.txt",
+  "json": "spanish/narration/ch637.json",
+  "textHash": "fnv1a64:d006212c6ccca8f3",
+  "jsonHash": "fnv1a64:6bacbffb4df6acf5",
+  "findings": []
+}

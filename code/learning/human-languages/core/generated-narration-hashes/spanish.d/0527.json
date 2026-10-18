@@ -1,0 +1,20 @@
+{
+  "language": "spanish",
+  "chapter": 527,
+  "sourceHash": "fnv1a64:a70f6484579b75eb",
+  "lessonIds": [
+    "ES-C527-chocar",
+    "ES-C527-choque",
+    "ES-C527-atropellar",
+    "ES-C527-ileso",
+    "ES-C527-caer",
+    "ES-R527-repaso-520-527"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "spanish/narration/ch527.txt",
+  "json": "spanish/narration/ch527.json",
+  "textHash": "fnv1a64:2e5f15e7300a99e5",
+  "jsonHash": "fnv1a64:df328e4ee7f9cb6d",
+  "findings": []
+}

@@ -1,0 +1,15 @@
+{
+  "language": "spanish",
+  "chapter": 777,
+  "sourceHash": "fnv1a64:9bbc01112d391574",
+  "lessonIds": [
+    "ES-C777-congelar",
+    "ES-C777-enfriar",
+    "ES-C777-planchar",
+    "ES-C777-enchufar",
+    "ES-C777-reiniciar",
+    "ES-R777-repaso-776-777",
+    "ES-R777-repaso-final-777"
+  ],
+  "tex": "spanish/book/chapters/ch777-si-se-va-la-luz.tex"
+}

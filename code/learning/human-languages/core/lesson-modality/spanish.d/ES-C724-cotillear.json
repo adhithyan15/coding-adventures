@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C724-cotillear",
+    "language": "spanish",
+    "chapter": 724,
+    "sequence": 26130,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c1b1e2431afa0b50"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "ES-C666-acampar",
+  "pathSegment": "ES-PATH-666-CAMPING",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ES-EXT-666-CAMPING",
+      "order": 1
+    }
+  ]
+}

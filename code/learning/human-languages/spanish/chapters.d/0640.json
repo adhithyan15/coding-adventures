@@ -1,0 +1,19 @@
+{
+  "chapter": 640,
+  "title": "Cómo nos movemos",
+  "label": "ch:es-como-nos-movemos",
+  "canDo": "I can talk about how I get around: summer trips, cars and vans, the traffic and the driver.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "ES-C640-conductor",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 640: I can talk about how I get around: summer trips, cars and vans, the traffic and the driver.",
+    "assesses": [
+      "ES-LEX-C640-VIAJAR-03",
+      "ES-LEX-C640-VIAJAR-04",
+      "ES-LEX-C640-VIAJAR-05"
+    ]
+  }
+}

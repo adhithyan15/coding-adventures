@@ -1,0 +1,11 @@
+{
+  "id": "ES-C697-aguacero",
+  "pathSegment": "ES-PATH-697-LLUVIA",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ES-EXT-697-LLUVIA",
+      "order": 2
+    }
+  ]
+}

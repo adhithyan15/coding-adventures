@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 654,
+  "sourceHash": "fnv1a64:fc83a8f65bb1ece2",
+  "lessonIds": [
+    "ES-C654-despegar",
+    "ES-C654-aterrizar",
+    "ES-C654-piloto",
+    "ES-C654-tripulacion",
+    "ES-C654-azafata"
+  ],
+  "tex": "spanish/book/chapters/ch654-en-el-avion.tex"
+}

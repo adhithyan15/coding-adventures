@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 523,
+  "sourceHash": "fnv1a64:90ade529489767ca",
+  "lessonIds": [
+    "ES-C523-preso",
+    "ES-C523-acusar",
+    "ES-C523-confesar",
+    "ES-C523-testificar",
+    "ES-C523-liberar"
+  ],
+  "tex": "spanish/book/chapters/ch523-el-preso.tex"
+}

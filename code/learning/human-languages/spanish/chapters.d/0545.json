@@ -1,0 +1,19 @@
+{
+  "chapter": 545,
+  "title": "De niño",
+  "label": "ch:es-de-nino",
+  "canDo": "I can talk about growing up: who brought me up, my childhood, my youth and my generation.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "ES-C545-generacion",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 545: I can talk about growing up: who brought me up, my childhood, my youth and my generation.",
+    "assesses": [
+      "ES-LEX-C545-NINEZ-03",
+      "ES-LEX-C545-NINEZ-04",
+      "ES-LEX-C545-NINEZ-05"
+    ]
+  }
+}

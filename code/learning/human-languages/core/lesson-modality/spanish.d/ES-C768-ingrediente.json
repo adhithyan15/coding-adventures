@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C768-ingrediente",
+    "language": "spanish",
+    "chapter": 768,
+    "sequence": 28440,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9a520ed5a2b5e2e9"
+  },
+  "findings": []
+}

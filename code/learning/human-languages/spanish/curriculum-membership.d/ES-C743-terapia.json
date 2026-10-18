@@ -1,0 +1,11 @@
+{
+  "id": "ES-C743-terapia",
+  "pathSegment": "ES-PATH-743-MENTE",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ES-EXT-743-MENTE",
+      "order": 1
+    }
+  ]
+}

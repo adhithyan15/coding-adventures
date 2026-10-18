@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 761,
+  "sourceHash": "fnv1a64:9d0ea95d61225c10",
+  "lessonIds": [
+    "ES-C761-serie",
+    "ES-C761-videojuego",
+    "ES-C761-cojin",
+    "ES-C761-bostezar",
+    "ES-C761-grabar"
+  ],
+  "tex": "spanish/book/chapters/ch761-tardes-en-el-sofa.tex"
+}

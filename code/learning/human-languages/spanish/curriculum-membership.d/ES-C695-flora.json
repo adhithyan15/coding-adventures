@@ -1,0 +1,11 @@
+{
+  "id": "ES-C695-flora",
+  "pathSegment": "ES-PATH-695-FAUNA",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ES-EXT-695-FAUNA",
+      "order": 2
+    }
+  ]
+}

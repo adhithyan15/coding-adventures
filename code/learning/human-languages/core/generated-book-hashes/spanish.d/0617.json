@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 617,
+  "sourceHash": "fnv1a64:b25416101290f10f",
+  "lessonIds": [
+    "ES-C617-decision",
+    "ES-C617-opcion",
+    "ES-C617-dilema",
+    "ES-C617-prioridad",
+    "ES-C617-criterio"
+  ],
+  "tex": "spanish/book/chapters/ch617-elegir.tex"
+}

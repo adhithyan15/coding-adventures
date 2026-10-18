@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C774-desvan",
+    "language": "spanish",
+    "chapter": 774,
+    "sequence": 28710,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b0c330664a5c0e2f"
+  },
+  "findings": []
+}

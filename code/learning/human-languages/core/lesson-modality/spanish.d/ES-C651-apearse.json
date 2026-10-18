@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C651-apearse",
+    "language": "spanish",
+    "chapter": 651,
+    "sequence": 22400,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2543b78f19eefcee"
+  },
+  "findings": []
+}

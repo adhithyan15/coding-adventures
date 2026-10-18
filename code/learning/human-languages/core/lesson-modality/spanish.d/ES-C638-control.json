@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C638-control",
+    "language": "spanish",
+    "chapter": 638,
+    "sequence": 21690,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2e2cbbe91e0b6299"
+  },
+  "findings": []
+}

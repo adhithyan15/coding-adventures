@@ -1,0 +1,11 @@
+{
+  "id": "ES-C570-escandalo",
+  "pathSegment": "ES-PATH-570-PROTESTA",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ES-EXT-570-PROTESTA",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "ES-C579-contradecir",
+  "pathSegment": "ES-PATH-579-CRITICA",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ES-EXT-579-CRITICA",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 540,
+  "title": "A finales de año",
+  "label": "ch:es-a-finales-de-ano",
+  "canDo": "I can say whether something happened at the beginning, in the middle or at the end of a month or a year, and how often it happens.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "ES-C540-anual",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 540: I can say whether something happened at the beginning, in the middle or at the end of a month or a year, and how often it happens.",
+    "assesses": [
+      "ES-LEX-C540-TEMPORADA-03",
+      "ES-LEX-C540-TEMPORADA-04",
+      "ES-LEX-C540-TEMPORADA-05"
+    ]
+  }
+}

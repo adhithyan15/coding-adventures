@@ -1,0 +1,9 @@
+{
+  "id": "ES-PATH-623-SANCION",
+  "spine_node": "SPINE-EXPRESS-CONDITION",
+  "before": [],
+  "inline": [
+    "ES-EXT-623-SANCION"
+  ],
+  "after": []
+}

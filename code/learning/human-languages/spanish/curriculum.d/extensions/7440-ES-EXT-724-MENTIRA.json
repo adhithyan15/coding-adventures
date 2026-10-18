@@ -1,0 +1,8 @@
+{
+  "id": "ES-EXT-724-MENTIRA",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can describe honest people, liars and gossips.",
+  "prerequisites": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "ES-C533-inesperado",
+  "pathSegment": "ES-PATH-533-CASUAL",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ES-EXT-533-CASUAL",
+      "order": 3
+    }
+  ]
+}

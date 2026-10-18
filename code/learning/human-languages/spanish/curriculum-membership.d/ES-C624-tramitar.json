@@ -1,0 +1,11 @@
+{
+  "id": "ES-C624-tramitar",
+  "pathSegment": "ES-PATH-624-PERMISO",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ES-EXT-624-PERMISO",
+      "order": 2
+    }
+  ]
+}

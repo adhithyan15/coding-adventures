@@ -1,0 +1,19 @@
+{
+  "chapter": 675,
+  "title": "Las partes de la ciudad",
+  "label": "ch:es-las-partes-de-la-ciudad",
+  "canDo": "I can talk about parts of a town: the outskirts, the blocks, an alley, arcades and cobbled streets.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "ES-C675-adoquin",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 675: I can talk about parts of a town: the outskirts, the blocks, an alley, arcades and cobbled streets.",
+    "assesses": [
+      "ES-LEX-C675-AFUERAS-03",
+      "ES-LEX-C675-AFUERAS-04",
+      "ES-LEX-C675-AFUERAS-05"
+    ]
+  }
+}

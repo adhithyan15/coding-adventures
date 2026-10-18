@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 673,
+  "sourceHash": "fnv1a64:33c01e12c17f53cf",
+  "lessonIds": [
+    "ES-C673-dirigirse",
+    "ES-C673-acortar",
+    "ES-C673-retroceder",
+    "ES-C673-rodear",
+    "ES-C673-bordear"
+  ],
+  "tex": "spanish/book/chapters/ch673-hacia-donde.tex"
+}

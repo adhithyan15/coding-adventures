@@ -1,0 +1,11 @@
+{
+  "id": "ES-C519-arrestar",
+  "pathSegment": "ES-PATH-519-POLICIA",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ES-EXT-519-POLICIA",
+      "order": 1
+    }
+  ]
+}

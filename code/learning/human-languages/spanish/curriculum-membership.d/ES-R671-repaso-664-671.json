@@ -1,0 +1,11 @@
+{
+  "id": "ES-R671-repaso-664-671",
+  "pathSegment": "ES-PATH-671-LEJOS",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "ES-EXT-671-LEJOS",
+      "order": 5
+    }
+  ]
+}

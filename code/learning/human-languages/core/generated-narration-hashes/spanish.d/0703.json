@@ -1,0 +1,22 @@
+{
+  "language": "spanish",
+  "chapter": 703,
+  "sourceHash": "fnv1a64:0bdf10d2ecba20b4",
+  "lessonIds": [
+    "ES-C703-atardecer",
+    "ES-C703-anochecer",
+    "ES-C703-horizonte",
+    "ES-C703-arco-iris",
+    "ES-C703-contemplar",
+    "ES-R703-repaso-696-703",
+    "ES-R703-repaso-final-703",
+    "ES-R703-repaso-problemas-de-viaje"
+  ],
+  "voiceLessons": 8,
+  "drivablePrefix": 8,
+  "text": "spanish/narration/ch703.txt",
+  "json": "spanish/narration/ch703.json",
+  "textHash": "fnv1a64:de89a253a15013c8",
+  "jsonHash": "fnv1a64:68f9edd2b30f0d16",
+  "findings": []
+}

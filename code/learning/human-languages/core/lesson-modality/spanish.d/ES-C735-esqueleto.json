@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C735-esqueleto",
+    "language": "spanish",
+    "chapter": 735,
+    "sequence": 26680,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:565bc1dd3ab5304d"
+  },
+  "findings": []
+}

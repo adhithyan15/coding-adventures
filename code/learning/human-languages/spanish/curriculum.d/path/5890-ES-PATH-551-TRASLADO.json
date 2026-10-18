@@ -1,0 +1,9 @@
+{
+  "id": "ES-PATH-551-TRASLADO",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "ES-EXT-551-TRASLADO"
+  ],
+  "after": []
+}

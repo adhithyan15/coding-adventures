@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 536,
+  "sourceHash": "fnv1a64:5b4f531c0b0a62f5",
+  "lessonIds": [
+    "ES-C536-mientras-tanto",
+    "ES-C536-al-mismo-tiempo",
+    "ES-C536-a-la-vez",
+    "ES-C536-en-cuanto",
+    "ES-C536-tan-pronto-como"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch536.txt",
+  "json": "spanish/narration/ch536.json",
+  "textHash": "fnv1a64:ca6d7d3769fc5b68",
+  "jsonHash": "fnv1a64:d2e54e3fbd2b6be5",
+  "findings": []
+}

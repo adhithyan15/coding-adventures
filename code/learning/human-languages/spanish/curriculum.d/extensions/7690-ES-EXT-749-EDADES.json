@@ -1,0 +1,8 @@
+{
+  "id": "ES-EXT-749-EDADES",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can describe more family members: a teenager, twins, a stepbrother, a great-grandfather and an orphan.",
+  "prerequisites": []
+}

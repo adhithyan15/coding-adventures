@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C646-repostar",
+    "language": "spanish",
+    "chapter": 646,
+    "sequence": 22110,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:613c83a774af9535"
+  },
+  "findings": []
+}

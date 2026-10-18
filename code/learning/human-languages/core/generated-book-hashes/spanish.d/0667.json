@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 667,
+  "sourceHash": "fnv1a64:4335189fbac34936",
+  "lessonIds": [
+    "ES-C667-apartamento",
+    "ES-C667-propietario",
+    "ES-C667-anfitrion",
+    "ES-C667-inquilino",
+    "ES-C667-alquilar"
+  ],
+  "tex": "spanish/book/chapters/ch667-un-piso-de-vacaciones.tex"
+}

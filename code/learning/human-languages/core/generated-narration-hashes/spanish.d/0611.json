@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 611,
+  "sourceHash": "fnv1a64:4b16bddbd7a27a0f",
+  "lessonIds": [
+    "ES-C611-condicion",
+    "ES-C611-siempre-que",
+    "ES-C611-a-menos-que",
+    "ES-C611-con-tal-de-que",
+    "ES-C611-en-caso-de-que"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch611.txt",
+  "json": "spanish/narration/ch611.json",
+  "textHash": "fnv1a64:590b5bf6a8b1dad5",
+  "jsonHash": "fnv1a64:2ef1de3687d9d967",
+  "findings": []
+}

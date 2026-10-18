@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 645,
+  "sourceHash": "fnv1a64:88c3f0083c68af88",
+  "lessonIds": [
+    "ES-C645-pinchazo",
+    "ES-C645-averiarse",
+    "ES-C645-mecanico",
+    "ES-C645-neumatico",
+    "ES-C645-pinchar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch645.txt",
+  "json": "spanish/narration/ch645.json",
+  "textHash": "fnv1a64:8b5c1eb01f18eb58",
+  "jsonHash": "fnv1a64:b425c996d91a277f",
+  "findings": []
+}

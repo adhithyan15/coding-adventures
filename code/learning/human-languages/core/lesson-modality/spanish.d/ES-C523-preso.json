@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C523-preso",
+    "language": "spanish",
+    "chapter": 523,
+    "sequence": 15740,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:09bd11f2809cffd8"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 672,
+  "title": "Carteles y flechas",
+  "label": "ch:es-carteles-y-flechas",
+  "canDo": "I can read signs on the way: signposts, notices, arrows, the signposting and diversions.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "ES-C672-desvio",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 672: I can read signs on the way: signposts, notices, arrows, the signposting and diversions.",
+    "assesses": [
+      "ES-LEX-C672-SENAL-03",
+      "ES-LEX-C672-SENAL-04",
+      "ES-LEX-C672-SENAL-05"
+    ]
+  }
+}

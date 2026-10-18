@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 722,
+  "sourceHash": "fnv1a64:4fe7dfc90258a8f0",
+  "lessonIds": [
+    "ES-C722-valor",
+    "ES-C722-coraje",
+    "ES-C722-valentia",
+    "ES-C722-cobarde",
+    "ES-C722-atreverse"
+  ],
+  "tex": "spanish/book/chapters/ch722-valientes-y-cobardes.tex"
+}

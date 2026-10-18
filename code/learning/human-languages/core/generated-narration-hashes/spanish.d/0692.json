@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 692,
+  "sourceHash": "fnv1a64:16216e92a268e175",
+  "lessonIds": [
+    "ES-C692-sembrar",
+    "ES-C692-regar",
+    "ES-C692-cosechar",
+    "ES-C692-pozo",
+    "ES-C692-florecer"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch692.txt",
+  "json": "spanish/narration/ch692.json",
+  "textHash": "fnv1a64:d7bf51765a5bee34",
+  "jsonHash": "fnv1a64:c219c9221955f66c",
+  "findings": []
+}

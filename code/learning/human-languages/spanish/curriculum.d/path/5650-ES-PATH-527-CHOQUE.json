@@ -1,0 +1,9 @@
+{
+  "id": "ES-PATH-527-CHOQUE",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "ES-EXT-527-CHOQUE"
+  ],
+  "after": []
+}

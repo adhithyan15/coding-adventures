@@ -1,0 +1,19 @@
+{
+  "chapter": 673,
+  "title": "Hacia dónde",
+  "label": "ch:es-hacia-donde",
+  "canDo": "I can say where people are heading, taking a short cut, going back, going round or skirting along.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "ES-C673-bordear",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 673: I can say where people are heading, taking a short cut, going back, going round or skirting along.",
+    "assesses": [
+      "ES-LEX-C673-DIRIGIRSE-03",
+      "ES-LEX-C673-DIRIGIRSE-04",
+      "ES-LEX-C673-DIRIGIRSE-05"
+    ]
+  }
+}

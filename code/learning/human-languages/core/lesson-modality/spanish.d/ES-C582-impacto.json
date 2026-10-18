@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C582-impacto",
+    "language": "spanish",
+    "chapter": 582,
+    "sequence": 18810,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d5c95fd839883ba7"
+  },
+  "findings": []
+}

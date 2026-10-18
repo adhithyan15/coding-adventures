@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 572,
+  "sourceHash": "fnv1a64:d995d7b251d63c4a",
+  "lessonIds": [
+    "ES-C572-convertirse",
+    "ES-C572-transformar",
+    "ES-C572-evolucionar",
+    "ES-C572-desarrollar",
+    "ES-C572-superar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch572.txt",
+  "json": "spanish/narration/ch572.json",
+  "textHash": "fnv1a64:3febd3f36bcdc893",
+  "jsonHash": "fnv1a64:960c05da105b7040",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 652,
+  "sourceHash": "fnv1a64:394e2f97a8ad47e0",
+  "lessonIds": [
+    "ES-C652-terminal",
+    "ES-C652-extraviarse",
+    "ES-C652-aerolinea",
+    "ES-C652-etiqueta",
+    "ES-C652-mochila"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch652.txt",
+  "json": "spanish/narration/ch652.json",
+  "textHash": "fnv1a64:2982d6b5e58c2520",
+  "jsonHash": "fnv1a64:98f200f9f70a4068",
+  "findings": []
+}

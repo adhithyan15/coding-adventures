@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C748-adopcion",
+    "language": "spanish",
+    "chapter": 748,
+    "sequence": 27370,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ceef88f0efbded9c"
+  },
+  "findings": []
+}

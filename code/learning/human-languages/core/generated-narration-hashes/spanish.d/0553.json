@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 553,
+  "sourceHash": "fnv1a64:656a82ba100c9853",
+  "lessonIds": [
+    "ES-C553-relevo",
+    "ES-C553-ascenso",
+    "ES-C553-finiquito",
+    "ES-C553-despedir",
+    "ES-C553-renunciar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch553.txt",
+  "json": "spanish/narration/ch553.json",
+  "textHash": "fnv1a64:f5eaf81cb2cdbe06",
+  "jsonHash": "fnv1a64:f9b55d0950a52892",
+  "findings": []
+}

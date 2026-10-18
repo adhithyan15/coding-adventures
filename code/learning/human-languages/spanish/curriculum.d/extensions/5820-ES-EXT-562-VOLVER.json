@@ -1,0 +1,8 @@
+{
+  "id": "ES-EXT-562-VOLVER",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say that someone did something again, ended up doing it, started doing it or burst out doing it, and moved away.",
+  "prerequisites": []
+}

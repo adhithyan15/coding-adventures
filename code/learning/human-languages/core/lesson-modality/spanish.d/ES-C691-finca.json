@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C691-finca",
+    "language": "spanish",
+    "chapter": 691,
+    "sequence": 24430,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:58089dd2834c628f"
+  },
+  "findings": []
+}

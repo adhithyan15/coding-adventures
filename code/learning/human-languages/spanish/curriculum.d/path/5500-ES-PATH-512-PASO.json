@@ -1,0 +1,9 @@
+{
+  "id": "ES-PATH-512-PASO",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "ES-EXT-512-PASO"
+  ],
+  "after": []
+}

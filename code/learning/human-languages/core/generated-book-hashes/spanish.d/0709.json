@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 709,
+  "sourceHash": "fnv1a64:218e893553f92da8",
+  "lessonIds": [
+    "ES-C709-aislamiento",
+    "ES-C709-solitario",
+    "ES-C709-extranar",
+    "ES-C709-nostalgia",
+    "ES-C709-anorar"
+  ],
+  "tex": "spanish/book/chapters/ch709-echar-de-menos.tex"
+}

@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 633,
+  "sourceHash": "fnv1a64:b2e673c38e7acdbc",
+  "lessonIds": [
+    "ES-C633-rico",
+    "ES-C633-miseria",
+    "ES-C633-riqueza",
+    "ES-C633-lujo",
+    "ES-C633-gratuito"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch633.txt",
+  "json": "spanish/narration/ch633.json",
+  "textHash": "fnv1a64:a69226a3f12ab7d2",
+  "jsonHash": "fnv1a64:16eaf86c8af2098e",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 558,
+  "sourceHash": "fnv1a64:a630ef57213763a0",
+  "lessonIds": [
+    "ES-C558-celebracion",
+    "ES-C558-festejar",
+    "ES-C558-conmemorar",
+    "ES-C558-homenaje",
+    "ES-C558-inaugurar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch558.txt",
+  "json": "spanish/narration/ch558.json",
+  "textHash": "fnv1a64:ad280b70c4a5709d",
+  "jsonHash": "fnv1a64:e9a5e6e939633e0a",
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C545-generacion",
+    "language": "spanish",
+    "chapter": 545,
+    "sequence": 16910,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3cd59af276b10814"
+  },
+  "findings": []
+}

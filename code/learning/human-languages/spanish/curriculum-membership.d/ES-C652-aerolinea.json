@@ -1,0 +1,11 @@
+{
+  "id": "ES-C652-aerolinea",
+  "pathSegment": "ES-PATH-652-AEROPUERTO",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ES-EXT-652-AEROPUERTO",
+      "order": 2
+    }
+  ]
+}

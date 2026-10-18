@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 566,
+  "sourceHash": "fnv1a64:486021401d95a282",
+  "lessonIds": [
+    "ES-C566-anecdota",
+    "ES-C566-aventura",
+    "ES-C566-hazana",
+    "ES-C566-record",
+    "ES-C566-novedad"
+  ],
+  "tex": "spanish/book/chapters/ch566-una-aventura.tex"
+}

@@ -1,0 +1,8 @@
+{
+  "id": "ES-EXT-543-RETRASO",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say that something was resumed, delayed, put off, moved forward or stayed the same.",
+  "prerequisites": []
+}

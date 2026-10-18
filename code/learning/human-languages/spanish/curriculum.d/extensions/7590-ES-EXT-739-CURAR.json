@@ -1,0 +1,8 @@
+{
+  "id": "ES-EXT-739-CURAR",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can talk about treating an illness, an operation and getting better.",
+  "prerequisites": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 664,
+  "title": "Cómo es la habitación",
+  "label": "ch:es-como-es-la-habitacion",
+  "canDo": "I can describe a hotel room: the sheets, the balcony, the view, the sockets and the taps.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "ES-C664-grifo",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 664: I can describe a hotel room: the sheets, the balcony, the view, the sockets and the taps.",
+    "assesses": [
+      "ES-LEX-C664-HABITACION-03",
+      "ES-LEX-C664-HABITACION-04",
+      "ES-LEX-C664-HABITACION-05"
+    ]
+  }
+}

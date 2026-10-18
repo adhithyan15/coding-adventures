@@ -1,0 +1,8 @@
+{
+  "id": "ES-EXT-644-COCHE",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can name the parts of a car I use on a trip: the engine, the steering wheel, the boot and the seat belt.",
+  "prerequisites": []
+}

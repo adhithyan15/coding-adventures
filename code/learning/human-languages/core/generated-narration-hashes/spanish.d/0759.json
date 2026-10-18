@@ -1,0 +1,20 @@
+{
+  "language": "spanish",
+  "chapter": 759,
+  "sourceHash": "fnv1a64:d0d86651e5ea647f",
+  "lessonIds": [
+    "ES-C759-escenario",
+    "ES-C759-espectaculo",
+    "ES-C759-aplaudir",
+    "ES-C759-actuar",
+    "ES-C759-actuacion",
+    "ES-R759-repaso-752-759"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "spanish/narration/ch759.txt",
+  "json": "spanish/narration/ch759.json",
+  "textHash": "fnv1a64:a4ca8966f4431cb9",
+  "jsonHash": "fnv1a64:f4eb0132c50321a9",
+  "findings": []
+}

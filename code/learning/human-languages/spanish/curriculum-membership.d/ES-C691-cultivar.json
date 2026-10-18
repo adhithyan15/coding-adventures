@@ -1,0 +1,11 @@
+{
+  "id": "ES-C691-cultivar",
+  "pathSegment": "ES-PATH-691-CAMPO",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "ES-EXT-691-CAMPO",
+      "order": 4
+    }
+  ]
+}

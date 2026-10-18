@@ -1,0 +1,9 @@
+{
+  "id": "ES-PATH-610-CONVIVIR",
+  "spine_node": "SPINE-GIVE-REASONS",
+  "before": [],
+  "inline": [
+    "ES-EXT-610-CONVIVIR"
+  ],
+  "after": []
+}

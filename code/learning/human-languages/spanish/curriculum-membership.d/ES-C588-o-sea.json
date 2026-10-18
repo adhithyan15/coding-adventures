@@ -1,0 +1,11 @@
+{
+  "id": "ES-C588-o-sea",
+  "pathSegment": "ES-PATH-588-ORDENA",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ES-EXT-588-ORDENA",
+      "order": 1
+    }
+  ]
+}

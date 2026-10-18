@@ -1,0 +1,20 @@
+{
+  "language": "spanish",
+  "chapter": 567,
+  "sourceHash": "fnv1a64:527ef1d1b85380ba",
+  "lessonIds": [
+    "ES-C567-combate",
+    "ES-C567-tregua",
+    "ES-C567-batalla",
+    "ES-C567-soldado",
+    "ES-C567-ejercito",
+    "ES-R567-repaso-560-567"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "spanish/narration/ch567.txt",
+  "json": "spanish/narration/ch567.json",
+  "textHash": "fnv1a64:42a64a5f8cfd54ef",
+  "jsonHash": "fnv1a64:ce013429687e62a3",
+  "findings": []
+}

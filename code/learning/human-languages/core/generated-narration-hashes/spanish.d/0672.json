@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 672,
+  "sourceHash": "fnv1a64:c6f1161b700a5f49",
+  "lessonIds": [
+    "ES-C672-indicador",
+    "ES-C672-letrero",
+    "ES-C672-flecha",
+    "ES-C672-senalizacion",
+    "ES-C672-desvio"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch672.txt",
+  "json": "spanish/narration/ch672.json",
+  "textHash": "fnv1a64:7157df0512e626da",
+  "jsonHash": "fnv1a64:0d68a31e16b5b675",
+  "findings": []
+}

@@ -1,0 +1,22 @@
+{
+  "language": "spanish",
+  "chapter": 639,
+  "sourceHash": "fnv1a64:5143bfbd77a4c7f7",
+  "lessonIds": [
+    "ES-C639-obtener",
+    "ES-C639-abandonar",
+    "ES-C639-rendirse",
+    "ES-C639-asumir",
+    "ES-C639-exitoso",
+    "ES-R639-repaso-632-639",
+    "ES-R639-repaso-final-639",
+    "ES-R639-repaso-por-que-y-si"
+  ],
+  "voiceLessons": 8,
+  "drivablePrefix": 8,
+  "text": "spanish/narration/ch639.txt",
+  "json": "spanish/narration/ch639.json",
+  "textHash": "fnv1a64:1532a1a0e619ba17",
+  "jsonHash": "fnv1a64:8daedec881f6e9a6",
+  "findings": []
+}

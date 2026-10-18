@@ -1,0 +1,19 @@
+{
+  "chapter": 671,
+  "title": "Cerca y lejos",
+  "label": "ch:es-cerca-y-lejos",
+  "canDo": "I can say how near or far a place is, and whether to take a short cut or the long way round.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "ES-R671-repaso-664-671",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 671: I can say how near or far a place is, and whether to take a short cut or the long way round.",
+    "assesses": [
+      "ES-LEX-C671-LEJOS-03",
+      "ES-LEX-C671-LEJOS-04",
+      "ES-LEX-C671-LEJOS-05"
+    ]
+  }
+}

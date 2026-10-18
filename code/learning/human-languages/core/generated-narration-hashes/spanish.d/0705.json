@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 705,
+  "sourceHash": "fnv1a64:7da399c1ee284d40",
+  "lessonIds": [
+    "ES-C705-orgullo",
+    "ES-C705-orgulloso",
+    "ES-C705-verguenza",
+    "ES-C705-avergonzado",
+    "ES-C705-avergonzarse"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch705.txt",
+  "json": "spanish/narration/ch705.json",
+  "textHash": "fnv1a64:1b85fd3d0e9367a1",
+  "jsonHash": "fnv1a64:4799bb970551395e",
+  "findings": []
+}

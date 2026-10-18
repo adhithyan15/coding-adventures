@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 512,
+  "sourceHash": "fnv1a64:157997959483ff43",
+  "lessonIds": [
+    "ES-C512-producirse",
+    "ES-C512-suceso",
+    "ES-C512-acontecimiento",
+    "ES-C512-acontecer",
+    "ES-C512-tener-lugar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch512.txt",
+  "json": "spanish/narration/ch512.json",
+  "textHash": "fnv1a64:68410fc19af1f429",
+  "jsonHash": "fnv1a64:2f533e36f64a37eb",
+  "findings": []
+}

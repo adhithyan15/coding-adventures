@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C665-dueno",
+    "language": "spanish",
+    "chapter": 665,
+    "sequence": 23120,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5a46d2d98ffe86b4"
+  },
+  "findings": []
+}

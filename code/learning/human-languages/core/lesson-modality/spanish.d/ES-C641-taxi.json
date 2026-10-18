@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C641-taxi",
+    "language": "spanish",
+    "chapter": 641,
+    "sequence": 21850,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:20e93eda8b8f2937"
+  },
+  "findings": []
+}

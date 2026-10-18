@@ -1,0 +1,9 @@
+{
+  "id": "ES-PATH-558-HOMENAJE",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "ES-EXT-558-HOMENAJE"
+  ],
+  "after": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "ES-C726-humildad",
+  "pathSegment": "ES-PATH-726-HUMILDE",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ES-EXT-726-HUMILDE",
+      "order": 1
+    }
+  ]
+}

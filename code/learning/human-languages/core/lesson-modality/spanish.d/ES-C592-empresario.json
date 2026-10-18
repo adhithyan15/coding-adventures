@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C592-empresario",
+    "language": "spanish",
+    "chapter": 592,
+    "sequence": 19320,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:09beff106fa6cc3b"
+  },
+  "findings": []
+}

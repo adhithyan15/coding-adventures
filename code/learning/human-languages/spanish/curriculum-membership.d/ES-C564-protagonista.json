@@ -1,0 +1,11 @@
+{
+  "id": "ES-C564-protagonista",
+  "pathSegment": "ES-PATH-564-HEROE",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ES-EXT-564-HEROE",
+      "order": 1
+    }
+  ]
+}

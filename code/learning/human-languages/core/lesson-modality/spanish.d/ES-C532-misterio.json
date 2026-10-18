@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C532-misterio",
+    "language": "spanish",
+    "chapter": 532,
+    "sequence": 16200,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:571fcfd9461fc309"
+  },
+  "findings": []
+}

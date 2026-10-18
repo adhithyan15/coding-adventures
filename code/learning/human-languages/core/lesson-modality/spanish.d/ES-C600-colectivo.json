@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C600-colectivo",
+    "language": "spanish",
+    "chapter": 600,
+    "sequence": 19740,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2ef9251d2f510302"
+  },
+  "findings": []
+}

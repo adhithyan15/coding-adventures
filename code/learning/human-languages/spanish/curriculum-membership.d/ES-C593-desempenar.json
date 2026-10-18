@@ -1,0 +1,11 @@
+{
+  "id": "ES-C593-desempenar",
+  "pathSegment": "ES-PATH-593-TAREA",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ES-EXT-593-TAREA",
+      "order": 1
+    }
+  ]
+}

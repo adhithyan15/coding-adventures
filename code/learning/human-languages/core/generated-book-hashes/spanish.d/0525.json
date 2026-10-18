@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 525,
+  "sourceHash": "fnv1a64:de731787a50d29f9",
+  "lessonIds": [
+    "ES-C525-herida",
+    "ES-C525-herir",
+    "ES-C525-ambulancia",
+    "ES-C525-socorrer",
+    "ES-C525-herido"
+  ],
+  "tex": "spanish/book/chapters/ch525-hay-heridos.tex"
+}

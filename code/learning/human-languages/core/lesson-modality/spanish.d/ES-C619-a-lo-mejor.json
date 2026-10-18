@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C619-a-lo-mejor",
+    "language": "spanish",
+    "chapter": 619,
+    "sequence": 20700,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:879d8f3dc9fcefa0"
+  },
+  "findings": []
+}

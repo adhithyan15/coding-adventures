@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 732,
+  "sourceHash": "fnv1a64:29fa775c0c8dd440",
+  "lessonIds": [
+    "ES-C732-saludable",
+    "ES-C732-cuidarse",
+    "ES-C732-enfermedad",
+    "ES-C732-enfermarse",
+    "ES-C732-empeorar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch732.txt",
+  "json": "spanish/narration/ch732.json",
+  "textHash": "fnv1a64:5d925328c4ab5dc6",
+  "jsonHash": "fnv1a64:678d6a5ea3965ca4",
+  "findings": []
+}

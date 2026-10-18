@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 596,
+  "sourceHash": "fnv1a64:027bc966f4db9ef6",
+  "lessonIds": [
+    "ES-C596-temario",
+    "ES-C596-matricula",
+    "ES-C596-tutoria",
+    "ES-C596-facultad",
+    "ES-C596-master"
+  ],
+  "tex": "spanish/book/chapters/ch596-en-la-universidad.tex"
+}

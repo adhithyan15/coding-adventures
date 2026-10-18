@@ -1,0 +1,19 @@
+{
+  "chapter": 648,
+  "title": "Dónde dejar el coche",
+  "label": "ch:es-donde-dejar-el-coche",
+  "canDo": "I can find a parking space, pay at the meter, keep to my lane and talk about trailers and towing.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "ES-C648-remolcar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 648: I can find a parking space, pay at the meter, keep to my lane and talk about trailers and towing.",
+    "assesses": [
+      "ES-LEX-C648-APARCAR-03",
+      "ES-LEX-C648-APARCAR-04",
+      "ES-LEX-C648-APARCAR-05"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C736-barba",
+    "language": "spanish",
+    "chapter": 736,
+    "sequence": 26770,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c9b284c6ba8b8835"
+  },
+  "findings": []
+}

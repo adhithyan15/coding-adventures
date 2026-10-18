@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C732-empeorar",
+    "language": "spanish",
+    "chapter": 732,
+    "sequence": 26570,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1fa4736857f79b57"
+  },
+  "findings": []
+}

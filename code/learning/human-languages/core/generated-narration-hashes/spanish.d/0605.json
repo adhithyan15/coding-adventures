@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 605,
+  "sourceHash": "fnv1a64:86855ddc734a35ca",
+  "lessonIds": [
+    "ES-C605-marginacion",
+    "ES-C605-violencia",
+    "ES-C605-discriminacion",
+    "ES-C605-racismo",
+    "ES-C605-corrupcion"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch605.txt",
+  "json": "spanish/narration/ch605.json",
+  "textHash": "fnv1a64:ace5140eeffec9df",
+  "jsonHash": "fnv1a64:fbf0efb6946a3250",
+  "findings": []
+}

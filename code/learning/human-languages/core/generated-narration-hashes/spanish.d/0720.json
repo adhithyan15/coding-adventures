@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 720,
+  "sourceHash": "fnv1a64:8558d0dd90f67e29",
+  "lessonIds": [
+    "ES-C720-admiracion",
+    "ES-C720-admirar",
+    "ES-C720-agradecido",
+    "ES-C720-gratitud",
+    "ES-C720-apreciar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch720.txt",
+  "json": "spanish/narration/ch720.json",
+  "textHash": "fnv1a64:12886ebb00e0de48",
+  "jsonHash": "fnv1a64:a2f7ecddb324e4df",
+  "findings": []
+}

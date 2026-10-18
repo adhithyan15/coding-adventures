@@ -1,0 +1,19 @@
+{
+  "chapter": 583,
+  "title": "Lo que influye",
+  "label": "ch:es-lo-que-influye",
+  "canDo": "I can say what influences or affects a situation.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "ES-R583-repaso-576-583",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 583: I can say what influences or affects a situation.",
+    "assesses": [
+      "ES-LEX-C583-INFLUYE-03",
+      "ES-LEX-C583-INFLUYE-04",
+      "ES-LEX-C583-INFLUYE-05"
+    ]
+  }
+}

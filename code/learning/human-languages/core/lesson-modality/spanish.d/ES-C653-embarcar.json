@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C653-embarcar",
+    "language": "spanish",
+    "chapter": 653,
+    "sequence": 22460,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c0fb8f3acc524047"
+  },
+  "findings": []
+}

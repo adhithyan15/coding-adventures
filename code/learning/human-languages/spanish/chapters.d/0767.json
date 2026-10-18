@@ -1,0 +1,19 @@
+{
+  "chapter": 767,
+  "title": "Cuerpo y mente en calma",
+  "label": "ch:es-cuerpo-y-mente-en-calma",
+  "canDo": "I can talk about willpower, meditation, stretching and massage.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "ES-R767-repaso-como-fue",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 767: I can talk about willpower, meditation, stretching and massage.",
+    "assesses": [
+      "ES-LEX-C767-PORVENIR-03",
+      "ES-LEX-C767-PORVENIR-04",
+      "ES-LEX-C767-PORVENIR-05"
+    ]
+  }
+}

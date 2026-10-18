@@ -1,0 +1,8 @@
+{
+  "id": "ES-EXT-768-COCINAR",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can tell someone how I cooked a dish: what I boiled, fried, peeled and beat, and which ingredients I used.",
+  "prerequisites": []
+}

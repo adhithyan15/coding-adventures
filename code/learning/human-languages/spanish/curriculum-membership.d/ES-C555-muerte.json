@@ -1,0 +1,11 @@
+{
+  "id": "ES-C555-muerte",
+  "pathSegment": "ES-PATH-555-VEJEZ",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ES-EXT-555-VEJEZ",
+      "order": 2
+    }
+  ]
+}

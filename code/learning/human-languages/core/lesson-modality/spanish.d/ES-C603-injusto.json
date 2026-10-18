@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C603-injusto",
+    "language": "spanish",
+    "chapter": 603,
+    "sequence": 19920,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:52c86fd94292b3b4"
+  },
+  "findings": []
+}

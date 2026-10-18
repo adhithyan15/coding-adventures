@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 769,
+  "sourceHash": "fnv1a64:b9aa2895e950a1bf",
+  "lessonIds": [
+    "ES-C769-gotear",
+    "ES-C769-gotera",
+    "ES-C769-averiado",
+    "ES-C769-fontanero",
+    "ES-C769-electricista"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch769.txt",
+  "json": "spanish/narration/ch769.json",
+  "textHash": "fnv1a64:0108d16f59d863d0",
+  "jsonHash": "fnv1a64:4b8f13637ba1254f",
+  "findings": []
+}

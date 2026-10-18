@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C603-privilegio",
+    "language": "spanish",
+    "chapter": 603,
+    "sequence": 19880,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a2bfa9a6ee1d8872"
+  },
+  "findings": []
+}

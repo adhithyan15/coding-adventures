@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 579,
+  "sourceHash": "fnv1a64:04f5681224ed1756",
+  "lessonIds": [
+    "ES-C579-criticar",
+    "ES-C579-critica",
+    "ES-C579-contradecir",
+    "ES-C579-reconocer",
+    "ES-C579-absurdo"
+  ],
+  "tex": "spanish/book/chapters/ch579-criticas.tex"
+}

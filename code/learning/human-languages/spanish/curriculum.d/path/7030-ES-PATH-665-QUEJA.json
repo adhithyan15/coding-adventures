@@ -1,0 +1,9 @@
+{
+  "id": "ES-PATH-665-QUEJA",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "ES-EXT-665-QUEJA"
+  ],
+  "after": []
+}

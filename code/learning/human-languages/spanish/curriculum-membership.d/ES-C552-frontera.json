@@ -1,0 +1,11 @@
+{
+  "id": "ES-C552-frontera",
+  "pathSegment": "ES-PATH-552-EXILIO",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ES-EXT-552-EXILIO",
+      "order": 3
+    }
+  ]
+}

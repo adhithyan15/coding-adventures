@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C721-valorar",
+    "language": "spanish",
+    "chapter": 721,
+    "sequence": 26010,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1499ef8f71d18917"
+  },
+  "findings": []
+}

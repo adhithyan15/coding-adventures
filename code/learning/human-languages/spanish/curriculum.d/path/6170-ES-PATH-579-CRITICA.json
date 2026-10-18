@@ -1,0 +1,9 @@
+{
+  "id": "ES-PATH-579-CRITICA",
+  "spine_node": "SPINE-GIVE-REASONS",
+  "before": [],
+  "inline": [
+    "ES-EXT-579-CRITICA"
+  ],
+  "after": []
+}

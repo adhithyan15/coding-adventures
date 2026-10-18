@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C744-noviazgo",
+    "language": "spanish",
+    "chapter": 744,
+    "sequence": 27170,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:11208544a12f0c63"
+  },
+  "findings": []
+}

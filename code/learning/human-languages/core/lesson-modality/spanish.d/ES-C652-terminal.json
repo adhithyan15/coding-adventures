@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C652-terminal",
+    "language": "spanish",
+    "chapter": 652,
+    "sequence": 22410,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f5b204a3422d743f"
+  },
+  "findings": []
+}

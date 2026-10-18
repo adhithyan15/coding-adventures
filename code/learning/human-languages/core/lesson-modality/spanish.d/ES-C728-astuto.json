@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C728-astuto",
+    "language": "spanish",
+    "chapter": 728,
+    "sequence": 26350,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:81c3577691338e93"
+  },
+  "findings": []
+}

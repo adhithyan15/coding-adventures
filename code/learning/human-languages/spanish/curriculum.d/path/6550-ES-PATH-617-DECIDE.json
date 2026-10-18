@@ -1,0 +1,9 @@
+{
+  "id": "ES-PATH-617-DECIDE",
+  "spine_node": "SPINE-EXPRESS-CONDITION",
+  "before": [],
+  "inline": [
+    "ES-EXT-617-DECIDE"
+  ],
+  "after": []
+}

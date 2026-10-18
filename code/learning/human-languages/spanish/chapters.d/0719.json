@@ -1,0 +1,19 @@
+{
+  "chapter": 719,
+  "title": "Dudas y preocupaciones",
+  "label": "ch:es-dudas-y-preocupaciones",
+  "canDo": "I can say what I doubt, what worries me and what I cannot stand.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "ES-R719-repaso-712-719",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 719: I can say what I doubt, what worries me and what I cannot stand.",
+    "assesses": [
+      "ES-LEX-C719-CONFIANZA-03",
+      "ES-LEX-C719-CONFIANZA-04",
+      "ES-LEX-C719-CONFIANZA-05"
+    ]
+  }
+}

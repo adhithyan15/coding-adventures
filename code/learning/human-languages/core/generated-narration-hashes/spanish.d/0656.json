@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 656,
+  "sourceHash": "fnv1a64:e8d043c29fe77b52",
+  "lessonIds": [
+    "ES-C656-aduanero",
+    "ES-C656-aduana",
+    "ES-C656-visado",
+    "ES-C656-sellar",
+    "ES-C656-registrar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch656.txt",
+  "json": "spanish/narration/ch656.json",
+  "textHash": "fnv1a64:71c89b5a10eec984",
+  "jsonHash": "fnv1a64:42a6834e9df5ff3c",
+  "findings": []
+}

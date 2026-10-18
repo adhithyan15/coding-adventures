@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 685,
+  "sourceHash": "fnv1a64:f34d07e1ae2f0ba2",
+  "lessonIds": [
+    "ES-C685-paisaje",
+    "ES-C685-naturaleza",
+    "ES-C685-sierra",
+    "ES-C685-monte",
+    "ES-C685-desierto"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch685.txt",
+  "json": "spanish/narration/ch685.json",
+  "textHash": "fnv1a64:245a03ccd53bce2b",
+  "jsonHash": "fnv1a64:0aeb03398eb39924",
+  "findings": []
+}

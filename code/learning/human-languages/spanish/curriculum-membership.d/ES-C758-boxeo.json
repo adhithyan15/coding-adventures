@@ -1,0 +1,11 @@
+{
+  "id": "ES-C758-boxeo",
+  "pathSegment": "ES-PATH-758-DEPORTES",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ES-EXT-758-DEPORTES",
+      "order": 1
+    }
+  ]
+}

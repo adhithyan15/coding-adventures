@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C574-enterarse",
+    "language": "spanish",
+    "chapter": 574,
+    "sequence": 18350,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4c9a2d5e5ba01697"
+  },
+  "findings": []
+}
