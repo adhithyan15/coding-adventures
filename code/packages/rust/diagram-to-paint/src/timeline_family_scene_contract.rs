@@ -334,3 +334,68 @@ fn timeline_family_none_keeps_complete_generic_temporal_title() {
     assert_eq!(*resolver.0.borrow(), expected_queries);
     println!("timeline-family-none COMPLETE generic-title");
 }
+
+#[test]
+fn timeline_family_none_keeps_complete_gantt_axis_and_queries() {
+    // Gantt's ordinary axis path consumes label_font, independently of the
+    // generic title-font control above. Baseline42+800/1000*14 =53.2.
+    let input = LayoutedTemporalDiagram {
+        width: 200.0,
+        height: 100.0,
+        accessibility_title: None,
+        accessibility_description: None,
+        timeline_config: None,
+        interactions: Vec::new(),
+        items: vec![
+            LayoutedTemporalItem::TemporalTitle {
+                x: 10.0,
+                y: 10.0,
+                width: 180.0,
+                height: 40.0,
+                label: "T".into(),
+            },
+            LayoutedTemporalItem::TimeAxisTick {
+                x: 50.0,
+                y: 40.0,
+                label: "L".into(),
+                label_above: false,
+            },
+        ],
+    };
+    let expected = PaintScene {
+        width: 200.0,
+        height: 100.0,
+        background: "rgb(255,255,255)".into(),
+        id: None,
+        metadata: None,
+        instructions: vec![
+            path(&[(50.0, 36.0), (50.0, 40.0)], "#374151", 1.0, false, false),
+            glyph("T", 100.0, 30.4, 18.0, "rgb(17, 24, 39)"),
+            glyph("L", 50.0, 53.2, 14.0, "rgb(107, 114, 128)"),
+        ],
+    };
+    let expected_queries = vec![
+        FontQuery::named("Caller Title").with_weight(text_interfaces::FontWeight(700)),
+        FontQuery::named("Caller Label"),
+    ];
+    let resolver = Resolver(std::cell::RefCell::new(Vec::new()));
+    let defaults = make_opts(&FakeShaper, &FakeMetrics, &FakeResolver);
+    let options = DiagramToPaintOptions {
+        label_font: FontSpec {
+            family: "Caller Label".into(),
+            ..defaults.label_font
+        },
+        title_font: FontSpec {
+            family: "Caller Title".into(),
+            ..defaults.title_font
+        },
+        resolver: &resolver,
+        shaper: &FakeShaper,
+        metrics: &FakeMetrics,
+        background: defaults.background,
+        device_pixel_ratio: defaults.device_pixel_ratio,
+    };
+    assert_eq!(diagram_to_paint_temporal(&input, &options), expected);
+    assert_eq!(*resolver.0.borrow(), expected_queries);
+    println!("timeline-family-none COMPLETE gantt-axis");
+}
