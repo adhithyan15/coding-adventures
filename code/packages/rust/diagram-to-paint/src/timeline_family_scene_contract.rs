@@ -209,6 +209,7 @@ fn timeline_family_source_keeps_complete_product_contracts() {
                     } else {
                         vec![FontQuery::named(family).with_weight(text_interfaces::FontWeight(700)),FontQuery::named(family)]
                     };
+                    let expected_queries = super::declared_timeline_period_queries(expected_queries, &expected_layout, if merged { FontQuery::named(family).with_weight(text_interfaces::FontWeight(600)).with_style(text_interfaces::FontStyle::Italic).with_stretch(text_interfaces::FontStretch::Condensed) } else { FontQuery::named(family) }, if merged { FontQuery::named(family).with_weight(text_interfaces::FontWeight(600)).with_style(text_interfaces::FontStyle::Italic).with_stretch(text_interfaces::FontStretch::Condensed) } else { FontQuery::named(family).with_weight(text_interfaces::FontWeight(700)) });
                     let parsed = mermaid_parser::parse_timeline(&source).unwrap();
                     assert_eq!(parsed,(title.clone(),semantic),"whole IR {name}:{header}:{titled}:{merged}");
                     let actual_layout = diagram_layout_temporal::try_layout_temporal_diagram(&TemporalDiagram { kind:TemporalKind::Timeline,title,body:TemporalBody::Timeline(parsed.1) },640.0).unwrap();
@@ -257,6 +258,7 @@ fn timeline_family_direct_domains_keep_full_scenes_and_queries() {
             FontQuery::named(effective).with_weight(text_interfaces::FontWeight(700)),
             FontQuery::named(effective),
         ];
+        let expected_queries = super::declared_timeline_period_queries(expected_queries, &expected_layout, FontQuery::named(effective), FontQuery::named(effective).with_weight(text_interfaces::FontWeight(700)));
         let actual_layout = diagram_layout_temporal::try_layout_temporal_diagram(
             &TemporalDiagram {
                 kind: TemporalKind::Timeline,

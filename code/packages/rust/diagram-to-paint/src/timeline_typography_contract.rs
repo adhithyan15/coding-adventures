@@ -17,9 +17,9 @@ fn declared_timeline_typography(
         .collect();
     let mut cursor = 0;
     let mut replacement = Vec::new();
-    let mut text = |value: &str, x: f64, y: f64, width: f64, title: bool| {
-        let old_size = if title { 18.0 } else { 14.0 };
-        let new_size = if title { size * 2.0 } else { size };
+    let mut text = |value: &str, x: f64, y: f64, width: f64, old_title: bool, new_title: bool| {
+        let old_size = if old_title { 18.0 } else { 14.0 };
+        let new_size = if new_title { size * 2.0 } else { size };
         let mut old_y = y + 800.0 * old_size / 1000.0;
         let mut new_y = y + 800.0 * new_size / 1000.0;
         if value.is_empty() {
@@ -74,10 +74,10 @@ fn declared_timeline_typography(
         match item {
             LayoutedTemporalItem::TemporalTitle {
                 x, y, width, label, ..
-            } => text(label, x + 8.0, y + 6.0, width - 16.0, true),
+            } => text(label, x + 8.0, y + 6.0, width - 16.0, true, true),
             LayoutedTemporalItem::TimelineSection {
                 x, y, width, label, ..
-            } => text(label, x + 10.0, y + 6.0, width - 20.0, false),
+            } => text(label, x + 10.0, y + 6.0, width - 20.0, false, false),
             LayoutedTemporalItem::TimelinePeriod {
                 x,
                 y,
@@ -86,7 +86,7 @@ fn declared_timeline_typography(
                 events,
                 ..
             } => {
-                text(label, x + 12.0, y + 8.0, width - 24.0, true);
+                text(label, x + 12.0, y + 8.0, width - 24.0, true, false);
                 if !events.is_empty() {
                     text(
                         &events
@@ -98,12 +98,13 @@ fn declared_timeline_typography(
                         y + 32.0,
                         width - 24.0,
                         false,
+                        false,
                     );
                 }
             }
             LayoutedTemporalItem::TimelineEvent {
                 x, y, width, label, ..
-            } => text(label, x + 10.0, y + 6.0, width - 20.0, false),
+            } => text(label, x + 10.0, y + 6.0, width - 20.0, false, false),
             LayoutedTemporalItem::TimelineSpine { .. }
             | LayoutedTemporalItem::TimelineEventLink { .. } => {}
             _ => panic!("closed migration only admits declared Timeline items"),

@@ -94,6 +94,7 @@ fn timeline_independent_palette_lengths_keep_whole_scenes_and_queries() {
                 ],
             };
             let oracle = declared_timeline_typography(oracle, &input);
+            let expected_queries = declared_timeline_period_queries(expected_queries, &input, FontQuery::named("\"trebuchet ms\", verdana, arial, sans-serif"), FontQuery::named("\"trebuchet ms\", verdana, arial, sans-serif").with_weight(text_interfaces::FontWeight(700)));
             let resolver = VennDebugRecordingResolver(std::cell::RefCell::new(vec![]));
             let defaults = make_opts(&FakeShaper, &FakeMetrics, &FakeResolver);
             let options = DiagramToPaintOptions {

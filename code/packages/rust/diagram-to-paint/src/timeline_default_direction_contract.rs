@@ -196,6 +196,7 @@ fn default_and_explicit_direction_keep_complete_product_contracts() {
             FontQuery::named("\"trebuchet ms\", verdana, arial, sans-serif").with_weight(text_interfaces::FontWeight(700)),
             FontQuery::named("\"trebuchet ms\", verdana, arial, sans-serif"),
         ];
+        let expected_queries = super::declared_timeline_period_queries(expected_queries, &expected_layout, FontQuery::named("\"trebuchet ms\", verdana, arial, sans-serif"), FontQuery::named("\"trebuchet ms\", verdana, arial, sans-serif").with_weight(text_interfaces::FontWeight(700)));
         let source = format!("{header}\nP : E\n");
         let parsed = mermaid_parser::parse_timeline(&source).unwrap();
         assert_eq!(parsed, (None, semantic), "whole IR {header}");

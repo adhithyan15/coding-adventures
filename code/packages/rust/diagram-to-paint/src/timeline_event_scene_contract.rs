@@ -26,7 +26,8 @@ mod timeline_event_scene_contract {
             declared_legacy_timeline_scene_cases()
         {
             // Retain the entire declared legacy Scene/query vectors above.
-            // The permitted delta is one metadata field and query family only.
+            // Retain original metadata/family transport; typography and period-role
+            // migrations separately prove complete old glyphs and query vectors.
             let mut declared_scene = declared_scene;
             declared_scene.metadata.as_mut().unwrap().insert("timeline.fontFamily".into(), "\"trebuchet ms\", verdana, arial, sans-serif".into());
             let declared_queries: Vec<_> = declared_queries.into_iter().map(|mut query| {
@@ -36,6 +37,7 @@ mod timeline_event_scene_contract {
             let declared_scene = super::declared_timeline_typography(declared_scene, &declared_layout);
             assert_eq!(declared_queries.len(), 2);
             assert_ne!(declared_queries[0], declared_queries[1]);
+            let declared_queries = super::declared_timeline_period_queries(declared_queries, &declared_layout, FontQuery::named("\"trebuchet ms\", verdana, arial, sans-serif"), FontQuery::named("\"trebuchet ms\", verdana, arial, sans-serif").with_weight(text_interfaces::FontWeight(700)));
             let defaults = make_opts(&FakeShaper, &FakeMetrics, &FakeResolver);
             let resolver = Resolver(std::cell::RefCell::new(Vec::new()));
             let options = DiagramToPaintOptions {
@@ -553,6 +555,7 @@ mod timeline_event_scene_contract {
                             } else {
                                 vec![label_query, title_query]
                             };
+                            let expected_queries = super::declared_timeline_period_queries(expected_queries, &expected_layout, FontQuery::named("\"trebuchet ms\", verdana, arial, sans-serif"), FontQuery::named("\"trebuchet ms\", verdana, arial, sans-serif").with_weight(text_interfaces::FontWeight(700)));
 
                             let parsed = mermaid_parser::parse_timeline(&source).unwrap();
                             assert_eq!(
