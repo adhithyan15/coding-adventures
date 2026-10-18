@@ -1,7 +1,7 @@
 import { access, mkdir, readFile, rm, writeFile } from "node:fs/promises";
 import { execFile } from "node:child_process";
 import { join, resolve } from "node:path";
-import { tmpdir } from "node:os";
+import { homedir, tmpdir } from "node:os";
 import { mkdtemp } from "node:fs/promises";
 import { fileURLToPath } from "node:url";
 import { promisify } from "node:util";
@@ -672,6 +672,47 @@ describe("clean", () => {
 });
 
 describe("installed-project shape", () => {
+  it("discovers TOML and runs its StageRef through the real CLI product path", async () => {
+    const root = await mkdtemp(join(process.platform === "win32" ? homedir() : tmpdir(), "forme-cli-toml-"));
+    roots.push(root);
+    const plugin = join(root, "forme-plugins", "plugin-source");
+    await mkdir(plugin, { recursive: true });
+    await writeFile(join(plugin, "plugin.mjs"), "export {};\n", "utf8");
+    await writeFile(join(plugin, "plugin.toml"), `manifestVersion = 1
+[plugin]
+name = "@example/toml-source"
+version = "1.0.0"
+apiVersion = 2
+[runtime]
+kind = "node"
+entry = "./plugin.mjs"
+[[contributes.stages]]
+id = "source"
+consumes = "Void"
+produces = "DeployArtifact"
+`, "utf8");
+    await writeFile(join(root, "forme.config.toml"), `name = "toml-product"
+[settings]
+storage-root = "."
+cache-dir = ".forme/cache"
+reproducible-build = true
+log-level = "info"
+best-effort = false
+[[stages]]
+id = "source"
+stage = "@example/toml-source"
+export = "source"
+`, "utf8");
+
+    const bin = fileURLToPath(new URL("../bin/forme.mjs", import.meta.url));
+    const checked = await execFileAsync(process.execPath, [bin, "check"], {
+      cwd: root,
+      timeout: 20_000,
+    });
+    expect(checked.stderr).toBe("");
+    expect(checked.stdout).toContain("forme check: toml-product is valid (1 stage, reproducible)");
+  }, 30_000);
+
   it("loads and builds a self-contained config outside the repository tree", async () => {
     const root = await mkdtemp(join(tmpdir(), "forme-cli-external-"));
     roots.push(root);
