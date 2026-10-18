@@ -2719,3 +2719,6 @@ mod cv04_timeline_checked;
 
 #[cfg(test)]
 mod cv04_incoming_timeline_eventcards;
+
+#[cfg(test)]
+mod cv04_timeline_event_admission;

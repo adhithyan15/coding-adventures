@@ -13675,6 +13675,7 @@ emphasized --> direct
 
     include!("venn_palette_contract_tests.rs");
     include!("timeline_palette_transport_contract.rs");
+    include!("timeline_event_scene_contract.rs");
     include!("venn_debug_paint_contract.rs");
     include!("venn_cascade_paint_contract.rs");
     include!("venn_rgba_paint_contract.rs");
