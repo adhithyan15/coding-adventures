@@ -36,6 +36,15 @@ def test_run_netlist_json_uses_the_shared_berkeley_cli_contract() -> None:
     ]
 
 
+def test_run_netlist_json_preserves_both_nested_dc_axes() -> None:
+    corpus = json.loads(_grammar_path("berkeley-v1-cli-corpus.json").read_text(encoding="utf-8"))
+    case = next(case for case in corpus["cases"] if case["id"] == "nested-dc-sweep")
+    payload = json.loads(run_netlist_json(case["deck"]))
+
+    assert [analysis["kind"] for analysis in payload["analyses"]] == case["expected"]["analysisKinds"]
+    assert payload["analyses"][0]["records"] == case["expected"]["records"]
+
+
 def test_module_cli_runs_a_deck_file_as_json(tmp_path: Path) -> None:
     case = _cli_case()
     deck_path = tmp_path / "core.cir"

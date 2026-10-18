@@ -7,7 +7,7 @@
     "requiredDeviceKinds": ["D", "NPN", "NJF", "NMOS"],
     "minimumSyntaxCaseCount": 9,
     "requiredSyntaxClassifications": ["supported", "supported-diagnostic", "deliberate-exclusion"],
-    "minimumCliSuccessCaseCount": 1,
+    "minimumCliSuccessCaseCount": 2,
     "minimumCliFailureCaseCount": 1
   },
   "cli": {

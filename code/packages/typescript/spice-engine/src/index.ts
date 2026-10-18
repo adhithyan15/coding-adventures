@@ -1386,6 +1386,10 @@ export interface DeckAnalysisPlan {
   readonly startValue?: number;
   readonly stopValue?: number;
   readonly stepValue?: number;
+  readonly secondarySourceName?: string;
+  readonly secondaryStartValue?: number;
+  readonly secondaryStopValue?: number;
+  readonly secondaryStepValue?: number;
   readonly sweepKind?: "lin" | "dec" | "oct";
   readonly pointCount?: number;
   readonly startFrequencyHz?: number;
@@ -6038,12 +6042,12 @@ function resolveDcAnalysis(
   lineNumber: number,
   state: DeckAnalysisState,
 ): void {
-  if (tokens.length !== 5) {
+  if (tokens.length !== 5 && tokens.length !== 9) {
     addAnalysisDiagnostic(state, {
       code: "SPICE_DECK_ANALYSIS_ARGUMENT",
       directive: ".dc",
       lineNumber,
-      message: ".dc requires source, start, stop, and step tokens",
+      message: ".dc requires source, start, stop, and step tokens, with an optional second source, start, stop, and step",
     });
     return;
   }
@@ -6084,6 +6088,56 @@ function resolveDcAnalysis(
     });
     return;
   }
+  let secondarySourceName: string | undefined;
+  let secondaryStartValue: number | undefined;
+  let secondaryStopValue: number | undefined;
+  let secondaryStepValue: number | undefined;
+  if (tokens.length === 9) {
+    secondarySourceName = unquoteToken(tokens[5]).trim();
+    if (secondarySourceName.length === 0) {
+      addAnalysisDiagnostic(state, {
+        code: "SPICE_DECK_ANALYSIS_ARGUMENT",
+        directive: ".dc",
+        lineNumber,
+        message: ".dc secondary source name must not be empty",
+        token: tokens[5],
+      });
+      return;
+    }
+    secondaryStartValue = parseDeckAnalysisValue(tokens[6], ".dc", lineNumber, state);
+    secondaryStopValue = parseDeckAnalysisValue(tokens[7], ".dc", lineNumber, state);
+    secondaryStepValue = parseDeckAnalysisValue(tokens[8], ".dc", lineNumber, state);
+    if (
+      secondaryStartValue === undefined
+      || secondaryStopValue === undefined
+      || secondaryStepValue === undefined
+    ) {
+      return;
+    }
+    if (secondaryStepValue === 0.0) {
+      addAnalysisDiagnostic(state, {
+        code: "SPICE_DECK_ANALYSIS_SWEEP",
+        directive: ".dc",
+        lineNumber,
+        message: ".dc secondary step value must be non-zero",
+        token: tokens[8],
+      });
+      return;
+    }
+    if (
+      (secondaryStartValue < secondaryStopValue && secondaryStepValue < 0.0)
+      || (secondaryStartValue > secondaryStopValue && secondaryStepValue > 0.0)
+    ) {
+      addAnalysisDiagnostic(state, {
+        code: "SPICE_DECK_ANALYSIS_SWEEP",
+        directive: ".dc",
+        lineNumber,
+        message: ".dc secondary step direction must move from start toward stop",
+        token: tokens[8],
+      });
+      return;
+    }
+  }
   state.analyses.push({
     directive: ".dc",
     analysis: "dc",
@@ -6092,6 +6146,10 @@ function resolveDcAnalysis(
     startValue,
     stopValue,
     stepValue,
+    secondarySourceName,
+    secondaryStartValue,
+    secondaryStopValue,
+    secondaryStepValue,
     useInitialConditions: false,
   });
 }
@@ -11278,7 +11336,14 @@ export function formatDcSweepTable(
       points[0].result.branchCurrents,
     )
   ) : probes;
-  const rows = [["Index", "Source", "Value", ...selectedProbes].join("\t")];
+  const hasSecondaryAxis = points.some((point) =>
+    point.secondarySourceName !== undefined && point.secondaryValue !== undefined
+  );
+  const headers = ["Index", "Source", "Value"];
+  if (hasSecondaryAxis) {
+    headers.push("SecondarySource", "SecondaryValue");
+  }
+  const rows = [[...headers, ...selectedProbes].join("\t")];
   points.forEach((point, index) => {
     const values = selectedProbes.map((probe) =>
       formatTableNumber(
@@ -11290,12 +11355,18 @@ export function formatDcSweepTable(
         ),
       ),
     );
-    rows.push([
+    const row = [
       String(index),
       sourceName,
       formatTableNumber(point.value),
-      ...values,
-    ].join("\t"));
+    ];
+    if (hasSecondaryAxis) {
+      row.push(point.secondarySourceName ?? "");
+      row.push(
+        point.secondaryValue === undefined ? "" : formatTableNumber(point.secondaryValue),
+      );
+    }
+    rows.push([...row, ...values].join("\t"));
   });
   rows.push("");
   return rows.join("\n");
@@ -13054,7 +13125,19 @@ function runDeckAnalysisPlan(
     const start = requireDeckPlanNumber(plan.startValue, plan, "startValue");
     const stop = requireDeckPlanNumber(plan.stopValue, plan, "stopValue");
     const step = requireDeckPlanNumber(plan.stepValue, plan, "stepValue");
-    const result = dcSweep(circuit, sourceName, start, stop, step);
+    const result = plan.secondarySourceName === undefined
+      ? dcSweep(circuit, sourceName, start, stop, step)
+      : dcSweep2d(
+        circuit,
+        sourceName,
+        start,
+        stop,
+        step,
+        plan.secondarySourceName,
+        requireDeckPlanNumber(plan.secondaryStartValue, plan, "secondaryStartValue"),
+        requireDeckPlanNumber(plan.secondaryStopValue, plan, "secondaryStopValue"),
+        requireDeckPlanNumber(plan.secondaryStepValue, plan, "secondaryStepValue"),
+      );
     const table = formatDeckDcSweepTable(sourceName, result, netlist);
     const measurements = measureDcSweepCards(
       result,

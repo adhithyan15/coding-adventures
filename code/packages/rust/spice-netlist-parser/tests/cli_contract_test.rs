@@ -37,6 +37,31 @@ fn run_netlist_json_uses_the_shared_berkeley_cli_contract() {
 }
 
 #[test]
+fn run_netlist_json_preserves_both_nested_dc_axes() {
+    let corpus_path = concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/../../../grammars/spice/berkeley-v1-cli-corpus.json"
+    );
+    let corpus: serde_json::Value =
+        serde_json::from_str(&fs::read_to_string(corpus_path).unwrap()).unwrap();
+    let test_case = corpus["cases"]
+        .as_array()
+        .unwrap()
+        .iter()
+        .find(|case| case["id"] == "nested-dc-sweep")
+        .unwrap();
+    let payload: serde_json::Value =
+        serde_json::from_str(&run_netlist_json(test_case["deck"].as_str().unwrap()).unwrap())
+            .unwrap();
+
+    assert_eq!(payload["analyses"][0]["kind"], "dc");
+    assert_eq!(
+        payload["analyses"][0]["records"],
+        test_case["expected"]["records"]
+    );
+}
+
+#[test]
 fn inspection_api_exposes_the_complete_runnable_plan() {
     let corpus_path = concat!(
         env!("CARGO_MANIFEST_DIR"),
