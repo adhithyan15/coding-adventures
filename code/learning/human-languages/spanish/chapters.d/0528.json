@@ -1,0 +1,19 @@
+{
+  "chapter": 528,
+  "title": "Una catástrofe",
+  "label": "ch:es-una-catastrofe",
+  "canDo": "I can talk about a disaster in the news: an earthquake, a flood, a tragedy.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "ES-C528-inundacion",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 528: I can talk about a disaster in the news: an earthquake, a flood, a tragedy.",
+    "assesses": [
+      "ES-LEX-C528-DESASTRE-03",
+      "ES-LEX-C528-DESASTRE-04",
+      "ES-LEX-C528-DESASTRE-05"
+    ]
+  }
+}

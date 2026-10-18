@@ -1,0 +1,19 @@
+{
+  "chapter": 530,
+  "title": "En peligro",
+  "label": "ch:es-en-peligro",
+  "canDo": "I can say that there was a risk or a threat, that something was risky, and that someone attacked.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "ES-C530-atacar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 530: I can say that there was a risk or a threat, that something was risky, and that someone attacked.",
+    "assesses": [
+      "ES-LEX-C530-PELIGRO-03",
+      "ES-LEX-C530-PELIGRO-04",
+      "ES-LEX-C530-PELIGRO-05"
+    ]
+  }
+}

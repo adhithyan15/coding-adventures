@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 529,
+  "sourceHash": "fnv1a64:35c1d8e9e10db225",
+  "lessonIds": [
+    "ES-C529-explosion",
+    "ES-C529-explotar",
+    "ES-C529-estallar",
+    "ES-C529-escombros",
+    "ES-C529-destruir"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch529.txt",
+  "json": "spanish/narration/ch529.json",
+  "textHash": "fnv1a64:c9360fca1784af35",
+  "jsonHash": "fnv1a64:35d98dfeca187eec",
+  "findings": []
+}

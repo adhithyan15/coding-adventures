@@ -1,0 +1,11 @@
+{
+  "id": "ES-C681-festivo",
+  "pathSegment": "ES-PATH-681-COMERCIO",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ES-EXT-681-COMERCIO",
+      "order": 3
+    }
+  ]
+}

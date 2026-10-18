@@ -1,0 +1,19 @@
+{
+  "chapter": 764,
+  "title": "Recuerdos",
+  "label": "ch:es-recuerdos",
+  "canDo": "I can talk about unforgettable moments, forgetting things and learning by heart.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "ES-C764-diario",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 764: I can talk about unforgettable moments, forgetting things and learning by heart.",
+    "assesses": [
+      "ES-LEX-C764-RECUERDO-03",
+      "ES-LEX-C764-RECUERDO-04",
+      "ES-LEX-C764-RECUERDO-05"
+    ]
+  }
+}

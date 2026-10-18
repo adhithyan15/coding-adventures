@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C585-propuesta",
+    "language": "spanish",
+    "chapter": 585,
+    "sequence": 18970,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:444eb8e9c39422c2"
+  },
+  "findings": []
+}

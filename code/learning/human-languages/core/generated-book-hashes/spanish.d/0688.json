@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 688,
+  "sourceHash": "fnv1a64:df2bd30c199a5e19",
+  "lessonIds": [
+    "ES-C688-oceano",
+    "ES-C688-ola",
+    "ES-C688-marea",
+    "ES-C688-bahia",
+    "ES-C688-flotar"
+  ],
+  "tex": "spanish/book/chapters/ch688-el-mar.tex"
+}

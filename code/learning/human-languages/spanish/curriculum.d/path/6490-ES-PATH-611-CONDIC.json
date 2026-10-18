@@ -1,0 +1,9 @@
+{
+  "id": "ES-PATH-611-CONDIC",
+  "spine_node": "SPINE-EXPRESS-CONDITION",
+  "before": [],
+  "inline": [
+    "ES-EXT-611-CONDIC"
+  ],
+  "after": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C628-interes",
+    "language": "spanish",
+    "chapter": 628,
+    "sequence": 21190,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:156b4f55e8da1de4"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C671-rodeo",
+    "language": "spanish",
+    "chapter": 671,
+    "sequence": 23420,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:cc7e2c4f288959e8"
+  },
+  "findings": []
+}

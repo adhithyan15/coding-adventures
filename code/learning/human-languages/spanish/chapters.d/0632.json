@@ -1,0 +1,19 @@
+{
+  "chapter": 632,
+  "title": "Pagos",
+  "label": "ch:es-pagos",
+  "canDo": "I can talk about paying, monthly payments, splitting a bill and a pension.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "ES-C632-pension",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 632: I can talk about paying, monthly payments, splitting a bill and a pension.",
+    "assesses": [
+      "ES-LEX-C632-PAGO-03",
+      "ES-LEX-C632-PAGO-04",
+      "ES-LEX-C632-PAGO-05"
+    ]
+  }
+}

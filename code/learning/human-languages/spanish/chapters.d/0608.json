@@ -1,0 +1,19 @@
+{
+  "chapter": 608,
+  "title": "Sube y baja",
+  "label": "ch:es-sube-y-baja",
+  "canDo": "I can say that something is rising or falling, and describe a trend.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "ES-C608-tendencia",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 608: I can say that something is rising or falling, and describe a trend.",
+    "assesses": [
+      "ES-LEX-C608-AUMENTA-03",
+      "ES-LEX-C608-AUMENTA-04",
+      "ES-LEX-C608-AUMENTA-05"
+    ]
+  }
+}

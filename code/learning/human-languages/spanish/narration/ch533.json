@@ -1,0 +1,717 @@
+{
+  "version": 1,
+  "language": "spanish",
+  "chapter": 533,
+  "title": "Por casualidad",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:c08f35c1ed40df69",
+  "lessons": [
+    {
+      "id": "ES-C533-casualidad",
+      "sequence": 16250,
+      "title": "la casualidad — chance, coincidence",
+      "headword": "la casualidad",
+      "romanization": "la casualidad",
+      "gloss": "chance, coincidence",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9c68df6053b82fbb",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Spanish for to hide, then the Spanish for the secret."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: la casualidad",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la casualidad — \"chance, coincidence\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Nos vimos por casualidad en el mercado. We met by chance at the market."
+            },
+            {
+              "kind": "speech",
+              "text": "Por casualidad — by chance. ¡Qué casualidad! — what a coincidence!"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "casualidad is built on casual 'happening by chance', from Latin cāsuālis, from cāsus 'a fall, a chance' (Lewis & Short), and cāsus is built on cadere 'to fall'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la casualidad",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la casualidad*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la casualidad, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la casualidad*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with la casualidad",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *la casualidad*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Spanish for to hide, then the Spanish for the secret, then say la casualidad again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Spanish for to hide, then the Spanish for the secret, then say *la casualidad* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does la casualidad mean? (\"Chance, coincidence\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C533-coincidencia",
+      "sequence": 16260,
+      "title": "la coincidencia — the coincidence",
+      "headword": "la coincidencia",
+      "romanization": "la coincidencia",
+      "gloss": "the coincidence",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:bd26de0ee81d8b87",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Spanish for the secret, then the Spanish for chance."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: la coincidencia",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la coincidencia — \"the coincidence\"."
+            },
+            {
+              "kind": "speech",
+              "text": "No fue una coincidencia. It was not a coincidence."
+            },
+            {
+              "kind": "speech",
+              "text": "Coincidir is to coincide or to agree."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "coincidencia is built on coincidir, from Medieval Latin coincidere 'to fall together', usually explained as co- and incidere 'to fall upon' (Lewis & Short), built on cadere 'to fall'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la coincidencia",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la coincidencia*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la coincidencia, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la coincidencia*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with la coincidencia",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *la coincidencia*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Spanish for the secret, then the Spanish for chance, then say la coincidencia again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Spanish for the secret, then the Spanish for chance, then say *la coincidencia* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does la coincidencia mean? (\"The coincidence\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C533-fortuito",
+      "sequence": 16270,
+      "title": "fortuito — accidental, by chance",
+      "headword": "fortuito",
+      "romanization": "fortuito",
+      "gloss": "accidental, by chance",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:fa180b13db34b229",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Spanish for chance, then the Spanish for the coincidence."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: fortuito",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "fortuito — \"accidental, by chance\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Fue un hallazgo fortuito: buscaba otra cosa. It was a chance find: I was looking for something else."
+            },
+            {
+              "kind": "speech",
+              "text": "Un caso fortuito is an accident nobody could foresee."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "fortuito is a learned borrowing from Latin fortuītus 'happening by chance' (EtymDB), built on fors 'chance, luck' (Lewis & Short)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "fortuito",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *fortuito*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "fortuito, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *fortuito*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with fortuito",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *fortuito*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Spanish for chance, then the Spanish for the coincidence, then say fortuito again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Spanish for chance, then the Spanish for the coincidence, then say *fortuito* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does fortuito mean? (\"Accidental, by chance\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C533-inesperado",
+      "sequence": 16280,
+      "title": "inesperado — unexpected",
+      "headword": "inesperado",
+      "romanization": "inesperado",
+      "gloss": "unexpected",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:df7d5d91550bcf44",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Spanish for the coincidence, then the Spanish for accidental."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: inesperado",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "inesperado — \"unexpected\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Recibimos una visita inesperada. We had an unexpected visit."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "inesperado is built on esperado, the participle of esperar, with in- 'not'. Esperar is inherited from Latin spērāre 'to hope' (Lewis & Short)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "inesperado",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *inesperado*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "inesperado, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *inesperado*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with inesperado",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *inesperado*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Spanish for the coincidence, then the Spanish for accidental, then say inesperado again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Spanish for the coincidence, then the Spanish for accidental, then say *inesperado* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does inesperado mean? (\"Unexpected\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C533-repentino",
+      "sequence": 16290,
+      "title": "repentino — sudden",
+      "headword": "repentino",
+      "romanization": "repentino",
+      "gloss": "sudden",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:132c66c9686f9476",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Spanish for accidental, then the Spanish for unexpected."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: repentino",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "repentino — \"sudden\"."
+            },
+            {
+              "kind": "speech",
+              "text": "El cambio de tiempo fue repentino. The change in the weather was sudden."
+            },
+            {
+              "kind": "speech",
+              "text": "De repente — suddenly — comes from the same family."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "repentino is a learned borrowing from Latin repentīnus 'sudden' (EtymDB), built on repēns 'sudden, unexpected'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "repentino",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *repentino*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "repentino, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *repentino*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with repentino",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *repentino*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Spanish for accidental, then the Spanish for unexpected, then say repentino again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Spanish for accidental, then the Spanish for unexpected, then say *repentino* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does repentino mean? (\"Sudden\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

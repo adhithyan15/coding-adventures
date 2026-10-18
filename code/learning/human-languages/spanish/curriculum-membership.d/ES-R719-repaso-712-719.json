@@ -1,0 +1,11 @@
+{
+  "id": "ES-R719-repaso-712-719",
+  "pathSegment": "ES-PATH-719-CONFIANZA",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "ES-EXT-719-CONFIANZA",
+      "order": 5
+    }
+  ]
+}

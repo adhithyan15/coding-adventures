@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C766-creativo",
+    "language": "spanish",
+    "chapter": 766,
+    "sequence": 28290,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6f93f18b3da5d9cf"
+  },
+  "findings": []
+}

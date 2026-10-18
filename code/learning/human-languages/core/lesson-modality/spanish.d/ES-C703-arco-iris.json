@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C703-arco-iris",
+    "language": "spanish",
+    "chapter": 703,
+    "sequence": 25050,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0a3b9b23c3a64278"
+  },
+  "findings": []
+}

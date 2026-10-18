@@ -1,0 +1,8 @@
+{
+  "id": "ES-EXT-663-TEMPORADA",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can understand the price of a stay: the tourist tax, extra charges, the deposit and a refund.",
+  "prerequisites": []
+}

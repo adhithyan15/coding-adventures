@@ -1,0 +1,19 @@
+{
+  "chapter": 751,
+  "title": "Mis aficiones",
+  "label": "ch:es-mis-aficiones",
+  "canDo": "I can talk about my hobbies, what I collect and what I like to paint.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "ES-R751-repaso-744-751",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 751: I can talk about my hobbies, what I collect and what I like to paint.",
+    "assesses": [
+      "ES-LEX-C751-AFICION-03",
+      "ES-LEX-C751-AFICION-04",
+      "ES-LEX-C751-AFICION-05"
+    ]
+  }
+}

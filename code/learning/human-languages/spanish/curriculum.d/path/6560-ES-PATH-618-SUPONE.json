@@ -1,0 +1,9 @@
+{
+  "id": "ES-PATH-618-SUPONE",
+  "spine_node": "SPINE-EXPRESS-CONDITION",
+  "before": [],
+  "inline": [
+    "ES-EXT-618-SUPONE"
+  ],
+  "after": []
+}

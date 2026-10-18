@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C562-alejarse",
+    "language": "spanish",
+    "chapter": 562,
+    "sequence": 17780,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:01c9f697b6d71069"
+  },
+  "findings": []
+}

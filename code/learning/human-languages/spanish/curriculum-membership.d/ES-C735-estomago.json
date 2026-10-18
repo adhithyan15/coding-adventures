@@ -1,0 +1,11 @@
+{
+  "id": "ES-C735-estomago",
+  "pathSegment": "ES-PATH-735-HUESO",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ES-EXT-735-HUESO",
+      "order": 2
+    }
+  ]
+}

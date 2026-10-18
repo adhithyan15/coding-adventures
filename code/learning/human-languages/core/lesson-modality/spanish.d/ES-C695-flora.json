@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C695-flora",
+    "language": "spanish",
+    "chapter": 695,
+    "sequence": 24630,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0f137e33c4c45da5"
+  },
+  "findings": []
+}

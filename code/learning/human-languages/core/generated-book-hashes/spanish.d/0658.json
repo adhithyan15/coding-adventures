@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 658,
+  "sourceHash": "fnv1a64:5350064b3cc95fb2",
+  "lessonIds": [
+    "ES-C658-ferry",
+    "ES-C658-crucero",
+    "ES-C658-navegar",
+    "ES-C658-muelle",
+    "ES-C658-desembarcar"
+  ],
+  "tex": "spanish/book/chapters/ch658-en-barco.tex"
+}

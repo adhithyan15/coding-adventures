@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 557,
+  "sourceHash": "fnv1a64:c3b12ccea61ca09b",
+  "lessonIds": [
+    "ES-C557-luto",
+    "ES-C557-esquela",
+    "ES-C557-pesame",
+    "ES-C557-ataud",
+    "ES-C557-herencia"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch557.txt",
+  "json": "spanish/narration/ch557.json",
+  "textHash": "fnv1a64:3b77a7ef19265775",
+  "jsonHash": "fnv1a64:e11bd07658fcabfd",
+  "findings": []
+}

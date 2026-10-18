@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C530-riesgo",
+    "language": "spanish",
+    "chapter": 530,
+    "sequence": 16110,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b254f282d9568451"
+  },
+  "findings": []
+}

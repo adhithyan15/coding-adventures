@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 560,
+  "sourceHash": "fnv1a64:2bf5529ef4920b05",
+  "lessonIds": [
+    "ES-C560-congregarse",
+    "ES-C560-juntarse",
+    "ES-C560-convocar",
+    "ES-C560-tertulia",
+    "ES-C560-reencuentro"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch560.txt",
+  "json": "spanish/narration/ch560.json",
+  "textHash": "fnv1a64:08b3ce39d71ddda8",
+  "jsonHash": "fnv1a64:60b03d977f457265",
+  "findings": []
+}

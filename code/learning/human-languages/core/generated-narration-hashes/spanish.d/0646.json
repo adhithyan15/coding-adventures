@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 646,
+  "sourceHash": "fnv1a64:52cfc17801153e99",
+  "lessonIds": [
+    "ES-C646-surtidor",
+    "ES-C646-repostar",
+    "ES-C646-deposito",
+    "ES-C646-combustible",
+    "ES-C646-kilometro"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch646.txt",
+  "json": "spanish/narration/ch646.json",
+  "textHash": "fnv1a64:316616e453ffeebc",
+  "jsonHash": "fnv1a64:a783ebc58673c74b",
+  "findings": []
+}

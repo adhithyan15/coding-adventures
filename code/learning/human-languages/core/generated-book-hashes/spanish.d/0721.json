@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 721,
+  "sourceHash": "fnv1a64:66098753d37b9af6",
+  "lessonIds": [
+    "ES-C721-rasgo",
+    "ES-C721-personalidad",
+    "ES-C721-temperamento",
+    "ES-C721-defecto",
+    "ES-C721-valorar"
+  ],
+  "tex": "spanish/book/chapters/ch721-rasgos-de-personalidad.tex"
+}

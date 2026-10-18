@@ -1,0 +1,19 @@
+{
+  "chapter": 707,
+  "title": "Cuando me enfado",
+  "label": "ch:es-cuando-me-enfado",
+  "canDo": "I can say that I am angry or annoyed and how strong the feeling is.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "ES-C707-fastidiar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 707: I can say that I am angry or annoyed and how strong the feeling is.",
+    "assesses": [
+      "ES-LEX-C707-ENFADO-03",
+      "ES-LEX-C707-ENFADO-04",
+      "ES-LEX-C707-ENFADO-05"
+    ]
+  }
+}

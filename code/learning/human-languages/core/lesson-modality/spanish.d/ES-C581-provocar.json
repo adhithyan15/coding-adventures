@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C581-provocar",
+    "language": "spanish",
+    "chapter": 581,
+    "sequence": 18760,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c34d75115544a223"
+  },
+  "findings": []
+}

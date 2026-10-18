@@ -1,0 +1,8 @@
+{
+  "id": "ES-EXT-696-CLIMA",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can understand a weather forecast and talk about the thermometer and the humidity.",
+  "prerequisites": []
+}

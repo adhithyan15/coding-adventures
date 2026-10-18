@@ -1,0 +1,9 @@
+{
+  "id": "ES-PATH-522-JUEZ",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "ES-EXT-522-JUEZ"
+  ],
+  "after": []
+}

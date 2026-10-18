@@ -1,0 +1,9 @@
+{
+  "id": "ES-PATH-601-GOBIERNO",
+  "spine_node": "SPINE-GIVE-REASONS",
+  "before": [],
+  "inline": [
+    "ES-EXT-601-GOBIERNO"
+  ],
+  "after": []
+}

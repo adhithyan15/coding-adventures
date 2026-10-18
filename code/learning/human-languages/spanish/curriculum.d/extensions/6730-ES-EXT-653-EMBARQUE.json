@@ -1,0 +1,8 @@
+{
+  "id": "ES-EXT-653-EMBARQUE",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can go through security and board: the tray for my things, the metal detector, stopovers and boarding times.",
+  "prerequisites": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C726-humilde",
+    "language": "spanish",
+    "chapter": 726,
+    "sequence": 26220,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0185e9883b597996"
+  },
+  "findings": []
+}

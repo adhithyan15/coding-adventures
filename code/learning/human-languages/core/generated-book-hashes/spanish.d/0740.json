@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 740,
+  "sourceHash": "fnv1a64:b7a00f81cebf44f3",
+  "lessonIds": [
+    "ES-C740-nauseas",
+    "ES-C740-aliviar",
+    "ES-C740-vomitar",
+    "ES-C740-desmayarse",
+    "ES-C740-alergia"
+  ],
+  "tex": "spanish/book/chapters/ch740-me-siento-mal.tex"
+}

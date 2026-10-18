@@ -1,0 +1,19 @@
+{
+  "chapter": 623,
+  "title": "Si no cumples",
+  "label": "ch:es-si-no-cumples",
+  "canDo": "I can say what happens to people who break the rules.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "ES-R623-repaso-616-623",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 623: I can say what happens to people who break the rules.",
+    "assesses": [
+      "ES-LEX-C623-SANCION-03",
+      "ES-LEX-C623-SANCION-04",
+      "ES-LEX-C623-SANCION-05"
+    ]
+  }
+}

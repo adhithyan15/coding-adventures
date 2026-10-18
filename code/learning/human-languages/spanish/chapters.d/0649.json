@@ -1,0 +1,19 @@
+{
+  "chapter": 649,
+  "title": "Sobre dos ruedas",
+  "label": "ch:es-sobre-dos-ruedas",
+  "canDo": "I can talk about getting around on two wheels: motorbikes and their riders, scooters and bicycles.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "ES-C649-ciclista",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 649: I can talk about getting around on two wheels: motorbikes and their riders, scooters and bicycles.",
+    "assesses": [
+      "ES-LEX-C649-RUEDAS-03",
+      "ES-LEX-C649-RUEDAS-04",
+      "ES-LEX-C649-RUEDAS-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 677,
+  "sourceHash": "fnv1a64:7801577b2420580f",
+  "lessonIds": [
+    "ES-C677-monumento",
+    "ES-C677-catedral",
+    "ES-C677-castillo",
+    "ES-C677-palacio",
+    "ES-C677-muralla"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch677.txt",
+  "json": "spanish/narration/ch677.json",
+  "textHash": "fnv1a64:8d626d09e1cd0ad7",
+  "jsonHash": "fnv1a64:66ded0f0fe24286c",
+  "findings": []
+}

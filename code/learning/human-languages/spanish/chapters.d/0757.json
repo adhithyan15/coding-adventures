@@ -1,0 +1,19 @@
+{
+  "chapter": 757,
+  "title": "Campeones y medallas",
+  "label": "ch:es-campeones-y-medallas",
+  "canDo": "I can talk about a tournament, the champion, a victory, a defeat and a medal.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "ES-C757-medalla",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 757: I can talk about a tournament, the champion, a victory, a defeat and a medal.",
+    "assesses": [
+      "ES-LEX-C757-CAMPEON-03",
+      "ES-LEX-C757-CAMPEON-04",
+      "ES-LEX-C757-CAMPEON-05"
+    ]
+  }
+}

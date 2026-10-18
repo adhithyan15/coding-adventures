@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C624-autorizar",
+    "language": "spanish",
+    "chapter": 624,
+    "sequence": 20960,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c1ae01dca74fe99d"
+  },
+  "findings": []
+}

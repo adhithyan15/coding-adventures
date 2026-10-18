@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C707-ira",
+    "language": "spanish",
+    "chapter": 707,
+    "sequence": 25280,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:eb47da539ee06dfe"
+  },
+  "findings": []
+}

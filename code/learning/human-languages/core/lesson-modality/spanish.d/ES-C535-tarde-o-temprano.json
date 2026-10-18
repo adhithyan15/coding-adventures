@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C535-tarde-o-temprano",
+    "language": "spanish",
+    "chapter": 535,
+    "sequence": 16370,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:cc3bc08d8ea819b9"
+  },
+  "findings": []
+}

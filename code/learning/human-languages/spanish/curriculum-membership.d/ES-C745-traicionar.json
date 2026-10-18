@@ -1,0 +1,11 @@
+{
+  "id": "ES-C745-traicionar",
+  "pathSegment": "ES-PATH-745-RUPTURA",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ES-EXT-745-RUPTURA",
+      "order": 3
+    }
+  ]
+}

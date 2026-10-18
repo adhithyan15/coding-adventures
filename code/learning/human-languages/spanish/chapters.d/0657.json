@@ -1,0 +1,19 @@
+{
+  "chapter": 657,
+  "title": "Papeles en regla",
+  "label": "ch:es-papeles-en-regla",
+  "canDo": "I can check that my documents are valid, renew a passport, bring a photocopy and go to the consulate.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "ES-C657-consulado",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 657: I can check that my documents are valid, renew a passport, bring a photocopy and go to the consulate.",
+    "assesses": [
+      "ES-LEX-C657-PAPELES-03",
+      "ES-LEX-C657-PAPELES-04",
+      "ES-LEX-C657-PAPELES-05"
+    ]
+  }
+}

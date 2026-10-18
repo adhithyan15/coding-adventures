@@ -1,0 +1,19 @@
+{
+  "chapter": 616,
+  "title": "Imprevistos",
+  "label": "ch:es-imprevistos",
+  "canDo": "I can say that something went wrong, move a plan earlier or later and find an alternative.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "ES-C616-alternativa",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 616: I can say that something went wrong, move a plan earlier or later and find an alternative.",
+    "assesses": [
+      "ES-LEX-C616-IMPREV-03",
+      "ES-LEX-C616-IMPREV-04",
+      "ES-LEX-C616-IMPREV-05"
+    ]
+  }
+}

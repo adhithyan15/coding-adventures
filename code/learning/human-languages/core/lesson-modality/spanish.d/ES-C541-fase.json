@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C541-fase",
+    "language": "spanish",
+    "chapter": 541,
+    "sequence": 16660,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:fff4cf809e4f0314"
+  },
+  "findings": []
+}

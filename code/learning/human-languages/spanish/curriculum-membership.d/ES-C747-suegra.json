@@ -1,0 +1,11 @@
+{
+  "id": "ES-C747-suegra",
+  "pathSegment": "ES-PATH-747-POLITICA",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ES-EXT-747-POLITICA",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 747,
+  "title": "La familia política",
+  "label": "ch:es-la-familia-politica",
+  "canDo": "I can name my in-laws and talk about them.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "ES-C747-nuera",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 747: I can name my in-laws and talk about them.",
+    "assesses": [
+      "ES-LEX-C747-POLITICA-03",
+      "ES-LEX-C747-POLITICA-04",
+      "ES-LEX-C747-POLITICA-05"
+    ]
+  }
+}

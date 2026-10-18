@@ -1,0 +1,22 @@
+{
+  "language": "spanish",
+  "chapter": 767,
+  "sourceHash": "fnv1a64:12250413cefc2ded",
+  "lessonIds": [
+    "ES-C767-meditar",
+    "ES-C767-meditacion",
+    "ES-C767-voluntad",
+    "ES-C767-estirarse",
+    "ES-C767-masaje",
+    "ES-R767-repaso-760-767",
+    "ES-R767-repaso-final-767",
+    "ES-R767-repaso-como-fue"
+  ],
+  "voiceLessons": 8,
+  "drivablePrefix": 8,
+  "text": "spanish/narration/ch767.txt",
+  "json": "spanish/narration/ch767.json",
+  "textHash": "fnv1a64:e93c651109a9b4ce",
+  "jsonHash": "fnv1a64:7d00984b7b5e44f3",
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C599-comparar",
+    "language": "spanish",
+    "chapter": 599,
+    "sequence": 19680,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:39c6df0497532a18"
+  },
+  "findings": []
+}

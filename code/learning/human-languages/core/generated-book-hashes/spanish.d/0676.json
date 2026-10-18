@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 676,
+  "sourceHash": "fnv1a64:6890826c3a1b06fa",
+  "lessonIds": [
+    "ES-C676-turismo",
+    "ES-C676-mirador",
+    "ES-C676-turistico",
+    "ES-C676-folleto",
+    "ES-C676-regatear"
+  ],
+  "tex": "spanish/book/chapters/ch676-turismo.tex"
+}

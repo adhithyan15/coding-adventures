@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 696,
+  "sourceHash": "fnv1a64:4cc317e84126ca42",
+  "lessonIds": [
+    "ES-C696-termometro",
+    "ES-C696-pronostico",
+    "ES-C696-prevision",
+    "ES-C696-humedo",
+    "ES-C696-humedad"
+  ],
+  "tex": "spanish/book/chapters/ch696-tiempo-y-temperatura.tex"
+}

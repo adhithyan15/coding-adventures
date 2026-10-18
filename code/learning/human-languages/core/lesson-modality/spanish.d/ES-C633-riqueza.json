@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C633-riqueza",
+    "language": "spanish",
+    "chapter": 633,
+    "sequence": 21440,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a62e505c1abea109"
+  },
+  "findings": []
+}

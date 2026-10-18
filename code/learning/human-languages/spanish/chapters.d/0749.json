@@ -1,0 +1,19 @@
+{
+  "chapter": 749,
+  "title": "Más parientes",
+  "label": "ch:es-mas-parientes",
+  "canDo": "I can describe more family members: a teenager, twins, a stepbrother, a great-grandfather and an orphan.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "ES-C749-huerfano",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 749: I can describe more family members: a teenager, twins, a stepbrother, a great-grandfather and an orphan.",
+    "assesses": [
+      "ES-LEX-C749-EDADES-03",
+      "ES-LEX-C749-EDADES-04",
+      "ES-LEX-C749-EDADES-05"
+    ]
+  }
+}

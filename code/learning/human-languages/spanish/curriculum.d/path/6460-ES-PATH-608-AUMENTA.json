@@ -1,0 +1,9 @@
+{
+  "id": "ES-PATH-608-AUMENTA",
+  "spine_node": "SPINE-GIVE-REASONS",
+  "before": [],
+  "inline": [
+    "ES-EXT-608-AUMENTA"
+  ],
+  "after": []
+}

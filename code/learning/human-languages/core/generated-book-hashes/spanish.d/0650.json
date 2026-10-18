@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 650,
+  "sourceHash": "fnv1a64:8dcdcb7fa23b4ae4",
+  "lessonIds": [
+    "ES-C650-autocar",
+    "ES-C650-tranvia",
+    "ES-C650-bonobus",
+    "ES-C650-transbordo",
+    "ES-C650-validar"
+  ],
+  "tex": "spanish/book/chapters/ch650-autocar-y-tranvia.tex"
+}

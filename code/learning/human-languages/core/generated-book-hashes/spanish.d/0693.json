@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 693,
+  "sourceHash": "fnv1a64:efaaa64a973c9248",
+  "lessonIds": [
+    "ES-C693-olivo",
+    "ES-C693-pino",
+    "ES-C693-arbusto",
+    "ES-C693-vegetacion",
+    "ES-C693-roble"
+  ],
+  "tex": "spanish/book/chapters/ch693-arboles-y-plantas.tex"
+}

@@ -1,0 +1,8 @@
+{
+  "id": "ES-EXT-742-DIETA",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can talk about diet, appetite, chewing well, being overweight and exercise.",
+  "prerequisites": []
+}

@@ -1,0 +1,20 @@
+{
+  "language": "spanish",
+  "chapter": 727,
+  "sourceHash": "fnv1a64:7944da59a576b4e5",
+  "lessonIds": [
+    "ES-C727-sensible",
+    "ES-C727-sensibilidad",
+    "ES-C727-ofender",
+    "ES-C727-educado",
+    "ES-C727-grosero",
+    "ES-R727-repaso-720-727"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "spanish/narration/ch727.txt",
+  "json": "spanish/narration/ch727.json",
+  "textHash": "fnv1a64:e145d452d2a6572c",
+  "jsonHash": "fnv1a64:22b01583bc4ff901",
+  "findings": []
+}

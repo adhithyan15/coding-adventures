@@ -1,0 +1,11 @@
+{
+  "id": "ES-C632-ingresar",
+  "pathSegment": "ES-PATH-632-PAGO",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ES-EXT-632-PAGO",
+      "order": 3
+    }
+  ]
+}

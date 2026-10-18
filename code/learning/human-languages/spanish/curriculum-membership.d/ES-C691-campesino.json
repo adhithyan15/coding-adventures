@@ -1,0 +1,11 @@
+{
+  "id": "ES-C691-campesino",
+  "pathSegment": "ES-PATH-691-CAMPO",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ES-EXT-691-CAMPO",
+      "order": 1
+    }
+  ]
+}

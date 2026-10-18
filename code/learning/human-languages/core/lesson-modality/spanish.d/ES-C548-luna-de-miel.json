@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C548-luna-de-miel",
+    "language": "spanish",
+    "chapter": 548,
+    "sequence": 17060,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4773546087d1f2ca"
+  },
+  "findings": []
+}

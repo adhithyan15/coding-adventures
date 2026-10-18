@@ -1,0 +1,11 @@
+{
+  "id": "ES-C637-favorecer",
+  "pathSegment": "ES-PATH-637-FAVOR",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "ES-EXT-637-FAVOR",
+      "order": 0
+    }
+  ]
+}

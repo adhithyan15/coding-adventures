@@ -1,0 +1,9 @@
+{
+  "id": "ES-PATH-660-ALOJAMIENTO",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "ES-EXT-660-ALOJAMIENTO"
+  ],
+  "after": []
+}

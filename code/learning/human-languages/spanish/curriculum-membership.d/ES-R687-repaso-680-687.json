@@ -1,0 +1,11 @@
+{
+  "id": "ES-R687-repaso-680-687",
+  "pathSegment": "ES-PATH-687-EXCURSION",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "ES-EXT-687-EXCURSION",
+      "order": 5
+    }
+  ]
+}

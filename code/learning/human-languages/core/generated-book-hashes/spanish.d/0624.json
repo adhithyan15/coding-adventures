@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 624,
+  "sourceHash": "fnv1a64:d0d89a6a8d2c87e9",
+  "lessonIds": [
+    "ES-C624-autorizar",
+    "ES-C624-autorizacion",
+    "ES-C624-tramitar",
+    "ES-C624-certificado",
+    "ES-C624-oficial"
+  ],
+  "tex": "spanish/book/chapters/ch624-papeles-oficiales.tex"
+}

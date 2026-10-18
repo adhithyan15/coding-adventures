@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 745,
+  "sourceHash": "fnv1a64:0a7e86bff4083409",
+  "lessonIds": [
+    "ES-C745-relacion",
+    "ES-C745-ruptura",
+    "ES-C745-infiel",
+    "ES-C745-traicionar",
+    "ES-C745-traicion"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch745.txt",
+  "json": "spanish/narration/ch745.json",
+  "textHash": "fnv1a64:e8480090e6d5f711",
+  "jsonHash": "fnv1a64:4d46196bb8c1430f",
+  "findings": []
+}

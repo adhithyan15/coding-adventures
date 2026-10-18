@@ -1,0 +1,9 @@
+{
+  "id": "ES-PATH-676-TURISMO",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "ES-EXT-676-TURISMO"
+  ],
+  "after": []
+}

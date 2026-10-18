@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 545,
+  "sourceHash": "fnv1a64:4ed1f84890f82ee6",
+  "lessonIds": [
+    "ES-C545-criar",
+    "ES-C545-ninez",
+    "ES-C545-juventud",
+    "ES-C545-adolescencia",
+    "ES-C545-generacion"
+  ],
+  "tex": "spanish/book/chapters/ch545-de-nino.tex"
+}

@@ -1,0 +1,8 @@
+{
+  "id": "ES-EXT-520-DELITO",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can talk about an offence and an offender, a crime, the victim and the investigation.",
+  "prerequisites": []
+}

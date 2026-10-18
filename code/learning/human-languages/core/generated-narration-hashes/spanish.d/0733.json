@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 733,
+  "sourceHash": "fnv1a64:751dd107ecb70591",
+  "lessonIds": [
+    "ES-C733-gripe",
+    "ES-C733-resfriado",
+    "ES-C733-constipado",
+    "ES-C733-contagiar",
+    "ES-C733-estornudar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch733.txt",
+  "json": "spanish/narration/ch733.json",
+  "textHash": "fnv1a64:dee887b2ea728f6b",
+  "jsonHash": "fnv1a64:f493eeade465ae69",
+  "findings": []
+}

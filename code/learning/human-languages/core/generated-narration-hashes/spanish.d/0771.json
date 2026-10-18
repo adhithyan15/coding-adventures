@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 771,
+  "sourceHash": "fnv1a64:19424b04c971732f",
+  "lessonIds": [
+    "ES-C771-sabor",
+    "ES-C771-picante",
+    "ES-C771-salado",
+    "ES-C771-crudo",
+    "ES-C771-oler"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch771.txt",
+  "json": "spanish/narration/ch771.json",
+  "textHash": "fnv1a64:dd19272bb563f14b",
+  "jsonHash": "fnv1a64:5903ddc1b04036ca",
+  "findings": []
+}

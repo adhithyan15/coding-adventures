@@ -1,0 +1,8 @@
+{
+  "id": "ES-EXT-760-PERSONAJE",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can talk about amateur theatre and dressing up: costumes, make-up and opening night.",
+  "prerequisites": []
+}

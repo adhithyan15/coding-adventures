@@ -1,0 +1,11 @@
+{
+  "id": "ES-C651-maquinista",
+  "pathSegment": "ES-PATH-651-TREN",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ES-EXT-651-TREN",
+      "order": 1
+    }
+  ]
+}

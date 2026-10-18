@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 605,
+  "sourceHash": "fnv1a64:d305f33e8fa6dfbc",
+  "lessonIds": [
+    "ES-C605-marginacion",
+    "ES-C605-violencia",
+    "ES-C605-discriminacion",
+    "ES-C605-racismo",
+    "ES-C605-corrupcion"
+  ],
+  "tex": "spanish/book/chapters/ch605-problemas-sociales.tex"
+}

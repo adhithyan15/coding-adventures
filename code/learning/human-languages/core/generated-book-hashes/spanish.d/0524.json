@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 524,
+  "sourceHash": "fnv1a64:1726ff595cad512f",
+  "lessonIds": [
+    "ES-C524-incendio",
+    "ES-C524-incendiar",
+    "ES-C524-arder",
+    "ES-C524-alarma",
+    "ES-C524-evacuar"
+  ],
+  "tex": "spanish/book/chapters/ch524-el-incendio.tex"
+}

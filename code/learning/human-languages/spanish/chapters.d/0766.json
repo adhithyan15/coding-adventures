@@ -1,0 +1,19 @@
+{
+  "chapter": 766,
+  "title": "Retos y logros",
+  "label": "ch:es-retos-y-logros",
+  "canDo": "I can talk about my challenges, achievements, talents and ambitions.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "ES-C766-talento",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 766: I can talk about my challenges, achievements, talents and ambitions.",
+    "assesses": [
+      "ES-LEX-C766-RETO-03",
+      "ES-LEX-C766-RETO-04",
+      "ES-LEX-C766-RETO-05"
+    ]
+  }
+}

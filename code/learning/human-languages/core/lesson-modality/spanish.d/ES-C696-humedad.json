@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C696-humedad",
+    "language": "spanish",
+    "chapter": 696,
+    "sequence": 24710,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:108c0b5a549b95fa"
+  },
+  "findings": []
+}

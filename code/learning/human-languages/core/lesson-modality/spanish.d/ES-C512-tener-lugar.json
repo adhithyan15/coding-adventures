@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C512-tener-lugar",
+    "language": "spanish",
+    "chapter": 512,
+    "sequence": 15220,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9423054c3bebda86"
+  },
+  "findings": []
+}

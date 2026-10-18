@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C587-aparentemente",
+    "language": "spanish",
+    "chapter": 587,
+    "sequence": 19100,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8cd817e1f2f7f9ef"
+  },
+  "findings": []
+}

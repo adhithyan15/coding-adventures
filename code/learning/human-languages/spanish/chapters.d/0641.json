@@ -1,0 +1,19 @@
+{
+  "chapter": 641,
+  "title": "En taxi",
+  "label": "ch:es-en-taxi",
+  "canDo": "I can take a taxi: ask about the fare, say how long the trip is and ask the driver to stop.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "ES-C641-parar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 641: I can take a taxi: ask about the fare, say how long the trip is and ask the driver to stop.",
+    "assesses": [
+      "ES-LEX-C641-TAXI-03",
+      "ES-LEX-C641-TAXI-04",
+      "ES-LEX-C641-TAXI-05"
+    ]
+  }
+}

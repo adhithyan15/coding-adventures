@@ -1,0 +1,11 @@
+{
+  "id": "ES-R743-repaso-736-743",
+  "pathSegment": "ES-PATH-743-MENTE",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "ES-EXT-743-MENTE",
+      "order": 5
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 775,
+  "title": "En mi cocina",
+  "label": "ch:es-en-mi-cocina",
+  "canDo": "I can describe my kitchen and what I find there: the fridge, the coffee maker, a tin, a piece of something, and the smell.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "ES-R775-repaso-768-775",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 775: I can describe my kitchen and what I find there: the fridge, the coffee maker, a tin, a piece of something, and the smell.",
+    "assesses": [
+      "ES-LEX-C775-NEVERA-03",
+      "ES-LEX-C775-NEVERA-04",
+      "ES-LEX-C775-NEVERA-05"
+    ]
+  }
+}

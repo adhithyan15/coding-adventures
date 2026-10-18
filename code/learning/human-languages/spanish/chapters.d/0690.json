@@ -1,0 +1,19 @@
+{
+  "chapter": 690,
+  "title": "Un día de playa",
+  "label": "ch:es-un-dia-de-playa",
+  "canDo": "I can talk about a day at the beach: swimming, getting a tan and lying under a sunshade in my swimsuit.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "ES-C690-tumbarse",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 690: I can talk about a day at the beach: swimming, getting a tan and lying under a sunshade in my swimsuit.",
+    "assesses": [
+      "ES-LEX-C690-PLAYA-03",
+      "ES-LEX-C690-PLAYA-04",
+      "ES-LEX-C690-PLAYA-05"
+    ]
+  }
+}

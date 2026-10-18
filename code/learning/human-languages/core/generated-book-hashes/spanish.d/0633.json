@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 633,
+  "sourceHash": "fnv1a64:b2000c642220c86c",
+  "lessonIds": [
+    "ES-C633-rico",
+    "ES-C633-miseria",
+    "ES-C633-riqueza",
+    "ES-C633-lujo",
+    "ES-C633-gratuito"
+  ],
+  "tex": "spanish/book/chapters/ch633-ricos-y-pobres.tex"
+}

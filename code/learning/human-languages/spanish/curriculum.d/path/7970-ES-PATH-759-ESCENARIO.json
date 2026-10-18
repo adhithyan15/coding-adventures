@@ -1,0 +1,9 @@
+{
+  "id": "ES-PATH-759-ESCENARIO",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "ES-EXT-759-ESCENARIO"
+  ],
+  "after": []
+}

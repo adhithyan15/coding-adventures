@@ -1,0 +1,11 @@
+{
+  "id": "ES-C776-carpeta",
+  "pathSegment": "ES-PATH-776-CLAVE",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ES-EXT-776-CLAVE",
+      "order": 2
+    }
+  ]
+}

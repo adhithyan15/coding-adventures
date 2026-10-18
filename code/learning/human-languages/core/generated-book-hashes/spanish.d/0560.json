@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 560,
+  "sourceHash": "fnv1a64:7dde870aa4a56f28",
+  "lessonIds": [
+    "ES-C560-congregarse",
+    "ES-C560-juntarse",
+    "ES-C560-convocar",
+    "ES-C560-tertulia",
+    "ES-C560-reencuentro"
+  ],
+  "tex": "spanish/book/chapters/ch560-el-reencuentro.tex"
+}

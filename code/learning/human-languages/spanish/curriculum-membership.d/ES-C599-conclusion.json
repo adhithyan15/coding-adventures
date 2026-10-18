@@ -1,0 +1,11 @@
+{
+  "id": "ES-C599-conclusion",
+  "pathSegment": "ES-PATH-599-INVESTIGA",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ES-EXT-599-INVESTIGA",
+      "order": 3
+    }
+  ]
+}

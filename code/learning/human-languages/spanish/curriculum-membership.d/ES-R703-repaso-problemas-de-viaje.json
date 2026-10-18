@@ -1,0 +1,11 @@
+{
+  "id": "ES-R703-repaso-problemas-de-viaje",
+  "pathSegment": "ES-PATH-703-ANOCHECER",
+  "pathOrder": 7,
+  "extensions": [
+    {
+      "id": "ES-EXT-703-ANOCHECER",
+      "order": 7
+    }
+  ]
+}

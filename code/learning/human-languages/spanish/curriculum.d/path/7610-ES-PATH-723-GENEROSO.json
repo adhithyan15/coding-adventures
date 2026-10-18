@@ -1,0 +1,9 @@
+{
+  "id": "ES-PATH-723-GENEROSO",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "ES-EXT-723-GENEROSO"
+  ],
+  "after": []
+}

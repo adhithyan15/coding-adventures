@@ -1,0 +1,19 @@
+{
+  "chapter": 588,
+  "title": "Ordenar las ideas",
+  "label": "ch:es-ordenar-las-ideas",
+  "canDo": "I can explain what I mean, contrast two points, stress what matters most and draw a conclusion.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "ES-C588-en-general",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 588: I can explain what I mean, contrast two points, stress what matters most and draw a conclusion.",
+    "assesses": [
+      "ES-LEX-C588-ORDENA-03",
+      "ES-LEX-C588-ORDENA-04",
+      "ES-LEX-C588-ORDENA-05"
+    ]
+  }
+}

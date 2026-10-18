@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 684,
+  "sourceHash": "fnv1a64:bf837ad5ea72cc1c",
+  "lessonIds": [
+    "ES-C684-forastero",
+    "ES-C684-urbano",
+    "ES-C684-rural",
+    "ES-C684-residir",
+    "ES-C684-vecindario"
+  ],
+  "tex": "spanish/book/chapters/ch684-ciudad-o-campo.tex"
+}

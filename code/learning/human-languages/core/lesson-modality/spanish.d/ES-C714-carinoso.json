@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C714-carinoso",
+    "language": "spanish",
+    "chapter": 714,
+    "sequence": 25620,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f5df67c15e6488c7"
+  },
+  "findings": []
+}

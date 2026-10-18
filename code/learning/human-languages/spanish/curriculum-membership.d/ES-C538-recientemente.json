@@ -1,0 +1,11 @@
+{
+  "id": "ES-C538-recientemente",
+  "pathSegment": "ES-PATH-538-ANTES",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ES-EXT-538-ANTES",
+      "order": 3
+    }
+  ]
+}

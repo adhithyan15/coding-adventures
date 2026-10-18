@@ -1,0 +1,19 @@
+{
+  "chapter": 525,
+  "title": "Hay heridos",
+  "label": "ch:es-hay-heridos",
+  "canDo": "I can say that someone was injured, how bad the wound was, who helped and that an ambulance came.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "ES-C525-herido",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 525: I can say that someone was injured, how bad the wound was, who helped and that an ambulance came.",
+    "assesses": [
+      "ES-LEX-C525-HERIDA-03",
+      "ES-LEX-C525-HERIDA-04",
+      "ES-LEX-C525-HERIDA-05"
+    ]
+  }
+}

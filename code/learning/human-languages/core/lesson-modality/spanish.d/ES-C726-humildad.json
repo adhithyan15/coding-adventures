@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C726-humildad",
+    "language": "spanish",
+    "chapter": 726,
+    "sequence": 26230,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:de8f58fb7d6df6d7"
+  },
+  "findings": []
+}

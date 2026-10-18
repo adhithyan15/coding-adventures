@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 661,
+  "sourceHash": "fnv1a64:5bb49d1ff183cab2",
+  "lessonIds": [
+    "ES-C661-recepcionista",
+    "ES-C661-botones",
+    "ES-C661-huesped",
+    "ES-C661-estancia",
+    "ES-C661-conserje"
+  ],
+  "tex": "spanish/book/chapters/ch661-en-recepcion.tex"
+}

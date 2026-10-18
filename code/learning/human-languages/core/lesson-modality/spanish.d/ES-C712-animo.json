@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C712-animo",
+    "language": "spanish",
+    "chapter": 712,
+    "sequence": 25520,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:11fbef9403ed595f"
+  },
+  "findings": []
+}

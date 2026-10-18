@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 738,
+  "sourceHash": "fnv1a64:b9fc975db62253ef",
+  "lessonIds": [
+    "ES-C738-diagnostico",
+    "ES-C738-diagnosticar",
+    "ES-C738-sintoma",
+    "ES-C738-tratamiento",
+    "ES-C738-padecer"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch738.txt",
+  "json": "spanish/narration/ch738.json",
+  "textHash": "fnv1a64:7958ec7f9adb238b",
+  "jsonHash": "fnv1a64:93876abe27d48a7b",
+  "findings": []
+}

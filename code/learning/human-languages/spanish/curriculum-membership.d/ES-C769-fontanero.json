@@ -1,0 +1,11 @@
+{
+  "id": "ES-C769-fontanero",
+  "pathSegment": "ES-PATH-769-GOTERA",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ES-EXT-769-GOTERA",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C582-conllevar",
+    "language": "spanish",
+    "chapter": 582,
+    "sequence": 18820,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:22213eaaa3be042f"
+  },
+  "findings": []
+}

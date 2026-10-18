@@ -1,0 +1,9 @@
+{
+  "id": "ES-PATH-750-CONVIVIR",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "ES-EXT-750-CONVIVIR"
+  ],
+  "after": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C556-tumba",
+    "language": "spanish",
+    "chapter": 556,
+    "sequence": 17460,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:deb11bd9347d65d3"
+  },
+  "findings": []
+}

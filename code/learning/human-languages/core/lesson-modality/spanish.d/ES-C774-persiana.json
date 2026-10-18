@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C774-persiana",
+    "language": "spanish",
+    "chapter": 774,
+    "sequence": 28740,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3fa81c57797adeb0"
+  },
+  "findings": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 641,
+  "sourceHash": "fnv1a64:80769d3754463654",
+  "lessonIds": [
+    "ES-C641-taxi",
+    "ES-C641-taxista",
+    "ES-C641-tarifa",
+    "ES-C641-trayecto",
+    "ES-C641-parar"
+  ],
+  "tex": "spanish/book/chapters/ch641-en-taxi.tex"
+}

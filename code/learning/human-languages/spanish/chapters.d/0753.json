@@ -1,0 +1,19 @@
+{
+  "chapter": 753,
+  "title": "Música y canciones",
+  "label": "ch:es-musica-y-canciones",
+  "canDo": "I can talk about musicians, humming a tune, songs and rhythm.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "ES-C753-componer",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 753: I can talk about musicians, humming a tune, songs and rhythm.",
+    "assesses": [
+      "ES-LEX-C753-MUSICA-03",
+      "ES-LEX-C753-MUSICA-04",
+      "ES-LEX-C753-MUSICA-05"
+    ]
+  }
+}

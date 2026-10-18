@@ -1,0 +1,8 @@
+{
+  "id": "ES-EXT-661-RECEPCION",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can deal with hotel staff, from the receptionist to the concierge, and say how long I am staying.",
+  "prerequisites": []
+}

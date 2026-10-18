@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 688,
+  "sourceHash": "fnv1a64:7818d1be9036c946",
+  "lessonIds": [
+    "ES-C688-oceano",
+    "ES-C688-ola",
+    "ES-C688-marea",
+    "ES-C688-bahia",
+    "ES-C688-flotar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch688.txt",
+  "json": "spanish/narration/ch688.json",
+  "textHash": "fnv1a64:308baa0a975e5ed7",
+  "jsonHash": "fnv1a64:2cbe475bcacbfc76",
+  "findings": []
+}

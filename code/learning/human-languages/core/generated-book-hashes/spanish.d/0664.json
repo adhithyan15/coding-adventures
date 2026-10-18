@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 664,
+  "sourceHash": "fnv1a64:e0c3655ada634104",
+  "lessonIds": [
+    "ES-C664-sabana",
+    "ES-C664-balcon",
+    "ES-C664-vista",
+    "ES-C664-enchufe",
+    "ES-C664-grifo"
+  ],
+  "tex": "spanish/book/chapters/ch664-como-es-la-habitacion.tex"
+}

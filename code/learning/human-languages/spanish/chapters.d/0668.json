@@ -1,0 +1,19 @@
+{
+  "chapter": 668,
+  "title": "Hacer y deshacer el equipaje",
+  "label": "ch:es-hacer-y-deshacer-el-equipaje",
+  "canDo": "I can pack and unpack, wrap things up, drag my case and weigh my bag.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "ES-C668-arrastrar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 668: I can pack and unpack, wrap things up, drag my case and weigh my bag.",
+    "assesses": [
+      "ES-LEX-C668-EQUIPAJE-03",
+      "ES-LEX-C668-EQUIPAJE-04",
+      "ES-LEX-C668-EQUIPAJE-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "ES-C679-estanco",
+  "pathSegment": "ES-PATH-679-SERVICIOS",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ES-EXT-679-SERVICIOS",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "ES-C551-establecerse",
+  "pathSegment": "ES-PATH-551-TRASLADO",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ES-EXT-551-TRASLADO",
+      "order": 2
+    }
+  ]
+}

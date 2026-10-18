@@ -1,0 +1,19 @@
+{
+  "chapter": 544,
+  "title": "Un bebé en camino",
+  "label": "ch:es-un-bebe-en-camino",
+  "canDo": "I can talk about a pregnancy and a birth: the newborn baby and how the birth went.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "ES-C544-recien-nacido",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 544: I can talk about a pregnancy and a birth: the newborn baby and how the birth went.",
+    "assesses": [
+      "ES-LEX-C544-PARTO-03",
+      "ES-LEX-C544-PARTO-04",
+      "ES-LEX-C544-PARTO-05"
+    ]
+  }
+}

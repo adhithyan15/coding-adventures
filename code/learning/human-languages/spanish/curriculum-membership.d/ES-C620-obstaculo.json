@@ -1,0 +1,11 @@
+{
+  "id": "ES-C620-obstaculo",
+  "pathSegment": "ES-PATH-620-SOLUCION",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ES-EXT-620-SOLUCION",
+      "order": 2
+    }
+  ]
+}

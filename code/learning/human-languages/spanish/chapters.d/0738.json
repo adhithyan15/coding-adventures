@@ -1,0 +1,19 @@
+{
+  "chapter": 738,
+  "title": "En la consulta del médico",
+  "label": "ch:es-en-la-consulta-del-medico",
+  "canDo": "I can explain my symptoms to a doctor and understand a diagnosis and a treatment.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "ES-C738-padecer",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 738: I can explain my symptoms to a doctor and understand a diagnosis and a treatment.",
+    "assesses": [
+      "ES-LEX-C738-CONSULTA-03",
+      "ES-LEX-C738-CONSULTA-04",
+      "ES-LEX-C738-CONSULTA-05"
+    ]
+  }
+}

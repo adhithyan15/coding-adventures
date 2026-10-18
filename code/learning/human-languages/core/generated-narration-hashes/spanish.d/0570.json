@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 570,
+  "sourceHash": "fnv1a64:7b27bc12baeae3e4",
+  "lessonIds": [
+    "ES-C570-manifestacion",
+    "ES-C570-protesta",
+    "ES-C570-disturbio",
+    "ES-C570-escandalo",
+    "ES-C570-polemica"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch570.txt",
+  "json": "spanish/narration/ch570.json",
+  "textHash": "fnv1a64:626bcb7b1e46a179",
+  "jsonHash": "fnv1a64:fdcd95d8d5e429e6",
+  "findings": []
+}

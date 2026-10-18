@@ -1,0 +1,11 @@
+{
+  "id": "ES-C773-recargar",
+  "pathSegment": "ES-PATH-773-COBERTURA",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "ES-EXT-773-COBERTURA",
+      "order": 4
+    }
+  ]
+}

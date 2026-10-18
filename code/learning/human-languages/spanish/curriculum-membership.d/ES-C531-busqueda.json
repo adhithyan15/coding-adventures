@@ -1,0 +1,11 @@
+{
+  "id": "ES-C531-busqueda",
+  "pathSegment": "ES-PATH-531-BUSQUEDA",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ES-EXT-531-BUSQUEDA",
+      "order": 1
+    }
+  ]
+}

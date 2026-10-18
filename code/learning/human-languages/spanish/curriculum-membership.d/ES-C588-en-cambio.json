@@ -1,0 +1,11 @@
+{
+  "id": "ES-C588-en-cambio",
+  "pathSegment": "ES-PATH-588-ORDENA",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ES-EXT-588-ORDENA",
+      "order": 2
+    }
+  ]
+}

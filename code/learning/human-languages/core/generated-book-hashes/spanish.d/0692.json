@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 692,
+  "sourceHash": "fnv1a64:bfac03588c1023ae",
+  "lessonIds": [
+    "ES-C692-sembrar",
+    "ES-C692-regar",
+    "ES-C692-cosechar",
+    "ES-C692-pozo",
+    "ES-C692-florecer"
+  ],
+  "tex": "spanish/book/chapters/ch692-sembrar-y-regar.tex"
+}

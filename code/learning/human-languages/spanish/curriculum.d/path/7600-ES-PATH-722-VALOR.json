@@ -1,0 +1,9 @@
+{
+  "id": "ES-PATH-722-VALOR",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "ES-EXT-722-VALOR"
+  ],
+  "after": []
+}

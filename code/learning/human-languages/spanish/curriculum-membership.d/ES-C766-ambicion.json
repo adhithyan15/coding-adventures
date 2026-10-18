@@ -1,0 +1,11 @@
+{
+  "id": "ES-C766-ambicion",
+  "pathSegment": "ES-PATH-766-RETO",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ES-EXT-766-RETO",
+      "order": 1
+    }
+  ]
+}

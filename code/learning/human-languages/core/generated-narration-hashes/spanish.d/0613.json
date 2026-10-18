@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 613,
+  "sourceHash": "fnv1a64:758cafdc4724b2c2",
+  "lessonIds": [
+    "ES-C613-requerir",
+    "ES-C613-requisito",
+    "ES-C613-incertidumbre",
+    "ES-C613-probable",
+    "ES-C613-probabilidad"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch613.txt",
+  "json": "spanish/narration/ch613.json",
+  "textHash": "fnv1a64:c63929961051d74c",
+  "jsonHash": "fnv1a64:c33b4987c9e3c8cb",
+  "findings": []
+}

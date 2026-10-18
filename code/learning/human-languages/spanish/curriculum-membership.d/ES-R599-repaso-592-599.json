@@ -1,0 +1,11 @@
+{
+  "id": "ES-R599-repaso-592-599",
+  "pathSegment": "ES-PATH-599-INVESTIGA",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "ES-EXT-599-INVESTIGA",
+      "order": 5
+    }
+  ]
+}

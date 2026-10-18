@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C712-sensacion",
+    "language": "spanish",
+    "chapter": 712,
+    "sequence": 25510,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:fc7117fc57320f60"
+  },
+  "findings": []
+}

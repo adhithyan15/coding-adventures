@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 758,
+  "sourceHash": "fnv1a64:4c88af1741c26e45",
+  "lessonIds": [
+    "ES-C758-voleibol",
+    "ES-C758-boxeo",
+    "ES-C758-esquiar",
+    "ES-C758-patinar",
+    "ES-C758-aficionado"
+  ],
+  "tex": "spanish/book/chapters/ch758-mas-deportes.tex"
+}

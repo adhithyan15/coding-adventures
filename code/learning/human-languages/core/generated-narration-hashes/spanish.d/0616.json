@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 616,
+  "sourceHash": "fnv1a64:1befdc34d3d885d6",
+  "lessonIds": [
+    "ES-C616-imprevisto",
+    "ES-C616-anticipar",
+    "ES-C616-posponer",
+    "ES-C616-contratiempo",
+    "ES-C616-alternativa"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch616.txt",
+  "json": "spanish/narration/ch616.json",
+  "textHash": "fnv1a64:5eb6211d9d354608",
+  "jsonHash": "fnv1a64:b00dc596197379a8",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 758,
+  "title": "Más deportes",
+  "label": "ch:es-mas-deportes",
+  "canDo": "I can talk about volleyball, boxing, skiing and skating, and about being a fan.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "ES-C758-aficionado",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 758: I can talk about volleyball, boxing, skiing and skating, and about being a fan.",
+    "assesses": [
+      "ES-LEX-C758-DEPORTES-03",
+      "ES-LEX-C758-DEPORTES-04",
+      "ES-LEX-C758-DEPORTES-05"
+    ]
+  }
+}

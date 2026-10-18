@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 549,
+  "sourceHash": "fnv1a64:71f85c10b1c357c8",
+  "lessonIds": [
+    "ES-C549-casado",
+    "ES-C549-soltero",
+    "ES-C549-casar",
+    "ES-C549-marido",
+    "ES-C549-brindar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch549.txt",
+  "json": "spanish/narration/ch549.json",
+  "textHash": "fnv1a64:3de1b30cc7ff80c6",
+  "jsonHash": "fnv1a64:037558aa07bf0f69",
+  "findings": []
+}

@@ -1,0 +1,20 @@
+{
+  "language": "spanish",
+  "chapter": 647,
+  "sourceHash": "fnv1a64:ca911aca18ae8cd9",
+  "lessonIds": [
+    "ES-C647-semaforo",
+    "ES-C647-bocacalle",
+    "ES-C647-calzada",
+    "ES-C647-peaton",
+    "ES-C647-rotonda",
+    "ES-R647-repaso-640-647"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "spanish/narration/ch647.txt",
+  "json": "spanish/narration/ch647.json",
+  "textHash": "fnv1a64:a759849b7ebe334e",
+  "jsonHash": "fnv1a64:39281252e562e264",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "ES-C724-cotillear",
+  "pathSegment": "ES-PATH-724-MENTIRA",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ES-EXT-724-MENTIRA",
+      "order": 1
+    }
+  ]
+}

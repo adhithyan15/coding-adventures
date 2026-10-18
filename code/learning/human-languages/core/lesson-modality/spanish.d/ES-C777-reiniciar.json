@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C777-reiniciar",
+    "language": "spanish",
+    "chapter": 777,
+    "sequence": 28900,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d4b41a4a8154368e"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C533-fortuito",
+    "language": "spanish",
+    "chapter": 533,
+    "sequence": 16270,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:fa180b13db34b229"
+  },
+  "findings": []
+}

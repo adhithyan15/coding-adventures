@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C587-obvio",
+    "language": "spanish",
+    "chapter": 587,
+    "sequence": 19080,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:312292ac6afd4b2e"
+  },
+  "findings": []
+}

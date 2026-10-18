@@ -1,0 +1,19 @@
+{
+  "chapter": 554,
+  "title": "Hacerse mayor",
+  "label": "ch:es-hacerse-mayor",
+  "canDo": "I can talk about graduating, coming of age and getting old.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "ES-C554-envejecer",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 554: I can talk about graduating, coming of age and getting old.",
+    "assesses": [
+      "ES-LEX-C554-GRADUA-03",
+      "ES-LEX-C554-GRADUA-04",
+      "ES-LEX-C554-GRADUA-05"
+    ]
+  }
+}

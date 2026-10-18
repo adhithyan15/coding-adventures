@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C693-pino",
+    "language": "spanish",
+    "chapter": 693,
+    "sequence": 24520,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3a07d0eeda2f2d39"
+  },
+  "findings": []
+}

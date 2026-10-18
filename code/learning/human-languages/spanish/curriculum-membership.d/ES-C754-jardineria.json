@@ -1,0 +1,11 @@
+{
+  "id": "ES-C754-jardineria",
+  "pathSegment": "ES-PATH-754-PESCA",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ES-EXT-754-PESCA",
+      "order": 3
+    }
+  ]
+}

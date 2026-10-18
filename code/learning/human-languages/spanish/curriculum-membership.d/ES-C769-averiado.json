@@ -1,0 +1,11 @@
+{
+  "id": "ES-C769-averiado",
+  "pathSegment": "ES-PATH-769-GOTERA",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ES-EXT-769-GOTERA",
+      "order": 2
+    }
+  ]
+}

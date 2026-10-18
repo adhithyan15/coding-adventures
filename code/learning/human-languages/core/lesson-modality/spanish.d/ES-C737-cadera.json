@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C737-cadera",
+    "language": "spanish",
+    "chapter": 737,
+    "sequence": 26820,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ee7f6e3277491f56"
+  },
+  "findings": []
+}

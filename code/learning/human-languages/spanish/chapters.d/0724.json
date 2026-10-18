@@ -1,0 +1,19 @@
+{
+  "chapter": 724,
+  "title": "Sinceros y cotillas",
+  "label": "ch:es-sinceros-y-cotillas",
+  "canDo": "I can describe honest people, liars and gossips.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "ES-C724-honestidad",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 724: I can describe honest people, liars and gossips.",
+    "assesses": [
+      "ES-LEX-C724-MENTIRA-03",
+      "ES-LEX-C724-MENTIRA-04",
+      "ES-LEX-C724-MENTIRA-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 721,
+  "sourceHash": "fnv1a64:528ade3239eee630",
+  "lessonIds": [
+    "ES-C721-rasgo",
+    "ES-C721-personalidad",
+    "ES-C721-temperamento",
+    "ES-C721-defecto",
+    "ES-C721-valorar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch721.txt",
+  "json": "spanish/narration/ch721.json",
+  "textHash": "fnv1a64:fc4507493ce9b886",
+  "jsonHash": "fnv1a64:6540ae4c994ed1d7",
+  "findings": []
+}

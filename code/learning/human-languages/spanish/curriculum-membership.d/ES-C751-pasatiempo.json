@@ -1,0 +1,11 @@
+{
+  "id": "ES-C751-pasatiempo",
+  "pathSegment": "ES-PATH-751-AFICION",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ES-EXT-751-AFICION",
+      "order": 1
+    }
+  ]
+}

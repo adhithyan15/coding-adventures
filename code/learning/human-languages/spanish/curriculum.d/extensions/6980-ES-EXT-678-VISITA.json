@@ -1,0 +1,8 @@
+{
+  "id": "ES-EXT-678-VISITA",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can plan a visit to a town: statues, towers, galleries and a country chapel.",
+  "prerequisites": []
+}

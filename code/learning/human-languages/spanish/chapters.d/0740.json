@@ -1,0 +1,19 @@
+{
+  "chapter": 740,
+  "title": "Me siento mal",
+  "label": "ch:es-me-siento-mal",
+  "canDo": "I can say that I feel sick or faint and what relieves it.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "ES-C740-alergia",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 740: I can say that I feel sick or faint and what relieves it.",
+    "assesses": [
+      "ES-LEX-C740-MAREO-03",
+      "ES-LEX-C740-MAREO-04",
+      "ES-LEX-C740-MAREO-05"
+    ]
+  }
+}

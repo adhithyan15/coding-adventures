@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C630-economia",
+    "language": "spanish",
+    "chapter": 630,
+    "sequence": 21260,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:22717dbb48f8a951"
+  },
+  "findings": []
+}

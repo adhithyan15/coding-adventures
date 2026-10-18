@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 620,
+  "sourceHash": "fnv1a64:158585a1c37458ab",
+  "lessonIds": [
+    "ES-C620-solucion",
+    "ES-C620-solucionar",
+    "ES-C620-obstaculo",
+    "ES-C620-complicado",
+    "ES-C620-plantear"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch620.txt",
+  "json": "spanish/narration/ch620.json",
+  "textHash": "fnv1a64:44ce695cb08ca314",
+  "jsonHash": "fnv1a64:7be370f76b1357f1",
+  "findings": []
+}

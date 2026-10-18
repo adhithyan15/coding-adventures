@@ -1,0 +1,11 @@
+{
+  "id": "ES-C515-declarar",
+  "pathSegment": "ES-PATH-515-RUMOR",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ES-EXT-515-RUMOR",
+      "order": 3
+    }
+  ]
+}

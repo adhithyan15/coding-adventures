@@ -1,0 +1,9 @@
+{
+  "id": "ES-PATH-697-LLUVIA",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "ES-EXT-697-LLUVIA"
+  ],
+  "after": []
+}

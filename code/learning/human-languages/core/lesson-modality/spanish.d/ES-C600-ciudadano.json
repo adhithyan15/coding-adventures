@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C600-ciudadano",
+    "language": "spanish",
+    "chapter": 600,
+    "sequence": 19760,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9ea03c9e31341f6f"
+  },
+  "findings": []
+}

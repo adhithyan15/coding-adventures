@@ -1,0 +1,19 @@
+{
+  "chapter": 667,
+  "title": "Un piso de vacaciones",
+  "label": "ch:es-un-piso-de-vacaciones",
+  "canDo": "I can rent a holiday flat or a car: meet the owner or host and talk about tenants.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "ES-C667-alquilar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 667: I can rent a holiday flat or a car: meet the owner or host and talk about tenants.",
+    "assesses": [
+      "ES-LEX-C667-APARTAMENTO-03",
+      "ES-LEX-C667-APARTAMENTO-04",
+      "ES-LEX-C667-APARTAMENTO-05"
+    ]
+  }
+}

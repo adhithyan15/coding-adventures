@@ -1,0 +1,19 @@
+{
+  "chapter": 683,
+  "title": "Regiones y pueblos",
+  "label": "ch:es-regiones-y-pueblos",
+  "canDo": "I can say which region, district or municipality a place is in, find the mayor’s office and talk about hamlets.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "ES-C683-alcaldia",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 683: I can say which region, district or municipality a place is in, find the mayor’s office and talk about hamlets.",
+    "assesses": [
+      "ES-LEX-C683-REGION-03",
+      "ES-LEX-C683-REGION-04",
+      "ES-LEX-C683-REGION-05"
+    ]
+  }
+}

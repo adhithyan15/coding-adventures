@@ -1,0 +1,19 @@
+{
+  "chapter": 695,
+  "title": "Fauna y flora",
+  "label": "ch:es-fauna-y-flora",
+  "canDo": "I can talk about wildlife such as deer, plant life, fishing, and insects that bite.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "ES-R695-repaso-688-695",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 695: I can talk about wildlife such as deer, plant life, fishing, and insects that bite.",
+    "assesses": [
+      "ES-LEX-C695-FAUNA-03",
+      "ES-LEX-C695-FAUNA-04",
+      "ES-LEX-C695-FAUNA-05"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C595-triunfar",
+    "language": "spanish",
+    "chapter": 595,
+    "sequence": 19510,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:842a7fb3206692cb"
+  },
+  "findings": []
+}

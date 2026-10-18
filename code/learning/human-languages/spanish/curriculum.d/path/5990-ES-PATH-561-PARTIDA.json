@@ -1,0 +1,9 @@
+{
+  "id": "ES-PATH-561-PARTIDA",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "ES-EXT-561-PARTIDA"
+  ],
+  "after": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C762-lector",
+    "language": "spanish",
+    "chapter": 762,
+    "sequence": 28090,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:252e1033b46ef439"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C699-tronar",
+    "language": "spanish",
+    "chapter": 699,
+    "sequence": 24860,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9db24d686ee03720"
+  },
+  "findings": []
+}

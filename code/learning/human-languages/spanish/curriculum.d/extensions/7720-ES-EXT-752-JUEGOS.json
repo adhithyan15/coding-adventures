@@ -1,0 +1,8 @@
+{
+  "id": "ES-EXT-752-JUEGOS",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can talk about board games, cards, puzzles, magic tricks and betting.",
+  "prerequisites": []
+}

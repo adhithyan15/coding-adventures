@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 709,
+  "sourceHash": "fnv1a64:08e810ea532b2741",
+  "lessonIds": [
+    "ES-C709-aislamiento",
+    "ES-C709-solitario",
+    "ES-C709-extranar",
+    "ES-C709-nostalgia",
+    "ES-C709-anorar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch709.txt",
+  "json": "spanish/narration/ch709.json",
+  "textHash": "fnv1a64:906f89810841f3c2",
+  "jsonHash": "fnv1a64:993e7d1425dc1331",
+  "findings": []
+}

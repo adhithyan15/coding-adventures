@@ -1,0 +1,19 @@
+{
+  "chapter": 631,
+  "title": "Ofertas y rebajas",
+  "label": "ch:es-ofertas-y-rebajas",
+  "canDo": "I can talk about clearance sales, price cuts, demand and what something is worth.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "ES-R631-repaso-624-631",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 631: I can talk about clearance sales, price cuts, demand and what something is worth.",
+    "assesses": [
+      "ES-LEX-C631-REBAJAS-03",
+      "ES-LEX-C631-REBAJAS-04",
+      "ES-LEX-C631-REBAJAS-05"
+    ]
+  }
+}

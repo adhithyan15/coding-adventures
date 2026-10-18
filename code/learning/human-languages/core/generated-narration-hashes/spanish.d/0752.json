@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 752,
+  "sourceHash": "fnv1a64:ad0d1069e56ccfbf",
+  "lessonIds": [
+    "ES-C752-ajedrez",
+    "ES-C752-rompecabezas",
+    "ES-C752-baraja",
+    "ES-C752-magia",
+    "ES-C752-apostar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch752.txt",
+  "json": "spanish/narration/ch752.json",
+  "textHash": "fnv1a64:45bed8d25479ec4b",
+  "jsonHash": "fnv1a64:9c2b47b1466a189d",
+  "findings": []
+}

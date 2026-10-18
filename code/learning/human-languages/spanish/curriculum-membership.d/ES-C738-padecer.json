@@ -1,0 +1,11 @@
+{
+  "id": "ES-C738-padecer",
+  "pathSegment": "ES-PATH-738-CONSULTA",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "ES-EXT-738-CONSULTA",
+      "order": 4
+    }
+  ]
+}

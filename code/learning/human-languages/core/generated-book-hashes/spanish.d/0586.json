@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 586,
+  "sourceHash": "fnv1a64:39192f812d57ab4d",
+  "lessonIds": [
+    "ES-C586-justificar",
+    "ES-C586-justificacion",
+    "ES-C586-excusa",
+    "ES-C586-pretexto",
+    "ES-C586-demostrar"
+  ],
+  "tex": "spanish/book/chapters/ch586-dar-explicaciones.tex"
+}

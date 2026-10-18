@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C730-belleza",
+    "language": "spanish",
+    "chapter": 730,
+    "sequence": 26460,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:33e366f5adfb2ada"
+  },
+  "findings": []
+}

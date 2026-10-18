@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 616,
+  "sourceHash": "fnv1a64:6536062e03812547",
+  "lessonIds": [
+    "ES-C616-imprevisto",
+    "ES-C616-anticipar",
+    "ES-C616-posponer",
+    "ES-C616-contratiempo",
+    "ES-C616-alternativa"
+  ],
+  "tex": "spanish/book/chapters/ch616-imprevistos.tex"
+}

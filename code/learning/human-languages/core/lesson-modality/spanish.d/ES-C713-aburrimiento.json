@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C713-aburrimiento",
+    "language": "spanish",
+    "chapter": 713,
+    "sequence": 25600,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:857c0c188b98ed6d"
+  },
+  "findings": []
+}

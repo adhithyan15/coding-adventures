@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 544,
+  "sourceHash": "fnv1a64:94779d32984dade2",
+  "lessonIds": [
+    "ES-C544-nacimiento",
+    "ES-C544-parto",
+    "ES-C544-dar-a-luz",
+    "ES-C544-embarazo",
+    "ES-C544-recien-nacido"
+  ],
+  "tex": "spanish/book/chapters/ch544-un-bebe-en-camino.tex"
+}

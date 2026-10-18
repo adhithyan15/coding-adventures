@@ -1,0 +1,11 @@
+{
+  "id": "ES-C521-averiguar",
+  "pathSegment": "ES-PATH-521-PISTA",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ES-EXT-521-PISTA",
+      "order": 3
+    }
+  ]
+}

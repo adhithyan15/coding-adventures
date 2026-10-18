@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 665,
+  "sourceHash": "fnv1a64:9587cb61838acbcb",
+  "lessonIds": [
+    "ES-C665-queja",
+    "ES-C665-desperfecto",
+    "ES-C665-compensar",
+    "ES-C665-gerente",
+    "ES-C665-dueno"
+  ],
+  "tex": "spanish/book/chapters/ch665-una-queja.tex"
+}

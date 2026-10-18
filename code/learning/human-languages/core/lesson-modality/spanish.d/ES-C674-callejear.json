@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C674-callejear",
+    "language": "spanish",
+    "chapter": 674,
+    "sequence": 23560,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f451623dd7778754"
+  },
+  "findings": []
+}

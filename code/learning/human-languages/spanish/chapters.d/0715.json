@@ -1,0 +1,19 @@
+{
+  "chapter": 715,
+  "title": "Amar y detestar",
+  "label": "ch:es-amar-y-detestar",
+  "canDo": "I can talk about love, passion and loathing in a story or a song.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "ES-C715-pasion",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 715: I can talk about love, passion and loathing in a story or a song.",
+    "assesses": [
+      "ES-LEX-C715-AMOR-03",
+      "ES-LEX-C715-AMOR-04",
+      "ES-LEX-C715-AMOR-05"
+    ]
+  }
+}

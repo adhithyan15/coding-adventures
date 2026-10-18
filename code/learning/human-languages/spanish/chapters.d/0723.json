@@ -1,0 +1,19 @@
+{
+  "chapter": 723,
+  "title": "Generosos y egoístas",
+  "label": "ch:es-generosos-y-egoistas",
+  "canDo": "I can say whether someone is kind, generous, stingy or selfish.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "ES-C723-cruel",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 723: I can say whether someone is kind, generous, stingy or selfish.",
+    "assesses": [
+      "ES-LEX-C723-GENEROSO-03",
+      "ES-LEX-C723-GENEROSO-04",
+      "ES-LEX-C723-GENEROSO-05"
+    ]
+  }
+}

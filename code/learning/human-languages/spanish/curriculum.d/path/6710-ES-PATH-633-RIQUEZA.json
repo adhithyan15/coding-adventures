@@ -1,0 +1,9 @@
+{
+  "id": "ES-PATH-633-RIQUEZA",
+  "spine_node": "SPINE-EXPRESS-CONDITION",
+  "before": [],
+  "inline": [
+    "ES-EXT-633-RIQUEZA"
+  ],
+  "after": []
+}

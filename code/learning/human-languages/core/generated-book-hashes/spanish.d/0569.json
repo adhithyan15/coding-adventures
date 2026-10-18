@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 569,
+  "sourceHash": "fnv1a64:ece8fc16096eff5a",
+  "lessonIds": [
+    "ES-C569-luchar",
+    "ES-C569-derrotar",
+    "ES-C569-vencer",
+    "ES-C569-defender",
+    "ES-C569-conflicto"
+  ],
+  "tex": "spanish/book/chapters/ch569-la-lucha.tex"
+}

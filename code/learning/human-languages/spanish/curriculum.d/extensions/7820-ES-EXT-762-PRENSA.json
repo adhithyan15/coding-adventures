@@ -1,0 +1,8 @@
+{
+  "id": "ES-EXT-762-PRENSA",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can talk about reading at home: magazines, covers, crosswords and flicking through pages.",
+  "prerequisites": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 759,
+  "title": "Sobre el escenario",
+  "label": "ch:es-sobre-el-escenario",
+  "canDo": "I can talk about a show, the applause and how the actors performed.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "ES-R759-repaso-752-759",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 759: I can talk about a show, the applause and how the actors performed.",
+    "assesses": [
+      "ES-LEX-C759-ESCENARIO-03",
+      "ES-LEX-C759-ESCENARIO-04",
+      "ES-LEX-C759-ESCENARIO-05"
+    ]
+  }
+}

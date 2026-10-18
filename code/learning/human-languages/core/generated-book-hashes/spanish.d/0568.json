@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 568,
+  "sourceHash": "fnv1a64:66bf6c7090e8a806",
+  "lessonIds": [
+    "ES-C568-historico",
+    "ES-C568-revolucion",
+    "ES-C568-monarca",
+    "ES-C568-reina",
+    "ES-C568-conquistar"
+  ],
+  "tex": "spanish/book/chapters/ch568-reyes-y-revoluciones.tex"
+}

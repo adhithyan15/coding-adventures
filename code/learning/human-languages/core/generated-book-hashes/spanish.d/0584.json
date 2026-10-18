@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 584,
+  "sourceHash": "fnv1a64:a306317d31d628b7",
+  "lessonIds": [
+    "ES-C584-ventaja",
+    "ES-C584-desventaja",
+    "ES-C584-inconveniente",
+    "ES-C584-positivo",
+    "ES-C584-negativo"
+  ],
+  "tex": "spanish/book/chapters/ch584-pros-y-contras.tex"
+}

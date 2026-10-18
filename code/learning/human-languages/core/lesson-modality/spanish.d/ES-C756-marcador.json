@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C756-marcador",
+    "language": "spanish",
+    "chapter": 756,
+    "sequence": 27780,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5fc467ae4d1d87c4"
+  },
+  "findings": []
+}

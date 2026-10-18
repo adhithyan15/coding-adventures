@@ -1,0 +1,19 @@
+{
+  "chapter": 744,
+  "title": "Flechazos y piropos",
+  "label": "ch:es-flechazos-y-piropos",
+  "canDo": "I can talk about falling for someone, compliments, a courtship and admirers.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "ES-C744-complicidad",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 744: I can talk about falling for someone, compliments, a courtship and admirers.",
+    "assesses": [
+      "ES-LEX-C744-NOVIOS-03",
+      "ES-LEX-C744-NOVIOS-04",
+      "ES-LEX-C744-NOVIOS-05"
+    ]
+  }
+}

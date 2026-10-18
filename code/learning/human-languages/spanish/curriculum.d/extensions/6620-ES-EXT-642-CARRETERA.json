@@ -1,0 +1,8 @@
+{
+  "id": "ES-EXT-642-CARRETERA",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can follow a road trip: the ring road, the hard shoulder, potholes, tolls and each stretch of the way.",
+  "prerequisites": []
+}

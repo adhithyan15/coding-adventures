@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C694-mariposa",
+    "language": "spanish",
+    "chapter": 694,
+    "sequence": 24590,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:405f646f0d4da69c"
+  },
+  "findings": []
+}

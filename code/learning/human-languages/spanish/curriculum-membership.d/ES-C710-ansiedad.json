@@ -1,0 +1,11 @@
+{
+  "id": "ES-C710-ansiedad",
+  "pathSegment": "ES-PATH-710-NERVIOS",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ES-EXT-710-NERVIOS",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "ES-C764-olvido",
+  "pathSegment": "ES-PATH-764-RECUERDO",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ES-EXT-764-RECUERDO",
+      "order": 1
+    }
+  ]
+}

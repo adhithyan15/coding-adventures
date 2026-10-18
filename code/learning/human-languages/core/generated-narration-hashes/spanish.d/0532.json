@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 532,
+  "sourceHash": "fnv1a64:a5f39f6648ea009b",
+  "lessonIds": [
+    "ES-C532-misterio",
+    "ES-C532-enigma",
+    "ES-C532-ocultar",
+    "ES-C532-esconder",
+    "ES-C532-secreto"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch532.txt",
+  "json": "spanish/narration/ch532.json",
+  "textHash": "fnv1a64:3b9540ed6eb8fd8b",
+  "jsonHash": "fnv1a64:3f96e755cb681f45",
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C531-busqueda",
+    "language": "spanish",
+    "chapter": 531,
+    "sequence": 16160,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:40e545c57057ba3b"
+  },
+  "findings": []
+}

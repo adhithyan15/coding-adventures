@@ -1,0 +1,19 @@
+{
+  "chapter": 769,
+  "title": "Una gotera en casa",
+  "label": "ch:es-una-gotera-en-casa",
+  "canDo": "I can tell someone that the roof leaked, something broke down, and that a plumber or an electrician came.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "ES-C769-electricista",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 769: I can tell someone that the roof leaked, something broke down, and that a plumber or an electrician came.",
+    "assesses": [
+      "ES-LEX-C769-GOTERA-03",
+      "ES-LEX-C769-GOTERA-04",
+      "ES-LEX-C769-GOTERA-05"
+    ]
+  }
+}

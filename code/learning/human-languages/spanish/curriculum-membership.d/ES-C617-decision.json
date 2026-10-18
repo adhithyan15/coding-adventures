@@ -1,0 +1,11 @@
+{
+  "id": "ES-C617-decision",
+  "pathSegment": "ES-PATH-617-DECIDE",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "ES-EXT-617-DECIDE",
+      "order": 0
+    }
+  ]
+}

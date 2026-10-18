@@ -1,0 +1,8 @@
+{
+  "id": "ES-EXT-676-TURISMO",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can talk about tourism, pick up a leaflet, find a viewpoint and haggle at a market.",
+  "prerequisites": []
+}

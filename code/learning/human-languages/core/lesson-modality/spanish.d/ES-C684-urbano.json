@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C684-urbano",
+    "language": "spanish",
+    "chapter": 684,
+    "sequence": 24060,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1483cf234c4080e8"
+  },
+  "findings": []
+}

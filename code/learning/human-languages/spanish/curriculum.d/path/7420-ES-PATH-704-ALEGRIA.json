@@ -1,0 +1,9 @@
+{
+  "id": "ES-PATH-704-ALEGRIA",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "ES-EXT-704-ALEGRIA"
+  ],
+  "after": []
+}

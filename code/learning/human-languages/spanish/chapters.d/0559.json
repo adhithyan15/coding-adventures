@@ -1,0 +1,19 @@
+{
+  "chapter": 559,
+  "title": "El desfile",
+  "label": "ch:es-el-desfile",
+  "canDo": "I can talk about public events: a parade with floats, a procession, a fair and the crowd.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "ES-R559-repaso-552-559",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 559: I can talk about public events: a parade with floats, a procession, a fair and the crowd.",
+    "assesses": [
+      "ES-LEX-C559-DESFILE-03",
+      "ES-LEX-C559-DESFILE-04",
+      "ES-LEX-C559-DESFILE-05"
+    ]
+  }
+}

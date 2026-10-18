@@ -1,0 +1,8 @@
+{
+  "id": "ES-EXT-706-SUSTO",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can tell someone that something gave me a fright or that I fear something.",
+  "prerequisites": []
+}

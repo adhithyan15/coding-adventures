@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C638-margen",
+    "language": "spanish",
+    "chapter": 638,
+    "sequence": 21670,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ea6fab5ec63ae82d"
+  },
+  "findings": []
+}

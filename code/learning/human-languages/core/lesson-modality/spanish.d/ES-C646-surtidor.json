@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C646-surtidor",
+    "language": "spanish",
+    "chapter": 646,
+    "sequence": 22100,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f225794cf42de3d4"
+  },
+  "findings": []
+}

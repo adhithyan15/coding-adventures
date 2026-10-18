@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 754,
+  "sourceHash": "fnv1a64:07878b44a355eb09",
+  "lessonIds": [
+    "ES-C754-tejer",
+    "ES-C754-pesca",
+    "ES-C754-ceramica",
+    "ES-C754-jardineria",
+    "ES-C754-coser"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch754.txt",
+  "json": "spanish/narration/ch754.json",
+  "textHash": "fnv1a64:e33b69e126748a92",
+  "jsonHash": "fnv1a64:7c4330140530aad5",
+  "findings": []
+}

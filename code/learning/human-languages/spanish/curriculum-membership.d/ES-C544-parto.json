@@ -1,0 +1,11 @@
+{
+  "id": "ES-C544-parto",
+  "pathSegment": "ES-PATH-544-PARTO",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ES-EXT-544-PARTO",
+      "order": 1
+    }
+  ]
+}

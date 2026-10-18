@@ -1,0 +1,19 @@
+{
+  "chapter": 599,
+  "title": "Un estudio",
+  "label": "ch:es-un-estudio",
+  "canDo": "I can talk about a study: the experiment, the comparison, the method and what it concluded.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "ES-R599-repaso-592-599",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 599: I can talk about a study: the experiment, the comparison, the method and what it concluded.",
+    "assesses": [
+      "ES-LEX-C599-INVESTIGA-03",
+      "ES-LEX-C599-INVESTIGA-04",
+      "ES-LEX-C599-INVESTIGA-05"
+    ]
+  }
+}

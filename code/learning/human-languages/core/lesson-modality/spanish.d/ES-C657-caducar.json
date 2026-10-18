@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C657-caducar",
+    "language": "spanish",
+    "chapter": 657,
+    "sequence": 22670,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:77882d11cc457c9e"
+  },
+  "findings": []
+}

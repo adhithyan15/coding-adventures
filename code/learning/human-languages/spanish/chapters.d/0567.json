@@ -1,0 +1,19 @@
+{
+  "chapter": 567,
+  "title": "La guerra",
+  "label": "ch:es-la-guerra",
+  "canDo": "I can talk about a war: the fighting, a truce, battles, soldiers and the army.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "ES-R567-repaso-560-567",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 567: I can talk about a war: the fighting, a truce, battles, soldiers and the army.",
+    "assesses": [
+      "ES-LEX-C567-GUERRA-03",
+      "ES-LEX-C567-GUERRA-04",
+      "ES-LEX-C567-GUERRA-05"
+    ]
+  }
+}

@@ -1,0 +1,854 @@
+{
+  "version": 1,
+  "language": "spanish",
+  "chapter": 559,
+  "title": "El desfile",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:1ee629a9c417afff",
+  "lessons": [
+    {
+      "id": "ES-C559-desfile",
+      "sequence": 17580,
+      "title": "el desfile — the parade",
+      "headword": "el desfile",
+      "romanization": "el desfile",
+      "gloss": "the parade",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c62d91635833f22e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Spanish for the tribute, then the Spanish for to open."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: el desfile",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "el desfile — \"the parade\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Vimos el desfile desde la ventana. We watched the parade from the window."
+            },
+            {
+              "kind": "speech",
+              "text": "Un desfile de moda — a fashion show."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "desfile is built on desfilar (EtymDB), from French défiler 'to march in a line', built on fil 'thread', from Latin fīlum."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el desfile",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el desfile*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el desfile, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el desfile*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with el desfile",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *el desfile*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Spanish for the tribute, then the Spanish for to open, then say el desfile again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Spanish for the tribute, then the Spanish for to open, then say *el desfile* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does el desfile mean? (\"The parade\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C559-procesion",
+      "sequence": 17590,
+      "title": "la procesión — the procession",
+      "headword": "la procesión",
+      "romanization": "la procesión",
+      "gloss": "the procession",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:edc7fde848408d42",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Spanish for to open, then the Spanish for the parade."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: la procesión",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la procesión — \"the procession\"."
+            },
+            {
+              "kind": "speech",
+              "text": "La procesión sale de la iglesia a las ocho. The procession leaves the church at eight."
+            },
+            {
+              "kind": "speech",
+              "text": "Very important in Holy Week, la Semana Santa."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "procesión is a learned borrowing from Latin prōcessiō 'a marching forward' (EtymDB), from prōcēdere 'to go forward', built on cēdere 'to go'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la procesión",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la procesión*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la procesión, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la procesión*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with la procesión",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *la procesión*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Spanish for to open, then the Spanish for the parade, then say la procesión again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Spanish for to open, then the Spanish for the parade, then say *la procesión* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does la procesión mean? (\"The procession\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C559-feria",
+      "sequence": 17600,
+      "title": "la feria — the fair",
+      "headword": "la feria",
+      "romanization": "la feria",
+      "gloss": "the fair",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b0a16dfe8fa634f1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Spanish for the parade, then the Spanish for the procession."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: la feria",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la feria — \"the fair\"."
+            },
+            {
+              "kind": "speech",
+              "text": "En abril hay feria en Sevilla. In April there is a fair in Seville."
+            },
+            {
+              "kind": "speech",
+              "text": "Una feria del libro — a book fair."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "feria is inherited from Latin fēriae 'holidays, feast days' (EtymDB). Markets were held on feast days."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la feria",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la feria*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la feria, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la feria*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with la feria",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *la feria*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Spanish for the parade, then the Spanish for the procession, then say la feria again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Spanish for the parade, then the Spanish for the procession, then say *la feria* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does la feria mean? (\"The fair\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C559-carroza",
+      "sequence": 17610,
+      "title": "la carroza — the float (in a parade); the carriage",
+      "headword": "la carroza",
+      "romanization": "la carroza",
+      "gloss": "the float (in a parade); the carriage",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6fdc06f072f9503c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Spanish for the procession, then the Spanish for the fair."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: la carroza",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la carroza — \"the float (in a parade); the carriage\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Los niños saludaban desde las carrozas. The children waved from the floats."
+            },
+            {
+              "kind": "speech",
+              "text": "La carroza de los Reyes Magos — the Three Kings' float on 5 January."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "carroza was borrowed from Italian carrozza 'a carriage', built on carro 'a cart', which comes from Latin carrus (Lewis & Short)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la carroza",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la carroza*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la carroza, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la carroza*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with la carroza",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *la carroza*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Spanish for the procession, then the Spanish for the fair, then say la carroza again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Spanish for the procession, then the Spanish for the fair, then say *la carroza* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does la carroza mean? (\"The float (in a parade); the carriage\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C559-multitud",
+      "sequence": 17620,
+      "title": "la multitud — the crowd",
+      "headword": "la multitud",
+      "romanization": "la multitud",
+      "gloss": "the crowd",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8eec91781f565653",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Spanish for the fair, then the Spanish for the float."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: la multitud",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la multitud — \"the crowd\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Una multitud esperaba en la plaza. A crowd was waiting in the square."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "multitud is a learned borrowing from Latin multitūdō 'a great number' (EtymDB), built on multus 'much, many'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la multitud",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la multitud*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la multitud, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la multitud*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with la multitud",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *la multitud*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Spanish for the fair, then the Spanish for the float, then say la multitud again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Spanish for the fair, then the Spanish for the float, then say *la multitud* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does la multitud mean? (\"The crowd\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-R559-repaso-552-559",
+      "sequence": 17630,
+      "title": "Repaso de los capítulos 552–559",
+      "headword": "(dialogue)",
+      "romanization": "(dialogue)",
+      "gloss": "a review of chapters 552-559",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:09a275658f402a34",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Spanish for the immigrant and the exile."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the immigrant, the exile, the refugee, the border, to become independent",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the immigrant, the exile, the refugee, the border, to become independent]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the replacement, the promotion, the final settlement, to dismiss, to resign",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the replacement, the promotion, the final settlement, to dismiss, to resign]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to graduate, the graduation, to get a degree, the age of majority, to grow old",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to graduate, the graduation, to get a degree, the age of majority, to grow old]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "old age, elderly, death, dead, the deceased",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: old age, elderly, death, dead, the deceased]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the burial, to bury, the wake, the grave, the cemetery",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the burial, to bury, the wake, the grave, the cemetery]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mourning, the death notice, the condolences, the coffin, the inheritance",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: mourning, the death notice, the condolences, the coffin, the inheritance]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the celebration, to celebrate, to commemorate, the tribute, to open",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the celebration, to celebrate, to commemorate, the tribute, to open]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the parade, the procession, the fair, the float, the crowd",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the parade, the procession, the fair, the float, the crowd]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The immigrant? (el inmigrante.) The exile? (el exilio.) The refugee? (el refugiado.) The border? (la frontera.) To become independent? (independizarse.) The replacement? (el relevo.) The promotion? (el ascenso.) The final settlement? (el finiquito.) To dismiss? (despedir.) To resign? (renunciar.) To graduate? (graduarse.) The graduation? (la graduación.) To get a degree? (licenciarse.) The age of majority? (la mayoría de edad.) To grow old? (envejecer.) Old age? (la vejez.) Elderly? (anciano.) Death? (la muerte.) Dead? (muerto.) The deceased? (el difunto.) The burial? (el entierro.) To bury? (enterrar.) The wake? (el velatorio.) The grave? (la tumba.) The cemetery? (el cementerio.) Mourning? (el luto.) The death notice? (la esquela.) The condolences? (el pésame.) The coffin? (el ataúd.) The inheritance? (la herencia.) The celebration? (la celebración.) To celebrate? (festejar.) To commemorate? (conmemorar.) The tribute? (el homenaje.) To open? (inaugurar.) The parade? (el desfile.) The procession? (la procesión.) The fair? (la feria.) The float? (la carroza.) The crowd? (la multitud.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -1,0 +1,9 @@
+{
+  "id": "ES-PATH-730-ENCANTO",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "ES-EXT-730-ENCANTO"
+  ],
+  "after": []
+}

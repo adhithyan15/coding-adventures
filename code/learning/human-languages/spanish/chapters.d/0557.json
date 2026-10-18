@@ -1,0 +1,19 @@
+{
+  "chapter": 557,
+  "title": "De luto",
+  "label": "ch:es-de-luto",
+  "canDo": "I can talk about mourning: a death notice, condolences, the coffin and what someone inherited.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "ES-C557-herencia",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 557: I can talk about mourning: a death notice, condolences, the coffin and what someone inherited.",
+    "assesses": [
+      "ES-LEX-C557-LUTO-03",
+      "ES-LEX-C557-LUTO-04",
+      "ES-LEX-C557-LUTO-05"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C522-carcel",
+    "language": "spanish",
+    "chapter": 522,
+    "sequence": 15730,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:312c2d0db6eccae3"
+  },
+  "findings": []
+}

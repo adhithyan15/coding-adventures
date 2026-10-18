@@ -1,0 +1,8 @@
+{
+  "id": "ES-EXT-679-SERVICIOS",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can find the police station, the embassy, the tobacconist, stamps and the toilets.",
+  "prerequisites": []
+}

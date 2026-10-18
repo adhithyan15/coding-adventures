@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 668,
+  "sourceHash": "fnv1a64:8e2908a763891c4d",
+  "lessonIds": [
+    "ES-C668-deshacer",
+    "ES-C668-empaquetar",
+    "ES-C668-bascula",
+    "ES-C668-exceso",
+    "ES-C668-arrastrar"
+  ],
+  "tex": "spanish/book/chapters/ch668-hacer-y-deshacer-el-equipaje.tex"
+}

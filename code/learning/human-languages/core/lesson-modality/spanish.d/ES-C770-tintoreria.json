@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C770-tintoreria",
+    "language": "spanish",
+    "chapter": 770,
+    "sequence": 28500,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:578972b0e55d3835"
+  },
+  "findings": []
+}

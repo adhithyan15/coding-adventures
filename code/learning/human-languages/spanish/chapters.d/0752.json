@@ -1,0 +1,19 @@
+{
+  "chapter": 752,
+  "title": "Juegos de mesa",
+  "label": "ch:es-juegos-de-mesa",
+  "canDo": "I can talk about board games, cards, puzzles, magic tricks and betting.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "ES-C752-apostar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 752: I can talk about board games, cards, puzzles, magic tricks and betting.",
+    "assesses": [
+      "ES-LEX-C752-JUEGOS-03",
+      "ES-LEX-C752-JUEGOS-04",
+      "ES-LEX-C752-JUEGOS-05"
+    ]
+  }
+}

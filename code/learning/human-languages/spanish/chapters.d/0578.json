@@ -1,0 +1,19 @@
+{
+  "chapter": 578,
+  "title": "No estoy de acuerdo",
+  "label": "ch:es-no-estoy-de-acuerdo",
+  "canDo": "I can say politely that I disagree, that I am against something or in favour of it.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "ES-C578-contrario",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 578: I can say politely that I disagree, that I am against something or in favour of it.",
+    "assesses": [
+      "ES-LEX-C578-DESACUER-03",
+      "ES-LEX-C578-DESACUER-04",
+      "ES-LEX-C578-DESACUER-05"
+    ]
+  }
+}

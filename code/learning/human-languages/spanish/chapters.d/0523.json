@@ -1,0 +1,19 @@
+{
+  "chapter": 523,
+  "title": "El preso",
+  "label": "ch:es-el-preso",
+  "canDo": "I can say that someone was accused, confessed, testified and was set free.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "ES-C523-liberar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 523: I can say that someone was accused, confessed, testified and was set free.",
+    "assesses": [
+      "ES-LEX-C523-PRESO-03",
+      "ES-LEX-C523-PRESO-04",
+      "ES-LEX-C523-PRESO-05"
+    ]
+  }
+}

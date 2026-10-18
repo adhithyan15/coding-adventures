@@ -1,0 +1,9 @@
+{
+  "id": "ES-PATH-628-BANCO",
+  "spine_node": "SPINE-EXPRESS-CONDITION",
+  "before": [],
+  "inline": [
+    "ES-EXT-628-BANCO"
+  ],
+  "after": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C596-matricula",
+    "language": "spanish",
+    "chapter": 596,
+    "sequence": 19530,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:83b5e382df9fde0f"
+  },
+  "findings": []
+}

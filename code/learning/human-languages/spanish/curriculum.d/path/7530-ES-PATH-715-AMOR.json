@@ -1,0 +1,9 @@
+{
+  "id": "ES-PATH-715-AMOR",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "ES-EXT-715-AMOR"
+  ],
+  "after": []
+}

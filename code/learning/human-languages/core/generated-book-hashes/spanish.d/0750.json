@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 750,
+  "sourceHash": "fnv1a64:928484ee7330e6a3",
+  "lessonIds": [
+    "ES-C750-vinculo",
+    "ES-C750-mimar",
+    "ES-C750-convivir",
+    "ES-C750-colega",
+    "ES-C750-apoyo"
+  ],
+  "tex": "spanish/book/chapters/ch750-bajo-el-mismo-techo.tex"
+}

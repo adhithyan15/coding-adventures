@@ -1,0 +1,20 @@
+{
+  "language": "spanish",
+  "chapter": 519,
+  "sourceHash": "fnv1a64:3e2fc39eb942b59d",
+  "lessonIds": [
+    "ES-C519-detener",
+    "ES-C519-arrestar",
+    "ES-C519-detencion",
+    "ES-C519-patrulla",
+    "ES-C519-perseguir",
+    "ES-R519-repaso-512-519"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "spanish/narration/ch519.txt",
+  "json": "spanish/narration/ch519.json",
+  "textHash": "fnv1a64:31e595b1ef38de7b",
+  "jsonHash": "fnv1a64:86ce4909b0b5615f",
+  "findings": []
+}

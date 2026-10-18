@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C571-inventor",
+    "language": "spanish",
+    "chapter": 571,
+    "sequence": 18200,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e78e186c283cdcee"
+  },
+  "findings": []
+}

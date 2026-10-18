@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C644-motor",
+    "language": "spanish",
+    "chapter": 644,
+    "sequence": 22000,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:343eb18b0a0bebc8"
+  },
+  "findings": []
+}

@@ -1,0 +1,8 @@
+{
+  "id": "ES-EXT-632-PAGO",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can talk about paying, monthly payments, splitting a bill and a pension.",
+  "prerequisites": []
+}

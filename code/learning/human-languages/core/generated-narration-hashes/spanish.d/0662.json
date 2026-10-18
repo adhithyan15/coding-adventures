@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 662,
+  "sourceHash": "fnv1a64:907014f163a218ce",
+  "lessonIds": [
+    "ES-C662-localizador",
+    "ES-C662-modificar",
+    "ES-C662-confirmacion",
+    "ES-C662-penalizacion",
+    "ES-C662-cancelacion"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch662.txt",
+  "json": "spanish/narration/ch662.json",
+  "textHash": "fnv1a64:1c1d5606991d03e6",
+  "jsonHash": "fnv1a64:7d008f7ea6e99b8e",
+  "findings": []
+}

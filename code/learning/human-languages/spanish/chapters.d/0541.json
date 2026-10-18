@@ -1,0 +1,19 @@
+{
+  "chapter": 541,
+  "title": "Cuánto duró",
+  "label": "ch:es-cuanto-duro",
+  "canDo": "I can say how long something went on, what phase it was in and how the time went by.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "ES-C541-transcurrir",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 541: I can say how long something went on, what phase it was in and how the time went by.",
+    "assesses": [
+      "ES-LEX-C541-DURAR-03",
+      "ES-LEX-C541-DURAR-04",
+      "ES-LEX-C541-DURAR-05"
+    ]
+  }
+}

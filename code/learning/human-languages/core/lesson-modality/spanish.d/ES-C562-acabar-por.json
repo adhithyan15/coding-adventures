@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C562-acabar-por",
+    "language": "spanish",
+    "chapter": 562,
+    "sequence": 17750,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0d0cab6e3cd90b27"
+  },
+  "findings": []
+}

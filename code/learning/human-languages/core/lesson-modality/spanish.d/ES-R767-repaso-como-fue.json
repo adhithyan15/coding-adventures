@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-R767-repaso-como-fue",
+    "language": "spanish",
+    "chapter": 767,
+    "sequence": 28390,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f7e02506995767dd"
+  },
+  "findings": []
+}

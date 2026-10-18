@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 750,
+  "sourceHash": "fnv1a64:4eaee2b6302270fd",
+  "lessonIds": [
+    "ES-C750-vinculo",
+    "ES-C750-mimar",
+    "ES-C750-convivir",
+    "ES-C750-colega",
+    "ES-C750-apoyo"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch750.txt",
+  "json": "spanish/narration/ch750.json",
+  "textHash": "fnv1a64:5643af4094e0dcdd",
+  "jsonHash": "fnv1a64:ba6050c7bfc9f240",
+  "findings": []
+}

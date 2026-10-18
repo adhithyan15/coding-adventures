@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 518,
+  "sourceHash": "fnv1a64:9574471c60ce2e89",
+  "lessonIds": [
+    "ES-C518-robar",
+    "ES-C518-robo",
+    "ES-C518-sospechoso",
+    "ES-C518-atracar",
+    "ES-C518-huir"
+  ],
+  "tex": "spanish/book/chapters/ch518-un-robo-en-el-barrio.tex"
+}

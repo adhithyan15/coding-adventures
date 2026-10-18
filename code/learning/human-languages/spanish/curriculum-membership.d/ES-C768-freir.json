@@ -1,0 +1,11 @@
+{
+  "id": "ES-C768-freir",
+  "pathSegment": "ES-PATH-768-COCINAR",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ES-EXT-768-COCINAR",
+      "order": 1
+    }
+  ]
+}

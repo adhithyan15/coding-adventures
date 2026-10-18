@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C541-duracion",
+    "language": "spanish",
+    "chapter": 541,
+    "sequence": 16680,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6c2acd4d6323ba88"
+  },
+  "findings": []
+}

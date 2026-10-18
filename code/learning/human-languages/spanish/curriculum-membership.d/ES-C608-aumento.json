@@ -1,0 +1,11 @@
+{
+  "id": "ES-C608-aumento",
+  "pathSegment": "ES-PATH-608-AUMENTA",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ES-EXT-608-AUMENTA",
+      "order": 2
+    }
+  ]
+}

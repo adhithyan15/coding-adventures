@@ -1,0 +1,19 @@
+{
+  "chapter": 653,
+  "title": "La puerta de embarque",
+  "label": "ch:es-la-puerta-de-embarque",
+  "canDo": "I can go through security and board: the tray for my things, the metal detector, stopovers and boarding times.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "ES-C653-escala",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 653: I can go through security and board: the tray for my things, the metal detector, stopovers and boarding times.",
+    "assesses": [
+      "ES-LEX-C653-EMBARQUE-03",
+      "ES-LEX-C653-EMBARQUE-04",
+      "ES-LEX-C653-EMBARQUE-05"
+    ]
+  }
+}

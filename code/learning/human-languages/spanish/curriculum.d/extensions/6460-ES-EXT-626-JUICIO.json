@@ -1,0 +1,8 @@
+{
+  "id": "ES-EXT-626-JUICIO",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can follow a short news item about a court, a charge, a verdict and a fraud.",
+  "prerequisites": []
+}

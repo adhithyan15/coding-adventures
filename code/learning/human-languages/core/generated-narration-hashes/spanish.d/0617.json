@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 617,
+  "sourceHash": "fnv1a64:0a22c361c80306a4",
+  "lessonIds": [
+    "ES-C617-decision",
+    "ES-C617-opcion",
+    "ES-C617-dilema",
+    "ES-C617-prioridad",
+    "ES-C617-criterio"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch617.txt",
+  "json": "spanish/narration/ch617.json",
+  "textHash": "fnv1a64:fbe064cdbfff4b63",
+  "jsonHash": "fnv1a64:5b1035ef7e1396ac",
+  "findings": []
+}

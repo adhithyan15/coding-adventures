@@ -1,0 +1,9 @@
+{
+  "id": "ES-PATH-529-BOMBA",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "ES-EXT-529-BOMBA"
+  ],
+  "after": []
+}

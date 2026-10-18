@@ -1,0 +1,11 @@
+{
+  "id": "ES-C612-de-lo-contrario",
+  "pathSegment": "ES-PATH-612-SINO",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ES-EXT-612-SINO",
+      "order": 2
+    }
+  ]
+}

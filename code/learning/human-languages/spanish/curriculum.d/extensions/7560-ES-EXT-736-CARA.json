@@ -1,0 +1,8 @@
+{
+  "id": "ES-EXT-736-CARA",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can describe a face: the forehead, cheeks, chin, beard and ears.",
+  "prerequisites": []
+}

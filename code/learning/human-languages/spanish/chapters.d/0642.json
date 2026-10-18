@@ -1,0 +1,19 @@
+{
+  "chapter": 642,
+  "title": "En ruta",
+  "label": "ch:es-en-ruta",
+  "canDo": "I can follow a road trip: the ring road, the hard shoulder, potholes, tolls and each stretch of the way.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "ES-C642-tramo",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 642: I can follow a road trip: the ring road, the hard shoulder, potholes, tolls and each stretch of the way.",
+    "assesses": [
+      "ES-LEX-C642-CARRETERA-03",
+      "ES-LEX-C642-CARRETERA-04",
+      "ES-LEX-C642-CARRETERA-05"
+    ]
+  }
+}

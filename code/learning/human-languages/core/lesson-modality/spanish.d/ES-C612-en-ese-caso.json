@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C612-en-ese-caso",
+    "language": "spanish",
+    "chapter": 612,
+    "sequence": 20370,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:30a3a4ed8b5b0af9"
+  },
+  "findings": []
+}

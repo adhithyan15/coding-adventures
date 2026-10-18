@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C678-visitar",
+    "language": "spanish",
+    "chapter": 678,
+    "sequence": 23740,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c7835808f78736fa"
+  },
+  "findings": []
+}

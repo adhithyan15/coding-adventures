@@ -1,0 +1,9 @@
+{
+  "id": "ES-PATH-590-VACANTE",
+  "spine_node": "SPINE-GIVE-REASONS",
+  "before": [],
+  "inline": [
+    "ES-EXT-590-VACANTE"
+  ],
+  "after": []
+}

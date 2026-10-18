@@ -1,0 +1,11 @@
+{
+  "id": "ES-C517-observar",
+  "pathSegment": "ES-PATH-517-TESTIGO",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ES-EXT-517-TESTIGO",
+      "order": 2
+    }
+  ]
+}
