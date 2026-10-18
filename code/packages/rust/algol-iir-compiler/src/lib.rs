@@ -4679,7 +4679,7 @@ impl Compiler {
         node: &'n GrammarASTNode,
     ) -> Option<&'n GrammarASTNode> {
         let operand = self.builtin_sign_operand_unchecked(node)?;
-        (self.builtin_sign_unit_offset_count(node)? <= 41).then_some(operand)
+        (self.builtin_sign_unit_offset_count(node)? <= 42).then_some(operand)
     }
 
     fn builtin_sign_unit_offset_count(&self, node: &GrammarASTNode) -> Option<usize> {
@@ -4764,6 +4764,7 @@ impl Compiler {
                                     39.0 => 39,
                                     40.0 => 40,
                                     41.0 => 41,
+                                    42.0 => 42,
                                     _ => return None,
                                 };
                                 count = count.checked_add(units)?;
@@ -4885,6 +4886,7 @@ impl Compiler {
                                         | 39.0
                                         | 40.0
                                         | 41.0
+                                        | 42.0
                                 )
                             {
                                 return None;
@@ -14448,7 +14450,7 @@ mod tests {
     }
 
     #[test]
-    fn al4_runtime_real_calling_selectors_allow_forty_one_unit_offset_bounded_local_name_actual_branches()
+    fn al4_runtime_real_calling_selectors_allow_forty_two_unit_offset_bounded_local_name_actual_branches()
     {
         for source in [
             "begin boolean procedure choose; choose := true; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := if choose() then relay(entier(entier(sign(left)) + 1)) else relay(entier(entier(sign(right)) + 1)); output(result) end",
@@ -14535,10 +14537,12 @@ mod tests {
             "begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := relay(entier(if choose() then (entier(sign(left)) + 40) else ((entier(sign(right)) + 20) + 20))); output(result) end",
             "begin boolean procedure choose; choose := true; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := if choose() then relay(entier(entier(sign(left)) + 41)) else relay(entier(entier(sign(right)) + 41)); output(result) end",
             "begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := relay(entier(if choose() then (entier(sign(left)) + 41) else ((entier(sign(right)) + 20) + 21))); output(result) end",
+            "begin boolean procedure choose; choose := true; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := if choose() then relay(entier(entier(sign(left)) + 42)) else relay(entier(entier(sign(right)) + 42)); output(result) end",
+            "begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := relay(entier(if choose() then (entier(sign(left)) + 42) else ((entier(sign(right)) + 21) + 21))); output(result) end",
         ] {
             let module = compile_source(source, "test").unwrap_or_else(|error| {
                 panic!(
-                    "a calling selector may choose a forty-one-unit-offset bounded local transform through real name formals for {source:?}: {error}"
+                    "a calling selector may choose a forty-two-unit-offset bounded local transform through real name formals for {source:?}: {error}"
                 )
             });
             let main = module.get_function("main").expect("has main");
@@ -14571,9 +14575,9 @@ mod tests {
             "begin boolean procedure choose; choose := true; real procedure pick; pick := 2.25; real procedure relay(x); real x; relay := x; real left, right, result; left := pick(); right := pick(); result := if choose() then relay(entier(sign(left)) ^ right) else relay(entier(sign(right)) ^ left); output(result) end",
             "begin boolean procedure choose; choose := true; real procedure pick; pick := 2.25; real procedure relay(x); real x; relay := x; real left, right, result; left := pick(); right := pick(); result := if choose() then relay(entier(abs(entier(left)))) else relay(entier(abs(entier(right)))); output(result) end",
             "begin boolean procedure choose; choose := true; real procedure pick; pick := 2.25; integer procedure entier(x); value x; real x; entier := 1; real procedure relay(x); real x; relay := x; real left, right, result; left := pick(); right := pick(); result := if choose() then relay(entier(abs(entier(sign(left))))) else relay(entier(abs(entier(sign(right))))); output(result) end",
-            "begin boolean procedure choose; choose := true; real procedure pick; pick := 2.25; real procedure relay(x); real x; relay := x; real left, right, result; left := pick(); right := pick(); result := if choose() then relay(entier(entier(sign(left)) + 42)) else relay(entier(entier(sign(right)) + 42)); output(result) end",
-            "begin boolean procedure choose; choose := true; real procedure pick; pick := 2.25; real procedure relay(x); real x; relay := x; real left, right, result; left := pick(); right := pick(); result := if choose() then relay(entier(entier(sign(left)) + 41 + 1)) else relay(entier(entier(sign(right)) + 1 + 41)); output(result) end",
-            "begin boolean procedure choose; choose := true; real procedure pick; pick := 2.25; real procedure relay(x); real x; relay := x; real left, right, result; left := pick(); right := pick(); result := relay(entier((if choose() then (entier(sign(left)) + 41) else (entier(sign(right)) + 41)) + 1)); output(result) end",
+            "begin boolean procedure choose; choose := true; real procedure pick; pick := 2.25; real procedure relay(x); real x; relay := x; real left, right, result; left := pick(); right := pick(); result := if choose() then relay(entier(entier(sign(left)) + 43)) else relay(entier(entier(sign(right)) + 43)); output(result) end",
+            "begin boolean procedure choose; choose := true; real procedure pick; pick := 2.25; real procedure relay(x); real x; relay := x; real left, right, result; left := pick(); right := pick(); result := if choose() then relay(entier(entier(sign(left)) + 42 + 1)) else relay(entier(entier(sign(right)) + 1 + 42)); output(result) end",
+            "begin boolean procedure choose; choose := true; real procedure pick; pick := 2.25; real procedure relay(x); real x; relay := x; real left, right, result; left := pick(); right := pick(); result := relay(entier((if choose() then (entier(sign(left)) + 42) else (entier(sign(right)) + 42)) + 1)); output(result) end",
         ] {
             let err = compile_source(source, "test").expect_err(
                 "a calling selector must not admit transformed locals or overridden builtins",
@@ -14961,10 +14965,12 @@ mod tests {
             "begin real procedure pick; pick := -2.25; real procedure relay(x); real x; relay := x; output(relay(entier(abs((sign(pick()) + 20) + 20)))) end",
             "begin real procedure pick; pick := -2.25; real procedure relay(x); real x; relay := x; output(relay(entier(entier(sign(pick())) + 41))) end",
             "begin real procedure pick; pick := -2.25; real procedure relay(x); real x; relay := x; output(relay(entier(abs((sign(pick()) + 20) + 21)))) end",
+            "begin real procedure pick; pick := -2.25; real procedure relay(x); real x; relay := x; output(relay(entier(entier(sign(pick())) + 42))) end",
+            "begin real procedure pick; pick := -2.25; real procedure relay(x); real x; relay := x; output(relay(entier(abs((sign(pick()) + 21) + 21)))) end",
         ] {
             let module = compile_source(source, "test").unwrap_or_else(|error| {
                 panic!(
-                    "an exact additive zero or forty-one-unit offset preserves the bounded sign result through entier for {source:?}: {error}"
+                    "an exact additive zero or forty-two-unit offset preserves the bounded sign result through entier for {source:?}: {error}"
                 )
             });
             let main = module.get_function("main").expect("has main");
@@ -14979,14 +14985,14 @@ mod tests {
     #[test]
     fn al4_additive_entier_sign_widening_rejects_unproven_terms() {
         for source in [
-            "begin real procedure pick; pick := -2.25; real result; result := entier(sign(pick()) + 42); output(result) end",
-            "begin real procedure pick; pick := -2.25; real result; result := entier(sign(pick()) + 41 + 1); output(result) end",
-            "begin real procedure pick; pick := -2.25; real result; result := entier((sign(pick()) + 41) + 1); output(result) end",
-            "begin real procedure pick; pick := -2.25; real result; result := entier(abs((sign(pick()) + 21) + 21)); output(result) end",
+            "begin real procedure pick; pick := -2.25; real result; result := entier(sign(pick()) + 43); output(result) end",
+            "begin real procedure pick; pick := -2.25; real result; result := entier(sign(pick()) + 42 + 1); output(result) end",
+            "begin real procedure pick; pick := -2.25; real result; result := entier((sign(pick()) + 42) + 1); output(result) end",
+            "begin real procedure pick; pick := -2.25; real result; result := entier(abs((sign(pick()) + 21) + 22)); output(result) end",
             "begin real procedure pick; pick := -2.25; integer zero; real result; zero := 0; result := entier(sign(pick()) + zero); output(result) end",
         ] {
             let err = compile_source(source, "test")
-                .expect_err("more than forty-one additive units or a variable term exceeds the bounded sign proof");
+                .expect_err("more than forty-two additive units or a variable term exceeds the bounded sign proof");
             assert!(format!("{err:?}").contains("cannot print a real value"));
         }
     }
