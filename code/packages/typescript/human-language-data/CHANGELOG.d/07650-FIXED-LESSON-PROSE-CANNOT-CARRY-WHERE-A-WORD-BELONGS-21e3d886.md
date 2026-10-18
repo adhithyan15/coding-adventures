@@ -39,7 +39,7 @@
   left for its own change); French's spaced `?`; the quiz and table blanks in
   ES-C03-como and GU-W22-ttha; the punctuation lessons of Malayalam, Kannada,
   Marathi and Russian; TypeScript `??` in backlog entries; URL query strings.
-  The ASCII-only `spanish/changelog.d/a1-vocab-04.md` writes `¿Cuántos años`
+  The ASCII-only `spanish/change-notes.d/a1-vocab-04.md` writes `¿Cuántos años`
   as `?Cuantos anos` on purpose throughout and is not lesson prose.
 - Regenerated: Japanese book chapters 1-6, narration ch01-ch06, their
   generated book and narration hashes, and 25 `core/lesson-modality` owners.
