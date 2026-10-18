@@ -299,6 +299,8 @@ class CIGateRegistryTests(unittest.TestCase):
             "python3 -m unittest discover -s code/scripts/tests -p 'test_bezier2d_flattening_conformance.py'",
             "python3 code/scripts/starlark_opcode_provider_conformance.py",
             "python3 -m unittest discover -s code/scripts/tests -p 'test_starlark_opcode_provider_conformance.py'",
+            "python3 code/scripts/compiler_ir_conformance.py",
+            "python3 -m unittest discover -s code/scripts/tests -p 'test_compiler_ir_conformance.py'",
         )
         lines = step.split("        run: |\n", 1)[1].splitlines()
         self.assertNotRegex(
