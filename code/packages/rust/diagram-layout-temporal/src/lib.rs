@@ -102,8 +102,9 @@ fn layout_timeline(
     let title_height = timeline_finite(size * 2.5)?.max(40.0);
     let section_height = timeline_finite(size * 1.875)?.max(30.0);
     let minimum_card_height = timeline_finite(size * 3.0)?.max(48.0);
-    let event_height = timeline_finite(size * 1.875)?.max(30.0);
-    let event_pitch = timeline_finite(event_height + 8.0)?;
+    let minimum_event_height = timeline_finite(size * 1.875)?.max(30.0);
+    // Admit the minimum pitch eagerly even when no event label is visited.
+    timeline_finite(minimum_event_height + 8.0)?;
     let mut items = Vec::new();
     let width = cw.max(560.0);
     let padding = diagram.config.padding;
@@ -151,10 +152,12 @@ fn layout_timeline(
                     });
                     let event_x = card_x + card_width + 36.0;
                     let event_width = (width - event_x - padding).max(160.0);
-                    // The absolute cursor makes the represented addition order
-                    // explicit; a later variable event height can use the same stack.
+                    // Each original label supplies its own scalar estimate;
+                    // the absolute cursor preserves the represented stack order.
                     let mut event_y = y;
                     for event in &period.events {
+                        let event_height = timeline_period_height(event, event_width, size, minimum_event_height)?;
+                        let event_pitch = timeline_finite(event_height + 8.0)?;
                         items.push(LayoutedTemporalItem::TimelineEventLink {
                             x1: card_x + card_width,
                             y1: y + card_height / 2.0,
@@ -221,6 +224,8 @@ fn layout_timeline(
                     let event_start_y = timeline_finite(card_y + (card_height + 42.0))?;
                     let mut event_y = event_start_y;
                     for event in &period.events {
+                        let event_height = timeline_period_height(event, card_width, size, minimum_event_height)?;
+                        let event_pitch = timeline_finite(event_height + 8.0)?;
                         items.push(LayoutedTemporalItem::TimelineEventLink {
                             x1: x + card_width / 2.0,
                             y1: card_y + 24.0 + card_height,
@@ -279,7 +284,7 @@ fn layout_timeline(
     })
 }
 
-// This is a scalar-count estimate of a period's vertical space, not a font
+// This is a scalar-count estimate of period/event vertical space, not a font
 // measurement or a wrapped copy of its label. Keep each represented product
 // observable before max can hide overflow behind the role minimum.
 fn timeline_period_height(
