@@ -1041,11 +1041,14 @@ suffixes, and the native Metal-to-PNG path validates the complete family.
 
 The native ZenUML frontend accepts the documented title, participant ordering,
 aliases, Actor and Database annotators, and asynchronous `A->B: message` forms.
-It lowers into the shared Sequence IR, layout, and backend-neutral PaintScene
-pipeline, with a Metal-to-PNG fixture. Mermaid 11.16.1 delegates the broader
-language to external `@zenuml/core`; synchronous nesting, creation and reply
-messages, comments-as-notes, and control fragments remain unsupported and fail
-grammar validation rather than degrading silently.
+It also parses nested synchronous calls, creation and return statements, and
+if, loop, opt, parallel, and try-family scopes into shared Sequence messages,
+activations, participant lifecycle events, and control blocks. These semantics
+flow through the existing layout and backend-neutral PaintScene pipeline, with
+the upstream nested-call example covered by Metal-to-PNG validation. Mermaid
+11.16.1 delegates the broader language to external `@zenuml/core`; typed reply
+assignments, return annotators, comments-as-notes, and complete branch semantics
+remain unsupported and fail grammar validation rather than degrading silently.
 
 ### Structural Groups
 

@@ -3280,3 +3280,27 @@ fn zenuml_dispatches_to_shared_sequence_ir() {
         _ => panic!("zenuml should lower to shared sequence IR"),
     }
 }
+
+#[test]
+fn zenuml_parses_nested_sync_calls_controls_returns_and_creation() {
+    let diagram = parse_zenuml(
+        "zenuml\nnew Worker\nA.method() {\n  if(x) {\n    B.method() {\n      selfCall() { return X }\n    }\n  }\n}",
+    ).expect("nested ZenUML should parse");
+    assert!(diagram.participants.iter().any(|participant| participant.id == "Worker"));
+    assert!(diagram.events.iter().any(|event| matches!(
+        event, diagram_ir::SequenceEvent::ParticipantCreated { participant } if participant == "Worker"
+    )));
+    assert!(diagram.events.iter().any(|event| matches!(
+        event,
+        diagram_ir::SequenceEvent::BlockStart {
+            kind: diagram_ir::SequenceBlockKind::Alt,
+            ..
+        }
+    )));
+    assert!(diagram.events.iter().filter(|event| matches!(
+        event, diagram_ir::SequenceEvent::Activation { active: true, .. }
+    )).count() >= 3);
+    assert!(diagram.events.iter().any(|event| matches!(
+        event, diagram_ir::SequenceEvent::Message { label, .. } if label == "return X"
+    )));
+}
