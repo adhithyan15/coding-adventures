@@ -79,7 +79,7 @@ in `BACKLOG.md`.
 
 | kind | one item is | outstanding is counted in | tranche |
 |---|---|---|---|
-| `assessment-contract` | write one track's external/project target, four-skill pass rule, writing ramp and full-mock contract | tracks | 1 |
+| `assessment-contract` | activate one track's machine-readable pass contract after every artifact it references exists | tracks | 1 |
 | `external-capstone` | finish one declared non-CEFR capstone's missing evidence | artifacts | 1 |
 | `task-shape` | write one track/level four-skill performance shape | inventories | 1 |
 | `writing-stage` | close one track/level/stage evidence deficit | stages | 1 |
@@ -117,7 +117,7 @@ one track clears the floor.
 ### 4.2 Kind priority second
 
 ```
-1. assessment-contract the whole pass target, including productive writing
+1. assessment-contract the whole pass target, including productive writing, once its referenced evidence exists
 2. external-capstone   preserve a real destination without inventing CEFR equivalence
 3. task-shape          name what the candidate must read, hear, write and say
 4. writing-stage       build productive writing cumulatively from the first page
@@ -130,6 +130,19 @@ one track clears the floor.
 11. atom-budget        a ramp that got steeper is a regression, not a backlog item
 12. spine-nodes        functional coverage, the coarsest corpus criterion
 ```
+
+The priority of a *target* is not permission to publish a dangling
+`assessment.json`. A track may specify its external or project-defined target
+in `assessment-spec.md` before it has the inventories, scored tasks, rubrics,
+answer keys and timed mocks needed by the machine-readable contract. The
+assessment-artifact gate rejects new references to files that do not exist.
+Accordingly, a missing contract remains counted in the projection, but it is
+not a ready head item while those prerequisites are absent. The next executable
+item must name a concrete missing prerequisite; inventing a placeholder or
+raising the artifact-debt ceiling is not progress. This distinction is
+especially important when a project-defined precursor and an external exam
+share a CEFR label: source and reconcile the actual external task variant
+before treating the precursor as its target inventory.
 
 **Why `exam-point` moved above `vocabulary`, and it is the one ordering here
 changed against a measurement rather than an argument.** This spec originally put
