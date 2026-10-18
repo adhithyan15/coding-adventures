@@ -161,6 +161,7 @@ build_output.txt
 /code/packages/rust/html-parser/CHANGELOG.md
 /code/programs/mosaic/engram-app/CHANGELOG.md
 /code/programs/mosaic/journal-app/CHANGELOG.md
+/code/programs/mosaic/venture-browser/CHANGELOG.md
 # The monorepo changelog. `CHANGELOG.d/_meta.md` at the repository root is now
 # its entry point, the same rule the repo standard already applies to packages.
 /CHANGELOG.md

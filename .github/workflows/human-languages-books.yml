@@ -137,6 +137,7 @@ jobs:
               'code/packages/rust/html-parser/CHANGELOG.d/*.md'
               'code/programs/mosaic/engram-app/CHANGELOG.d/*.md'
               'code/programs/mosaic/journal-app/CHANGELOG.d/*.md'
+              'code/programs/mosaic/venture-browser/CHANGELOG.d/*.md'
               'CHANGELOG.d/*.md'
             )
             # The migration PR must replace the one provisional Script Ductus
@@ -238,6 +239,7 @@ jobs:
             code/packages/rust/html-parser/CHANGELOG.md \
             code/programs/mosaic/engram-app/CHANGELOG.md \
             code/programs/mosaic/journal-app/CHANGELOG.md \
+            code/programs/mosaic/venture-browser/CHANGELOG.md \
             CHANGELOG.md)
           if [ -n "$tracked_doc_monoliths" ]; then
             echo "::error::Generated Markdown aggregates must remain untracked:"

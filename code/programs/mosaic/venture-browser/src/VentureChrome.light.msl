@@ -36,6 +36,9 @@ style VentureChrome {
     background : "#e8e2d6" ;
     padding : 7 ;
     gap : 6 ;
+    // Button rows wrap rather than overflow a narrow window (1024 points
+    // overflowed by 159 before this).
+    flex-wrap : wrap ;
     align : center-vertical ;
     border-bottom-width : 1 ;
     border-bottom-color : "#c8c0b1" ;
@@ -44,6 +47,9 @@ style VentureChrome {
     background : "#e4ded1" ;
     padding : 8 ;
     gap : 6 ;
+    // Button rows wrap rather than overflow a narrow window (1024 points
+    // overflowed by 159 before this).
+    flex-wrap : wrap ;
     align : center-vertical ;
     border-bottom-width : 1 ;
     border-bottom-color : "#c8c0b1" ;

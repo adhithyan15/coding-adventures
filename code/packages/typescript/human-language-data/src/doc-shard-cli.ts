@@ -499,6 +499,15 @@ export const DOC_SHARD_PLANS: readonly DocShardPlan[] = [
     newestFirst: true,
     entryShape: "bullet",
   },
+  {
+    // 108 top-level bullets under `## [Unreleased]`, newest first. Held back
+    // from the Mosaic batch while any change here ran a live Flutter test
+    // that failed on an overflowing toolbar; that test passes again.
+    path: "code/programs/mosaic/venture-browser/CHANGELOG.md",
+    headingLevel: 2,
+    newestFirst: true,
+    entryShape: "bullet",
+  },
 ];
 
 const BACKLOG_PATH = "code/learning/human-languages/BACKLOG.md";
