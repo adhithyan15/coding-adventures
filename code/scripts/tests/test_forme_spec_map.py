@@ -323,7 +323,7 @@ class FormeSpecMapTests(unittest.TestCase):
             "an unfinished roadmap must have exactly one active item; a completed roadmap must have none",
         )
 
-    def test_release_quality_milestone_is_closed(self) -> None:
+    def test_release_quality_milestone_is_closed_and_audit_gaps_are_tracked(self) -> None:
         roadmap = (SPECS / "FM00-forme-completion-roadmap.md").read_text(
             encoding="utf-8"
         )
@@ -339,13 +339,14 @@ class FormeSpecMapTests(unittest.TestCase):
             roadmap,
         )
         self.assertIn("Authoring v1 is complete.", roadmap)
-        self.assertRegex(
-            roadmap, r"No actionable Forme completion\s+backlog remains\."
+        self.assertIn(
+            "| 72 | FM-B073 | active | Implement the declarative TOML pipeline form |",
+            roadmap,
         )
-        backlog = roadmap.split("## Prioritized backlog\n", 1)[1].split(
-            "## Dependency path\n", 1
-        )[0]
-        self.assertNotRegex(backlog, r"\| (?:active|ready|blocked|later) \|")
+        self.assertIn(
+            "| 73 | FM-B074 | ready | Enforce plugin extension-kind subtype compatibility |",
+            roadmap,
+        )
 
     def test_forme_spec_markdown_links_resolve(self) -> None:
         for path in sorted(SPECS.glob("FM[0-9][0-9]-*.md")):

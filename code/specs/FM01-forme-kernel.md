@@ -1,7 +1,8 @@
 # FM01 — Forme Kernel: Types, Kinds, Stages, Capabilities, Identity, Manifest
 
-> **Status:** Implemented through the completed Forme v1 release contract.
-> Read alongside FM00 (vision).
+> **Status:** Implemented through the completed Forme v1 release contract. The
+> 2026-10-18 audit found one remaining conformance gap in extension-kind subtype
+> enforcement, tracked as FM-B074. Read alongside FM00 (vision).
 > **Scope:** The kernel packages that every other Forme package imports —
 > `forme-types`, `forme-stage`, `forme-capability`, `forme-identity`,
 > `forme-manifest`, and the shared error model.
