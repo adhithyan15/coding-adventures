@@ -1082,3 +1082,6 @@ mod wardley_pipeline_derived_contract;
 
 #[cfg(test)]
 mod wardley_stage_derived_contract;
+
+#[cfg(test)]
+mod venn_normal_contract;
