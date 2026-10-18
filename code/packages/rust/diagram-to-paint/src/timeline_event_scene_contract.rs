@@ -179,6 +179,7 @@ mod timeline_event_scene_contract {
                                 ]
                             };
                             let cfg = TimelineConfig {
+                                font_family: "\"trebuchet ms\", verdana, arial, sans-serif".into(),
                                 padding,
                                 left_margin: margin,
                                 use_max_width: custom,

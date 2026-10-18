@@ -7,6 +7,7 @@ use mermaid_parser::parse_timeline;
 
 fn config(padding: f64, left_margin: f64) -> TimelineConfig {
     TimelineConfig {
+        font_family: "\"trebuchet ms\", verdana, arial, sans-serif".into(),
         padding,
         left_margin,
         use_max_width: false,

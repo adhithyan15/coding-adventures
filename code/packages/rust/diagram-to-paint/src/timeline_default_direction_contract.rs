@@ -13,6 +13,7 @@ fn default_and_explicit_direction_keep_complete_product_contracts() {
             TimelineDirection::LeftRight
         };
         let cfg = TimelineConfig {
+            font_family: "\"trebuchet ms\", verdana, arial, sans-serif".into(),
             padding: 50.0,
             left_margin: 50.0,
             use_max_width: false,

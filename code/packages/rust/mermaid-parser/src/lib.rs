@@ -4025,6 +4025,7 @@ fn parse_timeline_config(source: &str) -> TimelineConfig {
         sanitize_railroad_color(value.as_deref(), fallback)
     }).collect();
     TimelineConfig {
+        font_family: "\"trebuchet ms\", verdana, arial, sans-serif".into(),
         padding: nonnegative("padding", defaults.padding),
         left_margin: nonnegative("leftMargin", defaults.left_margin),
         use_max_width: boolean("useMaxWidth", defaults.use_max_width),
