@@ -8945,7 +8945,11 @@ where
                 }));
                 text_children.push(text_node(
                     label, *x + 12.0, *y + 8.0, *width - 24.0, 22.0,
-                    timeline_title_font.clone(), css_to_color(timeline_color(
+                    if diagram.timeline_config.is_some() {
+                        timeline_label_font.clone()
+                    } else {
+                        timeline_title_font.clone()
+                    }, css_to_color(timeline_color(
                         &timeline_config.section_label_colors, *color_index, "#0f172a",
                     )),
                 ));
