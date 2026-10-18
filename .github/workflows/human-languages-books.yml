@@ -114,6 +114,7 @@ jobs:
               'code/learning/human-languages/persian/CHANGELOG.d/*.md'
               'code/learning/human-languages/portuguese/CHANGELOG.d/*.md'
               'code/learning/human-languages/russian/CHANGELOG.d/*.md'
+              'code/learning/human-languages/spanish/CHANGELOG.d/*.md'
               'code/packages/typescript/human-language-data/CHANGELOG.d/*.md'
               'code/programs/typescript/language-ladder/CHANGELOG.d/*.md'
               'code/packages/rust/lang-aot/CHANGELOG.d/*.md'
@@ -189,6 +190,7 @@ jobs:
             code/learning/human-languages/persian/CHANGELOG.md \
             code/learning/human-languages/portuguese/CHANGELOG.md \
             code/learning/human-languages/russian/CHANGELOG.md \
+            code/learning/human-languages/spanish/CHANGELOG.md \
             code/learning/human-languages/bengali/roadmap.md \
             code/learning/human-languages/bengali/session-map.md \
             code/learning/human-languages/gujarati/roadmap.md \

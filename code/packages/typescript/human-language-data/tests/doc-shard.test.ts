@@ -91,6 +91,17 @@ const NINE_TRACK_CHANGELOG_BASELINES = [
   ["portuguese", 600, 101_509, 60, "94372738a3c3e74d0b764c46187999caa90ed1b9bd67b21fb255e29dbd8bd2f7"],
   ["russian", 450, 99_307, 45, "4d494ff7ab29dd75d4092dbf65f05ca236966bbac04bb67dd7a60e3daff883f8"],
 ] as const;
+const SPANISH_CHANGELOG = "code/learning/human-languages/spanish/CHANGELOG.md";
+const SPANISH_CHANGELOG_BASELINE = {
+  migrationMaxRank: 2_130,
+  bytes: 282_875,
+  sections: 213,
+  sha256: "920179feaeb01529e470fd103191083a80ea89126e99037cd9b6b041fae8cce1",
+} as const;
+const SPANISH_CHANGE_NOTES_BASELINE = {
+  files: 52,
+  sha256: "565c3c269747c9dc628aa9b92936184d3914923dd3db5777e7064ea0500a98d9",
+} as const;
 
 /**
  * The fewest entries for which sharding a document buys anything.
@@ -349,6 +360,95 @@ describe("nine-track changelog ownership", () => {
       expect(createHash("sha256").update(rendered).digest("hex")).toBe(sha256);
     },
   );
+});
+
+describe("Spanish changelog ownership", () => {
+  it("registers the final track changelog as a newest-first level-2 plan", () => {
+    expect(
+      DOC_SHARD_PLANS.find((candidate) => candidate.path === SPANISH_CHANGELOG),
+    ).toEqual({
+      path: SPANISH_CHANGELOG,
+      headingLevel: 2,
+      newestFirst: true,
+    });
+  });
+
+  it("removes the tracked aggregate projection", () => {
+    const monolith = safeDocumentPath(defaultRepoRoot(), SPANISH_CHANGELOG);
+    let cause: unknown;
+    try {
+      lstatSync(monolith);
+    } catch (error) {
+      cause = error;
+    }
+    expect(isAbsentErrno((cause as NodeJS.ErrnoException | undefined)?.code)).toBe(true);
+  });
+
+  it("preserves all pre-migration history byte-for-byte", () => {
+    const plan = DOC_SHARD_PLANS.find(
+      (candidate) => candidate.path === SPANISH_CHANGELOG,
+    );
+    expect(plan).toBeDefined();
+
+    const shards = readDocShards(
+      safeDocumentPath(defaultRepoRoot(), SPANISH_CHANGELOG),
+      plan!,
+    );
+    expect(shards).not.toBeNull();
+    const historical = new Map(
+      [...shards!].filter(
+        ([name]) =>
+          name === DOC_META_SHARD ||
+          Number(name.slice(0, 5)) <= SPANISH_CHANGELOG_BASELINE.migrationMaxRank,
+      ),
+    );
+    const rendered = joinDocShards(historical, plan!);
+
+    expect(Buffer.byteLength(rendered)).toBe(SPANISH_CHANGELOG_BASELINE.bytes);
+    expect(splitDocument(rendered, 2).sections).toHaveLength(
+      SPANISH_CHANGELOG_BASELINE.sections,
+    );
+    expect(createHash("sha256").update(rendered).digest("hex")).toBe(
+      SPANISH_CHANGELOG_BASELINE.sha256,
+    );
+  });
+
+  it("pins the ignored projection and shard whitespace policy", () => {
+    const root = defaultRepoRoot();
+    const ignore = readFileSync(join(root, ".gitignore"), "utf8");
+    const attributes = readFileSync(join(root, ".gitattributes"), "utf8");
+
+    expect(ignore.split("\n")).toContain(`/${SPANISH_CHANGELOG}`);
+    expect(attributes.split("\n")).toContain(
+      "code/learning/human-languages/spanish/CHANGELOG.d/*.md whitespace=-blank-at-eof",
+    );
+  });
+
+  it("preserves the legacy narrative reports under a case-distinct owner", () => {
+    const spanishRoot = join(
+      defaultRepoRoot(),
+      "code/learning/human-languages/spanish",
+    );
+    const directoryNames = readdirSync(spanishRoot);
+    expect(directoryNames).toContain("CHANGELOG.d");
+    expect(directoryNames).toContain("change-notes.d");
+    expect(directoryNames).not.toContain("changelog.d");
+
+    const notesRoot = join(spanishRoot, "change-notes.d");
+    const names = readdirSync(notesRoot)
+      .filter((name) => name.endsWith(".md"))
+      .sort();
+    const digest = createHash("sha256");
+    for (const name of names) {
+      digest.update(name);
+      digest.update("\0");
+      digest.update(readFileSync(join(notesRoot, name)));
+      digest.update("\0");
+    }
+
+    expect(names).toHaveLength(SPANISH_CHANGE_NOTES_BASELINE.files);
+    expect(digest.digest("hex")).toBe(SPANISH_CHANGE_NOTES_BASELINE.sha256);
+  });
 });
 
 // Each row carries the MAX PRE-MIGRATION SHARD RANK, and it is load-bearing.

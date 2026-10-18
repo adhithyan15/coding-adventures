@@ -39,7 +39,7 @@ Every track shares the same shape:
 ```text
 <language>/
   README.md                  what this track is, how to use it, current progress
-  CHANGELOG.d/               append-only per-chapter release-note owners in sharded tracks
+  CHANGELOG.d/               append-only per-chapter release-note owners
   CHANGELOG.md               ignored local view rendered from CHANGELOG.d when needed
   curriculum.d/              ordered shared-spine path + extensions, sharded by entry
   curriculum-membership.d/   one direct path/extension membership owner per lesson
@@ -51,10 +51,11 @@ Every track shares the same shape:
   book/                        authored LaTeX fragments + chapters; book.tex is projected on demand
 ```
 
-For every direct-owner track with a `CHANGELOG.d/`, add one ranked fragment
-there; never edit or commit the rendered `CHANGELOG.md`. The document-shard
-check rejects missing, malformed, linked, case-fold-colliding, or resurrected
-owners.
+For every track, add one ranked fragment to `CHANGELOG.d/`; never edit or
+commit the rendered `CHANGELOG.md`. The document-shard check rejects missing,
+malformed, linked, case-fold-colliding, or resurrected owners. Spanish also
+keeps 52 preserved historical implementation reports in `change-notes.d/`;
+those are not release-note shards and new changelog entries do not go there.
 
 The machine-readable layer alongside the tracks is:
 

@@ -115,10 +115,11 @@ export function defaultRepoRoot(): string {
  * package's `CHANGELOG.md` by 75, while the per-language `<track>/CHANGELOG.md`
  * files were touched 4-11 times each. A later post-#12968 measurement found 34
  * touches to Language Ladder's changelog, so #13211 added that third plan.
- * Per-language changelogs remain separate by default. Hindi became the measured
- * exception: 23 same-track commits touched its monolith in the window recorded
- * by #14245, so independently authored Hindi tranches were still serialized.
- * Malayalam followed at 25 touches in the 200-commit window after #15661.
+ * Hindi and Malayalam first established direct per-track ownership after their
+ * same-language contention crossed the measured threshold. Later audits
+ * migrated every remaining registered track; #17703 closed the final Spanish
+ * exception after its lowercase legacy `changelog.d/` reports moved to the
+ * case-distinct `change-notes.d/` path.
  */
 export const DOC_SHARD_PLANS: readonly DocShardPlan[] = [
   {
@@ -195,6 +196,14 @@ export const DOC_SHARD_PLANS: readonly DocShardPlan[] = [
       newestFirst: true,
     }),
   ),
+  {
+    // The post-#17701 audit found Spanish was the sole registered track still
+    // committing its projection. Its 213 independently authored entries use
+    // the same strict newest-first level-2 ownership as every other track.
+    path: "code/learning/human-languages/spanish/CHANGELOG.md",
+    headingLevel: 2,
+    newestFirst: true,
+  },
   // The exact-main audit after #17696 found nine non-Indian track changelogs
   // still receiving 11-19 touches per 200 scoped commits. Their release notes
   // have the same direct-owner shape: newest-first level-2 entries, rendered
