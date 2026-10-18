@@ -12,3 +12,8 @@ no write occurred. Keep the safety assertion tied to rejection and unchanged
 outside contents; accept the earlier, equally specific symlink diagnostic when
 a new preflight changes which guard runs first. Never bypass the preflight to
 make a message assertion pass.
+
+The complete Linux package suite later caught the file-symlink variant that a
+focused Windows run had skipped for lack of symlink privilege. When a gate
+changes evaluation order, audit all platform-conditional siblings and run the
+required platform suite on the exact PR head before calling CI complete.

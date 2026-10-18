@@ -539,7 +539,7 @@ describe("the generator refuses to write through a symlink", () => {
     mkdirSync(join(root, ARTIFACT_CEILING_DIR), { recursive: true });
     symlinkSync(victim, join(root, ARTIFACT_CEILING_DIR, "fixtura.json"), "file");
     expect(() => runAssessmentArtifactCli(["--write"], root, undefined, () => {}, () => {}))
-      .toThrow(/not a regular file — refusing to write through it/);
+      .toThrow(/is a symbolic link|not a regular file — refusing to write through it/);
     expect(readFileSync(victim, "utf8")).toBe("original\n");
   });
 
