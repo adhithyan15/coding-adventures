@@ -4,6 +4,9 @@
 
 ### Changed
 
+- `tests/launched.rs` ends its broker with `BrokerChild::end`, the
+  launcher's (D18S P2.8b-2).
+
 - **Windows key adoption** (D18S P2.8b-1). The broker no longer refuses to
   run on Windows (exit 69): it adopts exactly the handles named in
   `CHIEF_OF_STAFF_HANDLES`, one per slot in slot order, refusing (66) a

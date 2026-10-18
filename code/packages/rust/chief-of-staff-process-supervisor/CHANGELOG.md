@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+- A host's broker is held as the launcher's `BrokerChild` (D18S P2.8b-2).
+  Ending it, seeing its exit and reporting its id are therefore the same
+  code on every OS, and on Windows the broker is the applier's
+  `ConfinedChild`. Nothing else changes.
+
 - The host is spawned through `chief_of_staff_spawn_isolation::spawn`,
   under the process-wide spawn lock (D18S P2.8b-1), so on Windows it is
   never created inside the applier's inheritable span.
