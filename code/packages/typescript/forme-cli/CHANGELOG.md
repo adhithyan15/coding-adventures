@@ -6,8 +6,10 @@
   `forme.config.toml` after the canonical executable config names. Reads are
   bounded to the parser's one-MiB contract, require valid UTF-8, reject linked
   or special files, bind stable file identity across the read, and dispatch
-  only known extensions. Config-derived terminal output and diagnostics are
-  bounded and ASCII-escaped.
+  only known extensions. Identity and timestamps use exact bigint metadata;
+  Windows performs the potentially blocking open/read in a killable bounded
+  helper process. Config-derived terminal output and diagnostics are bounded
+  and ASCII-escaped.
 - Prove a declarative package-stage pipeline through the real `forme check`
   subprocess, installed-plugin discovery, FM02 resolution, and DAG validation.
 

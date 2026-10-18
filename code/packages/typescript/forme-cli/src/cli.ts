@@ -1,8 +1,10 @@
 import { createHash } from "node:crypto";
-import { constants, type Stats } from "node:fs";
+import { execFile } from "node:child_process";
+import { constants, type BigIntStats } from "node:fs";
 import { access, lstat, mkdir, open, rm, writeFile } from "node:fs/promises";
 import { dirname, extname, isAbsolute, relative, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
+import { promisify } from "node:util";
 import {
   ParseErrors,
   Parser,
@@ -43,6 +45,45 @@ export const EXIT_OK = 0;
 export const EXIT_BUILD_FAILED = 1;
 export const EXIT_USAGE_OR_CONFIG = 2;
 export const EXIT_CANCELLED = 130;
+
+const execFileAsync = promisify(execFile);
+const WINDOWS_CONFIG_READ_TIMEOUT_MS = 5_000;
+const WINDOWS_BOUNDED_READ_SCRIPT = String.raw`
+const fs = require("node:fs");
+const path = process.argv[1];
+const maximum = Number(process.argv[2]);
+const sameFile = (left, right) => left.dev === right.dev && left.ino === right.ino;
+const sameSnapshot = (left, right) => sameFile(left, right) &&
+  left.nlink === right.nlink && left.size === right.size &&
+  left.mtimeNs === right.mtimeNs && left.ctimeNs === right.ctimeNs;
+const safe = metadata => metadata.isFile() && !metadata.isSymbolicLink() && metadata.nlink === 1n;
+const before = fs.lstatSync(path, { bigint: true });
+if (!safe(before)) throw new Error("TOML config must be one unlinked regular file");
+let descriptor;
+try {
+  descriptor = fs.openSync(path, fs.constants.O_RDONLY);
+  const opened = fs.fstatSync(descriptor, { bigint: true });
+  if (!safe(opened) || !sameFile(before, opened)) throw new Error("TOML config changed while opening");
+  if (opened.size > BigInt(maximum)) throw new Error("TOML config exceeds its byte limit");
+  const buffer = Buffer.alloc(maximum + 1);
+  let offset = 0;
+  while (offset < buffer.length) {
+    const count = fs.readSync(descriptor, buffer, offset, buffer.length - offset, offset);
+    if (count === 0) break;
+    offset += count;
+  }
+  if (offset > maximum) throw new Error("TOML config exceeds its byte limit");
+  const afterHandle = fs.fstatSync(descriptor, { bigint: true });
+  const afterPath = fs.lstatSync(path, { bigint: true });
+  if (!safe(afterHandle) || !safe(afterPath) ||
+      !sameSnapshot(opened, afterHandle) || !sameFile(afterHandle, afterPath)) {
+    throw new Error("TOML config changed while reading");
+  }
+  process.stdout.write(buffer.subarray(0, offset).toString("base64"));
+} finally {
+  if (descriptor !== undefined) fs.closeSync(descriptor);
+}
+`;
 
 const DEFAULT_CONFIG_NAMES = [
   "forme.config.ts",
@@ -135,16 +176,17 @@ async function loadProjectConfig(path: string): Promise<PipelineConfig> {
  * The second size check closes the stat/read race if a file grows after stat.
  */
 async function readBoundedToml(path: string): Promise<string> {
-  const before = await lstat(path);
+  if (process.platform === "win32") return readBoundedTomlOnWindows(path);
+
+  const before = await lstat(path, { bigint: true });
   requireSafeConfigFile(before, path);
-  const flags = constants.O_RDONLY |
-    (process.platform === "win32" ? 0 : constants.O_NONBLOCK | constants.O_NOFOLLOW);
+  const flags = constants.O_RDONLY | constants.O_NONBLOCK | constants.O_NOFOLLOW;
   const handle = await open(path, flags);
   try {
-    const opened = await handle.stat();
+    const opened = await handle.stat({ bigint: true });
     requireSafeConfigFile(opened, path);
     if (!sameFile(before, opened)) throw new Error(`TOML config identity changed while opening: ${path}`);
-    if (opened.size > MAX_TOML_CONFIG_BYTES) {
+    if (opened.size > BigInt(MAX_TOML_CONFIG_BYTES)) {
       throw new Error(`TOML config exceeds ${MAX_TOML_CONFIG_BYTES}-byte limit: ${path}`);
     }
     const buffer = Buffer.alloc(MAX_TOML_CONFIG_BYTES + 1);
@@ -157,7 +199,10 @@ async function readBoundedToml(path: string): Promise<string> {
     if (offset > MAX_TOML_CONFIG_BYTES) {
       throw new Error(`TOML config exceeds ${MAX_TOML_CONFIG_BYTES}-byte limit: ${path}`);
     }
-    const [afterHandle, afterPath] = await Promise.all([handle.stat(), lstat(path)]);
+    const [afterHandle, afterPath] = await Promise.all([
+      handle.stat({ bigint: true }),
+      lstat(path, { bigint: true }),
+    ]);
     requireSafeConfigFile(afterHandle, path);
     requireSafeConfigFile(afterPath, path);
     if (!sameSnapshot(opened, afterHandle) || !sameFile(afterHandle, afterPath)) {
@@ -169,19 +214,39 @@ async function readBoundedToml(path: string): Promise<string> {
   }
 }
 
-function requireSafeConfigFile(metadata: Stats, path: string): void {
-  if (metadata.isSymbolicLink()) throw new Error(`TOML config must not be a symbolic link: ${path}`);
-  if (!metadata.isFile()) throw new Error(`TOML config is not a regular file: ${path}`);
-  if (metadata.nlink !== 1) throw new Error(`TOML config must not have multiple hard links: ${path}`);
+async function readBoundedTomlOnWindows(path: string): Promise<string> {
+  const maxBuffer = Math.ceil((MAX_TOML_CONFIG_BYTES + 1) * 4 / 3) + 1024;
+  const { stdout } = await execFileAsync(
+    process.execPath,
+    ["--eval", WINDOWS_BOUNDED_READ_SCRIPT, path, String(MAX_TOML_CONFIG_BYTES)],
+    {
+      encoding: "utf8",
+      maxBuffer,
+      timeout: WINDOWS_CONFIG_READ_TIMEOUT_MS,
+      killSignal: "SIGKILL",
+      windowsHide: true,
+    },
+  );
+  const bytes = Buffer.from(stdout, "base64");
+  if (bytes.byteLength > MAX_TOML_CONFIG_BYTES) {
+    throw new Error(`TOML config exceeds ${MAX_TOML_CONFIG_BYTES}-byte limit: ${path}`);
+  }
+  return new TextDecoder("utf-8", { fatal: true }).decode(bytes);
 }
 
-function sameFile(left: Stats, right: Stats): boolean {
+function requireSafeConfigFile(metadata: BigIntStats, path: string): void {
+  if (metadata.isSymbolicLink()) throw new Error(`TOML config must not be a symbolic link: ${path}`);
+  if (!metadata.isFile()) throw new Error(`TOML config is not a regular file: ${path}`);
+  if (metadata.nlink !== 1n) throw new Error(`TOML config must not have multiple hard links: ${path}`);
+}
+
+function sameFile(left: BigIntStats, right: BigIntStats): boolean {
   return left.dev === right.dev && left.ino === right.ino;
 }
 
-function sameSnapshot(left: Stats, right: Stats): boolean {
+function sameSnapshot(left: BigIntStats, right: BigIntStats): boolean {
   return sameFile(left, right) && left.nlink === right.nlink && left.size === right.size &&
-    left.mtimeMs === right.mtimeMs && left.ctimeMs === right.ctimeMs;
+    left.mtimeNs === right.mtimeNs && left.ctimeNs === right.ctimeNs;
 }
 
 export async function run(
