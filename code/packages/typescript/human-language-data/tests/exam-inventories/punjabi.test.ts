@@ -115,13 +115,15 @@ describe("the committed Punjabi A1 inventory", () => {
     // here, because the count still stops at panj -- PA-A1-NUM-02 and -03 are
     // both open -- so nothing above fifth can be said at all.
     // 137 -> 142: chapter 176 closes the coherent pointing-and-place tranche.
+    // 142 -> 147: chapter 177 closes noun gender, attributive position,
+    // adjective gender agreement, degree, and the multiword noun phrase.
     // DEM-02 and ADV-05 were already taught by the exact chapter-89 itthe/utthe
     // atoms and only needed honest wiring. DEM-01 adds the genuinely missing eh
     // beside chapter 42's oh; CASE-04 adds vich; S-06 adds the explicit
     // thing + location + hai frame. Five points move, and no unrelated noun-
     // phrase or place-name point comes with them.
-    expect(coverage.covered).toBe(142);
-    expect(coverage.unmapped).toBe(85);
+    expect(coverage.covered).toBe(147);
+    expect(coverage.unmapped).toBe(80);
     expect(coverage.partial).toBe(0);
     // THE HEADLINE, and it is the starkest of the three tracks measured in this
     // series. ZERO of eleven. Not one of `te`/`ate`, `jaan`, `par`/`lekin`,
@@ -189,7 +191,7 @@ describe("the committed Punjabi A1 inventory", () => {
     // the cardinals stop at five, so sixth upward cannot be said.
     expect(coverage.points.find((point) => point.id === "PA-A1-NUM-02")?.covered).toBe(false);
     expect(formatExamCoverage(coverage)).toContain(
-      "punjabi A1 (partial inventory): 142/227 points covered (63%)",
+      "punjabi A1 (partial inventory): 147/227 points covered (65%)",
     );
   }, 60_000);
 });

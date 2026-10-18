@@ -1,0 +1,19 @@
+{
+  "language": "punjabi",
+  "chapter": 177,
+  "sourceHash": "fnv1a64:01b67567f000a23d",
+  "lessonIds": [
+    "PA-C177-noun-gender",
+    "PA-C177-adjective-position",
+    "PA-C177-adjective-agreement",
+    "PA-C177-bahut",
+    "PA-C177-noun-phrase"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 4,
+  "text": "punjabi/narration/ch177.txt",
+  "json": "punjabi/narration/ch177.json",
+  "textHash": "fnv1a64:fd06d7a210ac99b3",
+  "jsonHash": "fnv1a64:fd58de4f4d51e480",
+  "findings": []
+}

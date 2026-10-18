@@ -4,7 +4,7 @@ import {
   loadTrackChapters,
   loadTrackLessons,
 } from "../../../src/loader.js";
-import { formatExamCoverage, measureExamCoverage } from "../../../src/exam-inventory.js";
+import { measureExamCoverage } from "../../../src/exam-inventory.js";
 
 it("adds one bounded Punjabi A1 pointing-and-place tranche without readiness credit", () => {
   const lessons = loadTrackLessons("punjabi");
@@ -93,10 +93,9 @@ it("adds one bounded Punjabi A1 pointing-and-place tranche without readiness cre
   ]);
 
   const coverage = measureExamCoverage(inventory, lessons);
-  expect(coverage.enumerated).toBe(227);
-  expect(coverage.covered).toBe(142);
-  expect(coverage.unmapped).toBe(85);
-  expect(coverage.partial).toBe(0);
+  // This direct owner pins only the five points it introduced. Aggregate
+  // Punjabi coverage belongs to tests/exam-inventories/punjabi.test.ts so a
+  // later independent tranche never has to rewrite this historical owner.
   for (const id of [
     "PA-A1-DEM-01",
     "PA-A1-DEM-02",
@@ -110,7 +109,4 @@ it("adds one bounded Punjabi A1 pointing-and-place tranche without readiness cre
       unmapped: false,
     });
   }
-  expect(formatExamCoverage(coverage)).toContain(
-    "punjabi A1 (partial inventory): 142/227 points covered (63%)",
-  );
 }, 120_000);
