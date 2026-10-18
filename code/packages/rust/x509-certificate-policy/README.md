@@ -36,11 +36,19 @@ or OAuth transport.
 use der_asn1::Asn1Limits;
 use x509_certificate::decode_x509_certificate;
 use x509_certificate_policy::{
-    validate_certificate_role_extensions, X509CertificateRole,
+    validate_certificate_role_extensions, validate_critical_extensions, X509CertificateRole,
 };
 
 # fn check(encoded: &[u8]) -> Result<(), Box<dyn std::error::Error>> {
 let certificate = decode_x509_certificate(encoded, Asn1Limits::default())?;
+// This deliberately closed example recognizes only the three extensions its
+// next gate decodes. A broader profile must validate every additional OID it
+// recognizes before assigning trust.
+validate_critical_extensions(&certificate, |oid| {
+    oid.equals(&[2, 5, 29, 19])
+        || oid.equals(&[2, 5, 29, 15])
+        || oid.equals(&[2, 5, 29, 37])
+})?;
 let evidence = validate_certificate_role_extensions(
     &certificate,
     X509CertificateRole::EndEntity,
