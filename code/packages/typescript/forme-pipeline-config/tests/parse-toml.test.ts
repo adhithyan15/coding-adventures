@@ -278,6 +278,8 @@ from = { id = "a" }`, /wires\[0\]\.to.*table/i],
 
   it("enforces source, token, nesting, string, and collection bounds", () => {
     expect(() => parseTomlConfig("#".repeat(1_048_577))).toThrow(/source.*1048576/i);
+    const tooManyTokens = Array.from({ length: 16_700 }, (_, index) => `k${index}=0`).join("\n");
+    expect(() => parseTomlConfig(tooManyTokens)).toThrow(/token count exceeds 50000-token limit/i);
     expect(() => parseTomlConfig(`name = "${"x".repeat(65_537)}"`)).toThrow(/string.*65536/i);
     expect(() => parseTomlConfig(`name = "deep"\nvalue = ${"[".repeat(65)}0${"]".repeat(65)}`))
       .toThrow(/nesting.*64/i);

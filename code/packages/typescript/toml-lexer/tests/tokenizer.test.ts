@@ -183,7 +183,7 @@ describe("multi-line literal strings (triple single-quoted)", () => {
   });
 
   it("rejects a lone carriage return in a multi-line literal string", () => {
-    expect(() => tokenizeTOML("'''x\ry'''" )).toThrow();
+    expect(() => tokenizeTOML("'''x\ry'''")).toThrow();
   });
 });
 

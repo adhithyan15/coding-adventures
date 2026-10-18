@@ -46,8 +46,17 @@ it("tokenizes thousands of short lines within a bounded deadline", () => {
     ],
   };
   const source = Array.from({ length: 2_000 }, (_, index) => `k${index}=1`).join("\n");
-  expect(grammarTokenize(source, grammar)).toHaveLength(7_999);
+  expect(grammarTokenize(source, grammar)).toHaveLength(8_000);
 }, 2_000);
+
+it("stops before emitting more tokens than the configured budget", () => {
+  const grammar: TokenGrammar = {
+    version: 1,
+    definitions: [{ name: "NAME", pattern: "[A-Za-z]+", isRegex: true }],
+  };
+  expect(() => grammarTokenize("a a a", grammar, { maxTokens: 3 }))
+    .toThrow(/token count exceeds 3-token limit/i);
+});
 
 // ---------------------------------------------------------------------------
 // Path resolution — locate the grammar files
