@@ -18,3 +18,9 @@ bytes directly, preserving all proposals before mutation and the old library's
 exact module-registration inverse. Pin the test body, prior receipt, explicit
 input additions/removals and helper as well. Keep the unexecuted preflight
 WITHHELD record; these corrections do not turn it into a successful execution.
+
+The native31 green-v1 helper was withheld before execution: an unpinned
+append receipt or fixture, name-only binary join and unspecified selected-target
+census could overstate evidence. Pin the reviewed objects, exact target source/
+kind and shared runtime executable bytes, and whitelist typed status labels.
+Keep selected library coverage distinct from a full reverse integration suite.
