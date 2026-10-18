@@ -44,14 +44,16 @@ it("pins Portuguese lesson-content budgets", () =>
     // 231-255. 125 word lessons (forty-five verbs) and two reviews per run of
     // at most nine chapters. No idiom, sense or culture claim. Portuguese
     // attains A2 here.
-    lessons: 1296,
+    // 1296 -> 1299: chapters 256-258, the A1 writing stages Portuguese had
+    // not proved. No new word or atom.
+    lessons: 1299,
     idioms: 7,
     senses: 7,
     cultureClaims: 11,
     unitPrefix: "PT",
   }));
 
-it("pins Portuguese's pre-A1 writing ladder, now complete", () => {
+it("pins Portuguese's writing ladder IN ORDER, pre-A1 through A1", () => {
   const portuguese = languageWritingStages("portuguese");
 
   // Was ["observe-trace", "guided-copy"] -- a foothold, and the pin said so.
@@ -65,6 +67,11 @@ it("pins Portuguese's pre-A1 writing ladder, now complete", () => {
     "guided-copy",
     "delayed-copy",
     "dictation-transcription",
+    // The three A1 stages, proved by the appended writing chapters. ORDER is
+    // the point: a timed or connected paper before a controlled one is invalid.
+    "controlled-composition",
+    "timed-assessment-production",
+    "connected-composition",
   ]);
   expect(portuguese.defects).toEqual([]);
   expect(portuguese.levels[0]).toMatchObject({

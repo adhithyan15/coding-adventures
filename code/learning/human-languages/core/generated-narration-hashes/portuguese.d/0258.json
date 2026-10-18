@@ -1,0 +1,15 @@
+{
+  "language": "portuguese",
+  "chapter": 258,
+  "sourceHash": "fnv1a64:22735d6c6be8de8a",
+  "lessonIds": [
+    "PT-W258-four-lines"
+  ],
+  "voiceLessons": 0,
+  "drivablePrefix": 0,
+  "text": "portuguese/narration/ch258.txt",
+  "json": "portuguese/narration/ch258.json",
+  "textHash": "fnv1a64:f0663cfe8e12c813",
+  "jsonHash": "fnv1a64:0a4001a1d51ea2da",
+  "findings": []
+}

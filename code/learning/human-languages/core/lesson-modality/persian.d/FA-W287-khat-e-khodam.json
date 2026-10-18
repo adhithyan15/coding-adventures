@@ -1,0 +1,28 @@
+{
+  "lesson": {
+    "id": "FA-W287-khat-e-khodam",
+    "language": "persian",
+    "chapter": 287,
+    "sequence": 14850,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "eyes-or-hands-step"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type",
+      "eyes-or-hands-step"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:13839f5d75dffa70",
+    "detachableSegments": [
+      "Writing — controlled composition"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

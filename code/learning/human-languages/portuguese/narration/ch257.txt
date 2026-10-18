@@ -1,0 +1,39 @@
+Portuguese, chapter 257: Writing --- With A Clock.
+1 lesson. It needs your eyes or your hands, so save it for when you have stopped.
+
+
+Lesson 1 of 1.
+The same writing, with a clock — the first part of the A1 writing paper against a short clock, and the pass rule that lets one paper carry another.
+
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped.
+
+Warm-up.
+[pause 2 seconds]
+You wrote your own line with as long as you liked.
+[pause 1 second]
+A task you can only do untimed is not yet a task you can do.
+
+Writing — timed production.
+What CAPLE publishes. This track's A1 target is ACESSO, from CAPLE at the University of Lisbon. It certifies A1 in four components, over about one hour and thirty-five minutes, and a pass is any overall result from 55% to 100%.
+What this page does not quote. This book has not checked how many minutes ACESSO gives its writing component, or how many words it asks for, so it gives you no such number.
+What this book's own A1 paper sets. Twenty minutes, in two parts: a practical form, then a 30–40 word message to a named reader. That shape is the project's own, read out of task-shapes/a1.json. It is not CAPLE's.
+[pause 2 seconds]
+Today, the first part only, against a short clock. Set a three-minute timer, then fill six fields, in Portuguese:
+your name;
+the city where you live;
+one language you speak;
+the city where you work;
+one day of the week you work;
+a number from one to ten, as a word.
+[pause 2 seconds]
+When the three-minute timer rings, stop, even mid-word.
+
+Wrap-up recall.
+[pause 2 seconds]
+Spend at most one minute checking. The marks come first: the accent on a day or a number, and the hyphen before feira.
+[pause 2 seconds]
+Now the rule worth carrying out of this lesson, because it changes how you study rather than how you write today.
+[pause 2 seconds]
+CAPLE passes ACESSO on one overall figure, 55%, across the four components. A strong reader can carry a weak writer.
+[pause 2 seconds]
+This book's contract is stricter: 60% on every paper, each on its own, and no total makes up for a paper that falls short. Study for the stricter rule. If writing is your weak paper, reading practice does not repair it.

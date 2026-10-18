@@ -1,0 +1,11 @@
+{
+  "id": "PT-W257-with-a-clock",
+  "pathSegment": "PT-PATH-256-WRITING",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PT-EXT-256-WRITING",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "PT-W256-my-own-line",
+  "pathSegment": "PT-PATH-256-WRITING",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "PT-EXT-256-WRITING",
+      "order": 0
+    }
+  ]
+}

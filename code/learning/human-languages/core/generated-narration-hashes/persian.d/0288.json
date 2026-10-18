@@ -1,0 +1,15 @@
+{
+  "language": "persian",
+  "chapter": 288,
+  "sourceHash": "fnv1a64:4c951e38d590d6c1",
+  "lessonIds": [
+    "FA-W288-ba-saat"
+  ],
+  "voiceLessons": 0,
+  "drivablePrefix": 0,
+  "text": "persian/narration/ch288.txt",
+  "json": "persian/narration/ch288.json",
+  "textHash": "fnv1a64:6234b63eec9da048",
+  "jsonHash": "fnv1a64:0971b6aa3e98ce43",
+  "findings": []
+}

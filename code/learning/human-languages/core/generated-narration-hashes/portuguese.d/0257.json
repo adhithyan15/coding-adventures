@@ -1,0 +1,15 @@
+{
+  "language": "portuguese",
+  "chapter": 257,
+  "sourceHash": "fnv1a64:f0d5808e89e2ea3e",
+  "lessonIds": [
+    "PT-W257-with-a-clock"
+  ],
+  "voiceLessons": 0,
+  "drivablePrefix": 0,
+  "text": "portuguese/narration/ch257.txt",
+  "json": "portuguese/narration/ch257.json",
+  "textHash": "fnv1a64:b970f68e3642b2f5",
+  "jsonHash": "fnv1a64:5eab843e056c7d51",
+  "findings": []
+}

@@ -1,0 +1,23 @@
+{
+  "chapter": 259,
+  "title": "Writing --- With A Clock",
+  "label": "ch:ru-with-a-clock",
+  "canDo": "I can write lines I own to a named reader inside a three-minute practice clock, and say why, under this book's 66%-everywhere target, the weakest TORFL subtest decides.",
+  "spineNodes": [
+    "SPINE-SAY-WHY"
+  ],
+  "payoff": {
+    "lesson": "RU-W259-with-a-clock",
+    "kind": "task",
+    "summary": "Complete RU-W259-with-a-clock: ten minutes on the book's clock, stop on time, then check the handwritten shapes before counting anything.",
+    "assesses": [
+      "RU-LEX-YA",
+      "RU-GRAMMAR-PRESENT-FIRST-PERSON-U",
+      "RU-PUNCT-TOCHKA-01",
+      "RU-SCRIPT-L-01",
+      "RU-SCRIPT-M-01",
+      "RU-SCRIPT-T-01"
+    ],
+    "note": "The exam facts are those assessment-spec.md records from the Pushkin Institute: TORFL Elementary Level (ТЭУ/A1) is five separate subtests, about 3 h 30 min in all, and this book targets 66% on every one of them. The writing paper's own minutes and length are deliberately not quoted: russian/task-shapes/a1.json has not been transcribed, so the three-minute clock is the book's, not the exam's, and it keeps the lesson inside the five-minute cap."
+  }
+}

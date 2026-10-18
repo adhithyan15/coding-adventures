@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "RU-W259-with-a-clock",
+    "language": "russian",
+    "chapter": 259,
+    "sequence": 15890,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:af3b5898c9292e7c",
+    "detachableSegments": [
+      "Writing — timed production"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

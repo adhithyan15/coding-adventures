@@ -1,0 +1,15 @@
+{
+  "language": "russian",
+  "chapter": 260,
+  "sourceHash": "fnv1a64:7099300c1e801828",
+  "lessonIds": [
+    "RU-W260-four-lines"
+  ],
+  "voiceLessons": 0,
+  "drivablePrefix": 0,
+  "text": "russian/narration/ch260.txt",
+  "json": "russian/narration/ch260.json",
+  "textHash": "fnv1a64:7c0e7e9d2d82d90e",
+  "jsonHash": "fnv1a64:d822d3058f03b70f",
+  "findings": []
+}

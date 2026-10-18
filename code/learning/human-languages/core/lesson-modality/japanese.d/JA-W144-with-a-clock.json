@@ -1,0 +1,24 @@
+{
+  "lesson": {
+    "id": "JA-W144-with-a-clock",
+    "language": "japanese",
+    "chapter": 144,
+    "sequence": 8760,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-block"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:076840295ebcfc87",
+    "detachableSegments": [
+      "Writing — timed production"
+    ]
+  },
+  "findings": []
+}

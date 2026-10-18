@@ -1,0 +1,138 @@
+{
+  "version": 1,
+  "language": "italian",
+  "chapter": 260,
+  "title": "Writing --- My Own Line",
+  "drivablePrefix": 0,
+  "sourceHash": "fnv1a64:c4604605c5813e7c",
+  "lessons": [
+    {
+      "id": "IT-W260-my-own-line",
+      "sequence": 15620,
+      "title": "Your own line — the first writing with no model",
+      "headword": "(my own line)",
+      "romanization": "(my own line)",
+      "gloss": "your own line, chosen from a closed supply, with nothing to copy",
+      "script": "latin",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block"
+      ],
+      "sourceHash": "fnv1a64:6bfb5db35df7a1c9",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Everything you have written so far had something to reach for. You traced ciao, copied it, wrote it with the model covered, and wrote it from the sound."
+            },
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "This does not. You choose the words, from a supply that is closed: only what this book has taught you."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "writing",
+          "title": "Writing — controlled composition",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Write one line about yourself, on paper: your name, then one more fact about you. You hold two ways to give a name — the reflexive verb, and my name is with its article kept. Choose one; nobody is choosing for you."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "One thing to decide deliberately rather than by accident before you start: the accent on è is a letter, not decoration."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "With its accent, è is is. Without it, e is and. A hand that drops the accent has not written Italian untidily: il mio nome e Marco says \"my name and Marco\", and leaves the reader to guess the verb you meant."
+            },
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Write the line. Then read it back and check every e — does it mean is or and? — before you check anything else."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Is the accent on è decoration? (No — without it the word is and.)"
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "And what did you choose here that the earlier lessons chose for you? (The words.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

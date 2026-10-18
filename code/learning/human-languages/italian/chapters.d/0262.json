@@ -1,0 +1,21 @@
+{
+  "chapter": 262,
+  "title": "Writing --- Four Lines, And The Full Stop That Answers",
+  "label": "ch:it-four-lines",
+  "canDo": "I can write four connected lines to a named reader, joining with e and ma and giving a reason with perché, ending that line with a full stop rather than a question mark.",
+  "spineNodes": [
+    "SPINE-SAY-WHY"
+  ],
+  "payoff": {
+    "lesson": "IT-W262-four-lines",
+    "kind": "task",
+    "summary": "Complete IT-W262-four-lines: four lines to one reader, at least one joined with e or ma and one with perché, then check the perché line ends with a full stop and its accent rises.",
+    "assesses": [
+      "IT-LEX-ESSERE-02",
+      "IT-GRAMMAR-ESSERE-03",
+      "IT-LEX-MA-02",
+      "IT-LEX-PERCHE-02"
+    ],
+    "note": "perché is one word for why and because, so on the page only the end mark separates a question from a reason. Its acute accent leans the other way from the grave on è, and one line can hold both."
+  }
+}

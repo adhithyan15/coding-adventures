@@ -1,0 +1,15 @@
+{
+  "language": "persian",
+  "chapter": 287,
+  "sourceHash": "fnv1a64:e04a5d30735485b9",
+  "lessonIds": [
+    "FA-W287-khat-e-khodam"
+  ],
+  "voiceLessons": 0,
+  "drivablePrefix": 0,
+  "text": "persian/narration/ch287.txt",
+  "json": "persian/narration/ch287.json",
+  "textHash": "fnv1a64:110a01f9d5010e45",
+  "jsonHash": "fnv1a64:75e442474b363fb7",
+  "findings": []
+}

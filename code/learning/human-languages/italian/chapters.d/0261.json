@@ -1,0 +1,21 @@
+{
+  "chapter": 261,
+  "title": "Writing --- With A Clock",
+  "label": "ch:it-with-a-clock",
+  "canDo": "I can fill the six fields of a practical Italian form inside a three-minute clock, and I know the shape of this book's twenty-minute A1 writing paper and the CILS rule that one weak part cannot be carried.",
+  "spineNodes": [
+    "SPINE-SAY-WHY"
+  ],
+  "payoff": {
+    "lesson": "IT-W261-with-a-clock",
+    "kind": "task",
+    "summary": "Complete IT-W261-with-a-clock: six form fields against a three-minute timer, then at most one minute checking doubles and accents.",
+    "assesses": [
+      "IT-GRAMMAR-MI-CHIAMO-04",
+      "IT-GRAMMAR-IL-MIO-NOME-02",
+      "IT-LEX-ETA-02",
+      "IT-LEX-C44-FAMIGLIA1-03"
+    ],
+    "note": "Timing, parts and the 30-40 word band are read out of italian/task-shapes/a1.json, which is project-defined and says so; none of it is attributed to CILS. The CILS fact the lesson ends on -- five parts, each out of 12, 7 needed in every part -- is the one italian/assessment-spec.md records from the Siena, Pavia and Buenos Aires sources it cites. CILS's own writing minutes and word counts are deliberately not restated. The lesson describes the full twenty-minute paper but clocks only its form part, so the directed time (240 s) stays inside the five-minute lesson cap."
+  }
+}

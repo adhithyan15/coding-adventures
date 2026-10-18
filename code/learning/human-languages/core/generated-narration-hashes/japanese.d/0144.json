@@ -1,0 +1,15 @@
+{
+  "language": "japanese",
+  "chapter": 144,
+  "sourceHash": "fnv1a64:f7a44f6b9753a2d2",
+  "lessonIds": [
+    "JA-W144-with-a-clock"
+  ],
+  "voiceLessons": 0,
+  "drivablePrefix": 1,
+  "text": "japanese/narration/ch144.txt",
+  "json": "japanese/narration/ch144.json",
+  "textHash": "fnv1a64:40e93099fac820bb",
+  "jsonHash": "fnv1a64:5b9d715c0c7ba93e",
+  "findings": []
+}

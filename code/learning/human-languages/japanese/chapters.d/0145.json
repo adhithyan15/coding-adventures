@@ -1,0 +1,21 @@
+{
+  "chapter": 145,
+  "title": "Writing: Four Lines, and the Joint You Do Not Write",
+  "label": "ch:ja-writing-four-lines",
+  "canDo": "I can write four connected lines of Japanese to a named friend, walking through my day with time words and naming who does it at most once.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-WANT"
+  ],
+  "payoff": {
+    "lesson": "JA-W145-four-lines",
+    "kind": "task",
+    "summary": "Complete JA-W145-four-lines: a greeting and three lines of your day in order, each opening on a time word and closing on a polite verb, then count how many lines name who does it.",
+    "assesses": [
+      "JA-LEX-C53-ADJ53-05",
+      "JA-LEX-C54-TIME54-01",
+      "JA-LEX-C138-OKIMASU",
+      "JA-LEX-C138-KAERIMASU"
+    ],
+    "note": "The track teaches no Japanese conjunction yet, and the lesson does not smuggle one in. The lines hold together by a time word at the front of each and by the subject Japanese leaves out once it is clear, which chapter 138 already taught."
+  }
+}
