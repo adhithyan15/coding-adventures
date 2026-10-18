@@ -31,6 +31,8 @@ export interface AssessmentFullMock {
   timed: boolean;
   /** The learner-facing question paper. Legacy omissions are separately pinned debt. */
   paper?: string;
+  /** Full four-skill structure evidence. Legacy omissions are measurable debt. */
+  manifest?: string;
   rubric: string;
   answerKey: string;
   /**
@@ -298,6 +300,12 @@ export function parseAssessmentContract(
       const paper = mockRaw.paper === undefined
         ? undefined
         : artifactReference(mockRaw.paper, `${expectedLanguage}.${current}.fullMocks[${mockIndex}].paper`);
+      const manifest = mockRaw.manifest === undefined
+        ? undefined
+        : artifactReference(mockRaw.manifest, `${expectedLanguage}.${current}.fullMocks[${mockIndex}].manifest`);
+      if (manifest !== undefined && (!manifest.endsWith(".json") || manifest.includes("#"))) {
+        throw new Error(`assessment: ${expectedLanguage}.${current}.fullMocks[${mockIndex}].manifest must name a JSON file without a fragment`);
+      }
       const humanValidation = mockRaw.humanValidation === undefined
         ? undefined
         : artifactReference(
@@ -314,6 +322,7 @@ export function parseAssessmentContract(
         id: nonEmpty(mockRaw.id, `${expectedLanguage}.${current}.mock.id`),
         timed: true,
         ...(paper === undefined ? {} : { paper }),
+        ...(manifest === undefined ? {} : { manifest }),
         rubric,
         answerKey,
         ...(humanValidation === undefined ? {} : { humanValidation }),
@@ -321,6 +330,12 @@ export function parseAssessmentContract(
     });
     if (new Set(fullMocks.map((mock) => mock.id)).size !== fullMocks.length) {
       throw new Error(`assessment: ${expectedLanguage}.${current} has duplicate full mock ids`);
+    }
+    const declaredPapers = fullMocks
+      .map((mock) => mock.paper?.split("#", 1)[0])
+      .filter((path): path is string => path !== undefined);
+    if (new Set(declaredPapers).size !== declaredPapers.length) {
+      throw new Error(`assessment: ${expectedLanguage}.${current} has duplicate full mock paper paths`);
     }
     return {
       level: current,
@@ -421,6 +436,9 @@ export function parseAssessmentContract(
     const fullMocks = item.fullMocks.map((mock, mockIndex) => {
       const mockRaw = object(mock, `${where}.fullMocks[${mockIndex}]`);
       if (mockRaw.timed !== true) throw new Error(`assessment: ${where} mock must be timed`);
+      if (mockRaw.manifest !== undefined) {
+        throw new Error(`assessment: ${where} external capstone mock has no CEFR task shape for a manifest`);
+      }
       const paper = mockRaw.paper === undefined
         ? undefined
         : artifactReference(mockRaw.paper, `${where}.fullMocks[${mockIndex}].paper`);

@@ -141,6 +141,28 @@ afterEach(() => {
 // --- the check bites ---------------------------------------------------------
 
 describe("dangling assessment-contract references", () => {
+  it("rejects a newly declared but missing structure manifest", () => {
+    const value = contract("fixtura") as { levels: Array<{ fullMocks: Array<{ manifest?: string }> }> };
+    value.levels[1]!.fullMocks[0]!.manifest = "mocks/a1/mock-1-manifest.json";
+    write("fixtura/assessment.json", `${JSON.stringify(value)}\n`);
+    satisfy("fixtura");
+    const result = checkAssessmentArtifacts(root);
+    expect(result.diagnostics.map((entry) => entry.kind)).toEqual(["new-dangling-reference"]);
+    expect(result.diagnostics[0]!.message).toContain("A1.fullMocks[a1-mock-1].manifest");
+  });
+
+  it("refuses a structure manifest hidden in the grandfathered artifact ceiling", () => {
+    const value = contract("fixtura") as { levels: Array<{ fullMocks: Array<{ manifest?: string }> }> };
+    value.levels[1]!.fullMocks[0]!.manifest = "mocks/a1/mock-1-manifest.json";
+    write("fixtura/assessment.json", `${JSON.stringify(value)}\n`);
+    satisfy("fixtura");
+    write("core/assessment-artifact-ceiling/fixtura.json", `${JSON.stringify({
+      version: 1, language: "fixtura", unbuiltArtifacts: ["mocks/a1/mock-1-manifest.json"],
+    })}\n`);
+    expect(checkAssessmentArtifacts(root).diagnostics.map((entry) => entry.kind))
+      .toContain("manifest-may-not-be-pinned");
+  });
+
   it("a full mock's answer key cannot stand in for its missing paper", () => {
     satisfy("fixtura", ["mocks/a1/mock-1.md"]);
     const result = checkAssessmentArtifacts(root);
@@ -165,6 +187,13 @@ describe("dangling assessment-contract references", () => {
     value.levels[0]!.fullMocks[0]!.paper = value.levels[0]!.fullMocks[0]!.answerKey;
     write("fixtura/assessment.json", `${JSON.stringify(value)}\n`);
     expect(() => loadAssessmentContracts(root)).toThrow(/paper must be distinct from rubric and answerKey/);
+  });
+
+  it("does not count two mock IDs pointing at the same learner paper", () => {
+    const value = contract("fixtura") as { levels: Array<{ fullMocks: Array<{ paper: string }> }> };
+    value.levels[1]!.fullMocks[1]!.paper = value.levels[1]!.fullMocks[0]!.paper;
+    write("fixtura/assessment.json", `${JSON.stringify(value)}\n`);
+    expect(() => loadAssessmentContracts(root)).toThrow(/duplicate full mock paper paths/);
   });
 
   it("does not accept a dotted path alias of the answer key as the paper", () => {
