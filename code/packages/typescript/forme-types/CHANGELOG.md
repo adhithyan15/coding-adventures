@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+- Reconcile the kernel documentation with the shipped FM04/FM05 split: the
+  minimal style/interactivity shapes are deliberate leaf-level compatibility
+  envelopes, while the normative schemas and validators live in their
+  dedicated packages.
+
 ## 1.0.0 — 2026-10-05
 
 - Join the aligned stable Forme `1.0.0` package line targeting kernel API v2; see the [`forme-types` migration guide](../forme-types/MIGRATION-v2.md) for the breaking `RenderedPage` provenance and stage/plugin version changes.

@@ -20,9 +20,10 @@ tree.
 
 The static renderer clones only AST branches containing resolved images and
 replaces their destinations with `forme-asset:<logical-id>` placeholders. The
-asset-aware emitter introduced later replaces only these collision-free
+`forme-emit-site-fs` replaces only these collision-free
 placeholders with fingerprinted public paths. Authored query strings and SVG
 fragments remain on the placeholder so emission can preserve their semantics.
 
-The package declares `storage:read` because it reads identity sidecars directly
-while the FM02 capability-backed storage adapter is still pending.
+The package declares `storage:read` because this first-party filesystem stage
+reads identity sidecars directly. FM02's capability-backed product adapter is
+implemented separately in `forme-cli`.

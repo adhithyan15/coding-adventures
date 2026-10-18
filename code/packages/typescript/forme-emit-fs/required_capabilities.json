@@ -3,5 +3,5 @@
   "version": 1,
   "package": "typescript/forme-emit-fs",
   "capabilities": ["filesystem:write"],
-  "justification": "Emit stages ARE the filesystem adapter — they exist to materialise pipeline output on disk.  Same chicken-and-egg pattern as forme-source-fs: ctx.filesystem is the orchestrator-provided FilesystemApi, but for forme-emit-fs to write disk *something* has to be the implementation.  Pragmatic v0 resolution mirrors source-fs: declare the capability here (manifest audit layer) and read via node:fs/promises directly.  When FM02 lands and the orchestrator wires real FilesystemApis around stages, forme-emit-fs becomes one of the implementations rather than a consumer.  Stage-level exception documented in README and source."
+  "justification": "Emit stages are filesystem adapters: they materialise pipeline output on disk. The first-party forme-emit-fs sink declares filesystem:write in this audit inventory and writes through node:fs/promises directly, matching forme-source-fs's implementation boundary. FM02's shipped capability-backed APIs separately mediate installed third-party plugins, so this stage is an explicit filesystem implementation rather than a consumer of ambient plugin authority. The boundary is documented in the README and source header."
 }

@@ -1,13 +1,13 @@
 # FM04 — Forme Style IR: Design Tokens, Selectors, Rules, Contexts, Themes
 
-> **Status:** Code-ready specification. Read alongside FM00 (vision),
-> FM01 (kernel), FM03 (orchestrator).
+> **Status:** Implemented through the completed Forme v1 release contract. Read
+> alongside FM00 (vision), FM01 (kernel), and FM03 (orchestrator).
 > **Scope:** The Style intermediate representation — the typed,
 > backend-agnostic shape that flows between style-producing stages
 > (parsers, theme stages, transforms) and style-consuming stages
 > (renderers, AOT compilers). The packages `forme-style-ir` and the
-> per-backend translators `forme-style-to-css`,
-> `forme-style-to-latex` (sketched; v0 ships only `-to-css`).
+> per-backend translators `forme-style-to-css`, `forme-style-to-latex`, and
+> `forme-style-to-terminal`.
 > **Out of scope:** Interactivity IR (FM05), the AOT compiler that
 > derives per-page CSS slices (FM06), the dev-server and editor
 > integration that lets authors preview style changes in real time
@@ -21,7 +21,7 @@
 | Themes and orchestration | Implemented | `forme-style-theme`, `forme-theme-classless`, and `forme-style-orchestrator`. |
 | CSS, LaTeX, and terminal translation | Implemented | Backend translators have focused package coverage. |
 | Per-page CSS slicing | Implemented | [FM06](FM06-forme-aot-compiler.md) is exercised by both live sites. |
-| Live theme persistence/editor UX | Pending | The FM07 authoring surface and FM-B016 own it. |
+| Live theme persistence/editor UX | Implemented | FM09 and completed FM-B062–FM-B068 persist the reviewed theme identity and expose it through the editor and desktop shell. |
 | Cross-backend product proof | Implemented | FM-B017 wires the blog's resolved theme through HTML and terminal renderers, preserving exact ANSI rule usage and explicit skipped-property records. |
 
 ---
@@ -890,9 +890,9 @@ Context mapping:
 Unknown property kinds are emitted as warnings; the CSS output
 omits them.
 
-### 9.3 The LaTeX translator (sketch)
+### 9.3 The LaTeX translator
 
-`forme-style-to-latex` (deferred to v0.2). Maps style properties
+`forme-style-to-latex` maps style properties
 to LaTeX style commands (`\usepackage`, `\newcommand`, etc.).
 Many properties have no direct LaTeX equivalent (`shadow`,
 `opacity`, `border-radius`); these warn-and-skip.
@@ -1043,8 +1043,9 @@ Key ordering rules for determinism:
 
 ## 13. Package Layout
 
-Three new TypeScript packages (plus one TBD for LaTeX, one for
-PDF, one for terminal — sketched but not v0 deliverables):
+The shipped implementation separates the backend-neutral IR, theme support,
+and the CSS, LaTeX, and terminal translators. A PDF translator remains an
+optional future backend, not a Forme completion-roadmap requirement.
 
 ### 13.1 `@coding-adventures/forme-style-ir`
 
@@ -1080,14 +1081,21 @@ Theme management: registry, composition, resolution.
 - `src/compose.ts` — `composeWithTheme(base, theme)`
 - `src/resolve.ts` — `resolveTokenRefs(doc, tokens)`
 
-### 13.4 Dependency graph
+### 13.4 Backend translator packages
+
+`@coding-adventures/forme-style-to-latex` and
+`@coding-adventures/forme-style-to-terminal` consume the same validated IR as
+the CSS translator. The terminal path is exercised by the live cross-backend
+product proof in FM-B017.
+
+### 13.5 Dependency graph
 
 ```
 forme-types ◄── forme-style-ir ◄── forme-style-to-css
                               ◄── forme-style-theme
-                              ◄── forme-style-to-latex (v0.2)
-                              ◄── forme-style-to-pdf (v0.2)
-                              ◄── forme-style-to-terminal (v0.2)
+                              ◄── forme-style-to-latex
+                              ◄── forme-style-to-terminal
+                              ◄── forme-style-to-pdf (optional future backend)
 ```
 
 `forme-style-ir` is intentionally dependency-free beyond the
