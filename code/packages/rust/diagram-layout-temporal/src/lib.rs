@@ -92,6 +92,11 @@ fn layout_timeline(
     if !diagram.config.left_margin.is_finite() || diagram.config.left_margin < 0.0 {
         return Err(TemporalLayoutError::TimelineLeftMargin);
     }
+    // Admit the new scalar after all established raw-input priorities.
+    // It is not multiplied or used by the retained layout/paint formulas.
+    if !diagram.config.font_size.is_finite() || diagram.config.font_size <= 0.0 {
+        return Err(TemporalLayoutError::TimelineFontSize);
+    }
     let mut items = Vec::new();
     let width = cw.max(560.0);
     let padding = diagram.config.padding;

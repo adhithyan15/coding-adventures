@@ -3998,6 +3998,7 @@ fn timeline_config_object<'a>(root: Option<&'a str>, name: &str) -> Option<&'a s
 fn parse_timeline_config(source: &str) -> TimelineConfig {
     let defaults = TimelineConfig::default();
     let root = venn_init_root(source);
+    let root_front_matter = venn_front_matter_fields(source, &["config"]);
     let config_object = timeline_config_object(root, "timeline");
     let theme_object = timeline_config_object(root, "themeVariables");
     let front_matter = venn_front_matter_fields(source, &["config", "timeline"]);
@@ -4025,7 +4026,14 @@ fn parse_timeline_config(source: &str) -> TimelineConfig {
         sanitize_railroad_color(value.as_deref(), fallback)
     }).collect();
     TimelineConfig {
-        font_size: 16.0,
+        // A present root member suppresses YAML even when decoding fails.
+        // The size is transported only; this slice changes no font geometry.
+        font_size: root.and_then(|object| venn_object_member(object, "fontSize"))
+            .map(|value| venn_theme_string(value, true))
+            .or_else(|| field(None, &root_front_matter, "fontSize"))
+            .and_then(parse_mermaid_font_size)
+            .filter(|value| value.is_finite() && *value > 0.0)
+            .unwrap_or(defaults.font_size),
         font_family: sanitize_railroad_font_family(
             field(theme_object, &theme_front, "fontFamily").as_deref(), &defaults.font_family,
         ),
