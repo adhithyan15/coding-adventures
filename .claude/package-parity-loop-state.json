@@ -16,15 +16,12 @@
       "external-approval"
     ]
   },
-  "active_pr": null,
+  "active_pr": 17738,
   "last_ci_action": {
-    "observed_at": "2026-10-18T16:34:07.8115471Z",
-    "pr_number": 17677,
-    "head_sha": "20e8a010c6f4cf55f13c96de817c652292df7aca",
-    "status": "merged",
-    "merge_commit": "a9f4f459c4789405e2b7d44a2493111817388a95",
-    "receipt": "go-stp01-actual-merge-receipt.json",
-    "notes": "Verified external merge. Refresh inventory and register reviewed discoveries before next selection."
+    "observed_at": "2026-10-18T17:00:27.548466+00:00",
+    "pr_number": 17738,
+    "status": "pending",
+    "notes": "Ready-for-review BF03 foundation published after exact-source local/security validation. Monitor actual checks; no implementation churn or second PR while active."
   },
   "last_inventory": {
     "revision": "a9f4f459c4789405e2b7d44a2493111817388a95",
@@ -16680,10 +16677,10 @@
     {
       "id": "compiler-ir-aot-neutral-conformance",
       "title": "Freeze BF03 compiler IR types, opcodes, and text round trips",
-      "status": "in-progress",
+      "status": "pr-open",
       "depends_on": [],
       "branch": "codex/parity-bf03-neutral-20261018",
-      "pr_number": null,
+      "pr_number": 17738,
       "notes": "The collision-checked post-#16972 inventory finds compiler IR in 9/15 established lanes, leaving six slots in C#/Dart/F#/Java/Kotlin/Swift and blocking several Nib/AOT chains. Define pure ID, opcode, and textual round-trip fixtures before lane-sized ports. Keep BF03's source-map sketch out of this owner because compiler-source-map-language-neutral-conformance owns map semantics. Avoid overlapping the TypeScript compiler-IR metadata surface of PR #15858.",
       "bounded_read_only_classification": "jvm-dart-eight-nine-lane-classification-audit.md: exact grouped owner/alias scopes cover selected codecs/IR/VM/Nib packages; native target ports remain prerequisite-gated. Shared neutral owner readiness is graph state, not source/API/coverage execution. Nib actual TS lexer/parser embed generated grammar objects rather than runtime filesystem reads; source-map/protocol/IR/encoder requirements remain separately owned. Later exact lane children must be collision-checked under existing classifier rather than duplicated from package-name-only searches. No new owner or native validation in this report.",
       "worktree": "C:/Users/adhit/.codex/worktrees/parity-bf03-neutral-20261018/coding-adventures",
@@ -16730,7 +16727,9 @@
           "bf03-security-final-data-review.md"
         ],
         "limitations": "No native IR lane API/runtime/source-map/optimizer/backend execution; no whole-language qualification."
-      }
+      },
+      "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/17738",
+      "ready_for_review_at": "2026-10-18T17:00:27.548466+00:00"
     },
     {
       "id": "segment-tree-dt05-neutral-conformance",
