@@ -321,6 +321,39 @@ The TS form is canonical; the TOML form compiles to the TS form. Any
 TOML-only feature is a feature gap — both forms must be expressively
 equivalent. Code reviewers hold this rule strictly.
 
+`forme-pipeline-config` exposes the pure transform
+`parseTomlConfig(source)`. The product CLI reads an explicitly selected
+`.toml` file (or discovers `forme.config.toml`) and passes its UTF-8 text to
+that transform. TypeScript/JavaScript config files continue through
+`loadTsConfig`; unknown extensions are rejected rather than guessed.
+
+The declarative spelling lowers as follows:
+
+- `[settings]` uses kebab-case keys: `storage-root`, `cache-dir`,
+  `reproducible-build`, `max-concurrency`, `log-level`, `best-effort`, and
+  `deadline-ms`. `max-concurrency` and `deadline-ms` omit to `null`; the other
+  settings are required. `[settings.plugin-runtimes.<kind>]` supplies the
+  canonical `{ executable, root }` pair for `deno`, `bun`, or `python`.
+- Each `[[stages]]` requires a string `stage`, lowered to
+  `{ kind = "stage-ref", packageName = stage }`. Optional `export`, `id`,
+  `config`, and string-array `capabilities` fields lower directly to the
+  corresponding `StageInstanceSpec` fields.
+- Each `[[wires]]` requires inline-table `from` and `to` values with `id` and
+  optional `port` strings. Each `[[outputs]]` uses `from-instance` and `name`.
+- The root, settings, stage, wire, output, endpoint, and plugin-runtime tables
+  are closed: unknown keys fail with their full path. Stage `config` tables
+  remain open because their schema belongs to the referenced stage.
+
+The parser fails closed before constructing a `PipelineConfig`: duplicate
+assignments or table declarations, conflicting table/scalar paths, unsupported
+TOML constructs, unsafe key segments (`__proto__`, `constructor`, or
+`prototype`), non-finite numbers, and schema/type mismatches are errors. It
+builds only null-prototype intermediate tables and enforces explicit source,
+token, nesting-depth, collection-size, and string-size bounds before and while
+walking the grammar AST. This makes a declarative config data, not executable
+code, while retaining the exact same downstream FM02 resolution and FM03
+validation path as the TypeScript form.
+
 ### 2.4 Validation
 
 A `PipelineConfig` passes validation when:
