@@ -195,6 +195,27 @@ export const DOC_SHARD_PLANS: readonly DocShardPlan[] = [
       newestFirst: true,
     }),
   ),
+  // The exact-main audit after #17696 found nine non-Indian track changelogs
+  // still receiving 11-19 touches per 200 scoped commits. Their release notes
+  // have the same direct-owner shape: newest-first level-2 entries, rendered
+  // only as an ignored local projection.
+  ...[
+    "arabic",
+    "chinese",
+    "french",
+    "german",
+    "italian",
+    "latin",
+    "persian",
+    "portuguese",
+    "russian",
+  ].map(
+    (track): DocShardPlan => ({
+      path: `code/learning/human-languages/${track}/CHANGELOG.md`,
+      headingLevel: 2,
+      newestFirst: true,
+    }),
+  ),
   // Indian-track planning documents are edited by the same independent
   // chapter agents as their lesson owners. Roadmaps split at section headings;
   // session maps split at numbered Markdown table rows so even the older

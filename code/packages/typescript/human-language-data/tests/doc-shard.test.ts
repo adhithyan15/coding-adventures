@@ -80,6 +80,17 @@ const JAPANESE_PLAN: DocShardPlan = {
   newestFirst: true,
 };
 const JAPANESE_MIGRATION_MAX_RANK = 290;
+const NINE_TRACK_CHANGELOG_BASELINES = [
+  ["arabic", 570, 104_264, 57, "bfb10e2c45d469af0082f81e882feb5685a4267db85d72bc361661165fd73053"],
+  ["chinese", 170, 51_687, 17, "a0fb7baa7935181b848a60a7377c92e66f4aa889b5cb68c22fe9e77a22a60442"],
+  ["french", 430, 99_896, 43, "6ad6faadcda1d7550d2523e1f20825530235e00483c49c8799779b61f1a70798"],
+  ["german", 760, 181_622, 76, "e95b277d97c2aa6b8bd12f9c4008ba928dd363a7e111e79a9ad083be57fed705"],
+  ["italian", 630, 104_017, 63, "5d8649273f2ca09a32dc7258ce9904026641f3612593e9b6d4305cf883cc738a"],
+  ["latin", 390, 78_914, 39, "fe6f6d9a70c8f618f04e909b83517250ac13022d6fdc805826e414f5c252814c"],
+  ["persian", 450, 70_907, 45, "6a5146e6ac58c3b3eb0a01207384fb1115aa502fcaeaf144385b4376433d88a3"],
+  ["portuguese", 600, 101_509, 60, "94372738a3c3e74d0b764c46187999caa90ed1b9bd67b21fb255e29dbd8bd2f7"],
+  ["russian", 450, 99_307, 45, "4d494ff7ab29dd75d4092dbf65f05ca236966bbac04bb67dd7a60e3daff883f8"],
+] as const;
 
 /**
  * The fewest entries for which sharding a document buys anything.
@@ -292,6 +303,52 @@ describe("Japanese changelog ownership", () => {
       `${metadata}${headingB}\n\nB.\n\n${headingA}\n\nA.\n\n`,
     );
   });
+});
+
+describe("nine-track changelog ownership", () => {
+  it.each(NINE_TRACK_CHANGELOG_BASELINES)(
+    "%s registers a newest-first level-2 plan and removes its tracked projection",
+    (track) => {
+      const path = `code/learning/human-languages/${track}/CHANGELOG.md`;
+      expect(DOC_SHARD_PLANS.find((candidate) => candidate.path === path)).toEqual({
+        path,
+        headingLevel: 2,
+        newestFirst: true,
+      });
+
+      const monolith = safeDocumentPath(defaultRepoRoot(), path);
+      let cause: unknown;
+      try {
+        lstatSync(monolith);
+      } catch (error) {
+        cause = error;
+      }
+      expect(isAbsentErrno((cause as NodeJS.ErrnoException | undefined)?.code)).toBe(true);
+    },
+  );
+
+  it.each(NINE_TRACK_CHANGELOG_BASELINES)(
+    "%s preserves its pre-migration history byte-for-byte",
+    (track, migrationMaxRank, bytes, sections, sha256) => {
+      const path = `code/learning/human-languages/${track}/CHANGELOG.md`;
+      const plan = DOC_SHARD_PLANS.find((candidate) => candidate.path === path);
+      expect(plan).toBeDefined();
+
+      const shards = readDocShards(safeDocumentPath(defaultRepoRoot(), path), plan!);
+      expect(shards).not.toBeNull();
+      const historical = new Map(
+        [...shards!].filter(
+          ([name]) =>
+            name === DOC_META_SHARD || Number(name.slice(0, 5)) <= migrationMaxRank,
+        ),
+      );
+      const rendered = joinDocShards(historical, plan!);
+
+      expect(Buffer.byteLength(rendered)).toBe(bytes);
+      expect(splitDocument(rendered, 2).sections).toHaveLength(sections);
+      expect(createHash("sha256").update(rendered).digest("hex")).toBe(sha256);
+    },
+  );
 });
 
 // Each row carries the MAX PRE-MIGRATION SHARD RANK, and it is load-bearing.
