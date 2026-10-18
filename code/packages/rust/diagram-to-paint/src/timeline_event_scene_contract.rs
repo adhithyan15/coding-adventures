@@ -17,6 +17,7 @@ mod timeline_event_scene_contract {
     }
 
     include!("timeline_legacy_scene_data.rs");
+    include!("timeline_default_direction_contract.rs");
 
     #[test]
     fn retained_embedded_event_layouts_keep_complete_legacy_scenes() {
