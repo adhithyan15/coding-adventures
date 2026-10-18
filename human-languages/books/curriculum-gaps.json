@@ -12,7 +12,7 @@
   },
   "summary": {
     "registeredTracks": 23,
-    "totalLessons": 29660,
+    "totalLessons": 29680,
     "authoredBooks": 23,
     "durationViolations": 0,
     "unknownPrerequisites": 0,
@@ -42,12 +42,12 @@
     "chapterPayoffsNotRepresentative": 0,
     "chapterGateCleanTracks": 23,
     "tracksWithoutWritingStageEvidence": 0,
-    "missingWritingStagePairs": 102,
+    "missingWritingStagePairs": 17,
     "invalidWritingStageEvidence": 0,
-    "drivableLessons": 27831,
+    "drivableLessons": 27836,
     "drivablePercent": 94,
-    "chaptersWithoutDrivablePrefix": 196,
-    "chaptersWithoutDrivablePrefixByType": 188,
+    "chaptersWithoutDrivablePrefix": 210,
+    "chaptersWithoutDrivablePrefixByType": 202,
     "chaptersWithoutDrivablePrefixByContent": 8,
     "unexplainedModalityOverrides": 0
   },
@@ -6820,7 +6820,10 @@
           256,
           257,
           258,
-          259
+          259,
+          260,
+          261,
+          262
         ],
         "bookChapters": [
           1,
@@ -7081,7 +7084,10 @@
           256,
           257,
           258,
-          259
+          259,
+          260,
+          261,
+          262
         ],
         "missingBookChapters": [],
         "orphanBookChapters": [],
@@ -7345,7 +7351,10 @@
           252,
           253,
           254,
-          255
+          255,
+          256,
+          257,
+          258
         ],
         "bookChapters": [
           1,
@@ -7602,7 +7611,10 @@
           252,
           253,
           254,
-          255
+          255,
+          256,
+          257,
+          258
         ],
         "missingBookChapters": [],
         "orphanBookChapters": [],
@@ -8662,7 +8674,8 @@
           174,
           175,
           176,
-          177
+          177,
+          178
         ],
         "bookChapters": [
           1,
@@ -8841,7 +8854,8 @@
           174,
           175,
           176,
-          177
+          177,
+          178
         ],
         "missingBookChapters": [],
         "orphanBookChapters": [],
@@ -9943,7 +9957,10 @@
           254,
           255,
           256,
-          257
+          257,
+          258,
+          259,
+          260
         ],
         "bookChapters": [
           1,
@@ -10202,7 +10219,10 @@
           254,
           255,
           256,
-          257
+          257,
+          258,
+          259,
+          260
         ],
         "missingBookChapters": [],
         "orphanBookChapters": [],
@@ -11056,7 +11076,10 @@
           283,
           284,
           285,
-          286
+          286,
+          287,
+          288,
+          289
         ],
         "bookChapters": [
           1,
@@ -11344,7 +11367,10 @@
           283,
           284,
           285,
-          286
+          286,
+          287,
+          288,
+          289
         ],
         "missingBookChapters": [],
         "orphanBookChapters": [],
@@ -12101,7 +12127,10 @@
           139,
           140,
           141,
-          142
+          142,
+          143,
+          144,
+          145
         ],
         "bookChapters": [
           1,
@@ -12245,7 +12274,10 @@
           139,
           140,
           141,
-          142
+          142,
+          143,
+          144,
+          145
         ],
         "missingBookChapters": [],
         "orphanBookChapters": [],
@@ -12338,17 +12370,17 @@
       {
         "language": "italian",
         "status": "version-2",
-        "lessonCount": 1312,
+        "lessonCount": 1315,
         "versions": {
-          "2": 1312
+          "2": 1315
         }
       },
       {
         "language": "portuguese",
         "status": "version-2",
-        "lessonCount": 1296,
+        "lessonCount": 1299,
         "versions": {
-          "2": 1296
+          "2": 1299
         }
       },
       {
@@ -12370,9 +12402,9 @@
       {
         "language": "punjabi",
         "status": "version-2",
-        "lessonCount": 926,
+        "lessonCount": 931,
         "versions": {
-          "2": 926
+          "2": 931
         }
       },
       {
@@ -12394,9 +12426,9 @@
       {
         "language": "russian",
         "status": "version-2",
-        "lessonCount": 1339,
+        "lessonCount": 1342,
         "versions": {
-          "2": 1339
+          "2": 1342
         }
       },
       {
@@ -12410,9 +12442,9 @@
       {
         "language": "persian",
         "status": "version-2",
-        "lessonCount": 1482,
+        "lessonCount": 1485,
         "versions": {
-          "2": 1482
+          "2": 1485
         }
       },
       {
@@ -12434,9 +12466,9 @@
       {
         "language": "japanese",
         "status": "version-2",
-        "lessonCount": 837,
+        "lessonCount": 840,
         "versions": {
-          "2": 837
+          "2": 840
         }
       }
     ]
@@ -12502,16 +12534,16 @@
       },
       {
         "language": "italian",
-        "bookChapters": 259,
-        "declaredChapters": 259,
+        "bookChapters": 262,
+        "declaredChapters": 262,
         "missingCapability": 0,
         "findings": 0,
         "clean": true
       },
       {
         "language": "japanese",
-        "bookChapters": 142,
-        "declaredChapters": 142,
+        "bookChapters": 145,
+        "declaredChapters": 145,
         "missingCapability": 0,
         "findings": 0,
         "clean": true
@@ -12558,32 +12590,32 @@
       },
       {
         "language": "persian",
-        "bookChapters": 286,
-        "declaredChapters": 286,
+        "bookChapters": 289,
+        "declaredChapters": 289,
         "missingCapability": 0,
         "findings": 0,
         "clean": true
       },
       {
         "language": "portuguese",
-        "bookChapters": 255,
-        "declaredChapters": 255,
+        "bookChapters": 258,
+        "declaredChapters": 258,
         "missingCapability": 0,
         "findings": 0,
         "clean": true
       },
       {
         "language": "punjabi",
-        "bookChapters": 177,
-        "declaredChapters": 177,
+        "bookChapters": 178,
+        "declaredChapters": 178,
         "missingCapability": 0,
         "findings": 0,
         "clean": true
       },
       {
         "language": "russian",
-        "bookChapters": 257,
-        "declaredChapters": 257,
+        "bookChapters": 260,
+        "declaredChapters": 260,
         "missingCapability": 0,
         "findings": 0,
         "clean": true
@@ -12630,8 +12662,8 @@
       }
     ],
     "summary": {
-      "bookChapters": 5875,
-      "declaredChapters": 5875,
+      "bookChapters": 5891,
+      "declaredChapters": 5891,
       "chaptersWithoutCapability": 0,
       "payoffsNotClosed": 0,
       "payoffsNotRepresentative": 0,
@@ -12643,11 +12675,11 @@
     }
   },
   "levels": {
-    "totalLessons": 29660,
+    "totalLessons": 29680,
     "byLevel": {
       "pre-A1": 9460,
-      "A1": 18598,
-      "A2": 1518,
+      "A1": 18613,
+      "A2": 1523,
       "B1": 39,
       "B2": 17,
       "C1": 10,
@@ -12763,10 +12795,10 @@
       },
       {
         "language": "italian",
-        "lessonCount": 1312,
+        "lessonCount": 1315,
         "byLevel": {
           "pre-A1": 354,
-          "A1": 920,
+          "A1": 923,
           "A2": 38,
           "B1": 0,
           "B2": 0,
@@ -12778,10 +12810,10 @@
       },
       {
         "language": "japanese",
-        "lessonCount": 837,
+        "lessonCount": 840,
         "byLevel": {
           "pre-A1": 384,
-          "A1": 425,
+          "A1": 428,
           "A2": 28,
           "B1": 0,
           "B2": 0,
@@ -12868,10 +12900,10 @@
       },
       {
         "language": "persian",
-        "lessonCount": 1482,
+        "lessonCount": 1485,
         "byLevel": {
           "pre-A1": 379,
-          "A1": 1073,
+          "A1": 1076,
           "A2": 30,
           "B1": 0,
           "B2": 0,
@@ -12883,10 +12915,10 @@
       },
       {
         "language": "portuguese",
-        "lessonCount": 1296,
+        "lessonCount": 1299,
         "byLevel": {
           "pre-A1": 356,
-          "A1": 900,
+          "A1": 903,
           "A2": 40,
           "B1": 0,
           "B2": 0,
@@ -12898,11 +12930,11 @@
       },
       {
         "language": "punjabi",
-        "lessonCount": 926,
+        "lessonCount": 931,
         "byLevel": {
           "pre-A1": 489,
           "A1": 418,
-          "A2": 19,
+          "A2": 24,
           "B1": 0,
           "B2": 0,
           "C1": 0,
@@ -12913,10 +12945,10 @@
       },
       {
         "language": "russian",
-        "lessonCount": 1339,
+        "lessonCount": 1342,
         "byLevel": {
           "pre-A1": 405,
-          "A1": 901,
+          "A1": 904,
           "A2": 33,
           "B1": 0,
           "B2": 0,
@@ -13504,16 +13536,16 @@
       },
       {
         "language": "italian",
-        "lessonCount": 1312,
-        "measurable": 1312,
-        "unmeasurable": 0,
+        "lessonCount": 1315,
+        "measurable": 1314,
+        "unmeasurable": 1,
         "lessonViolations": 0,
         "chapterViolations": 3
       },
       {
         "language": "japanese",
-        "lessonCount": 837,
-        "measurable": 837,
+        "lessonCount": 840,
+        "measurable": 840,
         "unmeasurable": 0,
         "lessonViolations": 0,
         "chapterViolations": 0
@@ -13560,33 +13592,33 @@
       },
       {
         "language": "persian",
-        "lessonCount": 1482,
-        "measurable": 1481,
-        "unmeasurable": 1,
+        "lessonCount": 1485,
+        "measurable": 1483,
+        "unmeasurable": 2,
         "lessonViolations": 0,
         "chapterViolations": 3
       },
       {
         "language": "portuguese",
-        "lessonCount": 1296,
-        "measurable": 1296,
-        "unmeasurable": 0,
+        "lessonCount": 1299,
+        "measurable": 1298,
+        "unmeasurable": 1,
         "lessonViolations": 0,
         "chapterViolations": 3
       },
       {
         "language": "punjabi",
-        "lessonCount": 926,
-        "measurable": 892,
+        "lessonCount": 931,
+        "measurable": 897,
         "unmeasurable": 34,
         "lessonViolations": 0,
         "chapterViolations": 8
       },
       {
         "language": "russian",
-        "lessonCount": 1339,
-        "measurable": 1339,
-        "unmeasurable": 0,
+        "lessonCount": 1342,
+        "measurable": 1341,
+        "unmeasurable": 1,
         "lessonViolations": 0,
         "chapterViolations": 4
       },
@@ -13713,7 +13745,7 @@
           "language": "italian",
           "script": "latin",
           "latinScript": true,
-          "lessonCount": 1312,
+          "lessonCount": 1315,
           "totalGlyphs": 0,
           "lessonViolations": 0,
           "systemViolations": 0,
@@ -13723,7 +13755,7 @@
           "language": "japanese",
           "script": "japanese",
           "latinScript": false,
-          "lessonCount": 837,
+          "lessonCount": 840,
           "totalGlyphs": 84,
           "lessonViolations": 0,
           "systemViolations": 0,
@@ -13783,7 +13815,7 @@
           "language": "persian",
           "script": "perso-arabic",
           "latinScript": false,
-          "lessonCount": 1482,
+          "lessonCount": 1485,
           "totalGlyphs": 38,
           "lessonViolations": 0,
           "systemViolations": 0,
@@ -13793,7 +13825,7 @@
           "language": "portuguese",
           "script": "latin",
           "latinScript": true,
-          "lessonCount": 1296,
+          "lessonCount": 1299,
           "totalGlyphs": 0,
           "lessonViolations": 0,
           "systemViolations": 0,
@@ -13803,7 +13835,7 @@
           "language": "punjabi",
           "script": "gurmukhi",
           "latinScript": false,
-          "lessonCount": 926,
+          "lessonCount": 931,
           "totalGlyphs": 52,
           "lessonViolations": 0,
           "systemViolations": 0,
@@ -13813,8 +13845,8 @@
           "language": "russian",
           "script": "cyrillic",
           "latinScript": false,
-          "lessonCount": 1339,
-          "totalGlyphs": 60,
+          "lessonCount": 1342,
+          "totalGlyphs": 61,
           "lessonViolations": 0,
           "systemViolations": 0,
           "lessonsWithForeignScript": 0
@@ -13881,7 +13913,7 @@
     "summary": {
       "lessonViolations": 0,
       "chapterViolations": 62,
-      "unmeasurableLessons": 156,
+      "unmeasurableLessons": 160,
       "measurablePercent": 99,
       "steepestLesson": null
     }
@@ -40613,7 +40645,7 @@
           "R3",
           "R4"
         ],
-        "revisits": 3
+        "revisits": 4
       },
       {
         "atom": "FA-LEX-MARD",
@@ -40769,7 +40801,7 @@
           "R3",
           "R4"
         ],
-        "revisits": 2
+        "revisits": 3
       },
       {
         "atom": "FA-SCRIPT-C22-DAL-01",
@@ -56825,7 +56857,7 @@
           "R3",
           "R4"
         ],
-        "revisits": 3
+        "revisits": 5
       },
       {
         "atom": "JA-LEX-C25-FAMILY25-02",
@@ -57101,7 +57133,7 @@
           "R3",
           "R4"
         ],
-        "revisits": 3
+        "revisits": 4
       },
       {
         "atom": "JA-LEX-C41-SCHOOL41-04",
@@ -57269,7 +57301,7 @@
           "R3",
           "R4"
         ],
-        "revisits": 4
+        "revisits": 5
       },
       {
         "atom": "JA-LEX-C56-TIME56-02",
@@ -75077,7 +75109,7 @@
           "R3",
           "R4"
         ],
-        "revisits": 3
+        "revisits": 4
       },
       {
         "atom": "PA-LEX-C95-NUMBERS95-05",
@@ -75161,7 +75193,7 @@
           "R3",
           "R4"
         ],
-        "revisits": 2
+        "revisits": 3
       },
       {
         "atom": "PA-LEX-KARNA-05",
@@ -75173,7 +75205,7 @@
           "R3",
           "R4"
         ],
-        "revisits": 2
+        "revisits": 3
       },
       {
         "atom": "PA-LEX-MAAF",
@@ -125227,7 +125259,7 @@
           "R2",
           "R4"
         ],
-        "revisits": 3
+        "revisits": 4
       },
       {
         "atom": "FA-LEX-C158-CHERA158-03",
@@ -130400,6 +130432,39 @@
         "revisits": 3
       },
       {
+        "atom": "FA-LEX-C271-SEFAT271-05",
+        "language": "persian",
+        "introducedBy": "FA-C271-khosusi",
+        "introducedAt": 1402,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FA-LEX-C272-SEFAT272-01",
+        "language": "persian",
+        "introducedBy": "FA-C272-rostgu",
+        "introducedAt": 1403,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FA-LEX-C272-SEFAT272-02",
+        "language": "persian",
+        "introducedBy": "FA-C272-porru",
+        "introducedAt": 1404,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
         "atom": "FA-LEX-C276-CHIZ276-03",
         "language": "persian",
         "introducedBy": "FA-C276-shomare",
@@ -130525,6 +130590,39 @@
         "language": "persian",
         "introducedBy": "FA-C28-surat",
         "introducedAt": 135,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FA-LEX-C283-CHIZ283-03",
+        "language": "persian",
+        "introducedBy": "FA-C283-zanjir",
+        "introducedAt": 1462,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FA-LEX-C283-CHIZ283-04",
+        "language": "persian",
+        "introducedBy": "FA-C283-pich-gushti",
+        "introducedAt": 1463,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FA-LEX-C283-CHIZ283-05",
+        "language": "persian",
+        "introducedBy": "FA-C283-anbor",
+        "introducedAt": 1464,
         "missed": [
           "R2",
           "R3"
@@ -133092,7 +133190,7 @@
           "R2",
           "R4"
         ],
-        "revisits": 3
+        "revisits": 4
       },
       {
         "atom": "FA-LEX-C92-WHY92-04",
@@ -133444,7 +133542,7 @@
           "R2",
           "R4"
         ],
-        "revisits": 2
+        "revisits": 3
       },
       {
         "atom": "FA-LEX-CHETOR",
@@ -133609,7 +133707,7 @@
           "R3",
           "R4"
         ],
-        "revisits": 2
+        "revisits": 3
       },
       {
         "atom": "FA-LEX-KHANDAN",
@@ -133631,7 +133729,7 @@
           "R2",
           "R4"
         ],
-        "revisits": 3
+        "revisits": 4
       },
       {
         "atom": "FA-LEX-KHOSHVAGHTAM",
@@ -133664,7 +133762,7 @@
           "R2",
           "R4"
         ],
-        "revisits": 2
+        "revisits": 4
       },
       {
         "atom": "FA-LEX-MAH",
@@ -133994,7 +134092,7 @@
           "R3",
           "R4"
         ],
-        "revisits": 4
+        "revisits": 5
       },
       {
         "atom": "FA-SCRIPT-C24-YE-01",
@@ -134005,7 +134103,7 @@
           "R3",
           "R4"
         ],
-        "revisits": 4
+        "revisits": 5
       },
       {
         "atom": "FA-SCRIPT-C25-SAD-01",
@@ -134214,7 +134312,7 @@
           "R3",
           "R4"
         ],
-        "revisits": 4
+        "revisits": 5
       },
       {
         "atom": "FA-SCRIPT-KHODAHAFEZ-JOINED",
@@ -134291,7 +134389,7 @@
           "R2",
           "R4"
         ],
-        "revisits": 7
+        "revisits": 8
       },
       {
         "atom": "FA-SCRIPT-ZE",
@@ -170712,7 +170810,7 @@
           "R3",
           "R4"
         ],
-        "revisits": 4
+        "revisits": 6
       },
       {
         "atom": "IT-GRAMMAR-MANO-03",
@@ -177436,6 +177534,39 @@
         "revisits": 3
       },
       {
+        "atom": "IT-LEX-C244-PERCHE244-05",
+        "language": "italian",
+        "introducedBy": "IT-C244-insieme",
+        "introducedAt": 1232,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C245-QUAL245-01",
+        "language": "italian",
+        "introducedBy": "IT-C245-liscio",
+        "introducedAt": 1233,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C245-QUAL245-02",
+        "language": "italian",
+        "introducedBy": "IT-C245-ruvido",
+        "introducedAt": 1234,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
         "atom": "IT-LEX-C247-COSE247-03",
         "language": "italian",
         "introducedBy": "IT-C247-colore",
@@ -177511,6 +177642,39 @@
           "R3"
         ],
         "revisits": 4
+      },
+      {
+        "atom": "IT-LEX-C256-COSE256-03",
+        "language": "italian",
+        "introducedBy": "IT-C256-tuono",
+        "introducedAt": 1292,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C256-COSE256-04",
+        "language": "italian",
+        "introducedBy": "IT-C256-arcobaleno",
+        "introducedAt": 1293,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C256-COSE256-05",
+        "language": "italian",
+        "introducedBy": "IT-C256-clima",
+        "introducedAt": 1294,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 3
       },
       {
         "atom": "IT-LEX-C37-CORPO1-01",
@@ -177928,7 +178092,7 @@
           "R2",
           "R3"
         ],
-        "revisits": 3
+        "revisits": 4
       },
       {
         "atom": "IT-LEX-C44-FAMIGLIA1-04",
@@ -181418,17 +181582,6 @@
         "revisits": 3
       },
       {
-        "atom": "JA-LEX-C112-THINGS112-04",
-        "language": "japanese",
-        "introducedBy": "JA-C112-shigoto",
-        "introducedAt": 638,
-        "missed": [
-          "R2",
-          "R4"
-        ],
-        "revisits": 3
-      },
-      {
         "atom": "JA-LEX-C112-THINGS112-05",
         "language": "japanese",
         "introducedBy": "JA-C112-yasumi",
@@ -182999,7 +183152,7 @@
           "R3",
           "R4"
         ],
-        "revisits": 3
+        "revisits": 5
       },
       {
         "atom": "JA-LEX-C54-TIME54-01",
@@ -183010,7 +183163,7 @@
           "R3",
           "R4"
         ],
-        "revisits": 3
+        "revisits": 4
       },
       {
         "atom": "JA-LEX-C54-TIME54-02",
@@ -184759,7 +184912,7 @@
           "R2",
           "R4"
         ],
-        "revisits": 3
+        "revisits": 4
       },
       {
         "atom": "JA-LEX-C94-LIKE94-04",
@@ -233544,7 +233697,7 @@
           "R3",
           "R4"
         ],
-        "revisits": 2
+        "revisits": 3
       },
       {
         "atom": "PA-FORM-NAME-MANAN-01",
@@ -236965,7 +237118,7 @@
           "R2",
           "R4"
         ],
-        "revisits": 5
+        "revisits": 7
       },
       {
         "atom": "PA-LEX-C67-FOOD67-04",
@@ -237163,7 +237316,7 @@
           "R3",
           "R4"
         ],
-        "revisits": 5
+        "revisits": 6
       },
       {
         "atom": "PA-LEX-C72-SCHOOL72-01",
@@ -238197,7 +238350,7 @@
           "R2",
           "R4"
         ],
-        "revisits": 3
+        "revisits": 5
       },
       {
         "atom": "PA-LEX-C96-NUMBERS96-02",
@@ -238472,7 +238625,7 @@
           "R3",
           "R4"
         ],
-        "revisits": 4
+        "revisits": 5
       },
       {
         "atom": "PA-LEX-JANNA",
@@ -239781,7 +239934,7 @@
           "R2",
           "R3"
         ],
-        "revisits": 3
+        "revisits": 5
       },
       {
         "atom": "PT-GRAMMAR-MORAR-04",
@@ -239792,7 +239945,7 @@
           "R2",
           "R4"
         ],
-        "revisits": 2
+        "revisits": 5
       },
       {
         "atom": "PT-GRAMMAR-NUMEROS-11-15-02",
@@ -239946,7 +240099,7 @@
           "R2",
           "R3"
         ],
-        "revisits": 2
+        "revisits": 3
       },
       {
         "atom": "PT-LEX-C100-COISAS100-01",
@@ -246252,6 +246405,39 @@
         "revisits": 3
       },
       {
+        "atom": "PT-LEX-C240-SAUDE240-05",
+        "language": "portuguese",
+        "introducedBy": "PT-C240-descanso",
+        "introducedAt": 1216,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C241-QUAL241-01",
+        "language": "portuguese",
+        "introducedBy": "PT-C241-liso-lisa",
+        "introducedAt": 1217,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C241-QUAL241-02",
+        "language": "portuguese",
+        "introducedBy": "PT-C241-aspero-aspera",
+        "introducedAt": 1218,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
         "atom": "PT-LEX-C245-COISAS245-03",
         "language": "portuguese",
         "introducedBy": "PT-C245-publicidade",
@@ -246327,6 +246513,39 @@
           "R3"
         ],
         "revisits": 4
+      },
+      {
+        "atom": "PT-LEX-C252-COISAS252-03",
+        "language": "portuguese",
+        "introducedBy": "PT-C252-jogador",
+        "introducedAt": 1276,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C252-COISAS252-04",
+        "language": "portuguese",
+        "introducedBy": "PT-C252-treinador",
+        "introducedAt": 1277,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C252-COISAS252-05",
+        "language": "portuguese",
+        "introducedBy": "PT-C252-adepto",
+        "introducedAt": 1278,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 3
       },
       {
         "atom": "PT-LEX-C30-CORPO1-01",
@@ -248746,7 +248965,7 @@
           "R2",
           "R4"
         ],
-        "revisits": 3
+        "revisits": 4
       },
       {
         "atom": "PT-LEX-C84-PORQUE84-05",
@@ -249582,7 +249801,7 @@
           "R2",
           "R4"
         ],
-        "revisits": 2
+        "revisits": 5
       },
       {
         "atom": "PT-LEX-FALO-PORTUGUES-03",
@@ -250770,7 +250989,7 @@
           "R3",
           "R4"
         ],
-        "revisits": 3
+        "revisits": 4
       },
       {
         "atom": "RU-GRAMMAR-TSAT-TENS-01",
@@ -257263,6 +257482,39 @@
         "revisits": 3
       },
       {
+        "atom": "RU-LEX-C242-MESTO242-05",
+        "language": "russian",
+        "introducedBy": "RU-C242-tsirk",
+        "introducedAt": 1259,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "RU-LEX-C243-KACH243-01",
+        "language": "russian",
+        "introducedBy": "RU-C243-molodoy",
+        "introducedAt": 1260,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "RU-LEX-C243-KACH243-02",
+        "language": "russian",
+        "introducedBy": "RU-C243-pozhiloy",
+        "introducedAt": 1261,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
         "atom": "RU-LEX-C246-VESHCH246-03",
         "language": "russian",
         "introducedBy": "RU-C246-miska",
@@ -257338,6 +257590,39 @@
           "R3"
         ],
         "revisits": 4
+      },
+      {
+        "atom": "RU-LEX-C254-VESHCH254-03",
+        "language": "russian",
+        "introducedBy": "RU-C254-devushka",
+        "introducedAt": 1319,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "RU-LEX-C254-VESHCH254-04",
+        "language": "russian",
+        "introducedBy": "RU-C254-roditeli",
+        "introducedAt": 1320,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "RU-LEX-C254-VESHCH254-05",
+        "language": "russian",
+        "introducedBy": "RU-C254-plemyannik",
+        "introducedAt": 1321,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 3
       },
       {
         "atom": "RU-LEX-C29-BODY1-01",
@@ -260252,7 +260537,7 @@
           "R3",
           "R4"
         ],
-        "revisits": 3
+        "revisits": 4
       },
       {
         "atom": "RU-LEX-POVTORITE-01",
@@ -260483,7 +260768,7 @@
           "R3",
           "R4"
         ],
-        "revisits": 4
+        "revisits": 5
       },
       {
         "atom": "RU-SCRIPT-A-01",
@@ -260571,7 +260856,7 @@
           "R3",
           "R4"
         ],
-        "revisits": 7
+        "revisits": 9
       },
       {
         "atom": "RU-SCRIPT-M-01",
@@ -260582,7 +260867,7 @@
           "R3",
           "R4"
         ],
-        "revisits": 6
+        "revisits": 8
       },
       {
         "atom": "RU-SCRIPT-N-01",
@@ -260703,7 +260988,7 @@
           "R1",
           "R2"
         ],
-        "revisits": 3
+        "revisits": 4
       },
       {
         "atom": "RU-SCRIPT-Z-01",
@@ -309632,36 +309917,6 @@
         "revisits": 4
       },
       {
-        "atom": "FA-LEX-C271-SEFAT271-05",
-        "language": "persian",
-        "introducedBy": "FA-C271-khosusi",
-        "introducedAt": 1402,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "FA-LEX-C272-SEFAT272-01",
-        "language": "persian",
-        "introducedBy": "FA-C272-rostgu",
-        "introducedAt": 1403,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "FA-LEX-C272-SEFAT272-02",
-        "language": "persian",
-        "introducedBy": "FA-C272-porru",
-        "introducedAt": 1404,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 3
-      },
-      {
         "atom": "FA-LEX-C272-SEFAT272-03",
         "language": "persian",
         "introducedBy": "FA-C272-hasas",
@@ -310142,36 +310397,6 @@
         "revisits": 3
       },
       {
-        "atom": "FA-LEX-C283-CHIZ283-03",
-        "language": "persian",
-        "introducedBy": "FA-C283-zanjir",
-        "introducedAt": 1462,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "FA-LEX-C283-CHIZ283-04",
-        "language": "persian",
-        "introducedBy": "FA-C283-pich-gushti",
-        "introducedAt": 1463,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "FA-LEX-C283-CHIZ283-05",
-        "language": "persian",
-        "introducedBy": "FA-C283-anbor",
-        "introducedAt": 1464,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 3
-      },
-      {
         "atom": "FA-LEX-C284-KAR284-01",
         "language": "persian",
         "introducedBy": "FA-C284-mekanik",
@@ -310180,6 +310405,36 @@
           "R2"
         ],
         "revisits": 3
+      },
+      {
+        "atom": "FA-LEX-C286-KAR286-03",
+        "language": "persian",
+        "introducedBy": "FA-C286-sanduqdar",
+        "introducedAt": 1477,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FA-LEX-C286-KAR286-04",
+        "language": "persian",
+        "introducedBy": "FA-C286-faktor",
+        "introducedAt": 1478,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FA-LEX-C286-KAR286-05",
+        "language": "persian",
+        "introducedBy": "FA-C286-khodpardaz",
+        "introducedAt": 1479,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 2
       },
       {
         "atom": "FA-LEX-CHAHAR",
@@ -310209,7 +310464,7 @@
         "missed": [
           "R4"
         ],
-        "revisits": 6
+        "revisits": 8
       },
       {
         "atom": "FA-LEX-PANJ",
@@ -316059,7 +316314,7 @@
         "missed": [
           "R2"
         ],
-        "revisits": 3
+        "revisits": 6
       },
       {
         "atom": "IT-GRAMMAR-ESSERE-STATO-02",
@@ -316119,7 +316374,7 @@
         "missed": [
           "R2"
         ],
-        "revisits": 5
+        "revisits": 7
       },
       {
         "atom": "IT-GRAMMAR-MI-PIACE-03",
@@ -316350,36 +316605,6 @@
           "R4"
         ],
         "revisits": 4
-      },
-      {
-        "atom": "IT-LEX-C244-PERCHE244-05",
-        "language": "italian",
-        "introducedBy": "IT-C244-insieme",
-        "introducedAt": 1232,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "IT-LEX-C245-QUAL245-01",
-        "language": "italian",
-        "introducedBy": "IT-C245-liscio",
-        "introducedAt": 1233,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "IT-LEX-C245-QUAL245-02",
-        "language": "italian",
-        "introducedBy": "IT-C245-ruvido",
-        "introducedAt": 1234,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 3
       },
       {
         "atom": "IT-LEX-C245-QUAL245-03",
@@ -316862,36 +317087,6 @@
         "revisits": 3
       },
       {
-        "atom": "IT-LEX-C256-COSE256-03",
-        "language": "italian",
-        "introducedBy": "IT-C256-tuono",
-        "introducedAt": 1292,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "IT-LEX-C256-COSE256-04",
-        "language": "italian",
-        "introducedBy": "IT-C256-arcobaleno",
-        "introducedAt": 1293,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "IT-LEX-C256-COSE256-05",
-        "language": "italian",
-        "introducedBy": "IT-C256-clima",
-        "introducedAt": 1294,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 3
-      },
-      {
         "atom": "IT-LEX-C257-COSE257-01",
         "language": "italian",
         "introducedBy": "IT-C257-metallo",
@@ -316900,6 +317095,36 @@
           "R2"
         ],
         "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C259-LAV259-03",
+        "language": "italian",
+        "introducedBy": "IT-C259-insegnante",
+        "introducedAt": 1307,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C259-LAV259-04",
+        "language": "italian",
+        "introducedBy": "IT-C259-errore",
+        "introducedAt": 1308,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C259-LAV259-05",
+        "language": "italian",
+        "introducedBy": "IT-C259-storia",
+        "introducedAt": 1309,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 2
       },
       {
         "atom": "IT-LEX-CAFFE-02",
@@ -316989,7 +317214,7 @@
         "missed": [
           "R2"
         ],
-        "revisits": 3
+        "revisits": 6
       },
       {
         "atom": "IT-LEX-ETA-02",
@@ -316999,7 +317224,7 @@
         "missed": [
           "R2"
         ],
-        "revisits": 4
+        "revisits": 5
       },
       {
         "atom": "IT-LEX-FAMIGLIA-02",
@@ -317039,7 +317264,7 @@
         "missed": [
           "R4"
         ],
-        "revisits": 4
+        "revisits": 5
       },
       {
         "atom": "IT-LEX-MI-PIACE-02",
@@ -317089,7 +317314,7 @@
         "missed": [
           "R4"
         ],
-        "revisits": 3
+        "revisits": 4
       },
       {
         "atom": "IT-LEX-OCCHIO-02",
@@ -317169,7 +317394,7 @@
         "missed": [
           "R4"
         ],
-        "revisits": 4
+        "revisits": 5
       },
       {
         "atom": "IT-LEX-PERSONA-02",
@@ -317702,6 +317927,16 @@
         "revisits": 12
       },
       {
+        "atom": "JA-LEX-ANCHOR-INU",
+        "language": "japanese",
+        "introducedBy": "JA-C133-inu",
+        "introducedAt": 758,
+        "missed": [
+          "R4"
+        ],
+        "revisits": 4
+      },
+      {
         "atom": "JA-LEX-ANE",
         "language": "japanese",
         "introducedBy": "JA-C13-ane",
@@ -317728,6 +317963,16 @@
         "introducedAt": 82,
         "missed": [
           "R4"
+        ],
+        "revisits": 4
+      },
+      {
+        "atom": "JA-LEX-C112-THINGS112-04",
+        "language": "japanese",
+        "introducedBy": "JA-C112-shigoto",
+        "introducedAt": 638,
+        "missed": [
+          "R2"
         ],
         "revisits": 4
       },
@@ -318282,6 +318527,76 @@
         "revisits": 5
       },
       {
+        "atom": "JA-LEX-C133-KESA",
+        "language": "japanese",
+        "introducedBy": "JA-C133-kesa",
+        "introducedAt": 757,
+        "missed": [
+          "R4"
+        ],
+        "revisits": 4
+      },
+      {
+        "atom": "JA-LEX-C139-DAREMO",
+        "language": "japanese",
+        "introducedBy": "JA-C139-daremo",
+        "introducedAt": 818,
+        "missed": [
+          "R3"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "JA-LEX-C139-DOKONIMO",
+        "language": "japanese",
+        "introducedBy": "JA-C139-dokonimo",
+        "introducedAt": 819,
+        "missed": [
+          "R3"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "JA-LEX-C139-NANIMO",
+        "language": "japanese",
+        "introducedBy": "JA-C139-nanimo",
+        "introducedAt": 817,
+        "missed": [
+          "R3"
+        ],
+        "revisits": 4
+      },
+      {
+        "atom": "JA-LEX-C142-EIGYOUCHUU",
+        "language": "japanese",
+        "introducedBy": "JA-C142-eigyouchuu",
+        "introducedAt": 833,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "JA-LEX-C142-JUNBICHUU",
+        "language": "japanese",
+        "introducedBy": "JA-C142-junbichuu",
+        "introducedAt": 834,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "JA-LEX-C142-UKETSUKE",
+        "language": "japanese",
+        "introducedBy": "JA-C142-uketsuke",
+        "introducedAt": 832,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 2
+      },
+      {
         "atom": "JA-LEX-CHICHI",
         "language": "japanese",
         "introducedBy": "JA-C13-chichi",
@@ -318622,6 +318937,16 @@
         "revisits": 8
       },
       {
+        "atom": "JA-SCRIPT-NU-01",
+        "language": "japanese",
+        "introducedBy": "JA-W133-nu",
+        "introducedAt": 759,
+        "missed": [
+          "R4"
+        ],
+        "revisits": 4
+      },
+      {
         "atom": "JA-SCRIPT-RO-01",
         "language": "japanese",
         "introducedBy": "JA-W15-ro",
@@ -318639,7 +318964,7 @@
         "missed": [
           "R4"
         ],
-        "revisits": 6
+        "revisits": 8
       },
       {
         "atom": "JA-SCRIPT-TSU-01",
@@ -325962,6 +326287,16 @@
         "revisits": 5
       },
       {
+        "atom": "PA-ADV-BAHUT-DEGREE-01",
+        "language": "punjabi",
+        "introducedBy": "PA-C177-bahut",
+        "introducedAt": 924,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 3
+      },
+      {
         "atom": "PA-COMPARISON-PANJ-MATCH",
         "language": "punjabi",
         "introducedBy": "PA-C06-panj-convergence",
@@ -326282,10 +326617,40 @@
         "revisits": 3
       },
       {
+        "atom": "PA-GRAMMAR-ADJ-GENDER-AGREEMENT-01",
+        "language": "punjabi",
+        "introducedBy": "PA-C177-adjective-agreement",
+        "introducedAt": 923,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "PA-GRAMMAR-ADJ-PRENOMINAL-01",
+        "language": "punjabi",
+        "introducedBy": "PA-C177-adjective-position",
+        "introducedAt": 922,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 3
+      },
+      {
         "atom": "PA-GRAMMAR-EXISTENTIAL-LOCATION-01",
         "language": "punjabi",
         "introducedBy": "PA-C176-location-frame",
         "introducedAt": 920,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "PA-GRAMMAR-MULTIWORD-NP-01",
+        "language": "punjabi",
+        "introducedBy": "PA-C177-noun-phrase",
+        "introducedAt": 925,
         "missed": [
           "R2"
         ],
@@ -326300,6 +326665,16 @@
           "R4"
         ],
         "revisits": 14
+      },
+      {
+        "atom": "PA-GRAMMAR-NOUN-GENDER-01",
+        "language": "punjabi",
+        "introducedBy": "PA-C177-noun-gender",
+        "introducedAt": 921,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 4
       },
       {
         "atom": "PA-GRAMMAR-NOUN-PLUS-KARNA",
@@ -326409,7 +326784,7 @@
         "missed": [
           "R3"
         ],
-        "revisits": 5
+        "revisits": 6
       },
       {
         "atom": "PA-LEX-BHAIN",
@@ -327302,36 +327677,6 @@
         "revisits": 3
       },
       {
-        "atom": "PT-LEX-C240-SAUDE240-05",
-        "language": "portuguese",
-        "introducedBy": "PT-C240-descanso",
-        "introducedAt": 1216,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "PT-LEX-C241-QUAL241-01",
-        "language": "portuguese",
-        "introducedBy": "PT-C241-liso-lisa",
-        "introducedAt": 1217,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "PT-LEX-C241-QUAL241-02",
-        "language": "portuguese",
-        "introducedBy": "PT-C241-aspero-aspera",
-        "introducedAt": 1218,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 3
-      },
-      {
         "atom": "PT-LEX-C241-QUAL241-03",
         "language": "portuguese",
         "introducedBy": "PT-C241-profundo-profunda",
@@ -327812,36 +328157,6 @@
         "revisits": 3
       },
       {
-        "atom": "PT-LEX-C252-COISAS252-03",
-        "language": "portuguese",
-        "introducedBy": "PT-C252-jogador",
-        "introducedAt": 1276,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "PT-LEX-C252-COISAS252-04",
-        "language": "portuguese",
-        "introducedBy": "PT-C252-treinador",
-        "introducedAt": 1277,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "PT-LEX-C252-COISAS252-05",
-        "language": "portuguese",
-        "introducedBy": "PT-C252-adepto",
-        "introducedAt": 1278,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 3
-      },
-      {
         "atom": "PT-LEX-C253-COISAS253-01",
         "language": "portuguese",
         "introducedBy": "PT-C253-provador",
@@ -327850,6 +328165,36 @@
           "R2"
         ],
         "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C255-COISAS255-03",
+        "language": "portuguese",
+        "introducedBy": "PT-C255-oceano",
+        "introducedAt": 1291,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C255-COISAS255-04",
+        "language": "portuguese",
+        "introducedBy": "PT-C255-selva",
+        "introducedAt": 1292,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C255-COISAS255-05",
+        "language": "portuguese",
+        "introducedBy": "PT-C255-chinelo",
+        "introducedAt": 1293,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 2
       },
       {
         "atom": "PT-LEX-CAFE-02",
@@ -328169,7 +328514,7 @@
         "missed": [
           "R4"
         ],
-        "revisits": 3
+        "revisits": 4
       },
       {
         "atom": "RU-GRAMMAR-MOTION-ONE-WAY-VS-HABITUAL",
@@ -328209,7 +328554,7 @@
         "missed": [
           "R4"
         ],
-        "revisits": 3
+        "revisits": 4
       },
       {
         "atom": "RU-GRAMMAR-OBJECT-PRONOUNS",
@@ -328239,7 +328584,7 @@
         "missed": [
           "R3"
         ],
-        "revisits": 12
+        "revisits": 14
       },
       {
         "atom": "RU-GRAMMAR-REQUEST-PATTERN",
@@ -328279,37 +328624,7 @@
         "missed": [
           "R4"
         ],
-        "revisits": 4
-      },
-      {
-        "atom": "RU-LEX-C242-MESTO242-05",
-        "language": "russian",
-        "introducedBy": "RU-C242-tsirk",
-        "introducedAt": 1259,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "RU-LEX-C243-KACH243-01",
-        "language": "russian",
-        "introducedBy": "RU-C243-molodoy",
-        "introducedAt": 1260,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "RU-LEX-C243-KACH243-02",
-        "language": "russian",
-        "introducedBy": "RU-C243-pozhiloy",
-        "introducedAt": 1261,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 3
+        "revisits": 5
       },
       {
         "atom": "RU-LEX-C243-KACH243-03",
@@ -328792,36 +329107,6 @@
         "revisits": 3
       },
       {
-        "atom": "RU-LEX-C254-VESHCH254-03",
-        "language": "russian",
-        "introducedBy": "RU-C254-devushka",
-        "introducedAt": 1319,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "RU-LEX-C254-VESHCH254-04",
-        "language": "russian",
-        "introducedBy": "RU-C254-roditeli",
-        "introducedAt": 1320,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "RU-LEX-C254-VESHCH254-05",
-        "language": "russian",
-        "introducedBy": "RU-C254-plemyannik",
-        "introducedAt": 1321,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 3
-      },
-      {
         "atom": "RU-LEX-C255-VESHCH255-01",
         "language": "russian",
         "introducedBy": "RU-C255-familiya",
@@ -328830,6 +329115,36 @@
           "R2"
         ],
         "revisits": 3
+      },
+      {
+        "atom": "RU-LEX-C257-RABOTA257-03",
+        "language": "russian",
+        "introducedBy": "RU-C257-proyekt",
+        "introducedAt": 1334,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "RU-LEX-C257-RABOTA257-04",
+        "language": "russian",
+        "introducedBy": "RU-C257-zadacha",
+        "introducedAt": 1335,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "RU-LEX-C257-RABOTA257-05",
+        "language": "russian",
+        "introducedBy": "RU-C257-opyt",
+        "introducedAt": 1336,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 2
       },
       {
         "atom": "RU-LEX-CHAI",
@@ -328899,7 +329214,7 @@
         "missed": [
           "R4"
         ],
-        "revisits": 10
+        "revisits": 11
       },
       {
         "atom": "RU-LEX-ILI-01",
@@ -328979,7 +329294,7 @@
         "missed": [
           "R4"
         ],
-        "revisits": 4
+        "revisits": 5
       },
       {
         "atom": "RU-LEX-ODIN-01",
@@ -329179,7 +329494,7 @@
         "missed": [
           "R4"
         ],
-        "revisits": 4
+        "revisits": 6
       },
       {
         "atom": "RU-PUNCT-VOPROS-01",
@@ -329289,7 +329604,7 @@
         "missed": [
           "R3"
         ],
-        "revisits": 6
+        "revisits": 8
       },
       {
         "atom": "RU-SCRIPT-TS-01",
@@ -341601,7 +341916,7 @@
       },
       {
         "language": "italian",
-        "lessonCount": 1312,
+        "lessonCount": 1315,
         "lessonsWithoutSequence": 0,
         "forwardPrerequisites": 0,
         "forwardReviews": 0,
@@ -341611,7 +341926,7 @@
       },
       {
         "language": "japanese",
-        "lessonCount": 837,
+        "lessonCount": 840,
         "lessonsWithoutSequence": 0,
         "forwardPrerequisites": 0,
         "forwardReviews": 0,
@@ -341671,7 +341986,7 @@
       },
       {
         "language": "persian",
-        "lessonCount": 1482,
+        "lessonCount": 1485,
         "lessonsWithoutSequence": 0,
         "forwardPrerequisites": 0,
         "forwardReviews": 0,
@@ -341681,7 +341996,7 @@
       },
       {
         "language": "portuguese",
-        "lessonCount": 1296,
+        "lessonCount": 1299,
         "lessonsWithoutSequence": 0,
         "forwardPrerequisites": 0,
         "forwardReviews": 0,
@@ -341691,17 +342006,17 @@
       },
       {
         "language": "punjabi",
-        "lessonCount": 926,
+        "lessonCount": 931,
         "lessonsWithoutSequence": 0,
         "forwardPrerequisites": 0,
         "forwardReviews": 0,
-        "atomsTaught": 899,
+        "atomsTaught": 904,
         "atomsNeverRevisited": 1,
         "forwardReferences": 2
       },
       {
         "language": "russian",
-        "lessonCount": 1339,
+        "lessonCount": 1342,
         "lessonsWithoutSequence": 0,
         "forwardPrerequisites": 0,
         "forwardReviews": 0,
@@ -341765,14 +342080,14 @@
       "tracksWithUnorderedLessons": 0,
       "forwardPrerequisites": 0,
       "forwardReviews": 0,
-      "atomsTaught": 30009,
+      "atomsTaught": 30014,
       "atomsNeverRevisited": 3,
       "neverRevisitedPercent": 0,
       "missedByWindow": {
         "R1": 1554,
-        "R2": 19864,
-        "R3": 16017,
-        "R4": 24410
+        "R2": 19884,
+        "R3": 16032,
+        "R4": 24424
       },
       "forwardReferences": 788
     }
@@ -341847,8 +342162,8 @@
       {
         "language": "japanese",
         "script": "japanese",
-        "lessonCount": 837,
-        "scriptLessons": 82,
+        "lessonCount": 840,
+        "scriptLessons": 84,
         "taughtGlyphs": 84,
         "shownGlyphs": 84,
         "neverTaughtGlyphs": 0,
@@ -341912,8 +342227,8 @@
       {
         "language": "persian",
         "script": "perso-arabic",
-        "lessonCount": 1482,
-        "scriptLessons": 34,
+        "lessonCount": 1485,
+        "scriptLessons": 37,
         "taughtGlyphs": 38,
         "shownGlyphs": 38,
         "neverTaughtGlyphs": 0,
@@ -341925,7 +342240,7 @@
       {
         "language": "punjabi",
         "script": "gurmukhi",
-        "lessonCount": 926,
+        "lessonCount": 931,
         "scriptLessons": 202,
         "taughtGlyphs": 52,
         "shownGlyphs": 52,
@@ -341938,10 +342253,10 @@
       {
         "language": "russian",
         "script": "cyrillic",
-        "lessonCount": 1339,
-        "scriptLessons": 35,
-        "taughtGlyphs": 60,
-        "shownGlyphs": 60,
+        "lessonCount": 1342,
+        "scriptLessons": 38,
+        "taughtGlyphs": 61,
+        "shownGlyphs": 61,
         "neverTaughtGlyphs": 0,
         "violations": 0,
         "exposureOnly": 51,
@@ -349874,6 +350189,33 @@
             "stage": "dictation-transcription",
             "level": "pre-A1",
             "sequence": 17
+          },
+          {
+            "language": "italian",
+            "lessonId": "IT-W260-my-own-line",
+            "blockIndex": 1,
+            "blockTitle": "Writing — controlled composition",
+            "stage": "controlled-composition",
+            "level": "A1",
+            "sequence": 15620
+          },
+          {
+            "language": "italian",
+            "lessonId": "IT-W261-with-a-clock",
+            "blockIndex": 1,
+            "blockTitle": "Writing — timed production",
+            "stage": "timed-assessment-production",
+            "level": "A1",
+            "sequence": 15630
+          },
+          {
+            "language": "italian",
+            "lessonId": "IT-W262-four-lines",
+            "blockIndex": 2,
+            "blockTitle": "Writing — connected composition",
+            "stage": "connected-composition",
+            "level": "A1",
+            "sequence": 15640
           }
         ],
         "validEvidence": [
@@ -349912,6 +350254,33 @@
             "stage": "dictation-transcription",
             "level": "pre-A1",
             "sequence": 17
+          },
+          {
+            "language": "italian",
+            "lessonId": "IT-W260-my-own-line",
+            "blockIndex": 1,
+            "blockTitle": "Writing — controlled composition",
+            "stage": "controlled-composition",
+            "level": "A1",
+            "sequence": 15620
+          },
+          {
+            "language": "italian",
+            "lessonId": "IT-W261-with-a-clock",
+            "blockIndex": 1,
+            "blockTitle": "Writing — timed production",
+            "stage": "timed-assessment-production",
+            "level": "A1",
+            "sequence": 15630
+          },
+          {
+            "language": "italian",
+            "lessonId": "IT-W262-four-lines",
+            "blockIndex": 2,
+            "blockTitle": "Writing — connected composition",
+            "stage": "connected-composition",
+            "level": "A1",
+            "sequence": 15640
           }
         ],
         "defects": [],
@@ -349947,13 +350316,13 @@
               "observe-trace",
               "guided-copy",
               "delayed-copy",
-              "dictation-transcription"
-            ],
-            "missingStages": [
+              "dictation-transcription",
               "controlled-composition",
-              "timed-assessment-production"
+              "timed-assessment-production",
+              "connected-composition"
             ],
-            "complete": false
+            "missingStages": [],
+            "complete": true
           },
           {
             "level": "A2",
@@ -349970,14 +350339,13 @@
               "observe-trace",
               "guided-copy",
               "delayed-copy",
-              "dictation-transcription"
-            ],
-            "missingStages": [
+              "dictation-transcription",
               "controlled-composition",
-              "connected-composition",
-              "timed-assessment-production"
+              "timed-assessment-production",
+              "connected-composition"
             ],
-            "complete": false
+            "missingStages": [],
+            "complete": true
           },
           {
             "level": "B1",
@@ -349994,14 +350362,13 @@
               "observe-trace",
               "guided-copy",
               "delayed-copy",
-              "dictation-transcription"
-            ],
-            "missingStages": [
+              "dictation-transcription",
               "controlled-composition",
-              "connected-composition",
-              "timed-assessment-production"
+              "timed-assessment-production",
+              "connected-composition"
             ],
-            "complete": false
+            "missingStages": [],
+            "complete": true
           },
           {
             "level": "B2",
@@ -350018,14 +350385,13 @@
               "observe-trace",
               "guided-copy",
               "delayed-copy",
-              "dictation-transcription"
-            ],
-            "missingStages": [
+              "dictation-transcription",
               "controlled-composition",
-              "connected-composition",
-              "timed-assessment-production"
+              "timed-assessment-production",
+              "connected-composition"
             ],
-            "complete": false
+            "missingStages": [],
+            "complete": true
           },
           {
             "level": "C1",
@@ -350042,14 +350408,13 @@
               "observe-trace",
               "guided-copy",
               "delayed-copy",
-              "dictation-transcription"
-            ],
-            "missingStages": [
+              "dictation-transcription",
               "controlled-composition",
-              "connected-composition",
-              "timed-assessment-production"
+              "timed-assessment-production",
+              "connected-composition"
             ],
-            "complete": false
+            "missingStages": [],
+            "complete": true
           },
           {
             "level": "C2",
@@ -350066,14 +350431,13 @@
               "observe-trace",
               "guided-copy",
               "delayed-copy",
-              "dictation-transcription"
-            ],
-            "missingStages": [
+              "dictation-transcription",
               "controlled-composition",
-              "connected-composition",
-              "timed-assessment-production"
+              "timed-assessment-production",
+              "connected-composition"
             ],
-            "complete": false
+            "missingStages": [],
+            "complete": true
           }
         ]
       },
@@ -350115,6 +350479,33 @@
             "stage": "dictation-transcription",
             "level": "pre-A1",
             "sequence": 40
+          },
+          {
+            "language": "japanese",
+            "lessonId": "JA-W143-my-own-line",
+            "blockIndex": 1,
+            "blockTitle": "Writing — controlled composition",
+            "stage": "controlled-composition",
+            "level": "A1",
+            "sequence": 8750
+          },
+          {
+            "language": "japanese",
+            "lessonId": "JA-W144-with-a-clock",
+            "blockIndex": 1,
+            "blockTitle": "Writing — timed production",
+            "stage": "timed-assessment-production",
+            "level": "A1",
+            "sequence": 8760
+          },
+          {
+            "language": "japanese",
+            "lessonId": "JA-W145-four-lines",
+            "blockIndex": 2,
+            "blockTitle": "Writing — connected composition",
+            "stage": "connected-composition",
+            "level": "A1",
+            "sequence": 8770
           }
         ],
         "validEvidence": [
@@ -350153,6 +350544,33 @@
             "stage": "dictation-transcription",
             "level": "pre-A1",
             "sequence": 40
+          },
+          {
+            "language": "japanese",
+            "lessonId": "JA-W143-my-own-line",
+            "blockIndex": 1,
+            "blockTitle": "Writing — controlled composition",
+            "stage": "controlled-composition",
+            "level": "A1",
+            "sequence": 8750
+          },
+          {
+            "language": "japanese",
+            "lessonId": "JA-W144-with-a-clock",
+            "blockIndex": 1,
+            "blockTitle": "Writing — timed production",
+            "stage": "timed-assessment-production",
+            "level": "A1",
+            "sequence": 8760
+          },
+          {
+            "language": "japanese",
+            "lessonId": "JA-W145-four-lines",
+            "blockIndex": 2,
+            "blockTitle": "Writing — connected composition",
+            "stage": "connected-composition",
+            "level": "A1",
+            "sequence": 8770
           }
         ],
         "defects": [],
@@ -350188,13 +350606,13 @@
               "observe-trace",
               "guided-copy",
               "delayed-copy",
-              "dictation-transcription"
-            ],
-            "missingStages": [
+              "dictation-transcription",
               "controlled-composition",
-              "timed-assessment-production"
+              "timed-assessment-production",
+              "connected-composition"
             ],
-            "complete": false
+            "missingStages": [],
+            "complete": true
           },
           {
             "level": "A2",
@@ -350211,14 +350629,13 @@
               "observe-trace",
               "guided-copy",
               "delayed-copy",
-              "dictation-transcription"
-            ],
-            "missingStages": [
+              "dictation-transcription",
               "controlled-composition",
-              "connected-composition",
-              "timed-assessment-production"
+              "timed-assessment-production",
+              "connected-composition"
             ],
-            "complete": false
+            "missingStages": [],
+            "complete": true
           },
           {
             "level": "B1",
@@ -350235,14 +350652,13 @@
               "observe-trace",
               "guided-copy",
               "delayed-copy",
-              "dictation-transcription"
-            ],
-            "missingStages": [
+              "dictation-transcription",
               "controlled-composition",
-              "connected-composition",
-              "timed-assessment-production"
+              "timed-assessment-production",
+              "connected-composition"
             ],
-            "complete": false
+            "missingStages": [],
+            "complete": true
           },
           {
             "level": "B2",
@@ -350259,14 +350675,13 @@
               "observe-trace",
               "guided-copy",
               "delayed-copy",
-              "dictation-transcription"
-            ],
-            "missingStages": [
+              "dictation-transcription",
               "controlled-composition",
-              "connected-composition",
-              "timed-assessment-production"
+              "timed-assessment-production",
+              "connected-composition"
             ],
-            "complete": false
+            "missingStages": [],
+            "complete": true
           },
           {
             "level": "C1",
@@ -350283,14 +350698,13 @@
               "observe-trace",
               "guided-copy",
               "delayed-copy",
-              "dictation-transcription"
-            ],
-            "missingStages": [
+              "dictation-transcription",
               "controlled-composition",
-              "connected-composition",
-              "timed-assessment-production"
+              "timed-assessment-production",
+              "connected-composition"
             ],
-            "complete": false
+            "missingStages": [],
+            "complete": true
           },
           {
             "level": "C2",
@@ -350307,14 +350721,13 @@
               "observe-trace",
               "guided-copy",
               "delayed-copy",
-              "dictation-transcription"
-            ],
-            "missingStages": [
+              "dictation-transcription",
               "controlled-composition",
-              "connected-composition",
-              "timed-assessment-production"
+              "timed-assessment-production",
+              "connected-composition"
             ],
-            "complete": false
+            "missingStages": [],
+            "complete": true
           }
         ]
       },
@@ -356843,6 +357256,33 @@
             "stage": "dictation-transcription",
             "level": "pre-A1",
             "sequence": 17
+          },
+          {
+            "language": "persian",
+            "lessonId": "FA-W287-khat-e-khodam",
+            "blockIndex": 1,
+            "blockTitle": "Writing — controlled composition",
+            "stage": "controlled-composition",
+            "level": "A1",
+            "sequence": 14850
+          },
+          {
+            "language": "persian",
+            "lessonId": "FA-W288-ba-saat",
+            "blockIndex": 2,
+            "blockTitle": "Writing — timed assessment production",
+            "stage": "timed-assessment-production",
+            "level": "A1",
+            "sequence": 14860
+          },
+          {
+            "language": "persian",
+            "lessonId": "FA-W289-chahar-khat",
+            "blockIndex": 2,
+            "blockTitle": "Writing — connected composition",
+            "stage": "connected-composition",
+            "level": "A1",
+            "sequence": 14870
           }
         ],
         "validEvidence": [
@@ -356881,6 +357321,33 @@
             "stage": "dictation-transcription",
             "level": "pre-A1",
             "sequence": 17
+          },
+          {
+            "language": "persian",
+            "lessonId": "FA-W287-khat-e-khodam",
+            "blockIndex": 1,
+            "blockTitle": "Writing — controlled composition",
+            "stage": "controlled-composition",
+            "level": "A1",
+            "sequence": 14850
+          },
+          {
+            "language": "persian",
+            "lessonId": "FA-W288-ba-saat",
+            "blockIndex": 2,
+            "blockTitle": "Writing — timed assessment production",
+            "stage": "timed-assessment-production",
+            "level": "A1",
+            "sequence": 14860
+          },
+          {
+            "language": "persian",
+            "lessonId": "FA-W289-chahar-khat",
+            "blockIndex": 2,
+            "blockTitle": "Writing — connected composition",
+            "stage": "connected-composition",
+            "level": "A1",
+            "sequence": 14870
           }
         ],
         "defects": [],
@@ -356916,13 +357383,13 @@
               "observe-trace",
               "guided-copy",
               "delayed-copy",
-              "dictation-transcription"
-            ],
-            "missingStages": [
+              "dictation-transcription",
               "controlled-composition",
-              "timed-assessment-production"
+              "timed-assessment-production",
+              "connected-composition"
             ],
-            "complete": false
+            "missingStages": [],
+            "complete": true
           },
           {
             "level": "A2",
@@ -356939,14 +357406,13 @@
               "observe-trace",
               "guided-copy",
               "delayed-copy",
-              "dictation-transcription"
-            ],
-            "missingStages": [
+              "dictation-transcription",
               "controlled-composition",
-              "connected-composition",
-              "timed-assessment-production"
+              "timed-assessment-production",
+              "connected-composition"
             ],
-            "complete": false
+            "missingStages": [],
+            "complete": true
           },
           {
             "level": "B1",
@@ -356963,14 +357429,13 @@
               "observe-trace",
               "guided-copy",
               "delayed-copy",
-              "dictation-transcription"
-            ],
-            "missingStages": [
+              "dictation-transcription",
               "controlled-composition",
-              "connected-composition",
-              "timed-assessment-production"
+              "timed-assessment-production",
+              "connected-composition"
             ],
-            "complete": false
+            "missingStages": [],
+            "complete": true
           },
           {
             "level": "B2",
@@ -356987,14 +357452,13 @@
               "observe-trace",
               "guided-copy",
               "delayed-copy",
-              "dictation-transcription"
-            ],
-            "missingStages": [
+              "dictation-transcription",
               "controlled-composition",
-              "connected-composition",
-              "timed-assessment-production"
+              "timed-assessment-production",
+              "connected-composition"
             ],
-            "complete": false
+            "missingStages": [],
+            "complete": true
           },
           {
             "level": "C1",
@@ -357011,14 +357475,13 @@
               "observe-trace",
               "guided-copy",
               "delayed-copy",
-              "dictation-transcription"
-            ],
-            "missingStages": [
+              "dictation-transcription",
               "controlled-composition",
-              "connected-composition",
-              "timed-assessment-production"
+              "timed-assessment-production",
+              "connected-composition"
             ],
-            "complete": false
+            "missingStages": [],
+            "complete": true
           },
           {
             "level": "C2",
@@ -357035,14 +357498,13 @@
               "observe-trace",
               "guided-copy",
               "delayed-copy",
-              "dictation-transcription"
-            ],
-            "missingStages": [
+              "dictation-transcription",
               "controlled-composition",
-              "connected-composition",
-              "timed-assessment-production"
+              "timed-assessment-production",
+              "connected-composition"
             ],
-            "complete": false
+            "missingStages": [],
+            "complete": true
           }
         ]
       },
@@ -357084,6 +357546,33 @@
             "stage": "dictation-transcription",
             "level": "pre-A1",
             "sequence": 17
+          },
+          {
+            "language": "portuguese",
+            "lessonId": "PT-W256-my-own-line",
+            "blockIndex": 1,
+            "blockTitle": "Writing — controlled composition",
+            "stage": "controlled-composition",
+            "level": "A1",
+            "sequence": 15370
+          },
+          {
+            "language": "portuguese",
+            "lessonId": "PT-W257-with-a-clock",
+            "blockIndex": 1,
+            "blockTitle": "Writing — timed production",
+            "stage": "timed-assessment-production",
+            "level": "A1",
+            "sequence": 15380
+          },
+          {
+            "language": "portuguese",
+            "lessonId": "PT-W258-four-lines",
+            "blockIndex": 2,
+            "blockTitle": "Writing — connected composition",
+            "stage": "connected-composition",
+            "level": "A1",
+            "sequence": 15390
           }
         ],
         "validEvidence": [
@@ -357122,6 +357611,33 @@
             "stage": "dictation-transcription",
             "level": "pre-A1",
             "sequence": 17
+          },
+          {
+            "language": "portuguese",
+            "lessonId": "PT-W256-my-own-line",
+            "blockIndex": 1,
+            "blockTitle": "Writing — controlled composition",
+            "stage": "controlled-composition",
+            "level": "A1",
+            "sequence": 15370
+          },
+          {
+            "language": "portuguese",
+            "lessonId": "PT-W257-with-a-clock",
+            "blockIndex": 1,
+            "blockTitle": "Writing — timed production",
+            "stage": "timed-assessment-production",
+            "level": "A1",
+            "sequence": 15380
+          },
+          {
+            "language": "portuguese",
+            "lessonId": "PT-W258-four-lines",
+            "blockIndex": 2,
+            "blockTitle": "Writing — connected composition",
+            "stage": "connected-composition",
+            "level": "A1",
+            "sequence": 15390
           }
         ],
         "defects": [],
@@ -357157,13 +357673,13 @@
               "observe-trace",
               "guided-copy",
               "delayed-copy",
-              "dictation-transcription"
-            ],
-            "missingStages": [
+              "dictation-transcription",
               "controlled-composition",
-              "timed-assessment-production"
+              "timed-assessment-production",
+              "connected-composition"
             ],
-            "complete": false
+            "missingStages": [],
+            "complete": true
           },
           {
             "level": "A2",
@@ -357180,14 +357696,13 @@
               "observe-trace",
               "guided-copy",
               "delayed-copy",
-              "dictation-transcription"
-            ],
-            "missingStages": [
+              "dictation-transcription",
               "controlled-composition",
-              "connected-composition",
-              "timed-assessment-production"
+              "timed-assessment-production",
+              "connected-composition"
             ],
-            "complete": false
+            "missingStages": [],
+            "complete": true
           },
           {
             "level": "B1",
@@ -357204,14 +357719,13 @@
               "observe-trace",
               "guided-copy",
               "delayed-copy",
-              "dictation-transcription"
-            ],
-            "missingStages": [
+              "dictation-transcription",
               "controlled-composition",
-              "connected-composition",
-              "timed-assessment-production"
+              "timed-assessment-production",
+              "connected-composition"
             ],
-            "complete": false
+            "missingStages": [],
+            "complete": true
           },
           {
             "level": "B2",
@@ -357228,14 +357742,13 @@
               "observe-trace",
               "guided-copy",
               "delayed-copy",
-              "dictation-transcription"
-            ],
-            "missingStages": [
+              "dictation-transcription",
               "controlled-composition",
-              "connected-composition",
-              "timed-assessment-production"
+              "timed-assessment-production",
+              "connected-composition"
             ],
-            "complete": false
+            "missingStages": [],
+            "complete": true
           },
           {
             "level": "C1",
@@ -357252,14 +357765,13 @@
               "observe-trace",
               "guided-copy",
               "delayed-copy",
-              "dictation-transcription"
-            ],
-            "missingStages": [
+              "dictation-transcription",
               "controlled-composition",
-              "connected-composition",
-              "timed-assessment-production"
+              "timed-assessment-production",
+              "connected-composition"
             ],
-            "complete": false
+            "missingStages": [],
+            "complete": true
           },
           {
             "level": "C2",
@@ -357276,14 +357788,13 @@
               "observe-trace",
               "guided-copy",
               "delayed-copy",
-              "dictation-transcription"
-            ],
-            "missingStages": [
+              "dictation-transcription",
               "controlled-composition",
-              "connected-composition",
-              "timed-assessment-production"
+              "timed-assessment-production",
+              "connected-composition"
             ],
-            "complete": false
+            "missingStages": [],
+            "complete": true
           }
         ]
       },
@@ -359821,6 +360332,33 @@
             "stage": "dictation-transcription",
             "level": "pre-A1",
             "sequence": 66
+          },
+          {
+            "language": "russian",
+            "lessonId": "RU-W258-own-line",
+            "blockIndex": 1,
+            "blockTitle": "Writing — controlled composition",
+            "stage": "controlled-composition",
+            "level": "A1",
+            "sequence": 15880
+          },
+          {
+            "language": "russian",
+            "lessonId": "RU-W259-with-a-clock",
+            "blockIndex": 1,
+            "blockTitle": "Writing — timed production",
+            "stage": "timed-assessment-production",
+            "level": "A1",
+            "sequence": 15890
+          },
+          {
+            "language": "russian",
+            "lessonId": "RU-W260-four-lines",
+            "blockIndex": 2,
+            "blockTitle": "Writing — connected composition",
+            "stage": "connected-composition",
+            "level": "A1",
+            "sequence": 15900
           }
         ],
         "validEvidence": [
@@ -359868,6 +360406,33 @@
             "stage": "dictation-transcription",
             "level": "pre-A1",
             "sequence": 66
+          },
+          {
+            "language": "russian",
+            "lessonId": "RU-W258-own-line",
+            "blockIndex": 1,
+            "blockTitle": "Writing — controlled composition",
+            "stage": "controlled-composition",
+            "level": "A1",
+            "sequence": 15880
+          },
+          {
+            "language": "russian",
+            "lessonId": "RU-W259-with-a-clock",
+            "blockIndex": 1,
+            "blockTitle": "Writing — timed production",
+            "stage": "timed-assessment-production",
+            "level": "A1",
+            "sequence": 15890
+          },
+          {
+            "language": "russian",
+            "lessonId": "RU-W260-four-lines",
+            "blockIndex": 2,
+            "blockTitle": "Writing — connected composition",
+            "stage": "connected-composition",
+            "level": "A1",
+            "sequence": 15900
           }
         ],
         "defects": [],
@@ -359903,13 +360468,13 @@
               "observe-trace",
               "guided-copy",
               "delayed-copy",
-              "dictation-transcription"
-            ],
-            "missingStages": [
+              "dictation-transcription",
               "controlled-composition",
-              "timed-assessment-production"
+              "timed-assessment-production",
+              "connected-composition"
             ],
-            "complete": false
+            "missingStages": [],
+            "complete": true
           },
           {
             "level": "A2",
@@ -359926,14 +360491,13 @@
               "observe-trace",
               "guided-copy",
               "delayed-copy",
-              "dictation-transcription"
-            ],
-            "missingStages": [
+              "dictation-transcription",
               "controlled-composition",
-              "connected-composition",
-              "timed-assessment-production"
+              "timed-assessment-production",
+              "connected-composition"
             ],
-            "complete": false
+            "missingStages": [],
+            "complete": true
           },
           {
             "level": "B1",
@@ -359950,14 +360514,13 @@
               "observe-trace",
               "guided-copy",
               "delayed-copy",
-              "dictation-transcription"
-            ],
-            "missingStages": [
+              "dictation-transcription",
               "controlled-composition",
-              "connected-composition",
-              "timed-assessment-production"
+              "timed-assessment-production",
+              "connected-composition"
             ],
-            "complete": false
+            "missingStages": [],
+            "complete": true
           },
           {
             "level": "B2",
@@ -359974,14 +360537,13 @@
               "observe-trace",
               "guided-copy",
               "delayed-copy",
-              "dictation-transcription"
-            ],
-            "missingStages": [
+              "dictation-transcription",
               "controlled-composition",
-              "connected-composition",
-              "timed-assessment-production"
+              "timed-assessment-production",
+              "connected-composition"
             ],
-            "complete": false
+            "missingStages": [],
+            "complete": true
           },
           {
             "level": "C1",
@@ -359998,14 +360560,13 @@
               "observe-trace",
               "guided-copy",
               "delayed-copy",
-              "dictation-transcription"
-            ],
-            "missingStages": [
+              "dictation-transcription",
               "controlled-composition",
-              "connected-composition",
-              "timed-assessment-production"
+              "timed-assessment-production",
+              "connected-composition"
             ],
-            "complete": false
+            "missingStages": [],
+            "complete": true
           },
           {
             "level": "C2",
@@ -360022,14 +360583,13 @@
               "observe-trace",
               "guided-copy",
               "delayed-copy",
-              "dictation-transcription"
-            ],
-            "missingStages": [
+              "dictation-transcription",
               "controlled-composition",
-              "connected-composition",
-              "timed-assessment-production"
+              "timed-assessment-production",
+              "connected-composition"
             ],
-            "complete": false
+            "missingStages": [],
+            "complete": true
           }
         ]
       },
@@ -362851,9 +363411,9 @@
       "tracks": 23,
       "tracksWithAnyEvidence": 23,
       "tracksCompleteAtPreA1": 23,
-      "evidenceBlocks": 932,
+      "evidenceBlocks": 947,
       "invalidEvidenceBlocks": 0,
-      "missingTrackLevelStages": 102
+      "missingTrackLevelStages": 17
     }
   },
   "gentleRamp": {
@@ -363308,9 +363868,9 @@
       },
       {
         "language": "italian",
-        "lessonCount": 1312,
-        "atomMeasurableLessons": 1312,
-        "atomMeasurementBlindLessons": 0,
+        "lessonCount": 1315,
+        "atomMeasurableLessons": 1314,
+        "atomMeasurementBlindLessons": 1,
         "durationViolations": 0,
         "atomLessonSpikes": 0,
         "atomChapterSpikes": 3,
@@ -363326,15 +363886,15 @@
         "forwardReferences": 0,
         "atomsTaught": 1426,
         "atomsNeverRevisited": 0,
-        "reinforcementWindowMisses": 2767,
+        "reinforcementWindowMisses": 2776,
         "reinforcementMissesByWindow": {
           "R1": 39,
-          "R2": 980,
-          "R3": 613,
-          "R4": 1135
+          "R2": 983,
+          "R3": 616,
+          "R4": 1138
         },
         "payoffSurprises": 0,
-        "writingPracticeLessons": 4,
+        "writingPracticeLessons": 7,
         "firstWritingPracticeAt": 0,
         "lessonsBeforeWritingPractice": 0,
         "findings": [
@@ -363348,9 +363908,16 @@
           {
             "language": "italian",
             "kind": "reinforcement",
-            "count": 2767,
+            "count": 2776,
             "unit": "missed window(s)",
             "detail": "add retrieval at the expanding R1-R4 intervals"
+          },
+          {
+            "language": "italian",
+            "kind": "measurement-blind",
+            "count": 1,
+            "unit": "lesson(s)",
+            "detail": "migrate undeclared lesson knowledge so gentleness can be measured"
           }
         ],
         "next": {
@@ -363363,8 +363930,8 @@
       },
       {
         "language": "japanese",
-        "lessonCount": 837,
-        "atomMeasurableLessons": 837,
+        "lessonCount": 840,
+        "atomMeasurableLessons": 840,
         "atomMeasurementBlindLessons": 0,
         "durationViolations": 0,
         "atomLessonSpikes": 0,
@@ -363381,22 +363948,22 @@
         "forwardReferences": 0,
         "atomsTaught": 801,
         "atomsNeverRevisited": 0,
-        "reinforcementWindowMisses": 1224,
+        "reinforcementWindowMisses": 1232,
         "reinforcementMissesByWindow": {
           "R1": 1,
-          "R2": 459,
-          "R3": 245,
-          "R4": 519
+          "R2": 462,
+          "R3": 248,
+          "R4": 521
         },
         "payoffSurprises": 0,
-        "writingPracticeLessons": 91,
+        "writingPracticeLessons": 94,
         "firstWritingPracticeAt": 0,
         "lessonsBeforeWritingPractice": 0,
         "findings": [
           {
             "language": "japanese",
             "kind": "reinforcement",
-            "count": 1224,
+            "count": 1232,
             "unit": "missed window(s)",
             "detail": "add retrieval at the expanding R1-R4 intervals"
           }
@@ -363404,7 +363971,7 @@
         "next": {
           "language": "japanese",
           "kind": "reinforcement",
-          "count": 1224,
+          "count": 1232,
           "unit": "missed window(s)",
           "detail": "add retrieval at the expanding R1-R4 intervals"
         }
@@ -363735,9 +364302,9 @@
       },
       {
         "language": "persian",
-        "lessonCount": 1482,
-        "atomMeasurableLessons": 1481,
-        "atomMeasurementBlindLessons": 1,
+        "lessonCount": 1485,
+        "atomMeasurableLessons": 1483,
+        "atomMeasurementBlindLessons": 2,
         "durationViolations": 0,
         "atomLessonSpikes": 0,
         "atomChapterSpikes": 3,
@@ -363753,15 +364320,15 @@
         "forwardReferences": 2,
         "atomsTaught": 1527,
         "atomsNeverRevisited": 0,
-        "reinforcementWindowMisses": 3290,
+        "reinforcementWindowMisses": 3299,
         "reinforcementMissesByWindow": {
           "R1": 24,
-          "R2": 1097,
-          "R3": 748,
-          "R4": 1421
+          "R2": 1100,
+          "R3": 751,
+          "R4": 1424
         },
         "payoffSurprises": 0,
-        "writingPracticeLessons": 42,
+        "writingPracticeLessons": 45,
         "firstWritingPracticeAt": 0,
         "lessonsBeforeWritingPractice": 0,
         "findings": [
@@ -363782,14 +364349,14 @@
           {
             "language": "persian",
             "kind": "reinforcement",
-            "count": 3290,
+            "count": 3299,
             "unit": "missed window(s)",
             "detail": "add retrieval at the expanding R1-R4 intervals"
           },
           {
             "language": "persian",
             "kind": "measurement-blind",
-            "count": 1,
+            "count": 2,
             "unit": "lesson(s)",
             "detail": "migrate undeclared lesson knowledge so gentleness can be measured"
           }
@@ -363804,9 +364371,9 @@
       },
       {
         "language": "portuguese",
-        "lessonCount": 1296,
-        "atomMeasurableLessons": 1296,
-        "atomMeasurementBlindLessons": 0,
+        "lessonCount": 1299,
+        "atomMeasurableLessons": 1298,
+        "atomMeasurementBlindLessons": 1,
         "durationViolations": 0,
         "atomLessonSpikes": 0,
         "atomChapterSpikes": 3,
@@ -363822,15 +364389,15 @@
         "forwardReferences": 34,
         "atomsTaught": 1365,
         "atomsNeverRevisited": 0,
-        "reinforcementWindowMisses": 2914,
+        "reinforcementWindowMisses": 2923,
         "reinforcementMissesByWindow": {
           "R1": 50,
-          "R2": 1026,
-          "R3": 706,
-          "R4": 1132
+          "R2": 1029,
+          "R3": 709,
+          "R4": 1135
         },
         "payoffSurprises": 0,
-        "writingPracticeLessons": 4,
+        "writingPracticeLessons": 7,
         "firstWritingPracticeAt": 0,
         "lessonsBeforeWritingPractice": 0,
         "findings": [
@@ -363851,9 +364418,16 @@
           {
             "language": "portuguese",
             "kind": "reinforcement",
-            "count": 2914,
+            "count": 2923,
             "unit": "missed window(s)",
             "detail": "add retrieval at the expanding R1-R4 intervals"
+          },
+          {
+            "language": "portuguese",
+            "kind": "measurement-blind",
+            "count": 1,
+            "unit": "lesson(s)",
+            "detail": "migrate undeclared lesson knowledge so gentleness can be measured"
           }
         ],
         "next": {
@@ -363866,8 +364440,8 @@
       },
       {
         "language": "punjabi",
-        "lessonCount": 926,
-        "atomMeasurableLessons": 892,
+        "lessonCount": 931,
+        "atomMeasurableLessons": 897,
         "atomMeasurementBlindLessons": 34,
         "durationViolations": 0,
         "atomLessonSpikes": 0,
@@ -363882,12 +364456,12 @@
         "forwardPrerequisites": 0,
         "forwardReviews": 0,
         "forwardReferences": 2,
-        "atomsTaught": 899,
+        "atomsTaught": 904,
         "atomsNeverRevisited": 1,
-        "reinforcementWindowMisses": 1714,
+        "reinforcementWindowMisses": 1719,
         "reinforcementMissesByWindow": {
           "R1": 56,
-          "R2": 568,
+          "R2": 573,
           "R3": 512,
           "R4": 578
         },
@@ -363913,7 +364487,7 @@
           {
             "language": "punjabi",
             "kind": "reinforcement",
-            "count": 1714,
+            "count": 1719,
             "unit": "missed window(s)",
             "detail": "add retrieval at the expanding R1-R4 intervals"
           },
@@ -363935,9 +364509,9 @@
       },
       {
         "language": "russian",
-        "lessonCount": 1339,
-        "atomMeasurableLessons": 1339,
-        "atomMeasurementBlindLessons": 0,
+        "lessonCount": 1342,
+        "atomMeasurableLessons": 1341,
+        "atomMeasurementBlindLessons": 1,
         "durationViolations": 0,
         "atomLessonSpikes": 0,
         "atomChapterSpikes": 4,
@@ -363953,15 +364527,15 @@
         "forwardReferences": 0,
         "atomsTaught": 1393,
         "atomsNeverRevisited": 0,
-        "reinforcementWindowMisses": 2841,
+        "reinforcementWindowMisses": 2850,
         "reinforcementMissesByWindow": {
           "R1": 35,
-          "R2": 992,
-          "R3": 685,
-          "R4": 1129
+          "R2": 995,
+          "R3": 688,
+          "R4": 1132
         },
         "payoffSurprises": 0,
-        "writingPracticeLessons": 49,
+        "writingPracticeLessons": 52,
         "firstWritingPracticeAt": 0,
         "lessonsBeforeWritingPractice": 0,
         "findings": [
@@ -363975,9 +364549,16 @@
           {
             "language": "russian",
             "kind": "reinforcement",
-            "count": 2841,
+            "count": 2850,
             "unit": "missed window(s)",
             "detail": "add retrieval at the expanding R1-R4 intervals"
+          },
+          {
+            "language": "russian",
+            "kind": "measurement-blind",
+            "count": 1,
+            "unit": "lesson(s)",
+            "detail": "migrate undeclared lesson knowledge so gentleness can be measured"
           }
         ],
         "next": {
@@ -364534,7 +365115,7 @@
       {
         "language": "persian",
         "kind": "reinforcement",
-        "count": 3290,
+        "count": 3299,
         "unit": "missed window(s)",
         "detail": "add retrieval at the expanding R1-R4 intervals"
       },
@@ -364590,7 +365171,7 @@
       {
         "language": "portuguese",
         "kind": "reinforcement",
-        "count": 2914,
+        "count": 2923,
         "unit": "missed window(s)",
         "detail": "add retrieval at the expanding R1-R4 intervals"
       },
@@ -364604,7 +365185,7 @@
       {
         "language": "russian",
         "kind": "reinforcement",
-        "count": 2841,
+        "count": 2850,
         "unit": "missed window(s)",
         "detail": "add retrieval at the expanding R1-R4 intervals"
       },
@@ -364618,7 +365199,7 @@
       {
         "language": "italian",
         "kind": "reinforcement",
-        "count": 2767,
+        "count": 2776,
         "unit": "missed window(s)",
         "detail": "add retrieval at the expanding R1-R4 intervals"
       },
@@ -364639,7 +365220,7 @@
       {
         "language": "punjabi",
         "kind": "reinforcement",
-        "count": 1714,
+        "count": 1719,
         "unit": "missed window(s)",
         "detail": "add retrieval at the expanding R1-R4 intervals"
       },
@@ -364653,7 +365234,7 @@
       {
         "language": "japanese",
         "kind": "reinforcement",
-        "count": 1224,
+        "count": 1232,
         "unit": "missed window(s)",
         "detail": "add retrieval at the expanding R1-R4 intervals"
       },
@@ -364770,9 +365351,23 @@
         "detail": "migrate undeclared lesson knowledge so gentleness can be measured"
       },
       {
+        "language": "persian",
+        "kind": "measurement-blind",
+        "count": 2,
+        "unit": "lesson(s)",
+        "detail": "migrate undeclared lesson knowledge so gentleness can be measured"
+      },
+      {
         "language": "telugu",
         "kind": "measurement-blind",
         "count": 2,
+        "unit": "lesson(s)",
+        "detail": "migrate undeclared lesson knowledge so gentleness can be measured"
+      },
+      {
+        "language": "italian",
+        "kind": "measurement-blind",
+        "count": 1,
         "unit": "lesson(s)",
         "detail": "migrate undeclared lesson knowledge so gentleness can be measured"
       },
@@ -364791,7 +365386,14 @@
         "detail": "migrate undeclared lesson knowledge so gentleness can be measured"
       },
       {
-        "language": "persian",
+        "language": "portuguese",
+        "kind": "measurement-blind",
+        "count": 1,
+        "unit": "lesson(s)",
+        "detail": "migrate undeclared lesson knowledge so gentleness can be measured"
+      },
+      {
+        "language": "russian",
         "kind": "measurement-blind",
         "count": 1,
         "unit": "lesson(s)",
@@ -364810,8 +365412,8 @@
       "tracksWithDetectedCliffs": 23,
       "tracksWithNoWritingPractice": 0,
       "tracksWhereWritingStartsLate": 0,
-      "atomMeasurementBlindLessons": 156,
-      "findings": 71
+      "atomMeasurementBlindLessons": 160,
+      "findings": 74
     }
   },
   "levelGate": {
@@ -365000,13 +365602,18 @@
       {
         "language": "italian",
         "touches": "A2",
-        "attained": "pre-A1",
-        "inProgressAt": "A1",
+        "attained": "A2",
+        "inProgressAt": "B1",
         "blockers": [
           {
-            "criterion": "writing-stage",
-            "detail": "2 cumulative writing stage(s) unproved at A1: controlled-composition, timed-assessment-production",
-            "shortfall": 2
+            "criterion": "spine-nodes",
+            "detail": "5 of 5 B1 spine node(s) unrealized: SPINE-NARRATE-EVENTS, SPINE-GIVE-REASONS, SPINE-HANDLE-TRAVEL, SPINE-DESCRIBE-EXPERIENCE…",
+            "shortfall": 5
+          },
+          {
+            "criterion": "vocabulary",
+            "detail": "teaches 1244 distinct headwords at or below B1, against 2500",
+            "shortfall": 1256
           }
         ],
         "vocabulary": 1244
@@ -365014,13 +365621,18 @@
       {
         "language": "japanese",
         "touches": "A2",
-        "attained": "pre-A1",
-        "inProgressAt": "A1",
+        "attained": "A1",
+        "inProgressAt": "A2",
         "blockers": [
           {
-            "criterion": "writing-stage",
-            "detail": "2 cumulative writing stage(s) unproved at A1: controlled-composition, timed-assessment-production",
-            "shortfall": 2
+            "criterion": "vocabulary",
+            "detail": "teaches 694 distinct headwords at or below A2, against 1200",
+            "shortfall": 506
+          },
+          {
+            "criterion": "verb-vocabulary",
+            "detail": "teaches 73 distinct verb headwords at or below A2, against 120",
+            "shortfall": 47
           }
         ],
         "vocabulary": 694
@@ -365133,13 +365745,18 @@
       {
         "language": "persian",
         "touches": "A2",
-        "attained": "pre-A1",
-        "inProgressAt": "A1",
+        "attained": "A2",
+        "inProgressAt": "B1",
         "blockers": [
           {
-            "criterion": "writing-stage",
-            "detail": "2 cumulative writing stage(s) unproved at A1: controlled-composition, timed-assessment-production",
-            "shortfall": 2
+            "criterion": "spine-nodes",
+            "detail": "5 of 5 B1 spine node(s) unrealized: SPINE-NARRATE-EVENTS, SPINE-GIVE-REASONS, SPINE-HANDLE-TRAVEL, SPINE-DESCRIBE-EXPERIENCE…",
+            "shortfall": 5
+          },
+          {
+            "criterion": "vocabulary",
+            "detail": "teaches 1372 distinct headwords at or below B1, against 2500",
+            "shortfall": 1128
           }
         ],
         "vocabulary": 1372
@@ -365147,13 +365764,18 @@
       {
         "language": "portuguese",
         "touches": "A2",
-        "attained": "pre-A1",
-        "inProgressAt": "A1",
+        "attained": "A2",
+        "inProgressAt": "B1",
         "blockers": [
           {
-            "criterion": "writing-stage",
-            "detail": "2 cumulative writing stage(s) unproved at A1: controlled-composition, timed-assessment-production",
-            "shortfall": 2
+            "criterion": "spine-nodes",
+            "detail": "5 of 5 B1 spine node(s) unrealized: SPINE-NARRATE-EVENTS, SPINE-GIVE-REASONS, SPINE-HANDLE-TRAVEL, SPINE-DESCRIBE-EXPERIENCE…",
+            "shortfall": 5
+          },
+          {
+            "criterion": "vocabulary",
+            "detail": "teaches 1231 distinct headwords at or below B1, against 2500",
+            "shortfall": 1269
           }
         ],
         "vocabulary": 1231
@@ -365166,8 +365788,8 @@
         "blockers": [
           {
             "criterion": "spine-nodes",
-            "detail": "4 of 5 A2 spine node(s) unrealized: SPINE-NEGATE-AND-ASK, SPINE-TALK-ABOUT-PAST, SPINE-TALK-ABOUT-FUTURE, SPINE-READ-PRACTICAL-TEXTS",
-            "shortfall": 4
+            "detail": "3 of 5 A2 spine node(s) unrealized: SPINE-NEGATE-AND-ASK, SPINE-TALK-ABOUT-PAST, SPINE-TALK-ABOUT-FUTURE",
+            "shortfall": 3
           },
           {
             "criterion": "vocabulary",
@@ -365185,13 +365807,23 @@
       {
         "language": "russian",
         "touches": "A2",
-        "attained": "pre-A1",
-        "inProgressAt": "A1",
+        "attained": "A2",
+        "inProgressAt": "B1",
         "blockers": [
           {
-            "criterion": "writing-stage",
-            "detail": "2 cumulative writing stage(s) unproved at A1: controlled-composition, timed-assessment-production",
-            "shortfall": 2
+            "criterion": "spine-nodes",
+            "detail": "5 of 5 B1 spine node(s) unrealized: SPINE-NARRATE-EVENTS, SPINE-GIVE-REASONS, SPINE-HANDLE-TRAVEL, SPINE-DESCRIBE-EXPERIENCE…",
+            "shortfall": 5
+          },
+          {
+            "criterion": "vocabulary",
+            "detail": "teaches 1224 distinct headwords at or below B1, against 2500",
+            "shortfall": 1276
+          },
+          {
+            "criterion": "verb-vocabulary",
+            "detail": "teaches 192 distinct verb headwords at or below B1, against 250",
+            "shortfall": 58
           }
         ],
         "vocabulary": 1224
@@ -365308,12 +365940,12 @@
       }
     ],
     "summary": {
-      "tracksOverstating": 10,
+      "tracksOverstating": 6,
       "tracksWithAnyLevel": 22,
       "attainedByLevel": {
-        "pre-A1": 5,
-        "A1": 3,
-        "A2": 14,
+        "pre-A1": 0,
+        "A1": 4,
+        "A2": 18,
         "B1": 0,
         "B2": 0,
         "C1": 0,
@@ -365323,12 +365955,12 @@
   },
   "modality": {
     "maxLinearisableTableColumns": 3,
-    "totalLessons": 29660,
-    "voice": 27261,
-    "sight": 900,
-    "pen": 1499,
-    "coreVoice": 27831,
-    "lessonsWithWritingSegments": 964,
+    "totalLessons": 29680,
+    "voice": 27265,
+    "sight": 901,
+    "pen": 1514,
+    "coreVoice": 27836,
+    "lessonsWithWritingSegments": 979,
     "drivablePercent": 94,
     "tracks": [
       {
@@ -388232,10 +388864,10 @@
       },
       {
         "language": "italian",
-        "lessonCount": 1312,
+        "lessonCount": 1315,
         "voice": 1299,
         "sight": 9,
-        "pen": 4,
+        "pen": 7,
         "coreVoice": 1300,
         "drivablePercent": 99,
         "drivablePrefixTotal": 1287,
@@ -392131,18 +392763,66 @@
             "drivablePrefix": 7,
             "firstNonVoiceLesson": null,
             "unstartable": null
+          },
+          {
+            "language": "italian",
+            "chapter": 260,
+            "lessonCount": 1,
+            "voice": 0,
+            "sight": 0,
+            "pen": 1,
+            "coreVoice": 0,
+            "modalities": [
+              "sight",
+              "pen"
+            ],
+            "drivablePrefix": 0,
+            "firstNonVoiceLesson": "IT-W260-my-own-line",
+            "unstartable": "lesson-type"
+          },
+          {
+            "language": "italian",
+            "chapter": 261,
+            "lessonCount": 1,
+            "voice": 0,
+            "sight": 0,
+            "pen": 1,
+            "coreVoice": 0,
+            "modalities": [
+              "sight",
+              "pen"
+            ],
+            "drivablePrefix": 0,
+            "firstNonVoiceLesson": "IT-W261-with-a-clock",
+            "unstartable": "lesson-type"
+          },
+          {
+            "language": "italian",
+            "chapter": 262,
+            "lessonCount": 1,
+            "voice": 0,
+            "sight": 0,
+            "pen": 1,
+            "coreVoice": 0,
+            "modalities": [
+              "sight",
+              "pen"
+            ],
+            "drivablePrefix": 0,
+            "firstNonVoiceLesson": "IT-W262-four-lines",
+            "unstartable": "lesson-type"
           }
         ]
       },
       {
         "language": "japanese",
-        "lessonCount": 837,
+        "lessonCount": 840,
         "voice": 737,
         "sight": 17,
-        "pen": 83,
-        "coreVoice": 745,
+        "pen": 86,
+        "coreVoice": 746,
         "drivablePercent": 89,
-        "drivablePrefixTotal": 641,
+        "drivablePrefixTotal": 642,
         "chapters": [
           {
             "language": "japanese",
@@ -394313,6 +394993,54 @@
             "drivablePrefix": 7,
             "firstNonVoiceLesson": null,
             "unstartable": null
+          },
+          {
+            "language": "japanese",
+            "chapter": 143,
+            "lessonCount": 1,
+            "voice": 0,
+            "sight": 0,
+            "pen": 1,
+            "coreVoice": 0,
+            "modalities": [
+              "sight",
+              "pen"
+            ],
+            "drivablePrefix": 0,
+            "firstNonVoiceLesson": "JA-W143-my-own-line",
+            "unstartable": "lesson-type"
+          },
+          {
+            "language": "japanese",
+            "chapter": 144,
+            "lessonCount": 1,
+            "voice": 0,
+            "sight": 0,
+            "pen": 1,
+            "coreVoice": 1,
+            "modalities": [
+              "sight",
+              "pen"
+            ],
+            "drivablePrefix": 1,
+            "firstNonVoiceLesson": null,
+            "unstartable": null
+          },
+          {
+            "language": "japanese",
+            "chapter": 145,
+            "lessonCount": 1,
+            "voice": 0,
+            "sight": 0,
+            "pen": 1,
+            "coreVoice": 0,
+            "modalities": [
+              "sight",
+              "pen"
+            ],
+            "drivablePrefix": 0,
+            "firstNonVoiceLesson": "JA-W145-four-lines",
+            "unstartable": "lesson-type"
           }
         ]
       },
@@ -414920,12 +415648,12 @@
       },
       {
         "language": "persian",
-        "lessonCount": 1482,
+        "lessonCount": 1485,
         "voice": 1426,
         "sight": 21,
-        "pen": 35,
+        "pen": 38,
         "coreVoice": 1433,
-        "drivablePercent": 97,
+        "drivablePercent": 96,
         "drivablePrefixTotal": 1422,
         "chapters": [
           {
@@ -419236,15 +419964,63 @@
             "drivablePrefix": 7,
             "firstNonVoiceLesson": null,
             "unstartable": null
+          },
+          {
+            "language": "persian",
+            "chapter": 287,
+            "lessonCount": 1,
+            "voice": 0,
+            "sight": 0,
+            "pen": 1,
+            "coreVoice": 0,
+            "modalities": [
+              "sight",
+              "pen"
+            ],
+            "drivablePrefix": 0,
+            "firstNonVoiceLesson": "FA-W287-khat-e-khodam",
+            "unstartable": "lesson-type"
+          },
+          {
+            "language": "persian",
+            "chapter": 288,
+            "lessonCount": 1,
+            "voice": 0,
+            "sight": 0,
+            "pen": 1,
+            "coreVoice": 0,
+            "modalities": [
+              "sight",
+              "pen"
+            ],
+            "drivablePrefix": 0,
+            "firstNonVoiceLesson": "FA-W288-ba-saat",
+            "unstartable": "lesson-type"
+          },
+          {
+            "language": "persian",
+            "chapter": 289,
+            "lessonCount": 1,
+            "voice": 0,
+            "sight": 0,
+            "pen": 1,
+            "coreVoice": 0,
+            "modalities": [
+              "sight",
+              "pen"
+            ],
+            "drivablePrefix": 0,
+            "firstNonVoiceLesson": "FA-W289-chahar-khat",
+            "unstartable": "lesson-type"
           }
         ]
       },
       {
         "language": "portuguese",
-        "lessonCount": 1296,
+        "lessonCount": 1299,
         "voice": 1288,
         "sight": 4,
-        "pen": 4,
+        "pen": 7,
         "coreVoice": 1289,
         "drivablePercent": 99,
         "drivablePrefixTotal": 1278,
@@ -423076,18 +423852,66 @@
             "drivablePrefix": 7,
             "firstNonVoiceLesson": null,
             "unstartable": null
+          },
+          {
+            "language": "portuguese",
+            "chapter": 256,
+            "lessonCount": 1,
+            "voice": 0,
+            "sight": 0,
+            "pen": 1,
+            "coreVoice": 0,
+            "modalities": [
+              "sight",
+              "pen"
+            ],
+            "drivablePrefix": 0,
+            "firstNonVoiceLesson": "PT-W256-my-own-line",
+            "unstartable": "lesson-type"
+          },
+          {
+            "language": "portuguese",
+            "chapter": 257,
+            "lessonCount": 1,
+            "voice": 0,
+            "sight": 0,
+            "pen": 1,
+            "coreVoice": 0,
+            "modalities": [
+              "sight",
+              "pen"
+            ],
+            "drivablePrefix": 0,
+            "firstNonVoiceLesson": "PT-W257-with-a-clock",
+            "unstartable": "lesson-type"
+          },
+          {
+            "language": "portuguese",
+            "chapter": 258,
+            "lessonCount": 1,
+            "voice": 0,
+            "sight": 0,
+            "pen": 1,
+            "coreVoice": 0,
+            "modalities": [
+              "sight",
+              "pen"
+            ],
+            "drivablePrefix": 0,
+            "firstNonVoiceLesson": "PT-W258-four-lines",
+            "unstartable": "lesson-type"
           }
         ]
       },
       {
         "language": "punjabi",
-        "lessonCount": 926,
-        "voice": 654,
-        "sight": 53,
+        "lessonCount": 931,
+        "voice": 658,
+        "sight": 54,
         "pen": 219,
-        "coreVoice": 704,
+        "coreVoice": 708,
         "drivablePercent": 76,
-        "drivablePrefixTotal": 640,
+        "drivablePrefixTotal": 644,
         "chapters": [
           {
             "language": "punjabi",
@@ -425829,15 +426653,31 @@
             "drivablePrefix": 4,
             "firstNonVoiceLesson": "PA-C177-noun-phrase",
             "unstartable": null
+          },
+          {
+            "language": "punjabi",
+            "chapter": 178,
+            "lessonCount": 5,
+            "voice": 4,
+            "sight": 1,
+            "pen": 0,
+            "coreVoice": 4,
+            "modalities": [
+              "voice",
+              "sight"
+            ],
+            "drivablePrefix": 4,
+            "firstNonVoiceLesson": "PA-C178-baad",
+            "unstartable": null
           }
         ]
       },
       {
         "language": "russian",
-        "lessonCount": 1339,
+        "lessonCount": 1342,
         "voice": 1276,
         "sight": 26,
-        "pen": 37,
+        "pen": 40,
         "coreVoice": 1289,
         "drivablePercent": 96,
         "drivablePrefixTotal": 1277,
@@ -429716,6 +430556,54 @@
             "drivablePrefix": 7,
             "firstNonVoiceLesson": null,
             "unstartable": null
+          },
+          {
+            "language": "russian",
+            "chapter": 258,
+            "lessonCount": 1,
+            "voice": 0,
+            "sight": 0,
+            "pen": 1,
+            "coreVoice": 0,
+            "modalities": [
+              "sight",
+              "pen"
+            ],
+            "drivablePrefix": 0,
+            "firstNonVoiceLesson": "RU-W258-own-line",
+            "unstartable": "lesson-type"
+          },
+          {
+            "language": "russian",
+            "chapter": 259,
+            "lessonCount": 1,
+            "voice": 0,
+            "sight": 0,
+            "pen": 1,
+            "coreVoice": 0,
+            "modalities": [
+              "sight",
+              "pen"
+            ],
+            "drivablePrefix": 0,
+            "firstNonVoiceLesson": "RU-W259-with-a-clock",
+            "unstartable": "lesson-type"
+          },
+          {
+            "language": "russian",
+            "chapter": 260,
+            "lessonCount": 1,
+            "voice": 0,
+            "sight": 0,
+            "pen": 1,
+            "coreVoice": 0,
+            "modalities": [
+              "sight",
+              "pen"
+            ],
+            "drivablePrefix": 0,
+            "firstNonVoiceLesson": "RU-W260-four-lines",
+            "unstartable": "lesson-type"
           }
         ]
       },
@@ -455299,7 +456187,7 @@
     "underspentPercent": 95
   },
   "infoDump": {
-    "lessons": 29660,
+    "lessons": 29680,
     "lessonsWithFindings": 120,
     "ruleStatements": 32,
     "paradigmTables": 91,
@@ -455307,11 +456195,11 @@
     "overBudget": 2
   },
   "lessonBudgets": {
-    "lessons": 29660,
-    "measuredLessons": 25268,
-    "idiomMeasuredLessons": 25268,
-    "senseMeasuredLessons": 25269,
-    "cultureClaimMeasuredLessons": 25268,
+    "lessons": 29680,
+    "measuredLessons": 25288,
+    "idiomMeasuredLessons": 25288,
+    "senseMeasuredLessons": 25289,
+    "cultureClaimMeasuredLessons": 25288,
     "idioms": 101,
     "senses": 103,
     "cultureClaims": 208,
@@ -455320,18 +456208,18 @@
   "metalanguage": {
     "terms": 54,
     "termsUsed": 54,
-    "lessonsUsingTerms": 29268,
-    "usesBeforeIntroduction": 55757,
-    "technicalUsesBeforeIntroduction": 9681,
-    "technicalLessons": 6487,
+    "lessonsUsingTerms": 29288,
+    "usesBeforeIntroduction": 55806,
+    "technicalUsesBeforeIntroduction": 9692,
+    "technicalLessons": 6496,
     "worstTerms": [
       {
         "term": "verb",
-        "lessons": 3607
+        "lessons": 3612
       },
       {
         "term": "noun",
-        "lessons": 2055
+        "lessons": 2057
       },
       {
         "term": "participle",
@@ -455352,14 +456240,14 @@
     ]
   },
   "literalMarkup": {
-    "lessonsScanned": 29660,
+    "lessonsScanned": 29680,
     "sourceFindings": 0,
     "renderedFindings": 0
   },
   "glyphCoverage": {
-    "filesScanned": 5944,
+    "filesScanned": 5960,
     "mainCharacters": 154,
-    "scriptCharacters": 829,
+    "scriptCharacters": 830,
     "gaps": 0
   }
 }
