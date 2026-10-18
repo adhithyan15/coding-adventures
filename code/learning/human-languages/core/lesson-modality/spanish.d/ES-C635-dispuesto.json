@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C635-dispuesto",
+    "language": "spanish",
+    "chapter": 635,
+    "sequence": 21560,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0dd2240dc5236ff5"
+  },
+  "findings": []
+}

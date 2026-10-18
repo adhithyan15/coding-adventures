@@ -1,0 +1,11 @@
+{
+  "id": "ES-C613-requisito",
+  "pathSegment": "ES-PATH-613-REQUIERE",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ES-EXT-613-REQUIERE",
+      "order": 1
+    }
+  ]
+}

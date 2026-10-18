@@ -1,0 +1,11 @@
+{
+  "id": "ES-C611-con-tal-de-que",
+  "pathSegment": "ES-PATH-611-CONDIC",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ES-EXT-611-CONDIC",
+      "order": 3
+    }
+  ]
+}

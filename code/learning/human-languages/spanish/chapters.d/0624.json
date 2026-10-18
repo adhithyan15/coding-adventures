@@ -1,0 +1,19 @@
+{
+  "chapter": 624,
+  "title": "Papeles oficiales",
+  "label": "ch:es-papeles-oficiales",
+  "canDo": "I can ask for an authorisation, process the paperwork and get a certificate.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "ES-C624-oficial",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 624: I can ask for an authorisation, process the paperwork and get a certificate.",
+    "assesses": [
+      "ES-LEX-C624-PERMISO-03",
+      "ES-LEX-C624-PERMISO-04",
+      "ES-LEX-C624-PERMISO-05"
+    ]
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 552,
+  "sourceHash": "fnv1a64:36a28da79c3de0ec",
+  "lessonIds": [
+    "ES-C552-inmigrante",
+    "ES-C552-exilio",
+    "ES-C552-refugiado",
+    "ES-C552-frontera",
+    "ES-C552-independizarse"
+  ],
+  "tex": "spanish/book/chapters/ch552-lejos-de-casa.tex"
+}

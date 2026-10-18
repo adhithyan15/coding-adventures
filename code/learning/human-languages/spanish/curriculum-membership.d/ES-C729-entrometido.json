@@ -1,0 +1,11 @@
+{
+  "id": "ES-C729-entrometido",
+  "pathSegment": "ES-PATH-729-PEREZA",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ES-EXT-729-PEREZA",
+      "order": 3
+    }
+  ]
+}

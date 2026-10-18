@@ -1,0 +1,8 @@
+{
+  "id": "ES-EXT-635-PROMESA",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can make a deal, vouch for someone, question what I doubt and say whether ideas are consistent.",
+  "prerequisites": []
+}

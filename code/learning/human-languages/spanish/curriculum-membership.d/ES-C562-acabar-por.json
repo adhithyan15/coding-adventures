@@ -1,0 +1,11 @@
+{
+  "id": "ES-C562-acabar-por",
+  "pathSegment": "ES-PATH-562-VOLVER",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ES-EXT-562-VOLVER",
+      "order": 1
+    }
+  ]
+}

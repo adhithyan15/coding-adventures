@@ -1,0 +1,19 @@
+{
+  "chapter": 614,
+  "title": "Riesgos y garantías",
+  "label": "ch:es-riesgos-y-garantias",
+  "canDo": "I can talk about taking risks, preventing problems and what is guaranteed.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "ES-C614-proteccion",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 614: I can talk about taking risks, preventing problems and what is guaranteed.",
+    "assesses": [
+      "ES-LEX-C614-RIESGO-03",
+      "ES-LEX-C614-RIESGO-04",
+      "ES-LEX-C614-RIESGO-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 756,
+  "sourceHash": "fnv1a64:124ab3c828270238",
+  "lessonIds": [
+    "ES-C756-delantero",
+    "ES-C756-marcar",
+    "ES-C756-marcador",
+    "ES-C756-arbitro",
+    "ES-C756-empatar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch756.txt",
+  "json": "spanish/narration/ch756.json",
+  "textHash": "fnv1a64:3be36559b9eb67a7",
+  "jsonHash": "fnv1a64:5f623e35db10a4bb",
+  "findings": []
+}

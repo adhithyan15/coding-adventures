@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C554-licenciarse",
+    "language": "spanish",
+    "chapter": 554,
+    "sequence": 17350,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9d42b8b2d135bae6"
+  },
+  "findings": []
+}

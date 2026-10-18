@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C739-operar",
+    "language": "spanish",
+    "chapter": 739,
+    "sequence": 26920,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:21e1c5cfe331f941"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 715,
+  "sourceHash": "fnv1a64:427d70f17daf7f5a",
+  "lessonIds": [
+    "ES-C715-amar",
+    "ES-C715-detestar",
+    "ES-C715-enamorado",
+    "ES-C715-besar",
+    "ES-C715-pasion"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch715.txt",
+  "json": "spanish/narration/ch715.json",
+  "textHash": "fnv1a64:841f4f5e949b5f6c",
+  "jsonHash": "fnv1a64:8fc557476383af6c",
+  "findings": []
+}

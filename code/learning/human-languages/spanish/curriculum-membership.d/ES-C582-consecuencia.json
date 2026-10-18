@@ -1,0 +1,11 @@
+{
+  "id": "ES-C582-consecuencia",
+  "pathSegment": "ES-PATH-582-CONSEC",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "ES-EXT-582-CONSEC",
+      "order": 0
+    }
+  ]
+}

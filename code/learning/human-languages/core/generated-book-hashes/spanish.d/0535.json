@@ -1,0 +1,14 @@
+{
+  "language": "spanish",
+  "chapter": 535,
+  "sourceHash": "fnv1a64:c7cdb2d86d2ca928",
+  "lessonIds": [
+    "ES-C535-en-un-principio",
+    "ES-C535-a-la-larga",
+    "ES-C535-tarde-o-temprano",
+    "ES-C535-finalmente",
+    "ES-C535-mas-tarde",
+    "ES-R535-repaso-528-535"
+  ],
+  "tex": "spanish/book/chapters/ch535-tarde-o-temprano.tex"
+}

@@ -1,0 +1,8 @@
+{
+  "id": "ES-EXT-711-EMOCION",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can describe an exciting moment and the feelings it gave me.",
+  "prerequisites": []
+}

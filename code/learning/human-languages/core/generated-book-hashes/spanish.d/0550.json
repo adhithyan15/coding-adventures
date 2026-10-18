@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 550,
+  "sourceHash": "fnv1a64:fbfbef107e3f2d88",
+  "lessonIds": [
+    "ES-C550-divorcio",
+    "ES-C550-separarse",
+    "ES-C550-divorciado",
+    "ES-C550-viudo",
+    "ES-C550-viuda"
+  ],
+  "tex": "spanish/book/chapters/ch550-la-separacion.tex"
+}

@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 702,
+  "sourceHash": "fnv1a64:8f8c86d42cc4025e",
+  "lessonIds": [
+    "ES-C702-mojarse",
+    "ES-C702-empapado",
+    "ES-C702-charco",
+    "ES-C702-barro",
+    "ES-C702-impermeable"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch702.txt",
+  "json": "spanish/narration/ch702.json",
+  "textHash": "fnv1a64:77b6429d77322b62",
+  "jsonHash": "fnv1a64:54eb7ca38cfcdd76",
+  "findings": []
+}

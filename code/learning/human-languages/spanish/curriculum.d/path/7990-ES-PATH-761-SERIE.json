@@ -1,0 +1,9 @@
+{
+  "id": "ES-PATH-761-SERIE",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "ES-EXT-761-SERIE"
+  ],
+  "after": []
+}

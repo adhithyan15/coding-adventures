@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C650-bonobus",
+    "language": "spanish",
+    "chapter": 650,
+    "sequence": 22330,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3724d0f367546149"
+  },
+  "findings": []
+}

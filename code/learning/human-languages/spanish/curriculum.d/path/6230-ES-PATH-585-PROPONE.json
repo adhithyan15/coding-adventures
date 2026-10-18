@@ -1,0 +1,9 @@
+{
+  "id": "ES-PATH-585-PROPONE",
+  "spine_node": "SPINE-GIVE-REASONS",
+  "before": [],
+  "inline": [
+    "ES-EXT-585-PROPONE"
+  ],
+  "after": []
+}

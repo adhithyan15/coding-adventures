@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C579-reconocer",
+    "language": "spanish",
+    "chapter": 579,
+    "sequence": 18680,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:affb122854f00017"
+  },
+  "findings": []
+}

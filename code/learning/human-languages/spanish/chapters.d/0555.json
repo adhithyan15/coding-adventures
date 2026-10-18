@@ -1,0 +1,19 @@
+{
+  "chapter": 555,
+  "title": "La vejez",
+  "label": "ch:es-la-vejez",
+  "canDo": "I can talk about old age and death: the elderly, the dead and the deceased.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "ES-C555-difunto",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 555: I can talk about old age and death: the elderly, the dead and the deceased.",
+    "assesses": [
+      "ES-LEX-C555-VEJEZ-03",
+      "ES-LEX-C555-VEJEZ-04",
+      "ES-LEX-C555-VEJEZ-05"
+    ]
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "id": "ES-PATH-769-GOTERA",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "ES-EXT-769-GOTERA"
+  ],
+  "after": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C684-rural",
+    "language": "spanish",
+    "chapter": 684,
+    "sequence": 24070,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e8b871b8d45cbc0a"
+  },
+  "findings": []
+}

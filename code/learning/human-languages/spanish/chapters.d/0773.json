@@ -1,0 +1,19 @@
+{
+  "chapter": 773,
+  "title": "Conectado de viaje",
+  "label": "ch:es-conectado-de-viaje",
+  "canDo": "I can sort out my phone on a trip: the signal, a plug adapter, an app, a link, and topping up credit.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "ES-C773-recargar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 773: I can sort out my phone on a trip: the signal, a plug adapter, an app, a link, and topping up credit.",
+    "assesses": [
+      "ES-LEX-C773-COBERTURA-03",
+      "ES-LEX-C773-COBERTURA-04",
+      "ES-LEX-C773-COBERTURA-05"
+    ]
+  }
+}

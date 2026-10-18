@@ -1,0 +1,19 @@
+{
+  "chapter": 772,
+  "title": "Cuesta arriba",
+  "label": "ch:es-cuesta-arriba",
+  "canDo": "I can cope on a hill walk: a breeze blowing, a steep slope, slipping, and finding the way with a compass.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "ES-C772-brujula",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 772: I can cope on a hill walk: a breeze blowing, a steep slope, slipping, and finding the way with a compass.",
+    "assesses": [
+      "ES-LEX-C772-MONTE-03",
+      "ES-LEX-C772-MONTE-04",
+      "ES-LEX-C772-MONTE-05"
+    ]
+  }
+}

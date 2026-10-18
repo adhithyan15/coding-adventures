@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-R687-repaso-680-687",
+    "language": "spanish",
+    "chapter": 687,
+    "sequence": 24250,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b467c2d133d1bda8"
+  },
+  "findings": []
+}

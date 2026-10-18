@@ -1,0 +1,19 @@
+{
+  "chapter": 593,
+  "title": "Mis tareas",
+  "label": "ch:es-mis-tareas",
+  "canDo": "I can say what tasks someone carries out, how well and how efficiently, and what they do for a living.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "ES-C593-eficiente",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 593: I can say what tasks someone carries out, how well and how efficiently, and what they do for a living.",
+    "assesses": [
+      "ES-LEX-C593-TAREA-03",
+      "ES-LEX-C593-TAREA-04",
+      "ES-LEX-C593-TAREA-05"
+    ]
+  }
+}

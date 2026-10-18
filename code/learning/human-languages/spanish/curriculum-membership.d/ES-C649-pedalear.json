@@ -1,0 +1,11 @@
+{
+  "id": "ES-C649-pedalear",
+  "pathSegment": "ES-PATH-649-RUEDAS",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ES-EXT-649-RUEDAS",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C683-region",
+    "language": "spanish",
+    "chapter": 683,
+    "sequence": 24000,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f78990e1daa50b01"
+  },
+  "findings": []
+}

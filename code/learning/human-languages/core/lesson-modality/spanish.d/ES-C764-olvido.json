@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C764-olvido",
+    "language": "spanish",
+    "chapter": 764,
+    "sequence": 28180,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a45e9b0447ed55c6"
+  },
+  "findings": []
+}

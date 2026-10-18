@@ -1,0 +1,9 @@
+{
+  "id": "ES-PATH-777-ENCHUFAR",
+  "spine_node": "SPINE-EXPRESS-CONDITION",
+  "before": [],
+  "inline": [
+    "ES-EXT-777-ENCHUFAR"
+  ],
+  "after": []
+}

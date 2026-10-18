@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 706,
+  "sourceHash": "fnv1a64:7ed4ac241e70da42",
+  "lessonIds": [
+    "ES-C706-asustar",
+    "ES-C706-asustado",
+    "ES-C706-susto",
+    "ES-C706-panico",
+    "ES-C706-temer"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch706.txt",
+  "json": "spanish/narration/ch706.json",
+  "textHash": "fnv1a64:aea4427fb82428aa",
+  "jsonHash": "fnv1a64:19b82c8643a5b260",
+  "findings": []
+}

@@ -1,0 +1,20 @@
+{
+  "language": "spanish",
+  "chapter": 599,
+  "sourceHash": "fnv1a64:37f0e770fc7e384f",
+  "lessonIds": [
+    "ES-C599-experimento",
+    "ES-C599-comparar",
+    "ES-C599-analizar",
+    "ES-C599-conclusion",
+    "ES-C599-metodo",
+    "ES-R599-repaso-592-599"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "spanish/narration/ch599.txt",
+  "json": "spanish/narration/ch599.json",
+  "textHash": "fnv1a64:274dbb54af548519",
+  "jsonHash": "fnv1a64:1a8eea10dead5a6b",
+  "findings": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 515,
+  "sourceHash": "fnv1a64:6ed1289fd5905d68",
+  "lessonIds": [
+    "ES-C515-rumor",
+    "ES-C515-comunicado",
+    "ES-C515-declaracion",
+    "ES-C515-declarar",
+    "ES-C515-confirmar"
+  ],
+  "tex": "spanish/book/chapters/ch515-segun-dicen.tex"
+}

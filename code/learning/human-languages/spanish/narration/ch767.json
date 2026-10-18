@@ -1,0 +1,1038 @@
+{
+  "version": 1,
+  "language": "spanish",
+  "chapter": 767,
+  "title": "Cuerpo y mente en calma",
+  "drivablePrefix": 8,
+  "sourceHash": "fnv1a64:12250413cefc2ded",
+  "lessons": [
+    {
+      "id": "ES-C767-meditar",
+      "sequence": 28320,
+      "title": "meditar — to meditate; to ponder",
+      "headword": "meditar",
+      "romanization": "meditar",
+      "gloss": "to meditate; to ponder",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:be525703aff30f9a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Spanish for the achievement, then the Spanish for talent."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: meditar",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "meditar — \"to meditate; to ponder\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Medito diez minutos cada mañana. I meditate for ten minutes every morning."
+            },
+            {
+              "kind": "speech",
+              "text": "Also to think something over: meditar una decisión."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "meditar is a learned borrowing from Latin meditārī \"to think over, to practise\" (EtymDB)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "meditar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *meditar*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "meditar, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *meditar*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with meditar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *meditar*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Spanish for the achievement, then the Spanish for talent, then say meditar again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Spanish for the achievement, then the Spanish for talent, then say *meditar* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does meditar mean? (\"To meditate; to ponder\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C767-meditacion",
+      "sequence": 28330,
+      "title": "la meditación — meditation",
+      "headword": "la meditación",
+      "romanization": "la meditación",
+      "gloss": "meditation",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:262f2c9f64b41277",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Spanish for talent, then the Spanish for to meditate."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: la meditación",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la meditación — \"meditation\"."
+            },
+            {
+              "kind": "speech",
+              "text": "La meditación me ayuda con el estrés. Meditation helps me with stress."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "meditación is a learned borrowing from Latin meditātiō \"thinking, contemplation\" (EtymDB), from meditārī."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la meditación",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la meditación*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la meditación, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la meditación*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with la meditación",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *la meditación*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Spanish for talent, then the Spanish for to meditate, then say la meditación again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Spanish for talent, then the Spanish for to meditate, then say *la meditación* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does la meditación mean? (\"Meditation\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C767-voluntad",
+      "sequence": 28340,
+      "title": "la voluntad — will, willpower",
+      "headword": "la voluntad",
+      "romanization": "la voluntad",
+      "gloss": "will, willpower",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:debb238c8e80e872",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Spanish for to meditate, then the Spanish for meditation."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: la voluntad",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la voluntad — \"will, willpower\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Con fuerza de voluntad, todo es posible. With willpower, anything is possible."
+            },
+            {
+              "kind": "speech",
+              "text": "Fuerza de voluntad — willpower. Buena voluntad — goodwill."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "voluntad is usually traced to Latin voluntās, voluntātem \"will\", built on velle \"to want\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la voluntad",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la voluntad*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la voluntad, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la voluntad*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with la voluntad",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *la voluntad*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Spanish for to meditate, then the Spanish for meditation, then say la voluntad again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Spanish for to meditate, then the Spanish for meditation, then say *la voluntad* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does la voluntad mean? (\"Will, willpower\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C767-estirarse",
+      "sequence": 28350,
+      "title": "estirarse — to stretch",
+      "headword": "estirarse",
+      "romanization": "estirarse",
+      "gloss": "to stretch",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:71ef2e4fc7b71344",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Spanish for meditation, then the Spanish for will."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: estirarse",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "estirarse — \"to stretch\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Me estiro antes de correr. I stretch before running."
+            },
+            {
+              "kind": "speech",
+              "text": "Estirar las piernas — to stretch your legs."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "estirarse is built on tirar \"to pull\" with the prefix es-. For tirar the origin is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "estirarse",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *estirarse*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "estirarse, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *estirarse*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with estirarse",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *estirarse*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Spanish for meditation, then the Spanish for will, then say estirarse again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Spanish for meditation, then the Spanish for will, then say *estirarse* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does estirarse mean? (\"To stretch\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C767-masaje",
+      "sequence": 28360,
+      "title": "el masaje — the massage",
+      "headword": "el masaje",
+      "romanization": "el masaje",
+      "gloss": "the massage",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2f61b8bec51c4166",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Spanish for will, then the Spanish for to stretch."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: el masaje",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "el masaje — \"the massage\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Después del partido me dieron un masaje. After the match I had a massage."
+            },
+            {
+              "kind": "speech",
+              "text": "Dar un masaje — to give a massage."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "masaje was borrowed from French massage (EtymDB), from masser \"to knead\". Beyond French the origin is not settled; Arabic and Greek sources have both been proposed."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el masaje",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el masaje*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el masaje, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el masaje*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with el masaje",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *el masaje*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Spanish for will, then the Spanish for to stretch, then say el masaje again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Spanish for will, then the Spanish for to stretch, then say *el masaje* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does el masaje mean? (\"The massage\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-R767-repaso-760-767",
+      "sequence": 28370,
+      "title": "Más sentimientos y experiencias",
+      "headword": "(dialogue)",
+      "romanization": "(dialogue)",
+      "gloss": "a review of chapters 760-767",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1018d52f73afa764",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Spanish for the costume and to dress up."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the costume, to dress up, make-up, the premiere, to play",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the costume, to dress up, make-up, the premiere, to play]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the series, the video game, the cushion, to yawn, to record",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the series, the video game, the cushion, to yawn, to record]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the crossword, the magazine, the reader, the cover, to leaf through",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the crossword, the magazine, the reader, the cover, to leaf through]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the sculpture, the portrait, the canvas, the painter, to photograph",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the sculpture, the portrait, the canvas, the painter, to photograph]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "unforgettable, forgetting, to memorize, to relive, the diary",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: unforgettable, forgetting, to memorize, to relive, the diary]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "excitement, to yearn for, the whim, imagination, to aspire",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: excitement, to yearn for, the whim, imagination, to aspire]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the challenge, ambition, creative, the achievement, talent",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the challenge, ambition, creative, the achievement, talent]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to meditate, meditation, will, to stretch, the massage",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to meditate, meditation, will, to stretch, the massage]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The costume? (el disfraz.) To dress up? (disfrazarse.) Make-up? (el maquillaje.) The premiere? (el estreno.) To play? (interpretar.) The series? (la serie.) The video game? (el videojuego.) The cushion? (el cojín.) To yawn? (bostezar.) To record? (grabar.) The crossword? (el crucigrama.) The magazine? (la revista.) The reader? (el lector.) The cover? (la portada.) To leaf through? (hojear.) The sculpture? (la escultura.) The portrait? (el retrato.) The canvas? (el lienzo.) The painter? (el pintor.) To photograph? (fotografiar.) Unforgettable? (inolvidable.) Forgetting? (el olvido.) To memorize? (memorizar.) To relive? (revivir.) The diary? (el diario.) Excitement? (la ilusión.) To yearn for? (anhelar.) The whim? (el capricho.) Imagination? (la imaginación.) To aspire? (aspirar.) The challenge? (el reto.) Ambition? (la ambición.) Creative? (creativo.) The achievement? (el logro.) Talent? (el talento.) To meditate? (meditar.) Meditation? (la meditación.) Will? (la voluntad.) To stretch? (estirarse.) The massage? (el masaje.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-R767-repaso-final-767",
+      "sequence": 28380,
+      "title": "Cuerpo y mente en calma — once more",
+      "headword": "(dialogue)",
+      "romanization": "(dialogue)",
+      "gloss": "one more pass over chapter 767",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:73f339c299d941ad",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Spanish for to meditate and meditation."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to meditate, meditation, will, to stretch, the massage",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to meditate, meditation, will, to stretch, the massage]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "To meditate? (meditar.) Meditation? (la meditación.) Will? (la voluntad.) To stretch? (estirarse.) The massage? (el masaje.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-R767-repaso-como-fue",
+      "sequence": 28390,
+      "title": "How it was — back to the first story of a trip",
+      "headword": "(dialogue)",
+      "romanization": "(dialogue)",
+      "gloss": "a second revisit of feliz, más que, espero, durante and the told story",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f7e02506995767dd",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "From the first chapter about experiences: say the Spanish for \"happy\" and for \"during, for\"."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the scene, then the events: Llovía. Llegamos a la playa y luego comimos.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the scene, then the events: *Llovía. Llegamos a la playa y luego comimos.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "how long: Estuvimos allí durante una semana.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: how long: *Estuvimos allí durante una semana.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "feliz for him and for her, the same word: Él estaba feliz. Ella estaba feliz.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *feliz* for him and for her, the same word: *Él estaba feliz. Ella estaba feliz.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a comparison: Este viaje me gustó más que el otro.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a comparison: *Este viaje me gustó más que el otro.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "what you hope for next: Espero volver el año que viene.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: what you hope for next: *Espero volver el año que viene.*]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "In your story, which tense set the scene? (The imperfect: llovía.) Which told the events? (The preterite: llegamos, comimos.) Why does feliz not change for ella? (It ends in a consonant.) What two things can esperar mean? (To wait and to hope.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

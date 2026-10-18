@@ -1,0 +1,11 @@
+{
+  "id": "ES-C701-bochorno",
+  "pathSegment": "ES-PATH-701-CALOR",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ES-EXT-701-CALOR",
+      "order": 2
+    }
+  ]
+}

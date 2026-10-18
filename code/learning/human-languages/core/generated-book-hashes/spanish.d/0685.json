@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 685,
+  "sourceHash": "fnv1a64:2bc849c736bb7a65",
+  "lessonIds": [
+    "ES-C685-paisaje",
+    "ES-C685-naturaleza",
+    "ES-C685-sierra",
+    "ES-C685-monte",
+    "ES-C685-desierto"
+  ],
+  "tex": "spanish/book/chapters/ch685-el-paisaje.tex"
+}

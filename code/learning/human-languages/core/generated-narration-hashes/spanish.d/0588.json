@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 588,
+  "sourceHash": "fnv1a64:25d5fe47bc8c685a",
+  "lessonIds": [
+    "ES-C588-por-tanto",
+    "ES-C588-o-sea",
+    "ES-C588-en-cambio",
+    "ES-C588-sobre-todo",
+    "ES-C588-en-general"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch588.txt",
+  "json": "spanish/narration/ch588.json",
+  "textHash": "fnv1a64:828e70da5181aeb8",
+  "jsonHash": "fnv1a64:51824de644f596f1",
+  "findings": []
+}

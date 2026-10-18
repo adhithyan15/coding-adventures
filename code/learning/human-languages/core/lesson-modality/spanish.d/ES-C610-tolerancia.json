@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C610-tolerancia",
+    "language": "spanish",
+    "chapter": 610,
+    "sequence": 20240,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:62a23c2f5719e560"
+  },
+  "findings": []
+}

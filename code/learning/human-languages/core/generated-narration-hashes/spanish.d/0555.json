@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 555,
+  "sourceHash": "fnv1a64:63fc8f780f4585b4",
+  "lessonIds": [
+    "ES-C555-vejez",
+    "ES-C555-anciano",
+    "ES-C555-muerte",
+    "ES-C555-muerto",
+    "ES-C555-difunto"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch555.txt",
+  "json": "spanish/narration/ch555.json",
+  "textHash": "fnv1a64:6c13e6b422045422",
+  "jsonHash": "fnv1a64:18759f9c69cfdf52",
+  "findings": []
+}

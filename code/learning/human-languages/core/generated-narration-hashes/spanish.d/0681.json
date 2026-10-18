@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 681,
+  "sourceHash": "fnv1a64:35d195c753c98bfb",
+  "lessonIds": [
+    "ES-C681-mercadillo",
+    "ES-C681-centro-comercial",
+    "ES-C681-grandes-almacenes",
+    "ES-C681-festivo",
+    "ES-C681-atender"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch681.txt",
+  "json": "spanish/narration/ch681.json",
+  "textHash": "fnv1a64:f097c8220473a786",
+  "jsonHash": "fnv1a64:e15d2992aff43deb",
+  "findings": []
+}

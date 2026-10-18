@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 662,
+  "sourceHash": "fnv1a64:9ef683067aa047e5",
+  "lessonIds": [
+    "ES-C662-localizador",
+    "ES-C662-modificar",
+    "ES-C662-confirmacion",
+    "ES-C662-penalizacion",
+    "ES-C662-cancelacion"
+  ],
+  "tex": "spanish/book/chapters/ch662-cambios-y-cancelaciones.tex"
+}

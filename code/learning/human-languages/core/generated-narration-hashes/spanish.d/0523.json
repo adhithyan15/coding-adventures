@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 523,
+  "sourceHash": "fnv1a64:a96b188a24309e9a",
+  "lessonIds": [
+    "ES-C523-preso",
+    "ES-C523-acusar",
+    "ES-C523-confesar",
+    "ES-C523-testificar",
+    "ES-C523-liberar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch523.txt",
+  "json": "spanish/narration/ch523.json",
+  "textHash": "fnv1a64:df036f8d72a84dd8",
+  "jsonHash": "fnv1a64:2efc90cfae61a4c7",
+  "findings": []
+}

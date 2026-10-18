@@ -1,0 +1,11 @@
+{
+  "id": "ES-C717-desahogarse",
+  "pathSegment": "ES-PATH-717-SUFRIR",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ES-EXT-717-SUFRIR",
+      "order": 1
+    }
+  ]
+}

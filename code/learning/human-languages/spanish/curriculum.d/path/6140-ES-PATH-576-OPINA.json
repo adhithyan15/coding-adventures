@@ -1,0 +1,9 @@
+{
+  "id": "ES-PATH-576-OPINA",
+  "spine_node": "SPINE-GIVE-REASONS",
+  "before": [],
+  "inline": [
+    "ES-EXT-576-OPINA"
+  ],
+  "after": []
+}

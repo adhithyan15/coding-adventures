@@ -1,0 +1,8 @@
+{
+  "id": "ES-EXT-624-PERMISO",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can ask for an authorisation, process the paperwork and get a certificate.",
+  "prerequisites": []
+}

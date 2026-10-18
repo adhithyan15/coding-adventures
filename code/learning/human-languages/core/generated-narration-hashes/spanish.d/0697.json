@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 697,
+  "sourceHash": "fnv1a64:da8f839285dc0b16",
+  "lessonIds": [
+    "ES-C697-escampar",
+    "ES-C697-chubasco",
+    "ES-C697-aguacero",
+    "ES-C697-llovizna",
+    "ES-C697-lloviznar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch697.txt",
+  "json": "spanish/narration/ch697.json",
+  "textHash": "fnv1a64:26352ad3722f25d2",
+  "jsonHash": "fnv1a64:16bccc86c94afddd",
+  "findings": []
+}

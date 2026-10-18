@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 656,
+  "sourceHash": "fnv1a64:f8e9b6617f1b306b",
+  "lessonIds": [
+    "ES-C656-aduanero",
+    "ES-C656-aduana",
+    "ES-C656-visado",
+    "ES-C656-sellar",
+    "ES-C656-registrar"
+  ],
+  "tex": "spanish/book/chapters/ch656-en-la-aduana.tex"
+}

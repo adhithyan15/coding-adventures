@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C542-arranque",
+    "language": "spanish",
+    "chapter": 542,
+    "sequence": 16740,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:73de6a2b7a4e2160"
+  },
+  "findings": []
+}

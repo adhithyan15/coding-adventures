@@ -1,0 +1,9 @@
+{
+  "id": "ES-PATH-773-COBERTURA",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "ES-EXT-773-COBERTURA"
+  ],
+  "after": []
+}

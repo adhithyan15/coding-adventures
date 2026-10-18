@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 564,
+  "sourceHash": "fnv1a64:b63e7ba61220920f",
+  "lessonIds": [
+    "ES-C564-personaje",
+    "ES-C564-protagonista",
+    "ES-C564-heroe",
+    "ES-C564-leyenda",
+    "ES-C564-mito"
+  ],
+  "tex": "spanish/book/chapters/ch564-el-heroe-de-la-historia.tex"
+}

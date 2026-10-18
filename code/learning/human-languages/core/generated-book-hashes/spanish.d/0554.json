@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 554,
+  "sourceHash": "fnv1a64:092e6c7e7fef0551",
+  "lessonIds": [
+    "ES-C554-graduarse",
+    "ES-C554-graduacion",
+    "ES-C554-licenciarse",
+    "ES-C554-mayoria-de-edad",
+    "ES-C554-envejecer"
+  ],
+  "tex": "spanish/book/chapters/ch554-hacerse-mayor.tex"
+}

@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 563,
+  "sourceHash": "fnv1a64:01283679eecf83a9",
+  "lessonIds": [
+    "ES-C563-fabula",
+    "ES-C563-relato",
+    "ES-C563-narrar",
+    "ES-C563-relatar",
+    "ES-C563-narrador"
+  ],
+  "tex": "spanish/book/chapters/ch563-contar-una-historia.tex"
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 645,
+  "title": "Una avería",
+  "label": "ch:es-una-averia",
+  "canDo": "I can explain that the car has broken down or has a flat tyre and ask for a mechanic.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "ES-C645-pinchar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 645: I can explain that the car has broken down or has a flat tyre and ask for a mechanic.",
+    "assesses": [
+      "ES-LEX-C645-AVERIA-03",
+      "ES-LEX-C645-AVERIA-04",
+      "ES-LEX-C645-AVERIA-05"
+    ]
+  }
+}

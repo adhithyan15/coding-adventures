@@ -1,0 +1,19 @@
+{
+  "chapter": 644,
+  "title": "Dentro del coche",
+  "label": "ch:es-dentro-del-coche",
+  "canDo": "I can name the parts of a car I use on a trip: the engine, the steering wheel, the boot and the seat belt.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "ES-C644-abrocharse",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 644: I can name the parts of a car I use on a trip: the engine, the steering wheel, the boot and the seat belt.",
+    "assesses": [
+      "ES-LEX-C644-COCHE-03",
+      "ES-LEX-C644-COCHE-04",
+      "ES-LEX-C644-COCHE-05"
+    ]
+  }
+}

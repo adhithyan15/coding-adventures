@@ -1,0 +1,11 @@
+{
+  "id": "ES-C539-quincena",
+  "pathSegment": "ES-PATH-539-ANYO",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ES-EXT-539-ANYO",
+      "order": 1
+    }
+  ]
+}

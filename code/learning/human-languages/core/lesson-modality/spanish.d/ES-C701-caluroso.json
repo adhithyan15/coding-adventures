@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C701-caluroso",
+    "language": "spanish",
+    "chapter": 701,
+    "sequence": 24920,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8a017b0cf861b7dd"
+  },
+  "findings": []
+}

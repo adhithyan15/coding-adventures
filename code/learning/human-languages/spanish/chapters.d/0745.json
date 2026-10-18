@@ -1,0 +1,19 @@
+{
+  "chapter": 745,
+  "title": "Cuando se acaba",
+  "label": "ch:es-cuando-se-acaba",
+  "canDo": "I can talk about unfaithfulness, a break-up and betrayal.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "ES-C745-traicion",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 745: I can talk about unfaithfulness, a break-up and betrayal.",
+    "assesses": [
+      "ES-LEX-C745-RUPTURA-03",
+      "ES-LEX-C745-RUPTURA-04",
+      "ES-LEX-C745-RUPTURA-05"
+    ]
+  }
+}

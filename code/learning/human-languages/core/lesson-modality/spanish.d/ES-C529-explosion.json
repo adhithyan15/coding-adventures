@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C529-explosion",
+    "language": "spanish",
+    "chapter": 529,
+    "sequence": 16050,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b6a6715465428c35"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "ES-C700-helar",
+  "pathSegment": "ES-PATH-700-NIEVE",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ES-EXT-700-NIEVE",
+      "order": 1
+    }
+  ]
+}

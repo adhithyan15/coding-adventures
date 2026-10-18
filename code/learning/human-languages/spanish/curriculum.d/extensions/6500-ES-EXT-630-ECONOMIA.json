@@ -1,0 +1,8 @@
+{
+  "id": "ES-EXT-630-ECONOMIA",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can follow simple news about the economy, inflation, exports and trade.",
+  "prerequisites": []
+}

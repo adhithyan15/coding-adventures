@@ -1,0 +1,8 @@
+{
+  "id": "ES-EXT-734-HERIDA",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can describe a burn or a cut that bleeds, the bandage and the scar.",
+  "prerequisites": []
+}

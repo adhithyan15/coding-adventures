@@ -1,0 +1,8 @@
+{
+  "id": "ES-EXT-531-BUSQUEDA",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say that someone went missing, there was a search, and they were found.",
+  "prerequisites": []
+}

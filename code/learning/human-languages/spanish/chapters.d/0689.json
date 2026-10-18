@@ -1,0 +1,19 @@
+{
+  "chapter": 689,
+  "title": "Agua en el paisaje",
+  "label": "ch:es-agua-en-el-paisaje",
+  "canDo": "I can describe water in the countryside: waterfalls, streams, lagoons, marshes and cliffs.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "ES-C689-acantilado",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 689: I can describe water in the countryside: waterfalls, streams, lagoons, marshes and cliffs.",
+    "assesses": [
+      "ES-LEX-C689-AGUA-03",
+      "ES-LEX-C689-AGUA-04",
+      "ES-LEX-C689-AGUA-05"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C713-divertido",
+    "language": "spanish",
+    "chapter": 713,
+    "sequence": 25570,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e66fe941fee927f9"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C693-vegetacion",
+    "language": "spanish",
+    "chapter": 693,
+    "sequence": 24540,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ea1d20e1fde94268"
+  },
+  "findings": []
+}

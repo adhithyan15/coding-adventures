@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C749-huerfano",
+    "language": "spanish",
+    "chapter": 749,
+    "sequence": 27440,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:77d4e9fe661458ac"
+  },
+  "findings": []
+}

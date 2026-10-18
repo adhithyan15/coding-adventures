@@ -1,0 +1,19 @@
+{
+  "chapter": 591,
+  "title": "Formas de trabajar",
+  "label": "ch:es-formas-de-trabajar",
+  "canDo": "I can talk about civil servants, the self-employed, working from home, the union and its agreement.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "ES-R591-repaso-584-591",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 591: I can talk about civil servants, the self-employed, working from home, the union and its agreement.",
+    "assesses": [
+      "ES-LEX-C591-DESPIDO-03",
+      "ES-LEX-C591-DESPIDO-04",
+      "ES-LEX-C591-DESPIDO-05"
+    ]
+  }
+}

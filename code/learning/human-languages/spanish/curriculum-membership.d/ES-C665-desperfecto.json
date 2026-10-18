@@ -1,0 +1,11 @@
+{
+  "id": "ES-C665-desperfecto",
+  "pathSegment": "ES-PATH-665-QUEJA",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ES-EXT-665-QUEJA",
+      "order": 1
+    }
+  ]
+}

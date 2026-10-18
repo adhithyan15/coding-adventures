@@ -1,0 +1,9 @@
+{
+  "id": "ES-PATH-584-VENTAJA",
+  "spine_node": "SPINE-GIVE-REASONS",
+  "before": [],
+  "inline": [
+    "ES-EXT-584-VENTAJA"
+  ],
+  "after": []
+}

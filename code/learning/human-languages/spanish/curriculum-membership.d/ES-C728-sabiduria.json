@@ -1,0 +1,11 @@
+{
+  "id": "ES-C728-sabiduria",
+  "pathSegment": "ES-PATH-728-SABIO",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ES-EXT-728-SABIO",
+      "order": 1
+    }
+  ]
+}

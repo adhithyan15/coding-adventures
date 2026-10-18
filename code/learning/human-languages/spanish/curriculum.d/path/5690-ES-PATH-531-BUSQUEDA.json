@@ -1,0 +1,9 @@
+{
+  "id": "ES-PATH-531-BUSQUEDA",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "ES-EXT-531-BUSQUEDA"
+  ],
+  "after": []
+}

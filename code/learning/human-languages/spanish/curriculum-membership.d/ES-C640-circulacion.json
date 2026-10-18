@@ -1,0 +1,11 @@
+{
+  "id": "ES-C640-circulacion",
+  "pathSegment": "ES-PATH-640-VIAJAR",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ES-EXT-640-VIAJAR",
+      "order": 2
+    }
+  ]
+}

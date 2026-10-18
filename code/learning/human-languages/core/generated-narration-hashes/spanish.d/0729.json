@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 729,
+  "sourceHash": "fnv1a64:4b3048f473b62962",
+  "lessonIds": [
+    "ES-C729-terco",
+    "ES-C729-perezoso",
+    "ES-C729-pereza",
+    "ES-C729-entrometido",
+    "ES-C729-curiosidad"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch729.txt",
+  "json": "spanish/narration/ch729.json",
+  "textHash": "fnv1a64:a929b4c90918b73d",
+  "jsonHash": "fnv1a64:31721282872e195d",
+  "findings": []
+}

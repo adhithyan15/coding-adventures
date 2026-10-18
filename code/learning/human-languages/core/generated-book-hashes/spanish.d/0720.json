@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 720,
+  "sourceHash": "fnv1a64:62348856971d6989",
+  "lessonIds": [
+    "ES-C720-admiracion",
+    "ES-C720-admirar",
+    "ES-C720-agradecido",
+    "ES-C720-gratitud",
+    "ES-C720-apreciar"
+  ],
+  "tex": "spanish/book/chapters/ch720-admirar-y-agradecer.tex"
+}

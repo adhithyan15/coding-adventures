@@ -1,0 +1,19 @@
+{
+  "chapter": 582,
+  "title": "Las consecuencias",
+  "label": "ch:es-las-consecuencias",
+  "canDo": "I can say what follows from something, what it involves and what impact it had.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "ES-C582-de-modo-que",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 582: I can say what follows from something, what it involves and what impact it had.",
+    "assesses": [
+      "ES-LEX-C582-CONSEC-03",
+      "ES-LEX-C582-CONSEC-04",
+      "ES-LEX-C582-CONSEC-05"
+    ]
+  }
+}

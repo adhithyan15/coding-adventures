@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C771-salado",
+    "language": "spanish",
+    "chapter": 771,
+    "sequence": 28570,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ea25c774a272e907"
+  },
+  "findings": []
+}

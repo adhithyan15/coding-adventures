@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 740,
+  "sourceHash": "fnv1a64:b64c47cf7e0d8ef8",
+  "lessonIds": [
+    "ES-C740-nauseas",
+    "ES-C740-aliviar",
+    "ES-C740-vomitar",
+    "ES-C740-desmayarse",
+    "ES-C740-alergia"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch740.txt",
+  "json": "spanish/narration/ch740.json",
+  "textHash": "fnv1a64:05572f74cf060f74",
+  "jsonHash": "fnv1a64:bde1eb9de3739915",
+  "findings": []
+}

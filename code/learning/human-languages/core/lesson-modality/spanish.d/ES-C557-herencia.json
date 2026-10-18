@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C557-herencia",
+    "language": "spanish",
+    "chapter": 557,
+    "sequence": 17520,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:92b6e775264e7aad"
+  },
+  "findings": []
+}

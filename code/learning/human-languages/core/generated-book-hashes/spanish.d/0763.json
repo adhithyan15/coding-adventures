@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 763,
+  "sourceHash": "fnv1a64:06968a574daf7bb3",
+  "lessonIds": [
+    "ES-C763-escultura",
+    "ES-C763-retrato",
+    "ES-C763-lienzo",
+    "ES-C763-pintor",
+    "ES-C763-fotografiar"
+  ],
+  "tex": "spanish/book/chapters/ch763-en-el-museo.tex"
+}

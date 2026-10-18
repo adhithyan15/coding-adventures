@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C648-parquimetro",
+    "language": "spanish",
+    "chapter": 648,
+    "sequence": 22210,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a5a30b5d3dc6f732"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C599-analizar",
+    "language": "spanish",
+    "chapter": 599,
+    "sequence": 19690,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c230a6a617e2dcba"
+  },
+  "findings": []
+}

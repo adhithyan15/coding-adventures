@@ -1,0 +1,19 @@
+{
+  "chapter": 517,
+  "title": "El testigo",
+  "label": "ch:es-el-testigo",
+  "canDo": "I can say that a witness saw something happen, observed it, noticed a detail and told the police.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "ES-C517-detalle",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 517: I can say that a witness saw something happen, observed it, noticed a detail and told the police.",
+    "assesses": [
+      "ES-LEX-C517-TESTIGO-03",
+      "ES-LEX-C517-TESTIGO-04",
+      "ES-LEX-C517-TESTIGO-05"
+    ]
+  }
+}

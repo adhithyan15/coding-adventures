@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 730,
+  "sourceHash": "fnv1a64:3686fa882c829fc7",
+  "lessonIds": [
+    "ES-C730-encantador",
+    "ES-C730-encanto",
+    "ES-C730-atractivo",
+    "ES-C730-belleza",
+    "ES-C730-elegancia"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch730.txt",
+  "json": "spanish/narration/ch730.json",
+  "textHash": "fnv1a64:062262bc7b0a7ded",
+  "jsonHash": "fnv1a64:1a8c514324f80d97",
+  "findings": []
+}

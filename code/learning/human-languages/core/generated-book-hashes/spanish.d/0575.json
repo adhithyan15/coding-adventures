@@ -1,0 +1,15 @@
+{
+  "language": "spanish",
+  "chapter": 575,
+  "sourceHash": "fnv1a64:6a6ece8196e7908a",
+  "lessonIds": [
+    "ES-C575-antiguedad",
+    "ES-C575-presente",
+    "ES-C575-porvenir",
+    "ES-C575-antiguo",
+    "ES-C575-antiguamente",
+    "ES-R575-repaso-568-575",
+    "ES-R575-repaso-final-575"
+  ],
+  "tex": "spanish/book/chapters/ch575-el-pasado.tex"
+}

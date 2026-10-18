@@ -1,0 +1,11 @@
+{
+  "id": "ES-C556-velatorio",
+  "pathSegment": "ES-PATH-556-ENTIERRO",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ES-EXT-556-ENTIERRO",
+      "order": 2
+    }
+  ]
+}

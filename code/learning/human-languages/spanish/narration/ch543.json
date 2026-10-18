@@ -1,0 +1,858 @@
+{
+  "version": 1,
+  "language": "spanish",
+  "chapter": 543,
+  "title": "Más tarde de lo previsto",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:fb703bc93fb8627f",
+  "lessons": [
+    {
+      "id": "ES-C543-reanudar",
+      "sequence": 16760,
+      "title": "reanudar — to resume, to start again",
+      "headword": "reanudar",
+      "romanization": "reanudar",
+      "gloss": "to resume, to start again",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:837e63deab067ea7",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Spanish for the start, then the Spanish for to end."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: reanudar",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "reanudar — \"to resume, to start again\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Después de la lluvia reanudaron el partido. After the rain they resumed the match."
+            },
+            {
+              "kind": "speech",
+              "text": "Reanudarse — to start up again: Se reanudó el servicio."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "reanudar is built on anudar 'to tie a knot' with re- 'again'. Anudar, older añudar (EtymDB), is built on nudo 'a knot', from Latin nōdus 'a knot' (Lewis & Short). To resume is to tie the thread again."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "reanudar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *reanudar*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "reanudar, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *reanudar*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with reanudar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *reanudar*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Spanish for the start, then the Spanish for to end, then say reanudar again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Spanish for the start, then the Spanish for to end, then say *reanudar* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does reanudar mean? (\"To resume, to start again\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C543-retrasar",
+      "sequence": 16770,
+      "title": "retrasar — to delay, to put back",
+      "headword": "retrasar",
+      "romanization": "retrasar",
+      "gloss": "to delay, to put back",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:dbf794653fe6e826",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Spanish for to end, then the Spanish for to resume."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: retrasar",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "retrasar — \"to delay, to put back\"."
+            },
+            {
+              "kind": "speech",
+              "text": "La nieve retrasó el vuelo. The snow delayed the flight."
+            },
+            {
+              "kind": "speech",
+              "text": "Retrasarse is to be late: El tren se retrasó."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "retrasar is usually explained as built on tras 'behind', which comes from Latin trāns 'across, beyond' (Lewis & Short), with re- and the verb ending -ar."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "retrasar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *retrasar*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "retrasar, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *retrasar*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with retrasar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *retrasar*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Spanish for to end, then the Spanish for to resume, then say retrasar again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Spanish for to end, then the Spanish for to resume, then say *retrasar* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does retrasar mean? (\"To delay, to put back\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C543-aplazar",
+      "sequence": 16780,
+      "title": "aplazar — to postpone, to put off",
+      "headword": "aplazar",
+      "romanization": "aplazar",
+      "gloss": "to postpone, to put off",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:38337a098d939caf",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Spanish for to resume, then the Spanish for to delay."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: aplazar",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "aplazar — \"to postpone, to put off\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Aplazaron el partido por la lluvia. They postponed the match because of the rain."
+            },
+            {
+              "kind": "speech",
+              "text": "It takes c before e: aplacé. Aplazar algo hasta el lunes — to put something off until Monday."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "aplazar is usually explained as built on plazo 'a time limit' with a- and -ar. Plazo comes from Latin placitum 'what has been agreed', from placēre 'to please' (Lewis & Short)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "aplazar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *aplazar*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "aplazar, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *aplazar*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with aplazar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *aplazar*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Spanish for to resume, then the Spanish for to delay, then say aplazar again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Spanish for to resume, then the Spanish for to delay, then say *aplazar* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does aplazar mean? (\"To postpone, to put off\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C543-adelantar",
+      "sequence": 16790,
+      "title": "adelantar — to bring forward; to overtake",
+      "headword": "adelantar",
+      "romanization": "adelantar",
+      "gloss": "to bring forward; to overtake",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9f291842d3b7fe0a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Spanish for to delay, then the Spanish for to postpone."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: adelantar",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "adelantar — \"to bring forward; to overtake\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Adelantaron la reunión al lunes. They brought the meeting forward to Monday."
+            },
+            {
+              "kind": "speech",
+              "text": "On the road it means to overtake. Adelantarse is to get ahead."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "adelantar is built on adelante 'forward' (EtymDB), which comes from delante, old Spanish denante, built on Latin dē, in and ante 'before'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "adelantar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *adelantar*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "adelantar, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *adelantar*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with adelantar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *adelantar*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Spanish for to delay, then the Spanish for to postpone, then say adelantar again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Spanish for to delay, then the Spanish for to postpone, then say *adelantar* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does adelantar mean? (\"To bring forward; to overtake\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C543-permanecer",
+      "sequence": 16800,
+      "title": "permanecer — to remain, to stay",
+      "headword": "permanecer",
+      "romanization": "permanecer",
+      "gloss": "to remain, to stay",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4ade5886be5bcea9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Spanish for to postpone, then the Spanish for to bring forward."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: permanecer",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "permanecer — \"to remain, to stay\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Permaneció en el hospital una semana. He remained in hospital for a week."
+            },
+            {
+              "kind": "speech",
+              "text": "Formal; in speech quedarse. It takes a z: permanezco."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "permanecer comes from Latin permanēre 'to stay to the end, to last' (EtymDB), built on per and manēre 'to stay', with the Spanish ending -ecer."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "permanecer",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *permanecer*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "permanecer, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *permanecer*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with permanecer",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *permanecer*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Spanish for to postpone, then the Spanish for to bring forward, then say permanecer again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Spanish for to postpone, then the Spanish for to bring forward, then say *permanecer* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does permanecer mean? (\"To remain, to stay\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-R543-repaso-536-543",
+      "sequence": 16810,
+      "title": "Repaso de los capítulos 536–543",
+      "headword": "(dialogue)",
+      "romanization": "(dialogue)",
+      "gloss": "a review of chapters 536-543",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:01de4c208c386a31",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Spanish for meanwhile and at the same time."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "meanwhile, at the same time, at once, as soon as, the moment that",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: meanwhile, at the same time, at once, as soon as, the moment that]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "since then, until then, the next day, a short time ago, the day before yesterday",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: since then, until then, the next day, a short time ago, the day before yesterday]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "previously, subsequently, beforehand, recently, lately",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: previously, subsequently, beforehand, recently, lately]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the semester, the fortnight, the five-year period, the millennium, the period",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the semester, the fortnight, the five-year period, the millennium, the period]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "at the beginning of, in the middle of, at the end of, weekly, yearly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: at the beginning of, in the middle of, at the end of, weekly, yearly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the phase, the passing, the length, to go on, to go by",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the phase, the passing, the length, to go on, to go by]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to begin, to launch, the beginning, the start, to end",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to begin, to launch, the beginning, the start, to end]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to resume, to delay, to postpone, to bring forward, to remain",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to resume, to delay, to postpone, to bring forward, to remain]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Meanwhile? (mientras tanto.) At the same time? (al mismo tiempo.) At once? (a la vez.) As soon as? (en cuanto.) The moment that? (tan pronto como.) Since then? (desde entonces.) Until then? (hasta entonces.) The next day? (al día siguiente.) A short time ago? (hace poco.) The day before yesterday? (anteayer.) Previously? (anteriormente.) Subsequently? (posteriormente.) Beforehand? (previamente.) Recently? (recientemente.) Lately? (últimamente.) The semester? (el semestre.) The fortnight? (la quincena.) The five-year period? (el lustro.) The millennium? (el milenio.) The period? (el período.) At the beginning of? (a principios de.) In the middle of? (a mediados de.) At the end of? (a finales de.) Weekly? (semanal.) Yearly? (anual.) The phase? (la fase.) The passing? (el transcurso.) The length? (la duración.) To go on? (prolongarse.) To go by? (transcurrir.) To begin? (comenzar.) To launch? (iniciar.) The beginning? (el comienzo.) The start? (el arranque.) To end? (finalizar.) To resume? (reanudar.) To delay? (retrasar.) To postpone? (aplazar.) To bring forward? (adelantar.) To remain? (permanecer.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

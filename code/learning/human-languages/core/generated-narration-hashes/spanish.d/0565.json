@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 565,
+  "sourceHash": "fnv1a64:919b56e1bb513d31",
+  "lessonIds": [
+    "ES-C565-trama",
+    "ES-C565-argumento",
+    "ES-C565-capitulo",
+    "ES-C565-episodio",
+    "ES-C565-desenlace"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch565.txt",
+  "json": "spanish/narration/ch565.json",
+  "textHash": "fnv1a64:9b58fea693cddf54",
+  "jsonHash": "fnv1a64:27bb6f3a0074c9a0",
+  "findings": []
+}

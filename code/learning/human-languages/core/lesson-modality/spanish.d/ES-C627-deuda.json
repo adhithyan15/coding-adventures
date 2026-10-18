@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C627-deuda",
+    "language": "spanish",
+    "chapter": 627,
+    "sequence": 21130,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:09a2cc27d310cec2"
+  },
+  "findings": []
+}

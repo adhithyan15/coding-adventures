@@ -1,0 +1,11 @@
+{
+  "id": "ES-C589-en-realidad",
+  "pathSegment": "ES-PATH-589-MATIZA",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ES-EXT-589-MATIZA",
+      "order": 1
+    }
+  ]
+}

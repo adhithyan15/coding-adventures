@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 528,
+  "sourceHash": "fnv1a64:6ddf1719fcf601a7",
+  "lessonIds": [
+    "ES-C528-desastre",
+    "ES-C528-catastrofe",
+    "ES-C528-tragedia",
+    "ES-C528-terremoto",
+    "ES-C528-inundacion"
+  ],
+  "tex": "spanish/book/chapters/ch528-una-catastrofe.tex"
+}

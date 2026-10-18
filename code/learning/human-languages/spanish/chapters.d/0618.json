@@ -1,0 +1,19 @@
+{
+  "chapter": 618,
+  "title": "Supongamos que...",
+  "label": "ch:es-supongamos-que",
+  "canDo": "I can imagine a situation and talk about what would probably happen.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "ES-C618-seguramente",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 618: I can imagine a situation and talk about what would probably happen.",
+    "assesses": [
+      "ES-LEX-C618-SUPONE-03",
+      "ES-LEX-C618-SUPONE-04",
+      "ES-LEX-C618-SUPONE-05"
+    ]
+  }
+}

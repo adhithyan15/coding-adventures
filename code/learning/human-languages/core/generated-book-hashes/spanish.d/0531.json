@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 531,
+  "sourceHash": "fnv1a64:12f6e93075f29e50",
+  "lessonIds": [
+    "ES-C531-desaparecido",
+    "ES-C531-busqueda",
+    "ES-C531-localizar",
+    "ES-C531-hallar",
+    "ES-C531-hallazgo"
+  ],
+  "tex": "spanish/book/chapters/ch531-la-busqueda.tex"
+}

@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 547,
+  "sourceHash": "fnv1a64:7ad5c1808cfbd002",
+  "lessonIds": [
+    "ES-C547-novio",
+    "ES-C547-novia",
+    "ES-C547-comprometerse",
+    "ES-C547-compromiso",
+    "ES-C547-anillo"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch547.txt",
+  "json": "spanish/narration/ch547.json",
+  "textHash": "fnv1a64:e42c5a9eddba87c1",
+  "jsonHash": "fnv1a64:9201b1ebd2dfd4af",
+  "findings": []
+}

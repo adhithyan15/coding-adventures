@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C727-sensibilidad",
+    "language": "spanish",
+    "chapter": 727,
+    "sequence": 26280,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c09690676fda4ecf"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 718,
+  "sourceHash": "fnv1a64:1fcb6b0cbca4fb98",
+  "lessonIds": [
+    "ES-C718-guinar",
+    "ES-C718-bromista",
+    "ES-C718-broma",
+    "ES-C718-bromear",
+    "ES-C718-burlarse"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch718.txt",
+  "json": "spanish/narration/ch718.json",
+  "textHash": "fnv1a64:0338498b27b6a0e6",
+  "jsonHash": "fnv1a64:29a61d5ad2a3c8b4",
+  "findings": []
+}

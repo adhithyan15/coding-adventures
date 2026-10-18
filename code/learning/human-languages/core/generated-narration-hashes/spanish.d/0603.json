@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 603,
+  "sourceHash": "fnv1a64:af770e4b763fac1b",
+  "lessonIds": [
+    "ES-C603-privilegio",
+    "ES-C603-igualdad",
+    "ES-C603-desigualdad",
+    "ES-C603-justicia",
+    "ES-C603-injusto"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch603.txt",
+  "json": "spanish/narration/ch603.json",
+  "textHash": "fnv1a64:4d01df393d88469c",
+  "jsonHash": "fnv1a64:ecb57871aea0722a",
+  "findings": []
+}

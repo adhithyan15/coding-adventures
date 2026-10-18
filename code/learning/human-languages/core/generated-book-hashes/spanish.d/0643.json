@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 643,
+  "sourceHash": "fnv1a64:e59309d27008f93f",
+  "lessonIds": [
+    "ES-C643-derrapar",
+    "ES-C643-arrancar",
+    "ES-C643-atascarse",
+    "ES-C643-acelerar",
+    "ES-C643-circular"
+  ],
+  "tex": "spanish/book/chapters/ch643-al-volante.tex"
+}

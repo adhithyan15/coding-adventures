@@ -1,0 +1,20 @@
+{
+  "language": "spanish",
+  "chapter": 583,
+  "sourceHash": "fnv1a64:87e4e36c5971f5d9",
+  "lessonIds": [
+    "ES-C583-influir",
+    "ES-C583-influencia",
+    "ES-C583-afectar",
+    "ES-C583-factor",
+    "ES-C583-generar",
+    "ES-R583-repaso-576-583"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "spanish/narration/ch583.txt",
+  "json": "spanish/narration/ch583.json",
+  "textHash": "fnv1a64:cc6db14120d991b7",
+  "jsonHash": "fnv1a64:b42ea9408cbe9e9a",
+  "findings": []
+}

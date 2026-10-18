@@ -1,0 +1,11 @@
+{
+  "id": "ES-C641-taxista",
+  "pathSegment": "ES-PATH-641-TAXI",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ES-EXT-641-TAXI",
+      "order": 1
+    }
+  ]
+}

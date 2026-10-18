@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C714-carino",
+    "language": "spanish",
+    "chapter": 714,
+    "sequence": 25610,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e02e72e2426f797b"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 581,
+  "title": "Por culpa de, gracias a",
+  "label": "ch:es-por-culpa-de-gracias-a",
+  "canDo": "I can say what caused something, for good or for bad.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "ES-C581-gracias-a",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 581: I can say what caused something, for good or for bad.",
+    "assesses": [
+      "ES-LEX-C581-CAUSA-03",
+      "ES-LEX-C581-CAUSA-04",
+      "ES-LEX-C581-CAUSA-05"
+    ]
+  }
+}

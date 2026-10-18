@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 604,
+  "sourceHash": "fnv1a64:e61e41aa3b9b9b39",
+  "lessonIds": [
+    "ES-C604-protestar",
+    "ES-C604-expresar",
+    "ES-C604-polemico",
+    "ES-C604-reclamar",
+    "ES-C604-reivindicar"
+  ],
+  "tex": "spanish/book/chapters/ch604-protestar.tex"
+}

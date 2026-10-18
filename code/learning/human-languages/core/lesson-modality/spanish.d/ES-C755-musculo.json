@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C755-musculo",
+    "language": "spanish",
+    "chapter": 755,
+    "sequence": 27750,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0ee641d78933dd02"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 638,
+  "sourceHash": "fnv1a64:2cff2b68ec82690f",
+  "lessonIds": [
+    "ES-C638-margen",
+    "ES-C638-limitar",
+    "ES-C638-control",
+    "ES-C638-controlar",
+    "ES-C638-excepto"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch638.txt",
+  "json": "spanish/narration/ch638.json",
+  "textHash": "fnv1a64:631f513141eca7c5",
+  "jsonHash": "fnv1a64:ebd0e6bbba035cc5",
+  "findings": []
+}

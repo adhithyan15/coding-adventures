@@ -1,0 +1,19 @@
+{
+  "chapter": 535,
+  "title": "Tarde o temprano",
+  "label": "ch:es-tarde-o-temprano",
+  "canDo": "I can put a story in order: at first, in the long run, sooner or later, finally and later.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "ES-R535-repaso-528-535",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 535: I can put a story in order: at first, in the long run, sooner or later, finally and later.",
+    "assesses": [
+      "ES-LEX-C535-FINAL-03",
+      "ES-LEX-C535-FINAL-04",
+      "ES-LEX-C535-FINAL-05"
+    ]
+  }
+}

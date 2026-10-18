@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 556,
+  "sourceHash": "fnv1a64:46c964f22d341410",
+  "lessonIds": [
+    "ES-C556-entierro",
+    "ES-C556-enterrar",
+    "ES-C556-velatorio",
+    "ES-C556-tumba",
+    "ES-C556-cementerio"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch556.txt",
+  "json": "spanish/narration/ch556.json",
+  "textHash": "fnv1a64:305df6e7defba9da",
+  "jsonHash": "fnv1a64:10843c81c6417015",
+  "findings": []
+}

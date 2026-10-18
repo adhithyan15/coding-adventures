@@ -1,0 +1,858 @@
+{
+  "version": 1,
+  "language": "spanish",
+  "chapter": 719,
+  "title": "Dudas y preocupaciones",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:e8b53173805dd1fc",
+  "lessons": [
+    {
+      "id": "ES-C719-angustia",
+      "sequence": 25860,
+      "title": "la angustia — anguish, distress",
+      "headword": "la angustia",
+      "romanization": "la angustia",
+      "gloss": "anguish, distress",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a9f7a53b76d4f6b7",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Spanish for to joke, then the Spanish for to make fun of."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: la angustia",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la angustia — \"anguish, distress\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Sentí angustia al no tener noticias. I felt anguish at having no news."
+            },
+            {
+              "kind": "speech",
+              "text": "Me da angustia — it makes me anxious."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "angustia is a learned borrowing from Latin angustia \"narrowness, difficulty, distress\" (EtymDB), built on angustus \"narrow\": distress is a tightness in the chest."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la angustia",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la angustia*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la angustia, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la angustia*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with la angustia",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *la angustia*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Spanish for to joke, then the Spanish for to make fun of, then say la angustia again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Spanish for to joke, then the Spanish for to make fun of, then say *la angustia* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does la angustia mean? (\"Anguish, distress\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C719-soportar",
+      "sequence": 25870,
+      "title": "soportar — to bear, to put up with",
+      "headword": "soportar",
+      "romanization": "soportar",
+      "gloss": "to bear, to put up with",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b91efac793a65fb6",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Spanish for to make fun of, then the Spanish for anguish."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: soportar",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "soportar — \"to bear, to put up with\"."
+            },
+            {
+              "kind": "speech",
+              "text": "No soporto el ruido. I cannot stand the noise."
+            },
+            {
+              "kind": "speech",
+              "text": "No soporto a mi vecino — I cannot stand my neighbour. A false friend: to support is apoyar."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "soportar comes from Latin supportāre \"to carry, to convey\" (EtymDB; Lewis & Short), built on sub \"under\" and portāre \"to carry\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "soportar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *soportar*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "soportar, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *soportar*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with soportar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *soportar*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Spanish for to make fun of, then the Spanish for anguish, then say soportar again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Spanish for to make fun of, then the Spanish for anguish, then say *soportar* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does soportar mean? (\"To bear, to put up with\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C719-dudar",
+      "sequence": 25880,
+      "title": "dudar — to doubt",
+      "headword": "dudar",
+      "romanization": "dudar",
+      "gloss": "to doubt",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:32fbcadf8cb92666",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Spanish for anguish, then the Spanish for to bear."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: dudar",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "dudar — \"to doubt\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Dudo que venga hoy. I doubt he will come today."
+            },
+            {
+              "kind": "speech",
+              "text": "Dudar que takes the subjunctive. La duda is a doubt."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "dudar is inherited from Latin dubitāre \"to waver, to doubt\" (EtymDB); the middle -bit- wore away."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dudar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dudar*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dudar, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dudar*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with dudar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *dudar*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Spanish for anguish, then the Spanish for to bear, then say dudar again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Spanish for anguish, then the Spanish for to bear, then say *dudar* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does dudar mean? (\"To doubt\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C719-preocupacion",
+      "sequence": 25890,
+      "title": "la preocupación — worry, concern",
+      "headword": "la preocupación",
+      "romanization": "la preocupación",
+      "gloss": "worry, concern",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7c232fa73a48a874",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Spanish for to bear, then the Spanish for to doubt."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: la preocupación",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la preocupación — \"worry, concern\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Mi mayor preocupación es la salud. My biggest worry is health."
+            },
+            {
+              "kind": "speech",
+              "text": "The verb preocuparse is to worry."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "preocupación is a learned borrowing from Latin praeoccupātiō \"a seizing beforehand\" (EtymDB); a worry takes hold of the mind before anything else can."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la preocupación",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la preocupación*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la preocupación, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la preocupación*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with la preocupación",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *la preocupación*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Spanish for to bear, then the Spanish for to doubt, then say la preocupación again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Spanish for to bear, then the Spanish for to doubt, then say *la preocupación* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does la preocupación mean? (\"Worry, concern\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C719-preocupado",
+      "sequence": 25900,
+      "title": "preocupado — worried",
+      "headword": "preocupado",
+      "romanization": "preocupado",
+      "gloss": "worried",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:863f967b4cbf079d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Spanish for to doubt, then the Spanish for worry."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: preocupado",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "preocupado — \"worried\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Estoy preocupado por mi padre. I am worried about my father."
+            },
+            {
+              "kind": "speech",
+              "text": "Used with estar: estar preocupado por."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "preocupado is the participle of preocupar, a learned borrowing from Latin praeoccupāre \"to seize beforehand\" (EtymDB), built on occupāre \"to seize\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "preocupado",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *preocupado*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "preocupado, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *preocupado*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with preocupado",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *preocupado*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Spanish for to doubt, then the Spanish for worry, then say preocupado again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Spanish for to doubt, then the Spanish for worry, then say *preocupado* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does preocupado mean? (\"Worried\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-R719-repaso-712-719",
+      "sequence": 25910,
+      "title": "Repaso de los capítulos 712–719",
+      "headword": "(dialogue)",
+      "romanization": "(dialogue)",
+      "gloss": "a review of chapters 712-719",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9f80ca05270fefc1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Spanish for the sensation and mood."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the sensation, mood, discouraged, to cheer up, relief",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the sensation, mood, discouraged, to cheer up, relief]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "fun, entertaining, funny, to get bored, boredom",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: fun, entertaining, funny, to get bored, boredom]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "affection, affectionate, tenderness, tender, to adore",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: affection, affectionate, tenderness, tender, to adore]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to love, to detest, in love, to kiss, passion",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to love, to detest, in love, to kiss, passion]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pity, to console, to regret, disappointed, disappointment",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: pity, to console, to regret, disappointed, disappointment]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "depressed, to let off steam, suffering, the tear, desperate",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: depressed, to let off steam, suffering, the tear, desperate]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to wink, joker, the joke, to joke, to make fun of",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to wink, joker, the joke, to joke, to make fun of]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "anguish, to bear, to doubt, worry, worried",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: anguish, to bear, to doubt, worry, worried]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The sensation? (la sensación.) Mood? (el ánimo.) Discouraged? (desanimado.) To cheer up? (animar.) Relief? (el alivio.) Fun? (la diversión.) Entertaining? (divertido.) Funny? (gracioso.) To get bored? (aburrirse.) Boredom? (el aburrimiento.) Affection? (el cariño.) Affectionate? (cariñoso.) Tenderness? (la ternura.) Tender? (tierno.) To adore? (adorar.) To love? (amar.) To detest? (detestar.) In love? (enamorado.) To kiss? (besar.) Passion? (la pasión.) Pity? (la lástima.) To console? (consolar.) To regret? (lamentar.) Disappointed? (decepcionado.) Disappointment? (la decepción.) Depressed? (deprimido.) To let off steam? (desahogarse.) Suffering? (el sufrimiento.) The tear? (la lágrima.) Desperate? (desesperado.) To wink? (guiñar.) Joker? (bromista.) The joke? (la broma.) To joke? (bromear.) To make fun of? (burlarse.) Anguish? (la angustia.) To bear? (soportar.) To doubt? (dudar.) Worry? (la preocupación.) Worried? (preocupado.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

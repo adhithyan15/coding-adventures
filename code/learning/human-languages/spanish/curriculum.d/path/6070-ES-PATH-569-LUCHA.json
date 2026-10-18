@@ -1,0 +1,9 @@
+{
+  "id": "ES-PATH-569-LUCHA",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "ES-EXT-569-LUCHA"
+  ],
+  "after": []
+}

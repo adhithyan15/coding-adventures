@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 726,
+  "sourceHash": "fnv1a64:7fcd3a3ac6c1d80a",
+  "lessonIds": [
+    "ES-C726-humilde",
+    "ES-C726-humildad",
+    "ES-C726-vanidad",
+    "ES-C726-modesto",
+    "ES-C726-presumir"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch726.txt",
+  "json": "spanish/narration/ch726.json",
+  "textHash": "fnv1a64:d2de4bb6e417806a",
+  "jsonHash": "fnv1a64:c1d1d04910ef567e",
+  "findings": []
+}

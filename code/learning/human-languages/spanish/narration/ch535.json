@@ -1,0 +1,854 @@
+{
+  "version": 1,
+  "language": "spanish",
+  "chapter": 535,
+  "title": "Tarde o temprano",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:c8d4fbc8d71404a8",
+  "lessons": [
+    {
+      "id": "ES-C535-en-un-principio",
+      "sequence": 16350,
+      "title": "en un principio — at first, in the beginning",
+      "headword": "en un principio",
+      "romanization": "en un principio",
+      "gloss": "at first, in the beginning",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0236ad4957f8cb7b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Spanish for next, then the Spanish for abruptly."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: en un principio",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "en un principio — \"at first, in the beginning\"."
+            },
+            {
+              "kind": "speech",
+              "text": "En un principio nadie creyó al niño. At first nobody believed the boy."
+            },
+            {
+              "kind": "speech",
+              "text": "It often sets up a later change: En un principio..., pero luego..."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "en un principio is built on principio, which comes from Latin prīncipium 'a beginning' (EtymDB), from prīnceps 'first' (Lewis & Short)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "en un principio",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *en un principio*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "en un principio, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *en un principio*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with en un principio",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *en un principio*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Spanish for next, then the Spanish for abruptly, then say en un principio again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Spanish for next, then the Spanish for abruptly, then say *en un principio* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does en un principio mean? (\"At first, in the beginning\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C535-a-la-larga",
+      "sequence": 16360,
+      "title": "a la larga — in the long run",
+      "headword": "a la larga",
+      "romanization": "a la larga",
+      "gloss": "in the long run",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5d387f15fcadfbec",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Spanish for abruptly, then the Spanish for at first."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: a la larga",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "a la larga — \"in the long run\"."
+            },
+            {
+              "kind": "speech",
+              "text": "A la larga, fue lo mejor para todos. In the long run, it was the best thing for everyone."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "a la larga is built on largo 'long', which is inherited from Latin largus 'abundant, generous' (EtymDB). Spanish moved the sense from plenty to length."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a la larga",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *a la larga*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a la larga, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *a la larga*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with a la larga",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *a la larga*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Spanish for abruptly, then the Spanish for at first, then say a la larga again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Spanish for abruptly, then the Spanish for at first, then say *a la larga* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does a la larga mean? (\"In the long run\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C535-tarde-o-temprano",
+      "sequence": 16370,
+      "title": "tarde o temprano — sooner or later",
+      "headword": "tarde o temprano",
+      "romanization": "tarde o temprano",
+      "gloss": "sooner or later",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:cc3bc08d8ea819b9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Spanish for at first, then the Spanish for in the long run."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: tarde o temprano",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "tarde o temprano — \"sooner or later\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Tarde o temprano vas a saber la verdad. Sooner or later you are going to find out the truth."
+            },
+            {
+              "kind": "speech",
+              "text": "Spanish puts late first: tarde o temprano."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "tarde o temprano is built on tarde, from Latin tardē 'slowly, late', and temprano, which is inherited from spoken Latin temporānus, from temporāneus 'timely' (EtymDB), built on tempus 'time'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tarde o temprano",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tarde o temprano*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tarde o temprano, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tarde o temprano*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with tarde o temprano",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *tarde o temprano*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Spanish for at first, then the Spanish for in the long run, then say tarde o temprano again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Spanish for at first, then the Spanish for in the long run, then say *tarde o temprano* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does tarde o temprano mean? (\"Sooner or later\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C535-finalmente",
+      "sequence": 16380,
+      "title": "finalmente — finally, in the end",
+      "headword": "finalmente",
+      "romanization": "finalmente",
+      "gloss": "finally, in the end",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ba2cb2b2d52e7db1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Spanish for in the long run, then the Spanish for sooner or later."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: finalmente",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "finalmente — \"finally, in the end\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Finalmente, la policía detuvo al ladrón. Finally, the police arrested the thief."
+            },
+            {
+              "kind": "speech",
+              "text": "Common in written stories and in the news."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "finalmente is built on final and the ending -mente, from Latin mente 'with a mind'. Final comes from Latin fīnis 'end' (Lewis & Short)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "finalmente",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *finalmente*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "finalmente, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *finalmente*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with finalmente",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *finalmente*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Spanish for in the long run, then the Spanish for sooner or later, then say finalmente again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Spanish for in the long run, then the Spanish for sooner or later, then say *finalmente* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does finalmente mean? (\"Finally, in the end\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C535-mas-tarde",
+      "sequence": 16390,
+      "title": "más tarde — later",
+      "headword": "más tarde",
+      "romanization": "más tarde",
+      "gloss": "later",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7fd6ed058a239996",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Spanish for sooner or later, then the Spanish for finally."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: más tarde",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "más tarde — \"later\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Más tarde fuimos al hospital. Later we went to the hospital."
+            },
+            {
+              "kind": "speech",
+              "text": "Hasta más tarde — see you later."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "más tarde is built on tarde, which is inherited from Latin tardē 'slowly, late', from tardus 'slow' (Lewis & Short)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "más tarde",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *más tarde*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "más tarde, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *más tarde*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with más tarde",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *más tarde*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Spanish for sooner or later, then the Spanish for finally, then say más tarde again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Spanish for sooner or later, then the Spanish for finally, then say *más tarde* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does más tarde mean? (\"Later\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-R535-repaso-528-535",
+      "sequence": 16400,
+      "title": "Repaso de los capítulos 528–535",
+      "headword": "(dialogue)",
+      "romanization": "(dialogue)",
+      "gloss": "a review of chapters 528-535",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0d441c8c282045fe",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Spanish for the disaster and the catastrophe."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the disaster, the catastrophe, the tragedy, the earthquake, the flood",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the disaster, the catastrophe, the tragedy, the earthquake, the flood]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the explosion, to explode, to burst, the rubble, to destroy",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the explosion, to explode, to burst, the rubble, to destroy]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "risky, the risk, the threat, the attack, to attack",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: risky, the risk, the threat, the attack, to attack]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "missing, the search, to locate, to find, the find",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: missing, the search, to locate, to find, the find]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the mystery, the enigma, to conceal, to hide, the secret",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the mystery, the enigma, to conceal, to hide, the secret]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chance, the coincidence, accidental, unexpected, sudden",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: chance, the coincidence, accidental, unexpected, sudden]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "suddenly, all of a sudden, immediately, next, abruptly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: suddenly, all of a sudden, immediately, next, abruptly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "at first, in the long run, sooner or later, finally, later",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: at first, in the long run, sooner or later, finally, later]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The disaster? (el desastre.) The catastrophe? (la catástrofe.) The tragedy? (la tragedia.) The earthquake? (el terremoto.) The flood? (la inundación.) The explosion? (la explosión.) To explode? (explotar.) To burst? (estallar.) The rubble? (los escombros.) To destroy? (destruir.) Risky? (arriesgado.) The risk? (el riesgo.) The threat? (la amenaza.) The attack? (el ataque.) To attack? (atacar.) Missing? (desaparecido.) The search? (la búsqueda.) To locate? (localizar.) To find? (hallar.) The find? (el hallazgo.) The mystery? (el misterio.) The enigma? (el enigma.) To conceal? (ocultar.) To hide? (esconder.) The secret? (el secreto.) Chance? (la casualidad.) The coincidence? (la coincidencia.) Accidental? (fortuito.) Unexpected? (inesperado.) Sudden? (repentino.) Suddenly? (de pronto.) All of a sudden? (súbitamente.) Immediately? (inmediatamente.) Next? (a continuación.) Abruptly? (bruscamente.) At first? (en un principio.) In the long run? (a la larga.) Sooner or later? (tarde o temprano.) Finally? (finalmente.) Later? (más tarde.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

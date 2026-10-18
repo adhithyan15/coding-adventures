@@ -1,0 +1,8 @@
+{
+  "id": "ES-EXT-697-LLUVIA",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can talk about rain, from a light drizzle to a sudden downpour, and say when it stops.",
+  "prerequisites": []
+}

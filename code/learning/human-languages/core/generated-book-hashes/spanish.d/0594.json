@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 594,
+  "sourceHash": "fnv1a64:62dd2eb9f697af0f",
+  "lessonIds": [
+    "ES-C594-liderazgo",
+    "ES-C594-motivar",
+    "ES-C594-colaboracion",
+    "ES-C594-dirigir",
+    "ES-C594-gestionar"
+  ],
+  "tex": "spanish/book/chapters/ch594-en-equipo.tex"
+}

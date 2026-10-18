@@ -1,0 +1,11 @@
+{
+  "id": "ES-C736-barba",
+  "pathSegment": "ES-PATH-736-CARA",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ES-EXT-736-CARA",
+      "order": 3
+    }
+  ]
+}

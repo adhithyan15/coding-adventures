@@ -1,0 +1,9 @@
+{
+  "id": "ES-PATH-550-DIVORCIO",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "ES-EXT-550-DIVORCIO"
+  ],
+  "after": []
+}

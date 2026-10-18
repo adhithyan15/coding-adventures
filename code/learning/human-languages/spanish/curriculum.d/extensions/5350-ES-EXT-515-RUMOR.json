@@ -1,0 +1,8 @@
+{
+  "id": "ES-EXT-515-RUMOR",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say that there was a rumour, a statement or an official note, and that someone declared or confirmed it.",
+  "prerequisites": []
+}

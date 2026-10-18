@@ -1,0 +1,11 @@
+{
+  "id": "ES-C678-torre",
+  "pathSegment": "ES-PATH-678-VISITA",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ES-EXT-678-VISITA",
+      "order": 3
+    }
+  ]
+}

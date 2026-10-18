@@ -1,0 +1,8 @@
+{
+  "id": "ES-EXT-673-DIRIGIRSE",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say where people are heading, taking a short cut, going back, going round or skirting along.",
+  "prerequisites": []
+}

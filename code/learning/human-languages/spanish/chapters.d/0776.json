@@ -1,0 +1,19 @@
+{
+  "chapter": 776,
+  "title": "Si olvidas la contraseña",
+  "label": "ch:es-si-olvidas-la-contrasena",
+  "canDo": "I can say what to do if something goes wrong on a computer: a password, a file, a folder, an update or a keyboard.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "ES-C776-teclado",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 776: I can say what to do if something goes wrong on a computer: a password, a file, a folder, an update or a keyboard.",
+    "assesses": [
+      "ES-LEX-C776-CLAVE-03",
+      "ES-LEX-C776-CLAVE-04",
+      "ES-LEX-C776-CLAVE-05"
+    ]
+  }
+}

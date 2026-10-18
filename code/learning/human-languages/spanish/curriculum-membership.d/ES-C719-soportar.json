@@ -1,0 +1,11 @@
+{
+  "id": "ES-C719-soportar",
+  "pathSegment": "ES-PATH-719-CONFIANZA",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ES-EXT-719-CONFIANZA",
+      "order": 1
+    }
+  ]
+}

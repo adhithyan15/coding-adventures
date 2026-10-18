@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 744,
+  "sourceHash": "fnv1a64:2a07d85dd627bb5c",
+  "lessonIds": [
+    "ES-C744-flechazo",
+    "ES-C744-piropo",
+    "ES-C744-noviazgo",
+    "ES-C744-pretendiente",
+    "ES-C744-complicidad"
+  ],
+  "tex": "spanish/book/chapters/ch744-flechazos-y-piropos.tex"
+}

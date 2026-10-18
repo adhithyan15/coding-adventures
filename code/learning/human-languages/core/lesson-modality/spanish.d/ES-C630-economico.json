@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C630-economico",
+    "language": "spanish",
+    "chapter": 630,
+    "sequence": 21270,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:61560c16a69e1052"
+  },
+  "findings": []
+}

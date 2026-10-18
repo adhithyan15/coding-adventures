@@ -1,0 +1,11 @@
+{
+  "id": "ES-C772-soplar",
+  "pathSegment": "ES-PATH-772-MONTE",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ES-EXT-772-MONTE",
+      "order": 1
+    }
+  ]
+}

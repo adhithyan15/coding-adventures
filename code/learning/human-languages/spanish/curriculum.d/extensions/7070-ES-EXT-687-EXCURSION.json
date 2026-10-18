@@ -1,0 +1,8 @@
+{
+  "id": "ES-EXT-687-EXCURSION",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can plan a day out on foot: a long walk along a path, a mountain hut, climbing and exploring.",
+  "prerequisites": []
+}

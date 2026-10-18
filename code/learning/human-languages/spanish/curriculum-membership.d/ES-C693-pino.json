@@ -1,0 +1,11 @@
+{
+  "id": "ES-C693-pino",
+  "pathSegment": "ES-PATH-693-ARBOLES",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ES-EXT-693-ARBOLES",
+      "order": 1
+    }
+  ]
+}

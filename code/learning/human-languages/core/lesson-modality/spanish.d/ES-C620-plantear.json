@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C620-plantear",
+    "language": "spanish",
+    "chapter": 620,
+    "sequence": 20790,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:41cfae657892d877"
+  },
+  "findings": []
+}

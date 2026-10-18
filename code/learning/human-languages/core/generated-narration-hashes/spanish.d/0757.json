@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 757,
+  "sourceHash": "fnv1a64:9456c154687cc915",
+  "lessonIds": [
+    "ES-C757-campeon",
+    "ES-C757-torneo",
+    "ES-C757-victoria",
+    "ES-C757-derrota",
+    "ES-C757-medalla"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch757.txt",
+  "json": "spanish/narration/ch757.json",
+  "textHash": "fnv1a64:1e0c2ba0a829d821",
+  "jsonHash": "fnv1a64:f53b671364cc08ff",
+  "findings": []
+}

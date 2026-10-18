@@ -1,0 +1,19 @@
+{
+  "chapter": 728,
+  "title": "Listos y sabios",
+  "label": "ch:es-listos-y-sabios",
+  "canDo": "I can describe someone wise, clever or skilful.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "ES-C728-ingenio",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 728: I can describe someone wise, clever or skilful.",
+    "assesses": [
+      "ES-LEX-C728-SABIO-03",
+      "ES-LEX-C728-SABIO-04",
+      "ES-LEX-C728-SABIO-05"
+    ]
+  }
+}

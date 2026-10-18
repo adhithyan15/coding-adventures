@@ -1,0 +1,8 @@
+{
+  "id": "ES-EXT-664-HABITACION",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can describe a hotel room: the sheets, the balcony, the view, the sockets and the taps.",
+  "prerequisites": []
+}

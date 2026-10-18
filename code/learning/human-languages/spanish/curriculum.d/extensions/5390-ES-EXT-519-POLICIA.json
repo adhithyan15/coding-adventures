@@ -1,0 +1,8 @@
+{
+  "id": "ES-EXT-519-POLICIA",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say that a patrol came, and that an officer chased, stopped and arrested someone.",
+  "prerequisites": []
+}

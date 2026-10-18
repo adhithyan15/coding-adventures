@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 595,
+  "sourceHash": "fnv1a64:da53fe2e90ac236d",
+  "lessonIds": [
+    "ES-C595-carrera",
+    "ES-C595-ascender",
+    "ES-C595-merito",
+    "ES-C595-ambicioso",
+    "ES-C595-triunfar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch595.txt",
+  "json": "spanish/narration/ch595.json",
+  "textHash": "fnv1a64:2abba6a86bafa1ad",
+  "jsonHash": "fnv1a64:92be6efc01bae1de",
+  "findings": []
+}

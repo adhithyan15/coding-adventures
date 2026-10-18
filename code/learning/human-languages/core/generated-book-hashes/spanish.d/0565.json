@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 565,
+  "sourceHash": "fnv1a64:30433a11fe8f6e47",
+  "lessonIds": [
+    "ES-C565-trama",
+    "ES-C565-argumento",
+    "ES-C565-capitulo",
+    "ES-C565-episodio",
+    "ES-C565-desenlace"
+  ],
+  "tex": "spanish/book/chapters/ch565-capitulo-uno.tex"
+}

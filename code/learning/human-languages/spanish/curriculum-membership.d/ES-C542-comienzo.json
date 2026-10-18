@@ -1,0 +1,11 @@
+{
+  "id": "ES-C542-comienzo",
+  "pathSegment": "ES-PATH-542-COMIENZO",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ES-EXT-542-COMIENZO",
+      "order": 2
+    }
+  ]
+}

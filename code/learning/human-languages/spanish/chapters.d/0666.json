@@ -1,0 +1,19 @@
+{
+  "chapter": 666,
+  "title": "Bajo las estrellas",
+  "label": "ch:es-bajo-las-estrellas",
+  "canDo": "I can go camping: a sleeping bag and a mat, travelling in a caravan and bringing a torch.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "ES-C666-linterna",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 666: I can go camping: a sleeping bag and a mat, travelling in a caravan and bringing a torch.",
+    "assesses": [
+      "ES-LEX-C666-CAMPING-03",
+      "ES-LEX-C666-CAMPING-04",
+      "ES-LEX-C666-CAMPING-05"
+    ]
+  }
+}

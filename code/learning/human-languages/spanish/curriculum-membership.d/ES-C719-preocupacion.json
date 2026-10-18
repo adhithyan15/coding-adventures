@@ -1,0 +1,11 @@
+{
+  "id": "ES-C719-preocupacion",
+  "pathSegment": "ES-PATH-719-CONFIANZA",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ES-EXT-719-CONFIANZA",
+      "order": 3
+    }
+  ]
+}

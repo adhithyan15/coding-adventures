@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 612,
+  "sourceHash": "fnv1a64:7792d9f0818df951",
+  "lessonIds": [
+    "ES-C612-a-no-ser-que",
+    "ES-C612-a-condicion-de-que",
+    "ES-C612-de-lo-contrario",
+    "ES-C612-en-ese-caso",
+    "ES-C612-en-todo-caso"
+  ],
+  "tex": "spanish/book/chapters/ch612-si-no-es-asi.tex"
+}

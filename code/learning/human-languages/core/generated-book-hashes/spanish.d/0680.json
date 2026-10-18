@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 680,
+  "sourceHash": "fnv1a64:bfb4246d07306424",
+  "lessonIds": [
+    "ES-C680-pasteleria",
+    "ES-C680-papeleria",
+    "ES-C680-peluqueria",
+    "ES-C680-lavanderia",
+    "ES-C680-heladeria"
+  ],
+  "tex": "spanish/book/chapters/ch680-tiendas-del-barrio.tex"
+}

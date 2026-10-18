@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 689,
+  "sourceHash": "fnv1a64:1b09fe643162ab78",
+  "lessonIds": [
+    "ES-C689-cascada",
+    "ES-C689-arroyo",
+    "ES-C689-laguna",
+    "ES-C689-pantano",
+    "ES-C689-acantilado"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch689.txt",
+  "json": "spanish/narration/ch689.json",
+  "textHash": "fnv1a64:4b33f77fddd941b3",
+  "jsonHash": "fnv1a64:74749bdaf00fa58f",
+  "findings": []
+}

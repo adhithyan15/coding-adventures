@@ -1,0 +1,8 @@
+{
+  "id": "ES-EXT-527-CHOQUE",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can describe a road accident: two cars crashed, someone was run over or fell, and who came out unhurt.",
+  "prerequisites": []
+}

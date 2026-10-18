@@ -1,0 +1,9 @@
+{
+  "id": "ES-PATH-627-GASTO",
+  "spine_node": "SPINE-EXPRESS-CONDITION",
+  "before": [],
+  "inline": [
+    "ES-EXT-627-GASTO"
+  ],
+  "after": []
+}

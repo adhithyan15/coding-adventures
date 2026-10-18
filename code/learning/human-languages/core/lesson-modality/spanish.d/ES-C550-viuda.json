@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C550-viuda",
+    "language": "spanish",
+    "chapter": 550,
+    "sequence": 17160,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8abb8fab184aa1ed"
+  },
+  "findings": []
+}

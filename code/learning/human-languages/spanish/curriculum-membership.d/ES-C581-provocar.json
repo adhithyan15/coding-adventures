@@ -1,0 +1,11 @@
+{
+  "id": "ES-C581-provocar",
+  "pathSegment": "ES-PATH-581-CAUSA",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ES-EXT-581-CAUSA",
+      "order": 1
+    }
+  ]
+}

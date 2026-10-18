@@ -1,0 +1,11 @@
+{
+  "id": "ES-C752-magia",
+  "pathSegment": "ES-PATH-752-JUEGOS",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ES-EXT-752-JUEGOS",
+      "order": 3
+    }
+  ]
+}

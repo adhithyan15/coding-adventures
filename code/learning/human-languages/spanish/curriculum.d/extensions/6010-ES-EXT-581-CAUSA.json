@@ -1,0 +1,8 @@
+{
+  "id": "ES-EXT-581-CAUSA",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say what caused something, for good or for bad.",
+  "prerequisites": []
+}

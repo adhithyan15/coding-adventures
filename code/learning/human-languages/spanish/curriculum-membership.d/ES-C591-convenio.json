@@ -1,0 +1,11 @@
+{
+  "id": "ES-C591-convenio",
+  "pathSegment": "ES-PATH-591-DESPIDO",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "ES-EXT-591-DESPIDO",
+      "order": 0
+    }
+  ]
+}

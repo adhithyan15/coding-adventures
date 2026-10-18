@@ -1,0 +1,8 @@
+{
+  "id": "ES-EXT-566-AVENTURA",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can tell an anecdote about an adventure, a great feat, a record or some news.",
+  "prerequisites": []
+}

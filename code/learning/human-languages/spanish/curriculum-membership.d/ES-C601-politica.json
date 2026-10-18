@@ -1,0 +1,11 @@
+{
+  "id": "ES-C601-politica",
+  "pathSegment": "ES-PATH-601-GOBIERNO",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ES-EXT-601-GOBIERNO",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C615-programar",
+    "language": "spanish",
+    "chapter": 615,
+    "sequence": 20490,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:71b6c363c717c7f3"
+  },
+  "findings": []
+}

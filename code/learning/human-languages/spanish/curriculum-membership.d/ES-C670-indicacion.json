@@ -1,0 +1,11 @@
+{
+  "id": "ES-C670-indicacion",
+  "pathSegment": "ES-PATH-670-INDICAR",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ES-EXT-670-INDICAR",
+      "order": 1
+    }
+  ]
+}

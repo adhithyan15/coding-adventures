@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 724,
+  "sourceHash": "fnv1a64:c8349af72106497a",
+  "lessonIds": [
+    "ES-C724-sinceridad",
+    "ES-C724-cotillear",
+    "ES-C724-mentiroso",
+    "ES-C724-sincero",
+    "ES-C724-honestidad"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch724.txt",
+  "json": "spanish/narration/ch724.json",
+  "textHash": "fnv1a64:b1364a54b25679dc",
+  "jsonHash": "fnv1a64:c15243755e1f7185",
+  "findings": []
+}

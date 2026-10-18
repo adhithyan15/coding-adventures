@@ -1,0 +1,9 @@
+{
+  "id": "ES-PATH-562-VOLVER",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "ES-EXT-562-VOLVER"
+  ],
+  "after": []
+}

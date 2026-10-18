@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C698-soleado",
+    "language": "spanish",
+    "chapter": 698,
+    "sequence": 24790,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f07ef6b5bf1b338a"
+  },
+  "findings": []
+}

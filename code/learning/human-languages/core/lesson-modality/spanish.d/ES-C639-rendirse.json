@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C639-rendirse",
+    "language": "spanish",
+    "chapter": 639,
+    "sequence": 21740,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:86008c9ec84530d0"
+  },
+  "findings": []
+}

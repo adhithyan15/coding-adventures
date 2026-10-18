@@ -1,0 +1,11 @@
+{
+  "id": "ES-C659-remar",
+  "pathSegment": "ES-PATH-659-BARCA",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ES-EXT-659-BARCA",
+      "order": 2
+    }
+  ]
+}

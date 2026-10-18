@@ -1,0 +1,9 @@
+{
+  "id": "ES-PATH-517-TESTIGO",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "ES-EXT-517-TESTIGO"
+  ],
+  "after": []
+}

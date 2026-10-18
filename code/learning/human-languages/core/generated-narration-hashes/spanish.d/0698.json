@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 698,
+  "sourceHash": "fnv1a64:9cf23b8bcb2f4151",
+  "lessonIds": [
+    "ES-C698-nublado",
+    "ES-C698-despejado",
+    "ES-C698-soleado",
+    "ES-C698-nublarse",
+    "ES-C698-despejar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch698.txt",
+  "json": "spanish/narration/ch698.json",
+  "textHash": "fnv1a64:d7c9907ab2f9db88",
+  "jsonHash": "fnv1a64:ede332f67f109d72",
+  "findings": []
+}

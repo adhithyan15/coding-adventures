@@ -1,0 +1,11 @@
+{
+  "id": "ES-C762-lector",
+  "pathSegment": "ES-PATH-762-PRENSA",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ES-EXT-762-PRENSA",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 758,
+  "sourceHash": "fnv1a64:50bbfcfd4ea647ff",
+  "lessonIds": [
+    "ES-C758-voleibol",
+    "ES-C758-boxeo",
+    "ES-C758-esquiar",
+    "ES-C758-patinar",
+    "ES-C758-aficionado"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch758.txt",
+  "json": "spanish/narration/ch758.json",
+  "textHash": "fnv1a64:27d03ca277c5ff20",
+  "jsonHash": "fnv1a64:a272e8b69e6caa13",
+  "findings": []
+}

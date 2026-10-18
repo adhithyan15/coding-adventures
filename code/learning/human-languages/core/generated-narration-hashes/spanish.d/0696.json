@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 696,
+  "sourceHash": "fnv1a64:71eea2c640ec3035",
+  "lessonIds": [
+    "ES-C696-termometro",
+    "ES-C696-pronostico",
+    "ES-C696-prevision",
+    "ES-C696-humedo",
+    "ES-C696-humedad"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch696.txt",
+  "json": "spanish/narration/ch696.json",
+  "textHash": "fnv1a64:aa8d22962c70dfba",
+  "jsonHash": "fnv1a64:0704d0c689e00ac4",
+  "findings": []
+}

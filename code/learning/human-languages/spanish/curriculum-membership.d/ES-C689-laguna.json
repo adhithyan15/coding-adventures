@@ -1,0 +1,11 @@
+{
+  "id": "ES-C689-laguna",
+  "pathSegment": "ES-PATH-689-AGUA",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ES-EXT-689-AGUA",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "ES-C718-bromista",
+  "pathSegment": "ES-PATH-718-SONRISA",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ES-EXT-718-SONRISA",
+      "order": 1
+    }
+  ]
+}

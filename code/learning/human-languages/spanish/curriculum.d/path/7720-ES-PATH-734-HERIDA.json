@@ -1,0 +1,9 @@
+{
+  "id": "ES-PATH-734-HERIDA",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "ES-EXT-734-HERIDA"
+  ],
+  "after": []
+}

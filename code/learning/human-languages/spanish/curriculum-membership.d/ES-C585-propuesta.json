@@ -1,0 +1,11 @@
+{
+  "id": "ES-C585-propuesta",
+  "pathSegment": "ES-PATH-585-PROPONE",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ES-EXT-585-PROPONE",
+      "order": 1
+    }
+  ]
+}

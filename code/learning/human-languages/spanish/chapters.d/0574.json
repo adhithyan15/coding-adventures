@@ -1,0 +1,19 @@
+{
+  "chapter": 574,
+  "title": "Cómo me enteré",
+  "label": "ch:es-como-me-entere",
+  "canDo": "I can say how I found out about an incident: I got a notification or saw it on the TV news.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "ES-C574-incidente",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 574: I can say how I found out about an incident: I got a notification or saw it on the TV news.",
+    "assesses": [
+      "ES-LEX-C574-ENTERARSE-03",
+      "ES-LEX-C574-ENTERARSE-04",
+      "ES-LEX-C574-ENTERARSE-05"
+    ]
+  }
+}

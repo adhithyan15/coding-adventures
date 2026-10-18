@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C658-desembarcar",
+    "language": "spanish",
+    "chapter": 658,
+    "sequence": 22760,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:09f8b1450dbb5ffb"
+  },
+  "findings": []
+}

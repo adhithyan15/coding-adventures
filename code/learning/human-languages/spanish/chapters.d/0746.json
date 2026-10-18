@@ -1,0 +1,19 @@
+{
+  "chapter": 746,
+  "title": "Engaños y coqueteos",
+  "label": "ch:es-enganos-y-coqueteos",
+  "canDo": "I can talk about flirting, chatting someone up, caresses and deceit.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "ES-C746-amante",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 746: I can talk about flirting, chatting someone up, caresses and deceit.",
+    "assesses": [
+      "ES-LEX-C746-ENGANO-03",
+      "ES-LEX-C746-ENGANO-04",
+      "ES-LEX-C746-ENGANO-05"
+    ]
+  }
+}

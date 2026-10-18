@@ -1,0 +1,19 @@
+{
+  "chapter": 552,
+  "title": "Lejos de casa",
+  "label": "ch:es-lejos-de-casa",
+  "canDo": "I can talk about people who left their country: immigrants, refugees, exile, borders and leaving home.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "ES-C552-independizarse",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 552: I can talk about people who left their country: immigrants, refugees, exile, borders and leaving home.",
+    "assesses": [
+      "ES-LEX-C552-EXILIO-03",
+      "ES-LEX-C552-EXILIO-04",
+      "ES-LEX-C552-EXILIO-05"
+    ]
+  }
+}

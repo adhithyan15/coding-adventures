@@ -1,0 +1,11 @@
+{
+  "id": "ES-C642-peaje",
+  "pathSegment": "ES-PATH-642-CARRETERA",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ES-EXT-642-CARRETERA",
+      "order": 2
+    }
+  ]
+}

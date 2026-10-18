@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 534,
+  "sourceHash": "fnv1a64:f359bf838c9e4674",
+  "lessonIds": [
+    "ES-C534-de-pronto",
+    "ES-C534-subitamente",
+    "ES-C534-inmediatamente",
+    "ES-C534-a-continuacion",
+    "ES-C534-bruscamente"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch534.txt",
+  "json": "spanish/narration/ch534.json",
+  "textHash": "fnv1a64:451d198a6300da84",
+  "jsonHash": "fnv1a64:ff06653ceac3c8bb",
+  "findings": []
+}

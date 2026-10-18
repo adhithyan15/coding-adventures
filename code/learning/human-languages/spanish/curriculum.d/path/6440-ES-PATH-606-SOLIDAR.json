@@ -1,0 +1,9 @@
+{
+  "id": "ES-PATH-606-SOLIDAR",
+  "spine_node": "SPINE-GIVE-REASONS",
+  "before": [],
+  "inline": [
+    "ES-EXT-606-SOLIDAR"
+  ],
+  "after": []
+}

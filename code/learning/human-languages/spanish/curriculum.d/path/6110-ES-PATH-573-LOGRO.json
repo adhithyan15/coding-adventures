@@ -1,0 +1,9 @@
+{
+  "id": "ES-PATH-573-LOGRO",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "ES-EXT-573-LOGRO"
+  ],
+  "after": []
+}

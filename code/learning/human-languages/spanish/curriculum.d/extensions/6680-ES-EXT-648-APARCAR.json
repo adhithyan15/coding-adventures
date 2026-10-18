@@ -1,0 +1,8 @@
+{
+  "id": "ES-EXT-648-APARCAR",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can find a parking space, pay at the meter, keep to my lane and talk about trailers and towing.",
+  "prerequisites": []
+}

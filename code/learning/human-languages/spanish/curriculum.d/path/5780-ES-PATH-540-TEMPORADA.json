@@ -1,0 +1,9 @@
+{
+  "id": "ES-PATH-540-TEMPORADA",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "ES-EXT-540-TEMPORADA"
+  ],
+  "after": []
+}

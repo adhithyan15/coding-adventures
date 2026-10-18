@@ -1,0 +1,19 @@
+{
+  "chapter": 568,
+  "title": "Reyes y revoluciones",
+  "label": "ch:es-reyes-y-revoluciones",
+  "canDo": "I can talk about history: monarchs and queens, conquests, revolutions and historic days.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "ES-C568-conquistar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 568: I can talk about history: monarchs and queens, conquests, revolutions and historic days.",
+    "assesses": [
+      "ES-LEX-C568-REY-03",
+      "ES-LEX-C568-REY-04",
+      "ES-LEX-C568-REY-05"
+    ]
+  }
+}

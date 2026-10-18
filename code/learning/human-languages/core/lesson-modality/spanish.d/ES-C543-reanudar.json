@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C543-reanudar",
+    "language": "spanish",
+    "chapter": 543,
+    "sequence": 16760,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:837e63deab067ea7"
+  },
+  "findings": []
+}

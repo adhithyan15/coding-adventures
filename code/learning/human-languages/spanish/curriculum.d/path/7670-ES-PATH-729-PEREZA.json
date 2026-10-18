@@ -1,0 +1,9 @@
+{
+  "id": "ES-PATH-729-PEREZA",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "ES-EXT-729-PEREZA"
+  ],
+  "after": []
+}

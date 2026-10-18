@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C521-pista",
+    "language": "spanish",
+    "chapter": 521,
+    "sequence": 15650,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:abcbe5b602b8f29b"
+  },
+  "findings": []
+}

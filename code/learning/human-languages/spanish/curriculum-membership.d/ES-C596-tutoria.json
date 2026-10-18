@@ -1,0 +1,11 @@
+{
+  "id": "ES-C596-tutoria",
+  "pathSegment": "ES-PATH-596-ESTUDIOS",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ES-EXT-596-ESTUDIOS",
+      "order": 2
+    }
+  ]
+}

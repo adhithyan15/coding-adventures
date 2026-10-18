@@ -1,0 +1,14 @@
+{
+  "language": "spanish",
+  "chapter": 599,
+  "sourceHash": "fnv1a64:e6e96a8fc518775f",
+  "lessonIds": [
+    "ES-C599-experimento",
+    "ES-C599-comparar",
+    "ES-C599-analizar",
+    "ES-C599-conclusion",
+    "ES-C599-metodo",
+    "ES-R599-repaso-592-599"
+  ],
+  "tex": "spanish/book/chapters/ch599-un-estudio.tex"
+}

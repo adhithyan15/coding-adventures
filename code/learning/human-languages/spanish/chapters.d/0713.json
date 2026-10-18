@@ -1,0 +1,19 @@
+{
+  "chapter": 713,
+  "title": "Pasarlo bien",
+  "label": "ch:es-pasarlo-bien",
+  "canDo": "I can say whether something was fun, funny or boring.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "ES-C713-aburrimiento",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 713: I can say whether something was fun, funny or boring.",
+    "assesses": [
+      "ES-LEX-C713-DIVERTIDO-03",
+      "ES-LEX-C713-DIVERTIDO-04",
+      "ES-LEX-C713-DIVERTIDO-05"
+    ]
+  }
+}

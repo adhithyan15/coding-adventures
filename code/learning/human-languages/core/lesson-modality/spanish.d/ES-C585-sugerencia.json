@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C585-sugerencia",
+    "language": "spanish",
+    "chapter": 585,
+    "sequence": 18980,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9feb936df2af3f52"
+  },
+  "findings": []
+}

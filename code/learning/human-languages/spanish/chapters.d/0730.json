@@ -1,0 +1,19 @@
+{
+  "chapter": 730,
+  "title": "Encanto y belleza",
+  "label": "ch:es-encanto-y-belleza",
+  "canDo": "I can describe someone charming, attractive or elegant.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "ES-C730-elegancia",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 730: I can describe someone charming, attractive or elegant.",
+    "assesses": [
+      "ES-LEX-C730-ENCANTO-03",
+      "ES-LEX-C730-ENCANTO-04",
+      "ES-LEX-C730-ENCANTO-05"
+    ]
+  }
+}

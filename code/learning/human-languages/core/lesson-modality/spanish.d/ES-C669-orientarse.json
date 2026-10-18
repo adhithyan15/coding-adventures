@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C669-orientarse",
+    "language": "spanish",
+    "chapter": 669,
+    "sequence": 23290,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0eb9e53994552db2"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 755,
+  "sourceHash": "fnv1a64:6db3c4826104d3c7",
+  "lessonIds": [
+    "ES-C755-calentamiento",
+    "ES-C755-trotar",
+    "ES-C755-atleta",
+    "ES-C755-lesionarse",
+    "ES-C755-musculo"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch755.txt",
+  "json": "spanish/narration/ch755.json",
+  "textHash": "fnv1a64:4615ee684dbd9ccf",
+  "jsonHash": "fnv1a64:14be731dd02cffd0",
+  "findings": []
+}

@@ -1,0 +1,9 @@
+{
+  "id": "ES-PATH-546-BAUTIZO",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "ES-EXT-546-BAUTIZO"
+  ],
+  "after": []
+}

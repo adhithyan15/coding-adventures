@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C677-catedral",
+    "language": "spanish",
+    "chapter": 677,
+    "sequence": 23700,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1002a3cb81883ed6"
+  },
+  "findings": []
+}

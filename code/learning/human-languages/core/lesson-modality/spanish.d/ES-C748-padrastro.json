@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C748-padrastro",
+    "language": "spanish",
+    "chapter": 748,
+    "sequence": 27390,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:aad2d802dd39eae9"
+  },
+  "findings": []
+}

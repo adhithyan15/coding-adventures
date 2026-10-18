@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 725,
+  "sourceHash": "fnv1a64:aecebad8a5c80ea0",
+  "lessonIds": [
+    "ES-C725-fiel",
+    "ES-C725-leal",
+    "ES-C725-lealtad",
+    "ES-C725-reconciliarse",
+    "ES-C725-fingir"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch725.txt",
+  "json": "spanish/narration/ch725.json",
+  "textHash": "fnv1a64:76573c061979caeb",
+  "jsonHash": "fnv1a64:38ec843ed2579c3a",
+  "findings": []
+}

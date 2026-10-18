@@ -1,0 +1,8 @@
+{
+  "id": "ES-EXT-672-SENAL",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can read signs on the way: signposts, notices, arrows, the signposting and diversions.",
+  "prerequisites": []
+}

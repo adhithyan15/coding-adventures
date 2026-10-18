@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 700,
+  "sourceHash": "fnv1a64:e1da58cec4c5dcf8",
+  "lessonIds": [
+    "ES-C700-nevar",
+    "ES-C700-helar",
+    "ES-C700-ventisca",
+    "ES-C700-nevada",
+    "ES-C700-escarcha"
+  ],
+  "tex": "spanish/book/chapters/ch700-nieve-y-hielo.tex"
+}

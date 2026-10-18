@@ -1,0 +1,8 @@
+{
+  "id": "ES-EXT-550-DIVORCIO",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say that a couple separated or divorced, and that someone lost a husband or a wife.",
+  "prerequisites": []
+}

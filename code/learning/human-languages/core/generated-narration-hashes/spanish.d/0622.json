@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 622,
+  "sourceHash": "fnv1a64:f46528014feb0681",
+  "lessonIds": [
+    "ES-C622-normativa",
+    "ES-C622-reglamento",
+    "ES-C622-prohibicion",
+    "ES-C622-obligar",
+    "ES-C622-obligacion"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch622.txt",
+  "json": "spanish/narration/ch622.json",
+  "textHash": "fnv1a64:2b19f93584768fff",
+  "jsonHash": "fnv1a64:9d55ac67e2e08972",
+  "findings": []
+}

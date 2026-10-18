@@ -1,0 +1,19 @@
+{
+  "chapter": 720,
+  "title": "Admirar y agradecer",
+  "label": "ch:es-admirar-y-agradecer",
+  "canDo": "I can say whom I admire and thank someone warmly.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "ES-C720-apreciar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 720: I can say whom I admire and thank someone warmly.",
+    "assesses": [
+      "ES-LEX-C720-GRACIAS-03",
+      "ES-LEX-C720-GRACIAS-04",
+      "ES-LEX-C720-GRACIAS-05"
+    ]
+  }
+}

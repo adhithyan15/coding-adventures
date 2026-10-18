@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 610,
+  "sourceHash": "fnv1a64:f2adb2cdaeb26994",
+  "lessonIds": [
+    "ES-C610-tolerancia",
+    "ES-C610-tolerar",
+    "ES-C610-integracion",
+    "ES-C610-inmigracion",
+    "ES-C610-convivencia"
+  ],
+  "tex": "spanish/book/chapters/ch610-convivir.tex"
+}

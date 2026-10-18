@@ -1,0 +1,19 @@
+{
+  "chapter": 601,
+  "title": "El gobierno",
+  "label": "ch:es-el-gobierno",
+  "canDo": "I can follow simple talk about the government, politics and a town councillor.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "ES-C601-concejal",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 601: I can follow simple talk about the government, politics and a town councillor.",
+    "assesses": [
+      "ES-LEX-C601-GOBIERNO-03",
+      "ES-LEX-C601-GOBIERNO-04",
+      "ES-LEX-C601-GOBIERNO-05"
+    ]
+  }
+}

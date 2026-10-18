@@ -1,0 +1,11 @@
+{
+  "id": "ES-C566-hazana",
+  "pathSegment": "ES-PATH-566-AVENTURA",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ES-EXT-566-AVENTURA",
+      "order": 2
+    }
+  ]
+}

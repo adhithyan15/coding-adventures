@@ -1,0 +1,11 @@
+{
+  "id": "ES-C554-graduacion",
+  "pathSegment": "ES-PATH-554-GRADUA",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ES-EXT-554-GRADUA",
+      "order": 1
+    }
+  ]
+}

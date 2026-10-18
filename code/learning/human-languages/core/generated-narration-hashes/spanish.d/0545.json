@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 545,
+  "sourceHash": "fnv1a64:bbe095c92d9e91f8",
+  "lessonIds": [
+    "ES-C545-criar",
+    "ES-C545-ninez",
+    "ES-C545-juventud",
+    "ES-C545-adolescencia",
+    "ES-C545-generacion"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch545.txt",
+  "json": "spanish/narration/ch545.json",
+  "textHash": "fnv1a64:b0c75cbb428e1c20",
+  "jsonHash": "fnv1a64:c6d5957a80ea7808",
+  "findings": []
+}

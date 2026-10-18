@@ -1,0 +1,11 @@
+{
+  "id": "ES-C572-convertirse",
+  "pathSegment": "ES-PATH-572-CAMBIO",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "ES-EXT-572-CAMBIO",
+      "order": 0
+    }
+  ]
+}

@@ -1,0 +1,9 @@
+{
+  "id": "ES-PATH-747-POLITICA",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "ES-EXT-747-POLITICA"
+  ],
+  "after": []
+}

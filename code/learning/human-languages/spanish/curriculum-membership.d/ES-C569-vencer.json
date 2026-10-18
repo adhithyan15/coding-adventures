@@ -1,0 +1,11 @@
+{
+  "id": "ES-C569-vencer",
+  "pathSegment": "ES-PATH-569-LUCHA",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ES-EXT-569-LUCHA",
+      "order": 2
+    }
+  ]
+}

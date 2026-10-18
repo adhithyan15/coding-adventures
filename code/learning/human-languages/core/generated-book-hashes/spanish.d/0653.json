@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 653,
+  "sourceHash": "fnv1a64:4b78bec744b71a6e",
+  "lessonIds": [
+    "ES-C653-embarcar",
+    "ES-C653-embarque",
+    "ES-C653-detector",
+    "ES-C653-bandeja",
+    "ES-C653-escala"
+  ],
+  "tex": "spanish/book/chapters/ch653-la-puerta-de-embarque.tex"
+}

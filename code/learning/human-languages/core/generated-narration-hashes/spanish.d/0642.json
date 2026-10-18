@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 642,
+  "sourceHash": "fnv1a64:5ca0f7c426471d66",
+  "lessonIds": [
+    "ES-C642-circunvalacion",
+    "ES-C642-arcen",
+    "ES-C642-peaje",
+    "ES-C642-bache",
+    "ES-C642-tramo"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch642.txt",
+  "json": "spanish/narration/ch642.json",
+  "textHash": "fnv1a64:ce438b544b907fd6",
+  "jsonHash": "fnv1a64:67d90d301399e386",
+  "findings": []
+}

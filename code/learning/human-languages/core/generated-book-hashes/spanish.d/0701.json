@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 701,
+  "sourceHash": "fnv1a64:ee9fd8c39ce162b8",
+  "lessonIds": [
+    "ES-C701-caluroso",
+    "ES-C701-templado",
+    "ES-C701-bochorno",
+    "ES-C701-sequia",
+    "ES-C701-sudar"
+  ],
+  "tex": "spanish/book/chapters/ch701-calor-y-sequia.tex"
+}

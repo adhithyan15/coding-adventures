@@ -1,0 +1,8 @@
+{
+  "id": "ES-EXT-666-CAMPING",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can go camping: a sleeping bag and a mat, travelling in a caravan and bringing a torch.",
+  "prerequisites": []
+}

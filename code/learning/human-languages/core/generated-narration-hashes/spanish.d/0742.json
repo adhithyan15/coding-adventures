@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 742,
+  "sourceHash": "fnv1a64:09578989e43d9f34",
+  "lessonIds": [
+    "ES-C742-dieta",
+    "ES-C742-sobrepeso",
+    "ES-C742-apetito",
+    "ES-C742-ejercicio",
+    "ES-C742-masticar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch742.txt",
+  "json": "spanish/narration/ch742.json",
+  "textHash": "fnv1a64:39affb8e9e97a585",
+  "jsonHash": "fnv1a64:fbf26eff439e701d",
+  "findings": []
+}

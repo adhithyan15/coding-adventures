@@ -1,0 +1,19 @@
+{
+  "chapter": 743,
+  "title": "Salud emocional",
+  "label": "ch:es-salud-emocional",
+  "canDo": "I can talk about therapists, therapy, well-being and self-esteem.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "ES-R743-repaso-736-743",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 743: I can talk about therapists, therapy, well-being and self-esteem.",
+    "assesses": [
+      "ES-LEX-C743-MENTE-03",
+      "ES-LEX-C743-MENTE-04",
+      "ES-LEX-C743-MENTE-05"
+    ]
+  }
+}

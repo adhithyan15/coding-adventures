@@ -1,0 +1,19 @@
+{
+  "chapter": 643,
+  "title": "Al volante",
+  "label": "ch:es-al-volante",
+  "canDo": "I can say what a car does: start, skid, get stuck, speed up and move with the traffic.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "ES-C643-circular",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 643: I can say what a car does: start, skid, get stuck, speed up and move with the traffic.",
+    "assesses": [
+      "ES-LEX-C643-VOLANTE-03",
+      "ES-LEX-C643-VOLANTE-04",
+      "ES-LEX-C643-VOLANTE-05"
+    ]
+  }
+}

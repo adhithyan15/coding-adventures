@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C682-papelera",
+    "language": "spanish",
+    "chapter": 682,
+    "sequence": 23960,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:20976875ba6e32b4"
+  },
+  "findings": []
+}

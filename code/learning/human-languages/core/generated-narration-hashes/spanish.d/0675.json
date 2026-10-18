@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 675,
+  "sourceHash": "fnv1a64:fcd78b273c122cc3",
+  "lessonIds": [
+    "ES-C675-afueras",
+    "ES-C675-cuadra",
+    "ES-C675-callejon",
+    "ES-C675-soportal",
+    "ES-C675-adoquin"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch675.txt",
+  "json": "spanish/narration/ch675.json",
+  "textHash": "fnv1a64:8660148e37197439",
+  "jsonHash": "fnv1a64:70c46f50113ae707",
+  "findings": []
+}

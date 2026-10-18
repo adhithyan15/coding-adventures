@@ -1,0 +1,19 @@
+{
+  "chapter": 585,
+  "title": "Propuestas",
+  "label": "ch:es-propuestas",
+  "canDo": "I can make a proposal, give a suggestion and warn of a problem.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "ES-C585-advertencia",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 585: I can make a proposal, give a suggestion and warn of a problem.",
+    "assesses": [
+      "ES-LEX-C585-PROPONE-03",
+      "ES-LEX-C585-PROPONE-04",
+      "ES-LEX-C585-PROPONE-05"
+    ]
+  }
+}

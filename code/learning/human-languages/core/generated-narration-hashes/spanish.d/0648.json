@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 648,
+  "sourceHash": "fnv1a64:8cb1ada2ee5695bd",
+  "lessonIds": [
+    "ES-C648-parquimetro",
+    "ES-C648-estacionamiento",
+    "ES-C648-remolque",
+    "ES-C648-carril",
+    "ES-C648-remolcar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch648.txt",
+  "json": "spanish/narration/ch648.json",
+  "textHash": "fnv1a64:2f051b1c796d97e0",
+  "jsonHash": "fnv1a64:d2d995515c5650b1",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "ES-C702-empapado",
+  "pathSegment": "ES-PATH-702-MOJARSE",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ES-EXT-702-MOJARSE",
+      "order": 1
+    }
+  ]
+}

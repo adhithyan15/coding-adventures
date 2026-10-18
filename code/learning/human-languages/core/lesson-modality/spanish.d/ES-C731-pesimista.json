@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C731-pesimista",
+    "language": "spanish",
+    "chapter": 731,
+    "sequence": 26520,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ad956b355e69af67"
+  },
+  "findings": []
+}

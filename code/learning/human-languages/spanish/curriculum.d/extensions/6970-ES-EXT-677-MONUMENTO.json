@@ -1,0 +1,8 @@
+{
+  "id": "ES-EXT-677-MONUMENTO",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can talk about the sights of an old town: monuments, the cathedral, the castle, the palace and the walls.",
+  "prerequisites": []
+}

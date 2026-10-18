@@ -1,0 +1,19 @@
+{
+  "chapter": 598,
+  "title": "Saber hacer",
+  "label": "ch:es-saber-hacer",
+  "canDo": "I can describe knowledge, skills and effort and say what I bring to a team.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "ES-C598-aportar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 598: I can describe knowledge, skills and effort and say what I bring to a team.",
+    "assesses": [
+      "ES-LEX-C598-SABER-03",
+      "ES-LEX-C598-SABER-04",
+      "ES-LEX-C598-SABER-05"
+    ]
+  }
+}

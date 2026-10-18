@@ -1,0 +1,9 @@
+{
+  "id": "ES-PATH-758-DEPORTES",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "ES-EXT-758-DEPORTES"
+  ],
+  "after": []
+}

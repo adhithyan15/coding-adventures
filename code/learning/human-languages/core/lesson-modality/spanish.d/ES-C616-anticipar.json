@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C616-anticipar",
+    "language": "spanish",
+    "chapter": 616,
+    "sequence": 20560,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ce9b335128f4e464"
+  },
+  "findings": []
+}

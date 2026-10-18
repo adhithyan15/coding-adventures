@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C553-renunciar",
+    "language": "spanish",
+    "chapter": 553,
+    "sequence": 17320,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3595aef3a2dd5f5e"
+  },
+  "findings": []
+}

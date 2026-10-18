@@ -1,0 +1,19 @@
+{
+  "chapter": 621,
+  "title": "Lo hace posible o no",
+  "label": "ch:es-lo-hace-posible-o-no",
+  "canDo": "I can say what makes something easier or harder, what is forbidden and who is exempt.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "ES-C621-prohibido",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 621: I can say what makes something easier or harder, what is forbidden and who is exempt.",
+    "assesses": [
+      "ES-LEX-C621-IMPIDE-03",
+      "ES-LEX-C621-IMPIDE-04",
+      "ES-LEX-C621-IMPIDE-05"
+    ]
+  }
+}
