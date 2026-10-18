@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C178-naal",
+    "language": "punjabi",
+    "chapter": 178,
+    "sequence": 9310,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:54c64fbf2e740779"
+  },
+  "findings": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "punjabi",
+  "chapter": 178,
+  "sourceHash": "fnv1a64:6ca844d7386c5311",
+  "lessonIds": [
+    "PA-C178-vaje",
+    "PA-C178-ton",
+    "PA-C178-tak",
+    "PA-C178-naal",
+    "PA-C178-baad"
+  ],
+  "tex": "punjabi/book/chapters/ch178-from-eight-until-ten-then-home.tex"
+}

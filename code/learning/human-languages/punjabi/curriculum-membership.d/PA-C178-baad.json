@@ -1,0 +1,11 @@
+{
+  "id": "PA-C178-baad",
+  "pathSegment": "PA-PATH-178-A2-SCHEDULE-SEQUENCE",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PA-EXT-178-A2-SCHEDULE-SEQUENCE",
+      "order": 4
+    }
+  ]
+}

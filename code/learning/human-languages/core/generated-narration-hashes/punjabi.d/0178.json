@@ -1,0 +1,19 @@
+{
+  "language": "punjabi",
+  "chapter": 178,
+  "sourceHash": "fnv1a64:f357adb226e22fcf",
+  "lessonIds": [
+    "PA-C178-vaje",
+    "PA-C178-ton",
+    "PA-C178-tak",
+    "PA-C178-naal",
+    "PA-C178-baad"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 4,
+  "text": "punjabi/narration/ch178.txt",
+  "json": "punjabi/narration/ch178.json",
+  "textHash": "fnv1a64:9d96aa14102fbaaa",
+  "jsonHash": "fnv1a64:9d675edae637d0e1",
+  "findings": []
+}

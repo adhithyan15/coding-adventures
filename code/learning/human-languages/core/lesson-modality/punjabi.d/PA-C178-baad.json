@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C178-baad",
+    "language": "punjabi",
+    "chapter": 178,
+    "sequence": 9320,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "eyes-or-hands-step"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "eyes-or-hands-step"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:92d040294ef8a4ae"
+  },
+  "findings": []
+}
