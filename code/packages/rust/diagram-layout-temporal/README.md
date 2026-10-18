@@ -1,6 +1,32 @@
 # diagram-layout-temporal
 
-## Checked cumulative Timeline events
+## Per-event Timeline height estimates
+
+Timeline events estimate vertical space from their original Unicode scalar
+ counts, Rust hard lines, actual TD width (minimum160) or LR width190 and size s.
+ The existing private estimator finite-checks (lines*s)*1.2+12 before max with
+ max(1.875s,30). Eager minimum/pitch admission still precedes section work, even
+ when empty. Each actual height+8 advances the checked absolute cursor, including
+ the final event; existing grouped origins/span/row calculations remain.
+ 
+ Default16 short events deliberately grow30 to31.2; fractional16.01/17.25 use
+ 31.212/32.7, while size24 short events retain45. Complete declared old layouts,
+ Scenes and ordered font queries remain independent controls; explicit closed
+ migrations cover24 native and80 painter constructor products. The missing moved
+ Q connector center was caught by independent review before production and
+ repaired with its exact preimage. Direct forged/legacy, size24 and precision
+ refusal controls remain. Original labels/source/IR, palettes, fonts, metadata,
+ widths, period estimates and actual rectangle/rounded-arrow guards are retained.
+ No API, dependency, arbitrary cap, shaping/containment or raster guarantee.
+ 
+PR17288 remains unmerged; whole-main/conflict reconciliation, current required
+ exact-head hosted checks/review and actual merge remain OPEN; auto-merge OFF.
+ Miri DEFERRED/PENDING, never passed: frozen run/checkout/inputs/receipts/target
+ untouched and unpolled. Full Closure parity, stable identities/spans, output-byte/
+ source joins and all fold/rename/inline/motion/merge/delete/pass-sweep lineage
+ remain OPEN. Genuine final-source Miri follows implementation delivery.
+
+## Historical checked cumulative Timeline events
 
 Timeline events now use an absolute cursor and checked addition of the existing
 finite event pitch after every event, including the final advance. TD row height
@@ -23,7 +49,7 @@ follows implementation delivery. No compiler-wide or platform-renderer execution
 is claimed. Older sections are historical evidence for their named source heads.
 
 
-## Checked Timeline period-card estimates
+## Historical checked Timeline period-card estimates
 
 Period cards now estimate vertical space from Unicode scalar counts, owned
 width180/190 and positive configured size s. Capacity is floor((width-20)/
