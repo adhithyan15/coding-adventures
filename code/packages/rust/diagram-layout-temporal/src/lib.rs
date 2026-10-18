@@ -144,7 +144,7 @@ fn layout_timeline(
                     has_period = true;
                     let card_x = spine_x + 28.0;
                     let card_width = 180.0;
-                    let card_height = minimum_card_height;
+                    let card_height = timeline_period_height(&period.label, card_width, size, minimum_card_height)?;
                     items.push(LayoutedTemporalItem::TimelinePeriod {
                         x: card_x, y, width: card_width, height: card_height,
                         label: period.label.clone(), events: Vec::new(), color_index,
@@ -205,7 +205,7 @@ fn layout_timeline(
 
                 for (index, period) in section.periods.iter().enumerate() {
                     let x = start_x + index as f64 * (card_width + gap);
-                    let card_height = minimum_card_height;
+                    let card_height = timeline_period_height(&period.label, card_width, size, minimum_card_height)?;
                     row_height = row_height.max(card_height);
                     items.push(LayoutedTemporalItem::TimelinePeriod {
                         x, y: card_y + 24.0, width: card_width, height: card_height,
@@ -267,6 +267,41 @@ fn layout_timeline(
         timeline_config: Some(diagram.config.clone()),
         interactions: Vec::new(), items,
     })
+}
+
+// This is a scalar-count estimate of a period's vertical space, not a font
+// measurement or a wrapped copy of its label. Keep each represented product
+// observable before max can hide overflow behind the role minimum.
+fn timeline_period_height(
+    label: &str,
+    width: f64,
+    size: f64,
+    minimum: f64,
+) -> Result<f64, TemporalLayoutError> {
+    let inner = timeline_finite(width - 20.0)?;
+    if !width.is_finite() || width <= 0.0 || inner <= 0.0 {
+        return Err(TemporalLayoutError::TimelineGeometry);
+    }
+    let scalar_width = timeline_finite(size * 0.44)?;
+    // Ingress already admitted positive finite size. Its smallest subnormal
+    // can round scalar_width to zero: the positive quotient then becomes
+    // infinity and Rust's defined saturating cast gives usize::MAX. That is
+    // a capacity estimate, never an admitted infinite coordinate or count cap.
+    let capacity = (inner / scalar_width).floor().max(1.0) as usize;
+    let lines = label
+        .lines()
+        .try_fold(0usize, |total, line| {
+            let scalars = line.chars().count().max(1);
+            // div_ceil avoids the overflow-prone (scalars+capacity-1) expression,
+            // especially when a subnormal size saturated the capacity above.
+            total
+                .checked_add(scalars.div_ceil(capacity))
+                .ok_or(TemporalLayoutError::TimelineGeometry)
+        })?
+        .max(1);
+    let scaled = timeline_finite(lines as f64 * size)?;
+    let height = timeline_finite(timeline_finite(scaled * 1.2)? + 12.0)?;
+    Ok(height.max(minimum))
 }
 
 fn timeline_finite(value: f64) -> Result<f64, TemporalLayoutError> {
@@ -2791,21 +2826,3 @@ mod cv04_timeline_font_size;
 
 #[cfg(test)]
 mod cv04_timeline_period_height;
-
-// A test-only old-behavior seam permits compiled semantic red for the new
-// private contract before adding production code. Actual card layout still
-// uses its existing minimum directly. The implementation replaces this seam
-// with the checked estimator and makes its two production calls separately.
-#[cfg(test)]
-fn timeline_period_height(
-    _label: &str,
-    width: f64,
-    _size: f64,
-    minimum: f64,
-) -> Result<f64, TemporalLayoutError> {
-    let inner = timeline_finite(width - 20.0)?;
-    if !width.is_finite() || width <= 0.0 || inner <= 0.0 {
-        return Err(TemporalLayoutError::TimelineGeometry);
-    }
-    Ok(minimum)
-}
