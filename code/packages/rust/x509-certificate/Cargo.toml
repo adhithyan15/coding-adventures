@@ -1,0 +1,16 @@
+[package]
+name = "x509-certificate"
+version = "0.1.0"
+edition = "2021"
+description = "Allocation-free structural RFC 5280 certificate decoding"
+
+[dependencies]
+der-asn1 = { path = "../der-asn1" }
+der-tlv = { path = "../der-tlv" }
+x509-algorithm-identifier = { path = "../x509-algorithm-identifier" }
+x509-certificate-version = { path = "../x509-certificate-version" }
+x509-extensions = { path = "../x509-extensions" }
+x509-name = { path = "../x509-name" }
+x509-serial-number = { path = "../x509-serial-number" }
+x509-subject-public-key-info = { path = "../x509-subject-public-key-info" }
+x509-validity = { path = "../x509-validity" }
