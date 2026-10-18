@@ -587,6 +587,14 @@ enable algorithms, verify signatures, interpret extension policy, compare
 names, validate paths or
 hostnames, check revocation, select trust roots, perform TLS, read a clock, or
 open a network connection.
+A bounded `x509-certificate-policy` gate now enforces the certificate-wide
+unknown-critical-extension rule over that complete decoded structure. It calls
+a caller-supplied, data-driven OID recognizer exactly once for each critical
+extension in wire order, accepts unrecognized non-critical extensions, and
+fails closed with a redacted sequence index at the first unsupported critical
+extension. Recognition does not decode or validate the extension value, grant
+a certificate role, or establish trust; certificate-role policy and every
+remaining HTTPS prerequisite are still required.
 
 The current slices intentionally stop before provider HTTPS transport. The
 loopback host owns only local TCP and injected browser authority; custody owns
