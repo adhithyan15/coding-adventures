@@ -1,5 +1,33 @@
 # diagram-to-paint
 
+## Checked Timeline font requests
+
+`try_diagram_to_paint_temporal` returns typed TimelineFontSize or
+TimelineTitleFontSize errors before backend work when the configured label or
+doubled title request cannot be a positive finite f32. The existing entry point
+retains its PaintScene signature and explicitly panics on these refused requests.
+Configured Timeline clones use sizes s and 2*s; ordinary temporal and Journey fonts,
+caller style/line height, existing period title role and geometry are retained.
+timeline.fontSize metadata reports the transported f64 value; emitted glyph size
+uses the text bridge's f32 conversion, while metrics retain f64 operations.
+
+Admission certifies the two font requests, not arbitrary font backend output,
+finite glyph coordinates, caller line-height arithmetic or raster resources.
+The current fixed frames can wrap at the new sizes; size-driven layout/reflow,
+period-role reconciliation and full main integration remain open.
+
+The original validation wrapper exited1 on a phantom ninth retained priority
+marker; all88 actual commands exited0. Separate read-only adjudication checks
+the real104 markers, full raw streams/artifacts and frozen inputs, retaining
+the original failed wrapper receipt. No Rust rerun is implied by adjudication.
+
+Exact source dba1ff58: 1186 executable tests plus2 doctests passed; 14 strict
+checks passed, with complete Scene/query, cast-neighbor, fractional, hard/soft
+line and mixed Some/None controls. Miri DEFERRED/PENDING; this is unmerged
+bounded progress, not full Closure/compiler or final-source validation.
+
+## Historical Timeline ingress checkpoint a3172c65
+
 TimelineConfig now carries font_size with a16.0 default. Only direct fontSize
 in the first closed init root, with absent-member fallback to config.fontSize
 YAML, supplies the value. Existing decoding/unit scales and ownership remain;
@@ -23,6 +51,8 @@ gates outstanding. Miri DEFERRED/PENDING, never passed; full Closure parity,
 transformation lineage and output-byte/source mapping remain OPEN.
 
 
+## Historical Timeline family checkpoint 0b768739
+
 Timeline configuration now carries a validated font family from the owned
 themeVariables boundary into every Timeline font query and effective metadata.
 The default is the opaque family string `"trebuchet ms", verdana, arial, sans-serif`;
@@ -41,6 +71,8 @@ Font size/layout expansion and native font rendering acceptance remain open.
 Miri DEFERRED/PENDING, never passed; full Closure parity and lineage remain OPEN.
 
 
+## Historical Timeline direction checkpoint 74d9f01c
+
 Bare `timeline` and `TimelineDirection::default()` now select left-to-right;
 explicit TD and LR keep their existing behavior. Configuration ownership,
 preprocessing, checked geometry and existing sources/assertions are retained.
@@ -52,6 +84,8 @@ This is bounded progress, unmerged pending current review/conflict/hosted gates.
 Apple rendering remains unexecuted here. Miri DEFERRED/PENDING, never passed;
 full Closure parity and transformation lineage remain OPEN.
 
+
+## Historical Timeline event checkpoint dc842d0c
 
 Checked separate timeline event cards now retain authored event order and
 per-period palette ordinals. Actual Event text frames and the unchanged painter's

@@ -1,5 +1,36 @@
 # Closure Compiler on Rust — parity backlog
 
+## Current bounded checkpoint — Timeline typography
+
+Executed source `dba1ff58392bc8e1a721b52d0de4e230632f9efe` checks both planned Timeline font requests at the
+f64/f32 boundary before backend work, binds guarded label/title clones to s/2s,
+and emits fontSize metadata. Ordinary axis/Journey fonts, caller style and line
+height, the period title role, geometry and original nonglyph/metadata/query
+controls remain exact. No new manifest/dependency/grammar/parser change.
+
+Compiled semantic red fe15bb79:173P/11F, exactly intended failures; the earlier
+eabf36e3 E0277 build failure is preserved and is never semantic red. A filled
+lesson records the Clone query assertion repair. The red EXE is saved before
+target reuse. New40 complete cells plus compatibility panic pass on the final
+source, including adjacent title-cast boundary neighbors and mixed Some roles.
+Original green wrapper EXIT1 is preserved: its mistaken ninth priority-marker
+expectation is separately adjudicated against all104 actual markers, full raw
+streams, artifacts and frozen inputs. All88 actual commands exited0; adjudication
+executes no Rust. A filled lesson records the exact-anchor correction.
+Full affected execution:1186 native+2 doctests/0failed/0ignored/0filtered,
+59 unfiltered harnesses+14 doctest libraries+14 strict checks; fresh1293 manifest
+graph/436registryrows/reverse14/forward50. Exact source and terminal independent
+reviews PASS/RELEASED. Execution receipt SHA256 `9e41e69d11c83fd623cb1c160d8cf0c5082967d7921473192100f0df2e61feaa`.
+
+This admits representable font requests only; arbitrary backend output and
+finite Scene/resource guarantees are not claimed. Next: reconcile Timeline
+size-driven layout/wrapping/period role, then whole current-main/conflicts and
+required CI. One active shared PR; bounded progress remains unmerged. Full
+Closure parity, output-byte/source joins and all transformation lineage remain
+OPEN. Miri DEFERRED/PENDING; frozen run/checkout/inputs/receipts/target untouched.
+
+## Historical Timeline size-ingress checkpoint a3172c65
+
 <!-- Closure current concise checkpoint: CV04b Timeline size ingress -->
 Bounded source `a3172c6569863bad3c02075f3090443c94f6c8cb` adds positive font_size16 transport and checked typed
 refusal after existing canvas/padding/margin priorities. Direct selected-root

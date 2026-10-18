@@ -93,3 +93,33 @@ independent exact-source and actual-terminal security review, and reconcile
 README/changelog/backlog/linked issue evidence before publication. Keep one
 active shared PR and preserve the current conflict-free/review-clean/exact-head
 terminal hosted-check gates before auto-merge; verify real merge reachability.
+
+
+## Bounded execution and numeric clarification
+
+After label admission, f64 doubling cannot overflow and the positive title
+cannot underflow: the reachable title refusal is its doubled f32 cast. Positive
+f32 subnormal requests can produce zero half-em fake advances; admission does
+not promise a nonzero advance or finite accumulated Scene coordinates. Raw
+values slightly beyond f32MAX can still round to finite f32MAX. Exact title
+transition label neighbors 0x47dfffffefffffff and 0x47dffffff0000000 are retained
+as declared acceptance/refusal controls. These clarify the original request
+contract without adding a magnitude cap or changing existing layout admission.
+
+Executed `dba1ff58392bc8e1a721b52d0de4e230632f9efe`:1186 native+2 doctests/0failed/0ignored/0filtered,
+59 unfiltered harnesses,14 doctest libraries,14 strict checks. New40 cells are
+26 exact errors/zero-work probes,9 empty complete Scenes,4 whole wrapped Scenes
+with fractional f32/f64 and caller-style/line-height controls, and1 whole mixed
+Some axis/Journey/Timeline Scene, plus the compatibility panic. Every original
+source, complete IR/layout, legacy Scene body and ordered query control remains.
+Expected glyph migration checks the old complete GlyphRuns and both declared
+fit conditions before substituting new expected glyphs; actual output is never
+normalized. Compiled fe15 red173P11F preceded implementation; eab compile E0277
+is separate preserved evidence. The original green wrapper also remains EXIT1
+for its phantom ninth retained priority marker; all88 actual commands exited0.
+Separate read-only adjudication validates the real104 markers, every raw stream,
+artifact and frozen input; it does not reexecute Rust. Execution SHA256 `9e41e69d11c83fd623cb1c160d8cf0c5082967d7921473192100f0df2e61feaa`;
+source review `384dbe33397020465998b0c8db9c7b57501c0aed464ace2d4703dd713ec21cf4`; terminal review `a37c666c927a1cab1862bb04344080e5805d7bd950d616817a0610430558243a`.
+Painting now uses size; size-driven layout/reflow, period-role/main integration,
+hosted/merge/full-goal gates and genuine final-source Miri remain OPEN.
+Miri DEFERRED/PENDING; frozen run/inputs/receipts/target untouched and unpolled.
