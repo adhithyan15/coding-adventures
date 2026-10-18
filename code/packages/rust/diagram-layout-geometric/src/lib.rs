@@ -98,6 +98,7 @@ fn layout_venn_supported(diagram: &VennDiagram) -> LayoutedVennDiagram {
         }
     }
     for text in &diagram.texts {
+        #[cfg(test)] observe_venn_debug_work();
         if let Some((x, y)) = centroid(&text.sets, &centers) {
             labels.push(LayoutedVennLabel { text: text.label.clone().unwrap_or_else(|| text.id.clone()), x, y: y + 20.0,
                 font_size: 40.0 * scale, style: text.style.clone() });
@@ -175,7 +176,10 @@ fn venn_debug_geometry(diagram: &VennDiagram, circles: &[LayoutedVennCircle], ce
 }
 
 fn centroid(sets: &[String], centers: &HashMap<&str, (f64, f64)>) -> Option<(f64, f64)> {
-    let points: Vec<_> = sets.iter().filter_map(|set| centers.get(set.as_str())).collect();
+    let points: Vec<_> = sets.iter().filter_map(|set| {
+        #[cfg(test)] observe_venn_debug_work();
+        centers.get(set.as_str())
+    }).collect();
     (!points.is_empty()).then(|| { let count = points.len() as f64;
         (points.iter().map(|point| point.0).sum::<f64>() / count,
          points.iter().map(|point| point.1).sum::<f64>() / count) })

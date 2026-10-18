@@ -1004,3 +1004,78 @@ fn venn_normal_retains_scalar_error_priority_and_derived_refusal() {
     d.regions[0].size = f64::NAN;
     assert_eq!(try_layout_venn(&d), Err(VennLayoutError::DerivedGeometry));
 }
+
+#[test]
+fn venn_normal_work_observes_real_visits_in_both_debug_modes() {
+    // The same sixteen-visits-per-singleton ceiling is retained by the older
+    // debug contract. These are actual iterator visits, not elapsed time,
+    // allocator limits, Hash/Eq internals or a production input cap.
+    for count in [8, 32, 128] {
+        for debug in [false, true] {
+            let ids: Vec<_> = (0..count).map(|i| format!("s{i}")).collect();
+            let d = VennDiagram {
+                title: None,
+                config: VennConfig {
+                    use_debug_layout: debug,
+                    ..Default::default()
+                },
+                regions: ids
+                    .iter()
+                    .map(|id| VennRegion {
+                        sets: vec![id.clone()],
+                        size: 4.0,
+                        label: None,
+                        style: VennStyle::default(),
+                    })
+                    .collect(),
+                texts: ids.iter().map(|id| text(&[id], id)).collect(),
+            };
+            VENN_DEBUG_VISITS.with(|v| v.set(0));
+            let layout = try_layout_venn(&d).unwrap();
+            let visits = VENN_DEBUG_VISITS.with(std::cell::Cell::get);
+            assert_eq!(layout.circles.len(), count);
+            assert_eq!(layout.labels.len(), 2 * count);
+            assert_eq!(layout.debug_circles.len(), if debug { count } else { 0 });
+            assert_eq!(layout.debug_cells.len(), if debug { count } else { 0 });
+            assert!(
+                visits > 0 && visits <= 16 * count,
+                "{count} singleton groups debug={debug}: {visits} real visits"
+            );
+            println!("VENN_NORMAL_WORK groups={count} debug={debug} visits={visits}");
+        }
+    }
+    // T authored keys of M repeated members contribute T*M input terms even
+    // when there is only one structural group. The bound includes every key;
+    // it makes no promise about unobserved standard-library hashing/equality.
+    for (texts, members) in [(8, 4), (32, 16), (32, 128)] {
+        for debug in [false, true] {
+            let (mut d, _) = fixture(false, false, 0, debug);
+            d.texts = (0..texts)
+                .map(|i| VennText {
+                    sets: vec!["A".into(); members],
+                    id: format!("long{i}"),
+                    label: None,
+                    style: VennStyle::default(),
+                })
+                .collect();
+            VENN_DEBUG_VISITS.with(|v| v.set(0));
+            let layout = try_layout_venn(&d).unwrap();
+            let visits = VENN_DEBUG_VISITS.with(std::cell::Cell::get);
+            let input_and_output = 2
+                + 2
+                + texts
+                + texts * members
+                + members
+                + layout.labels.len()
+                + layout.debug_cells.len();
+            assert_eq!(layout.labels.len(), 2 + texts);
+            assert_eq!(layout.debug_circles.len(), usize::from(debug));
+            assert_eq!(layout.debug_cells.len(), if debug { texts } else { 0 });
+            assert!(
+                visits > 0 && visits <= 16 * input_and_output,
+                "{texts} authored keys of {members} members debug={debug}: {visits}"
+            );
+            println!("VENN_NORMAL_KEYS texts={texts} members={members} authored_terms={} debug={debug} visits={visits}", texts * members);
+        }
+    }
+}
