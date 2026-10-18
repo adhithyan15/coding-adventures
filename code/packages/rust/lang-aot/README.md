@@ -1,6 +1,21 @@
 # lang-aot
 
-## CV04b dedicated native31 checkpoint — 2026-10-18
+## CV04b dedicated native32 — 2026-10-18
+
+Execution `dd91ffa3b6fdf8f819514ae7561fa91f14724648` admits canonical32 offsets using four dedicated proof edits;
+shared sign/exp/ln/f64 logic and all production safety limits remain exact.
+Spec68089e83 and tests8f58ec4f preceded code. Actual cap31 semantic red built
+and refused all154 positive occurrences with24 safety controls (1P4F); final
+source executes their exact ordered formatter/effect bytes and typed VM main
+results. Only149 quantitative32 refusals move to declared33 companions;
+245 other safety occurrences and all old positive programs remain.
+
+See the native32 spec/backlog and package changelog for complete bounded
+validation and remaining work. Miri DEFERRED/PENDING, never passed; full parity,
+lineage, final integrated CI and actual merge remain OPEN.
+
+
+## Historical CV04b dedicated native31 checkpoint — 2026-10-18
 
 Exactly four dedicated proof edits extend canonical literal and cumulative
 absolute units from 25 through 31 around the resolved direct sign root (range [-32,32]).

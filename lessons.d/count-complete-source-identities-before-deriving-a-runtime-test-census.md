@@ -21,4 +21,12 @@ An attempted inline PowerShell/Python correction failed to parse because of
 nested quoting. Use a saved UTF8 Python script for multi-line replacements,
 preserving explicit newlines and avoiding shell interpolation.
 
-TODO: what went wrong, what the fix was, and what to do differently. Replace this line.
+The filled lesson must also replace the generator's default TODO line;
+read the entire resulting shard before validation and publication.
+
+Native32 docs preflight withheld unexecuted v1/v2 helpers until they captured
+and rechecked every physical preimage, required explicit review/hold release,
+and independently verified all seven path/body/mode recipes. Preserve mixed
+newlines by splitting a README at its first newline. A scoped source PASS with
+a separate pending-documentation qualification is discharged by a later
+validated docs child; never rewrite the immutable source review to remove it.
