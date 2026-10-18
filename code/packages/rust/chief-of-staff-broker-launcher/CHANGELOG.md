@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+### Changed
+
+- The broker is spawned through `chief_of_staff_spawn_isolation::spawn`,
+  under the process-wide spawn lock (D18S P2.8b-1).
+
 ### Fixed
 
 - `the_deadline_does_not_charge_the_broker_for_the_daemon_s_time` lets

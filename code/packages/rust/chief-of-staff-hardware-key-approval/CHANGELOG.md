@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+- The helper is spawned through `chief_of_staff_spawn_isolation::spawn`,
+  under the daemon's process-wide spawn lock (D18S P2.8b-1): this runs in
+  the daemon, where on Windows a child created inside the broker applier's
+  inheritable span would inherit a broker's key handles.
+
 - Restore full-target coverage measurement, replacing the `--lib` scoping added
   when this SIGILL was first hit. That change concluded the integration target
   was "unmeasurable by construction"; that holds only for the ptrace engine, and

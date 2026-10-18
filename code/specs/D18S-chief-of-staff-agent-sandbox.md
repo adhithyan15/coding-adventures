@@ -2459,13 +2459,17 @@ through S-I3 before two weeks are spent on Windows.
      the handles immediately before its `CreateProcessW` and closes its
      copies right after. **Before 8b passes a broker's keys this way, every
      Windows spawn in the supervisor takes one spawn lock** (std's and this
-     applier's), so the window holds no other spawn. It ends entirely when
-     every agent spawn goes through this applier (step 9).
+     applier's; P2.8b-1), so the window holds no other spawn. It ends
+     entirely when every agent spawn goes through this applier (step 9).
+     Every std spawn in the daemon process takes it: the host, the
+     broker launcher's, and the approval helpers' (notification,
+     biometric, hardware key). A new spawn site must too.
    - *One agent, two instances.* Two launches of one `agent_id` would share
      a SID, and processes of one AppContainer can open each other; either
      could also write into the profile the other's spawn registers. So a
      supervisor runs one instance of an agent at a time (above). Before 8b
-     a broker runs under a SID of its own (the agent's, plus a suffix).
+     a broker runs under a SID of its own (P2.8b-1: a `chief-of-staff-broker.`
+     container over the agent's digest).
    - *One supervisor per user.* The profile span and the one-instance rule
      hold within one supervisor process. A second supervisor, or any tool
      of the same user, managing the same agent's profile could make a
@@ -2491,7 +2495,62 @@ through S-I3 before two weeks are spent on Windows.
       list, and their values reach it in one environment variable. The
       supervisor-wide spawn lock and the broker's own SID come first (see
       the residuals). The daemon accepts `[hosts.broker]` on Windows, and
-      the broker end-to-end tests run on `windows-2025`.
+      the broker end-to-end tests run on `windows-2025`. In two parts, so
+      that each piece is proven natively before anything depends on it:
+      - **P2.8b-1, the pieces.**
+        - *Owner-only key files on Windows.* `open_owner_only_secret`,
+          `read_owner_only_secret_from` and `check_owner_only_directory`
+          gain Windows forms (today they refuse there). A key file passes
+          the same policy `read_owner_only_secret` already enforces: the
+          user owns it, and a protected DACL holds exactly one allow ACE,
+          the user's. It is opened through held, delete-locked ancestors,
+          sharing read only, never through a reparse point, and the
+          policy is checked on the open handle; that handle is what the
+          broker inherits, and the broker checks it again before reading
+          exactly the key's length from it. A secret directory passes if
+          the user, SYSTEM or Administrators own it and every allow ACE
+          names one of those three, or CREATOR OWNER on an inherit-only
+          entry (it becomes a child's creator, and only those three can
+          create here); a user profile's own directories pass as created,
+          and nothing else may list or change it.
+        - *One spawn lock.* `chief_of_staff_spawn_isolation::spawn_lock()`
+          is a process-wide lock. Every process creation in the
+          supervisor holds it: the applier's whole inheritable span (from
+          marking the listed handles to closing its copies), and every
+          std `Command::spawn` in the daemon process makes (the host, the
+          launcher's, the approval helpers'), through
+          `chief_of_staff_spawn_isolation::spawn`. So no std child, which
+          inherits every inheritable handle, can be created while a
+          broker's key handles are inheritable. The applier's listed
+          handles and the lock are one value, so the handles are closed
+          before the lock is released on every path, a panic's included.
+        - *The broker's own container.* `WindowsConfinement` gains a
+          broker role. Its container is named
+          `chief-of-staff-broker.<32 hex>` over the same digest of the
+          agent's id, a namespace no agent's `chief-of-staff.<32 hex>`
+          can reach. So a broker and its agent have different SIDs (they
+          cannot open each other as one AppContainer may its own), and
+          the one-instance rule holds for each independently.
+        - *The broker adopts its keys.* On Windows the broker reads
+          `CHIEF_OF_STAFF_HANDLES` (the applier's variable), adopts
+          exactly as many handles as the bootstrap names slots, in order,
+          and refuses (exit 66) a count that differs, a repeat, or a value
+          that is not a multiple of 4 below 2^32 (Windows ignores a handle
+          value's low two bits; larger values are pseudo-handles). This
+          replaces the
+          Unix descriptor walk; `serve_process` is unchanged.
+        - Each is tested on `windows-2025`: the key-file policy and its
+          refusals, the lock's exclusion, two containers for one agent,
+          and the broker binary, confined by the applier, loading keys
+          from handles and answering `Ready`.
+      - **P2.8b-2, the wiring.** The launcher gains a Windows
+        `BrokerProgram` (the broker alone: no shim) and launches through
+        the applier, its plan for `OsFamily::Windows`. The launcher's and
+        supervisor's broker child is a small trait over std's `Child` and
+        the applier's `ConfinedChild` (id, kill, wait, and the two
+        pipes), so `LaunchedBroker`, the relay and `OwnedBroker` are the
+        same code on every OS. The daemon verifies `[hosts.broker]` on
+        Windows. `broker-e2e`'s supervised tests run on `windows-2025`.
    3. **P2.8c:** `Direct` file grants, as per-object ACEs for the agent's
       SID, checked as on macOS and removed when the agent ends.
 9. **Wire into `spawn_verified`.** Deno becomes one supported runtime rather

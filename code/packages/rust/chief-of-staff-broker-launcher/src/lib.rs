@@ -604,7 +604,8 @@ pub fn launch(
     confinement
         .apply_inheriting(&mut command, descriptors)
         .map_err(|_| LaunchError::Confinement)?;
-    let spawned = command.spawn();
+    // Under the spawn lock, as every supervisor spawn is (D18S P2.8b-1).
+    let spawned = chief_of_staff_spawn_isolation::spawn(&mut command);
     // The command holds the parked key descriptors; dropping it closes
     // this process's last copies.
     drop(command);

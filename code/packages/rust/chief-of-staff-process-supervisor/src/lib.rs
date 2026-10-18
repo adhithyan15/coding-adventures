@@ -1181,7 +1181,11 @@ impl ProcessHostSupervisor {
         // supervisor byte channel the broker never sees. Nothing above fd 2
         // is inherited, and a terminal on fd 0-2 refuses the spawn.
         chief_of_staff_spawn_isolation::isolate(&mut command);
-        let mut child = command.spawn().map_err(|_| ProcessSupervisorError::Spawn)?;
+        // Under the spawn lock: on Windows this child inherits every
+        // inheritable handle, so it must not be created inside the
+        // applier's inheritable span (D18S P2.8b-1).
+        let mut child = chief_of_staff_spawn_isolation::spawn(&mut command)
+            .map_err(|_| ProcessSupervisorError::Spawn)?;
         let process_id = child.id();
         let started_at_ns = self.clock.now_ns();
         let child_stdin = match child.stdin.take() {
