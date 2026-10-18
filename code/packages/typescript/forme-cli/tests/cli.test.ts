@@ -683,23 +683,31 @@ describe("clean", () => {
 });
 
 describe("installed-project shape", () => {
-  it.skipIf(process.platform === "win32")("rejects FIFO, symlink, and hardlink TOML configs without blocking", async () => {
+  it("rejects symlink and hardlink TOML configs", async () => {
     const root = await mkdtemp(join(tmpdir(), "forme-cli-toml-file-"));
     roots.push(root);
     const source = join(root, "source.toml");
     await writeFile(source, 'name = "unsafe"\n', "utf8");
     const linked = join(root, "linked.toml");
-    await symlink(source, linked);
+    await symlink(source, linked, "file");
     const hardlinked = join(root, "hardlinked.toml");
     await link(source, hardlinked);
-    const fifo = join(root, "fifo.toml");
-    await execFileAsync("mkfifo", [fifo]);
 
-    for (const path of [linked, hardlinked, fifo]) {
+    for (const path of [linked, hardlinked]) {
       const io = makeIO(root, new Set([path]));
       expect(await run(["check", "--config", path], io)).toBe(EXIT_USAGE_OR_CONFIG);
       expect(io.stderrText).toMatch(/regular|link|identity/i);
     }
+  });
+
+  it.skipIf(process.platform === "win32")("rejects a FIFO TOML config without blocking", async () => {
+    const root = await mkdtemp(join(tmpdir(), "forme-cli-toml-fifo-"));
+    roots.push(root);
+    const fifo = join(root, "fifo.toml");
+    await execFileAsync("mkfifo", [fifo]);
+    const io = makeIO(root, new Set([fifo]));
+    expect(await run(["check", "--config", fifo], io)).toBe(EXIT_USAGE_OR_CONFIG);
+    expect(io.stderrText).toMatch(/regular|link|identity/i);
   });
 
   it("renders TOML parser diagnostics as bounded ASCII without terminal controls", async () => {
