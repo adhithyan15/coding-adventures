@@ -1,6 +1,33 @@
 # Closure Compiler on Rust — parity backlog
 
-## Current bounded checkpoint — per-event Timeline height
+## Current bounded work — whole-main conflict reconciliation
+
+The validated event-height slice is published in sole PR #17288 at
+690950ee47541af6e022febcf36129199d2b9041. Fresh main
+4d6b02699425232f924dbf9356410f9884641f19 still has11actual conflicts.
+Reconciliation is specified before production in
+[CV04b whole-main reconciliation](CV04b-whole-main-reconciliation.md).
+
+The incoming endpoint inventory now closes1162paths, including1142main-only
+paths,20three-way overlaps and52rename-source deletions omitted from the
+earlier1110path rename-detected list. All1221incoming blobs were saved as
+inert data and checked against full Git object identity; incoming source is
+UNREVIEWED/UNINTEGRATED and has not been executed. Preserve old receipts and
+all owned safety/production-limit/oracle controls; review automatic overlaps too.
+No further geometry expansion or independent cap increase is selected.
+
+Native event-height source d90aa53183df1ab2935b56f34bcd4bc90ad9002c remains
+accepted at296functions/521exact completion identities/8actualcommands0; its
+repaired Markdown carrier passed3actualcommands0 and exact-head review. These
+are historical execution receipts, not post-integration acceptance. Current-main
+adoption requires fresh affected native/compiler/downstream/lint and docs tests,
+exact-head independent review and required CI. PR remains unmerged, auto-mergeOFF.
+Miri DEFERRED/PENDING, never passed; frozen run/checkout/inputs/receipts/target
+untouched and unpolled. Full Closure parity/output-byte-source/full transformation
+lineage and genuine final-source Miri remain OPEN.
+
+
+## Historical bounded checkpoint — per-event Timeline height
 
 Timeline events estimate vertical space from their original Unicode scalar
 counts, Rust hard lines, actual TD width (minimum160) or LR width190 and size s.
