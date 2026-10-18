@@ -268,6 +268,7 @@ mod timeline_typography_contract {
                 TemporalPaintError::TimelineFontSize,
             ),
             (f32::MAX as f64, TemporalPaintError::TimelineTitleFontSize),
+            (f64::from_bits(0x47dffffff0000000), TemporalPaintError::TimelineTitleFontSize),
             // Raw label slightly above f32MAX still rounds to finite f32MAX.
             (
                 f64::from_bits((f32::MAX as f64).to_bits() + 1),
@@ -320,6 +321,7 @@ mod timeline_typography_contract {
             16.0,
             24.0,
             10.0000001,
+            f64::from_bits(0x47dfffffefffffff),
             (f32::MAX as f64) / 2.0,
             f64::from_bits(((f32::MAX as f64) / 2.0).to_bits() + 1),
         ]
@@ -547,7 +549,7 @@ mod timeline_typography_contract {
         );
         assert_eq!(*resolver.0.borrow(), queries);
         assert_eq!(diagram_to_paint_temporal(&input, &options), expected);
-        assert_eq!(*resolver.0.borrow(), queries.repeat(2));
+        assert_eq!(*resolver.0.borrow(), [queries.clone(), queries].concat());
         println!("timeline-typography-mixed COMPLETE axis-journey");
     }
 
