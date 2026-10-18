@@ -72,7 +72,10 @@ to `forme-router`.
   Composition accepts at most 1,024 route documents with a 16 MiB aggregate
   canonical-document budget. Interactive rendered bodies are limited to 8 MiB
   and one million parsed nodes before HTML5 element-ID resolution; static pages
-  bypass this parsing path.
+  bypass this parsing path. Deep, block-only HTML uses a semantics-preserving
+  parser scope shortcut, so adversarial nesting does not turn the ID check into
+  quadratic work; ignored tags, foreign content, raw text, and detached HTML
+  template contents retain browser tree-construction behavior.
 - Resolved `AssetRef` images render as collision-free `forme-asset:`
   placeholders and populate `usedAssets`; selected island module assets join
   the same exact usage list for the asset-aware emitter.
