@@ -1,0 +1,10 @@
+{
+  "id": "PA-EXT-178-A2-SCHEDULE-SEQUENCE",
+  "stage": "A2",
+  "kind": "required",
+  "category": "grammar",
+  "canDo": "I can read and give one simple schedule with vaje, ton, tak, naal, and ton baad.",
+  "prerequisites": [
+    "PA-EXT-177-NOUN-PHRASE-AGREEMENT"
+  ]
+}
