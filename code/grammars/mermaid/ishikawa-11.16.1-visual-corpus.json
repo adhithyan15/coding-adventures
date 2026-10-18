@@ -1,0 +1,28 @@
+{
+  "schema_version": 1,
+  "upstream_commit": "7ecca0cd7f1658ef74f4e7e91f925724ef403bbf",
+  "source_corpus": "ishikawa-11.16.1-corpus.json",
+  "fixtures": [
+    "upstream-parser-basic",
+    "upstream-parser-unindented-root",
+    "upstream-parser-effect-indented-more-than-causes",
+    "upstream-render-1-simple",
+    "upstream-render-2-many-causes-both-sides",
+    "upstream-render-3-deeply-nested",
+    "upstream-render-4-single-cause",
+    "upstream-render-5-root-only",
+    "upstream-render-6-hand-drawn",
+    "upstream-render-7-forest-theme",
+    "upstream-render-8-dark-theme",
+    "upstream-render-9-diagram-padding",
+    "upstream-render-10-use-max-width",
+    "upstream-render-11-fixed-width",
+    "upstream-render-12-effect-indented-more-than-causes",
+    "upstream-render-13-very-deep",
+    "configured-theme-and-canvas",
+    "first-cause-baseline-clamps-shallower-indent",
+    "same-line-effect",
+    "percent-prefixed-label",
+    "header-prefix-becomes-inline-effect"
+  ]
+}

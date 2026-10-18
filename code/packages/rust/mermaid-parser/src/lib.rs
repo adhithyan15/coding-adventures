@@ -5730,23 +5730,38 @@ pub fn parse_ishikawa(source: &str) -> Result<IshikawaDiagram, ParseError> {
     GrammarParser::new(tokens, grammar).with_max_depth(MAX_RULE_DEPTH).parse()
         .map_err(|error| ParseError { message: error.message, line: error.token.line, col: error.token.column })?;
 
+    let mut saw_header = false;
     let lines: Vec<_> = prepared.lines().enumerate().filter_map(|(index, line)| {
         let text = line.trim();
-        if text.is_empty() || matches!(text.to_ascii_lowercase().as_str(), "ishikawa" | "ishikawa-beta") { None }
-        else { Some((index + 1, indentation_width(line), text.to_string())) }
+        if text.is_empty() {
+            None
+        } else if !saw_header {
+            saw_header = true;
+            let header_length = if text.get(..13).is_some_and(|head| head.eq_ignore_ascii_case("ishikawa-beta")) {
+                13
+            } else {
+                8
+            };
+            let effect = text[header_length..].trim_start();
+            (!effect.is_empty()).then(|| (index + 1, 0, effect.to_string()))
+        } else {
+            Some((index + 1, indentation_width(line), text.to_string()))
+        }
     }).collect();
     let Some((_, _, effect)) = lines.first() else { return Err(ParseError { message: "ishikawa requires an effect".into(), line: 1, col: 1 }); };
     let mut causes = Vec::new();
     let mut stack = Vec::<(usize, String)>::new();
+    let mut base_level = None;
     for (line, indentation, label) in lines.iter().skip(1) {
-        let effective_indent = *indentation;
-        while stack.last().is_some_and(|(level, _)| *level >= effective_indent) { stack.pop(); }
+        let base_level = *base_level.get_or_insert(*indentation);
+        let level = indentation.saturating_sub(base_level) + 1;
+        while stack.last().is_some_and(|(stack_level, _)| *stack_level >= level) { stack.pop(); }
         let parent_id = stack.last().map(|(_, id)| id.clone());
         let id = format!("cause-{}", causes.len() + 1);
         let depth = parent_id.as_ref().and_then(|parent| causes.iter().find(|cause: &&IshikawaCause| &cause.id == parent)).map_or(1, |cause| cause.depth + 1);
         if label.is_empty() { return Err(ParseError { message: "empty Ishikawa cause".into(), line: *line, col: 1 }); }
         causes.push(IshikawaCause { id: id.clone(), label: label.clone(), parent_id, depth });
-        stack.push((effective_indent, id));
+        stack.push((level, id));
     }
     Ok(IshikawaDiagram { effect: effect.clone(), causes, config })
 }

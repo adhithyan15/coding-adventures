@@ -91,6 +91,7 @@ const TREEMAP_VISUAL_CORPUS: &str = include_str!(concat!(
 const VENN_CORPUS: &str = include_str!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../../grammars/mermaid/venn-11.16.1-corpus.json"));
 const VENN_VISUAL_CORPUS: &str = include_str!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../../grammars/mermaid/venn-11.16.1-visual-corpus.json"));
 const ISHIKAWA_CORPUS: &str = include_str!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../../grammars/mermaid/ishikawa-11.16.1-corpus.json"));
+const ISHIKAWA_VISUAL_CORPUS: &str = include_str!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../../grammars/mermaid/ishikawa-11.16.1-visual-corpus.json"));
 const WARDLEY_CORPUS: &str = include_str!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../../grammars/mermaid/wardley-11.16.1-corpus.json"));
 const CYNEFIN_CORPUS: &str = include_str!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../../grammars/mermaid/cynefin-11.16.1-corpus.json"));
 const CYNEFIN_VISUAL_CORPUS: &str = include_str!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../../grammars/mermaid/cynefin-11.16.1-visual-corpus.json"));
@@ -497,16 +498,19 @@ fn pinned_wardley_subset_corpus_parses_to_strategic_map_ir() {
 }
 
 #[test]
-fn pinned_ishikawa_subset_corpus_parses_to_causal_tree_ir() {
+fn pinned_ishikawa_corpus_matches_upstream_acceptance() {
     let corpus: Value = serde_json::from_str(ISHIKAWA_CORPUS).expect("ishikawa corpus must be JSON");
     assert_eq!(corpus["upstream"].as_str(), Some("mermaid@11.16.1"));
-    for fixture in corpus["fixtures"].as_array().expect("fixture array") {
-        let name = fixture["name"].as_str().expect("fixture name");
+    assert_eq!(corpus["level"].as_str(), Some("full"));
+    for fixture in corpus["valid"].as_array().expect("valid fixture array") {
+        let name = fixture["id"].as_str().expect("fixture id");
         let diagram = parse_ishikawa(fixture["source"].as_str().expect("fixture source"))
             .unwrap_or_else(|error| panic!("ishikawa fixture {name} failed: {error}"));
         assert!(!diagram.effect.is_empty());
-        assert!(!diagram.causes.is_empty());
-        if name == "diagram-padding-config" {
+        if name == "upstream-render-5-root-only" {
+            assert!(diagram.causes.is_empty());
+        }
+        if name == "configured-theme-and-canvas" {
             assert_eq!(diagram.config.diagram_padding, 64.0);
             assert!(diagram.config.use_max_width);
             assert_eq!(diagram.config.font_size, 22.0);
@@ -515,15 +519,44 @@ fn pinned_ishikawa_subset_corpus_parses_to_causal_tree_ir() {
             assert_eq!(diagram.config.fill_color, "#abcdef");
             assert_eq!(diagram.config.text_color, "#654321");
         }
-        if name == "deep-long-labels" {
-            assert_eq!(diagram.causes.iter().map(|cause| cause.depth).max(), Some(3));
-            assert!(diagram.causes.iter().any(|cause| cause.label == "Legal approval queues delay publication"));
-        }
-        if name == "hand-drawn-config" {
+        if name == "upstream-render-6-hand-drawn" {
             assert_eq!(diagram.config.look, diagram_ir::IshikawaLook::HandDrawn);
-            assert_eq!(diagram.config.hand_drawn_seed, 17);
+        }
+        if name == "first-cause-baseline-clamps-shallower-indent" {
+            assert!(diagram.causes.iter().all(|cause| cause.parent_id.is_none()));
+        }
+        if name == "header-prefix-becomes-inline-effect" {
+            assert_eq!(diagram.effect, "-diagram");
+            assert_eq!(diagram.causes[0].label, "Problem");
         }
     }
+    for fixture in corpus["invalid"].as_array().expect("invalid fixture array") {
+        let name = fixture["id"].as_str().expect("fixture id");
+        assert!(parse_ishikawa(fixture["source"].as_str().expect("fixture source")).is_err(),
+            "invalid ishikawa fixture {name} parsed");
+    }
+}
+
+#[test]
+fn ishikawa_full_status_is_backed_by_pinned_syntax_and_visual_corpora() {
+    let manifest: Value =
+        serde_json::from_str(COMPATIBILITY_MANIFEST).expect("compatibility manifest must be JSON");
+    let ishikawa = manifest["families"].as_array().expect("families array").iter()
+        .find(|family| family["id"] == "ishikawa").expect("ishikawa family");
+    assert_eq!(ishikawa["status"].as_str(), Some("full"));
+
+    let syntax: Value = serde_json::from_str(ISHIKAWA_CORPUS).expect("ishikawa corpus JSON");
+    let visual: Value = serde_json::from_str(ISHIKAWA_VISUAL_CORPUS)
+        .expect("ishikawa visual corpus JSON");
+    assert_eq!(syntax["upstream_commit"], visual["upstream_commit"]);
+    let expected = syntax["valid"].as_array().expect("valid fixtures").iter()
+        .map(|fixture| fixture["id"].as_str().expect("fixture id"))
+        .collect::<BTreeSet<_>>();
+    let actual = visual["fixtures"].as_array().expect("visual fixtures").iter()
+        .map(|id| id.as_str().expect("visual fixture id"))
+        .collect::<BTreeSet<_>>();
+    assert_eq!(actual, expected);
+    assert!(!syntax["invalid"].as_array().expect("invalid fixtures").is_empty());
 }
 
 #[test]

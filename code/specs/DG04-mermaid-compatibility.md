@@ -818,32 +818,33 @@ and remain presentation concerns; the native pipeline renders those source bodie
 with its deterministic portable geometry. Venn is therefore full at the pinned
 native compatibility level.
 
-### Ishikawa Native Slice
+### Ishikawa Native Compatibility
 
-The initial Mermaid 11.16.1 Ishikawa slice recognizes `ishikawa` and
-`ishikawa-beta`, takes the first content line as the effect, and preserves
-subsequent indentation as dedicated causal-tree IR. Deterministic alternating
-fishbone layout lowers through backend-neutral paths, a rounded effect box,
-and glyph runs, with native Metal-to-PNG validation. Non-negative `diagramPadding`
-and boolean `useMaxWidth` values from Mermaid init directives or YAML front matter
-survive causal IR and layout. Root `fontFamily`, `lineColor`, `mainBkg`, and
-`textColor` theme variables also flow through typed configuration into
-backend-neutral Paint instructions and metadata. Cause labels lower as bounded,
-width-aware theme boxes, and deeply nested trees expand the canvas vertically before
-Paint lowering. Exact upstream sizing and collision behavior, remaining
-configuration parity, and interactive behavior remain unsupported at the partial level.
-The global Mermaid `fontSize` setting survives typed causal IR, scales cause-label
-geometry during layout, and selects the matching glyph size before Paint lowering.
-Global `look: handDrawn` and `handDrawnSeed` settings also survive causal IR;
-layout deterministically perturbs spine, bone, effect-box, and cause-box paths before
-backend-neutral Paint lowering. Five-pixel, negative-41-degree hachure lines are clipped
-to those seeded outlines and lower as portable paths with Mermaid's fill color and weight.
-Every causal bone also carries a tangent-aligned arrowhead through layout IR and lowers
-to a filled backend-neutral Paint path in both classic and hand-drawn modes.
-The effect uses Mermaid's closed fish-head silhouette, sampled from the upstream quadratic
-curve in layout and emitted as a portable filled path rather than a renderer-specific shape.
-Cause labels on each side of the spine resolve deterministic box collisions outward from
-the spine before outlines, hachures, and glyph runs are lowered.
+The Mermaid 11.16.1 Ishikawa implementation recognizes `ishikawa` and
+`ishikawa-beta`, takes the first content line as the effect, and preserves the
+remaining indentation hierarchy in dedicated causal-tree IR. The first cause
+establishes the indentation baseline, matching upstream behavior when the effect
+or later root causes are indented differently. Root-only diagrams and arbitrarily
+deep cause trees are accepted.
+
+Deterministic alternating fishbone layout carries the causal IR into portable
+spine, branch, arrowhead, label-box, and closed fish-head geometry. The complete
+layout lowers to backend-neutral Paint paths and glyph runs. Cause boxes are
+width-aware, deep trees expand the canvas, and same-side collisions resolve
+outward from the spine before Paint lowering. `diagramPadding`, `useMaxWidth`,
+global `fontSize`, `look: handDrawn`, `handDrawnSeed`, and the `fontFamily`,
+`lineColor`, `mainBkg`, and `textColor` theme variables survive typed configuration.
+Hand-drawn mode uses seeded path perturbations and clipped hachure paths rather
+than backend-specific rough.js objects.
+
+The pinned syntax corpus includes every upstream parser fixture and all thirteen
+active upstream rendering fixtures, including root-only, uneven indentation,
+many-cause, and very deep trees. Its matching visual corpus lowers every valid
+fixture through causal IR, layout, PaintScene instructions, Metal, and PNG.
+Named browser themes affect externally supplied Mermaid theme variables rather
+than Ishikawa source grammar, and browser DOM sizing and interaction behavior are
+outside the portable native contract. Ishikawa is therefore full at the pinned
+native compatibility level.
 
 ### Wardley Native Slice
 
