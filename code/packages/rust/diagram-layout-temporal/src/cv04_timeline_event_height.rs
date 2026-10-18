@@ -28,6 +28,7 @@ pub(super) fn migrate_declared(
                 | (LayoutedTemporalItem::TimelineSection { y, .. }, "y") => y,
                 (LayoutedTemporalItem::TimelineEventLink { y2, .. }, "y2")
                 | (LayoutedTemporalItem::TimelineSpine { y2, .. }, "y2") => y2,
+                (LayoutedTemporalItem::TimelineEventLink { y1, .. }, "y1") => y1,
                 _ => panic!("closed declared field {index}:{field}"),
             }
         };
