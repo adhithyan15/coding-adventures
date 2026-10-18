@@ -2,6 +2,46 @@
 use super::*;
 use diagram_ir::{TemporalKind, TimelineConfig, TimelinePeriod, TimelineSection};
 
+// Only declared predecessor products enter this helper. Every changed scalar
+// has a literal binary64 preimage and an explicit successor; all other fields
+// (including labels, configuration, ordering and metadata) survive untouched.
+// usize::MAX denotes the outer height, never an item or a production limit.
+pub(super) fn migrate_declared(
+    mut old: LayoutedTemporalDiagram,
+    patches: &[(usize, &str, f64, f64)],
+) -> LayoutedTemporalDiagram {
+    assert_eq!(validate_timeline_layout(old.clone()), Ok(old.clone()));
+    let mut seen = BTreeSet::new();
+    for &(index, field, before, after) in patches {
+        assert!(
+            seen.insert((index, field)),
+            "duplicate declared field patch"
+        );
+        let target = if index == usize::MAX {
+            assert_eq!(field, "height");
+            &mut old.height
+        } else {
+            match (&mut old.items[index], field) {
+                (LayoutedTemporalItem::TimelineEvent { height, .. }, "height") => height,
+                (LayoutedTemporalItem::TimelineEvent { y, .. }, "y")
+                | (LayoutedTemporalItem::TimelinePeriod { y, .. }, "y")
+                | (LayoutedTemporalItem::TimelineSection { y, .. }, "y") => y,
+                (LayoutedTemporalItem::TimelineEventLink { y2, .. }, "y2")
+                | (LayoutedTemporalItem::TimelineSpine { y2, .. }, "y2") => y2,
+                _ => panic!("closed declared field {index}:{field}"),
+            }
+        };
+        assert_eq!(
+            target.to_bits(),
+            before.to_bits(),
+            "preimage {index}:{field}"
+        );
+        *target = after;
+    }
+    assert_eq!(validate_timeline_layout(old.clone()), Ok(old.clone()));
+    old
+}
+
 fn config() -> TimelineConfig {
     TimelineConfig {
         font_family: "\"trebuchet ms\", verdana, arial, sans-serif".into(),

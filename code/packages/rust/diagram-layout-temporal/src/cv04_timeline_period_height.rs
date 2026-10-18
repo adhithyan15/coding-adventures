@@ -295,6 +295,22 @@ fn unequal_periods_preserve_complete_indexed_events_and_empty_rows() {
             interactions: Vec::new(),
             items,
         };
+        let patches = if td {
+            vec![
+                (usize::MAX,"height",363.6,364.4),(1,"y2",277.6,278.4),
+                (4,"y2",155.0,155.6),(5,"height",30.0,31.2),
+                (6,"y2",193.0,194.79999999999998),(7,"y",178.0,179.2),(7,"height",30.0,31.2),
+                (8,"y",227.6,228.39999999999998),(9,"y2",242.6,243.99999999999997),
+                (10,"y",227.6,228.39999999999998),(10,"height",30.0,31.2),
+            ]
+        } else {
+            vec![
+                (usize::MAX,"height",541.6,544.0),(4,"height",30.0,31.2),
+                (5,"y2",295.6,296.8),(6,"y",295.6,296.8),(6,"height",30.0,31.2),
+                (9,"height",30.0,31.2),
+            ]
+        };
+        let expected = super::cv04_timeline_event_height::migrate_declared(expected, &patches);
         TIMELINE_WORK.with(|c| c.set((0, 0)));
         assert_eq!(try_layout_temporal_diagram(&d, 640.0), Ok(expected.clone()));
         assert_eq!(TIMELINE_WORK.with(|c| c.get()), (1, 2));

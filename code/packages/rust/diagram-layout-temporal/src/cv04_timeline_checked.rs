@@ -267,6 +267,20 @@ fn nonempty_events_keep_complete_layouts() {
         }
         if !td { new_items.push(new_spine); }
         let new_oracle = expected(640.0, new_height, config(50.0, 50.0, false), new_items);
+        let mut patches = vec![(if td { 3 } else { 2 }, "height", 30.0, 31.2)];
+        if td {
+            patches.push((2, "y2", 65.0, 65.6));
+            if count == 2 {
+                patches.extend([(4,"y2",103.0,104.8),(5,"y",88.0,89.2),(5,"height",30.0,31.2),
+                    (0,"y2",110.0,112.4),(usize::MAX,"height",196.0,198.4)]);
+            }
+        } else {
+            patches.push((usize::MAX,"height",new_height,if count == 1 {297.2} else {336.4}));
+            if count == 2 {
+                patches.extend([(3,"y2",222.0,223.2),(4,"y",222.0,223.2),(4,"height",30.0,31.2)]);
+            }
+        }
+        let new_oracle = super::cv04_timeline_event_height::migrate_declared(new_oracle, &patches);
         assert_eq!(try_layout_temporal_diagram(&d, 640.0), Ok(new_oracle));
     }
     println!("timeline-checked COMPLETE cell=nonempty_events_keep_complete_layouts");

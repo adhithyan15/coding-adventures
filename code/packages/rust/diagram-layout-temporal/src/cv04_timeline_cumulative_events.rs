@@ -196,6 +196,33 @@ fn cumulative_positions_keep_whole_fractional_and_default_products() {
             interactions: Vec::new(),
             items,
         };
+        // Retain the entire predecessor above as a direct validator product.
+        // This closed successor table is independent of returned layout values.
+        let (next_h,next_q,next_s,next_total,next_end,next_ys,next_links) = match (td,size) {
+            (true,16.0) => (31.2,216.8,302.8,400.8,314.8,
+                [50.0,89.2,128.4,167.60000000000002],
+                [65.6,104.8,144.0,183.20000000000002]),
+            (true,16.01) => (31.212,216.848,302.87800000000004,400.89675000000005,314.89675000000005,
+                [50.0,89.212,128.424,167.63600000000002],
+                [65.606,104.818,144.03,183.24200000000002]),
+            (false,16.0) => (31.2,118.0,498.79999999999995,682.8,106.0,
+                [184.0,223.2,262.4,301.59999999999997],
+                [184.0,223.2,262.4,301.59999999999997]),
+            (false,16.01) => (31.212,118.0,498.908,682.938,106.0,
+                [184.03,223.24200000000002,262.454,301.666],
+                [184.03,223.24200000000002,262.454,301.666]),
+            _ => panic!("closed cumulative successor table"),
+        };
+        let mut patches = vec![(usize::MAX,"height",total,next_total),(11,"y",sy,next_s)];
+        if td {
+            patches.extend([(0,"y2",spine_end,next_end),(10,"y",qy,next_q)]);
+        }
+        for i in 0..4 {
+            let link = (if td {2} else {1}) + i * 2;
+            patches.extend([(link,"y2",link_ys[i],next_links[i]),
+                (link+1,"y",event_ys[i],next_ys[i]),(link+1,"height",eh,next_h)]);
+        }
+        let expected = super::cv04_timeline_event_height::migrate_declared(expected, &patches);
         assert_eq!(
             try_layout_temporal_diagram(&input, 640.0),
             Ok(expected.clone())
@@ -276,6 +303,7 @@ fn rounded_cursor_span_keeps_complete_large_coordinate_product() {
     let mut old = expected.clone();
     old.height = 36_028_797_018_964_160.0;
     assert_eq!(validate_timeline_layout(old.clone()), Ok(old));
+    let expected = super::cv04_timeline_event_height::migrate_declared(expected, &[(2,"height",30.0,31.2)]);
     assert_eq!(
         try_layout_temporal_diagram(&input, 1_152_921_504_606_846_976.0),
         Ok(expected.clone())
@@ -356,6 +384,15 @@ fn fractional_lr_origin_distinguishes_each_cumulative_event_position() {
         interactions: Vec::new(),
         items,
     };
+    let mut patches = vec![(usize::MAX,"height",310.105,314.878)];
+    for (i,(before,after)) in [
+        (134.03,134.03),(172.04875,173.24200000000002),
+        (210.06750000000002,212.454),(248.08625000000004,251.666),
+    ].into_iter().enumerate() {
+        patches.extend([(1+i*2,"y2",before,after),(2+i*2,"y",before,after),
+            (2+i*2,"height",30.018750000000004,31.212)]);
+    }
+    let expected = super::cv04_timeline_event_height::migrate_declared(expected, &patches);
     assert_eq!(
         try_layout_temporal_diagram(&input, 640.0),
         Ok(expected.clone())

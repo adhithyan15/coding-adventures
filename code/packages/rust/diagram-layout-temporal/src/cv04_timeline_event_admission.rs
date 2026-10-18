@@ -193,6 +193,7 @@ fn lr_large_coordinates_distinguish_valid_arrow_from_rounded_collapse() {
         left_margin: 0.0,
         ..Default::default()
     });
+    let expected = super::cv04_timeline_event_height::migrate_declared(expected, &[(2,"height",30.0,31.2)]);
     assert_eq!(
         try_layout_temporal_diagram(&input(TimelineDirection::LeftRight, p), 2f64.powi(60)),
         Ok(expected)
@@ -385,5 +386,10 @@ fn product_history_keeps_full_labels_accessibility_order_and_legacy_layout() {
         ],
         ..legacy
     };
+    let expected = super::cv04_timeline_event_height::migrate_declared(expected, &[
+        (usize::MAX,"height",286.0,288.4),(1,"y2",200.0,202.39999999999998),
+        (4,"y2",155.0,155.6),(5,"height",30.0,31.2),
+        (6,"y2",193.0,194.79999999999998),(7,"y",178.0,179.2),(7,"height",30.0,31.2),
+    ]);
     assert_eq!(try_layout_temporal_diagram(&diagram, 640.0), Ok(expected));
 }

@@ -357,8 +357,22 @@ fn migrated_size_layout(
     if size == f64::MAX {
         return Err(TemporalLayoutError::TimelineGeometry);
     }
-    if size <= 16.0 {
+    if size < 16.0 {
         return Ok(old);
+    }
+    if size == 16.0 {
+        let period = usize::from(titled) + usize::from(named) + usize::from(td);
+        let mut patches = vec![(period + 2,"height",30.0,31.2)];
+        if td {
+            let (before, after) = match (titled,named) {
+                (false,false)=>(65.0,65.6),(false,true)=>(103.0,103.6),
+                (true,false)=>(117.0,117.6),(true,true)=>(155.0,155.6),
+            };
+            patches.push((period + 1,"y2",before,after));
+        } else {
+            patches.push((usize::MAX,"height",if titled {348.0}else{296.0},if titled {349.2}else{297.2}));
+        }
+        return Ok(super::cv04_timeline_event_height::migrate_declared(old, &patches));
     }
     let (
         th,
@@ -627,6 +641,12 @@ fn timeline_size_minima_fractional_complete() {
             interactions: Vec::new(),
             items,
         };
+        let patches = if td {
+            vec![(4,"y2",161.640625,161.81875),(5,"height",32.34375,32.7)]
+        } else {
+            vec![(4,"height",32.34375,32.7),(usize::MAX,"height",357.21875,357.575)]
+        };
+        let expected = super::cv04_timeline_event_height::migrate_declared(expected, &patches);
         assert_eq!(
             try_layout_temporal_diagram(&input, 640.0),
             Ok(expected.clone())
