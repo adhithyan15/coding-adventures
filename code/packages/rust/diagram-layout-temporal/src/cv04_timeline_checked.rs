@@ -284,9 +284,9 @@ fn event_frame_extent_can_fail_after_outer_and_title_extents_pass() {
     assert_eq!(try_layout_temporal_diagram(&d, 2f64.powi(60)), Err(TemporalLayoutError::TimelineGeometry));
     // The new separate Event frame passes here; its arrow collapses. Preserve
     // the retired embedded28-height proof explicitly instead of relabeling it.
-    let legacy = expected(2f64.powi(60), y * 2.0 + 96.0, config(y, 0.0, false), vec![
-        LayoutedTemporalItem::TimelineSpine { x1: y + 106.0, y1: y + 16.0, x2: y + 106.0, y2: (y + 84.0) - 36.0 },
-        LayoutedTemporalItem::TimelinePeriod { x: (y + 106.0) + 28.0, y, width: (2f64.powi(60) - ((y + 106.0) + 28.0) - 24.0).max(24.0), height: 66.0, label: "P0".into(), events: vec!["A".into()], color_index: 0 },
+    let legacy = expected(2f64.powi(60), ((y + 84.0) + 10.0) + y, config(y, 0.0, false), vec![
+        LayoutedTemporalItem::TimelineSpine { x1: y + 106.0, y1: y + 16.0, x2: y + 106.0, y2: ((y + 84.0) + 10.0) - 36.0 },
+        LayoutedTemporalItem::TimelinePeriod { x: (y + 106.0) + 28.0, y, width: (2f64.powi(60) - (y + 106.0)) - 52.0, height: 66.0, label: "P0".into(), events: vec!["A".into()], color_index: 0 },
     ]);
     assert_eq!(validate_timeline_layout(legacy), Err(TemporalLayoutError::TimelineGeometry));
     println!("timeline-checked COMPLETE cell=event_frame_extent_can_fail_after_outer_and_title_extents_pass");

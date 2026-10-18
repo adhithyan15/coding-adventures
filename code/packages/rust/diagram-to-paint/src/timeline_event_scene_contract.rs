@@ -70,7 +70,7 @@ mod timeline_event_scene_contract {
         PaintInstruction::Path(PaintPath {
             base: PaintBase::default(),
             commands,
-            fill: Some(if arrow { stroke } else { "none" }.into()).filter(|_| !dashed),
+            fill: (!dashed).then_some(if arrow { stroke } else { "none" }.into()),
             fill_rule: None,
             stroke: (!arrow).then(|| stroke.into()),
             stroke_width: (!arrow).then_some(width),

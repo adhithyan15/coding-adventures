@@ -266,10 +266,22 @@ fn retired_canvas_coupled_widths_remain_direct_legacy_guards() {
         use_max_width: true,
         ..Default::default()
     });
+    // This24-wide forged payload isolates a zero inner frame. The actual
+    // retired constructor used raw640 - 1156 - 52, without a width clamp.
     assert_eq!(
-        validate_timeline_layout(large_padding),
+        validate_timeline_layout(large_padding.clone()),
         Err(TemporalLayoutError::TimelineGeometry)
     );
+    let mut retired_large_padding = large_padding;
+    if let LayoutedTemporalItem::TimelinePeriod { width, .. } = &mut retired_large_padding.items[1]
+    {
+        *width = -568.0;
+    }
+    assert_eq!(
+        validate_timeline_layout(retired_large_padding),
+        Err(TemporalLayoutError::TimelineGeometry)
+    );
+    println!("timeline-event-retired-large-padding COMPLETE width=-568");
     println!("timeline-event-legacy-widths COMPLETE cells=4");
 }
 
