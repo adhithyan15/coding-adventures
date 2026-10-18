@@ -593,8 +593,15 @@ a caller-supplied, data-driven OID recognizer exactly once for each critical
 extension in wire order, accepts unrecognized non-critical extensions, and
 fails closed with a redacted sequence index at the first unsupported critical
 extension. Recognition does not decode or validate the extension value, grant
-a certificate role, or establish trust; certificate-role policy and every
-remaining HTTPS prerequisite are still required.
+a certificate role, or establish trust. A second bounded gate now composes the
+shipped Basic Constraints, Key Usage, and Extended Key Usage decoders under one
+explicit semantic budget. It requires critical `cA = TRUE` plus
+`keyCertSign` for an intended issuing CA, rejects CA or certificate-signing
+assertions for an intended end entity, and returns only borrowed decoded role
+evidence. It deliberately leaves key-usage selection, EKU purpose
+authorization, algorithms, signatures, names, paths, trust, clocks,
+revocation, and transport to later policy layers, so concrete HTTPS remains
+blocked.
 
 The current slices intentionally stop before provider HTTPS transport. The
 loopback host owns only local TCP and injected browser authority; custody owns
