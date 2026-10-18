@@ -26,6 +26,11 @@ existing numeric error priority. The painter applies the same trim/character
 fallback to a direct forged typed configuration before querying or recording
 metadata, so malformed direct payloads have a deterministic effective family.
 
+Trimming precedes validation and includes Unicode whitespace. A raw leading or
+trailing TAB/newline therefore trims away; an interior control or NUL rejects.
+The CSS-looking default remains one opaque `family_names` query member; this
+slice does not parse it into a list of independently resolved fallback families.
+
 When `timeline_config` is `Some`, clone the caller's label and title fonts and
 replace only their family. Preserve each size, weight, style, stretch and line
 height, including the current title-font role of TimelinePeriod. Use the family
