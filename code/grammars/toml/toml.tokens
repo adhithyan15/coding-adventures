@@ -57,11 +57,12 @@ escapes: none
 # escapes, and one/two non-closing quotes. Keeping those branches disjoint is
 # important: overlapping newline alternatives make unterminated input
 # catastrophically backtrack before callers can enforce their size limits.
-# ML_LITERAL_STRING allows everything literally, including backslashes.
-# Both use non-greedy matching (*?) to find the closest closing delimiter.
+# ML_LITERAL_STRING allows everything except lone carriage returns literally,
+# including backslashes. The bounded quote suffix preserves one or two quotes
+# immediately before the closing delimiter without ambiguous backtracking.
 
-ML_BASIC_STRING   = /"""(?:[^"\\]|\\[\s\S]|"(?!")|""(?!"))*"""/
-ML_LITERAL_STRING = /'''[\s\S]*?'''/
+ML_BASIC_STRING   = /"""(?:[^"\\\r]|\\(?:\r\n|[^\r])|\r\n|"(?!")|""(?!"))*"{0,2}"""/
+ML_LITERAL_STRING = /'''(?:[^'\r]|\r\n|'(?!')|''(?!'))*'{0,2}'''/
 
 # ============================================================================
 # Single-Line Strings
@@ -70,8 +71,8 @@ ML_LITERAL_STRING = /'''[\s\S]*?'''/
 # Basic strings support escape sequences. Literal strings do not.
 # Neither can contain unescaped newlines.
 
-BASIC_STRING   = /"([^"\\\n]|\\.)*"/
-LITERAL_STRING = /'[^'\n]*'/
+BASIC_STRING   = /"([^"\\\r\n]|\\[^\r\n])*"/
+LITERAL_STRING = /'[^'\r\n]*'/
 
 # ============================================================================
 # Date/Time Literals (MUST come before BARE_KEY and numbers)

@@ -5,7 +5,8 @@
 - Harden declarative TOML evaluation against adversarial multiline strings,
   invalid Unicode scalars and date/time ranges, table-declaration conflicts,
   and control-character diagnostic injection while preserving explicit input
-  bounds.
+  bounds. Token limits are enforced during both lexer passes before an
+  oversized token array can be allocated.
 
 ### Added
 

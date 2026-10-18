@@ -119,6 +119,7 @@ import { TOKEN_GRAMMAR } from "./_grammar.js";
  *   - Recognizes four string types, date/time literals, and bare keys
  *
  * @param source - The TOML text to tokenize.
+ * @param maxTokens - Optional hard bound, including the EOF token.
  * @returns An array of Token objects. The last token is always EOF.
  *
  * @example
@@ -141,7 +142,7 @@ import { TOKEN_GRAMMAR } from "./_grammar.js";
  *     //  Token(BASIC_STRING, "green"), Token(COMMA, ","),
  *     //  Token(BASIC_STRING, "blue"), Token(RBRACKET, "]"), Token(EOF, "")]
  */
-export function tokenizeTOML(source: string): Token[] {
+export function tokenizeTOML(source: string, maxTokens?: number): Token[] {
   /**
    * Run the generic grammar-driven tokenizer against the pre-compiled
    * TOKEN_GRAMMAR constant. This is the same engine used for JSON,
@@ -156,5 +157,5 @@ export function tokenizeTOML(source: string): Token[] {
    *      before single-quoted, dates before bare keys, etc.)
    *   5. Strip quotes from string tokens without processing escapes
    */
-  return grammarTokenize(source, TOKEN_GRAMMAR);
+  return grammarTokenize(source, TOKEN_GRAMMAR, { maxTokens });
 }

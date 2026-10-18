@@ -76,7 +76,7 @@ export function parseTomlConfig(source: string): PipelineConfig {
 
   let tokens: readonly TomlToken[];
   try {
-    tokens = tokenizeTOML(source);
+    tokens = tokenizeTOML(source, MAX_TOKENS);
   } catch (error) {
     fail(`invalid TOML: ${message(error)}`);
   }
@@ -84,7 +84,7 @@ export function parseTomlConfig(source: string): PipelineConfig {
 
   let ast: TomlNode;
   try {
-    ast = parseTOML(source) as TomlNode;
+    ast = parseTOML(source, MAX_TOKENS) as TomlNode;
   } catch (error) {
     fail(`invalid TOML: ${message(error)}`);
   }
@@ -409,7 +409,8 @@ function validateRawStringToken(token: TomlToken, path: readonly string[]): void
       fail(`string at ${formatPath(path)} contains an invalid Unicode scalar`);
     }
     if (code === 0x09) continue;
-    if (multiline && (code === 0x0a || code === 0x0d)) continue;
+    if (multiline && code === 0x0a) continue;
+    if (multiline && code === 0x0d && token.value.charCodeAt(index + 1) === 0x0a) continue;
     if (code <= 0x1f || code === 0x7f) {
       fail(`string at ${formatPath(path)} contains a forbidden raw control character`);
     }
