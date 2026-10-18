@@ -196,12 +196,17 @@ fn timeline_family_source_keeps_complete_product_contracts() {
                 for merged in [false,true] {
                     let (mut semantic,mut expected_layout,expected_scene) = declared_family_product(td,titled,family);
                     // The retained authored custom prefix declares root fontSize24.
-                    // Only expected semantic/layout config changes; Scene/query data stay exact.
+                    // First prove old configured Scene geometry; then migrate only layout minima.
                     if name == "custom" {
                         semantic.config.font_size = 24.0;
                         expected_layout.timeline_config.as_mut().unwrap().font_size = 24.0;
                     }
                     let expected_scene = super::declared_timeline_typography(expected_scene, &expected_layout);
+                    let (expected_layout, expected_scene) = if name == "custom" {
+                        migrate_declared_family_size_layout(expected_layout, expected_scene, td, titled, family)
+                    } else {
+                        (expected_layout, expected_scene)
+                    };
                     let title = titled.then(|| "T".to_string());
                     let source = format!("{prefix}{header}\n{}P : E\n",if titled { "title T\n" } else { "" });
                     let expected_queries = if merged {
