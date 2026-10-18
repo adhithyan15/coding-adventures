@@ -62,7 +62,7 @@ import { LINE_TERMINATORS } from "./constants.js";
 import { readLedgerFile } from "./shard.js";
 import {
   spanishMockDir,
-  spanishTaughtForms,
+  spanishTaughtFormsBounded,
   type MockAuditLevel,
 } from "./spanish-a1-mock-audit-cli.js";
 
@@ -359,14 +359,15 @@ export function reportSpanishMockStemCoverage(
   root = defaultCurriculumRoot(),
   level: MockAuditLevel = "A2",
 ): { mock: number; forms: FormReport[] }[] {
-  const vocabulary = loadStemVocabulary(root);
-  const { taught } = spanishTaughtForms(root, level);
-  // By LOOKUP, never interpolation. This function is exported from `index.ts`,
-  // so its `level` is constrained only by a TypeScript type that does not
-  // survive the package boundary: a JavaScript caller passing
-  // `"../../../../../../etc"` read outside the curriculum root entirely before
-  // this call went through `spanishMockDir`. Found by security review.
+  // Validate the package-boundary input before any vocabulary or corpus read.
+  // A TypeScript union cannot protect a JavaScript caller at runtime.
   const dir = spanishMockDir(level);
+  const vocabulary = loadStemVocabulary(root);
+  const { taught } = spanishTaughtFormsBounded(root, level);
+  // The validated lookup above is also the only source of this path. Before
+  // that guard existed, JavaScript callers could pass a traversal fragment;
+  // before it moved to the start of this function, invalid levels still paid
+  // for vocabulary and whole-corpus work before being rejected.
   return [1, 2].map((mock) => {
     const paper = readFileSync(resolve(root, `${dir}/mock-${mock}-paper.md`), "utf8");
     const key = readFileSync(resolve(root, `${dir}/mock-${mock}-answer-key.md`), "utf8");

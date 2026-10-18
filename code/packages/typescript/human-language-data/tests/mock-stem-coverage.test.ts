@@ -250,7 +250,7 @@ describe("the level is a closed set, not a path fragment", () => {
     // `spanishMockDir`, which is a lookup and cannot build a path out of what
     // it is handed. Found by security review.
     expect(() =>
-      reportSpanishMockStemCoverage(defaultCurriculumRoot(), "../../../../../../etc" as never),
+      reportSpanishMockStemCoverage(mkdtempSync(join(tmpdir(), "invalid-mock-level-")), "../../../../../../etc" as never),
     ).toThrow(/unknown mock level/);
   });
 
@@ -262,7 +262,7 @@ describe("the level is a closed set, not a path fragment", () => {
       // `Object.hasOwn` is what closes that, and it is cheaper than proving the
       // lookup table can never gain a prototype.
       expect(() =>
-        reportSpanishMockStemCoverage(defaultCurriculumRoot(), level as never),
+        reportSpanishMockStemCoverage(mkdtempSync(join(tmpdir(), "invalid-mock-level-")), level as never),
       ).toThrow(/unknown mock level/);
     },
   );
