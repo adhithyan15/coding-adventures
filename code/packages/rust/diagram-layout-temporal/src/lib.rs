@@ -2788,3 +2788,24 @@ mod cv04_timeline_event_admission;
 
 #[cfg(test)]
 mod cv04_timeline_font_size;
+
+#[cfg(test)]
+mod cv04_timeline_period_height;
+
+// A test-only old-behavior seam permits compiled semantic red for the new
+// private contract before adding production code. Actual card layout still
+// uses its existing minimum directly. The implementation replaces this seam
+// with the checked estimator and makes its two production calls separately.
+#[cfg(test)]
+fn timeline_period_height(
+    _label: &str,
+    width: f64,
+    _size: f64,
+    minimum: f64,
+) -> Result<f64, TemporalLayoutError> {
+    let inner = timeline_finite(width - 20.0)?;
+    if !width.is_finite() || width <= 0.0 || inner <= 0.0 {
+        return Err(TemporalLayoutError::TimelineGeometry);
+    }
+    Ok(minimum)
+}
