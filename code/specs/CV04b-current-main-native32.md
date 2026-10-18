@@ -63,6 +63,8 @@ guards inside the native31 module. Bind each changed complete function and
 reverse its exact source edits; never globally replace numerals or use
 expression-relative offsets as whole-program byte offsets. Factories must
 retain their exact source construction and change only the declared argument.
+Permit only the two existing quantitative diagnostic markers to truthfully
+change 32 to 33 with their inventoried refusal, preserving their assertions.
 
 Add explicit controls for direct33, split32+1, wrapper/cancellation budget
 reset attempts, noncanonical multiplication, REAL33.0, shared exp/ln refusal,
@@ -86,7 +88,11 @@ locks or install dependencies. Version/lock evidence SHA256:
 Recompute actual manifest identities, all-kind reverse consumers and forward
 inputs after reconciliation; prior 6/166 counts are not a new execution proof.
 
-Retain the entire old 74-source runtime module and its assertions. Enumerate
+Retain all old 74 positive runtime programs, tuple oracles, loops, observer and
+status assertions byte-exact. The sole old-module exception is the inventoried
+runtime-compile25 refusal source32 to33 and its COMPILE_REFUSED units marker32
+to33. Reverse those edits to recover the entire old prefix before appending
+new runtime code. Enumerate
 and deduplicate proposed runtime companions by complete program bytes before
 declaring the new source/backend/Float census. Include all four incoming
 positive frames, the missing abs frame, canonical integer and real read-once
@@ -94,7 +100,7 @@ frames, both selector outcomes, root positions, split/wrapper and cancellation
 controls. Deduplication applies only to distinct runtime sources, not unit
 occurrence identities. Existing six-backend stdout trim/status contracts remain
 explicit: VM/JIT real-result sources need exact Float bits; Wasm uses the
-declared numeric low byte, Native/LLVM/JVM normal completion is not typed-main
+declared numeric low byte (also CLR when actually available), Native/LLVM/JVM normal completion is not typed-main
 ABI proof. Saved-only/direct-output Int0 programs require normal0 and separate
 exact native-VM Int assertions. Absent CLR is uncounted. No stdout-only or
 crash acceptance and no toolchain skipping may replace an executed cell.
