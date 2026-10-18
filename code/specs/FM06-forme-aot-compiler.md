@@ -1,10 +1,11 @@
 # FM06 — Forme AOT Compiler
 
-> **Status:** Implementation-reconciliation specification.
+> **Status:** Implemented through the completed Forme v1 release contract.
 > **Scope:** Deterministic per-page dependency selection, incremental AOT
 > caching, and static artifact emission after rendering.
-> **Delivery owner:** Existing `forme-aot-*` packages; remaining release gaps
-> are tracked in the [Forme completion roadmap](FM00-forme-completion-roadmap.md).
+> **Delivery owner:** The shipped `forme-aot-*` packages and their product
+> compositions recorded in the
+> [Forme completion roadmap](FM00-forme-completion-roadmap.md).
 
 ## Implementation status
 
@@ -14,7 +15,7 @@
 | Incremental slice cache | Implemented | `forme-aot-incremental-cache` plus `forme-aot-fs-cache`. |
 | Page/style/script emission | Implemented | Page, HTML document, style-tag, script-tag, and bundle emitters exist. |
 | Site metadata emission | Implemented | Sitemap, robots, discovery links, and deploy-manifest emitters exist. |
-| Interactivity tree shaking | Active | FM05 is implemented; FM-B060 composes exact renderer, script-asset, and deploy-route usage. |
+| Interactivity tree shaking | Implemented | FM-B060 composes exact renderer, script-asset, and deploy-route usage, while pages without selected islands remain zero-JavaScript. |
 | Multi-backend release proof | Implemented | FM-B017 adds terminal buffers and a capability-free terminal artifact packager to the live blog fan-out. |
 
 ## 1. Purpose

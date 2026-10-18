@@ -1,7 +1,9 @@
 # FM03 — Forme Orchestrator: Pipeline Configuration and Execution
 
-> **Status:** Code-ready specification. Read alongside FM00 (vision)
-> and FM01 (kernel).
+> **Status:** The shipped headless and extensible product paths are implemented.
+> The 2026-10-18 audit found that the declarative TOML form in §2.3 remains a
+> specification-conformance gap; FM-B073 tracks it to completion. Read alongside
+> FM00 (vision) and FM01 (kernel).
 > **Scope:** The orchestrator runtime — pipeline configuration format,
 > DAG construction, type checking, execution scheduling, streaming,
 > caching, incremental rebuild, watch mode, reproducible builds,
@@ -9,14 +11,15 @@
 > `forme-orchestrator`, `forme-pipeline-config`, and `forme-cache`.
 > **Out of scope:** The plugin host (FM02 — loading, sandboxing, the
 > extension registry). FM03 assumes plugins are already loaded; a
-> first-party-only configuration that imports stages directly works
-> against FM03 today, with FM02 layering in third-party plugins later.
+> first-party-only configuration can import stages directly, while the shipped
+> FM02 `PluginStageLoader` path resolves reviewed third-party stages.
 
 ## Implementation status
 
 | Surface | Status | Evidence / next step |
 |---|---|---|
 | Config validation and typed DAG | Implemented | `forme-pipeline-config` and `forme-orchestrator` power both live sites. |
+| Declarative TOML configuration | Active | FM-B073 adds bounded parsing, TS-form parity, FM02 resolution, and CLI product acceptance. |
 | Deterministic fan-in/fan-out | Implemented | Named ports, bounded multicast, and stable ordering are tested. |
 | Persistent cache and affected set | Implemented | External source ledgers and topology checkpoints work across CLI processes. |
 | Concurrent scheduling and cancellation | Implemented | One FIFO permit pool bounds ready stages, items, and iterator pulls. |
