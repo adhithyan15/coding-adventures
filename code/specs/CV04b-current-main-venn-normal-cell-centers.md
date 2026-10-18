@@ -150,3 +150,38 @@ checkout, inputs, target and receipts remain untouched/unpolled. Implement and
 deliver first, then obtain genuine final-source Miri acceptance. No auto-merge
 without current conflict-free review-clean terminal acceptable required checks;
 verify actual fetched-main merge reachability before cleanup. Heartbeat ACTIVE.
+
+
+## Validated implementation checkpoint
+
+At exact execution `6c4b9ec8d8719719677e021d3ec495bcab2520cb`, the two affected packages passed261
+tests with zero failures, ignores or filters across all17 metadata-declared
+executable harnesses. Both separate doctest targets completed successfully with
+zero tests; both all-target strict checks passed. The complete all-kind graph
+was rebuilt from1,293 manifests: two reverse-affected packages and50 forward
+input packages. Nine test-disabled example targets were checked on Windows;
+their Apple implementation paths were not executed. The Windows-disabled
+Metal integration reports zero tests, with no Apple runtime claim.
+
+Independent source and combined terminal review passed. Forty-eight complete
+numeric/bit layout cases and32 source→whole IR→checked layout→whole Scene/query
+cells complete, alongside32 direct Scene controls and12 real-work witnesses.
+The old136 source and96 direct complete Scene cells remain; only independently
+predeclared normal-label/glyph coordinates migrate. Legacy debug assertions,
+typed refusals, source programs and portable dev dependencies remain intact.
+
+The original focused helper returned1 because its parser omitted a passing
+libtest `- should panic` suffix; its false aggregate is preserved. A separate
+corrected audit verifies the actual successful Cargo runs. The initial external
+grammar-freeze omission and metadata-only two-harness assumption remain distinct
+failed preparations; the fully pinned successor covers every declared target.
+
+This is bounded local shared-crate validation. Current-main reconciliation,
+hosted checks, actual merge and full Closure parity/output-byte/source/full
+transformation lineage remain OPEN. Miri **DEFERRED/PENDING**, never passed;
+its frozen checkout, run, inputs, target and receipts remain untouched/unpolled.
+Implementation delivery precedes genuine final-source Miri; heartbeat ACTIVE.
+
+Source review `86149c6c`; complete terminal review `67997d7a`; library/strict actual audit `9598f616`; supplemental execution `b2fd5969`.
+The earlier CLOC41 execution at fa8b81c2 and publication at fbb2bd93 retain
+their own source attribution; none is reclassified as this Venn execution.

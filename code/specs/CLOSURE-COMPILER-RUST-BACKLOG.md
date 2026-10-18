@@ -1,5 +1,33 @@
 # Closure Compiler on Rust — parity backlog
 
+<!-- Closure current concise checkpoint: CV04b normal Venn -->
+Bounded execution `6c4b9ec8d8719719677e021d3ec495bcab2520cb` validates shared normal Venn grid centers:
+261P/0F/0I/0filters, all17 actual harnesses plus2 empty doctests; both strict
+checks and independent exact source/terminal review PASS. Graph1,293 manifests,
+reverse affected2/forward inputs50. Current-main audit `42c3b66fa9275d9190409b4a073fa6b0b0257f6d`
+inspected all12 open PR file lists; sole Closure/shared PR17288 remains OPEN,
+auto-merge OFF. Its published CLOC41 head was fbb2bd93 at that audit; this
+docs child adds no Rust execution and requires its own reviewed progress push.
+Normal positions/order now share the owned structural debug grid; old debug,
+typed admission,136 source/96 direct complete Scenes and retained corpora stay.
+Full parity, ingestion IDs, output-byte/source maps and fold/rename/inline/
+motion/merge/delete lineage, pass/sweep order, stable IDs and spans remain OPEN.
+Raw native33/34/35, Timeline/parser/ABI/CI/attribute/checker overlaps and a closed
+whole-tree conflict recipe remain separately unaccepted. Do not cap-chase.
+Miri DEFERRED/PENDING, never passed; frozen run/inputs/target/receipts untouched.
+<!-- Closure current concise checkpoint end -->
+
+## Next reconciliation audit
+
+Recompute the actual current-main conflict set and preserve every owned hunk
+before choosing the next bounded Timeline/parser/ABI reconciliation. No raw
+helper or whole-main acceptance follows from this normal-grid slice. Keep one
+active PR; current exact-head hosted/review/conflict/actual-merge gates still
+control merging. Genuine final-source Miri follows implementation delivery.
+
+## Historical bounded CLOC41 checkpoint
+
+
 <!-- Closure current concise checkpoint: CLOC41 -->
 Latest bounded local Rust execution `fa8b81c2a8c7408ec31114617a7c176f7a5cbffd`: 3277 tests/doctests
 passed, 41 existing ignores, zero failures/filters across
@@ -11,7 +39,7 @@ actual-merge gates. Full parity/lineage/output-byte-source joins remain OPEN.
 Miri DEFERRED/PENDING, never passed; frozen run/inputs/target/receipts untouched.
 <!-- Closure current concise checkpoint end -->
 
-## Selected next: normal Venn text cell centers
+## Historical selection: normal Venn text cell centers
 
 CLOC41 progress is published at `fbb2bd93fc935025548fc21decbef55785c77a6a`
 on sole PR17288. Actual source execution remains `fa8b81c2` (3277P/41I;
