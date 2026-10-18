@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+- Harden declarative TOML evaluation against adversarial multiline strings,
+  invalid Unicode scalars and date/time ranges, table-declaration conflicts,
+  and control-character diagnostic injection while preserving explicit input
+  bounds.
+
 ### Added
 
 - Add bounded `parseTomlConfig(source)` lowering for FM03's declarative form.

@@ -15,7 +15,7 @@ export const TOKEN_GRAMMAR: TokenGrammar = {
   definitions: [
     {
       name: "ML_BASIC_STRING",
-      pattern: "\"\"\"([^\\\\]|\\\\(.|\\n)|\\n)*?\"\"\"",
+      pattern: "\"\"\"(?:[^\"\\\\]|\\\\[\\s\\S]|\"(?!\")|\"\"(?!\"))*\"\"\"",
       isRegex: true,
       lineNumber: 60,
     },

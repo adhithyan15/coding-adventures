@@ -1,5 +1,6 @@
 import { createHash } from "node:crypto";
-import { access, mkdir, open, rm, writeFile } from "node:fs/promises";
+import { constants, type Stats } from "node:fs";
+import { access, lstat, mkdir, open, rm, writeFile } from "node:fs/promises";
 import { dirname, extname, isAbsolute, relative, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import {
@@ -134,11 +135,16 @@ async function loadProjectConfig(path: string): Promise<PipelineConfig> {
  * The second size check closes the stat/read race if a file grows after stat.
  */
 async function readBoundedToml(path: string): Promise<string> {
-  const handle = await open(path, "r");
+  const before = await lstat(path);
+  requireSafeConfigFile(before, path);
+  const flags = constants.O_RDONLY |
+    (process.platform === "win32" ? 0 : constants.O_NONBLOCK | constants.O_NOFOLLOW);
+  const handle = await open(path, flags);
   try {
-    const metadata = await handle.stat();
-    if (!metadata.isFile()) throw new Error(`TOML config is not a regular file: ${path}`);
-    if (metadata.size > MAX_TOML_CONFIG_BYTES) {
+    const opened = await handle.stat();
+    requireSafeConfigFile(opened, path);
+    if (!sameFile(before, opened)) throw new Error(`TOML config identity changed while opening: ${path}`);
+    if (opened.size > MAX_TOML_CONFIG_BYTES) {
       throw new Error(`TOML config exceeds ${MAX_TOML_CONFIG_BYTES}-byte limit: ${path}`);
     }
     const buffer = Buffer.alloc(MAX_TOML_CONFIG_BYTES + 1);
@@ -151,10 +157,31 @@ async function readBoundedToml(path: string): Promise<string> {
     if (offset > MAX_TOML_CONFIG_BYTES) {
       throw new Error(`TOML config exceeds ${MAX_TOML_CONFIG_BYTES}-byte limit: ${path}`);
     }
+    const [afterHandle, afterPath] = await Promise.all([handle.stat(), lstat(path)]);
+    requireSafeConfigFile(afterHandle, path);
+    requireSafeConfigFile(afterPath, path);
+    if (!sameSnapshot(opened, afterHandle) || !sameFile(afterHandle, afterPath)) {
+      throw new Error(`TOML config identity or contents changed while reading: ${path}`);
+    }
     return new TextDecoder("utf-8", { fatal: true }).decode(buffer.subarray(0, offset));
   } finally {
     await handle.close();
   }
+}
+
+function requireSafeConfigFile(metadata: Stats, path: string): void {
+  if (metadata.isSymbolicLink()) throw new Error(`TOML config must not be a symbolic link: ${path}`);
+  if (!metadata.isFile()) throw new Error(`TOML config is not a regular file: ${path}`);
+  if (metadata.nlink !== 1) throw new Error(`TOML config must not have multiple hard links: ${path}`);
+}
+
+function sameFile(left: Stats, right: Stats): boolean {
+  return left.dev === right.dev && left.ino === right.ino;
+}
+
+function sameSnapshot(left: Stats, right: Stats): boolean {
+  return sameFile(left, right) && left.nlink === right.nlink && left.size === right.size &&
+    left.mtimeMs === right.mtimeMs && left.ctimeMs === right.ctimeMs;
 }
 
 export async function run(
@@ -235,7 +262,7 @@ export async function run(
         reviewCapability: options.reviewCapability,
       });
       io.stdout.write(
-        `forme install: ${result.pluginName}@${result.pluginVersion} ${result.status} (${result.trustTier}; ${result.grantedCapabilities.length} grant${result.grantedCapabilities.length === 1 ? "" : "s"})\n`,
+        `forme install: ${safeAscii(result.pluginName)}@${safeAscii(result.pluginVersion)} ${safeAscii(result.status)} (${safeAscii(result.trustTier)}; ${result.grantedCapabilities.length} grant${result.grantedCapabilities.length === 1 ? "" : "s"})\n`,
       );
       return EXIT_OK;
     } catch (error) {
@@ -298,7 +325,7 @@ export async function run(
     if (args.command === "check") {
       const count = pipeline.dag.topoOrder.length;
       io.stdout.write(
-        `forme check: ${config.name} is valid (${count} stage${count === 1 ? "" : "s"}${args.reproducible ? ", reproducible" : ""})\n`,
+        `forme check: ${safeAscii(config.name)} is valid (${count} stage${count === 1 ? "" : "s"}${args.reproducible ? ", reproducible" : ""})\n`,
       );
       return EXIT_OK;
     }
@@ -328,7 +355,7 @@ export async function run(
         await materializeDeployInput(result.outputs, deployInput, projectRoot);
       }
       io.stdout.write(
-        `forme build: ${config.name} success (${count} stage${count === 1 ? "" : "s"}; outputs: ${outputs}; build: ${result.buildId})\n`,
+        `forme build: ${safeAscii(config.name)} success (${count} stage${count === 1 ? "" : "s"}; outputs: ${safeAscii(outputs)}; build: ${safeAscii(String(result.buildId))})\n`,
       );
       return EXIT_OK;
     }
@@ -452,14 +479,14 @@ async function runWatch(
       debounceMs: args.debounceMs,
       cancellation: options.cancellation,
     });
-    io.stdout.write(`forme watch: ${server.address.url} (${config.name}; debounce: ${args.debounceMs}ms)\n`);
+    io.stdout.write(`forme watch: ${safeAscii(server.address.url)} (${safeAscii(config.name)}; debounce: ${args.debounceMs}ms)\n`);
 
     for await (const result of session.results()) {
       if (result.outcome === "success") {
         try {
           const snapshot = snapshotFromOutputs(String(result.buildId), result.outputs);
           server.publish(snapshot);
-          io.stdout.write(`forme watch: ${config.name} ready (build: ${result.buildId})\n`);
+          io.stdout.write(`forme watch: ${safeAscii(config.name)} ready (build: ${safeAscii(String(result.buildId))})\n`);
         } catch (error) {
           const detail = message(error);
           server.publishFailure({ message: detail });
@@ -624,7 +651,20 @@ function projectCacheRoot(config: PipelineConfig, projectRoot: string): string |
 }
 
 function diagnostic(io: CliIO, code: string, value: string): void {
-  io.stderr.write(`forme: ${code}: ${value}\n`);
+  io.stderr.write(`forme: ${safeAscii(code, 128)}: ${safeAscii(value)}\n`);
+}
+
+function safeAscii(value: string, limit = 4096): string {
+  let result = "";
+  for (const character of value) {
+    const point = character.codePointAt(0)!;
+    const rendered = point >= 0x20 && point <= 0x7e
+      ? character
+      : `\\u{${point.toString(16)}}`;
+    if (result.length + rendered.length > limit - 3) return `${result}...`;
+    result += rendered;
+  }
+  return result;
 }
 
 function message(error: unknown): string {

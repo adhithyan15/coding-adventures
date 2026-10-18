@@ -53,11 +53,14 @@ escapes: none
 # Without this ordering, `"""hello"""` would match as `""` (empty BASIC_STRING)
 # followed by `"hello"` (BASIC_STRING) followed by `""`.
 #
-# ML_BASIC_STRING allows escape sequences inside (backslash + any char).
+# ML_BASIC_STRING uses mutually exclusive branches for ordinary characters,
+# escapes, and one/two non-closing quotes. Keeping those branches disjoint is
+# important: overlapping newline alternatives make unterminated input
+# catastrophically backtrack before callers can enforce their size limits.
 # ML_LITERAL_STRING allows everything literally, including backslashes.
 # Both use non-greedy matching (*?) to find the closest closing delimiter.
 
-ML_BASIC_STRING   = /"""([^\\]|\\(.|\n)|\n)*?"""/
+ML_BASIC_STRING   = /"""(?:[^"\\]|\\[\s\S]|"(?!")|""(?!"))*"""/
 ML_LITERAL_STRING = /'''[\s\S]*?'''/
 
 # ============================================================================

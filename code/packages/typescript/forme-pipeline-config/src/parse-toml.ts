@@ -60,12 +60,15 @@ function table(): TomlTable {
 }
 
 function fail(message: string): never {
-  throw new TypeError(`parseTomlConfig: ${message}`);
+  throw new TypeError(`parseTomlConfig: ${safeAscii(message)}`);
 }
 
 /** Parse bounded TOML text and lower it to the canonical pipeline shape. */
 export function parseTomlConfig(source: string): PipelineConfig {
   if (typeof source !== "string") fail("source must be a string");
+  if (source.length > MAX_TOML_CONFIG_BYTES) {
+    fail(`source exceeds ${MAX_TOML_CONFIG_BYTES}-byte limit`);
+  }
   const bytes = new TextEncoder().encode(source).byteLength;
   if (bytes > MAX_TOML_CONFIG_BYTES) {
     fail(`source exceeds ${MAX_TOML_CONFIG_BYTES}-byte limit (got ${bytes})`);
@@ -110,6 +113,7 @@ class TomlEvaluator {
   private currentPath: readonly string[] = [];
   private assignments = 0;
   private readonly declaredTables = new WeakSet<TomlTable>();
+  private readonly dottedTables = new WeakSet<TomlTable>();
   private readonly arrayTables = new WeakSet<TomlValue[]>();
   private readonly inlineTables = new WeakSet<TomlTable>();
 
@@ -139,7 +143,7 @@ class TomlEvaluator {
     if (inner.ruleName === "array_table_header") {
       const path = this.headerPath(inner);
       this.bumpAssignments("array-of-tables entries");
-      const parent = this.ensureTable(this.root, path.slice(0, -1));
+      const parent = this.ensureTable(this.root, path.slice(0, -1), false);
       const leaf = path.at(-1)!;
       const existing = parent[leaf];
       let values: TomlValue[];
@@ -195,6 +199,7 @@ class TomlEvaluator {
       if (existing === undefined) {
         const next = table();
         current[segment] = next;
+        this.dottedTables.add(next);
         current = next;
       } else if (isTable(existing)) {
         current = existing;
@@ -210,7 +215,7 @@ class TomlEvaluator {
     current[leaf] = value;
   }
 
-  private ensureTable(root: TomlTable, path: readonly string[]): TomlTable {
+  private ensureTable(root: TomlTable, path: readonly string[], declaringLeaf = true): TomlTable {
     let current = root;
     for (let index = 0; index < path.length; index += 1) {
       if (this.inlineTables.has(current)) fail(`cannot extend inline table ${formatPath(path.slice(0, index))}`);
@@ -221,9 +226,15 @@ class TomlEvaluator {
         current[segment] = next;
         current = next;
       } else if (isTable(existing)) {
+        if (declaringLeaf && index === path.length - 1 && this.dottedTables.has(existing)) {
+          fail(`cannot redeclare dotted-key table ${formatPath(path)}`);
+        }
         current = existing;
       } else if (Array.isArray(existing) && this.arrayTables.has(existing)
           && isTable(existing[existing.length - 1])) {
+        if (declaringLeaf && index === path.length - 1) {
+          fail(`cannot redeclare array of tables ${formatPath(path)} as a table`);
+        }
         current = existing[existing.length - 1]! as TomlTable;
       } else {
         fail(`cannot redeclare ${formatPath(path.slice(0, index + 1))} as a table; it already has a value`);
@@ -238,6 +249,7 @@ class TomlEvaluator {
       if (!isNode(child) || child.ruleName !== "simple_key") continue;
       const token = child.children.find((part): part is TomlToken => !isNode(part));
       if (token === undefined) fail("malformed TOML key");
+      validateRawStringToken(token, [...result, "<key>"]);
       const segment = token.type === "BASIC_STRING"
         ? decodeBasicEscapes(token.value, token.line)
         : token.value;
@@ -297,6 +309,7 @@ function scalar(token: TomlToken, path: readonly string[]): TomlScalar {
   if (token.value.length > MAX_STRING_LENGTH && token.type.includes("STRING")) {
     fail(`string exceeds ${MAX_STRING_LENGTH}-character limit at ${formatPath(path)}`);
   }
+  validateRawStringToken(token, path);
   switch (token.type) {
     case "BASIC_STRING": return decodeBasicEscapes(token.value, token.line, false);
     case "ML_BASIC_STRING": return decodeBasicEscapes(token.value, token.line, true);
@@ -314,7 +327,9 @@ function scalar(token: TomlToken, path: readonly string[]): TomlScalar {
     case "OFFSET_DATETIME":
     case "LOCAL_DATETIME":
     case "LOCAL_DATE":
-    case "LOCAL_TIME": return token.value;
+    case "LOCAL_TIME":
+      validateDateTime(token.value, token.type, path);
+      return token.value;
     default: return fail(`unsupported scalar ${token.type} at ${formatPath(path)}`);
   }
 }
@@ -378,6 +393,54 @@ function decodeBasicEscapes(raw: string, line: number, multiline = false): strin
 function trimInitialMultilineNewline(raw: string): string {
   if (raw.startsWith("\r\n")) return raw.slice(2);
   return raw.startsWith("\n") ? raw.slice(1) : raw;
+}
+
+function validateRawStringToken(token: TomlToken, path: readonly string[]): void {
+  if (!token.type.includes("STRING")) return;
+  const multiline = token.type.startsWith("ML_");
+  for (let index = 0; index < token.value.length; index += 1) {
+    const code = token.value.charCodeAt(index);
+    if (code >= 0xd800 && code <= 0xdfff) {
+      const next = token.value.charCodeAt(index + 1);
+      if (code <= 0xdbff && next >= 0xdc00 && next <= 0xdfff) {
+        index += 1;
+        continue;
+      }
+      fail(`string at ${formatPath(path)} contains an invalid Unicode scalar`);
+    }
+    if (code === 0x09) continue;
+    if (multiline && (code === 0x0a || code === 0x0d)) continue;
+    if (code <= 0x1f || code === 0x7f) {
+      fail(`string at ${formatPath(path)} contains a forbidden raw control character`);
+    }
+  }
+}
+
+function validateDateTime(raw: string, type: string, path: readonly string[]): void {
+  const dateMatch = /^(\d{4})-(\d{2})-(\d{2})/.exec(raw);
+  if (type !== "LOCAL_TIME") {
+    if (dateMatch === null || !validDate(Number(dateMatch[1]), Number(dateMatch[2]), Number(dateMatch[3]))) {
+      fail(`date/time at ${formatPath(path)} has an invalid calendar date`);
+    }
+  }
+  if (type === "LOCAL_DATE") return;
+  const timeMatch = /(?:^|[T ])(\d{2}):(\d{2}):(\d{2})(?:\.\d+)?/.exec(raw);
+  if (timeMatch === null || Number(timeMatch[1]) > 23 || Number(timeMatch[2]) > 59 || Number(timeMatch[3]) > 60) {
+    fail(`date/time at ${formatPath(path)} has an invalid clock time`);
+  }
+  if (type === "OFFSET_DATETIME" && !raw.endsWith("Z")) {
+    const offset = /[+-](\d{2}):(\d{2})$/.exec(raw);
+    if (offset === null || Number(offset[1]) > 23 || Number(offset[2]) > 59) {
+      fail(`date/time at ${formatPath(path)} has an invalid UTC offset`);
+    }
+  }
+}
+
+function validDate(year: number, month: number, day: number): boolean {
+  if (month < 1 || month > 12 || day < 1) return false;
+  const leap = year % 4 === 0 && (year % 100 !== 0 || year % 400 === 0);
+  const days = [31, leap ? 29 : 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+  return day <= days[month - 1]!;
 }
 
 function lowerPipeline(raw: TomlTable): PipelineConfig {
@@ -545,4 +608,17 @@ function formatPath(path: readonly string[]): string {
 
 function message(error: unknown): string {
   return error instanceof Error ? error.message : String(error);
+}
+
+function safeAscii(value: string, limit = 4096): string {
+  let result = "";
+  for (const character of value) {
+    const point = character.codePointAt(0)!;
+    const rendered = point >= 0x20 && point <= 0x7e
+      ? character
+      : `\\u{${point.toString(16)}}`;
+    if (result.length + rendered.length > limit - 3) return `${result}...`;
+    result += rendered;
+  }
+  return result;
 }
