@@ -3234,3 +3234,22 @@ receipts untouched/unpolled. Full transformation/output/parity objective OPEN.
   reassociation/output joins/parity remain OPEN. Miri DEFERRED/PENDING;
   frozen run untouched, genuine final-source acceptance after implementation
   delivery. Full objective OPEN; heartbeat ACTIVE.
+
+### 2026-10-17: native31 current-main reconciliation contract
+
+- CLOC40 reviewed unmerged progress is actually published at
+  `d07147ce5343f788c7f288ac03413f66aa9b2759` to the one existing PR#17288;
+  actual push0/Git+PR agreement/postpublication review PASS. Actual Rust
+  execution remains a3ec4ef3, not the docs carrier. Miri DEFERRED/PENDING.
+- Fresh audit00:15:37Z: main7aa8396d,14openPRs, sole Closure/shared PR
+  CONFLICTING/0hostedchecks/autoOFF. Complete159-path incoming metadata and
+  eight actual conflict paths select current-main reconciliation before
+  another fold slice; the unresolved computed tree is not a source candidate.
+- [Native31 contract](CV04b-current-main-native31.md) precedes tests/code:
+  preserve owned dedicated proof and all shared/alias/structural/rounding
+  guards; classify complete negative occurrences, add26..31 exact companions
+  and32 boundary refusals, require genuine compiled red before four edits.
+  Raw shared-f64/main/style/parser imports remain WITHHELD pending bounded
+  reviews and complete dependency/input classification. No new acceptance.
+- Frozen Miri inputs/checkout/target/receipts untouched/unpolled; final-source
+  acceptance follows implementation delivery. Full objective OPEN.
