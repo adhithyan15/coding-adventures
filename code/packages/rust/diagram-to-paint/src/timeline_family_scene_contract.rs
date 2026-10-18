@@ -194,7 +194,13 @@ fn timeline_family_source_keeps_complete_product_contracts() {
                 ("invalid","---\nthemeVariables:\n  fontFamily: 'url(font)'\n---\n",FAMILY),
             ] {
                 for merged in [false,true] {
-                    let (semantic,expected_layout,expected_scene) = declared_family_product(td,titled,family);
+                    let (mut semantic,mut expected_layout,expected_scene) = declared_family_product(td,titled,family);
+                    // The retained authored custom prefix declares root fontSize24.
+                    // Only expected semantic/layout config changes; Scene/query data stay exact.
+                    if name == "custom" {
+                        semantic.config.font_size = 24.0;
+                        expected_layout.timeline_config.as_mut().unwrap().font_size = 24.0;
+                    }
                     let title = titled.then(|| "T".to_string());
                     let source = format!("{prefix}{header}\n{}P : E\n",if titled { "title T\n" } else { "" });
                     let expected_queries = if merged {
