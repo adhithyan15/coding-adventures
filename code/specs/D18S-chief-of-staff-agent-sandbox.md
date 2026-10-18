@@ -2462,14 +2462,21 @@ through S-I3 before two weeks are spent on Windows.
      applier's; P2.8b-1), so the window holds no other spawn. It ends
      entirely when every agent spawn goes through this applier (step 9).
      Every std spawn in the daemon process takes it: the host, the
-     broker launcher's, and the approval helpers' (notification,
-     biometric, hardware key). A new spawn site must too.
+     broker launcher's, the approval helpers' (notification, biometric,
+     hardware key), and the host runtime's verified Deno run (P2.8b-2).
+     A new spawn site must too.
    - *One agent, two instances.* Two launches of one `agent_id` would share
      a SID, and processes of one AppContainer can open each other; either
      could also write into the profile the other's spawn registers. So a
      supervisor runs one instance of an agent at a time (above). Before 8b
      a broker runs under a SID of its own (P2.8b-1: a `chief-of-staff-broker.`
-     container over the agent's digest).
+     container over the agent's digest). The claim is per agent id, but
+     the supervisor's busy check is per pipeline and agent. So a second
+     pipeline's broker for the same agent, while the first runs, is
+     refused (`BrokerLaunch`), never run beside it. A broker that does
+     not exit within ten seconds of being ended keeps its agent's claim
+     until the daemon restarts. Both fail closed, at the cost of
+     availability.
    - *One supervisor per user.* The profile span and the one-instance rule
      hold within one supervisor process. A second supervisor, or any tool
      of the same user, managing the same agent's profile could make a
