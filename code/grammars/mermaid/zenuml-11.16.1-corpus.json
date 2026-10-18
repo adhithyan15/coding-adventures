@@ -57,6 +57,21 @@
       "name": "comments above messages",
       "compatible": true,
       "source": "zenuml\nA\n// **Markdown** comment\nA.method()"
+    },
+    {
+      "name": "documented participant annotators",
+      "compatible": true,
+      "source": "zenuml\n@Boundary API\n@Control Controller\n@Entity Order\n@Collections Items\n@Queue Jobs\n@Starter Client\nClient->API: begin"
+    },
+    {
+      "name": "assigned and typed creation",
+      "compatible": true,
+      "source": "zenuml\nClient.start() {\n  worker = new Worker(config)\n  Worker helper = new Worker() {\n    helper.init()\n  }\n}"
+    },
+    {
+      "name": "semicolon terminators",
+      "compatible": true,
+      "source": "zenuml\n@Actor Client;\nClient->API: request;\nAPI.handle();\nreturn result;"
     }
   ]
 }
