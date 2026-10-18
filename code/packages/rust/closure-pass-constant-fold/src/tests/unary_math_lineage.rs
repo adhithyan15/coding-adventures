@@ -859,7 +859,7 @@ fn c41_declined_arity_receiver_nonliteral_nonfinite_and_signed_zero_keep_data() 
                     let Expression::MemberExpression(m) = c.callee.as_mut() else {
                         unreachable!()
                     };
-                    m.object = Box::new(named("notMath", Some(&ids[2])));
+                    *m.object = named("notMath", Some(&ids[2]));
                 }
                 4 => c.arguments[0] = num(f64::NAN, Some(&ids[4])),
                 5 => c.arguments[0] = num(f64::INFINITY, Some(&ids[4])),
@@ -875,7 +875,7 @@ fn c41_declined_arity_receiver_nonliteral_nonfinite_and_signed_zero_keep_data() 
                     let Expression::MemberExpression(m) = c.callee.as_mut() else {
                         unreachable!()
                     };
-                    m.property = Box::new(named("notARecognizedMethod", Some(&ids[3])));
+                    *m.property = named("notARecognizedMethod", Some(&ids[3]));
                 }
                 _ => unreachable!(),
             }
