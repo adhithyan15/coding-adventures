@@ -371,9 +371,10 @@ fn c41_six_math_methods_keep_exact_repeated_unicode_crlf_source_parents() {
             let start = source.len() + "report(".len();
             source.push_str(&format!("report(Math.{method}(5.75));\r\n"));
             cases.push((repeat, method, after, start));
-            expected_js.push_str(&format!("report({after});\n"));
+            expected_js.push_str(&format!("report({after});"));
         }
     }
+    expected_js.push('\n');
     for level in ["SIMPLE", "ADVANCED"] {
         let f = Fixture::new(&source);
         let w = f.compile(level);
