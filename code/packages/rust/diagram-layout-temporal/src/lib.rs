@@ -265,6 +265,47 @@ fn timeline_rect(x: f64, y: f64, width: f64, height: f64) -> bool {
         && width > 0.0 && height > 0.0 && x + width > x && y + height > y
 }
 
+// Event links consume simple_arrowhead's represented triangle in the painter.
+// A finite shaft may still overflow during normalization, or lose both base
+// corners to rounding. Certify that exact operation order locally; chronology
+// spines keep their separate finite-only (possibly zero-length) contract.
+fn timeline_event_arrow(x1: f64, y1: f64, x2: f64, y2: f64) -> bool {
+    let dx = x2 - x1;
+    let dy = y2 - y1;
+    let xx = dx * dx;
+    let yy = dy * dy;
+    let norm = xx + yy;
+    if ![x1, y1, x2, y2, dx, dy, xx, yy, norm].iter().all(|v| v.is_finite())
+        || norm <= 0.0
+    {
+        return false;
+    }
+    let len = norm.sqrt().max(1e-9);
+    let ux = dx / len;
+    let uy = dy / len;
+    let size = 10.0;
+    let hw = size * 0.5;
+    let bx = x2 - ux * size;
+    let by = y2 - uy * size;
+    let px = -uy;
+    let py = ux;
+    let lx = bx + px * hw;
+    let ly = by + py * hw;
+    let rx = bx - px * hw;
+    let ry = by - py * hw;
+    // Use the actual rounded vertices, rather than an ideal area/length bound.
+    let ax = lx - x2;
+    let ay = ly - y2;
+    let cx = rx - x2;
+    let cy = ry - y2;
+    let left_product = ax * cy;
+    let right_product = ay * cx;
+    let determinant = left_product - right_product;
+    [len, ux, uy, ux * size, uy * size, bx, by, px, py, px * hw, py * hw,
+        lx, ly, rx, ry, ax, ay, cx, cy, left_product, right_product, determinant]
+        .iter().all(|v| v.is_finite()) && determinant != 0.0
+}
+
 fn validate_timeline_layout(
     layout: LayoutedTemporalDiagram,
 ) -> Result<LayoutedTemporalDiagram, TemporalLayoutError> {
@@ -291,6 +332,13 @@ fn validate_timeline_layout(
             }
             LayoutedTemporalItem::TimelineSpine { x1, y1, x2, y2 } => {
                 [x1, y1, x2, y2].iter().all(|v| v.is_finite())
+            }
+            LayoutedTemporalItem::TimelineEvent { x, y, width, height, .. } => {
+                timeline_rect(*x, *y, *width, *height)
+                    && timeline_rect(x + 10.0, y + 6.0, width - 20.0, height - 12.0)
+            }
+            LayoutedTemporalItem::TimelineEventLink { x1, y1, x2, y2, .. } => {
+                timeline_event_arrow(*x1, *y1, *x2, *y2)
             }
             _ => false,
         });
