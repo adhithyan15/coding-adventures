@@ -7,7 +7,9 @@ from pathlib import Path
 from unittest import mock
 
 from sharded_ledger import (
+    _files,
     _remove,
+    _strict_directory_entries,
     load_book_generation,
     load_curriculum,
     load_script,
@@ -309,6 +311,72 @@ class ShardedLedgerSafetyTest(unittest.TestCase):
             if moved.exists():
                 os.rename(moved, directory)
         self.assertTrue(swapped)
+
+    @unittest.skipUnless(os.name == "nt", "Windows directory junction fixture")
+    def test_windows_file_enumeration_rejects_swap_after_path_prevalidation(self):
+        directory = self.root / "spanish" / "chapters.d"
+        write_json(directory / "0001.json", {"chapter": 1, "title": "inside"})
+        write_json(self.outside / "0002.json", {"chapter": 2, "title": "outside"})
+        from sharded_ledger import _directory
+        moved = directory.with_name("chapters-moved")
+        swapped = []
+
+        def attempt_swap(root, *parts):
+            path = _directory(root, *parts)
+            if parts == ("spanish", "chapters.d") and not swapped:
+                os.rename(directory, moved)
+                link_directory(self.outside, directory)
+                swapped.append(True)
+            return path
+
+        try:
+            with (
+                mock.patch("sharded_ledger._directory", side_effect=attempt_swap),
+                self.assertRaisesRegex(ValueError, "reparse"),
+            ):
+                _files(self.root, "spanish", "chapters.d")
+        finally:
+            if swapped and directory.exists():
+                os.rmdir(directory)
+            if moved.exists():
+                os.rename(moved, directory)
+        self.assertTrue(swapped)
+
+    @unittest.skipUnless(os.name == "nt", "Windows directory junction fixture")
+    def test_windows_owner_enumeration_rejects_swap_after_path_prevalidation(self):
+        directory = self.book_generation_tree()
+        write_json(self.outside / "outside.json", {"owner": "outside"})
+        from sharded_ledger import _directory
+        moved = directory.with_name("book-generation-moved")
+        swapped = []
+
+        def attempt_swap(root, *parts):
+            path = _directory(root, *parts)
+            if parts == ("core", "book-generation.d") and not swapped:
+                os.rename(directory, moved)
+                link_directory(self.outside, directory)
+                swapped.append(True)
+            return path
+
+        try:
+            with (
+                mock.patch("sharded_ledger._directory", side_effect=attempt_swap),
+                self.assertRaisesRegex(ValueError, "reparse"),
+            ):
+                _strict_directory_entries(self.root, "core", "book-generation.d")
+        finally:
+            if swapped and directory.exists():
+                os.rmdir(directory)
+            if moved.exists():
+                os.rename(moved, directory)
+        self.assertTrue(swapped)
+
+    @unittest.skipUnless(os.name == "nt", "Windows native directory batches")
+    def test_windows_file_enumeration_drains_multiple_native_batches(self):
+        directory = self.root / "spanish" / "chapters.d"
+        for index in range(300):
+            write_json(directory / f"{index:04d}-{'x' * 110}.json", {"index": index})
+        self.assertEqual(len(_files(self.root, "spanish", "chapters.d")), 300)
 
     def test_duplicate_chapters_are_rejected_before_any_write(self):
         directory = self.root / "spanish" / "chapters.d"

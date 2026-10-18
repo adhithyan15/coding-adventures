@@ -204,6 +204,17 @@ logs are read far more widely than the repo. Both the message **and the `cause`
 chain** are scrubbed — the cause is what Node's default handler and Vitest
 actually print.
 
+The Python compatibility reader has the same boundary even when another
+process changes a shard directory during a read. On Windows, enumeration of
+JSON shards and book-generation owner entries must use the already-validated
+directory handle, not `os.scandir` on its former pathname. Every returned name
+and kind is checked through that handle without following a reparse point;
+enumeration errors fail closed. A directory moved after opening remains the
+directory being enumerated, so a junction substituted at the old name cannot
+contribute outside owner names. Tests must perform that swap for both reader
+entry points without requiring symlink privilege. Unix keeps its symlink and
+special-file rejection tests.
+
 ---
 
 ## 3. Generated artifacts are regenerated, never hand-merged
