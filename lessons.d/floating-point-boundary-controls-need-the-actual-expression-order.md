@@ -17,3 +17,10 @@ endpoints before testing admission, and distinguish power-of-two boundaries
 from nearby same-binade coordinates. Preserve an exact typed positive control
 alongside each collapse/refusal. A failed patch context also leaves the entire
 patch unapplied; inspect the corrected diff before committing.
+
+The migration helper also refused twice before source mutation: a one-line
+old anchor had two different replacement newline encodings, then a short width
+replacement was ambiguous during inversion after other insertions. Select the
+physical newline encoding once and include the unchanged coordinate context in
+both inverse anchors. Preserve the refused helper versions and write the whole
+candidate/recipe before applying any file.

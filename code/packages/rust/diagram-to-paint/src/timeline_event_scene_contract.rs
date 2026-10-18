@@ -50,15 +50,13 @@ mod timeline_event_scene_contract {
     }
 
     fn rect(
-        x: f64,
-        y: f64,
-        width: f64,
-        height: f64,
+        frame: (f64, f64, f64, f64),
         fill: &str,
         stroke: Option<&str>,
         sw: f64,
         radius: f64,
     ) -> PaintInstruction {
+        let (x, y, width, height) = frame;
         PaintInstruction::Rect(PaintRect {
             base: PaintBase::default(),
             x,
@@ -310,10 +308,7 @@ mod timeline_event_scene_contract {
                                         color_index: start,
                                     });
                                     geometry.push(rect(
-                                        origin,
-                                        section_y,
-                                        136.0,
-                                        30.0,
+                                        (origin, section_y, 136.0, 30.0),
                                         fills[slot],
                                         None,
                                         0.0,
@@ -386,10 +381,7 @@ mod timeline_event_scene_contract {
                                         color_index: ordinal,
                                     });
                                     geometry.push(rect(
-                                        x,
-                                        y,
-                                        w,
-                                        48.0,
+                                        (x, y, w, 48.0),
                                         fills[slot],
                                         Some(strokes[slot]),
                                         2.0,
@@ -421,10 +413,7 @@ mod timeline_event_scene_contract {
                                     };
                                     geometry.push(path(&arrow, strokes[slot], 0.0, true, false));
                                     geometry.push(rect(
-                                        ex,
-                                        ey,
-                                        ew,
-                                        30.0,
+                                        (ex, ey, ew, 30.0),
                                         fills[slot],
                                         Some(strokes[slot]),
                                         1.5,

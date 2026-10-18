@@ -2574,7 +2574,7 @@ mod tests {
         )));
         assert!(layout.items.iter().any(|item| matches!(item,
             LayoutedTemporalItem::TimelinePeriod { label, events, .. }
-                if label == "2024" && events == &["Prototype", "First customer"]
+                if label == "2024" && events.is_empty()
         )));
         assert!(layout.items.iter().any(|item| matches!(
             item,

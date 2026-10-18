@@ -69,9 +69,36 @@ refusal!(margin_negative_infinity, empty(50.0, f64::NEG_INFINITY), 640.0, Timeli
 refusal!(margin_negative, empty(50.0, -1.0), 640.0, TimelineLeftMargin);
 refusal!(empty_origin_overflow, empty(1e308, 1e308), 640.0, TimelineGeometry);
 refusal!(empty_height_overflow, empty(1e308, 0.0), 640.0, TimelineGeometry);
-refusal!(td_inner_zero, input(50.0, 408.0, TimelineDirection::TopDown, false, false, false, 1), 640.0, TimelineGeometry);
-refusal!(td_inner_negative, input(50.0, 409.0, TimelineDirection::TopDown, false, false, false, 1), 640.0, TimelineGeometry);
-refusal!(td_large_padding, input(1000.0, 50.0, TimelineDirection::TopDown, false, false, false, 1), 640.0, TimelineGeometry);
+#[test]
+fn td_inner_zero() {
+    // Fixed180-wide cards intentionally retire the old canvas-coupled width.
+    let oracle = expected(640.0, 176.0, config(50.0, 408.0, false), vec![
+        LayoutedTemporalItem::TimelineSpine { x1: 564.0, y1: 66.0, x2: 564.0, y2: 90.0 },
+        LayoutedTemporalItem::TimelinePeriod { x: 592.0, y: 50.0, width: 180.0, height: 48.0, label: "P0".into(), events: Vec::new(), color_index: 0 },
+    ]);
+    assert_eq!(try_layout_temporal_diagram(&input(50.0, 408.0, TimelineDirection::TopDown, false, false, false, 1), 640.0), Ok(oracle));
+    println!("timeline-checked COMPLETE cell=td_inner_zero");
+}
+#[test]
+fn td_inner_negative() {
+    // Fixed180-wide cards intentionally retire the old canvas-coupled width.
+    let oracle = expected(640.0, 176.0, config(50.0, 409.0, false), vec![
+        LayoutedTemporalItem::TimelineSpine { x1: 565.0, y1: 66.0, x2: 565.0, y2: 90.0 },
+        LayoutedTemporalItem::TimelinePeriod { x: 593.0, y: 50.0, width: 180.0, height: 48.0, label: "P0".into(), events: Vec::new(), color_index: 0 },
+    ]);
+    assert_eq!(try_layout_temporal_diagram(&input(50.0, 409.0, TimelineDirection::TopDown, false, false, false, 1), 640.0), Ok(oracle));
+    println!("timeline-checked COMPLETE cell=td_inner_negative");
+}
+#[test]
+fn td_large_padding() {
+    // Fixed180-wide cards intentionally retire the old canvas-coupled width.
+    let oracle = expected(640.0, 2076.0, config(1000.0, 50.0, false), vec![
+        LayoutedTemporalItem::TimelineSpine { x1: 1156.0, y1: 1016.0, x2: 1156.0, y2: 1040.0 },
+        LayoutedTemporalItem::TimelinePeriod { x: 1184.0, y: 1000.0, width: 180.0, height: 48.0, label: "P0".into(), events: Vec::new(), color_index: 0 },
+    ]);
+    assert_eq!(try_layout_temporal_diagram(&input(1000.0, 50.0, TimelineDirection::TopDown, false, false, false, 1), 640.0), Ok(oracle));
+    println!("timeline-checked COMPLETE cell=td_large_padding");
+}
 refusal!(lr_large_padding_title, input(1000.0, 50.0, TimelineDirection::LeftRight, true, false, false, 1), 640.0, TimelineGeometry);
 refusal!(title_inner_zero, input(312.0, 0.0, TimelineDirection::LeftRight, true, false, false, 1), 640.0, TimelineGeometry);
 refusal!(title_inner_negative, input(313.0, 0.0, TimelineDirection::LeftRight, true, false, false, 1), 640.0, TimelineGeometry);
@@ -99,7 +126,7 @@ fn empty_zero_height_and_finite_canvas_normalization() {
 fn td_inner_one_complete() {
     let oracle = expected(640.0, 176.0, config(50.0, 407.0, false), vec![
         LayoutedTemporalItem::TimelineSpine { x1: 563.0, y1: 66.0, x2: 563.0, y2: 90.0 },
-        LayoutedTemporalItem::TimelinePeriod { x: 591.0, y: 50.0, width: 25.0, height: 48.0, label: "P0".into(), events: Vec::new(), color_index: 0 },
+        LayoutedTemporalItem::TimelinePeriod { x: 591.0, y: 50.0, width: 180.0, height: 48.0, label: "P0".into(), events: Vec::new(), color_index: 0 },
     ]);
     assert_eq!(try_layout_temporal_diagram(&input(50.0, 407.0, TimelineDirection::TopDown, false, false, false, 1), 640.0), Ok(oracle));
     println!("timeline-checked COMPLETE cell=td_inner_one_complete");
@@ -158,6 +185,14 @@ fn complete_direction_title_section_boolean_matrix() {
             if direction == TimelineDirection::LeftRight {
                 items.push(LayoutedTemporalItem::TimelineSpine { x1: 301.0, y1: sy1, x2: 515.0, y2: sy2 });
             }
+            // Retain every old matrix layout as a direct legacy validator control.
+            let legacy = expected(width, height, config(50.0, 50.0, single), items.clone());
+            assert_eq!(validate_timeline_layout(legacy.clone()), Ok(legacy));
+            if direction == TimelineDirection::TopDown {
+                for item in &mut items {
+                    if let LayoutedTemporalItem::TimelinePeriod { width, .. } = item { *width = 180.0; }
+                }
+            }
             let oracle = expected(width, height, config(50.0, 50.0, single), items);
             let actual = try_layout_temporal_diagram(&input(50.0, 50.0, direction, title, named, single, 2), 640.0);
             assert_eq!(actual, Ok(oracle), "row={row} single={single}");
@@ -200,7 +235,37 @@ fn nonempty_events_keep_complete_layouts() {
         let mut d = input(50.0, 50.0, direction, false, false, false, 1);
         let TemporalBody::Timeline(t) = &mut d.body else { unreachable!() };
         t.sections[0].periods[0].events = events;
-        assert_eq!(try_layout_temporal_diagram(&d, 640.0), Ok(oracle));
+        // Preserve the complete old embedded-event layout as a direct control.
+        assert_eq!(validate_timeline_layout(oracle.clone()), Ok(oracle));
+        let (new_height, new_spine_end) = match (direction, count) {
+            (TimelineDirection::TopDown, 1) => (176.0, 90.0),
+            (TimelineDirection::TopDown, 2) => (196.0, 110.0),
+            (TimelineDirection::LeftRight, 1) => (296.0, 106.0),
+            (TimelineDirection::LeftRight, 2) => (334.0, 106.0),
+            _ => unreachable!(),
+        };
+        let td = direction == TimelineDirection::TopDown;
+        let new_spine = LayoutedTemporalItem::TimelineSpine {
+            x1: sx1, y1: sy1, x2: sx2, y2: new_spine_end,
+        };
+        let mut new_items = Vec::new();
+        if td { new_items.push(new_spine.clone()); }
+        new_items.push(LayoutedTemporalItem::TimelinePeriod {
+            x, y, width: if td { 180.0 } else { 190.0 }, height: 48.0,
+            label: "P0".into(), events: Vec::new(), color_index: 0,
+        });
+        for (i, label) in ["A", "B"][..count].iter().enumerate() {
+            let (ex, ey, ew, lx1, ly1, lx2, ly2) = if td {
+                (450.0, 50.0 + i as f64 * 38.0, 160.0, 414.0, 74.0, 450.0, 65.0 + i as f64 * 38.0)
+            } else {
+                (206.0, 184.0 + i as f64 * 38.0, 190.0, 301.0, 166.0, 301.0, 184.0 + i as f64 * 38.0)
+            };
+            new_items.push(LayoutedTemporalItem::TimelineEventLink { x1: lx1, y1: ly1, x2: lx2, y2: ly2, color_index: 0 });
+            new_items.push(LayoutedTemporalItem::TimelineEvent { x: ex, y: ey, width: ew, height: 30.0, label: (*label).into(), color_index: 0 });
+        }
+        if !td { new_items.push(new_spine); }
+        let new_oracle = expected(640.0, new_height, config(50.0, 50.0, false), new_items);
+        assert_eq!(try_layout_temporal_diagram(&d, 640.0), Ok(new_oracle));
     }
     println!("timeline-checked COMPLETE cell=nonempty_events_keep_complete_layouts");
 }
@@ -217,5 +282,12 @@ fn event_frame_extent_can_fail_after_outer_and_title_extents_pass() {
     let TemporalBody::Timeline(t) = &mut d.body else { unreachable!() };
     t.sections[0].periods[0].events = vec!["A".into()];
     assert_eq!(try_layout_temporal_diagram(&d, 2f64.powi(60)), Err(TemporalLayoutError::TimelineGeometry));
+    // The new separate Event frame passes here; its arrow collapses. Preserve
+    // the retired embedded28-height proof explicitly instead of relabeling it.
+    let legacy = expected(2f64.powi(60), y * 2.0 + 96.0, config(y, 0.0, false), vec![
+        LayoutedTemporalItem::TimelineSpine { x1: y + 106.0, y1: y + 16.0, x2: y + 106.0, y2: (y + 84.0) - 36.0 },
+        LayoutedTemporalItem::TimelinePeriod { x: (y + 106.0) + 28.0, y, width: (2f64.powi(60) - ((y + 106.0) + 28.0) - 24.0).max(24.0), height: 66.0, label: "P0".into(), events: vec!["A".into()], color_index: 0 },
+    ]);
+    assert_eq!(validate_timeline_layout(legacy), Err(TemporalLayoutError::TimelineGeometry));
     println!("timeline-checked COMPLETE cell=event_frame_extent_can_fail_after_outer_and_title_extents_pass");
 }
