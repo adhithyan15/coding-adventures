@@ -17480,3 +17480,41 @@ Parity inventory remains collision-free/identical to pinned main; ten reporter
 and 31 lessons tests pass, with 1163 lesson shards and zero problems. Independent
 correctness and CI-scope reviews found no actionable issue. Exact-head security
 review and hosted CI remain gates before publication and auto-merge.
+
+
+## Post-#17473 merge and Go provider adoption (2026-10-16)
+
+PR #17473 was externally merged as c4f9543aac39a3bbb97d70e700d10f2d5dabdf9e
+from reviewed dea68afaab9db0cbff61c326eef93c4be58ffe69; all 38 checks were
+terminal acceptable (31 success, seven skipped). No manual merge was performed.
+After disk space recovered, the journal transitioned the foundation to merged.
+
+The complete collision-checked Git-tree inventory at f3a7eae08279a7bb9dfa5b7650b598016526770b
+has 15 established languages, 1,508 implementation identities, 4,790 slots and
+1,550 all-reported identities, with zero collisions or unknown buckets. The one
+new Chief Windows sandbox identity is registered as an excluded, blocked native
+authority review before selection. OCaml remains emerging. Parallel inventory,
+classification, dependency ranking and native-reader preparation are retained;
+structural presence does not claim behavioral qualification.
+
+Select only starlark-compiler-go-opcode-provider-conformance-adoption after its
+neutral prerequisite merged. Its existing public APIs support a bounded native
+reader and ownership checks; live open-PR file overlap checks were clear. The
+broader BF03 contract retains 14 direct/19 transitive dependents. Go adoption
+wins this tranche on bounded implementation readiness, not dependency count.
+No actual Go downstream importer was found; AST compiler tests are separate.
+
+
+Go adoption local qualification now consumes every STP01 row through native
+APIs and rejects malformed transport/coordinated semantic corruption. Actual
+provider BUILD/BUILD_windows, vet/build and tests pass with 99.0% production
+statement coverage. Five temporary shared-storage regressions are rejected by
+independently copied baselines; production source is restored byte-for-byte.
+The complete build-tool suite passes with 83.7% aggregate coverage, vet/build
+and its actual generic BUILD on Windows. Exact fixture routing, all three
+platform plans and missing-reader output atomicity are tested. The real
+repository detector emits an unforced plan requiring only Go; dependencies are
+retained. Neutral 15-test/359-row and reporter ten-test checks pass, as do 1,209
+lesson shards. Full materialized Git-visible inventory matches the immutable
+report, including special buckets. Native execution was Windows only; platform
+plan inspection and script execution do not claim native Linux/macOS runs.

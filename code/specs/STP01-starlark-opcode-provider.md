@@ -142,3 +142,26 @@ Rust, TypeScript, Go and Elixir reference tables, Python's missing implementatio
 and Ruby's unresolved component applicability remain distinct records. Keep
 OCaml emerging until its promotion gates pass; this profile does not change the
 15-language established denominator or grant any exception.
+
+
+## 6. Go native adoption
+
+The Go provider's committed test reader consumes the fixed shared cases.json
+through standard-library JSON token parsing. It enforces section 4 transport, shape and domain checks before any
+provider call or byte conversion, including decoded duplicate keys, scalar-only
+Unicode, integer syntax, explicit null versus omission, and bounded input/depth. Semantic table values are checked against actual
+provider APIs and independently by the neutral oracle.
+All 359 rows must be compared with actual AllOps, OpFromByte, category/name/byte,
+four map constructors and direct lookup helpers. Corruption cases must fail;
+coordinated fixture changes must not regenerate expected provider behavior.
+
+Retain two returned slices/maps while changing one, then verify both the other
+and a fresh result. Cover all four map families, deletion/replacement/insertion,
+and slice overwrite/reorder/append; do not assume append allocates new storage.
+
+Only the exact shared cases.json path seeds go/starlark-compiler in native CI
+selection, across supported platforms and all/Go filters. Other language filters
+and nearby spec/schema/documentation paths do not acquire this reader. Union
+normal package changes and reverse dependencies; missing required consumers
+fail before writing a plan. Nil/empty changes and force behavior stay intact.
+This adoption runs no Starlark source, imports modules or grants host authority.

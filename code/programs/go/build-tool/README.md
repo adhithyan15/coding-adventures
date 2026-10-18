@@ -2,6 +2,12 @@
 
 The **primary build tool** for the coding-adventures monorepo. Compiled to a native binary for fast, dependency-free CI execution.
 
+Changes to the exact `code/specs/fixtures/starlark-opcode-provider-v1/cases.json`
+path also schedule the committed `go/starlark-compiler` native conformance reader
+on every platform for all/Go invocations. Nearby schema/docs paths and other
+language filters do not acquire that relation. Missing required readers fail
+before a plan is written; ordinary affected-package propagation is preserved.
+
 ## What it does
 
 This tool discovers packages in the monorepo by recursively walking for `BUILD` files, resolves inter-package dependencies, hashes source files for change detection, and only rebuilds packages whose source or dependency inputs changed. Independent packages are built in parallel using Go goroutines.

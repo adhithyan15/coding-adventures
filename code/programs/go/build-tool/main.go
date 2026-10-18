@@ -564,6 +564,21 @@ func changedPackageRootsForPlatformAndLanguage(
 		}
 		changed[closureProvenanceConsumer] = true
 	}
+	// Only the committed Go native reader consumes this exact external corpus.
+	// Seed before the ordinary fixture early return, including deleted old paths.
+	if containsPath(changedFiles, "code/specs/fixtures/starlark-opcode-provider-v1/cases.json") && (language == "all" || language == "go") {
+		found := false
+		for _, pkg := range packages {
+			if pkg.Name == "go/starlark-compiler" && pkg.Language == "go" {
+				found = true
+				break
+			}
+		}
+		if !found {
+			return nil, fmt.Errorf("STP01 fixture consumer %q is missing from discovered packages", "go/starlark-compiler")
+		}
+		changed["go/starlark-compiler"] = true
+	}
 	discoveryFixtureChanged := containsPath(changedFiles, sharedDiscoveryFixturePath)
 	ciGateFixtureChanged := hasCIGateFixturePath(changedFiles)
 	toolchainFixtureChanged := hasToolchainDetectionFixturePath(changedFiles)

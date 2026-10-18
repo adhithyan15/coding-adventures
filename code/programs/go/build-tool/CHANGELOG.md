@@ -6,6 +6,8 @@ All notable changes to the Go build tool will be documented in this file.
 
 ### Added
 
+- Exact STP01 cases.json changes schedule the committed Go starlark-compiler native reader on each platform, honoring language filters and failing before plan publication when that reader is missing.
+
 - `-prune-leaf-targets`. Once a package has built (pass or fail), the flag
   deletes its own Cargo `target/` if no package depends on it. Main's full
   build turns it on. Each Mosaic package and Rust program is a standalone
