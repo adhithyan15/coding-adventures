@@ -1,5 +1,44 @@
 # closurec
 
+## CLOC41 unary Math result lineage
+
+The existing abs/floor/ceil/round/trunc/sign numeric handler now joins
+available original-call, folded-member, receiver, property and folded-argument
+identities in that order, with first-seen alias deduplication. Five borrowed
+stack slots bound frontier storage and comparison count; this is not a bound
+on arbitrary ID byte lengths, recursive folding or whole-process memory.
+The returned numeric node owns its checked fold contribution; nested child
+history and real pass/sweep order survive. Missing IDs are not manufactured.
+
+Admission, numeric bits/raw formatting, labels, negative-zero/result-finite
+guards, eager child folding and first-error behavior remain. Native
+sign-of-Infinity inputs still yield positive/negative one. Textual Math
+matching does not certify a global binding. Actual ingested source intervals,
+Unicode/CRLF and repeated spellings, traced/plain JS/map/manifest equality,
+checked graph/resource failures and all-artifact refusal sentinels are tested.
+
+Actual Rust execution `fa8b81c2a8c7408ec31114617a7c176f7a5cbffd` completed 3277 native tests/doctests,
+zero failures or filtered tests and 41 existing ignored cases,
+across 248 metadata-declared executable harness targets and
+14 separate doctest targets. Both affected all-target strict checks
+passed. The selected reverse cone plus parser/CV covers fourteen shared
+packages and the CLI, with thirty-six forward input packages; all 1,293 Rust
+manifests and complete dependency declarations were re-audited. Focused CLOC41
+native/CLI tests are included in those totals, not additional counts.
+Source review `6fa6977512742b052856543517bcca112d157c5009e4a3d28701466194d0d0b6` and terminal review
+`c1dd1b03d23a33f239537877374f04695097f082c901244c81d2f7198a85f86d` bind this bounded local execution. Core receipt
+`31126ef9572a1297bfba5e9d8ebf32eb799e54c161dc5de58494e3561d12e382`. This later Markdown update claims no Rust re-execution.
+
+This is bounded local CLOC41 lineage, not complete source/output mapping,
+all call/composite families, full transform-role lineage or Closure parity.
+Current-main reconciliation, conflict-free exact-head required CI and actual
+merge/delivery remain OPEN. Base ESTree stays the canonical serialized
+boundary, with own types and no new crates.io dependencies. Miri
+DEFERRED/PENDING, never passed; frozen run/checkout/inputs/target/receipts remain
+untouched and unpolled. Genuine final-source Miri follows implementation
+delivery. Full objective OPEN; heartbeat ACTIVE.
+
+
 ## Consumed-source grammar replay (CV04b D3b)
 
 Traced compilation retains each actual consumed String allocation by move and
