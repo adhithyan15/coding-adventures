@@ -18,9 +18,15 @@ also carries forward a shard's file-specific DACL. On Unix, mutations use
 directory-relative operations with no-follow checks. Run
 `python test_sharded_ledger.py -v` to exercise both platform boundaries; the
 books gate runs the Windows junction fixtures as well as the Unix symlink
-fixtures. Read-side pathname enumeration still needs separate handle anchoring
-(tracked in [#17732](https://github.com/adhithyan15/coding-adventures/issues/17732));
-do not treat this mutation repair as full concurrent-read safety.
+fixtures. Read-side enumeration also queries the opened directory handle on
+Windows, validates each returned record, and reopens each selected owner
+relative to that handle without following reparse points. A junction swapped
+in after pathname prevalidation cannot supply an outside owner list. This
+does not promise a snapshot of an actively edited in-root directory: native
+enumeration may observe either side of a concurrent in-root change.
+Unix read-side ancestor-swap hardening remains a separate follow-up
+(tracked in [#17740](https://github.com/adhithyan15/coding-adventures/issues/17740));
+do not treat this Windows fix as cross-platform concurrent-read safety.
 
 ## Safe regeneration of the Dravidian syllabaries
 

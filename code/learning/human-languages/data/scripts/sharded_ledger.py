@@ -138,6 +138,22 @@ if os.name == "nt":
         _fields_ = [("Status", ctypes.c_void_p), ("Information", ctypes.c_void_p)]
 
 
+    class _FileDirectoryInformationHeader(ctypes.Structure):
+        """Fixed 64-byte prefix of Windows FILE_DIRECTORY_INFORMATION."""
+        _fields_ = [
+            ("NextEntryOffset", wintypes.ULONG),
+            ("FileIndex", wintypes.ULONG),
+            ("CreationTime", ctypes.c_int64),
+            ("LastAccessTime", ctypes.c_int64),
+            ("LastWriteTime", ctypes.c_int64),
+            ("ChangeTime", ctypes.c_int64),
+            ("EndOfFile", ctypes.c_int64),
+            ("AllocationSize", ctypes.c_int64),
+            ("FileAttributes", wintypes.ULONG),
+            ("FileNameLength", wintypes.ULONG),
+        ]
+
+
     _ntdll = ctypes.WinDLL("ntdll", use_last_error=True)
     _nt_create_file = _ntdll.NtCreateFile
     _nt_create_file.argtypes = (
@@ -156,6 +172,13 @@ if os.name == "nt":
         wintypes.ULONG, wintypes.ULONG,
     )
     _nt_set_information.restype = ctypes.c_long
+    _nt_query_directory_file = _ntdll.NtQueryDirectoryFile
+    _nt_query_directory_file.argtypes = (
+        wintypes.HANDLE, wintypes.HANDLE, ctypes.c_void_p, ctypes.c_void_p,
+        ctypes.POINTER(_IoStatusBlock), ctypes.c_void_p, wintypes.ULONG,
+        wintypes.ULONG, wintypes.BOOLEAN, ctypes.c_void_p, wintypes.BOOLEAN,
+    )
+    _nt_query_directory_file.restype = ctypes.c_long
     _write_file = _kernel32.WriteFile
     _write_file.argtypes = (
         wintypes.HANDLE, ctypes.c_void_p, wintypes.DWORD,
@@ -298,13 +321,20 @@ if os.name == "nt":
 
 
     @contextmanager
-    def _windows_directory(root, *parts):
+    def _windows_directory(root, *parts, list_entries=False):
         """Anchor each untrusted component to its already-open parent handle."""
         handles = []
         try:
-            handles.append(_windows_open_checked(_root(root), directory=True))
-            for part in parts:
-                handles.append(_windows_open_relative(handles[-1], part, directory=True))
+            handles.append(_windows_open_checked(
+                _root(root), directory=True, read_data=list_entries and not parts,
+            ))
+            for index, part in enumerate(parts):
+                access = _READ_ATTRIBUTES | _SYNCHRONIZE
+                if list_entries and index == len(parts) - 1:
+                    access |= _READ_DATA  # FILE_LIST_DIRECTORY on the final handle.
+                handles.append(_windows_open_relative(
+                    handles[-1], part, directory=True, access=access,
+                ))
             yield handles[-1]
         finally:
             for handle in reversed(handles):
@@ -323,6 +353,63 @@ if os.name == "nt":
             raise
         with os.fdopen(descriptor, encoding="utf-8") as stream:
             return stream.read()
+
+
+    def _windows_query_directory(directory_handle):
+        """Enumerate the opened directory object, never its mutable pathname.
+
+        NtQueryDirectoryFile returns batches of variable-length, 8-byte-aligned
+        records. Validate every offset and length before decoding names: an
+        incomplete batch must fail closed rather than select partial owners.
+        """
+        header_size = ctypes.sizeof(_FileDirectoryInformationHeader)
+        buffer = ctypes.create_string_buffer(65536)
+        entries = []
+        while True:
+            io_status = _IoStatusBlock()
+            status = _nt_query_directory_file(
+                directory_handle, None, None, None, ctypes.byref(io_status),
+                buffer, len(buffer), 1, False, None, False,
+            )
+            if status & 0xFFFFFFFF == 0x80000006:  # STATUS_NO_MORE_FILES
+                return entries
+            if status != 0:
+                raise ctypes.WinError(_nt_to_win_error(status))
+            length = io_status.Information or 0
+            if length < header_size or length > len(buffer):
+                raise OSError("invalid Windows ledger directory batch length")
+            offset = 0
+            while True:
+                if offset + header_size > length:
+                    raise OSError("truncated Windows ledger directory entry")
+                info = _FileDirectoryInformationHeader.from_buffer_copy(buffer, offset)
+                next_offset = info.NextEntryOffset
+                if next_offset and (
+                    next_offset < header_size or next_offset % 8
+                    or offset + next_offset > length
+                ):
+                    raise OSError("invalid Windows ledger directory entry offset")
+                end = offset + next_offset if next_offset else length
+                if info.FileNameLength % 2 or offset + header_size + info.FileNameLength > end:
+                    raise OSError("invalid Windows ledger directory entry name length")
+                raw_name = ctypes.string_at(
+                    ctypes.addressof(buffer) + offset + header_size,
+                    info.FileNameLength,
+                )
+                name = raw_name.decode("utf-16-le")
+                if name not in (".", ".."):
+                    if not name or "\\" in name or "/" in name or "\x00" in name:
+                        raise ValueError(f"unsafe Windows ledger directory entry: {name!r}")
+                    entries.append((name, info.FileAttributes))
+                if not next_offset:
+                    break
+                offset = end
+
+
+    def _windows_checked_entry(directory_handle, name, *, directory):
+        """Re-open one enumerated name beneath the pinned parent, no-follow."""
+        handle = _windows_open_relative(directory_handle, name, directory=directory)
+        _close_handle(handle)
 
 
 def _safe_track(track):
@@ -546,6 +633,16 @@ def _remove(root, *parts):
 def _files(root, *parts):
     directory = _directory(root, *parts)
     names = []
+    if os.name == "nt":
+        with _windows_directory(root, *parts, list_entries=True) as directory_handle:
+            for name, attributes in _windows_query_directory(directory_handle):
+                if not name.endswith(".json"):
+                    continue
+                if attributes & REPARSE_POINT or attributes & _DIRECTORY_ATTRIBUTE:
+                    raise ValueError(f"refusing non-file ledger shard: {directory}/{name}")
+                _windows_checked_entry(directory_handle, name, directory=False)
+                names.append(name)
+        return sorted(names)
     with os.scandir(directory) as entries:
         for entry in entries:
             if not entry.name.endswith(".json"):
@@ -798,6 +895,21 @@ def _strict_directory_entries(root, *parts):
     """Enumerate every direct child, refusing symlinks and special files."""
     directory = _directory(root, *parts)
     entries = []
+    if os.name == "nt":
+        with _windows_directory(root, *parts, list_entries=True) as directory_handle:
+            for name, attributes in _windows_query_directory(directory_handle):
+                if attributes & REPARSE_POINT:
+                    raise ValueError(
+                        f"refusing link or reparse book-generation owner: {directory}/{name}"
+                    )
+                if attributes & 0x40:  # FILE_ATTRIBUTE_DEVICE is not a regular owner.
+                    raise ValueError(
+                        f"refusing special book-generation owner: {directory}/{name}"
+                    )
+                is_directory = bool(attributes & _DIRECTORY_ATTRIBUTE)
+                _windows_checked_entry(directory_handle, name, directory=is_directory)
+                entries.append((name, is_directory))
+        return sorted(entries)
     with os.scandir(directory) as iterator:
         for entry in iterator:
             info = entry.stat(follow_symlinks=False)
