@@ -1,0 +1,9 @@
+{
+  "id": "PA-PATH-178-A2-SCHEDULE-SEQUENCE",
+  "spine_node": "SPINE-READ-PRACTICAL-TEXTS",
+  "before": [],
+  "inline": [
+    "PA-EXT-178-A2-SCHEDULE-SEQUENCE"
+  ],
+  "after": []
+}
