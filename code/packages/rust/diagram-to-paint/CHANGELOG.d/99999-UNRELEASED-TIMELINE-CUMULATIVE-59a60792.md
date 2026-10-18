@@ -1,4 +1,4 @@
-# Checked cumulative Timeline event positions
+## Checked cumulative Timeline event positions
 
 Timeline events now use an absolute cursor and checked addition of the existing
 finite event pitch after every event, including the final advance. TD row height
