@@ -65,3 +65,20 @@ attribution. No new crates.io dependencies. Sole PR/current terminal clean check
 actual merge reachability and cleanup rules remain; Miri DEFERRED/PENDING,
 frozen run untouched/unpolled, genuine final-source Miri follows delivery.
 Full Closure parity and output-byte/source/transformation lineage remain OPEN.
+
+Resume checkpoint, 2026-10-18: owned3e4e370a already constructs separate cards
+but rejects both new item variants through the validator's default arm. This
+slice restores their checked admission; it does not repair a previously accepted
+unsafe arrow. The complete endpoint inventory at main42c3b66f records20 shared
+changed paths and10 actual virtual conflicts; that inventory is not acceptance
+of the virtual merge. Keep this repair independent of native-bound increments.
+
+Run authored source-to-layout-to-Scene controls on every platform by promoting
+the existing local diagram-layout-temporal test dependency of diagram-to-paint
+out of its Apple-only table. Add no registry dependency. Preserve the48-cell
+legacy typed palette fixture byte-for-byte. New complete Scene fixtures must
+declare their expected layouts before calling the checked constructor and their
+Scene instructions before calling the painter; deriving gold from actual layout
+output does not establish the contract. A compiled red must demonstrate an
+ordinary valid card refused by the current default arm; invalid-frame/arrow
+controls initially pass because this missing admission is fail-closed.
