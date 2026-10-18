@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C177-noun-phrase",
+    "language": "punjabi",
+    "chapter": 177,
+    "sequence": 9270,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "eyes-or-hands-step"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "eyes-or-hands-step"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:fbedeacc602a01ac"
+  },
+  "findings": []
+}

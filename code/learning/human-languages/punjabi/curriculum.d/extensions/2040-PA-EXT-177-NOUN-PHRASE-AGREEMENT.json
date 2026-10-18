@@ -1,0 +1,10 @@
+{
+  "id": "PA-EXT-177-NOUN-PHRASE-AGREEMENT",
+  "stage": "A1",
+  "kind": "required",
+  "category": "grammar",
+  "canDo": "I can build and intensify one masculine and one feminine adjective-noun phrase, then retrieve a complete example before hai.",
+  "prerequisites": [
+    "PA-EXT-176-POINTING-PLACE"
+  ]
+}

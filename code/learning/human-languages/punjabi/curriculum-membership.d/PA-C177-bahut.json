@@ -1,0 +1,11 @@
+{
+  "id": "PA-C177-bahut",
+  "pathSegment": "PA-PATH-177-NOUN-PHRASE-AGREEMENT",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PA-EXT-177-NOUN-PHRASE-AGREEMENT",
+      "order": 3
+    }
+  ]
+}

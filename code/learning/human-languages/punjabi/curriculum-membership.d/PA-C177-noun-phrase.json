@@ -1,0 +1,11 @@
+{
+  "id": "PA-C177-noun-phrase",
+  "pathSegment": "PA-PATH-177-NOUN-PHRASE-AGREEMENT",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PA-EXT-177-NOUN-PHRASE-AGREEMENT",
+      "order": 4
+    }
+  ]
+}
