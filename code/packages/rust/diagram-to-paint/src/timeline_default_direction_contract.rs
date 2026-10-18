@@ -191,6 +191,7 @@ fn default_and_explicit_direction_keep_complete_product_contracts() {
             metadata: Some(metadata),
             instructions,
         };
+        let expected_scene = super::declared_timeline_typography(expected_scene, &expected_layout);
         let expected_queries = vec![
             FontQuery::named("\"trebuchet ms\", verdana, arial, sans-serif").with_weight(text_interfaces::FontWeight(700)),
             FontQuery::named("\"trebuchet ms\", verdana, arial, sans-serif"),

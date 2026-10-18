@@ -201,6 +201,7 @@ fn timeline_family_source_keeps_complete_product_contracts() {
                         semantic.config.font_size = 24.0;
                         expected_layout.timeline_config.as_mut().unwrap().font_size = 24.0;
                     }
+                    let expected_scene = super::declared_timeline_typography(expected_scene, &expected_layout);
                     let title = titled.then(|| "T".to_string());
                     let source = format!("{prefix}{header}\n{}P : E\n",if titled { "title T\n" } else { "" });
                     let expected_queries = if merged {
@@ -251,6 +252,7 @@ fn timeline_family_direct_domains_keep_full_scenes_and_queries() {
             .as_mut()
             .unwrap()
             .font_family = raw.into();
+        let expected_scene = super::declared_timeline_typography(expected_scene, &expected_layout);
         let expected_queries = vec![
             FontQuery::named(effective).with_weight(text_interfaces::FontWeight(700)),
             FontQuery::named(effective),

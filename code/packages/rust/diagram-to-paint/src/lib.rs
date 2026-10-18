@@ -8816,11 +8816,32 @@ fn timeline_color<'a>(colors: &'a [String], index: usize, fallback: &'a str) -> 
     colors.get(index % colors.len().max(1)).map(String::as_str).unwrap_or(fallback)
 }
 
-/// Lower a [`LayoutedTemporalDiagram`] into a [`PaintScene`].
+/// Font-request admission errors, independent of checked layout admission.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum TemporalPaintError {
+    TimelineFontSize,
+    TimelineTitleFontSize,
+}
+
+/// Lower temporal geometry, panicking on unsupported Timeline font requests.
 pub fn diagram_to_paint_temporal<S, M, R>(
     diagram: &LayoutedTemporalDiagram,
     options: &DiagramToPaintOptions<'_, S, M, R>,
 ) -> PaintScene
+where
+    S: TextShaper,
+    M: FontMetrics<Handle = S::Handle>,
+    R: FontResolver<Handle = S::Handle>,
+{
+    try_diagram_to_paint_temporal(diagram, options).expect("unsupported temporal typography")
+}
+
+/// Checked temporal lowering; request admission is distinct from font/backend
+/// validity and does not promise that arbitrary backend output is finite.
+pub fn try_diagram_to_paint_temporal<S, M, R>(
+    diagram: &LayoutedTemporalDiagram,
+    options: &DiagramToPaintOptions<'_, S, M, R>,
+) -> Result<PaintScene, TemporalPaintError>
 where
     S: TextShaper,
     M: FontMetrics<Handle = S::Handle>,
@@ -9601,14 +9622,14 @@ where
         );
     }
     let bg = options.background;
-    PaintScene {
+    Ok(PaintScene {
         width: diagram.width,
         height: diagram.height,
         background: format!("rgb({},{},{})", bg.r, bg.g, bg.b),
         instructions,
         id: None,
         metadata: (!metadata.is_empty()).then_some(metadata),
-    }
+    })
 }
 
 fn gantt_task_colors(tags: &GanttTaskTags) -> (&'static str, Option<&'static str>, Option<f64>) {
@@ -13701,6 +13722,7 @@ emphasized --> direct
     }
 
     include!("venn_palette_contract_tests.rs");
+    include!("timeline_typography_contract.rs");
     include!("timeline_palette_transport_contract.rs");
     include!("timeline_event_scene_contract.rs");
     include!("venn_debug_paint_contract.rs");

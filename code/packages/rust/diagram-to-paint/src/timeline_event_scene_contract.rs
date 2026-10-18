@@ -33,6 +33,7 @@ mod timeline_event_scene_contract {
                 query.family_names = vec!["\"trebuchet ms\", verdana, arial, sans-serif".into()];
                 query
             }).collect();
+            let declared_scene = super::declared_timeline_typography(declared_scene, &declared_layout);
             assert_eq!(declared_queries.len(), 2);
             assert_ne!(declared_queries[0], declared_queries[1]);
             let defaults = make_opts(&FakeShaper, &FakeMetrics, &FakeResolver);
@@ -543,6 +544,7 @@ mod timeline_event_scene_contract {
                                 metadata: Some(metadata),
                                 instructions: geometry,
                             };
+                            let expected_scene = super::declared_timeline_typography(expected_scene, &expected_layout);
                             let title_query = FontQuery::named("\"trebuchet ms\", verdana, arial, sans-serif")
                                 .with_weight(text_interfaces::FontWeight(700));
                             let label_query = FontQuery::named("\"trebuchet ms\", verdana, arial, sans-serif");

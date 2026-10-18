@@ -93,6 +93,7 @@ fn timeline_independent_palette_lengths_keep_whole_scenes_and_queries() {
                     LayoutedTemporalItem::TimelinePeriod { x: 20.0, y: 70.0, width: 190.0, height: 66.0, label: "P".into(), events: vec!["E".into()], color_index: index },
                 ],
             };
+            let oracle = declared_timeline_typography(oracle, &input);
             let resolver = VennDebugRecordingResolver(std::cell::RefCell::new(vec![]));
             let defaults = make_opts(&FakeShaper, &FakeMetrics, &FakeResolver);
             let options = DiagramToPaintOptions {
