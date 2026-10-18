@@ -92,11 +92,18 @@ fn layout_timeline(
     if !diagram.config.left_margin.is_finite() || diagram.config.left_margin < 0.0 {
         return Err(TemporalLayoutError::TimelineLeftMargin);
     }
-    // Admit the new scalar after all established raw-input priorities.
-    // It is not multiplied or used by the retained layout/paint formulas.
+    // Raw scalar admission keeps the established input-error priorities.
     if !diagram.config.font_size.is_finite() || diagram.config.font_size <= 0.0 {
         return Err(TemporalLayoutError::TimelineFontSize);
     }
+    // Admit every planned role before max/allocation/section work, even
+    // with no title or items. Finite minima do not certify actual frames.
+    let size = diagram.config.font_size;
+    let title_height = timeline_finite(size * 2.5)?.max(40.0);
+    let section_height = timeline_finite(size * 1.875)?.max(30.0);
+    let minimum_card_height = timeline_finite(size * 3.0)?.max(48.0);
+    let event_height = timeline_finite(size * 1.875)?.max(30.0);
+    let event_pitch = timeline_finite(event_height + 8.0)?;
     let mut items = Vec::new();
     let width = cw.max(560.0);
     let padding = diagram.config.padding;
@@ -111,9 +118,9 @@ fn layout_timeline(
     let mut y = padding;
     if let Some(label) = title {
         items.push(LayoutedTemporalItem::TemporalTitle {
-            x: padding, y, width: width - padding * 2.0, height: 40.0, label: label.clone(),
+            x: padding, y, width: width - padding * 2.0, height: title_height, label: label.clone(),
         });
-        y = timeline_finite(y + 52.0)?;
+        y = timeline_finite(y + (title_height + 12.0))?;
     }
 
     match diagram.direction {
@@ -128,16 +135,16 @@ fn layout_timeline(
                 TIMELINE_WORK.with(|count| { let (p, s) = count.get(); count.set((p, s + 1)); });
                 if let Some(label) = &section.label {
                     items.push(LayoutedTemporalItem::TimelineSection {
-                        x: origin_x, y, width: 136.0, height: 30.0, label: label.clone(),
+                        x: origin_x, y, width: 136.0, height: section_height, label: label.clone(),
                         color_index,
                     });
-                    y = timeline_finite(y + 38.0)?;
+                    y = timeline_finite(y + (section_height + 8.0))?;
                 }
                 for period in &section.periods {
                     has_period = true;
                     let card_x = spine_x + 28.0;
                     let card_width = 180.0;
-                    let card_height = 48.0;
+                    let card_height = minimum_card_height;
                     items.push(LayoutedTemporalItem::TimelinePeriod {
                         x: card_x, y, width: card_width, height: card_height,
                         label: period.label.clone(), events: Vec::new(), color_index,
@@ -145,24 +152,24 @@ fn layout_timeline(
                     let event_x = card_x + card_width + 36.0;
                     let event_width = (width - event_x - padding).max(160.0);
                     for (event_index, event) in period.events.iter().enumerate() {
-                        let event_y = y + event_index as f64 * 38.0;
+                        let event_y = y + event_index as f64 * event_pitch;
                         items.push(LayoutedTemporalItem::TimelineEventLink {
                             x1: card_x + card_width,
                             y1: y + card_height / 2.0,
                             x2: event_x,
-                            y2: event_y + 15.0,
+                            y2: event_y + event_height / 2.0,
                             color_index,
                         });
                         items.push(LayoutedTemporalItem::TimelineEvent {
                             x: event_x,
                             y: event_y,
                             width: event_width,
-                            height: 30.0,
+                            height: event_height,
                             label: event.clone(),
                             color_index,
                         });
                     }
-                    let row_height = card_height.max(period.events.len() as f64 * 38.0 - 8.0);
+                    let row_height = card_height.max(period.events.len() as f64 * event_pitch - 8.0);
                     y = timeline_finite(y + timeline_finite(row_height + 18.0)?)?;
                     if !without_sections || !diagram.config.disable_multicolor {
                         color_index = color_index.checked_add(1)
@@ -187,25 +194,27 @@ fn layout_timeline(
                 TIMELINE_WORK.with(|count| { let (p, s) = count.get(); count.set((p, s + 1)); });
                 if let Some(label) = &section.label {
                     items.push(LayoutedTemporalItem::TimelineSection {
-                        x: origin_x, y, width: 136.0, height: 30.0, label: label.clone(),
+                        x: origin_x, y, width: 136.0, height: section_height, label: label.clone(),
                         color_index,
                     });
                 }
                 let card_y = timeline_finite(y + 44.0)?;
                 let spine_y = timeline_finite(card_y + 12.0)?;
                 let start_x = timeline_finite(origin_x + 106.0)?;
-                let mut row_height: f64 = 48.0;
+                let mut row_height = minimum_card_height;
 
                 for (index, period) in section.periods.iter().enumerate() {
                     let x = start_x + index as f64 * (card_width + gap);
-                    let card_height = 48.0;
+                    let card_height = minimum_card_height;
                     row_height = row_height.max(card_height);
                     items.push(LayoutedTemporalItem::TimelinePeriod {
                         x, y: card_y + 24.0, width: card_width, height: card_height,
                         label: period.label.clone(), events: Vec::new(), color_index,
                     });
                     for (event_index, event) in period.events.iter().enumerate() {
-                        let event_y = card_y + 90.0 + event_index as f64 * 38.0;
+                        // Group the role-dependent offset before adding the row origin;
+                        // the default remains the represented card_y + 90.
+                        let event_y = card_y + (card_height + 42.0) + event_index as f64 * event_pitch;
                         items.push(LayoutedTemporalItem::TimelineEventLink {
                             x1: x + card_width / 2.0,
                             y1: card_y + 24.0 + card_height,
@@ -217,13 +226,13 @@ fn layout_timeline(
                             x,
                             y: event_y,
                             width: card_width,
-                            height: 30.0,
+                            height: event_height,
                             label: event.clone(),
                             color_index,
                         });
                     }
                     if !period.events.is_empty() {
-                        row_height = row_height.max(72.0 + period.events.len() as f64 * 38.0);
+                        row_height = row_height.max((card_height + 24.0) + period.events.len() as f64 * event_pitch);
                     }
                     if !without_sections || !diagram.config.disable_multicolor {
                         color_index = color_index.checked_add(1)
