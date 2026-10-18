@@ -150,8 +150,12 @@ function writeCeilingFile(root: string, path: string, contents: string): void {
 const KIND_ORDER = [
   "audit-went-blind",
   "new-dangling-reference",
+  "new-paper-omission",
+  "paper-may-not-be-pinned",
   "ceiling-has-fallen",
+  "paper-omission-ceiling-has-fallen",
   "stale-ceiling-file",
+  "stale-paper-omission-ceiling-file",
 ] as const;
 
 export function runAssessmentArtifactCli(
@@ -172,7 +176,19 @@ export function runAssessmentArtifactCli(
   }
 
   if (mode === "--write") {
-    const outputs = generatedCeilings(auditAssessmentArtifacts(root));
+    const audit = auditAssessmentArtifacts(root);
+    const missingPapers = audit.tracks.flatMap((track) => track.references
+      .filter((reference) => reference.where.endsWith(".paper") && track.missing.includes(reference.path))
+      .map((reference) => `${track.language}/assessment.json ${reference.where}: ${reference.path}`));
+    const newOmissions = checkAssessmentArtifacts(root).diagnostics
+      .filter((diagnostic) => diagnostic.kind === "new-paper-omission");
+    if (missingPapers.length > 0 || newOmissions.length > 0) {
+      for (const paper of missingPapers) err(`missing full-mock paper: ${paper}\n`);
+      for (const omission of newOmissions) err(`${omission.kind}: ${omission.message}\n`);
+      err("Refusing to grow the legacy artifact or paper-omission ceilings.\n");
+      return 1;
+    }
+    const outputs = generatedCeilings(audit);
     for (const [relative, contents] of outputs) {
       const language = relative.slice(`${ARTIFACT_CEILING_DIR}/`.length, -".json".length);
       write(ceilingPath(root, language), contents);

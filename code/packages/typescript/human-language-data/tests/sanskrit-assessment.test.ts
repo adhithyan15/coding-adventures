@@ -44,6 +44,7 @@ describe("Sanskrit assessment contract", () => {
       expect(level.fullMocks).toEqual([1, 2].map((form) => ({
         id: `${slug}-mock-${form}`,
         timed: true,
+        paper: `mocks/${slug}/mock-${form}.md`,
         rubric: `mocks/${slug}/rubric.md`,
         answerKey: `mocks/${slug}/mock-${form}-answer-key.md`,
       })));
