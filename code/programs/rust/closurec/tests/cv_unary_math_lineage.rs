@@ -388,13 +388,10 @@ fn c41_six_math_methods_keep_exact_repeated_unicode_crlf_source_parents() {
             let property = token(&w, &root, &source, start + 5, end);
             let argument = token(&w, &root, &source, end + 1, end + 5);
             let result = own_fold(&w, &m, &format!("Math.{method}(5.75)"), after);
-            joined(
-                &w,
-                &root,
-                &result,
-                &[m.clone(), receiver, property, argument],
-                &[],
-            );
+            joined(&w, &root, &result, &[m.clone(), receiver, argument], &[]);
+            // The dot-property field has no CV. Its actual physical token
+            // reaches the result through the member's exact prefix instead.
+            assert!(ancestry(&w, &result).contains(&property));
             assert!(
                 identities.insert(m) && identities.insert(result),
                 "same spelling reminted/aliased"
@@ -466,9 +463,10 @@ fn c41_nested_unary_and_binary_history_precedes_own_math_event() {
             &w,
             &root,
             &result,
-            &[m, receiver, property, unary.clone()],
+            &[m, receiver, unary.clone()],
             &[binary, unary],
         );
+        assert!(ancestry(&w, &result).contains(&property));
         println!("C41_CLI_NESTED {level}");
     }
 }
@@ -526,7 +524,13 @@ fn c41_real_cli_refusals_preserve_js_map_manifest_and_trace() {
                 )
             })
             .count();
-        for cap in [count, count + 1] {
+        for (cap, cause) in [
+            (count, "CV fold merge failed: CV nodes limit exceeded"),
+            (
+                count + 1,
+                "CV fold derivation failed: CV nodes limit exceeded",
+            ),
+        ] {
             for format in ["JSON", "NDJSON", "NONE"] {
                 let before = f.seed();
                 let cap = format!("max_nodes={cap}");
@@ -542,8 +546,8 @@ fn c41_real_cli_refusals_preserve_js_map_manifest_and_trace() {
                 );
                 refusal(
                     out,
-                    &format!("{level} compilation failed at pass stage:"),
-                    "constant-fold",
+                    &format!("{level} compilation failed at optimization pass stage: pass \"constant-fold\" failed: "),
+                    cause,
                 );
                 f.preserved(&before);
                 println!("C41_CLI_OUTER_REFUSAL {level} {format} {cap}");
