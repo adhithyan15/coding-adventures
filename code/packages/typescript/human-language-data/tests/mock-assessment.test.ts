@@ -97,9 +97,19 @@ describe("full-mock coverage measurement", () => {
     const paper = readFileSync(path, "utf8");
     write("spanish/mocks/a1/mock-1.md", paper.replace(
       /Read or perform this reading prompt\./,
-      "<!-- TODO: write a prompt --><div></div>&nbsp;",
+      "<!-- TODO: write a prompt -->&nbsp;",
     ));
     expect(() => listMockAssessmentStatuses(root)).toThrow(/no visible content/);
+  });
+
+  it("rejects raw HTML inside a marked part rather than treating it as text", () => {
+    const path = join(root, "spanish", "mocks", "a1", "mock-1.md");
+    const paper = readFileSync(path, "utf8");
+    write("spanish/mocks/a1/mock-1.md", paper.replace(
+      /Read or perform this reading prompt\./,
+      "<scr<!-- hidden -->ipt>alert(1)</script>",
+    ));
+    expect(() => listMockAssessmentStatuses(root)).toThrow(/raw HTML is not allowed/);
   });
 
   it("rejects a rubric with no per-part scoring spans", () => {

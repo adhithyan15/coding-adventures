@@ -39,6 +39,7 @@ Read the notice and answer its questions.
 
 Use one matching start/end pair for each selected part ID in the learner
 paper, scoring rubric, and answer key, with visible content between them.
+Write the content as Markdown; raw HTML within a part span is rejected.
 The validator rejects duplicate,
 unexpected, unclosed, empty, or missing spans. This prevents a JSON manifest
 beside an empty paper from passing as a complete four-skill mock. The required

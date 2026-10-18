@@ -111,11 +111,7 @@ function validateMockDocument(
     } else {
       if (openId !== id) throw new Error(`${label}: unmatched end marker for '${id}'`);
       const body = markdown.slice(bodyStart, match.index);
-      const visible = body
-        .replace(/<!--[\s\S]*?-->/g, "")
-        .replace(/<[^>]*>/g, "")
-        .replace(/&(?:[A-Za-z][A-Za-z0-9]+|#\d+|#x[0-9a-f]+);/gi, "");
-      if (!/[\p{L}\p{N}]/u.test(visible)) {
+      if (!hasVisibleContent(body)) {
         throw new Error(`${label}: part '${id}' has no visible content`);
       }
       seen.add(id);
@@ -126,6 +122,36 @@ function validateMockDocument(
   if (seen.size !== expected.size) {
     throw new Error(`${label}: missing task-shape part marker(s): ${[...expected].filter((id) => !seen.has(id)).join(", ")}`);
   }
+}
+
+/** Count text without rewriting it into a potentially different HTML string. */
+function hasVisibleContent(body: string): boolean {
+  let visible = false;
+  for (let i = 0; i < body.length;) {
+    if (body.startsWith("<!--", i)) {
+      const end = body.indexOf("-->", i + 4);
+      if (end < 0) throw new Error("mock document: unterminated HTML comment in part span");
+      i = end + 3;
+      continue;
+    }
+    // Part bodies are Markdown. Raw HTML is unnecessary and could hide an
+    // apparent part behind malformed or browser-interpreted markup.
+    if (body[i] === "<" || body[i] === ">") {
+      throw new Error("mock document: raw HTML is not allowed in part spans");
+    }
+    if (body[i] === "&") {
+      const entity = /^&(?:[A-Za-z][A-Za-z0-9]+|#\d+|#x[0-9a-f]+);/i.exec(body.slice(i));
+      if (entity) {
+        i += entity[0].length;
+        continue;
+      }
+    }
+    const point = body.codePointAt(i)!;
+    const char = String.fromCodePoint(point);
+    if (/[\p{L}\p{N}]/u.test(char)) visible = true;
+    i += char.length;
+  }
+  return visible;
 }
 
 export function validateMockPaper(manifest: MockManifest, markdown: string): void {
