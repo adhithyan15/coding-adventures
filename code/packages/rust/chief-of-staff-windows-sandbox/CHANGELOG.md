@@ -21,6 +21,11 @@
       index, so a hard link to the image is refused too.
   - The file is held from then until the agent has exited, sharing read
     and write but not delete, so its path keeps naming it.
+  - After each entry is written, the file is checked again with
+    `check_trusted_file`. Writing a list back re-applies its directory's
+    inheritable entries, which the check at preparation never saw. A file
+    someone else may now write refuses the launch, and the grant is taken
+    back (security review).
   - `direct_read_grants(plan)` lists the grants.
   - `ConfinementError::Grant` reports a refused file.
   - New native tests in `tests/confinement.rs`:

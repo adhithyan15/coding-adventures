@@ -11,7 +11,7 @@ use crate::{
     HANDLES_VARIABLE, MITIGATIONS,
 };
 use capability_os_sandbox::SandboxPlan;
-use chief_of_staff_spawn_isolation::{open_trusted_file, VerifiedExecutable};
+use chief_of_staff_spawn_isolation::{check_trusted_file, open_trusted_file, VerifiedExecutable};
 use std::ffi::c_void;
 use std::fs::File;
 use std::io;
@@ -1107,6 +1107,13 @@ impl GrantedFiles {
                 GRANT_ACCESS,
             )
             .map_err(|why| ConfinementError::Grant(format!("{}: {why}", grant.path)))?;
+            // Writing the list back re-applied the directory's inheritable
+            // entries, which the check at preparation never saw. A file
+            // someone else may now write is refused, and the guard's drop
+            // takes the grant back (review of P2.8c).
+            check_trusted_file(&grant.held).map_err(|why| {
+                ConfinementError::Grant(format!("{}: after the grant: {why}", grant.path))
+            })?;
         }
         Ok(granted)
     }

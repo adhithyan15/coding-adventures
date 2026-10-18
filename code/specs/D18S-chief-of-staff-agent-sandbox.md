@@ -2506,7 +2506,12 @@ through S-I3 before two weeks are spent on Windows.
      list, such as an owner-only file's, must not start inheriting its
      directory's entries;
    - a list that cannot be changed refuses the launch, for example a
-     file whose owner is SYSTEM.
+     file whose owner is SYSTEM;
+   - after it is written, the owner and access-list rule is checked
+     again on the held handle. Writing a list back re-applies its
+     directory's inheritable entries, which the check at preparation
+     never saw. A file someone else may now write refuses the launch,
+     and the grant is taken back.
 
    *Removal.* Once the agent has exited, every explicit ACE naming its
    SID is removed from each granted file, under the same lock. "Exited"
@@ -2517,9 +2522,22 @@ through S-I3 before two weeks are spent on Windows.
 
    *Residuals.*
    - A supervisor that dies while the agent runs leaves the ACE, and so
-     does a removal that fails. The entry admits only that agent's SID.
-     That SID is held only by that agent's own later runs, one at a time,
-     and the next run with the same grant removes it when it ends.
+     does a removal that fails. The entry admits only that agent's SID,
+     which only that agent's own later runs hold, one at a time. But any
+     such run can read the file, even one whose plan no longer grants
+     it, until a run that does grant it ends and removes the entry. A
+     record of applied grants, swept at the next preparation, would
+     close this; it is not built.
+   - The list is serialized only within this process. A second
+     supervisor, or someone editing the list at the same moment, could
+     restore an entry just removed, or drop one. The daemon is the only
+     supervisor.
+   - A deny entry naming the agent's SID is not a supported control.
+     Granting merges with it, and removal does not restore it. What an
+     agent may read is its plan's.
+   - At step 9 the supervisor checks S-I6's never-grantable set. It must
+     compare by file identity, as the image check here does, not by
+     path: a hard link to the vault is the vault.
    - The file's owner can change its contents while the agent reads it,
      as on macOS. Linux pins the inode, but not the bytes.
 

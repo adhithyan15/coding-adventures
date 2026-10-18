@@ -216,12 +216,22 @@ pub fn open_trusted_file(path: &Path) -> Result<File, VerifyError> {
         .custom_flags(FILE_FLAG_OPEN_REPARSE_POINT)
         .open(path)
         .map_err(|_| VerifyError::Unreadable)?;
+    check_trusted_file(&file)?;
+    Ok(file)
+}
+
+/// The check [`open_trusted_file`] makes, on a file already open: a regular
+/// file, not a reparse point, owned and writable only by the trusted. Run
+/// it again after changing the file's access list. Writing the list back
+/// re-applies its directory's inheritable entries, which no earlier check
+/// saw (D18S P2.8c, review).
+#[cfg(windows)]
+pub fn check_trusted_file(file: &File) -> Result<(), VerifyError> {
     let metadata = file.metadata().map_err(|_| VerifyError::Unreadable)?;
     if !metadata.file_type().is_file() {
         return Err(VerifyError::NotRegular);
     }
-    check_owner_and_mode(&file, &metadata)?;
-    Ok(file)
+    check_owner_and_mode(file, &metadata)
 }
 
 /// Unix: `O_RDONLY`, never `O_PATH`, which `execveat` would accept but

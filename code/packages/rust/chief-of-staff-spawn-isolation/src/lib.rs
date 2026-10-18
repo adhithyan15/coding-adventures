@@ -67,7 +67,7 @@ use std::process::{Command, Stdio};
 #[cfg(any(target_os = "linux", target_os = "macos", windows))]
 mod exec;
 #[cfg(windows)]
-pub use exec::open_trusted_file;
+pub use exec::{check_trusted_file, open_trusted_file};
 #[cfg(any(target_os = "linux", target_os = "macos", windows))]
 pub use exec::{VerifiedExecutable, VerifyError, MAX_EXECUTABLE_BYTES};
 
