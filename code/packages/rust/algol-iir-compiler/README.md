@@ -46,6 +46,8 @@ Miri DEFERRED/PENDING, never passed. Frozen checkout/run/inputs/receipts/target
 stay untouched and unpolled. Genuine final-source Miri follows implementation
 delivery; full objective OPEN and heartbeat ACTIVE.
 
+## Historical native18 validation
+
 
 The dedicated outer-`entier` proof accepts eighteen cumulative absolute
 canonical literal units around one resolved, unshadowed direct `sign` root,

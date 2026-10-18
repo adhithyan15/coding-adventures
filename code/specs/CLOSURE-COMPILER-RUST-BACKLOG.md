@@ -1,5 +1,24 @@
 # Closure Compiler on Rust — parity backlog
 
+<!-- Closure current concise checkpoint: native31 -->
+Latest bounded Rust execution `bca117e0febe4644f238fd33620c930423fbe3f3`:
+2,967 core/native passes, two historical ignores, 144 selected consumer-library
+passes, scoped 74 sources/444 backend cells/66 VM-JIT Float observations;
+both strict checks and independent source/terminal review PASS.
+Later documentation carriers execute no Rust. Audited main snapshot
+`850986376b104b2593156992134ff573c894ebb9` adds native32; raw shared/f64 import
+is WITHHELD. Next: dedicated32, then remaining bounded main reconciliation.
+PR #17288 remains subject to fresh conflict/required-check/review gates and
+actual merge verification. Full LANG integrations, parity and transformation/
+output-byte/source lineage remain OPEN. Miri DEFERRED/PENDING, never passed;
+frozen run/inputs/target/receipts remain untouched and unpolled.
+The older "current" frames below are dated historical snapshots; resume from
+this top block and the later native31 section, with a fresh live-state audit.
+<!-- Closure current concise checkpoint end -->
+
+## Historical checkpoint material
+
+
 <!-- Closure current concise checkpoint: CLOC40 -->
 Current local execution `a3ec4ef38dcf5cbc8856ab6dc9c99fcff5de0794` completes bounded CLOC40 ownership (2962P,
 strict/source/terminal PASS); this later docs carrier adds no Rust execution.

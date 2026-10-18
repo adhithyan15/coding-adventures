@@ -46,6 +46,8 @@ Miri DEFERRED/PENDING, never passed. Frozen checkout/run/inputs/receipts/target
 stay untouched and unpolled. Genuine final-source Miri follows implementation
 delivery; full objective OPEN and heartbeat ACTIVE.
 
+## Historical native18 validation
+
 
 The17/18-unit saved-result groups declare20 additional programs with exact
 stdout, selected-arm/evaluation markers and actual normal exit Some(0). Every

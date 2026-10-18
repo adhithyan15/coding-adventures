@@ -24,3 +24,8 @@ append receipt or fixture, name-only binary join and unspecified selected-target
 census could overstate evidence. Pin the reviewed objects, exact target source/
 kind and shared runtime executable bytes, and whitelist typed status labels.
 Keep selected library coverage distinct from a full reverse integration suite.
+
+A native31 docs carrier passed tooling but static review withheld its stale
+top-of-backlog "current" attribution. Put the latest execution and pending
+work first and explicitly label older README/status prose historical.
+Appending a new result at EOF does not update the current resume frame.
