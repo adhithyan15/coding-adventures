@@ -39,3 +39,10 @@ decoding or parsing it, including post-push observations; otherwise a parse
 failure can erase evidence of an action that already happened. The reviewed
 publisher-v2 separately executed successfully. Preserve v1 as unexecuted and
 WITHHELD rather than transferring v2 acceptance backward.
+
+The native32 red-v1 preflight caught a repeated missing-input filter and
+mutable plan/baseline bindings before execution. A fresh snapshot must reject
+every missing prior input, pin the accepted baseline and candidate identities,
+and close the successor's complete path delta and production inverse. Red-v2
+then actually built at the tests-only head and recorded all154 refusals and24
+post-assertion guard markers. Preserve the unexecuted v1 separately.

@@ -4847,18 +4847,18 @@ impl Compiler {
                 break;
             }
             // Only canonical small literals enter this dedicated budget of
-            // thirty-one; a sign root therefore stays within [-32, 32]. A
+            // thirty-two; a sign root therefore stays within [-33, 33]. A
             // generic f64 fold is not an exact proof for integer arithmetic
             // near2^53, and must not hide another unit in a nested subtree.
             let tokens=direct_tokens(current);
             if tokens.len()==1&&direct_nodes(current).is_empty() {
                 let amount=match tokens[0].effective_type_name() {
-                    "INTEGER_LIT"=>tokens[0].value.parse::<u64>().ok().filter(|v|*v<=31),
+                    "INTEGER_LIT"=>tokens[0].value.parse::<u64>().ok().filter(|v|*v<=32),
                     "REAL_LIT"=>tokens[0].value.parse::<f64>().ok().and_then(|v|
-                        [0.0,1.0,2.0,3.0,4.0,5.0,6.0,7.0,8.0,9.0,10.0,11.0,12.0,13.0,14.0,15.0,16.0,17.0,18.0,19.0,20.0,21.0,22.0,23.0,24.0,25.0,26.0,27.0,28.0,29.0,30.0,31.0].iter().position(|allowed|*allowed==v).map(|v|v as u64)),
+                        [0.0,1.0,2.0,3.0,4.0,5.0,6.0,7.0,8.0,9.0,10.0,11.0,12.0,13.0,14.0,15.0,16.0,17.0,18.0,19.0,20.0,21.0,22.0,23.0,24.0,25.0,26.0,27.0,28.0,29.0,30.0,31.0,32.0].iter().position(|allowed|*allowed==v).map(|v|v as u64)),
                     _=>None,
                 }?;
-                units=units.checked_add(amount)?;if units>31 {return None;}continue;
+                units=units.checked_add(amount)?;if units>32 {return None;}continue;
             }
             if matches!(current.rule_name.as_str(),"expr_add"|"simple_arith") {
                 let sequence=pieces(current);
@@ -14829,11 +14829,11 @@ mod tests {
             (23, "begin boolean procedure choose; choose := true; real procedure pick; pick := 2.25; real procedure relay(x); real x; relay := x; real left, right, result; left := pick(); right := pick(); result := relay(entier((if choose() then (entier(sign(left)) + 16) else (entier(sign(right)) + 16)) + 1)); output(result) end"),
             (24, "begin boolean procedure choose; choose := true; real procedure pick; pick := 2.25; real procedure relay(x); real x; relay := x; real left, right, result; left := pick(); right := pick(); result := relay(entier((if choose() then (entier(sign(left)) + 17) else (entier(sign(right)) + 17)) + 1)); output(result) end"),
             (25, "begin boolean procedure choose; choose := true; real procedure pick; pick := 2.25; real procedure relay(x); real x; relay := x; real left, right, result; left := pick(); right := pick(); result := relay(entier((if choose() then (entier(sign(left)) + 18) else (entier(sign(right)) + 18)) + 1)); output(result) end"),
-            (26, "begin boolean procedure choose; choose := true; real procedure pick; pick := 2.25; real procedure relay(x); real x; relay := x; real left, right, result; left := pick(); right := pick(); result := if choose() then relay(entier(entier(sign(left)) + 32)) else relay(entier(entier(sign(right)) + 32)); output(result) end"),
-            (27, "begin boolean procedure choose; choose := true; real procedure pick; pick := 2.25; real procedure relay(x); real x; relay := x; real left, right, result; left := pick(); right := pick(); result := if choose() then relay(entier(entier(sign(left)) + 31 + 1)) else relay(entier(entier(sign(right)) + 1 + 31)); output(result) end"),
+            (26, "begin boolean procedure choose; choose := true; real procedure pick; pick := 2.25; real procedure relay(x); real x; relay := x; real left, right, result; left := pick(); right := pick(); result := if choose() then relay(entier(entier(sign(left)) + 33)) else relay(entier(entier(sign(right)) + 33)); output(result) end"),
+            (27, "begin boolean procedure choose; choose := true; real procedure pick; pick := 2.25; real procedure relay(x); real x; relay := x; real left, right, result; left := pick(); right := pick(); result := if choose() then relay(entier(entier(sign(left)) + 32 + 1)) else relay(entier(entier(sign(right)) + 1 + 32)); output(result) end"),
             (28, "begin boolean procedure choose; choose := true; real procedure pick; pick := 2.25; real procedure relay(x); real x; relay := x; real left, right, result; left := pick(); right := pick(); result := relay(entier((if choose() then (entier(sign(left)) + 21) else (entier(sign(right)) + 21)) + 1)); output(result) end"),
-            (29, "begin boolean procedure choose; choose := true; real procedure pick; pick := 2.25; real procedure relay(x); real x; relay := x; real left, right, result; left := pick(); right := pick(); result := if choose() then relay(entier(entier(sign(left)) + 32)) else relay(entier(entier(sign(right)) + 32)); output(result) end"),
-            (30, "begin boolean procedure choose; choose := true; real procedure pick; pick := 2.25; real procedure relay(x); real x; relay := x; real left, right, result; left := pick(); right := pick(); result := if choose() then relay(entier(entier(sign(left)) + 31 + 1)) else relay(entier(entier(sign(right)) + 1 + 31)); output(result) end"),
+            (29, "begin boolean procedure choose; choose := true; real procedure pick; pick := 2.25; real procedure relay(x); real x; relay := x; real left, right, result; left := pick(); right := pick(); result := if choose() then relay(entier(entier(sign(left)) + 33)) else relay(entier(entier(sign(right)) + 33)); output(result) end"),
+            (30, "begin boolean procedure choose; choose := true; real procedure pick; pick := 2.25; real procedure relay(x); real x; relay := x; real left, right, result; left := pick(); right := pick(); result := if choose() then relay(entier(entier(sign(left)) + 32 + 1)) else relay(entier(entier(sign(right)) + 1 + 32)); output(result) end"),
             (31, "begin boolean procedure choose; choose := true; real procedure pick; pick := 2.25; real procedure relay(x); real x; relay := x; real left, right, result; left := pick(); right := pick(); result := relay(entier((if choose() then (entier(sign(left)) + 23) else (entier(sign(right)) + 23)) + 1)); output(result) end"),
         ] {
             let error = compile_source(source, "cap24_refusal").expect_err("exact retained refusal");
@@ -15222,10 +15222,10 @@ mod tests {
     #[test]
     fn al4_additive_entier_sign_widening_rejects_unproven_terms() {
         for source in [
-            "begin real procedure pick; pick := -2.25; real result; result := entier(sign(pick()) + 32); output(result) end",
-            "begin real procedure pick; pick := -2.25; real result; result := entier(sign(pick()) + 31 + 1); output(result) end",
-            "begin real procedure pick; pick := -2.25; real result; result := entier((sign(pick()) + 31) + 1); output(result) end",
-            "begin real procedure pick; pick := -2.25; real result; result := entier(abs((sign(pick()) + 12) + 20)); output(result) end",
+            "begin real procedure pick; pick := -2.25; real result; result := entier(sign(pick()) + 33); output(result) end",
+            "begin real procedure pick; pick := -2.25; real result; result := entier(sign(pick()) + 32 + 1); output(result) end",
+            "begin real procedure pick; pick := -2.25; real result; result := entier((sign(pick()) + 32) + 1); output(result) end",
+            "begin real procedure pick; pick := -2.25; real result; result := entier(abs((sign(pick()) + 12) + 21)); output(result) end",
             "begin real procedure pick; pick := -2.25; integer zero; real result; zero := 0; result := entier(sign(pick()) + zero); output(result) end",
         ] {
             let err = compile_source(source, "test")

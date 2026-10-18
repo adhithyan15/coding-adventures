@@ -214,13 +214,13 @@ fn native25_intermediate_rounding_and_shared_exp_remain_refused() {
 #[test]
 fn native25_all_seven_raw_new_refusal_contexts_remain_complete() {
     for (id, source) in [
-        (1, "begin boolean procedure choose; choose := true; real procedure pick; pick := 2.25; real procedure relay(x); real x; relay := x; real left, right, result; left := pick(); right := pick(); result := if choose() then relay(entier(entier(sign(left)) + 32)) else relay(entier(entier(sign(right)) + 32)); output(result) end"),
-        (2, "begin boolean procedure choose; choose := true; real procedure pick; pick := 2.25; real procedure relay(x); real x; relay := x; real left, right, result; left := pick(); right := pick(); result := if choose() then relay(entier(entier(sign(left)) + 31 + 1)) else relay(entier(entier(sign(right)) + 1 + 31)); output(result) end"),
+        (1, "begin boolean procedure choose; choose := true; real procedure pick; pick := 2.25; real procedure relay(x); real x; relay := x; real left, right, result; left := pick(); right := pick(); result := if choose() then relay(entier(entier(sign(left)) + 33)) else relay(entier(entier(sign(right)) + 33)); output(result) end"),
+        (2, "begin boolean procedure choose; choose := true; real procedure pick; pick := 2.25; real procedure relay(x); real x; relay := x; real left, right, result; left := pick(); right := pick(); result := if choose() then relay(entier(entier(sign(left)) + 32 + 1)) else relay(entier(entier(sign(right)) + 1 + 32)); output(result) end"),
         (3, "begin boolean procedure choose; choose := true; real procedure pick; pick := 2.25; real procedure relay(x); real x; relay := x; real left, right, result; left := pick(); right := pick(); result := relay(entier((if choose() then (entier(sign(left)) + 25) else (entier(sign(right)) + 25)) + 1)); output(result) end"),
-        (4, "begin real procedure pick; pick := -2.25; real result; result := entier(sign(pick()) + 32); output(result) end"),
-        (5, "begin real procedure pick; pick := -2.25; real result; result := entier(sign(pick()) + 31 + 1); output(result) end"),
-        (6, "begin real procedure pick; pick := -2.25; real result; result := entier((sign(pick()) + 31) + 1); output(result) end"),
-        (7, "begin real procedure pick; pick := -2.25; real result; result := entier(abs((sign(pick()) + 13) + 19)); output(result) end"),
+        (4, "begin real procedure pick; pick := -2.25; real result; result := entier(sign(pick()) + 33); output(result) end"),
+        (5, "begin real procedure pick; pick := -2.25; real result; result := entier(sign(pick()) + 32 + 1); output(result) end"),
+        (6, "begin real procedure pick; pick := -2.25; real result; result := entier((sign(pick()) + 32) + 1); output(result) end"),
+        (7, "begin real procedure pick; pick := -2.25; real result; result := entier(abs((sign(pick()) + 13) + 20)); output(result) end"),
     ] {
         assert!(matches!(compile_source(source, "native25_raw_refusal"), Err(CompileError::Type(message)) if message.contains("cannot print a real value")), "raw{id}: {source}");
         eprintln!("native25-raw REFUSED context={id}");

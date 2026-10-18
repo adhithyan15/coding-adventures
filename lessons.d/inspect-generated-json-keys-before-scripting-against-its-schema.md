@@ -36,3 +36,13 @@ receipt uses accepted/source_unchanged/utf8_strict, not a complete field. The
 unexecuted v2 docs checker was withheld rather than changing that receipt.
 Use explicit UTF8 when copying or parsing helper files on Windows; default
 cp1252 decoding can corrupt punctuation or refuse an otherwise valid file.
+
+The native32 graph-v1 reader freshly matched all adjacency edges but omitted
+the derived forward_count key from its output cone; exact dictionary comparison
+correctly refused before any source write. Add the missing derived field,
+keeping the complete comparison. A further review found that a registry-row
+count alone was weaker than the surrounding exact identity claim. Graph-v3
+compares canonical full declaration/effective-spec multisets, preserving
+duplicate target rows and binding inherited workspace specs to unchanged
+workspace bodies. Rerun it on the final versioned source; a precode graph is
+not a final-source execution receipt.

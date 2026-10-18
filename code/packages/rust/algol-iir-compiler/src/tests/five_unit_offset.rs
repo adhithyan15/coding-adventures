@@ -47,11 +47,11 @@ fn canonical_five_unit_forms_have_one_real_formatter_and_independent_arms() {
 fn five_unit_proofs_refuse_twenty_two_units_rounding_traps_and_exp_widening() {
     // All authored loop configurations are explicit; mixed guards stay exact.
     for (case_id, source) in [
-        (127, "begin real procedure pick; pick := 3.5; real saved; saved := entier(sign(pick()) + 32); output(saved) end"),
-        (128, "begin real procedure pick; pick := 3.5; real saved; saved := entier((sign(pick()) + 8) + 24); output(saved) end"),
-        (129, "begin real procedure pick; pick := 3.5; real saved; saved := entier(1 + (31 + sign(pick()))); output(saved) end"),
-        (130, "begin real procedure pick; pick := 3.5; real saved; saved := entier(entier(sign(pick()) + 1) + 31); output(saved) end"),
-        (131, "begin real procedure pick; pick := 3.5; real saved; saved := entier(abs(sign(pick()) + 2) + 30); output(saved) end"),
+        (127, "begin real procedure pick; pick := 3.5; real saved; saved := entier(sign(pick()) + 33); output(saved) end"),
+        (128, "begin real procedure pick; pick := 3.5; real saved; saved := entier((sign(pick()) + 8) + 25); output(saved) end"),
+        (129, "begin real procedure pick; pick := 3.5; real saved; saved := entier(1 + (32 + sign(pick()))); output(saved) end"),
+        (130, "begin real procedure pick; pick := 3.5; real saved; saved := entier(entier(sign(pick()) + 1) + 32); output(saved) end"),
+        (131, "begin real procedure pick; pick := 3.5; real saved; saved := entier(abs(sign(pick()) + 2) + 31); output(saved) end"),
         (132, "begin real procedure pick; pick := 3.5; real saved; saved := entier(sign(pick()) + 5.5); output(saved) end"),
         (133, "begin real procedure pick; pick := 3.5; real saved; saved := entier(sign(pick()) + sign(pick()) + 1 + 4); output(saved) end"),
         (134, "begin real procedure pick; pick := 3.5; real saved; saved := entier(sign(pick()) + ((9007199254740992 + 1) - 9007199254740992) + 5); output(saved) end"),

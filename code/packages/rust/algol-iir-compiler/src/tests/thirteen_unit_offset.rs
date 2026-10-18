@@ -60,11 +60,11 @@ fn canonical_thirteen_unit_forms_have_typed_output_routes_and_independent_arms()
 fn thirteen_unit_proofs_refuse_twenty_two_units_rounding_traps_and_exp_widening() {
     // All authored loop configurations are explicit; mixed guards stay exact.
     for (case_id, source) in [
-        (267, "begin real procedure pick; pick := 3.5; real saved; saved := entier(sign(pick()) + 32); output(saved) end"),
-        (268, "begin real procedure pick; pick := 3.5; real saved; saved := entier((sign(pick()) + 8) + 24); output(saved) end"),
-        (269, "begin real procedure pick; pick := 3.5; real saved; saved := entier(1 + (31 + sign(pick()))); output(saved) end"),
-        (270, "begin real procedure pick; pick := 3.5; real saved; saved := entier(entier(sign(pick()) + 1) + 31); output(saved) end"),
-        (271, "begin real procedure pick; pick := 3.5; real saved; saved := entier(abs(sign(pick()) + 2) + 30); output(saved) end"),
+        (267, "begin real procedure pick; pick := 3.5; real saved; saved := entier(sign(pick()) + 33); output(saved) end"),
+        (268, "begin real procedure pick; pick := 3.5; real saved; saved := entier((sign(pick()) + 8) + 25); output(saved) end"),
+        (269, "begin real procedure pick; pick := 3.5; real saved; saved := entier(1 + (32 + sign(pick()))); output(saved) end"),
+        (270, "begin real procedure pick; pick := 3.5; real saved; saved := entier(entier(sign(pick()) + 1) + 32); output(saved) end"),
+        (271, "begin real procedure pick; pick := 3.5; real saved; saved := entier(abs(sign(pick()) + 2) + 31); output(saved) end"),
         (272, "begin real procedure pick; pick := 3.5; real saved; saved := entier(sign(pick()) + 12.5); output(saved) end"),
         (273, "begin real procedure pick; pick := 3.5; real saved; saved := entier(sign(pick()) + 13.5); output(saved) end"),
         (274, "begin real procedure pick; pick := 3.5; real saved; saved := entier(sign(pick()) + sign(pick()) + 6 + 7); output(saved) end"),
@@ -75,9 +75,9 @@ fn thirteen_unit_proofs_refuse_twenty_two_units_rounding_traps_and_exp_widening(
         (279, "begin real procedure pick; pick := 3.5; real saved; saved := entier((sign(pick()) + 13) * 1); output(saved) end"),
         (280, "begin real procedure pick; pick := 3.5; real saved; saved := entier(exp(sign(pick())) + 13); output(saved) end"),
         (281, "begin real procedure pick; pick := 3.5; real saved; saved := entier(exp(sign(pick()) + 13)); output(saved) end"),
-        (282, "begin real procedure pick; pick := 3.5; real saved; saved := entier(sign(pick()) + 31 - 1); output(saved) end"),
-        (283, "begin real procedure pick; pick := 3.5; real saved; saved := entier(abs(entier(sign(pick()) + 31) + 1)); output(saved) end"),
-        (284, "begin real procedure pick; pick := 3.5; real saved; saved := entier(entier(abs(sign(pick()) + 31) + 1)); output(saved) end"),
+        (282, "begin real procedure pick; pick := 3.5; real saved; saved := entier(sign(pick()) + 32 - 1); output(saved) end"),
+        (283, "begin real procedure pick; pick := 3.5; real saved; saved := entier(abs(entier(sign(pick()) + 32) + 1)); output(saved) end"),
+        (284, "begin real procedure pick; pick := 3.5; real saved; saved := entier(entier(abs(sign(pick()) + 32) + 1)); output(saved) end"),
         (285, "begin integer procedure sign(x); value x; real x; sign := 1; real procedure pick; pick := 3.5; real saved; saved := entier(abs(sign(pick()) + 1) + 12); output(saved) end"),
         (286, "begin integer procedure abs(x); value x; real x; abs := 1; real procedure pick; pick := 3.5; real saved; saved := entier(abs(sign(pick()) + 1) + 12); output(saved) end"),
         (287, "begin integer procedure entier(x); value x; real x; entier := 1; real procedure pick; pick := 3.5; real saved; saved := entier(abs(sign(pick()) + 1) + 12); output(saved) end"),
@@ -130,10 +130,10 @@ fn thirteen_unit_conditional_alias_effects_obey_the_discovery_limit() {
 fn thirteen_unit_unselected_twenty_two_unit_arms_are_semantic_refusals() {
     // All authored loop configurations are explicit; mixed guards stay exact.
     for (case_id, source) in [
-        (288, "begin boolean procedure choose; choose := true; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real left, right, saved; left := leftvalue(); right := rightvalue(); saved := entier(if choose() then (entier(sign(left)) + 32) else (entier(sign(right)) + 1)); output(saved) end"),
-        (289, "begin boolean procedure choose; choose := true; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real left, right, saved; left := leftvalue(); right := rightvalue(); saved := entier(if choose() then (entier(sign(left)) + 1) else (entier(sign(right)) + 32)); output(saved) end"),
-        (290, "begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real left, right, saved; left := leftvalue(); right := rightvalue(); saved := entier(if choose() then (entier(sign(left)) + 32) else (entier(sign(right)) + 1)); output(saved) end"),
-        (291, "begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real left, right, saved; left := leftvalue(); right := rightvalue(); saved := entier(if choose() then (entier(sign(left)) + 1) else (entier(sign(right)) + 32)); output(saved) end"),
+        (288, "begin boolean procedure choose; choose := true; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real left, right, saved; left := leftvalue(); right := rightvalue(); saved := entier(if choose() then (entier(sign(left)) + 33) else (entier(sign(right)) + 1)); output(saved) end"),
+        (289, "begin boolean procedure choose; choose := true; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real left, right, saved; left := leftvalue(); right := rightvalue(); saved := entier(if choose() then (entier(sign(left)) + 1) else (entier(sign(right)) + 33)); output(saved) end"),
+        (290, "begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real left, right, saved; left := leftvalue(); right := rightvalue(); saved := entier(if choose() then (entier(sign(left)) + 33) else (entier(sign(right)) + 1)); output(saved) end"),
+        (291, "begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real left, right, saved; left := leftvalue(); right := rightvalue(); saved := entier(if choose() then (entier(sign(left)) + 1) else (entier(sign(right)) + 33)); output(saved) end"),
     ] {
         assert!(matches!(compile_source(source, "cap24_refusal"), Err(CompileError::Type(message)) if message.contains("cannot print a real value")), "original case {case_id}: {source}");
         eprintln!("cap23-corpus REFUSED original-case={case_id}");

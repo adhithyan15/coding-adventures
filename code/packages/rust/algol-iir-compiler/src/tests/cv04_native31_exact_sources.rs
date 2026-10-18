@@ -455,11 +455,11 @@ fn native31_canonical_real_literals_preserve_read_once_effects() {
 #[test]
 fn native31_rounding_shared_and_structural_refusals_remain_exact() {
     for (id, source) in [
-        (r#"guard-0"#, r#"begin real procedure pick; pick := 3.5; real saved; saved := entier(sign(pick()) + 32); output(saved) end"#),
-        (r#"guard-1"#, r#"begin real procedure pick; pick := 3.5; real saved; saved := entier(sign(pick()) + 31 + 1); output(saved) end"#),
-        (r#"guard-2"#, r#"begin real procedure pick; pick := 3.5; real saved; saved := entier((sign(pick()) + 31) + 1); output(saved) end"#),
-        (r#"guard-3"#, r#"begin real procedure pick; pick := 3.5; real saved; saved := entier(abs(entier(sign(pick()) + 31) + 1)); output(saved) end"#),
-        (r#"guard-4"#, r#"begin real procedure pick; pick := 3.5; real saved; saved := entier(entier(abs(sign(pick()) + 31) + 1)); output(saved) end"#),
+        (r#"guard-0"#, r#"begin real procedure pick; pick := 3.5; real saved; saved := entier(sign(pick()) + 33); output(saved) end"#),
+        (r#"guard-1"#, r#"begin real procedure pick; pick := 3.5; real saved; saved := entier(sign(pick()) + 32 + 1); output(saved) end"#),
+        (r#"guard-2"#, r#"begin real procedure pick; pick := 3.5; real saved; saved := entier((sign(pick()) + 32) + 1); output(saved) end"#),
+        (r#"guard-3"#, r#"begin real procedure pick; pick := 3.5; real saved; saved := entier(abs(entier(sign(pick()) + 32) + 1)); output(saved) end"#),
+        (r#"guard-4"#, r#"begin real procedure pick; pick := 3.5; real saved; saved := entier(entier(abs(sign(pick()) + 32) + 1)); output(saved) end"#),
         (r#"guard-5"#, r#"begin real procedure pick; pick := 3.5; real saved; saved := entier(sign(pick()) + 32 - 32); output(saved) end"#),
         (r#"guard-6"#, r#"begin real procedure pick; pick := 3.5; real saved; saved := entier(sign(pick()) + 31 - 31); output(saved) end"#),
         (r#"guard-7"#, r#"begin real procedure pick; pick := 3.5; real saved; saved := entier(sign(pick()) + ((9007199254740992 + 1) - 9007199254740992 + 31)); output(saved) end"#),
