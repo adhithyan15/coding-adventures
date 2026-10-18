@@ -30,6 +30,12 @@ Trimming precedes validation and includes Unicode whitespace. A raw leading or
 trailing TAB/newline therefore trims away; an interior control or NUL rejects.
 The CSS-looking default remains one opaque `family_names` query member; this
 slice does not parse it into a list of independently resolved fallback families.
+The reused reader/sanitizer is a text allowlist, not a CSS parser or JSON-string
+type gate: bare `true`, `null` and `12`, commas-only text and unmatched quotes
+are admitted when their resulting nonempty text consists only of allowed bytes.
+Tests must declare these existing lexical semantics rather than silently adding
+a stricter field reader. Resolver caching excludes size; identical family,
+weight, style and stretch may deduplicate label/title queries after replacement.
 
 When `timeline_config` is `Some`, clone the caller's label and title fonts and
 replace only their family. Preserve each size, weight, style, stretch and line
