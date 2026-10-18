@@ -1,10 +1,13 @@
 import json
 import os
+import subprocess
 import tempfile
 import unittest
 from pathlib import Path
+from unittest import mock
 
 from sharded_ledger import (
+    _remove,
     load_book_generation,
     load_curriculum,
     load_script,
@@ -18,6 +21,18 @@ from sharded_ledger import (
 def write_json(path, value):
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(json.dumps(value, indent=2) + "\n", encoding="utf-8")
+
+
+def link_directory(target, link):
+    """Exercise a real symlink on Unix and a privilege-free junction on Windows."""
+    if os.name == "nt":
+        subprocess.run(
+            ["cmd", "/c", "mklink", "/J", str(link), str(target)],
+            check=True,
+            capture_output=True,
+        )
+    else:
+        os.symlink(target, link)
 
 
 class ShardedLedgerSafetyTest(unittest.TestCase):
@@ -133,11 +148,15 @@ class ShardedLedgerSafetyTest(unittest.TestCase):
         )
         return directory
 
-    def test_dangling_shard_symlink_cannot_create_its_target(self):
+    def test_reparse_or_dangling_symlink_shard_cannot_create_its_target(self):
         directory = self.root / "spanish" / "chapters.d"
         write_json(directory / "_meta.json", {"version": 1, "language": "spanish"})
         target = self.outside / "created.json"
-        os.symlink(target, directory / "0001.json")
+        if os.name == "nt":
+            # A directory junction needs no Developer Mode or symlink privilege.
+            link_directory(self.outside, directory / "0001.json")
+        else:
+            os.symlink(target, directory / "0001.json")
 
         with self.assertRaisesRegex(ValueError, "non-file ledger shard"):
             write_chapters(
@@ -147,13 +166,149 @@ class ShardedLedgerSafetyTest(unittest.TestCase):
             )
         self.assertFalse(target.exists())
 
+    @unittest.skipUnless(os.name == "nt", "Windows hard-link fixture")
+    def test_windows_hardlinked_shard_does_not_overwrite_outside_file(self):
+        directory = self.root / "spanish" / "chapters.d"
+        write_json(directory / "_meta.json", {"version": 1, "language": "spanish"})
+        target = self.outside / "sentinel.json"
+        write_json(target, {"chapter": 1, "title": "outside sentinel"})
+        before = target.read_bytes()
+        os.link(target, directory / "0001.json")
+
+        write_chapters(
+            self.root,
+            "spanish",
+            self.chapter_document({"chapter": 1, "title": "new inside"}),
+        )
+        self.assertEqual(target.read_bytes(), before)
+        self.assertEqual(json.loads((directory / "0001.json").read_text())["title"], "new inside")
+
+    @unittest.skipUnless(os.name == "nt", "Windows file ACL fixture")
+    def test_windows_replacement_preserves_restricted_shard_dacl(self):
+        directory = self.root / "spanish" / "chapters.d"
+        write_json(directory / "_meta.json", {"version": 1, "language": "spanish"})
+        shard = directory / "0001.json"
+        write_json(shard, {"chapter": 1, "title": "old"})
+        user = subprocess.check_output(["whoami"], text=True).strip()
+        subprocess.run(["icacls", str(shard), "/grant:r", f"{user}:(F)"], check=True, capture_output=True)
+        subprocess.run(["icacls", str(shard), "/inheritance:r"], check=True, capture_output=True)
+
+        def acl():
+            listing = subprocess.check_output(["icacls", str(shard)], text=True)
+            return listing.split(str(shard), 1)[1].split("Successfully processed", 1)[0].strip()
+
+        before = acl()
+        write_chapters(
+            self.root, "spanish", self.chapter_document({"chapter": 1, "title": "replacement"}),
+        )
+        self.assertEqual(acl(), before)
+
+    @unittest.skipUnless(os.name == "nt", "Windows handle cleanup fixture")
+    def test_windows_failed_temp_cleanup_surfaces_both_errors(self):
+        directory = self.root / "spanish" / "chapters.d"
+        write_json(directory / "_meta.json", {"version": 1, "language": "spanish"})
+        with mock.patch("sharded_ledger._windows_write_handle", side_effect=OSError("write failed")):
+            with mock.patch("sharded_ledger._windows_dispose", side_effect=OSError("cleanup failed")):
+                with self.assertRaisesRegex(OSError, "cleanup failed") as raised:
+                    write_chapters(
+                        self.root, "spanish", self.chapter_document({"chapter": 1}),
+                    )
+        self.assertEqual(str(raised.exception.__cause__), "write failed")
+
     def test_symlinked_track_ancestor_cannot_escape_root(self):
         directory = self.outside / "chapters.d"
         write_json(directory / "_meta.json", {"version": 1, "language": "spanish"})
-        os.symlink(self.outside, self.root / "spanish")
+        link_directory(self.outside, self.root / "spanish")
 
         with self.assertRaisesRegex(ValueError, "non-directory ledger ancestor"):
             write_chapters(self.root, "spanish", self.chapter_document())
+
+    @unittest.skipUnless(os.name == "nt", "Windows directory junction fixture")
+    def test_junctioned_track_ancestor_cannot_escape_root(self):
+        write_json(
+            self.outside / "chapters.d" / "_meta.json",
+            {"version": 1, "language": "spanish"},
+        )
+        subprocess.run(
+            ["cmd", "/c", "mklink", "/J", str(self.root / "spanish"), str(self.outside)],
+            check=True,
+            capture_output=True,
+        )
+        with self.assertRaisesRegex(ValueError, "non-directory ledger ancestor"):
+            write_chapters(self.root, "spanish", self.chapter_document())
+        self.assertFalse((self.outside / "chapters.d" / "0001.json").exists())
+
+    @unittest.skipUnless(os.name == "nt", "Windows directory pin fixture")
+    def test_windows_writer_stays_on_original_directory_after_junction_swap(self):
+        directory = self.root / "spanish" / "chapters.d"
+        write_json(directory / "_meta.json", {"version": 1, "language": "spanish"})
+        outside_shard = self.outside / "0001.json"
+        write_json(outside_shard, {"chapter": 1, "title": "outside sentinel"})
+        before = outside_shard.read_bytes()
+        from sharded_ledger import _windows_open_relative, _write_if_changed
+        swapped = []
+        moved = directory.with_name("chapters-moved")
+
+        def attempt_swap(parent, name, **options):
+            if options.get("create") and not swapped:
+                os.rename(directory, moved)
+                subprocess.run(
+                    ["cmd", "/c", "mklink", "/J", str(directory), str(self.outside)],
+                    check=True,
+                    capture_output=True,
+                )
+                swapped.append(True)
+            return _windows_open_relative(parent, name, **options)
+
+        try:
+            with mock.patch("sharded_ledger._windows_open_relative", side_effect=attempt_swap):
+                _write_if_changed(
+                    self.root, "spanish", "chapters.d", "0001.json",
+                    value={"chapter": 1, "title": "one"},
+                )
+            self.assertEqual(outside_shard.read_bytes(), before)
+            self.assertTrue((moved / "0001.json").is_file())
+        finally:
+            if swapped and directory.exists():
+                os.rmdir(directory)
+            if moved.exists():
+                os.rename(moved, directory)
+        self.assertTrue(swapped)
+        self.assertTrue((directory / "0001.json").is_file())
+
+    @unittest.skipUnless(os.name == "nt", "Windows directory junction fixture")
+    def test_windows_remove_stays_on_original_directory_after_junction_swap(self):
+        directory = self.root / "spanish" / "chapters.d"
+        write_json(directory / "0001.json", {"chapter": 1, "title": "inside"})
+        outside_shard = self.outside / "0001.json"
+        write_json(outside_shard, {"chapter": 1, "title": "outside sentinel"})
+        before = outside_shard.read_bytes()
+        from sharded_ledger import _windows_open_relative
+        moved = directory.with_name("chapters-moved")
+        swapped = []
+
+        def attempt_swap(parent, name, **options):
+            if name == "0001.json" and not swapped:
+                os.rename(directory, moved)
+                subprocess.run(
+                    ["cmd", "/c", "mklink", "/J", str(directory), str(self.outside)],
+                    check=True,
+                    capture_output=True,
+                )
+                swapped.append(True)
+            return _windows_open_relative(parent, name, **options)
+
+        try:
+            with mock.patch("sharded_ledger._windows_open_relative", side_effect=attempt_swap):
+                _remove(self.root, "spanish", "chapters.d", "0001.json")
+            self.assertEqual(outside_shard.read_bytes(), before)
+            self.assertFalse((moved / "0001.json").exists())
+        finally:
+            if swapped and directory.exists():
+                os.rmdir(directory)
+            if moved.exists():
+                os.rename(moved, directory)
+        self.assertTrue(swapped)
 
     def test_duplicate_chapters_are_rejected_before_any_write(self):
         directory = self.root / "spanish" / "chapters.d"
@@ -219,7 +374,7 @@ class ShardedLedgerSafetyTest(unittest.TestCase):
 
     def test_script_inventory_refuses_a_symlinked_digits_directory(self):
         directory = self.script_tree()
-        os.symlink(self.outside, directory / "digits")
+        link_directory(self.outside, directory / "digits")
         with self.assertRaisesRegex(ValueError, "non-directory ledger ancestor"):
             load_script_inventory(self.root, "japanese")
 
@@ -238,7 +393,7 @@ class ShardedLedgerSafetyTest(unittest.TestCase):
     def test_mixed_script_loader_refuses_a_symlinked_shard_directory(self):
         scripts = self.root / "data" / "scripts"
         scripts.mkdir(parents=True)
-        os.symlink(self.outside, scripts / "tamil.d")
+        link_directory(self.outside, scripts / "tamil.d")
         with self.assertRaisesRegex(ValueError, "non-directory ledger ancestor"):
             load_script(self.root, "tamil")
 
@@ -349,9 +504,9 @@ class ShardedLedgerSafetyTest(unittest.TestCase):
     def test_book_generation_rejects_symlinked_section_component(self):
         directory = self.book_generation_tree()
         (directory / "indexes.d").rmdir()
-        os.symlink(self.outside, directory / "indexes.d")
+        link_directory(self.outside, directory / "indexes.d")
 
-        with self.assertRaisesRegex(ValueError, "symbolic-link book-generation owner"):
+        with self.assertRaisesRegex(ValueError, "link or reparse book-generation owner"):
             load_book_generation(self.root)
 
     def test_book_generation_rejects_resurrected_monolith(self):

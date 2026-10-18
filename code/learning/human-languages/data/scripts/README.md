@@ -7,6 +7,21 @@ writing it by hand. The schema is deliberately general (spec:
 model teaches an alphabet, an abugida, or an abjad — and so **adding a new script
 is data, not code.**
 
+## Python shard mutation boundary
+
+`sharded_ledger.py` keeps the older Python authoring scripts on canonical JSON
+shards. The caller must supply a trusted ledger root. On Windows, mutation
+opens each descendant relative to a validated directory handle and refuses
+junctions and other reparse points; rename and deletion stay attached to that
+opened directory even if its pathname is concurrently replaced. Replacement
+also carries forward a shard's file-specific DACL. On Unix, mutations use
+directory-relative operations with no-follow checks. Run
+`python test_sharded_ledger.py -v` to exercise both platform boundaries; the
+books gate runs the Windows junction fixtures as well as the Unix symlink
+fixtures. Read-side pathname enumeration still needs separate handle anchoring
+(tracked in [#17732](https://github.com/adhithyan15/coding-adventures/issues/17732));
+do not treat this mutation repair as full concurrent-read safety.
+
 ## Safe regeneration of the Dravidian syllabaries
 
 `generate_syllabary.py` rebuilds the Telugu, Kannada, and Malayalam Unicode

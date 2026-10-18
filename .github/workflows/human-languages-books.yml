@@ -314,6 +314,26 @@ jobs:
         shell: bash
         run: bash code/scripts/tests/test-check-book-compile-bash-compat.sh
 
+  # Junctions need no symlink privilege on Windows. Keep the shard writer's
+  # handle-relative escape tests in the same required gate as the Unix symlink
+  # fixtures, so a platform-only regression cannot hide behind green books.
+  windows_shard_boundary:
+    name: Python shard boundary (windows-latest)
+    needs: detect
+    if: needs.detect.outputs.books == 'true'
+    runs-on: windows-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - name: Set up Python
+        uses: actions/setup-python@v7
+        with:
+          python-version: '3.13'
+      - name: Test Windows junction and handle-relative shard safety
+        run: python code/learning/human-languages/data/scripts/test_sharded_ledger.py -v
+
   # Building and publishing are two jobs, not one, because they need opposite
   # things from the token.
   #
@@ -875,7 +895,7 @@ jobs:
   # repository — the thing a build turns into code — never enters this job.
   publish:
     name: Publish books to Pages and Releases
-    needs: [detect, build, bash_compat]
+    needs: [detect, build, bash_compat, windows_shard_boundary]
     if: >-
       github.event_name == 'push' &&
       github.ref == 'refs/heads/main' &&
@@ -964,7 +984,7 @@ jobs:
     # main, so requiring it would make this gate un-satisfiable on the pull
     # requests it exists to gate. `build` is the job that proves the books are
     # sound; `publish` merely moves the result it produced.
-    needs: [detect, build, bash_compat]
+    needs: [detect, build, bash_compat, windows_shard_boundary]
     if: always()
     runs-on: ubuntu-latest
     steps:
@@ -975,24 +995,25 @@ jobs:
           BOOKS_RELEVANT: ${{ needs.detect.outputs.books }}
           BUILD_RESULT: ${{ needs.build.result }}
           BASH_COMPAT_RESULT: ${{ needs.bash_compat.result }}
+          WINDOWS_SHARD_RESULT: ${{ needs.windows_shard_boundary.result }}
         run: |
           set -euo pipefail
-          echo "detect=$DETECT_RESULT relevant=$BOOKS_RELEVANT build=$BUILD_RESULT bash_compat=$BASH_COMPAT_RESULT"
+          echo "detect=$DETECT_RESULT relevant=$BOOKS_RELEVANT build=$BUILD_RESULT bash_compat=$BASH_COMPAT_RESULT windows_shard=$WINDOWS_SHARD_RESULT"
 
           if [ "$DETECT_RESULT" != "success" ]; then
             echo "::error::Human-language book change detection did not succeed."
             exit 1
           fi
 
-          case "$BOOKS_RELEVANT:$BUILD_RESULT:$BASH_COMPAT_RESULT" in
-            true:success:success)
-              echo "The required all-books build and both system-Bash checks passed."
+          case "$BOOKS_RELEVANT:$BUILD_RESULT:$BASH_COMPAT_RESULT:$WINDOWS_SHARD_RESULT" in
+            true:success:success:success)
+              echo "The required all-books build, Bash checks, and Windows shard boundary passed."
               ;;
-            false:skipped:skipped)
-              echo "No book inputs changed; the all-books build and Bash checks were legitimately skipped."
+            false:skipped:skipped:skipped)
+              echo "No book inputs changed; the all-books build, Bash checks, and Windows shard check were legitimately skipped."
               ;;
             *)
-              echo "::error::Unexpected books gate state: relevant=$BOOKS_RELEVANT build=$BUILD_RESULT bash_compat=$BASH_COMPAT_RESULT"
+              echo "::error::Unexpected books gate state: relevant=$BOOKS_RELEVANT build=$BUILD_RESULT bash_compat=$BASH_COMPAT_RESULT windows_shard=$WINDOWS_SHARD_RESULT"
               exit 1
               ;;
           esac
