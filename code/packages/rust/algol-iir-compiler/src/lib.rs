@@ -13463,6 +13463,7 @@ mod tests {
     mod cv04_incoming_native25;
     mod cv04_native25_exact_sources;
     mod cv04_native31_exact_sources;
+    mod cv04_native32_exact_sources;
     mod cv04_native24_exact_sources;
     mod cv04_retained_boundary_contexts;
     mod unit_offset;
