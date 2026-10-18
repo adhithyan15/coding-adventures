@@ -2839,3 +2839,6 @@ mod cv04_timeline_period_height;
 
 #[cfg(test)]
 mod cv04_timeline_cumulative_events;
+
+#[cfg(test)]
+mod cv04_timeline_event_height;
