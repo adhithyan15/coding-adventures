@@ -85,9 +85,9 @@ fn event_link_certifies_actual_arrow_triangle() {
         (0.0, 0.0, 1.0, f64::NAN, false),
         // Nonzero represented delta, but the triangle's corners coincide.
         (
+            2f64.powi(56) + 32.0,
             2f64.powi(56),
-            2f64.powi(56),
-            2f64.powi(56),
+            2f64.powi(56) + 32.0,
             2f64.powi(56) + 32.0,
             false,
         ),
