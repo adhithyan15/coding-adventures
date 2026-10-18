@@ -13,8 +13,9 @@ The full current inventory closes1164 paths:1144 main-only and20 overlaps,
 `a954b6d63195927b7c163d948ff91c9783a914b3aebe62fc2ca937adc9895ac7`.
 All1155 unchanged incoming endpoints match the previous complete inventory by
 absence/mode/Git ID and saved body. Three sealed independent static reviews
-cover the prior1162 endpoints, with integration WITHHELD; the new9 endpoint
-security review is pending. Previous1110 was a rename-detected destination
+cover the prior1162 endpoints, with integration WITHHELD. The new9 endpoint
+review is also sealed: static endpoint closure PASS, raw shared-proof adoption
+WITHHELD; preserve the owned zero-only shared classifier and dedicated proofs. Previous1110 was a rename-detected destination
 list, corrected by the full old/new52 rename-source map, not full coverage.
 
 Test-first retained source8531f28db0aa13f58a25cba86dff6b2e53e9f524 adds eight
@@ -32,6 +33,15 @@ The first offline metadata attempt failed101 before tests; actual outer1 and
 raw failure remain preserved, never relabeled. Corrected --no-deps metadata
 checks workspace target identity; actual tests compile their locked dependency
 cone. Every native target is RELEASED_DO_NOT_REREAD.
+
+Initial documentation carrier75be48cb failed the actual shard checker because
+its new changelog entry used a level-one heading instead of required level two.
+Actual exits1/0/0 and outer1 were consumed with all physical guards true. The
+failed receipt remains unchanged (SHA256
+`9e7b4e2100d71b3d4f7a650d619df6249772bd8867ae125deb8f504b72ef8b5d`).
+This child repairs that one heading character and records the immediate filled
+lesson; fresh documentation acceptance remains pending until actual completion.
+Native acceptance is unchanged and never transferred to the failed carrier.
 
 Next: review the saved current9 endpoints, then close explicit full-body
 resolutions for the20 overlaps. Preserve owned proof bounds, production-limit
