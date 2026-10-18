@@ -30,6 +30,13 @@ For the actual folded shapes, first-seen distinct available parents are:
 4. Folded property Identifier.cv.
 5. Folded NumericLiteral argument.cv.
 
+On the ordinary CLI dot-member bridge, the call and property fields are None.
+The three immediate parents are the observed member occurrence, actual Math
+receiver token and folded numeric argument. The property's physical token
+still reaches the result through the member's exact prefix parents; its
+presence in the log is not permission to invent a direct property-field CV.
+Hand-built native nodes with a real property CV retain that fourth field.
+
 Use five borrowed stack slots and at most 25 equality comparisons. No arbitrary
 subtree walk, unbounded frontier allocation, AST serialization or general call
 collector is needed. Deduplicate aliases in declared order, including repeated
@@ -53,6 +60,8 @@ All four pre-existing JS/map/manifest/trace destination sentinel bytes survive
 failed CLI candidates. Normal typed pipeline failure, rather than a panic,
 missing binary or arbitrary nonzero status, is required. Existing graph,
 production-limit, parser/source-ownership and CLOC31–40 controls stay intact.
+The existing typed CLI stage is spelled "optimization pass". Outer merge and
+derive node refusals must retain that stage and their distinct checked causes.
 
 ## Tests before implementation
 
