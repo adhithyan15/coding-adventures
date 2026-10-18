@@ -846,7 +846,7 @@ than Ishikawa source grammar, and browser DOM sizing and interaction behavior ar
 outside the portable native contract. Ishikawa is therefore full at the pinned
 native compatibility level.
 
-### Wardley Native Slice
+### Wardley Native Compatibility
 
 The initial Mermaid 11.16.1 Wardley slice recognizes `wardley-beta` and parses
 titles, canvas sizes, custom evolution stages, anchors, components,
@@ -882,7 +882,14 @@ forward, backward, and bidirectional flow ports, and inline flow labels. Layout 
 links to component boundaries and positions rotated labels before backend-neutral paths,
 arrowheads, and glyph groups are emitted. Annotation stroke, text, and fill theme fields
 also survive typed configuration and control marker, connector, and annotations-box Paint.
-Exact browser rendering remains unsupported at the partial level.
+The pinned corpus covers every active Mermaid 11.16.1 Wardley parser test and
+renderer acceptance fixture, including compact arrows, consecutive and trailing
+hyphens, all four upstream theme runs, pipelines, and the large GPT tokeniser
+map. Every valid fixture is lowered through `PaintScene` and rendered to PNG by
+the native Metal backend. Browser DOM measurement, responsive SVG sizing, and
+interactive behavior remain outside the portable native contract, so Wardley
+is full at the pinned native compatibility level rather than pixel-identical to
+Mermaid's browser renderer.
 
 ### Cynefin Native Slice
 
