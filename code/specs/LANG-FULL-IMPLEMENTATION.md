@@ -1452,9 +1452,9 @@ backend immediately) come before the enabler-dependent items.
   One additional built-in `entier` may wrap a supported bounded transform rooted
   in `sign(...)`, including the exact `entier(sign(...))` root; broader runtime
   `entier` operands remain conservative.
-  The bounded sign-rooted transform may include up to forty-two exact additive
-  offset units, either as one exact `42` term or a checked sum of exact `1`
-  through `41` terms. The cap is
+  The bounded sign-rooted transform may include up to forty-three exact additive
+  offset units, either as one exact `43` term or a checked sum of exact `1`
+  through `42` terms. The cap is
   preserved through parentheses and supported standard-function wrappers and
   applied independently to each runtime conditional path. Larger and dynamic
   offsets remain conservative.
