@@ -16,6 +16,38 @@ mod timeline_event_scene_contract {
         }
     }
 
+    include!("timeline_legacy_scene_data.rs");
+
+    #[test]
+    fn retained_embedded_event_layouts_keep_complete_legacy_scenes() {
+        for (name, declared_layout, declared_scene, declared_queries) in
+            declared_legacy_timeline_scene_cases()
+        {
+            let defaults = make_opts(&FakeShaper, &FakeMetrics, &FakeResolver);
+            let resolver = Resolver(std::cell::RefCell::new(Vec::new()));
+            let options = DiagramToPaintOptions {
+                label_font: defaults.label_font,
+                title_font: defaults.title_font,
+                background: defaults.background,
+                device_pixel_ratio: defaults.device_pixel_ratio,
+                resolver: &resolver,
+                shaper: &FakeShaper,
+                metrics: &FakeMetrics,
+            };
+            assert_eq!(
+                diagram_to_paint_temporal(&declared_layout, &options),
+                declared_scene,
+                "whole legacy Scene {name}"
+            );
+            assert_eq!(
+                *resolver.0.borrow(),
+                declared_queries,
+                "ordered legacy queries {name}"
+            );
+            println!("timeline-event-legacy-scene COMPLETE {name}");
+        }
+    }
+
     fn path(
         points: &[(f64, f64)],
         stroke: &str,
