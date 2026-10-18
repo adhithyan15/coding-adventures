@@ -63,6 +63,45 @@ overlaps also require review; lack of conflict markers is not semantic acceptanc
 7. Keep required CI and branch-protection behavior. Inspect the complete combined
    workflow; retain main gates and owned checks without broad skip/limit changes.
 
+## Selected compatibility decisions before candidate construction
+
+These are implementation decisions under the committed reconciliation spec,
+not claims that an uninstalled candidate has passed. Review immutable preimages.
+
+- Keep owned Timeline minimum event width160, checked cumulative associations,
+  global palette ordinals and complete typed products. Main's180 width, section
+  palette grouping and reassociated LR height are different observable contracts;
+  do not describe them as already equivalent or silently replace owned numeric
+  witnesses. Retain new upstream authored fixture sources and actual assertions
+  in companion controls, and document intentional incompatibilities explicitly.
+- Keep owned guarded Some-only font clones, font admission/normalization and
+  caller-style behavior when configuration is absent. Keep owned Venn structural
+  deduplication and shared single geometry/grid computation/resource proofs.
+- Resolve duplicate automatic TimelineConfig fields/defaults to one copy in
+  owned field order. Union new architecture fields only with a full constructor
+  census and explicit None/default changes in every affected old whole product.
+- Reconcile inherited main offset40 through the existing dedicated iterative
+  outer-entier proof. Do not replace the shared sign/exp/log classifier with the
+  broader recursive main classifier. Retain the old32 contract as an explicit
+  direct legacy-budget control, add exact new33..40 positives/current41 refusals,
+  preserve zero/near2^53/alias/work controls and do not add an independent cap41.
+- Main-only fixture/data/TypeScript endpoints stay exactly main. Preserve old
+  replaced authored corpora and original semantic assertions separately. Classify
+  genuine non-safety domain extensions, such as multi-root treemap acceptance,
+  explicitly rather than restoring obsolete negatives or weakening safety tests.
+- Other incoming features, including Ishikawa rendering changes, require the
+  independent overlap review and full old/new products before their candidate
+  resolution is selected. No generic choose-whole-side conflict resolver.
+- Validate the final candidate delta against incoming main. Pure-main features
+  outside owned reverse dependencies keep upstream acceptance and qualification
+  limits; do not claim their feature correctness from Closure/doc tests or turn
+  unrelated feature qualification into new local compiler gates. Record inherited
+  security findings truthfully and block an actually reachable unsafe validation
+  boundary until it has a concrete fix. Required CI is unchanged.
+
+Full Closure completion remains OPEN. Miri DEFERRED/PENDING; frozen inputs and
+targets untouched, no incoming execution, no integration or publication claimed.
+
 ## Installation and validation
 
 Install only after candidate/source review closes the pinned snapshot. Keep a
