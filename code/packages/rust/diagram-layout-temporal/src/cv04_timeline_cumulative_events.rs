@@ -349,7 +349,7 @@ fn fractional_lr_origin_distinguishes_each_cumulative_event_position() {
     });
     let expected = LayoutedTemporalDiagram {
         width: 640.0,
-        height: 310.1050000000001,
+        height: 310.105,
         accessibility_title: Some("LR cursor".into()),
         accessibility_description: None,
         timeline_config: Some(cfg),
