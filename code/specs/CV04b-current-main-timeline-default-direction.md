@@ -67,3 +67,15 @@ publication. Publish only to the dynamically rediscovered sole PR. Auto-merge
 stays off while conflicts, missing checks or review concerns remain. This slice
 does not establish Apple runtime, full Closure parity, transformation lineage,
 current-main integration or Miri acceptance.
+
+
+Bounded execution checkpoint: `74d9f01c11650b4e0aae49b4ad4d4108136033f1`. 1168 tests passed across55
+unfiltered harnesses, 0 existing ignores; 2 doctests passed and
+0 ignored across14targets. All14all-target strict commands passed.
+Fresh graph1293manifests/436registryrows/reverse14/forward50. Original files
+are retained by exact whole-file inverse recipes; production changes only four
+lines. Corrected red69606422 records explicit controls passing and only intended
+direction failures. Failed7475 remains unaccepted; source/preprocess semantics
+were preserved in its new-oracle correction. Three complete product cells and
+37 source/empty/retained IR cells passed. Exact source and terminal security
+review and current delivery gates remain required. Miri DEFERRED/PENDING.

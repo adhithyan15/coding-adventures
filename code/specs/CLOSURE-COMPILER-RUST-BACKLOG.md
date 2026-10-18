@@ -1,19 +1,18 @@
 # Closure Compiler on Rust — parity backlog
 
-<!-- Closure current concise checkpoint: CV04b timeline events -->
-Bounded source execution `dc842d0c31e78a55141a663db1bb232abb8f78b1` restores checked separate timeline events:
-84 native+174 painter tests PASS, zero failures/ignores/filters, two empty
-doctests and both strict commands PASS. Graph1293 manifests/reverse2/forward50;
-11 actual-frame/12 actual-arrow controls,2^55 positive versus2^56/57 refusals,
-32 complete source/IR/layout/Scene/query cells and four complete legacy Scenes.
-Original48 typed palette controls, prior Venn/CLOC41 source and all old guards
-remain. Historical835 strict failure/incorrect legacy-width model are preserved
-and corrected; no lint allowance or production-limit weakening.
-Current audited main42c3b66f has20 changed shared paths/10 actual conflicts.
-Sole PR17288 remains OPEN/unmerged/autoOFF; current hosted/review/conflict and
-actual-merge gates still apply. No raw-main integration is accepted by this slice.
+<!-- Closure current concise checkpoint: CV04b Timeline default direction -->
+Bounded source execution `74d9f01c11650b4e0aae49b4ad4d4108136033f1` aligns bare-header and typed defaults
+with LR; explicit TD/LR, existing source/configuration/geometry remain exact.
+1168 tests PASS across55harnesses/0existing ignores, 2doctests
+PASS/0ignored across14targets; all14strict checks PASS.
+Graph1293manifests/reverse14/forward50, unchanged436registrydeclarations.
+37complete source/empty/retained IR cells and3complete portable product Scenes.
+Earlier timeline-event executiondc842d0c remains258P, Venn/CLOC41 retained.
+Failed first7475red and corrected696064semantic red evidence are preserved.
+Sole PR17288 remains unmerged/autoOFF; current-main reconciliation, exact-head
+review/hosted/conflict and actual-merge reachability gates still apply.
 Full Closure parity, ingestion IDs, output-byte/source maps, stable IDs/spans,
-pass/sweep order and fold/rename/inline/motion/merge/delete lineage remain OPEN.
+pass/sweep and fold/rename/inline/motion/merge/delete lineage remain OPEN.
 Miri DEFERRED/PENDING, never passed; frozen run/inputs/receipts/target untouched.
 <!-- Closure current concise checkpoint end -->
 
