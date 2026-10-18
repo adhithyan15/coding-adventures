@@ -20,6 +20,14 @@ Owned configuration selection, accessibility-block token ownership, bounded
 readers, checked arithmetic and all explicit-direction fixtures stay intact.
 Raw main is not accepted by this slice.
 
+The existing shared preprocessing blanks `%%{...}%%` spans before Timeline
+tokenization, including spans written inside an accessibility block. Such an
+authored span therefore contributes no description text, and the later owned
+configuration scanner still prevents it from selecting configuration. Preserve
+both stages. First test draft 7475c2da incorrectly expected that span's text in
+the description; its failed red receipt remains unaccepted. Correct only that
+new expectation before retrying red, without altering its authored source.
+
 ## Evidence and retention
 
 Before changing production, retain the old whole source files and inventory all
