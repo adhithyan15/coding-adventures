@@ -119,7 +119,8 @@ assessment gate. It must reject an unknown level before reading any corpus
 data, including when called from JavaScript without TypeScript's level type.
 For a supported level, it must derive taught forms from the same Spanish
 curriculum, lesson, and spine evidence as the mock audit, without loading
-unrelated language tracks. This bounded read must preserve the reporter's
+unrelated language tracks. A narrow read must still reject a linked Spanish
+track before following any curriculum or lesson path. It must preserve the reporter's
 complete stem-and-option buckets and the audit's existing output; performance
 work must not suppress words or relax test timeouts.
 

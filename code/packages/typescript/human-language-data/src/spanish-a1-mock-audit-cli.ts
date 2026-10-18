@@ -1,4 +1,4 @@
-import { readFileSync, writeFileSync } from "node:fs";
+import { lstatSync, readFileSync, writeFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { pathToFileURL } from "node:url";
 import { lessonsUpToLevel } from "./levels.js";
@@ -505,6 +505,12 @@ export function spanishTaughtFormsBounded(
   level: MockAuditLevel = "A1",
 ): { taught: Set<string>; lessonCount: number } {
   spanishMockDir(level);
+  // The whole-corpus loader rejects linked tracks. A narrow read must keep
+  // that boundary before following curriculum or lessons under `spanish`.
+  const track = lstatSync(resolve(root, "spanish"));
+  if (!track.isDirectory() || track.isSymbolicLink()) {
+    throw new Error("spanish must be a real directory in the curriculum tree");
+  }
   const curriculum = loadTrackLanguageCurriculum("spanish", root);
   return taughtFormsFromEvidence(
     loadTrackLessons("spanish", root),

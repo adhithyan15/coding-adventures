@@ -6,8 +6,9 @@
 // bucket that is still printed, beside the word it matched.
 
 import { describe, expect, it } from "vitest";
-import { mkdtempSync, mkdirSync, writeFileSync } from "node:fs";
+import { mkdtempSync, mkdirSync, symlinkSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
+import { platform } from "node:process";
 import { join } from "node:path";
 import {
   loadStemVocabulary,
@@ -19,7 +20,7 @@ import {
 } from "../src/mock-stem-coverage.js";
 import { defaultCurriculumRoot } from "../src/loader.js";
 import { runMockStemCoverageCli } from "../src/mock-stem-coverage-cli.js";
-import { spanishMockAuditPath } from "../src/spanish-a1-mock-audit-cli.js";
+import { spanishMockAuditPath, spanishTaughtFormsBounded } from "../src/spanish-a1-mock-audit-cli.js";
 
 const VOCAB: StemVocabulary = {
   functionWords: ["el", "la", "de", "que"],
@@ -241,6 +242,14 @@ describe("the committed vocabulary", () => {
 });
 
 describe("the level is a closed set, not a path fragment", () => {
+  it("refuses a linked Spanish track before reading its lessons", () => {
+    const root = mkdtempSync(join(tmpdir(), "linked-spanish-"));
+    const outside = mkdtempSync(join(tmpdir(), "outside-spanish-"));
+    mkdirSync(join(outside, "lessons"));
+    symlinkSync(outside, join(root, "spanish"), platform === "win32" ? "junction" : "dir");
+    expect(() => spanishTaughtFormsBounded(root, "A2")).toThrow(/real directory/);
+  });
+
   it("refuses a level that would escape the curriculum root", () => {
     // `reportSpanishMockStemCoverage` is exported from `index.ts`, and a
     // TypeScript union does not survive the package boundary. A first draft
