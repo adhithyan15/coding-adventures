@@ -187,6 +187,43 @@ impl VerifiedExecutable {
     }
 }
 
+/// Open a file an agent will be granted to read, under the same owner and
+/// access-list rule as an executable, without a digest (Windows; D18S
+/// P2.8c).
+///
+/// ```text
+///   opened with                           refused when
+///   read; share read and write, never     not absolute, not a regular file,
+///   delete; the last reparse point        a reparse point, owned by someone
+///   not followed                          untrusted, or writable (by its
+///                                         access list) by anyone untrusted
+/// ```
+///
+/// While the handle is held, no one can rename or delete the file, so its
+/// path keeps naming it. Its owner may still write it. The caller checks
+/// that the path is the handle's final path.
+#[cfg(windows)]
+pub fn open_trusted_file(path: &Path) -> Result<File, VerifyError> {
+    use windows_sys::Win32::Storage::FileSystem::{
+        FILE_FLAG_OPEN_REPARSE_POINT, FILE_SHARE_READ, FILE_SHARE_WRITE,
+    };
+    if !path.is_absolute() {
+        return Err(VerifyError::NotAbsolute);
+    }
+    let file = std::fs::OpenOptions::new()
+        .read(true)
+        .share_mode(FILE_SHARE_READ | FILE_SHARE_WRITE)
+        .custom_flags(FILE_FLAG_OPEN_REPARSE_POINT)
+        .open(path)
+        .map_err(|_| VerifyError::Unreadable)?;
+    let metadata = file.metadata().map_err(|_| VerifyError::Unreadable)?;
+    if !metadata.file_type().is_file() {
+        return Err(VerifyError::NotRegular);
+    }
+    check_owner_and_mode(&file, &metadata)?;
+    Ok(file)
+}
+
 /// Unix: `O_RDONLY`, never `O_PATH`, which `execveat` would accept but
 /// which cannot be read to hash (S-I4d).
 #[cfg(unix)]

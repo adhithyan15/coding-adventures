@@ -32,7 +32,21 @@ so this crate creates the process itself and returns a `ConfinedChild`.
   It has no capabilities: no network, no libraries, no devices. It is LPAC,
   so `ALL APPLICATION PACKAGES` grants it nothing.
 - **Its own image, readable.** One ACE lets its SID read and execute the
-  agent's binary. Nothing else is granted (Direct file grants are P2.8c).
+  agent's binary. Beyond that, only the plan's `Direct` file reads are
+  granted (P2.8c), one ACE each, taken back when the agent exits.
+- **Direct read grants.** A `Direct` `fs:read` of one exact file becomes an
+  allow ACE for the agent's SID, with read rights only.
+  - The file must be a regular file at exactly its final path, not a
+    reparse point, owned and writable only as an executable must be, and
+    not the agent's own image.
+  - It is held, undeletable, until the agent has exited. Then every entry
+    for the SID comes off.
+  - A `Direct` write is refused. The agent is Low integrity, and Windows'
+    no-write-up policy blocks its writes to ordinary files; lowering a
+    file's label would open it to every Low process of the user. So
+    writes stay brokered.
+  - Create, delete and list are refused: each would need rights over a
+    whole directory.
 - **Exactly its handles.** stdin and stdout are pipes, stderr is `NUL`,
   plus any handles passed on. Their values arrive in
   `CHIEF_OF_STAFF_HANDLES`.

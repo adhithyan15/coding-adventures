@@ -121,3 +121,39 @@ fn a_binary_someone_else_may_write_is_refused() {
         Some(VerifyError::Writable)
     );
 }
+
+/// `open_trusted_file` (D18S P2.8c): the executable's owner and
+/// access-list rule, without a digest, for a file an agent will read.
+#[test]
+fn a_trusted_file_is_opened_under_the_executable_s_rule() {
+    use chief_of_staff_spawn_isolation::open_trusted_file;
+    use std::io::Read;
+    let scratch = Scratch::new();
+    let path = scratch.0.join("granted.txt");
+    fs::write(&path, b"for the agent").unwrap();
+    let mut contents = String::new();
+    open_trusted_file(&path)
+        .unwrap()
+        .read_to_string(&mut contents)
+        .unwrap();
+    assert_eq!(contents, "for the agent");
+    // Held, it shares write but not delete: the owner can still write the
+    // file, but no one can delete it.
+    let held = open_trusted_file(&path).unwrap();
+    assert!(fs::write(&path, b"updated").is_ok());
+    assert!(fs::remove_file(&path).is_err());
+    drop(held);
+
+    assert_eq!(
+        open_trusted_file(Path::new("granted.txt")).err(),
+        Some(VerifyError::NotAbsolute)
+    );
+    assert!(open_trusted_file(&scratch.0).is_err(), "a directory");
+    let granted = std::process::Command::new("icacls")
+        .arg(&path)
+        .args(["/grant", "*S-1-1-0:(W)"])
+        .output()
+        .unwrap();
+    assert!(granted.status.success(), "{granted:?}");
+    assert_eq!(open_trusted_file(&path).err(), Some(VerifyError::Writable));
+}

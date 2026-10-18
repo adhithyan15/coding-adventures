@@ -4,6 +4,55 @@
 
 ### Added
 
+- **`Direct` read grants** (D18S P2.8c). A `Direct` `fs:read` of one
+  exact file is an allow ACE for the agent's AppContainer SID: read
+  rights, never execute, not inheritable.
+  - It is added before the agent is created, through a handle reopened
+    from the held one, under the image ACE's lock.
+  - Every entry naming the SID is removed once the agent has exited
+    (`ConfinedChild`'s drop) or the spawn failed. Removal comes before the
+    one-instance claim is released, so a new instance's entry is never
+    taken back.
+  - Each grant is checked when the confinement is prepared:
+    - `open_trusted_file`: a regular file, not a reparse point, under the
+      executable's owner and access-list rule;
+    - the path is exactly the file's final path;
+    - it is not the agent's own image, compared by volume serial and file
+      index, so a hard link to the image is refused too.
+  - The file is held from then until the agent has exited, sharing read
+    and write but not delete, so its path keeps naming it.
+  - `direct_read_grants(plan)` lists the grants.
+  - `ConfinementError::Grant` reports a refused file.
+  - New native tests in `tests/confinement.rs`:
+    - a granted file is readable and its neighbour is not;
+    - the grant is gone after the agent exits;
+    - each of these is refused: a missing file, a directory, a junction,
+      a non-canonical spelling, the image or a hard link to it, and a
+      file Everyone may write.
+- `set_entry`, one access-list read-modify-write serialized across the
+  process, now serves both the image's entry and the grants'.
+
+### Fixed
+
+- An access-list change is now written back with the list's protection
+  as it was (`PROTECTED_` or `UNPROTECTED_DACL_SECURITY_INFORMATION`,
+  from the descriptor's control bits). Writing a DACL with neither flag
+  could leave a protected list, such as an owner-only file's, inheriting
+  its directory's entries again. That would widen access beyond the one
+  entry asked for. It mattered little for the image, whose list
+  inherits, but it would have for a granted file.
+  - New test: `a_protected_list_stays_protected_through_a_grant`.
+
+### Changed
+
+- `check_plan` accepts `Direct` file reads. Every other `Direct` rule is
+  still `Unsupported`.
+  - A **write** stays `Unsupported` on Windows. The agent is Low
+    integrity, and no-write-up refuses its write to an ordinary file
+    whatever its list says. Expressing the write would mean lowering the
+    file's label, which would open the file to every Low-integrity
+    process of the user.
+
 - **P2.8b-1.** `WindowsConfinement::prepare_verified_broker(plan, broker,
   agent_id)` and `broker_container_name`: a broker runs in a
   `chief-of-staff-broker.<32 hex>` container, a namespace no agent's
