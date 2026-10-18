@@ -1,0 +1,9 @@
+{
+  "id": "IT-PATH-378-SCOPO",
+  "spine_node": "SPINE-EXPRESS-CONDITION",
+  "before": [],
+  "inline": [
+    "IT-EXT-378-SCOPO"
+  ],
+  "after": []
+}

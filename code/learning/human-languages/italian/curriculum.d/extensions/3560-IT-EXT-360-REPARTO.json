@@ -1,0 +1,8 @@
+{
+  "id": "IT-EXT-360-REPARTO",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can describe my place at work: the manager, my department and my duties, a delivery date and an extension.",
+  "prerequisites": []
+}

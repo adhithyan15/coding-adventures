@@ -1,0 +1,11 @@
+{
+  "id": "IT-R288-ripasso-281-288",
+  "pathSegment": "IT-PATH-288-ANNUNCIO",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "IT-EXT-288-ANNUNCIO",
+      "order": 5
+    }
+  ]
+}

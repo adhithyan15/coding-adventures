@@ -1,0 +1,19 @@
+{
+  "chapter": 322,
+  "title": "Fuochi e falò",
+  "label": "ch:it-fuochi-e-falo",
+  "canDo": "I can describe a night of fireworks, bangs, bonfires and lanterns, with dancing.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "IT-C322-danzare",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 322: I can describe a night of fireworks, bangs, bonfires and lanterns, with dancing.",
+    "assesses": [
+      "IT-LEX-C322-FUOCHI-03",
+      "IT-LEX-C322-FUOCHI-04",
+      "IT-LEX-C322-FUOCHI-05"
+    ]
+  }
+}

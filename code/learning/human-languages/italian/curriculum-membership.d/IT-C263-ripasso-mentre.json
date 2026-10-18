@@ -1,0 +1,11 @@
+{
+  "id": "IT-C263-ripasso-mentre",
+  "pathSegment": "IT-PATH-263-SCENA",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "IT-EXT-263-SCENA",
+      "order": 4
+    }
+  ]
+}

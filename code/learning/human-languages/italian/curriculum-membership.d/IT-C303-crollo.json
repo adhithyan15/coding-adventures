@@ -1,0 +1,11 @@
+{
+  "id": "IT-C303-crollo",
+  "pathSegment": "IT-PATH-303-ESPLOSIONE",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "IT-EXT-303-ESPLOSIONE",
+      "order": 4
+    }
+  ]
+}

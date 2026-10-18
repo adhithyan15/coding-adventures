@@ -1,0 +1,11 @@
+{
+  "id": "IT-C426-imballare",
+  "pathSegment": "IT-PATH-426-BAGAGLI",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "IT-EXT-426-BAGAGLI",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,9 @@
+{
+  "id": "IT-PATH-310-TRASFERIRSI",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "IT-EXT-310-TRASFERIRSI"
+  ],
+  "after": []
+}

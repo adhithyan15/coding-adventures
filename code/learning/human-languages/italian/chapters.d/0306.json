@@ -1,0 +1,19 @@
+{
+  "chapter": 306,
+  "title": "Salvati in mare",
+  "label": "ch:it-salvati-in-mare",
+  "canDo": "I can tell a rescue story at sea: the lifeguard, the shipwreck, the missing and the survivors.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "IT-C306-sopravvivere",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 306: I can tell a rescue story at sea: the lifeguard, the shipwreck, the missing and the survivors.",
+    "assesses": [
+      "IT-LEX-C306-SALVATAGGIO-03",
+      "IT-LEX-C306-SALVATAGGIO-04",
+      "IT-LEX-C306-SALVATAGGIO-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 332,
+  "sourceHash": "fnv1a64:4aa5d06bf2444927",
+  "lessonIds": [
+    "IT-C332-tagliere",
+    "IT-C332-affettare",
+    "IT-C332-tritare",
+    "IT-C332-sbucciare",
+    "IT-C332-grattugiare"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch332.txt",
+  "json": "italian/narration/ch332.json",
+  "textHash": "fnv1a64:4bfe89b5f2f2e68c",
+  "jsonHash": "fnv1a64:77139a3c138d9c5e",
+  "findings": []
+}

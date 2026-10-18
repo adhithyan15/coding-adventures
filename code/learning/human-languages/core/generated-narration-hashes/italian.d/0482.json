@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 482,
+  "sourceHash": "fnv1a64:e42904ccf5885429",
+  "lessonIds": [
+    "IT-C482-sopracciglio",
+    "IT-C482-ciglia",
+    "IT-C482-palpebra",
+    "IT-C482-tempia",
+    "IT-C482-mascella"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch482.txt",
+  "json": "italian/narration/ch482.json",
+  "textHash": "fnv1a64:7ef12dc10eb30c1e",
+  "jsonHash": "fnv1a64:760083afc9bcc671",
+  "findings": []
+}

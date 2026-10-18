@@ -1,0 +1,11 @@
+{
+  "id": "IT-C360-mansione",
+  "pathSegment": "IT-PATH-360-REPARTO",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "IT-EXT-360-REPARTO",
+      "order": 2
+    }
+  ]
+}

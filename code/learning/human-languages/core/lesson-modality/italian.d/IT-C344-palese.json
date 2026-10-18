@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C344-palese",
+    "language": "italian",
+    "chapter": 344,
+    "sequence": 19890,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ef98e4c99ed432bf"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "IT-C362-efficiente",
+  "pathSegment": "IT-PATH-362-STRESS",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "IT-EXT-362-STRESS",
+      "order": 3
+    }
+  ]
+}

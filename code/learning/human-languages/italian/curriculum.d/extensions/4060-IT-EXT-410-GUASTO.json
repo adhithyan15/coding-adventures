@@ -1,0 +1,8 @@
+{
+  "id": "IT-EXT-410-GUASTO",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can deal with a breakdown: the fault, breaking down, the tow truck, towing and the garage.",
+  "prerequisites": []
+}

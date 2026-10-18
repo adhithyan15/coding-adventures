@@ -1,0 +1,9 @@
+{
+  "id": "IT-PATH-460-BOSCO",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "IT-EXT-460-BOSCO"
+  ],
+  "after": []
+}

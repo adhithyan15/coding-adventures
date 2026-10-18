@@ -1,0 +1,8 @@
+{
+  "id": "IT-EXT-396-BANCA",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can handle money at the bank: cash, the balance, a cheque, a payment in and a deposit.",
+  "prerequisites": []
+}

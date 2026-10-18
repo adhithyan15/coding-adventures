@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 345,
+  "sourceHash": "fnv1a64:acc2916e8f9ab401",
+  "lessonIds": [
+    "IT-C345-esprimere",
+    "IT-C345-affermare",
+    "IT-C345-affermazione",
+    "IT-C345-attendibile",
+    "IT-C345-affidabile"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch345.txt",
+  "json": "italian/narration/ch345.json",
+  "textHash": "fnv1a64:e7a74086d642d699",
+  "jsonHash": "fnv1a64:2d6bc07d33ce8e3f",
+  "findings": []
+}

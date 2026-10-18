@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C522-modellare",
+    "language": "italian",
+    "chapter": 522,
+    "sequence": 29250,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:cf7c34c21dde3c6b"
+  },
+  "findings": []
+}

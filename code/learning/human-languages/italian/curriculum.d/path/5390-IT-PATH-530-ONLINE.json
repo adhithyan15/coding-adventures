@@ -1,0 +1,9 @@
+{
+  "id": "IT-PATH-530-ONLINE",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "IT-EXT-530-ONLINE"
+  ],
+  "after": []
+}

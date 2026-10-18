@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 305,
+  "sourceHash": "fnv1a64:dafb6da340bea71e",
+  "lessonIds": [
+    "IT-C305-alluvione",
+    "IT-C305-allagare",
+    "IT-C305-frana",
+    "IT-C305-valanga",
+    "IT-C305-annegare"
+  ],
+  "tex": "italian/book/chapters/ch305-acqua-e-fango.tex"
+}

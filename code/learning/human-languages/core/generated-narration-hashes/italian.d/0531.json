@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 531,
+  "sourceHash": "fnv1a64:233c805e90df7ce9",
+  "lessonIds": [
+    "IT-C531-bucato",
+    "IT-C531-appendere",
+    "IT-C531-stendino",
+    "IT-C531-molletta",
+    "IT-C531-ferro-da-stiro"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch531.txt",
+  "json": "italian/narration/ch531.json",
+  "textHash": "fnv1a64:7d209c4d6a625a94",
+  "jsonHash": "fnv1a64:eea82efda21f9bc0",
+  "findings": []
+}

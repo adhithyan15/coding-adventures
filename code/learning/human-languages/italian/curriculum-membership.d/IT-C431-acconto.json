@@ -1,0 +1,11 @@
+{
+  "id": "IT-C431-acconto",
+  "pathSegment": "IT-PATH-431-CAPARRA",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "IT-EXT-431-CAPARRA",
+      "order": 1
+    }
+  ]
+}

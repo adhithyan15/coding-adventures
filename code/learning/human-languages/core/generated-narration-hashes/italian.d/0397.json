@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 397,
+  "sourceHash": "fnv1a64:6314136c1f693e60",
+  "lessonIds": [
+    "IT-C397-garanzia",
+    "IT-C397-garantire",
+    "IT-C397-fattura",
+    "IT-C397-preventivo",
+    "IT-C397-conveniente"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch397.txt",
+  "json": "italian/narration/ch397.json",
+  "textHash": "fnv1a64:233310869ec13a2e",
+  "jsonHash": "fnv1a64:0e344c196a5040c4",
+  "findings": []
+}

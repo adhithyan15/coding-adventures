@@ -1,0 +1,11 @@
+{
+  "id": "IT-C309-tramandare",
+  "pathSegment": "IT-PATH-309-GENERAZIONE",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "IT-EXT-309-GENERAZIONE",
+      "order": 4
+    }
+  ]
+}

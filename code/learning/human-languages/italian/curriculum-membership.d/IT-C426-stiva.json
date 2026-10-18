@@ -1,0 +1,11 @@
+{
+  "id": "IT-C426-stiva",
+  "pathSegment": "IT-PATH-426-BAGAGLI",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "IT-EXT-426-BAGAGLI",
+      "order": 1
+    }
+  ]
+}

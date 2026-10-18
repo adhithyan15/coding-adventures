@@ -1,0 +1,11 @@
+{
+  "id": "IT-C387-idoneo",
+  "pathSegment": "IT-PATH-387-REQUISITO",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "IT-EXT-387-REQUISITO",
+      "order": 1
+    }
+  ]
+}

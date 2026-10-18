@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C273-innanzitutto",
+    "language": "italian",
+    "chapter": 273,
+    "sequence": 16110,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c259867470b49039"
+  },
+  "findings": []
+}

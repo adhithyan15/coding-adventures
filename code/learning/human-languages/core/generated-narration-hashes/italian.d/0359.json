@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 359,
+  "sourceHash": "fnv1a64:a41c25b095ed45c8",
+  "lessonIds": [
+    "IT-C359-sindacato",
+    "IT-C359-sciopero",
+    "IT-C359-scioperare",
+    "IT-C359-turno",
+    "IT-C359-straordinari"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch359.txt",
+  "json": "italian/narration/ch359.json",
+  "textHash": "fnv1a64:8cb3519a5ddc69f8",
+  "jsonHash": "fnv1a64:929e0922fc7ed53b",
+  "findings": []
+}

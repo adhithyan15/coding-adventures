@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 411,
+  "sourceHash": "fnv1a64:c83e2d649fa1bbd3",
+  "lessonIds": [
+    "IT-C411-cofano",
+    "IT-C411-bagagliaio",
+    "IT-C411-frizione",
+    "IT-C411-fanale",
+    "IT-C411-svitare"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch411.txt",
+  "json": "italian/narration/ch411.json",
+  "textHash": "fnv1a64:b5fc91bb2514ed6c",
+  "jsonHash": "fnv1a64:3245457dc5bf593e",
+  "findings": []
+}

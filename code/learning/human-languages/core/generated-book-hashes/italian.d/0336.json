@@ -1,0 +1,14 @@
+{
+  "language": "italian",
+  "chapter": 336,
+  "sourceHash": "fnv1a64:65e9c145c324a21d",
+  "lessonIds": [
+    "IT-C336-preriscaldare",
+    "IT-C336-infornare",
+    "IT-C336-sfornare",
+    "IT-C336-teglia",
+    "IT-C336-cottura",
+    "IT-R336-ripasso-329-336"
+  ],
+  "tex": "italian/book/chapters/ch336-in-forno.tex"
+}

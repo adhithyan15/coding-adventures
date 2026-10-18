@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 278,
+  "sourceHash": "fnv1a64:966c3ef4dc995447",
+  "lessonIds": [
+    "IT-C278-principio",
+    "IT-C278-terminare",
+    "IT-C278-concludere",
+    "IT-C278-conclusione",
+    "IT-C278-riprendere"
+  ],
+  "tex": "italian/book/chapters/ch278-dal-principio-alla-fine.tex"
+}

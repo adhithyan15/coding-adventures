@@ -1,0 +1,8 @@
+{
+  "id": "IT-EXT-507-ORTO",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can talk about gardening.",
+  "prerequisites": []
+}

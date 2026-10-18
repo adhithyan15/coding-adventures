@@ -1,0 +1,11 @@
+{
+  "id": "IT-C400-disinstallare",
+  "pathSegment": "IT-PATH-400-INSTALLARE",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "IT-EXT-400-INSTALLARE",
+      "order": 2
+    }
+  ]
+}

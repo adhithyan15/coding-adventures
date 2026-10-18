@@ -1,0 +1,8 @@
+{
+  "id": "IT-EXT-468-GELO",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can describe a cold spell: the frost, freezing, the white frost, the dew and the freezer.",
+  "prerequisites": []
+}

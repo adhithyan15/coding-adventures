@@ -1,0 +1,19 @@
+{
+  "chapter": 335,
+  "title": "Mani in pasta",
+  "label": "ch:it-mani-in-pasta",
+  "canDo": "I can describe making dough: kneading, the dough, the yeast, letting it rise and the rolling pin.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "IT-C335-mattarello",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 335: I can describe making dough: kneading, the dough, the yeast, letting it rise and the rolling pin.",
+    "assesses": [
+      "IT-LEX-C335-IMPASTO-03",
+      "IT-LEX-C335-IMPASTO-04",
+      "IT-LEX-C335-IMPASTO-05"
+    ]
+  }
+}

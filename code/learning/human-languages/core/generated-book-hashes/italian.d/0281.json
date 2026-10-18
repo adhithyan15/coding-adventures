@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 281,
+  "sourceHash": "fnv1a64:8070921e0b7e4fdf",
+  "lessonIds": [
+    "IT-C281-vigilia",
+    "IT-C281-indomani",
+    "IT-C281-stamattina",
+    "IT-C281-stanotte",
+    "IT-C281-mattinata"
+  ],
+  "tex": "italian/book/chapters/ch281-il-giorno-prima-il-giorno-dopo.tex"
+}

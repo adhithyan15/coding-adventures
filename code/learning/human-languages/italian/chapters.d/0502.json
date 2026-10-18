@@ -1,0 +1,19 @@
+{
+  "chapter": 502,
+  "title": "Sotto le stelle",
+  "label": "ch:it-sotto-le-stelle",
+  "canDo": "I can talk about camping and exploring outdoors.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "IT-R502-ripasso-495-502",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 502: I can talk about camping and exploring outdoors.",
+    "assesses": [
+      "IT-LEX-C502-CAMPEGGIO-03",
+      "IT-LEX-C502-CAMPEGGIO-04",
+      "IT-LEX-C502-CAMPEGGIO-05"
+    ]
+  }
+}

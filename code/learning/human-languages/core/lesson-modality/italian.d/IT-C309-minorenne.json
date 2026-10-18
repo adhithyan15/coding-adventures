@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C309-minorenne",
+    "language": "italian",
+    "chapter": 309,
+    "sequence": 17960,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:649712de4cb164ee"
+  },
+  "findings": []
+}

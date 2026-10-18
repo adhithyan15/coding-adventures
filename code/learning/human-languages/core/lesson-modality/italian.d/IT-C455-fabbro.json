@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C455-fabbro",
+    "language": "italian",
+    "chapter": 455,
+    "sequence": 25700,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4c510e6a9b86eae6"
+  },
+  "findings": []
+}

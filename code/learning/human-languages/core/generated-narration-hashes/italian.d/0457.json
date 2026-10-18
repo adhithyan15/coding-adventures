@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 457,
+  "sourceHash": "fnv1a64:1a4ece517a01b583",
+  "lessonIds": [
+    "IT-C457-cassiere",
+    "IT-C457-spiccioli",
+    "IT-C457-camerino",
+    "IT-C457-svendita",
+    "IT-C457-mercanteggiare"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch457.txt",
+  "json": "italian/narration/ch457.json",
+  "textHash": "fnv1a64:d27b4b493247d5be",
+  "jsonHash": "fnv1a64:5a2e9b76cddafad4",
+  "findings": []
+}

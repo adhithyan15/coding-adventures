@@ -1,0 +1,11 @@
+{
+  "id": "IT-C354-impedire",
+  "pathSegment": "IT-PATH-354-OSTACOLO",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "IT-EXT-354-OSTACOLO",
+      "order": 2
+    }
+  ]
+}

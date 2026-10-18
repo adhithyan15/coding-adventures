@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 492,
+  "sourceHash": "fnv1a64:aa0dc0bc41c9d443",
+  "lessonIds": [
+    "IT-C492-abbraccio",
+    "IT-C492-coccolare",
+    "IT-C492-coccole",
+    "IT-C492-affezionarsi",
+    "IT-C492-affettuoso"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch492.txt",
+  "json": "italian/narration/ch492.json",
+  "textHash": "fnv1a64:29ba675bf665f95e",
+  "jsonHash": "fnv1a64:b64010bb9a1cee16",
+  "findings": []
+}

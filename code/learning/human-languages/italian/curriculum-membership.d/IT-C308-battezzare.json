@@ -1,0 +1,11 @@
+{
+  "id": "IT-C308-battezzare",
+  "pathSegment": "IT-PATH-308-BATTESIMO",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "IT-EXT-308-BATTESIMO",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C524-epilogo",
+    "language": "italian",
+    "chapter": 524,
+    "sequence": 29350,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:87ed9cf9ed696c88"
+  },
+  "findings": []
+}

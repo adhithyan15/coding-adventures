@@ -1,0 +1,11 @@
+{
+  "id": "IT-C465-strisciare",
+  "pathSegment": "IT-PATH-465-PICCOLI",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "IT-EXT-465-PICCOLI",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "language": "italian",
+  "chapter": 468,
+  "sourceHash": "fnv1a64:2dedcbad9a9b3474",
+  "lessonIds": [
+    "IT-C468-gelo",
+    "IT-C468-gelare",
+    "IT-C468-brina",
+    "IT-C468-rugiada",
+    "IT-C468-congelare",
+    "IT-R468-ripasso-461-468"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "italian/narration/ch468.txt",
+  "json": "italian/narration/ch468.json",
+  "textHash": "fnv1a64:97d7bc5e9d2037c8",
+  "jsonHash": "fnv1a64:44fcf043fdca6f5c",
+  "findings": []
+}

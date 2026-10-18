@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 355,
+  "sourceHash": "fnv1a64:65b15b5cabaff36b",
+  "lessonIds": [
+    "IT-C355-rimedio",
+    "IT-C355-sistemare",
+    "IT-C355-aggravare",
+    "IT-C355-attenuare",
+    "IT-C355-compensare"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch355.txt",
+  "json": "italian/narration/ch355.json",
+  "textHash": "fnv1a64:ace1a53e4aef1478",
+  "jsonHash": "fnv1a64:3764fc5f0cd68141",
+  "findings": []
+}

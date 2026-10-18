@@ -1,0 +1,11 @@
+{
+  "id": "IT-C440-proseguire",
+  "pathSegment": "IT-PATH-440-INDICAZIONI",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "IT-EXT-440-INDICAZIONI",
+      "order": 3
+    }
+  ]
+}

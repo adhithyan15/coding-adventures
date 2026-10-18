@@ -1,0 +1,19 @@
+{
+  "chapter": 446,
+  "title": "Il centro storico",
+  "label": "ch:it-il-centro-storico",
+  "canDo": "I can describe an old town: the walls, the fortress, the village, the cloister, and wandering round.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "IT-C446-vagare",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 446: I can describe an old town: the walls, the fortress, the village, the cloister, and wandering round.",
+    "assesses": [
+      "IT-LEX-C446-BORGO-03",
+      "IT-LEX-C446-BORGO-04",
+      "IT-LEX-C446-BORGO-05"
+    ]
+  }
+}

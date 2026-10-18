@@ -1,0 +1,11 @@
+{
+  "id": "IT-C434-scarico",
+  "pathSegment": "IT-PATH-434-BAGNO",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "IT-EXT-434-BAGNO",
+      "order": 3
+    }
+  ]
+}

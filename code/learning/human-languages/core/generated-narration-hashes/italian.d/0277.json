@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 277,
+  "sourceHash": "fnv1a64:b86bb013065be4cd",
+  "lessonIds": [
+    "IT-C277-durare",
+    "IT-C277-durata",
+    "IT-C277-istante",
+    "IT-C277-attimo",
+    "IT-C277-fase"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch277.txt",
+  "json": "italian/narration/ch277.json",
+  "textHash": "fnv1a64:9522d1e21ef3ca8d",
+  "jsonHash": "fnv1a64:72382a9f7dc4e158",
+  "findings": []
+}

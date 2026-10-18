@@ -1,0 +1,11 @@
+{
+  "id": "IT-C430-zanzariera",
+  "pathSegment": "IT-PATH-430-TENDA",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "IT-EXT-430-TENDA",
+      "order": 4
+    }
+  ]
+}

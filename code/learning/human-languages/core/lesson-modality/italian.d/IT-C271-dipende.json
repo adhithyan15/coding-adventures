@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C271-dipende",
+    "language": "italian",
+    "chapter": 271,
+    "sequence": 15990,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2058d06a91154399"
+  },
+  "findings": []
+}

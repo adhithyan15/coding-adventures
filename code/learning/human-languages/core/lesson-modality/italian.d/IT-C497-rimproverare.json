@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C497-rimproverare",
+    "language": "italian",
+    "chapter": 497,
+    "sequence": 27960,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:06ff8b65eb169c1e"
+  },
+  "findings": []
+}

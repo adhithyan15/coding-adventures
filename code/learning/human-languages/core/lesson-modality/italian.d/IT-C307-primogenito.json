@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C307-primogenito",
+    "language": "italian",
+    "chapter": 307,
+    "sequence": 17860,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:110976776f65fae9"
+  },
+  "findings": []
+}

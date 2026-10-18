@@ -1,0 +1,11 @@
+{
+  "id": "IT-C339-convinto",
+  "pathSegment": "IT-PATH-339-OPINIONE",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "IT-EXT-339-OPINIONE",
+      "order": 2
+    }
+  ]
+}

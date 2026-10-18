@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C363-cittadino",
+    "language": "italian",
+    "chapter": 363,
+    "sequence": 20830,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:483014ffa11d23e8"
+  },
+  "findings": []
+}

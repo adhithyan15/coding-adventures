@@ -1,0 +1,11 @@
+{
+  "id": "IT-C306-disperso",
+  "pathSegment": "IT-PATH-306-SALVATAGGIO",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "IT-EXT-306-SALVATAGGIO",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 516,
+  "sourceHash": "fnv1a64:5e0377b54a2196a8",
+  "lessonIds": [
+    "IT-C516-violoncello",
+    "IT-C516-flauto",
+    "IT-C516-tromba",
+    "IT-C516-fisarmonica",
+    "IT-C516-strimpellare"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch516.txt",
+  "json": "italian/narration/ch516.json",
+  "textHash": "fnv1a64:66549b2875b2bf1c",
+  "jsonHash": "fnv1a64:5d3990a79f09aea4",
+  "findings": []
+}

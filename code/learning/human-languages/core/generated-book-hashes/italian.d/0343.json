@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 343,
+  "sourceHash": "fnv1a64:f3e41532470eb9fb",
+  "lessonIds": [
+    "IT-C343-dubitare",
+    "IT-C343-scettico",
+    "IT-C343-negare",
+    "IT-C343-assurdo",
+    "IT-C343-discutibile"
+  ],
+  "tex": "italian/book/chapters/ch343-ho-i-miei-dubbi.tex"
+}

@@ -1,0 +1,11 @@
+{
+  "id": "IT-C409-pneumatico",
+  "pathSegment": "IT-PATH-409-GOMMA",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "IT-EXT-409-GOMMA",
+      "order": 2
+    }
+  ]
+}

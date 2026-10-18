@@ -1,0 +1,19 @@
+{
+  "chapter": 400,
+  "title": "Scaricare un'app",
+  "label": "ch:it-scaricare-un-app",
+  "canDo": "I can install and remove an app, talk about software and the device it runs on.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "IT-C400-software",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 400: I can install and remove an app, talk about software and the device it runs on.",
+    "assesses": [
+      "IT-LEX-C400-INSTALLARE-03",
+      "IT-LEX-C400-INSTALLARE-04",
+      "IT-LEX-C400-INSTALLARE-05"
+    ]
+  }
+}

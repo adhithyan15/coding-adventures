@@ -1,0 +1,11 @@
+{
+  "id": "IT-C335-impasto",
+  "pathSegment": "IT-PATH-335-IMPASTO",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "IT-EXT-335-IMPASTO",
+      "order": 1
+    }
+  ]
+}

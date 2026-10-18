@@ -1,0 +1,19 @@
+{
+  "chapter": 512,
+  "title": "Il torneo",
+  "label": "ch:it-il-torneo",
+  "canDo": "I can follow a tournament all the way to the medals.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "IT-C512-podio",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 512: I can follow a tournament all the way to the medals.",
+    "assesses": [
+      "IT-LEX-C512-TORNEO-03",
+      "IT-LEX-C512-TORNEO-04",
+      "IT-LEX-C512-TORNEO-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "IT-C385-autorizzazione",
+  "pathSegment": "IT-PATH-385-VIETATO",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "IT-EXT-385-VIETATO",
+      "order": 4
+    }
+  ]
+}

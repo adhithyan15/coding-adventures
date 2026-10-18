@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C476-pianto",
+    "language": "italian",
+    "chapter": 476,
+    "sequence": 26880,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:98977d465caeef5e"
+  },
+  "findings": []
+}

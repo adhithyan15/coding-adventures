@@ -1,0 +1,11 @@
+{
+  "id": "IT-C442-costeggiare",
+  "pathSegment": "IT-PATH-442-SALITA",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "IT-EXT-442-SALITA",
+      "order": 2
+    }
+  ]
+}

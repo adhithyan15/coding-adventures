@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 501,
+  "sourceHash": "fnv1a64:82ac658119acba5b",
+  "lessonIds": [
+    "IT-C501-pescare",
+    "IT-C501-canna-da-pesca",
+    "IT-C501-esca",
+    "IT-C501-abboccare",
+    "IT-C501-borraccia"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch501.txt",
+  "json": "italian/narration/ch501.json",
+  "textHash": "fnv1a64:4b167722b96d68d5",
+  "jsonHash": "fnv1a64:3c041868acb6a7aa",
+  "findings": []
+}

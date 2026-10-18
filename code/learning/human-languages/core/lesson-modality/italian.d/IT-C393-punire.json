@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C393-punire",
+    "language": "italian",
+    "chapter": 393,
+    "sequence": 22380,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0e385eb3dc66e5e0"
+  },
+  "findings": []
+}

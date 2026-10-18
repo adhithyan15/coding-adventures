@@ -1,0 +1,11 @@
+{
+  "id": "IT-C350-percio",
+  "pathSegment": "IT-PATH-350-SICCOME",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "IT-EXT-350-SICCOME",
+      "order": 2
+    }
+  ]
+}

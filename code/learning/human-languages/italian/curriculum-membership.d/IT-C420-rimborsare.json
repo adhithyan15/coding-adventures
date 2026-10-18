@@ -1,0 +1,11 @@
+{
+  "id": "IT-C420-rimborsare",
+  "pathSegment": "IT-PATH-420-RITARDO",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "IT-EXT-420-RITARDO",
+      "order": 4
+    }
+  ]
+}

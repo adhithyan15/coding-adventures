@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 445,
+  "sourceHash": "fnv1a64:606944f4d1d7c328",
+  "lessonIds": [
+    "IT-C445-campanile",
+    "IT-C445-duomo",
+    "IT-C445-cattedrale",
+    "IT-C445-portico",
+    "IT-C445-loggia"
+  ],
+  "tex": "italian/book/chapters/ch445-in-piazza.tex"
+}

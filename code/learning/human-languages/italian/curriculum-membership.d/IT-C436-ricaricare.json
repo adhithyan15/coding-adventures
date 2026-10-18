@@ -1,0 +1,11 @@
+{
+  "id": "IT-C436-ricaricare",
+  "pathSegment": "IT-PATH-436-LUCE",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "IT-EXT-436-LUCE",
+      "order": 3
+    }
+  ]
+}

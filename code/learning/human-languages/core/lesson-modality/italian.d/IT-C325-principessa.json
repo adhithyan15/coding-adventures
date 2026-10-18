@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C325-principessa",
+    "language": "italian",
+    "chapter": 325,
+    "sequence": 18770,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:041055706d4dff11"
+  },
+  "findings": []
+}

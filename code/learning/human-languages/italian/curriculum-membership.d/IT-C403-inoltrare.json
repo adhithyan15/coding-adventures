@@ -1,0 +1,11 @@
+{
+  "id": "IT-C403-inoltrare",
+  "pathSegment": "IT-PATH-403-PUBBLICARE",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "IT-EXT-403-PUBBLICARE",
+      "order": 2
+    }
+  ]
+}

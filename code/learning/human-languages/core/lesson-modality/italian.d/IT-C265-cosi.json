@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C265-cosi",
+    "language": "italian",
+    "chapter": 265,
+    "sequence": 15800,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:23c0e2c2568d450a"
+  },
+  "findings": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 410,
+  "sourceHash": "fnv1a64:4856b4a1aa84f586",
+  "lessonIds": [
+    "IT-C410-guasto",
+    "IT-C410-guastarsi",
+    "IT-C410-carro-attrezzi",
+    "IT-C410-rimorchiare",
+    "IT-C410-officina"
+  ],
+  "tex": "italian/book/chapters/ch410-il-guasto.tex"
+}

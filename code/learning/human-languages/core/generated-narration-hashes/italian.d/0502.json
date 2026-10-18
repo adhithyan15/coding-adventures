@@ -1,0 +1,20 @@
+{
+  "language": "italian",
+  "chapter": 502,
+  "sourceHash": "fnv1a64:3ad4dd7b254cc3a7",
+  "lessonIds": [
+    "IT-C502-campeggiare",
+    "IT-C502-torcia",
+    "IT-C502-fornelletto",
+    "IT-C502-escursione",
+    "IT-C502-esplorare",
+    "IT-R502-ripasso-495-502"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "italian/narration/ch502.txt",
+  "json": "italian/narration/ch502.json",
+  "textHash": "fnv1a64:8e3e0b2f2039eea0",
+  "jsonHash": "fnv1a64:2e64420429798abe",
+  "findings": []
+}

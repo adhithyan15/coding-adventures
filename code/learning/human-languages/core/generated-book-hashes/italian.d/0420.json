@@ -1,0 +1,14 @@
+{
+  "language": "italian",
+  "chapter": 420,
+  "sourceHash": "fnv1a64:44e1c83123accf55",
+  "lessonIds": [
+    "IT-C420-tabellone",
+    "IT-C420-ritardare",
+    "IT-C420-posticipare",
+    "IT-C420-rimborso",
+    "IT-C420-rimborsare",
+    "IT-R420-ripasso-413-420"
+  ],
+  "tex": "italian/book/chapters/ch420-ritardi-e-rimborsi.tex"
+}

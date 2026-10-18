@@ -1,0 +1,11 @@
+{
+  "id": "IT-C336-infornare",
+  "pathSegment": "IT-PATH-336-FORNO",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "IT-EXT-336-FORNO",
+      "order": 1
+    }
+  ]
+}

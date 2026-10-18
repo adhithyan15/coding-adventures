@@ -1,0 +1,11 @@
+{
+  "id": "IT-C477-rimpianto",
+  "pathSegment": "IT-PATH-477-NOSTALGIA",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "IT-EXT-477-NOSTALGIA",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C439-orientarsi",
+    "language": "italian",
+    "chapter": 439,
+    "sequence": 24840,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:11fc72237a5de9b2"
+  },
+  "findings": []
+}

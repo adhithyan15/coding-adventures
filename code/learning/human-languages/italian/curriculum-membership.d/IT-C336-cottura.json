@@ -1,0 +1,11 @@
+{
+  "id": "IT-C336-cottura",
+  "pathSegment": "IT-PATH-336-FORNO",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "IT-EXT-336-FORNO",
+      "order": 4
+    }
+  ]
+}

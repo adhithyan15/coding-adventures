@@ -1,0 +1,19 @@
+{
+  "chapter": 468,
+  "title": "Il gelo",
+  "label": "ch:it-il-gelo",
+  "canDo": "I can describe a cold spell: the frost, freezing, the white frost, the dew and the freezer.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "IT-R468-ripasso-461-468",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 468: I can describe a cold spell: the frost, freezing, the white frost, the dew and the freezer.",
+    "assesses": [
+      "IT-LEX-C468-GELO-03",
+      "IT-LEX-C468-GELO-04",
+      "IT-LEX-C468-GELO-05"
+    ]
+  }
+}

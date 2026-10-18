@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C342-ammettere",
+    "language": "italian",
+    "chapter": 342,
+    "sequence": 19750,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:aff26c4fa3d3a364"
+  },
+  "findings": []
+}

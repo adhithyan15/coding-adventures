@@ -1,0 +1,11 @@
+{
+  "id": "IT-C441-vicolo",
+  "pathSegment": "IT-PATH-441-VICOLI",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "IT-EXT-441-VICOLI",
+      "order": 1
+    }
+  ]
+}

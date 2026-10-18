@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C384-regolamento",
+    "language": "italian",
+    "chapter": 384,
+    "sequence": 21910,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:32c4d426bd46da5a"
+  },
+  "findings": []
+}

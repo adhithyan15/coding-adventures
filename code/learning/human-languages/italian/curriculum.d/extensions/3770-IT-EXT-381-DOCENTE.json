@@ -1,0 +1,8 @@
+{
+  "id": "IT-EXT-381-DOCENTE",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can talk about advanced study: lecturers, a thesis supervisor, a scholarship, a doctorate and an exam session.",
+  "prerequisites": []
+}

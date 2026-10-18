@@ -1,0 +1,11 @@
+{
+  "id": "IT-C491-tenerezza",
+  "pathSegment": "IT-PATH-491-INNAMORATI",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "IT-EXT-491-INNAMORATI",
+      "order": 3
+    }
+  ]
+}

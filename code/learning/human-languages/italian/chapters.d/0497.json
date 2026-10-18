@@ -1,0 +1,19 @@
+{
+  "chapter": 497,
+  "title": "Crescere i figli",
+  "label": "ch:it-crescere-i-figli",
+  "canDo": "I can talk about bringing up children: manners, spoiling and telling off.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "IT-C497-castigo",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 497: I can talk about bringing up children: manners, spoiling and telling off.",
+    "assesses": [
+      "IT-LEX-C497-EDUCARE-03",
+      "IT-LEX-C497-EDUCARE-04",
+      "IT-LEX-C497-EDUCARE-05"
+    ]
+  }
+}

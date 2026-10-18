@@ -1,0 +1,11 @@
+{
+  "id": "IT-C525-segnalibro",
+  "pathSegment": "IT-PATH-525-LIBRERIA",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "IT-EXT-525-LIBRERIA",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 308,
+  "sourceHash": "fnv1a64:f574f805ec2bc52f",
+  "lessonIds": [
+    "IT-C308-battesimo",
+    "IT-C308-battezzare",
+    "IT-C308-padrino",
+    "IT-C308-madrina",
+    "IT-C308-cresima"
+  ],
+  "tex": "italian/book/chapters/ch308-il-battesimo.tex"
+}

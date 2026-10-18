@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C283-intervistare",
+    "language": "italian",
+    "chapter": 283,
+    "sequence": 16650,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:caf602850bc25cd1"
+  },
+  "findings": []
+}

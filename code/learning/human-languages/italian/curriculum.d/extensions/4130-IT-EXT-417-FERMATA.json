@@ -1,0 +1,8 @@
+{
+  "id": "IT-EXT-417-FERMATA",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can wait for a bus or train: the platform, the shelter, the terminus, the coach and trains passing through.",
+  "prerequisites": []
+}

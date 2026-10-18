@@ -1,0 +1,8 @@
+{
+  "id": "IT-EXT-434-BAGNO",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can report problems in the bathroom: the tap, dripping, a blocked sink, the drain and getting it unblocked.",
+  "prerequisites": []
+}

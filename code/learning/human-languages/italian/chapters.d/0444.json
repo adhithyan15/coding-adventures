@@ -1,0 +1,19 @@
+{
+  "chapter": 444,
+  "title": "L'indirizzo",
+  "label": "ch:it-l-indirizzo",
+  "canDo": "I can find an address: the neighbourhood, the outskirts, tracking someone down, the house number and the intercom.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "IT-R444-ripasso-437-444",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 444: I can find an address: the neighbourhood, the outskirts, tracking someone down, the house number and the intercom.",
+    "assesses": [
+      "IT-LEX-C444-INDIRIZZO-03",
+      "IT-LEX-C444-INDIRIZZO-04",
+      "IT-LEX-C444-INDIRIZZO-05"
+    ]
+  }
+}

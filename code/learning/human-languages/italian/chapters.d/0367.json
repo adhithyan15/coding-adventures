@@ -1,0 +1,19 @@
+{
+  "chapter": 367,
+  "title": "Dare una mano",
+  "label": "ch:it-dare-una-mano",
+  "canDo": "I can talk about helping others: volunteering, a volunteer, an association, charity and the community.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "IT-C367-comunita",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 367: I can talk about helping others: volunteering, a volunteer, an association, charity and the community.",
+    "assesses": [
+      "IT-LEX-C367-VOLONTARIO-03",
+      "IT-LEX-C367-VOLONTARIO-04",
+      "IT-LEX-C367-VOLONTARIO-05"
+    ]
+  }
+}

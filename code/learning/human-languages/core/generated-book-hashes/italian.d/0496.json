@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 496,
+  "sourceHash": "fnv1a64:7c308068b9fc561a",
+  "lessonIds": [
+    "IT-C496-pannolino",
+    "IT-C496-passeggino",
+    "IT-C496-allattare",
+    "IT-C496-cullare",
+    "IT-C496-gattonare"
+  ],
+  "tex": "italian/book/chapters/ch496-il-primo-anno.tex"
+}

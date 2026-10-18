@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 279,
+  "sourceHash": "fnv1a64:a23c9e14c110760a",
+  "lessonIds": [
+    "IT-C279-interruzione",
+    "IT-C279-sospendere",
+    "IT-C279-rimandare",
+    "IT-C279-in-anticipo",
+    "IT-C279-tappa"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch279.txt",
+  "json": "italian/narration/ch279.json",
+  "textHash": "fnv1a64:693b41f908f7325c",
+  "jsonHash": "fnv1a64:0cd77e77481c776b",
+  "findings": []
+}

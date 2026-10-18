@@ -1,0 +1,11 @@
+{
+  "id": "IT-C424-approdare",
+  "pathSegment": "IT-PATH-424-APPRODO",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "IT-EXT-424-APPRODO",
+      "order": 1
+    }
+  ]
+}

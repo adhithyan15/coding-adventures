@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 466,
+  "sourceHash": "fnv1a64:0b9dc02b4359c261",
+  "lessonIds": [
+    "IT-C466-afa",
+    "IT-C466-afoso",
+    "IT-C466-scottarsi",
+    "IT-C466-siccita",
+    "IT-C466-brezza"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch466.txt",
+  "json": "italian/narration/ch466.json",
+  "textHash": "fnv1a64:30f78fce3b1629ac",
+  "jsonHash": "fnv1a64:8dc2b183f384b2f1",
+  "findings": []
+}

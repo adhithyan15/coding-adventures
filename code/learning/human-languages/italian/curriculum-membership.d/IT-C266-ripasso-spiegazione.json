@@ -1,0 +1,11 @@
+{
+  "id": "IT-C266-ripasso-spiegazione",
+  "pathSegment": "IT-PATH-266-SPIEGARE",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "IT-EXT-266-SPIEGARE",
+      "order": 2
+    }
+  ]
+}

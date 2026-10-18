@@ -1,0 +1,8 @@
+{
+  "id": "IT-EXT-531-BUCATO",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can talk about doing the laundry.",
+  "prerequisites": []
+}

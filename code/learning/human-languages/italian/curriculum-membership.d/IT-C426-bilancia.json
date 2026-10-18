@@ -1,0 +1,11 @@
+{
+  "id": "IT-C426-bilancia",
+  "pathSegment": "IT-PATH-426-BAGAGLI",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "IT-EXT-426-BAGAGLI",
+      "order": 3
+    }
+  ]
+}

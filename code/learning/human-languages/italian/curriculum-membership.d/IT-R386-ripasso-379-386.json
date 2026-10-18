@@ -1,0 +1,11 @@
+{
+  "id": "IT-R386-ripasso-379-386",
+  "pathSegment": "IT-PATH-386-VIOLAZIONE",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "IT-EXT-386-VIOLAZIONE",
+      "order": 5
+    }
+  ]
+}

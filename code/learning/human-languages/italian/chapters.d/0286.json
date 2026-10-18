@@ -1,0 +1,19 @@
+{
+  "chapter": 286,
+  "title": "Carta stampata",
+  "label": "ch:it-carta-stampata",
+  "canDo": "I can talk about what gets printed: the edition, the caption, the scoop and censorship.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "IT-C286-censurare",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 286: I can talk about what gets printed: the edition, the caption, the scoop and censorship.",
+    "assesses": [
+      "IT-LEX-C286-EDIZIONE-03",
+      "IT-LEX-C286-EDIZIONE-04",
+      "IT-LEX-C286-EDIZIONE-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "IT-C388-valido",
+  "pathSegment": "IT-PATH-388-VALIDO",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "IT-EXT-388-VALIDO",
+      "order": 1
+    }
+  ]
+}

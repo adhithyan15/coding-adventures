@@ -1,0 +1,19 @@
+{
+  "chapter": 507,
+  "title": "Il giardinaggio",
+  "label": "ch:it-il-giardinaggio",
+  "canDo": "I can talk about gardening.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "IT-C507-zappare",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 507: I can talk about gardening.",
+    "assesses": [
+      "IT-LEX-C507-ORTO-03",
+      "IT-LEX-C507-ORTO-04",
+      "IT-LEX-C507-ORTO-05"
+    ]
+  }
+}

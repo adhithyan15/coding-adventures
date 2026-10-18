@@ -1,0 +1,858 @@
+{
+  "version": 1,
+  "language": "italian",
+  "chapter": 312,
+  "title": "Le radici",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:fd71e351b3ab3fcd",
+  "lessons": [
+    {
+      "id": "IT-C312-antenato",
+      "sequence": 18090,
+      "title": "l'antenato — the ancestor",
+      "headword": "l'antenato",
+      "romanization": "l'antenato",
+      "gloss": "the ancestor",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4dea390d07903bf9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Italian for the bouquet, then the Italian for the wedding favour."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: l'antenato",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "l'antenato — \"the ancestor\"."
+            },
+            {
+              "kind": "speech",
+              "text": "I miei antenati erano contadini. My ancestors were farmers."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural gli antenati."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "antenato is usually traced to Late Latin antenātus \"born before\", a learned word built on ante \"before\" and nātus \"born\" (Lewis & Short)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "l'antenato",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *l'antenato*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "l'antenato, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *l'antenato*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with l'antenato",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *l'antenato*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Italian for the bouquet, then the Italian for the wedding favour, then say l'antenato again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Italian for the bouquet, then the Italian for the wedding favour, then say *l'antenato* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does l'antenato mean? (\"The ancestor\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "IT-C312-posteri",
+      "sequence": 18100,
+      "title": "i posteri — posterity, future generations",
+      "headword": "i posteri",
+      "romanization": "i posteri",
+      "gloss": "posterity, future generations",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:552986b0a39975ca",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Italian for the wedding favour, then the Italian for the ancestor."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: i posteri",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "i posteri — \"posterity, future generations\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Questa casa resterà ai posteri. This house will be left to posterity."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural only; formal."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "posteri is a learned borrowing from Latin posterī \"those coming after\", from posterus \"following\" (Lewis & Short)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "i posteri",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *i posteri*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "i posteri, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *i posteri*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with i posteri",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *i posteri*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Italian for the wedding favour, then the Italian for the ancestor, then say i posteri again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Italian for the wedding favour, then the Italian for the ancestor, then say *i posteri* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does i posteri mean? (\"Posterity, future generations\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "IT-C312-discendenza",
+      "sequence": 18110,
+      "title": "la discendenza — the descendants, the line of descent",
+      "headword": "la discendenza",
+      "romanization": "la discendenza",
+      "gloss": "the descendants, the line of descent",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2da4bd8457ef17f8",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Italian for the ancestor, then the Italian for posterity."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: la discendenza",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la discendenza — \"the descendants, the line of descent\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Ha una discendenza numerosa: dieci nipoti. He has many descendants: ten grandchildren."
+            },
+            {
+              "kind": "speech",
+              "text": "Built on discendere, ‘to go down’."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "discendenza is built on discendere \"to descend\", from Latin dēscendere (EtymDB), from dē and scandere \"to climb\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la discendenza",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la discendenza*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la discendenza, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la discendenza*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with la discendenza",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *la discendenza*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Italian for the ancestor, then the Italian for posterity, then say la discendenza again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Italian for the ancestor, then the Italian for posterity, then say *la discendenza* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does la discendenza mean? (\"The descendants, the line of descent\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "IT-C312-stirpe",
+      "sequence": 18120,
+      "title": "la stirpe — the lineage, the stock",
+      "headword": "la stirpe",
+      "romanization": "la stirpe",
+      "gloss": "the lineage, the stock",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:93eeb389ec28e2d9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Italian for posterity, then the Italian for the descendants."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: la stirpe",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la stirpe — \"the lineage, the stock\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Viene da una stirpe di pescatori. He comes from a line of fishermen."
+            },
+            {
+              "kind": "speech",
+              "text": "Literary."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "stirpe is a learned borrowing from Latin stirps \"a stem, a stock, a family\" (Lewis & Short)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la stirpe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la stirpe*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la stirpe, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la stirpe*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with la stirpe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *la stirpe*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Italian for posterity, then the Italian for the descendants, then say la stirpe again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Italian for posterity, then the Italian for the descendants, then say *la stirpe* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does la stirpe mean? (\"The lineage, the stock\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "IT-C312-albero-genealogico",
+      "sequence": 18130,
+      "title": "l'albero genealogico — the family tree",
+      "headword": "l'albero genealogico",
+      "romanization": "l'albero genealogico",
+      "gloss": "the family tree",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:539d96c1207e723f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Italian for the descendants, then the Italian for the lineage."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: l'albero genealogico",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "l'albero genealogico — \"the family tree\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Mio padre ha disegnato l'albero genealogico della famiglia. My father drew the family tree."
+            },
+            {
+              "kind": "speech",
+              "text": "Genealogico — of the family line."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "albero is inherited from Latin arbor \"tree\" (EtymDB); genealogico comes from Greek genealogía, an account of a family line, which Latin took over as geneālogia (Lewis & Short)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "l'albero genealogico",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *l'albero genealogico*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "l'albero genealogico, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *l'albero genealogico*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with l'albero genealogico",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *l'albero genealogico*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Italian for the descendants, then the Italian for the lineage, then say l'albero genealogico again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Italian for the descendants, then the Italian for the lineage, then say *l'albero genealogico* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does l'albero genealogico mean? (\"The family tree\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "IT-R312-ripasso-305-312",
+      "sequence": 18140,
+      "title": "Ripasso dei capitoli 305–312",
+      "headword": "(dialogue)",
+      "romanization": "(dialogue)",
+      "gloss": "a review of chapters 305-312",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8d27b418c96ad75b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Italian for the flood and to flood."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the flood, to flood, the landslide, the avalanche, to drown",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the flood, to flood, the landslide, the avalanche, to drown]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the rescue, the lifeguard, the shipwreck, missing, to survive",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the rescue, the lifeguard, the shipwreck, missing, to survive]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the birth, the twins, the first-born child, to wean, the dummy",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the birth, the twins, the first-born child, to wean, the dummy]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the christening, to christen, the godfather, the godmother, the confirmation",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the christening, to christen, the godfather, the godmother, the confirmation]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "youth, of age, underage, the generation, to hand down",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: youth, of age, underage, the generation, to hand down]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to live together, to move, to fit in, to settle in, to return to one's country",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to live together, to move, to fit in, to settle in, to return to one's country]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to get married, the wedding ring, the veil, the bouquet, the wedding favour",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to get married, the wedding ring, the veil, the bouquet, the wedding favour]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the ancestor, posterity, the descendants, the lineage, the family tree",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the ancestor, posterity, the descendants, the lineage, the family tree]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The flood? (l'alluvione.) To flood? (allagare.) The landslide? (la frana.) The avalanche? (la valanga.) To drown? (annegare.) The rescue? (il salvataggio.) The lifeguard? (il bagnino.) The shipwreck? (il naufragio.) Missing? (disperso.) To survive? (sopravvivere.) The birth? (la nascita.) The twins? (i gemelli.) The first-born child? (il primogenito.) To wean? (svezzare.) The dummy? (il ciuccio.) The christening? (il battesimo.) To christen? (battezzare.) The godfather? (il padrino.) The godmother? (la madrina.) The confirmation? (la cresima.) Youth? (la giovinezza.) Of age? (maggiorenne.) Underage? (minorenne.) The generation? (la generazione.) To hand down? (tramandare.) To live together? (convivere.) To move? (trasferirsi.) To fit in? (integrarsi.) To settle in? (ambientarsi.) To return to one's country? (rimpatriare.) To get married? (sposarsi.) The wedding ring? (la fede.) The veil? (il velo.) The bouquet? (il bouquet.) The wedding favour? (la bomboniera.) The ancestor? (l'antenato.) Posterity? (i posteri.) The descendants? (la discendenza.) The lineage? (la stirpe.) The family tree? (l'albero genealogico.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

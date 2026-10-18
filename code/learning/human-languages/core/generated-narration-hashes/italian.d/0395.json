@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 395,
+  "sourceHash": "fnv1a64:114f69c4209a6f13",
+  "lessonIds": [
+    "IT-C395-risparmio",
+    "IT-C395-investimento",
+    "IT-C395-interesse",
+    "IT-C395-tasso",
+    "IT-C395-inflazione"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch395.txt",
+  "json": "italian/narration/ch395.json",
+  "textHash": "fnv1a64:2a42cac9d3e9f3de",
+  "jsonHash": "fnv1a64:f4668cc3a721c3bc",
+  "findings": []
+}

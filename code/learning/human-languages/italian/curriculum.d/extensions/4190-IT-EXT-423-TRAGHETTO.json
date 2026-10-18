@@ -1,0 +1,8 @@
+{
+  "id": "IT-EXT-423-TRAGHETTO",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can talk about a voyage: the cruise, the cabin, the sailor, the bow and the stern.",
+  "prerequisites": []
+}

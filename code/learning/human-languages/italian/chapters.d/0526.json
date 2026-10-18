@@ -1,0 +1,19 @@
+{
+  "chapter": 526,
+  "title": "Leggere e giudicare",
+  "label": "ch:it-leggere-e-giudicare",
+  "canDo": "I can talk about reviews and the way I read.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "IT-R526-ripasso-519-526",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 526: I can talk about reviews and the way I read.",
+    "assesses": [
+      "IT-LEX-C526-RECENSIONE-03",
+      "IT-LEX-C526-RECENSIONE-04",
+      "IT-LEX-C526-RECENSIONE-05"
+    ]
+  }
+}

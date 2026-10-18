@@ -1,0 +1,19 @@
+{
+  "chapter": 487,
+  "title": "Stomaco e testa",
+  "label": "ch:it-stomaco-e-testa",
+  "canDo": "I can describe stomach trouble and dizziness.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "IT-C487-vertigini",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 487: I can describe stomach trouble and dizziness.",
+    "assesses": [
+      "IT-LEX-C487-STOMACO-03",
+      "IT-LEX-C487-STOMACO-04",
+      "IT-LEX-C487-STOMACO-05"
+    ]
+  }
+}

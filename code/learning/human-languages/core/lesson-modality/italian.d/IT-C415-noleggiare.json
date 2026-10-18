@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C415-noleggiare",
+    "language": "italian",
+    "chapter": 415,
+    "sequence": 23610,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:26c58a30940c03a6"
+  },
+  "findings": []
+}

@@ -1,0 +1,9 @@
+{
+  "id": "IT-PATH-340-DIBATTITO",
+  "spine_node": "SPINE-GIVE-REASONS",
+  "before": [],
+  "inline": [
+    "IT-EXT-340-DIBATTITO"
+  ],
+  "after": []
+}

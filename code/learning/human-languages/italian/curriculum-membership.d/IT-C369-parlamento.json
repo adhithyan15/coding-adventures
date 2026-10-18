@@ -1,0 +1,11 @@
+{
+  "id": "IT-C369-parlamento",
+  "pathSegment": "IT-PATH-369-PARTITO",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "IT-EXT-369-PARTITO",
+      "order": 1
+    }
+  ]
+}

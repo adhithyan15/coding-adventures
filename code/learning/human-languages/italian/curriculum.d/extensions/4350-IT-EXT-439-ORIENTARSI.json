@@ -1,0 +1,8 @@
+{
+  "id": "IT-EXT-439-ORIENTARSI",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can find my bearings: finding my way, getting lost, the map, the street plan and the compass.",
+  "prerequisites": []
+}

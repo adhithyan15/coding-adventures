@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C525-tascabile",
+    "language": "italian",
+    "chapter": 525,
+    "sequence": 29400,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:93523ae4e861f18e"
+  },
+  "findings": []
+}

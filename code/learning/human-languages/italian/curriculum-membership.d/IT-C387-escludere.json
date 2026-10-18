@@ -1,0 +1,11 @@
+{
+  "id": "IT-C387-escludere",
+  "pathSegment": "IT-PATH-387-REQUISITO",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "IT-EXT-387-REQUISITO",
+      "order": 3
+    }
+  ]
+}

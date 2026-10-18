@@ -1,0 +1,11 @@
+{
+  "id": "IT-C474-sereno",
+  "pathSegment": "IT-PATH-474-UMORE",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "IT-EXT-474-UMORE",
+      "order": 1
+    }
+  ]
+}

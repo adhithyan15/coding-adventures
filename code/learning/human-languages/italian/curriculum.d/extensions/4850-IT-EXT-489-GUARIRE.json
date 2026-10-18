@@ -1,0 +1,8 @@
+{
+  "id": "IT-EXT-489-GUARIRE",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can describe getting ill: symptoms, diagnosis, infection and recovery.",
+  "prerequisites": []
+}

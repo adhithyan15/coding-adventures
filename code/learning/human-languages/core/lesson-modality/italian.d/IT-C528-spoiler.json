@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C528-spoiler",
+    "language": "italian",
+    "chapter": 528,
+    "sequence": 29550,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:920269a52ac975d8"
+  },
+  "findings": []
+}

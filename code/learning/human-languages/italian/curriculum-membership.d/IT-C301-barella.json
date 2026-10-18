@@ -1,0 +1,11 @@
+{
+  "id": "IT-C301-barella",
+  "pathSegment": "IT-PATH-301-SOCCORSO",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "IT-EXT-301-SOCCORSO",
+      "order": 3
+    }
+  ]
+}

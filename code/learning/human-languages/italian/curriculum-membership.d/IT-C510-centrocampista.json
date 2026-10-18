@@ -1,0 +1,11 @@
+{
+  "id": "IT-C510-centrocampista",
+  "pathSegment": "IT-PATH-510-SQUADRA",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "IT-EXT-510-SQUADRA",
+      "order": 2
+    }
+  ]
+}

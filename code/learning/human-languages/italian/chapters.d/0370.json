@@ -1,0 +1,19 @@
+{
+  "chapter": 370,
+  "title": "La maggioranza",
+  "label": "ch:it-la-maggioranza",
+  "canDo": "I can talk about the majority and minorities, democracy, a reform and a member of parliament.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "IT-R370-ripasso-363-370",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 370: I can talk about the majority and minorities, democracy, a reform and a member of parliament.",
+    "assesses": [
+      "IT-LEX-C370-MAGGIORANZA-03",
+      "IT-LEX-C370-MAGGIORANZA-04",
+      "IT-LEX-C370-MAGGIORANZA-05"
+    ]
+  }
+}

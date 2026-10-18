@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C459-rata",
+    "language": "italian",
+    "chapter": 459,
+    "sequence": 25900,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:83e5f6eccd2aa9c7"
+  },
+  "findings": []
+}

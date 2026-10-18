@@ -1,0 +1,11 @@
+{
+  "id": "IT-C424-nausea",
+  "pathSegment": "IT-PATH-424-APPRODO",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "IT-EXT-424-APPRODO",
+      "order": 4
+    }
+  ]
+}

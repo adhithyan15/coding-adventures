@@ -1,0 +1,9 @@
+{
+  "id": "IT-PATH-423-TRAGHETTO",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "IT-EXT-423-TRAGHETTO"
+  ],
+  "after": []
+}

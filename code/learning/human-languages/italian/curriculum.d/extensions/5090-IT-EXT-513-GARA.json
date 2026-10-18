@@ -1,0 +1,8 @@
+{
+  "id": "IT-EXT-513-GARA",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can describe a race: timing, distance and being out of breath.",
+  "prerequisites": []
+}

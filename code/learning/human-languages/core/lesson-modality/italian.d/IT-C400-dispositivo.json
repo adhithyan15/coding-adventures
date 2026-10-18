@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C400-dispositivo",
+    "language": "italian",
+    "chapter": 400,
+    "sequence": 22750,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4fb2d86d0945dc95"
+  },
+  "findings": []
+}

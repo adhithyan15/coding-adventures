@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 403,
+  "sourceHash": "fnv1a64:63e8004edf21a369",
+  "lessonIds": [
+    "IT-C403-pubblicare",
+    "IT-C403-commentare",
+    "IT-C403-inoltrare",
+    "IT-C403-email",
+    "IT-C403-casella"
+  ],
+  "tex": "italian/book/chapters/ch403-sui-social.tex"
+}

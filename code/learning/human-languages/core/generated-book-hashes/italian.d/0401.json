@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 401,
+  "sourceHash": "fnv1a64:03cf32bb8a5ab878",
+  "lessonIds": [
+    "IT-C401-file",
+    "IT-C401-cancellare",
+    "IT-C401-copiare",
+    "IT-C401-incollare",
+    "IT-C401-backup"
+  ],
+  "tex": "italian/book/chapters/ch401-file-e-cartelle.tex"
+}

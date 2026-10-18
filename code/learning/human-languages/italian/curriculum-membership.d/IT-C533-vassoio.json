@@ -1,0 +1,11 @@
+{
+  "id": "IT-C533-vassoio",
+  "pathSegment": "IT-PATH-533-TAVOLA",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "IT-EXT-533-TAVOLA",
+      "order": 4
+    }
+  ]
+}

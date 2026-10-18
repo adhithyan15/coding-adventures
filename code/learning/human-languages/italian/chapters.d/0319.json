@@ -1,0 +1,19 @@
+{
+  "chapter": 319,
+  "title": "Il carnevale",
+  "label": "ch:it-il-carnevale",
+  "canDo": "I can describe carnival: masks, confetti, dressing up and parading through the streets.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "IT-C319-sfilare",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 319: I can describe carnival: masks, confetti, dressing up and parading through the streets.",
+    "assesses": [
+      "IT-LEX-C319-CARNEVALE-03",
+      "IT-LEX-C319-CARNEVALE-04",
+      "IT-LEX-C319-CARNEVALE-05"
+    ]
+  }
+}

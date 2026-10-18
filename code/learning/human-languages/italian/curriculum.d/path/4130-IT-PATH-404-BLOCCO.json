@@ -1,0 +1,9 @@
+{
+  "id": "IT-PATH-404-BLOCCO",
+  "spine_node": "SPINE-EXPRESS-CONDITION",
+  "before": [],
+  "inline": [
+    "IT-EXT-404-BLOCCO"
+  ],
+  "after": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 275,
+  "title": "Cosa è accaduto",
+  "label": "ch:it-cosa-e-accaduto",
+  "canDo": "I can say that something happened, came about or took place, and talk about what happened.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "IT-C275-accaduto",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 275: I can say that something happened, came about or took place, and talk about what happened.",
+    "assesses": [
+      "IT-LEX-C275-ACCADERE-03",
+      "IT-LEX-C275-ACCADERE-04",
+      "IT-LEX-C275-ACCADERE-05"
+    ]
+  }
+}

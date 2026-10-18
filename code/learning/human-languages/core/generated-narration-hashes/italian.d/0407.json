@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 407,
+  "sourceHash": "fnv1a64:a84eff22f9255e99",
+  "lessonIds": [
+    "IT-C407-parabrezza",
+    "IT-C407-tergicristallo",
+    "IT-C407-specchietto",
+    "IT-C407-clacson",
+    "IT-C407-appannarsi"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch407.txt",
+  "json": "italian/narration/ch407.json",
+  "textHash": "fnv1a64:143ec0d59215d5ea",
+  "jsonHash": "fnv1a64:0753205ce68d5fd2",
+  "findings": []
+}

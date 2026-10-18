@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 476,
+  "sourceHash": "fnv1a64:20a74fb127a4e632",
+  "lessonIds": [
+    "IT-C476-deludere",
+    "IT-C476-delusione",
+    "IT-C476-consolare",
+    "IT-C476-pianto",
+    "IT-C476-singhiozzare"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch476.txt",
+  "json": "italian/narration/ch476.json",
+  "textHash": "fnv1a64:324427ff34dbc894",
+  "jsonHash": "fnv1a64:a30c20438cd3a8a0",
+  "findings": []
+}

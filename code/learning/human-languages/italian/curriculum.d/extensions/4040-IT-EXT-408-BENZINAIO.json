@@ -1,0 +1,8 @@
+{
+  "id": "IT-EXT-408-BENZINAIO",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can fill up the car: the attendant, diesel, fuel, the tank and refuelling.",
+  "prerequisites": []
+}

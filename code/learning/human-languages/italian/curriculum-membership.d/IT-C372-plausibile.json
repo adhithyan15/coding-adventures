@@ -1,0 +1,11 @@
+{
+  "id": "IT-C372-plausibile",
+  "pathSegment": "IT-PATH-372-IPOTESI",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "IT-EXT-372-IPOTESI",
+      "order": 3
+    }
+  ]
+}

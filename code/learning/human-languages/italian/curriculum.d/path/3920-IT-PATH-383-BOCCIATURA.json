@@ -1,0 +1,9 @@
+{
+  "id": "IT-PATH-383-BOCCIATURA",
+  "spine_node": "SPINE-EXPRESS-CONDITION",
+  "before": [],
+  "inline": [
+    "IT-EXT-383-BOCCIATURA"
+  ],
+  "after": []
+}

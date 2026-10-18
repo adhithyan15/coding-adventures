@@ -1,0 +1,11 @@
+{
+  "id": "IT-C431-anticipare",
+  "pathSegment": "IT-PATH-431-CAPARRA",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "IT-EXT-431-CAPARRA",
+      "order": 4
+    }
+  ]
+}

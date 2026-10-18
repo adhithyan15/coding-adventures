@@ -1,0 +1,19 @@
+{
+  "chapter": 276,
+  "title": "Una lunga vicenda",
+  "label": "ch:it-una-lunga-vicenda",
+  "canDo": "I can talk about an event, a chain of events, a matter, and the order things came in.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "IT-C276-sequenza",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 276: I can talk about an event, a chain of events, a matter, and the order things came in.",
+    "assesses": [
+      "IT-LEX-C276-VICENDA-03",
+      "IT-LEX-C276-VICENDA-04",
+      "IT-LEX-C276-VICENDA-05"
+    ]
+  }
+}

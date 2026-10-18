@@ -1,0 +1,9 @@
+{
+  "id": "IT-PATH-331-RICETTA",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "IT-EXT-331-RICETTA"
+  ],
+  "after": []
+}

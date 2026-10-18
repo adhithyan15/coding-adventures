@@ -1,0 +1,11 @@
+{
+  "id": "IT-C428-atterrare",
+  "pathSegment": "IT-PATH-428-VOLO",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "IT-EXT-428-VOLO",
+      "order": 1
+    }
+  ]
+}

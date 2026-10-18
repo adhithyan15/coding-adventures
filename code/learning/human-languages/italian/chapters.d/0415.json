@@ -1,0 +1,19 @@
+{
+  "chapter": 415,
+  "title": "A noleggio",
+  "label": "ch:it-a-noleggio",
+  "canDo": "I can hire a car: hiring, the rental, the number plate, the logbook and the insurance.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "IT-C415-assicurazione",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 415: I can hire a car: hiring, the rental, the number plate, the logbook and the insurance.",
+    "assesses": [
+      "IT-LEX-C415-NOLEGGIO-03",
+      "IT-LEX-C415-NOLEGGIO-04",
+      "IT-LEX-C415-NOLEGGIO-05"
+    ]
+  }
+}

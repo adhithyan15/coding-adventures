@@ -1,0 +1,8 @@
+{
+  "id": "IT-EXT-482-VISO",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can describe the face in detail: brows, lashes, eyelids, temples and jaw.",
+  "prerequisites": []
+}

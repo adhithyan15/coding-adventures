@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 282,
+  "sourceHash": "fnv1a64:11ed29c0bd2b5033",
+  "lessonIds": [
+    "IT-C282-cronaca",
+    "IT-C282-quotidiano",
+    "IT-C282-settimanale",
+    "IT-C282-titolo",
+    "IT-C282-articolo"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch282.txt",
+  "json": "italian/narration/ch282.json",
+  "textHash": "fnv1a64:eee378ad27a9fb46",
+  "jsonHash": "fnv1a64:57472181ad430a75",
+  "findings": []
+}

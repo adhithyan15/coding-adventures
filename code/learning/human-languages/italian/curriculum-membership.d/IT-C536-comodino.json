@@ -1,0 +1,11 @@
+{
+  "id": "IT-C536-comodino",
+  "pathSegment": "IT-PATH-536-CASA",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "IT-EXT-536-CASA",
+      "order": 4
+    }
+  ]
+}

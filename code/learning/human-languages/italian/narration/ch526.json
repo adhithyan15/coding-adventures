@@ -1,0 +1,858 @@
+{
+  "version": 1,
+  "language": "italian",
+  "chapter": 526,
+  "title": "Leggere e giudicare",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:ba8cbb4b7a08d480",
+  "lessons": [
+    {
+      "id": "IT-C526-recensione",
+      "sequence": 29410,
+      "title": "la recensione — review",
+      "headword": "la recensione",
+      "romanization": "la recensione",
+      "gloss": "review",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:258e02bbe6021cd9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Italian for bookmark, then the Italian for paperback."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: la recensione",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la recensione — \"review\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Ho letto una recensione molto positiva del film. I read a very good review of the film."
+            },
+            {
+              "kind": "speech",
+              "text": "Scrivere una recensione — to write a review."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "recensione is a learned borrowing from Latin recēnsiō \"a review, a counting\" (Lewis & Short), from cēnsēre \"to assess\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la recensione",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la recensione*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la recensione, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la recensione*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with la recensione",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *la recensione*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Italian for bookmark, then the Italian for paperback, then say la recensione again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Italian for bookmark, then the Italian for paperback, then say *la recensione* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does la recensione mean? (\"Review\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "IT-C526-recensire",
+      "sequence": 29420,
+      "title": "recensire — to review",
+      "headword": "recensire",
+      "romanization": "recensire",
+      "gloss": "to review",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:52049fbf008166b2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Italian for paperback, then the Italian for review."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: recensire",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "recensire — \"to review\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Il giornale ha recensito il suo ultimo romanzo. The newspaper reviewed her latest novel."
+            },
+            {
+              "kind": "speech",
+              "text": "An -isc- verb: recensisco."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "recensire is a learned borrowing from Latin recēnsēre \"to count over, to review\" (Lewis & Short), from cēnsēre \"to assess\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "recensire",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *recensire*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "recensire, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *recensire*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with recensire",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *recensire*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Italian for paperback, then the Italian for review, then say recensire again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Italian for paperback, then the Italian for review, then say *recensire* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does recensire mean? (\"To review\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "IT-C526-critico",
+      "sequence": 29430,
+      "title": "il critico — critic",
+      "headword": "il critico",
+      "romanization": "il critico",
+      "gloss": "critic",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2b42d841d4a174d3",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Italian for review, then the Italian for to review."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: il critico",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "il critico — \"critic\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Il critico ha parlato male dello spettacolo. The critic spoke badly of the show."
+            },
+            {
+              "kind": "speech",
+              "text": "The plural is i critici. Also an adjective: un momento critico."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "critico is a learned borrowing, through Latin criticus (Lewis & Short), from Greek kritikós \"able to judge\", from krínein \"to judge\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "il critico",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *il critico*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "il critico, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *il critico*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with il critico",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *il critico*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Italian for review, then the Italian for to review, then say il critico again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Italian for review, then the Italian for to review, then say *il critico* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does il critico mean? (\"Critic\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "IT-C526-divorare",
+      "sequence": 29440,
+      "title": "divorare — to devour",
+      "headword": "divorare",
+      "romanization": "divorare",
+      "gloss": "to devour",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:025d5892b4aa5806",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Italian for to review, then the Italian for critic."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: divorare",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "divorare — \"to devour\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Ho divorato il libro in due giorni. I devoured the book in two days."
+            },
+            {
+              "kind": "speech",
+              "text": "Of books: to read very fast."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "divorare comes from Latin dēvorāre \"to swallow down\" (EtymDB), from vorāre \"to swallow\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "divorare",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *divorare*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "divorare, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *divorare*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with divorare",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *divorare*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Italian for to review, then the Italian for critic, then say divorare again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Italian for to review, then the Italian for critic, then say *divorare* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does divorare mean? (\"To devour\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "IT-C526-rileggere",
+      "sequence": 29450,
+      "title": "rileggere — to reread",
+      "headword": "rileggere",
+      "romanization": "rileggere",
+      "gloss": "to reread",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:29a2a4f5986ea05e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Italian for critic, then the Italian for to devour."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: rileggere",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "rileggere — \"to reread\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Rileggo spesso i miei libri preferiti. I often reread my favourite books."
+            },
+            {
+              "kind": "speech",
+              "text": "Like leggere: past participle riletto."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "rileggere is built from ri- \"again\" and leggere \"to read\", inherited from Latin legere \"to gather, to read\" (Lewis & Short)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rileggere",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rileggere*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rileggere, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rileggere*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with rileggere",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *rileggere*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Italian for critic, then the Italian for to devour, then say rileggere again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Italian for critic, then the Italian for to devour, then say *rileggere* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does rileggere mean? (\"To reread\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "IT-R526-ripasso-519-526",
+      "sequence": 29460,
+      "title": "Ripasso dei capitoli 519–526",
+      "headword": "(dialogue)",
+      "romanization": "(dialogue)",
+      "gloss": "a review of chapters 519-526",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9304c1ec528342b1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Italian for stage and curtain."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "stage, curtain, stalls, gallery, applause",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: stage, curtain, stalls, gallery, applause]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to act, script, role, to make one's debut, director",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to act, script, role, to make one's debut, director]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "painting, paintbrush, canvas, easel, watercolour",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: painting, paintbrush, canvas, easel, watercolour]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to sculpt, sculptor, marble, clay, to model",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to sculpt, sculptor, marble, clay, to model]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "exhibition, masterpiece, portrait, fresco, to restore",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: exhibition, masterpiece, portrait, fresco, to restore]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "novelist, chapter, to set, twist, ending",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: novelist, chapter, to set, twist, ending]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bookseller, cover, to leaf through, bookmark, paperback",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: bookseller, cover, to leaf through, bookmark, paperback]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "review, to review, critic, to devour, to reread",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: review, to review, critic, to devour, to reread]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Stage? (il palcoscenico.) Curtain? (il sipario.) Stalls? (la platea.) Gallery? (il loggione.) Applause? (l'applauso.) To act? (recitare.) Script? (il copione.) Role? (il ruolo.) To make one's debut? (debuttare.) Director? (il regista.) Painting? (la pittura.) Paintbrush? (il pennello.) Canvas? (la tela.) Easel? (il cavalletto.) Watercolour? (l'acquerello.) To sculpt? (scolpire.) Sculptor? (lo scultore.) Marble? (il marmo.) Clay? (l'argilla.) To model? (modellare.) Exhibition? (la mostra.) Masterpiece? (il capolavoro.) Portrait? (il ritratto.) Fresco? (l'affresco.) To restore? (restaurare.) Novelist? (il romanziere.) Chapter? (il capitolo.) To set? (ambientare.) Twist? (il colpo di scena.) Ending? (l'epilogo.) Bookseller? (il libraio.) Cover? (la copertina.) To leaf through? (sfogliare.) Bookmark? (il segnalibro.) Paperback? (il tascabile.) Review? (la recensione.) To review? (recensire.) Critic? (il critico.) To devour? (divorare.) To reread? (rileggere.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

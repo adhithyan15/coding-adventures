@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C440-navigatore",
+    "language": "italian",
+    "chapter": 440,
+    "sequence": 24890,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:825e0dc30998c3d0"
+  },
+  "findings": []
+}

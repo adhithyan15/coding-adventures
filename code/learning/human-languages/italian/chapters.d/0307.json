@@ -1,0 +1,19 @@
+{
+  "chapter": 307,
+  "title": "Benvenuto al mondo",
+  "label": "ch:it-benvenuto-al-mondo",
+  "canDo": "I can talk about a birth: twins, the first-born, weaning and the dummy.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "IT-C307-ciuccio",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 307: I can talk about a birth: twins, the first-born, weaning and the dummy.",
+    "assesses": [
+      "IT-LEX-C307-NASCITA-03",
+      "IT-LEX-C307-NASCITA-04",
+      "IT-LEX-C307-NASCITA-05"
+    ]
+  }
+}

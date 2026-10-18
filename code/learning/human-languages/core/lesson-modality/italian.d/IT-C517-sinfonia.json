@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C517-sinfonia",
+    "language": "italian",
+    "chapter": 517,
+    "sequence": 28960,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:79c8ff477dddf1e2"
+  },
+  "findings": []
+}

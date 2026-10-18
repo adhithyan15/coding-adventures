@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 461,
+  "sourceHash": "fnv1a64:d4add66c1a61114a",
+  "lessonIds": [
+    "IT-C461-quercia",
+    "IT-C461-pino",
+    "IT-C461-abete",
+    "IT-C461-potare",
+    "IT-C461-corteccia"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch461.txt",
+  "json": "italian/narration/ch461.json",
+  "textHash": "fnv1a64:271e7679bb5070ae",
+  "jsonHash": "fnv1a64:9302089f2194cd97",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "IT-C310-ambientarsi",
+  "pathSegment": "IT-PATH-310-TRASFERIRSI",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "IT-EXT-310-TRASFERIRSI",
+      "order": 3
+    }
+  ]
+}

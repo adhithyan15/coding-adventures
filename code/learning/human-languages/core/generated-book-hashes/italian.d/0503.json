@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 503,
+  "sourceHash": "fnv1a64:83308bff44a48ca3",
+  "lessonIds": [
+    "IT-C503-scacchi",
+    "IT-C503-dama",
+    "IT-C503-dado",
+    "IT-C503-gioco-da-tavolo",
+    "IT-C503-barare"
+  ],
+  "tex": "italian/book/chapters/ch503-giochi-da-tavolo.tex"
+}

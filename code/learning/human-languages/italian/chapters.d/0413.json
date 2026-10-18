@@ -1,0 +1,19 @@
+{
+  "chapter": 413,
+  "title": "Incidenti e code",
+  "label": "ch:it-incidenti-e-code",
+  "canDo": "I can report trouble on the road: a bump from behind, a pile-up, a traffic jam and a diversion.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "IT-C413-deviare",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 413: I can report trouble on the road: a bump from behind, a pile-up, a traffic jam and a diversion.",
+    "assesses": [
+      "IT-LEX-C413-INGORGO-03",
+      "IT-LEX-C413-INGORGO-04",
+      "IT-LEX-C413-INGORGO-05"
+    ]
+  }
+}

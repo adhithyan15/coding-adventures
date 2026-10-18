@@ -1,0 +1,11 @@
+{
+  "id": "IT-C530-videogioco",
+  "pathSegment": "IT-PATH-530-ONLINE",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "IT-EXT-530-ONLINE",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "IT-C418-abbonamento",
+  "pathSegment": "IT-PATH-418-BIGLIETTERIA",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "IT-EXT-418-BIGLIETTERIA",
+      "order": 1
+    }
+  ]
+}

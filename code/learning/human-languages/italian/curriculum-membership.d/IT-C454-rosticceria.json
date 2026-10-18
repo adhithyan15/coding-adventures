@@ -1,0 +1,11 @@
+{
+  "id": "IT-C454-rosticceria",
+  "pathSegment": "IT-PATH-454-ALIMENTARI",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "IT-EXT-454-ALIMENTARI",
+      "order": 4
+    }
+  ]
+}

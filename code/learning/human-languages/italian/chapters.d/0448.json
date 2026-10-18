@@ -1,0 +1,19 @@
+{
+  "chapter": 448,
+  "title": "Panchine e lampioni",
+  "label": "ch:it-panchine-e-lampioni",
+  "canDo": "I can describe things on the street: a bench, a street lamp, a litter bin, a drain cover and things in the way.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "IT-C448-ingombrare",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 448: I can describe things on the street: a bench, a street lamp, a litter bin, a drain cover and things in the way.",
+    "assesses": [
+      "IT-LEX-C448-ARREDO-03",
+      "IT-LEX-C448-ARREDO-04",
+      "IT-LEX-C448-ARREDO-05"
+    ]
+  }
+}

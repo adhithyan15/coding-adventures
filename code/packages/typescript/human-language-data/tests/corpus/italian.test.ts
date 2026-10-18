@@ -44,7 +44,12 @@ it("pins Italian lesson-content budgets", () =>
     // lessons and two reviews per run. Italian attains A2 here.
     // 1312 -> 1315: chapters 260-262, the A1 writing stages Italian had not
     // proved (my own line, with a clock, four lines). No new word or atom.
-    lessons: 1315,
+    // 1315 -> 1350: chapters 263-272, the B1 core that realizes all five B1
+    // spine nodes (imperfetto, reasons, travel, experience, condizionale):
+    // 35 lessons, one reading and one writing, no idiom, sense or culture claim.
+    // 1350 -> 2710: chapters 273-536, the B1 vocabulary: 1,320 word lessons
+    // (one headword each) and 40 spaced reviews. Italian attains B1 here.
+    lessons: 2710,
     idioms: 4,
     senses: 9,
     cultureClaims: 11,
@@ -69,6 +74,9 @@ it("pins Italian's writing ladder IN ORDER, pre-A1 through A1", () => {
     // the point: a timed or connected paper before a controlled one is invalid.
     "controlled-composition",
     "timed-assessment-production",
+    "connected-composition",
+    // IT-W272-sei-righe: six connected lines about a journey, the B1 core's
+    // writing task. A second connected composition, later in sequence.
     "connected-composition",
   ]);
   expect(italian.defects).toEqual([]);

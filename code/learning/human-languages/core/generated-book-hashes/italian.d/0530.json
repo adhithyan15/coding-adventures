@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 530,
+  "sourceHash": "fnv1a64:21d58b3fc7695ead",
+  "lessonIds": [
+    "IT-C530-abbonarsi",
+    "IT-C530-streaming",
+    "IT-C530-videogioco",
+    "IT-C530-postare",
+    "IT-C530-follower"
+  ],
+  "tex": "italian/book/chapters/ch530-sullo-schermo.tex"
+}

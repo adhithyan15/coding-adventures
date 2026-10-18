@@ -1,0 +1,19 @@
+{
+  "chapter": 399,
+  "title": "Il mio account",
+  "label": "ch:it-il-mio-account",
+  "canDo": "I can manage an online account: the user, the password, signing up and logging in.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "IT-C399-registrarsi",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 399: I can manage an online account: the user, the password, signing up and logging in.",
+    "assesses": [
+      "IT-LEX-C399-ACCOUNT-03",
+      "IT-LEX-C399-ACCOUNT-04",
+      "IT-LEX-C399-ACCOUNT-05"
+    ]
+  }
+}

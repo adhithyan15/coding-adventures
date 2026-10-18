@@ -1,0 +1,19 @@
+{
+  "chapter": 324,
+  "title": "Miti ed eroi",
+  "label": "ch:it-miti-ed-eroi",
+  "canDo": "I can talk about heroes, legends and myths, how a story ends and its moral.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "IT-C324-morale",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 324: I can talk about heroes, legends and myths, how a story ends and its moral.",
+    "assesses": [
+      "IT-LEX-C324-MITO-03",
+      "IT-LEX-C324-MITO-04",
+      "IT-LEX-C324-MITO-05"
+    ]
+  }
+}

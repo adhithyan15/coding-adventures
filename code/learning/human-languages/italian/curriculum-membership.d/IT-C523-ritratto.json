@@ -1,0 +1,11 @@
+{
+  "id": "IT-C523-ritratto",
+  "pathSegment": "IT-PATH-523-MOSTRA",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "IT-EXT-523-MOSTRA",
+      "order": 2
+    }
+  ]
+}

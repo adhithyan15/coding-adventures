@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 497,
+  "sourceHash": "fnv1a64:9fd16aa35b45d447",
+  "lessonIds": [
+    "IT-C497-educare",
+    "IT-C497-viziare",
+    "IT-C497-viziato",
+    "IT-C497-rimproverare",
+    "IT-C497-castigo"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch497.txt",
+  "json": "italian/narration/ch497.json",
+  "textHash": "fnv1a64:24d5b94628691530",
+  "jsonHash": "fnv1a64:827ece5824cd18ed",
+  "findings": []
+}

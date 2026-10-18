@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C415-assicurazione",
+    "language": "italian",
+    "chapter": 415,
+    "sequence": 23650,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c5dbfb347198aec4"
+  },
+  "findings": []
+}

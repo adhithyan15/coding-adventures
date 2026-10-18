@@ -1,0 +1,11 @@
+{
+  "id": "IT-C378-programmare",
+  "pathSegment": "IT-PATH-378-SCOPO",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "IT-EXT-378-SCOPO",
+      "order": 2
+    }
+  ]
+}

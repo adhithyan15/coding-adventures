@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C392-condanna",
+    "language": "italian",
+    "chapter": 392,
+    "sequence": 22340,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9ab2d9c697671a2c"
+  },
+  "findings": []
+}

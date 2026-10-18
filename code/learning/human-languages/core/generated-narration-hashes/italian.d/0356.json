@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 356,
+  "sourceHash": "fnv1a64:56f79ffb068ace80",
+  "lessonIds": [
+    "IT-C356-curriculum",
+    "IT-C356-candidatura",
+    "IT-C356-candidarsi",
+    "IT-C356-candidato",
+    "IT-C356-assunzione"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch356.txt",
+  "json": "italian/narration/ch356.json",
+  "textHash": "fnv1a64:6f535657b6ef570d",
+  "jsonHash": "fnv1a64:3220656e2c80d1bb",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "IT-C429-agriturismo",
+  "pathSegment": "IT-PATH-429-DORMIRE",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "IT-EXT-429-DORMIRE",
+      "order": 1
+    }
+  ]
+}

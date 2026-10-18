@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 387,
+  "sourceHash": "fnv1a64:6e7d561458eb282d",
+  "lessonIds": [
+    "IT-C387-requisito",
+    "IT-C387-idoneo",
+    "IT-C387-ammissione",
+    "IT-C387-escludere",
+    "IT-C387-condizione"
+  ],
+  "tex": "italian/book/chapters/ch387-chi-puo-partecipare.tex"
+}

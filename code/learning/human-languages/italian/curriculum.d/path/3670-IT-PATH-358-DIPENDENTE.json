@@ -1,0 +1,9 @@
+{
+  "id": "IT-PATH-358-DIPENDENTE",
+  "spine_node": "SPINE-GIVE-REASONS",
+  "before": [],
+  "inline": [
+    "IT-EXT-358-DIPENDENTE"
+  ],
+  "after": []
+}

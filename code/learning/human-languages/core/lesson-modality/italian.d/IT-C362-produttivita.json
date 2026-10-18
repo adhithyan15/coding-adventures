@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C362-produttivita",
+    "language": "italian",
+    "chapter": 362,
+    "sequence": 20810,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f8b9457d58c2d022"
+  },
+  "findings": []
+}

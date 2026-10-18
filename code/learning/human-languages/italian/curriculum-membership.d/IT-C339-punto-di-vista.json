@@ -1,0 +1,11 @@
+{
+  "id": "IT-C339-punto-di-vista",
+  "pathSegment": "IT-PATH-339-OPINIONE",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "IT-EXT-339-OPINIONE",
+      "order": 4
+    }
+  ]
+}

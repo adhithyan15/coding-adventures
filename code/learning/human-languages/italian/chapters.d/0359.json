@@ -1,0 +1,19 @@
+{
+  "chapter": 359,
+  "title": "Lo sciopero",
+  "label": "ch:it-lo-sciopero",
+  "canDo": "I can talk about workers' rights: the union, a strike, going on strike, shifts and overtime.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "IT-C359-straordinari",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 359: I can talk about workers' rights: the union, a strike, going on strike, shifts and overtime.",
+    "assesses": [
+      "IT-LEX-C359-SCIOPERO-03",
+      "IT-LEX-C359-SCIOPERO-04",
+      "IT-LEX-C359-SCIOPERO-05"
+    ]
+  }
+}

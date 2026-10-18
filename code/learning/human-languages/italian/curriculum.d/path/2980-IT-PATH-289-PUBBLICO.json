@@ -1,0 +1,9 @@
+{
+  "id": "IT-PATH-289-PUBBLICO",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "IT-EXT-289-PUBBLICO"
+  ],
+  "after": []
+}

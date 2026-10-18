@@ -1,0 +1,20 @@
+{
+  "language": "italian",
+  "chapter": 336,
+  "sourceHash": "fnv1a64:e5e5156f2dd86e48",
+  "lessonIds": [
+    "IT-C336-preriscaldare",
+    "IT-C336-infornare",
+    "IT-C336-sfornare",
+    "IT-C336-teglia",
+    "IT-C336-cottura",
+    "IT-R336-ripasso-329-336"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "italian/narration/ch336.txt",
+  "json": "italian/narration/ch336.json",
+  "textHash": "fnv1a64:0ed0a05692202faf",
+  "jsonHash": "fnv1a64:3852baa0a09222a7",
+  "findings": []
+}

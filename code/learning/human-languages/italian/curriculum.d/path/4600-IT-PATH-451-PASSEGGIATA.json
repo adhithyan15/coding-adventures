@@ -1,0 +1,9 @@
+{
+  "id": "IT-PATH-451-PASSEGGIATA",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "IT-EXT-451-PASSEGGIATA"
+  ],
+  "after": []
+}

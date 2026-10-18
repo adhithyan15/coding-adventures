@@ -1,0 +1,8 @@
+{
+  "id": "IT-EXT-485-STORTA",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can describe a sprain, a cramp and how it is bandaged.",
+  "prerequisites": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C426-bilancia",
+    "language": "italian",
+    "chapter": 426,
+    "sequence": 24200,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a8f0b2d1095689fb"
+  },
+  "findings": []
+}

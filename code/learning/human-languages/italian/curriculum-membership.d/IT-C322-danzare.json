@@ -1,0 +1,11 @@
+{
+  "id": "IT-C322-danzare",
+  "pathSegment": "IT-PATH-322-FUOCHI",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "IT-EXT-322-FUOCHI",
+      "order": 4
+    }
+  ]
+}

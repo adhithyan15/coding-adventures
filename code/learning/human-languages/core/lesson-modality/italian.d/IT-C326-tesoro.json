@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C326-tesoro",
+    "language": "italian",
+    "chapter": 326,
+    "sequence": 18850,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7d0f1a4d8aa03e70"
+  },
+  "findings": []
+}

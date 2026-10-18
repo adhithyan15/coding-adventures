@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C479-commuoversi",
+    "language": "italian",
+    "chapter": 479,
+    "sequence": 27050,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e1910cb4be7d1001"
+  },
+  "findings": []
+}

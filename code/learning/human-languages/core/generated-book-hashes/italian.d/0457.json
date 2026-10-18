@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 457,
+  "sourceHash": "fnv1a64:cf910eae8ad4f218",
+  "lessonIds": [
+    "IT-C457-cassiere",
+    "IT-C457-spiccioli",
+    "IT-C457-camerino",
+    "IT-C457-svendita",
+    "IT-C457-mercanteggiare"
+  ],
+  "tex": "italian/book/chapters/ch457-alla-cassa.tex"
+}

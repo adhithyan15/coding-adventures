@@ -1,0 +1,11 @@
+{
+  "id": "IT-C408-benzinaio",
+  "pathSegment": "IT-PATH-408-BENZINAIO",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "IT-EXT-408-BENZINAIO",
+      "order": 0
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "IT-C298-aggressione",
+  "pathSegment": "IT-PATH-298-BANDA",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "IT-EXT-298-BANDA",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 422,
+  "sourceHash": "fnv1a64:c34689539d52f51f",
+  "lessonIds": [
+    "IT-C422-battello",
+    "IT-C422-gommone",
+    "IT-C422-remo",
+    "IT-C422-remare",
+    "IT-C422-canoa"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch422.txt",
+  "json": "italian/narration/ch422.json",
+  "textHash": "fnv1a64:220181c27e854918",
+  "jsonHash": "fnv1a64:5b82f303871ae336",
+  "findings": []
+}

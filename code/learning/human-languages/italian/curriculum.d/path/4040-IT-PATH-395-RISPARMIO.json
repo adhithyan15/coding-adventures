@@ -1,0 +1,9 @@
+{
+  "id": "IT-PATH-395-RISPARMIO",
+  "spine_node": "SPINE-EXPRESS-CONDITION",
+  "before": [],
+  "inline": [
+    "IT-EXT-395-RISPARMIO"
+  ],
+  "after": []
+}

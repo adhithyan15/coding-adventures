@@ -1,0 +1,9 @@
+{
+  "id": "IT-PATH-387-REQUISITO",
+  "spine_node": "SPINE-EXPRESS-CONDITION",
+  "before": [],
+  "inline": [
+    "IT-EXT-387-REQUISITO"
+  ],
+  "after": []
+}

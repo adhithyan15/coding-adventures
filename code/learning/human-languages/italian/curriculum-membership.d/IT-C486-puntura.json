@@ -1,0 +1,11 @@
+{
+  "id": "IT-C486-puntura",
+  "pathSegment": "IT-PATH-486-PRURITO",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "IT-EXT-486-PRURITO",
+      "order": 4
+    }
+  ]
+}

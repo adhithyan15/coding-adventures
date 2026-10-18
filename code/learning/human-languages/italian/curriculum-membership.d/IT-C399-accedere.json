@@ -1,0 +1,11 @@
+{
+  "id": "IT-C399-accedere",
+  "pathSegment": "IT-PATH-399-ACCOUNT",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "IT-EXT-399-ACCOUNT",
+      "order": 3
+    }
+  ]
+}

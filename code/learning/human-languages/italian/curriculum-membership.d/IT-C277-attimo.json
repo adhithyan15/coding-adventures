@@ -1,0 +1,11 @@
+{
+  "id": "IT-C277-attimo",
+  "pathSegment": "IT-PATH-277-DURATA",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "IT-EXT-277-DURATA",
+      "order": 3
+    }
+  ]
+}

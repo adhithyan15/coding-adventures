@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C275-accadere",
+    "language": "italian",
+    "chapter": 275,
+    "sequence": 16200,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:70ec339c3861a6af"
+  },
+  "findings": []
+}

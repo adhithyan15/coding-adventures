@@ -1,0 +1,19 @@
+{
+  "chapter": 436,
+  "title": "Luce e corrente",
+  "label": "ch:it-luce-e-corrente",
+  "canDo": "I can report electrical problems: the bulb, the switch, a fuse, recharging and a bulb that has gone.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "IT-R436-ripasso-429-436",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 436: I can report electrical problems: the bulb, the switch, a fuse, recharging and a bulb that has gone.",
+    "assesses": [
+      "IT-LEX-C436-LUCE-03",
+      "IT-LEX-C436-LUCE-04",
+      "IT-LEX-C436-LUCE-05"
+    ]
+  }
+}

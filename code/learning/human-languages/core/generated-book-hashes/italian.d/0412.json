@@ -1,0 +1,14 @@
+{
+  "language": "italian",
+  "chapter": 412,
+  "sourceHash": "fnv1a64:57fc7093094d6478",
+  "lessonIds": [
+    "IT-C412-vigile",
+    "IT-C412-pedone",
+    "IT-C412-strisce",
+    "IT-C412-investire",
+    "IT-C412-contravvenzione",
+    "IT-R412-ripasso-405-412"
+  ],
+  "tex": "italian/book/chapters/ch412-pedoni-e-vigili.tex"
+}

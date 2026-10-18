@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C357-licenziamento",
+    "language": "italian",
+    "chapter": 357,
+    "sequence": 20520,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1eebb59f22ceb18f"
+  },
+  "findings": []
+}

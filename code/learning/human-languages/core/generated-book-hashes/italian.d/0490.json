@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 490,
+  "sourceHash": "fnv1a64:3130b5df77d8aa0a",
+  "lessonIds": [
+    "IT-C490-insonnia",
+    "IT-C490-russare",
+    "IT-C490-incubo",
+    "IT-C490-sbadigliare",
+    "IT-C490-sgranchirsi"
+  ],
+  "tex": "italian/book/chapters/ch490-notti-agitate.tex"
+}

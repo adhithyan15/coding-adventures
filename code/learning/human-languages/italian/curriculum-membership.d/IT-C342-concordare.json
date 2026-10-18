@@ -1,0 +1,11 @@
+{
+  "id": "IT-C342-concordare",
+  "pathSegment": "IT-PATH-342-COMPROMESSO",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "IT-EXT-342-COMPROMESSO",
+      "order": 1
+    }
+  ]
+}

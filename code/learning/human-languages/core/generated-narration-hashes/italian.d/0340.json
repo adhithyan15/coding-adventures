@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 340,
+  "sourceHash": "fnv1a64:74b023ceebf0e0ea",
+  "lessonIds": [
+    "IT-C340-dibattito",
+    "IT-C340-tesi",
+    "IT-C340-argomentazione",
+    "IT-C340-convincente",
+    "IT-C340-persuadere"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch340.txt",
+  "json": "italian/narration/ch340.json",
+  "textHash": "fnv1a64:e7a155457b4948aa",
+  "jsonHash": "fnv1a64:7238f59a98cdb66c",
+  "findings": []
+}

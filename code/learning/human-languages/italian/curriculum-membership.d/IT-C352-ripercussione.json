@@ -1,0 +1,11 @@
+{
+  "id": "IT-C352-ripercussione",
+  "pathSegment": "IT-PATH-352-IMPATTO",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "IT-EXT-352-IMPATTO",
+      "order": 1
+    }
+  ]
+}

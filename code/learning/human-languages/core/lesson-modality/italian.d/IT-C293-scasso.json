@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C293-scasso",
+    "language": "italian",
+    "chapter": 293,
+    "sequence": 17120,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5b0cc0a669e89c96"
+  },
+  "findings": []
+}

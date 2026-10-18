@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 350,
+  "sourceHash": "fnv1a64:6d97dc8d8097e91e",
+  "lessonIds": [
+    "IT-C350-siccome",
+    "IT-C350-poiche",
+    "IT-C350-percio",
+    "IT-C350-pertanto",
+    "IT-C350-dovuto"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch350.txt",
+  "json": "italian/narration/ch350.json",
+  "textHash": "fnv1a64:f84def61f44ebe20",
+  "jsonHash": "fnv1a64:d5b4f6ff0557cd23",
+  "findings": []
+}

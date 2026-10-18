@@ -1,0 +1,19 @@
+{
+  "chapter": 534,
+  "title": "Lavare i piatti",
+  "label": "ch:it-lavare-i-piatti",
+  "canDo": "I can talk about washing up and polishing.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "IT-R534-ripasso-527-534",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 534: I can talk about washing up and polishing.",
+    "assesses": [
+      "IT-LEX-C534-PIATTI-03",
+      "IT-LEX-C534-PIATTI-04",
+      "IT-LEX-C534-PIATTI-05"
+    ]
+  }
+}

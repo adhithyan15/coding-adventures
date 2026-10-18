@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 488,
+  "sourceHash": "fnv1a64:e176e9072b77e79f",
+  "lessonIds": [
+    "IT-C488-pronto-soccorso",
+    "IT-C488-infermiere",
+    "IT-C488-chirurgo",
+    "IT-C488-operare",
+    "IT-C488-anestesia"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch488.txt",
+  "json": "italian/narration/ch488.json",
+  "textHash": "fnv1a64:02118e48bfbec88c",
+  "jsonHash": "fnv1a64:15a4a7b7d9187264",
+  "findings": []
+}

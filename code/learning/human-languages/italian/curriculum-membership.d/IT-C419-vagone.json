@@ -1,0 +1,11 @@
+{
+  "id": "IT-C419-vagone",
+  "pathSegment": "IT-PATH-419-CARROZZA",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "IT-EXT-419-CARROZZA",
+      "order": 0
+    }
+  ]
+}

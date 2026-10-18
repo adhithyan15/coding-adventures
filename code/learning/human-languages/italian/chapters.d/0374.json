@@ -1,0 +1,19 @@
+{
+  "chapter": 374,
+  "title": "Gli imprevisti",
+  "label": "ch:it-gli-imprevisti",
+  "canDo": "I can talk about the unexpected: something foreseeable or not, an alternative and adapting to it.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "IT-C374-adattarsi",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 374: I can talk about the unexpected: something foreseeable or not, an alternative and adapting to it.",
+    "assesses": [
+      "IT-LEX-C374-IMPREVISTO-03",
+      "IT-LEX-C374-IMPREVISTO-04",
+      "IT-LEX-C374-IMPREVISTO-05"
+    ]
+  }
+}

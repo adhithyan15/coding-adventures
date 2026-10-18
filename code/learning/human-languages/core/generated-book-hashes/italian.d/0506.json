@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 506,
+  "sourceHash": "fnv1a64:5fa66ad5d93280e9",
+  "lessonIds": [
+    "IT-C506-scattare",
+    "IT-C506-inquadrare",
+    "IT-C506-treppiede",
+    "IT-C506-rullino",
+    "IT-C506-sviluppare"
+  ],
+  "tex": "italian/book/chapters/ch506-fotografare.tex"
+}

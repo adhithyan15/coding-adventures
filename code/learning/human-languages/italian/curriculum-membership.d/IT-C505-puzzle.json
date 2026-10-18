@@ -1,0 +1,11 @@
+{
+  "id": "IT-C505-puzzle",
+  "pathSegment": "IT-PATH-505-COLLEZIONI",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "IT-EXT-505-COLLEZIONI",
+      "order": 2
+    }
+  ]
+}

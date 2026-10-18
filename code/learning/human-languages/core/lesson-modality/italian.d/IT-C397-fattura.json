@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C397-fattura",
+    "language": "italian",
+    "chapter": 397,
+    "sequence": 22590,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d21eacf3b7460dc8"
+  },
+  "findings": []
+}

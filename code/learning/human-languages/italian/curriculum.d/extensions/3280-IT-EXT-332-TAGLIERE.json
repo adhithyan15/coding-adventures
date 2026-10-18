@@ -1,0 +1,8 @@
+{
+  "id": "IT-EXT-332-TAGLIERE",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say how I prepared the vegetables: slicing, chopping, peeling and grating on the board.",
+  "prerequisites": []
+}

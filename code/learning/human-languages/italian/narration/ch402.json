@@ -1,0 +1,858 @@
+{
+  "version": 1,
+  "language": "italian",
+  "chapter": 402,
+  "title": "In rete",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:595d7b1c44e3dfda",
+  "lessons": [
+    {
+      "id": "IT-C402-rete",
+      "sequence": 22820,
+      "title": "la rete — the network; the internet; the net",
+      "headword": "la rete",
+      "romanization": "la rete",
+      "gloss": "the network; the internet; the net",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7b16ab500a0bd91c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Italian for to paste, then the Italian for the backup."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: la rete",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la rete — \"the network; the internet; the net\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Ho trovato la ricetta in rete. I found the recipe online."
+            },
+            {
+              "kind": "speech",
+              "text": "In rete — online. In football, la rete is the goal net, and a goal."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "rete is inherited from Latin rēte \"a net\" (Lewis & Short): a fishing net, then any network of threads, roads or computers."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la rete",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la rete*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la rete, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la rete*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with la rete",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *la rete*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Italian for to paste, then the Italian for the backup, then say la rete again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Italian for to paste, then the Italian for the backup, then say *la rete* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does la rete mean? (\"The network; the internet; the net\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "IT-C402-connessione",
+      "sequence": 22830,
+      "title": "la connessione — the connection",
+      "headword": "la connessione",
+      "romanization": "la connessione",
+      "gloss": "the connection",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:90ab864ec9f6572b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Italian for the backup, then the Italian for the network."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: la connessione",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la connessione — \"the connection\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Se la connessione è lenta, il video si ferma. If the connection is slow, the video stops."
+            },
+            {
+              "kind": "speech",
+              "text": "Also a tie between ideas."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "connessione is a learned borrowing from Latin cōnexiō, cōnexiōnis \"a binding together\" (EtymDB), from cōnectere \"to tie together\", built on nectere \"to tie\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la connessione",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la connessione*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la connessione, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la connessione*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with la connessione",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *la connessione*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Italian for the backup, then the Italian for the network, then say la connessione again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Italian for the backup, then the Italian for the network, then say *la connessione* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does la connessione mean? (\"The connection\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "IT-C402-connettersi",
+      "sequence": 22840,
+      "title": "connettersi — to connect, to go online",
+      "headword": "connettersi",
+      "romanization": "connettersi",
+      "gloss": "to connect, to go online",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f07fef11ca18d034",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Italian for the network, then the Italian for the connection."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: connettersi",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "connettersi — \"to connect, to go online\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Se ti connetti al wifi dell'albergo, non paghi. If you connect to the hotel wifi, you do not pay."
+            },
+            {
+              "kind": "speech",
+              "text": "Connettersi a — to connect to. Past participle connesso."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "connettersi comes from Latin cōnectere \"to tie together\" (Lewis & Short), built from con- \"together\" and nectere \"to tie\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "connettersi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *connettersi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "connettersi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *connettersi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with connettersi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *connettersi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Italian for the network, then the Italian for the connection, then say connettersi again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Italian for the network, then the Italian for the connection, then say *connettersi* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does connettersi mean? (\"To connect, to go online\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "IT-C402-navigare",
+      "sequence": 22850,
+      "title": "navigare — to browse, to surf; to sail",
+      "headword": "navigare",
+      "romanization": "navigare",
+      "gloss": "to browse, to surf; to sail",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:993ac01d3266f85f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Italian for the connection, then the Italian for to connect."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: navigare",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "navigare — \"to browse, to surf; to sail\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Passo troppo tempo a navigare su internet. I spend too much time browsing the internet."
+            },
+            {
+              "kind": "speech",
+              "text": "First to sail: navigare sul fiume."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "navigare is a learned borrowing from Latin nāvigāre \"to sail\" (Lewis & Short), built on nāvis \"a ship\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "navigare",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *navigare*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "navigare, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *navigare*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with navigare",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *navigare*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Italian for the connection, then the Italian for to connect, then say navigare again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Italian for the connection, then the Italian for to connect, then say *navigare* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does navigare mean? (\"To browse, to surf; to sail\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "IT-C402-link",
+      "sequence": 22860,
+      "title": "il link — the link",
+      "headword": "il link",
+      "romanization": "il link",
+      "gloss": "the link",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:acec843b7cc714c3",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Italian for to connect, then the Italian for to browse."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: il link",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "il link — \"the link\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Ti mando il link: clicca e guarda. I will send you the link: click and have a look."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine, invariable: i link. Also il collegamento."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "link was borrowed from English link \"a ring of a chain\" (EtymDB), a word usually traced to Old Norse."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "il link",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *il link*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "il link, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *il link*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with il link",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *il link*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Italian for to connect, then the Italian for to browse, then say il link again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Italian for to connect, then the Italian for to browse, then say *il link* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does il link mean? (\"The link\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "IT-R402-ripasso-395-402",
+      "sequence": 22870,
+      "title": "Ripasso dei capitoli 395–402",
+      "headword": "(dialogue)",
+      "romanization": "(dialogue)",
+      "gloss": "a review of chapters 395-402",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e5d2e4dd7332845f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Italian for the saving and the investment."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the saving, the investment, the interest, the rate, the inflation",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the saving, the investment, the interest, the rate, the inflation]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the cash, the balance, the cheque, the payment, the deposit",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the cash, the balance, the cheque, the payment, the deposit]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the guarantee, to guarantee, the invoice, the quote, good value",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the guarantee, to guarantee, the invoice, the quote, good value]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to earn, the earnings, the profit, the loss, to go bankrupt",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to earn, the earnings, the profit, the loss, to go bankrupt]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the online account, the password, the user, to log in, to sign up",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the online account, the password, the user, to log in, to sign up]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the app, to install, to uninstall, the device, the software",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the app, to install, to uninstall, the device, the software]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the computer file, to delete, to copy, to paste, the backup",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the computer file, to delete, to copy, to paste, the backup]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the network, the connection, to connect, to browse, the link",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the network, the connection, to connect, to browse, the link]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The saving? (il risparmio.) The investment? (l'investimento.) The interest? (l'interesse.) The rate? (il tasso.) The inflation? (l'inflazione.) The cash? (i contanti.) The balance? (il saldo.) The cheque? (l'assegno.) The payment? (il versamento.) The deposit? (il deposito.) The guarantee? (la garanzia.) To guarantee? (garantire.) The invoice? (la fattura.) The quote? (il preventivo.) Good value? (conveniente.) To earn? (guadagnare.) The earnings? (il guadagno.) The profit? (il profitto.) The loss? (la perdita.) To go bankrupt? (fallire.) The online account? (l'account.) The password? (la password.) The user? (l'utente.) To log in? (accedere.) To sign up? (registrarsi.) The app? (l'applicazione.) To install? (installare.) To uninstall? (disinstallare.) The device? (il dispositivo.) The software? (il software.) The computer file? (il file.) To delete? (cancellare.) To copy? (copiare.) To paste? (incollare.) The backup? (il backup.) The network? (la rete.) The connection? (la connessione.) To connect? (connettersi.) To browse? (navigare.) The link? (il link.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

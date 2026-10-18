@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 525,
+  "sourceHash": "fnv1a64:e988f5b235001ba1",
+  "lessonIds": [
+    "IT-C525-libraio",
+    "IT-C525-copertina",
+    "IT-C525-sfogliare",
+    "IT-C525-segnalibro",
+    "IT-C525-tascabile"
+  ],
+  "tex": "italian/book/chapters/ch525-in-libreria.tex"
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C505-assemblare",
+    "language": "italian",
+    "chapter": 505,
+    "sequence": 28380,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:fe94dc4955e1b7b8"
+  },
+  "findings": []
+}

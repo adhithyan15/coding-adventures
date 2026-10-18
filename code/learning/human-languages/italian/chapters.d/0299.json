@@ -1,0 +1,19 @@
+{
+  "chapter": 299,
+  "title": "Lo scontro",
+  "label": "ch:it-lo-scontro",
+  "canDo": "I can describe a road crash: the collision, crashing into something, dents and damage.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "IT-C299-danneggiare",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 299: I can describe a road crash: the collision, crashing into something, dents and damage.",
+    "assesses": [
+      "IT-LEX-C299-SCONTRO-03",
+      "IT-LEX-C299-SCONTRO-04",
+      "IT-LEX-C299-SCONTRO-05"
+    ]
+  }
+}

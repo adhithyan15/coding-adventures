@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 323,
+  "sourceHash": "fnv1a64:79848e2ba348a310",
+  "lessonIds": [
+    "IT-C323-c-era-una-volta",
+    "IT-C323-racconto",
+    "IT-C323-favola",
+    "IT-C323-narrare",
+    "IT-C323-narratore"
+  ],
+  "tex": "italian/book/chapters/ch323-c-era-una-volta.tex"
+}

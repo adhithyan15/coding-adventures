@@ -1,0 +1,19 @@
+{
+  "chapter": 396,
+  "title": "In banca",
+  "label": "ch:it-in-banca",
+  "canDo": "I can handle money at the bank: cash, the balance, a cheque, a payment in and a deposit.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "IT-C396-deposito",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 396: I can handle money at the bank: cash, the balance, a cheque, a payment in and a deposit.",
+    "assesses": [
+      "IT-LEX-C396-BANCA-03",
+      "IT-LEX-C396-BANCA-04",
+      "IT-LEX-C396-BANCA-05"
+    ]
+  }
+}

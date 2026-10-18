@@ -1,0 +1,11 @@
+{
+  "id": "IT-C486-allergia",
+  "pathSegment": "IT-PATH-486-PRURITO",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "IT-EXT-486-PRURITO",
+      "order": 3
+    }
+  ]
+}

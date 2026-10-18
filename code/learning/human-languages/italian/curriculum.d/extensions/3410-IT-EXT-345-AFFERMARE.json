@@ -1,0 +1,8 @@
+{
+  "id": "IT-EXT-345-AFFERMARE",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can express an idea, state something firmly and say whether a statement or a person is reliable.",
+  "prerequisites": []
+}

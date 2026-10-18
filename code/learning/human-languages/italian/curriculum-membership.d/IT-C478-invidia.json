@@ -1,0 +1,11 @@
+{
+  "id": "IT-C478-invidia",
+  "pathSegment": "IT-PATH-478-VERGOGNA",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "IT-EXT-478-VERGOGNA",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 307,
+  "sourceHash": "fnv1a64:9329d21ff1404c08",
+  "lessonIds": [
+    "IT-C307-nascita",
+    "IT-C307-gemelli",
+    "IT-C307-primogenito",
+    "IT-C307-svezzare",
+    "IT-C307-ciuccio"
+  ],
+  "tex": "italian/book/chapters/ch307-benvenuto-al-mondo.tex"
+}

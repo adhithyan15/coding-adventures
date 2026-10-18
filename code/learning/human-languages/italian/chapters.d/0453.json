@@ -1,0 +1,19 @@
+{
+  "chapter": 453,
+  "title": "Piccoli negozi",
+  "label": "ch:it-piccoli-negozi",
+  "canDo": "I can find specialist shops: the hardware shop, the haberdasher, the perfume shop, the herbalist and the jeweller.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "IT-C453-gioielleria",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 453: I can find specialist shops: the hardware shop, the haberdasher, the perfume shop, the herbalist and the jeweller.",
+    "assesses": [
+      "IT-LEX-C453-NEGOZI-03",
+      "IT-LEX-C453-NEGOZI-04",
+      "IT-LEX-C453-NEGOZI-05"
+    ]
+  }
+}

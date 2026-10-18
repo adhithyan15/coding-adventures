@@ -1,0 +1,11 @@
+{
+  "id": "IT-C275-accaduto",
+  "pathSegment": "IT-PATH-275-ACCADERE",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "IT-EXT-275-ACCADERE",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "IT-C471-chiacchierone",
+  "pathSegment": "IT-PATH-471-TIMIDEZZA",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "IT-EXT-471-TIMIDEZZA",
+      "order": 3
+    }
+  ]
+}

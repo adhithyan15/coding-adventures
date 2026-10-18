@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 511,
+  "sourceHash": "fnv1a64:551ff64210f9ff16",
+  "lessonIds": [
+    "IT-C511-segnare",
+    "IT-C511-pareggio",
+    "IT-C511-pareggiare",
+    "IT-C511-classifica",
+    "IT-C511-eliminare"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch511.txt",
+  "json": "italian/narration/ch511.json",
+  "textHash": "fnv1a64:80a584f3a05814d1",
+  "jsonHash": "fnv1a64:fd9c42263d476429",
+  "findings": []
+}

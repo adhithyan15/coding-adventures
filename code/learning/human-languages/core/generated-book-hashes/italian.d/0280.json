@@ -1,0 +1,14 @@
+{
+  "language": "italian",
+  "chapter": 280,
+  "sourceHash": "fnv1a64:5e455cbc7ff67e1b",
+  "lessonIds": [
+    "IT-C280-finora",
+    "IT-C280-da-allora",
+    "IT-C280-tuttora",
+    "IT-C280-ultimamente",
+    "IT-C280-precedentemente",
+    "IT-R280-ripasso-273-280"
+  ],
+  "tex": "italian/book/chapters/ch280-da-allora-a-oggi.tex"
+}

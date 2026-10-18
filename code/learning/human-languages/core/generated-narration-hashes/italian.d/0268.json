@@ -1,0 +1,17 @@
+{
+  "language": "italian",
+  "chapter": 268,
+  "sourceHash": "fnv1a64:c71aaae908f2e4fe",
+  "lessonIds": [
+    "IT-C268-andata-e-ritorno",
+    "IT-C268-ho-perso",
+    "IT-C268-ripasso-stazione"
+  ],
+  "voiceLessons": 3,
+  "drivablePrefix": 3,
+  "text": "italian/narration/ch268.txt",
+  "json": "italian/narration/ch268.json",
+  "textHash": "fnv1a64:b8cbda100a5ce61a",
+  "jsonHash": "fnv1a64:0b360dd13448129d",
+  "findings": []
+}

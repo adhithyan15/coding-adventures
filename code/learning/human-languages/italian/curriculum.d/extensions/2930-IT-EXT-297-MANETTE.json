@@ -1,0 +1,8 @@
+{
+  "id": "IT-EXT-297-MANETTE",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can report an arrest: arresting, the handcuffs, the capture and running away.",
+  "prerequisites": []
+}

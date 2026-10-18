@@ -1,0 +1,8 @@
+{
+  "id": "IT-EXT-364-PROTESTA",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can describe a protest: people protest, demonstrate in the square and carry a banner.",
+  "prerequisites": []
+}

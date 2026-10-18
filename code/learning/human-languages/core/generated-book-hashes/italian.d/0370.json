@@ -1,0 +1,14 @@
+{
+  "language": "italian",
+  "chapter": 370,
+  "sourceHash": "fnv1a64:4d3e6dd13a2b1b7b",
+  "lessonIds": [
+    "IT-C370-maggioranza",
+    "IT-C370-minoranza",
+    "IT-C370-democrazia",
+    "IT-C370-riforma",
+    "IT-C370-deputato",
+    "IT-R370-ripasso-363-370"
+  ],
+  "tex": "italian/book/chapters/ch370-la-maggioranza.tex"
+}

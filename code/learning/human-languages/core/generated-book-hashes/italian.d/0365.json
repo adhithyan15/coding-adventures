@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 365,
+  "sourceHash": "fnv1a64:e6fdafeb8b1fdafb",
+  "lessonIds": [
+    "IT-C365-giustizia",
+    "IT-C365-ingiusto",
+    "IT-C365-ingiustizia",
+    "IT-C365-pregiudizio",
+    "IT-C365-stereotipo"
+  ],
+  "tex": "italian/book/chapters/ch365-giusto-e-ingiusto.tex"
+}

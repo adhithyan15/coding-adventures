@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C478-invidia",
+    "language": "italian",
+    "chapter": 478,
+    "sequence": 26980,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:05e67a69ae61d4e6"
+  },
+  "findings": []
+}

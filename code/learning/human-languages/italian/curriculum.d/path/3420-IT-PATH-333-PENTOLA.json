@@ -1,0 +1,9 @@
+{
+  "id": "IT-PATH-333-PENTOLA",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "IT-EXT-333-PENTOLA"
+  ],
+  "after": []
+}

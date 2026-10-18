@@ -1,0 +1,11 @@
+{
+  "id": "IT-C437-muffa",
+  "pathSegment": "IT-PATH-437-RUMORE",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "IT-EXT-437-RUMORE",
+      "order": 3
+    }
+  ]
+}

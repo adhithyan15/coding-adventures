@@ -1,0 +1,11 @@
+{
+  "id": "IT-C294-telecamera",
+  "pathSegment": "IT-PATH-294-PATTUGLIA",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "IT-EXT-294-PATTUGLIA",
+      "order": 3
+    }
+  ]
+}

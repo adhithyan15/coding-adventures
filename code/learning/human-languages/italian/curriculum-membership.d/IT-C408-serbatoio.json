@@ -1,0 +1,11 @@
+{
+  "id": "IT-C408-serbatoio",
+  "pathSegment": "IT-PATH-408-BENZINAIO",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "IT-EXT-408-BENZINAIO",
+      "order": 3
+    }
+  ]
+}

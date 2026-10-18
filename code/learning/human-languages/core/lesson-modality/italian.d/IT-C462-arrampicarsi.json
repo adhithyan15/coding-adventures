@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C462-arrampicarsi",
+    "language": "italian",
+    "chapter": 462,
+    "sequence": 26060,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8687d2ed6d8abb05"
+  },
+  "findings": []
+}

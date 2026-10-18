@@ -1,0 +1,11 @@
+{
+  "id": "IT-C467-grandine",
+  "pathSegment": "IT-PATH-467-TEMPORALE",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "IT-EXT-467-TEMPORALE",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C535-cacciavite",
+    "language": "italian",
+    "chapter": 535,
+    "sequence": 29900,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:58a058f7c150ba0a"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "IT-R460-ripasso-453-460",
+  "pathSegment": "IT-PATH-460-BOSCO",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "IT-EXT-460-BOSCO",
+      "order": 5
+    }
+  ]
+}

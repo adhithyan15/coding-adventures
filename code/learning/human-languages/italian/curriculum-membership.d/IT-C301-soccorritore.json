@@ -1,0 +1,11 @@
+{
+  "id": "IT-C301-soccorritore",
+  "pathSegment": "IT-PATH-301-SOCCORSO",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "IT-EXT-301-SOCCORSO",
+      "order": 2
+    }
+  ]
+}

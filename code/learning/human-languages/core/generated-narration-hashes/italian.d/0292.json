@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 292,
+  "sourceHash": "fnv1a64:2a9c95a35add72f9",
+  "lessonIds": [
+    "IT-C292-rapina",
+    "IT-C292-rapinare",
+    "IT-C292-rapinatore",
+    "IT-C292-cassaforte",
+    "IT-C292-bottino"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch292.txt",
+  "json": "italian/narration/ch292.json",
+  "textHash": "fnv1a64:14d0045a0da021e8",
+  "jsonHash": "fnv1a64:3af154b0a982133a",
+  "findings": []
+}

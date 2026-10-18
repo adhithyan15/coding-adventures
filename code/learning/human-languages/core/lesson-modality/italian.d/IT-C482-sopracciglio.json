@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C482-sopracciglio",
+    "language": "italian",
+    "chapter": 482,
+    "sequence": 27160,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2a5f9e79ee51200a"
+  },
+  "findings": []
+}

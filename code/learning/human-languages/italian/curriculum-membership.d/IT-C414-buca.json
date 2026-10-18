@@ -1,0 +1,11 @@
+{
+  "id": "IT-C414-buca",
+  "pathSegment": "IT-PATH-414-STATALE",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "IT-EXT-414-STATALE",
+      "order": 3
+    }
+  ]
+}

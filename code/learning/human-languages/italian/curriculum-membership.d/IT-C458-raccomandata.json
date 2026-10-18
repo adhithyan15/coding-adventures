@@ -1,0 +1,11 @@
+{
+  "id": "IT-C458-raccomandata",
+  "pathSegment": "IT-PATH-458-POSTA",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "IT-EXT-458-POSTA",
+      "order": 0
+    }
+  ]
+}

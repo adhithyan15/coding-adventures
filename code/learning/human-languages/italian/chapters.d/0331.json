@@ -1,0 +1,19 @@
+{
+  "chapter": 331,
+  "title": "Gli ingredienti",
+  "label": "ch:it-gli-ingredienti",
+  "canDo": "I can read out a recipe: the ingredients, the amounts, a pinch, a teaspoon and a bowl.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "IT-C331-ciotola",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 331: I can read out a recipe: the ingredients, the amounts, a pinch, a teaspoon and a bowl.",
+    "assesses": [
+      "IT-LEX-C331-RICETTA-03",
+      "IT-LEX-C331-RICETTA-04",
+      "IT-LEX-C331-RICETTA-05"
+    ]
+  }
+}

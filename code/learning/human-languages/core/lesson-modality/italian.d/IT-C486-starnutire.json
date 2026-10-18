@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C486-starnutire",
+    "language": "italian",
+    "chapter": 486,
+    "sequence": 27360,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6811acac39796e1c"
+  },
+  "findings": []
+}

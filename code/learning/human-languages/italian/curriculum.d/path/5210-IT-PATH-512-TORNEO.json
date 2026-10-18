@@ -1,0 +1,9 @@
+{
+  "id": "IT-PATH-512-TORNEO",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "IT-EXT-512-TORNEO"
+  ],
+  "after": []
+}

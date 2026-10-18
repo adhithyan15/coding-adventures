@@ -1,0 +1,8 @@
+{
+  "id": "IT-EXT-342-COMPROMESSO",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can admit someone is right, agree with them, give way and reach a compromise.",
+  "prerequisites": []
+}

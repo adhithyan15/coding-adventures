@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C330-scavi",
+    "language": "italian",
+    "chapter": 330,
+    "sequence": 19050,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:604c1acf81f63df7"
+  },
+  "findings": []
+}

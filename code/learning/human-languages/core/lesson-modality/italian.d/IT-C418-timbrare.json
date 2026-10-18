@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C418-timbrare",
+    "language": "italian",
+    "chapter": 418,
+    "sequence": 23780,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:06676826b84f3fbd"
+  },
+  "findings": []
+}

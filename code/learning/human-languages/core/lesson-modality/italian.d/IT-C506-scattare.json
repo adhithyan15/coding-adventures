@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C506-scattare",
+    "language": "italian",
+    "chapter": 506,
+    "sequence": 28390,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d790a27b5e8c3798"
+  },
+  "findings": []
+}

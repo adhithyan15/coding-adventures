@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 429,
+  "sourceHash": "fnv1a64:3df942572bb6dfb0",
+  "lessonIds": [
+    "IT-C429-ostello",
+    "IT-C429-agriturismo",
+    "IT-C429-locanda",
+    "IT-C429-pensione",
+    "IT-C429-campeggio"
+  ],
+  "tex": "italian/book/chapters/ch429-dove-dormire.tex"
+}

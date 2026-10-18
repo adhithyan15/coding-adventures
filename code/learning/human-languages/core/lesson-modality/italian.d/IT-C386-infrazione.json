@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C386-infrazione",
+    "language": "italian",
+    "chapter": 386,
+    "sequence": 22020,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ed53efeb4987cee0"
+  },
+  "findings": []
+}

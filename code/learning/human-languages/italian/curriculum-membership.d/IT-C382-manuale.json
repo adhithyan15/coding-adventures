@@ -1,0 +1,11 @@
+{
+  "id": "IT-C382-manuale",
+  "pathSegment": "IT-PATH-382-RIPASSO",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "IT-EXT-382-RIPASSO",
+      "order": 4
+    }
+  ]
+}

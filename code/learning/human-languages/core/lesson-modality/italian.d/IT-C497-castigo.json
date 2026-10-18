@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C497-castigo",
+    "language": "italian",
+    "chapter": 497,
+    "sequence": 27970,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:715f5329685c4ede"
+  },
+  "findings": []
+}

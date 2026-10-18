@@ -1,0 +1,11 @@
+{
+  "id": "IT-C525-copertina",
+  "pathSegment": "IT-PATH-525-LIBRERIA",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "IT-EXT-525-LIBRERIA",
+      "order": 1
+    }
+  ]
+}

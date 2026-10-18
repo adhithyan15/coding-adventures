@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C499-litigio",
+    "language": "italian",
+    "chapter": 499,
+    "sequence": 28030,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:847b5d6086494707"
+  },
+  "findings": []
+}

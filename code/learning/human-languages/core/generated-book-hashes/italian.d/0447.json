@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 447,
+  "sourceHash": "fnv1a64:6a25fa6af59815bc",
+  "lessonIds": [
+    "IT-C447-questura",
+    "IT-C447-prefettura",
+    "IT-C447-caserma",
+    "IT-C447-segnalare",
+    "IT-C447-carta-d-identita"
+  ],
+  "tex": "italian/book/chapters/ch447-uffici-pubblici.tex"
+}

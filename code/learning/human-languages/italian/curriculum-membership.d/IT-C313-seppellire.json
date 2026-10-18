@@ -1,0 +1,11 @@
+{
+  "id": "IT-C313-seppellire",
+  "pathSegment": "IT-PATH-313-LUTTO",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "IT-EXT-313-LUTTO",
+      "order": 4
+    }
+  ]
+}

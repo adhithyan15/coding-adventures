@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 379,
+  "sourceHash": "fnv1a64:ee57ed58648ac977",
+  "lessonIds": [
+    "IT-C379-liceo",
+    "IT-C379-frequentare",
+    "IT-C379-assenza",
+    "IT-C379-pagella",
+    "IT-C379-preside"
+  ],
+  "tex": "italian/book/chapters/ch379-a-scuola.tex"
+}

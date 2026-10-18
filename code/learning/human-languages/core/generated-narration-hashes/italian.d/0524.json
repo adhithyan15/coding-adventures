@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 524,
+  "sourceHash": "fnv1a64:4412142c20bce6a1",
+  "lessonIds": [
+    "IT-C524-romanziere",
+    "IT-C524-capitolo",
+    "IT-C524-ambientare",
+    "IT-C524-colpo-di-scena",
+    "IT-C524-epilogo"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch524.txt",
+  "json": "italian/narration/ch524.json",
+  "textHash": "fnv1a64:9893c2c8c08c71f8",
+  "jsonHash": "fnv1a64:e2b95c62556c7db1",
+  "findings": []
+}

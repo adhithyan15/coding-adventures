@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C275-capitare",
+    "language": "italian",
+    "chapter": 275,
+    "sequence": 16210,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f186e5dd3e926f60"
+  },
+  "findings": []
+}

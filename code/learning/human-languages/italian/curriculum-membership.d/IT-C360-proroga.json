@@ -1,0 +1,11 @@
+{
+  "id": "IT-C360-proroga",
+  "pathSegment": "IT-PATH-360-REPARTO",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "IT-EXT-360-REPARTO",
+      "order": 3
+    }
+  ]
+}
