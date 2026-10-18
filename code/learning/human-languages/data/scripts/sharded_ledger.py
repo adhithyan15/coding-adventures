@@ -3,6 +3,14 @@
 The TypeScript validators remain the authoritative schema gates. These helpers
 keep older Python authoring/report scripts usable after aggregate ledgers were
 removed while refusing path escapes, symlinks, and ambiguous shard identities.
+
+The caller supplies a trusted ledger root. Descendants may be replaced by an
+untrusted concurrent process. On Windows, each child is opened relative to a
+validated directory handle; writes and deletions remain attached to that
+original directory object even if its pathname is later renamed and replaced
+with a junction. A moved original directory may move its own contents, but a
+replacement pathname cannot redirect an operation to an unrelated outside
+directory. On Unix, dir_fd and O_NOFOLLOW provide the corresponding boundary.
 """
 
 import json
@@ -10,6 +18,12 @@ import os
 import re
 import secrets
 import stat
+from contextlib import contextmanager
+
+if os.name == "nt":
+    import ctypes
+    import msvcrt
+    from ctypes import wintypes
 
 GROUPED_KEYS = (
     "referenceAppendices",
@@ -45,6 +59,270 @@ SAFE_BOOK_SLUG = re.compile(r"^[a-z0-9][a-z0-9-]*$")
 WINDOWS_RESERVED = re.compile(r"^(con|prn|aux|nul|com[1-9]|lpt[1-9])$", re.IGNORECASE)
 NOFOLLOW = getattr(os, "O_NOFOLLOW", 0)
 DIRECTORY = getattr(os, "O_DIRECTORY", 0)
+REPARSE_POINT = getattr(stat, "FILE_ATTRIBUTE_REPARSE_POINT", 0x400)
+
+
+def _is_reparse(info):
+    return bool(getattr(info, "st_file_attributes", 0) & REPARSE_POINT)
+
+
+if os.name == "nt":
+    class _WindowsFileInformation(ctypes.Structure):
+        _fields_ = [
+            ("attributes", wintypes.DWORD),
+            ("creation_time", wintypes.FILETIME),
+            ("access_time", wintypes.FILETIME),
+            ("write_time", wintypes.FILETIME),
+            ("volume_serial", wintypes.DWORD),
+            ("size_high", wintypes.DWORD),
+            ("size_low", wintypes.DWORD),
+            ("links", wintypes.DWORD),
+            ("index_high", wintypes.DWORD),
+            ("index_low", wintypes.DWORD),
+        ]
+
+    _kernel32 = ctypes.WinDLL("kernel32", use_last_error=True)
+    _create_file = _kernel32.CreateFileW
+    _create_file.argtypes = (
+        wintypes.LPCWSTR, wintypes.DWORD, wintypes.DWORD, wintypes.LPVOID,
+        wintypes.DWORD, wintypes.DWORD, wintypes.HANDLE,
+    )
+    _create_file.restype = wintypes.HANDLE
+    _file_information = _kernel32.GetFileInformationByHandle
+    _file_information.argtypes = (wintypes.HANDLE, ctypes.POINTER(_WindowsFileInformation))
+    _file_information.restype = wintypes.BOOL
+    _close_handle = _kernel32.CloseHandle
+    _close_handle.argtypes = (wintypes.HANDLE,)
+    _close_handle.restype = wintypes.BOOL
+    _INVALID_HANDLE = ctypes.c_void_p(-1).value
+    _READ_ATTRIBUTES = 0x80
+    _READ_DATA = 0x01
+    _SHARE_READ_WRITE = 0x03  # Omit FILE_SHARE_DELETE: pin namespace components.
+    _OPEN_EXISTING = 3
+    _OPEN_REPARSE_POINT = 0x00200000
+    _BACKUP_SEMANTICS = 0x02000000
+    _DIRECTORY_ATTRIBUTE = 0x10
+    _SYNCHRONIZE = 0x00100000
+    _DELETE = 0x00010000
+    _READ_CONTROL = 0x00020000
+    _SE_FILE_OBJECT = 1
+    _DACL_SECURITY_INFORMATION = 0x00000004
+    _FILE_OPEN = 1
+    _FILE_CREATE = 2
+    _FILE_DIRECTORY_FILE = 0x00000001
+    _FILE_NON_DIRECTORY_FILE = 0x00000040
+    _FILE_SYNCHRONOUS_IO_NONALERT = 0x00000020
+    _FILE_OPEN_REPARSE_POINT = 0x00200000
+
+
+    class _UnicodeString(ctypes.Structure):
+        _fields_ = [
+            ("Length", wintypes.USHORT),
+            ("MaximumLength", wintypes.USHORT),
+            ("Buffer", ctypes.c_void_p),
+        ]
+
+
+    class _ObjectAttributes(ctypes.Structure):
+        _fields_ = [
+            ("Length", wintypes.ULONG),
+            ("RootDirectory", wintypes.HANDLE),
+            ("ObjectName", ctypes.POINTER(_UnicodeString)),
+            ("Attributes", wintypes.ULONG),
+            ("SecurityDescriptor", ctypes.c_void_p),
+            ("SecurityQualityOfService", ctypes.c_void_p),
+        ]
+
+
+    class _IoStatusBlock(ctypes.Structure):
+        _fields_ = [("Status", ctypes.c_void_p), ("Information", ctypes.c_void_p)]
+
+
+    _ntdll = ctypes.WinDLL("ntdll", use_last_error=True)
+    _nt_create_file = _ntdll.NtCreateFile
+    _nt_create_file.argtypes = (
+        ctypes.POINTER(wintypes.HANDLE), wintypes.DWORD,
+        ctypes.POINTER(_ObjectAttributes), ctypes.POINTER(_IoStatusBlock),
+        ctypes.c_void_p, wintypes.DWORD, wintypes.DWORD, wintypes.DWORD,
+        wintypes.DWORD, ctypes.c_void_p, wintypes.DWORD,
+    )
+    _nt_create_file.restype = ctypes.c_long
+    _nt_to_win_error = _ntdll.RtlNtStatusToDosError
+    _nt_to_win_error.argtypes = (ctypes.c_long,)
+    _nt_to_win_error.restype = wintypes.ULONG
+    _nt_set_information = _ntdll.NtSetInformationFile
+    _nt_set_information.argtypes = (
+        wintypes.HANDLE, ctypes.POINTER(_IoStatusBlock), ctypes.c_void_p,
+        wintypes.ULONG, wintypes.ULONG,
+    )
+    _nt_set_information.restype = ctypes.c_long
+    _write_file = _kernel32.WriteFile
+    _write_file.argtypes = (
+        wintypes.HANDLE, ctypes.c_void_p, wintypes.DWORD,
+        ctypes.POINTER(wintypes.DWORD), ctypes.c_void_p,
+    )
+    _write_file.restype = wintypes.BOOL
+    _flush_file = _kernel32.FlushFileBuffers
+    _flush_file.argtypes = (wintypes.HANDLE,)
+    _flush_file.restype = wintypes.BOOL
+    _advapi32 = ctypes.WinDLL("advapi32", use_last_error=True)
+    _get_security_info = _advapi32.GetSecurityInfo
+    _get_security_info.argtypes = (
+        wintypes.HANDLE, wintypes.DWORD, wintypes.DWORD,
+        ctypes.c_void_p, ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p),
+        ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p),
+    )
+    _get_security_info.restype = wintypes.DWORD
+    _local_free = _kernel32.LocalFree
+    _local_free.argtypes = (ctypes.c_void_p,)
+    _local_free.restype = ctypes.c_void_p
+
+
+    class _FileRenameInformation(ctypes.Structure):
+        _fields_ = [
+            ("ReplaceIfExists", wintypes.BOOLEAN),
+            ("RootDirectory", wintypes.HANDLE),
+            ("FileNameLength", wintypes.ULONG),
+            ("FileName", wintypes.WCHAR * 1),
+        ]
+
+
+    class _FileDispositionInformation(ctypes.Structure):
+        _fields_ = [("DeleteFile", wintypes.BOOLEAN)]
+
+
+    def _windows_set_information(handle, buffer, size, kind):
+        io_status = _IoStatusBlock()
+        status = _nt_set_information(handle, ctypes.byref(io_status), buffer, size, kind)
+        if status < 0:
+            raise ctypes.WinError(_nt_to_win_error(status))
+
+
+    def _windows_rename_relative(handle, directory_handle, name):
+        encoded_name = name.encode("utf-16-le")
+        buffer = ctypes.create_string_buffer(ctypes.sizeof(_FileRenameInformation) + len(encoded_name))
+        info = ctypes.cast(buffer, ctypes.POINTER(_FileRenameInformation)).contents
+        info.ReplaceIfExists = True
+        info.RootDirectory = directory_handle
+        info.FileNameLength = len(encoded_name)
+        ctypes.memmove(ctypes.addressof(buffer) + _FileRenameInformation.FileName.offset,
+                       encoded_name, len(encoded_name))
+        _windows_set_information(handle, buffer, len(buffer), 10)  # FileRenameInformation
+
+
+    def _windows_dispose(handle):
+        info = _FileDispositionInformation(True)
+        _windows_set_information(handle, ctypes.byref(info), ctypes.sizeof(info), 13)
+
+
+    def _windows_write_handle(handle, body):
+        data = body.encode("utf-8")
+        buffer = ctypes.create_string_buffer(data)
+        written = wintypes.DWORD()
+        if not _write_file(handle, buffer, len(data), ctypes.byref(written), None):
+            raise ctypes.WinError(ctypes.get_last_error())
+        if written.value != len(data):
+            raise OSError(f"short Windows ledger write: {written.value} of {len(data)} bytes")
+        if not _flush_file(handle):
+            raise ctypes.WinError(ctypes.get_last_error())
+
+
+    def _windows_security_descriptor(source):
+        """Get the existing shard's DACL for secure replacement creation."""
+        dacl = ctypes.c_void_p()
+        descriptor = ctypes.c_void_p()
+        error = _get_security_info(
+            source, _SE_FILE_OBJECT, _DACL_SECURITY_INFORMATION,
+            None, None, ctypes.byref(dacl), None, ctypes.byref(descriptor),
+        )
+        if error:
+            raise ctypes.WinError(error)
+        return descriptor
+
+
+    def _windows_open_relative(
+        parent, name, *, directory, create=False, access=None, security_descriptor=None,
+    ):
+        """Resolve exactly one child relative to an already-open directory handle."""
+        if not name or name in (".", "..") or "\\" in name or "/" in name:
+            raise ValueError(f"unsafe relative ledger name: {name!r}")
+        name_buffer = ctypes.create_unicode_buffer(name)
+        size = len(name.encode("utf-16-le"))
+        unicode_name = _UnicodeString(size, size, ctypes.cast(name_buffer, ctypes.c_void_p))
+        attributes = _ObjectAttributes(
+            ctypes.sizeof(_ObjectAttributes), parent, ctypes.pointer(unicode_name),
+            0x40, security_descriptor, None,  # OBJ_CASE_INSENSITIVE
+        )
+        result = wintypes.HANDLE()
+        io_status = _IoStatusBlock()
+        desired_access = access if access is not None else _READ_ATTRIBUTES | _SYNCHRONIZE
+        options = (_FILE_DIRECTORY_FILE if directory else _FILE_NON_DIRECTORY_FILE)
+        options |= _FILE_SYNCHRONOUS_IO_NONALERT | _FILE_OPEN_REPARSE_POINT
+        status = _nt_create_file(
+            ctypes.byref(result), desired_access, ctypes.byref(attributes),
+            ctypes.byref(io_status), None, 0x80, _SHARE_READ_WRITE,
+            _FILE_CREATE if create else _FILE_OPEN, options, None, 0,
+        )
+        if status < 0:
+            raise ctypes.WinError(_nt_to_win_error(status))
+        handle = result.value
+        try:
+            info = _WindowsFileInformation()
+            if not _file_information(handle, ctypes.byref(info)):
+                raise ctypes.WinError(ctypes.get_last_error())
+            if info.attributes & REPARSE_POINT or bool(info.attributes & _DIRECTORY_ATTRIBUTE) != directory:
+                raise ValueError(f"refusing reparse or wrong-kind ledger name: {name}")
+            return handle
+        except BaseException:
+            _close_handle(handle)
+            raise
+
+
+    def _windows_open_checked(path, *, directory, read_data=False):
+        """Open the named object itself and reject junctions and other reparse points."""
+        access = _READ_ATTRIBUTES | (_READ_DATA if read_data else 0)
+        flags = _OPEN_REPARSE_POINT | (_BACKUP_SEMANTICS if directory else 0)
+        handle = _create_file(path, access, _SHARE_READ_WRITE, None, _OPEN_EXISTING, flags, None)
+        if handle == _INVALID_HANDLE:
+            raise ctypes.WinError(ctypes.get_last_error())
+        try:
+            info = _WindowsFileInformation()
+            if not _file_information(handle, ctypes.byref(info)):
+                raise ctypes.WinError(ctypes.get_last_error())
+            if info.attributes & REPARSE_POINT or bool(info.attributes & _DIRECTORY_ATTRIBUTE) != directory:
+                raise ValueError(f"refusing reparse or wrong-kind ledger path: {path}")
+            return handle
+        except BaseException:
+            _close_handle(handle)
+            raise
+
+
+    @contextmanager
+    def _windows_directory(root, *parts):
+        """Anchor each untrusted component to its already-open parent handle."""
+        handles = []
+        try:
+            handles.append(_windows_open_checked(_root(root), directory=True))
+            for part in parts:
+                handles.append(_windows_open_relative(handles[-1], part, directory=True))
+            yield handles[-1]
+        finally:
+            for handle in reversed(handles):
+                _close_handle(handle)
+
+
+    def _windows_read_regular(directory_handle, name):
+        handle = _windows_open_relative(
+            directory_handle, name, directory=False,
+            access=_READ_DATA | _READ_ATTRIBUTES | _SYNCHRONIZE,
+        )
+        try:
+            descriptor = msvcrt.open_osfhandle(handle, os.O_RDONLY)
+        except BaseException:
+            _close_handle(handle)
+            raise
+        with os.fdopen(descriptor, encoding="utf-8") as stream:
+            return stream.read()
 
 
 def _safe_track(track):
@@ -91,7 +369,7 @@ def _directory(root, *parts):
             info = os.lstat(current)
         except FileNotFoundError as cause:
             raise ValueError(f"missing ledger directory: {current}") from cause
-        if stat.S_ISLNK(info.st_mode) or not stat.S_ISDIR(info.st_mode):
+        if _is_reparse(info) or stat.S_ISLNK(info.st_mode) or not stat.S_ISDIR(info.st_mode):
             raise ValueError(f"refusing non-directory ledger ancestor: {current}")
 
     relative = os.path.relpath(os.path.realpath(current), real_root)
@@ -129,21 +407,89 @@ def _file(root, *parts, must_exist=True):
             raise ValueError(f"missing ledger shard: {path}")
         return path
     info = os.lstat(path)
-    if stat.S_ISLNK(info.st_mode) or not stat.S_ISREG(info.st_mode):
+    if _is_reparse(info) or stat.S_ISLNK(info.st_mode) or not stat.S_ISREG(info.st_mode):
         raise ValueError(f"refusing non-file ledger shard: {path}")
     return path
 
 
 def _read(root, *parts):
     path = _file(root, *parts)
+    if os.name == "nt":
+        with _windows_directory(root, *parts[:-1]) as directory_handle:
+            return json.loads(_windows_read_regular(directory_handle, parts[-1]))
     descriptor = os.open(path, os.O_RDONLY | NOFOLLOW)
     with os.fdopen(descriptor, encoding="utf-8") as handle:
         return json.load(handle)
 
 
+if os.name == "nt":
+    def _windows_write_if_changed(root, parts, body):
+        _file(root, *parts, must_exist=False)
+        with _windows_directory(root, *parts[:-1]) as directory_handle:
+            previous_handle = None
+            try:
+                previous_handle = _windows_open_relative(
+                    directory_handle, parts[-1], directory=False,
+                    access=_READ_DATA | _READ_ATTRIBUTES | _READ_CONTROL | _SYNCHRONIZE,
+                )
+            except FileNotFoundError:
+                previous = None
+            try:
+                if previous_handle is not None:
+                    previous = _windows_read_regular(directory_handle, parts[-1])
+                if previous == body:
+                    return
+                temporary = f".{parts[-1]}.{os.getpid()}.{secrets.token_hex(8)}.tmp"
+                descriptor = (
+                    _windows_security_descriptor(previous_handle)
+                    if previous_handle is not None else None
+                )
+                try:
+                    handle = _windows_open_relative(
+                        directory_handle, temporary, directory=False, create=True,
+                        access=_READ_ATTRIBUTES | _SYNCHRONIZE | _DELETE | 0x02,
+                        security_descriptor=descriptor,
+                    )
+                finally:
+                    if descriptor is not None:
+                        _local_free(descriptor)
+                try:
+                    if previous_handle is not None:
+                        _close_handle(previous_handle)
+                        previous_handle = None
+                    _windows_write_handle(handle, body)
+                    _windows_rename_relative(handle, directory_handle, parts[-1])
+                except BaseException as cause:
+                    try:
+                        _windows_dispose(handle)
+                    except OSError as cleanup_error:
+                        raise cleanup_error from cause
+                    raise
+                finally:
+                    _close_handle(handle)
+            finally:
+                if previous_handle is not None:
+                    _close_handle(previous_handle)
+
+
+    def _windows_remove(root, parts):
+        _file(root, *parts)
+        with _windows_directory(root, *parts[:-1]) as directory_handle:
+            handle = _windows_open_relative(
+                directory_handle, parts[-1], directory=False,
+                access=_READ_ATTRIBUTES | _SYNCHRONIZE | _DELETE,
+            )
+            try:
+                _windows_dispose(handle)
+            finally:
+                _close_handle(handle)
+
+
 def _write_if_changed(root, *parts, value):
     """Atomically replace one regular shard without ever following its name."""
     body = json.dumps(value, ensure_ascii=False, indent=2) + "\n"
+    if os.name == "nt":
+        return _windows_write_if_changed(root, parts, body)
     path = _file(root, *parts, must_exist=False)
     directory = os.path.dirname(path)
     name = os.path.basename(path)
@@ -184,6 +530,8 @@ def _write_if_changed(root, *parts, value):
 
 
 def _remove(root, *parts):
+    if os.name == "nt":
+        return _windows_remove(root, parts)
     path = _file(root, *parts)
     directory_fd = os.open(os.path.dirname(path), os.O_RDONLY | DIRECTORY | NOFOLLOW)
     try:
@@ -203,7 +551,7 @@ def _files(root, *parts):
             if not entry.name.endswith(".json"):
                 continue
             info = entry.stat(follow_symlinks=False)
-            if entry.is_symlink() or not stat.S_ISREG(info.st_mode):
+            if _is_reparse(info) or entry.is_symlink() or not stat.S_ISREG(info.st_mode):
                 raise ValueError(f"refusing non-file ledger shard: {entry.path}")
             names.append(entry.name)
     return sorted(names)
@@ -280,7 +628,7 @@ def load_script(root, script):
         info = os.lstat(shard_directory)
     except FileNotFoundError:
         return _read(root, "data", "scripts", f"{script}.json")
-    if stat.S_ISLNK(info.st_mode) or not stat.S_ISDIR(info.st_mode):
+    if _is_reparse(info) or stat.S_ISLNK(info.st_mode) or not stat.S_ISDIR(info.st_mode):
         raise ValueError(f"refusing non-directory ledger ancestor: {shard_directory}")
     return load_script_inventory(root, script)
 
@@ -453,9 +801,9 @@ def _strict_directory_entries(root, *parts):
     with os.scandir(directory) as iterator:
         for entry in iterator:
             info = entry.stat(follow_symlinks=False)
-            if entry.is_symlink():
+            if _is_reparse(info) or entry.is_symlink():
                 raise ValueError(
-                    f"refusing symbolic-link book-generation owner: {entry.path}"
+                    f"refusing link or reparse book-generation owner: {entry.path}"
                 )
             if not (stat.S_ISREG(info.st_mode) or stat.S_ISDIR(info.st_mode)):
                 raise ValueError(
