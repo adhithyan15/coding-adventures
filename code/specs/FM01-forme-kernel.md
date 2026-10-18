@@ -1,6 +1,7 @@
 # FM01 — Forme Kernel: Types, Kinds, Stages, Capabilities, Identity, Manifest
 
-> **Status:** Code-ready specification. Read alongside FM00 (vision).
+> **Status:** Implemented through the completed Forme v1 release contract.
+> Read alongside FM00 (vision).
 > **Scope:** The kernel packages that every other Forme package imports —
 > `forme-types`, `forme-stage`, `forme-capability`, `forme-identity`,
 > `forme-manifest`, and the shared error model.
@@ -16,7 +17,7 @@
 | Identity and revision primitives | Implemented | `forme-identity` covers logical IDs, UUIDv7 identities, and canonical revisions. |
 | Manifest validation | Implemented | `forme-manifest` validates first-party manifest data; FM02 owns host enforcement. |
 | Shared diagnostics | Implemented | `forme-errors` supplies the common error surface. |
-| Interactivity shape | Placeholder active for compatibility | [FM05](FM05-forme-interactivity-ir.md) defines the normative v1 contract; FM-B059 supplies its dedicated package before a later kernel migration. |
+| Style/interactivity compatibility shapes | Retained by design | `forme-types` remains the dependency-graph leaf with minimal carrier envelopes; the normative FM04/FM05 contracts and validators live in `forme-style-ir` and `forme-interactivity-ir`. |
 | Terminal output shape | Implemented | `TerminalBuffer` carries bounded ANSI text, exact usage, canonical provenance, a content/config revision, and explicit non-web degradation records in the live FM-B017 product path. |
 
 ---

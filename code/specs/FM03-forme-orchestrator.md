@@ -1,7 +1,7 @@
 # FM03 — Forme Orchestrator: Pipeline Configuration and Execution
 
-> **Status:** Code-ready specification. Read alongside FM00 (vision)
-> and FM01 (kernel).
+> **Status:** Implemented through the completed Forme v1 release contract. Read
+> alongside FM00 (vision) and FM01 (kernel).
 > **Scope:** The orchestrator runtime — pipeline configuration format,
 > DAG construction, type checking, execution scheduling, streaming,
 > caching, incremental rebuild, watch mode, reproducible builds,
@@ -9,8 +9,8 @@
 > `forme-orchestrator`, `forme-pipeline-config`, and `forme-cache`.
 > **Out of scope:** The plugin host (FM02 — loading, sandboxing, the
 > extension registry). FM03 assumes plugins are already loaded; a
-> first-party-only configuration that imports stages directly works
-> against FM03 today, with FM02 layering in third-party plugins later.
+> first-party-only configuration can import stages directly, while the shipped
+> FM02 `PluginStageLoader` path resolves reviewed third-party stages.
 
 ## Implementation status
 
