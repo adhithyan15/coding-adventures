@@ -55,6 +55,7 @@ fn timeline_family_owned_complete_source_ir() {
                     accessibility_title: Some("Accessible".into()),
                     accessibility_description: Some("fontFamily: Poison".into()),
                     config: TimelineConfig {
+                        font_size: 16.0,
                         font_family: family.into(),
                         padding: 50.0,
                         left_margin: 50.0,

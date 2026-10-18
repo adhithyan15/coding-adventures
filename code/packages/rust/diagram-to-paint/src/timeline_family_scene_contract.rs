@@ -5,6 +5,7 @@ fn declared_family_product(
     family: &str,
 ) -> (TimelineDiagram, LayoutedTemporalDiagram, PaintScene) {
     let cfg = TimelineConfig {
+        font_size: 16.0,
         font_family: family.into(),
         padding: 50.0,
         left_margin: 50.0,

@@ -12114,6 +12114,7 @@ emphasized --> direct
             accessibility_title: None,
             accessibility_description: None,
             timeline_config: Some(diagram_ir::TimelineConfig {
+                font_size: 16.0,
                 font_family: "\"trebuchet ms\", verdana, arial, sans-serif".into(),
                 padding: 72.0,
                 left_margin: 80.0,
@@ -12161,6 +12162,7 @@ emphasized --> direct
             accessibility_title: None,
             accessibility_description: None,
             timeline_config: Some(diagram_ir::TimelineConfig {
+                font_size: 16.0,
                 font_family: "\"trebuchet ms\", verdana, arial, sans-serif".into(),
                 padding: 72.0,
                 left_margin: 80.0,

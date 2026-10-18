@@ -16,6 +16,7 @@ fn declared_legacy_timeline_scene_cases() -> Vec<(
                 accessibility_title: Some("Accessible history".into()),
                 accessibility_description: Some("Ordered milestones".into()),
                 timeline_config: Some(diagram_ir::TimelineConfig {
+                    font_size: 16.0,
                     font_family: "\"trebuchet ms\", verdana, arial, sans-serif".into(),
                     padding: f64::from_bits(0x4049000000000000),
                     left_margin: f64::from_bits(0x4049000000000000),
@@ -212,6 +213,7 @@ fn declared_legacy_timeline_scene_cases() -> Vec<(
                 accessibility_title: Some("Accessible history".into()),
                 accessibility_description: Some("Ordered milestones".into()),
                 timeline_config: Some(diagram_ir::TimelineConfig {
+                    font_size: 16.0,
                     font_family: "\"trebuchet ms\", verdana, arial, sans-serif".into(),
                     padding: f64::from_bits(0x4049000000000000),
                     left_margin: f64::from_bits(0x4049000000000000),
@@ -434,6 +436,7 @@ fn declared_legacy_timeline_scene_cases() -> Vec<(
                 accessibility_title: Some("Accessible history".into()),
                 accessibility_description: Some("Ordered milestones".into()),
                 timeline_config: Some(diagram_ir::TimelineConfig {
+                    font_size: 16.0,
                     font_family: "\"trebuchet ms\", verdana, arial, sans-serif".into(),
                     padding: f64::from_bits(0x4049000000000000),
                     left_margin: f64::from_bits(0x4049000000000000),
@@ -630,6 +633,7 @@ fn declared_legacy_timeline_scene_cases() -> Vec<(
                 accessibility_title: Some("Accessible history".into()),
                 accessibility_description: Some("Ordered milestones".into()),
                 timeline_config: Some(diagram_ir::TimelineConfig {
+                    font_size: 16.0,
                     font_family: "\"trebuchet ms\", verdana, arial, sans-serif".into(),
                     padding: f64::from_bits(0x4049000000000000),
                     left_margin: f64::from_bits(0x4049000000000000),

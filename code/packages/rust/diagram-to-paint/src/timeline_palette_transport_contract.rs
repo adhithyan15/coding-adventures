@@ -30,6 +30,7 @@ fn timeline_independent_palette_lengths_keep_whole_scenes_and_queries() {
     for (profile, (nf, nl, ns)) in profiles.into_iter().enumerate() {
         for (column, index) in [0, 1, 5, 6, 7, usize::MAX].into_iter().enumerate() {
             let cfg = diagram_ir::TimelineConfig {
+                font_size: 16.0,
                 font_family: "\"trebuchet ms\", verdana, arial, sans-serif".into(),
                 padding: 50.0, left_margin: 50.0, use_max_width: true, disable_multicolor: false,
                 section_colors: fills[..nf].iter().map(|s| s.to_string()).collect(),

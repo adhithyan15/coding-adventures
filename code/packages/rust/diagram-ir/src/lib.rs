@@ -2504,6 +2504,7 @@ pub enum TimelineDirection {
 #[derive(Clone, Debug, PartialEq)]
 pub struct TimelineConfig {
     pub font_family: String,
+    pub font_size: f64,
     pub padding: f64,
     pub left_margin: f64,
     pub use_max_width: bool,
@@ -2516,6 +2517,7 @@ pub struct TimelineConfig {
 impl Default for TimelineConfig {
     fn default() -> Self {
         Self {
+            font_size: 16.0,
             font_family: "\"trebuchet ms\", verdana, arial, sans-serif".into(),
             padding: 50.0,
             left_margin: 50.0,

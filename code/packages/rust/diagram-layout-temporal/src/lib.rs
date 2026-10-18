@@ -54,6 +54,7 @@ pub enum TemporalLayoutError {
     TimelinePadding,
     TimelineLeftMargin,
     TimelineGeometry,
+    TimelineFontSize,
 }
 
 /// Compatibility entry point. Call the checked API to handle unsupported geometry.

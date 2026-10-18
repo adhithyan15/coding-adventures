@@ -4025,6 +4025,7 @@ fn parse_timeline_config(source: &str) -> TimelineConfig {
         sanitize_railroad_color(value.as_deref(), fallback)
     }).collect();
     TimelineConfig {
+        font_size: 16.0,
         font_family: sanitize_railroad_font_family(
             field(theme_object, &theme_front, "fontFamily").as_deref(), &defaults.font_family,
         ),

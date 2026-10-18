@@ -6,6 +6,7 @@ fn complete_timeline_defaults_include_the_opaque_font_family() {
     assert_eq!(
         TimelineConfig::default(),
         TimelineConfig {
+            font_size: 16.0,
             padding: 50.0,
             left_margin: 50.0,
             font_family: "\"trebuchet ms\", verdana, arial, sans-serif".into(),

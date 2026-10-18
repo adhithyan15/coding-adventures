@@ -5,6 +5,7 @@ use diagram_ir::{TemporalKind, TimelineConfig, TimelinePeriod, TimelineSection};
 
 fn config(padding: f64, left_margin: f64, disable_multicolor: bool) -> TimelineConfig {
     TimelineConfig {
+        font_size: 16.0,
         font_family: "\"trebuchet ms\", verdana, arial, sans-serif".into(),
         padding, left_margin, use_max_width: true, disable_multicolor,
         section_colors: ["#dbeafe", "#dcfce7", "#fef3c7", "#fae8ff", "#ffe4e6", "#cffafe"].map(str::to_string).to_vec(),
