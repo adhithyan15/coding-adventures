@@ -114,3 +114,18 @@ README/changelogs/backlog/issues and review the concrete publication carrier.
 Keep one dynamically rediscovered Closure/shared PR; normal progress publication
 does not waive conflict-free/current-review/terminal hosted and actual-merge gates.
 Miri remains DEFERRED/PENDING until genuine final-source completion after delivery.
+
+
+Bounded execution `a3172c6569863bad3c02075f3090443c94f6c8cb`: 1181 native tests passed across59 unfiltered
+harnesses/0ignored, 2 doctests passed/0 ignored
+across14libraries, all14 strict commands passed. Fresh1293manifest graph retains
+436registryrows/reverse14/forward50. New132wholeIR cells and104typed markers
+plus compatibility panic passed, alongside all old family/direction/palette/
+numeric/Venn/wholeScene/query controls. The preserved root24 source changes
+only12 declared config values; no old glyph or geometry expectation changes.
+Compiled red2b38b727 (0P1F/86P3F/178P1F) precedes implementation; three physical
+red executable preimages are saved. The earlier symbolicHEAD caller refusal
+was before Cargo and is not semantic red. Bootstrap17b5 is only default1P.
+Whole ABI/test/consumer inverse recipes and exact source/terminal reviews bind
+this execution. Painting/reflow/main integration/hosted/merge/full-goal gates
+remain OPEN. Miri DEFERRED/PENDING; frozen run/inputs/receipts/target untouched.

@@ -1,19 +1,22 @@
 # Closure Compiler on Rust — parity backlog
 
-<!-- Closure current concise checkpoint: CV04b Timeline font family -->
-Bounded execution `0b7687390d942b02853dfb04a778cc73b8d3d302` carries owned themeVariables.fontFamily through IR
-to Timeline-only queries/effective metadata, with the declared opaque default
-and trim/allowlist fallback. All roles/sizes/attributes/layout/source ownership
-and None-config non-Timeline families remain exact. 1174 native tests PASS
-across57harnesses/0ignored, 2doctests PASS/0ignored
-across14libraries; all14strict checks PASS. Graph1293/reverse14/forward50/436rows.
-84complete source IR cells, 48source products, nine direct typed families and
-two None-config title/label controls. 53literal ABI insertions plus field/default;
-five struct updates unchanged. All87old complete Scenes retained by declared
-family/metadata-only inverses. Compiled redcbca778f and saved executables retained.
+<!-- Closure current concise checkpoint: CV04b Timeline size ingress -->
+Bounded source `a3172c6569863bad3c02075f3090443c94f6c8cb` adds positive font_size16 transport and checked typed
+refusal after existing canvas/padding/margin priorities. Direct selected-root
+fontSize uses missing-only config.fontSize YAML fallback and unchanged units.
+Allpositivefinite sizes retain old layouts; no paint size/reflow/metadata/query
+or font-role change is claimed. Public API:56literal+2field/default+1variant
+insertions; five true updates unchanged. Retained custom root24 source changes
+only12 expected IR/layout configs; all old Scene/query/glyph/geometry stays exact.
+1181native tests PASS across59harnesses/0ignored; 2doctests
+PASS/0ignored across14libraries; all14strict commands PASS.
+Fresh graph1293/reverse14/forward50/436rows. New132wholeIR+104typedmarkers+
+compatpanic; source/terminal/retention checks PASS, compiled red2b38 retained.
+SymbolicHEAD caller refusal is separate, before Cargo, not semantic red.
 Sole PR17288 remains unmerged/autoOFF; current-main conflicts/hosted/exact-head
-review and actual-merge reachability gates apply. Next bounded audit: Timeline
-font-size/layout admission, preserving numeric/palette/old source controls.
+reviews and actual-merge reachability gates apply. Next bounded audit: Timeline
+size-driven typography and represented-operation admission, preserving oldsource
+and original complete Scene/query controls, then wrapping/reconciliation.
 Full Closure parity, ingestion IDs, output-byte/source maps, stable IDs/spans,
 pass/sweep and fold/rename/inline/motion/merge/delete lineage remain OPEN.
 Miri DEFERRED/PENDING, never passed; frozen run/inputs/receipts/target untouched.
