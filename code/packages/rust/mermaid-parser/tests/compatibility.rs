@@ -93,6 +93,7 @@ const VENN_VISUAL_CORPUS: &str = include_str!(concat!(env!("CARGO_MANIFEST_DIR")
 const ISHIKAWA_CORPUS: &str = include_str!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../../grammars/mermaid/ishikawa-11.16.1-corpus.json"));
 const ISHIKAWA_VISUAL_CORPUS: &str = include_str!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../../grammars/mermaid/ishikawa-11.16.1-visual-corpus.json"));
 const WARDLEY_CORPUS: &str = include_str!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../../grammars/mermaid/wardley-11.16.1-corpus.json"));
+const WARDLEY_VISUAL_CORPUS: &str = include_str!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../../grammars/mermaid/wardley-11.16.1-visual-corpus.json"));
 const CYNEFIN_CORPUS: &str = include_str!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../../grammars/mermaid/cynefin-11.16.1-corpus.json"));
 const CYNEFIN_VISUAL_CORPUS: &str = include_str!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../../grammars/mermaid/cynefin-11.16.1-visual-corpus.json"));
 const TREEVIEW_CORPUS: &str = include_str!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../../grammars/mermaid/treeview-11.16.1-corpus.json"));
@@ -420,23 +421,17 @@ fn cynefin_full_status_is_backed_by_pinned_syntax_and_visual_corpora() {
 }
 
 #[test]
-fn pinned_wardley_subset_corpus_parses_to_strategic_map_ir() {
+fn pinned_wardley_corpus_matches_upstream_acceptance() {
     let corpus: Value = serde_json::from_str(WARDLEY_CORPUS).expect("wardley corpus must be JSON");
     assert_eq!(corpus["upstream"].as_str(), Some("mermaid@11.16.1"));
-    for fixture in corpus["fixtures"].as_array().expect("fixture array") {
-        let name = fixture["name"].as_str().expect("fixture name");
+    assert_eq!(corpus["level"].as_str(), Some("full"));
+    assert_eq!(corpus["upstream_commit"].as_str(), Some("7ecca0cd7f1658ef74f4e7e91f925724ef403bbf"));
+    for fixture in corpus["valid"].as_array().expect("valid fixture array") {
+        let name = fixture["id"].as_str().expect("fixture id");
         let diagram = parse_wardley(fixture["source"].as_str().expect("fixture source"))
             .unwrap_or_else(|error| panic!("wardley fixture {name} failed: {error}"));
         assert!(!diagram.nodes.is_empty());
-        if name == "basic" {
-            assert_eq!(diagram.notes.len(), 1);
-            assert_eq!(diagram.notes[0].text, "Standardising power accelerates evolution");
-            assert_eq!((diagram.notes[0].visibility, diagram.notes[0].evolution), (0.30, 0.49));
-            assert_eq!(diagram.annotations_box, Some((0.10, 0.90)));
-            assert_eq!(diagram.annotations.len(), 1);
-            assert_eq!(diagram.annotations[0].coordinates, [(0.60, 0.65), (0.50, 0.50)]);
-        }
-        if name == "renderer-config" {
+        if name == "native-config-theme-accessibility" {
             assert_eq!((diagram.config.width, diagram.config.height, diagram.config.padding), (760.0, 480.0, 36.0));
             assert_eq!((diagram.config.node_radius, diagram.config.node_label_offset), (9.0, 12.0));
             assert_eq!((diagram.config.axis_font_size, diagram.config.label_font_size), (15.0, 13.0));
@@ -444,57 +439,41 @@ fn pinned_wardley_subset_corpus_parses_to_strategic_map_ir() {
             assert_eq!((&diagram.config.theme.background_color, &diagram.config.theme.axis_color,
                 &diagram.config.theme.component_fill, &diagram.config.theme.link_stroke),
                 (&"#f8fafc".to_string(), &"#123456".to_string(), &"#abcdef".to_string(), &"#6789ab".to_string()));
-        }
-        if name == "annotation-theme" {
             assert_eq!((&diagram.config.theme.annotation_stroke, &diagram.config.theme.annotation_text_color,
                 &diagram.config.theme.annotation_fill), (&"#7c3aed".to_string(), &"#f97316".to_string(),
                 &"#fef3c7".to_string()));
-        }
-        if name == "stage-boundaries" {
-            assert_eq!(diagram.stages, ["Genesis / Concept", "Custom / Emerging", "Product / Converging", "Commodity / Accepted"]);
-            assert_eq!(diagram.stage_boundaries, [0.2, 0.4, 0.75, 1.0]);
-        }
-        if name == "label-offsets" {
-            assert_eq!((diagram.nodes[0].label_offset_x, diagram.nodes[0].label_offset_y), (Some(-50.0), Some(10.0)));
-        }
-        if name == "decorators" {
-            assert_eq!(diagram.nodes.iter().map(|node| node.source_strategy).collect::<Vec<_>>(), [
-                Some(diagram_ir::WardleySourceStrategy::Build), Some(diagram_ir::WardleySourceStrategy::Buy),
-                Some(diagram_ir::WardleySourceStrategy::Outsource), Some(diagram_ir::WardleySourceStrategy::Market)]);
-            assert!(diagram.nodes[3].inertia);
-        }
-        if name == "flow-links" {
-            assert_eq!(diagram.links.len(), 6);
-            assert_eq!(diagram.links[0].label.as_deref(), Some("request"));
-            assert!(diagram.links[1].dashed);
-            assert_eq!(diagram.links[2].flow, Some(diagram_ir::WardleyLinkFlow::Forward));
-            assert_eq!(diagram.links[3].flow, Some(diagram_ir::WardleyLinkFlow::Backward));
-            assert_eq!(diagram.links[4].flow, Some(diagram_ir::WardleyLinkFlow::Bidirectional));
-            assert_eq!(diagram.links[4].label.as_deref(), Some("sync"));
-            assert_eq!(diagram.links[5].flow, Some(diagram_ir::WardleyLinkFlow::Forward));
-        }
-        if name == "accessibility" {
             assert_eq!(diagram.accessibility_title.as_deref(), Some("Accessible strategy map"));
             assert_eq!(diagram.accessibility_description.as_deref(),
                 Some("Components and dependencies\nacross the value chain"));
         }
-        if name == "forces" {
-            assert_eq!(diagram.forces.len(), 2);
-            assert_eq!(diagram.forces[0].label, "AI Adoption");
-            assert_eq!(diagram.forces[0].kind, diagram_ir::WardleyForceKind::Accelerator);
-            assert_eq!((diagram.forces[1].visibility, diagram.forces[1].evolution), (0.15, 0.75));
-            assert_eq!(diagram.forces[1].kind, diagram_ir::WardleyForceKind::Deaccelerator);
-        }
-        if name == "pipeline" {
-            assert_eq!(diagram.pipelines.len(), 1);
-            assert_eq!(diagram.pipelines[0].component_ids.len(), 4);
-            assert_eq!(diagram.nodes.len(), 5);
-            assert!(diagram.nodes[0].pipeline_parent);
-            assert_eq!((diagram.nodes[1].label.as_str(), diagram.nodes[1].visibility, diagram.nodes[1].evolution),
-                ("File System", 0.40, 0.25));
-            assert_eq!((diagram.nodes[1].label_offset_x, diagram.nodes[1].label_offset_y), (Some(-12.0), Some(8.0)));
-        }
     }
+    for fixture in corpus["invalid"].as_array().expect("invalid fixture array") {
+        let name = fixture["id"].as_str().expect("invalid fixture id");
+        assert!(parse_wardley(fixture["source"].as_str().expect("invalid fixture source")).is_err(),
+            "invalid wardley fixture {name} parsed");
+    }
+}
+
+#[test]
+fn wardley_full_status_is_backed_by_pinned_syntax_and_visual_corpora() {
+    let manifest: Value = serde_json::from_str(COMPATIBILITY_MANIFEST)
+        .expect("compatibility manifest must be JSON");
+    let wardley = manifest["families"].as_array().expect("families array").iter()
+        .find(|family| family["id"] == "wardley").expect("wardley family");
+    assert_eq!(wardley["status"].as_str(), Some("full"));
+
+    let syntax: Value = serde_json::from_str(WARDLEY_CORPUS).expect("wardley corpus JSON");
+    let visual: Value = serde_json::from_str(WARDLEY_VISUAL_CORPUS)
+        .expect("wardley visual corpus JSON");
+    assert_eq!(syntax["upstream_commit"], visual["upstream_commit"]);
+    let expected = syntax["valid"].as_array().expect("valid fixtures").iter()
+        .map(|fixture| fixture["id"].as_str().expect("fixture id"))
+        .collect::<BTreeSet<_>>();
+    let actual = visual["fixtures"].as_array().expect("visual fixtures").iter()
+        .map(|id| id.as_str().expect("visual fixture id"))
+        .collect::<BTreeSet<_>>();
+    assert_eq!(actual, expected);
+    assert!(!syntax["invalid"].as_array().expect("invalid fixtures").is_empty());
 }
 
 #[test]
