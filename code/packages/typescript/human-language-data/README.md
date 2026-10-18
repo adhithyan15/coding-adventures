@@ -298,6 +298,15 @@ new contracts must never name missing evidence. See
 The separate `mock-assessment` item is blocked on an absent task-shape
 inventory; it cannot infer a complete timed paper from `timed: true` alone.
 
+For a human review of Spanish mock question vocabulary, run
+`npm run report:mock-stem-coverage -- --level A2` (or `pre-A1`/`A1`). The
+report lists unaccounted and plausibly derivable stem/option forms; it is not
+a pass/fail gate. Unknown levels are rejected before corpus reads. Valid
+reports read Spanish lessons, curriculum membership, and the shared spine,
+not every other language track. The taught-form conversion remains shared
+with the Spanish mock audit, so narrowing the read does not narrow what the
+report credits or hides.
+
 ## Scope note
 
 Script/character-breakdown data (`data/scripts/*.json`, the "learn to write, piece
