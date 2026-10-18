@@ -129,6 +129,33 @@ C1 out 0 1u IC=0
     assert len(run_netlist(deck)) == 5
 
 
+def test_runs_two_axis_dc_sweep_with_second_source_as_outer_axis() -> None:
+    corpus_path = Path(__file__).resolve().parents[4] / "grammars/spice/nested-dc-sweep-v1-corpus.json"
+    case = json.loads(corpus_path.read_text(encoding="utf-8"))["cases"][0]
+    parsed = parse_netlist(case["deck"])
+
+    card = parsed.dc_cards()[0]
+    assert card == DcAnalysis(
+        source_name=case["expected"]["primarySource"],
+        start=0.0,
+        stop=1.0,
+        step=1.0,
+        secondary_source_name=case["expected"]["secondarySource"],
+        secondary_start=0.0,
+        secondary_stop=2.0,
+        secondary_step=2.0,
+    )
+    result = parsed.run_analysis_plan()[0].result
+    assert [(point.source_value, point.secondary_source_value) for point in result.points] == [
+        tuple(point) for point in case["expected"]["points"]
+    ]
+    assert isclose(result.points[-1].node_voltages["out"], case["expected"]["finalOut"], abs_tol=1e-9)
+    rows = parsed.select_outputs()[0].rows
+    assert [(row.axis_value, row.secondary_axis_value) for row in rows] == [
+        tuple(point) for point in case["expected"]["points"]
+    ]
+
+
 def test_runs_shared_berkeley_v1_core_corpus() -> None:
     corpus_path = (
         Path(__file__).resolve().parents[4]

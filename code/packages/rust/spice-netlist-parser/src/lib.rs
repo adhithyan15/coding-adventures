@@ -4,13 +4,13 @@ use std::{
 };
 
 use spice_engine::{
-    ac_sweep, dc_op_with_options, dc_sweep, format_deck_table_json, mosfet_from_model_card,
-    normalize_model_card, run_deck, tf, transient_with_method, AcPoint, AdaptiveTransientOptions,
-    Bjt, BjtPolarity, Capacitor, Cccs, Ccvs, Circuit, Complex, CurrentSource, DcOpOptions,
-    DcResult, DcSweepPoint, Diode, Element, ExpWaveform, Inductor, Jfet, JfetPolarity, Mosfet,
-    MosfetLevel1Params, MosfetType, MutualInductor, PulseWaveform, PwlWaveform, Resistor,
-    SinWaveform, SpiceError, TfResult, TransientMethod, TransientPoint, TransmissionLine, Vccs,
-    Vcvs, VoltageSource, Waveform,
+    ac_sweep, dc_op_with_options, dc_sweep, dc_sweep_2d, format_deck_table_json,
+    mosfet_from_model_card, normalize_model_card, run_deck, tf, transient_with_method, AcPoint,
+    AdaptiveTransientOptions, Bjt, BjtPolarity, Capacitor, Cccs, Ccvs, Circuit, Complex,
+    CurrentSource, DcOpOptions, DcResult, DcSweepPoint, Diode, Element, ExpWaveform, Inductor,
+    Jfet, JfetPolarity, Mosfet, MosfetLevel1Params, MosfetType, MutualInductor, PulseWaveform,
+    PwlWaveform, Resistor, SinWaveform, SpiceError, TfResult, TransientMethod, TransientPoint,
+    TransmissionLine, Vccs, Vcvs, VoltageSource, Waveform,
 };
 
 const OXIDE_PERMITTIVITY: f64 = 3.453_133e-11;
@@ -203,6 +203,10 @@ pub struct DcAnalysis {
     pub start: f64,
     pub stop: f64,
     pub step: f64,
+    pub secondary_source_name: Option<String>,
+    pub secondary_start: Option<f64>,
+    pub secondary_stop: Option<f64>,
+    pub secondary_step: Option<f64>,
 }
 
 #[derive(Debug, Clone, PartialEq)]
@@ -436,6 +440,8 @@ pub struct SelectedOutputRow {
     pub axis_name: Option<String>,
     pub axis_value: Option<f64>,
     pub values: BTreeMap<String, SelectedOutputValue>,
+    pub secondary_axis_name: Option<String>,
+    pub secondary_axis_value: Option<f64>,
 }
 
 #[derive(Debug, Clone, PartialEq)]
@@ -1174,13 +1180,37 @@ fn execute_analysis_step(
                 method,
             )?))
         }
-        RunnableAnalysis::Dc(card) => Ok(AnalysisResult::Dc(dc_sweep(
-            &parsed.circuit,
-            &card.source_name,
-            card.start,
-            card.stop,
-            card.step,
-        )?)),
+        RunnableAnalysis::Dc(card) => Ok(AnalysisResult::Dc(match &card.secondary_source_name {
+            Some(source_name) => {
+                let (Some(start), Some(stop), Some(step)) = (
+                    card.secondary_start,
+                    card.secondary_stop,
+                    card.secondary_step,
+                ) else {
+                    return Err(AnalysisExecutionError::Netlist(NetlistParseError::new(
+                        "nested .dc analysis requires complete secondary sweep bounds",
+                    )));
+                };
+                dc_sweep_2d(
+                    &parsed.circuit,
+                    &card.source_name,
+                    card.start,
+                    card.stop,
+                    card.step,
+                    source_name,
+                    start,
+                    stop,
+                    step,
+                )?
+            }
+            None => dc_sweep(
+                &parsed.circuit,
+                &card.source_name,
+                card.start,
+                card.stop,
+                card.step,
+            )?,
+        })),
         RunnableAnalysis::Ac(card) => Ok(AnalysisResult::Ac(ac_sweep(
             &parsed.circuit,
             card.start_hz,
@@ -1266,6 +1296,8 @@ fn selected_output_rows(
                 probes,
                 ".op output selection",
             )?,
+            secondary_axis_name: None,
+            secondary_axis_value: None,
         }]),
         AnalysisResult::Dc(points) => points
             .iter()
@@ -1281,6 +1313,8 @@ fn selected_output_rows(
                         probes,
                         ".dc output selection",
                     )?,
+                    secondary_axis_name: point.secondary_source_name.clone(),
+                    secondary_axis_value: point.secondary_value,
                 })
             })
             .collect(),
@@ -1298,6 +1332,8 @@ fn selected_output_rows(
                         probes,
                         ".ac output selection",
                     )?,
+                    secondary_axis_name: None,
+                    secondary_axis_value: None,
                 })
             })
             .collect(),
@@ -1315,6 +1351,8 @@ fn selected_output_rows(
                         probes,
                         ".tran output selection",
                     )?,
+                    secondary_axis_name: None,
+                    secondary_axis_value: None,
                 })
             })
             .collect(),
@@ -3583,12 +3621,26 @@ fn parse_directive(fields: &[String]) -> Result<Analysis, NetlistParseError> {
             }))
         }
         ".dc" => {
-            require_fields(fields, 5, ".dc")?;
+            if fields.len() != 5 && fields.len() != 9 {
+                return Err(NetlistParseError::new(
+                    ".dc requires one or two source start stop step axes",
+                ));
+            }
             Ok(Analysis::Dc(DcAnalysis {
                 source_name: fields[1].clone(),
                 start: parse_value(&fields[2])?,
                 stop: parse_value(&fields[3])?,
                 step: parse_value(&fields[4])?,
+                secondary_source_name: (fields.len() == 9).then(|| fields[5].clone()),
+                secondary_start: (fields.len() == 9)
+                    .then(|| parse_value(&fields[6]))
+                    .transpose()?,
+                secondary_stop: (fields.len() == 9)
+                    .then(|| parse_value(&fields[7]))
+                    .transpose()?,
+                secondary_step: (fields.len() == 9)
+                    .then(|| parse_value(&fields[8]))
+                    .transpose()?,
             }))
         }
         ".ac" => {
