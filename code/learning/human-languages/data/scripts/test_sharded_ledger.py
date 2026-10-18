@@ -8,6 +8,7 @@ from unittest import mock
 
 from sharded_ledger import (
     _files,
+    _read,
     _remove,
     _strict_directory_entries,
     load_book_generation,
@@ -224,6 +225,93 @@ class ShardedLedgerSafetyTest(unittest.TestCase):
 
         with self.assertRaisesRegex(ValueError, "non-directory ledger ancestor"):
             write_chapters(self.root, "spanish", self.chapter_document())
+
+    @unittest.skipIf(os.name == "nt", "Unix descriptor-relative read fixture")
+    def test_unix_file_enumeration_rejects_swapped_track_ancestor(self):
+        directory = self.root / "spanish"
+        write_json(directory / "chapters.d" / "0001.json", {"title": "inside"})
+        write_json(self.outside / "chapters.d" / "0002.json", {"title": "outside"})
+        moved = directory.with_name("spanish-moved")
+        from sharded_ledger import _directory
+        swapped = []
+
+        def swap_after_check(root, *parts):
+            path = _directory(root, *parts)
+            if parts == ("spanish", "chapters.d") and not swapped:
+                os.rename(directory, moved)
+                link_directory(self.outside, directory)
+                swapped.append(True)
+            return path
+
+        try:
+            with (
+                mock.patch("sharded_ledger._directory", side_effect=swap_after_check),
+                self.assertRaisesRegex(ValueError, "non-directory ledger ancestor"),
+            ):
+                _files(self.root, "spanish", "chapters.d")
+        finally:
+            if swapped:
+                os.unlink(directory)
+                os.rename(moved, directory)
+        self.assertTrue(swapped)
+
+    @unittest.skipIf(os.name == "nt", "Unix descriptor-relative read fixture")
+    def test_unix_owner_enumeration_rejects_swapped_core_ancestor(self):
+        directory = self.root / "core"
+        self.book_generation_tree()
+        write_json(self.outside / "book-generation.d" / "outside.json", {"outside": True})
+        moved = directory.with_name("core-moved")
+        from sharded_ledger import _directory
+        swapped = []
+
+        def swap_after_check(root, *parts):
+            path = _directory(root, *parts)
+            if parts == ("core", "book-generation.d") and not swapped:
+                os.rename(directory, moved)
+                link_directory(self.outside, directory)
+                swapped.append(True)
+            return path
+
+        try:
+            with (
+                mock.patch("sharded_ledger._directory", side_effect=swap_after_check),
+                self.assertRaisesRegex(ValueError, "non-directory ledger ancestor"),
+            ):
+                _strict_directory_entries(self.root, "core", "book-generation.d")
+        finally:
+            if swapped:
+                os.unlink(directory)
+                os.rename(moved, directory)
+        self.assertTrue(swapped)
+
+    @unittest.skipIf(os.name == "nt", "Unix descriptor-relative read fixture")
+    def test_unix_read_rejects_swapped_track_ancestor(self):
+        directory = self.root / "spanish"
+        write_json(directory / "chapters.d" / "0001.json", {"title": "inside"})
+        write_json(self.outside / "chapters.d" / "0001.json", {"title": "outside"})
+        moved = directory.with_name("spanish-moved")
+        from sharded_ledger import _file
+        swapped = []
+
+        def swap_after_check(root, *parts, **options):
+            path = _file(root, *parts, **options)
+            if parts == ("spanish", "chapters.d", "0001.json") and not swapped:
+                os.rename(directory, moved)
+                link_directory(self.outside, directory)
+                swapped.append(True)
+            return path
+
+        try:
+            with (
+                mock.patch("sharded_ledger._file", side_effect=swap_after_check),
+                self.assertRaisesRegex(ValueError, "non-directory ledger ancestor"),
+            ):
+                _read(self.root, "spanish", "chapters.d", "0001.json")
+        finally:
+            if swapped:
+                os.unlink(directory)
+                os.rename(moved, directory)
+        self.assertTrue(swapped)
 
     @unittest.skipUnless(os.name == "nt", "Windows directory junction fixture")
     def test_junctioned_track_ancestor_cannot_escape_root(self):
