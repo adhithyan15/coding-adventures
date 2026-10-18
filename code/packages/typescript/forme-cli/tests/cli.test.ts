@@ -710,7 +710,7 @@ export = "source"
       timeout: 20_000,
     });
     expect(checked.stderr).toBe("");
-    expect(checked.stdout).toContain("forme check: toml-product is valid (1 stage, reproducible)");
+    expect(checked.stdout).toContain("forme check: toml-product is valid (1 stage)");
   }, 30_000);
 
   it("loads and builds a self-contained config outside the repository tree", async () => {
