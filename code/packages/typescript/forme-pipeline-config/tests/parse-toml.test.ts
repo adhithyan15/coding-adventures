@@ -161,16 +161,44 @@ raw\\ntext''' }
     expect(parsed.stages[0]?.config).toEqual({ basic: "onetwo", literal: "raw\\ntext" });
   });
 
+  it("preserves non-TOML whitespace after multiline continuations", () => {
+    const parsed = parseTomlConfig(`name = "continuation-whitespace"
+[settings]
+storage-root = "."
+cache-dir = "cache"
+reproducible-build = false
+log-level = "info"
+best-effort = false
+[[stages]]
+stage = "@example/source"
+config = { nbsp = """x\\
+${"\u00a0"}y""", separator = """x\\
+${"\u2028"}y""" }
+`);
+    expect(parsed.stages[0]?.config).toEqual({ nbsp: "x\u00a0y", separator: "x\u2028y" });
+  });
+
   it.each([
     [String.raw`name = "bad\q"`, /unsupported escape/i],
+    [String.raw`name = "bad\/"`, /unsupported escape/i],
     [String.raw`name = "bad\uD800"`, /invalid Unicode scalar/i],
     [String.raw`name = "bad\u12xz"`, /invalid TOML|invalid.*escape/i],
+    ['name = "bad"\nvalue = 01', /invalid TOML/i],
+    ['name = "bad"\nvalue = 1_', /invalid TOML/i],
+    ['name = "bad"\nvalue = 1__2', /invalid TOML/i],
+    ['name = "bad"\nvalue = 1_.0', /invalid TOML/i],
+    ['name = "bad"\nvalue = 1.e2', /invalid TOML/i],
+    ['name = "bad"\nvalue = 0x1_', /invalid TOML/i],
+    ['name = "bad"\nvalue = 0x1__2', /invalid TOML/i],
     ['name = "unsafe"\nvalue = 9007199254740992', /safe integer/i],
     ['name = "unsafe"\nvalue = 2025-02-29', /invalid calendar date/i],
     ['name = "unsafe"\nvalue = 24:00:00', /invalid clock time/i],
     ['name = "unsafe"\nvalue = 2024-01-01T00:00:00+24:00', /invalid UTC offset/i],
     [`name = "${"\ud800"}"`, /invalid Unicode scalar/i],
     [`name = "raw${"\u0001"}control"`, /control|invalid TOML/i],
+    [`name = "comment-control"\n# unsafe${"\u0001"}comment`, /control|invalid TOML/i],
+    [`name = "comment-surrogate"\n# unsafe${"\ud800"}comment`, /invalid Unicode scalar/i],
+    ['name = "comment-cr"\n# unsafe\rcomment', /control|invalid TOML/i],
     ['name = "deadline"\n[settings]\nstorage-root = "."\ncache-dir = "cache"\nreproducible-build = false\nlog-level = "info"\nbest-effort = false\ndeadline-ms = 0\n[[stages]]\nstage = "@example/source"', /deadline-ms.*positive finite/i],
   ])("rejects invalid scalar values", (source, message) => {
     expect(() => parseTomlConfig(source)).toThrow(message);
