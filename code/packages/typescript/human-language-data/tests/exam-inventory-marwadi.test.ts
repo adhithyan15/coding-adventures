@@ -10,7 +10,7 @@
 //
 // WHAT THIS SUITE HAS TO GUARD THAT THE OTHERS DO NOT
 // This track began as a market transaction and for 257 lessons taught no
-// numeral. It now has 897 direct lesson owners through chapter 150. That is the
+// numeral. It now has 901 direct lesson owners through chapter 151. That is the
 // kind of moving corpus an inventory can silently fall behind: chapters 44–149
 // added hundreds of exact atoms while this file still reported many as absent.
 //
@@ -86,9 +86,9 @@ describe("the committed Marwadi A1 inventory", () => {
   it("pins the direct-owner snapshot behind the reconciliation", () => {
     const marwadiLessons = lessons.filter((lesson) => lesson.language === "marwadi");
     const marwadiChapters = loadTrackChapters().find((track) => track.language === "marwadi");
-    expect(marwadiLessons).toHaveLength(897);
-    expect(marwadiChapters?.chapters).toHaveLength(150);
-    expect(trackIntroducedAtoms(lessons, "marwadi").size).toBe(831);
+    expect(marwadiLessons).toHaveLength(901);
+    expect(marwadiChapters?.chapters).toHaveLength(151);
+    expect(trackIntroducedAtoms(lessons, "marwadi").size).toBe(838);
   });
 
   it("keeps every point's probe key, and never an empty probe", () => {
@@ -165,7 +165,7 @@ describe("the committed Marwadi A1 inventory", () => {
 
   it("records the exam-levels caveat as STALE rather than deferring to it", () => {
     // The caveat says the mapping "does not claim that the current starter
-    // chapter reaches it". The track has 897 lessons across 150 chapters, an
+    // chapter reaches it". The track has 901 lessons across 151 chapters, an
     // assessment spec, task shapes, and 31 scored performance atoms.
     // A caveat that has been overtaken is recorded as overtaken — the same
     // treatment a sibling track's OVERSTATED caveat got, in the other direction.
@@ -195,18 +195,18 @@ describe("the committed Marwadi A1 inventory", () => {
     }
   });
 
-  it("reports an EMPTY joining column, the reconciled adverb column, and a closed transaction column", () => {
+  it("reports the first joining tranche, the reconciled adverb column, and a closed transaction column", () => {
     const coverage = measureExamCoverage(inventory, lessons);
     expect(coverage.enumerated).toBe(197);
-    expect(coverage.covered).toBe(98);
-    expect(coverage.unmapped).toBe(99);
+    expect(coverage.covered).toBe(103);
+    expect(coverage.unmapped).toBe(94);
     expect(coverage.partial).toBe(0);
-    // FLAT ZERO. `ar`, `ane`, `aur` (and), `pan`, `par` (but), `ke` (that),
-    // `jad` (when) all lack direct owners across 897 lessons. A learner with
-    // a broad family and food lexicon still cannot say "bread and tea".
+    // The first tranche closes copulative, alternative, adversative and causal
+    // joining. Negative/distributive coordination and complement, relative,
+    // infinitive, purpose and simultaneity clauses remain explicit gaps.
     expect(coverage.byCategory["Yojak (joining and subordination)"]!).toEqual({
       enumerated: 11,
-      covered: 0,
+      covered: 4,
     });
     // Five are now exact: place, time, polarity, how/where, and why/because.
     // Quantity, manner and connective adverbs remain genuinely partial.
@@ -217,7 +217,7 @@ describe("the committed Marwadi A1 inventory", () => {
       covered: 4,
     });
     expect(formatExamCoverage(coverage)).toContain(
-      "marwadi A1 (partial inventory): 98/197 points covered (50%)",
+      "marwadi A1 (partial inventory): 103/197 points covered (52%)",
     );
   }, 60_000);
 
