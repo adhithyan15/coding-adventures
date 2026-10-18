@@ -70,6 +70,9 @@ production-limit, parser/source-ownership and CLOC31–40 controls stay intact.
   Math expressions: exact physical source intervals/coordinate ownership,
   member-prefix evidence, result-owned events, child/outer pass/sweep clocks,
   traced/plain JS/map equality and all-artifact failure sentinels.
+  Keep the emitter's existing multi-statement formatting: concatenated report
+  statements and one final LF. The independent numeric/order table must not
+  invent per-statement newlines and fail before the lineage assertions.
 - Full affected folder/parser/CLI/downstream suites, strict all-target lint,
   independent exact-head source and terminal security review. Keep actual Rust
   execution, later documentation carrier and published PR head distinct.
