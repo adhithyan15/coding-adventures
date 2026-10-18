@@ -207,6 +207,12 @@ fn timeline_family_source_keeps_complete_product_contracts() {
                     } else {
                         (expected_layout, expected_scene)
                     };
+                    let predecessor = (expected_layout.clone(), expected_scene.clone());
+                    let (expected_layout, expected_scene) = if name == "custom" {
+                        (expected_layout, expected_scene)
+                    } else {
+                        migrate_event_product(expected_layout, expected_scene, td)
+                    };
                     let title = titled.then(|| "T".to_string());
                     let source = format!("{prefix}{header}\n{}P : E\n",if titled { "title T\n" } else { "" });
                     let expected_queries = if merged {
@@ -227,6 +233,7 @@ fn timeline_family_source_keeps_complete_product_contracts() {
                         for font in [&mut label_font,&mut title_font] { font.weight=600;font.italic=true;font.stretch=FontStretch::Condensed; }
                     }
                     let options = DiagramToPaintOptions { label_font,title_font,resolver:&resolver,shaper:&FakeShaper,metrics:&FakeMetrics,background:defaults.background,device_pixel_ratio:defaults.device_pixel_ratio };
+                    prove_event_predecessor(&predecessor, &options, &expected_queries);
                     assert_eq!(diagram_to_paint_temporal(&actual_layout,&options),expected_scene,"whole Scene {name}:{header}:{titled}:{merged}");
                     assert_eq!(*resolver.0.borrow(),expected_queries,"whole queries/cache {name}:{header}:{titled}:{merged}");
                     println!("timeline-family-product COMPLETE {name}:{header}:{titled}:{merged}");
@@ -259,6 +266,8 @@ fn timeline_family_direct_domains_keep_full_scenes_and_queries() {
             .unwrap()
             .font_family = raw.into();
         let expected_scene = super::declared_timeline_typography(expected_scene, &expected_layout);
+        let predecessor = (expected_layout.clone(), expected_scene.clone());
+        let (expected_layout, expected_scene) = migrate_event_product(expected_layout, expected_scene, true);
         let expected_queries = vec![
             FontQuery::named(effective).with_weight(text_interfaces::FontWeight(700)),
             FontQuery::named(effective),
@@ -288,6 +297,7 @@ fn timeline_family_direct_domains_keep_full_scenes_and_queries() {
             background: defaults.background,
             device_pixel_ratio: defaults.device_pixel_ratio,
         };
+        prove_event_predecessor(&predecessor, &options, &expected_queries);
         assert_eq!(
             diagram_to_paint_temporal(&actual_layout, &options),
             expected_scene,

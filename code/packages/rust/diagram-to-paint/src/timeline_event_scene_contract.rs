@@ -21,6 +21,7 @@ mod timeline_event_scene_contract {
     include!("timeline_size_layout_product_contract.rs");
     include!("timeline_period_height_product_contract.rs");
     include!("timeline_event_height_product_contract.rs");
+    include!("timeline_event_height_migration_contract.rs");
     include!("timeline_family_scene_contract.rs");
 
     #[test]
@@ -550,6 +551,8 @@ mod timeline_event_scene_contract {
                                 instructions: geometry,
                             };
                             let expected_scene = super::declared_timeline_typography(expected_scene, &expected_layout);
+                            let predecessor = (expected_layout.clone(), expected_scene.clone());
+                            let (expected_layout, expected_scene) = migrate_event_product(expected_layout, expected_scene, td);
                             let title_query = FontQuery::named("\"trebuchet ms\", verdana, arial, sans-serif")
                                 .with_weight(text_interfaces::FontWeight(700));
                             let label_query = FontQuery::named("\"trebuchet ms\", verdana, arial, sans-serif");
@@ -597,6 +600,7 @@ mod timeline_event_scene_contract {
                                 background: defaults.background,
                                 device_pixel_ratio: defaults.device_pixel_ratio,
                             };
+                            prove_event_predecessor(&predecessor, &options, &expected_queries);
                             assert_eq!(
                                 diagram_to_paint_temporal(&actual_layout, &options),
                                 expected_scene,

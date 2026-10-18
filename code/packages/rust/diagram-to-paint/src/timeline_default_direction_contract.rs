@@ -192,6 +192,8 @@ fn default_and_explicit_direction_keep_complete_product_contracts() {
             instructions,
         };
         let expected_scene = super::declared_timeline_typography(expected_scene, &expected_layout);
+        let predecessor = (expected_layout.clone(), expected_scene.clone());
+        let (expected_layout, expected_scene) = migrate_event_product(expected_layout, expected_scene, td);
         let expected_queries = vec![
             FontQuery::named("\"trebuchet ms\", verdana, arial, sans-serif").with_weight(text_interfaces::FontWeight(700)),
             FontQuery::named("\"trebuchet ms\", verdana, arial, sans-serif"),
@@ -227,6 +229,7 @@ fn default_and_explicit_direction_keep_complete_product_contracts() {
             background: defaults.background,
             device_pixel_ratio: defaults.device_pixel_ratio,
         };
+        prove_event_predecessor(&predecessor, &options, &expected_queries);
         assert_eq!(
             diagram_to_paint_temporal(&actual_layout, &options),
             expected_scene,
