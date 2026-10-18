@@ -97,16 +97,11 @@ fn layout_venn_supported(diagram: &VennDiagram) -> LayoutedVennDiagram {
             labels.push(LayoutedVennLabel { text: label.clone(), x, y, font_size: 48.0 * scale, style: region.style.clone() });
         }
     }
-    for text in &diagram.texts {
-        #[cfg(test)] observe_venn_debug_work();
-        if let Some((x, y)) = centroid(&text.sets, &centers) {
-            labels.push(LayoutedVennLabel { text: text.label.clone().unwrap_or_else(|| text.id.clone()), x, y: y + 20.0,
-                font_size: 40.0 * scale, style: text.style.clone() });
-        }
-    }
-    let (debug_circles, debug_cells) = if diagram.config.use_debug_layout {
-        venn_debug_geometry(diagram, &circles, &centers)
-    } else { (Vec::new(), Vec::new()) };
+    // One authored group/grid preparation serves both normal labels and the
+    // optional diagnostic vectors. Hash tables index; the group vector orders.
+    let (normal_labels, debug_circles, debug_cells) =
+        venn_text_geometry(diagram, &circles, &centers, diagram.config.use_debug_layout);
+    labels.extend(normal_labels);
     LayoutedVennDiagram { width, height, title: diagram.title.clone(), config: diagram.config.clone(), circles, labels,
         debug_circles, debug_cells }
 }
@@ -116,8 +111,17 @@ std::thread_local! { static VENN_DEBUG_VISITS: std::cell::Cell<usize> = const { 
 #[cfg(test)]
 fn observe_venn_debug_work() { VENN_DEBUG_VISITS.with(|v| v.set(v.get() + 1)); }
 
+// Retain the direct legacy debug-test entry independently of the public flag.
+// Production calls the shared helper once with the actual emission preference.
+#[cfg(test)]
 fn venn_debug_geometry(diagram: &VennDiagram, circles: &[LayoutedVennCircle], centers: &HashMap<&str, (f64, f64)>)
     -> (Vec<LayoutedVennDebugCircle>, Vec<LayoutedVennDebugCell>) {
+    let (_, circles, cells) = venn_text_geometry(diagram, circles, centers, true);
+    (circles, cells)
+}
+
+fn venn_text_geometry(diagram: &VennDiagram, circles: &[LayoutedVennCircle], centers: &HashMap<&str, (f64, f64)>, emit_debug: bool)
+    -> (Vec<LayoutedVennLabel>, Vec<LayoutedVennDebugCircle>, Vec<LayoutedVennDebugCell>) {
     let scale = diagram.config.width / 1600.0;
     // Structural slices cannot alias through a delimiter. The vector retains
     // first authored occurrence; hash tables are lookup-only and never order
@@ -135,26 +139,35 @@ fn venn_debug_geometry(diagram: &VennDiagram, circles: &[LayoutedVennCircle], ce
         if region.label.as_ref().is_some_and(|label| !label.is_empty()) { labeled.insert(region.sets.as_slice()); }
     }
     let mut indices = HashMap::<&[String], usize>::new();
-    let mut groups = Vec::<(&[String], usize)>::new();
+    let mut groups = Vec::<(&[String], Vec<&diagram_ir::VennText>)>::new();
     for text in &diagram.texts {
         #[cfg(test)] observe_venn_debug_work();
         let key = text.sets.as_slice();
-        if let Some(index) = indices.get(key).copied() { groups[index].1 += 1; }
-        else { indices.insert(key, groups.len()); groups.push((key, 1)); }
+        if let Some(index) = indices.get(key).copied() { groups[index].1.push(text); }
+        else { indices.insert(key, groups.len()); groups.push((key, vec![text])); }
     }
+    let mut normal_labels = Vec::new();
     let mut debug_circles = Vec::new();
     let mut debug_cells = Vec::new();
-    for (sets, count) in groups {
+    for (sets, texts) in groups {
+        let count = texts.len();
         #[cfg(test)] observe_venn_debug_work();
         let Some((cx, cy)) = centroid(sets, centers) else { continue; };
         let area_circles: Vec<_> = sets.iter().inspect(|_| { #[cfg(test)] observe_venn_debug_work(); })
             .filter_map(|id| first_circles.get(id.as_str()).copied()).collect();
-        let min_radius = area_circles.iter().map(|circle| circle.radius).fold(f64::INFINITY, f64::min);
+        let min_radius = area_circles.iter().map(|circle| {
+            #[cfg(test)] observe_venn_debug_work();
+            circle.radius
+        }).fold(f64::INFINITY, f64::min);
         let mut inner_radius = area_circles.iter().map(|circle| {
+            #[cfg(test)] observe_venn_debug_work();
             circle.radius - (cx - circle.cx).hypot(cy - circle.cy)
         }).fold(f64::INFINITY, f64::min).max(0.0);
         if inner_radius == 0.0 && min_radius.is_finite() { inner_radius = min_radius * 0.6; }
-        debug_circles.push(LayoutedVennDebugCircle { cx, cy, radius: inner_radius });
+        if emit_debug {
+            #[cfg(test)] observe_venn_debug_work();
+            debug_circles.push(LayoutedVennDebugCircle { cx, cy, radius: inner_radius });
+        }
         let cols = (count as f64).sqrt().ceil().max(1.0) as usize;
         let rows = count.div_ceil(cols).max(1);
         let inner_width = (80.0 * scale).max(inner_radius * 1.9);
@@ -166,13 +179,25 @@ fn venn_debug_geometry(diagram: &VennDiagram, circles: &[LayoutedVennCircle], ce
         let cell_height = inner_height / rows as f64;
         let start_x = cx - inner_width / 2.0;
         let start_y = cy - inner_height / 2.0 + label_offset;
-        for index in 0..count {
+        for (index, text) in texts.into_iter().enumerate() {
             #[cfg(test)] observe_venn_debug_work();
-            debug_cells.push(LayoutedVennDebugCell { x: start_x + cell_width * (index % cols) as f64,
-                y: start_y + cell_height * (index / cols) as f64, width: cell_width, height: cell_height });
+            let cell = LayoutedVennDebugCell { x: start_x + cell_width * (index % cols) as f64,
+                y: start_y + cell_height * (index / cols) as f64, width: cell_width, height: cell_height };
+            // Preserve each operation: rounded displayed centers are not an
+            // equivalent oracle. The same cell is optionally published below.
+            #[cfg(test)] observe_venn_debug_work();
+            normal_labels.push(LayoutedVennLabel {
+                text: text.label.clone().unwrap_or_else(|| text.id.clone()),
+                x: cell.x + cell.width / 2.0, y: cell.y + cell.height / 2.0,
+                font_size: 40.0 * scale, style: text.style.clone(),
+            });
+            if emit_debug {
+                #[cfg(test)] observe_venn_debug_work();
+                debug_cells.push(cell);
+            }
         }
     }
-    (debug_circles, debug_cells)
+    (normal_labels, debug_circles, debug_cells)
 }
 
 fn centroid(sets: &[String], centers: &HashMap<&str, (f64, f64)>) -> Option<(f64, f64)> {
@@ -181,8 +206,8 @@ fn centroid(sets: &[String], centers: &HashMap<&str, (f64, f64)>) -> Option<(f64
         centers.get(set.as_str())
     }).collect();
     (!points.is_empty()).then(|| { let count = points.len() as f64;
-        (points.iter().map(|point| point.0).sum::<f64>() / count,
-         points.iter().map(|point| point.1).sum::<f64>() / count) })
+        (points.iter().map(|point| { #[cfg(test)] observe_venn_debug_work(); point.0 }).sum::<f64>() / count,
+         points.iter().map(|point| { #[cfg(test)] observe_venn_debug_work(); point.1 }).sum::<f64>() / count) })
 }
 
 /// Lay out an Ishikawa causal tree as an alternating fishbone.
