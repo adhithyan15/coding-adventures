@@ -9,7 +9,7 @@ use actor::{ActorError, ActorSystem};
 use chief_of_staff_broker_launcher::{
     BrokerKeyFiles, BrokerProgram, KeyFileDeclaration, RelayConfig,
 };
-#[cfg(any(target_os = "linux", target_os = "macos"))]
+#[cfg(any(target_os = "linux", target_os = "macos", windows))]
 use chief_of_staff_broker_launcher::{VerifiedExecutable, VerifyError};
 use chief_of_staff_broker_protocol::KeyKind;
 use chief_of_staff_channel_crypto::ChannelId;
@@ -341,7 +341,7 @@ pub enum ChiefDaemonError {
     Reconciliation(ReconcileConfigError),
     /// `[hosts.broker]` names an executable that is not the pinned binary,
     /// or that could not be verified (D18S S-K1).
-    #[cfg(any(target_os = "linux", target_os = "macos"))]
+    #[cfg(any(target_os = "linux", target_os = "macos", windows))]
     BrokerExecutable(VerifyError),
     /// `[hosts.broker]` is configured on macOS without `seatbelt_shim`
     /// and `seatbelt_shim_sha256` (D18S P2.7b): with no shim there is no
@@ -518,7 +518,7 @@ impl Display for ChiefDaemonError {
             Self::Storage(_) => "chief daemon: durable storage failed",
             Self::Process(_) => "chief daemon: process supervision failed",
             Self::Reconciliation(_) => "chief daemon: reconciliation configuration failed",
-            #[cfg(any(target_os = "linux", target_os = "macos"))]
+            #[cfg(any(target_os = "linux", target_os = "macos", windows))]
             Self::BrokerExecutable(_) => "chief daemon: broker executable failed verification",
             Self::BrokerShimMissing => {
                 "chief daemon: [hosts.broker] needs seatbelt_shim and seatbelt_shim_sha256 on macOS"
@@ -1159,11 +1159,13 @@ pub fn compose_channel_brokers(
 /// their pinned digests.
 ///
 /// ```text
-///   Linux   broker                          the shim pair is not opened
-///   macOS   broker + seatbelt_shim          no pair: BrokerShimMissing
-///   other   refused (BrokerUnsupported)
+///   Linux     broker                        the shim pair is not opened
+///   macOS     broker + seatbelt_shim        no pair: BrokerShimMissing
+///   Windows   broker                        the shim pair is not opened
+///                                           (P2.8b-2)
+///   other     refused (BrokerUnsupported)
 /// ```
-#[cfg(target_os = "linux")]
+#[cfg(any(target_os = "linux", windows))]
 fn verify_broker_program(
     broker: &HostBrokerConfig,
     executable: &Path,
@@ -1196,7 +1198,7 @@ fn verify_broker_program(
         .map_err(|_| ChiefDaemonError::BrokerShim(None))
 }
 
-#[cfg(not(any(target_os = "linux", target_os = "macos")))]
+#[cfg(not(any(target_os = "linux", target_os = "macos", windows)))]
 fn verify_broker_program(
     _broker: &HostBrokerConfig,
     _executable: &Path,
@@ -4294,6 +4296,12 @@ hardware_key_timeout = 60
         digest.iter().map(|byte| format!("{byte:02x}")).collect()
     }
 
+    /// `path` inside a TOML basic string: a Windows path's backslashes
+    /// would otherwise be read as escapes.
+    fn toml_path(path: &Path) -> String {
+        path.display().to_string().replace('\\', "\\\\")
+    }
+
     /// `[hosts.broker]`, with the Seatbelt shim pair when `shim` is given.
     fn broker_config_with_shim(
         executable: &Path,
@@ -4304,14 +4312,14 @@ hardware_key_timeout = 60
             .map(|(path, digest)| {
                 format!(
                     "seatbelt_shim = \"{}\"\nseatbelt_shim_sha256 = \"{}\"\n",
-                    path.display(),
+                    toml_path(path),
                     hex(digest)
                 )
             })
             .unwrap_or_default();
         parse_config(&format!(
             "{VALID_CONFIG}\n{BROKER_CHANNEL_KEYS}\n[hosts.broker]\nexecutable = \"{}\"\nsha256 = \"{}\"\n{shim}",
-            executable.display(),
+            toml_path(executable),
             hex(digest)
         ))
         .unwrap()
@@ -4454,7 +4462,7 @@ hardware_key_timeout = 60
         );
     }
 
-    #[cfg(any(target_os = "linux", target_os = "macos"))]
+    #[cfg(any(target_os = "linux", target_os = "macos", windows))]
     #[test]
     fn the_broker_binary_is_verified_at_startup() {
         let directory = TestDir::new();
@@ -4465,7 +4473,7 @@ hardware_key_timeout = 60
         let shim = a_shim(&directory);
         #[cfg(target_os = "macos")]
         let shim = Some((shim.0.as_path(), shim.1));
-        #[cfg(target_os = "linux")]
+        #[cfg(not(target_os = "macos"))]
         let shim = None;
         let broker_config =
             |executable: &Path, digest| broker_config_with_shim(executable, digest, shim);
@@ -4616,7 +4624,7 @@ hardware_key_timeout = 60
         .is_some());
     }
 
-    #[cfg(not(any(target_os = "linux", target_os = "macos")))]
+    #[cfg(not(any(target_os = "linux", target_os = "macos", windows)))]
     #[test]
     fn a_broker_table_is_refused_where_no_verified_launch_exists() {
         let directory = TestDir::new();

@@ -2462,14 +2462,21 @@ through S-I3 before two weeks are spent on Windows.
      applier's; P2.8b-1), so the window holds no other spawn. It ends
      entirely when every agent spawn goes through this applier (step 9).
      Every std spawn in the daemon process takes it: the host, the
-     broker launcher's, and the approval helpers' (notification,
-     biometric, hardware key). A new spawn site must too.
+     broker launcher's, the approval helpers' (notification, biometric,
+     hardware key), and the host runtime's verified Deno run (P2.8b-2).
+     A new spawn site must too.
    - *One agent, two instances.* Two launches of one `agent_id` would share
      a SID, and processes of one AppContainer can open each other; either
      could also write into the profile the other's spawn registers. So a
      supervisor runs one instance of an agent at a time (above). Before 8b
      a broker runs under a SID of its own (P2.8b-1: a `chief-of-staff-broker.`
-     container over the agent's digest).
+     container over the agent's digest). The claim is per agent id, but
+     the supervisor's busy check is per pipeline and agent. So a second
+     pipeline's broker for the same agent, while the first runs, is
+     refused (`BrokerLaunch`), never run beside it. A broker that does
+     not exit within ten seconds of being ended keeps its agent's claim
+     until the daemon restarts. Both fail closed, at the cost of
+     availability.
    - *One supervisor per user.* The profile span and the one-instance rule
      hold within one supervisor process. A second supervisor, or any tool
      of the same user, managing the same agent's profile could make a
@@ -2543,14 +2550,34 @@ through S-I3 before two weeks are spent on Windows.
           refusals, the lock's exclusion, two containers for one agent,
           and the broker binary, confined by the applier, loading keys
           from handles and answering `Ready`.
-      - **P2.8b-2, the wiring.** The launcher gains a Windows
-        `BrokerProgram` (the broker alone: no shim) and launches through
-        the applier, its plan for `OsFamily::Windows`. The launcher's and
-        supervisor's broker child is a small trait over std's `Child` and
-        the applier's `ConfinedChild` (id, kill, wait, and the two
-        pipes), so `LaunchedBroker`, the relay and `OwnedBroker` are the
-        same code on every OS. The daemon verifies `[hosts.broker]` on
-        Windows. `broker-e2e`'s supervised tests run on `windows-2025`.
+      - **P2.8b-2, the wiring.**
+        - *The launch.* The launcher gains a Windows `BrokerProgram`: the
+          broker alone, with no shim. It launches through the applier with
+          the plan for `OsFamily::Windows`, in the order Linux and macOS
+          use:
+          1. secret directories;
+          2. slots;
+          3. `prepare_verified_broker` over the agent's id, which
+             re-verifies the binary;
+          4. the key files, opened owner-only;
+          5. the spawn, with the files as the handle list;
+          6. Bootstrap and the `Ready` check.
+
+          Bootstrapping a started broker and checking its `Ready` is one
+          function, shared by every platform.
+        - *One broker child.* The broker child is one type,
+          `BrokerChild`: std's `Child` on Unix, the applier's
+          `ConfinedChild` on Windows. It offers its id, whether it has
+          exited (seen without reaping) and its end. On Unix the end kills
+          the session, then reaps. On Windows it ends the job and waits up
+          to ten seconds; a broker that outlives that keeps its
+          container's claim for good. So `LaunchedBroker`, the relay and
+          `OwnedBroker` are the same code on every OS. (An earlier draft
+          planned a trait here. One cfg'd type does the same with less.)
+        - *The daemon* verifies `[hosts.broker]` on Windows as on Linux.
+        - *The end-to-end tests.* `broker-e2e`'s supervised tests run on
+          `windows-2025`, with an agent per test, because a container
+          runs one instance at a time.
    3. **P2.8c:** `Direct` file grants, as per-object ACEs for the agent's
       SID, checked as on macOS and removed when the agent ends.
 9. **Wire into `spawn_verified`.** Deno becomes one supported runtime rather

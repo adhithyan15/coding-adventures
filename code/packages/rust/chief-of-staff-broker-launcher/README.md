@@ -51,10 +51,22 @@ reached without links). Those are the key files' directories, and whatever
 |---|---|---|
 | Linux (P2.6d-3) | the verified broker | `chief-of-staff-linux-sandbox`, between fork and `execveat` of the hashed descriptor |
 | macOS (P2.7b) | the verified broker and the verified Seatbelt shim | `chief-of-staff-macos-sandbox`: the shim, a fresh image, installs the profile and then execs the broker |
+| Windows (P2.8b-2) | the verified broker | `chief-of-staff-windows-sandbox`: created suspended in its own `chief-of-staff-broker.<hex>` LPAC AppContainer, alone in a job, its keys as handles on the handle list, checked before its first instruction |
 | elsewhere | nothing: no value can exist | no broker can be launched (S-P3) |
 
-On both supported platforms the plan is `broker_plan()`, with no
+On every supported platform the plan is `broker_plan()`, with no
 capabilities. The launch takes the same steps in the same order.
+
+On Windows the key files pass the Windows owner-only policy instead of the
+mode check. Each file is owned by the user, with a protected list that
+holds one allow entry, the user's. Each directory holding secrets must
+name only the user, SYSTEM and Administrators. The handles' values reach
+the broker in `CHIEF_OF_STAFF_HANDLES`.
+
+The running broker is a `BrokerChild` on every platform: std's `Child` on
+Unix, the applier's `ConfinedChild` on Windows. The supervisor holds it
+to read its `id`, ask whether it `has_exited` (without reaping it), and
+`end` it. So the relay and the supervisor are the same code everywhere.
 
 ## Tests
 
