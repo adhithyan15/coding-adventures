@@ -39,7 +39,7 @@ Every track shares the same shape:
 ```text
 <language>/
   README.md                  what this track is, how to use it, current progress
-  CHANGELOG.d/               append-only per-chapter release-note owners
+  CHANGELOG.d/               append-only per-chapter release-note owners in sharded tracks
   CHANGELOG.md               ignored local view rendered from CHANGELOG.d when needed
   curriculum.d/              ordered shared-spine path + extensions, sharded by entry
   curriculum-membership.d/   one direct path/extension membership owner per lesson
