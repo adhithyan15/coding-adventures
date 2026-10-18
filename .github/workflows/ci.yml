@@ -103,6 +103,7 @@ jobs:
       needs_mosaic_compose_runtime: ${{ steps.mosaic-compose-runtime.outputs.required }}
       diff_base: ${{ steps.diff-base.outputs.base }}
       is_main: ${{ steps.detect-main.outputs.is_main }}
+      full_build: ${{ steps.detect-main.outputs.full_build }}
       build_shards: ${{ steps.detect.outputs.build_shards }}
       build_matrix: ${{ steps.build-matrix.outputs.build_matrix }}
       shard_count: ${{ steps.build-matrix.outputs.shard_count }}
@@ -175,17 +176,34 @@ jobs:
           echo "base=$BASE" >> "$GITHUB_OUTPUT"
           echo "Diff base: $BASE"
 
+      # full_build selects the forced, sharded build every main push runs.
+      # A pull request can ask for the same build with the `ci-full-build`
+      # label, so a change to the main build itself (sharding, disk reclaim,
+      # step ceilings) is proven on its own PR instead of after it merges --
+      # main runs take 4-5 hours and batch many merges, so a regression found
+      # there is found late and blamed on the wrong PR (X-7). Add the label,
+      # then push: labelling alone does not start a run, and a re-run replays
+      # the old event's labels. A labelled PR runs only the Linux shards; drop
+      # the label for the ordinary macOS/Windows legs.
       - name: Check if main branch
         id: detect-main
         shell: bash
         env:
           GIT_REF: ${{ github.ref }}
           EVENT_NAME: ${{ github.event_name }}
+          FULL_BUILD_LABEL: ${{ github.event_name == 'pull_request' && contains(github.event.pull_request.labels.*.name, 'ci-full-build') }}
         run: |
           if [ "$GIT_REF" = "refs/heads/main" ] && [ "$EVENT_NAME" = "push" ]; then
             echo "is_main=true" >> "$GITHUB_OUTPUT"
+            echo "full_build=true" >> "$GITHUB_OUTPUT"
           else
             echo "is_main=false" >> "$GITHUB_OUTPUT"
+            if [ "$FULL_BUILD_LABEL" = "true" ]; then
+              echo "::notice::ci-full-build label: running main's forced, sharded full build on this pull request"
+              echo "full_build=true" >> "$GITHUB_OUTPUT"
+            else
+              echo "full_build=false" >> "$GITHUB_OUTPUT"
+            fi
           fi
 
       - name: Detect needed languages and emit build plan
@@ -197,10 +215,16 @@ jobs:
           cd ../../../..
           force_flag=()
           shard_flags=()
-          if [ "${{ steps.detect-main.outputs.is_main }}" = "true" ]; then
+          if [ "${{ steps.detect-main.outputs.full_build }}" = "true" ]; then
             force_flag=(-force)
             shard_flags=(-shard-count 15 -emit-shard-matrix)
           fi
+          # -shard-weights balances shards on each package's measured build
+          # time and keeps prerequisite closures together (sharding v2,
+          # code/specs/build-plan-sharding.md); refresh the file with
+          # code/scripts/ci_package_durations.py. Only a sharded plan uses it,
+          # but every run loads it, so a malformed refresh fails the PR that
+          # made it instead of main's next detect.
           emit_plan() {
             ./build-tool \
               -root . \
@@ -209,6 +233,7 @@ jobs:
               -validate-build-files \
               -detect-languages \
               -emit-plan build-plan.json \
+              -shard-weights code/specs/data/ci-package-durations.json \
               "${shard_flags[@]}"
           }
           if plan_output="$(emit_plan 2>&1)"; then
@@ -324,8 +349,8 @@ jobs:
         id: toolchains
         shell: bash
         run: |
-          if [ "${{ steps.detect-main.outputs.is_main }}" = "true" ]; then
-            echo "Main branch push detected; enabling all supported toolchains for the forced full build"
+          if [ "${{ steps.detect-main.outputs.full_build }}" = "true" ]; then
+            echo "Forced full build (main push or ci-full-build label); enabling all supported toolchains"
             printf '%s\n' \
               'needs_python=true' \
               'needs_ruby=true' \
@@ -374,7 +399,7 @@ jobs:
         shell: bash
         env:
           EVENT_NAME: ${{ github.event_name }}
-          IS_MAIN: ${{ steps.detect-main.outputs.is_main }}
+          FULL_BUILD: ${{ steps.detect-main.outputs.full_build }}
           BUILD_SHARDS: ${{ steps.detect.outputs.build_shards }}
           NEEDS_SWIFT: ${{ steps.toolchains.outputs.needs_swift }}
           NEEDS_ELIXIR: ${{ steps.toolchains.outputs.needs_elixir }}
@@ -468,7 +493,7 @@ jobs:
               # full matrix rather than silently narrowing coverage.
               return None
 
-          if os.environ["IS_MAIN"] == "true":
+          if os.environ["FULL_BUILD"] == "true":
             shards = json.loads(os.environ.get("BUILD_SHARDS") or "[]")
             entries = [
               {
@@ -614,6 +639,9 @@ jobs:
           python3 -m unittest discover -s code/scripts/tests -p 'test_forme_spec_map.py'
           python3 -m unittest discover -s code/scripts/tests -p 'test_package_parity_report.py'
           python3 -m unittest discover -s code/scripts/tests -p 'test_human_language_hot_files.py'
+          # Main's shard weights come from this parser; a report-format drift
+          # it no longer recognizes must fail here, not unbalance main.
+          python3 -m unittest discover -s code/scripts/tests -p 'test_ci_package_durations.py'
           python3 code/scripts/geometry2d_conformance.py
           python3 -m unittest discover -s code/scripts/tests -p 'test_geometry2d_conformance.py'
           python3 code/scripts/bezier2d_flattening_conformance.py
@@ -2734,8 +2762,14 @@ jobs:
           fi
           docker system prune --all --force || true
           sudo apt-get clean
+          # The CodeQL bundles in the tool cache serve only codeql.yml, which
+          # runs on its own runners; nothing in this job reads them.
+          sudo rm -rf /opt/hostedtoolcache/CodeQL || true
           echo "Disk after cleanup:"
           df -h /
+          # What the image still carries, largest first, so the next reclaim
+          # can be chosen from evidence rather than guessed (#17652).
+          sudo du -xsh /opt/hostedtoolcache/* /usr/local/lib/* /usr/share/* /opt/* 2>/dev/null | sort -rh | head -20 || true
 
       # ── Android SDK (Kotlin / Android) ────────────────────────
       #
@@ -5179,7 +5213,7 @@ jobs:
       # well inside the 360-minute job limit, with room for the ~25 minutes
       # of Windows setup before this step, so a real hang still fails.
       - name: Build and test affected packages
-        if: needs.detect.outputs.is_main != 'true' && (runner.os != 'Windows' || needs.detect.outputs.needs_swift == 'true' || needs.detect.outputs.needs_elixir == 'true' || needs.detect.outputs.needs_dotnet == 'true' || needs.detect.outputs.needs_ocaml == 'true' || needs.detect.outputs.run_build_windows_os_suites == 'true')
+        if: needs.detect.outputs.full_build != 'true' && (runner.os != 'Windows' || needs.detect.outputs.needs_swift == 'true' || needs.detect.outputs.needs_elixir == 'true' || needs.detect.outputs.needs_dotnet == 'true' || needs.detect.outputs.needs_ocaml == 'true' || needs.detect.outputs.run_build_windows_os_suites == 'true')
         timeout-minutes: 300
         shell: bash
         run: |
@@ -5187,17 +5221,14 @@ jobs:
             printf '%s\n' "$$" | sudo tee /sys/fs/cgroup/forme-sandbox/runner/cgroup.procs >/dev/null
           fi
           if [ "$RUNNER_OS" = "Windows" ]; then BT=./build-tool.exe; else BT=./build-tool; fi
-          job_flags=()
-          if [ "${{ steps.setup-ocaml.outcome }}" = "success" ]; then
-            job_flags=(-jobs 1)
-          fi
+          # No worker-count override: the executor serializes OCaml packages on its
+          # global:opam-switch lock and runs everything else in parallel.
           PLAN_FLAG=""
           if [ -f build-plan.json ]; then
             PLAN_FLAG="-plan-file build-plan.json"
             echo "Using pre-computed build plan"
           fi
           $BT \
-            "${job_flags[@]}" \
             -root . \
             $PLAN_FLAG \
             -validate-build-files \
@@ -5207,9 +5238,20 @@ jobs:
       # ── Force full build on main ──────────────────────────────
       # Same bounded-hang rationale as "Build and test affected packages"
       # above — this step runs the identical build-tool invocation, just
-      # forced and sharded, on every merge to main.
+      # forced and sharded, on every merge to main (and on a pull request
+      # labelled ci-full-build; see the detect job).
+      #
+      # It used to pass `-jobs 1` whenever an OCaml switch was active. Sharding
+      # v1 scattered the six OCaml packages over five shards, so five runners
+      # built ~1,000 packages each on ONE worker, and three of them hit this
+      # ceiling at ~95% done every run (#17631). The executor's
+      # global:opam-switch lock now serializes only the OCaml packages.
+      #
+      # disk-watch.sh prints `df` every five minutes and a breakdown of the
+      # largest directories when usage crosses 70/80/90/95%, so a shard that
+      # runs out of disk says what filled it while it still can (#17652).
       - name: Full build on main merge
-        if: needs.detect.outputs.is_main == 'true'
+        if: needs.detect.outputs.full_build == 'true'
         timeout-minutes: 150
         shell: bash
         run: |
@@ -5217,15 +5259,15 @@ jobs:
             printf '%s\n' "$$" | sudo tee /sys/fs/cgroup/forme-sandbox/runner/cgroup.procs >/dev/null
           fi
           if [ "$RUNNER_OS" = "Windows" ]; then BT=./build-tool.exe; else BT=./build-tool; fi
-          job_flags=()
-          if [ "${{ steps.setup-ocaml.outcome }}" = "success" ]; then
-            job_flags=(-jobs 1)
-          fi
+          code/scripts/ci/disk-watch.sh report "before full build"
+          code/scripts/ci/disk-watch.sh watch 300 &
+          disk_watch_pid=$!
+          trap 'kill "$disk_watch_pid" 2>/dev/null || true; code/scripts/ci/disk-watch.sh report "after full build"' EXIT
           # -prune-leaf-targets: each standalone Cargo package builds its whole
           # dependency tree into its own target/, and keeping them all filled
           # the runner disk part-way through a shard (X-7). A leaf's target/
           # goes once its build has reported.
-          $BT "${job_flags[@]}" -root . -plan-file build-plan.json -shard-index "${{ matrix.shard_index }}" -force -validate-build-files -clippy -prune-leaf-targets -language all
+          $BT -root . -plan-file build-plan.json -shard-index "${{ matrix.shard_index }}" -force -validate-build-files -clippy -prune-leaf-targets -language all
 
   # ── Job 16: CI gate ────────────────────────────────────────────
   #

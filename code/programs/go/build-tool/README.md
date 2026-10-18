@@ -226,6 +226,33 @@ On Windows, use the compiled `.exe`:
 | `-cache-file` | .build-cache.json | Path to the build cache file |
 | `-validate-build-files` | true | Validate BUILD dependency metadata, established-lane package-root coverage, crate coverage, and tracked artifacts |
 | `-ci-gates` | code/specs/data/ci-gates.json | CI gate registry used to decide which Actions jobs this change needs; empty disables gating |
+| `-shard-count` | 0 | Split an emitted plan (`-emit-plan`) into this many prerequisite-closed CI shards |
+| `-shard-weights` | (none) | Measured per-package seconds (`ci-package-durations-v1`); selects locality-aware sharding v2 (see below) |
+| `-shard-index` | -1 | With `-plan-file`, run only that shard |
+| `-prune-leaf-targets` | false | Delete a leaf package's own Cargo `target/` once it has built (CI disk budget) |
+
+### Sharding v1 and v2
+
+Main CI splits its forced full build across 15 runners. Each shard must be
+*prerequisite-closed* -- it builds everything its packages depend on -- so
+any prerequisite two shards share is built twice. Sharding v1 deals packages
+round the shards by a heuristic cost ("a Rust crate costs 6") and only then
+copies each one's prerequisites in, which on the real repo multiplied the
+work by 2.8x. Sharding v2 (`-shard-weights`) hands out whole dependency
+closures, biggest first, to the shard that gains the least *new* work while
+staying within a fair share, and costs packages in measured seconds:
+
+| 2026-10-18 main plan, 15 shards | package builds | heaviest shard | lightest shard |
+|---|---:|---:|---:|
+| v1 | 14,878 | 233 min | 134 min |
+| v2 | 5,908 | 69 min | 69 min |
+
+Refresh the durations from finished main runs with
+`python3 code/scripts/ci_package_durations.py --runs <run ids>`. A package
+the file has not seen yet costs its toolchain's median, so a new package
+never needs a refresh to be scheduled sensibly. See
+`internal/plan/shard_weights.go` for the algorithm and
+`code/specs/build-plan-sharding.md` for the contract.
 
 For strict Starlark packages with declared sources, diff selection recognizes
 only the exact recursive build fronts `BUILD`, `BUILD_windows`, `BUILD_mac`,

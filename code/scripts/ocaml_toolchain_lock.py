@@ -130,7 +130,7 @@ GENERIC_BOOTSTRAP_RUN_SHA256 = (
     "da5d03fbce1c2766acb87fc9c381292704bf18b7b8b4a5bbf164c2e3922dbe56"
 )
 GENERIC_MATRIX_PLAN_RUN_SHA256 = (
-    "02b36725b5036a9ac57023f94ec372936e0ee7f24dd8c9d5aec8d6f4a2eec8d0"
+    "30ea6d06c27d8fa86dabe0fb0f68340f6639cb7079f8d73f2664d3213eeb5483"
 )
 EXPECTED_RUN_METADATA = {
     "contract.validate": {"shell": None, "env": None},
@@ -1377,22 +1377,60 @@ def validate_generic_ci_workflow_text(
         incremental.get("run"), "jobs.build.incremental.run"
     )
     full_run = _workflow_string(full.get("run"), "jobs.build.full.run")
+    # OCaml builds share one opam switch, so they must not run concurrently.
+    # That used to be enforced here as `-jobs 1` for the whole invocation
+    # whenever an OCaml switch was active, which serialized every other
+    # package on the runner too: five main shards ran ~1,000 packages on one
+    # worker and three of them hit the 150-minute ceiling (#17631). The
+    # executor now owns the lock (validate_executor_opam_lock), so the
+    # workflow must invoke the build tool WITHOUT a worker override -- a
+    # `-jobs` here would quietly bring the whole-shard serialization back.
     for label, run, invocation in (
-        (
-            "incremental",
-            incremental_run,
-            '$BT \\\n  "${job_flags[@]}" \\\n  -root .',
-        ),
-        ("full", full_run, '$BT "${job_flags[@]}" -root .'),
+        ("incremental", incremental_run, "$BT \\\n  -root ."),
+        ("full", full_run, "$BT -root ."),
     ):
-        if (
-            'if [ "${{ steps.setup-ocaml.outcome }}" = "success" ]; then' not in run
-            or "job_flags=(-jobs 1)" not in run
-            or invocation not in run
-        ):
+        if invocation not in run:
+            raise ContractError(f"generic CI {label} build must invoke the build tool")
+        if re.search(r"(^|\s)-jobs(\s|=|$)", run) or "job_flags" in run:
             raise ContractError(
-                f"generic CI {label} build must serialize only an active OCaml switch"
+                f"generic CI {label} build must not override build-tool workers; "
+                "OCaml is serialized by the executor's global:opam-switch lock"
             )
+
+
+EXECUTOR_RELATIVE_PATH = Path("code/programs/go/build-tool/internal/executor/executor.go")
+OPAM_LOCK_DECLARATION = 'const OpamSwitchLockKey = "global:opam-switch"'
+OPAM_LOCK_GUARD = re.compile(
+    r'if pkg\.Language == "ocaml" \|\| opamCommandRe\.MatchString\(command\) \{'
+    r"[^}]*keys\[OpamSwitchLockKey\] = true",
+    re.DOTALL,
+)
+
+
+def validate_executor_opam_lock_text(source: str) -> None:
+    """Require the Go executor to serialize every OCaml build on one lock.
+
+    This is the guarantee CI's old `-jobs 1` provided, moved to where it can
+    be scoped: the executor takes `global:opam-switch` for every OCaml
+    package and every BUILD that runs opam, and nothing else waits on it.
+    """
+
+    if OPAM_LOCK_DECLARATION not in source:
+        raise ContractError("build-tool executor must declare the global:opam-switch lock")
+    if not OPAM_LOCK_GUARD.search(source):
+        raise ContractError(
+            "build-tool executor must take the opam-switch lock for every OCaml package"
+        )
+
+
+def validate_executor_opam_lock(repo_root: Path) -> None:
+    path = repo_root / EXECUTOR_RELATIVE_PATH
+    _require_regular_file(path, "build-tool executor", boundary=repo_root)
+    try:
+        source = path.read_text(encoding="utf-8")
+    except (OSError, UnicodeError) as exc:
+        raise ContractError(f"cannot read executor {path}: {exc}") from exc
+    validate_executor_opam_lock_text(source)
 
 
 def validate_repository(
@@ -1461,6 +1499,7 @@ def validate_repository(
                 f"cannot read workflow {generic_workflow_path}: {exc}"
             ) from exc
         validate_generic_ci_workflow_text(manifest, generic_workflow_text)
+        validate_executor_opam_lock(repo_root)
     return manifest
 
 
