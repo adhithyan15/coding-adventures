@@ -175,6 +175,8 @@ raw\\ntext''' }
     ['name = "one"\nname = "two"', /already assigned|duplicate/i],
     ['[settings]\n[settings]', /declared more than once|duplicate/i],
     ['settings = "scalar"\n[settings]', /already has|redeclare|descend/i],
+    ['[[stages]]\nstage = "@example/source"\n[stages]', /array of tables|redeclare|table/i],
+    ['stages.config.nested.answer = 42\n[stages.config.nested]', /dotted|redeclare|table/i],
   ])("rejects duplicate or conflicting TOML paths", (fragment, message) => {
     expect(() => parseTomlConfig(fragment)).toThrow(message);
   });
@@ -252,6 +254,21 @@ from = { id = "a" }`, /wires\[0\]\.to.*table/i],
     expect(() => parseTomlConfig('[__proto__]\npolluted = "yes"')).toThrow(/reserved/i);
     expect(Object.keys(Object.prototype)).toEqual(before);
     expect((Object.prototype as { polluted?: unknown }).polluted).toBeUndefined();
+  });
+
+  it("ASCII-escapes and bounds untrusted diagnostic fragments", () => {
+    let thrown: unknown;
+    try {
+      parseTomlConfig('"bad\\u001b\\n\\u202e" = true');
+    } catch (error) {
+      thrown = error;
+    }
+    const rendered = String(thrown);
+    expect(rendered).not.toContain("\u001b");
+    expect(rendered).not.toContain("\u202e");
+    expect(rendered).not.toContain("\n");
+    expect(rendered).toContain("\\u{1b}");
+    expect(rendered.length).toBeLessThanOrEqual(4200);
   });
 
   it("enforces source, token, nesting, string, and collection bounds", () => {

@@ -1,4 +1,4 @@
-import { access, mkdir, readFile, rm, writeFile } from "node:fs/promises";
+import { access, link, mkdir, readFile, rm, symlink, writeFile } from "node:fs/promises";
 import { execFile } from "node:child_process";
 import { join, resolve } from "node:path";
 import { homedir, tmpdir } from "node:os";
@@ -672,6 +672,39 @@ describe("clean", () => {
 });
 
 describe("installed-project shape", () => {
+  it.skipIf(process.platform === "win32")("rejects FIFO, symlink, and hardlink TOML configs without blocking", async () => {
+    const root = await mkdtemp(join(tmpdir(), "forme-cli-toml-file-"));
+    roots.push(root);
+    const source = join(root, "source.toml");
+    await writeFile(source, 'name = "unsafe"\n', "utf8");
+    const linked = join(root, "linked.toml");
+    await symlink(source, linked);
+    const hardlinked = join(root, "hardlinked.toml");
+    await link(source, hardlinked);
+    const fifo = join(root, "fifo.toml");
+    await execFileAsync("mkfifo", [fifo]);
+
+    for (const path of [linked, hardlinked, fifo]) {
+      const io = makeIO();
+      expect(await run(["check", "--config", path], io)).toBe(EXIT_USAGE_OR_CONFIG);
+      expect(io.stderrText).toMatch(/regular|link|identity/i);
+    }
+  });
+
+  it("renders TOML parser diagnostics as bounded ASCII without terminal controls", async () => {
+    const root = await mkdtemp(join(tmpdir(), "forme-cli-toml-diagnostic-"));
+    roots.push(root);
+    const path = join(root, "forme.config.toml");
+    await writeFile(path, '"bad\\u001b\\n\\u202e" = true\n', "utf8");
+    const io = makeIO();
+    expect(await run(["check", "--config", path], io)).toBe(EXIT_USAGE_OR_CONFIG);
+    expect(io.stderrText).not.toContain("\u001b");
+    expect(io.stderrText).not.toContain("\u202e");
+    expect(io.stderrText.split("\n")).toHaveLength(2);
+    expect(io.stderrText).toContain("\\u{1b}");
+    expect(io.stderrText.length).toBeLessThanOrEqual(4200);
+  });
+
   it("discovers TOML and runs its StageRef through the real CLI product path", async () => {
     const root = await mkdtemp(join(process.platform === "win32" ? homedir() : tmpdir(), "forme-cli-toml-"));
     roots.push(root);

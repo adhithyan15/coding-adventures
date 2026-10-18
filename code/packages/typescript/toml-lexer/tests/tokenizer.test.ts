@@ -125,6 +125,11 @@ describe("literal strings (single-quoted)", () => {
 });
 
 describe("multi-line basic strings (triple double-quoted)", () => {
+  it("rejects long unterminated newline-only strings without catastrophic backtracking", () => {
+    const source = `\"\"\"${"\n".repeat(256)}`;
+    expect(() => tokenizeTOML(source)).toThrow();
+  });
+
   it("tokenizes a multi-line basic string", () => {
     /**
      * Multi-line basic strings use triple double quotes: """..."""

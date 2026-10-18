@@ -344,14 +344,18 @@ The declarative spelling lowers as follows:
   remain open because their schema belongs to the referenced stage.
 
 The parser fails closed before constructing a `PipelineConfig`: duplicate
-assignments or table declarations, conflicting table/scalar paths, unsupported
+assignments or table declarations (including dotted-key/table and
+array-of-tables/table conflicts), conflicting table/scalar paths, unsupported
 TOML constructs, unsafe key segments (`__proto__`, `constructor`, or
 `prototype`), non-finite numbers, and schema/type mismatches are errors. It
 builds only null-prototype intermediate tables and enforces explicit source,
 token, nesting-depth, collection-size, and string-size bounds before and while
-walking the grammar AST. This makes a declarative config data, not executable
-code, while retaining the exact same downstream FM02 resolution and FM03
-validation path as the TypeScript form.
+walking the grammar AST. Lexing is linear in the bounded input size. CLI file
+admission rejects links, multiply-linked files, and non-regular files before a
+potentially blocking read, then binds the opened handle to stable pre/post file
+identity. Diagnostics are ASCII-only, control-safe, and bounded. This makes a
+declarative config data, not executable code, while retaining the exact same
+downstream FM02 resolution and FM03 validation path as the TypeScript form.
 
 ### 2.4 Validation
 
@@ -1351,8 +1355,9 @@ forme-types → forme-errors → forme-identity → forme-pipeline-config
 - Differential parity: representative declarative configs lower to the same
   canonical value returned by the TypeScript loader.
 - TOML rejection: duplicate/conflicting paths, unknown closed-schema fields,
-  unsafe keys, malformed scalars, and every explicit resource limit fail
-  deterministically.
+  unsafe keys, malformed scalars, adversarial unterminated strings, unsafe
+  file identities/types, diagnostic controls, and every explicit resource
+  limit fail deterministically.
 - TS form: `loadTsConfig(...)` correctly imports and validates.
 - Validation: every documented rejection reason has a test.
 - Type-level tests: the `PipelineConfig` shape is preserved across
