@@ -1,0 +1,18 @@
+{
+  "language": "marwadi",
+  "chapter": 151,
+  "sourceHash": "fnv1a64:533f971fd3ece674",
+  "lessonIds": [
+    "MW-C151-ar-together",
+    "MW-C151-ar-choice",
+    "MW-C151-pan-contrast",
+    "MW-C151-kyunkai-reason"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 4,
+  "text": "marwadi/narration/ch151.txt",
+  "json": "marwadi/narration/ch151.json",
+  "textHash": "fnv1a64:0ba44973572f7539",
+  "jsonHash": "fnv1a64:70f0bed16cda465e",
+  "findings": []
+}

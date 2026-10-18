@@ -2,8 +2,8 @@
   "version": 1,
   "language": "marwadi",
   "level": "A1",
-  "about": "A PROJECT-DEFINED EDITORIAL EQUIVALENT, NOT AN EXTERNAL SYLLABUS. Marwadi may have no external syllabus at all: no complete external pre-A1-to-C2 ladder has been identified, and nothing here is attributable to DELE, the Instituto Cervantes or another awarding body. The Spanish A1 inventory lends only a language-neutral point structure; every Marwadi exponent is this project's editorial judgement. Coverage measures exact introduced atoms in 897 lessons across 150 chapters and is NO READINESS, ATTAINMENT, MOCK-EXAM OR HUMAN-VALIDATION CLAIM while every scope dimension remains partial. THE REGISTER COLUMN WAS MEASURED, NOT IMPORTED: 39 lessons use one of six non-neutral register values and all 897 declare central-marwari-devanagari. WHAT THIS TRACK DOES DIFFERENTLY is an expanding-interval retrieval schedule: introduction lessons feed cumulative first and second passes rather than a one-pass word list. NOT SEARCHED, BY INSTRUCTION: no new external Marwadi syllabus search was performed for this reconciliation; the project backlog records that sourcing question as settled.",
-  "source": "PROJECT-DEFINED. LEVEL PROXY: core/exam-inventory-es-a1.json supplies the language-neutral A1 demand structure and attributes nothing about Marwadi to DELE or the Instituto Cervantes. EXAM ENVELOPE: ONE EXISTS AND IT IS PROJECT-DEFINED in marwadi/assessment-spec.md, assessment.json, task-shapes/ and track.json; it is a contract and not evidence. PROFICIENCY BACKBONE: core/exam-levels.json retains the no-external-ladder caveat. CORPUS EVIDENCE: every probe was checked against 897 direct lesson owners introducing 831 distinct atoms -- 630 LEX, 155 SCRIPT, 31 PERFORMANCE, 3 DIALOGUE, 3 SKILL, 2 QUESTION, 2 ANSWER and one each of COURTESY, FAREWELL, PHRASE, REGISTER and RESPONSE. All 897 lessons declare central-marwari-devanagari. NOT SEARCHED, BY INSTRUCTION: no external Marwadi content syllabus search was repeated for this evidence reconciliation.",
+  "about": "A PROJECT-DEFINED EDITORIAL EQUIVALENT, NOT AN EXTERNAL SYLLABUS. Marwadi may have no external syllabus at all: no complete external pre-A1-to-C2 ladder has been identified, and nothing here is attributable to DELE, the Instituto Cervantes or another awarding body. The Spanish A1 inventory lends only a language-neutral point structure; every Marwadi exponent is this project's editorial judgement. Coverage measures exact introduced atoms in 901 lessons across 151 chapters and is NO READINESS, ATTAINMENT, MOCK-EXAM OR HUMAN-VALIDATION CLAIM while every scope dimension remains partial. THE REGISTER COLUMN WAS MEASURED, NOT IMPORTED: 39 lessons use one of six non-neutral register values and all 901 declare central-marwari-devanagari. WHAT THIS TRACK DOES DIFFERENTLY is an expanding-interval retrieval schedule: introduction lessons feed cumulative first and second passes rather than a one-pass word list. NOT SEARCHED, BY INSTRUCTION: no new external Marwadi syllabus search was performed for this reconciliation; the project backlog records that sourcing question as settled.",
+  "source": "PROJECT-DEFINED. LEVEL PROXY: core/exam-inventory-es-a1.json supplies the language-neutral A1 demand structure and attributes nothing about Marwadi to DELE or the Instituto Cervantes. EXAM ENVELOPE: ONE EXISTS AND IT IS PROJECT-DEFINED in marwadi/assessment-spec.md, assessment.json, task-shapes/ and track.json; it is a contract and not evidence. PROFICIENCY BACKBONE: core/exam-levels.json retains the no-external-ladder caveat. CORPUS EVIDENCE: every probe was checked against 901 direct lesson owners introducing 838 distinct atoms -- 630 LEX, 155 SCRIPT, 31 PERFORMANCE, 4 GRAMMAR, 3 DIALOGUE, 3 SKILL, 2 QUESTION, 2 ANSWER, 2 CONJ and one each of COURTESY, FAREWELL, FUNCTION, PHRASE, REGISTER and RESPONSE. All 901 lessons declare central-marwari-devanagari. NOT SEARCHED, BY INSTRUCTION: no external Marwadi content syllabus search was repeated for this evidence reconciliation.",
   "anchors": [
     {
       "id": "ES-A1-PROXY",
@@ -20,7 +20,7 @@
     {
       "id": "MW-CORPUS",
       "kind": "project-owned",
-      "title": "code/learning/human-languages/marwadi/ -- 897 lessons across 150 chapters, curriculum.d and chapters.d",
+      "title": "code/learning/human-languages/marwadi/ -- 901 lessons across 151 chapters, curriculum.d and chapters.d",
       "note": "Our own work. It is what every probe resolves against and it is finite and auditable, but agreeing with it is not corroboration: the corpus cannot tell you what an exam would ask, only what this course happens to teach. Where a point's note says a word is missing, that absence was read out of this directory."
     },
     {
@@ -50,7 +50,7 @@
     "grammar": {
       "status": "partial",
       "source": "code/learning/human-languages/core/exam-inventory-es-a1.json (the proxy's grammar, sentence and coordination columns)",
-      "note": "Walking the Spanish grammar column surfaced demands no vocabulary census alone would name. The 897-lesson course now teaches hundreds of nouns, adjectives and dictionary-form verbs plus the negator koni, but it still never conjugates a lexical verb for a person, teaches a plural or an agreement paradigm, or explains its pervasive verb-final word order. Marwadi-specific postpositions, sound contrasts and the respect particle remain editorial mappings where the proxy has no direct slot."
+      "note": "Walking the Spanish grammar column surfaced demands no vocabulary census alone would name. The 901-lesson course now teaches hundreds of nouns, adjectives and dictionary-form verbs plus the negator koni, but it still never conjugates a lexical verb for a person, teaches a plural or an agreement paradigm, or explains its pervasive verb-final word order. Marwadi-specific postpositions, sound contrasts and the respect particle remain editorial mappings where the proxy has no direct slot."
     },
     "phonology-orthography": {
       "status": "partial",
@@ -63,7 +63,7 @@
       "note": "Walked at the granularity of the proxy's numbered subsections. It does not close: no external syllabus says which Marwadi words an A1 candidate must hold, and grouped fields remain partial. The corpus now introduces 630 distinct lexical atoms spanning numbers, body and health, school, time and calendar, location, colours, work, home, food, nature and qualities. Real gaps remain specific: proper place names and origin, measurement units, meals of the day, identity documents, full media/service/work/arts subdomains, and productive sentence frames that isolated vocabulary cannot supply."
     }
   },
-  "probeSemantics": "A point counts as COVERED when every atom in `probe` is introduced by a direct lesson owner. `probe: null` means the point remains uncovered or only partially taught, never skipped; its note states the remaining joint. Every probe is checked mechanically against the 831 distinct atoms introduced by the Marwadi track, and no atom is invented to fill an inventory slot. Skill-specific atoms stay separate: a vocabulary point names LEX evidence, a writing point names SCRIPT evidence, and a scored performance names PERFORMANCE evidence. Whole learned phrases can close only the exact memorised function they teach, not a productive grammar pattern. A POINT IS NOT COVERED BY ONE TAUGHT HALF: one ordinal is not an ordinal series; dictionary-form know, think, can, like and want do not create conjugated communicative frames; school, media, health, work, leisure and arts vocabulary does not close grouped subdomains whose other parts are absent. `derivedFrom` records proxy provenance and `anchorIds` records evidence kind so the editorial mapping can be audited rather than trusted.",
+  "probeSemantics": "A point counts as COVERED when every atom in `probe` is introduced by a direct lesson owner. `probe: null` means the point remains uncovered or only partially taught, never skipped; its note states the remaining joint. Every probe is checked mechanically against the 838 distinct atoms introduced by the Marwadi track, and no atom is invented to fill an inventory slot. Skill-specific atoms stay separate: a vocabulary point names LEX evidence, a writing point names SCRIPT evidence, and a scored performance names PERFORMANCE evidence. Whole learned phrases can close only the exact memorised function they teach, not a productive grammar pattern. A POINT IS NOT COVERED BY ONE TAUGHT HALF: one ordinal is not an ordinal series; dictionary-form know, think, can, like and want do not create conjugated communicative frames; school, media, health, work, leisure and arts vocabulary does not close grouped subdomains whose other parts are absent. `derivedFrom` records proxy provenance and `anchorIds` records evidence kind so the editorial mapping can be audited rather than trusted.",
   "points": [
     {
       "id": "MW-A1-N-01",
@@ -96,7 +96,7 @@
       "derivedFrom": [
         "A1-N-01"
       ],
-      "note": "Not one settlement, region or country name has a direct owner in the current 897-lesson corpus. Jodhpur, Marwar, Rajasthan: none of them, in a course about the language of that region."
+      "note": "Not one settlement, region or country name has a direct owner in the current 901-lesson corpus. Jodhpur, Marwar, Rajasthan: none of them, in a course about the language of that region."
     },
     {
       "id": "MW-A1-N-03",
@@ -334,7 +334,7 @@
       "derivedFrom": [
         "A1-DEM-02"
       ],
-      "note": "vo still has no direct demonstrative owner in the current 897-lesson corpus (incidental text matches include the -vo ending of dikhavo and lavo). Marwadi's deixis is two-way and the track teaches the near half. Half a system."
+      "note": "vo still has no direct demonstrative owner in the current 901-lesson corpus (incidental text matches include the -vo ending of dikhavo and lavo). Marwadi's deixis is two-way and the track teaches the near half. Half a system."
     },
     {
       "id": "MW-A1-DEM-03",
@@ -881,7 +881,7 @@
         "A1-V-10",
         "A1-V-14"
       ],
-      "note": "EIGHT PROXY POINTS, ONE ABSENCE. hua appears inside the whole-learned question ye kitno hua?, and is never taken apart. Nothing with a direct owner in the current 897-lesson corpus reports anything that has already happened."
+      "note": "EIGHT PROXY POINTS, ONE ABSENCE. hua appears inside the whole-learned question ye kitno hua?, and is never taken apart. Nothing with a direct owner in the current 901-lesson corpus reports anything that has already happened."
     },
     {
       "id": "MW-A1-V-06",
@@ -1114,7 +1114,10 @@
       "id": "MW-A1-CJ-01",
       "category": "Yojak (joining and subordination)",
       "label": "copulative coordination: ar",
-      "probe": null,
+      "probe": [
+        "MW-CONJ-AR-01",
+        "MW-GRAMMAR-COORDINATE-AND-01"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "MW-CORPUS",
@@ -1123,7 +1126,7 @@
       "derivedFrom": [
         "A1-CO-01"
       ],
-      "note": "THE JOINING COLUMN IS FLAT ZERO, WHICH MAKES IT THE ELEVENTH TRACK IN THIS SERIES TO REPORT ONE. ar (the Marwadi and), ane and Hindi's aur still have no direct owners in the current 897-lesson corpus. A learner with a broad food and family lexicon still cannot say bread and tea."
+      "note": "Chapter 151 directly teaches source-verified ar and uses it between two already-known nouns. The probe requires both the connector and the coordination frame, not an incidental prose occurrence."
     },
     {
       "id": "MW-A1-CJ-02",
@@ -1138,13 +1141,16 @@
       "derivedFrom": [
         "A1-CO-02"
       ],
-      "note": "Still uncovered. The negator now exists (MW-A1-ADV-05) so the old note's reason no longer holds, but neither coordinator does: there is no ar and no ya either (MW-A1-CJ-01, MW-A1-CJ-03), so negative coordination is blocked on the joining column rather than on the negator."
+      "note": "Still uncovered. The negator and ar now exist, but chapter 151 teaches no neither/nor construction and the inventory does not infer negative coordination from its separate ingredients."
     },
     {
       "id": "MW-A1-CJ-03",
       "category": "Yojak (joining and subordination)",
-      "label": "disjunctive coordination: ya",
-      "probe": null,
+      "label": "disjunctive coordination: source-attested ar in an alternative question",
+      "probe": [
+        "MW-CONJ-AR-01",
+        "MW-GRAMMAR-ALTERNATIVE-CHOICE-01"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "MW-CORPUS",
@@ -1153,13 +1159,16 @@
       "derivedFrom": [
         "A1-CO-03"
       ],
-      "note": "Zero occurrences, and it is the word a stall conversation needs most after the numbers: this one or that one."
+      "note": "The Government of India's Linguistic Survey identifies Marwari ar with 'and / or' value. Chapter 151 teaches its alternative value separately in an offered choice; no Hindi ya is imported."
     },
     {
       "id": "MW-A1-CJ-04",
       "category": "Yojak (joining and subordination)",
       "label": "adversative coordination: pan",
-      "probe": null,
+      "probe": [
+        "MW-CONJ-PAN-01",
+        "MW-GRAMMAR-ADVERSATIVE-PAN-01"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "MW-CORPUS",
@@ -1168,7 +1177,7 @@
       "derivedFrom": [
         "A1-CO-04"
       ],
-      "note": "pan and par both return ZERO occurrences. The bargaining exchange in chapter 31 runs five turns and never once sets one against another."
+      "note": "Chapter 151 teaches source-verified pan between two complete familiar copular statements. The probe requires both the connector and the contrast frame."
     },
     {
       "id": "MW-A1-CJ-05",
@@ -1188,8 +1197,11 @@
     {
       "id": "MW-A1-CJ-06",
       "category": "Yojak (joining and subordination)",
-      "label": "causal clauses: kyunki",
-      "probe": null,
+      "label": "causal clauses: kyunkai",
+      "probe": [
+        "MW-LEX-C117-WHY117-05",
+        "MW-GRAMMAR-CAUSAL-KYUNKAI-01"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "MW-CORPUS",
@@ -1198,7 +1210,7 @@
       "derivedFrom": [
         "A1-SUB-06"
       ],
-      "note": "Zero. A learner can say this is very expensive and cannot say why anything is anything."
+      "note": "Chapter 117 owns kyunkai as vocabulary; chapter 151 adds the missing two-clause reason frame. Both atoms are required so an isolated word cannot stand in for productive causal joining."
     },
     {
       "id": "MW-A1-CJ-07",
@@ -1213,7 +1225,7 @@
       "derivedFrom": [
         "A1-SUB-03"
       ],
-      "note": "ke still has no direct owner in the current 897-lesson corpus."
+      "note": "ke still has no direct owner in the current 901-lesson corpus."
     },
     {
       "id": "MW-A1-CJ-08",
@@ -1625,7 +1637,10 @@
       "id": "MW-A1-F3-02",
       "category": "Kaam: pasand ar chaah",
       "label": "ask about a preference by offering alternatives",
-      "probe": null,
+      "probe": [
+        "MW-GRAMMAR-ALTERNATIVE-CHOICE-01",
+        "MW-FUNCTION-ASK-PREFERENCE-ALTERNATIVES-01"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "MW-CORPUS",
@@ -1634,7 +1649,7 @@
       "derivedFrom": [
         "A1-F3-02"
       ],
-      "note": "Needs ya; see MW-A1-CJ-03."
+      "note": "Chapter 151 uses source-attested ar in a two-item question and requires the learner to offer and answer the choice. It does not claim the separate ability to state a preference."
     },
     {
       "id": "MW-A1-F3-03",
@@ -3448,7 +3463,7 @@
       ],
       "derivedFrom": [],
       "marwadiSpecific": true,
-      "note": "MEASURED, NOT IMPORTED. core/exam-levels.json's caveat for marwadi says nothing about register; it is about the missing external ladder. The current frontmatter remains unusually informative: 39 of 897 lessons declare something other than neutral across six values -- neutral-familiar (13), familiar (12), respectful (6), polite-formal (3), neutral-friendly (3), formal (2) -- and all 897 declare variety central-marwari-devanagari, which track.json expands to contemporary central Marwari with regional variation named explicitly."
+      "note": "MEASURED, NOT IMPORTED. core/exam-levels.json's caveat for marwadi says nothing about register; it is about the missing external ladder. The current frontmatter remains unusually informative: 39 of 901 lessons declare something other than neutral across six values -- neutral-familiar (13), familiar (12), respectful (6), polite-formal (3), neutral-friendly (3), formal (2) -- and all 901 declare variety central-marwari-devanagari, which track.json expands to contemporary central Marwari with regional variation named explicitly."
     },
     {
       "id": "MW-A1-REG-04",
@@ -3462,7 +3477,7 @@
       ],
       "derivedFrom": [],
       "marwadiSpecific": true,
-      "note": "Recorded rather than deferred to. marwadi's caveat says the project-defined equivalent must test four skills with published task shapes, rubrics, pass thresholds and timed mocks, and that the mapping does not claim the current STARTER CHAPTER reaches it. The track now has 897 lessons across 150 chapters, ships assessment-spec.md, assessment.json and task-shapes/, and introduces 31 PERFORMANCE atoms. The starter-chapter description describes a track that no longer exists; the rest stands: no external Marwadi pre-A1-to-C2 ladder has been identified, and this partial inventory claims neither readiness nor attainment."
+      "note": "Recorded rather than deferred to. marwadi's caveat says the project-defined equivalent must test four skills with published task shapes, rubrics, pass thresholds and timed mocks, and that the mapping does not claim the current STARTER CHAPTER reaches it. The track now has 901 lessons across 151 chapters, ships assessment-spec.md, assessment.json and task-shapes/, and introduces 31 PERFORMANCE atoms. The starter-chapter description describes a track that no longer exists; the rest stands: no external Marwadi pre-A1-to-C2 ladder has been identified, and this partial inventory claims neither readiness nor attainment."
     },
     {
       "id": "MW-A1-SAU-01",
@@ -3536,7 +3551,7 @@
       ],
       "derivedFrom": [],
       "marwadiSpecific": true,
-      "note": "THE TRACK'S OWN METHOD, AND WHY ITS REINFORCEMENT WINDOWS COME BACK CLEAN. The original transaction sequence cycles from listening-speaking through word or writing work into scored practice, and later chapters preserve repeated practice and review windows. The current 897 lessons comprise 610 word, 101 practice-mix, 94 listening-speaking, 54 writing, 19 review, 15 phrase, 3 reading and 1 vocabulary lesson. Cumulative reviews repeatedly return to material introduced earlier: an expanding-interval retrieval schedule built into the curriculum shape rather than bolted on. No proxy point exists for a teaching method; it is enumerated because it is an explicit project-owned design choice, not external syllabus evidence."
+      "note": "THE TRACK'S OWN METHOD, AND WHY ITS REINFORCEMENT WINDOWS COME BACK CLEAN. The original transaction sequence cycles from listening-speaking through word or writing work into scored practice, and later chapters preserve repeated practice and review windows. The current 901 lessons comprise 610 word, 101 practice-mix, 94 listening-speaking, 54 writing, 19 review, 19 phrase, 3 reading and 1 vocabulary lesson. Cumulative reviews repeatedly return to material introduced earlier: an expanding-interval retrieval schedule built into the curriculum shape rather than bolted on. No proxy point exists for a teaching method; it is enumerated because it is an explicit project-owned design choice, not external syllabus evidence."
     }
   ]
 }

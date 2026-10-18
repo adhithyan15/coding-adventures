@@ -1,0 +1,24 @@
+{
+  "chapter": 151,
+  "title": "And, Or, But, and One Reason",
+  "label": "ch:mw-a1-joining-choice",
+  "canDo": "I can join two familiar things, offer a choice, contrast two short statements, and give one reason.",
+  "spineNodes": [
+    "SPINE-SAY-WHY"
+  ],
+  "payoff": {
+    "lesson": "MW-C151-kyunkai-reason",
+    "kind": "production",
+    "summary": "Join a pair, offer tea or water, contrast hot tea with cold water, and give one short reason with kyunkai.",
+    "assesses": [
+      "MW-CONJ-AR-01",
+      "MW-GRAMMAR-COORDINATE-AND-01",
+      "MW-GRAMMAR-ALTERNATIVE-CHOICE-01",
+      "MW-FUNCTION-ASK-PREFERENCE-ALTERNATIVES-01",
+      "MW-CONJ-PAN-01",
+      "MW-GRAMMAR-ADVERSATIVE-PAN-01",
+      "MW-GRAMMAR-CAUSAL-KYUNKAI-01"
+    ],
+    "note": "This closes five named points in a partial project-defined A1 inventory during the track's A2-stage repair work. It is not an A1 mock, readiness decision, attainment claim, external ladder, or human validation."
+  }
+}
