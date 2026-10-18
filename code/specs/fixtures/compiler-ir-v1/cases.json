@@ -1,0 +1,1930 @@
+{
+  "schema_version": 1,
+  "profile": "core-text-v1",
+  "opcodes": [
+    {
+      "name": "LOAD_IMM",
+      "category": "constants",
+      "operands": [
+        "register",
+        "immediate"
+      ]
+    },
+    {
+      "name": "LOAD_ADDR",
+      "category": "constants",
+      "operands": [
+        "register",
+        "label"
+      ]
+    },
+    {
+      "name": "LOAD_BYTE",
+      "category": "memory",
+      "operands": [
+        "register",
+        "register",
+        "register|immediate"
+      ]
+    },
+    {
+      "name": "STORE_BYTE",
+      "category": "memory",
+      "operands": [
+        "register",
+        "register",
+        "register|immediate"
+      ]
+    },
+    {
+      "name": "LOAD_WORD",
+      "category": "memory",
+      "operands": [
+        "register",
+        "register",
+        "register|immediate"
+      ]
+    },
+    {
+      "name": "STORE_WORD",
+      "category": "memory",
+      "operands": [
+        "register",
+        "register",
+        "register|immediate"
+      ]
+    },
+    {
+      "name": "ADD",
+      "category": "arithmetic",
+      "operands": [
+        "register",
+        "register",
+        "register"
+      ]
+    },
+    {
+      "name": "ADD_IMM",
+      "category": "arithmetic",
+      "operands": [
+        "register",
+        "register",
+        "immediate"
+      ]
+    },
+    {
+      "name": "SUB",
+      "category": "arithmetic",
+      "operands": [
+        "register",
+        "register",
+        "register"
+      ]
+    },
+    {
+      "name": "AND",
+      "category": "arithmetic",
+      "operands": [
+        "register",
+        "register",
+        "register"
+      ]
+    },
+    {
+      "name": "AND_IMM",
+      "category": "arithmetic",
+      "operands": [
+        "register",
+        "register",
+        "immediate"
+      ]
+    },
+    {
+      "name": "CMP_EQ",
+      "category": "comparison",
+      "operands": [
+        "register",
+        "register",
+        "register"
+      ]
+    },
+    {
+      "name": "CMP_NE",
+      "category": "comparison",
+      "operands": [
+        "register",
+        "register",
+        "register"
+      ]
+    },
+    {
+      "name": "CMP_LT",
+      "category": "comparison",
+      "operands": [
+        "register",
+        "register",
+        "register"
+      ]
+    },
+    {
+      "name": "CMP_GT",
+      "category": "comparison",
+      "operands": [
+        "register",
+        "register",
+        "register"
+      ]
+    },
+    {
+      "name": "LABEL",
+      "category": "control_flow",
+      "operands": [
+        "label"
+      ]
+    },
+    {
+      "name": "JUMP",
+      "category": "control_flow",
+      "operands": [
+        "label"
+      ]
+    },
+    {
+      "name": "BRANCH_Z",
+      "category": "control_flow",
+      "operands": [
+        "register",
+        "label"
+      ]
+    },
+    {
+      "name": "BRANCH_NZ",
+      "category": "control_flow",
+      "operands": [
+        "register",
+        "label"
+      ]
+    },
+    {
+      "name": "CALL",
+      "category": "control_flow",
+      "operands": [
+        "label"
+      ]
+    },
+    {
+      "name": "RET",
+      "category": "control_flow",
+      "operands": []
+    },
+    {
+      "name": "SYSCALL",
+      "category": "system",
+      "operands": [
+        "immediate"
+      ]
+    },
+    {
+      "name": "HALT",
+      "category": "system",
+      "operands": []
+    },
+    {
+      "name": "NOP",
+      "category": "meta",
+      "operands": []
+    },
+    {
+      "name": "COMMENT",
+      "category": "meta",
+      "operands": [
+        "text"
+      ]
+    }
+  ],
+  "programs": [
+    {
+      "name": "empty",
+      "program": {
+        "version": 1,
+        "entry": "_start",
+        "data": [],
+        "instructions": []
+      },
+      "text": ".version 1\n\n.entry _start\n"
+    },
+    {
+      "name": "all_core",
+      "program": {
+        "version": 1,
+        "entry": "_start",
+        "data": [],
+        "instructions": [
+          {
+            "op": "LOAD_IMM",
+            "operands": [
+              {
+                "kind": "register",
+                "index": 0
+              },
+              {
+                "kind": "immediate",
+                "value": -1
+              }
+            ],
+            "id": 0
+          },
+          {
+            "op": "LOAD_ADDR",
+            "operands": [
+              {
+                "kind": "register",
+                "index": 1
+              },
+              {
+                "kind": "label",
+                "name": "tape"
+              }
+            ],
+            "id": 1
+          },
+          {
+            "op": "LOAD_BYTE",
+            "operands": [
+              {
+                "kind": "register",
+                "index": 2
+              },
+              {
+                "kind": "register",
+                "index": 1
+              },
+              {
+                "kind": "register",
+                "index": 0
+              }
+            ],
+            "id": 2
+          },
+          {
+            "op": "STORE_BYTE",
+            "operands": [
+              {
+                "kind": "register",
+                "index": 2
+              },
+              {
+                "kind": "register",
+                "index": 1
+              },
+              {
+                "kind": "immediate",
+                "value": 0
+              }
+            ],
+            "id": 3
+          },
+          {
+            "op": "LOAD_WORD",
+            "operands": [
+              {
+                "kind": "register",
+                "index": 3
+              },
+              {
+                "kind": "register",
+                "index": 1
+              },
+              {
+                "kind": "immediate",
+                "value": 4
+              }
+            ],
+            "id": 4
+          },
+          {
+            "op": "STORE_WORD",
+            "operands": [
+              {
+                "kind": "register",
+                "index": 3
+              },
+              {
+                "kind": "register",
+                "index": 1
+              },
+              {
+                "kind": "register",
+                "index": 0
+              }
+            ],
+            "id": 5
+          },
+          {
+            "op": "ADD",
+            "operands": [
+              {
+                "kind": "register",
+                "index": 0
+              },
+              {
+                "kind": "register",
+                "index": 1
+              },
+              {
+                "kind": "register",
+                "index": 2
+              }
+            ],
+            "id": 6
+          },
+          {
+            "op": "ADD_IMM",
+            "operands": [
+              {
+                "kind": "register",
+                "index": 0
+              },
+              {
+                "kind": "register",
+                "index": 1
+              },
+              {
+                "kind": "immediate",
+                "value": -2
+              }
+            ],
+            "id": 7
+          },
+          {
+            "op": "SUB",
+            "operands": [
+              {
+                "kind": "register",
+                "index": 0
+              },
+              {
+                "kind": "register",
+                "index": 1
+              },
+              {
+                "kind": "register",
+                "index": 2
+              }
+            ],
+            "id": 8
+          },
+          {
+            "op": "AND",
+            "operands": [
+              {
+                "kind": "register",
+                "index": 0
+              },
+              {
+                "kind": "register",
+                "index": 1
+              },
+              {
+                "kind": "register",
+                "index": 2
+              }
+            ],
+            "id": 9
+          },
+          {
+            "op": "AND_IMM",
+            "operands": [
+              {
+                "kind": "register",
+                "index": 0
+              },
+              {
+                "kind": "register",
+                "index": 1
+              },
+              {
+                "kind": "immediate",
+                "value": 255
+              }
+            ],
+            "id": 10
+          },
+          {
+            "op": "CMP_EQ",
+            "operands": [
+              {
+                "kind": "register",
+                "index": 0
+              },
+              {
+                "kind": "register",
+                "index": 1
+              },
+              {
+                "kind": "register",
+                "index": 2
+              }
+            ],
+            "id": 11
+          },
+          {
+            "op": "CMP_NE",
+            "operands": [
+              {
+                "kind": "register",
+                "index": 0
+              },
+              {
+                "kind": "register",
+                "index": 1
+              },
+              {
+                "kind": "register",
+                "index": 2
+              }
+            ],
+            "id": 12
+          },
+          {
+            "op": "CMP_LT",
+            "operands": [
+              {
+                "kind": "register",
+                "index": 0
+              },
+              {
+                "kind": "register",
+                "index": 1
+              },
+              {
+                "kind": "register",
+                "index": 2
+              }
+            ],
+            "id": 13
+          },
+          {
+            "op": "CMP_GT",
+            "operands": [
+              {
+                "kind": "register",
+                "index": 0
+              },
+              {
+                "kind": "register",
+                "index": 1
+              },
+              {
+                "kind": "register",
+                "index": 2
+              }
+            ],
+            "id": 14
+          },
+          {
+            "op": "LABEL",
+            "operands": [
+              {
+                "kind": "label",
+                "name": "_start"
+              }
+            ],
+            "id": -1
+          },
+          {
+            "op": "JUMP",
+            "operands": [
+              {
+                "kind": "label",
+                "name": "absent"
+              }
+            ],
+            "id": 16
+          },
+          {
+            "op": "BRANCH_Z",
+            "operands": [
+              {
+                "kind": "register",
+                "index": 0
+              },
+              {
+                "kind": "label",
+                "name": "_start"
+              }
+            ],
+            "id": 17
+          },
+          {
+            "op": "BRANCH_NZ",
+            "operands": [
+              {
+                "kind": "register",
+                "index": 1
+              },
+              {
+                "kind": "label",
+                "name": "absent"
+              }
+            ],
+            "id": 18
+          },
+          {
+            "op": "CALL",
+            "operands": [
+              {
+                "kind": "label",
+                "name": "absent"
+              }
+            ],
+            "id": 19
+          },
+          {
+            "op": "RET",
+            "operands": [],
+            "id": 20
+          },
+          {
+            "op": "SYSCALL",
+            "operands": [
+              {
+                "kind": "immediate",
+                "value": 0
+              }
+            ],
+            "id": 21
+          },
+          {
+            "op": "HALT",
+            "operands": [],
+            "id": 22
+          },
+          {
+            "op": "NOP",
+            "operands": [],
+            "id": 23
+          },
+          {
+            "op": "COMMENT",
+            "operands": [
+              {
+                "kind": "text",
+                "value": "note"
+              }
+            ],
+            "id": -1
+          }
+        ]
+      },
+      "text": ".version 1\n\n.entry _start\n  LOAD_IMM   v0, -1  ; #0\n  LOAD_ADDR  v1, tape  ; #1\n  LOAD_BYTE  v2, v1, v0  ; #2\n  STORE_BYTE v2, v1, 0  ; #3\n  LOAD_WORD  v3, v1, 4  ; #4\n  STORE_WORD v3, v1, v0  ; #5\n  ADD        v0, v1, v2  ; #6\n  ADD_IMM    v0, v1, -2  ; #7\n  SUB        v0, v1, v2  ; #8\n  AND        v0, v1, v2  ; #9\n  AND_IMM    v0, v1, 255  ; #10\n  CMP_EQ     v0, v1, v2  ; #11\n  CMP_NE     v0, v1, v2  ; #12\n  CMP_LT     v0, v1, v2  ; #13\n  CMP_GT     v0, v1, v2  ; #14\n\n_start:\n  JUMP       absent  ; #16\n  BRANCH_Z   v0, _start  ; #17\n  BRANCH_NZ  v1, absent  ; #18\n  CALL       absent  ; #19\n  RET  ; #20\n  SYSCALL    0  ; #21\n  HALT  ; #22\n  NOP  ; #23\n  ; note\n"
+    },
+    {
+      "name": "sparse_ids",
+      "program": {
+        "version": 1,
+        "entry": "_start",
+        "data": [],
+        "instructions": [
+          {
+            "op": "LABEL",
+            "operands": [
+              {
+                "kind": "label",
+                "name": "_start"
+              }
+            ],
+            "id": -1
+          },
+          {
+            "op": "LOAD_IMM",
+            "operands": [
+              {
+                "kind": "register",
+                "index": 0
+              },
+              {
+                "kind": "immediate",
+                "value": -1
+              }
+            ],
+            "id": 42
+          },
+          {
+            "op": "COMMENT",
+            "operands": [
+              {
+                "kind": "text",
+                "value": "note"
+              }
+            ],
+            "id": -1
+          },
+          {
+            "op": "NOP",
+            "operands": [],
+            "id": 7
+          },
+          {
+            "op": "HALT",
+            "operands": [],
+            "id": 99
+          }
+        ]
+      },
+      "text": ".version 1\n\n.entry _start\n\n_start:\n  LOAD_IMM   v0, -1  ; #42\n  ; note\n  NOP  ; #7\n  HALT  ; #99\n"
+    },
+    {
+      "name": "numeric_bounds",
+      "program": {
+        "version": 1,
+        "entry": "_start",
+        "data": [
+          {
+            "label": "z",
+            "size": 65535,
+            "init": 255
+          },
+          {
+            "label": "a",
+            "size": 0,
+            "init": 0
+          }
+        ],
+        "instructions": [
+          {
+            "op": "LOAD_IMM",
+            "operands": [
+              {
+                "kind": "register",
+                "index": 65535
+              },
+              {
+                "kind": "immediate",
+                "value": -2147483648
+              }
+            ],
+            "id": 2147483647
+          },
+          {
+            "op": "ADD_IMM",
+            "operands": [
+              {
+                "kind": "register",
+                "index": 0
+              },
+              {
+                "kind": "register",
+                "index": 65535
+              },
+              {
+                "kind": "immediate",
+                "value": 2147483647
+              }
+            ],
+            "id": 0
+          },
+          {
+            "op": "COMMENT",
+            "operands": [
+              {
+                "kind": "text",
+                "value": "two  spaces"
+              }
+            ],
+            "id": -1
+          }
+        ]
+      },
+      "text": ".version 1\n\n.data z 65535 255\n\n.data a 0 0\n\n.entry _start\n  LOAD_IMM   v65535, -2147483648  ; #2147483647\n  ADD_IMM    v0, v65535, 2147483647  ; #0\n  ; two  spaces\n"
+    }
+  ],
+  "invalid_programs": [
+    {
+      "name": "meta_id",
+      "program": {
+        "version": 1,
+        "entry": "_start",
+        "data": [],
+        "instructions": [
+          {
+            "op": "LABEL",
+            "operands": [
+              {
+                "kind": "label",
+                "name": "_start"
+              }
+            ],
+            "id": 8
+          },
+          {
+            "op": "LOAD_IMM",
+            "operands": [
+              {
+                "kind": "register",
+                "index": 0
+              },
+              {
+                "kind": "immediate",
+                "value": -1
+              }
+            ],
+            "id": 42
+          },
+          {
+            "op": "COMMENT",
+            "operands": [
+              {
+                "kind": "text",
+                "value": "note"
+              }
+            ],
+            "id": -1
+          },
+          {
+            "op": "NOP",
+            "operands": [],
+            "id": 7
+          },
+          {
+            "op": "HALT",
+            "operands": [],
+            "id": 99
+          }
+        ]
+      }
+    },
+    {
+      "name": "duplicate_id",
+      "program": {
+        "version": 1,
+        "entry": "_start",
+        "data": [],
+        "instructions": [
+          {
+            "op": "LABEL",
+            "operands": [
+              {
+                "kind": "label",
+                "name": "_start"
+              }
+            ],
+            "id": -1
+          },
+          {
+            "op": "LOAD_IMM",
+            "operands": [
+              {
+                "kind": "register",
+                "index": 0
+              },
+              {
+                "kind": "immediate",
+                "value": -1
+              }
+            ],
+            "id": 42
+          },
+          {
+            "op": "COMMENT",
+            "operands": [
+              {
+                "kind": "text",
+                "value": "note"
+              }
+            ],
+            "id": -1
+          },
+          {
+            "op": "NOP",
+            "operands": [],
+            "id": 7
+          },
+          {
+            "op": "HALT",
+            "operands": [],
+            "id": 42
+          }
+        ]
+      }
+    },
+    {
+      "name": "negative_id",
+      "program": {
+        "version": 1,
+        "entry": "_start",
+        "data": [],
+        "instructions": [
+          {
+            "op": "LABEL",
+            "operands": [
+              {
+                "kind": "label",
+                "name": "_start"
+              }
+            ],
+            "id": -1
+          },
+          {
+            "op": "LOAD_IMM",
+            "operands": [
+              {
+                "kind": "register",
+                "index": 0
+              },
+              {
+                "kind": "immediate",
+                "value": -1
+              }
+            ],
+            "id": -1
+          },
+          {
+            "op": "COMMENT",
+            "operands": [
+              {
+                "kind": "text",
+                "value": "note"
+              }
+            ],
+            "id": -1
+          },
+          {
+            "op": "NOP",
+            "operands": [],
+            "id": 7
+          },
+          {
+            "op": "HALT",
+            "operands": [],
+            "id": 99
+          }
+        ]
+      }
+    },
+    {
+      "name": "version_two",
+      "program": {
+        "version": 2,
+        "entry": "_start",
+        "data": [],
+        "instructions": [
+          {
+            "op": "LABEL",
+            "operands": [
+              {
+                "kind": "label",
+                "name": "_start"
+              }
+            ],
+            "id": -1
+          },
+          {
+            "op": "LOAD_IMM",
+            "operands": [
+              {
+                "kind": "register",
+                "index": 0
+              },
+              {
+                "kind": "immediate",
+                "value": -1
+              }
+            ],
+            "id": 42
+          },
+          {
+            "op": "COMMENT",
+            "operands": [
+              {
+                "kind": "text",
+                "value": "note"
+              }
+            ],
+            "id": -1
+          },
+          {
+            "op": "NOP",
+            "operands": [],
+            "id": 7
+          },
+          {
+            "op": "HALT",
+            "operands": [],
+            "id": 99
+          }
+        ]
+      }
+    },
+    {
+      "name": "register_over",
+      "program": {
+        "version": 1,
+        "entry": "_start",
+        "data": [],
+        "instructions": [
+          {
+            "op": "LABEL",
+            "operands": [
+              {
+                "kind": "label",
+                "name": "_start"
+              }
+            ],
+            "id": -1
+          },
+          {
+            "op": "LOAD_IMM",
+            "operands": [
+              {
+                "kind": "register",
+                "index": 65536
+              },
+              {
+                "kind": "immediate",
+                "value": -1
+              }
+            ],
+            "id": 42
+          },
+          {
+            "op": "COMMENT",
+            "operands": [
+              {
+                "kind": "text",
+                "value": "note"
+              }
+            ],
+            "id": -1
+          },
+          {
+            "op": "NOP",
+            "operands": [],
+            "id": 7
+          },
+          {
+            "op": "HALT",
+            "operands": [],
+            "id": 99
+          }
+        ]
+      }
+    },
+    {
+      "name": "immediate_over",
+      "program": {
+        "version": 1,
+        "entry": "_start",
+        "data": [],
+        "instructions": [
+          {
+            "op": "LABEL",
+            "operands": [
+              {
+                "kind": "label",
+                "name": "_start"
+              }
+            ],
+            "id": -1
+          },
+          {
+            "op": "LOAD_IMM",
+            "operands": [
+              {
+                "kind": "register",
+                "index": 0
+              },
+              {
+                "kind": "immediate",
+                "value": 2147483648
+              }
+            ],
+            "id": 42
+          },
+          {
+            "op": "COMMENT",
+            "operands": [
+              {
+                "kind": "text",
+                "value": "note"
+              }
+            ],
+            "id": -1
+          },
+          {
+            "op": "NOP",
+            "operands": [],
+            "id": 7
+          },
+          {
+            "op": "HALT",
+            "operands": [],
+            "id": 99
+          }
+        ]
+      }
+    },
+    {
+      "name": "wrong_arity",
+      "program": {
+        "version": 1,
+        "entry": "_start",
+        "data": [],
+        "instructions": [
+          {
+            "op": "LABEL",
+            "operands": [
+              {
+                "kind": "label",
+                "name": "_start"
+              }
+            ],
+            "id": -1
+          },
+          {
+            "op": "LOAD_IMM",
+            "operands": [
+              {
+                "kind": "register",
+                "index": 0
+              }
+            ],
+            "id": 42
+          },
+          {
+            "op": "COMMENT",
+            "operands": [
+              {
+                "kind": "text",
+                "value": "note"
+              }
+            ],
+            "id": -1
+          },
+          {
+            "op": "NOP",
+            "operands": [],
+            "id": 7
+          },
+          {
+            "op": "HALT",
+            "operands": [],
+            "id": 99
+          }
+        ]
+      }
+    },
+    {
+      "name": "wrong_tag",
+      "program": {
+        "version": 1,
+        "entry": "_start",
+        "data": [],
+        "instructions": [
+          {
+            "op": "LABEL",
+            "operands": [
+              {
+                "kind": "label",
+                "name": "_start"
+              }
+            ],
+            "id": -1
+          },
+          {
+            "op": "LOAD_IMM",
+            "operands": [
+              {
+                "kind": "register",
+                "index": 0
+              },
+              {
+                "kind": "label",
+                "name": "x"
+              }
+            ],
+            "id": 42
+          },
+          {
+            "op": "COMMENT",
+            "operands": [
+              {
+                "kind": "text",
+                "value": "note"
+              }
+            ],
+            "id": -1
+          },
+          {
+            "op": "NOP",
+            "operands": [],
+            "id": 7
+          },
+          {
+            "op": "HALT",
+            "operands": [],
+            "id": 99
+          }
+        ]
+      }
+    },
+    {
+      "name": "register_label",
+      "program": {
+        "version": 1,
+        "entry": "v1",
+        "data": [],
+        "instructions": [
+          {
+            "op": "LABEL",
+            "operands": [
+              {
+                "kind": "label",
+                "name": "_start"
+              }
+            ],
+            "id": -1
+          },
+          {
+            "op": "LOAD_IMM",
+            "operands": [
+              {
+                "kind": "register",
+                "index": 0
+              },
+              {
+                "kind": "immediate",
+                "value": -1
+              }
+            ],
+            "id": 42
+          },
+          {
+            "op": "COMMENT",
+            "operands": [
+              {
+                "kind": "text",
+                "value": "note"
+              }
+            ],
+            "id": -1
+          },
+          {
+            "op": "NOP",
+            "operands": [],
+            "id": 7
+          },
+          {
+            "op": "HALT",
+            "operands": [],
+            "id": 99
+          }
+        ]
+      }
+    },
+    {
+      "name": "comment_hash",
+      "program": {
+        "version": 1,
+        "entry": "_start",
+        "data": [],
+        "instructions": [
+          {
+            "op": "LABEL",
+            "operands": [
+              {
+                "kind": "label",
+                "name": "_start"
+              }
+            ],
+            "id": -1
+          },
+          {
+            "op": "LOAD_IMM",
+            "operands": [
+              {
+                "kind": "register",
+                "index": 0
+              },
+              {
+                "kind": "immediate",
+                "value": -1
+              }
+            ],
+            "id": 42
+          },
+          {
+            "op": "COMMENT",
+            "operands": [
+              {
+                "kind": "text",
+                "value": "#lost"
+              }
+            ],
+            "id": -1
+          },
+          {
+            "op": "NOP",
+            "operands": [],
+            "id": 7
+          },
+          {
+            "op": "HALT",
+            "operands": [],
+            "id": 99
+          }
+        ]
+      }
+    },
+    {
+      "name": "comment_space",
+      "program": {
+        "version": 1,
+        "entry": "_start",
+        "data": [],
+        "instructions": [
+          {
+            "op": "LABEL",
+            "operands": [
+              {
+                "kind": "label",
+                "name": "_start"
+              }
+            ],
+            "id": -1
+          },
+          {
+            "op": "LOAD_IMM",
+            "operands": [
+              {
+                "kind": "register",
+                "index": 0
+              },
+              {
+                "kind": "immediate",
+                "value": -1
+              }
+            ],
+            "id": 42
+          },
+          {
+            "op": "COMMENT",
+            "operands": [
+              {
+                "kind": "text",
+                "value": " note"
+              }
+            ],
+            "id": -1
+          },
+          {
+            "op": "NOP",
+            "operands": [],
+            "id": 7
+          },
+          {
+            "op": "HALT",
+            "operands": [],
+            "id": 99
+          }
+        ]
+      }
+    },
+    {
+      "name": "duplicate_label",
+      "program": {
+        "version": 1,
+        "entry": "_start",
+        "data": [],
+        "instructions": [
+          {
+            "op": "LABEL",
+            "operands": [
+              {
+                "kind": "label",
+                "name": "_start"
+              }
+            ],
+            "id": -1
+          },
+          {
+            "op": "LOAD_IMM",
+            "operands": [
+              {
+                "kind": "register",
+                "index": 0
+              },
+              {
+                "kind": "immediate",
+                "value": -1
+              }
+            ],
+            "id": 42
+          },
+          {
+            "op": "COMMENT",
+            "operands": [
+              {
+                "kind": "text",
+                "value": "note"
+              }
+            ],
+            "id": -1
+          },
+          {
+            "op": "NOP",
+            "operands": [],
+            "id": 7
+          },
+          {
+            "op": "HALT",
+            "operands": [],
+            "id": 99
+          },
+          {
+            "op": "LABEL",
+            "operands": [
+              {
+                "kind": "label",
+                "name": "_start"
+              }
+            ],
+            "id": -1
+          }
+        ]
+      }
+    },
+    {
+      "name": "duplicate_data",
+      "program": {
+        "version": 1,
+        "entry": "_start",
+        "data": [
+          {
+            "label": "x",
+            "size": 0,
+            "init": 0
+          },
+          {
+            "label": "x",
+            "size": 0,
+            "init": 0
+          }
+        ],
+        "instructions": [
+          {
+            "op": "LABEL",
+            "operands": [
+              {
+                "kind": "label",
+                "name": "_start"
+              }
+            ],
+            "id": -1
+          },
+          {
+            "op": "LOAD_IMM",
+            "operands": [
+              {
+                "kind": "register",
+                "index": 0
+              },
+              {
+                "kind": "immediate",
+                "value": -1
+              }
+            ],
+            "id": 42
+          },
+          {
+            "op": "COMMENT",
+            "operands": [
+              {
+                "kind": "text",
+                "value": "note"
+              }
+            ],
+            "id": -1
+          },
+          {
+            "op": "NOP",
+            "operands": [],
+            "id": 7
+          },
+          {
+            "op": "HALT",
+            "operands": [],
+            "id": 99
+          }
+        ]
+      }
+    },
+    {
+      "name": "extension_MUL",
+      "program": {
+        "version": 1,
+        "entry": "_start",
+        "data": [],
+        "instructions": [
+          {
+            "op": "LABEL",
+            "operands": [
+              {
+                "kind": "label",
+                "name": "_start"
+              }
+            ],
+            "id": -1
+          },
+          {
+            "op": "MUL",
+            "operands": [
+              {
+                "kind": "register",
+                "index": 0
+              },
+              {
+                "kind": "immediate",
+                "value": -1
+              }
+            ],
+            "id": 42
+          },
+          {
+            "op": "COMMENT",
+            "operands": [
+              {
+                "kind": "text",
+                "value": "note"
+              }
+            ],
+            "id": -1
+          },
+          {
+            "op": "NOP",
+            "operands": [],
+            "id": 7
+          },
+          {
+            "op": "HALT",
+            "operands": [],
+            "id": 99
+          }
+        ]
+      }
+    },
+    {
+      "name": "extension_DIV",
+      "program": {
+        "version": 1,
+        "entry": "_start",
+        "data": [],
+        "instructions": [
+          {
+            "op": "LABEL",
+            "operands": [
+              {
+                "kind": "label",
+                "name": "_start"
+              }
+            ],
+            "id": -1
+          },
+          {
+            "op": "DIV",
+            "operands": [
+              {
+                "kind": "register",
+                "index": 0
+              },
+              {
+                "kind": "immediate",
+                "value": -1
+              }
+            ],
+            "id": 42
+          },
+          {
+            "op": "COMMENT",
+            "operands": [
+              {
+                "kind": "text",
+                "value": "note"
+              }
+            ],
+            "id": -1
+          },
+          {
+            "op": "NOP",
+            "operands": [],
+            "id": 7
+          },
+          {
+            "op": "HALT",
+            "operands": [],
+            "id": 99
+          }
+        ]
+      }
+    },
+    {
+      "name": "extension_OR",
+      "program": {
+        "version": 1,
+        "entry": "_start",
+        "data": [],
+        "instructions": [
+          {
+            "op": "LABEL",
+            "operands": [
+              {
+                "kind": "label",
+                "name": "_start"
+              }
+            ],
+            "id": -1
+          },
+          {
+            "op": "OR",
+            "operands": [
+              {
+                "kind": "register",
+                "index": 0
+              },
+              {
+                "kind": "immediate",
+                "value": -1
+              }
+            ],
+            "id": 42
+          },
+          {
+            "op": "COMMENT",
+            "operands": [
+              {
+                "kind": "text",
+                "value": "note"
+              }
+            ],
+            "id": -1
+          },
+          {
+            "op": "NOP",
+            "operands": [],
+            "id": 7
+          },
+          {
+            "op": "HALT",
+            "operands": [],
+            "id": 99
+          }
+        ]
+      }
+    },
+    {
+      "name": "extension_OR_IMM",
+      "program": {
+        "version": 1,
+        "entry": "_start",
+        "data": [],
+        "instructions": [
+          {
+            "op": "LABEL",
+            "operands": [
+              {
+                "kind": "label",
+                "name": "_start"
+              }
+            ],
+            "id": -1
+          },
+          {
+            "op": "OR_IMM",
+            "operands": [
+              {
+                "kind": "register",
+                "index": 0
+              },
+              {
+                "kind": "immediate",
+                "value": -1
+              }
+            ],
+            "id": 42
+          },
+          {
+            "op": "COMMENT",
+            "operands": [
+              {
+                "kind": "text",
+                "value": "note"
+              }
+            ],
+            "id": -1
+          },
+          {
+            "op": "NOP",
+            "operands": [],
+            "id": 7
+          },
+          {
+            "op": "HALT",
+            "operands": [],
+            "id": 99
+          }
+        ]
+      }
+    },
+    {
+      "name": "extension_XOR",
+      "program": {
+        "version": 1,
+        "entry": "_start",
+        "data": [],
+        "instructions": [
+          {
+            "op": "LABEL",
+            "operands": [
+              {
+                "kind": "label",
+                "name": "_start"
+              }
+            ],
+            "id": -1
+          },
+          {
+            "op": "XOR",
+            "operands": [
+              {
+                "kind": "register",
+                "index": 0
+              },
+              {
+                "kind": "immediate",
+                "value": -1
+              }
+            ],
+            "id": 42
+          },
+          {
+            "op": "COMMENT",
+            "operands": [
+              {
+                "kind": "text",
+                "value": "note"
+              }
+            ],
+            "id": -1
+          },
+          {
+            "op": "NOP",
+            "operands": [],
+            "id": 7
+          },
+          {
+            "op": "HALT",
+            "operands": [],
+            "id": 99
+          }
+        ]
+      }
+    },
+    {
+      "name": "extension_XOR_IMM",
+      "program": {
+        "version": 1,
+        "entry": "_start",
+        "data": [],
+        "instructions": [
+          {
+            "op": "LABEL",
+            "operands": [
+              {
+                "kind": "label",
+                "name": "_start"
+              }
+            ],
+            "id": -1
+          },
+          {
+            "op": "XOR_IMM",
+            "operands": [
+              {
+                "kind": "register",
+                "index": 0
+              },
+              {
+                "kind": "immediate",
+                "value": -1
+              }
+            ],
+            "id": 42
+          },
+          {
+            "op": "COMMENT",
+            "operands": [
+              {
+                "kind": "text",
+                "value": "note"
+              }
+            ],
+            "id": -1
+          },
+          {
+            "op": "NOP",
+            "operands": [],
+            "id": 7
+          },
+          {
+            "op": "HALT",
+            "operands": [],
+            "id": 99
+          }
+        ]
+      }
+    },
+    {
+      "name": "extension_NOT",
+      "program": {
+        "version": 1,
+        "entry": "_start",
+        "data": [],
+        "instructions": [
+          {
+            "op": "LABEL",
+            "operands": [
+              {
+                "kind": "label",
+                "name": "_start"
+              }
+            ],
+            "id": -1
+          },
+          {
+            "op": "NOT",
+            "operands": [
+              {
+                "kind": "register",
+                "index": 0
+              },
+              {
+                "kind": "immediate",
+                "value": -1
+              }
+            ],
+            "id": 42
+          },
+          {
+            "op": "COMMENT",
+            "operands": [
+              {
+                "kind": "text",
+                "value": "note"
+              }
+            ],
+            "id": -1
+          },
+          {
+            "op": "NOP",
+            "operands": [],
+            "id": 7
+          },
+          {
+            "op": "HALT",
+            "operands": [],
+            "id": 99
+          }
+        ]
+      }
+    }
+  ],
+  "invalid_texts": [
+    {
+      "name": "missing_version",
+      "text": "\n.entry _start\n"
+    },
+    {
+      "name": "version_two",
+      "text": ".version 2\n\n.entry _start\n"
+    },
+    {
+      "name": "duplicate_version",
+      "text": ".version 1\n.version 1\n\n.entry _start\n"
+    },
+    {
+      "name": "missing_entry",
+      "text": ".version 1\n"
+    },
+    {
+      "name": "duplicate_entry",
+      "text": ".version 1\n\n.entry a\n.entry b\n"
+    },
+    {
+      "name": "late_data",
+      "text": ".version 1\n\n.entry a\n\n.data x 1 0\n"
+    },
+    {
+      "name": "partial_id",
+      "text": ".version 1\n\n.entry _start\n\n_start:\n  LOAD_IMM   v0, -1  ; #42junk\n  ; note\n  NOP  ; #7\n  HALT  ; #99\n"
+    },
+    {
+      "name": "missing_id",
+      "text": ".version 1\n\n.entry _start\n\n_start:\n  LOAD_IMM   v0, -1\n  ; note\n  NOP  ; #7\n  HALT  ; #99\n"
+    },
+    {
+      "name": "leading_zero",
+      "text": ".version 1\n\n.entry _start\n\n_start:\n  LOAD_IMM   v0, -1  ; #042\n  ; note\n  NOP  ; #7\n  HALT  ; #99\n"
+    },
+    {
+      "name": "plus_id",
+      "text": ".version 1\n\n.entry _start\n\n_start:\n  LOAD_IMM   v0, -1  ; #+42\n  ; note\n  NOP  ; #7\n  HALT  ; #99\n"
+    },
+    {
+      "name": "float",
+      "text": ".version 1\n\n.entry _start\n\n_start:\n  LOAD_IMM   v0, 1.0  ; #42\n  ; note\n  NOP  ; #7\n  HALT  ; #99\n"
+    },
+    {
+      "name": "negative_zero",
+      "text": ".version 1\n\n.entry _start\n\n_start:\n  LOAD_IMM   v0, -0  ; #42\n  ; note\n  NOP  ; #7\n  HALT  ; #99\n"
+    },
+    {
+      "name": "wrong_case",
+      "text": ".version 1\n\n.entry _start\n\n_start:\n  load_imm   v0, -1  ; #42\n  ; note\n  NOP  ; #7\n  HALT  ; #99\n"
+    },
+    {
+      "name": "unknown_op",
+      "text": ".version 1\n\n.entry _start\n\n_start:\n  BOGUS   v0, -1  ; #42\n  ; note\n  NOP  ; #7\n  HALT  ; #99\n"
+    },
+    {
+      "name": "crlf",
+      "text": ".version 1\r\n\r\n.entry _start\r\n\r\n_start:\r\n  LOAD_IMM   v0, -1  ; #42\r\n  ; note\r\n  NOP  ; #7\r\n  HALT  ; #99\r\n"
+    },
+    {
+      "name": "no_final_lf",
+      "text": ".version 1\n\n.entry _start\n\n_start:\n  LOAD_IMM   v0, -1  ; #42\n  ; note\n  NOP  ; #7\n  HALT  ; #99"
+    },
+    {
+      "name": "tab",
+      "text": ".version 1\n\n.entry _start\n\n_start:\n  LOAD_IMM   v0, -1  ; #42\n  ; note\n\tNOP  ; #7\n  HALT  ; #99\n"
+    },
+    {
+      "name": "extra_blank",
+      "text": ".version 1\n\n.entry _start\n\n_start:\n  LOAD_IMM   v0, -1  ; #42\n  ; note\n  NOP  ; #7\n  HALT  ; #99\n\n"
+    },
+    {
+      "name": "padded_halt",
+      "text": ".version 1\n\n.entry _start\n\n_start:\n  LOAD_IMM   v0, -1  ; #42\n  ; note\n  NOP  ; #7\n  HALT         ; #99\n"
+    },
+    {
+      "name": "comment_only_id",
+      "text": ".version 1\n\n.entry _start\n\n_start:\n  LOAD_IMM   v0, -1  ; #42\n  ; #9\n  NOP  ; #7\n  HALT  ; #99\n"
+    },
+    {
+      "name": "unknown_directive",
+      "text": ".version 1\n\n.entry _start\n\n_start:\n  LOAD_IMM   v0, -1  ; #42\n  ; note\n  NOP  ; #7\n  HALT  ; #99\n.other 1\n"
+    },
+    {
+      "name": "empty_text",
+      "text": ""
+    }
+  ],
+  "id_sequences": [
+    {
+      "name": "initial",
+      "start": 0,
+      "count": 3,
+      "values": [
+        0,
+        1,
+        2
+      ],
+      "next": 3
+    },
+    {
+      "name": "empty",
+      "start": 0,
+      "count": 0,
+      "values": [],
+      "next": 0
+    },
+    {
+      "name": "suffix",
+      "start": 42,
+      "count": 2,
+      "values": [
+        42,
+        43
+      ],
+      "next": 44
+    },
+    {
+      "name": "last",
+      "start": 2147483647,
+      "count": 1,
+      "values": [
+        2147483647
+      ],
+      "next": 2147483648
+    }
+  ]
+}
