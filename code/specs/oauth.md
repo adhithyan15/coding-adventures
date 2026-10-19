@@ -577,6 +577,14 @@ non-empty DER-ordered RDN sets, and OID-plus-opaque-value attributes under
 shared limits. It retains exact borrowed values and RDN boundaries without
 claiming DirectoryString normalization, semantic name equality, issuer/subject
 relationship decisions, or path validation.
+A bounded `x509-name-comparison` semantic layer next compares two decoded RDN
+sequences in order, matches each RDN's attributes without depending on their
+DER SET order, requires exact canonical attribute OIDs, and delegates only the
+already framed attribute-value comparison to caller policy. The callback must
+be a stable equivalence relation and may run more than once for repeated
+attribute types. This structure is not DirectoryString decoding,
+normalization, complete RFC 5280 name equality, issuer selection, or path
+validation.
 A bounded `x509-certificate` structural composition now decodes complete RFC
 5280 `Certificate` and `TBSCertificate` values under one shared DER budget. It
 retains the exact signed bytes, composes the shipped field decoders, validates
@@ -633,9 +641,10 @@ fails closed with no Name or certificate bytes in the error; opaque success
 proves only that this comparator accepted this pair. The gate embeds no name
 normalization or equality rule, does not grant the candidate a CA role, and
 neither constructs nor validates a path. Repository-owned signature
-verification, complete distinguished-name policy, certificate path
-construction and validation, trust-root integration, revocation policy, TLS,
-and HTTP remain blockers, so concrete HTTPS remains unavailable.
+verification, DirectoryString and schema-specific value comparison,
+certificate path construction and validation, trust-root integration,
+revocation policy, TLS, and HTTP remain blockers, so concrete HTTPS remains
+unavailable.
 
 The current slices intentionally stop before provider HTTPS transport. The
 loopback host owns only local TCP and injected browser authority; custody owns
