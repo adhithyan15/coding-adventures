@@ -1,4 +1,4 @@
-### Fixed — test scratch directories never collide
+## 2026-10-19 (Test scratch directories never collide)
 
 Tests named their scratch directories by process id and `SystemTime` nanos.
 macOS reports `SystemTime` in whole microseconds, so two tests running in
