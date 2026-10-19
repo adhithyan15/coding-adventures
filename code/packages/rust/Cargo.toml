@@ -796,6 +796,7 @@ members = [
     "x509-directory-string",
     "x509-certificate",
     "x509-certificate-policy",
+    "x509-webpki-roots-snapshot",
     "tls-server-identity",
     "tls-platform",
     "dns-message",
