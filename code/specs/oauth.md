@@ -673,6 +673,41 @@ exponent without allocation, and enforces caller-supplied inclusive
 modulus-bit and exponent-allowlist policy. It adds no modular arithmetic,
 signature verification, general algorithm registry, or cryptographic
 authority.
+A separate bounded `rsa-pkcs1-v1-5-sha256` prerequisite now validates the
+complete modulus-width encoded message produced by a future RSA public
+operation. It accepts only the exact RFC 8017 `00 01 || PS || 00 ||
+DigestInfo` form, at least eight `ff` padding bytes, the canonical SHA-256 DER
+trailer with present NULL parameters, and the complete caller-supplied digest.
+It performs no RSA arithmetic or hashing, and arbitrary caller-supplied bytes
+do not become an authenticated signature by passing this formatting gate.
+A bounded `rsa-public-operation` prerequisite now consumes only a previously
+validated RSA public key, enforces a separate caller-owned modulus-byte ceiling
+before arbitrary-precision conversion, rejects non-modulus-width or
+out-of-range signature representatives, and recovers the exact modulus-width
+RSAVP1 encoded message with repository-owned arithmetic. It adds no private-key
+operation, hashing, padding interpretation, certificate-signature verdict,
+path trust, or transport readiness; it is not by itself a verifier.
+A bounded `x509-rsa-pkcs1-v1-5-sha256-signature` composition now verifies one
+exact certificate signature with repository-owned primitives. It requires the
+canonical `sha256WithRSAEncryption` identifier with present NULL parameters,
+an already policy-validated issuer RSA key, an explicit modulus-byte ceiling,
+and a byte-aligned signature; it hashes the preserved `TBSCertificate` DER,
+applies RSAVP1, and validates the complete canonical SHA-256 encoded message.
+Its non-copyable borrowed result binds the exact certificate and validated
+issuer key and proves only that the key verified those exact signed bytes.
+Issuer selection and linkage, algorithm routing, certificate
+roles, path construction and validation, trust roots, time, names, revocation,
+TLS, HTTP, and network effects remain separate blockers.
+A bounded `x509-rsa-sha256-issuer-link` composition now authenticates one
+directed child-to-candidate-issuer link for that exact algorithm. Caller-owned
+Name policy is invoked once in the fixed child-issuer to candidate-subject
+direction; the exact candidate must pass issuing-CA role checks and
+caller-supplied RSA key-strength policy before its key verifies the child's
+preserved signed bytes. Non-copyable evidence binds the exact child, candidate
+issuer, and validated key. The composition does not process other critical
+extensions, validity, path length, name constraints, trust anchors, path
+construction, revocation, TLS, HTTP, or network effects, so concrete HTTPS
+remains unavailable.
 
 The current slices intentionally stop before provider HTTPS transport. The
 loopback host owns only local TCP and injected browser authority; custody owns

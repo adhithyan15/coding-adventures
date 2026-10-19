@@ -7811,6 +7811,7 @@ def test_dc_sweep_probe_measurements_execute_parsed_cards() -> None:
         """
 .measure dc out_swing PP V(out) FROM=0 TO=2
 .meas dc out_final FINAL V(out)
+.measure dc out_at FIND V(out) AT=1.5
 .end
 """,
     )
@@ -7819,6 +7820,7 @@ def test_dc_sweep_probe_measurements_execute_parsed_cards() -> None:
         "Name\tAnalysis\tProbe\tMode\tFrom\tTo\tValue\n"
         "out_swing\tdc\tV(out)\tpp\t0.000000e+00\t2.000000e+00\t1.000000e+00\n"
         "out_final\tdc\tV(out)\tlast\t\t\t1.000000e+00\n"
+        "out_at\tdc\tV(out)\tfind\t1.500000e+00\t1.500000e+00\t7.500000e-01\n"
     )
 
 
@@ -13527,6 +13529,7 @@ def test_ac_sweep_probe_measurements_execute_parsed_cards() -> None:
         """
 .measure ac out_swing PP V(out) FROM=10 TO=1000
 .meas ac out_final FINAL V(out)
+.measure ac out_at FIND V(out) AT=550
 .end
 """,
     )
@@ -13535,6 +13538,7 @@ def test_ac_sweep_probe_measurements_execute_parsed_cards() -> None:
         "Name\tAnalysis\tProbe\tMode\tFrom\tTo\tValue\n"
         "out_swing\tac\tV(out)\tpp\t1.000000e+01\t1.000000e+03\t1.500000e+00\n"
         "out_final\tac\tV(out)\tlast\t\t\t5.000000e-01\n"
+        "out_at\tac\tV(out)\tfind\t5.500000e+02\t5.500000e+02\t1.250000e+00\n"
     )
 
 

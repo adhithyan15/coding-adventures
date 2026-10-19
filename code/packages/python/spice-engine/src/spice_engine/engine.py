@@ -5084,7 +5084,7 @@ def _run_deck_analysis_plan(
     if plan.analysis == "noise":
         output_node = _require_deck_plan_string(plan, "output_node")
         input_source = _require_deck_plan_string(plan, "source_name")
-        frequencies: list[float] | None = None
+        frequencies: list[float] | tuple[float, ...] | None = plan.frequencies or None
         if plan.sweep_kind is not None:
             sweep_kind = _require_deck_plan_string(plan, "sweep_kind")
             point_count = _require_deck_plan_int(plan, "point_count")
@@ -5102,6 +5102,7 @@ def _run_deck_analysis_plan(
             output_node=output_node,
             input_source=input_source,
             freqs=frequencies,
+            temperature=plan.temperature,
         )
         _select_deck_measurement_cards_for_analysis(netlist, plan.analysis)
         measurements = []
@@ -6217,6 +6218,66 @@ def _transient_probe_value_at(
     raise ValueError(f"{context}: at_time is outside transient sample range")
 
 
+def _dc_sweep_probe_value_at(
+    points: list[DcSweepPoint],
+    probe: str,
+    at_value: float,
+    context: str,
+) -> float:
+    previous: tuple[float, float] | None = None
+    for point in points:
+        value = _table_probe_value(
+            point.node_voltages,
+            point.branch_currents,
+            probe,
+            context,
+        )
+        if point.source_value == at_value:
+            return value
+        if point.source_value > at_value:
+            if previous is None:
+                raise ValueError(f"{context}: at_value is outside dc sweep sample range")
+            previous_axis, previous_value = previous
+            if point.source_value == previous_axis:
+                raise ValueError(
+                    f"{context}: duplicate dc sweep source values around AT value"
+                )
+            fraction = (at_value - previous_axis) / (point.source_value - previous_axis)
+            return previous_value + (value - previous_value) * fraction
+        previous = (point.source_value, value)
+    raise ValueError(f"{context}: at_value is outside dc sweep sample range")
+
+
+def _ac_sweep_probe_value_at(
+    points: list[AcPoint],
+    probe: str,
+    at_frequency: float,
+    context: str,
+) -> float:
+    previous: tuple[float, complex] | None = None
+    for point in points:
+        value = _table_complex_probe_value(
+            point.node_voltages,
+            point.branch_currents,
+            probe,
+            context,
+        )
+        if point.freq == at_frequency:
+            return abs(value)
+        if point.freq > at_frequency:
+            if previous is None:
+                raise ValueError(f"{context}: at_frequency is outside ac sweep sample range")
+            previous_axis, previous_value = previous
+            if point.freq == previous_axis:
+                raise ValueError(
+                    f"{context}: duplicate ac sweep frequencies around AT value"
+                )
+            fraction = (at_frequency - previous_axis) / (point.freq - previous_axis)
+            return abs(previous_value + (value - previous_value) * fraction)
+        previous = (point.freq, value)
+    raise ValueError(f"{context}: at_frequency is outside ac sweep sample range")
+
+
 def _transient_probe_crossing_time(
     points: list[TransientPoint],
     probe: str,
@@ -6453,6 +6514,38 @@ def measure_dc_sweep_probe(
     )
 
 
+def measure_dc_sweep_find_at_probe(
+    dc_sweep_result: DcSweepResult | list[DcSweepPoint],
+    name: str,
+    probe: str,
+    at_value: float,
+) -> ProbeMeasurement:
+    """Measure one DC sweep probe at an exact or interpolated source value."""
+
+    if not math.isfinite(at_value):
+        raise ValueError("measure_dc_sweep_find_at_probe: at_value must be finite")
+    points = (
+        dc_sweep_result.points
+        if isinstance(dc_sweep_result, DcSweepResult)
+        else dc_sweep_result
+    )
+    value = _dc_sweep_probe_value_at(
+        points,
+        probe,
+        at_value,
+        "measure_dc_sweep_find_at_probe",
+    )
+    return ProbeMeasurement(
+        name=name,
+        analysis="dc",
+        probe=probe,
+        mode="find",
+        value=value,
+        from_value=at_value,
+        to_value=at_value,
+    )
+
+
 def measure_dc_sweep_cards(
     dc_sweep_result: DcSweepResult | list[DcSweepPoint],
     measurements: Iterable[DeckMeasurementCard],
@@ -6465,6 +6558,20 @@ def measure_dc_sweep_cards(
             raise ValueError(
                 "measure_dc_sweep_cards: only dc measurement cards are supported"
             )
+        if measurement.mode == "find":
+            if measurement.at_value is None:
+                raise ValueError(
+                    "measure_dc_sweep_cards: FIND measurement cards require an AT value"
+                )
+            results.append(
+                measure_dc_sweep_find_at_probe(
+                    dc_sweep_result,
+                    measurement.name,
+                    measurement.probe,
+                    measurement.at_value,
+                )
+            )
+            continue
         results.append(
             measure_dc_sweep_probe(
                 dc_sweep_result,
@@ -6558,6 +6665,34 @@ def measure_ac_sweep_probe(
     )
 
 
+def measure_ac_sweep_find_at_probe(
+    ac_result: AcResult | list[AcPoint],
+    name: str,
+    probe: str,
+    at_frequency: float,
+) -> ProbeMeasurement:
+    """Measure one AC probe magnitude at an exact or interpolated frequency."""
+
+    if not math.isfinite(at_frequency):
+        raise ValueError("measure_ac_sweep_find_at_probe: at_frequency must be finite")
+    points = ac_result.points if isinstance(ac_result, AcResult) else ac_result
+    value = _ac_sweep_probe_value_at(
+        points,
+        probe,
+        at_frequency,
+        "measure_ac_sweep_find_at_probe",
+    )
+    return ProbeMeasurement(
+        name=name,
+        analysis="ac",
+        probe=probe,
+        mode="find",
+        value=value,
+        from_value=at_frequency,
+        to_value=at_frequency,
+    )
+
+
 def measure_ac_sweep_cards(
     ac_result: AcResult | list[AcPoint],
     measurements: Iterable[DeckMeasurementCard],
@@ -6570,6 +6705,20 @@ def measure_ac_sweep_cards(
             raise ValueError(
                 "measure_ac_sweep_cards: only ac measurement cards are supported"
             )
+        if measurement.mode == "find":
+            if measurement.at_value is None:
+                raise ValueError(
+                    "measure_ac_sweep_cards: FIND measurement cards require an AT value"
+                )
+            results.append(
+                measure_ac_sweep_find_at_probe(
+                    ac_result,
+                    measurement.name,
+                    measurement.probe,
+                    measurement.at_value,
+                )
+            )
+            continue
         results.append(
             measure_ac_sweep_probe(
                 ac_result,

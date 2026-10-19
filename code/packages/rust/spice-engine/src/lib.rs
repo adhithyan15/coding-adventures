@@ -7389,6 +7389,8 @@ pub struct DeckAnalysisPlan {
     pub point_count: Option<usize>,
     pub start_frequency_hz: Option<f64>,
     pub stop_frequency_hz: Option<f64>,
+    pub frequencies_hz: Vec<f64>,
+    pub temperature_kelvin: f64,
     pub step_time: Option<f64>,
     pub stop_time: Option<f64>,
     pub start_time: Option<f64>,
@@ -9774,6 +9776,8 @@ fn resolve_op_analysis(tokens: &[&str], line_number: usize, state: &mut DeckAnal
         point_count: None,
         start_frequency_hz: None,
         stop_frequency_hz: None,
+        frequencies_hz: Vec::new(),
+        temperature_kelvin: 300.0,
         step_time: None,
         stop_time: None,
         start_time: None,
@@ -9920,6 +9924,8 @@ fn resolve_dc_analysis(tokens: &[&str], line_number: usize, state: &mut DeckAnal
         point_count: None,
         start_frequency_hz: None,
         stop_frequency_hz: None,
+        frequencies_hz: Vec::new(),
+        temperature_kelvin: 300.0,
         step_time: None,
         stop_time: None,
         start_time: None,
@@ -10004,6 +10010,8 @@ fn resolve_ac_analysis(tokens: &[&str], line_number: usize, state: &mut DeckAnal
         point_count: Some(point_count),
         start_frequency_hz: Some(start_frequency_hz),
         stop_frequency_hz: Some(stop_frequency_hz),
+        frequencies_hz: Vec::new(),
+        temperature_kelvin: 300.0,
         step_time: None,
         stop_time: None,
         start_time: None,
@@ -10112,6 +10120,8 @@ fn resolve_tran_analysis(tokens: &[&str], line_number: usize, state: &mut DeckAn
         point_count: None,
         start_frequency_hz: None,
         stop_frequency_hz: None,
+        frequencies_hz: Vec::new(),
+        temperature_kelvin: 300.0,
         step_time: Some(step_time),
         stop_time: Some(stop_time),
         start_time,
@@ -10176,6 +10186,8 @@ fn resolve_tf_analysis(tokens: &[&str], line_number: usize, state: &mut DeckAnal
         point_count: None,
         start_frequency_hz: None,
         stop_frequency_hz: None,
+        frequencies_hz: Vec::new(),
+        temperature_kelvin: 300.0,
         step_time: None,
         stop_time: None,
         start_time: None,
@@ -10228,6 +10240,8 @@ fn resolve_sens_analysis(tokens: &[&str], line_number: usize, state: &mut DeckAn
         point_count: None,
         start_frequency_hz: None,
         stop_frequency_hz: None,
+        frequencies_hz: Vec::new(),
+        temperature_kelvin: 300.0,
         step_time: None,
         stop_time: None,
         start_time: None,
@@ -10237,13 +10251,13 @@ fn resolve_sens_analysis(tokens: &[&str], line_number: usize, state: &mut DeckAn
 }
 
 fn resolve_noise_analysis(tokens: &[&str], line_number: usize, state: &mut DeckAnalysisState) {
-    if !matches!(tokens.len(), 3 | 7) {
+    if tokens.len() < 3 {
         add_analysis_diagnostic(
             state,
             "SPICE_DECK_ANALYSIS_ARGUMENT",
             ".noise",
             line_number,
-            ".noise requires output voltage probe, input source, and optional sweep kind, point count, start frequency, and stop frequency tokens",
+            ".noise requires an output voltage probe and input source",
             None,
         );
         return;
@@ -10280,21 +10294,10 @@ fn resolve_noise_analysis(tokens: &[&str], line_number: usize, state: &mut DeckA
     let mut point_count = None;
     let mut start_frequency_hz = None;
     let mut stop_frequency_hz = None;
-    if tokens.len() == 7 {
-        let Some(parsed_sweep_kind) = normalize_ac_sweep_kind(tokens[3]) else {
-            add_analysis_diagnostic(
-                state,
-                "SPICE_DECK_ANALYSIS_MODE",
-                ".noise",
-                line_number,
-                &format!(
-                    ".noise sweep kind must be LIN, DEC, or OCT, got {:?}",
-                    tokens[3]
-                ),
-                Some(tokens[3].to_string()),
-            );
-            return;
-        };
+    let mut frequencies_hz = Vec::new();
+    let mut temperature_kelvin = 300.0;
+    if tokens.len() == 7 && normalize_ac_sweep_kind(tokens[3]).is_some() {
+        let parsed_sweep_kind = normalize_ac_sweep_kind(tokens[3]).unwrap();
         let parsed_point_count =
             parse_deck_analysis_integer(tokens[4], ".noise", line_number, state);
         let parsed_start_frequency =
@@ -10337,6 +10340,71 @@ fn resolve_noise_analysis(tokens: &[&str], line_number: usize, state: &mut DeckA
         point_count = Some(parsed_point_count);
         start_frequency_hz = Some(parsed_start_frequency);
         stop_frequency_hz = Some(parsed_stop_frequency);
+    } else {
+        let mut tail_index = 3;
+        while tail_index < tokens.len() {
+            let token = tokens[tail_index];
+            let lower_token = token.to_ascii_lowercase();
+            if lower_token == "temp" {
+                if tail_index + 1 >= tokens.len() {
+                    add_analysis_diagnostic(
+                        state,
+                        "SPICE_DECK_ANALYSIS_ARGUMENT",
+                        ".noise",
+                        line_number,
+                        ".noise temp requires a temperature value",
+                        Some(token.to_string()),
+                    );
+                    return;
+                }
+                let Some(parsed_temperature) =
+                    parse_deck_analysis_value(tokens[tail_index + 1], ".noise", line_number, state)
+                else {
+                    return;
+                };
+                temperature_kelvin = parsed_temperature;
+                tail_index += 2;
+                continue;
+            }
+            if let Some(value) = lower_token.strip_prefix("temp=") {
+                let Some(parsed_temperature) =
+                    parse_deck_analysis_value(value, ".noise", line_number, state)
+                else {
+                    return;
+                };
+                temperature_kelvin = parsed_temperature;
+                tail_index += 1;
+                continue;
+            }
+            let Some(frequency) = parse_deck_analysis_value(token, ".noise", line_number, state)
+            else {
+                return;
+            };
+            if frequency <= 0.0 {
+                add_analysis_diagnostic(
+                    state,
+                    "SPICE_DECK_ANALYSIS_SWEEP",
+                    ".noise",
+                    line_number,
+                    ".noise frequencies must be positive",
+                    Some(token.to_string()),
+                );
+                return;
+            }
+            frequencies_hz.push(frequency);
+            tail_index += 1;
+        }
+        if temperature_kelvin <= 0.0 {
+            add_analysis_diagnostic(
+                state,
+                "SPICE_DECK_ANALYSIS_SWEEP",
+                ".noise",
+                line_number,
+                ".noise temperature must be positive",
+                None,
+            );
+            return;
+        }
     }
 
     state.analyses.push(DeckAnalysisPlan {
@@ -10356,6 +10424,8 @@ fn resolve_noise_analysis(tokens: &[&str], line_number: usize, state: &mut DeckA
         point_count,
         start_frequency_hz,
         stop_frequency_hz,
+        frequencies_hz,
+        temperature_kelvin,
         step_time: None,
         stop_time: None,
         start_time: None,
@@ -11482,6 +11552,8 @@ fn implicit_deck_op_analysis_plan() -> DeckAnalysisPlan {
         point_count: None,
         start_frequency_hz: None,
         stop_frequency_hz: None,
+        frequencies_hz: Vec::new(),
+        temperature_kelvin: 300.0,
         step_time: None,
         stop_time: None,
         start_time: None,
@@ -16166,6 +16238,8 @@ fn deck_analysis_plans_for_execution(
             point_count: None,
             start_frequency_hz: None,
             stop_frequency_hz: None,
+            frequencies_hz: Vec::new(),
+            temperature_kelvin: 300.0,
             step_time: None,
             stop_time: None,
             start_time: None,
@@ -17156,9 +17230,15 @@ fn run_deck_analysis_plan(
                     require_deck_plan_number(plan.stop_frequency_hz, &plan, "stop_frequency_hz")?;
                 deck_ac_frequencies(&plan, sweep_kind, point_count, start, stop)?
             } else {
-                Vec::new()
+                plan.frequencies_hz.clone()
             };
-            let result = noise_ac(circuit, output_node, input_source, &frequencies, 300.0)?;
+            let result = noise_ac(
+                circuit,
+                output_node,
+                input_source,
+                &frequencies,
+                plan.temperature_kelvin,
+            )?;
             select_deck_measurement_cards_for_analysis(netlist, "noise")?;
             let measurements = Vec::new();
             let measurement_table = format_measurement_table(&measurements);
@@ -18431,6 +18511,92 @@ fn transient_probe_value_at(
     ))
 }
 
+fn dc_sweep_probe_value_at(
+    points: &[DcSweepPoint],
+    probe: &str,
+    at_value: f64,
+    context: &str,
+) -> Result<f64, SpiceError> {
+    let mut previous: Option<(f64, f64)> = None;
+    for point in points {
+        let value = table_probe_value(
+            &point.result.node_voltages,
+            &point.result.branch_currents,
+            probe,
+            context,
+        )?;
+        if point.value == at_value {
+            return Ok(value);
+        }
+        if point.value > at_value {
+            let Some((previous_axis, previous_value)) = previous else {
+                return Err(table_error(
+                    context,
+                    "at_value is outside dc sweep sample range",
+                ));
+            };
+            if point.value == previous_axis {
+                return Err(table_error(
+                    context,
+                    "duplicate dc sweep source values around AT value",
+                ));
+            }
+            let fraction = (at_value - previous_axis) / (point.value - previous_axis);
+            return Ok(previous_value + (value - previous_value) * fraction);
+        }
+        previous = Some((point.value, value));
+    }
+    Err(table_error(
+        context,
+        "at_value is outside dc sweep sample range",
+    ))
+}
+
+fn ac_sweep_probe_value_at(
+    points: &[AcPoint],
+    probe: &str,
+    at_frequency: f64,
+    context: &str,
+) -> Result<f64, SpiceError> {
+    let mut previous: Option<(f64, Complex)> = None;
+    for point in points {
+        let value = table_complex_probe_value(
+            &point.node_voltages,
+            &point.branch_currents,
+            probe,
+            context,
+        )?;
+        if point.frequency_hz == at_frequency {
+            return Ok(value.abs());
+        }
+        if point.frequency_hz > at_frequency {
+            let Some((previous_axis, previous_value)) = previous else {
+                return Err(table_error(
+                    context,
+                    "at_frequency is outside ac sweep sample range",
+                ));
+            };
+            if point.frequency_hz == previous_axis {
+                return Err(table_error(
+                    context,
+                    "duplicate ac sweep frequencies around AT value",
+                ));
+            }
+            let fraction = (at_frequency - previous_axis) / (point.frequency_hz - previous_axis);
+            return Ok(Complex::new(
+                previous_value.real + (value.real - previous_value.real) * fraction,
+                previous_value.imag + (value.imag - previous_value.imag) * fraction,
+            )
+            .abs());
+        }
+        previous = Some((point.frequency_hz, value));
+    }
+    Err(table_error(
+        context,
+        "at_frequency is outside ac sweep sample range",
+    ))
+}
+
 fn transient_probe_crossing_time(
     points: &[TransientPoint],
     probe: &str,
@@ -18672,6 +18838,30 @@ pub fn measure_dc_sweep_probe(
     })
 }
 
+pub fn measure_dc_sweep_find_at_probe(
+    points: &[DcSweepPoint],
+    name: &str,
+    probe: &str,
+    at_value: f64,
+) -> Result<ProbeMeasurement, SpiceError> {
+    if !at_value.is_finite() {
+        return Err(table_error(
+            "measure_dc_sweep_find_at_probe",
+            "at_value must be finite",
+        ));
+    }
+    let value = dc_sweep_probe_value_at(points, probe, at_value, "measure_dc_sweep_find_at_probe")?;
+    Ok(ProbeMeasurement {
+        name: name.to_string(),
+        analysis: "dc".to_string(),
+        probe: probe.to_string(),
+        mode: "find".to_string(),
+        value,
+        from_value: Some(at_value),
+        to_value: Some(at_value),
+    })
+}
+
 pub fn measure_dc_sweep_cards(
     points: &[DcSweepPoint],
     measurements: &[DeckMeasurementCard],
@@ -18683,6 +18873,21 @@ pub fn measure_dc_sweep_cards(
                 "measure_dc_sweep_cards",
                 "only dc measurement cards are supported",
             ));
+        }
+        if measurement.mode == "find" {
+            let Some(at_value) = measurement.at_value else {
+                return Err(table_error(
+                    "measure_dc_sweep_cards",
+                    "FIND measurement cards require an AT value",
+                ));
+            };
+            results.push(measure_dc_sweep_find_at_probe(
+                points,
+                &measurement.name,
+                &measurement.probe,
+                at_value,
+            )?);
+            continue;
         }
         results.push(measure_dc_sweep_probe(
             points,
@@ -18779,6 +18984,35 @@ pub fn measure_ac_sweep_probe(
     })
 }
 
+pub fn measure_ac_sweep_find_at_probe(
+    points: &[AcPoint],
+    name: &str,
+    probe: &str,
+    at_frequency: f64,
+) -> Result<ProbeMeasurement, SpiceError> {
+    if !at_frequency.is_finite() {
+        return Err(table_error(
+            "measure_ac_sweep_find_at_probe",
+            "at_frequency must be finite",
+        ));
+    }
+    let value = ac_sweep_probe_value_at(
+        points,
+        probe,
+        at_frequency,
+        "measure_ac_sweep_find_at_probe",
+    )?;
+    Ok(ProbeMeasurement {
+        name: name.to_string(),
+        analysis: "ac".to_string(),
+        probe: probe.to_string(),
+        mode: "find".to_string(),
+        value,
+        from_value: Some(at_frequency),
+        to_value: Some(at_frequency),
+    })
+}
+
 pub fn measure_ac_sweep_cards(
     points: &[AcPoint],
     measurements: &[DeckMeasurementCard],
@@ -18790,6 +19024,21 @@ pub fn measure_ac_sweep_cards(
                 "measure_ac_sweep_cards",
                 "only ac measurement cards are supported",
             ));
+        }
+        if measurement.mode == "find" {
+            let Some(at_value) = measurement.at_value else {
+                return Err(table_error(
+                    "measure_ac_sweep_cards",
+                    "FIND measurement cards require an AT value",
+                ));
+            };
+            results.push(measure_ac_sweep_find_at_probe(
+                points,
+                &measurement.name,
+                &measurement.probe,
+                at_value,
+            )?);
+            continue;
         }
         results.push(measure_ac_sweep_probe(
             points,

@@ -5682,6 +5682,30 @@ model-card parameter, or a UI artifact is not a completion signal.
      analyses remain table-only because they do not expose selectable probe
      rows. Raw-format interoperability and broader output-control semantics
      remain separate phases.
+   - **Sweep `FIND ... AT=` measurements** (completed in the cross-language
+     CLI/API slice): deck-owned DC and AC measurements now execute `FIND`
+     cards at exact samples or by linear interpolation across the swept axis.
+     AC interpolation preserves the complex phasor until its magnitude is
+     reported, matching the parser evaluator. The shared CLI artifact corpus
+     again runs an interpolated DC `FIND` card, closing the previously exposed
+     runner gap while retaining raw-format interoperability and vendor-style
+     output controls for later phases.
+   - **Engine-backed sensitivity and noise analysis plans** (completed in the
+     cross-language CLI/API slice): parser analysis plans and `inspect --json`
+     now expose executable `.sens` and engine-compatible default `.noise`
+     cards across Python, Rust, and TypeScript. The shared CLI corpus runs both
+     cards, while structured sensitivity/noise results deliberately remain out
+     of waveform output selection and `.measure` handling.
+   - **Parser-style `.noise` tails** (completed in the cross-language core
+     corpus slice): Python, Rust, and TypeScript deck runners now execute the
+     parser-supported explicit frequency list plus `temp VALUE` or `temp=VALUE`
+     forms, retaining default and LIN/DEC/OCT sweep behavior. Parser tests
+     retain the explicit-temperature tail through every parser-to-engine path.
+   - **Canonical `.noise` sweep syntax** (completed in the cross-language core
+     corpus slice): parser facades now normalize LIN, DEC, and OCT noise sweep
+     cards into the same frequency points used by deck execution. The shared
+     CLI corpus executes a canonical LIN card, while parser tests lock all
+     three sweep modes across Python, Rust, and TypeScript.
    - Expand deck-owned output compatibility beyond source-order analysis
      execution and stable artifact exports toward nested sweeps, raw-format
      interoperability, and remaining vendor-style output controls.

@@ -1394,6 +1394,8 @@ export interface DeckAnalysisPlan {
   readonly pointCount?: number;
   readonly startFrequencyHz?: number;
   readonly stopFrequencyHz?: number;
+  readonly frequenciesHz?: readonly number[];
+  readonly temperatureKelvin?: number;
   readonly stepTime?: number;
   readonly stopTime?: number;
   readonly startTime?: number;
@@ -6387,12 +6389,12 @@ function resolveNoiseAnalysis(
   lineNumber: number,
   state: DeckAnalysisState,
 ): void {
-  if (tokens.length !== 3 && tokens.length !== 7) {
+  if (tokens.length < 3) {
     addAnalysisDiagnostic(state, {
       code: "SPICE_DECK_ANALYSIS_ARGUMENT",
       directive: ".noise",
       lineNumber,
-      message: ".noise requires output voltage probe, input source, and optional sweep kind, point count, start frequency, and stop frequency tokens",
+      message: ".noise requires an output voltage probe and input source",
     });
     return;
   }
@@ -6423,18 +6425,10 @@ function resolveNoiseAnalysis(
   let pointCount: number | undefined;
   let startFrequencyHz: number | undefined;
   let stopFrequencyHz: number | undefined;
-  if (tokens.length === 7) {
-    sweepKind = normalizeAcSweepKind(tokens[3]);
-    if (sweepKind === undefined) {
-      addAnalysisDiagnostic(state, {
-        code: "SPICE_DECK_ANALYSIS_MODE",
-        directive: ".noise",
-        lineNumber,
-        message: `.noise sweep kind must be LIN, DEC, or OCT, got ${JSON.stringify(tokens[3])}`,
-        token: tokens[3],
-      });
-      return;
-    }
+  const frequenciesHz: number[] = [];
+  let temperatureKelvin = 300.0;
+  if (tokens.length === 7 && normalizeAcSweepKind(tokens[3]) !== undefined) {
+    sweepKind = normalizeAcSweepKind(tokens[3])!;
     pointCount = parseDeckAnalysisInteger(tokens[4], ".noise", lineNumber, state);
     startFrequencyHz = parseDeckAnalysisValue(tokens[5], ".noise", lineNumber, state);
     stopFrequencyHz = parseDeckAnalysisValue(tokens[6], ".noise", lineNumber, state);
@@ -6464,6 +6458,69 @@ function resolveNoiseAnalysis(
       });
       return;
     }
+  } else {
+    let tailIndex = 3;
+    while (tailIndex < tokens.length) {
+      const token = tokens[tailIndex]!;
+      const lowerToken = token.toLowerCase();
+      if (lowerToken === "temp") {
+        if (tailIndex + 1 >= tokens.length) {
+          addAnalysisDiagnostic(state, {
+            code: "SPICE_DECK_ANALYSIS_ARGUMENT",
+            directive: ".noise",
+            lineNumber,
+            message: ".noise temp requires a temperature value",
+            token,
+          });
+          return;
+        }
+        const parsedTemperature = parseDeckAnalysisValue(
+          tokens[tailIndex + 1]!,
+          ".noise",
+          lineNumber,
+          state,
+        );
+        if (parsedTemperature === undefined) return;
+        temperatureKelvin = parsedTemperature;
+        tailIndex += 2;
+        continue;
+      }
+      if (lowerToken.startsWith("temp=")) {
+        const parsedTemperature = parseDeckAnalysisValue(
+          token.split("=", 2)[1]!,
+          ".noise",
+          lineNumber,
+          state,
+        );
+        if (parsedTemperature === undefined) return;
+        temperatureKelvin = parsedTemperature;
+        tailIndex += 1;
+        continue;
+      }
+      const frequency = parseDeckAnalysisValue(token, ".noise", lineNumber, state);
+      if (frequency === undefined) return;
+      if (frequency <= 0.0) {
+        addAnalysisDiagnostic(state, {
+          code: "SPICE_DECK_ANALYSIS_SWEEP",
+          directive: ".noise",
+          lineNumber,
+          message: ".noise frequencies must be positive",
+          token,
+        });
+        return;
+      }
+      frequenciesHz.push(frequency);
+      tailIndex += 1;
+    }
+    if (temperatureKelvin <= 0.0) {
+      addAnalysisDiagnostic(state, {
+        code: "SPICE_DECK_ANALYSIS_SWEEP",
+        directive: ".noise",
+        lineNumber,
+        message: ".noise temperature must be positive",
+      });
+      return;
+    }
   }
 
   state.analyses.push({
@@ -6476,6 +6533,8 @@ function resolveNoiseAnalysis(
     pointCount,
     startFrequencyHz,
     stopFrequencyHz,
+    frequenciesHz,
+    temperatureKelvin,
     useInitialConditions: false,
   });
 }
@@ -10855,6 +10914,75 @@ function transientProbeValueAt(
   throw invalidElement(context, "atTime is outside transient sample range");
 }
 
+function dcSweepProbeValueAt(
+  points: readonly DcSweepPoint[],
+  probe: string,
+  atValue: number,
+  context: string,
+): number {
+  let previous: readonly [number, number] | undefined;
+  for (const point of points) {
+    const value = tableProbeValue(
+      point.result.nodeVoltages,
+      point.result.branchCurrents,
+      probe,
+      context,
+    );
+    if (point.value === atValue) {
+      return value;
+    }
+    if (point.value > atValue) {
+      if (previous === undefined) {
+        throw invalidElement(context, "atValue is outside dc sweep sample range");
+      }
+      const [previousAxis, previousValue] = previous;
+      if (point.value === previousAxis) {
+        throw invalidElement(context, "duplicate dc sweep source values around AT value");
+      }
+      const fraction = (atValue - previousAxis) / (point.value - previousAxis);
+      return previousValue + (value - previousValue) * fraction;
+    }
+    previous = [point.value, value];
+  }
+  throw invalidElement(context, "atValue is outside dc sweep sample range");
+}
+
+function acSweepProbeValueAt(
+  points: readonly AcPoint[],
+  probe: string,
+  atFrequency: number,
+  context: string,
+): number {
+  let previous: readonly [number, Complex] | undefined;
+  for (const point of points) {
+    const value = tableComplexProbeValue(
+      point.nodeVoltages,
+      point.branchCurrents,
+      probe,
+      context,
+    );
+    if (point.frequencyHz === atFrequency) {
+      return complexAbs(value);
+    }
+    if (point.frequencyHz > atFrequency) {
+      if (previous === undefined) {
+        throw invalidElement(context, "atFrequency is outside ac sweep sample range");
+      }
+      const [previousAxis, previousValue] = previous;
+      if (point.frequencyHz === previousAxis) {
+        throw invalidElement(context, "duplicate ac sweep frequencies around AT value");
+      }
+      const fraction = (atFrequency - previousAxis) / (point.frequencyHz - previousAxis);
+      return complexAbs({
+        real: previousValue.real + (value.real - previousValue.real) * fraction,
+        imag: previousValue.imag + (value.imag - previousValue.imag) * fraction,
+      });
+    }
+    previous = [point.frequencyHz, value];
+  }
+  throw invalidElement(context, "atFrequency is outside ac sweep sample range");
+}
+
 function transientProbeCrossingTime(
   points: readonly TransientPoint[],
   probe: string,
@@ -11043,6 +11171,26 @@ export function measureDcSweepProbe(
   };
 }
 
+export function measureDcSweepFindAtProbe(
+  points: readonly DcSweepPoint[],
+  name: string,
+  probe: string,
+  atValue: number,
+): ProbeMeasurement {
+  if (!Number.isFinite(atValue)) {
+    throw invalidElement("measureDcSweepFindAtProbe", "atValue must be finite");
+  }
+  return {
+    name,
+    analysis: "dc",
+    probe,
+    mode: "find",
+    value: dcSweepProbeValueAt(points, probe, atValue, "measureDcSweepFindAtProbe"),
+    fromValue: atValue,
+    toValue: atValue,
+  };
+}
+
 export function measureDcSweepCards(
   points: readonly DcSweepPoint[],
   measurements: readonly DeckMeasurementCard[],
@@ -11050,6 +11198,17 @@ export function measureDcSweepCards(
   return measurements.map((measurement) => {
     if (measurement.analysis !== "dc") {
       throw invalidElement("measureDcSweepCards", "only dc measurement cards are supported");
+    }
+    if (measurement.mode === "find") {
+      if (measurement.atValue === undefined) {
+        throw invalidElement("measureDcSweepCards", "FIND measurement cards require an AT value");
+      }
+      return measureDcSweepFindAtProbe(
+        points,
+        measurement.name,
+        measurement.probe,
+        measurement.atValue,
+      );
     }
     return measureDcSweepProbe(
       points,
@@ -11125,6 +11284,26 @@ export function measureAcSweepProbe(
   };
 }
 
+export function measureAcSweepFindAtProbe(
+  points: readonly AcPoint[],
+  name: string,
+  probe: string,
+  atFrequency: number,
+): ProbeMeasurement {
+  if (!Number.isFinite(atFrequency)) {
+    throw invalidElement("measureAcSweepFindAtProbe", "atFrequency must be finite");
+  }
+  return {
+    name,
+    analysis: "ac",
+    probe,
+    mode: "find",
+    value: acSweepProbeValueAt(points, probe, atFrequency, "measureAcSweepFindAtProbe"),
+    fromValue: atFrequency,
+    toValue: atFrequency,
+  };
+}
+
 export function measureAcSweepCards(
   points: readonly AcPoint[],
   measurements: readonly DeckMeasurementCard[],
@@ -11132,6 +11311,17 @@ export function measureAcSweepCards(
   return measurements.map((measurement) => {
     if (measurement.analysis !== "ac") {
       throw invalidElement("measureAcSweepCards", "only ac measurement cards are supported");
+    }
+    if (measurement.mode === "find") {
+      if (measurement.atValue === undefined) {
+        throw invalidElement("measureAcSweepCards", "FIND measurement cards require an AT value");
+      }
+      return measureAcSweepFindAtProbe(
+        points,
+        measurement.name,
+        measurement.probe,
+        measurement.atValue,
+      );
     }
     return measureAcSweepProbe(
       points,
@@ -13843,7 +14033,9 @@ function runDeckAnalysisPlan(
     const outputNode = requireDeckPlanString(plan.outputNode, plan, "outputNode");
     const inputSource = requireDeckPlanString(plan.sourceName, plan, "sourceName");
     const frequenciesHz = plan.sweepKind === undefined
-      ? undefined
+      ? (plan.frequenciesHz === undefined || plan.frequenciesHz.length === 0
+          ? undefined
+          : plan.frequenciesHz)
       : deckAcFrequencies(
           plan,
           plan.sweepKind,
@@ -13851,7 +14043,7 @@ function runDeckAnalysisPlan(
           requireDeckPlanNumber(plan.startFrequencyHz, plan, "startFrequencyHz"),
           requireDeckPlanNumber(plan.stopFrequencyHz, plan, "stopFrequencyHz"),
         );
-    const result = noiseAc(circuit, outputNode, inputSource, frequenciesHz);
+    const result = noiseAc(circuit, outputNode, inputSource, frequenciesHz, plan.temperatureKelvin);
     selectDeckMeasurementCardsForAnalysis(netlist, plan.analysis);
     selectDeckFourierCardsForAnalysis(netlist, plan.analysis);
     const measurements: ProbeMeasurement[] = [];

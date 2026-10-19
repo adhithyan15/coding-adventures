@@ -1006,6 +1006,8 @@ class DeckAnalysisPlan:
     point_count: int | None = None
     start_frequency: float | None = None
     stop_frequency: float | None = None
+    frequencies: tuple[float, ...] = ()
+    temperature: float = 300.0
     step_time: float | None = None
     stop_time: float | None = None
     start_time: float | None = None
@@ -3648,15 +3650,14 @@ def _resolve_noise_analysis(
     line_number: int,
     state: _DeckAnalysisState,
 ) -> None:
-    if len(tokens) not in {3, 7}:
+    if len(tokens) < 3:
         _add_analysis_diagnostic(
             state,
             code="SPICE_DECK_ANALYSIS_ARGUMENT",
             directive=".noise",
             line_number=line_number,
             message=(
-                ".noise requires output voltage probe, input source, and optional "
-                "sweep kind, point count, start frequency, and stop frequency tokens"
+                ".noise requires an output voltage probe and input source"
             ),
         )
         return
@@ -3686,7 +3687,9 @@ def _resolve_noise_analysis(
     point_count: int | None = None
     start_frequency: float | None = None
     stop_frequency: float | None = None
-    if len(tokens) == 7:
+    frequencies: list[float] = []
+    temperature = 300.0
+    if len(tokens) == 7 and _normalize_ac_sweep_kind(tokens[3]) is not None:
         sweep_kind = _normalize_ac_sweep_kind(tokens[3])
         if sweep_kind is None:
             _add_analysis_diagnostic(
@@ -3722,6 +3725,63 @@ def _resolve_noise_analysis(
                 message=".noise frequencies must be positive and stop must be >= start",
             )
             return
+    else:
+        tail_index = 3
+        while tail_index < len(tokens):
+            token = tokens[tail_index]
+            lower_token = token.lower()
+            if lower_token == "temp":
+                if tail_index + 1 >= len(tokens):
+                    _add_analysis_diagnostic(
+                        state,
+                        code="SPICE_DECK_ANALYSIS_ARGUMENT",
+                        directive=".noise",
+                        line_number=line_number,
+                        message=".noise temp requires a temperature value",
+                        token=token,
+                    )
+                    return
+                parsed_temperature = _parse_deck_analysis_value(
+                    tokens[tail_index + 1], ".noise", line_number, state
+                )
+                if parsed_temperature is None:
+                    return
+                temperature = parsed_temperature
+                tail_index += 2
+                continue
+            if lower_token.startswith("temp="):
+                parsed_temperature = _parse_deck_analysis_value(
+                    token.split("=", 1)[1], ".noise", line_number, state
+                )
+                if parsed_temperature is None:
+                    return
+                temperature = parsed_temperature
+                tail_index += 1
+                continue
+            frequency = _parse_deck_analysis_value(token, ".noise", line_number, state)
+            if frequency is None:
+                return
+            if frequency <= 0.0:
+                _add_analysis_diagnostic(
+                    state,
+                    code="SPICE_DECK_ANALYSIS_SWEEP",
+                    directive=".noise",
+                    line_number=line_number,
+                    message=".noise frequencies must be positive",
+                    token=token,
+                )
+                return
+            frequencies.append(frequency)
+            tail_index += 1
+        if temperature <= 0.0:
+            _add_analysis_diagnostic(
+                state,
+                code="SPICE_DECK_ANALYSIS_SWEEP",
+                directive=".noise",
+                line_number=line_number,
+                message=".noise temperature must be positive",
+            )
+            return
     state.analyses.append(
         DeckAnalysisPlan(
             directive=".noise",
@@ -3733,6 +3793,8 @@ def _resolve_noise_analysis(
             point_count=point_count,
             start_frequency=start_frequency,
             stop_frequency=stop_frequency,
+            frequencies=tuple(frequencies),
+            temperature=temperature,
         )
     )
 

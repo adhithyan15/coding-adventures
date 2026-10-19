@@ -128,6 +128,68 @@ fn inspection_api_exposes_the_complete_runnable_plan() {
 }
 
 #[test]
+fn engine_backed_analysis_cards_are_inspectable_and_runnable() {
+    let corpus_path = concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/../../../grammars/spice/berkeley-v1-cli-corpus.json"
+    );
+    let corpus: serde_json::Value =
+        serde_json::from_str(&fs::read_to_string(corpus_path).unwrap()).unwrap();
+    let test_case = corpus["cases"]
+        .as_array()
+        .unwrap()
+        .iter()
+        .find(|case| case["id"] == "engine-backed-analysis-plan")
+        .unwrap();
+    let inspection: serde_json::Value =
+        serde_json::from_str(&inspect_netlist_json(test_case["deck"].as_str().unwrap()).unwrap())
+            .unwrap();
+    let result: serde_json::Value =
+        serde_json::from_str(&run_netlist_json(test_case["deck"].as_str().unwrap()).unwrap())
+            .unwrap();
+    let expected = &test_case["expected"];
+
+    assert_eq!(
+        inspection["analyses"]
+            .as_array()
+            .unwrap()
+            .iter()
+            .map(|analysis| analysis["index"].as_u64().unwrap())
+            .collect::<Vec<_>>(),
+        expected["analysisIndexes"]
+            .as_array()
+            .unwrap()
+            .iter()
+            .map(|index| index.as_u64().unwrap())
+            .collect::<Vec<_>>()
+    );
+    let expected_kinds = expected["analysisKinds"]
+        .as_array()
+        .unwrap()
+        .iter()
+        .map(|kind| kind.as_str().unwrap())
+        .collect::<Vec<_>>();
+    assert_eq!(
+        inspection["analyses"]
+            .as_array()
+            .unwrap()
+            .iter()
+            .map(|analysis| analysis["kind"].as_str().unwrap())
+            .collect::<Vec<_>>(),
+        expected_kinds
+    );
+    assert_eq!(
+        result["analyses"]
+            .as_array()
+            .unwrap()
+            .iter()
+            .map(|analysis| analysis["kind"].as_str().unwrap())
+            .collect::<Vec<_>>(),
+        expected_kinds
+    );
+}
+
+#[test]
 fn shared_release_manifest_freezes_the_berkeley_v1_gate() {
     let grammar_root = concat!(env!("CARGO_MANIFEST_DIR"), "/../../../grammars/spice/");
     let release: serde_json::Value = serde_json::from_str(
