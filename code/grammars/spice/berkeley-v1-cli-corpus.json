@@ -58,7 +58,7 @@
     },
     {
       "id": "deck-output-artifacts",
-      "deck": "* Berkeley SPICE v1 output artifact CLI corpus\nV1 in 0 0\nR1 in out 1k\nR2 out 0 1k\n.save V(out)\n.print dc V(in)\n.measure dc half MAX V(out)\n.dc V1 0 1 1\n.end\n",
+      "deck": "* Berkeley SPICE v1 output artifact CLI corpus\nV1 in 0 0\nR1 in out 1k\nR2 out 0 1k\n.save V(out)\n.print dc V(in)\n.measure dc half FIND V(out) AT=0.5\n.dc V1 0 1 1\n.end\n",
       "expected": {
         "title": "Berkeley SPICE v1 output artifact CLI corpus",
         "outputs": [
@@ -91,9 +91,9 @@
             "analysisIndex": 3,
             "analysis": "dc",
             "name": "half",
-            "operation": "max",
+            "operation": "find",
             "probe": "V(out)",
-            "value": 0.5
+            "value": 0.25
           }
         ]
       }

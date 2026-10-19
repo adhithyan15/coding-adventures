@@ -5682,6 +5682,14 @@ model-card parameter, or a UI artifact is not a completion signal.
      analyses remain table-only because they do not expose selectable probe
      rows. Raw-format interoperability and broader output-control semantics
      remain separate phases.
+   - **Sweep `FIND ... AT=` measurements** (completed in the cross-language
+     CLI/API slice): deck-owned DC and AC measurements now execute `FIND`
+     cards at exact samples or by linear interpolation across the swept axis.
+     AC interpolation preserves the complex phasor until its magnitude is
+     reported, matching the parser evaluator. The shared CLI artifact corpus
+     again runs an interpolated DC `FIND` card, closing the previously exposed
+     runner gap while retaining raw-format interoperability and vendor-style
+     output controls for later phases.
    - Expand deck-owned output compatibility beyond source-order analysis
      execution and stable artifact exports toward nested sweeps, raw-format
      interoperability, and remaining vendor-style output controls.

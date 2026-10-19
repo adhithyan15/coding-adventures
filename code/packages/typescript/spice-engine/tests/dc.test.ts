@@ -3751,6 +3751,7 @@ describe("dcOp", () => {
       `
 .measure dc midSwing PP V(mid) FROM=0 TO=2
 .meas dc midFinal FINAL V(mid)
+.measure dc midAt FIND V(mid) AT=1.5
 .end
 `,
     );
@@ -3758,7 +3759,8 @@ describe("dcOp", () => {
     expect(formatMeasurementTable(measurements)).toBe(
       "Name\tAnalysis\tProbe\tMode\tFrom\tTo\tValue\n" +
       "midSwing\tdc\tV(mid)\tpp\t0.000000e+00\t2.000000e+00\t1.000000e+00\n" +
-      "midFinal\tdc\tV(mid)\tlast\t\t\t1.000000e+00\n",
+      "midFinal\tdc\tV(mid)\tlast\t\t\t1.000000e+00\n" +
+      "midAt\tdc\tV(mid)\tfind\t1.500000e+00\t1.500000e+00\t7.500000e-01\n",
     );
   });
 
