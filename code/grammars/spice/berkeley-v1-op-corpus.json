@@ -66,6 +66,24 @@
       "expected": { "min": 1.3, "max": 1.5 }
     },
     {
+      "id": "current-source-bias",
+      "kind": "I",
+      "analysis": "op",
+      "sample": "op-node",
+      "deck": "* Berkeley SPICE v1 core corpus: current-source-bias\nI1 out 0 DC 1m\nR1 out 0 1k\n.op\n.save V(out)\n.end\n",
+      "probe": "out",
+      "expected": { "min": -1.001, "max": -0.999 }
+    },
+    {
+      "id": "subcircuit-divider",
+      "kind": "subckt",
+      "analysis": "op",
+      "sample": "op-node",
+      "deck": "* Berkeley SPICE v1 core corpus: subcircuit-divider\n.subckt divider in out 0\nRtop in out 1k\nRbot out 0 1k\n.ends divider\nV1 in 0 DC 1\nX1 in out 0 divider\n.op\n.save V(out)\n.end\n",
+      "probe": "out",
+      "expected": { "min": 0.499, "max": 0.501 }
+    },
+    {
       "id": "diode-capacitance-ac",
       "kind": "D",
       "analysis": "ac",
@@ -127,6 +145,15 @@
       "deck": "* Berkeley SPICE v1 core corpus: pmos-level1-capacitance-ac\n.model Mp PMOS(LEVEL=1 VTO=-0.55 LAMBDA=0.04 NSUB=1.6 CBD=3e-13)\nVdd vdd 0 1.8\nVdrive in 0 0 AC 1\nRin in drain 1k\nVgate gate 0 1.8\nM1 drain gate vdd vdd Mp\n.ac dec 1 100k 100k\n.save V(drain)\n.end\n",
       "probe": "drain",
       "expected": { "min": 0.98, "max": 1.0 }
+    },
+    {
+      "id": "inductor-divider-ac",
+      "kind": "L",
+      "analysis": "ac",
+      "sample": "ac-first-magnitude",
+      "deck": "* Berkeley SPICE v1 core corpus: inductor-divider-ac\nV1 in 0 DC 0 AC 1\nR1 in out 1k\nL1 out 0 1m\n.ac dec 1 1k 1k\n.save V(out)\n.end\n",
+      "probe": "out",
+      "expected": { "min": 0.00627, "max": 0.00629 }
     },
     {
       "id": "diode-storage-charge",

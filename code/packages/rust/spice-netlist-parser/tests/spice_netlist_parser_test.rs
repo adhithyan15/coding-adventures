@@ -306,9 +306,9 @@ fn runs_shared_berkeley_v1_core_corpus() {
             .map(|case| case["analysis"].as_str().unwrap())
             .collect::<Vec<_>>(),
         vec![
-            "op", "op", "op", "op", "op", "op", "op", "ac", "ac", "ac", "ac", "ac", "ac",
-            "ac", "tran", "tran", "tran", "tran", "tran", "tran", "tran", "dc", "dc", "dc",
-            "dc", "dc", "dc", "dc", "dc", "tf", "tf", "tf", "tf", "tf", "tf", "tf", "tf"
+            "op", "op", "op", "op", "op", "op", "op", "op", "op", "ac", "ac", "ac", "ac", "ac",
+            "ac", "ac", "ac", "tran", "tran", "tran", "tran", "tran", "tran", "tran", "dc", "dc",
+            "dc", "dc", "dc", "dc", "dc", "dc", "tf", "tf", "tf", "tf", "tf", "tf", "tf", "tf"
         ]
     );
 
