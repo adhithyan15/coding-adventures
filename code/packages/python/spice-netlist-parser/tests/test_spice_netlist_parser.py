@@ -129,6 +129,30 @@ C1 out 0 1u IC=0
     assert len(run_netlist(deck)) == 5
 
 
+def test_builds_and_runs_engine_backed_sensitivity_and_noise_cards() -> None:
+    deck = """
+V1 in 0 DC 1 AC 1
+R1 in out 1k
+R2 out 0 1k
+.sens V(out)
+.noise V(out) V1
+.end
+"""
+    parsed = parse_netlist(deck)
+
+    assert [(step.index, step.kind) for step in parsed.analysis_plan()] == [
+        (0, "sens"),
+        (1, "noise"),
+    ]
+    results = parsed.run_analysis_plan()
+    assert [result.kind for result in results] == ["sens", "noise"]
+    assert isclose(results[0].result.nominal_voltage, 0.5, abs_tol=1e-9)
+    assert results[0].result.entries
+    assert len(results[1].result.points) == 50
+    assert isclose(results[1].result.points[0].freq, 1.0, abs_tol=1e-12)
+    assert len(run_netlist(deck)) == 2
+
+
 def test_runs_two_axis_dc_sweep_with_second_source_as_outer_axis() -> None:
     corpus_path = Path(__file__).resolve().parents[4] / "grammars/spice/nested-dc-sweep-v1-corpus.json"
     case = json.loads(corpus_path.read_text(encoding="utf-8"))["cases"][0]

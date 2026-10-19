@@ -5,12 +5,13 @@ use std::{
 
 use spice_engine::{
     ac_sweep, dc_op_with_options, dc_sweep, dc_sweep_2d, format_deck_table_json,
-    mosfet_from_model_card, normalize_model_card, run_deck, tf, transient_with_method, AcPoint,
-    AdaptiveTransientOptions, Bjt, BjtPolarity, Capacitor, Cccs, Ccvs, Circuit, Complex,
-    CurrentSource, DcOpOptions, DcResult, DcSweepPoint, Diode, Element, ExpWaveform, Inductor,
-    Jfet, JfetPolarity, Mosfet, MosfetLevel1Params, MosfetType, MutualInductor, PulseWaveform,
-    PwlWaveform, Resistor, SinWaveform, SpiceError, TfResult, TransientMethod, TransientPoint,
-    TransmissionLine, Vccs, Vcvs, VoltageSource, Waveform,
+    mosfet_from_model_card, noise_ac, normalize_model_card, run_deck, sens_dc, tf,
+    transient_with_method, AcPoint, AdaptiveTransientOptions, Bjt, BjtPolarity, Capacitor, Cccs,
+    Ccvs, Circuit, Complex, CurrentSource, DcOpOptions, DcResult, DcSweepPoint, Diode, Element,
+    ExpWaveform, Inductor, Jfet, JfetPolarity, Mosfet, MosfetLevel1Params, MosfetType,
+    MutualInductor, NoiseResult, PulseWaveform, PwlWaveform, Resistor, SensResult, SinWaveform,
+    SpiceError, TfResult, TransientMethod, TransientPoint, TransmissionLine, Vccs, Vcvs,
+    VoltageSource, Waveform,
 };
 
 const OXIDE_PERMITTIVITY: f64 = 3.453_133e-11;
@@ -378,6 +379,8 @@ pub enum AnalysisKind {
     Dc,
     Ac,
     Tf,
+    Sens,
+    Noise,
 }
 
 #[derive(Debug, Clone, PartialEq)]
@@ -387,6 +390,8 @@ pub enum RunnableAnalysis {
     Dc(DcAnalysis),
     Ac(AcAnalysis),
     Tf(TfAnalysis),
+    Sens(SensAnalysis),
+    Noise(NoiseAnalysis),
 }
 
 impl RunnableAnalysis {
@@ -397,6 +402,8 @@ impl RunnableAnalysis {
             Self::Dc(_) => AnalysisKind::Dc,
             Self::Ac(_) => AnalysisKind::Ac,
             Self::Tf(_) => AnalysisKind::Tf,
+            Self::Sens(_) => AnalysisKind::Sens,
+            Self::Noise(_) => AnalysisKind::Noise,
         }
     }
 }
@@ -418,6 +425,8 @@ pub enum AnalysisResult {
     Dc(Vec<DcSweepPoint>),
     Ac(Vec<AcPoint>),
     Tf(TfResult),
+    Sens(SensResult),
+    Noise(NoiseResult),
 }
 
 #[derive(Debug, Clone, PartialEq)]
@@ -1182,7 +1191,10 @@ pub fn select_outputs(
 ) -> Result<Vec<SelectedAnalysisOutput>, NetlistParseError> {
     let mut selected = Vec::new();
     for result in results {
-        if result.kind == AnalysisKind::Tf {
+        if matches!(
+            result.kind,
+            AnalysisKind::Tf | AnalysisKind::Sens | AnalysisKind::Noise
+        ) {
             continue;
         }
         let probes = selected_output_probes(parsed, result.kind);
@@ -1227,6 +1239,8 @@ fn analysis_plan_step(index: usize, analysis: &Analysis) -> Option<AnalysisPlanS
         Analysis::Dc(card) => RunnableAnalysis::Dc(card.clone()),
         Analysis::Ac(card) => RunnableAnalysis::Ac(card.clone()),
         Analysis::Tf(card) => RunnableAnalysis::Tf(card.clone()),
+        Analysis::Sens(card) => RunnableAnalysis::Sens(card.clone()),
+        Analysis::Noise(card) => RunnableAnalysis::Noise(card.clone()),
         _ => return None,
     };
     Some(AnalysisPlanStep {
@@ -1297,6 +1311,17 @@ fn execute_analysis_step(
             &parsed.circuit,
             &card.output_node,
             &card.input_source,
+        )?)),
+        RunnableAnalysis::Sens(card) => Ok(AnalysisResult::Sens(sens_dc(
+            &parsed.circuit,
+            &card.output_node,
+        )?)),
+        RunnableAnalysis::Noise(card) => Ok(AnalysisResult::Noise(noise_ac(
+            &parsed.circuit,
+            &card.output_node,
+            &card.input_source,
+            &card.frequencies_hz,
+            card.temperature,
         )?)),
     }
 }
@@ -1434,6 +1459,9 @@ fn selected_output_rows(
             .collect(),
         AnalysisResult::Tf(_) => Err(NetlistParseError::new(
             ".tf output selection is not yet supported",
+        )),
+        AnalysisResult::Sens(_) | AnalysisResult::Noise(_) => Err(NetlistParseError::new(
+            "selected waveform output is not supported for structured analysis results",
         )),
     }
 }
@@ -1597,6 +1625,9 @@ fn measure_samples(
             .collect(),
         AnalysisResult::Tf(_) => Err(NetlistParseError::new(
             ".measure does not yet support .tf results",
+        )),
+        AnalysisResult::Sens(_) | AnalysisResult::Noise(_) => Err(NetlistParseError::new(
+            ".measure does not support structured sensitivity or noise results",
         )),
     }
 }

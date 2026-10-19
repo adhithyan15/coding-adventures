@@ -5690,6 +5690,16 @@ model-card parameter, or a UI artifact is not a completion signal.
      again runs an interpolated DC `FIND` card, closing the previously exposed
      runner gap while retaining raw-format interoperability and vendor-style
      output controls for later phases.
+   - **Engine-backed sensitivity and noise analysis plans** (completed in the
+     cross-language CLI/API slice): parser analysis plans and `inspect --json`
+     now expose executable `.sens` and engine-compatible default `.noise`
+     cards across Python, Rust, and TypeScript. The shared CLI corpus runs both
+     cards, while structured sensitivity/noise results deliberately remain out
+     of waveform output selection and `.measure` handling.
+   - Discovery: parser-only explicit noise-frequency and temperature forms do
+     not yet share the deck runner's canonical three- or seven-token `.noise`
+     syntax. Keep that broader parser-to-deck-runner alignment as a separate
+     compatibility phase rather than treating it as Berkeley v1 conformance.
    - Expand deck-owned output compatibility beyond source-order analysis
      execution and stable artifact exports toward nested sweeps, raw-format
      interoperability, and remaining vendor-style output controls.
