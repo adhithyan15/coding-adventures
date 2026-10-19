@@ -37,6 +37,19 @@ dynamic objects, coercions, closures, exceptions, and built-in libraries
 already work unchanged. Emit a clear unsupported-syntax or unsupported-
 semantic diagnostic whenever the selected slice cannot preserve behavior.
 
+### Operations these frontends need: LANG83
+
+The operations these languages need beyond the scalar core, such as floor
+division, output without a newline, defined traps, overflow checks and string
+conversions, are first-class IIR operations. They are named in one registry,
+and **every backend lowers them itself**. A backend that cannot lower one
+refuses it at compile time. There is no portable runtime and no generated IIR
+helper library. See
+[LANG83 — IIR standard operation registry](LANG83-iir-standard-operation-registry.md)
+for the vocabulary, the type-first naming rule, trap semantics, the backend
+contract and the PR plan. A frontend slice that needs a new operation adds it
+to that registry first.
+
 ## Slice A — JavaScript interpreter pilot
 
 Create `code/packages/rust/javascript-iir-compiler` with `compile_source`
