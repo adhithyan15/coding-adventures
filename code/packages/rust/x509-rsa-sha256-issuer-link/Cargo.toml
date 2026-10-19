@@ -1,0 +1,14 @@
+[package]
+name = "x509-rsa-sha256-issuer-link"
+version = "0.1.0"
+edition = "2021"
+description = "Bounded RSA SHA-256 authenticated X.509 issuer-link composition"
+
+[dependencies]
+der-asn1 = { path = "../der-asn1" }
+rsa-public-operation = { path = "../rsa-public-operation" }
+x509-certificate = { path = "../x509-certificate" }
+x509-certificate-policy = { path = "../x509-certificate-policy" }
+x509-name = { path = "../x509-name" }
+x509-rsa-pkcs1-v1-5-sha256-signature = { path = "../x509-rsa-pkcs1-v1-5-sha256-signature" }
+x509-rsa-public-key = { path = "../x509-rsa-public-key" }
