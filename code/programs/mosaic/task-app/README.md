@@ -234,9 +234,10 @@ cd host/web && npm install && npm run dev       # http://localhost:5173
 
 ## Incremental releases
 
-The next unreleased Qt fidelity patch preserves the timeline milestone and
+The prepared `task-app-v0.5.8` patch preserves the timeline milestone and
 legend-swatch diamond rotations (#17675), reducing measured Qt style drops from
-83 to 81. Downloadable coverage is unchanged.
+83 to 81. Publication and immutable asset auditing remain pending in #17682.
+Downloadable coverage is unchanged.
 
 TaskApp uses product-scoped [Semantic Versioning](https://semver.org/):
 `task-app-vMAJOR.MINOR.PATCH`. Compatible fixes and packaging improvements bump
@@ -282,10 +283,10 @@ the style regression gate from 63 to 59 allowances. Emitted drag behavior and
 downloadable artifact coverage remain unchanged. Publication and the immutable
 asset audit are tracked in #17491; the same CI-only and signing limitations apply.
 
-The prepared `task-app-v0.5.7` patch preserves timeline and calendar milestone
+The published `task-app-v0.5.7` patch preserves timeline and calendar milestone
 diamond rotations in SwiftUI and tightens its style regression gate from 59 to
-57 allowances. Publication and the immutable asset audit remain pending in
-#17610 until release validation and publication complete. Downloadable coverage
+57 allowances. Publication and the immutable asset audit completed in #17610:
+all thirteen assets and twelve checksum entries were verified. Downloadable coverage
 is unchanged: Static HTML, Web Components, and Paint remain CI-only; signing,
 notarization, and installers remain #13977.
 
