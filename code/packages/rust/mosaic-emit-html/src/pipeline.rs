@@ -633,6 +633,20 @@ root.addEventListener("input", event => {
   if (target === null || !root.contains(target)) {
     return;
   }
+  // An IME composition (CJK, dead keys) fires input events for text that is
+  // not final. A host response re-renders the field, which would end the
+  // composition mid-word, so the change is sent once it completes instead.
+  if (event.isComposing) {
+    return;
+  }
+  void dispatchMosaicEvent(target.dataset.onChange, target);
+});
+
+root.addEventListener("compositionend", event => {
+  const target = closestEventTarget(event.target, "[data-on-change]");
+  if (target === null || !root.contains(target)) {
+    return;
+  }
   void dispatchMosaicEvent(target.dataset.onChange, target);
 });
 
@@ -1020,10 +1034,70 @@ function normalizeHostProps(response) {
 }
 
 function render() {
+  // render() rebuilds root.innerHTML wholesale, which destroys the element
+  // that has focus. A controlled field re-renders after every keystroke the
+  // host echoes back, so without this the field lost focus after the first
+  // character and typing stopped.
+  const focus = captureFocus();
   root.innerHTML = renderTemplate(template, props);
   applyHostNodes(root, props);
   normalizeHostAttributes(root);
   applyFontSizes(root, props);
+  restoreFocus(focus);
+}
+
+// The focused element is found again by what it IS, not where it was: its
+// tag, accessible name and event markers, plus which of the elements sharing
+// that signature it was. A child-index path would point at a different field
+// as soon as an If or For above it changed the tree.
+const FOCUS_SIGNATURE_ATTRIBUTES = [
+  "aria-label",
+  "name",
+  "placeholder",
+  "data-on-change",
+  "data-on-commit",
+  "data-on-click",
+  "data-on-toggle",
+  "data-on-select",
+];
+
+function focusSignature(element) {
+  return [element.tagName, ...FOCUS_SIGNATURE_ATTRIBUTES.map(name => element.getAttribute(name) ?? "")].join("\u0000");
+}
+
+function captureFocus() {
+  const active = document.activeElement;
+  if (active === null || active === root || !root.contains(active)) {
+    return null;
+  }
+  const signature = focusSignature(active);
+  const twins = [...root.querySelectorAll(active.tagName)].filter(element => focusSignature(element) === signature);
+  const state = { signature, tag: active.tagName, occurrence: twins.indexOf(active), scrollTop: active.scrollTop };
+  if (typeof active.selectionStart === "number") {
+    state.selection = [active.selectionStart, active.selectionEnd, active.selectionDirection];
+  }
+  return state;
+}
+
+function restoreFocus(state) {
+  if (state === null || state.occurrence < 0) {
+    return;
+  }
+  const twins = [...root.querySelectorAll(state.tag)].filter(element => focusSignature(element) === state.signature);
+  const element = twins[state.occurrence];
+  if (element === undefined) {
+    return;
+  }
+  element.focus({ preventScroll: true });
+  if (state.selection !== undefined && typeof element.setSelectionRange === "function") {
+    const length = String(element.value ?? "").length;
+    try {
+      element.setSelectionRange(Math.min(state.selection[0], length), Math.min(state.selection[1], length), state.selection[2]);
+    } catch {
+      // Some input types (number, email) refuse a selection; focus is enough.
+    }
+  }
+  element.scrollTop = state.scrollTop;
 }
 
 function applyFontSizes(scope, context) {
@@ -5483,6 +5557,24 @@ mod tests {
             assert!(!out.contains("data-on-commit"), "{tag}: {out}");
             assert!(out.contains("data-on-cancel=\"onDiscard\""), "{tag}: {out}");
         }
+    }
+
+    /// The runtime's `render()` rebuilds `root.innerHTML`, which destroys the
+    /// focused element; a controlled field re-renders after every echoed
+    /// keystroke, so it must capture focus before the rebuild and restore it
+    /// after, and hold a composition's input until `compositionend`.
+    /// (Behaviour is checked against jsdom outside the unit suite: 7/7 vs 1/7.)
+    #[test]
+    fn the_runtime_keeps_focus_across_a_render_and_waits_out_composition() {
+        let main_js = HTML_RUNTIME_TEMPLATE;
+        let render = &main_js[main_js.find("function render() {").expect("render")..];
+        let render = &render[..render.find("\n}\n").unwrap()];
+        let capture = render.find("const focus = captureFocus();").expect("capture");
+        let rebuild = render.find("root.innerHTML = renderTemplate(template, props);").expect("rebuild");
+        let restore = render.find("restoreFocus(focus);").expect("restore");
+        assert!(capture < rebuild && rebuild < restore, "{render}");
+        assert!(main_js.contains("if (event.isComposing) {\n    return;\n  }"), "composition guard");
+        assert!(main_js.contains("root.addEventListener(\"compositionend\""), "composition end");
     }
 
     #[test]
