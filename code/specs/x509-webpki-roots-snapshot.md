@@ -16,7 +16,11 @@ No upstream executable code is a production dependency. In particular,
 `webpki-roots`, its `rustls-pki-types` dependency, Rustls, WebPKI libraries,
 and certificate generators are not compiled or linked. A standard-library-only
 review tool extracts the published static subject, SubjectPublicKeyInfo, and
-optional name-constraints DER bytes into the checked-in snapshot.
+optional name-constraints DER bytes into the checked-in snapshot. It reads the
+one exact regular `webpki-roots-1.0.9/src/lib.rs` member directly from the
+checksum-verified crate archive and rejects separate source inputs, links,
+duplicates, unexpected member paths or types, invalid sizes, and malformed
+UTF-8.
 
 ## Canonical format
 

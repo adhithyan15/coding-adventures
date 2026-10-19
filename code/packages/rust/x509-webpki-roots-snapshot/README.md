@@ -21,6 +21,10 @@ SubjectPublicKeyInfo DER, and optional name-constraints DER, with the format
 and length framing defined in `code/specs/x509-webpki-roots-snapshot.md`.
 `tools/verify_snapshot.py`, the package tests, and the pinned constants all fail
 closed if those bytes, their order, count, format, or provenance drift.
+The generator reads only the exact regular
+`webpki-roots-1.0.9/src/lib.rs` member directly from the checksum-verified
+crate archive; separate source files, links, duplicate members, and unexpected
+member paths or types are rejected.
 
 ## Deployment policy
 
