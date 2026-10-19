@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+### Changed — documentation only (#15930)
+
+The layout comment notes that `HostInput ( multiline : true )` now lowers to
+the same text area as the body's legacy `Input`, so the body can move to it
+when `Input` retires. The generated output is unchanged.
+
 ### Fixed — 5 stale style-drop pins removed (X-7)
 
 The emitters now lower these, so the gate's inverse ratchet

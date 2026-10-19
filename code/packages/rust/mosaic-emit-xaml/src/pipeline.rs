@@ -11713,8 +11713,11 @@ fn emit_host_input(
     }
 
     // onCommit / onCancel → merged KeyDown handler keyed on Enter / Escape.
+    // A multiline TextBox (`AcceptsReturn`) spends Enter on a line break, so
+    // it has no commit key; every backend agrees on that (#15930).
+    let multiline = find_prop_keyword(node, "multiline") == Some("true");
     let commit = match find_prop_value(node, "onCommit") {
-        Some(LayoutPropValue::EmitRef(e)) => Some(e.clone()),
+        Some(LayoutPropValue::EmitRef(e)) if !multiline => Some(e.clone()),
         _ => None,
     };
     let cancel = match find_prop_value(node, "onCancel") {
@@ -19244,6 +19247,42 @@ mod tests {
             "got:\n{}",
             r.xaml
         );
+    }
+
+    /// #15930 — a multiline TextBox spends Enter on a line break, so the
+    /// merged KeyDown handler carries no Enter-to-commit branch; Escape
+    /// still cancels. Every backend lowers a multiline field this way.
+    #[test]
+    fn multiline_host_input_does_not_commit_on_enter() {
+        let c = component(
+            "Foo",
+            vec![],
+            vec![emit("onSave", vec![]), emit("onDiscard", vec![])],
+        );
+        let l = layout_with_root(
+            "Foo",
+            host_input_node(
+                None,
+                vec![
+                    LayoutProp {
+                        name: "multiline".to_string(),
+                        value: LayoutPropValue::Keyword("true".to_string()),
+                    },
+                    LayoutProp {
+                        name: "onCommit".to_string(),
+                        value: LayoutPropValue::EmitRef("onSave".to_string()),
+                    },
+                    LayoutProp {
+                        name: "onCancel".to_string(),
+                        value: LayoutPropValue::EmitRef("onDiscard".to_string()),
+                    },
+                ],
+            ),
+        );
+        let r = compile(&c, &l, &empty_style("Foo"));
+        let cb = &r.code_behind;
+        assert!(!cb.contains("VirtualKey.Enter"), "got:\n{cb}");
+        assert!(cb.contains("VirtualKey.Escape"), "got:\n{cb}");
     }
 
     #[test]

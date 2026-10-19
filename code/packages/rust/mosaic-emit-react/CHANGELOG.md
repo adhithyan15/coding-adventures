@@ -1,5 +1,11 @@
 # Changelog
 
+## 2026-10-19 (HostInput multiline)
+
+- **`HostInput ( multiline : true )` is a `<textarea>` (#15930).** React always drew a one-line `<input type="text">` for `HostInput` and ignored the keyword, on the theory that a userland `MultilineInput` would own text areas. None could: a text area cannot be composed from single-line fields. UI29-3 had already counted on HostInput's `multiline`, and XAML, Compose and Flutter honoured it, so the note-type editor's card templates were one line here and a text area there.
+  - The value, name, placeholder, `disabled`, `read-only`, `auto-focus` and `onChange` wiring is shared with the single-line field; a `<textarea>` just takes no `type`.
+  - Enter is a line break in a text area, so a multiline field gets no Enter-to-`onCommit` branch; Escape still raises `onCancel` (UI29 §2.1).
+
 ## 2026-09-25 (checkbox row index)
 
 - **`HostCheckbox` in a list reports which row changed (UI29-2 §2.1.1).** Inside a `For`, an `onToggle` that targets `( index : number )` now carries the row index, exactly as a `HostButton` click does. Before, it carried only the new checked value, so a list of checkboxes could not say which item was toggled, and `mosaic-pkg-checklist` had to draw a toggle button beside a "☐" glyph. Any other single parameter still receives the checked value.

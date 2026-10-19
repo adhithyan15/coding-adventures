@@ -1711,7 +1711,11 @@ fn layout_value_to_js_expr(v: &LayoutPropValue) -> String {
 /// because in the shadow DOM `this` inside an inline handler is the
 /// element where the handler is declared, not the Custom Element.
 fn emit_host_input(node: &LayoutNode, part_styles: &HtmlStyles) -> String {
-    let multiline = node.tag == "Input" && find_keyword(node, "multiline") == Some("true");
+    // `multiline: true` is a `<textarea>` on both primitives, the legacy
+    // `Input` and the kernel `HostInput` (UI29 §2.1). Reading it only on the
+    // legacy tag turned every multiline `HostInput` into a one-line
+    // `<input>` (#15930).
+    let multiline = find_keyword(node, "multiline") == Some("true");
     let mut attrs = if multiline {
         String::from("<textarea")
     } else {
@@ -1794,8 +1798,9 @@ fn emit_host_input(node: &LayoutNode, part_styles: &HtmlStyles) -> String {
         }
     }
 
-    // onkeydown — merges onCommit (Enter) and onCancel (Escape).
-    let commit = find_emit_ref(node, "onCommit");
+    // onkeydown — merges onCommit (Enter) and onCancel (Escape). In a text
+    // area Enter is a line break, so a multiline field has no commit key.
+    let commit = find_emit_ref(node, "onCommit").filter(|_| !multiline);
     let cancel = find_emit_ref(node, "onCancel");
     if commit.is_some() || cancel.is_some() {
         let mut body = String::new();
@@ -8199,6 +8204,80 @@ mod tests {
             "got:\n{out}"
         );
         assert!(!out.contains("readonly"), "got:\n{out}");
+    }
+
+    fn multiline_field(tag: &str, extra: Vec<(&str, LayoutPropValue)>) -> LayoutDef {
+        let mut root = leaf(tag);
+        root.props.push(LayoutProp {
+            name: "multiline".to_string(),
+            value: LayoutPropValue::Keyword("true".to_string()),
+        });
+        for (name, value) in extra {
+            root.props.push(LayoutProp { name: name.to_string(), value });
+        }
+        LayoutDef {
+            component_name: "X".to_string(),
+            root,
+        }
+    }
+
+    /// #15930 — the kernel `HostInput` honours `multiline: true`. The Web
+    /// Component emitter read the keyword only on the legacy `Input`, so the
+    /// note-type editor's multiline templates became one-line `<input>`s.
+    #[test]
+    fn a_multiline_host_input_emits_a_named_textarea() {
+        let m = component(
+            "X",
+            vec![
+                slot("body", SlotType::Text, true),
+                slot("body-label", SlotType::Text, true),
+            ],
+            vec![emit_decl("onBodyChange", vec![])],
+        );
+        let l = multiline_field(
+            "HostInput",
+            vec![
+                ("value", LayoutPropValue::SlotRef("body".to_string())),
+                ("a11y-label", LayoutPropValue::SlotRef("body-label".to_string())),
+                ("auto-focus", LayoutPropValue::Keyword("true".to_string())),
+                ("onChange", LayoutPropValue::EmitRef("onBodyChange".to_string())),
+            ],
+        );
+        let out = from_pipeline(&m, &l, &empty_style("X")).unwrap().output;
+        assert!(out.contains("<textarea"), "got:\n{out}");
+        assert!(!out.contains(r#"<input type="text""#), "got:\n{out}");
+        assert!(out.contains("${escapeHtml(body)}</textarea>"), "got:\n{out}");
+        assert!(out.contains(" autofocus"), "got:\n{out}");
+        assert!(
+            out.contains("dispatch({type:'bodyChange',value:event.target.value})"),
+            "got:\n{out}"
+        );
+    }
+
+    /// #15930 — Enter is a line break in a text area, so neither primitive
+    /// wires it to `onCommit` when multiline. Escape still cancels.
+    #[test]
+    fn a_multiline_field_does_not_commit_on_enter() {
+        for tag in ["HostInput", "Input"] {
+            let m = component(
+                "X",
+                vec![],
+                vec![emit_decl("onSave", vec![]), emit_decl("onDiscard", vec![])],
+            );
+            let l = multiline_field(
+                tag,
+                vec![
+                    ("onCommit", LayoutPropValue::EmitRef("onSave".to_string())),
+                    ("onCancel", LayoutPropValue::EmitRef("onDiscard".to_string())),
+                ],
+            );
+            let out = from_pipeline(&m, &l, &empty_style("X")).unwrap().output;
+            assert!(!out.contains("'Enter'"), "{tag}:\n{out}");
+            assert!(
+                out.contains("if(event.key==='Escape')this.getRootNode().host.dispatch({type:'discard'});"),
+                "{tag}:\n{out}"
+            );
+        }
     }
 
 }
