@@ -1,0 +1,11 @@
+{
+  "id": "IT-C330-archeologo",
+  "pathSegment": "IT-PATH-330-SCAVI",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "IT-EXT-330-SCAVI",
+      "order": 4
+    }
+  ]
+}

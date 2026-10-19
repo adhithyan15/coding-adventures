@@ -1,0 +1,9 @@
+{
+  "id": "IT-PATH-298-BANDA",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "IT-EXT-298-BANDA"
+  ],
+  "after": []
+}

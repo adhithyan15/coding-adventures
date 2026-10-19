@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 318,
+  "sourceHash": "fnv1a64:835c646ccffb6b17",
+  "lessonIds": [
+    "IT-C318-invito",
+    "IT-C318-invitato",
+    "IT-C318-ricevimento",
+    "IT-C318-rinfresco",
+    "IT-C318-confetto"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch318.txt",
+  "json": "italian/narration/ch318.json",
+  "textHash": "fnv1a64:18fd282cdee2cd0b",
+  "jsonHash": "fnv1a64:3447f92689530488",
+  "findings": []
+}

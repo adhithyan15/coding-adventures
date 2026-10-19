@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C345-affermare",
+    "language": "italian",
+    "chapter": 345,
+    "sequence": 19910,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e689f79412216977"
+  },
+  "findings": []
+}

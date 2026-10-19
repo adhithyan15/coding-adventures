@@ -1,0 +1,9 @@
+{
+  "id": "IT-PATH-483-FERITE",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "IT-EXT-483-FERITE"
+  ],
+  "after": []
+}

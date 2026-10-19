@@ -5,12 +5,13 @@ use std::{
 
 use spice_engine::{
     ac_sweep, dc_op_with_options, dc_sweep, dc_sweep_2d, format_deck_table_json,
-    mosfet_from_model_card, normalize_model_card, run_deck, tf, transient_with_method, AcPoint,
-    AdaptiveTransientOptions, Bjt, BjtPolarity, Capacitor, Cccs, Ccvs, Circuit, Complex,
-    CurrentSource, DcOpOptions, DcResult, DcSweepPoint, Diode, Element, ExpWaveform, Inductor,
-    Jfet, JfetPolarity, Mosfet, MosfetLevel1Params, MosfetType, MutualInductor, PulseWaveform,
-    PwlWaveform, Resistor, SinWaveform, SpiceError, TfResult, TransientMethod, TransientPoint,
-    TransmissionLine, Vccs, Vcvs, VoltageSource, Waveform,
+    mosfet_from_model_card, noise_ac, normalize_model_card, run_deck, sens_dc, tf,
+    transient_with_method, AcPoint, AdaptiveTransientOptions, Bjt, BjtPolarity, Capacitor, Cccs,
+    Ccvs, Circuit, Complex, CurrentSource, DcOpOptions, DcResult, DcSweepPoint, Diode, Element,
+    ExpWaveform, Inductor, Jfet, JfetPolarity, Mosfet, MosfetLevel1Params, MosfetType,
+    MutualInductor, NoiseResult, PulseWaveform, PwlWaveform, Resistor, SensResult, SinWaveform,
+    SpiceError, TfResult, TransientMethod, TransientPoint, TransmissionLine, Vccs, Vcvs,
+    VoltageSource, Waveform,
 };
 
 const OXIDE_PERMITTIVITY: f64 = 3.453_133e-11;
@@ -378,6 +379,8 @@ pub enum AnalysisKind {
     Dc,
     Ac,
     Tf,
+    Sens,
+    Noise,
 }
 
 #[derive(Debug, Clone, PartialEq)]
@@ -387,6 +390,8 @@ pub enum RunnableAnalysis {
     Dc(DcAnalysis),
     Ac(AcAnalysis),
     Tf(TfAnalysis),
+    Sens(SensAnalysis),
+    Noise(NoiseAnalysis),
 }
 
 impl RunnableAnalysis {
@@ -397,6 +402,8 @@ impl RunnableAnalysis {
             Self::Dc(_) => AnalysisKind::Dc,
             Self::Ac(_) => AnalysisKind::Ac,
             Self::Tf(_) => AnalysisKind::Tf,
+            Self::Sens(_) => AnalysisKind::Sens,
+            Self::Noise(_) => AnalysisKind::Noise,
         }
     }
 }
@@ -418,6 +425,8 @@ pub enum AnalysisResult {
     Dc(Vec<DcSweepPoint>),
     Ac(Vec<AcPoint>),
     Tf(TfResult),
+    Sens(SensResult),
+    Noise(NoiseResult),
 }
 
 #[derive(Debug, Clone, PartialEq)]
@@ -1038,6 +1047,9 @@ pub const CLI_ERROR_CODE: &str = "SPICE_CLI_ERROR";
 pub fn run_netlist_json(text: &str) -> Result<String, AnalysisExecutionError> {
     let parsed = parse_netlist(text)?;
     let execution = run_deck(&parsed.circuit, text)?;
+    let parser_results = run_analysis_plan(&parsed)?;
+    let outputs = select_outputs(&parsed, &parser_results)?;
+    let measures = measure_results(&parsed, &parser_results)?;
     let analyses = execution
         .executions
         .iter()
@@ -1056,6 +1068,8 @@ pub fn run_netlist_json(text: &str) -> Result<String, AnalysisExecutionError> {
             "schemaVersion": CLI_RESULT_SCHEMA_VERSION,
             "title": parsed.title,
             "analyses": analyses,
+            "outputs": cli_output_artifacts(&outputs),
+            "measures": cli_measure_artifacts(&measures),
         }))
         .expect("CLI result envelope must serialize")
     ))
@@ -1103,12 +1117,86 @@ fn cli_table_records(analysis: &str, table: &str) -> serde_json::Value {
     serde_json::Value::Array(records)
 }
 
+fn cli_output_artifacts(outputs: &[SelectedAnalysisOutput]) -> Vec<serde_json::Value> {
+    outputs
+        .iter()
+        .map(|output| {
+            let records = output
+                .rows
+                .iter()
+                .map(|row| {
+                    let values = row
+                        .values
+                        .iter()
+                        .map(|(name, value)| (name.clone(), cli_selected_value(value)))
+                        .collect::<serde_json::Map<_, _>>();
+                    serde_json::json!({
+                        "index": row.index,
+                        "axisName": row.axis_name,
+                        "axisValue": row.axis_value,
+                        "secondaryAxisName": row.secondary_axis_name,
+                        "secondaryAxisValue": row.secondary_axis_value,
+                        "values": values,
+                    })
+                })
+                .collect::<Vec<_>>();
+            serde_json::json!({
+                "analysisIndex": output.index,
+                "analysis": format!("{:?}", output.kind).to_ascii_lowercase(),
+                "probes": output.probes.iter().map(cli_probe_text).collect::<Vec<_>>(),
+                "records": records,
+            })
+        })
+        .collect()
+}
+
+fn cli_measure_artifacts(measures: &[MeasureResult]) -> Vec<serde_json::Value> {
+    measures
+        .iter()
+        .map(|measure| serde_json::json!({
+            "analysisIndex": measure.analysis_index,
+            "analysis": measure.analysis,
+            "name": measure.name,
+            "operation": format!("{:?}", measure.operation).to_ascii_lowercase(),
+            "probe": cli_probe_text(&measure.probe),
+            "value": measure.value,
+        }))
+        .collect()
+}
+
+fn cli_probe_text(probe: &OutputProbe) -> String {
+    match probe {
+        OutputProbe::Voltage { node } => format!("V({node})"),
+        OutputProbe::DifferentialVoltage {
+            positive_node,
+            negative_node,
+        } => format!("V({positive_node},{negative_node})"),
+        OutputProbe::Current { source_name } => format!("I({source_name})"),
+    }
+}
+
+fn cli_selected_value(value: &SelectedOutputValue) -> serde_json::Value {
+    match value {
+        SelectedOutputValue::Real(value) => serde_json::json!(value),
+        SelectedOutputValue::Complex(value) => serde_json::json!({
+            "real": value.real,
+            "imag": value.imag,
+        }),
+    }
+}
+
 pub fn select_outputs(
     parsed: &ParsedNetlist,
     results: &[AnalysisExecutionResult],
 ) -> Result<Vec<SelectedAnalysisOutput>, NetlistParseError> {
     let mut selected = Vec::new();
     for result in results {
+        if matches!(
+            result.kind,
+            AnalysisKind::Tf | AnalysisKind::Sens | AnalysisKind::Noise
+        ) {
+            continue;
+        }
         let probes = selected_output_probes(parsed, result.kind);
         if probes.is_empty() {
             continue;
@@ -1151,6 +1239,8 @@ fn analysis_plan_step(index: usize, analysis: &Analysis) -> Option<AnalysisPlanS
         Analysis::Dc(card) => RunnableAnalysis::Dc(card.clone()),
         Analysis::Ac(card) => RunnableAnalysis::Ac(card.clone()),
         Analysis::Tf(card) => RunnableAnalysis::Tf(card.clone()),
+        Analysis::Sens(card) => RunnableAnalysis::Sens(card.clone()),
+        Analysis::Noise(card) => RunnableAnalysis::Noise(card.clone()),
         _ => return None,
     };
     Some(AnalysisPlanStep {
@@ -1221,6 +1311,17 @@ fn execute_analysis_step(
             &parsed.circuit,
             &card.output_node,
             &card.input_source,
+        )?)),
+        RunnableAnalysis::Sens(card) => Ok(AnalysisResult::Sens(sens_dc(
+            &parsed.circuit,
+            &card.output_node,
+        )?)),
+        RunnableAnalysis::Noise(card) => Ok(AnalysisResult::Noise(noise_ac(
+            &parsed.circuit,
+            &card.output_node,
+            &card.input_source,
+            &card.frequencies_hz,
+            card.temperature,
         )?)),
     }
 }
@@ -1358,6 +1459,9 @@ fn selected_output_rows(
             .collect(),
         AnalysisResult::Tf(_) => Err(NetlistParseError::new(
             ".tf output selection is not yet supported",
+        )),
+        AnalysisResult::Sens(_) | AnalysisResult::Noise(_) => Err(NetlistParseError::new(
+            "selected waveform output is not supported for structured analysis results",
         )),
     }
 }
@@ -1521,6 +1625,9 @@ fn measure_samples(
             .collect(),
         AnalysisResult::Tf(_) => Err(NetlistParseError::new(
             ".measure does not yet support .tf results",
+        )),
+        AnalysisResult::Sens(_) | AnalysisResult::Noise(_) => Err(NetlistParseError::new(
+            ".measure does not support structured sensitivity or noise results",
         )),
     }
 }
@@ -3696,10 +3803,19 @@ fn parse_directive(fields: &[String]) -> Result<Analysis, NetlistParseError> {
         }
         ".noise" => {
             require_min_fields(fields, 3, ".noise")?;
-            let mut frequencies_hz = Vec::new();
+            let canonical_sweep = fields.len() == 7
+                && matches!(
+                    fields[3].to_ascii_lowercase().as_str(),
+                    "lin" | "dec" | "oct"
+                );
+            let mut frequencies_hz = if canonical_sweep {
+                noise_sweep_frequencies(&fields[3], &fields[4], &fields[5], &fields[6])?
+            } else {
+                Vec::new()
+            };
             let mut temperature = 300.0;
             let mut temperature_is_explicit = false;
-            let mut tail_index = 3;
+            let mut tail_index = if canonical_sweep { 7 } else { 3 };
             while tail_index < fields.len() {
                 let token = &fields[tail_index];
                 let lower_token = token.to_ascii_lowercase();
@@ -3802,6 +3918,57 @@ fn parse_directive(fields: &[String]) -> Result<Analysis, NetlistParseError> {
             "unsupported directive {:?}",
             fields[0]
         ))),
+    }
+}
+
+fn noise_sweep_frequencies(
+    mode: &str,
+    point_count_token: &str,
+    start_token: &str,
+    stop_token: &str,
+) -> Result<Vec<f64>, NetlistParseError> {
+    let point_count_value = parse_value(point_count_token)?;
+    if !point_count_value.is_finite()
+        || point_count_value <= 0.0
+        || point_count_value.fract() != 0.0
+    {
+        return Err(NetlistParseError::new(
+            ".noise point count must be a positive integer",
+        ));
+    }
+    let start_hz = parse_value(start_token)?;
+    let stop_hz = parse_value(stop_token)?;
+    if start_hz <= 0.0 || stop_hz < start_hz {
+        return Err(NetlistParseError::new(
+            ".noise frequencies must be positive and stop must be >= start",
+        ));
+    }
+    let point_count = point_count_value as usize;
+    match mode.to_ascii_lowercase().as_str() {
+        "lin" if point_count == 1 => Ok(vec![start_hz]),
+        "lin" => {
+            let step = (stop_hz - start_hz) / (point_count - 1) as f64;
+            Ok((0..point_count)
+                .map(|index| start_hz + index as f64 * step)
+                .collect())
+        }
+        "dec" | "oct" => {
+            let base = if mode.eq_ignore_ascii_case("dec") {
+                10.0_f64
+            } else {
+                2.0_f64
+            };
+            let ratio = base.powf(1.0 / point_count as f64);
+            let epsilon = stop_hz * 1.0e-12;
+            let mut frequencies = Vec::new();
+            let mut frequency_hz = start_hz;
+            while frequency_hz <= stop_hz + epsilon {
+                frequencies.push(frequency_hz);
+                frequency_hz *= ratio;
+            }
+            Ok(frequencies)
+        }
+        _ => unreachable!("canonical sweep kind was validated before expansion"),
     }
 }
 

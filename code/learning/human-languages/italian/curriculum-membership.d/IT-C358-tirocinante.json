@@ -1,0 +1,11 @@
+{
+  "id": "IT-C358-tirocinante",
+  "pathSegment": "IT-PATH-358-DIPENDENTE",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "IT-EXT-358-DIPENDENTE",
+      "order": 1
+    }
+  ]
+}

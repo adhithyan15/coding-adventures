@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 437,
+  "sourceHash": "fnv1a64:19aff8dc86b2bdd0",
+  "lessonIds": [
+    "IT-C437-baccano",
+    "IT-C437-chiasso",
+    "IT-C437-scarafaggio",
+    "IT-C437-muffa",
+    "IT-C437-cigolare"
+  ],
+  "tex": "italian/book/chapters/ch437-rumore-e-sporco.tex"
+}

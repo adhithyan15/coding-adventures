@@ -1,0 +1,11 @@
+{
+  "id": "IT-C451-sbirciare",
+  "pathSegment": "IT-PATH-451-PASSEGGIATA",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "IT-EXT-451-PASSEGGIATA",
+      "order": 3
+    }
+  ]
+}

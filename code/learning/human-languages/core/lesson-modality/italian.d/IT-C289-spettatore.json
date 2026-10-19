@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C289-spettatore",
+    "language": "italian",
+    "chapter": 289,
+    "sequence": 16940,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:09259b22074f58c2"
+  },
+  "findings": []
+}

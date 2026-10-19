@@ -1,0 +1,19 @@
+{
+  "chapter": 456,
+  "title": "Capelli e occhiali",
+  "label": "ch:it-capelli-e-occhiali",
+  "canDo": "I can use personal services: the hairdresser, the barber, the beautician, the optician and getting a stain out.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "IT-C456-smacchiare",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 456: I can use personal services: the hairdresser, the barber, the beautician, the optician and getting a stain out.",
+    "assesses": [
+      "IT-LEX-C456-CURA-03",
+      "IT-LEX-C456-CURA-04",
+      "IT-LEX-C456-CURA-05"
+    ]
+  }
+}

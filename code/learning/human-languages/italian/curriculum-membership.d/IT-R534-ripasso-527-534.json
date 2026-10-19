@@ -1,0 +1,11 @@
+{
+  "id": "IT-R534-ripasso-527-534",
+  "pathSegment": "IT-PATH-534-PIATTI",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "IT-EXT-534-PIATTI",
+      "order": 5
+    }
+  ]
+}

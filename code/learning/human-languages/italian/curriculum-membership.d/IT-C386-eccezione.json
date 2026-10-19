@@ -1,0 +1,11 @@
+{
+  "id": "IT-C386-eccezione",
+  "pathSegment": "IT-PATH-386-VIOLAZIONE",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "IT-EXT-386-VIOLAZIONE",
+      "order": 4
+    }
+  ]
+}

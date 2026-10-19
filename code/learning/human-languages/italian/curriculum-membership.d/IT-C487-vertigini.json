@@ -1,0 +1,11 @@
+{
+  "id": "IT-C487-vertigini",
+  "pathSegment": "IT-PATH-487-STOMACO",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "IT-EXT-487-STOMACO",
+      "order": 4
+    }
+  ]
+}

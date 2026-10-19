@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 498,
+  "sourceHash": "fnv1a64:036707ac4635bc9f",
+  "lessonIds": [
+    "IT-C498-tata",
+    "IT-C498-pediatra",
+    "IT-C498-accudire",
+    "IT-C498-badare",
+    "IT-C498-ubbidire"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch498.txt",
+  "json": "italian/narration/ch498.json",
+  "textHash": "fnv1a64:599a1161faa1d879",
+  "jsonHash": "fnv1a64:31e1035a00b602a1",
+  "findings": []
+}

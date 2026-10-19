@@ -1,0 +1,11 @@
+{
+  "id": "IT-C502-torcia",
+  "pathSegment": "IT-PATH-502-CAMPEGGIO",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "IT-EXT-502-CAMPEGGIO",
+      "order": 1
+    }
+  ]
+}

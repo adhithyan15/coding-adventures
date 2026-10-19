@@ -49,7 +49,9 @@ it("pins Portuguese lesson-content budgets", () =>
     // 1299 -> 1336: chapters 259-268, the B1 core that realizes all five B1
     // spine nodes (imperfeito, reasons, travel, experience, condicional):
     // 37 lessons, one reading and one writing, no idiom, sense or culture claim.
-    lessons: 1336,
+    // 1336 -> 2696: chapters 269-532, the B1 vocabulary: 1,320 word lessons
+    // (one headword each) and 40 spaced reviews. Portuguese attains B1 here.
+    lessons: 2696,
     idioms: 7,
     senses: 7,
     cultureClaims: 11,

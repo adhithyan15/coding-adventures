@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C445-duomo",
+    "language": "italian",
+    "chapter": 445,
+    "sequence": 25160,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0048dd62c0d5bd43"
+  },
+  "findings": []
+}

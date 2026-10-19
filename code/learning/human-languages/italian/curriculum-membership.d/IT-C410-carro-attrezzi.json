@@ -1,0 +1,11 @@
+{
+  "id": "IT-C410-carro-attrezzi",
+  "pathSegment": "IT-PATH-410-GUASTO",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "IT-EXT-410-GUASTO",
+      "order": 2
+    }
+  ]
+}

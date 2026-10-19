@@ -1,0 +1,11 @@
+{
+  "id": "IT-C326-drago",
+  "pathSegment": "IT-PATH-326-MAGIA",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "IT-EXT-326-MAGIA",
+      "order": 0
+    }
+  ]
+}

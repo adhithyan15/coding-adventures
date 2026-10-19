@@ -36,6 +36,25 @@ def test_run_netlist_json_uses_the_shared_berkeley_cli_contract() -> None:
     ]
 
 
+def test_run_netlist_json_preserves_both_nested_dc_axes() -> None:
+    corpus = json.loads(_grammar_path("berkeley-v1-cli-corpus.json").read_text(encoding="utf-8"))
+    case = next(case for case in corpus["cases"] if case["id"] == "nested-dc-sweep")
+    payload = json.loads(run_netlist_json(case["deck"]))
+
+    assert [analysis["kind"] for analysis in payload["analyses"]] == case["expected"]["analysisKinds"]
+    assert payload["analyses"][0]["records"] == case["expected"]["records"]
+
+
+def test_run_netlist_json_exposes_deck_output_artifacts() -> None:
+    corpus = json.loads(_grammar_path("berkeley-v1-cli-corpus.json").read_text(encoding="utf-8"))
+    case = next(case for case in corpus["cases"] if case["id"] == "deck-output-artifacts")
+    payload = json.loads(run_netlist_json(case["deck"]))
+
+    assert payload["title"] == case["expected"]["title"]
+    assert payload["outputs"] == case["expected"]["outputs"]
+    assert payload["measures"] == case["expected"]["measures"]
+
+
 def test_module_cli_runs_a_deck_file_as_json(tmp_path: Path) -> None:
     case = _cli_case()
     deck_path = tmp_path / "core.cir"
@@ -71,6 +90,24 @@ def test_inspection_api_and_cli_expose_the_complete_runnable_plan() -> None:
 
     assert completed.returncode == 0, completed.stderr
     assert json.loads(completed.stdout) == payload
+
+
+def test_engine_backed_analysis_cards_are_inspectable_and_runnable() -> None:
+    corpus = json.loads(_grammar_path("berkeley-v1-cli-corpus.json").read_text(encoding="utf-8"))
+    case = next(case for case in corpus["cases"] if case["id"] == "engine-backed-analysis-plan")
+
+    inspection = json.loads(inspect_netlist_json(case["deck"]))
+    result = json.loads(run_netlist_json(case["deck"]))
+
+    assert [analysis["index"] for analysis in inspection["analyses"]] == case["expected"][
+        "analysisIndexes"
+    ]
+    assert [analysis["kind"] for analysis in inspection["analyses"]] == case["expected"][
+        "analysisKinds"
+    ]
+    assert [analysis["kind"] for analysis in result["analyses"]] == case["expected"][
+        "analysisKinds"
+    ]
 
 
 def test_module_cli_reports_a_stable_failure_code() -> None:

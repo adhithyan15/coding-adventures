@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 490,
+  "sourceHash": "fnv1a64:2194cbd1baba1273",
+  "lessonIds": [
+    "IT-C490-insonnia",
+    "IT-C490-russare",
+    "IT-C490-incubo",
+    "IT-C490-sbadigliare",
+    "IT-C490-sgranchirsi"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch490.txt",
+  "json": "italian/narration/ch490.json",
+  "textHash": "fnv1a64:c0995e62a0d31870",
+  "jsonHash": "fnv1a64:31884f5a16559b06",
+  "findings": []
+}

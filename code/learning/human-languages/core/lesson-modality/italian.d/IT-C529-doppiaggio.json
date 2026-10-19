@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C529-doppiaggio",
+    "language": "italian",
+    "chapter": 529,
+    "sequence": 29580,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8923bd36924fe5c6"
+  },
+  "findings": []
+}

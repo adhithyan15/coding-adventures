@@ -1,0 +1,11 @@
+{
+  "id": "IT-C402-navigare",
+  "pathSegment": "IT-PATH-402-RETE",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "IT-EXT-402-RETE",
+      "order": 3
+    }
+  ]
+}

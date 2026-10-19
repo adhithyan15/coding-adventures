@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 396,
+  "sourceHash": "fnv1a64:702798ddd66d50e1",
+  "lessonIds": [
+    "IT-C396-contanti",
+    "IT-C396-saldo",
+    "IT-C396-assegno",
+    "IT-C396-versamento",
+    "IT-C396-deposito"
+  ],
+  "tex": "italian/book/chapters/ch396-in-banca.tex"
+}

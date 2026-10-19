@@ -1,0 +1,19 @@
+{
+  "chapter": 388,
+  "title": "Documenti in regola",
+  "label": "ch:it-documenti-in-regola",
+  "canDo": "I can keep my papers in order: say when something expires or is valid, and renew a card.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "IT-C388-tessera",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 388: I can keep my papers in order: say when something expires or is valid, and renew a card.",
+    "assesses": [
+      "IT-LEX-C388-VALIDO-03",
+      "IT-LEX-C388-VALIDO-04",
+      "IT-LEX-C388-VALIDO-05"
+    ]
+  }
+}

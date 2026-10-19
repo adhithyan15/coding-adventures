@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 332,
+  "sourceHash": "fnv1a64:629e871ca01b8c1b",
+  "lessonIds": [
+    "IT-C332-tagliere",
+    "IT-C332-affettare",
+    "IT-C332-tritare",
+    "IT-C332-sbucciare",
+    "IT-C332-grattugiare"
+  ],
+  "tex": "italian/book/chapters/ch332-sul-tagliere.tex"
+}

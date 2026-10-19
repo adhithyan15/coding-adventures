@@ -1,0 +1,11 @@
+{
+  "id": "IT-C354-consentire",
+  "pathSegment": "IT-PATH-354-OSTACOLO",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "IT-EXT-354-OSTACOLO",
+      "order": 4
+    }
+  ]
+}

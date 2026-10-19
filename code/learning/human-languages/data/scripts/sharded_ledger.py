@@ -444,6 +444,39 @@ def _root(root):
     return real_root
 
 
+@contextmanager
+def _unix_directory(root, *parts):
+    """Pin every descendant to its already-open parent, rejecting symlinks."""
+    if (
+        not NOFOLLOW or not DIRECTORY
+        or os.open not in os.supports_dir_fd
+        or os.listdir not in os.supports_fd
+        or os.stat not in os.supports_dir_fd
+        or os.stat not in os.supports_follow_symlinks
+    ):
+        raise OSError("descriptor-relative no-follow ledger operations are unavailable")
+    current = _root(root)
+    descriptor = os.open(current, os.O_RDONLY | DIRECTORY | NOFOLLOW)
+    try:
+        for part in parts:
+            if not isinstance(part, str) or part in ("", ".", "..") or os.sep in part:
+                raise ValueError(f"unsafe ledger path component: {part!r}")
+            child_path = os.path.join(current, part)
+            try:
+                child = os.open(part, os.O_RDONLY | DIRECTORY | NOFOLLOW, dir_fd=descriptor)
+            except FileNotFoundError as cause:
+                raise ValueError(f"missing ledger directory: {child_path}") from cause
+            except OSError as cause:
+                raise ValueError(f"refusing non-directory ledger ancestor: {child_path}") from cause
+            previous = descriptor
+            descriptor = child
+            os.close(previous)
+            current = child_path
+        yield descriptor
+    finally:
+        os.close(descriptor)
+
+
 def _directory(root, *parts):
     """Return a real directory below root, refusing every symlink component."""
     real_root = _root(root)
@@ -504,9 +537,63 @@ def _read(root, *parts):
     if os.name == "nt":
         with _windows_directory(root, *parts[:-1]) as directory_handle:
             return json.loads(_windows_read_regular(directory_handle, parts[-1]))
-    descriptor = os.open(path, os.O_RDONLY | NOFOLLOW)
-    with os.fdopen(descriptor, encoding="utf-8") as handle:
-        return json.load(handle)
+    with _unix_directory(root, *parts[:-1]) as directory_fd:
+        try:
+            descriptor = os.open(parts[-1], os.O_RDONLY | NOFOLLOW, dir_fd=directory_fd)
+        except OSError as cause:
+            raise ValueError(f"refusing non-file ledger shard: {path}") from cause
+        with os.fdopen(descriptor, encoding="utf-8") as handle:
+            if not stat.S_ISREG(os.fstat(handle.fileno()).st_mode):
+                raise ValueError(f"refusing non-file ledger shard: {path}")
+            return json.load(handle)
+
+
+def read_track_regular_text(root, track, relative_path, *, reject_sharded_sibling=False):
+    """Read mock evidence through pinned, no-follow track descendants.
+
+    The TypeScript assessment contract supplies the relative name, but this
+    process validates it again before any filesystem operation. An audit's
+    earlier path check is not a capability: only the regular-file handle opened
+    beneath the trusted root supplies the returned bytes.
+    """
+    _safe_track(track)
+    if not isinstance(relative_path, str) or not relative_path:
+        raise ValueError("empty mock evidence path")
+    if reject_sharded_sibling and not relative_path.endswith(".json"):
+        raise ValueError("sharded-sibling check requires a JSON mock ledger")
+    parts = relative_path.split("/")
+    if any(
+        not part or part in (".", "..") or "\\" in part or ":" in part
+        or "\x00" in part or part.endswith((".", " "))
+        for part in parts
+    ):
+        raise ValueError(f"unsafe mock evidence path: {relative_path!r}")
+    if os.name == "nt":
+        with _windows_directory(root, track, *parts[:-1]) as directory_handle:
+            if reject_sharded_sibling:
+                shard = parts[-1][:-5] + ".d"
+                try:
+                    sibling = _windows_open_relative(directory_handle, shard, directory=True)
+                except FileNotFoundError:
+                    pass
+                else:
+                    _close_handle(sibling)
+                    raise ValueError(f"refusing sharded mock ledger: {relative_path}")
+            return _windows_read_regular(directory_handle, parts[-1])
+    with _unix_directory(root, track, *parts[:-1]) as directory_fd:
+        if reject_sharded_sibling:
+            shard = parts[-1][:-5] + ".d"
+            try:
+                os.stat(shard, dir_fd=directory_fd, follow_symlinks=False)
+            except FileNotFoundError:
+                pass
+            else:
+                raise ValueError(f"refusing sharded mock ledger: {relative_path}")
+        descriptor = os.open(parts[-1], os.O_RDONLY | NOFOLLOW, dir_fd=directory_fd)
+        with os.fdopen(descriptor, encoding="utf-8") as handle:
+            if not stat.S_ISREG(os.fstat(handle.fileno()).st_mode):
+                raise ValueError(f"refusing non-file mock evidence: {relative_path}")
+            return handle.read()
 
 
 if os.name == "nt":
@@ -578,19 +665,24 @@ def _write_if_changed(root, *parts, value):
     if os.name == "nt":
         return _windows_write_if_changed(root, parts, body)
     path = _file(root, *parts, must_exist=False)
-    directory = os.path.dirname(path)
-    name = os.path.basename(path)
-    directory_fd = os.open(directory, os.O_RDONLY | DIRECTORY | NOFOLLOW)
+    name = parts[-1]
     temporary = f".{name}.{os.getpid()}.{secrets.token_hex(8)}.tmp"
-    try:
+    # The pathname check above rejects static links; only the parent-relative
+    # walk below is authoritative after another process can rename an ancestor.
+    with _unix_directory(root, *parts[:-1]) as directory_fd:
         mode = 0o644
-        if os.path.lexists(path):
+        try:
             info = os.stat(name, dir_fd=directory_fd, follow_symlinks=False)
+        except FileNotFoundError:
+            info = None
+        if info is not None:
             if stat.S_ISLNK(info.st_mode) or not stat.S_ISREG(info.st_mode):
                 raise ValueError(f"refusing non-file ledger shard: {path}")
             mode = stat.S_IMODE(info.st_mode)
             descriptor = os.open(name, os.O_RDONLY | NOFOLLOW, dir_fd=directory_fd)
             with os.fdopen(descriptor, encoding="utf-8") as handle:
+                if not stat.S_ISREG(os.fstat(handle.fileno()).st_mode):
+                    raise ValueError(f"refusing non-file ledger shard: {path}")
                 if handle.read() == body:
                     return
 
@@ -612,22 +704,18 @@ def _write_if_changed(root, *parts, value):
             except FileNotFoundError:
                 pass
             raise
-    finally:
-        os.close(directory_fd)
 
 
 def _remove(root, *parts):
     if os.name == "nt":
         return _windows_remove(root, parts)
     path = _file(root, *parts)
-    directory_fd = os.open(os.path.dirname(path), os.O_RDONLY | DIRECTORY | NOFOLLOW)
-    try:
-        info = os.stat(os.path.basename(path), dir_fd=directory_fd, follow_symlinks=False)
+    name = parts[-1]
+    with _unix_directory(root, *parts[:-1]) as directory_fd:
+        info = os.stat(name, dir_fd=directory_fd, follow_symlinks=False)
         if stat.S_ISLNK(info.st_mode) or not stat.S_ISREG(info.st_mode):
             raise ValueError(f"refusing non-file ledger shard: {path}")
-        os.unlink(os.path.basename(path), dir_fd=directory_fd)
-    finally:
-        os.close(directory_fd)
+        os.unlink(name, dir_fd=directory_fd)
 
 
 def _files(root, *parts):
@@ -643,14 +731,14 @@ def _files(root, *parts):
                 _windows_checked_entry(directory_handle, name, directory=False)
                 names.append(name)
         return sorted(names)
-    with os.scandir(directory) as entries:
-        for entry in entries:
-            if not entry.name.endswith(".json"):
+    with _unix_directory(root, *parts) as directory_fd:
+        for name in os.listdir(directory_fd):
+            if not name.endswith(".json"):
                 continue
-            info = entry.stat(follow_symlinks=False)
-            if _is_reparse(info) or entry.is_symlink() or not stat.S_ISREG(info.st_mode):
-                raise ValueError(f"refusing non-file ledger shard: {entry.path}")
-            names.append(entry.name)
+            info = os.stat(name, dir_fd=directory_fd, follow_symlinks=False)
+            if _is_reparse(info) or stat.S_ISLNK(info.st_mode) or not stat.S_ISREG(info.st_mode):
+                raise ValueError(f"refusing non-file ledger shard: {directory}/{name}")
+            names.append(name)
     return sorted(names)
 
 
@@ -910,18 +998,18 @@ def _strict_directory_entries(root, *parts):
                 _windows_checked_entry(directory_handle, name, directory=is_directory)
                 entries.append((name, is_directory))
         return sorted(entries)
-    with os.scandir(directory) as iterator:
-        for entry in iterator:
-            info = entry.stat(follow_symlinks=False)
-            if _is_reparse(info) or entry.is_symlink():
+    with _unix_directory(root, *parts) as directory_fd:
+        for name in os.listdir(directory_fd):
+            info = os.stat(name, dir_fd=directory_fd, follow_symlinks=False)
+            if _is_reparse(info) or stat.S_ISLNK(info.st_mode):
                 raise ValueError(
-                    f"refusing link or reparse book-generation owner: {entry.path}"
+                    f"refusing link or reparse book-generation owner: {directory}/{name}"
                 )
             if not (stat.S_ISREG(info.st_mode) or stat.S_ISDIR(info.st_mode)):
                 raise ValueError(
-                    f"refusing special book-generation owner: {entry.path}"
+                    f"refusing special book-generation owner: {directory}/{name}"
                 )
-            entries.append((entry.name, stat.S_ISDIR(info.st_mode)))
+            entries.append((name, stat.S_ISDIR(info.st_mode)))
     return sorted(entries)
 
 

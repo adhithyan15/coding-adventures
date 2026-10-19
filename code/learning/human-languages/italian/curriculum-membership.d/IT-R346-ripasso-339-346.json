@@ -1,0 +1,11 @@
+{
+  "id": "IT-R346-ripasso-339-346",
+  "pathSegment": "IT-PATH-346-MALINTESO",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "IT-EXT-346-MALINTESO",
+      "order": 5
+    }
+  ]
+}

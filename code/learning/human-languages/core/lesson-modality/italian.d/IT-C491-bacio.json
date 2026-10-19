@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C491-bacio",
+    "language": "italian",
+    "chapter": 491,
+    "sequence": 27660,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f191f640f67960a9"
+  },
+  "findings": []
+}

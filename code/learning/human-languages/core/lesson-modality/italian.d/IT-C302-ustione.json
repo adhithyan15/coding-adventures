@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C302-ustione",
+    "language": "italian",
+    "chapter": 302,
+    "sequence": 17610,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:da68e12f33d641ad"
+  },
+  "findings": []
+}

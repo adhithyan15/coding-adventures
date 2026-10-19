@@ -1,0 +1,9 @@
+{
+  "id": "IT-PATH-437-RUMORE",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "IT-EXT-437-RUMORE"
+  ],
+  "after": []
+}

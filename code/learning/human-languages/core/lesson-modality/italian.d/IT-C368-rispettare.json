@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C368-rispettare",
+    "language": "italian",
+    "chapter": 368,
+    "sequence": 21110,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:685d1098d969943f"
+  },
+  "findings": []
+}

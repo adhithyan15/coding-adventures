@@ -596,6 +596,11 @@ export function readLedgerFileWithSource<T = unknown>(
   } catch (cause) {
     throw new Error(`'${path}': cannot be read — ${describe(cause)}`, { cause });
   }
+  return { value: parseLedgerText<T>(text, path), text };
+}
+
+/** Apply the same scrubbed JSON and unsafe-key gate to bytes read from a pinned handle. */
+export function parseLedgerText<T = unknown>(text: string, path: string): T {
   let value: T;
   try {
     value = JSON.parse(text) as T;
@@ -605,7 +610,7 @@ export function readLedgerFileWithSource<T = unknown>(
     });
   }
   rejectDangerousKeys(value, `'${path}'`);
-  return { value, text };
+  return value;
 }
 
 export function readLedgerFile<T = unknown>(

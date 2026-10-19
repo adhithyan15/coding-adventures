@@ -1,0 +1,9 @@
+{
+  "id": "IT-PATH-306-SALVATAGGIO",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "IT-EXT-306-SALVATAGGIO"
+  ],
+  "after": []
+}

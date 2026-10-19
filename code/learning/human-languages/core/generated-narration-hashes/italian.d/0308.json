@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 308,
+  "sourceHash": "fnv1a64:f86783e48a7e9692",
+  "lessonIds": [
+    "IT-C308-battesimo",
+    "IT-C308-battezzare",
+    "IT-C308-padrino",
+    "IT-C308-madrina",
+    "IT-C308-cresima"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch308.txt",
+  "json": "italian/narration/ch308.json",
+  "textHash": "fnv1a64:aed98d1f23b10811",
+  "jsonHash": "fnv1a64:1ccecab1eef27500",
+  "findings": []
+}

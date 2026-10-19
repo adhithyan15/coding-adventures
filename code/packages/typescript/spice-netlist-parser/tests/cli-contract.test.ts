@@ -38,6 +38,45 @@ describe("Berkeley SPICE CLI contract", () => {
     expect(payload.analyses.map((analysis) => analysis.records.length)).toEqual(testCase.expected.recordCounts);
   });
 
+  it("preserves both nested DC axes in the shared JSON envelope", () => {
+    const corpus = JSON.parse(readFileSync(
+      new URL("../../../../grammars/spice/berkeley-v1-cli-corpus.json", import.meta.url),
+      "utf8",
+    )) as {
+      cases: readonly {
+        id: string;
+        deck: string;
+        expected: { records: readonly Record<string, string>[] };
+      }[];
+    };
+    const testCase = corpus.cases.find((testCase) => testCase.id === "nested-dc-sweep")!;
+    const payload = JSON.parse(runNetlistJson(testCase.deck)) as {
+      analyses: readonly { kind: string; records: readonly Record<string, string>[] }[];
+    };
+
+    expect(payload.analyses).toHaveLength(1);
+    expect(payload.analyses[0]?.kind).toBe("dc");
+    expect(payload.analyses[0]?.records).toEqual(testCase.expected.records);
+  });
+
+  it("exposes deck-selected outputs and evaluated measures", () => {
+    const corpus = JSON.parse(readFileSync(
+      new URL("../../../../grammars/spice/berkeley-v1-cli-corpus.json", import.meta.url),
+      "utf8",
+    )) as {
+      cases: readonly {
+        id: string;
+        deck: string;
+        expected: { outputs: unknown; measures: unknown };
+      }[];
+    };
+    const testCase = corpus.cases.find((testCase) => testCase.id === "deck-output-artifacts")!;
+    const payload = JSON.parse(runNetlistJson(testCase.deck)) as { outputs: unknown; measures: unknown };
+
+    expect(payload.outputs).toEqual(testCase.expected.outputs);
+    expect(payload.measures).toEqual(testCase.expected.measures);
+  });
+
   it("runs the bundled CLI against standard input", () => {
     const corpus = JSON.parse(readFileSync(
       new URL("../../../../grammars/spice/berkeley-v1-cli-corpus.json", import.meta.url),
@@ -80,6 +119,30 @@ describe("Berkeley SPICE CLI contract", () => {
     expect(payload.analyses.map((analysis) => analysis.kind)).toEqual(testCase.expected.analysisKinds);
     expect(result.status, result.stderr).toBe(0);
     expect(JSON.parse(result.stdout)).toEqual(payload);
+  });
+
+  it("inspects and runs engine-backed analysis cards", () => {
+    const corpus = JSON.parse(readFileSync(
+      new URL("../../../../grammars/spice/berkeley-v1-cli-corpus.json", import.meta.url),
+      "utf8",
+    )) as {
+      cases: readonly {
+        id: string;
+        deck: string;
+        expected: { analysisIndexes: readonly number[]; analysisKinds: readonly string[] };
+      }[];
+    };
+    const testCase = corpus.cases.find((testCase) => testCase.id === "engine-backed-analysis-plan")!;
+    const inspection = JSON.parse(inspectNetlistJson(testCase.deck)) as {
+      analyses: readonly { index: number; kind: string }[];
+    };
+    const result = JSON.parse(runNetlistJson(testCase.deck)) as {
+      analyses: readonly { kind: string }[];
+    };
+
+    expect(inspection.analyses.map((analysis) => analysis.index)).toEqual(testCase.expected.analysisIndexes);
+    expect(inspection.analyses.map((analysis) => analysis.kind)).toEqual(testCase.expected.analysisKinds);
+    expect(result.analyses.map((analysis) => analysis.kind)).toEqual(testCase.expected.analysisKinds);
   });
 
   it("reports the shared stable failure code", () => {

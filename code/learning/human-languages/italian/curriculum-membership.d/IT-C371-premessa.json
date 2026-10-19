@@ -1,0 +1,11 @@
+{
+  "id": "IT-C371-premessa",
+  "pathSegment": "IT-PATH-371-RILEVANTE",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "IT-EXT-371-RILEVANTE",
+      "order": 4
+    }
+  ]
+}

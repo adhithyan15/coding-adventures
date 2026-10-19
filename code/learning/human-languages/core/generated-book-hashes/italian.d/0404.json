@@ -1,0 +1,15 @@
+{
+  "language": "italian",
+  "chapter": 404,
+  "sourceHash": "fnv1a64:36d038f3fc8e0d15",
+  "lessonIds": [
+    "IT-C404-bloccarsi",
+    "IT-C404-riavviare",
+    "IT-C404-virus",
+    "IT-C404-portatile",
+    "IT-C404-antivirus",
+    "IT-R404-ripasso-403-404",
+    "IT-R404-ripasso-final-404"
+  ],
+  "tex": "italian/book/chapters/ch404-non-funziona.tex"
+}

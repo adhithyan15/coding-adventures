@@ -1,0 +1,11 @@
+{
+  "id": "IT-C409-cric",
+  "pathSegment": "IT-PATH-409-GOMMA",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "IT-EXT-409-GOMMA",
+      "order": 3
+    }
+  ]
+}

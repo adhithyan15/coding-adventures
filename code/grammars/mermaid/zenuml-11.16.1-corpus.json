@@ -72,6 +72,16 @@
       "name": "semicolon terminators",
       "compatible": true,
       "source": "zenuml\n@Actor Client;\nClient->API: request;\nAPI.handle();\nreturn result;"
+    },
+    {
+      "name": "custom participant annotator",
+      "compatible": true,
+      "source": "zenuml\n@Service API\nClient->API: request"
+    },
+    {
+      "name": "inline message comment",
+      "compatible": true,
+      "source": "zenuml\nClient->API: request // traced request\nAPI.handle() // handler invocation"
     }
   ]
 }

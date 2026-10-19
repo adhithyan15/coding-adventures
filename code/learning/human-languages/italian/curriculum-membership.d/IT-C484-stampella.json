@@ -1,0 +1,11 @@
+{
+  "id": "IT-C484-stampella",
+  "pathSegment": "IT-PATH-484-GESSO",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "IT-EXT-484-GESSO",
+      "order": 2
+    }
+  ]
+}

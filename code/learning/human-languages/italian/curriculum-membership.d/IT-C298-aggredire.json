@@ -1,0 +1,11 @@
+{
+  "id": "IT-C298-aggredire",
+  "pathSegment": "IT-PATH-298-BANDA",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "IT-EXT-298-BANDA",
+      "order": 2
+    }
+  ]
+}

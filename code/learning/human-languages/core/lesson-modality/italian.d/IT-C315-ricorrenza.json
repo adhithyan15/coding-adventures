@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C315-ricorrenza",
+    "language": "italian",
+    "chapter": 315,
+    "sequence": 18260,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b22ea3fce416d219"
+  },
+  "findings": []
+}

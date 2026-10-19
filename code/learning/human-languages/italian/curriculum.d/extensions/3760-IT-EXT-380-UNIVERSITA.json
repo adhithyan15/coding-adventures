@@ -1,0 +1,8 @@
+{
+  "id": "IT-EXT-380-UNIVERSITA",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can talk about starting university: the faculty, enrolling, being a first-year student and the semester.",
+  "prerequisites": []
+}

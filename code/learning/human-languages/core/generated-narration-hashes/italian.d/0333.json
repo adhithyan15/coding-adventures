@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 333,
+  "sourceHash": "fnv1a64:fdf85b969b083677",
+  "lessonIds": [
+    "IT-C333-bollire",
+    "IT-C333-lessare",
+    "IT-C333-scolare",
+    "IT-C333-coperchio",
+    "IT-C333-tegame"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch333.txt",
+  "json": "italian/narration/ch333.json",
+  "textHash": "fnv1a64:d04f8a807312ec0a",
+  "jsonHash": "fnv1a64:d73c8d52115796d4",
+  "findings": []
+}

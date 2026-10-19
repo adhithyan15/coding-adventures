@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C502-esplorare",
+    "language": "italian",
+    "chapter": 502,
+    "sequence": 28220,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:810de0dbd5c5676c"
+  },
+  "findings": []
+}

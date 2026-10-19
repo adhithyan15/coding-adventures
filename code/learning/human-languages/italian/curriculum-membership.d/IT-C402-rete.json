@@ -1,0 +1,11 @@
+{
+  "id": "IT-C402-rete",
+  "pathSegment": "IT-PATH-402-RETE",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "IT-EXT-402-RETE",
+      "order": 0
+    }
+  ]
+}

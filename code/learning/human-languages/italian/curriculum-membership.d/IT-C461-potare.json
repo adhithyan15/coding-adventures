@@ -1,0 +1,11 @@
+{
+  "id": "IT-C461-potare",
+  "pathSegment": "IT-PATH-461-ALBERI",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "IT-EXT-461-ALBERI",
+      "order": 3
+    }
+  ]
+}

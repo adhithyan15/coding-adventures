@@ -1,0 +1,11 @@
+{
+  "id": "IT-C470-pozzanghera",
+  "pathSegment": "IT-PATH-470-PIOGGIA",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "IT-EXT-470-PIOGGIA",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,8 @@
+{
+  "id": "IT-EXT-437-RUMORE",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can complain about noise and dirt: a racket, a din, a cockroach, mould and a creaking door.",
+  "prerequisites": []
+}

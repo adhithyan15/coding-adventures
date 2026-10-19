@@ -1,0 +1,11 @@
+{
+  "id": "IT-C300-travolgere",
+  "pathSegment": "IT-PATH-300-FERITI",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "IT-EXT-300-FERITI",
+      "order": 0
+    }
+  ]
+}

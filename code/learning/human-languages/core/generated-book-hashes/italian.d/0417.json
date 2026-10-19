@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 417,
+  "sourceHash": "fnv1a64:77e4a98504735017",
+  "lessonIds": [
+    "IT-C417-banchina",
+    "IT-C417-pensilina",
+    "IT-C417-capolinea",
+    "IT-C417-pullman",
+    "IT-C417-transitare"
+  ],
+  "tex": "italian/book/chapters/ch417-alla-fermata.tex"
+}

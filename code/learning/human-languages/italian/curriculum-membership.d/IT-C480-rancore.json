@@ -1,0 +1,11 @@
+{
+  "id": "IT-C480-rancore",
+  "pathSegment": "IT-PATH-480-RANCORE",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "IT-EXT-480-RANCORE",
+      "order": 1
+    }
+  ]
+}

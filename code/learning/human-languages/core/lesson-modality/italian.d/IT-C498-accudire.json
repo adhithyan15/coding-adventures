@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C498-accudire",
+    "language": "italian",
+    "chapter": 498,
+    "sequence": 28000,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c949fefabbe39d06"
+  },
+  "findings": []
+}

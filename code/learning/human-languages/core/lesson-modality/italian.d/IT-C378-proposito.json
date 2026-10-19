@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C378-proposito",
+    "language": "italian",
+    "chapter": 378,
+    "sequence": 21620,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9a1e89a9400117cc"
+  },
+  "findings": []
+}

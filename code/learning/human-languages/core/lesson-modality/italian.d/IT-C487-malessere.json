@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C487-malessere",
+    "language": "italian",
+    "chapter": 487,
+    "sequence": 27440,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b8350075ce4ed146"
+  },
+  "findings": []
+}

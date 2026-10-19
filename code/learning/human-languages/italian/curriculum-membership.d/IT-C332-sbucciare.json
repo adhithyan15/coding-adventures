@@ -1,0 +1,11 @@
+{
+  "id": "IT-C332-sbucciare",
+  "pathSegment": "IT-PATH-332-TAGLIERE",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "IT-EXT-332-TAGLIERE",
+      "order": 3
+    }
+  ]
+}

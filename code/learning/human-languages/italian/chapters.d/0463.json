@@ -1,0 +1,19 @@
+{
+  "chapter": 463,
+  "title": "Sugli scogli",
+  "label": "ch:it-sugli-scogli",
+  "canDo": "I can describe a day on a rocky shore: the rocks, getting a tan, seashells, the tide and diving in.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "IT-C463-tuffarsi",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 463: I can describe a day on a rocky shore: the rocks, getting a tan, seashells, the tide and diving in.",
+    "assesses": [
+      "IT-LEX-C463-SCOGLI-03",
+      "IT-LEX-C463-SCOGLI-04",
+      "IT-LEX-C463-SCOGLI-05"
+    ]
+  }
+}

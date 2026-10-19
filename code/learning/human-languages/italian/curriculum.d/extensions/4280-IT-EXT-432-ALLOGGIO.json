@@ -1,0 +1,8 @@
+{
+  "id": "IT-EXT-432-ALLOGGIO",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can talk about where I stay: lodging, spending the night, an overnight stay, staying a while and the porter.",
+  "prerequisites": []
+}

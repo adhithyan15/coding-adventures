@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C402-connessione",
+    "language": "italian",
+    "chapter": 402,
+    "sequence": 22830,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:90ab864ec9f6572b"
+  },
+  "findings": []
+}

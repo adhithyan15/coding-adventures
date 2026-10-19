@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 489,
+  "sourceHash": "fnv1a64:62e89de571bdf568",
+  "lessonIds": [
+    "IT-C489-ammalarsi",
+    "IT-C489-sintomo",
+    "IT-C489-diagnosi",
+    "IT-C489-infezione",
+    "IT-C489-guarire"
+  ],
+  "tex": "italian/book/chapters/ch489-ammalarsi-e-guarire.tex"
+}

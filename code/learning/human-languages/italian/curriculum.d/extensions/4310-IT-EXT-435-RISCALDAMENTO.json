@@ -1,0 +1,8 @@
+{
+  "id": "IT-EXT-435-RISCALDAMENTO",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can complain about the temperature: the heating, the radiator, the air conditioner, cooling down and the water heater.",
+  "prerequisites": []
+}

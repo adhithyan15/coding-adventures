@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C485-crampo",
+    "language": "italian",
+    "chapter": 485,
+    "sequence": 27320,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:bf1ff5bb83930846"
+  },
+  "findings": []
+}

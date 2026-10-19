@@ -1,0 +1,11 @@
+{
+  "id": "IT-C452-edicola",
+  "pathSegment": "IT-PATH-452-EDICOLA",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "IT-EXT-452-EDICOLA",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 434,
+  "title": "Il bagno non funziona",
+  "label": "ch:it-il-bagno-non-funziona",
+  "canDo": "I can report problems in the bathroom: the tap, dripping, a blocked sink, the drain and getting it unblocked.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "IT-C434-sturare",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 434: I can report problems in the bathroom: the tap, dripping, a blocked sink, the drain and getting it unblocked.",
+    "assesses": [
+      "IT-LEX-C434-BAGNO-03",
+      "IT-LEX-C434-BAGNO-04",
+      "IT-LEX-C434-BAGNO-05"
+    ]
+  }
+}

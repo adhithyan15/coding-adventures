@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C336-sfornare",
+    "language": "italian",
+    "chapter": 336,
+    "sequence": 19340,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2a775d9d16698564"
+  },
+  "findings": []
+}

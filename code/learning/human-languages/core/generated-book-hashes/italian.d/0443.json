@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 443,
+  "sourceHash": "fnv1a64:c7f749109658efe6",
+  "lessonIds": [
+    "IT-C443-settentrionale",
+    "IT-C443-meridionale",
+    "IT-C443-orientale",
+    "IT-C443-occidentale",
+    "IT-C443-punto-di-riferimento"
+  ],
+  "tex": "italian/book/chapters/ch443-i-punti-cardinali.tex"
+}

@@ -212,8 +212,24 @@ and kind is checked through that handle without following a reparse point;
 enumeration errors fail closed. A directory moved after opening remains the
 directory being enumerated, so a junction substituted at the old name cannot
 contribute outside owner names. Tests must perform that swap for both reader
-entry points without requiring symlink privilege. Unix keeps its symlink and
-special-file rejection tests.
+entry points without requiring symlink privilege. On Unix, the Python reader
+must likewise enumerate through a descriptor opened from the trusted root,
+opening each descendant directory relative to its pinned parent with no-follow
+checks. A selected JSON shard is opened relative to that pinned directory and
+checked as a regular file before parsing. Static symlink rejection is not
+enough: deterministic ancestor-swap fixtures must show that both enumerators
+and a shard read cannot consume an outside replacement. Concurrent changes
+within the pinned tree need not form a snapshot; errors must fail closed.
+
+The Unix compatibility writer and remover have the same ancestor-swap boundary.
+After pathname prevalidation, each directory component must be opened relative
+to the already-pinned parent descriptor with `O_DIRECTORY` and `O_NOFOLLOW`.
+The selected shard must be checked relative to that final descriptor; temporary
+creation, atomic replacement, and deletion must also use it. A replaced track
+ancestor must neither redirect a write nor remove an outside shard. Tests must
+swap that ancestor immediately after prevalidation for both operations and
+preserve outside sentinels. Existing mode preservation and static symlink
+rejection remain required; no pathname recheck can substitute for anchoring.
 
 ---
 

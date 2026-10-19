@@ -1,0 +1,11 @@
+{
+  "id": "IT-C274-d-un-tratto",
+  "pathSegment": "IT-PATH-274-FRATTEMPO",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "IT-EXT-274-FRATTEMPO",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,9 @@
+{
+  "id": "IT-PATH-314-EREDITA",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "IT-EXT-314-EREDITA"
+  ],
+  "after": []
+}

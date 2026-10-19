@@ -1,6 +1,7 @@
 import json
 import os
 import subprocess
+import sys
 import tempfile
 import unittest
 from pathlib import Path
@@ -8,12 +9,15 @@ from unittest import mock
 
 from sharded_ledger import (
     _files,
+    _read,
     _remove,
     _strict_directory_entries,
+    _write_if_changed,
     load_book_generation,
     load_curriculum,
     load_script,
     load_script_inventory,
+    read_track_regular_text,
     write_book_generation_language,
     write_chapters,
     write_curriculum,
@@ -47,6 +51,68 @@ class ShardedLedgerSafetyTest(unittest.TestCase):
 
     def tearDown(self):
         self.temporary.cleanup()
+
+    def test_mock_evidence_reads_checked_regular_file_bytes(self):
+        path = self.root / "spanish" / "mocks" / "paper.md"
+        path.parent.mkdir(parents=True)
+        path.write_text("# Learner paper\n¡Hola!\n", encoding="utf-8")
+        self.assertEqual(
+            read_track_regular_text(self.root, "spanish", "mocks/paper.md"),
+            "# Learner paper\n¡Hola!\n",
+        )
+        with self.assertRaises(ValueError):
+            read_track_regular_text(self.root, "spanish", "../outside/paper.md")
+
+    def test_mock_manifest_refuses_sharded_sibling_under_pinned_parent(self):
+        directory = self.root / "spanish" / "mocks"
+        write_json(directory / "manifest.json", {"version": 1})
+        (directory / "manifest.d").mkdir()
+        with self.assertRaisesRegex(ValueError, "sharded mock ledger"):
+            read_track_regular_text(
+                self.root, "spanish", "mocks/manifest.json",
+                reject_sharded_sibling=True,
+            )
+
+    def test_mock_evidence_cli_accepts_unicode_request_paths(self):
+        path = self.root / "spanish" / "mocks" / "ਪੇਪਰ.md"
+        path.parent.mkdir(parents=True)
+        path.write_text("ਪੰਜਾਬੀ learner paper", encoding="utf-8")
+        request = {"root": str(self.root), "track": "spanish", "paths": ["mocks/ਪੇਪਰ.md"], "ledgers": []}
+        result = subprocess.run(
+            [sys.executable, str(Path(__file__).with_name("mock_evidence_read.py"))],
+            input=json.dumps(request, ensure_ascii=False).encode("utf-8"),
+            capture_output=True,
+            check=True,
+        )
+        self.assertEqual(
+            json.loads(result.stdout)["files"]["mocks/ਪੇਪਰ.md"],
+            "ਪੰਜਾਬੀ learner paper",
+        )
+
+    def test_mock_evidence_rejects_ancestor_swap_after_audit(self):
+        directory = self.root / "spanish" / "mocks"
+        inside = directory / "paper.md"
+        inside.parent.mkdir(parents=True)
+        inside.write_text("inside learner paper", encoding="utf-8")
+        (self.outside / "paper.md").write_text("outside sentinel", encoding="utf-8")
+        # Model the TypeScript audit's earlier successful path observation.
+        self.assertEqual(inside.read_text(encoding="utf-8"), "inside learner paper")
+        moved = directory.with_name("mocks-moved")
+        os.rename(directory, moved)
+        link_directory(self.outside, directory)
+        try:
+            with self.assertRaises((OSError, ValueError)):
+                read_track_regular_text(self.root, "spanish", "mocks/paper.md")
+            self.assertEqual(
+                (self.outside / "paper.md").read_text(encoding="utf-8"),
+                "outside sentinel",
+            )
+        finally:
+            if os.name == "nt":
+                os.rmdir(directory)  # Remove the junction, not its target.
+            else:
+                os.unlink(directory)  # Unix symlinks are not directories to rmdir.
+            os.rename(moved, directory)
 
     def chapter_document(self, *chapters):
         return {"version": 1, "language": "spanish", "chapters": list(chapters)}
@@ -224,6 +290,174 @@ class ShardedLedgerSafetyTest(unittest.TestCase):
 
         with self.assertRaisesRegex(ValueError, "non-directory ledger ancestor"):
             write_chapters(self.root, "spanish", self.chapter_document())
+
+    @unittest.skipIf(os.name == "nt", "Unix descriptor-relative read fixture")
+    def test_unix_file_enumeration_rejects_swapped_track_ancestor(self):
+        directory = self.root / "spanish"
+        write_json(directory / "chapters.d" / "0001.json", {"title": "inside"})
+        write_json(self.outside / "chapters.d" / "0002.json", {"title": "outside"})
+        moved = directory.with_name("spanish-moved")
+        from sharded_ledger import _directory
+        swapped = []
+
+        def swap_after_check(root, *parts):
+            path = _directory(root, *parts)
+            if parts == ("spanish", "chapters.d") and not swapped:
+                os.rename(directory, moved)
+                link_directory(self.outside, directory)
+                swapped.append(True)
+            return path
+
+        try:
+            with (
+                mock.patch("sharded_ledger._directory", side_effect=swap_after_check),
+                self.assertRaisesRegex(ValueError, "non-directory ledger ancestor"),
+            ):
+                _files(self.root, "spanish", "chapters.d")
+        finally:
+            if swapped:
+                os.unlink(directory)
+                os.rename(moved, directory)
+        self.assertTrue(swapped)
+
+    @unittest.skipIf(os.name == "nt", "Unix descriptor-relative read fixture")
+    def test_unix_owner_enumeration_rejects_swapped_core_ancestor(self):
+        directory = self.root / "core"
+        self.book_generation_tree()
+        write_json(self.outside / "book-generation.d" / "outside.json", {"outside": True})
+        moved = directory.with_name("core-moved")
+        from sharded_ledger import _directory
+        swapped = []
+
+        def swap_after_check(root, *parts):
+            path = _directory(root, *parts)
+            if parts == ("core", "book-generation.d") and not swapped:
+                os.rename(directory, moved)
+                link_directory(self.outside, directory)
+                swapped.append(True)
+            return path
+
+        try:
+            with (
+                mock.patch("sharded_ledger._directory", side_effect=swap_after_check),
+                self.assertRaisesRegex(ValueError, "non-directory ledger ancestor"),
+            ):
+                _strict_directory_entries(self.root, "core", "book-generation.d")
+        finally:
+            if swapped:
+                os.unlink(directory)
+                os.rename(moved, directory)
+        self.assertTrue(swapped)
+
+    @unittest.skipIf(os.name == "nt", "Unix descriptor-relative read fixture")
+    def test_unix_read_rejects_swapped_track_ancestor(self):
+        directory = self.root / "spanish"
+        write_json(directory / "chapters.d" / "0001.json", {"title": "inside"})
+        write_json(self.outside / "chapters.d" / "0001.json", {"title": "outside"})
+        moved = directory.with_name("spanish-moved")
+        from sharded_ledger import _file
+        swapped = []
+
+        def swap_after_check(root, *parts, **options):
+            path = _file(root, *parts, **options)
+            if parts == ("spanish", "chapters.d", "0001.json") and not swapped:
+                os.rename(directory, moved)
+                link_directory(self.outside, directory)
+                swapped.append(True)
+            return path
+
+        try:
+            with (
+                mock.patch("sharded_ledger._file", side_effect=swap_after_check),
+                self.assertRaisesRegex(ValueError, "non-directory ledger ancestor"),
+            ):
+                _read(self.root, "spanish", "chapters.d", "0001.json")
+        finally:
+            if swapped:
+                os.unlink(directory)
+                os.rename(moved, directory)
+        self.assertTrue(swapped)
+
+    @unittest.skipIf(os.name == "nt", "Unix descriptor-relative mutation fixture")
+    def test_unix_write_rejects_swapped_track_ancestor(self):
+        directory = self.root / "spanish"
+        write_json(directory / "chapters.d" / "0001.json", {"title": "inside"})
+        sentinel = self.outside / "chapters.d" / "0001.json"
+        write_json(sentinel, {"title": "outside sentinel"})
+        before = sentinel.read_bytes()
+        moved = directory.with_name("spanish-moved")
+        from sharded_ledger import _file
+        swapped = []
+
+        def swap_after_check(root, *parts, **options):
+            path = _file(root, *parts, **options)
+            if parts == ("spanish", "chapters.d", "0001.json") and not swapped:
+                os.rename(directory, moved)
+                link_directory(self.outside, directory)
+                swapped.append(True)
+            return path
+
+        try:
+            with (
+                mock.patch("sharded_ledger._file", side_effect=swap_after_check),
+                self.assertRaisesRegex(ValueError, "non-directory ledger ancestor"),
+            ):
+                _write_if_changed(
+                    self.root, "spanish", "chapters.d", "0001.json",
+                    value={"title": "new inside"},
+                )
+        finally:
+            if swapped:
+                os.unlink(directory)
+                os.rename(moved, directory)
+        self.assertTrue(swapped)
+        self.assertEqual(sentinel.read_bytes(), before)
+
+    @unittest.skipIf(os.name == "nt", "Unix descriptor-relative mutation fixture")
+    def test_unix_remove_rejects_swapped_track_ancestor(self):
+        directory = self.root / "spanish"
+        write_json(directory / "chapters.d" / "0001.json", {"title": "inside"})
+        sentinel = self.outside / "chapters.d" / "0001.json"
+        write_json(sentinel, {"title": "outside sentinel"})
+        before = sentinel.read_bytes()
+        moved = directory.with_name("spanish-moved")
+        from sharded_ledger import _file
+        swapped = []
+
+        def swap_after_check(root, *parts, **options):
+            path = _file(root, *parts, **options)
+            if parts == ("spanish", "chapters.d", "0001.json") and not swapped:
+                os.rename(directory, moved)
+                link_directory(self.outside, directory)
+                swapped.append(True)
+            return path
+
+        try:
+            with (
+                mock.patch("sharded_ledger._file", side_effect=swap_after_check),
+                self.assertRaisesRegex(ValueError, "non-directory ledger ancestor"),
+            ):
+                _remove(self.root, "spanish", "chapters.d", "0001.json")
+        finally:
+            if swapped:
+                os.unlink(directory)
+                os.rename(moved, directory)
+        self.assertTrue(swapped)
+        self.assertEqual(sentinel.read_bytes(), before)
+
+    @unittest.skipIf(os.name == "nt", "Unix replacement mode fixture")
+    def test_unix_replacement_preserves_shard_mode(self):
+        shard = self.root / "spanish" / "chapters.d" / "0001.json"
+        write_json(shard, {"title": "inside"})
+        os.chmod(shard, 0o600)
+
+        _write_if_changed(
+            self.root, "spanish", "chapters.d", "0001.json",
+            value={"title": "replacement"},
+        )
+
+        self.assertEqual(shard.stat().st_mode & 0o777, 0o600)
+        self.assertEqual(json.loads(shard.read_text(encoding="utf-8"))["title"], "replacement")
 
     @unittest.skipUnless(os.name == "nt", "Windows directory junction fixture")
     def test_junctioned_track_ancestor_cannot_escape_root(self):

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C533-tovagliolo",
+    "language": "italian",
+    "chapter": 533,
+    "sequence": 29800,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:cb1262c96af01482"
+  },
+  "findings": []
+}

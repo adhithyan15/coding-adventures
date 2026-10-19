@@ -1,0 +1,11 @@
+{
+  "id": "IT-C485-slogarsi",
+  "pathSegment": "IT-PATH-485-STORTA",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "IT-EXT-485-STORTA",
+      "order": 0
+    }
+  ]
+}

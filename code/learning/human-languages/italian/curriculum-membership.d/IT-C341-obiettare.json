@@ -1,0 +1,11 @@
+{
+  "id": "IT-C341-obiettare",
+  "pathSegment": "IT-PATH-341-OBIEZIONE",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "IT-EXT-341-OBIEZIONE",
+      "order": 1
+    }
+  ]
+}

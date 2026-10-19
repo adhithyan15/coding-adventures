@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 467,
+  "sourceHash": "fnv1a64:545717b23b248614",
+  "lessonIds": [
+    "IT-C467-lampo",
+    "IT-C467-tuonare",
+    "IT-C467-lampeggiare",
+    "IT-C467-grandine",
+    "IT-C467-grandinare"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch467.txt",
+  "json": "italian/narration/ch467.json",
+  "textHash": "fnv1a64:b4fcbf77cfc7c07f",
+  "jsonHash": "fnv1a64:23122e326461a2da",
+  "findings": []
+}

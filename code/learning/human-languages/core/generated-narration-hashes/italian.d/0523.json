@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 523,
+  "sourceHash": "fnv1a64:813e47a8a1eb0059",
+  "lessonIds": [
+    "IT-C523-mostra",
+    "IT-C523-capolavoro",
+    "IT-C523-ritratto",
+    "IT-C523-affresco",
+    "IT-C523-restaurare"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch523.txt",
+  "json": "italian/narration/ch523.json",
+  "textHash": "fnv1a64:34ca0362e269b060",
+  "jsonHash": "fnv1a64:eefeb8211f9d1367",
+  "findings": []
+}

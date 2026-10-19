@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 357,
+  "sourceHash": "fnv1a64:72a33324d1fba171",
+  "lessonIds": [
+    "IT-C357-licenziamento",
+    "IT-C357-dimettersi",
+    "IT-C357-dimissioni",
+    "IT-C357-disoccupato",
+    "IT-C357-preavviso"
+  ],
+  "tex": "italian/book/chapters/ch357-lasciare-il-lavoro.tex"
+}

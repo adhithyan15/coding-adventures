@@ -1,0 +1,9 @@
+{
+  "id": "IT-PATH-484-GESSO",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "IT-EXT-484-GESSO"
+  ],
+  "after": []
+}

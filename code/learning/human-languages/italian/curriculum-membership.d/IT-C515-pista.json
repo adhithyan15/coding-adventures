@@ -1,0 +1,11 @@
+{
+  "id": "IT-C515-pista",
+  "pathSegment": "IT-PATH-515-NEVE",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "IT-EXT-515-NEVE",
+      "order": 2
+    }
+  ]
+}

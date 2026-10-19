@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 432,
+  "sourceHash": "fnv1a64:1069121b6b416e69",
+  "lessonIds": [
+    "IT-C432-alloggiare",
+    "IT-C432-pernottare",
+    "IT-C432-pernottamento",
+    "IT-C432-soggiornare",
+    "IT-C432-portiere"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch432.txt",
+  "json": "italian/narration/ch432.json",
+  "textHash": "fnv1a64:d6e8424bc98442b5",
+  "jsonHash": "fnv1a64:b418dbf8f65bace9",
+  "findings": []
+}

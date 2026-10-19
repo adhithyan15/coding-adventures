@@ -1,0 +1,19 @@
+{
+  "chapter": 536,
+  "title": "Una casa nuova",
+  "label": "ch:it-una-casa-nuova",
+  "canDo": "I can talk about renting and furnishing a home.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "IT-R536-ripasso-final-536",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 536: I can talk about renting and furnishing a home.",
+    "assesses": [
+      "IT-LEX-C536-CASA-03",
+      "IT-LEX-C536-CASA-04",
+      "IT-LEX-C536-CASA-05"
+    ]
+  }
+}

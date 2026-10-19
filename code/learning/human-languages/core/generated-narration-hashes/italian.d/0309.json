@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 309,
+  "sourceHash": "fnv1a64:a68af54475f8e939",
+  "lessonIds": [
+    "IT-C309-giovinezza",
+    "IT-C309-maggiorenne",
+    "IT-C309-minorenne",
+    "IT-C309-generazione",
+    "IT-C309-tramandare"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch309.txt",
+  "json": "italian/narration/ch309.json",
+  "textHash": "fnv1a64:d8e1b435daae66c2",
+  "jsonHash": "fnv1a64:61c016db2191b34e",
+  "findings": []
+}

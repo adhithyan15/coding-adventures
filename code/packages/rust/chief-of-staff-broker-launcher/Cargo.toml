@@ -25,5 +25,9 @@ chief-of-staff-linux-sandbox = { path = "../chief-of-staff-linux-sandbox" }
 capability-os-sandbox = { path = "../capability-os-sandbox" }
 chief-of-staff-macos-sandbox = { path = "../chief-of-staff-macos-sandbox" }
 
+[target.'cfg(windows)'.dependencies]
+capability-os-sandbox = { path = "../capability-os-sandbox" }
+chief-of-staff-windows-sandbox = { path = "../chief-of-staff-windows-sandbox" }
+
 [dev-dependencies]
 chief-of-staff-service-registry = { path = "../chief-of-staff-service-registry" }

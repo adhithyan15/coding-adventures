@@ -1,0 +1,11 @@
+{
+  "id": "IT-C414-curva",
+  "pathSegment": "IT-PATH-414-STATALE",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "IT-EXT-414-STATALE",
+      "order": 2
+    }
+  ]
+}

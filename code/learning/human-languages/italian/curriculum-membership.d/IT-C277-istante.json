@@ -1,0 +1,11 @@
+{
+  "id": "IT-C277-istante",
+  "pathSegment": "IT-PATH-277-DURATA",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "IT-EXT-277-DURATA",
+      "order": 2
+    }
+  ]
+}

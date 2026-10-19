@@ -1,0 +1,11 @@
+{
+  "id": "IT-C416-pedalare",
+  "pathSegment": "IT-PATH-416-MOTORINO",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "IT-EXT-416-MOTORINO",
+      "order": 2
+    }
+  ]
+}

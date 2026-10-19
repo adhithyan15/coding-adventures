@@ -1,0 +1,11 @@
+{
+  "id": "IT-C485-fasciare",
+  "pathSegment": "IT-PATH-485-STORTA",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "IT-EXT-485-STORTA",
+      "order": 4
+    }
+  ]
+}

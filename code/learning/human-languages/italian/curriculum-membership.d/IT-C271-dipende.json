@@ -1,0 +1,11 @@
+{
+  "id": "IT-C271-dipende",
+  "pathSegment": "IT-PATH-271-SE",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "IT-EXT-271-SE",
+      "order": 2
+    }
+  ]
+}

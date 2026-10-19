@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 290,
+  "sourceHash": "fnv1a64:0a997312987b901f",
+  "lessonIds": [
+    "IT-C290-crimine",
+    "IT-C290-delitto",
+    "IT-C290-criminale",
+    "IT-C290-vittima",
+    "IT-C290-commettere"
+  ],
+  "tex": "italian/book/chapters/ch290-delitti-e-vittime.tex"
+}

@@ -1,0 +1,11 @@
+{
+  "id": "IT-C529-trailer",
+  "pathSegment": "IT-PATH-529-CINEMA",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "IT-EXT-529-CINEMA",
+      "order": 4
+    }
+  ]
+}

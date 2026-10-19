@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 371,
+  "sourceHash": "fnv1a64:b5ea63eb8cbbee95",
+  "lessonIds": [
+    "IT-C371-rilevante",
+    "IT-C371-cruciale",
+    "IT-C371-essenziale",
+    "IT-C371-fondamentale",
+    "IT-C371-premessa"
+  ],
+  "tex": "italian/book/chapters/ch371-cio-che-conta.tex"
+}

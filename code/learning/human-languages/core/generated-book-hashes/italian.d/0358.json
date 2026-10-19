@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 358,
+  "sourceHash": "fnv1a64:560150653462455b",
+  "lessonIds": [
+    "IT-C358-tirocinio",
+    "IT-C358-tirocinante",
+    "IT-C358-apprendista",
+    "IT-C358-datore-di-lavoro",
+    "IT-C358-dipendente"
+  ],
+  "tex": "italian/book/chapters/ch358-il-primo-impiego.tex"
+}

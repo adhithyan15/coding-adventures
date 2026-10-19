@@ -1,0 +1,11 @@
+{
+  "id": "IT-C456-smacchiare",
+  "pathSegment": "IT-PATH-456-CURA",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "IT-EXT-456-CURA",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "IT-C528-puntata",
+  "pathSegment": "IT-PATH-528-SERIE",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "IT-EXT-528-SERIE",
+      "order": 1
+    }
+  ]
+}

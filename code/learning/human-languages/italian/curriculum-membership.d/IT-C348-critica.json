@@ -1,0 +1,11 @@
+{
+  "id": "IT-C348-critica",
+  "pathSegment": "IT-PATH-348-VANTAGGIO",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "IT-EXT-348-VANTAGGIO",
+      "order": 3
+    }
+  ]
+}

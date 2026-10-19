@@ -1,0 +1,19 @@
+{
+  "chapter": 366,
+  "title": "Problemi sociali",
+  "label": "ch:it-problemi-sociali",
+  "canDo": "I can talk about social problems: poverty, unemployment, discrimination and immigration.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "IT-C366-immigrazione",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 366: I can talk about social problems: poverty, unemployment, discrimination and immigration.",
+    "assesses": [
+      "IT-LEX-C366-SOCIETA-03",
+      "IT-LEX-C366-SOCIETA-04",
+      "IT-LEX-C366-SOCIETA-05"
+    ]
+  }
+}

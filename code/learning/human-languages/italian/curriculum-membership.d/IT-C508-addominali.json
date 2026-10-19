@@ -1,0 +1,11 @@
+{
+  "id": "IT-C508-addominali",
+  "pathSegment": "IT-PATH-508-PALESTRA",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "IT-EXT-508-PALESTRA",
+      "order": 3
+    }
+  ]
+}

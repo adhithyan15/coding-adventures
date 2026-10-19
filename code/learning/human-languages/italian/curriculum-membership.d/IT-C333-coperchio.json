@@ -1,0 +1,11 @@
+{
+  "id": "IT-C333-coperchio",
+  "pathSegment": "IT-PATH-333-PENTOLA",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "IT-EXT-333-PENTOLA",
+      "order": 3
+    }
+  ]
+}

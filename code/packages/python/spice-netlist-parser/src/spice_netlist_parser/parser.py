@@ -29,9 +29,11 @@ from spice_engine import (
     Inductor,
     Mosfet,
     MutualInductor,
+    NoiseResult,
     PulseWaveform,
     PwlWaveform,
     Resistor,
+    SensResult,
     SinWaveform,
     TfResult,
     TransientResult,
@@ -44,8 +46,10 @@ from spice_engine import (
     dc_sweep_2d,
     format_deck_table_json,
     mosfet_from_model_card,
+    noise_ac,
     normalize_model_card,
     run_deck,
+    sens_dc,
     tf,
     transient,
 )
@@ -121,7 +125,7 @@ class McAnalysis:
 
 @dataclass(frozen=True, slots=True)
 class NoiseAnalysis:
-    """A `.noise V(output_node) input_source [freq ...] [temp=<kelvin>]` card."""
+    """A `.noise V(output_node) input_source [sweep|freq ...] [temp=<kelvin>]` card."""
 
     output_node: str
     input_source: str
@@ -252,15 +256,19 @@ type Analysis = (
     | PoleZeroAnalysis
     | OptionsAnalysis
 )
-type RunnableAnalysis = OpAnalysis | TranAnalysis | DcAnalysis | AcAnalysis | TfAnalysis
-type AnalysisKind = Literal["op", "tran", "dc", "ac", "tf"]
-type AnalysisResult = DcResult | DcSweepResult | AcResult | TransientResult | TfResult
+type RunnableAnalysis = (
+    OpAnalysis | TranAnalysis | DcAnalysis | AcAnalysis | TfAnalysis | SensAnalysis | NoiseAnalysis
+)
+type AnalysisKind = Literal["op", "tran", "dc", "ac", "tf", "sens", "noise"]
+type AnalysisResult = (
+    DcResult | DcSweepResult | AcResult | TransientResult | TfResult | SensResult | NoiseResult
+)
 type SelectedOutputValue = float | complex
 
 
 @dataclass(frozen=True, slots=True)
 class AnalysisPlanStep:
-    """One executable `.op`, `.dc`, `.ac`, `.tran`, or `.tf` card in deck order."""
+    """One executable deck-analysis card in source order."""
 
     index: int
     kind: AnalysisKind
@@ -712,6 +720,7 @@ def run_netlist_json(text: str) -> str:
 
     parsed = parse_netlist(text)
     execution = run_deck(parsed.circuit, text)
+    parser_results = run_analysis_plan(parsed)
     payload = {
         "schemaVersion": CLI_RESULT_SCHEMA_VERSION,
         "title": parsed.title,
@@ -723,6 +732,8 @@ def run_netlist_json(text: str) -> str:
             }
             for index, item in enumerate(execution.executions)
         ],
+        "outputs": _cli_output_artifacts(parsed, parser_results),
+        "measures": _cli_measure_artifacts(parsed, parser_results),
     }
     return json.dumps(payload, separators=(",", ":"), allow_nan=False, sort_keys=True) + "\n"
 
@@ -753,6 +764,65 @@ def _cli_table_records(analysis: str, table: str) -> list[dict[str, str]]:
     return records
 
 
+def _cli_output_artifacts(
+    parsed: ParsedNetlist,
+    results: list[AnalysisExecutionResult],
+) -> list[dict[str, object]]:
+    return [
+        {
+            "analysisIndex": output.index,
+            "analysis": output.kind,
+            "probes": [_cli_probe_text(probe) for probe in output.probes],
+            "records": [
+                {
+                    "index": row.index,
+                    "axisName": row.axis_name,
+                    "axisValue": row.axis_value,
+                    "secondaryAxisName": row.secondary_axis_name,
+                    "secondaryAxisValue": row.secondary_axis_value,
+                    "values": {
+                        name: _cli_selected_value(value)
+                        for name, value in row.values.items()
+                    },
+                }
+                for row in output.rows
+            ],
+        }
+        for output in select_outputs(parsed, results)
+    ]
+
+
+def _cli_measure_artifacts(
+    parsed: ParsedNetlist,
+    results: list[AnalysisExecutionResult],
+) -> list[dict[str, object]]:
+    return [
+        {
+            "analysisIndex": measure.analysis_index,
+            "analysis": measure.analysis,
+            "name": measure.name,
+            "operation": measure.operation,
+            "probe": _cli_probe_text(measure.probe),
+            "value": measure.value,
+        }
+        for measure in measure_results(parsed, results)
+    ]
+
+
+def _cli_probe_text(probe: OutputProbe) -> str:
+    if probe.kind == "current":
+        return f"I({probe.target})"
+    if probe.negative_target is not None:
+        return f"V({probe.target},{probe.negative_target})"
+    return f"V({probe.target})"
+
+
+def _cli_selected_value(value: SelectedOutputValue) -> float | dict[str, float]:
+    if isinstance(value, complex):
+        return {"real": value.real, "imag": value.imag}
+    return value
+
+
 def select_outputs(
     parsed: ParsedNetlist,
     results: list[AnalysisExecutionResult] | None = None,
@@ -762,6 +832,8 @@ def select_outputs(
     selected: list[SelectedAnalysisOutput] = []
     execution_results = run_analysis_plan(parsed) if results is None else results
     for result in execution_results:
+        if result.kind in ("tf", "sens", "noise"):
+            continue
         probes = _selected_output_probes(parsed, result.kind)
         if not probes:
             continue
@@ -823,6 +895,10 @@ def _analysis_plan_step(index: int, analysis: Analysis) -> AnalysisPlanStep | No
         return AnalysisPlanStep(index=index, kind="ac", analysis=analysis)
     if isinstance(analysis, TfAnalysis):
         return AnalysisPlanStep(index=index, kind="tf", analysis=analysis)
+    if isinstance(analysis, SensAnalysis):
+        return AnalysisPlanStep(index=index, kind="sens", analysis=analysis)
+    if isinstance(analysis, NoiseAnalysis):
+        return AnalysisPlanStep(index=index, kind="noise", analysis=analysis)
     return None
 
 
@@ -884,6 +960,16 @@ def _execute_analysis_step(parsed: ParsedNetlist, step: AnalysisPlanStep) -> Ana
             parsed.circuit,
             output_node=analysis.output_node,
             input_source=analysis.input_source,
+        )
+    if isinstance(analysis, SensAnalysis):
+        return sens_dc(parsed.circuit, output_node=analysis.output_node)
+    if isinstance(analysis, NoiseAnalysis):
+        return noise_ac(
+            parsed.circuit,
+            output_node=analysis.output_node,
+            input_source=analysis.input_source,
+            freqs=None if not analysis.freqs else list(analysis.freqs),
+            temperature=analysis.temperature,
         )
     raise NetlistParseError(f"analysis card at index {step.index} is not executable")
 
@@ -1867,10 +1953,10 @@ def _parse_directive(fields: list[str]) -> Analysis:
         )
     if directive == ".noise":
         _require_min_fields(fields, 3, ".noise")
-        freqs: list[float] = []
+        freqs = _parse_noise_frequencies(fields)
         temperature = 300.0
         temperature_is_explicit = False
-        tail_index = 3
+        tail_index = 7 if len(fields) == 7 and fields[3].lower() in {"lin", "dec", "oct"} else 3
         while tail_index < len(fields):
             token = fields[tail_index]
             lower_token = token.lower()
@@ -1953,6 +2039,37 @@ def _parse_directive(fields: list[str]) -> Analysis:
         _require_min_fields(fields, 2, ".options")
         return OptionsAnalysis(values=_parse_options(fields[1:]))
     raise NetlistParseError(f"unsupported directive {fields[0]!r}")
+
+
+def _parse_noise_frequencies(fields: list[str]) -> list[float]:
+    if len(fields) == 7 and fields[3].lower() in {"lin", "dec", "oct"}:
+        sweep_kind = fields[3].lower()
+        point_count_value = parse_value(fields[4])
+        if not point_count_value.is_integer() or point_count_value <= 0.0:
+            raise NetlistParseError(".noise point count must be a positive integer")
+        start_frequency = parse_value(fields[5])
+        stop_frequency = parse_value(fields[6])
+        if start_frequency <= 0.0 or stop_frequency < start_frequency:
+            raise NetlistParseError(
+                ".noise frequencies must be positive and stop must be >= start"
+            )
+        point_count = int(point_count_value)
+        if sweep_kind == "lin":
+            if point_count == 1:
+                return [start_frequency]
+            step = (stop_frequency - start_frequency) / (point_count - 1)
+            return [start_frequency + index * step for index in range(point_count)]
+        base = 10.0 if sweep_kind == "dec" else 2.0
+        ratio = base ** (1.0 / point_count)
+        epsilon = stop_frequency * 1.0e-12
+        frequencies: list[float] = []
+        frequency = start_frequency
+        while frequency <= stop_frequency + epsilon:
+            frequencies.append(frequency)
+            frequency *= ratio
+        return frequencies
+
+    return []
 
 
 def _parse_probe_card(fields: list[str]) -> ProbeAnalysis:

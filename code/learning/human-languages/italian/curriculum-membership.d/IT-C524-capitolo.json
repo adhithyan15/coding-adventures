@@ -1,0 +1,11 @@
+{
+  "id": "IT-C524-capitolo",
+  "pathSegment": "IT-PATH-524-ROMANZO",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "IT-EXT-524-ROMANZO",
+      "order": 1
+    }
+  ]
+}

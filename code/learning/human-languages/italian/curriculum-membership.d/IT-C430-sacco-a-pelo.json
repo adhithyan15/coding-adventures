@@ -1,0 +1,11 @@
+{
+  "id": "IT-C430-sacco-a-pelo",
+  "pathSegment": "IT-PATH-430-TENDA",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "IT-EXT-430-TENDA",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "IT-C401-incollare",
+  "pathSegment": "IT-PATH-401-FILE",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "IT-EXT-401-FILE",
+      "order": 3
+    }
+  ]
+}

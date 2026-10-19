@@ -1,0 +1,19 @@
+{
+  "chapter": 452,
+  "title": "Giornali e tabacchi",
+  "label": "ch:it-giornali-e-tabacchi",
+  "canDo": "I can use small everyday shops: the tobacconist and his shop, the newsstand, the newsagent and the stationer.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "IT-R452-ripasso-445-452",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 452: I can use small everyday shops: the tobacconist and his shop, the newsstand, the newsagent and the stationer.",
+    "assesses": [
+      "IT-LEX-C452-EDICOLA-03",
+      "IT-LEX-C452-EDICOLA-04",
+      "IT-LEX-C452-EDICOLA-05"
+    ]
+  }
+}

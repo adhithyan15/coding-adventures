@@ -1,0 +1,9 @@
+{
+  "id": "IT-PATH-351-ORIGINE",
+  "spine_node": "SPINE-GIVE-REASONS",
+  "before": [],
+  "inline": [
+    "IT-EXT-351-ORIGINE"
+  ],
+  "after": []
+}

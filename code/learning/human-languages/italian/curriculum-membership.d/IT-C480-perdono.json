@@ -1,0 +1,11 @@
+{
+  "id": "IT-C480-perdono",
+  "pathSegment": "IT-PATH-480-RANCORE",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "IT-EXT-480-RANCORE",
+      "order": 2
+    }
+  ]
+}

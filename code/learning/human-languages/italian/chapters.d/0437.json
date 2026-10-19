@@ -1,0 +1,19 @@
+{
+  "chapter": 437,
+  "title": "Rumore e sporco",
+  "label": "ch:it-rumore-e-sporco",
+  "canDo": "I can complain about noise and dirt: a racket, a din, a cockroach, mould and a creaking door.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "IT-C437-cigolare",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 437: I can complain about noise and dirt: a racket, a din, a cockroach, mould and a creaking door.",
+    "assesses": [
+      "IT-LEX-C437-RUMORE-03",
+      "IT-LEX-C437-RUMORE-04",
+      "IT-LEX-C437-RUMORE-05"
+    ]
+  }
+}

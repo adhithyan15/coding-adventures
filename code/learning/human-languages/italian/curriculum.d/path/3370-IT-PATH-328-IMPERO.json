@@ -1,0 +1,9 @@
+{
+  "id": "IT-PATH-328-IMPERO",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "IT-EXT-328-IMPERO"
+  ],
+  "after": []
+}

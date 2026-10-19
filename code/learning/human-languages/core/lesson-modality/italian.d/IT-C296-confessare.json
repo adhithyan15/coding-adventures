@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C296-confessare",
+    "language": "italian",
+    "chapter": 296,
+    "sequence": 17310,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:87649d7e3e889a06"
+  },
+  "findings": []
+}

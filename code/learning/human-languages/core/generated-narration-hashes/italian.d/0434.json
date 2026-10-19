@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 434,
+  "sourceHash": "fnv1a64:2ed44bc4bf46a035",
+  "lessonIds": [
+    "IT-C434-rubinetto",
+    "IT-C434-gocciolare",
+    "IT-C434-intasato",
+    "IT-C434-scarico",
+    "IT-C434-sturare"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch434.txt",
+  "json": "italian/narration/ch434.json",
+  "textHash": "fnv1a64:66ad5789378ac4e6",
+  "jsonHash": "fnv1a64:ae05ca2a30b6d90e",
+  "findings": []
+}

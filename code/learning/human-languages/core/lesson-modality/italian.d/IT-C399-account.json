@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C399-account",
+    "language": "italian",
+    "chapter": 399,
+    "sequence": 22670,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d6c9ab425e8cf045"
+  },
+  "findings": []
+}

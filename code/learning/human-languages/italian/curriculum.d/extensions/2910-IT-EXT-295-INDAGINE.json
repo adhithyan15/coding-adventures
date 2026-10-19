@@ -1,0 +1,8 @@
+{
+  "id": "IT-EXT-295-INDAGINE",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can follow an investigation: investigating, the inspector, the clues and the footprints.",
+  "prerequisites": []
+}

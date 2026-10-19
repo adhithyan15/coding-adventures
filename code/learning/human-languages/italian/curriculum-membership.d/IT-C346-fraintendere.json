@@ -1,0 +1,11 @@
+{
+  "id": "IT-C346-fraintendere",
+  "pathSegment": "IT-PATH-346-MALINTESO",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "IT-EXT-346-MALINTESO",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "IT-C331-cucchiaino",
+  "pathSegment": "IT-PATH-331-RICETTA",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "IT-EXT-331-RICETTA",
+      "order": 3
+    }
+  ]
+}

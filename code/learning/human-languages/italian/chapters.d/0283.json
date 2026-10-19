@@ -1,0 +1,19 @@
+{
+  "chapter": 283,
+  "title": "In redazione",
+  "label": "ch:it-in-redazione",
+  "canDo": "I can talk about who makes the news: the newsroom, the reporter, the correspondent and the interview.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "IT-C283-intervistare",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 283: I can talk about who makes the news: the newsroom, the reporter, the correspondent and the interview.",
+    "assesses": [
+      "IT-LEX-C283-REDAZIONE-03",
+      "IT-LEX-C283-REDAZIONE-04",
+      "IT-LEX-C283-REDAZIONE-05"
+    ]
+  }
+}

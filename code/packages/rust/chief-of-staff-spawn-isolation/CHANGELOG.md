@@ -4,6 +4,18 @@
 
 ### Added
 
+- `open_trusted_file(path)` (Windows; D18S P2.8c) opens a file an agent
+  will be granted to read.
+  - The rules are the executable's, without a digest: absolute, a regular
+    file, not a reparse point, owned by the user, Administrators, SYSTEM
+    or TrustedInstaller, and writable by no one else by its access list.
+  - It is opened sharing read and write but not delete, so while the
+    handle is held the file can be neither renamed nor deleted.
+  - `check_trusted_file(file)` makes the same check on a file already
+    open. The applier re-runs it after changing a granted file's access
+    list.
+  - New native test in `tests/verified_exec_windows.rs`.
+
 - `spawn_lock()` and `spawn(&mut Command)` (D18S P2.8b-1): one
   process-wide spawn lock. The Windows applier holds it across its
   inheritable span; every std spawn the supervisor makes goes through

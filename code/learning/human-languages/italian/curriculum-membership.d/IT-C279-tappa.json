@@ -1,0 +1,11 @@
+{
+  "id": "IT-C279-tappa",
+  "pathSegment": "IT-PATH-279-RINVIO",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "IT-EXT-279-RINVIO",
+      "order": 4
+    }
+  ]
+}

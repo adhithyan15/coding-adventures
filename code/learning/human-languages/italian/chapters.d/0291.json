@@ -1,0 +1,19 @@
+{
+  "chapter": 291,
+  "title": "Mi hanno preso la borsa",
+  "label": "ch:it-mi-hanno-preso-la-borsa",
+  "canDo": "I can say that someone snatched my bag or robbed me in the street, and name the pickpocket and the stolen goods.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "IT-C291-refurtiva",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 291: I can say that someone snatched my bag or robbed me in the street, and name the pickpocket and the stolen goods.",
+    "assesses": [
+      "IT-LEX-C291-SCIPPO-03",
+      "IT-LEX-C291-SCIPPO-04",
+      "IT-LEX-C291-SCIPPO-05"
+    ]
+  }
+}

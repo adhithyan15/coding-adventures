@@ -1,0 +1,8 @@
+{
+  "id": "IT-EXT-266-SPIEGARE",
+  "stage": "B1",
+  "kind": "required",
+  "category": "grammar",
+  "canDo": "I can advise with dovrei and dovresti, and explain myself in four moves: an opinion, a cause, a consequence and advice.",
+  "prerequisites": []
+}

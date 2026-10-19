@@ -1,0 +1,8 @@
+{
+  "id": "IT-EXT-460-BOSCO",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can describe a walk in the woods: a clearing, a brook, a mountain stream, a bush and wading across.",
+  "prerequisites": []
+}

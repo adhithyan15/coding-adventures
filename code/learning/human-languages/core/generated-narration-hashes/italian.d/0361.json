@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 361,
+  "sourceHash": "fnv1a64:27f38815036db2a1",
+  "lessonIds": [
+    "IT-C361-aumento",
+    "IT-C361-qualifica",
+    "IT-C361-competenza",
+    "IT-C361-formazione",
+    "IT-C361-consulente"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch361.txt",
+  "json": "italian/narration/ch361.json",
+  "textHash": "fnv1a64:726e5ee11653c195",
+  "jsonHash": "fnv1a64:528ff5e011322bf1",
+  "findings": []
+}

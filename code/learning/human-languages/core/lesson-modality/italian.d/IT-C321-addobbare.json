@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C321-addobbare",
+    "language": "italian",
+    "chapter": 321,
+    "sequence": 18590,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a38f4afbd50f1387"
+  },
+  "findings": []
+}

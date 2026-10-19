@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 415,
+  "sourceHash": "fnv1a64:beeaf519ffbab9e1",
+  "lessonIds": [
+    "IT-C415-noleggiare",
+    "IT-C415-noleggio",
+    "IT-C415-targa",
+    "IT-C415-libretto",
+    "IT-C415-assicurazione"
+  ],
+  "tex": "italian/book/chapters/ch415-a-noleggio.tex"
+}

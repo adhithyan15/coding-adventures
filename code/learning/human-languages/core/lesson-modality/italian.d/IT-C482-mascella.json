@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C482-mascella",
+    "language": "italian",
+    "chapter": 482,
+    "sequence": 27200,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:06914eb09de613e8"
+  },
+  "findings": []
+}

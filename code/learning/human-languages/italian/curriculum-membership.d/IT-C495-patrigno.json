@@ -1,0 +1,11 @@
+{
+  "id": "IT-C495-patrigno",
+  "pathSegment": "IT-PATH-495-FAMIGLIE",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "IT-EXT-495-FAMIGLIE",
+      "order": 2
+    }
+  ]
+}

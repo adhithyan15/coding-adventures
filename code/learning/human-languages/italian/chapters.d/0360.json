@@ -1,0 +1,19 @@
+{
+  "chapter": 360,
+  "title": "In ufficio",
+  "label": "ch:it-in-ufficio",
+  "canDo": "I can describe my place at work: the manager, my department and my duties, a delivery date and an extension.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "IT-C360-consegna",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 360: I can describe my place at work: the manager, my department and my duties, a delivery date and an extension.",
+    "assesses": [
+      "IT-LEX-C360-REPARTO-03",
+      "IT-LEX-C360-REPARTO-04",
+      "IT-LEX-C360-REPARTO-05"
+    ]
+  }
+}

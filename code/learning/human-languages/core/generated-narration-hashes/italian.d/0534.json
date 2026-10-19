@@ -1,0 +1,20 @@
+{
+  "language": "italian",
+  "chapter": 534,
+  "sourceHash": "fnv1a64:c25e87a18da12aad",
+  "lessonIds": [
+    "IT-C534-lavastoviglie",
+    "IT-C534-sciacquare",
+    "IT-C534-spugna",
+    "IT-C534-lavandino",
+    "IT-C534-lucidare",
+    "IT-R534-ripasso-527-534"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "italian/narration/ch534.txt",
+  "json": "italian/narration/ch534.json",
+  "textHash": "fnv1a64:e31451985f467a93",
+  "jsonHash": "fnv1a64:94c528eaddfc653b",
+  "findings": []
+}

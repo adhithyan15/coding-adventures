@@ -1,0 +1,11 @@
+{
+  "id": "IT-C295-indagine",
+  "pathSegment": "IT-PATH-295-INDAGINE",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "IT-EXT-295-INDAGINE",
+      "order": 1
+    }
+  ]
+}

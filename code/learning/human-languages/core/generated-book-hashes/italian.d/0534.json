@@ -1,0 +1,14 @@
+{
+  "language": "italian",
+  "chapter": 534,
+  "sourceHash": "fnv1a64:7fb94e00c73526e7",
+  "lessonIds": [
+    "IT-C534-lavastoviglie",
+    "IT-C534-sciacquare",
+    "IT-C534-spugna",
+    "IT-C534-lavandino",
+    "IT-C534-lucidare",
+    "IT-R534-ripasso-527-534"
+  ],
+  "tex": "italian/book/chapters/ch534-lavare-i-piatti.tex"
+}

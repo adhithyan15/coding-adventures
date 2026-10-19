@@ -1,0 +1,20 @@
+{
+  "chapter": 268,
+  "title": "A Return Ticket --- And When It Goes Wrong",
+  "label": "ch:it-a-return-ticket",
+  "canDo": "I can buy a ticket, one way or return, and report a problem such as a missed train or connection.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "IT-C268-ripasso-stazione",
+    "kind": "production",
+    "summary": "Complete IT-C268-ripasso-stazione: one morning at the station, from finding it to missing the train and asking what next.",
+    "assesses": [
+      "IT-LEX-ANDATA-E-RITORNO-01",
+      "IT-GRAMMAR-BIGLIETTO-PER-02",
+      "IT-LEX-HO-PERSO-01",
+      "IT-GRAMMAR-HO-UN-PROBLEMA-02"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C347-oggettivo",
+    "language": "italian",
+    "chapter": 347,
+    "sequence": 20040,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2d705a1b8616cd2c"
+  },
+  "findings": []
+}

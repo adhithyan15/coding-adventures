@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 403,
+  "sourceHash": "fnv1a64:822b714c120feac3",
+  "lessonIds": [
+    "IT-C403-pubblicare",
+    "IT-C403-commentare",
+    "IT-C403-inoltrare",
+    "IT-C403-email",
+    "IT-C403-casella"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch403.txt",
+  "json": "italian/narration/ch403.json",
+  "textHash": "fnv1a64:70cfab5da3cf344c",
+  "jsonHash": "fnv1a64:6d62b8bed323e84f",
+  "findings": []
+}

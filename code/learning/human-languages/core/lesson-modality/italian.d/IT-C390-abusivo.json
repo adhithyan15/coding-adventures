@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C390-abusivo",
+    "language": "italian",
+    "chapter": 390,
+    "sequence": 22250,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a840cbbfc685299b"
+  },
+  "findings": []
+}

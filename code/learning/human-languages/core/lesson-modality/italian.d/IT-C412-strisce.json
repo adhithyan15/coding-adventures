@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C412-strisce",
+    "language": "italian",
+    "chapter": 412,
+    "sequence": 23470,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:eeac7ea4b1f9651a"
+  },
+  "findings": []
+}

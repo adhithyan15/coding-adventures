@@ -1,0 +1,20 @@
+{
+  "language": "italian",
+  "chapter": 288,
+  "sourceHash": "fnv1a64:fb860446f1f543fb",
+  "lessonIds": [
+    "IT-C288-annuncio",
+    "IT-C288-statistica",
+    "IT-C288-rivelare",
+    "IT-C288-diffondere",
+    "IT-C288-approfondire",
+    "IT-R288-ripasso-281-288"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "italian/narration/ch288.txt",
+  "json": "italian/narration/ch288.json",
+  "textHash": "fnv1a64:3144cc5e6c52c9f9",
+  "jsonHash": "fnv1a64:6222d044e721ea37",
+  "findings": []
+}

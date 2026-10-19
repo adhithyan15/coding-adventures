@@ -1,0 +1,19 @@
+{
+  "chapter": 427,
+  "title": "Al confine",
+  "label": "ch:it-al-confine",
+  "canDo": "I can get through border and security checks: the customs officer, declaring, being searched and the border pass.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "IT-C427-valico",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 427: I can get through border and security checks: the customs officer, declaring, being searched and the border pass.",
+    "assesses": [
+      "IT-LEX-C427-DOGANA-03",
+      "IT-LEX-C427-DOGANA-04",
+      "IT-LEX-C427-DOGANA-05"
+    ]
+  }
+}

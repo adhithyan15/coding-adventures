@@ -1,0 +1,11 @@
+{
+  "id": "IT-C471-arrossire",
+  "pathSegment": "IT-PATH-471-TIMIDEZZA",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "IT-EXT-471-TIMIDEZZA",
+      "order": 4
+    }
+  ]
+}

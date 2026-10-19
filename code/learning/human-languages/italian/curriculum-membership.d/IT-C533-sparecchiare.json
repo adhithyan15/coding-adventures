@@ -1,0 +1,11 @@
+{
+  "id": "IT-C533-sparecchiare",
+  "pathSegment": "IT-PATH-533-TAVOLA",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "IT-EXT-533-TAVOLA",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "IT-C386-trasgredire",
+  "pathSegment": "IT-PATH-386-VIOLAZIONE",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "IT-EXT-386-VIOLAZIONE",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 308,
+  "title": "Il battesimo",
+  "label": "ch:it-il-battesimo",
+  "canDo": "I can talk about a christening: christening a child, the godparents and confirmation.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "IT-C308-cresima",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 308: I can talk about a christening: christening a child, the godparents and confirmation.",
+    "assesses": [
+      "IT-LEX-C308-BATTESIMO-03",
+      "IT-LEX-C308-BATTESIMO-04",
+      "IT-LEX-C308-BATTESIMO-05"
+    ]
+  }
+}

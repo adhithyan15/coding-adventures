@@ -1,0 +1,19 @@
+{
+  "chapter": 301,
+  "title": "Arrivano i soccorsi",
+  "label": "ch:it-arrivano-i-soccorsi",
+  "canDo": "I can describe the rescue: help arriving, the rescuers, the stretcher and the siren.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "IT-C301-sirena",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 301: I can describe the rescue: help arriving, the rescuers, the stretcher and the siren.",
+    "assesses": [
+      "IT-LEX-C301-SOCCORSO-03",
+      "IT-LEX-C301-SOCCORSO-04",
+      "IT-LEX-C301-SOCCORSO-05"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C511-eliminare",
+    "language": "italian",
+    "chapter": 511,
+    "sequence": 28690,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:63786e6fad837ea0"
+  },
+  "findings": []
+}

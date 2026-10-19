@@ -1,0 +1,19 @@
+{
+  "chapter": 425,
+  "title": "In aeroporto",
+  "label": "ch:it-in-aeroporto",
+  "canDo": "I can find my way through an airport: the terminal, a stopover, boarding, the shuttle bus and the time zone.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "IT-C425-fuso-orario",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 425: I can find my way through an airport: the terminal, a stopover, boarding, the shuttle bus and the time zone.",
+    "assesses": [
+      "IT-LEX-C425-AEROPORTO-03",
+      "IT-LEX-C425-AEROPORTO-04",
+      "IT-LEX-C425-AEROPORTO-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 283,
+  "sourceHash": "fnv1a64:0a08c91245920fcd",
+  "lessonIds": [
+    "IT-C283-redazione",
+    "IT-C283-cronista",
+    "IT-C283-inviato",
+    "IT-C283-intervista",
+    "IT-C283-intervistare"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch283.txt",
+  "json": "italian/narration/ch283.json",
+  "textHash": "fnv1a64:02030ff9ac5973b5",
+  "jsonHash": "fnv1a64:c7ffee55c4e59062",
+  "findings": []
+}

@@ -1,0 +1,8 @@
+{
+  "id": "IT-EXT-448-ARREDO",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can describe things on the street: a bench, a street lamp, a litter bin, a drain cover and things in the way.",
+  "prerequisites": []
+}

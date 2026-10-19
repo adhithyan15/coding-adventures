@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 352,
+  "sourceHash": "fnv1a64:7646b44910ad1d8f",
+  "lessonIds": [
+    "IT-C352-impatto",
+    "IT-C352-ripercussione",
+    "IT-C352-risvolto",
+    "IT-C352-scatenare",
+    "IT-C352-innescare"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch352.txt",
+  "json": "italian/narration/ch352.json",
+  "textHash": "fnv1a64:fc80129fe08faa26",
+  "jsonHash": "fnv1a64:84e48d76cbff84c0",
+  "findings": []
+}

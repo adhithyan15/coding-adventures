@@ -35,6 +35,11 @@ visible per-part spans in the learner paper, rubric, and answer key. The plan's
 `mock-assessment/<language>/<level>` family counts mocks still missing a
 distinct paper, rubric, key, or valid manifest; undeclared legacy manifests
 remain visible debt rather than becoming a parse error.
+For present full-mock evidence, the validator uses the repository's Python 3
+handle-relative reader so a concurrent symlink or Windows junction swap cannot
+redirect the manifest, paper, rubric, or key outside the audited track. Python 3
+must be available as `python3` on Unix or `python` on Windows for this check;
+an unavailable reader fails the gate rather than counting evidence as missing.
 See the [structure-manifest contract](docs/feature-contracts/full-mock-structure-manifests.md)
 for the JSON shape and migration rule.
 

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C358-tirocinio",
+    "language": "italian",
+    "chapter": 358,
+    "sequence": 20570,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b2f9c6c5bd2c0f83"
+  },
+  "findings": []
+}

@@ -1,0 +1,9 @@
+{
+  "id": "IT-PATH-472-DIFETTI",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "IT-EXT-472-DIFETTI"
+  ],
+  "after": []
+}

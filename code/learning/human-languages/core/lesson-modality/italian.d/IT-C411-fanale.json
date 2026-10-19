@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C411-fanale",
+    "language": "italian",
+    "chapter": 411,
+    "sequence": 23430,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c3a606c06aabee46"
+  },
+  "findings": []
+}

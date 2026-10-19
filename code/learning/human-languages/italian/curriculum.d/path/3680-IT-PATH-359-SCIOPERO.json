@@ -1,0 +1,9 @@
+{
+  "id": "IT-PATH-359-SCIOPERO",
+  "spine_node": "SPINE-GIVE-REASONS",
+  "before": [],
+  "inline": [
+    "IT-EXT-359-SCIOPERO"
+  ],
+  "after": []
+}

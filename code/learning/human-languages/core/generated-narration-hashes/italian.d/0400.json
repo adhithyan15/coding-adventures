@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 400,
+  "sourceHash": "fnv1a64:1c29b08161596139",
+  "lessonIds": [
+    "IT-C400-applicazione",
+    "IT-C400-installare",
+    "IT-C400-disinstallare",
+    "IT-C400-dispositivo",
+    "IT-C400-software"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch400.txt",
+  "json": "italian/narration/ch400.json",
+  "textHash": "fnv1a64:df3c02b37819a499",
+  "jsonHash": "fnv1a64:b24a693f73e96133",
+  "findings": []
+}

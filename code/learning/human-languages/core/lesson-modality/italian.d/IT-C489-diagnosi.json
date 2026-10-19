@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C489-diagnosi",
+    "language": "italian",
+    "chapter": 489,
+    "sequence": 27540,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:44919fd1eafb3718"
+  },
+  "findings": []
+}

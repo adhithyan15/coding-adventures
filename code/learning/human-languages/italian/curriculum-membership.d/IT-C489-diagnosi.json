@@ -1,0 +1,11 @@
+{
+  "id": "IT-C489-diagnosi",
+  "pathSegment": "IT-PATH-489-GUARIRE",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "IT-EXT-489-GUARIRE",
+      "order": 2
+    }
+  ]
+}

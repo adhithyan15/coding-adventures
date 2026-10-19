@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C375-stabilire",
+    "language": "italian",
+    "chapter": 375,
+    "sequence": 21480,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:eea3e32a9ac8b37d"
+  },
+  "findings": []
+}

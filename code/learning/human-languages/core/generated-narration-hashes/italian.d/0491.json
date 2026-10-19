@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 491,
+  "sourceHash": "fnv1a64:92f97cc363b5d061",
+  "lessonIds": [
+    "IT-C491-cotta",
+    "IT-C491-corteggiare",
+    "IT-C491-innamorato",
+    "IT-C491-tenerezza",
+    "IT-C491-bacio"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch491.txt",
+  "json": "italian/narration/ch491.json",
+  "textHash": "fnv1a64:66054ec1e5d93224",
+  "jsonHash": "fnv1a64:524ebb484588e896",
+  "findings": []
+}

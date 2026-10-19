@@ -1,0 +1,11 @@
+{
+  "id": "IT-C388-rinnovo",
+  "pathSegment": "IT-PATH-388-VALIDO",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "IT-EXT-388-VALIDO",
+      "order": 3
+    }
+  ]
+}

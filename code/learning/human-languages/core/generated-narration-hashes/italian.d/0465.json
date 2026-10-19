@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 465,
+  "sourceHash": "fnv1a64:9e0dffd726a9c3ac",
+  "lessonIds": [
+    "IT-C465-lucertola",
+    "IT-C465-vipera",
+    "IT-C465-rospo",
+    "IT-C465-lumaca",
+    "IT-C465-strisciare"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch465.txt",
+  "json": "italian/narration/ch465.json",
+  "textHash": "fnv1a64:7f1d98efcbcfad50",
+  "jsonHash": "fnv1a64:302dc901278741ac",
+  "findings": []
+}

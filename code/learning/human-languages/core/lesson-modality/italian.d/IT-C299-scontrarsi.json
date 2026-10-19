@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C299-scontrarsi",
+    "language": "italian",
+    "chapter": 299,
+    "sequence": 17440,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:cbb6632b640d5d02"
+  },
+  "findings": []
+}

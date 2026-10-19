@@ -1,0 +1,21 @@
+{
+  "language": "italian",
+  "chapter": 338,
+  "sourceHash": "fnv1a64:7b22f9f71098ae68",
+  "lessonIds": [
+    "IT-C338-frusta",
+    "IT-C338-sbattere",
+    "IT-C338-montare",
+    "IT-C338-amalgamare",
+    "IT-C338-mestolo",
+    "IT-R338-ripasso-337-338",
+    "IT-R338-ripasso-final-338"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "italian/narration/ch338.txt",
+  "json": "italian/narration/ch338.json",
+  "textHash": "fnv1a64:b5c0d8f9ea0d1a2c",
+  "jsonHash": "fnv1a64:df8c0040de92c91f",
+  "findings": []
+}

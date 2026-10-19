@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 334,
+  "sourceHash": "fnv1a64:8a9c544dbf61f4c4",
+  "lessonIds": [
+    "IT-C334-soffriggere",
+    "IT-C334-rosolare",
+    "IT-C334-friggere",
+    "IT-C334-sfumare",
+    "IT-C334-soffritto"
+  ],
+  "tex": "italian/book/chapters/ch334-in-padella.tex"
+}

@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 300,
+  "sourceHash": "fnv1a64:676c041c79e26652",
+  "lessonIds": [
+    "IT-C300-travolgere",
+    "IT-C300-ferito",
+    "IT-C300-ferire",
+    "IT-C300-illeso",
+    "IT-C300-cavarsela"
+  ],
+  "tex": "italian/book/chapters/ch300-feriti-e-illesi.tex"
+}

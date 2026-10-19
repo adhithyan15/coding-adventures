@@ -1,0 +1,11 @@
+{
+  "id": "IT-C515-sciatore",
+  "pathSegment": "IT-PATH-515-NEVE",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "IT-EXT-515-NEVE",
+      "order": 3
+    }
+  ]
+}

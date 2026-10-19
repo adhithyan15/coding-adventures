@@ -1,0 +1,19 @@
+{
+  "chapter": 488,
+  "title": "Al pronto soccorso",
+  "label": "ch:it-al-pronto-soccorso",
+  "canDo": "I can talk about going to hospital: the emergency room, being admitted and surgery.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "IT-C488-anestesia",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 488: I can talk about going to hospital: the emergency room, being admitted and surgery.",
+    "assesses": [
+      "IT-LEX-C488-OSPEDALE-03",
+      "IT-LEX-C488-OSPEDALE-04",
+      "IT-LEX-C488-OSPEDALE-05"
+    ]
+  }
+}

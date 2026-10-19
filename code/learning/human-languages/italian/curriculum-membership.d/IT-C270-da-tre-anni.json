@@ -1,0 +1,11 @@
+{
+  "id": "IT-C270-da-tre-anni",
+  "pathSegment": "IT-PATH-270-CONFRONTO",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "IT-EXT-270-CONFRONTO",
+      "order": 1
+    }
+  ]
+}

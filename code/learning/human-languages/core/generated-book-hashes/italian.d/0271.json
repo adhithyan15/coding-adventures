@@ -1,0 +1,12 @@
+{
+  "language": "italian",
+  "chapter": 271,
+  "sourceHash": "fnv1a64:ec43340bea778bf6",
+  "lessonIds": [
+    "IT-C271-se",
+    "IT-C271-se-piove",
+    "IT-C271-dipende",
+    "IT-C271-ripasso-condizioni"
+  ],
+  "tex": "italian/book/chapters/ch271-real-conditions.tex"
+}

@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 414,
+  "sourceHash": "fnv1a64:7d30d78578f49947",
+  "lessonIds": [
+    "IT-C414-statale",
+    "IT-C414-provinciale",
+    "IT-C414-curva",
+    "IT-C414-buca",
+    "IT-C414-sterrato"
+  ],
+  "tex": "italian/book/chapters/ch414-strade-di-campagna.tex"
+}

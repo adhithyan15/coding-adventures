@@ -6,4 +6,13 @@ description = "Data-driven RFC 5280 certificate policy gates"
 
 [dependencies]
 der-asn1 = { path = "../der-asn1" }
+tls-server-identity = { path = "../tls-server-identity" }
+x509-algorithm-identifier = { path = "../x509-algorithm-identifier" }
+x509-basic-constraints = { path = "../x509-basic-constraints" }
 x509-certificate = { path = "../x509-certificate" }
+x509-extended-key-usage = { path = "../x509-extended-key-usage" }
+x509-key-usage = { path = "../x509-key-usage" }
+x509-name = { path = "../x509-name" }
+x509-subject-alt-name = { path = "../x509-subject-alt-name" }
+x509-time = { path = "../x509-time" }
+x509-validity = { path = "../x509-validity" }

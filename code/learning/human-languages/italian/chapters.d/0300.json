@@ -1,0 +1,19 @@
+{
+  "chapter": 300,
+  "title": "Feriti e illesi",
+  "label": "ch:it-feriti-e-illesi",
+  "canDo": "I can say who was hurt in an accident, who was run over and who came out unhurt.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "IT-C300-cavarsela",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 300: I can say who was hurt in an accident, who was run over and who came out unhurt.",
+    "assesses": [
+      "IT-LEX-C300-FERITI-03",
+      "IT-LEX-C300-FERITI-04",
+      "IT-LEX-C300-FERITI-05"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C399-registrarsi",
+    "language": "italian",
+    "chapter": 399,
+    "sequence": 22710,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:10c75112c2c7dfc5"
+  },
+  "findings": []
+}

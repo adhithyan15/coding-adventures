@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 443,
+  "sourceHash": "fnv1a64:33f6bf92d034aec3",
+  "lessonIds": [
+    "IT-C443-settentrionale",
+    "IT-C443-meridionale",
+    "IT-C443-orientale",
+    "IT-C443-occidentale",
+    "IT-C443-punto-di-riferimento"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch443.txt",
+  "json": "italian/narration/ch443.json",
+  "textHash": "fnv1a64:f01e0675daa17a32",
+  "jsonHash": "fnv1a64:7079b9d68cdf5810",
+  "findings": []
+}

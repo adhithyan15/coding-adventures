@@ -1,0 +1,11 @@
+{
+  "id": "IT-C323-narratore",
+  "pathSegment": "IT-PATH-323-FAVOLA",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "IT-EXT-323-FAVOLA",
+      "order": 4
+    }
+  ]
+}

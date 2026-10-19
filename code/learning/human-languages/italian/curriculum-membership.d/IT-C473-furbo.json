@@ -1,0 +1,11 @@
+{
+  "id": "IT-C473-furbo",
+  "pathSegment": "IT-PATH-473-SINCERITA",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "IT-EXT-473-SINCERITA",
+      "order": 3
+    }
+  ]
+}

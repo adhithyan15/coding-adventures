@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C393-carcere",
+    "language": "italian",
+    "chapter": 393,
+    "sequence": 22360,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c0276500a4c439b6"
+  },
+  "findings": []
+}

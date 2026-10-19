@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 488,
+  "sourceHash": "fnv1a64:bbe7d0549528b618",
+  "lessonIds": [
+    "IT-C488-pronto-soccorso",
+    "IT-C488-ricoverare",
+    "IT-C488-chirurgo",
+    "IT-C488-operare",
+    "IT-C488-anestesia"
+  ],
+  "tex": "italian/book/chapters/ch488-al-pronto-soccorso.tex"
+}

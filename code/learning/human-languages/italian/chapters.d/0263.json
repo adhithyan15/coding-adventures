@@ -1,0 +1,23 @@
+{
+  "chapter": 263,
+  "title": "The Scene --- Ero, Era, C'era",
+  "label": "ch:it-the-scene",
+  "canDo": "I can paint the scene of a past story with the imperfetto, and drop the events into it with the passato prossimo.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "IT-C263-ripasso-mentre",
+    "kind": "production",
+    "summary": "Complete IT-C263-ripasso-mentre: a scene in the imperfetto and an event that cuts into it, joined with mentre.",
+    "assesses": [
+      "IT-GRAMMAR-IMPERFETTO-01",
+      "IT-ETYMON-IMPERFETTO-BA-02",
+      "IT-LEX-ERA-01",
+      "IT-LEX-C-ERA-02",
+      "IT-LEX-FACEVA-01",
+      "IT-GRAMMAR-SCENA-EVENTO-01",
+      "IT-ETYMON-IMPERFECTUS-02"
+    ]
+  }
+}

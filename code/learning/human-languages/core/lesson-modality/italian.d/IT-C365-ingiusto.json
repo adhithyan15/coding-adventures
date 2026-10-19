@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C365-ingiusto",
+    "language": "italian",
+    "chapter": 365,
+    "sequence": 20940,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0769b5a9dadbd699"
+  },
+  "findings": []
+}

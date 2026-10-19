@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 532,
+  "sourceHash": "fnv1a64:076dc0f832d7834c",
+  "lessonIds": [
+    "IT-C532-spazzare",
+    "IT-C532-spolverare",
+    "IT-C532-straccio",
+    "IT-C532-detersivo",
+    "IT-C532-aspirapolvere"
+  ],
+  "tex": "italian/book/chapters/ch532-le-pulizie.tex"
+}

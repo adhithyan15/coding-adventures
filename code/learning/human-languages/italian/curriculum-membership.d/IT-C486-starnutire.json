@@ -1,0 +1,11 @@
+{
+  "id": "IT-C486-starnutire",
+  "pathSegment": "IT-PATH-486-PRURITO",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "IT-EXT-486-PRURITO",
+      "order": 0
+    }
+  ]
+}

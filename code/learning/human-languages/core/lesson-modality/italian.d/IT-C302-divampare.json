@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C302-divampare",
+    "language": "italian",
+    "chapter": 302,
+    "sequence": 17590,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:bb66a394c89ae086"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "IT-C334-soffritto",
+  "pathSegment": "IT-PATH-334-SOFFRITTO",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "IT-EXT-334-SOFFRITTO",
+      "order": 4
+    }
+  ]
+}

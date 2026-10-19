@@ -1,0 +1,9 @@
+{
+  "id": "IT-PATH-459-BANCA",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "IT-EXT-459-BANCA"
+  ],
+  "after": []
+}

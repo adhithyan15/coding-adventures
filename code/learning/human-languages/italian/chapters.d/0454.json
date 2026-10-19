@@ -1,0 +1,19 @@
+{
+  "chapter": 454,
+  "title": "Il cibo in negozio",
+  "label": "ch:it-il-cibo-in-negozio",
+  "canDo": "I can shop for food: the delicatessen, the fishmonger, the greengrocer, the cake shop and the rotisserie.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "IT-C454-rosticceria",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 454: I can shop for food: the delicatessen, the fishmonger, the greengrocer, the cake shop and the rotisserie.",
+    "assesses": [
+      "IT-LEX-C454-ALIMENTARI-03",
+      "IT-LEX-C454-ALIMENTARI-04",
+      "IT-LEX-C454-ALIMENTARI-05"
+    ]
+  }
+}

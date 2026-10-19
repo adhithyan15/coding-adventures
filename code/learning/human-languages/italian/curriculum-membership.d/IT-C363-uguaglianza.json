@@ -1,0 +1,11 @@
+{
+  "id": "IT-C363-uguaglianza",
+  "pathSegment": "IT-PATH-363-CITTADINO",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "IT-EXT-363-CITTADINO",
+      "order": 4
+    }
+  ]
+}

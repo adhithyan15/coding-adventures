@@ -1,0 +1,19 @@
+{
+  "chapter": 336,
+  "title": "In forno",
+  "label": "ch:it-in-forno",
+  "canDo": "I can describe baking: preheating, putting in and taking out, the baking tray and the cooking time.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "IT-R336-ripasso-329-336",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 336: I can describe baking: preheating, putting in and taking out, the baking tray and the cooking time.",
+    "assesses": [
+      "IT-LEX-C336-FORNO-03",
+      "IT-LEX-C336-FORNO-04",
+      "IT-LEX-C336-FORNO-05"
+    ]
+  }
+}

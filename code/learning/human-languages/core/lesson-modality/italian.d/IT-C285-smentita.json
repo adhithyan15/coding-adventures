@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C285-smentita",
+    "language": "italian",
+    "chapter": 285,
+    "sequence": 16750,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c781a434484ddd33"
+  },
+  "findings": []
+}

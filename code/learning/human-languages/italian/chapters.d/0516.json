@@ -1,0 +1,19 @@
+{
+  "chapter": 516,
+  "title": "Strumenti musicali",
+  "label": "ch:it-strumenti-musicali",
+  "canDo": "I can talk about the instruments people play.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "IT-C516-strimpellare",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 516: I can talk about the instruments people play.",
+    "assesses": [
+      "IT-LEX-C516-STRUMENTI-03",
+      "IT-LEX-C516-STRUMENTI-04",
+      "IT-LEX-C516-STRUMENTI-05"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C531-molletta",
+    "language": "italian",
+    "chapter": 531,
+    "sequence": 29700,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9064a763d57e26b4"
+  },
+  "findings": []
+}

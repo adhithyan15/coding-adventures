@@ -1,0 +1,11 @@
+{
+  "id": "IT-C520-debuttare",
+  "pathSegment": "IT-PATH-520-RECITARE",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "IT-EXT-520-RECITARE",
+      "order": 3
+    }
+  ]
+}

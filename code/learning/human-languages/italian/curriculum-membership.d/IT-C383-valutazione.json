@@ -1,0 +1,11 @@
+{
+  "id": "IT-C383-valutazione",
+  "pathSegment": "IT-PATH-383-BOCCIATURA",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "IT-EXT-383-BOCCIATURA",
+      "order": 3
+    }
+  ]
+}

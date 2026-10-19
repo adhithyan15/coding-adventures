@@ -1,0 +1,11 @@
+{
+  "id": "IT-R336-ripasso-329-336",
+  "pathSegment": "IT-PATH-336-FORNO",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "IT-EXT-336-FORNO",
+      "order": 5
+    }
+  ]
+}

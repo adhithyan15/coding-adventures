@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 390,
+  "sourceHash": "fnv1a64:78cc3925d650752e",
+  "lessonIds": [
+    "IT-C390-legale",
+    "IT-C390-illegale",
+    "IT-C390-lecito",
+    "IT-C390-illecito",
+    "IT-C390-abusivo"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch390.txt",
+  "json": "italian/narration/ch390.json",
+  "textHash": "fnv1a64:012491bf149e11f1",
+  "jsonHash": "fnv1a64:9a8fc0556e6c4e7e",
+  "findings": []
+}

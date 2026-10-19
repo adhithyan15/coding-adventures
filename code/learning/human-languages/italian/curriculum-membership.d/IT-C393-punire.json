@@ -1,0 +1,11 @@
+{
+  "id": "IT-C393-punire",
+  "pathSegment": "IT-PATH-393-CARCERE",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "IT-EXT-393-CARCERE",
+      "order": 2
+    }
+  ]
+}

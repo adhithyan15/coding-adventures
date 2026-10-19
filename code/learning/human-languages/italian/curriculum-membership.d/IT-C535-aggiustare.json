@@ -1,0 +1,11 @@
+{
+  "id": "IT-C535-aggiustare",
+  "pathSegment": "IT-PATH-535-ATTREZZI",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "IT-EXT-535-ATTREZZI",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C307-nascita",
+    "language": "italian",
+    "chapter": 307,
+    "sequence": 17840,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:84ad6b658289def4"
+  },
+  "findings": []
+}

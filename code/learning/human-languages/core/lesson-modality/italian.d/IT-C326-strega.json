@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C326-strega",
+    "language": "italian",
+    "chapter": 326,
+    "sequence": 18820,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e8d24ade176c7aad"
+  },
+  "findings": []
+}

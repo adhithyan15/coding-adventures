@@ -1,0 +1,11 @@
+{
+  "id": "IT-C274-non-appena",
+  "pathSegment": "IT-PATH-274-FRATTEMPO",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "IT-EXT-274-FRATTEMPO",
+      "order": 2
+    }
+  ]
+}

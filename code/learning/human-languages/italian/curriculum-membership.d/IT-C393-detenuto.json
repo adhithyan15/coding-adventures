@@ -1,0 +1,11 @@
+{
+  "id": "IT-C393-detenuto",
+  "pathSegment": "IT-PATH-393-CARCERE",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "IT-EXT-393-CARCERE",
+      "order": 1
+    }
+  ]
+}

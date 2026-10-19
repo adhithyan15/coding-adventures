@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 286,
+  "sourceHash": "fnv1a64:ec5489b1e125c074",
+  "lessonIds": [
+    "IT-C286-edizione",
+    "IT-C286-didascalia",
+    "IT-C286-scoop",
+    "IT-C286-censura",
+    "IT-C286-censurare"
+  ],
+  "tex": "italian/book/chapters/ch286-carta-stampata.tex"
+}

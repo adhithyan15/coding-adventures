@@ -1,0 +1,11 @@
+{
+  "id": "IT-C466-afoso",
+  "pathSegment": "IT-PATH-466-AFA",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "IT-EXT-466-AFA",
+      "order": 1
+    }
+  ]
+}

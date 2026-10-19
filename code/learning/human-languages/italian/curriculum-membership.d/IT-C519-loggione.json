@@ -1,0 +1,11 @@
+{
+  "id": "IT-C519-loggione",
+  "pathSegment": "IT-PATH-519-TEATRO",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "IT-EXT-519-TEATRO",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "IT-C389-procedura",
+  "pathSegment": "IT-PATH-389-PRATICA",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "IT-EXT-389-PRATICA",
+      "order": 2
+    }
+  ]
+}

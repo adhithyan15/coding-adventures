@@ -1,0 +1,11 @@
+{
+  "id": "IT-C455-risuolare",
+  "pathSegment": "IT-PATH-455-ARTIGIANI",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "IT-EXT-455-ARTIGIANI",
+      "order": 1
+    }
+  ]
+}

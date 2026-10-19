@@ -1,0 +1,8 @@
+{
+  "id": "IT-EXT-296-MOVENTE",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can follow a whodunnit: the suspect, the motive, the alibi, the questioning and the confession.",
+  "prerequisites": []
+}

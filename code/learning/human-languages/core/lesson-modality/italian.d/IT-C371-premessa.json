@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C371-premessa",
+    "language": "italian",
+    "chapter": 371,
+    "sequence": 21280,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a508deada2d9395f"
+  },
+  "findings": []
+}

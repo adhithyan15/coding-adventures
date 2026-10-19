@@ -1,0 +1,20 @@
+{
+  "language": "italian",
+  "chapter": 428,
+  "sourceHash": "fnv1a64:1d90a2a7d1157440",
+  "lessonIds": [
+    "IT-C428-decollare",
+    "IT-C428-atterrare",
+    "IT-C428-turbolenza",
+    "IT-C428-allacciare",
+    "IT-C428-finestrino",
+    "IT-R428-ripasso-421-428"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "italian/narration/ch428.txt",
+  "json": "italian/narration/ch428.json",
+  "textHash": "fnv1a64:f6bfad7257b761df",
+  "jsonHash": "fnv1a64:bba79ea6c912c542",
+  "findings": []
+}

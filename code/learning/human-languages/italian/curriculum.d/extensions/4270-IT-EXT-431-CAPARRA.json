@@ -1,0 +1,8 @@
+{
+  "id": "IT-EXT-431-CAPARRA",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can handle a booking: the deposit, the advance, cancelling, the cancellation fee and bringing dates forward.",
+  "prerequisites": []
+}

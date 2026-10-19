@@ -1,0 +1,11 @@
+{
+  "id": "IT-C446-rocca",
+  "pathSegment": "IT-PATH-446-BORGO",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "IT-EXT-446-BORGO",
+      "order": 1
+    }
+  ]
+}

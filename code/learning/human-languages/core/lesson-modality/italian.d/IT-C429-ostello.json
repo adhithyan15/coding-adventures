@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C429-ostello",
+    "language": "italian",
+    "chapter": 429,
+    "sequence": 24330,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9cea6fdd9fc55493"
+  },
+  "findings": []
+}

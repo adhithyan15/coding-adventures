@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 453,
+  "sourceHash": "fnv1a64:abb05010f4dff1c4",
+  "lessonIds": [
+    "IT-C453-ferramenta",
+    "IT-C453-merceria",
+    "IT-C453-profumeria",
+    "IT-C453-erboristeria",
+    "IT-C453-gioielleria"
+  ],
+  "tex": "italian/book/chapters/ch453-piccoli-negozi.tex"
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 471,
+  "title": "Timidi e socievoli",
+  "label": "ch:it-timidi-e-socievoli",
+  "canDo": "I can describe how shy or outgoing someone is.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "IT-C471-arrossire",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 471: I can describe how shy or outgoing someone is.",
+    "assesses": [
+      "IT-LEX-C471-TIMIDEZZA-03",
+      "IT-LEX-C471-TIMIDEZZA-04",
+      "IT-LEX-C471-TIMIDEZZA-05"
+    ]
+  }
+}

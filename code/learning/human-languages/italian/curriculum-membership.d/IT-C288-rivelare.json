@@ -1,0 +1,11 @@
+{
+  "id": "IT-C288-rivelare",
+  "pathSegment": "IT-PATH-288-ANNUNCIO",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "IT-EXT-288-ANNUNCIO",
+      "order": 2
+    }
+  ]
+}

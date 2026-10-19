@@ -1,0 +1,11 @@
+{
+  "id": "IT-C384-regolamento",
+  "pathSegment": "IT-PATH-384-NORMA",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "IT-EXT-384-NORMA",
+      "order": 1
+    }
+  ]
+}

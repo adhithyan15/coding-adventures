@@ -1,0 +1,11 @@
+{
+  "id": "IT-C337-guarnire",
+  "pathSegment": "IT-PATH-337-CONDIRE",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "IT-EXT-337-CONDIRE",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "IT-C498-ubbidire",
+  "pathSegment": "IT-PATH-498-BAMBINI",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "IT-EXT-498-BAMBINI",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C323-c-era-una-volta",
+    "language": "italian",
+    "chapter": 323,
+    "sequence": 18660,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:dbfe4dbdfea72d8b"
+  },
+  "findings": []
+}

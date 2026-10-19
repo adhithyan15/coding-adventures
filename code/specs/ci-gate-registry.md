@@ -373,6 +373,13 @@ It MUST also include `rust/chief-of-staff-daemon-secret-file` and
 owner-only key-file policy a broker's keys pass through; the second holds the
 broker's Windows key adoption. Both have tests that run only on Windows.
 
+It MUST also include `rust/chief-of-staff-broker-launcher`,
+`rust/chief-of-staff-process-supervisor` and `rust/chief-of-staff-broker-e2e`
+(D18S P2.8b-2). The launcher holds the Windows broker launch through the
+applier, and the supervisor holds the broker child it ends. `broker-e2e`'s
+supervised tests run the confined broker end to end on Windows. A change to
+any of the three must run those tests natively.
+
 ### Closure compiler native Windows acceptance
 
 The Windows general package-test step is conditional on

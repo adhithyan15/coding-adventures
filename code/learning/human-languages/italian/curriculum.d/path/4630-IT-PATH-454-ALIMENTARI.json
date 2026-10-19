@@ -1,0 +1,9 @@
+{
+  "id": "IT-PATH-454-ALIMENTARI",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "IT-EXT-454-ALIMENTARI"
+  ],
+  "after": []
+}

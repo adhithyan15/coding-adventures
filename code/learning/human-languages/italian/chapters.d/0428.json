@@ -1,0 +1,19 @@
+{
+  "chapter": 428,
+  "title": "In volo",
+  "label": "ch:it-in-volo",
+  "canDo": "I can talk about a flight: taking off, landing, turbulence, fastening my belt and the window seat.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "IT-R428-ripasso-421-428",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 428: I can talk about a flight: taking off, landing, turbulence, fastening my belt and the window seat.",
+    "assesses": [
+      "IT-LEX-C428-VOLO-03",
+      "IT-LEX-C428-VOLO-04",
+      "IT-LEX-C428-VOLO-05"
+    ]
+  }
+}

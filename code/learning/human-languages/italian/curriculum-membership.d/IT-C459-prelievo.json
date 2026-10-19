@@ -1,0 +1,11 @@
+{
+  "id": "IT-C459-prelievo",
+  "pathSegment": "IT-PATH-459-BANCA",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "IT-EXT-459-BANCA",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 326,
+  "title": "Draghi e streghe",
+  "label": "ch:it-draghi-e-streghe",
+  "canDo": "I can tell a magic tale: the dragon, the witch, the fairy, the wizard and the treasure.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "IT-C326-tesoro",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 326: I can tell a magic tale: the dragon, the witch, the fairy, the wizard and the treasure.",
+    "assesses": [
+      "IT-LEX-C326-MAGIA-03",
+      "IT-LEX-C326-MAGIA-04",
+      "IT-LEX-C326-MAGIA-05"
+    ]
+  }
+}

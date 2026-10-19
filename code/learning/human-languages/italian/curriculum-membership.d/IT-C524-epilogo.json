@@ -1,0 +1,11 @@
+{
+  "id": "IT-C524-epilogo",
+  "pathSegment": "IT-PATH-524-ROMANZO",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "IT-EXT-524-ROMANZO",
+      "order": 4
+    }
+  ]
+}

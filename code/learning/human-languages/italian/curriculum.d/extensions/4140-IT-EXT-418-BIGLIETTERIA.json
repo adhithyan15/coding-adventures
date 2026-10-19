@@ -1,0 +1,8 @@
+{
+  "id": "IT-EXT-418-BIGLIETTERIA",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can buy and use tickets: the ticket office, a season ticket, stamping it, the inspector and the supplement.",
+  "prerequisites": []
+}

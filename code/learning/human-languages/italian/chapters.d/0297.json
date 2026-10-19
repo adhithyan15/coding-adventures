@@ -1,0 +1,19 @@
+{
+  "chapter": 297,
+  "title": "In manette",
+  "label": "ch:it-in-manette",
+  "canDo": "I can report an arrest: arresting, the handcuffs, the capture and running away.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "IT-C297-fuggire",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 297: I can report an arrest: arresting, the handcuffs, the capture and running away.",
+    "assesses": [
+      "IT-LEX-C297-MANETTE-03",
+      "IT-LEX-C297-MANETTE-04",
+      "IT-LEX-C297-MANETTE-05"
+    ]
+  }
+}

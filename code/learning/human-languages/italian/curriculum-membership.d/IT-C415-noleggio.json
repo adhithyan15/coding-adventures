@@ -1,0 +1,11 @@
+{
+  "id": "IT-C415-noleggio",
+  "pathSegment": "IT-PATH-415-NOLEGGIO",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "IT-EXT-415-NOLEGGIO",
+      "order": 1
+    }
+  ]
+}

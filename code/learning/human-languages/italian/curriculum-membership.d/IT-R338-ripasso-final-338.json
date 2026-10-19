@@ -1,0 +1,11 @@
+{
+  "id": "IT-R338-ripasso-final-338",
+  "pathSegment": "IT-PATH-338-FRUSTA",
+  "pathOrder": 6,
+  "extensions": [
+    {
+      "id": "IT-EXT-338-FRUSTA",
+      "order": 6
+    }
+  ]
+}

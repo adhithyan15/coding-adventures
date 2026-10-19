@@ -1,0 +1,11 @@
+{
+  "id": "IT-R428-ripasso-421-428",
+  "pathSegment": "IT-PATH-428-VOLO",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "IT-EXT-428-VOLO",
+      "order": 5
+    }
+  ]
+}

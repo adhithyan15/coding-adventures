@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 425,
+  "sourceHash": "fnv1a64:d6f9d541492d2773",
+  "lessonIds": [
+    "IT-C425-terminal",
+    "IT-C425-scalo",
+    "IT-C425-imbarco",
+    "IT-C425-navetta",
+    "IT-C425-fuso-orario"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch425.txt",
+  "json": "italian/narration/ch425.json",
+  "textHash": "fnv1a64:ed14a08a04c2977b",
+  "jsonHash": "fnv1a64:bb8c128c4f2698ea",
+  "findings": []
+}

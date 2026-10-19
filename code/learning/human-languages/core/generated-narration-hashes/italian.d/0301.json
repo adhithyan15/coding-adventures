@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 301,
+  "sourceHash": "fnv1a64:438eaed28199a2e1",
+  "lessonIds": [
+    "IT-C301-soccorso",
+    "IT-C301-soccorrere",
+    "IT-C301-soccorritore",
+    "IT-C301-barella",
+    "IT-C301-sirena"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch301.txt",
+  "json": "italian/narration/ch301.json",
+  "textHash": "fnv1a64:ec02774e674f0be2",
+  "jsonHash": "fnv1a64:c1043301704c7200",
+  "findings": []
+}

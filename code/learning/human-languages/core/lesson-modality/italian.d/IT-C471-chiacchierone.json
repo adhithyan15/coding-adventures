@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C471-chiacchierone",
+    "language": "italian",
+    "chapter": 471,
+    "sequence": 26630,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2fe5a3b6d50c0462"
+  },
+  "findings": []
+}

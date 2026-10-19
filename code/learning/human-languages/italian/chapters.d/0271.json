@@ -1,0 +1,21 @@
+{
+  "chapter": 271,
+  "title": "If It Rains --- Real Conditions, and It Depends",
+  "label": "ch:it-real-conditions",
+  "canDo": "I can set out a real condition with se and the present, and answer with dipende, naming what it depends on.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "IT-C271-ripasso-condizioni",
+    "kind": "production",
+    "summary": "Complete IT-C271-ripasso-condizioni: plans with a branch in them, from decided to not yet named.",
+    "assesses": [
+      "IT-GRAMMAR-SE-01",
+      "IT-ETYMON-SE-SI-02",
+      "IT-GRAMMAR-SE-PRESENTE-01",
+      "IT-LEX-DIPENDE-01",
+      "IT-GRAMMAR-DIPENDE-DA-02"
+    ]
+  }
+}

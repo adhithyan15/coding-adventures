@@ -1,0 +1,20 @@
+{
+  "language": "italian",
+  "chapter": 478,
+  "sourceHash": "fnv1a64:d8a8b47a41b8b5eb",
+  "lessonIds": [
+    "IT-C478-orgoglio",
+    "IT-C478-vergognarsi",
+    "IT-C478-imbarazzo",
+    "IT-C478-invidia",
+    "IT-C478-invidiare",
+    "IT-R478-ripasso-471-478"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "italian/narration/ch478.txt",
+  "json": "italian/narration/ch478.json",
+  "textHash": "fnv1a64:c72f8be7cce1b156",
+  "jsonHash": "fnv1a64:6012d8f124c4c129",
+  "findings": []
+}

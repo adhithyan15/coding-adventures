@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C319-coriandoli",
+    "language": "italian",
+    "chapter": 319,
+    "sequence": 18470,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b92dcd536eb36694"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 319,
+  "sourceHash": "fnv1a64:d14bf2ae6f5a53ee",
+  "lessonIds": [
+    "IT-C319-carnevale",
+    "IT-C319-maschera",
+    "IT-C319-coriandoli",
+    "IT-C319-mascherarsi",
+    "IT-C319-sfilare"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch319.txt",
+  "json": "italian/narration/ch319.json",
+  "textHash": "fnv1a64:5af7d97ce880d6d9",
+  "jsonHash": "fnv1a64:7b616574e42a2663",
+  "findings": []
+}

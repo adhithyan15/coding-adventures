@@ -1,0 +1,11 @@
+{
+  "id": "IT-C369-eleggere",
+  "pathSegment": "IT-PATH-369-PARTITO",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "IT-EXT-369-PARTITO",
+      "order": 3
+    }
+  ]
+}

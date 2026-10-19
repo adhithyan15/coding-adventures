@@ -1,0 +1,19 @@
+{
+  "chapter": 535,
+  "title": "Fai da te",
+  "label": "ch:it-fai-da-te",
+  "canDo": "I can talk about small repairs and painting the walls.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "IT-C535-imbiancare",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 535: I can talk about small repairs and painting the walls.",
+    "assesses": [
+      "IT-LEX-C535-ATTREZZI-03",
+      "IT-LEX-C535-ATTREZZI-04",
+      "IT-LEX-C535-ATTREZZI-05"
+    ]
+  }
+}

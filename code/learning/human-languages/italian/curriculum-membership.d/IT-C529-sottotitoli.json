@@ -1,0 +1,11 @@
+{
+  "id": "IT-C529-sottotitoli",
+  "pathSegment": "IT-PATH-529-CINEMA",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "IT-EXT-529-CINEMA",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "IT-C442-sbucare",
+  "pathSegment": "IT-PATH-442-SALITA",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "IT-EXT-442-SALITA",
+      "order": 3
+    }
+  ]
+}

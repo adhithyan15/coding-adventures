@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 419,
+  "sourceHash": "fnv1a64:bdf0fd433d42b88c",
+  "lessonIds": [
+    "IT-C419-vagone",
+    "IT-C419-carrozza",
+    "IT-C419-scompartimento",
+    "IT-C419-cuccetta",
+    "IT-C419-capotreno"
+  ],
+  "tex": "italian/book/chapters/ch419-in-treno.tex"
+}

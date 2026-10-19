@@ -1,0 +1,9 @@
+{
+  "id": "IT-PATH-294-PATTUGLIA",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "IT-EXT-294-PATTUGLIA"
+  ],
+  "after": []
+}

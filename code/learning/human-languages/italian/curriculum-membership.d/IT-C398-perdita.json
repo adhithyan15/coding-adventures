@@ -1,0 +1,11 @@
+{
+  "id": "IT-C398-perdita",
+  "pathSegment": "IT-PATH-398-GUADAGNO",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "IT-EXT-398-GUADAGNO",
+      "order": 3
+    }
+  ]
+}

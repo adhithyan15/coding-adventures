@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C536-inquilino",
+    "language": "italian",
+    "chapter": 536,
+    "sequence": 29930,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:83f53a37589035f4"
+  },
+  "findings": []
+}

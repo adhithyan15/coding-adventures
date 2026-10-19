@@ -1,0 +1,19 @@
+{
+  "chapter": 391,
+  "title": "Le accuse",
+  "label": "ch:it-le-accuse",
+  "canDo": "I can say who is accused of what: an accusation, a thief, a formal complaint and corruption.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "IT-C391-corruzione",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 391: I can say who is accused of what: an accusation, a thief, a formal complaint and corruption.",
+    "assesses": [
+      "IT-LEX-C391-ACCUSA-03",
+      "IT-LEX-C391-ACCUSA-04",
+      "IT-LEX-C391-ACCUSA-05"
+    ]
+  }
+}

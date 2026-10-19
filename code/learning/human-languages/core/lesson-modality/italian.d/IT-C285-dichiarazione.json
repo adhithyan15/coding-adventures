@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C285-dichiarazione",
+    "language": "italian",
+    "chapter": 285,
+    "sequence": 16710,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9ce297dae87519d9"
+  },
+  "findings": []
+}

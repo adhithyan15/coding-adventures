@@ -1,0 +1,11 @@
+{
+  "id": "IT-C366-discriminazione",
+  "pathSegment": "IT-PATH-366-SOCIETA",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "IT-EXT-366-SOCIETA",
+      "order": 2
+    }
+  ]
+}

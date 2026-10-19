@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C304-terremoto",
+    "language": "italian",
+    "chapter": 304,
+    "sequence": 17680,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e38b6fc9e64c6faf"
+  },
+  "findings": []
+}

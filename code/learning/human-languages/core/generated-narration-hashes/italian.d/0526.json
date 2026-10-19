@@ -1,0 +1,20 @@
+{
+  "language": "italian",
+  "chapter": 526,
+  "sourceHash": "fnv1a64:ba8cbb4b7a08d480",
+  "lessonIds": [
+    "IT-C526-recensione",
+    "IT-C526-recensire",
+    "IT-C526-critico",
+    "IT-C526-divorare",
+    "IT-C526-rileggere",
+    "IT-R526-ripasso-519-526"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "italian/narration/ch526.txt",
+  "json": "italian/narration/ch526.json",
+  "textHash": "fnv1a64:7c3e43aa982d7f47",
+  "jsonHash": "fnv1a64:de3df696800d0d4c",
+  "findings": []
+}

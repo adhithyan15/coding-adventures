@@ -1,0 +1,19 @@
+{
+  "chapter": 467,
+  "title": "Il temporale",
+  "label": "ch:it-il-temporale",
+  "canDo": "I can describe a thunderstorm: lightning, thunder, flashing, hail and hailing.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "IT-C467-grandinare",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 467: I can describe a thunderstorm: lightning, thunder, flashing, hail and hailing.",
+    "assesses": [
+      "IT-LEX-C467-TEMPORALE-03",
+      "IT-LEX-C467-TEMPORALE-04",
+      "IT-LEX-C467-TEMPORALE-05"
+    ]
+  }
+}

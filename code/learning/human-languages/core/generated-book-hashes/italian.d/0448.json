@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 448,
+  "sourceHash": "fnv1a64:82e3ecc9dc72ad61",
+  "lessonIds": [
+    "IT-C448-panchina",
+    "IT-C448-lampione",
+    "IT-C448-cestino",
+    "IT-C448-tombino",
+    "IT-C448-ingombrare"
+  ],
+  "tex": "italian/book/chapters/ch448-panchine-e-lampioni.tex"
+}

@@ -1,0 +1,11 @@
+{
+  "id": "IT-C264-lettura",
+  "pathSegment": "IT-PATH-264-ORDINE",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "IT-EXT-264-ORDINE",
+      "order": 2
+    }
+  ]
+}

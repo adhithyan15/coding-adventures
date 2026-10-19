@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 330,
+  "sourceHash": "fnv1a64:bc89652ffb9960a1",
+  "lessonIds": [
+    "IT-C330-epoca",
+    "IT-C330-medioevo",
+    "IT-C330-rovine",
+    "IT-C330-scavi",
+    "IT-C330-archeologo"
+  ],
+  "tex": "italian/book/chapters/ch330-sotto-la-terra.tex"
+}

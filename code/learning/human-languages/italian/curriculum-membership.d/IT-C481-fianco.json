@@ -1,0 +1,11 @@
+{
+  "id": "IT-C481-fianco",
+  "pathSegment": "IT-PATH-481-GAMBA",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "IT-EXT-481-GAMBA",
+      "order": 0
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "IT-C441-traversa",
+  "pathSegment": "IT-PATH-441-VICOLI",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "IT-EXT-441-VICOLI",
+      "order": 2
+    }
+  ]
+}

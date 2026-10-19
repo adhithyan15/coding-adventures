@@ -1,0 +1,8 @@
+{
+  "id": "IT-EXT-442-SALITA",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can describe a route: uphill, downhill, running alongside, coming out somewhere and going round.",
+  "prerequisites": []
+}

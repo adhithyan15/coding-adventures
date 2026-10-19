@@ -1,0 +1,9 @@
+{
+  "id": "IT-PATH-415-NOLEGGIO",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "IT-EXT-415-NOLEGGIO"
+  ],
+  "after": []
+}

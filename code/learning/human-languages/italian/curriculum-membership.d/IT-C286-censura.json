@@ -1,0 +1,11 @@
+{
+  "id": "IT-C286-censura",
+  "pathSegment": "IT-PATH-286-EDIZIONE",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "IT-EXT-286-EDIZIONE",
+      "order": 3
+    }
+  ]
+}

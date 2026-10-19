@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 451,
+  "sourceHash": "fnv1a64:d18eadc31e5dba6c",
+  "lessonIds": [
+    "IT-C451-lungomare",
+    "IT-C451-gironzolare",
+    "IT-C451-curiosare",
+    "IT-C451-sbirciare",
+    "IT-C451-vetrina"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch451.txt",
+  "json": "italian/narration/ch451.json",
+  "textHash": "fnv1a64:5672414af553f23a",
+  "jsonHash": "fnv1a64:3314cc765a676608",
+  "findings": []
+}

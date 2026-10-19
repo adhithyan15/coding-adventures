@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 527,
+  "sourceHash": "fnv1a64:8e916d245e578cb8",
+  "lessonIds": [
+    "IT-C527-biografia",
+    "IT-C527-fantascienza",
+    "IT-C527-saggio",
+    "IT-C527-fumetto",
+    "IT-C527-poeta"
+  ],
+  "tex": "italian/book/chapters/ch527-che-cosa-leggi.tex"
+}

@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 515,
+  "sourceHash": "fnv1a64:61b501b9ba275060",
+  "lessonIds": [
+    "IT-C515-pattinare",
+    "IT-C515-scarpone",
+    "IT-C515-pista",
+    "IT-C515-sciatore",
+    "IT-C515-seggiovia"
+  ],
+  "tex": "italian/book/chapters/ch515-ghiaccio-e-neve.tex"
+}

@@ -299,7 +299,7 @@ all 13 assets and twelve checksum entries were audited against GitHub digests.
 Static HTML, Web Components, and Paint remain CI-only; signing, notarization,
 and installers remain #13977.
 
-### Next bounded fidelity item — #17675: Qt milestone rotations
+### Completed bounded fidelity item — #17675: Qt milestone rotations
 
 After the P0 native lifecycle gates and v0.5.7 publication, preserve the two
 authored timeline milestone and legend-swatch `rotate(45deg)` declarations in
@@ -310,6 +310,16 @@ Translation, scaling, transform chains, and transform-origin are excluded.
 Assert exact emitted bindings, negative inputs, and both authored themes before
 retiring the two Qt transform allowances (83 to 81 measured drops). Validate
 native Qt payload generation/build in CI; do not claim local Qt runtime proof.
+
+### Next release checkpoint — #17682: TaskApp v0.5.8
+
+Roll forward the compatible Qt milestone rotation fix merged in #17676 as
+`task-app-v0.5.8`. Both themes preserve the two centered 45-degree diamonds;
+the Qt style inventory falls from 83 to 81. Validate every existing payload on
+the selected source commit, publish from main after preparation merges, then
+audit the immutable tag, manifest source, thirteen assets and twelve checksums.
+Static HTML, Web Components, and Paint remain CI-only; signing, notarization,
+and installers remain #13977. Preparation is not publication.
 
 ### Tier C — reach, stated honestly
 

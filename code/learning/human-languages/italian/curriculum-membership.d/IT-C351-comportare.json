@@ -1,0 +1,11 @@
+{
+  "id": "IT-C351-comportare",
+  "pathSegment": "IT-PATH-351-ORIGINE",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "IT-EXT-351-ORIGINE",
+      "order": 2
+    }
+  ]
+}

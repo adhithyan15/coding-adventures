@@ -1,0 +1,11 @@
+{
+  "id": "IT-C478-orgoglio",
+  "pathSegment": "IT-PATH-478-VERGOGNA",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "IT-EXT-478-VERGOGNA",
+      "order": 0
+    }
+  ]
+}

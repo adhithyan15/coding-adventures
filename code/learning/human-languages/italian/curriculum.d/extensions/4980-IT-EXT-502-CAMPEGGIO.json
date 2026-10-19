@@ -1,0 +1,8 @@
+{
+  "id": "IT-EXT-502-CAMPEGGIO",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can talk about camping and exploring outdoors.",
+  "prerequisites": []
+}

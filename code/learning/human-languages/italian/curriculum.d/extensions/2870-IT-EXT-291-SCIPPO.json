@@ -1,0 +1,8 @@
+{
+  "id": "IT-EXT-291-SCIPPO",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say that someone snatched my bag or robbed me in the street, and name the pickpocket and the stolen goods.",
+  "prerequisites": []
+}

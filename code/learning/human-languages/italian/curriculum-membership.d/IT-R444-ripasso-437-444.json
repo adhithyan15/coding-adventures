@@ -1,0 +1,11 @@
+{
+  "id": "IT-R444-ripasso-437-444",
+  "pathSegment": "IT-PATH-444-INDIRIZZO",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "IT-EXT-444-INDIRIZZO",
+      "order": 5
+    }
+  ]
+}

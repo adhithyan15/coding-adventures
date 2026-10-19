@@ -1,0 +1,11 @@
+{
+  "id": "IT-C489-infezione",
+  "pathSegment": "IT-PATH-489-GUARIRE",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "IT-EXT-489-GUARIRE",
+      "order": 3
+    }
+  ]
+}
