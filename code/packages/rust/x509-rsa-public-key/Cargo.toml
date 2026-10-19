@@ -1,0 +1,9 @@
+[package]
+name = "x509-rsa-public-key"
+version = "0.1.0"
+edition = "2021"
+description = "Bounded RSA SubjectPublicKeyInfo parsing and caller-supplied strength policy"
+
+[dependencies]
+der-asn1 = { path = "../der-asn1" }
+x509-subject-public-key-info = { path = "../x509-subject-public-key-info" }
