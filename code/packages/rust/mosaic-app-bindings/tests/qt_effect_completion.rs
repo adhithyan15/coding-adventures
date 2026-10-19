@@ -132,7 +132,7 @@ fn the_emitted_qt_host_answers_effects() {
         std::process::id(),
         unique_nonce()
     ));
-    std::fs::create_dir_all(&project).expect("create the driver project");
+    std::fs::create_dir(&project).expect("create the driver project");
 
     // The host under test, exactly as a real package would receive it.
     let binding =

@@ -2119,7 +2119,7 @@ mod tests {
             "self-ref-test-{}",
             unique_nonce()
         ));
-        std::fs::create_dir_all(&tmp).unwrap();
+        std::fs::create_dir(&tmp).unwrap();
         let mpath = tmp.join("mosaic-package.toml");
         std::fs::write(
             &mpath,
@@ -2167,7 +2167,7 @@ version = "1"
             "self-ref-test2-{}",
             unique_nonce()
         ));
-        std::fs::create_dir_all(&tmp).unwrap();
+        std::fs::create_dir(&tmp).unwrap();
         let mpath = tmp.join("mosaic-package.toml");
         std::fs::write(
             &mpath,
@@ -2215,7 +2215,7 @@ version = "1"
             "ui30-resolve-{label}-{}",
             unique_nonce()
         ));
-        std::fs::create_dir_all(&p).unwrap();
+        std::fs::create_dir(&p).unwrap();
         p
     }
 

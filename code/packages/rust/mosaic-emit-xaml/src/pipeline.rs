@@ -28596,7 +28596,7 @@ mod projection_identity_tests {
         };
         let dir = std::env::temp_dir().join(format!("mosaic-identity-{}-{}", std::process::id(),
             unique_nonce()));
-        fs::create_dir_all(&dir).unwrap();
+        fs::create_dir(&dir).unwrap();
         for name in ["Directory.Build.props", "Directory.Build.targets"] { fs::write(dir.join(name), "<Project />").unwrap(); }
         fs::write(dir.join("Probe.csproj"), "<Project Sdk=\"Microsoft.NET.Sdk\"><PropertyGroup><OutputType>Exe</OutputType><TargetFramework>net9.0</TargetFramework><Nullable>enable</Nullable><ImplicitUsings>enable</ImplicitUsings></PropertyGroup></Project>").unwrap();
         let options = EmitOptions::default();

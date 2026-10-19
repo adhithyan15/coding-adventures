@@ -33,7 +33,8 @@ fn temporary_output_directory() -> PathBuf {
         "mosaic-compile-style-optional-{}-{nonce}",
         std::process::id()
     ));
-    fs::create_dir_all(&path).expect("temporary output directory");
+    // `create_dir`, not `create_dir_all`: a fresh directory must not already exist.
+    fs::create_dir(&path).expect("temporary output directory");
     path
 }
 

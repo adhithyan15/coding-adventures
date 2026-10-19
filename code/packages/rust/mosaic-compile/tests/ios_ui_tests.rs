@@ -36,7 +36,8 @@ fn temporary_directory(label: &str) -> PathBuf {
         "mosaic-compile-ios-ui-tests-{label}-{}-{nonce}",
         std::process::id()
     ));
-    fs::create_dir_all(&path).expect("temporary directory");
+    // `create_dir`, not `create_dir_all`: a fresh directory must not already exist.
+    fs::create_dir(&path).expect("temporary directory");
     path
 }
 

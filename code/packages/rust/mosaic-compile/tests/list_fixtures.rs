@@ -45,7 +45,8 @@ fn scratch(name: &str) -> PathBuf {
         "mosaic-compile-list-fixtures-{name}-{}-{nonce}",
         std::process::id()
     ));
-    fs::create_dir_all(&path).expect("scratch directory");
+    // `create_dir`, not `create_dir_all`: a fresh directory must not already exist.
+    fs::create_dir(&path).expect("scratch directory");
     path
 }
 

@@ -32,7 +32,7 @@ fn generated_projection_batches_execute_with_nested_and_reentrant_updates() {
     // Compile the actual emitted methods without requiring the WinUI SDK.
     let dir = std::env::temp_dir().join(format!("mosaic-batch-{}-{}", std::process::id(),
         unique_nonce()));
-    fs::create_dir_all(&dir).unwrap();
+    fs::create_dir(&dir).unwrap();
     for name in ["Directory.Build.props", "Directory.Build.targets"] {
         fs::write(dir.join(name), "<Project />").unwrap();
     }

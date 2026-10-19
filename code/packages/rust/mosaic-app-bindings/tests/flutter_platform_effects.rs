@@ -60,8 +60,9 @@ fn the_flutter_platform_library_passes_its_headless_conformance() {
         std::process::id(),
         unique_nonce()
     ));
-    std::fs::create_dir_all(project.join("bin")).expect("create the harness project");
-    std::fs::create_dir_all(project.join("lib")).expect("create the harness lib");
+    std::fs::create_dir(&project).expect("create the harness project");
+    std::fs::create_dir(project.join("bin")).expect("create the harness bin");
+    std::fs::create_dir(project.join("lib")).expect("create the harness lib");
 
     // The committed harness, not a second copy of it.
     for file in ["pubspec.yaml", "bin/conformance.dart"] {

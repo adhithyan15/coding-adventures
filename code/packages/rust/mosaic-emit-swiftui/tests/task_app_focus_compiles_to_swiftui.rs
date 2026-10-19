@@ -163,6 +163,7 @@ fn complete_task_app_generated_swift_typechecks() {
     let project_root =
         std::env::temp_dir().join(format!("mosaic-task-app-{}-{unique}", std::process::id()));
     let sources = project_root.join("Sources").join("App");
+    fs::create_dir(&project_root).expect("create a fresh temporary project root");
     fs::create_dir_all(&sources).expect("create temporary SwiftPM source tree");
     fs::write(
         project_root.join("Package.swift"),

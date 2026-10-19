@@ -33,7 +33,8 @@ fn temporary_directory() -> PathBuf {
         "mosaic-compile-manifest-palettes-{}-{nonce}",
         std::process::id()
     ));
-    fs::create_dir_all(&path).expect("temporary directory");
+    // `create_dir`, not `create_dir_all`: a fresh directory must not already exist.
+    fs::create_dir(&path).expect("temporary directory");
     path
 }
 

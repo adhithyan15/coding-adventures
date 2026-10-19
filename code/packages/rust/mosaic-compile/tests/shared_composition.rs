@@ -25,7 +25,8 @@ fn temporary_workspace() -> PathBuf {
         "mosaic-compile-shared-composition-{}-{nonce}",
         std::process::id()
     ));
-    fs::create_dir_all(&path).expect("temporary workspace");
+    // `create_dir`, not `create_dir_all`: a fresh directory must not already exist.
+    fs::create_dir(&path).expect("temporary workspace");
     path
 }
 
