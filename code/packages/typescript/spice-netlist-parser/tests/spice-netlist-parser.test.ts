@@ -147,8 +147,8 @@ C1 out 0 1u IC=0
     expect(corpus.schemaVersion).toBe(1);
     expect(corpus.suite).toBe("berkeley-v1-core");
     expect(corpus.cases.map((testCase) => testCase.analysis)).toEqual([
-      "op", "op", "op", "op", "op", "op", "op", "ac", "ac", "ac", "ac", "tran", "tran", "tran",
-      "tran", "dc", "tf",
+      "op", "op", "op", "op", "op", "op", "op", "ac", "ac", "ac", "ac", "ac", "ac", "ac",
+      "tran", "tran", "tran", "tran", "tran", "tran", "tran", "dc", "tf",
     ]);
 
     for (const testCase of corpus.cases) {
