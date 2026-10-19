@@ -1,0 +1,150 @@
+French, chapter 267: Would — the conditionnel, and Six Lines.
+4 lessons. You can do the first 3 of them in the car; after that you will want to have stopped.
+
+
+Lesson 1 of 4.
+je pourrais, j'aimerais — the would of French.
+
+Warm-up.
+[pause 2 seconds]
+Ask a stranger for a coffee. (Je voudrais un café.) Then say "I should sleep". (Je devrais dormir.)
+[pause 1 second]
+Two forms of one tense. This lesson gives it its name and its recipe.
+
+Grammar Lens: the infinitive, plus the imparfait's endings.
+This is the conditionnel, French's "would". Keep the whole infinitive and add the endings of the imparfait, -ais for "I":
+parler, je parlerais — I would speak finir, je finirais — I would finish prendre, je prendrais — I would take.
+A verb in -re lets its final e go first: prendr-, prendrais. The other persons change only the ending: je parlerais, tu parlerais, il parlerait, nous parlerions, vous parleriez, ils parleraient. Beside the imparfait: je parlais, I was speaking; je parlerais, I would speak. The infinitive inside it is the whole difference.
+A few common verbs squeeze their stem first. You have met two of them, vouloir in je voudrais and devoir in je devrais; the third is pouvoir, je pourrais. Aimer follows the plain recipe: j'aimerais.
+Three jobs, all softening. A polite request: Vous pourriez m'aider? — Could you help me? A wish: J'aimerais partir en vacances. — I'd like to go on holiday. And advice: À ta place, je dormirais. — In your place, I'd sleep.
+
+The word, taken apart: "I had to speak".
+Latin had no would-tense. Spoken Latin made one by gluing a past of habēre, "to have", onto the infinitive: roughly "I had to speak", which slid into "I would speak". French chose the imperfect of that verb, the same habēbat that became avait; worn down on the end of a verb, it is the -ait of parlerait. Italian glued on a different past, which is why its endings do not match. Neither EtymDB nor Lewis & Short covers a change this late; this is the usual explanation in histories of Romance, given as that. The name conditionnel comes from Medieval Latin conditiōnālis, built on conditiō, "a condition" (EtymDB 2.1).
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: je parlerais, tu parlerais, il parlerait]
+[pause 8 seconds for the answer]
+[your turn — say: the imparfait, then the conditionnel — je parlais, then je parlerais]
+[pause 8 seconds for the answer]
+[your turn — say: a polite request, after a problem — Excusez-moi, j'ai un problème. Vous pourriez m'aider?]
+[pause 8 seconds for the answer]
+[your turn — say: a wish — J'aimerais partir en vacances.]
+[pause 8 seconds for the answer]
+[your turn — say: an answer that depends — Ça dépend. J'aimerais venir, mais je ne peux pas.]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Build "I would finish". (Je finirais — the whole infinitive, plus -ais.) What are the three jobs of the conditionnel? (A polite request, a wish, advice.) Which Latin past hides in its endings? (Habēbat, "he had", the same one inside avait.)
+
+
+Lesson 2 of 4.
+ce serait — it would be.
+
+Warm-up.
+[pause 2 seconds]
+Build "I would speak". (Je parlerais.) Then "it's good", now. (C'est bien.)
+
+You'll want to know: ce serait.
+ce serait — "it would be", "that would be".
+être refused the imparfait's recipe and gave you c'était. Its conditionnel has a stem of its own too, ser-, with the same endings: je serais, tu serais, il serait. C'est is now, c'était was, and ce serait is the judgement on something that has not happened:
+Ce serait bien. — That would be good. Ce serait plus rapide en train. — It would be quicker by train.
+En train, "by train", and en voiture, "by car", are how French says the way you travel.
+
+Grammar Lens: si, the imparfait, and the would.
+Now the condition that is not true. Put the si half in the imparfait, and the result in the conditionnel:
+Si j'avais le temps, je partirais en vacances. — If I had the time, I'd go on holiday. Si c'était moins cher, je prendrais le train. — If it were cheaper, I'd take the train.
+Set it beside last chapter's real condition. S'il pleut, je reste: it might rain, and here is the plan. S'il pleuvait, je resterais: it is not raining, and I am imagining. The conditionnel goes in the result, and the si half takes the imparfait.
+In relaxed speech, above all in Québec, you will hear si j'aurais for "if I had"; standard French keeps the imparfait after si, and so should a letter or an exam.
+
+The phrase, taken apart.
+être is inherited, through Old French estre, from Latin esse, "to be" (EtymDB 2.1). The stem ser- is usually traced to a spoken Latin infinitive essere, reshaped from esse, with the worn habēbat of the last lesson on its end: something like "had to be". Neither source records forms this late, so that step is the usual explanation rather than a cited one.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: je serais, tu serais, il serait]
+[pause 8 seconds for the answer]
+[your turn — say: Ce serait plus rapide en train.]
+[pause 8 seconds for the answer]
+[your turn — say: Si j'avais le temps, je partirais en vacances.]
+[pause 8 seconds for the answer]
+[your turn — say: real, then imagined — S'il pleut, je reste. then S'il pleuvait, je resterais.]
+[pause 8 seconds for the answer]
+[your turn — say: a judgement with mieux — Ce serait mieux en train.]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+What stem does être use in the conditionnel? (Ser-.) Say "it would be quicker by train". (Ce serait plus rapide en train.) In si j'avais le temps, je partirais, which half takes the conditionnel? (The result, je partirais.)
+
+
+Lesson 3 of 4.
+Review — if this, then that would.
+
+Warm-up.
+[pause 2 seconds]
+Say "that would be good". (Ce serait bien.) Then "I could". (Je pourrais.)
+
+What you've built.
+Two chapters, and a whole way of talking about what has not happened yet. A real branch: s'il pleut, je reste. A branch not yet named: ça dépend, or ça dépend de toi. The softened result, in the conditionnel: je pourrais, j'aimerais, je devrais, ce serait. And the condition that is not true now: si j'avais le temps, je partirais.
+— On va au parc demain? — Ça dépend. Ce serait bien, mais s'il pleut, on pourrait aller au musée.
+[pause 2 seconds]
+On pourrait is "we could", the on form of je pourrais: a soft suggestion, which is why it fits after s'il pleut. The si half stays in the present, because rain tomorrow is a real possibility.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: Ce serait bien d'aller au parc demain.]
+[pause 8 seconds for the answer]
+[your turn — say: S'il pleut, on pourrait aller au musée.]
+[pause 8 seconds for the answer]
+[your turn — say: advice inside a branch — Si tu es fatigué, tu devrais dormir.]
+[pause 8 seconds for the answer]
+[your turn — say: a hope and a judgement — J'espère partir en vacances. Ce serait bien.]
+[pause 8 seconds for the answer]
+[your turn — say: the imagined one — Si j'avais le temps, je partirais en vacances.]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+In s'il pleut, on pourrait aller au musée, which half is the conditionnel? (On pourrait aller.) Which tense does the si half take when the condition is not true now? (The imparfait.) What would "we would be" be, from serait? (Nous serions.) And which Latin verb hides in the devoir of je devrais? (Dēbēre, to owe.)
+
+
+Lesson 4 of 4.
+Six lines about a journey — six connected lines to one reader about a journey — a scene in the imparfait, events in order, a reason, a feeling, and a last line that looks forward.
+
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped.
+
+Warm-up.
+[pause 2 seconds]
+Chapter forty-eight asked for four lines that held together, with parce que. This one asks for six, and they tell a story.
+[pause 1 second]
+Pick one person who will read it: un ami, une amie, someone in your family.
+
+You'll want to know.
+[pause 2 seconds]
+A told story is not a list of events. It has a scene, in the imparfait: c'était, il y avait, il faisait froid, j'étais content. It has events, in the passé composé, put in order with d'abord, ensuite and enfin. It has at least one reason, pointing back with parce que or forward with donc, and perhaps a turn with mais.
+[pause 2 seconds]
+And a good one ends by looking forward: j'espère …, or ce serait …, or a condition with si.
+[pause 2 seconds]
+The DELF B1 writing paper asks for a connected text of at least 160 words. Six lines is the first step towards it, not the whole of it.
+
+Writing — connected composition.
+[pause 2 seconds]
+On paper, write six lines to your reader about a journey, real or invented, one line for each of these:
+the scene: when it was, and the weather;
+where you were, who was with you, and how long you stayed, with pendant;
+the first thing that happened, with d'abord;
+the next thing, with ensuite, and a reason, with parce que or donc;
+how it ended and how you felt, with enfin and j'étais;
+one line forward, with j'espère, ce serait or si.
+[pause 3 seconds]
+Use only words you already write. The exercise is choosing the right past for each line.
+
+Wrap-up recall.
+[pause 2 seconds]
+Now go through your lines as you went through the journey in chapter two hundred and fifty-nine. Mark every verb S for scene or E for event. Lines one and two should be mostly S; three and four mostly E; five has one of each. A line about the weather marked E is the commonest slip: change il a plu back to il pleuvait.
+[pause 2 seconds]
+Then two spelling checks. The participle of an -er verb ends in -é: j'ai parlé, je suis arrivé, and with être it agrees with a woman writing about herself: je suis arrivée. And the imparfait's endings are silent but spelled: -ais, -ait, -aient.
+[pause 2 seconds]
+Last, read line six on its own. If it has a si about something real, is the verb after it in the plain present? If it has ce serait, is it your judgement on something that has not happened yet? Then it looks forward, and the story is finished.

@@ -1,0 +1,470 @@
+{
+  "version": 1,
+  "language": "french",
+  "chapter": 262,
+  "title": "Finding the Way — excusez-moi, tout droit",
+  "drivablePrefix": 3,
+  "sourceHash": "fnv1a64:aefc415609e158b6",
+  "lessons": [
+    {
+      "id": "FR-C262-excusez-moi",
+      "sequence": 15260,
+      "title": "excusez-moi — the question that finds the way",
+      "headword": "excusez-moi, pour aller à… ?",
+      "romanization": "excusez-moi, pour aller à… ?",
+      "gloss": "excuse me, how do I get to…? — the polite opener, and the question that finds the way",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:bd3eea917373a2ed",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"to go\". (Aller.) Say \"the museum\". (Le musée.)"
+            },
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "You are in a town you do not know, and the museum is somewhere."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: excusez-moi",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "excusez-moi — \"excuse me\", to someone you do not know."
+            },
+            {
+              "kind": "speech",
+              "text": "It is the vous command of excuser, \"to excuse\", with moi after it: word for word, \"excuse me\". A stranger in the street is owed vous; to a friend it is excuse-moi. The same words apologise: bump into someone and you say excusez-moi! The short pardon does both jobs too, and is as polite."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: pour aller à…",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Excusez-moi, pour aller au musée, s'il vous plaît? — Excuse me, how do I get to the museum?"
+            },
+            {
+              "kind": "speech",
+              "text": "Word for word, \"to go to the museum, please\". The rest of the question is left unsaid, and every French speaker hears it anyway. The place takes à, which welds onto le:"
+            },
+            {
+              "kind": "speech",
+              "text": "au musée, à la plage, à l'hôtel."
+            },
+            {
+              "kind": "speech",
+              "text": "A second way asks for the place rather than the way, with où est, \"where is\". Either can be followed by a short question that saves a walk, c'est loin, \"is it far\", or c'est près d'ici, \"is it near here\":"
+            },
+            {
+              "kind": "speech",
+              "text": "Où est le musée? C'est loin? C'est près d'ici?"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The phrase, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "excuser is inherited from Latin excūsāre (EtymDB 2.1), built on ex-, \"out of\", and causa, \"a cause, a charge in court\" (Lewis & Short, under excuso): to release someone from a charge, to free them from blame. So excusez-moi asks, at root, to be let off. English excuse is the same word, and cause is its second half."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Excusez-moi, pour aller au musée, s'il vous plaît? — and let the voice rise",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Excusez-moi, pour aller au musée, s'il vous plaît ?* — and let the voice rise]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the same, to the beach, then to the hotel",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the same, to the beach, then to the hotel]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ask for the place, and how far — Excusez-moi, où est le musée? C'est loin?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: ask for the place, and how far — *Excusez-moi, où est le musée ? C'est loin ?*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to a friend — Excuse-moi!",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to a friend — *Excuse-moi !*]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Who gets excusez-moi, and who gets excuse-moi? (A stranger; a friend.) Ask the way to the hotel. (Excusez-moi, pour aller à l'hôtel?) What does à plus le become? (Au.) And which Latin word is inside excuser? (Causa, a charge.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FR-C262-tout-droit",
+      "sequence": 15270,
+      "title": "tout droit — straight on, and then the turns",
+      "headword": "tout droit",
+      "romanization": "tout droit",
+      "gloss": "straight on — and the directions that follow it: left, right, keep going, cross",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:332183669c449d38",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"on the right\". (À droite.) Then \"on the left\". (À gauche.)"
+            },
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "You asked the way, and a stranger is answering. This lesson is what you will hear."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: tout droit",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "tout droit — \"straight on\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Allez tout droit. — Go straight on."
+            },
+            {
+              "kind": "speech",
+              "text": "Listen hard to the end of it. In droit the final t is silent: \"drwa\". In droite it is said: \"drwat\". Tout droit is straight ahead; à droite is a turn to the right. The two sound almost alike, and they send you in different directions, so a careful listener waits for that t."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: directions, as commands",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "A stranger gives directions in the vous command: the vous form of the present, without the vous."
+            },
+            {
+              "kind": "speech",
+              "text": "Allez tout droit, puis tournez à gauche. — Go straight on, then turn left. Continuez jusqu'au musée. — Keep going as far as the museum. Traversez la rue. — Cross the street. Prenez la rue à droite. — Take the street on the right."
+            },
+            {
+              "kind": "speech",
+              "text": "Five verbs carry almost every set of directions: aller, tourner, continuer, traverser and prendre. The order words come back too: d'abord, puis, ensuite. And a kind stranger may end with a distance: C'est à deux minutes. — It's two minutes away."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The phrase, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "tout is inherited from Latin tōtus, \"all, whole\" (EtymDB 2.1), so tout droit is \"all straight\", the whole way. droit has no parent in EtymDB 2.1; it is usually traced to Latin dīrēctus, \"set straight\" (Lewis & Short, under directus), which English kept as direct. Droite, the right hand, is the same word in the feminine. That the right hand was named as the \"straight\" or proper one is the usual account, offered here as that."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tout droit, then à droite — and hear the t",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tout droit*, then *à droite* — and hear the *t*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Allez tout droit, puis tournez à gauche.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Allez tout droit, puis tournez à gauche.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Continuez jusqu'au musée. Traversez la rue.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Continuez jusqu'au musée. Traversez la rue.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the whole exchange — Excusez-moi, pour aller à l'hôtel? — Allez tout droit, puis prenez la rue à droite.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the whole exchange — *Excusez-moi, pour aller à l'hôtel ?* — *Allez tout droit, puis prenez la rue à droite.*]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "How do you hear tout droit apart from à droite? (The final t is said only in droite.) Say \"turn left\". (Tournez à gauche.) Which form do the directions take? (The vous command.) And what did Latin tōtus mean? (Whole.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FR-C262-revision-chemin",
+      "sequence": 15280,
+      "title": "Review — finding the way",
+      "headword": "(review)",
+      "romanization": "(review)",
+      "gloss": "ask the way, then give it back — straight on, left, right, and the order words in between",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ba203dcb135a5ea8",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Stop a stranger politely. (Excusez-moi.) Then say \"straight on\". (Tout droit.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Two lessons, and a whole exchange in the street. The opener, excusez-moi. The question, pour aller à…?, or où est…? And the answer, in the vous command: allez tout droit, tournez à gauche, continuez, traversez, prenez la rue à droite."
+            },
+            {
+              "kind": "speech",
+              "text": "— Excusez-moi, pour aller au musée, s'il vous plaît? — D'abord, allez tout droit. Ensuite, tournez à droite, et traversez la rue. Le musée est là, à côté de l'hôtel. — C'est loin? — Non, c'est à deux minutes."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The order words from the story chapters are back at work: a set of directions is a little story about the future, told in commands."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the question — Excusez-moi, pour aller au musée, s'il vous plaît?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the question — *Excusez-moi, pour aller au musée, s'il vous plaît ?*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the answer — D'abord, allez tout droit. Ensuite, tournez à droite.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the answer — *D'abord, allez tout droit. Ensuite, tournez à droite.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Traversez la rue. Le musée est à côté de l'hôtel.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Traversez la rue. Le musée est à côté de l'hôtel.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "when you did not catch it — Excusez-moi, vous pouvez m'expliquer encore une fois?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: when you did not catch it — *Excusez-moi, vous pouvez m'expliquer encore une fois ?*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "directions from your door to the nearest shop, with d'abord and ensuite",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: directions from your door to the nearest shop, with *d'abord* and *ensuite*]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What do you listen for to tell tout droit from à droite? (The final t of droite.) Say \"cross the street\". (Traversez la rue.) And what do you say to a friend instead of excusez-moi? (Excuse-moi.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

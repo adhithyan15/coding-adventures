@@ -1,0 +1,11 @@
+{
+  "id": "FR-C259-revision-histoire",
+  "pathSegment": "FR-PATH-259-RECIT",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FR-EXT-259-RECIT",
+      "order": 3
+    }
+  ]
+}

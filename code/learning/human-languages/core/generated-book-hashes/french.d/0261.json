@@ -1,0 +1,11 @@
+{
+  "language": "french",
+  "chapter": 261,
+  "sourceHash": "fnv1a64:6c40144f32f3a8ca",
+  "lessonIds": [
+    "FR-C261-je-devrais",
+    "FR-C261-expliquer",
+    "FR-C261-revision-explication"
+  ],
+  "tex": "french/book/chapters/ch261-should-and-why.tex"
+}

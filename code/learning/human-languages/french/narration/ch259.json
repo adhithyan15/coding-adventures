@@ -1,0 +1,667 @@
+{
+  "version": 1,
+  "language": "french",
+  "chapter": 259,
+  "title": "D'abord, Ensuite, Enfin — A Story Told in Order",
+  "drivablePrefix": 2,
+  "sourceHash": "fnv1a64:a0540392cb91f99b",
+  "lessons": [
+    {
+      "id": "FR-C259-dabord",
+      "sequence": 15160,
+      "title": "d'abord — the events, in order",
+      "headword": "d'abord",
+      "romanization": "d'abord",
+      "gloss": "first, at first — the word that opens a story told in order",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:82b897e864aa1b07",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"then\". (Puis.) Then \"afterwards\". (Ensuite.) Then \"finally\". (Enfin.)"
+            },
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Three words for the middle and the end of a story. The order still needs a first word."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: d'abord",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "d'abord — \"first\", \"at first\"."
+            },
+            {
+              "kind": "speech",
+              "text": "D'abord, j'ai acheté le billet. — First I bought the ticket. Ensuite, j'ai attendu le train. — Next I waited for the train. Puis le train est arrivé. — Then the train came. Enfin, je suis rentré à la maison. — Finally I went back home."
+            },
+            {
+              "kind": "speech",
+              "text": "Say it as one word: \"da-BOR\". The d is de with its vowel dropped, and the final d of abord is silent."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: four places in a story",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Ensuite and puis both mean \"then, next\", and a story can use them as many times as it has events. Puis is the lighter of the two, and speech often doubles it up as et puis."
+            },
+            {
+              "kind": "speech",
+              "text": "Enfin closes the story, and it often carries relief: something you were waiting for has come at last. In speech it has a second life as a hesitation, enfin…, \"well, I mean…\", which you will hear constantly."
+            },
+            {
+              "kind": "speech",
+              "text": "D'abord can also mean \"at first\", setting up a change:"
+            },
+            {
+              "kind": "speech",
+              "text": "D'abord, j'avais peur, mais ensuite, c'était bien. — At first I was scared, but then it was fine."
+            },
+            {
+              "kind": "speech",
+              "text": "Notice what these words do not touch: the scene. Il faisait froid needs no d'abord. Order belongs to the events."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "d'abord is de plus abord, \"the approach, the first coming alongside\". Abord is built on bord, \"the edge, the side of a ship\", a Germanic word: EtymDB 2.1 sets it beside Old English bord, \"side of a ship\", and Old Norse borð. The usual account runs through the verb aborder, to bring a ship alongside: d'abord is \"from the very first approach\"."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "D'abord, j'ai acheté le billet. Ensuite, j'ai attendu le train.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *D'abord, j'ai acheté le billet. Ensuite, j'ai attendu le train.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Puis le train est arrivé. Enfin, je suis rentré à la maison.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Puis le train est arrivé. Enfin, je suis rentré à la maison.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "at first, then a change — D'abord, j'avais peur, mais ensuite, c'était bien.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: at first, then a change — *D'abord, j'avais peur, mais ensuite, c'était bien.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a scene, then events — Il pleuvait. D'abord, j'ai attendu. Ensuite, quand le train est arrivé, je suis monté.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a scene, then events — *Il pleuvait. D'abord, j'ai attendu. Ensuite, quand le train est arrivé, je suis monté.*]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which word opens a story told in order? (D'abord.) Which two words mean \"then\"? (Ensuite and puis.) Does the weather need a d'abord? (No — order belongs to the events.) And what was abord, at root? (A ship's first coming alongside.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FR-C259-raconter",
+      "sequence": 15170,
+      "title": "raconter — to tell a story, which is to count it",
+      "headword": "raconter",
+      "romanization": "raconter",
+      "gloss": "to tell (a story) — and the backbone of a told story: the scene, the events in order, and the turn",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e9781d82a347c0d7",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "You can hold a scene still and put events in order with d'abord. This lesson gives the act a name, then puts it all together."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: raconter",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "raconter — \"to tell\", for a story or for what happened. It is a regular -er verb: je raconte, j'ai raconté, je racontais."
+            },
+            {
+              "kind": "speech",
+              "text": "Je raconte une histoire à mon frère. — I tell my brother a story. Raconte! — Go on, tell me!"
+            },
+            {
+              "kind": "speech",
+              "text": "You have l'histoire, which is both \"history\" and \"a story\", so raconter une histoire is the whole act in three words. The person who hears it comes after à."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: the backbone of a told story",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Here is what a story tells, with both pasts to work with:"
+            },
+            {
+              "kind": "speech",
+              "text": "C'était samedi. Il faisait beau. D'abord, je suis allé au marché. Ensuite, j'ai rencontré un ami, et nous avons parlé. Mais il a commencé à pleuvoir, et enfin je suis rentré à la maison. It was Saturday. The weather was fine. First I went to the market. Then I met a friend, and we talked. But it started to rain, and in the end I went back home."
+            },
+            {
+              "kind": "speech",
+              "text": "C'était, il faisait: the scene, held still. Je suis allé, j'ai rencontré, nous avons parlé, il a commencé, je suis rentré: the events, put in order by d'abord, ensuite and enfin. Mais marks the turn, the point where the story stops going the way it was going. Et adds; mais turns."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart: counting it out",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "raconter goes back to Old French raconter (EtymDB 2.1). It is built on conter, \"to tell\", which EtymDB 2.1 traces to Latin computāre, \"to reckon up, to compute\" (Lewis & Short, under computo), with re- and a- in front. To tell a story was to count it out, one piece after another. English kept both senses in one word: you count a sum, and you recount what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the scene — C'était samedi. Il faisait beau.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the scene — *C'était samedi. Il faisait beau.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the events — D'abord, je suis allé au marché. Ensuite, j'ai rencontré un ami.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the events — *D'abord, je suis allé au marché. Ensuite, j'ai rencontré un ami.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the turn and the end — Mais il a commencé à pleuvoir, et enfin je suis rentré à la maison.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the turn and the end — *Mais il a commencé à pleuvoir, et enfin je suis rentré à la maison.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Je raconte une histoire à mon frère.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Je raconte une histoire à mon frère.*]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "In your story, which past held the weather and which one took you to the market? (Il faisait — imparfait; je suis allé — passé composé.) Which word marked the turn? (Mais.) Which Latin verb is behind conter? (Computāre, \"to reckon up\".)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FR-C259-lecture",
+      "sequence": 15180,
+      "title": "(reading) — a journey, told in both pasts",
+      "headword": "(reading)",
+      "romanization": "(reading)",
+      "gloss": "a journey in a hundred words — the first connected story in this book, told in both pasts, and not one word of it new",
+      "script": "latin",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "reading-type",
+        "eyes-or-hands-step"
+      ],
+      "sourceHash": "fnv1a64:c8bd010e11b8f273",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, to read the printed text yourself"
+        ],
+        "waitUntilStopped": [
+          "Reading"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not a driving lesson. You will want your eyes, to read the printed text yourself. The questions are about what you read, so save the whole lesson for when you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Chapter forty-five gave you sixty-three words in a row, all in the present. This passage is longer, and it happened last Saturday."
+            },
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Every word in it has come up before this lesson."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "comprehension",
+          "title": "Reading",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Samedi dernier, c'était l'anniversaire de mon ami. Il faisait froid et il pleuvait. D'abord, j'ai attendu le train sur le quai. Il y avait beaucoup de monde, mais le train n'arrivait pas, et j'étais inquiet. Ensuite, le train est arrivé, et je suis monté. Dans le train, je lisais, et un enfant dormait à côté de moi. Quand je suis arrivé, mon ami m'attendait devant la maison. Puis nous avons mangé du gâteau, et nous avons beaucoup parlé. Enfin, le soir, je suis rentré à la maison. Il faisait beau, et il y avait des étoiles. J'étais content."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Read it once without stopping. Do not translate as you go."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Then read it a second time and sort every verb into one of two piles: the scene, or what happened."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The events pile is short: j'ai attendu, est arrivé, je suis monté, je suis arrivé, nous avons mangé, nous avons parlé, je suis rentré. Seven things happened, and d'abord, ensuite, puis and enfin put them in order."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Everything else is scene: the birthday, the cold, the rain, the crowd, the worry, the stars. A story is mostly background."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Le train n'arrivait pas is scene: the not-arriving went on. Le train est arrivé is the event that ended it. And mon ami m'attendait is scene too. He was already waiting, and the narrator's arrival cut into it, with quand."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the passage aloud, once, without stopping",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the passage aloud, once, without stopping]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "FR-C259-lecture-evenements",
+              "prompt": "How many events in the passé composé are in the passage?",
+              "assesses": [
+                "FR-SKILL-READ-NARRATIVE-01",
+                "FR-GRAM-DECOR-EVENEMENT-01"
+              ],
+              "responseSeconds": 15,
+              "acceptedResponses": [
+                "seven",
+                "7",
+                "sept"
+              ],
+              "feedback": {
+                "correct": "J'ai attendu, est arrivé, je suis monté, je suis arrivé, nous avons mangé, nous avons parlé, je suis rentré.",
+                "incorrect": "Seven: j'ai attendu, est arrivé, je suis monté, je suis arrivé, nous avons mangé, nous avons parlé, je suis rentré."
+              }
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "How many words in that passage were new? (None.)"
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Why is m'attendait in the imparfait? (The waiting was already going on when the narrator arrived: it is scene.)"
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which word opened the line where a scene met an event? (Quand.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FR-C259-revision-histoire",
+      "sequence": 15190,
+      "title": "Review — the journey, retold",
+      "headword": "(review)",
+      "romanization": "(review)",
+      "gloss": "the journey retold aloud — scene or event for every verb, and the order words holding the events in line",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:58340434ff029ccb",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"first\". (D'abord.) Say \"I tell a story\". (Je raconte une histoire.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Two chapters, and a whole story. A scene in the imparfait: il faisait froid, il y avait beaucoup de monde, j'étais inquiet. Events in the passé composé, held in line by d'abord, ensuite, puis and enfin. A turn with mais. And the joint where a scene meets an event: quand."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Now the journey from the reading, told by you. Here is its skeleton, scene first, then the events:"
+            },
+            {
+              "kind": "speech",
+              "text": "C'était samedi. Il faisait froid et il pleuvait. D'abord, j'ai attendu le train. Ensuite, je suis monté. Quand je suis arrivé, mon ami m'attendait. Enfin, je suis rentré à la maison. J'étais content."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the scene — C'était samedi. Il faisait froid et il pleuvait. Il y avait beaucoup de monde.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the scene — *C'était samedi. Il faisait froid et il pleuvait. Il y avait beaucoup de monde.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the first two events — D'abord, j'ai attendu le train. Ensuite, je suis monté.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the first two events — *D'abord, j'ai attendu le train. Ensuite, je suis monté.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a scene inside the journey — Pendant que je lisais, un enfant dormait.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a scene inside the journey — *Pendant que je lisais, un enfant dormait.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the event that met the waiting friend — Quand je suis arrivé, mon ami m'attendait.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the event that met the waiting friend — *Quand je suis arrivé, mon ami m'attendait.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the end — Enfin, je suis rentré à la maison. J'étais content.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the end — *Enfin, je suis rentré à la maison. J'étais content.*]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which word puts the first event in place? (D'abord.) Is j'étais content scene or event? (Scene — a feeling has no edge.) Which word marks the turn in a story? (Mais.) And which Latin verb is inside raconter? (Computāre, to count it out.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -1,0 +1,14 @@
+{
+  "language": "french",
+  "chapter": 258,
+  "sourceHash": "fnv1a64:9f34730bdea6ca90",
+  "lessonIds": [
+    "FR-C258-parlais",
+    "FR-C258-cetait",
+    "FR-C258-il-faisait-froid",
+    "FR-C258-dormais-dormi",
+    "FR-C258-pendant-que",
+    "FR-C258-revision-quand"
+  ],
+  "tex": "french/book/chapters/ch258-the-scene.tex"
+}

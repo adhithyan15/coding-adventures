@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C267-je-pourrais",
+    "language": "french",
+    "chapter": 267,
+    "sequence": 15420,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:86c22885990fd68f"
+  },
+  "findings": []
+}

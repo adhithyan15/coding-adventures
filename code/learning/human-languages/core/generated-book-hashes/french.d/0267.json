@@ -1,0 +1,12 @@
+{
+  "language": "french",
+  "chapter": 267,
+  "sourceHash": "fnv1a64:f0fb260c5b06cf58",
+  "lessonIds": [
+    "FR-C267-je-pourrais",
+    "FR-C267-ce-serait",
+    "FR-C267-revision-conditionnel",
+    "FR-W267-six-lignes"
+  ],
+  "tex": "french/book/chapters/ch267-would.tex"
+}

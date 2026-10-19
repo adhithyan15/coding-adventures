@@ -1,0 +1,12 @@
+{
+  "language": "french",
+  "chapter": 266,
+  "sourceHash": "fnv1a64:b57318d9b03ad9fe",
+  "lessonIds": [
+    "FR-C266-si",
+    "FR-C266-sil-pleut",
+    "FR-C266-ca-depend",
+    "FR-C266-revision-conditions"
+  ],
+  "tex": "french/book/chapters/ch266-if.tex"
+}

@@ -1,0 +1,154 @@
+French, chapter 266: If — si, s'il pleut, ça dépend.
+4 lessons. All 4 can be done entirely by ear.
+
+
+Lesson 1 of 4.
+si — if.
+
+Warm-up.
+[pause 2 seconds]
+Say "I don't know". (Je ne sais pas.) Then "I have been living here for three years". (J'habite ici depuis trois ans.)
+[pause 1 second]
+Most sentences so far have said what is, or what was. This chapter says what follows if something else is true, and it begins with two letters.
+
+Grammar Lens: si opens a condition.
+si — "if".
+Si tu as faim, mange. — If you're hungry, eat. Si tu as froid, ferme la fenêtre. — If you're cold, shut the window.
+Whatever follows si is the condition; the rest of the sentence is what follows from it. The condition can come first, with a comma, or second, without one: Ferme la fenêtre si tu as froid. Notice that French has hunger and cold, tu as faim, tu as froid, where English is hungry and cold.
+
+Grammar Lens: s'il, and si for "whether".
+Before il and ils, si drops its vowel: s'il, s'ils. Before elle it keeps it: si elle. You have said s'il since the chapter on please, because s'il vous plaît is "if it pleases you".
+After a verb of knowing or asking, si also means "whether", and your je ne sais pas comes in useful:
+Je ne sais pas si c'est loin. — I don't know whether it's far.
+
+The word, taken apart: one spelling, two words.
+You have met si before, as the "yes" that contradicts a negative: Tu ne viens pas? — Si! That one goes back to Latin sīc, "so, thus". The si of this lesson is inherited from Latin sī, "if", a conditional particle (Lewis & Short, under si). EtymDB 2.1 lists both Latin words behind the French spelling. Two words, worn into one shape.
+The ear tells them apart by their place. The "yes" si stands alone, as an answer. The "if" si opens a whole clause.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: Si tu as faim, mange.]
+[pause 8 seconds for the answer]
+[your turn — say: the same, condition second — Mange, si tu as faim.]
+[pause 8 seconds for the answer]
+[your turn — say: Si tu as froid, ferme la fenêtre.]
+[pause 8 seconds for the answer]
+[your turn — say: Je ne sais pas si c'est loin.]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Which half of si tu as faim, mange is the condition? (Si tu as faim.) What does si become before il? (S'il.) What does si mean after je ne sais pas? (Whether.) Which Latin words are behind the two kinds of si? (Sī, "if", and sīc, "so".)
+
+
+Lesson 2 of 4.
+s'il pleut, je reste — the condition that really happens.
+
+Warm-up.
+[pause 2 seconds]
+Say "if". (Si.) Say "it was raining". (Il pleuvait.) Now the present: "it's raining". (Il pleut.)
+
+Grammar Lens: both halves in the present.
+S'il pleut, je reste à la maison. — If it rains, I stay at home. Si le train est cher, je prends la voiture. — If the train is expensive, I take the car.
+This is a real condition, true now or whenever it happens. Both halves take the plain present, as in English: nothing new to build.
+The result half can also be advice, with the tu devrais of chapter two hundred and sixty-one, or a command:
+Si tu es malade, tu devrais dormir. — If you're ill, you should sleep. Si tu es fatigué, dors! — If you're tired, sleep!
+
+Why it's said this way.
+A real condition is a plan with a branch in it. Someone who takes the train to work every day lives by two of them:
+Si je rate le train, je prends le métro. Si je rate le métro, je reste à la maison.
+Compare donc. Il pleut, donc je reste says it is raining. S'il pleut, je reste says it might, and here is what happens if so. Same consequence; the second has not decided whether the cause is true.
+
+Grammar Lens: tomorrow, still in the present.
+For one particular occasion still to come, the result can move into the future, with the aller + infinitive you know. The si half does not move:
+S'il pleut demain, je vais rester à la maison. — If it rains tomorrow, I'm going to stay at home.
+Il pleut, the present, even about tomorrow. English does the same, "if it rains tomorrow", so here the ear is on your side.
+
+The word, taken apart.
+rester goes back to Latin restāre (EtymDB 2.1), "to stop behind, to keep back" (Lewis & Short, under resto): re-, "back", plus stāre, "to stand", the standing verb behind j'étais. To stay is to stand still while the others go on.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: S'il pleut, je reste à la maison.]
+[pause 8 seconds for the answer]
+[your turn — say: the branch — Si je rate le train, je prends le métro.]
+[pause 8 seconds for the answer]
+[your turn — say: advice in the result — Si tu es malade, tu devrais dormir.]
+[pause 8 seconds for the answer]
+[your turn — say: tomorrow — S'il pleut demain, je vais rester à la maison.]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Which tense goes in the si half of a real condition? (The present, even for tomorrow.) What is the difference between il pleut, donc je reste and s'il pleut, je reste? (The first says it is raining; the second has not decided.) What is rester, taken apart? (Re- and stāre: to stand back.)
+
+
+Lesson 3 of 4.
+ça dépend — the condition you do not have to finish.
+
+Warm-up.
+[pause 2 seconds]
+Say "if it rains, I stay at home". (S'il pleut, je reste à la maison.)
+[pause 1 second]
+That sentence names its condition. Sometimes you want the condition without saying what it is.
+
+You'll want to know: ça dépend.
+ça dépend — "it depends".
+— Tu vas au cinéma demain? — Ça dépend. — Going to the cinema tomorrow? It depends.
+You have dépendre, "to depend". Ça dépend is its "it" form, and on its own it is a complete answer: it says a condition exists and declines to say which.
+Ça is the everyday "it, that", and tout dépend is "it all depends".
+
+Grammar Lens: ça dépend de.
+Add de and you can name the condition after all:
+Ça dépend du temps. — It depends on the weather. Ça dépend de toi. — It depends on you. Ça dépend de l'heure. — It depends on the time.
+De and le weld into du, as in content du voyage. English says depend on; French says dépend de, "hangs from", which is the older picture.
+Or name it with a whole si: Ça dépend. S'il pleut, je reste à la maison. The ça dépend announces a condition; the si sentence states it.
+
+The phrase, taken apart.
+dépendre comes from Latin dēpendēre, "to hang from, to hang down" (Lewis & Short, under dependeo): dē, "down from", and pendēre, "to hang". To depend on something is to hang from it, and the answer swings until the condition settles. The same pendēre is inside pendant, which you met with pendant que. Its close relative pendere, "to make hang, to weigh on the scales" (Lewis & Short, under pendo), is the one behind penser. English pendant and pending belong to the family too.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: answer Tu vas au cinéma demain? — Ça dépend.]
+[pause 8 seconds for the answer]
+[your turn — say: name it — Ça dépend du temps.]
+[pause 8 seconds for the answer]
+[your turn — say: name it with a whole condition — Ça dépend. S'il pleut, je reste à la maison.]
+[pause 8 seconds for the answer]
+[your turn — say: hand it back — Ça dépend de toi. Qu'est-ce que tu en penses?]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+What does ça dépend say, and what does it not say? (That there is a condition — not which.) What do you add to name it? (De: ça dépend de toi.) What is hanging, in dēpendēre? (The answer, from the condition.)
+
+
+Lesson 4 of 4.
+Review — if, and it depends.
+
+Warm-up.
+[pause 2 seconds]
+Say "if he is tired", with the vowel si loses. (S'il est fatigué.) Then "it depends". (Ça dépend.)
+
+What you've built.
+Three lessons, and a way of talking about what has not happened yet. The condition, opened by si: s'il pleut. The result, in the present, the future with aller, or a piece of advice. And the condition not yet named: ça dépend, or named after all: ça dépend du temps.
+— Tu vas à la plage demain? — Ça dépend du temps. S'il fait beau, je vais à la plage. S'il pleut, je vais rester à la maison.
+[pause 2 seconds]
+Two branches, one for each kind of weather, and the si half in the present both times, although both are about tomorrow.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: Ça dépend du temps.]
+[pause 8 seconds for the answer]
+[your turn — say: the first branch — S'il fait beau, je vais à la plage.]
+[pause 8 seconds for the answer]
+[your turn — say: the second — S'il pleut, je vais rester à la maison.]
+[pause 8 seconds for the answer]
+[your turn — say: advice in a branch — Si tu es fatigué, tu devrais dormir.]
+[pause 8 seconds for the answer]
+[your turn — say: your own plan for tomorrow, with ça dépend and two branches]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+In s'il fait beau demain, which tense is fait? (The present.) What does si become before il? (S'il.) And what does ça dépend leave unsaid? (Which condition.)

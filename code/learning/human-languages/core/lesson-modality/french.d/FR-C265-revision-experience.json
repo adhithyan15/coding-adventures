@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C265-revision-experience",
+    "language": "french",
+    "chapter": 265,
+    "sequence": 15370,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0f489b1ab97bd358"
+  },
+  "findings": []
+}

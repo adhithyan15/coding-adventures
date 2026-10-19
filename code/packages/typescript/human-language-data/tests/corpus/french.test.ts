@@ -205,7 +205,10 @@ it("pins French lesson-content budgets", () =>
     // two reviews per run.
     // 1245 -> 1376: the fourth and last tranche, chapters 233-257: 125 word
     // lessons and two reviews per run. French attains A2 here.
-    lessons: 1376,
+    // 1376 -> 1412: chapters 258-267, the B1 core that realizes all five B1
+    // spine nodes (imparfait, reasons, travel, experience, conditionnel):
+    // 36 lessons, one reading and one writing, no idiom, sense or culture claim.
+    lessons: 1412,
     idioms: 3,
     senses: 7,
     cultureClaims: 27,
@@ -233,6 +236,9 @@ it("pins French's writing runway, now complete at every level", () => {
     "controlled-composition",
     "timed-assessment-production",
     "connected-composition",
+    // FR-W267-six-lignes: six connected lines about a journey, the B1 core's
+    // writing task. A second connected composition, later in sequence.
+    "connected-composition",
   ]);
 });
 
@@ -243,6 +249,9 @@ it("pins French-owned objective activities without extending a global ledger", (
     .sort();
   expect(ids).toEqual([
     "FR-C18-oui-more-negative",
+    // FR-C259-lecture, the B1 core's first connected story: one objective
+    // check that the reader can tell the passé composé events from the scene.
+    "FR-C259-lecture-evenements",
     "FR-C45-details-age",
     "FR-C45-instructions-listen",
     "FR-C45-premiere-lecture-city",

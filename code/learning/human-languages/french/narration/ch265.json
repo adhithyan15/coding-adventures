@@ -1,0 +1,490 @@
+{
+  "version": 1,
+  "language": "french",
+  "chapter": 265,
+  "title": "More Than, and for How Long — plus … que, depuis, pendant",
+  "drivablePrefix": 3,
+  "sourceHash": "fnv1a64:b336369d8e7ee203",
+  "lessons": [
+    {
+      "id": "FR-C265-plus-que",
+      "sequence": 15350,
+      "title": "plus … que — more than",
+      "headword": "plus … que, moins … que",
+      "romanization": "plus … que, moins … que",
+      "gloss": "more … than, less … than — comparing two things, and the adjective that refuses plus",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:39ceb7385206510a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"fast\". (Rapide.) Say \"expensive\". (Cher.)"
+            },
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "An experience is easier to describe beside another one. This lesson sets two things side by side."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: plus … que, moins … que",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "To compare two things, put plus, \"more\", in front of the adjective and que, \"than\", in front of the second thing:"
+            },
+            {
+              "kind": "speech",
+              "text": "Le train est plus rapide que la voiture. — The train is faster than the car. L'avion est plus cher que le train. — The plane is dearer than the train. Tu es plus jeune que moi. — You are younger than me."
+            },
+            {
+              "kind": "speech",
+              "text": "English often builds the comparison into the adjective, faster, younger; French builds it with plus. After que a person takes the strong form you know: que moi, que toi, que lui."
+            },
+            {
+              "kind": "speech",
+              "text": "Its opposite is moins, \"less\": Le vélo est moins cher que la voiture. And for \"as … as\", aussi … que: Le train est aussi cher que l'avion."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: le plus, and the one that refuses",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "For the most of all, give plus the article as well:"
+            },
+            {
+              "kind": "speech",
+              "text": "le train le plus rapide — the fastest train la voiture la plus chère — the dearest car."
+            },
+            {
+              "kind": "speech",
+              "text": "These adjectives stay after the noun, as in le vin rouge, and the adjective takes its own article: le train le plus rapide, the article twice."
+            },
+            {
+              "kind": "speech",
+              "text": "The commonest adjective of all refuses plus. Bon becomes meilleur, \"better\": Le café est meilleur que le thé. Its adverb, bien, becomes mieux: Tu parles mieux que moi. — You speak better than me."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "plus is inherited from Latin plūs, \"more\" (EtymDB 2.1), which English kept whole as plus. moins is inherited, through Old French meins, from Latin minus, \"less\" (EtymDB 2.1), English minus. meilleur is inherited, through Old French meillor, from Latin melior, \"better\" (EtymDB 2.1), which English kept in ameliorate, \"to make better\"; and mieux goes back to its neighbour melius."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Le train est plus rapide que la voiture.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Le train est plus rapide que la voiture.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the other way round — La voiture est moins rapide que le train.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the other way round — *La voiture est moins rapide que le train.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "le train le plus rapide",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *le train le plus rapide*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a view with a comparison — Je pense que le vélo est meilleur que la voiture.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a view with a comparison — *Je pense que le vélo est meilleur que la voiture.*]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"the plane is dearer than the train\". (L'avion est plus cher que le train.) How do you say \"the fastest train\"? (Le train le plus rapide.) What does bon become? (Meilleur.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FR-C265-depuis-pendant",
+      "sequence": 15360,
+      "title": "depuis, pendant — how long, and still going",
+      "headword": "depuis, pendant",
+      "romanization": "depuis, pendant",
+      "gloss": "for, since and ago — how long, and whether it is still going on",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:507865b0fe95f67c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"the train is faster than the car\". (Le train est plus rapide que la voiture.) Then \"I live in Paris\". (J'habite à Paris.)"
+            },
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "An experience has a length, and French asks whether it is over."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: depuis, and the present",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "J'habite ici depuis trois ans. — I have been living here for three years. J'habite ici depuis janvier. — I have lived here since January."
+            },
+            {
+              "kind": "speech",
+              "text": "Listen to the verb. English says have been living; French says j'habite, the plain present, because the living is still going on. Depuis takes a length, \"for three years\", or a starting point, \"since January\", with the same present. The question is depuis quand, since when, or depuis combien de temps, for how long."
+            },
+            {
+              "kind": "speech",
+              "text": "Everyday speech everywhere has a second way to say it, with the length in front: Ça fait trois ans que j'habite ici."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: pendant, and il y a",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "When the stretch has ended, the verb goes into the passé composé and the length takes pendant, \"for, during\":"
+            },
+            {
+              "kind": "speech",
+              "text": "J'ai habité à Paris pendant deux ans. — I lived in Paris for two years. (and then I left)."
+            },
+            {
+              "kind": "speech",
+              "text": "One English word, for, splits in two. Depuis with the present: still going on. Pendant with the passé composé: over."
+            },
+            {
+              "kind": "speech",
+              "text": "And the il y a you know as \"there is\" also means \"ago\", with an event:"
+            },
+            {
+              "kind": "speech",
+              "text": "Je suis arrivé ici il y a trois ans. — I arrived here three years ago."
+            },
+            {
+              "kind": "speech",
+              "text": "So one life can carry all three: Je suis arrivé il y a trois ans. J'habite ici depuis trois ans. Avant, j'ai habité à Paris pendant deux ans."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "depuis is de, \"from\", plus puis, \"then\" (EtymDB 2.1): \"from then on\". Puis goes back to a spoken Latin postius, built on post, \"after\". pendant is the participle of pendre, \"to hang\", from Latin pendēre (EtymDB 2.1): pendant deux ans is, at root, \"two years hanging\", the stretch while the matter hung open."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "J'habite ici depuis trois ans.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *J'habite ici depuis trois ans.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Ça fait trois ans que j'habite ici.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Ça fait trois ans que j'habite ici.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the stretch that is over — J'ai habité à Paris pendant deux ans.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the stretch that is over — *J'ai habité à Paris pendant deux ans.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"ago\" — Je suis arrivé il y a trois mois.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"ago\" — *Je suis arrivé il y a trois mois.*]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which tense goes with depuis, when it is still going on? (The present.) Which word takes over when the stretch is finished, and with which tense? (Pendant, with the passé composé.) What does il y a mean with an event? (Ago.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FR-C265-revision-experience",
+      "sequence": 15370,
+      "title": "Review — describing an experience",
+      "headword": "(review)",
+      "romanization": "(review)",
+      "gloss": "an experience described — compared with another, and measured: how long, and whether it is over",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0f489b1ab97bd358",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"the coffee is better than the tea\". (Le café est meilleur que le thé.) Then \"I have been living here for three years\". (J'habite ici depuis trois ans.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Two chapters, and an experience can be told whole: how it felt, what you hope next, how it compares, and how long it lasted. Plus … que, moins … que, aussi … que, with meilleur for the one adjective that refuses. Depuis with the present for what is still going on, pendant with the passé composé for what is over, and il y a for \"ago\"."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Here is a life in four lines:"
+            },
+            {
+              "kind": "speech",
+              "text": "J'ai habité à Paris pendant deux ans. C'était une ville plus chère que Lyon, mais j'étais content. J'habite à Lyon depuis janvier. J'espère rester ici."
+            },
+            {
+              "kind": "speech",
+              "text": "Rester, \"to stay\", is one of the standing verb's children, Latin re-stāre: to stand behind."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "J'ai habité à Paris pendant deux ans.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *J'ai habité à Paris pendant deux ans.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "C'était une ville plus chère que Lyon.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *C'était une ville plus chère que Lyon.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "J'habite à Lyon depuis janvier.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *J'habite à Lyon depuis janvier.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "and the dream beyond it — Mon rêve, c'est de vivre près de la mer.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: and the dream beyond it — *Mon rêve, c'est de vivre près de la mer.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "your own — where you live, since when, and one place you lived before, with pendant",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: your own — where you live, since when, and one place you lived before, with *pendant*]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "In j'habite à Lyon depuis janvier, why the present? (The living is still going on.) Say \"less expensive than the car\". (Moins cher que la voiture.) And which word says \"ago\"? (Il y a.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

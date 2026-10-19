@@ -1,0 +1,996 @@
+{
+  "version": 1,
+  "language": "french",
+  "chapter": 258,
+  "title": "The Scene — c'était, il y avait, il faisait froid",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:7176fd4aa0d56ee8",
+  "lessons": [
+    {
+      "id": "FR-C258-parlais",
+      "sequence": 15100,
+      "title": "je parlais — the past that is still running",
+      "headword": "je parlais, il parlait",
+      "romanization": "je parlais, il parlait",
+      "gloss": "the imparfait — a second past with no edge on it, built on the nous form of the present",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2dc2c89c73e8770b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"I spoke\", with avoir and the participle. (J'ai parlé.)"
+            },
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "That past has an edge: it happened, and it finished. French has a second past with no edge at all, and every story you tell from here on needs both of them."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: one stem, one set of endings",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Start from the nous form of the present and take off its -ons. What is left is the stem. Then add -ais for \"I\":"
+            },
+            {
+              "kind": "speech",
+              "text": "nous parl-ons, je parlais — I was speaking, I used to speak nous finiss-ons, je finissais — I was finishing nous pren-ons, je prenais — I was taking."
+            },
+            {
+              "kind": "speech",
+              "text": "The other persons keep that stem and change only the ending: je parlais, tu parlais, il parlait, nous parlions, vous parliez, ils parlaient."
+            },
+            {
+              "kind": "speech",
+              "text": "Two things to hear. Four of those six are one sound: parlais, parlais, parlait and parlaient all end in the same open è, so the pronoun in front is what tells a listener who was speaking. And nous parlions is one small i away from the present nous parlons. Listen for that i."
+            },
+            {
+              "kind": "speech",
+              "text": "This past is the imparfait, and almost every verb follows this recipe. The one that refuses it comes next."
+            },
+            {
+              "kind": "speech",
+              "text": "What it means is \"was ‑ing\", or \"used to\": j'habitais à Paris, I lived in Paris, back then, with no start and no finish in view."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart: where -ais came from",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Latin already had this past, and it marked it with a b: habēbat, \"he was having\", from habēre, the Latin verb that gave avoir (EtymDB 2.1). In French the b wore away entirely. You met one of its forms in the chapter on être: j'étais goes back to stābam, \"I was standing\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Older French spelled the ending -oit, il parloit, and the spelling -ais settled only in the nineteenth century, long after the sound had changed. Neither EtymDB nor Lewis & Short records endings this late, so that history is the usual account in histories of French, given here as one."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nous parlons, then je parlais",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nous parlons*, then *je parlais*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "je parlais, tu parlais, il parlait — one sound",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *je parlais, tu parlais, il parlait* — one sound]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nous parlions, vous parliez — and hear the i",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nous parlions, vous parliez* — and hear the *i*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "j'habitais à Paris — habiter, still running in the past",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *j'habitais à Paris* — *habiter*, still running in the past]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the edge, then no edge — j'ai parlé, then je parlais",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the edge, then no edge — *j'ai parlé*, then *je parlais*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which present form do you build the stem on? (The nous form, without its -ons.) Build \"I was taking\". (Je prenais.) Which Latin letter wore away from the ending? (The b of habēbat.) Which past has an edge, and which has none? (J'ai parlé has one; je parlais has none.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FR-C258-cetait",
+      "sequence": 15110,
+      "title": "c'était, il y avait — the words a scene is made of",
+      "headword": "c'était, il y avait",
+      "romanization": "c'était, il y avait",
+      "gloss": "it was, there was — être's own imparfait stem, and the two openers a French scene is built from",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:17dab8a47fa64976",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Build \"I was speaking\". (Je parlais.) Say \"it's good\". (C'est bon.) Then \"there is bread\". (Il y a du pain.)"
+            },
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Hold on to all three. This lesson moves the last two into the past."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: c'était",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One verb refuses last lesson's recipe: être. Its nous form, nous sommes, gives nothing to build on, so it has a stem of its own, ét-, with the same endings: j'étais, tu étais, il était, nous étions, vous étiez, ils étaient."
+            },
+            {
+              "kind": "speech",
+              "text": "The form you will use most is the one inside c'est:"
+            },
+            {
+              "kind": "speech",
+              "text": "C'était bon. — It was good. C'était samedi. — It was Saturday."
+            },
+            {
+              "kind": "speech",
+              "text": "C'est is now; c'était is how things were, all through some stretch of the past."
+            },
+            {
+              "kind": "speech",
+              "text": "avoir does follow the recipe: nous avons gives j'avais. Age is the clearest case. J'ai vingt ans is now; j'avais vingt ans is the age you were, back then."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "input",
+          "title": "You'll want to know: il y avait",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "You have il y a, \"there is\" and \"there are\". Its past is il y avait:"
+            },
+            {
+              "kind": "speech",
+              "text": "Il y avait beaucoup de monde. — There were a lot of people. Il n'y avait pas de pain. — There was no bread."
+            },
+            {
+              "kind": "speech",
+              "text": "Like il y a, it does not change for a plural: one avait for one thing or for a hundred. And after the negative, pas de stays exactly as it was in the present."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The phrase, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "était goes back to Latin stābat, \"he was standing\", the standing verb that lent être every form beginning ét-. avait goes back to habēbat, \"he was having\", the past of habēre, the Latin verb that gave avoir (EtymDB 2.1). In both, the Latin b wore away."
+            },
+            {
+              "kind": "speech",
+              "text": "The little y of il y a is inherited from Latin ibī, \"there\" (EtymDB 2.1; Lewis & Short, under ibi). So il y avait is, word for word, \"it had there\"."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "c'était, il y avait",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *c'était, il y avait*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "C'était samedi. — then C'était bon.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *C'était samedi.* — then *C'était bon.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "J'avais vingt ans.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *J'avais vingt ans.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Il y avait beaucoup de monde. — then Il n'y avait pas de pain.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Il y avait beaucoup de monde.* — then *Il n'y avait pas de pain.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "from now to then — c'est becomes c'était, il y a becomes il y avait",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: from now to then — *c'est* becomes *c'était*, *il y a* becomes *il y avait*]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What stem does être use in the imparfait? (Ét-.) Say \"there were a lot of people\". (Il y avait beaucoup de monde.) Does il y avait change for a plural? (No.) Which Latin verb is behind était? (Stāre, \"to stand\".)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FR-C258-il-faisait-froid",
+      "sequence": 15120,
+      "title": "il faisait froid — the weather, made in the past",
+      "headword": "il faisait froid, il faisait chaud",
+      "romanization": "il faisait froid, il faisait chaud",
+      "gloss": "it was cold, it was hot — the weather, made in the past",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:782b3b5084c21c79",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"there were a lot of people\", the way last lesson built it. (Il y avait beaucoup de monde.) Then \"it's cold\", today. (Il fait froid.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: il faisait froid, il faisait chaud",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "English says the weather was cold. French says it made cold, and you have that already: il fait froid. Move it into the past with the recipe. Nous faisons gives the stem fais-:"
+            },
+            {
+              "kind": "speech",
+              "text": "Il faisait froid. — It was cold. Il faisait chaud. — It was hot."
+            },
+            {
+              "kind": "speech",
+              "text": "Listen to the first syllable. The ai of faisait is said like the short e of le: \"fe-zè\". It is the one surprise in the whole recipe."
+            },
+            {
+              "kind": "speech",
+              "text": "Rain has a verb of its own. You have il pleut, \"it's raining\", and its past is il pleuvait, \"it was raining\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Keep c'était and était for things. Le café était froid — the coffee was cold — is about the coffee. Il faisait froid is about the whole day. Put three of these together and you have a morning before anything has happened in it:"
+            },
+            {
+              "kind": "speech",
+              "text": "Il faisait froid et il pleuvait. Il n'y avait pas de soleil."
+            },
+            {
+              "kind": "speech",
+              "text": "In Québec, relaxed speech has its own word for a biting cold: il faisait frette. In a letter, everyone writes froid."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The phrase, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "faire is inherited from Latin facere, \"to make, to do\" (EtymDB 2.1), and faisait goes back to its past faciēbat, \"he was making\" (Lewis & Short, under facio). English fact and factory share it."
+            },
+            {
+              "kind": "speech",
+              "text": "froid is inherited, through Old French froit, from Latin frīgidus, \"cold\" (EtymDB 2.1), which English borrowed whole as frigid. chaud goes back to Old French chaut (EtymDB 2.1), usually traced to Latin calidus, \"warm, hot\" (Lewis & Short)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Il faisait froid. — then Il faisait chaud.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Il faisait froid.* — then *Il faisait chaud.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "il pleut, then il pleuvait",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *il pleut*, then *il pleuvait*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a thing, then a day — Le café était froid. then Il faisait froid.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a thing, then a day — *Le café était froid.* then *Il faisait froid.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a whole morning — Il faisait froid et il pleuvait. Il n'y avait pas de soleil.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a whole morning — *Il faisait froid et il pleuvait. Il n'y avait pas de soleil.*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"it was hot\". (Il faisait chaud.) For the coffee, is it était or faisait? (Était — it is about a thing.) How is the ai of faisait said? (Like the e of le.) Which Latin verb is inside faisait? (Facere, \"to make\".)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FR-C258-dormais-dormi",
+      "sequence": 15130,
+      "title": "je dormais / j'ai dormi — the same sleep, told two ways",
+      "headword": "je dormais / j'ai dormi",
+      "romanization": "je dormais / j'ai dormi",
+      "gloss": "the scene and the events — the imparfait paints what was going on, the passé composé drops in what happened",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:bd04d3addd64cc21",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Paint a cold morning in two short sentences. (Il faisait froid. Il n'y avait pas de soleil.)"
+            },
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Nothing has happened in it yet. This lesson is about what happens."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: the scene and the events",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Take one fact, that you slept, and let the tense decide what kind of fact it is:"
+            },
+            {
+              "kind": "speech",
+              "text": "Je dormais. — I was sleeping. (no edge: what was going on) J'ai dormi. — I slept. (an edge: a thing that happened and ended)."
+            },
+            {
+              "kind": "speech",
+              "text": "Neither is more correct. A told story needs both, in a division of labour:"
+            },
+            {
+              "kind": "speech",
+              "text": "The imparfait paints the scene: what was going on, what things were like. The passé composé drops the events into it: what happened."
+            },
+            {
+              "kind": "speech",
+              "text": "Il faisait froid. Je dormais. Ma mère a téléphoné. — It was cold. I was asleep. My mother phoned."
+            },
+            {
+              "kind": "speech",
+              "text": "English has no separate ending for this. It leans on was ‑ing and used to and lets the context carry the rest. French settles it in the verb."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: what used to happen",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "A habit is scene too. It went on, again and again, with no single edge:"
+            },
+            {
+              "kind": "speech",
+              "text": "Autrefois, je dormais beaucoup. — In the old days, I used to sleep a lot."
+            },
+            {
+              "kind": "speech",
+              "text": "So the imparfait answers two questions: what was going on at that moment, and what used to happen. The passé composé answers a third: what happened, once, and was done."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart: why \"imparfait\"",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "imparfait is inherited from Latin imperfectus, \"unfinished, incomplete\" (EtymDB 2.1; Lewis & Short): in-, \"not\", plus perfectus, \"carried all the way through\", which is itself per-, \"through\", plus facere, \"to make\". That facere is the one inside last lesson's faisait."
+            },
+            {
+              "kind": "speech",
+              "text": "So the name describes the job. The imparfait is the not-carried-through past: unfinished in time, with no edge on it."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the pair — je dormais, then j'ai dormi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the pair — *je dormais*, then *j'ai dormi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a scene, then an event — Il pleuvait. Ma mère a téléphoné.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a scene, then an event — *Il pleuvait. Ma mère a téléphoné.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a habit — Autrefois, je dormais beaucoup.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a habit — *Autrefois, je dormais beaucoup.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "C'était samedi, et j'ai dormi.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *C'était samedi, et j'ai dormi.*]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "In a story, which past paints and which drops the events in? (The imparfait paints; the passé composé drops them in.) Is a habit scene or event? (Scene, in the imparfait.) What does imperfectus say? (Not carried through.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FR-C258-pendant-que",
+      "sequence": 15140,
+      "title": "quand, pendant que — the scene, and what cut into it",
+      "headword": "quand, pendant que",
+      "romanization": "quand, pendant que",
+      "gloss": "when and while — the scene that was running, and the event that cut into it",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:07a3d8daf872b90f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"I was sleeping\", then \"I slept\". (Je dormais, then j'ai dormi.)"
+            },
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "This lesson joins a scene and an event into one sentence."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: quand, where the event comes in",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "You have quand, \"when\". It puts a scene and an event into one sentence:"
+            },
+            {
+              "kind": "speech",
+              "text": "Je lisais quand ma mère a téléphoné. — I was reading when my mother phoned. J'attendais le train quand il a commencé à pleuvoir. — I was waiting for the train when it started to rain."
+            },
+            {
+              "kind": "speech",
+              "text": "The first half is the scene, still running, in the imparfait. The quand half is the event that cut into it, in the passé composé. Turn the sentence round and the tenses keep their jobs: Quand ma mère a téléphoné, je lisais."
+            },
+            {
+              "kind": "speech",
+              "text": "A quand can hold a scene too: Quand j'avais vingt ans, j'habitais à Paris. A stretch of life is not an event, so both halves are scene."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: pendant que, two things at once",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "pendant que means \"while\". It holds a scene open so that something else can happen inside it:"
+            },
+            {
+              "kind": "speech",
+              "text": "Pendant que je lisais, mon frère dormait. — While I was reading, my brother was asleep. Pendant que j'attendais le train, j'ai téléphoné à ma mère. — While I was waiting for the train, I phoned my mother."
+            },
+            {
+              "kind": "speech",
+              "text": "Two scenes side by side, then one event inside a scene."
+            },
+            {
+              "kind": "speech",
+              "text": "French has one more way to hold a moment still: être en train de, \"to be in the middle of\". J'étais en train de lire quand ma mère a téléphoné."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "pendant comes from pendre, \"to hang\", which is inherited from Latin pendēre, \"to hang, to be suspended\" (EtymDB 2.1; Lewis & Short, under pendeo). Pendant que je lisais is, at root, \"while my reading was still hanging\": open, not yet settled. English pending has the same picture."
+            },
+            {
+              "kind": "speech",
+              "text": "quand is inherited from Latin quandō, \"when\" (EtymDB 2.1), and the d it kept in spelling is the Latin one."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Je lisais quand ma mère a téléphoné.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Je lisais quand ma mère a téléphoné.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the same, turned round — Quand ma mère a téléphoné, je lisais.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the same, turned round — *Quand ma mère a téléphoné, je lisais.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Pendant que je lisais, mon frère dormait.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Pendant que je lisais, mon frère dormait.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a scene of your own — Il faisait froid et j'attendais … — then one thing that happened, with quand",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a scene of your own — *Il faisait froid et j'attendais …* — then one thing that happened, with *quand*]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "In je lisais quand ma mère a téléphoné, which half is the scene? (Je lisais.) Which past does the quand half take here? (The passé composé — the event.) What does pendant que mean? (While.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FR-C258-revision-quand",
+      "sequence": 15150,
+      "title": "Review — the scene, and what cut into it",
+      "headword": "(review)",
+      "romanization": "(review)",
+      "gloss": "a scene and an event in one breath — quand, pendant que, the imparfait and the passé composé together",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:45ca21404230693e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Build \"I was reading\" from lire. (Je lisais.) Then say \"I had a dog\". (J'avais un chien.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Five lessons, and every piece of a scene is in your hands. The recipe, the nous stem plus -ais, on almost any verb: je parlais, je finissais, je prenais. The one verb that refuses it, être, with c'était. The scene-setter il y avait. The weather, made rather than being: il faisait froid. And the division of labour: the imparfait paints, the passé composé drops the events in."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The joints between the two are quand and pendant que."
+            },
+            {
+              "kind": "speech",
+              "text": "Je lisais quand ma mère a téléphoné. J'attendais le train quand il a commencé à pleuvoir."
+            },
+            {
+              "kind": "speech",
+              "text": "The second one is worth hearing twice. The rain is an event here, because it began: il a commencé. Once it is falling, it is scene again: il pleuvait."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a scene in three — Il faisait froid. Il y avait beaucoup de monde. C'était samedi.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a scene in three — *Il faisait froid. Il y avait beaucoup de monde. C'était samedi.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Je lisais quand ma mère a téléphoné.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Je lisais quand ma mère a téléphoné.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the rain as an event — il a commencé à pleuvoir — then as a scene — il pleuvait",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the rain as an event — *il a commencé à pleuvoir* — then as a scene — *il pleuvait*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Pendant que j'attendais le train, j'ai téléphoné à ma mère.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Pendant que j'attendais le train, j'ai téléphoné à ma mère.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "one of your own — a scene with je …-ais, and one thing that happened, with quand",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: one of your own — a scene with *je …-ais*, and one thing that happened, with *quand*]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "After quand, in these sentences, which past? (The passé composé — the event.) Why is il a commencé à pleuvoir in the passé composé? (The rain began: that is an event.) What does imparfait mean, taken apart? (Not carried through.) And which stem does c'était use? (Ét-, from the standing verb.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

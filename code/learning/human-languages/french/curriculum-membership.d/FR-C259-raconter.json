@@ -1,0 +1,11 @@
+{
+  "id": "FR-C259-raconter",
+  "pathSegment": "FR-PATH-259-RECIT",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FR-EXT-259-RECIT",
+      "order": 1
+    }
+  ]
+}

@@ -265,7 +265,7 @@ describe("corpus level summary", () => {
       expect(readdirSync(join(root, "core", entry.name)), entry.name).toEqual([]);
     }
   });
-  it("shows twenty-one tracks have reached A2, and every track has now reached A1", () => {
+  it("shows twenty tracks have reached A2, and every track has now reached A1", () => {
     const { lessons, curricula: paths, spine } = REAL_EVERYTHING;
     const summary = summarizeLevels(lessons, paths, spine);
     // `reach` is the highest level a track has ANY lesson at, so this names the tracks
@@ -277,6 +277,8 @@ describe("corpus level summary", () => {
     // the list is 22: every track but Spanish reaches A2 and stops there.
     // Italian leaves it with chapters 263-272, which realize the five B1 spine
     // nodes, so the list is 21. `reach` only touches B1; attained stays A2.
+    // French leaves it with chapters 258-267, which realize the five B1 spine
+    // nodes, so the list is 20.
     expect(
       summary.tracks.filter((track) => track.reach === "A2").map((track) => track.language),
     ).toEqual([
@@ -287,7 +289,6 @@ describe("corpus level summary", () => {
       // SPINE-NEGATE-AND-ASK, which are the two A2 grammar nodes this track had
       // never reached. Both are one character each.
       "chinese",
-      "french",
       "german",
       "gujarati",
       "hindi",
@@ -310,13 +311,14 @@ describe("corpus level summary", () => {
       "telugu",
       "urdu",
     ]);
-    // Two tracks now exceed A2, and naming them is stronger than a blanket
+    // Three tracks now exceed A2, and naming them is stronger than a blanket
     // "nothing does" -- it says which rung was climbed and by whom. Italian joins
-    // Spanish with its B1 core, chapters 263-272.
+    // Spanish with its B1 core, chapters 263-272, and French with its B1 core,
+    // chapters 258-267.
     expect(
       summary.tracks.filter((track) => track.reach !== null && levelRank(track.reach) > levelRank("A2"))
         .map((track) => track.language),
-    ).toEqual(["italian", "spanish"]);
+    ).toEqual(["french", "italian", "spanish"]);
     expect(
       summary.tracks.filter((track) => track.reach === "pre-A1").map((track) => track.language),
       // HL-C230: chinese leaves this list. Its numerals chapter realizes

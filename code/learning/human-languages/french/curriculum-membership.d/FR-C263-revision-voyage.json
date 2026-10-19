@@ -1,0 +1,11 @@
+{
+  "id": "FR-C263-revision-voyage",
+  "pathSegment": "FR-PATH-263-BILLET",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-263-BILLET",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C258-il-faisait-froid",
+    "language": "french",
+    "chapter": 258,
+    "sequence": 15120,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:782b3b5084c21c79"
+  },
+  "findings": []
+}
