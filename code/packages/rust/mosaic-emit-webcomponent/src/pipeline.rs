@@ -1706,6 +1706,7 @@ fn layout_value_to_js_expr(v: &LayoutPropValue) -> String {
 /// - `read-only: true`    → `readonly`
 /// - `onChange: emit: onX` → `onchange="this.getRootNode().host.dispatch({type:'x', value:event.target.value})"`
 /// - `onCommit: emit: onX` + `onCancel: emit: onY` → merged `onkeydown` handler
+///   (Enter commits a single-line field, Ctrl/Cmd+Enter a `<textarea>`)
 ///
 /// All inline handlers reach the host via `this.getRootNode().host`
 /// because in the shadow DOM `this` inside an inline handler is the
@@ -1798,18 +1799,32 @@ fn emit_host_input(node: &LayoutNode, part_styles: &HtmlStyles) -> String {
         }
     }
 
-    // onkeydown — merges onCommit (Enter) and onCancel (Escape). In a text
-    // area Enter is a line break, so a multiline field has no commit key.
-    let commit = find_emit_ref(node, "onCommit").filter(|_| !multiline);
+    // onkeydown — merges onCommit and onCancel (Escape). A single-line field
+    // commits on Enter. In a text area Enter is a line break, so the commit
+    // key is UI25 §4's Ctrl+Enter (Windows, Linux) or Cmd+Enter (macOS):
+    // `ctrlKey||metaKey` covers both without sniffing the platform, and
+    // `preventDefault()` keeps the chord from ever reaching the text.
+    //
+    //   field       | handler branch
+    //   ------------+---------------------------------------------------------
+    //   single-line | if(event.key==='Enter')<dispatch>;
+    //   multiline   | if(event.key==='Enter'&&(event.ctrlKey||event.metaKey)){
+    //               |   event.preventDefault();<dispatch>;}
+    let commit = find_emit_ref(node, "onCommit");
     let cancel = find_emit_ref(node, "onCancel");
     if commit.is_some() || cancel.is_some() {
         let mut body = String::new();
         if let Some(e) = commit {
             let t = to_camel_case_first_lower(&strip_on_prefix(e));
             if is_safe_identifier(&t) {
-                body.push_str(&format!(
-                    "if(event.key==='Enter')this.getRootNode().host.dispatch({{type:'{t}'}});"
-                ));
+                let dispatch = format!("this.getRootNode().host.dispatch({{type:'{t}'}});");
+                if multiline {
+                    body.push_str(&format!(
+                        "if(event.key==='Enter'&&(event.ctrlKey||event.metaKey)){{event.preventDefault();{dispatch}}}"
+                    ));
+                } else {
+                    body.push_str(&format!("if(event.key==='Enter'){dispatch}"));
+                }
             }
         }
         if let Some(e) = cancel {
@@ -8254,10 +8269,11 @@ mod tests {
         );
     }
 
-    /// #15930 — Enter is a line break in a text area, so neither primitive
-    /// wires it to `onCommit` when multiline. Escape still cancels.
+    /// UI25 §4 — Enter is a line break in a text area, so a multiline field
+    /// commits on Ctrl+Enter (Windows/Linux) or Cmd+Enter (macOS) instead,
+    /// on both primitives. Escape still cancels.
     #[test]
-    fn a_multiline_field_does_not_commit_on_enter() {
+    fn a_multiline_field_commits_on_ctrl_or_cmd_enter() {
         for tag in ["HostInput", "Input"] {
             let m = component(
                 "X",
@@ -8272,12 +8288,39 @@ mod tests {
                 ],
             );
             let out = from_pipeline(&m, &l, &empty_style("X")).unwrap().output;
-            assert!(!out.contains("'Enter'"), "{tag}:\n{out}");
+            assert!(
+                out.contains(
+                    "if(event.key==='Enter'&&(event.ctrlKey||event.metaKey)){event.preventDefault();this.getRootNode().host.dispatch({type:'save'});}"
+                ),
+                "{tag}:\n{out}"
+            );
+            assert!(!out.contains("if(event.key==='Enter')"), "{tag}:\n{out}");
             assert!(
                 out.contains("if(event.key==='Escape')this.getRootNode().host.dispatch({type:'discard'});"),
                 "{tag}:\n{out}"
             );
         }
+    }
+
+    /// A single-line field keeps bare Enter as its commit key.
+    #[test]
+    fn a_single_line_field_still_commits_on_bare_enter() {
+        let m = component("X", vec![], vec![emit_decl("onSave", vec![])]);
+        let mut root = leaf("HostInput");
+        root.props.push(LayoutProp {
+            name: "onCommit".to_string(),
+            value: LayoutPropValue::EmitRef("onSave".to_string()),
+        });
+        let l = LayoutDef {
+            component_name: "X".to_string(),
+            root,
+        };
+        let out = from_pipeline(&m, &l, &empty_style("X")).unwrap().output;
+        assert!(
+            out.contains("if(event.key==='Enter')this.getRootNode().host.dispatch({type:'save'});"),
+            "got:\n{out}"
+        );
+        assert!(!out.contains("ctrlKey"), "got:\n{out}");
     }
 
 }
