@@ -3803,10 +3803,19 @@ fn parse_directive(fields: &[String]) -> Result<Analysis, NetlistParseError> {
         }
         ".noise" => {
             require_min_fields(fields, 3, ".noise")?;
-            let mut frequencies_hz = Vec::new();
+            let canonical_sweep = fields.len() == 7
+                && matches!(
+                    fields[3].to_ascii_lowercase().as_str(),
+                    "lin" | "dec" | "oct"
+                );
+            let mut frequencies_hz = if canonical_sweep {
+                noise_sweep_frequencies(&fields[3], &fields[4], &fields[5], &fields[6])?
+            } else {
+                Vec::new()
+            };
             let mut temperature = 300.0;
             let mut temperature_is_explicit = false;
-            let mut tail_index = 3;
+            let mut tail_index = if canonical_sweep { 7 } else { 3 };
             while tail_index < fields.len() {
                 let token = &fields[tail_index];
                 let lower_token = token.to_ascii_lowercase();
@@ -3909,6 +3918,57 @@ fn parse_directive(fields: &[String]) -> Result<Analysis, NetlistParseError> {
             "unsupported directive {:?}",
             fields[0]
         ))),
+    }
+}
+
+fn noise_sweep_frequencies(
+    mode: &str,
+    point_count_token: &str,
+    start_token: &str,
+    stop_token: &str,
+) -> Result<Vec<f64>, NetlistParseError> {
+    let point_count_value = parse_value(point_count_token)?;
+    if !point_count_value.is_finite()
+        || point_count_value <= 0.0
+        || point_count_value.fract() != 0.0
+    {
+        return Err(NetlistParseError::new(
+            ".noise point count must be a positive integer",
+        ));
+    }
+    let start_hz = parse_value(start_token)?;
+    let stop_hz = parse_value(stop_token)?;
+    if start_hz <= 0.0 || stop_hz < start_hz {
+        return Err(NetlistParseError::new(
+            ".noise frequencies must be positive and stop must be >= start",
+        ));
+    }
+    let point_count = point_count_value as usize;
+    match mode.to_ascii_lowercase().as_str() {
+        "lin" if point_count == 1 => Ok(vec![start_hz]),
+        "lin" => {
+            let step = (stop_hz - start_hz) / (point_count - 1) as f64;
+            Ok((0..point_count)
+                .map(|index| start_hz + index as f64 * step)
+                .collect())
+        }
+        "dec" | "oct" => {
+            let base = if mode.eq_ignore_ascii_case("dec") {
+                10.0_f64
+            } else {
+                2.0_f64
+            };
+            let ratio = base.powf(1.0 / point_count as f64);
+            let epsilon = stop_hz * 1.0e-12;
+            let mut frequencies = Vec::new();
+            let mut frequency_hz = start_hz;
+            while frequency_hz <= stop_hz + epsilon {
+                frequencies.push(frequency_hz);
+                frequency_hz *= ratio;
+            }
+            Ok(frequencies)
+        }
+        _ => unreachable!("canonical sweep kind was validated before expansion"),
     }
 }
 
