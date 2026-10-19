@@ -6013,7 +6013,8 @@ fn pick_signal_arg_with(
 /// | `onChange: emit: onE`   | `onTextChanged: e(<arg>)`  — `arg` is `text` when the signal      |
 /// |                         | declares one parameter, empty when it declares zero (see          |
 /// |                         | `pick_signal_arg`).                                               |
-/// | `onCommit: emit: onE`   | `onAccepted: e(<arg>)` — fires on Enter, same arg rule            |
+/// | `onCommit: emit: onE`   | `onAccepted: e(<arg>)` — fires on Enter, same arg rule;           |
+/// |                         | a `TextArea` uses `Keys.onPressed` for Ctrl/Cmd+Enter instead     |
 /// | `onCancel: emit: onE`   | `Keys.onEscapePressed: { e(<arg>); event.accepted = true }`       |
 ///
 /// ## Signal arity matters
@@ -6215,12 +6216,30 @@ fn emit_text_input_qml(
         writeln!(out, "{inner_pad}onTextChanged: {camel}({arg})").unwrap();
     }
 
-    // TextArea has no `accepted` signal: Enter inserts a newline. The
-    // single-line controls preserve HostInput's Enter-to-commit contract.
-    if !multiline {
-        if let Some(emit_name) = find_emit_ref_prop(node, "onCommit") {
-            let camel = qml_signal_name(emit_name, ctx.signal_names)?;
-            let arg = pick_signal_arg(emit_name, ctx.emits);
+    // The single-line controls commit on Enter through `accepted`.
+    //
+    // TextArea has no `accepted` signal: Enter inserts a newline. Its commit
+    // key is UI25 §4's Ctrl+Enter (Windows, Linux) or Cmd+Enter (macOS),
+    // caught in `Keys.onPressed`, which runs before TextArea's own key
+    // handling, so accepting the event keeps the chord out of the text.
+    //
+    // Qt swaps the modifier names on macOS: Cmd arrives as ControlModifier
+    // and the physical Control key as MetaModifier. Testing both is what
+    // makes one handler mean "Ctrl+Enter here, Cmd+Enter on a Mac".
+    // `Key_Enter` is the keypad Enter; `Key_Return` the main one.
+    //
+    // `Keys.onEscapePressed` (onCancel, below) is a key-specific handler, so
+    // Qt runs it before `onPressed`; the two never compete for a key.
+    if let Some(emit_name) = find_emit_ref_prop(node, "onCommit") {
+        let camel = qml_signal_name(emit_name, ctx.signal_names)?;
+        let arg = pick_signal_arg(emit_name, ctx.emits);
+        if multiline {
+            writeln!(
+                out,
+                "{inner_pad}Keys.onPressed: function(event) {{ if ((event.key === Qt.Key_Return || event.key === Qt.Key_Enter) && (event.modifiers & (Qt.ControlModifier | Qt.MetaModifier))) {{ {camel}({arg}); event.accepted = true }} }}"
+            )
+            .unwrap();
+        } else {
             writeln!(out, "{inner_pad}onAccepted: {camel}({arg})").unwrap();
         }
     }
@@ -11720,7 +11739,18 @@ mod tests {
             "TextArea Enter must insert a newline rather than commit:\n{}",
             result.output
         );
+        // UI25 §4: Ctrl/Cmd+Enter commits instead, with the text payload the
+        // one-parameter signal declares.
+        assert!(
+            result.output.contains(QT_MOD_ENTER_COMMIT_BODY_CHANGE),
+            "TextArea must commit on Ctrl/Cmd+Enter:\n{}",
+            result.output
+        );
     }
+
+    /// The `Keys.onPressed` line a multiline field with
+    /// `onCommit: emit: onBodyChange` (one text parameter) must carry.
+    const QT_MOD_ENTER_COMMIT_BODY_CHANGE: &str = "Keys.onPressed: function(event) { if ((event.key === Qt.Key_Return || event.key === Qt.Key_Enter) && (event.modifiers & (Qt.ControlModifier | Qt.MetaModifier))) { bodyChange(text); event.accepted = true } }";
 
     /// #15930 — the kernel `HostInput` honours `multiline: true` with the
     /// same native `TextArea` the legacy `Input` gets. Qt hard-wired the
@@ -11774,6 +11804,37 @@ mod tests {
             !out.contains("onAccepted:"),
             "TextArea Enter must insert a newline rather than commit:\n{out}"
         );
+        // UI25 §4: the commit key of a text area is Ctrl+Enter, or Cmd+Enter
+        // on macOS. Qt maps Cmd to ControlModifier and Ctrl to MetaModifier
+        // there, so the handler accepts either. `onSave` is parameterless.
+        assert!(
+            out.contains(
+                "Keys.onPressed: function(event) { if ((event.key === Qt.Key_Return || event.key === Qt.Key_Enter) && (event.modifiers & (Qt.ControlModifier | Qt.MetaModifier))) { save(); event.accepted = true } }"
+            ),
+            "TextArea must commit on Ctrl/Cmd+Enter:\n{out}"
+        );
+    }
+
+    /// A single-line field keeps `onAccepted` (bare Enter) and gets no
+    /// modifier-key handler.
+    #[test]
+    fn a_single_line_host_input_still_commits_on_accepted() {
+        let m = component("Editor", vec![], vec![emit_decl("onSave", vec![])]);
+        let l = LayoutDef {
+            component_name: "Editor".to_string(),
+            root: LayoutNode {
+                tag: "HostInput".to_string(),
+                part_name: None,
+                props: vec![LayoutProp {
+                    name: "onCommit".to_string(),
+                    value: LayoutPropValue::EmitRef("onSave".to_string()),
+                }],
+                children: Vec::new(),
+            },
+        };
+        let out = from_pipeline(&m, &l, &empty_style("Editor")).unwrap().output;
+        assert!(out.contains("onAccepted: save()"), "got:\n{out}");
+        assert!(!out.contains("Keys.onPressed"), "got:\n{out}");
     }
 
     #[test]
