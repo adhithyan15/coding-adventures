@@ -14,6 +14,9 @@ data-driven policy, while an unrecognized non-critical extension may be
 ignored. The second gate decodes Basic Constraints, Key Usage, and Extended
 Key Usage under one explicit semantic budget and enforces only their
 algorithm-independent issuing-CA or end-entity role relationships.
+The third gate selects exactly one caller-supplied certificate algorithm
+profile and checks its exact AlgorithmIdentifier parameter encodings and
+public-key and signature bit-length bounds.
 
 ## Input contract
 
@@ -93,6 +96,51 @@ Constraints, Key Usage, and Extended Key Usage values plus the checked role.
 It is evidence only for the relationships above, not proof of a valid chain,
 trusted CA, authenticated server, or usable public key.
 
+## Certificate algorithm profile contract
+
+The caller supplies an ordered slice of immutable profiles. Each profile
+contains:
+
+- one exact signature algorithm OID and either absent parameters or one exact
+  canonical DER parameter element;
+- one exact subject-public-key algorithm OID and the same parameter policy;
+- an inclusive, nonzero subject-public-key bit-length range; and
+- an inclusive, nonzero certificate-signature bit-length range.
+
+Profile construction rejects empty OID arc slices, zero minimum lengths, and
+inverted ranges. The library embeds no algorithm registry, preferred profile,
+or provider-specific OID table.
+
+Validation compares both complete certificate AlgorithmIdentifiers against
+every profile. Parameters match by presence and exact encoded DER bytes. Zero
+identifier matches fail as unsupported. More than one identifier match fails
+as ambiguous before any bit-length policy is applied. For exactly one match,
+the subject-public-key and certificate-signature BIT STRING lengths must fall
+within that profile's inclusive bounds.
+
+```rust
+pub enum X509AlgorithmParametersPolicy<'a> {
+    Absent,
+    ExactDer(&'a [u8]),
+}
+
+pub struct X509BitLengthRange { /* private fields */ }
+pub struct X509CertificateAlgorithmProfile<'a> { /* private fields */ }
+
+pub fn validate_certificate_algorithm_profile<'certificate, 'policy>(
+    certificate: &X509Certificate<'certificate>,
+    profiles: &[X509CertificateAlgorithmProfile<'policy>],
+) -> Result<ValidatedCertificateAlgorithmProfile<'certificate>,
+            X509CertificateAlgorithmError>;
+```
+
+Successful evidence contains the selected profile index and borrowed signature
+AlgorithmIdentifier, subject-public-key AlgorithmIdentifier, subject public
+key BIT STRING, and certificate signature BIT STRING. It neither parses nor
+verifies either bit string and grants no cryptographic or trust authority.
+Supplying an Ed25519, RSA, or other OID merely supplies policy data; it does
+not enable that algorithm or choose a verifier.
+
 ## Tests
 
 Tests must cover:
@@ -123,13 +171,24 @@ Certificate-role tests must additionally cover:
   extensions; and
 - redacted role errors that expose neither OIDs nor extension contents.
 
+Certificate-algorithm tests must additionally cover:
+
+- rejection of invalid profile definitions;
+- exact OID and absent-versus-exact-DER parameter matching;
+- unsupported and ambiguous profile selection;
+- inclusive public-key and signature bit-length bounds;
+- borrowed evidence for the uniquely selected profile; and
+- redacted errors that expose no OID, parameter, key, signature, or
+  certificate bytes.
+
 ## Deliberate exclusions
 
 - an embedded extension registry or provider-specific OID table;
 - decoding or semantically validating extensions other than Basic Constraints,
   Key Usage, and Extended Key Usage;
 - TLS key-usage selection or Extended Key Usage purpose authorization;
-- signature or public-key algorithm policy and signature verification;
+- an embedded signature or public-key algorithm registry;
+- public-key or signature parsing, hashing, or signature verification;
 - certificate name comparison, path construction, or path validation;
 - clocks, hostname validation, trust roots, revocation, TLS records,
   handshakes, sockets, HTTP, or OAuth transport.
