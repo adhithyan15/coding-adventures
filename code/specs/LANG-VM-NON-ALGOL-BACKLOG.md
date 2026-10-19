@@ -525,7 +525,11 @@ implementation PRs may be active. Include documentation, lesson shards,
 generated files and transitive dependencies in each DAG ownership audit.
 
 1. **PREP01 generic engine / MacroNib and MacroOct:** these are the first
-   consumers. Audit their existing composition and select a demonstrated gap
+   consumers. 2026-10-19 audit: MacroOct lacked the pre-lex byte budgets
+   MacroNib and the C dialect enforce (8 MB dense input → ~2 GB before
+   rejection); fixed by macrooct-iir-compiler 0.3.0. Next demonstrated gap:
+   MacroNib is not wired into `lang-aot` (no `Language` variant, matrix rows,
+   or `PROGRAMS`-reading identity oracle like MacroOct's). Audit their existing composition and select a demonstrated gap
    in preprocessing, provenance, bounds or IIR identity against hand-expanded
    Nib/Oct. The already published octal-stringize PR #17281 is existing work;
    further C-specific stages and full C preprocessing are long-term work,
