@@ -76,3 +76,25 @@ it("keeps the final Marathi named-reader checkpoint untimed and model-free", () 
   expect(activity?.prompt).toContain("Without a model");
   expect(activity?.answer.trim().split(/\s+/)).toHaveLength(32);
 });
+
+it("introduces a partial timer before a full timed named-reader message", () => {
+  const ids = ["MR-A1M18-independent-message", "MR-A1M19-partial-timer", "MR-A1M20-timed-message"];
+  const lessons = ids.map((id) => loadTrackLessons("marathi").find((lesson) => lesson.realization.lessonId === id));
+  expect(lessons.every(Boolean)).toBe(true);
+  expect(lessons[1]?.frontmatter.prerequisites).toContain(ids[0]);
+  expect(lessons[2]?.frontmatter.prerequisites).toContain(ids[1]);
+  for (const lesson of lessons.slice(1)) {
+    expect(lesson?.frontmatter.delivery).toBe("script");
+    expect(Number(lesson?.frontmatter["duration.max_seconds"])).toBeLessThanOrEqual(300);
+    expect(lesson?.body).toContain("hl-writing-stage: timed-assessment-production");
+    expect(lesson?.body).toContain("task fulfilment");
+    expect(lesson?.body).toContain("organisation");
+    expect(lesson?.body).toContain("Marathi control");
+    expect(lesson?.body).toContain("orthographic control");
+    expect(lesson?.body).toContain("repair");
+  }
+  expect(lessons[1]?.body).toContain("partial timer");
+  expect(lessons[2]?.body).toContain("30–40 words");
+  expect(lessons[2]?.body).toContain("three and a half minutes");
+  expect(lessons[2]?.body).toContain("not a full A1 mock");
+});
