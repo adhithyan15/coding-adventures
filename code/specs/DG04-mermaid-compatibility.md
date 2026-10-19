@@ -1052,11 +1052,14 @@ Sequence notes. These semantics flow through the existing layout and
 backend-neutral PaintScene pipeline, with the expanded reply-and-branch example
 covered by Metal-to-PNG validation. Mermaid 11.16.1 delegates the broader
 language to external `@zenuml/core`. Assigned and typed creation forms preserve
-the authored binding as the created participant, creation blocks participate in
-activation nesting, and statement semicolon terminators are accepted without
-leaking punctuation into semantic labels. Unknown custom annotators, inline
-comments, assigned-creation labels, and the full external expression grammar
-remain unsupported, so ZenUML remains at the manifest's `partial` level.
+the authored binding and class label on the created participant, creation blocks
+participate in activation nesting, and statement semicolon terminators are
+accepted without leaking punctuation into semantic labels. Custom participant
+annotators lower to the backend-neutral participant fallback, while inline
+comments attached to messages lower to Sequence notes without treating URL
+slashes or quoted `//` text as comments. Custom annotator glyphs and the full
+external expression grammar remain unsupported, so ZenUML remains at the
+manifest's `partial` level.
 
 ### Structural Groups
 
