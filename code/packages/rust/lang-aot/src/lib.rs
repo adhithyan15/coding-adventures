@@ -536,6 +536,8 @@ pub fn compile_source_to_iir(
 /// * `FrontendError` — the language-specific frontend rejected the source.
 /// * `LlvmBackendError` — the IIR contained an op or type the LLVM backend
 ///   does not yet handle (the error message names the function and op).
+/// * `UnsupportedOps` — the module uses a LANG83 registry op the LLVM
+///   backend declares `Refused`.
 /// * `Io` — failed to read the input or write the output.
 pub fn compile_file_to_llvm_ir(
     src: &Path,
@@ -545,6 +547,11 @@ pub fn compile_file_to_llvm_ir(
     let source = std::fs::read_to_string(src)?;
     let stem = src.file_stem().and_then(|s| s.to_str()).unwrap_or("lang");
     let module = compile_source_to_iir(language, &source, stem)?;
+    // LANG83: this textual-IR path lowers directly rather than through
+    // `compile_iir_to_llvm`, so it must run the registry check itself —
+    // every code-generation entry point refuses unsupported ops before
+    // any backend sees them.
+    check_module_for(Backend::Llvm, &module)?;
 
     // Use the stem as both the LLVM module-id and the default triple stays
     // at iir-to-llvm's deterministic `x86_64-unknown-linux-gnu` so test
