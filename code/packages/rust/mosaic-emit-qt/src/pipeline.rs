@@ -6015,7 +6015,7 @@ fn pick_signal_arg_with(
 /// |                         | `pick_signal_arg`).                                               |
 /// | `onCommit: emit: onE`   | `onAccepted: e(<arg>)` — fires on Enter, same arg rule;           |
 /// |                         | a `TextArea` uses `Keys.onPressed` for Ctrl/Cmd+Enter instead     |
-/// | `onCancel: emit: onE`   | `Keys.onEscapePressed: { e(<arg>); event.accepted = true }`       |
+/// | `onCancel: emit: onE`   | `Keys.onEscapePressed: function(event) { e(<arg>); event.accepted = true }` |
 ///
 /// ## Signal arity matters
 ///
@@ -6244,13 +6244,16 @@ fn emit_text_input_qml(
         }
     }
 
-    // Keys.onEscapePressed: { e(<arg>); event.accepted = true }
+    // Keys.onEscapePressed: function(event) { e(<arg>); event.accepted = true }
+    //
+    // `event` is a declared parameter, not an injected one: Qt 6 deprecates
+    // signal-parameter injection into handler blocks and warns at run time.
     if let Some(emit_name) = find_emit_ref_prop(node, "onCancel") {
         let camel = qml_signal_name(emit_name, ctx.signal_names)?;
         let arg = pick_signal_arg(emit_name, ctx.emits);
         writeln!(
             out,
-            "{inner_pad}Keys.onEscapePressed: {{ {camel}({arg}); event.accepted = true }}"
+            "{inner_pad}Keys.onEscapePressed: function(event) {{ {camel}({arg}); event.accepted = true }}"
         )
         .unwrap();
     }
@@ -8529,17 +8532,17 @@ fn emit_native_host_table_qml(
         .unwrap();
         writeln!(
             out,
-            "{component_inner}    Keys.onReturnPressed: {{ {activation}; event.accepted = true }}"
+            "{component_inner}    Keys.onReturnPressed: function(event) {{ {activation}; event.accepted = true }}"
         )
         .unwrap();
         writeln!(
             out,
-            "{component_inner}    Keys.onEnterPressed: {{ {activation}; event.accepted = true }}"
+            "{component_inner}    Keys.onEnterPressed: function(event) {{ {activation}; event.accepted = true }}"
         )
         .unwrap();
         writeln!(
             out,
-            "{component_inner}    Keys.onSpacePressed: {{ {activation}; event.accepted = true }}"
+            "{component_inner}    Keys.onSpacePressed: function(event) {{ {activation}; event.accepted = true }}"
         )
         .unwrap();
         writeln!(out, "{component_inner}    TapHandler {{").unwrap();
@@ -12484,10 +12487,30 @@ mod tests {
             result.output
         );
         assert!(
-            result.output.contains("event.accepted = true"),
-            "missing event.accepted in:\n{}",
+            result
+                .output
+                .contains("Keys.onEscapePressed: function(event) { abort(); event.accepted = true }"),
+            "Escape must take `event` as a declared parameter:\n{}",
             result.output
         );
+        assert_no_injected_key_parameters(&result.output);
+    }
+
+    /// Qt 6 deprecates injecting a signal's parameters into a handler block
+    /// (`Keys.onEscapePressed: { ...; event.accepted = true }`): it warns
+    /// "Parameter \"event\" is not declared" at run time and is slated for
+    /// removal. Every `Keys.*` handler that touches `event` must declare it,
+    /// as `function(event) { ... }`.
+    fn assert_no_injected_key_parameters(qml: &str) {
+        for line in qml.lines() {
+            let line = line.trim_start();
+            if line.starts_with("Keys.on") && line.contains("event.") {
+                assert!(
+                    line.contains(": function(event) {"),
+                    "a Keys handler uses an injected `event`: {line}\nin:\n{qml}"
+                );
+            }
+        }
     }
 
     // -------- Test 22: HostButton with label + onTap --------
@@ -13165,7 +13188,10 @@ mod tests {
         assert!(result.output.contains("TableView {"));
         assert!(result.output.contains("Accessible.role: Accessible.Table"));
         assert!(result.output.contains("Accessible.role: Accessible.Cell"));
-        assert!(result.output.contains("Keys.onReturnPressed:"));
+        assert!(result.output.contains("Keys.onReturnPressed: function(event) {"));
+        assert!(result.output.contains("Keys.onEnterPressed: function(event) {"));
+        assert!(result.output.contains("Keys.onSpacePressed: function(event) {"));
+        assert_no_injected_key_parameters(&result.output);
         assert!(result.output.contains("TapHandler {"));
         assert!(result.output.contains("navigate((r), (c))"));
         assert!(result

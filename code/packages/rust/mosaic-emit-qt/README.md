@@ -193,7 +193,7 @@ behavior; partial or unsupported combinations remain reported degradations.
 | `multiline: true`        | `TextArea`; Enter inserts a newline, Ctrl/Cmd+Enter commits (`Keys.onPressed`) |
 | `onChange: emit: onE`   | `onTextChanged: e(text)` for a one-parameter emit        |
 | `onCommit: emit: onE`   | `onAccepted: e(text)` (Enter)                           |
-| `onCancel: emit: onE`   | `Keys.onEscapePressed: { e(); event.accepted = true }`  |
+| `onCancel: emit: onE`   | `Keys.onEscapePressed: function(event) { e(); event.accepted = true }` |
 
 An exact `width: 100%` on `Input`, `HostInput`, or `HostButton` lowers to
 `Layout.fillWidth: true`. This lowering is deliberately limited to controls

@@ -1,5 +1,15 @@
 # Changelog
 
+## 2026-10-19 (Key handlers declare `event`)
+
+- `Keys.onEscapePressed` (a text field's `onCancel`) and a native table
+  cell's `Keys.onReturnPressed` / `onEnterPressed` / `onSpacePressed` now take
+  `event` as a declared parameter, `function(event) { ...; event.accepted =
+  true }`. The block form relied on signal-parameter injection, which Qt 6
+  deprecates: every such handler printed "Parameter \"event\" is not
+  declared" at run time. A test helper now fails any `Keys.*` handler that
+  touches `event` without declaring it.
+
 ## 2026-10-19 (A TextArea commits on Ctrl/Cmd+Enter)
 
 - A multiline `HostInput` or `Input` with `onCommit` gets
