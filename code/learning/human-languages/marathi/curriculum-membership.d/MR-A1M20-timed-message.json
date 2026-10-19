@@ -1,0 +1,6 @@
+{
+  "id": "MR-A1M20-timed-message",
+  "pathSegment": "MR-PATH-022",
+  "pathOrder": 19,
+  "extensions": [{ "id": "MR-EXT-025-A1-NAMED-READER-MESSAGE", "order": 19 }]
+}

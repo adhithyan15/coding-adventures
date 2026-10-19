@@ -95,6 +95,6 @@ it("introduces a partial timer before a full timed named-reader message", () => 
   }
   expect(lessons[1]?.body).toContain("partial timer");
   expect(lessons[2]?.body).toContain("30–40 words");
-  expect(lessons[2]?.body).toContain("three and a half minutes");
+  expect(lessons[2]?.body).toContain("three minutes");
   expect(lessons[2]?.body).toContain("not a full A1 mock");
 });
