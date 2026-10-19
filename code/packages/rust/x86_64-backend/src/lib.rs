@@ -822,13 +822,22 @@ fn emit_instr(
     // selects the register file, exactly as the f64 arithmetic path relies on.
     //
     //   int_to_real        mov rax,[src]; cvtsi2sd xmm0,rax;       movsd [dest],xmm0
-    //   real_to_int_trunc  movsd xmm0,[src]; cvttsd2si rax,xmm0;   mov [dest],rax
-    //   real_to_int_floor  movsd xmm0,[src]; roundsd xmm0,xmm0,1; cvttsd2si rax,xmm0; mov [dest],rax
+    //   real_to_int_*      movsd xmm0,[src]
+    //                      roundsd xmm0,xmm0,<1 floor | 3 trunc>
+    //                      cvttsd2si rax,xmm0
+    //                      cvtsi2sd xmm1,rax ; ucomisd xmm0,xmm1   ; round-trip check
+    //                      jp trap ; je ok
+    //               trap:  ud2
+    //                 ok:  mov [dest],rax
     //
-    // `cvttsd2si` truncates toward zero and yields the integer-indefinite
-    // `0x8000…0` on NaN/±∞/out-of-range (no trap) — a documented divergence from
-    // the VM trap, shared with the JVM/aarch64 backends; every finite, in-range
-    // value converts identically. `roundsd … ,1` rounds toward −∞ (floor).
+    // `cvttsd2si` does not trap: on NaN/±∞/out-of-range it yields the
+    // integer-indefinite `0x8000…0` (i64::MIN), which would hand the program
+    // a sign-flipped wrong answer. The VM contract is a fail-closed trap, so
+    // the converted integer is turned back into a double and compared with the
+    // already-rounded input. An in-range integral value survives the round
+    // trip exactly. i64::MIN comes back as -2^63, which only matches a genuine
+    // -2^63 input. NaN compares unordered and sets PF. xmm1 (`Reg::Rcx`) is
+    // free scratch here.
     if op == "int_to_real" {
         let dest = require_dest(instr)?;
         let src = instr.srcs.first()
@@ -844,10 +853,20 @@ fn emit_instr(
         let src = instr.srcs.first()
             .ok_or_else(|| BackendError::MalformedInstr(format!("{op} needs srcs[0]")))?;
         load_fp_operand(asm, alloc, Reg::Rax, src)?;   // f64 → xmm0
-        if op == "real_to_int_floor" {
-            asm.roundsd(Reg::Rax, Reg::Rax, 1);        // xmm0 = floor(xmm0)  (mode 1 = −∞)
-        }
-        asm.cvttsd2si(Reg::Rax, Reg::Rax);             // rax = (i64) xmm0  (trunc toward zero)
+        // Round in place so the round-trip check compares integral values:
+        // mode 1 = toward −∞ (floor), mode 3 = toward zero (truncate).
+        let mode = if op == "real_to_int_floor" { 1 } else { 3 };
+        asm.roundsd(Reg::Rax, Reg::Rax, mode);
+        asm.cvttsd2si(Reg::Rax, Reg::Rax);             // rax = (i64) xmm0
+        asm.cvtsi2sd(Reg::Rcx, Reg::Rax);              // xmm1 = (double) rax
+        asm.ucomisd(Reg::Rax, Reg::Rcx);               // xmm0 vs xmm1
+        let trap = asm.create_label();
+        let ok = asm.create_label();
+        asm.jcc(Cond::P, trap);                        // unordered: NaN input
+        asm.jcc(Cond::E, ok);                          // exact round trip: in range
+        asm.bind(trap).map_err(BackendError::from)?;
+        asm.ud2();
+        asm.bind(ok).map_err(BackendError::from)?;
         let slot = alloc.slot_of(dest);
         asm.mov_mem_r64(Reg::Rbp, RegAlloc::rbp_offset(slot), Reg::Rax); // store rax
         return Ok(());
