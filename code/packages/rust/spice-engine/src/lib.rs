@@ -18431,6 +18431,92 @@ fn transient_probe_value_at(
     ))
 }
 
+fn dc_sweep_probe_value_at(
+    points: &[DcSweepPoint],
+    probe: &str,
+    at_value: f64,
+    context: &str,
+) -> Result<f64, SpiceError> {
+    let mut previous: Option<(f64, f64)> = None;
+    for point in points {
+        let value = table_probe_value(
+            &point.result.node_voltages,
+            &point.result.branch_currents,
+            probe,
+            context,
+        )?;
+        if point.value == at_value {
+            return Ok(value);
+        }
+        if point.value > at_value {
+            let Some((previous_axis, previous_value)) = previous else {
+                return Err(table_error(
+                    context,
+                    "at_value is outside dc sweep sample range",
+                ));
+            };
+            if point.value == previous_axis {
+                return Err(table_error(
+                    context,
+                    "duplicate dc sweep source values around AT value",
+                ));
+            }
+            let fraction = (at_value - previous_axis) / (point.value - previous_axis);
+            return Ok(previous_value + (value - previous_value) * fraction);
+        }
+        previous = Some((point.value, value));
+    }
+    Err(table_error(
+        context,
+        "at_value is outside dc sweep sample range",
+    ))
+}
+
+fn ac_sweep_probe_value_at(
+    points: &[AcPoint],
+    probe: &str,
+    at_frequency: f64,
+    context: &str,
+) -> Result<f64, SpiceError> {
+    let mut previous: Option<(f64, Complex)> = None;
+    for point in points {
+        let value = table_complex_probe_value(
+            &point.node_voltages,
+            &point.branch_currents,
+            probe,
+            context,
+        )?;
+        if point.frequency_hz == at_frequency {
+            return Ok(value.abs());
+        }
+        if point.frequency_hz > at_frequency {
+            let Some((previous_axis, previous_value)) = previous else {
+                return Err(table_error(
+                    context,
+                    "at_frequency is outside ac sweep sample range",
+                ));
+            };
+            if point.frequency_hz == previous_axis {
+                return Err(table_error(
+                    context,
+                    "duplicate ac sweep frequencies around AT value",
+                ));
+            }
+            let fraction = (at_frequency - previous_axis) / (point.frequency_hz - previous_axis);
+            return Ok(Complex::new(
+                previous_value.real + (value.real - previous_value.real) * fraction,
+                previous_value.imag + (value.imag - previous_value.imag) * fraction,
+            )
+            .abs());
+        }
+        previous = Some((point.frequency_hz, value));
+    }
+    Err(table_error(
+        context,
+        "at_frequency is outside ac sweep sample range",
+    ))
+}
+
 fn transient_probe_crossing_time(
     points: &[TransientPoint],
     probe: &str,
@@ -18672,6 +18758,30 @@ pub fn measure_dc_sweep_probe(
     })
 }
 
+pub fn measure_dc_sweep_find_at_probe(
+    points: &[DcSweepPoint],
+    name: &str,
+    probe: &str,
+    at_value: f64,
+) -> Result<ProbeMeasurement, SpiceError> {
+    if !at_value.is_finite() {
+        return Err(table_error(
+            "measure_dc_sweep_find_at_probe",
+            "at_value must be finite",
+        ));
+    }
+    let value = dc_sweep_probe_value_at(points, probe, at_value, "measure_dc_sweep_find_at_probe")?;
+    Ok(ProbeMeasurement {
+        name: name.to_string(),
+        analysis: "dc".to_string(),
+        probe: probe.to_string(),
+        mode: "find".to_string(),
+        value,
+        from_value: Some(at_value),
+        to_value: Some(at_value),
+    })
+}
+
 pub fn measure_dc_sweep_cards(
     points: &[DcSweepPoint],
     measurements: &[DeckMeasurementCard],
@@ -18683,6 +18793,21 @@ pub fn measure_dc_sweep_cards(
                 "measure_dc_sweep_cards",
                 "only dc measurement cards are supported",
             ));
+        }
+        if measurement.mode == "find" {
+            let Some(at_value) = measurement.at_value else {
+                return Err(table_error(
+                    "measure_dc_sweep_cards",
+                    "FIND measurement cards require an AT value",
+                ));
+            };
+            results.push(measure_dc_sweep_find_at_probe(
+                points,
+                &measurement.name,
+                &measurement.probe,
+                at_value,
+            )?);
+            continue;
         }
         results.push(measure_dc_sweep_probe(
             points,
@@ -18779,6 +18904,35 @@ pub fn measure_ac_sweep_probe(
     })
 }
 
+pub fn measure_ac_sweep_find_at_probe(
+    points: &[AcPoint],
+    name: &str,
+    probe: &str,
+    at_frequency: f64,
+) -> Result<ProbeMeasurement, SpiceError> {
+    if !at_frequency.is_finite() {
+        return Err(table_error(
+            "measure_ac_sweep_find_at_probe",
+            "at_frequency must be finite",
+        ));
+    }
+    let value = ac_sweep_probe_value_at(
+        points,
+        probe,
+        at_frequency,
+        "measure_ac_sweep_find_at_probe",
+    )?;
+    Ok(ProbeMeasurement {
+        name: name.to_string(),
+        analysis: "ac".to_string(),
+        probe: probe.to_string(),
+        mode: "find".to_string(),
+        value,
+        from_value: Some(at_frequency),
+        to_value: Some(at_frequency),
+    })
+}
+
 pub fn measure_ac_sweep_cards(
     points: &[AcPoint],
     measurements: &[DeckMeasurementCard],
@@ -18790,6 +18944,21 @@ pub fn measure_ac_sweep_cards(
                 "measure_ac_sweep_cards",
                 "only ac measurement cards are supported",
             ));
+        }
+        if measurement.mode == "find" {
+            let Some(at_value) = measurement.at_value else {
+                return Err(table_error(
+                    "measure_ac_sweep_cards",
+                    "FIND measurement cards require an AT value",
+                ));
+            };
+            results.push(measure_ac_sweep_find_at_probe(
+                points,
+                &measurement.name,
+                &measurement.probe,
+                at_value,
+            )?);
+            continue;
         }
         results.push(measure_ac_sweep_probe(
             points,

@@ -10855,6 +10855,75 @@ function transientProbeValueAt(
   throw invalidElement(context, "atTime is outside transient sample range");
 }
 
+function dcSweepProbeValueAt(
+  points: readonly DcSweepPoint[],
+  probe: string,
+  atValue: number,
+  context: string,
+): number {
+  let previous: readonly [number, number] | undefined;
+  for (const point of points) {
+    const value = tableProbeValue(
+      point.result.nodeVoltages,
+      point.result.branchCurrents,
+      probe,
+      context,
+    );
+    if (point.value === atValue) {
+      return value;
+    }
+    if (point.value > atValue) {
+      if (previous === undefined) {
+        throw invalidElement(context, "atValue is outside dc sweep sample range");
+      }
+      const [previousAxis, previousValue] = previous;
+      if (point.value === previousAxis) {
+        throw invalidElement(context, "duplicate dc sweep source values around AT value");
+      }
+      const fraction = (atValue - previousAxis) / (point.value - previousAxis);
+      return previousValue + (value - previousValue) * fraction;
+    }
+    previous = [point.value, value];
+  }
+  throw invalidElement(context, "atValue is outside dc sweep sample range");
+}
+
+function acSweepProbeValueAt(
+  points: readonly AcPoint[],
+  probe: string,
+  atFrequency: number,
+  context: string,
+): number {
+  let previous: readonly [number, Complex] | undefined;
+  for (const point of points) {
+    const value = tableComplexProbeValue(
+      point.nodeVoltages,
+      point.branchCurrents,
+      probe,
+      context,
+    );
+    if (point.frequencyHz === atFrequency) {
+      return complexAbs(value);
+    }
+    if (point.frequencyHz > atFrequency) {
+      if (previous === undefined) {
+        throw invalidElement(context, "atFrequency is outside ac sweep sample range");
+      }
+      const [previousAxis, previousValue] = previous;
+      if (point.frequencyHz === previousAxis) {
+        throw invalidElement(context, "duplicate ac sweep frequencies around AT value");
+      }
+      const fraction = (atFrequency - previousAxis) / (point.frequencyHz - previousAxis);
+      return complexAbs({
+        real: previousValue.real + (value.real - previousValue.real) * fraction,
+        imag: previousValue.imag + (value.imag - previousValue.imag) * fraction,
+      });
+    }
+    previous = [point.frequencyHz, value];
+  }
+  throw invalidElement(context, "atFrequency is outside ac sweep sample range");
+}
+
 function transientProbeCrossingTime(
   points: readonly TransientPoint[],
   probe: string,
@@ -11043,6 +11112,26 @@ export function measureDcSweepProbe(
   };
 }
 
+export function measureDcSweepFindAtProbe(
+  points: readonly DcSweepPoint[],
+  name: string,
+  probe: string,
+  atValue: number,
+): ProbeMeasurement {
+  if (!Number.isFinite(atValue)) {
+    throw invalidElement("measureDcSweepFindAtProbe", "atValue must be finite");
+  }
+  return {
+    name,
+    analysis: "dc",
+    probe,
+    mode: "find",
+    value: dcSweepProbeValueAt(points, probe, atValue, "measureDcSweepFindAtProbe"),
+    fromValue: atValue,
+    toValue: atValue,
+  };
+}
+
 export function measureDcSweepCards(
   points: readonly DcSweepPoint[],
   measurements: readonly DeckMeasurementCard[],
@@ -11050,6 +11139,17 @@ export function measureDcSweepCards(
   return measurements.map((measurement) => {
     if (measurement.analysis !== "dc") {
       throw invalidElement("measureDcSweepCards", "only dc measurement cards are supported");
+    }
+    if (measurement.mode === "find") {
+      if (measurement.atValue === undefined) {
+        throw invalidElement("measureDcSweepCards", "FIND measurement cards require an AT value");
+      }
+      return measureDcSweepFindAtProbe(
+        points,
+        measurement.name,
+        measurement.probe,
+        measurement.atValue,
+      );
     }
     return measureDcSweepProbe(
       points,
@@ -11125,6 +11225,26 @@ export function measureAcSweepProbe(
   };
 }
 
+export function measureAcSweepFindAtProbe(
+  points: readonly AcPoint[],
+  name: string,
+  probe: string,
+  atFrequency: number,
+): ProbeMeasurement {
+  if (!Number.isFinite(atFrequency)) {
+    throw invalidElement("measureAcSweepFindAtProbe", "atFrequency must be finite");
+  }
+  return {
+    name,
+    analysis: "ac",
+    probe,
+    mode: "find",
+    value: acSweepProbeValueAt(points, probe, atFrequency, "measureAcSweepFindAtProbe"),
+    fromValue: atFrequency,
+    toValue: atFrequency,
+  };
+}
+
 export function measureAcSweepCards(
   points: readonly AcPoint[],
   measurements: readonly DeckMeasurementCard[],
@@ -11132,6 +11252,17 @@ export function measureAcSweepCards(
   return measurements.map((measurement) => {
     if (measurement.analysis !== "ac") {
       throw invalidElement("measureAcSweepCards", "only ac measurement cards are supported");
+    }
+    if (measurement.mode === "find") {
+      if (measurement.atValue === undefined) {
+        throw invalidElement("measureAcSweepCards", "FIND measurement cards require an AT value");
+      }
+      return measureAcSweepFindAtProbe(
+        points,
+        measurement.name,
+        measurement.probe,
+        measurement.atValue,
+      );
     }
     return measureAcSweepProbe(
       points,
