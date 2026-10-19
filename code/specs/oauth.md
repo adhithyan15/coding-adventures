@@ -673,6 +673,13 @@ exponent without allocation, and enforces caller-supplied inclusive
 modulus-bit and exponent-allowlist policy. It adds no modular arithmetic,
 signature verification, general algorithm registry, or cryptographic
 authority.
+A separate bounded `rsa-pkcs1-v1-5-sha256` prerequisite now validates the
+complete modulus-width encoded message produced by a future RSA public
+operation. It accepts only the exact RFC 8017 `00 01 || PS || 00 ||
+DigestInfo` form, at least eight `ff` padding bytes, the canonical SHA-256 DER
+trailer with present NULL parameters, and the complete caller-supplied digest.
+It performs no RSA arithmetic or hashing, and arbitrary caller-supplied bytes
+do not become an authenticated signature by passing this formatting gate.
 
 The current slices intentionally stop before provider HTTPS transport. The
 loopback host owns only local TCP and injected browser authority; custody owns

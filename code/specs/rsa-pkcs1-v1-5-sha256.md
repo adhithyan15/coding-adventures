@@ -2,7 +2,7 @@
 
 ## Status
 
-Planned as a zero-external-dependency Rust package
+Implemented as the zero-external-dependency Rust package
 `rsa-pkcs1-v1-5-sha256`.
 
 ## Purpose
