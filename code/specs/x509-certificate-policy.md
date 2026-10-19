@@ -20,6 +20,8 @@ encoded public-key and signature BIT STRING length bounds.
 The fourth gate decodes the complete certificate's Subject Alternative Name
 extension and applies the repository-owned RFC 9525 DNS-ID/IP-ID matcher to one
 already validated, caller-selected reference identity.
+The fifth gate classifies the certificate's already decoded inclusive validity
+interval at one explicit, already validated caller-supplied observation.
 
 ## Input contract
 
@@ -180,6 +182,34 @@ This gate does not replace `validate_critical_extensions` and does not prove
 the certificate's path, signature, validity, revocation status, key usage, or
 trust. It adds no clock, trust-root, TLS, socket, HTTP, or OAuth authority.
 
+## Certificate validity-at-time contract
+
+The caller supplies a complete decoded certificate and one validated
+`X509Time` observation. Time acquisition, UTC conversion, trust, freshness,
+and audit remain caller-owned; this gate never reads an ambient clock or
+accepts a tolerance window.
+
+The gate reuses the decoded certificate's `X509Validity::classify` semantics.
+An observation equal to `notBefore` or `notAfter` succeeds because RFC 5280
+defines both endpoints as inclusive. An earlier observation fails as
+`NotYetValid`; a later observation fails as `Expired`.
+
+```rust
+pub fn validate_certificate_validity_at(
+    certificate: &X509Certificate<'_>,
+    observed: &X509Time,
+) -> Result<ValidatedCertificateValidity,
+            X509CertificateValidityError>;
+```
+
+Errors expose only one stable failure category and retain no certificate bytes,
+encoded time, calendar fields, or caller observation. Success returns opaque
+evidence that cannot be constructed outside the crate. The evidence proves
+only this one interval comparison at this one caller-owned observation; it
+does not assert that the observation came from a trustworthy clock and grants
+no path, signature, identity, purpose, revocation, trust-root, TLS, socket,
+HTTP, or OAuth authority.
+
 ## Tests
 
 Tests must cover:
@@ -229,6 +259,15 @@ Certificate server-identity tests must additionally cover:
 - critical and non-critical Subject Alternative Name encodings; and
 - redacted errors and evidence that retain no presented names or certificate
   bytes.
+
+Certificate validity-at-time tests must additionally cover:
+
+- observations immediately before and after the interval;
+- success exactly at both inclusive endpoints and inside the interval;
+- certificates whose endpoints use different valid ASN.1 time encodings;
+- a zero-duration interval at its single accepted instant; and
+- redacted failures that expose neither certificate time values nor the caller
+  observation.
 
 ## Deliberate exclusions
 

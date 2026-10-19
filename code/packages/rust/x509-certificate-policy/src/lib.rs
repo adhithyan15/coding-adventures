@@ -8,7 +8,9 @@
 //! profile without parsing keys or signatures or choosing a verifier.
 //! Its server-identity gate decodes one Subject Alternative Name extension and
 //! applies the repository-owned DNS-ID/IP-ID matcher without Common Name
-//! fallback. None of these gates establishes certificate trust.
+//! fallback. Its validity gate classifies an explicit caller-owned observation
+//! against the decoded inclusive interval without reading a clock. None of
+//! these gates establishes certificate trust.
 
 #![deny(unsafe_code)]
 
@@ -26,6 +28,8 @@ use x509_extended_key_usage::{
 };
 use x509_key_usage::{decode_key_usage, KeyUsage, KeyUsageBit, KEY_USAGE_OID};
 use x509_subject_alt_name::{decode_subject_alt_name, SUBJECT_ALT_NAME_OID};
+use x509_time::X509Time;
+use x509_validity::X509ValidityStatus;
 
 /// Exact parameter-presence policy for one AlgorithmIdentifier.
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
@@ -317,6 +321,51 @@ impl fmt::Display for X509CertificateServerIdentityError {
 
 impl Error for X509CertificateServerIdentityError {}
 
+/// Stable complete-certificate validity-at-time failure categories.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum X509CertificateValidityErrorKind {
+    NotYetValid,
+    Expired,
+}
+
+/// A redacted validity-at-time failure that retains no calendar fields.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub struct X509CertificateValidityError {
+    kind: X509CertificateValidityErrorKind,
+}
+
+impl X509CertificateValidityError {
+    const fn new(kind: X509CertificateValidityErrorKind) -> Self {
+        Self { kind }
+    }
+
+    pub const fn kind(self) -> X509CertificateValidityErrorKind {
+        self.kind
+    }
+}
+
+impl fmt::Display for X509CertificateValidityError {
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(
+            formatter,
+            "X.509 certificate validity policy error {:?}",
+            self.kind
+        )
+    }
+}
+
+impl Error for X509CertificateValidityError {}
+
+/// Opaque evidence that one explicit observation was inside the interval.
+///
+/// This value proves nothing about the observation's source or freshness and
+/// grants no certificate-path, signature, identity, trust, TLS, or network
+/// authority.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub struct ValidatedCertificateValidity {
+    private: (),
+}
+
 /// Opaque evidence that one certificate Subject Alternative Name matched.
 ///
 /// This value proves neither certificate trust nor path, signature, validity,
@@ -567,6 +616,27 @@ pub fn validate_certificate_server_identity(
         extension_index,
         match_kind: verified.kind(),
     })
+}
+
+/// Check the decoded inclusive validity interval at one explicit observation.
+///
+/// The caller owns time acquisition, validation, UTC conversion, freshness,
+/// and audit. This function reads no ambient clock and applies no tolerance.
+/// It grants no certificate-path, signature, identity, purpose, revocation,
+/// trust-root, TLS, or network authority.
+pub fn validate_certificate_validity_at(
+    certificate: &X509Certificate<'_>,
+    observed: &X509Time,
+) -> Result<ValidatedCertificateValidity, X509CertificateValidityError> {
+    match certificate.tbs_certificate().validity().classify(observed) {
+        X509ValidityStatus::NotYetValid => Err(X509CertificateValidityError::new(
+            X509CertificateValidityErrorKind::NotYetValid,
+        )),
+        X509ValidityStatus::Valid => Ok(ValidatedCertificateValidity { private: () }),
+        X509ValidityStatus::Expired => Err(X509CertificateValidityError::new(
+            X509CertificateValidityErrorKind::Expired,
+        )),
+    }
 }
 
 /// Select exactly one caller-supplied certificate algorithm profile.

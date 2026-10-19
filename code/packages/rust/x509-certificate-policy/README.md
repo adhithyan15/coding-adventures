@@ -19,6 +19,11 @@ Subject Alternative Name extension under a caller-supplied budget, then passes
 only typed DNS-ID and IP-ID values to the repository-owned RFC 9525 matcher.
 There is no subject Common Name input or fallback.
 
+Its validity-at-time gate classifies the already decoded inclusive certificate
+interval against one explicit validated `X509Time`. The caller retains all
+authority and responsibility for clock acquisition, UTC conversion, freshness,
+and audit.
+
 An intended issuing CA must carry critical `cA = TRUE` Basic Constraints and
 Key Usage with `keyCertSign`. An intended end entity may omit those extensions,
 but it must not assert either CA status or certificate-signing usage. Extended
@@ -51,6 +56,11 @@ reference matched a typed Subject Alternative Name value. It neither replaces
 the critical-extension gate nor authenticates the certificate until separate
 path, signature, validity, revocation, purpose, and trust-root checks also
 succeed.
+
+Passing the validity-at-time gate proves only that one explicit caller-owned
+observation fell within the inclusive interval. The gate reads no ambient clock
+and applies no tolerance. Its opaque evidence does not prove the observation's
+source or freshness and grants no other certificate or transport authority.
 
 ## Example
 

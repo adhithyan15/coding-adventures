@@ -613,10 +613,15 @@ an explicit caller budget, then applies the shipped RFC 9525 matcher to only
 typed DNS-ID and IP-ID values. It has no Common Name fallback and returns only
 the matched kind plus the extension's wire index. This proves only a name match
 for one caller-selected reference; it does not authenticate the certificate or
-replace critical-extension policy. Repository-owned signature verification,
+replace critical-extension policy. A fifth bounded gate now classifies the
+already decoded inclusive certificate validity interval at one explicit
+validated caller-owned observation. It distinguishes not-yet-valid from
+expired without reading an ambient clock, applying tolerance, or claiming the
+observation's source or freshness; clock acquisition, conversion, and audit
+remain separate caller authority. Repository-owned signature verification,
 certificate path construction and validation, issuer/subject name policy,
-validity, purpose, trust-root integration, revocation policy, TLS, and HTTP
-remain blockers, so concrete HTTPS remains unavailable.
+purpose, trust-root integration, revocation policy, TLS, and HTTP remain
+blockers, so concrete HTTPS remains unavailable.
 
 The current slices intentionally stop before provider HTTPS transport. The
 loopback host owns only local TCP and injected browser authority; custody owns
