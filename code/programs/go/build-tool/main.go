@@ -854,7 +854,7 @@ func runWithPackageHasher(hashPackage func(discovery.Package) (string, error)) i
 	shardWeightsPath := flag.String("shard-weights", "", "Measured per-package durations (ci-package-durations-v1 JSON, repo-relative or absolute); selects locality-aware sharding v2")
 	ciGates := flag.String("ci-gates", cigates.DefaultRegistryPath, "CI gate registry (repo-relative) used to decide which Actions jobs this change needs; empty disables gating")
 	validateBuildFiles := flag.Bool("validate-build-files", true, "Validate BUILD files against inferred dependency metadata and fail on mismatches")
-	pruneLeafTargets := flag.Bool("prune-leaf-targets", false, "Delete a package's own Cargo target/ once it has built, when no package depends on it (CI disk budget; X-7)")
+	pruneLeafTargets := flag.Bool("prune-leaf-targets", false, "Delete a package's own Cargo target/ and npm node_modules/ once it has built, when no package depends on it (CI disk budget; X-7)")
 	clippy := flag.Bool("clippy", false, "For Rust packages, run `cargo clippy --all-targets -- -D warnings` before the BUILD commands and fail the package on any clippy warning")
 
 	flag.Parse()

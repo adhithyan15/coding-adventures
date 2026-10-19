@@ -1394,6 +1394,72 @@ func TestPruneLeafCargoTarget(t *testing.T) {
 	}
 }
 
+func TestPruneLeafNodeModules(t *testing.T) {
+	makePkg := func(name string, manifest bool, modules string) discovery.Package {
+		dir := t.TempDir()
+		if manifest {
+			if err := os.WriteFile(filepath.Join(dir, "package.json"), []byte("{}\n"), 0o644); err != nil {
+				t.Fatal(err)
+			}
+		}
+		switch modules {
+		case "dir":
+			dep := t.TempDir()
+			if err := os.MkdirAll(filepath.Join(dir, "node_modules", "left-pad"), 0o755); err != nil {
+				t.Fatal(err)
+			}
+			// A file: dependency is installed as a symlink into the
+			// dependency's own directory, which must survive the prune.
+			if err := os.WriteFile(filepath.Join(dep, "index.js"), []byte("1\n"), 0o644); err != nil {
+				t.Fatal(err)
+			}
+			if err := os.Symlink(dep, filepath.Join(dir, "node_modules", "local-dep")); err != nil {
+				t.Skip("symlinks unavailable:", err)
+			}
+			t.Cleanup(func() {
+				if _, err := os.Stat(filepath.Join(dep, "index.js")); err != nil {
+					t.Error("pruning followed a file: dependency symlink into its target")
+				}
+			})
+		case "symlink":
+			if err := os.Symlink(t.TempDir(), filepath.Join(dir, "node_modules")); err != nil {
+				t.Skip("symlinks unavailable:", err)
+			}
+		}
+		return discovery.Package{Name: name, Path: dir}
+	}
+	graph := directedgraph.New()
+	leaf := makePkg("typescript/leaf", true, "dir")
+	lib := makePkg("typescript/lib", true, "dir")
+	noManifest := makePkg("python/leaf", false, "dir")
+	linked := makePkg("typescript/linked", true, "symlink")
+	for _, p := range []discovery.Package{leaf, lib, noManifest, linked} {
+		graph.AddNode(p.Name)
+	}
+	graph.AddEdge("typescript/lib", "typescript/leaf")
+
+	for _, p := range []discovery.Package{leaf, lib, noManifest, linked} {
+		pruneLeafCargoTarget(p, graph)
+	}
+
+	exists := func(p discovery.Package) bool {
+		_, err := os.Lstat(filepath.Join(p.Path, "node_modules"))
+		return err == nil
+	}
+	if exists(leaf) {
+		t.Error("a leaf npm package's node_modules/ should be pruned")
+	}
+	if !exists(lib) {
+		t.Error("a package with dependents must keep node_modules/: dependents resolve through it")
+	}
+	if !exists(noManifest) {
+		t.Error("a node_modules/ with no package.json beside it must stay")
+	}
+	if !exists(linked) {
+		t.Error("a symlinked node_modules/ must not be followed or removed")
+	}
+}
+
 func TestBuildResourceKeysSerializeEveryOpamSwitchUser(t *testing.T) {
 	root := makeFixture(t, map[string]string{"pkg/BUILD": "true"})
 	paths := map[string]string{filepath.Join(root, "pkg"): "pkg"}
@@ -1467,5 +1533,33 @@ func TestExecuteBuildsRunsOCamlOneAtATimeAndEverythingElseAlongside(t *testing.T
 		if results[pkg.Name].Status != "built" {
 			t.Fatalf("%s: %s (stderr: %s)", pkg.Name, results[pkg.Name].Status, results[pkg.Name].Stderr)
 		}
+	}
+}
+
+func TestBuildResourceKeysSerializeRubyGemInstalls(t *testing.T) {
+	root := makeFixture(t, map[string]string{"pkg/BUILD": "true"})
+	paths := map[string]string{filepath.Join(root, "pkg"): "pkg"}
+
+	for _, tc := range []struct {
+		command string
+		want    bool
+	}{
+		{"bundle install --quiet && bundle exec rspec", true},
+		{"gem install bundler --no-document", true},
+		{"cd ../dep && bundle install", true},
+		{"bundle exec rspec", false},
+		{"python install_gem_report.py", false},
+		{"npm install", false},
+	} {
+		t.Run(tc.command, func(t *testing.T) {
+			pkg := discovery.Package{Name: "pkg", Path: filepath.Join(root, "pkg"), BuildCommands: []string{tc.command}, Language: "ruby"}
+			got := false
+			for _, key := range buildResourceKeys(pkg, paths) {
+				got = got || key == RubyGemsLockKey
+			}
+			if got != tc.want {
+				t.Fatalf("ruby-gems lock for %q = %v, want %v", tc.command, got, tc.want)
+			}
+		})
 	}
 }

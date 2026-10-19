@@ -24,6 +24,16 @@ All notable changes to the Go build tool will be documented in this file.
   was active, which ran five main shards on one worker each (#17631).
   `TestExecuteBuildsRunsOCamlOneAtATimeAndEverythingElseAlongside` fails
   both without the lock and with whole-run serialization.
+- A `global:ruby-gems` resource lock for every BUILD that runs `bundle
+  install` or `gem install`. They all write the runner Ruby's one gem home,
+  and RubyGems does not lock across processes: on PR #17759's first sharded
+  run, two Ruby packages compiled json-3.1.0's native extension in the same
+  directory at once and one failed with mkmf's temp log deleted under it.
+- `-prune-leaf-targets` also removes a leaf package's `node_modules/` (beside
+  a `package.json`) once it has built, by the same rules as Cargo `target/`:
+  leaves only, never through a symlink, while the package still holds its
+  locks. TypeScript `node_modules` were the largest consumer on that run's
+  fullest shard: 21 GB of shard 8 at 90% disk.
 
 - Exact STP01 cases.json changes schedule the committed Go starlark-compiler native reader on each platform, honoring language filters and failing before plan publication when that reader is missing.
 

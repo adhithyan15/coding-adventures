@@ -63,8 +63,13 @@ report() {
   candidates | while IFS= read -r dir; do
     [ -d "$dir" ] && du -xsh "$dir" 2>/dev/null
   done | sort -rh
+  # Toolchain setup actions unpack into RUNNER_TEMP before the build starts
+  # (18 GB on PR #17759's first run), so break it down too.
+  echo "-- largest entries in RUNNER_TEMP --"
+  du -xsh "${RUNNER_TEMP:-/home/runner/work/_temp}"/* "${RUNNER_TEMP:-/home/runner/work/_temp}"/.[!.]* 2>/dev/null | sort -rh 2>/dev/null | head -10
   echo "-- largest directories under code/ (depth 5) --"
-  du -xh -d 5 "$workspace/code" 2>/dev/null | sort -rh | head -25
+  # sort's stderr is dropped: head closing the pipe early is expected.
+  du -xh -d 5 "$workspace/code" 2>/dev/null | sort -rh 2>/dev/null | head -25
   echo "== end disk-watch: $label =="
 }
 
