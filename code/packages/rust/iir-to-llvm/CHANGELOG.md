@@ -1,4 +1,27 @@
 # Changelog — iir-to-llvm
+## [0.60.0] — 2026-10-19 (LANG83 PR1b — floor division, `trap`, `write_i64`)
+
+- **Self-contained LANG83 runtime in the emitted module.** A module that uses
+  `write_i64` gets `define linkonce_odr void @__iir_write_i64(i64)`
+  (`printf("%lld")`); one that can trap gets
+  `define linkonce_odr void @__iir_trap(ptr, i64) noreturn`, which calls
+  `fflush(NULL)` **first** (libc stdout is buffered on a pipe and `abort` does
+  not flush it), then `write(2, "trap: <kind>\n")`, then `abort()`, plus one
+  `@__iir_trap_msg.<id>` constant per kind used. Nothing beyond libc is linked,
+  so no harness C runtime is involved ([LANG83](../../../specs/LANG83-iir-standard-operation-registry.md)).
+- **`i64_div_floor` / `i64_mod_floor`**: `icmp`+`br` to a trap block for a zero
+  divisor and (div) `MIN / -1`; mod divides by 1 instead of -1. `sdiv`/`srem`
+  are only reached with a safe divisor (never LLVM UB), then a `select`-based
+  floor fix-up.
+- **`trap "<kind>"`**: `call @__iir_trap(msg); unreachable`, then a fresh
+  (unreachable) block for any IIR that follows. The validator rejects a `trap`
+  whose operand is not a registered kind literal.
+- `op_support`: the four PR1b ops are `Lowered`.
+- Tests: IR shape (edges before `sdiv`, flush → write → abort order, message
+  bytes, fresh block after `trap`, validator), and three real-`clang` runs:
+  the floor sign table and `MIN / 1`, `MIN mod -1 = 0`, and print-then-trap
+  proving buffered stdout survives a `Trap.Overflow` / `Trap.DivZero`.
+
 ## [0.59.0] — 2026-10-19 (LANG83 PR1a — standard operation support)
 
 - **LANG83 op support.** New `op_support` module exporting `OP_SUPPORT` and
