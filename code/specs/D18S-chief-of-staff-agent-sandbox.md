@@ -2450,6 +2450,97 @@ through S-I3 before two weeks are spent on Windows.
    reported to point it in any case, and which is removed before the agent
    runs; Windows may point `TEMP` and `TMP` there as well.
 
+   **Direct grants (P2.8c).** Only a `Direct` `fs:read` of one exact file
+   is expressed. Each is an allow ACE on that file for the agent's
+   AppContainer SID. Every other `Direct` rule refuses the launch
+   (`Unsupported`), never runs without it:
+   - *Create, delete and list* would need rights over a whole directory,
+     as on Linux and macOS.
+   - *Write* is refused on Windows for a reason of its own. An
+     AppContainer token is Low integrity, and the default no-write-up
+     policy refuses a write to an ordinary (Medium) file whatever its
+     list says. Expressing the grant would mean lowering the file's
+     label to Low for the agent's life. Every Low-integrity process of
+     the user whose list entries already admit it could then write the
+     file too. If the supervisor died, the label would stay lowered. So
+     a write stays brokered on Windows (step 6). Lowering the label would
+     be a decision of its own, recorded if ever taken.
+
+   Each grant is checked when the confinement is prepared. The file is
+   opened, and that handle is held from then until the agent has exited:
+   - It is opened for reading, sharing read and write but **not delete**,
+     with the last component's reparse point not followed. While it is
+     held, the file cannot be renamed or deleted, and no directory above
+     it can be renamed, so the path names this file for the agent's whole
+     life. Its owner may still write it, as on macOS.
+   - It must be a regular file and not a reparse point. A directory, a
+     junction, a symbolic link, a device or a reserved name (`NUL`,
+     `COM1.txt`) is refused. A device has no final path, which the next
+     check needs.
+   - The path must be exactly the handle's final path, case included, as
+     the image's must.
+   - The executable's owner and access-list rule applies:
+     - the owner must be the user, Administrators, SYSTEM or
+       TrustedInstaller;
+     - no one else may hold any write-class right.
+
+     This is macOS's "owned by root or this user and writable by no one
+     else". Who can change the file matters, because the grant lasts as
+     long as the agent does.
+   - It must not be the agent's own image. Identity is compared by volume
+     serial number and file index, so a hard link to the image is the
+     image.
+   - The rest of S-I6's never-grantable set (the vault, the audit log,
+     the shim, the broker, the plan files) is the supervisor's to check
+     at step 9, as on Linux. Only it knows those paths.
+
+   *The ACE.* One per grant:
+   - it names the agent's SID, with read rights (`FILE_GENERIC_READ`),
+     never execute, and is not inheritable;
+   - it is added before `CreateProcessW`, by the image's
+     read-modify-write, through a handle reopened from the held one and
+     under the same lock;
+   - it is merged into the SID's allow entry if one is there already
+     (`GRANT_ACCESS`), so granting twice leaves one entry;
+   - the list is written back with its protection as it was. A protected
+     list, such as an owner-only file's, must not start inheriting its
+     directory's entries;
+   - a list that cannot be changed refuses the launch, for example a
+     file whose owner is SYSTEM;
+   - after it is written, the owner and access-list rule is checked
+     again on the held handle. Writing a list back re-applies its
+     directory's inheritable entries, which the check at preparation
+     never saw. A file someone else may now write refuses the launch,
+     and the grant is taken back.
+
+   *Removal.* Once the agent has exited, every explicit ACE naming its
+   SID is removed from each granted file, under the same lock. "Exited"
+   means the child's drop has ended its job and seen the exit, or a
+   spawn failed after the ACEs were added. If the process has not exited
+   within the drop's ten seconds, the ACEs are removed anyway: removing
+   access early only denies more. The image keeps its ACE (above).
+
+   *Residuals.*
+   - A supervisor that dies while the agent runs leaves the ACE, and so
+     does a removal that fails. The entry admits only that agent's SID,
+     which only that agent's own later runs hold, one at a time. But any
+     such run can read the file, even one whose plan no longer grants
+     it, until a run that does grant it ends and removes the entry. A
+     record of applied grants, swept at the next preparation, would
+     close this; it is not built.
+   - The list is serialized only within this process. A second
+     supervisor, or someone editing the list at the same moment, could
+     restore an entry just removed, or drop one. The daemon is the only
+     supervisor.
+   - A deny entry naming the agent's SID is not a supported control.
+     Granting merges with it, and removal does not restore it. What an
+     agent may read is its plan's.
+   - At step 9 the supervisor checks S-I6's never-grantable set. It must
+     compare by file identity, as the image check here does, not by
+     path: a hard link to the vault is the vault.
+   - The file's owner can change its contents while the agent reads it,
+     as on macOS. Linux pins the inode, but not the bytes.
+
    **Residuals, recorded.**
    - *A concurrent std spawn.* A handle on the list must be inheritable.
      std's `Command` spawns with `bInheritHandles=TRUE` and no list, so a
@@ -2487,8 +2578,9 @@ through S-I3 before two weeks are spent on Windows.
      supervisor.
    - *Old image ACEs.* An agent's image keeps the ACE for its SID after
      the agent is gone; reinstalling the agent reuses it.
-   - *Grants.* No `Direct` grant exists until 8c; a plan with one is
-     refused (`Unsupported`), never run without it.
+   - *Grants.* Until 8c no `Direct` grant could run, and a plan with one
+     was refused (`Unsupported`). From 8c a read grant runs (above), and
+     every other `Direct` rule is still refused.
 
    Sub-steps:
    1. **P2.8a:** `VerifiedExecutable` on Windows, and
@@ -2579,7 +2671,14 @@ through S-I3 before two weeks are spent on Windows.
           `windows-2025`, with an agent per test, because a container
           runs one instance at a time.
    3. **P2.8c:** `Direct` file grants, as per-object ACEs for the agent's
-      SID, checked as on macOS and removed when the agent ends.
+      SID, checked as on macOS and removed when the agent ends. Read only:
+      a write grant is refused (see "Direct grants" above). Tested on
+      `windows-2025`:
+      - the probe agent reads a granted file and is denied its neighbour;
+      - after the agent ends, the file names no ACE for its SID;
+      - a write grant, a directory, a junction, a file someone else may
+        write, a non-canonical spelling and the agent's own image are
+        each refused.
 9. **Wire into `spawn_verified`.** Deno becomes one supported runtime rather
    than the enforcement mechanism — its flags are retained beneath the OS plan
    as the S-I8 inner layer, not deleted.
