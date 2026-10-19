@@ -1,0 +1,11 @@
+{
+  "id": "ES-C678-estatua",
+  "pathSegment": "ES-PATH-678-VISITA",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ES-EXT-678-VISITA",
+      "order": 2
+    }
+  ]
+}

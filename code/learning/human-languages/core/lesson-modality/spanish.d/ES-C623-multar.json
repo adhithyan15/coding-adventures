@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C623-multar",
+    "language": "spanish",
+    "chapter": 623,
+    "sequence": 20940,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:839d2a14a11db360"
+  },
+  "findings": []
+}

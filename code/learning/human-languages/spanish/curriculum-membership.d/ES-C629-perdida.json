@@ -1,0 +1,11 @@
+{
+  "id": "ES-C629-perdida",
+  "pathSegment": "ES-PATH-629-GANANCIA",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ES-EXT-629-GANANCIA",
+      "order": 1
+    }
+  ]
+}

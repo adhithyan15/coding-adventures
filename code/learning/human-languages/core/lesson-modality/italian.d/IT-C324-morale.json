@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C324-morale",
+    "language": "italian",
+    "chapter": 324,
+    "sequence": 18750,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9c94dac41cb1aa95"
+  },
+  "findings": []
+}

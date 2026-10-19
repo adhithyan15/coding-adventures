@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C410-guastarsi",
+    "language": "italian",
+    "chapter": 410,
+    "sequence": 23360,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6688f2fb6c3a0d30"
+  },
+  "findings": []
+}

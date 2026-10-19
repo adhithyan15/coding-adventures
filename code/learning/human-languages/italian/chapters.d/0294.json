@@ -1,0 +1,19 @@
+{
+  "chapter": 294,
+  "title": "Le forze dell'ordine",
+  "label": "ch:it-le-forze-dell-ordine",
+  "canDo": "I can talk about the police at work: the carabinieri, the police station, the patrol, the cameras and the chase.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "IT-C294-inseguimento",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 294: I can talk about the police at work: the carabinieri, the police station, the patrol, the cameras and the chase.",
+    "assesses": [
+      "IT-LEX-C294-PATTUGLIA-03",
+      "IT-LEX-C294-PATTUGLIA-04",
+      "IT-LEX-C294-PATTUGLIA-05"
+    ]
+  }
+}

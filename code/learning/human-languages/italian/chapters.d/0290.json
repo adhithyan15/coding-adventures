@@ -1,0 +1,19 @@
+{
+  "chapter": 290,
+  "title": "Delitti e vittime",
+  "label": "ch:it-delitti-e-vittime",
+  "canDo": "I can talk about a crime, the criminal and the victim, and say what someone committed.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "IT-C290-commettere",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 290: I can talk about a crime, the criminal and the victim, and say what someone committed.",
+    "assesses": [
+      "IT-LEX-C290-DELITTO-03",
+      "IT-LEX-C290-DELITTO-04",
+      "IT-LEX-C290-DELITTO-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "IT-C312-posteri",
+  "pathSegment": "IT-PATH-312-ANTENATI",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "IT-EXT-312-ANTENATI",
+      "order": 1
+    }
+  ]
+}

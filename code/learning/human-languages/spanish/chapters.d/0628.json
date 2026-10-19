@@ -1,0 +1,19 @@
+{
+  "chapter": 628,
+  "title": "En el banco",
+  "label": "ch:es-en-el-banco",
+  "canDo": "I can talk about cash, a bank transfer, a mortgage, interest and taking money out.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "ES-C628-retirar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 628: I can talk about cash, a bank transfer, a mortgage, interest and taking money out.",
+    "assesses": [
+      "ES-LEX-C628-BANCO-03",
+      "ES-LEX-C628-BANCO-04",
+      "ES-LEX-C628-BANCO-05"
+    ]
+  }
+}

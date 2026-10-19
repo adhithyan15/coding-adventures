@@ -1,0 +1,11 @@
+{
+  "id": "ES-C636-honesto",
+  "pathSegment": "ES-PATH-636-VERDAD",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ES-EXT-636-VERDAD",
+      "order": 3
+    }
+  ]
+}

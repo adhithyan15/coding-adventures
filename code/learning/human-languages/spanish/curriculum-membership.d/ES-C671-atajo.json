@@ -1,0 +1,11 @@
+{
+  "id": "ES-C671-atajo",
+  "pathSegment": "ES-PATH-671-LEJOS",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ES-EXT-671-LEJOS",
+      "order": 2
+    }
+  ]
+}

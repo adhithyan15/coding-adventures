@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C513-maratona",
+    "language": "italian",
+    "chapter": 513,
+    "sequence": 28770,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d597b3dff39d46c2"
+  },
+  "findings": []
+}

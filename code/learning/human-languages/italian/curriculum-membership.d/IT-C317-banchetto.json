@@ -1,0 +1,11 @@
+{
+  "id": "IT-C317-banchetto",
+  "pathSegment": "IT-PATH-317-SPUMANTE",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "IT-EXT-317-SPUMANTE",
+      "order": 4
+    }
+  ]
+}

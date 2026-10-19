@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C341-obiettare",
+    "language": "italian",
+    "chapter": 341,
+    "sequence": 19710,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4afd36df5b4175a1"
+  },
+  "findings": []
+}

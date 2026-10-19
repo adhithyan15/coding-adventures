@@ -1,0 +1,11 @@
+{
+  "id": "ES-C573-fracasar",
+  "pathSegment": "ES-PATH-573-LOGRO",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ES-EXT-573-LOGRO",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 371,
+  "sourceHash": "fnv1a64:9f59ee7fb099cf5e",
+  "lessonIds": [
+    "IT-C371-rilevante",
+    "IT-C371-cruciale",
+    "IT-C371-essenziale",
+    "IT-C371-fondamentale",
+    "IT-C371-premessa"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch371.txt",
+  "json": "italian/narration/ch371.json",
+  "textHash": "fnv1a64:97b4d5f0b5ee2907",
+  "jsonHash": "fnv1a64:6d86f9e864d07427",
+  "findings": []
+}

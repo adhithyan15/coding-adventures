@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C371-fondamentale",
+    "language": "italian",
+    "chapter": 371,
+    "sequence": 21270,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:60c8f400b81a6452"
+  },
+  "findings": []
+}

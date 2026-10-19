@@ -1,0 +1,20 @@
+{
+  "language": "italian",
+  "chapter": 452,
+  "sourceHash": "fnv1a64:66eeeb46d2c3c99d",
+  "lessonIds": [
+    "IT-C452-tabaccheria",
+    "IT-C452-tabaccaio",
+    "IT-C452-edicola",
+    "IT-C452-edicolante",
+    "IT-C452-cartoleria",
+    "IT-R452-ripasso-445-452"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "italian/narration/ch452.txt",
+  "json": "italian/narration/ch452.json",
+  "textHash": "fnv1a64:525ac945c990e16c",
+  "jsonHash": "fnv1a64:6cda291643f50037",
+  "findings": []
+}

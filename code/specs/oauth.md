@@ -577,6 +577,23 @@ non-empty DER-ordered RDN sets, and OID-plus-opaque-value attributes under
 shared limits. It retains exact borrowed values and RDN boundaries without
 claiming DirectoryString normalization, semantic name equality, issuer/subject
 relationship decisions, or path validation.
+A bounded `x509-name-comparison` semantic layer now compares two decoded RDN
+sequences in order, matches each RDN's attributes without depending on their
+DER SET order, requires exact canonical attribute OIDs, and delegates only the
+already framed attribute-value comparison to caller policy. The callback must
+be a stable equivalence relation and may run more than once for repeated
+attribute types. This structure is not DirectoryString decoding,
+normalization, complete RFC 5280 name equality, issuer selection, or path
+validation.
+A bounded `x509-directory-string` value layer now recognizes all five
+primitive, non-empty RFC 5280 DirectoryString alternatives. It validates
+UTF8String, PrintableString, UniversalString, and BMPString into
+allocation-free Unicode-scalar views while retaining TeletexString as opaque
+bytes, and it can compare exact scalar sequences across the four supported
+representations. It refuses Teletex comparison rather than inventing a T.61
+mapping. It performs no RFC 4518 StringPrep, case folding, normalization,
+insignificant-space handling, or attribute-OID schema selection, so it is not
+yet a complete value policy for issuer linking or path validation.
 A bounded `x509-certificate` structural composition now decodes complete RFC
 5280 `Certificate` and `TBSCertificate` values under one shared DER budget. It
 retains the exact signed bytes, composes the shipped field decoders, validates
@@ -587,6 +604,68 @@ enable algorithms, verify signatures, interpret extension policy, compare
 names, validate paths or
 hostnames, check revocation, select trust roots, perform TLS, read a clock, or
 open a network connection.
+A bounded `x509-certificate-policy` gate now enforces the certificate-wide
+unknown-critical-extension rule over that complete decoded structure. It calls
+a caller-supplied, data-driven OID recognizer exactly once for each critical
+extension in wire order, accepts unrecognized non-critical extensions, and
+fails closed with a redacted sequence index at the first unsupported critical
+extension. Recognition does not decode or validate the extension value, grant
+a certificate role, or establish trust. A second bounded gate now composes the
+shipped Basic Constraints, Key Usage, and Extended Key Usage decoders under one
+explicit semantic budget. It requires critical `cA = TRUE` plus
+`keyCertSign` for an intended issuing CA, rejects CA or certificate-signing
+assertions for an intended end entity, and returns only borrowed decoded role
+evidence. It deliberately leaves key-usage selection, EKU purpose
+authorization, signatures, names, paths, trust, clocks, revocation, and
+transport to later policy layers. A third bounded gate selects exactly one
+caller-supplied signature/key AlgorithmIdentifier pair, including exact
+parameter presence or DER bytes, then checks inclusive encoded public-key and
+certificate-signature BIT STRING length ranges. The public-key bound is a
+wire-size policy, not algorithm-specific strength such as an RSA modulus size
+or EC group. It embeds no algorithm registry, parses no key or signature,
+chooses no verifier, and grants no cryptographic authority. Repository-owned
+key parsing and strength validation remain separate. A fourth bounded gate now
+requires and decodes the complete certificate's Subject Alternative Name under
+an explicit caller budget, then applies the shipped RFC 9525 matcher to only
+typed DNS-ID and IP-ID values. It has no Common Name fallback and returns only
+the matched kind plus the extension's wire index. This proves only a name match
+for one caller-selected reference; it does not authenticate the certificate or
+replace critical-extension policy. A fifth bounded gate now classifies the
+already decoded inclusive certificate validity interval at one explicit
+validated caller-owned observation. It distinguishes not-yet-valid from
+expired without reading an ambient clock, applying tolerance, or claiming the
+observation's source or freshness; clock acquisition, conversion, and audit
+remain separate caller authority. A sixth bounded gate now authorizes one
+caller-supplied non-empty Extended Key Usage purpose over already validated
+end-entity role evidence. It fails closed when the role is not an end entity,
+the certificate omitted Extended Key Usage, or that extension does not contain
+the exact requested OID. It embeds no purpose registry and gives
+`anyExtendedKeyUsage` no implicit wildcard meaning: callers that choose that
+OID request only that exact OID. Its opaque success evidence grants no key
+operation, signature, path, identity, time, trust, revocation, TLS, or network
+authority. A seventh bounded gate now fixes one certificate-link direction:
+it invokes one caller-supplied distinguished-name comparator exactly once with
+the child issuer Name followed by the candidate issuer subject Name. Mismatch
+fails closed with no Name or certificate bytes in the error; opaque success
+proves only that this comparator accepted this pair. The gate embeds no name
+normalization or equality rule, does not grant the candidate a CA role, and
+neither constructs nor validates a path. Repository-owned signature
+verification, RFC 4518 and schema-specific name value comparison,
+certificate path construction and validation, trust-root integration,
+revocation policy, TLS, and HTTP remain blockers, so concrete HTTPS remains
+unavailable.
+A reviewed trust-root data prerequisite is now shipped as
+`x509-webpki-roots-snapshot`: the exact `webpki-roots` 1.0.9 Mozilla
+public-Web-PKI anchor set is pinned by upstream tag and commit, crates.io
+archive checksum, root count, and canonical root-set digest. Only generated
+anchor bytes enter production; neither `webpki-roots` nor its
+`rustls-pki-types` dependency is compiled or linked. Repository-owned code
+parses the allocation-free snapshot, and independent CI verification rejects
+unreviewed byte, order, count, format, or provenance drift. The static set
+excludes OS, enterprise, user-installed, and local roots and carries an
+explicit update cadence. It supplies data only: certificate parsing, path and
+hostname validation, signature verification, constraint and algorithm policy,
+revocation, TLS, HTTP, and platform trust remain separate blockers.
 
 The current slices intentionally stop before provider HTTPS transport. The
 loopback host owns only local TCP and injected browser authority; custody owns

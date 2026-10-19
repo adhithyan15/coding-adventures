@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C434-scarico",
+    "language": "italian",
+    "chapter": 434,
+    "sequence": 24610,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:14a74b2ab3610af6"
+  },
+  "findings": []
+}

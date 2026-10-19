@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 310,
+  "sourceHash": "fnv1a64:1d21bacc4181530f",
+  "lessonIds": [
+    "IT-C310-convivere",
+    "IT-C310-trasferirsi",
+    "IT-C310-integrarsi",
+    "IT-C310-ambientarsi",
+    "IT-C310-rimpatriare"
+  ],
+  "tex": "italian/book/chapters/ch310-cambiare-citta.tex"
+}

@@ -1,0 +1,11 @@
+{
+  "id": "IT-C344-ovvio",
+  "pathSegment": "IT-PATH-344-PROVA",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "IT-EXT-344-PROVA",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,8 @@
+{
+  "id": "ES-EXT-694-ANIMALES",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can name small wild creatures: seagulls, birds, insects, butterflies and lizards.",
+  "prerequisites": []
+}

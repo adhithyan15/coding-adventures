@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 643,
+  "sourceHash": "fnv1a64:c418f44f74d9bd69",
+  "lessonIds": [
+    "ES-C643-derrapar",
+    "ES-C643-arrancar",
+    "ES-C643-atascarse",
+    "ES-C643-acelerar",
+    "ES-C643-circular"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch643.txt",
+  "json": "spanish/narration/ch643.json",
+  "textHash": "fnv1a64:b25b63ad5a162e06",
+  "jsonHash": "fnv1a64:2058894e33572244",
+  "findings": []
+}

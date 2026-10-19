@@ -1,0 +1,19 @@
+{
+  "chapter": 277,
+  "title": "Quanto è durato",
+  "label": "ch:it-quanto-e-durato",
+  "canDo": "I can say how long something lasted, and name a moment, an instant and a stage.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "IT-C277-fase",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 277: I can say how long something lasted, and name a moment, an instant and a stage.",
+    "assesses": [
+      "IT-LEX-C277-DURATA-03",
+      "IT-LEX-C277-DURATA-04",
+      "IT-LEX-C277-DURATA-05"
+    ]
+  }
+}

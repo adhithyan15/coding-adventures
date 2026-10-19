@@ -5650,6 +5650,30 @@ model-card parameter, or a UI artifact is not a completion signal.
      the same public parser contract.
 
 52. Deck compatibility follow-up.
+   - **Two-axis deck-owned DC sweeps** (completed in the cross-language CLI/API
+     contract slice): Python, Rust, and TypeScript parse and execute
+     `.dc source start stop step source2 start2 stop2 step2` through both the
+     parser analysis-plan and deck-control execution paths. The first source is
+     the deterministic inner loop, the second source is the outer loop, and
+     stable deck tables and CLI JSON records retain `Source`/`Value` and
+     `SecondarySource`/`SecondaryValue` for every result row. The Berkeley v1
+     CLI corpus now locks the four-row nested sweep and raises its success gate
+     to two cases. Temperature, parameter, corner, Monte Carlo, raw-format,
+     and measurement expansion remain separate phases.
+   - **Signed nonlinear core corpus** (completed in the cross-language core
+     gate slice): the release manifest now requires all seven advertised
+     nonlinear model kinds. The shared operating-point corpus adds `PNP`,
+     `PJF`, and Level-1 `PMOS` fixtures alongside the original `NPN`, `NJF`,
+     and `NMOS` coverage.
+   - **Signed nonlinear dynamic corpus** (completed in the cross-language core
+     gate slice): the shared release corpus now exercises `PNP`, `PJF`, and
+     Level-1 `PMOS` capacitance and storage behavior through AC and transient
+     analyses. The Berkeley v1 core gate requires 23 cases.
+   - **Signed nonlinear DC and transfer corpus** (completed in the
+     cross-language core gate slice): every advertised nonlinear kind now has
+     a one-source DC sweep and a DC small-signal transfer-function fixture.
+     The core gate requires 37 cases; temperature, parameter, corner, Monte
+     Carlo, raw-format, and measurement expansion remain separate phases.
    - Expand deck-owned output compatibility beyond source-order analysis
      execution and stable artifact exports toward nested sweeps, raw-format
      interoperability, and remaining vendor-style output controls.

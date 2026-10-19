@@ -1,0 +1,19 @@
+{
+  "chapter": 718,
+  "title": "Guiños y bromas",
+  "label": "ch:es-guinos-y-bromas",
+  "canDo": "I can talk about winking, joking and teasing among friends.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "ES-C718-burlarse",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 718: I can talk about winking, joking and teasing among friends.",
+    "assesses": [
+      "ES-LEX-C718-SONRISA-03",
+      "ES-LEX-C718-SONRISA-04",
+      "ES-LEX-C718-SONRISA-05"
+    ]
+  }
+}

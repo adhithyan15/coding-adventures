@@ -1,0 +1,19 @@
+{
+  "chapter": 313,
+  "title": "L'ultimo saluto",
+  "label": "ch:it-l-ultimo-saluto",
+  "canDo": "I can talk about a death: the deceased, the funeral, mourning and burial.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "IT-C313-seppellire",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 313: I can talk about a death: the deceased, the funeral, mourning and burial.",
+    "assesses": [
+      "IT-LEX-C313-LUTTO-03",
+      "IT-LEX-C313-LUTTO-04",
+      "IT-LEX-C313-LUTTO-05"
+    ]
+  }
+}

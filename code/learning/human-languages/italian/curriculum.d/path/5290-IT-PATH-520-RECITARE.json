@@ -1,0 +1,9 @@
+{
+  "id": "IT-PATH-520-RECITARE",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "IT-EXT-520-RECITARE"
+  ],
+  "after": []
+}

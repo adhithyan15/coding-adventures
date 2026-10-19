@@ -1,0 +1,11 @@
+{
+  "id": "IT-C479-commuoversi",
+  "pathSegment": "IT-PATH-479-ALLEGRIA",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "IT-EXT-479-ALLEGRIA",
+      "order": 4
+    }
+  ]
+}

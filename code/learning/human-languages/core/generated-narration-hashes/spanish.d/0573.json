@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 573,
+  "sourceHash": "fnv1a64:eeaee96df983144e",
+  "lessonIds": [
+    "ES-C573-alcanzar",
+    "ES-C573-fracasar",
+    "ES-C573-fracaso",
+    "ES-C573-sufrir",
+    "ES-C573-resultar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch573.txt",
+  "json": "spanish/narration/ch573.json",
+  "textHash": "fnv1a64:eb5d7613723dad18",
+  "jsonHash": "fnv1a64:9180c8038a3b4b04",
+  "findings": []
+}

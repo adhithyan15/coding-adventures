@@ -1,0 +1,9 @@
+{
+  "id": "IT-PATH-275-ACCADERE",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "IT-EXT-275-ACCADERE"
+  ],
+  "after": []
+}

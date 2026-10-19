@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 665,
+  "sourceHash": "fnv1a64:149fee4657e70793",
+  "lessonIds": [
+    "ES-C665-queja",
+    "ES-C665-desperfecto",
+    "ES-C665-compensar",
+    "ES-C665-gerente",
+    "ES-C665-dueno"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch665.txt",
+  "json": "spanish/narration/ch665.json",
+  "textHash": "fnv1a64:e9578106711908ae",
+  "jsonHash": "fnv1a64:3dea00f9191a1d41",
+  "findings": []
+}

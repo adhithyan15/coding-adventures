@@ -1,0 +1,11 @@
+{
+  "id": "ES-C563-relato",
+  "pathSegment": "ES-PATH-563-RELATO",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ES-EXT-563-RELATO",
+      "order": 1
+    }
+  ]
+}

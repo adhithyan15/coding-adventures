@@ -1,0 +1,11 @@
+{
+  "id": "IT-C280-ultimamente",
+  "pathSegment": "IT-PATH-280-FINORA",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "IT-EXT-280-FINORA",
+      "order": 3
+    }
+  ]
+}

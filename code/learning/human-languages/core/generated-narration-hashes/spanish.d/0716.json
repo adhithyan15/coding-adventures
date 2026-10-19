@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 716,
+  "sourceHash": "fnv1a64:94da705324a76d52",
+  "lessonIds": [
+    "ES-C716-lastima",
+    "ES-C716-consolar",
+    "ES-C716-lamentar",
+    "ES-C716-decepcionado",
+    "ES-C716-decepcion"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch716.txt",
+  "json": "spanish/narration/ch716.json",
+  "textHash": "fnv1a64:2276689bea94e512",
+  "jsonHash": "fnv1a64:4ce351781b859374",
+  "findings": []
+}

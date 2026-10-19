@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 648,
+  "sourceHash": "fnv1a64:bad4ec1e35ef7ce9",
+  "lessonIds": [
+    "ES-C648-parquimetro",
+    "ES-C648-estacionamiento",
+    "ES-C648-remolque",
+    "ES-C648-carril",
+    "ES-C648-remolcar"
+  ],
+  "tex": "spanish/book/chapters/ch648-donde-dejar-el-coche.tex"
+}

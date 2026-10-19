@@ -1,0 +1,19 @@
+{
+  "chapter": 414,
+  "title": "Strade di campagna",
+  "label": "ch:it-strade-di-campagna",
+  "canDo": "I can describe country roads: the main road, the provincial road, bends, potholes and dirt tracks.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "IT-C414-sterrato",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 414: I can describe country roads: the main road, the provincial road, bends, potholes and dirt tracks.",
+    "assesses": [
+      "IT-LEX-C414-STATALE-03",
+      "IT-LEX-C414-STATALE-04",
+      "IT-LEX-C414-STATALE-05"
+    ]
+  }
+}

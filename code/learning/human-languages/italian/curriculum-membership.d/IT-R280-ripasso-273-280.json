@@ -1,0 +1,11 @@
+{
+  "id": "IT-R280-ripasso-273-280",
+  "pathSegment": "IT-PATH-280-FINORA",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "IT-EXT-280-FINORA",
+      "order": 5
+    }
+  ]
+}

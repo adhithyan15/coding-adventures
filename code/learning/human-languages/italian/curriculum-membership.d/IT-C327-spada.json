@@ -1,0 +1,11 @@
+{
+  "id": "IT-C327-spada",
+  "pathSegment": "IT-PATH-327-BATTAGLIA",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "IT-EXT-327-BATTAGLIA",
+      "order": 2
+    }
+  ]
+}

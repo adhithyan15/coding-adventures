@@ -1,0 +1,11 @@
+{
+  "id": "IT-C311-bomboniera",
+  "pathSegment": "IT-PATH-311-SPOSARSI",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "IT-EXT-311-SPOSARSI",
+      "order": 4
+    }
+  ]
+}

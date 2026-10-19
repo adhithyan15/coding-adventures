@@ -1,0 +1,9 @@
+{
+  "id": "IT-PATH-405-AUTOSTRADA",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "IT-EXT-405-AUTOSTRADA"
+  ],
+  "after": []
+}

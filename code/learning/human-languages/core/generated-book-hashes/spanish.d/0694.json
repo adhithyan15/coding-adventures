@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 694,
+  "sourceHash": "fnv1a64:730fe5be86cd852f",
+  "lessonIds": [
+    "ES-C694-gaviota",
+    "ES-C694-ave",
+    "ES-C694-insecto",
+    "ES-C694-mariposa",
+    "ES-C694-lagartija"
+  ],
+  "tex": "spanish/book/chapters/ch694-animales-del-campo.tex"
+}

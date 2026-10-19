@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 327,
+  "sourceHash": "fnv1a64:ccb791a705422739",
+  "lessonIds": [
+    "IT-C327-battaglia",
+    "IT-C327-cavaliere",
+    "IT-C327-spada",
+    "IT-C327-scudo",
+    "IT-C327-conquistare"
+  ],
+  "tex": "italian/book/chapters/ch327-la-battaglia.tex"
+}

@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 347,
+  "sourceHash": "fnv1a64:2f2287b00c93c511",
+  "lessonIds": [
+    "IT-C347-valutare",
+    "IT-C347-giudizio",
+    "IT-C347-giudicare",
+    "IT-C347-oggettivo",
+    "IT-C347-soggettivo"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch347.txt",
+  "json": "italian/narration/ch347.json",
+  "textHash": "fnv1a64:d77134faa74d387f",
+  "jsonHash": "fnv1a64:f303ad1bf9a3da37",
+  "findings": []
+}

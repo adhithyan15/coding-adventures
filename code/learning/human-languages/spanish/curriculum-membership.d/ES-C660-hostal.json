@@ -1,0 +1,11 @@
+{
+  "id": "ES-C660-hostal",
+  "pathSegment": "ES-PATH-660-ALOJAMIENTO",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ES-EXT-660-ALOJAMIENTO",
+      "order": 3
+    }
+  ]
+}

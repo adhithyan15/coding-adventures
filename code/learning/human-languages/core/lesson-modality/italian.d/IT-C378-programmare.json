@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C378-programmare",
+    "language": "italian",
+    "chapter": 378,
+    "sequence": 21610,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:91a66e08d91fd483"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C372-supporre",
+    "language": "italian",
+    "chapter": 372,
+    "sequence": 21290,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:dd4cd03c01d62ac2"
+  },
+  "findings": []
+}

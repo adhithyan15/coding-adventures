@@ -1,0 +1,11 @@
+{
+  "id": "ES-C715-enamorado",
+  "pathSegment": "ES-PATH-715-AMOR",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ES-EXT-715-AMOR",
+      "order": 2
+    }
+  ]
+}

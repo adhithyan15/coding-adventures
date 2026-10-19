@@ -1,0 +1,19 @@
+{
+  "chapter": 470,
+  "title": "Dopo la pioggia",
+  "label": "ch:it-dopo-la-pioggia",
+  "canDo": "I can talk about rainy weather and what follows: drizzle, the sky clearing, puddles, getting soaked and the raincoat.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "IT-R470-ripasso-final-470",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 470: I can talk about rainy weather and what follows: drizzle, the sky clearing, puddles, getting soaked and the raincoat.",
+    "assesses": [
+      "IT-LEX-C470-PIOGGIA-03",
+      "IT-LEX-C470-PIOGGIA-04",
+      "IT-LEX-C470-PIOGGIA-05"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C569-derrotar",
+    "language": "spanish",
+    "chapter": 569,
+    "sequence": 18110,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4781caa7738a7918"
+  },
+  "findings": []
+}

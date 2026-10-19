@@ -1,0 +1,11 @@
+{
+  "id": "IT-C308-madrina",
+  "pathSegment": "IT-PATH-308-BATTESIMO",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "IT-EXT-308-BATTESIMO",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 292,
+  "sourceHash": "fnv1a64:3d48399a393e97dd",
+  "lessonIds": [
+    "IT-C292-rapina",
+    "IT-C292-rapinare",
+    "IT-C292-rapinatore",
+    "IT-C292-cassaforte",
+    "IT-C292-bottino"
+  ],
+  "tex": "italian/book/chapters/ch292-rapina-in-banca.tex"
+}

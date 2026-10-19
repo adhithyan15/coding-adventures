@@ -1,0 +1,9 @@
+{
+  "id": "IT-PATH-374-IMPREVISTO",
+  "spine_node": "SPINE-EXPRESS-CONDITION",
+  "before": [],
+  "inline": [
+    "IT-EXT-374-IMPREVISTO"
+  ],
+  "after": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C679-comisaria",
+    "language": "spanish",
+    "chapter": 679,
+    "sequence": 23790,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d5b2bbc2180c16a3"
+  },
+  "findings": []
+}

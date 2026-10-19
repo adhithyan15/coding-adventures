@@ -1,0 +1,19 @@
+{
+  "chapter": 385,
+  "title": "Si può o no",
+  "label": "ch:it-si-puo-o-no",
+  "canDo": "I can say what is forbidden, banned or tolerated, and talk about permission and authorising something.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "IT-C385-autorizzazione",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 385: I can say what is forbidden, banned or tolerated, and talk about permission and authorising something.",
+    "assesses": [
+      "IT-LEX-C385-VIETATO-03",
+      "IT-LEX-C385-VIETATO-04",
+      "IT-LEX-C385-VIETATO-05"
+    ]
+  }
+}

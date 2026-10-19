@@ -1,0 +1,11 @@
+{
+  "id": "IT-C513-atleta",
+  "pathSegment": "IT-PATH-513-GARA",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "IT-EXT-513-GARA",
+      "order": 3
+    }
+  ]
+}

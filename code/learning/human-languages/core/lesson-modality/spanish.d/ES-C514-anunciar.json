@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C514-anunciar",
+    "language": "spanish",
+    "chapter": 514,
+    "sequence": 15320,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ac8d9f0e7b4655c1"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C524-colpo-di-scena",
+    "language": "italian",
+    "chapter": 524,
+    "sequence": 29340,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c909f8977947811d"
+  },
+  "findings": []
+}

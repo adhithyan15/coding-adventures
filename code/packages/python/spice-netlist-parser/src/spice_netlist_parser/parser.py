@@ -41,6 +41,7 @@ from spice_engine import (
     ac_sweep,
     dc_op,
     dc_sweep,
+    dc_sweep_2d,
     format_deck_table_json,
     mosfet_from_model_card,
     normalize_model_card,
@@ -70,12 +71,16 @@ class TranAnalysis:
 
 @dataclass(frozen=True, slots=True)
 class DcAnalysis:
-    """A `.dc source start stop step` analysis card."""
+    """A one- or two-axis `.dc` analysis card."""
 
     source_name: str
     start: float
     stop: float
     step: float
+    secondary_source_name: str | None = None
+    secondary_start: float | None = None
+    secondary_stop: float | None = None
+    secondary_step: float | None = None
 
 
 @dataclass(frozen=True, slots=True)
@@ -280,6 +285,8 @@ class SelectedOutputRow:
     axis_name: str | None
     axis_value: float | None
     values: dict[str, SelectedOutputValue]
+    secondary_axis_name: str | None = None
+    secondary_axis_value: float | None = None
 
 
 @dataclass(frozen=True, slots=True)
@@ -828,6 +835,25 @@ def _execute_analysis_step(parsed: ParsedNetlist, step: AnalysisPlanStep) -> Ana
         sweep_kwargs = {
             key: dc_kwargs[key] for key in ("max_iterations", "tol") if key in dc_kwargs
         }
+        if analysis.secondary_source_name is not None:
+            if None in (
+                analysis.secondary_start,
+                analysis.secondary_stop,
+                analysis.secondary_step,
+            ):
+                raise ValueError("nested .dc analysis requires complete secondary sweep bounds")
+            return dc_sweep_2d(
+                parsed.circuit,
+                analysis.source_name,
+                analysis.start,
+                analysis.stop,
+                analysis.step,
+                analysis.secondary_source_name,
+                analysis.secondary_start,
+                analysis.secondary_stop,
+                analysis.secondary_step,
+                **sweep_kwargs,
+            )
         return dc_sweep(
             parsed.circuit,
             analysis.source_name,
@@ -942,6 +968,8 @@ def _selected_output_rows(
                     probes,
                     ".dc output selection",
                 ),
+                secondary_axis_name=point.secondary_source_name,
+                secondary_axis_value=point.secondary_source_value,
             )
             for index, point in enumerate(result.points)
         ]
@@ -1785,12 +1813,25 @@ def _parse_directive(fields: list[str]) -> Analysis:
             method=_parse_tran_method_options(fields[3:]),
         )
     if directive == ".dc":
-        _require_fields(fields, 5, ".dc")
-        return DcAnalysis(
+        if len(fields) not in (5, 9):
+            raise ValueError(".dc requires one or two source start stop step axes")
+        primary = DcAnalysis(
             source_name=fields[1],
             start=parse_value(fields[2]),
             stop=parse_value(fields[3]),
             step=parse_value(fields[4]),
+        )
+        if len(fields) == 5:
+            return primary
+        return DcAnalysis(
+            source_name=primary.source_name,
+            start=primary.start,
+            stop=primary.stop,
+            step=primary.step,
+            secondary_source_name=fields[5],
+            secondary_start=parse_value(fields[6]),
+            secondary_stop=parse_value(fields[7]),
+            secondary_step=parse_value(fields[8]),
         )
     if directive == ".ac":
         _require_fields(fields, 5, ".ac")

@@ -1,0 +1,11 @@
+{
+  "id": "IT-C392-condanna",
+  "pathSegment": "IT-PATH-392-DIFESA",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "IT-EXT-392-DIFESA",
+      "order": 3
+    }
+  ]
+}

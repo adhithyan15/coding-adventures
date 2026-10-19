@@ -1,0 +1,20 @@
+{
+  "language": "spanish",
+  "chapter": 663,
+  "sourceHash": "fnv1a64:7d13da764862298b",
+  "lessonIds": [
+    "ES-C663-tasa",
+    "ES-C663-suplemento",
+    "ES-C663-fianza",
+    "ES-C663-reembolso",
+    "ES-C663-reembolsar",
+    "ES-R663-repaso-656-663"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "spanish/narration/ch663.txt",
+  "json": "spanish/narration/ch663.json",
+  "textHash": "fnv1a64:127111c3a28f6b19",
+  "jsonHash": "fnv1a64:21c2c4dec0d16729",
+  "findings": []
+}

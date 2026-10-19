@@ -1,0 +1,15 @@
+{
+  "language": "italian",
+  "chapter": 470,
+  "sourceHash": "fnv1a64:f474d55d265a5f2f",
+  "lessonIds": [
+    "IT-C470-piovigginare",
+    "IT-C470-schiarirsi",
+    "IT-C470-pozzanghera",
+    "IT-C470-fradicio",
+    "IT-C470-impermeabile",
+    "IT-R470-ripasso-469-470",
+    "IT-R470-ripasso-final-470"
+  ],
+  "tex": "italian/book/chapters/ch470-dopo-la-pioggia.tex"
+}

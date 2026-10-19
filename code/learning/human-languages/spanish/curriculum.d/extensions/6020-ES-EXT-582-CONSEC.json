@@ -1,0 +1,8 @@
+{
+  "id": "ES-EXT-582-CONSEC",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say what follows from something, what it involves and what impact it had.",
+  "prerequisites": []
+}

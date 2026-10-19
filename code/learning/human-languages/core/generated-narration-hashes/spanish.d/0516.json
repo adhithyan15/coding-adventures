@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 516,
+  "sourceHash": "fnv1a64:75bcd8b174d94012",
+  "lessonIds": [
+    "ES-C516-asegurar",
+    "ES-C516-rectificar",
+    "ES-C516-revelar",
+    "ES-C516-desmentir",
+    "ES-C516-version"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch516.txt",
+  "json": "spanish/narration/ch516.json",
+  "textHash": "fnv1a64:8ce526c639594ec3",
+  "jsonHash": "fnv1a64:3800586f01f39b49",
+  "findings": []
+}

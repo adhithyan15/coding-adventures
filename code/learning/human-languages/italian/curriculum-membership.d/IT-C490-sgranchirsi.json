@@ -1,0 +1,11 @@
+{
+  "id": "IT-C490-sgranchirsi",
+  "pathSegment": "IT-PATH-490-SONNO",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "IT-EXT-490-SONNO",
+      "order": 4
+    }
+  ]
+}

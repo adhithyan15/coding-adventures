@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 629,
+  "sourceHash": "fnv1a64:5fe13c756ecf011a",
+  "lessonIds": [
+    "ES-C629-ganancia",
+    "ES-C629-perdida",
+    "ES-C629-beneficio",
+    "ES-C629-inversion",
+    "ES-C629-financiar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch629.txt",
+  "json": "spanish/narration/ch629.json",
+  "textHash": "fnv1a64:874aa3eca4b7153e",
+  "jsonHash": "fnv1a64:69818909bb46f72e",
+  "findings": []
+}

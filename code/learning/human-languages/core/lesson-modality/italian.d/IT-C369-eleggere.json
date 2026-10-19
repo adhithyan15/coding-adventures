@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C369-eleggere",
+    "language": "italian",
+    "chapter": 369,
+    "sequence": 21160,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:82c3a57d51a560e7"
+  },
+  "findings": []
+}

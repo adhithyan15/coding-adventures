@@ -1,0 +1,11 @@
+{
+  "id": "IT-C397-fattura",
+  "pathSegment": "IT-PATH-397-GARANZIA",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "IT-EXT-397-GARANZIA",
+      "order": 2
+    }
+  ]
+}

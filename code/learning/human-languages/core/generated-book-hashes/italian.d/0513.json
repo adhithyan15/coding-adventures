@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 513,
+  "sourceHash": "fnv1a64:e08e1a96edaa5fe4",
+  "lessonIds": [
+    "IT-C513-gareggiare",
+    "IT-C513-cronometro",
+    "IT-C513-maratona",
+    "IT-C513-atleta",
+    "IT-C513-ansimare"
+  ],
+  "tex": "italian/book/chapters/ch513-la-gara.tex"
+}

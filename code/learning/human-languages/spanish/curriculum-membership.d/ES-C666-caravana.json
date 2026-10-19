@@ -1,0 +1,11 @@
+{
+  "id": "ES-C666-caravana",
+  "pathSegment": "ES-PATH-666-CAMPING",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ES-EXT-666-CAMPING",
+      "order": 3
+    }
+  ]
+}

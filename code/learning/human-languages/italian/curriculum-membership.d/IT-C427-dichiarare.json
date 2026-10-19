@@ -1,0 +1,11 @@
+{
+  "id": "IT-C427-dichiarare",
+  "pathSegment": "IT-PATH-427-DOGANA",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "IT-EXT-427-DOGANA",
+      "order": 1
+    }
+  ]
+}

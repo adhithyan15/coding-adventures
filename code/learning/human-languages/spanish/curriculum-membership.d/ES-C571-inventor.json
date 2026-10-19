@@ -1,0 +1,11 @@
+{
+  "id": "ES-C571-inventor",
+  "pathSegment": "ES-PATH-571-DESCUBRIR",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "ES-EXT-571-DESCUBRIR",
+      "order": 0
+    }
+  ]
+}

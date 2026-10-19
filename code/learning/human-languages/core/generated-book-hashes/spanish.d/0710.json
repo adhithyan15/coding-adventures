@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 710,
+  "sourceHash": "fnv1a64:4d56e6aab38fde02",
+  "lessonIds": [
+    "ES-C710-nervios",
+    "ES-C710-estres",
+    "ES-C710-ansiedad",
+    "ES-C710-tension",
+    "ES-C710-calmar"
+  ],
+  "tex": "spanish/book/chapters/ch710-los-nervios.tex"
+}

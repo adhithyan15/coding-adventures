@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 446,
+  "sourceHash": "fnv1a64:ac064000eb317b85",
+  "lessonIds": [
+    "IT-C446-mura",
+    "IT-C446-rocca",
+    "IT-C446-borgo",
+    "IT-C446-chiostro",
+    "IT-C446-vagare"
+  ],
+  "tex": "italian/book/chapters/ch446-il-centro-storico.tex"
+}

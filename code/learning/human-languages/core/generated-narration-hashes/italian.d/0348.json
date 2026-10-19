@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 348,
+  "sourceHash": "fnv1a64:93075f01e5771737",
+  "lessonIds": [
+    "IT-C348-vantaggio",
+    "IT-C348-svantaggio",
+    "IT-C348-aspetto",
+    "IT-C348-critica",
+    "IT-C348-ribadire"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch348.txt",
+  "json": "italian/narration/ch348.json",
+  "textHash": "fnv1a64:2047e36177666a22",
+  "jsonHash": "fnv1a64:64a1857d7e92c3f9",
+  "findings": []
+}

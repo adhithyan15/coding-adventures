@@ -1,0 +1,11 @@
+{
+  "id": "ES-C721-personalidad",
+  "pathSegment": "ES-PATH-721-CARACTER",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ES-EXT-721-CARACTER",
+      "order": 1
+    }
+  ]
+}

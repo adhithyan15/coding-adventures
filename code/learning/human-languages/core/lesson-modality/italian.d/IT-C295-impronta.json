@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C295-impronta",
+    "language": "italian",
+    "chapter": 295,
+    "sequence": 17260,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:655a5d2d0f2ec5fb"
+  },
+  "findings": []
+}

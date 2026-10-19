@@ -1,0 +1,858 @@
+{
+  "version": 1,
+  "language": "spanish",
+  "chapter": 591,
+  "title": "Formas de trabajar",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:08ffcee4ad065f71",
+  "lessons": [
+    {
+      "id": "ES-C591-convenio",
+      "sequence": 19260,
+      "title": "el convenio — the agreement; the collective agreement",
+      "headword": "el convenio",
+      "romanization": "el convenio",
+      "gloss": "the agreement; the collective agreement",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:dc8f7b914477e6d0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Spanish for the training, then the Spanish for the profile."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: el convenio",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "el convenio — \"the agreement; the collective agreement\"."
+            },
+            {
+              "kind": "speech",
+              "text": "El convenio sube los sueldos un dos por ciento. The collective agreement raises wages by two per cent."
+            },
+            {
+              "kind": "speech",
+              "text": "El convenio sets pay and hours for everyone in one kind of work."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "convenio comes from convenir, inherited from Latin convenire 'to come together, to agree' (EtymDB), built on venire 'to come'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el convenio",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el convenio*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el convenio, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el convenio*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with el convenio",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *el convenio*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Spanish for the training, then the Spanish for the profile, then say el convenio again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Spanish for the training, then the Spanish for the profile, then say *el convenio* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does el convenio mean? (\"The agreement; the collective agreement\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C591-autonomo",
+      "sequence": 19270,
+      "title": "el autónomo — the self-employed worker; autonomous",
+      "headword": "el autónomo",
+      "romanization": "el autónomo",
+      "gloss": "the self-employed worker; autonomous",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:768b30c23029caa9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Spanish for the profile, then the Spanish for the agreement."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: el autónomo",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "el autónomo — \"the self-employed worker; autonomous\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Mi hermana trabaja como autónoma. My sister is self-employed."
+            },
+            {
+              "kind": "speech",
+              "text": "In Spain ser autónomo is to be self-employed; much of Latin America says trabajador independiente."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "autónomo is a learned borrowing from Greek autonomos 'having its own laws', built from autos 'self' and nomos 'custom, law' (EtymDB)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el autónomo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el autónomo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el autónomo, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el autónomo*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with el autónomo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *el autónomo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Spanish for the profile, then the Spanish for the agreement, then say el autónomo again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Spanish for the profile, then the Spanish for the agreement, then say *el autónomo* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does el autónomo mean? (\"The self-employed worker; autonomous\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C591-funcionario",
+      "sequence": 19280,
+      "title": "el funcionario — the civil servant, the public employee",
+      "headword": "el funcionario",
+      "romanization": "el funcionario",
+      "gloss": "the civil servant, the public employee",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:25bb6f5fe1fedd79",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Spanish for the agreement, then the Spanish for the self-employed worker."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: el funcionario",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "el funcionario — \"the civil servant, the public employee\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Mi madre es funcionaria del ayuntamiento. My mother is a civil servant at the town council."
+            },
+            {
+              "kind": "speech",
+              "text": "A woman is la funcionaria. In Spain many people sit public exams to become one."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "funcionario is built on función, a learned borrowing from Latin functio 'a performance, a duty' (EtymDB), from fungi 'to carry out'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el funcionario",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el funcionario*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el funcionario, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el funcionario*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with el funcionario",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *el funcionario*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Spanish for the agreement, then the Spanish for the self-employed worker, then say el funcionario again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Spanish for the agreement, then the Spanish for the self-employed worker, then say *el funcionario* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does el funcionario mean? (\"The civil servant, the public employee\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C591-teletrabajo",
+      "sequence": 19290,
+      "title": "el teletrabajo — remote work, working from home",
+      "headword": "el teletrabajo",
+      "romanization": "el teletrabajo",
+      "gloss": "remote work, working from home",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5dbe04fb54ded300",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Spanish for the self-employed worker, then the Spanish for the civil servant."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: el teletrabajo",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "el teletrabajo — \"remote work, working from home\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Hago teletrabajo dos días a la semana. I work from home two days a week."
+            },
+            {
+              "kind": "speech",
+              "text": "The verb is teletrabajar."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "teletrabajo is built on Greek tele 'far' and trabajo. Trabajo is usually traced to Vulgar Latin tripālium, a device for torture (EtymDB), so the word for work first meant suffering."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el teletrabajo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el teletrabajo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el teletrabajo, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el teletrabajo*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with el teletrabajo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *el teletrabajo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Spanish for the self-employed worker, then the Spanish for the civil servant, then say el teletrabajo again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Spanish for the self-employed worker, then the Spanish for the civil servant, then say *el teletrabajo* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does el teletrabajo mean? (\"Remote work, working from home\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C591-sindicato",
+      "sequence": 19300,
+      "title": "el sindicato — the trade union",
+      "headword": "el sindicato",
+      "romanization": "el sindicato",
+      "gloss": "the trade union",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:71d74b9020d08367",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Spanish for the civil servant, then the Spanish for remote work."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: el sindicato",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "el sindicato — \"the trade union\"."
+            },
+            {
+              "kind": "speech",
+              "text": "El sindicato pide salarios más altos. The union is asking for higher wages."
+            },
+            {
+              "kind": "speech",
+              "text": "A trade unionist is un sindicalista; a member is un afiliado."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "sindicato is built on síndico 'representative', a learned borrowing from Latin syndicus and Greek syndikos 'advocate' (EtymDB)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el sindicato",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el sindicato*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el sindicato, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el sindicato*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with el sindicato",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *el sindicato*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Spanish for the civil servant, then the Spanish for remote work, then say el sindicato again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Spanish for the civil servant, then the Spanish for remote work, then say *el sindicato* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does el sindicato mean? (\"The trade union\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-R591-repaso-584-591",
+      "sequence": 19310,
+      "title": "Repaso de los capítulos 584–591",
+      "headword": "(dialogue)",
+      "romanization": "(dialogue)",
+      "gloss": "a review of chapters 584-591",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2d87044fbaf57bf7",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Spanish for the advantage and the disadvantage."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the advantage, the disadvantage, the drawback, positive, negative",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the advantage, the disadvantage, the drawback, positive, negative]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to propose, the proposal, the suggestion, to warn, the warning",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to propose, the proposal, the suggestion, to warn, the warning]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to justify, the justification, the excuse, the pretext, to show",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to justify, the justification, the excuse, the pretext, to show]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to check, evident, obvious, the certainty, apparently",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to check, evident, obvious, the certainty, apparently]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "therefore, I mean, whereas, above all, in general",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: therefore, I mean, whereas, above all, in general]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "in fact, actually, certainly, not at all, deep down",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: in fact, actually, certainly, not at all, deep down]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the vacancy, to select, the employee, the training, the profile",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the vacancy, to select, the employee, the training, the profile]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the agreement, the self-employed worker, the civil servant, remote work, the trade union",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the agreement, the self-employed worker, the civil servant, remote work, the trade union]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The advantage? (la ventaja.) The disadvantage? (la desventaja.) The drawback? (el inconveniente.) Positive? (positivo.) Negative? (negativo.) To propose? (proponer.) The proposal? (la propuesta.) The suggestion? (la sugerencia.) To warn? (advertir.) The warning? (la advertencia.) To justify? (justificar.) The justification? (la justificación.) The excuse? (la excusa.) The pretext? (el pretexto.) To show? (demostrar.) To check? (comprobar.) Evident? (evidente.) Obvious? (obvio.) The certainty? (la certeza.) Apparently? (aparentemente.) Therefore? (por tanto.) I mean? (o sea.) Whereas? (en cambio.) Above all? (sobre todo.) In general? (en general.) In fact? (de hecho.) Actually? (en realidad.) Certainly? (desde luego.) Not at all? (en absoluto.) Deep down? (en el fondo.) The vacancy? (la vacante.) To select? (seleccionar.) The employee? (el empleado.) The training? (la formación.) The profile? (el perfil.) The agreement? (el convenio.) The self-employed worker? (el autónomo.) The civil servant? (el funcionario.) Remote work? (el teletrabajo.) The trade union? (el sindicato.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

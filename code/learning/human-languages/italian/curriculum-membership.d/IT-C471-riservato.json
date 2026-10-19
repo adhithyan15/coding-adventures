@@ -1,0 +1,11 @@
+{
+  "id": "IT-C471-riservato",
+  "pathSegment": "IT-PATH-471-TIMIDEZZA",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "IT-EXT-471-TIMIDEZZA",
+      "order": 2
+    }
+  ]
+}

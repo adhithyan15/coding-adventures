@@ -1,0 +1,11 @@
+{
+  "id": "IT-C450-processione",
+  "pathSegment": "IT-PATH-450-SAGRA",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "IT-EXT-450-SAGRA",
+      "order": 2
+    }
+  ]
+}

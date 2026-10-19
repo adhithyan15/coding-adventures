@@ -1,0 +1,9 @@
+{
+  "id": "IT-PATH-291-SCIPPO",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "IT-EXT-291-SCIPPO"
+  ],
+  "after": []
+}

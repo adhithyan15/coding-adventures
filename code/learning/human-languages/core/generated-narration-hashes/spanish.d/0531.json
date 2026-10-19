@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 531,
+  "sourceHash": "fnv1a64:c40f366199b3c861",
+  "lessonIds": [
+    "ES-C531-desaparecido",
+    "ES-C531-busqueda",
+    "ES-C531-localizar",
+    "ES-C531-hallar",
+    "ES-C531-hallazgo"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch531.txt",
+  "json": "spanish/narration/ch531.json",
+  "textHash": "fnv1a64:fe1b61b30976431c",
+  "jsonHash": "fnv1a64:df7516e25419f09d",
+  "findings": []
+}

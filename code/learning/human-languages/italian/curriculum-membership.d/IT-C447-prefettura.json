@@ -1,0 +1,11 @@
+{
+  "id": "IT-C447-prefettura",
+  "pathSegment": "IT-PATH-447-UFFICI",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "IT-EXT-447-UFFICI",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 388,
+  "sourceHash": "fnv1a64:937ff1f2190644cd",
+  "lessonIds": [
+    "IT-C388-scadere",
+    "IT-C388-valido",
+    "IT-C388-rinnovare",
+    "IT-C388-rinnovo",
+    "IT-C388-tessera"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch388.txt",
+  "json": "italian/narration/ch388.json",
+  "textHash": "fnv1a64:c75f7a19b11c8249",
+  "jsonHash": "fnv1a64:7ca6a7f63f56ad35",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 582,
+  "sourceHash": "fnv1a64:d64972ab7ce4d6d6",
+  "lessonIds": [
+    "ES-C582-consecuencia",
+    "ES-C582-impacto",
+    "ES-C582-conllevar",
+    "ES-C582-por-consiguiente",
+    "ES-C582-de-modo-que"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch582.txt",
+  "json": "spanish/narration/ch582.json",
+  "textHash": "fnv1a64:50249445f093772a",
+  "jsonHash": "fnv1a64:453be9e8daefc867",
+  "findings": []
+}

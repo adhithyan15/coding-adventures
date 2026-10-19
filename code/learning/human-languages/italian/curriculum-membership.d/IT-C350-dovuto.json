@@ -1,0 +1,11 @@
+{
+  "id": "IT-C350-dovuto",
+  "pathSegment": "IT-PATH-350-SICCOME",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "IT-EXT-350-SICCOME",
+      "order": 4
+    }
+  ]
+}

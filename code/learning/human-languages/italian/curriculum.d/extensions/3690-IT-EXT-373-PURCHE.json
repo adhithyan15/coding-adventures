@@ -1,0 +1,8 @@
+{
+  "id": "IT-EXT-373-PURCHE",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can set a condition: provided that, in case, otherwise, or else, and a possible extra cost.",
+  "prerequisites": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "IT-C404-virus",
+  "pathSegment": "IT-PATH-404-BLOCCO",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "IT-EXT-404-BLOCCO",
+      "order": 2
+    }
+  ]
+}

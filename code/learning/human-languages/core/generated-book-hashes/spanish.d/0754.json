@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 754,
+  "sourceHash": "fnv1a64:5b620c65dc28b967",
+  "lessonIds": [
+    "ES-C754-tejer",
+    "ES-C754-pesca",
+    "ES-C754-ceramica",
+    "ES-C754-jardineria",
+    "ES-C754-coser"
+  ],
+  "tex": "spanish/book/chapters/ch754-aficiones-tranquilas.tex"
+}

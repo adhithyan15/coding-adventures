@@ -327,6 +327,12 @@ describe("the gate that would have caught the A2 claim", () => {
     // are derived from that map, so a track climbing a rung edits one entry here
     // and the anti-spurious sweep stays intact.
     const expectedByLevel = new Map<string, number>();
+    // Spanish was the first track to attain B1, with chapters 512-777 (1,330
+    // headwords on the five B1 spine nodes, 390 verbs) and three consolidation
+    // reviews for the older B1 atoms, which moved it from the A2 row of HELD to B1.
+    // Italian followed as the second, with chapters 263-272 (the B1 core: the
+    // imperfetto, reasons, travel, experience and the condizionale, realizing all
+    // five B1 nodes) and chapters 273-536 (1,320 headwords, 389 verbs).
     for (const level of Object.values(HELD)) {
       expectedByLevel.set(level, (expectedByLevel.get(level) ?? 0) + 1);
     }
@@ -419,8 +425,9 @@ describe("the gate that would have caught the A2 claim", () => {
   it("fails an authored-but-unrealized level on a COUNT, not on absence", () => {
     // spine.json used to have zero B1-C2 nodes, and the gate refused those levels on
     // the grounds that "no node is unrealized" is not "every node is realized".
-    // The tranche is authored now, so the refusal has a better reason: 17 nodes exist
-    // and none is realized by any track. The failure names a number instead of a void.
+    // The tranche is authored now, so the refusal has a better reason: 17 nodes exist,
+    // and a track that has not realized them is refused on that count. The failure
+    // names a number instead of a void. (Spanish has since realized all of B1.)
     const e = REAL_EVERYTHING;
     const gate = runLevelGate({
       lessons: e.lessons,
@@ -441,10 +448,22 @@ describe("the gate that would have caught the A2 claim", () => {
     // ladder has closed. Scoping the assertion to B1-and-above says exactly the thing
     // the test is named for, and still fails the day a track is handed a rung whose
     // ledger is empty.
+    //
+    // Spanish then climbed B1 honestly (chapters 512-777), so "below B1" stopped
+    // being true for every track. The claim the test is named for still holds and is
+    // now checked directly rather than by proxy: a track at B1 or above must realize
+    // EVERY authored B1 node in its own lessons. A track handed B1 on an empty ledger
+    // still fails here, on the first node it does not realize.
+    const nodeOf = lessonSpineNodes(e.curricula);
     for (const track of gate.tracks) {
-      if (track.attained !== null) {
-        expect(levelRank(track.attained)).toBeLessThan(levelRank("B1"));
-      }
+      if (track.attained === null || levelRank(track.attained) < levelRank("B1")) continue;
+      const realized = new Set(
+        e.lessons
+          .filter((l) => l.language === track.language)
+          .map((l) => nodeOf.get(l.realization.lessonId))
+          .filter((node): node is string => node !== undefined),
+      );
+      for (const node of authored) expect(realized.has(node.id), `${track.language} ${node.id}`).toBe(true);
     }
     // And the whole ladder is now reachable in principle: every CEFR level has nodes.
     const stages = new Set(e.spine.nodes.map((n) => n.stage));
@@ -530,8 +549,9 @@ describe("the first rung anybody actually climbed", () => {
       .filter(([, level]) => level === held)
       .map(([language]) => language)
       .sort();
+    // Singular when one track holds the rung: Spanish was the first at B1, alone.
     expect(line).toContain(
-      `${peers.length} tracks at ${held} (${peers.join(", ")})`,
+      `${peers.length} track${peers.length === 1 ? "" : "s"} at ${held} (${peers.join(", ")})`,
     );
     // And it must really be a rung that was climbed, not `null` stringified into the
     // sentence. Without this the line above would pass on "1 track at null (spanish)".

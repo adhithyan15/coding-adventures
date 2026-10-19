@@ -1,0 +1,19 @@
+{
+  "chapter": 466,
+  "title": "Il caldo",
+  "label": "ch:it-il-caldo",
+  "canDo": "I can talk about hot weather: the sultry heat, muggy days, getting sunburnt, drought and a cool breeze.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "IT-C466-brezza",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 466: I can talk about hot weather: the sultry heat, muggy days, getting sunburnt, drought and a cool breeze.",
+    "assesses": [
+      "IT-LEX-C466-AFA-03",
+      "IT-LEX-C466-AFA-04",
+      "IT-LEX-C466-AFA-05"
+    ]
+  }
+}

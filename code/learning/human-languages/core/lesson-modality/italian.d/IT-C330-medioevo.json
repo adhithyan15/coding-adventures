@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C330-medioevo",
+    "language": "italian",
+    "chapter": 330,
+    "sequence": 19030,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a217f2183c3c5e4b"
+  },
+  "findings": []
+}

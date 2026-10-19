@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C753-cancion",
+    "language": "spanish",
+    "chapter": 753,
+    "sequence": 27630,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:157ca85327c76828"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 630,
+  "sourceHash": "fnv1a64:fe29f7cbbbb3680b",
+  "lessonIds": [
+    "ES-C630-economia",
+    "ES-C630-economico",
+    "ES-C630-exportacion",
+    "ES-C630-inflacion",
+    "ES-C630-comercio"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch630.txt",
+  "json": "spanish/narration/ch630.json",
+  "textHash": "fnv1a64:2a84b90403905bd0",
+  "jsonHash": "fnv1a64:ecfbc7ad7fd98d62",
+  "findings": []
+}

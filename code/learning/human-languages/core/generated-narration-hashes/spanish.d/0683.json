@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 683,
+  "sourceHash": "fnv1a64:80c3da0ade7c1513",
+  "lessonIds": [
+    "ES-C683-region",
+    "ES-C683-comarca",
+    "ES-C683-municipio",
+    "ES-C683-aldea",
+    "ES-C683-alcaldia"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch683.txt",
+  "json": "spanish/narration/ch683.json",
+  "textHash": "fnv1a64:4b3e0304d4868006",
+  "jsonHash": "fnv1a64:f35adaae98d7f7b8",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 620,
+  "title": "Buscar soluciones",
+  "label": "ch:es-buscar-soluciones",
+  "canDo": "I can raise a problem, describe the difficulty and propose a solution.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "ES-C620-plantear",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 620: I can raise a problem, describe the difficulty and propose a solution.",
+    "assesses": [
+      "ES-LEX-C620-SOLUCION-03",
+      "ES-LEX-C620-SOLUCION-04",
+      "ES-LEX-C620-SOLUCION-05"
+    ]
+  }
+}

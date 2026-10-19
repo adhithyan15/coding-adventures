@@ -1,0 +1,20 @@
+{
+  "language": "spanish",
+  "chapter": 687,
+  "sourceHash": "fnv1a64:e818286613d71d90",
+  "lessonIds": [
+    "ES-C687-refugio",
+    "ES-C687-caminata",
+    "ES-C687-senda",
+    "ES-C687-trepar",
+    "ES-C687-explorar",
+    "ES-R687-repaso-680-687"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "spanish/narration/ch687.txt",
+  "json": "spanish/narration/ch687.json",
+  "textHash": "fnv1a64:e20869c50339da31",
+  "jsonHash": "fnv1a64:8b256af9c2ac9538",
+  "findings": []
+}

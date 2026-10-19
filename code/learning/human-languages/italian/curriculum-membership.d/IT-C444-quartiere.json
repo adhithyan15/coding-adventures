@@ -1,0 +1,11 @@
+{
+  "id": "IT-C444-quartiere",
+  "pathSegment": "IT-PATH-444-INDIRIZZO",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "IT-EXT-444-INDIRIZZO",
+      "order": 0
+    }
+  ]
+}

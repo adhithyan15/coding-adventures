@@ -15,6 +15,7 @@ import {
   acSweep,
   dcOp,
   dcSweep,
+  dcSweep2d,
   defaultMosfetLevel1Params,
   inductorWithInitialCurrent,
   jfet,
@@ -72,6 +73,10 @@ export interface DcAnalysis {
   readonly start: number;
   readonly stop: number;
   readonly step: number;
+  readonly secondarySourceName?: string;
+  readonly secondaryStart?: number;
+  readonly secondaryStop?: number;
+  readonly secondaryStep?: number;
 }
 
 export interface AcAnalysis {
@@ -235,6 +240,8 @@ export interface SelectedOutputRow {
   readonly axisName?: string;
   readonly axisValue?: number;
   readonly values: ReadonlyMap<string, SelectedOutputValue>;
+  readonly secondaryAxisName?: string;
+  readonly secondaryAxisValue?: number;
 }
 
 export interface SelectedAnalysisOutput {
@@ -775,6 +782,26 @@ function executeAnalysisStep(parsed: ParsedNetlist, step: AnalysisPlanStep): Ana
     return dcOp(parsed.circuit, parsed.dcOpOptions());
   }
   if (analysis.kind === "dc") {
+    if (analysis.secondarySourceName !== undefined) {
+      if (
+        analysis.secondaryStart === undefined ||
+        analysis.secondaryStop === undefined ||
+        analysis.secondaryStep === undefined
+      ) {
+        throw new NetlistParseError("nested .dc analysis requires complete secondary sweep bounds");
+      }
+      return dcSweep2d(
+        parsed.circuit,
+        analysis.sourceName,
+        analysis.start,
+        analysis.stop,
+        analysis.step,
+        analysis.secondarySourceName,
+        analysis.secondaryStart,
+        analysis.secondaryStop,
+        analysis.secondaryStep,
+      );
+    }
     return dcSweep(
       parsed.circuit,
       analysis.sourceName,
@@ -879,6 +906,8 @@ function selectedOutputRows(
       index,
       axisName: "source",
       axisValue: point.value,
+      secondaryAxisName: point.secondarySourceName,
+      secondaryAxisValue: point.secondaryValue,
       values: selectedOutputValues(
         point.result.nodeVoltages,
         point.result.branchCurrents,
@@ -2963,13 +2992,22 @@ function parseDirective(fields: readonly string[]): Analysis {
     return method === undefined ? card : { ...card, method };
   }
   if (directive === ".dc") {
-    requireFields(fields, 5, ".dc");
-    return {
+    if (fields.length !== 5 && fields.length !== 9) {
+      throw new NetlistParseError(".dc requires one or two source start stop step axes");
+    }
+    const card: DcAnalysis = {
       kind: "dc",
       sourceName: fields[1],
       start: parseValue(fields[2]),
       stop: parseValue(fields[3]),
       step: parseValue(fields[4]),
+    };
+    return fields.length === 5 ? card : {
+      ...card,
+      secondarySourceName: fields[5],
+      secondaryStart: parseValue(fields[6]),
+      secondaryStop: parseValue(fields[7]),
+      secondaryStep: parseValue(fields[8]),
     };
   }
   if (directive === ".ac") {

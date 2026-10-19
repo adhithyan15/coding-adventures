@@ -1,0 +1,9 @@
+{
+  "id": "ES-PATH-745-RUPTURA",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "ES-EXT-745-RUPTURA"
+  ],
+  "after": []
+}

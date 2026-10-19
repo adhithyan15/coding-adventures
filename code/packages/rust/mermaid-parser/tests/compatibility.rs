@@ -3342,3 +3342,29 @@ fn zenuml_lowers_reply_forms_comments_and_control_branches() {
         event, diagram_ir::SequenceEvent::BlockEnd { .. }
     )).count(), 2);
 }
+
+#[test]
+fn zenuml_preserves_participant_kinds_assigned_creation_and_semicolons() {
+    let diagram = parse_zenuml(
+        "zenuml\n@Boundary API;\n@Control Controller;\n@Entity Order;\n@Collections Items;\n@Queue Jobs;\n@Starter Client;\nClient->API.start() {\n  Worker worker = new Worker(config);\n  worker.init();\n}\n",
+    ).expect("ZenUML annotations and assigned creation should parse");
+
+    let kinds = diagram.participants.iter().map(|participant| {
+        (participant.id.as_str(), &participant.kind)
+    }).collect::<std::collections::HashMap<_, _>>();
+    assert_eq!(kinds["API"], &diagram_ir::SequenceParticipantKind::Boundary);
+    assert_eq!(kinds["Controller"], &diagram_ir::SequenceParticipantKind::Control);
+    assert_eq!(kinds["Order"], &diagram_ir::SequenceParticipantKind::Entity);
+    assert_eq!(kinds["Items"], &diagram_ir::SequenceParticipantKind::Collections);
+    assert_eq!(kinds["Jobs"], &diagram_ir::SequenceParticipantKind::Queue);
+    assert_eq!(kinds["Client"], &diagram_ir::SequenceParticipantKind::Participant);
+    assert!(diagram.events.iter().any(|event| matches!(
+        event,
+        diagram_ir::SequenceEvent::ParticipantCreated { participant } if participant == "worker"
+    )));
+    assert!(diagram.events.iter().any(|event| matches!(
+        event,
+        diagram_ir::SequenceEvent::Message { from, to, label, .. }
+            if from == "API" && to == "worker" && label == "worker.init()"
+    )));
+}

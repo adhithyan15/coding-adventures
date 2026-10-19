@@ -1,0 +1,19 @@
+{
+  "chapter": 442,
+  "title": "Su e giù",
+  "label": "ch:it-su-e-giu",
+  "canDo": "I can describe a route: uphill, downhill, running alongside, coming out somewhere and going round.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "IT-C442-aggirare",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 442: I can describe a route: uphill, downhill, running alongside, coming out somewhere and going round.",
+    "assesses": [
+      "IT-LEX-C442-SALITA-03",
+      "IT-LEX-C442-SALITA-04",
+      "IT-LEX-C442-SALITA-05"
+    ]
+  }
+}

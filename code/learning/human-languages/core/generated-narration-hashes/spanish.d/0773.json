@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 773,
+  "sourceHash": "fnv1a64:1703943197d7479f",
+  "lessonIds": [
+    "ES-C773-cobertura",
+    "ES-C773-adaptador",
+    "ES-C773-aplicacion",
+    "ES-C773-enlace",
+    "ES-C773-recargar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch773.txt",
+  "json": "spanish/narration/ch773.json",
+  "textHash": "fnv1a64:9c3e56ace84453e8",
+  "jsonHash": "fnv1a64:b2375993e90b19b9",
+  "findings": []
+}

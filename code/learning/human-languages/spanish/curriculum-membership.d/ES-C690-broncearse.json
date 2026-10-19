@@ -1,0 +1,11 @@
+{
+  "id": "ES-C690-broncearse",
+  "pathSegment": "ES-PATH-690-PLAYA",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ES-EXT-690-PLAYA",
+      "order": 1
+    }
+  ]
+}

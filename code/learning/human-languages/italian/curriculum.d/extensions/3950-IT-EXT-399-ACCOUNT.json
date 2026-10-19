@@ -1,0 +1,8 @@
+{
+  "id": "IT-EXT-399-ACCOUNT",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can manage an online account: the user, the password, signing up and logging in.",
+  "prerequisites": []
+}

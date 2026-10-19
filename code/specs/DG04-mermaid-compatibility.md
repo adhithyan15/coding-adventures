@@ -1040,7 +1040,8 @@ suffixes, and the native Metal-to-PNG path validates the complete family.
 ### ZenUML Partial Compatibility
 
 The native ZenUML frontend accepts the documented title, participant ordering,
-aliases, Actor and Database annotators, and asynchronous `A->B: message` forms.
+aliases, Actor, Boundary, Control, Entity, Database, Collections, Queue, and
+Starter annotators, and asynchronous `A->B: message` forms.
 It also parses nested synchronous calls, typed reply assignments, explicit
 return statements, `@return` and `@reply` annotators, creation statements, and
 if, loop, opt, parallel, and try-family scopes into shared Sequence messages,
@@ -1050,8 +1051,11 @@ typed branch events. Comments attached to messages and fragments lower to
 Sequence notes. These semantics flow through the existing layout and
 backend-neutral PaintScene pipeline, with the expanded reply-and-branch example
 covered by Metal-to-PNG validation. Mermaid 11.16.1 delegates the broader
-language to external `@zenuml/core`; additional participant annotators, assigned
-creation forms, semicolon terminators, and the full external expression grammar
+language to external `@zenuml/core`. Assigned and typed creation forms preserve
+the authored binding as the created participant, creation blocks participate in
+activation nesting, and statement semicolon terminators are accepted without
+leaking punctuation into semantic labels. Unknown custom annotators, inline
+comments, assigned-creation labels, and the full external expression grammar
 remain unsupported, so ZenUML remains at the manifest's `partial` level.
 
 ### Structural Groups

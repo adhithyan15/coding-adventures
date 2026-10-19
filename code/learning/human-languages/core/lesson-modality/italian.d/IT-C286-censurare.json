@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C286-censurare",
+    "language": "italian",
+    "chapter": 286,
+    "sequence": 16800,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8d5038a556ce5297"
+  },
+  "findings": []
+}

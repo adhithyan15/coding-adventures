@@ -1,0 +1,11 @@
+{
+  "id": "IT-C521-cavalletto",
+  "pathSegment": "IT-PATH-521-PITTURA",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "IT-EXT-521-PITTURA",
+      "order": 3
+    }
+  ]
+}

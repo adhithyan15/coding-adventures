@@ -1,0 +1,11 @@
+{
+  "id": "IT-C492-abbraccio",
+  "pathSegment": "IT-PATH-492-ABBRACCI",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "IT-EXT-492-ABBRACCI",
+      "order": 0
+    }
+  ]
+}

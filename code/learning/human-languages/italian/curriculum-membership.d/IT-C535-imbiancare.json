@@ -1,0 +1,11 @@
+{
+  "id": "IT-C535-imbiancare",
+  "pathSegment": "IT-PATH-535-ATTREZZI",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "IT-EXT-535-ATTREZZI",
+      "order": 4
+    }
+  ]
+}

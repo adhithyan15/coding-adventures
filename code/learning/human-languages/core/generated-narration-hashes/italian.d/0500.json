@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 500,
+  "sourceHash": "fnv1a64:67f2e5a5e560be97",
+  "lessonIds": [
+    "IT-C500-cucire",
+    "IT-C500-ago",
+    "IT-C500-ricamare",
+    "IT-C500-uncinetto",
+    "IT-C500-rammendare"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch500.txt",
+  "json": "italian/narration/ch500.json",
+  "textHash": "fnv1a64:9ec1ec05f87d8cd7",
+  "jsonHash": "fnv1a64:07607e4f2a8bb6cb",
+  "findings": []
+}

@@ -1,0 +1,9 @@
+{
+  "id": "IT-PATH-536-CASA",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "IT-EXT-536-CASA"
+  ],
+  "after": []
+}

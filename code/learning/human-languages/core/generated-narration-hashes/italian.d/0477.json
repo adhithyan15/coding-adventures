@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 477,
+  "sourceHash": "fnv1a64:01a5625fea443ddf",
+  "lessonIds": [
+    "IT-C477-nostalgia",
+    "IT-C477-malinconia",
+    "IT-C477-rimpiangere",
+    "IT-C477-rimpianto",
+    "IT-C477-rimorso"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch477.txt",
+  "json": "italian/narration/ch477.json",
+  "textHash": "fnv1a64:15563fa46177de00",
+  "jsonHash": "fnv1a64:ab62dbc3fead9023",
+  "findings": []
+}

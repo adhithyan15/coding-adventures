@@ -1,0 +1,20 @@
+{
+  "language": "italian",
+  "chapter": 378,
+  "sourceHash": "fnv1a64:9edc061e2c2bd0c1",
+  "lessonIds": [
+    "IT-C378-scopo",
+    "IT-C378-intenzione",
+    "IT-C378-programmare",
+    "IT-C378-proposito",
+    "IT-C378-meta",
+    "IT-R378-ripasso-371-378"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "italian/narration/ch378.txt",
+  "json": "italian/narration/ch378.json",
+  "textHash": "fnv1a64:140616f34c4506d3",
+  "jsonHash": "fnv1a64:68bef4de8f4e95cb",
+  "findings": []
+}

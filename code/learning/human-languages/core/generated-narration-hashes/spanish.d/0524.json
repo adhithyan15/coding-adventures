@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 524,
+  "sourceHash": "fnv1a64:068e9f838923a9ae",
+  "lessonIds": [
+    "ES-C524-incendio",
+    "ES-C524-incendiar",
+    "ES-C524-arder",
+    "ES-C524-alarma",
+    "ES-C524-evacuar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch524.txt",
+  "json": "spanish/narration/ch524.json",
+  "textHash": "fnv1a64:5a1e9aed45cde5fb",
+  "jsonHash": "fnv1a64:96e9bcc708c7b975",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 377,
+  "title": "Se ho tempo",
+  "label": "ch:it-se-ho-tempo",
+  "canDo": "I can say whether I am free or busy, talk about a commitment and say I am flexible.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "IT-C377-flessibile",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 377: I can say whether I am free or busy, talk about a commitment and say I am flexible.",
+    "assesses": [
+      "IT-LEX-C377-IMPEGNO-03",
+      "IT-LEX-C377-IMPEGNO-04",
+      "IT-LEX-C377-IMPEGNO-05"
+    ]
+  }
+}

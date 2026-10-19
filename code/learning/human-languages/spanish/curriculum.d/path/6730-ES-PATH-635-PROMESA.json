@@ -1,0 +1,9 @@
+{
+  "id": "ES-PATH-635-PROMESA",
+  "spine_node": "SPINE-EXPRESS-CONDITION",
+  "before": [],
+  "inline": [
+    "ES-EXT-635-PROMESA"
+  ],
+  "after": []
+}

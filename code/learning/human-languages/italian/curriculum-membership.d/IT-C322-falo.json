@@ -1,0 +1,11 @@
+{
+  "id": "IT-C322-falo",
+  "pathSegment": "IT-PATH-322-FUOCHI",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "IT-EXT-322-FUOCHI",
+      "order": 2
+    }
+  ]
+}

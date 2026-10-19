@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C519-patrulla",
+    "language": "spanish",
+    "chapter": 519,
+    "sequence": 15560,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f56b5846978afb1e"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 669,
+  "sourceHash": "fnv1a64:c3b9ae8751df62b0",
+  "lessonIds": [
+    "ES-C669-plano",
+    "ES-C669-orientarse",
+    "ES-C669-ubicacion",
+    "ES-C669-senalar",
+    "ES-C669-situado"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch669.txt",
+  "json": "spanish/narration/ch669.json",
+  "textHash": "fnv1a64:897aba42443925ba",
+  "jsonHash": "fnv1a64:43bcf2ebd967f1d3",
+  "findings": []
+}

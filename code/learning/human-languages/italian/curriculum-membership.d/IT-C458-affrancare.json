@@ -1,0 +1,11 @@
+{
+  "id": "IT-C458-affrancare",
+  "pathSegment": "IT-PATH-458-POSTA",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "IT-EXT-458-POSTA",
+      "order": 3
+    }
+  ]
+}

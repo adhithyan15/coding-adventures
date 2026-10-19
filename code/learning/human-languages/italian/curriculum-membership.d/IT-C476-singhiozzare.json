@@ -1,0 +1,11 @@
+{
+  "id": "IT-C476-singhiozzare",
+  "pathSegment": "IT-PATH-476-DELUSIONE",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "IT-EXT-476-DELUSIONE",
+      "order": 4
+    }
+  ]
+}

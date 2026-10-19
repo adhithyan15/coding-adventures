@@ -1,0 +1,11 @@
+{
+  "id": "IT-C428-allacciare",
+  "pathSegment": "IT-PATH-428-VOLO",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "IT-EXT-428-VOLO",
+      "order": 3
+    }
+  ]
+}

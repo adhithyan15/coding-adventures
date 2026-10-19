@@ -1,0 +1,11 @@
+{
+  "id": "IT-R354-ripasso-347-354",
+  "pathSegment": "IT-PATH-354-OSTACOLO",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "IT-EXT-354-OSTACOLO",
+      "order": 5
+    }
+  ]
+}

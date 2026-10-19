@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 602,
+  "sourceHash": "fnv1a64:c4ef7b83061e8474",
+  "lessonIds": [
+    "ES-C602-voto",
+    "ES-C602-elecciones",
+    "ES-C602-candidato",
+    "ES-C602-votante",
+    "ES-C602-democracia"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch602.txt",
+  "json": "spanish/narration/ch602.json",
+  "textHash": "fnv1a64:259a99f11b2a5069",
+  "jsonHash": "fnv1a64:8a868f3b6a2fa53b",
+  "findings": []
+}

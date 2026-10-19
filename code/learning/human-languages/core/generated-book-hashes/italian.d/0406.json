@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 406,
+  "sourceHash": "fnv1a64:2c9b6e495e3a0ca1",
+  "lessonIds": [
+    "IT-C406-accelerare",
+    "IT-C406-freno",
+    "IT-C406-frenata",
+    "IT-C406-sterzare",
+    "IT-C406-sbandare"
+  ],
+  "tex": "italian/book/chapters/ch406-alla-guida.tex"
+}

@@ -1,0 +1,11 @@
+{
+  "id": "ES-C662-modificar",
+  "pathSegment": "ES-PATH-662-RESERVA",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ES-EXT-662-RESERVA",
+      "order": 1
+    }
+  ]
+}

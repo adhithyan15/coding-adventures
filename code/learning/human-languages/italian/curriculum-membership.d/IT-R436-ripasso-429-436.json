@@ -1,0 +1,11 @@
+{
+  "id": "IT-R436-ripasso-429-436",
+  "pathSegment": "IT-PATH-436-LUCE",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "IT-EXT-436-LUCE",
+      "order": 5
+    }
+  ]
+}

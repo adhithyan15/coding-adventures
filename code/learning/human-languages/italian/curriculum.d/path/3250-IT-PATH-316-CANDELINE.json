@@ -1,0 +1,9 @@
+{
+  "id": "IT-PATH-316-CANDELINE",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "IT-EXT-316-CANDELINE"
+  ],
+  "after": []
+}

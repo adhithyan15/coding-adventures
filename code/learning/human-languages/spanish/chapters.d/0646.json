@@ -1,0 +1,19 @@
+{
+  "chapter": 646,
+  "title": "Llenar el depósito",
+  "label": "ch:es-llenar-el-deposito",
+  "canDo": "I can fill up at a petrol pump and talk about the tank, fuel and kilometres.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "ES-C646-kilometro",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 646: I can fill up at a petrol pump and talk about the tank, fuel and kilometres.",
+    "assesses": [
+      "ES-LEX-C646-GASOLINA-03",
+      "ES-LEX-C646-GASOLINA-04",
+      "ES-LEX-C646-GASOLINA-05"
+    ]
+  }
+}

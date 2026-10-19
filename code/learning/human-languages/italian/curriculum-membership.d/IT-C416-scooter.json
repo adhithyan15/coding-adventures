@@ -1,0 +1,11 @@
+{
+  "id": "IT-C416-scooter",
+  "pathSegment": "IT-PATH-416-MOTORINO",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "IT-EXT-416-MOTORINO",
+      "order": 1
+    }
+  ]
+}

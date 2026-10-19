@@ -1,0 +1,11 @@
+{
+  "id": "IT-C490-incubo",
+  "pathSegment": "IT-PATH-490-SONNO",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "IT-EXT-490-SONNO",
+      "order": 2
+    }
+  ]
+}

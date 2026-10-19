@@ -1,0 +1,11 @@
+{
+  "id": "IT-C292-rapinatore",
+  "pathSegment": "IT-PATH-292-RAPINA",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "IT-EXT-292-RAPINA",
+      "order": 2
+    }
+  ]
+}

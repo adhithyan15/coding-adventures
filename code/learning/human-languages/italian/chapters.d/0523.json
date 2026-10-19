@@ -1,0 +1,19 @@
+{
+  "chapter": 523,
+  "title": "Una mostra",
+  "label": "ch:it-una-mostra",
+  "canDo": "I can talk about visiting an exhibition.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "IT-C523-restaurare",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 523: I can talk about visiting an exhibition.",
+    "assesses": [
+      "IT-LEX-C523-MOSTRA-03",
+      "IT-LEX-C523-MOSTRA-04",
+      "IT-LEX-C523-MOSTRA-05"
+    ]
+  }
+}

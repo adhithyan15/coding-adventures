@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C772-soplar",
+    "language": "spanish",
+    "chapter": 772,
+    "sequence": 28610,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7b389e3fc2b344ea"
+  },
+  "findings": []
+}

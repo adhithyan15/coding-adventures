@@ -1,0 +1,11 @@
+{
+  "id": "ES-C547-comprometerse",
+  "pathSegment": "ES-PATH-547-NOVIOS",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ES-EXT-547-NOVIOS",
+      "order": 2
+    }
+  ]
+}

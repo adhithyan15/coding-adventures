@@ -1,0 +1,11 @@
+{
+  "id": "IT-C444-numero-civico",
+  "pathSegment": "IT-PATH-444-INDIRIZZO",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "IT-EXT-444-INDIRIZZO",
+      "order": 3
+    }
+  ]
+}

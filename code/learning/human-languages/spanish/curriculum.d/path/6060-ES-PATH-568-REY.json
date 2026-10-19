@@ -1,0 +1,9 @@
+{
+  "id": "ES-PATH-568-REY",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "ES-EXT-568-REY"
+  ],
+  "after": []
+}

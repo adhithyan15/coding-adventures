@@ -1,0 +1,11 @@
+{
+  "id": "ES-C733-constipado",
+  "pathSegment": "ES-PATH-733-GRIPE",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ES-EXT-733-GRIPE",
+      "order": 2
+    }
+  ]
+}

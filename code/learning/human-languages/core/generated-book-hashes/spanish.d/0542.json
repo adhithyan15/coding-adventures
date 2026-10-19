@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 542,
+  "sourceHash": "fnv1a64:ec7d3e2ade31598e",
+  "lessonIds": [
+    "ES-C542-comenzar",
+    "ES-C542-iniciar",
+    "ES-C542-comienzo",
+    "ES-C542-arranque",
+    "ES-C542-finalizar"
+  ],
+  "tex": "spanish/book/chapters/ch542-el-comienzo.tex"
+}

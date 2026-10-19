@@ -1,0 +1,11 @@
+{
+  "id": "IT-C490-sbadigliare",
+  "pathSegment": "IT-PATH-490-SONNO",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "IT-EXT-490-SONNO",
+      "order": 3
+    }
+  ]
+}

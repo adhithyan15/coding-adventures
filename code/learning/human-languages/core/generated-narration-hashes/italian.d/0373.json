@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 373,
+  "sourceHash": "fnv1a64:619fd8ef3d4e9e55",
+  "lessonIds": [
+    "IT-C373-purche",
+    "IT-C373-qualora",
+    "IT-C373-altrimenti",
+    "IT-C373-senno",
+    "IT-C373-eventuale"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch373.txt",
+  "json": "italian/narration/ch373.json",
+  "textHash": "fnv1a64:4fdeb7e096df59ac",
+  "jsonHash": "fnv1a64:78d7d0799dc7d6d4",
+  "findings": []
+}

@@ -1,0 +1,8 @@
+{
+  "id": "IT-EXT-510-SQUADRA",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can name the players and their roles in a team.",
+  "prerequisites": []
+}

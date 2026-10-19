@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 513,
+  "sourceHash": "fnv1a64:0df6cd5a297f727a",
+  "lessonIds": [
+    "ES-C513-redaccion",
+    "ES-C513-titular",
+    "ES-C513-prensa",
+    "ES-C513-corresponsal",
+    "ES-C513-publicar"
+  ],
+  "tex": "spanish/book/chapters/ch513-en-el-periodico.tex"
+}

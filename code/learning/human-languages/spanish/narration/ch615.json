@@ -1,0 +1,858 @@
+{
+  "version": 1,
+  "language": "spanish",
+  "chapter": 615,
+  "title": "Planes",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:001aada10960b828",
+  "lessons": [
+    {
+      "id": "ES-C615-programar",
+      "sequence": 20490,
+      "title": "programar — to schedule, to plan; to program",
+      "headword": "programar",
+      "romanization": "programar",
+      "gloss": "to schedule, to plan; to program",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:71b6c363c717c7f3",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Spanish for the guarantee, then the Spanish for the protection."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: programar",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "programar — \"to schedule, to plan; to program\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Programamos la reunión para el martes. We scheduled the meeting for Tuesday."
+            },
+            {
+              "kind": "speech",
+              "text": "Also to write a computer program."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "programar is built on programa, from Late Latin programma, taken from Greek programma 'a public notice', from graphein 'to write' (EtymDB)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "programar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *programar*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "programar, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *programar*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with programar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *programar*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Spanish for the guarantee, then the Spanish for the protection, then say programar again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Spanish for the guarantee, then the Spanish for the protection, then say *programar* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does programar mean? (\"To schedule, to plan; to program\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C615-planificar",
+      "sequence": 20500,
+      "title": "planificar — to plan",
+      "headword": "planificar",
+      "romanization": "planificar",
+      "gloss": "to plan",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:18970762efb6f961",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Spanish for the protection, then the Spanish for to schedule."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: planificar",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "planificar — \"to plan\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Planificamos el viaje con tiempo. We planned the trip in good time."
+            },
+            {
+              "kind": "speech",
+              "text": "More formal than planear. Spelling: planifiqué."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "planificar is built on plan with the ending -ificar; plan rests on plano, a learned borrowing from Latin planus 'flat' (Lewis & Short)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "planificar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *planificar*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "planificar, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *planificar*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with planificar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *planificar*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Spanish for the protection, then the Spanish for to schedule, then say planificar again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Spanish for the protection, then the Spanish for to schedule, then say *planificar* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does planificar mean? (\"To plan\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C615-proposito",
+      "sequence": 20510,
+      "title": "el propósito — the purpose, the aim; the resolution",
+      "headword": "el propósito",
+      "romanization": "el propósito",
+      "gloss": "the purpose, the aim; the resolution",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2a701e63ef4f7553",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Spanish for to schedule, then the Spanish for to plan."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: el propósito",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "el propósito — \"the purpose, the aim; the resolution\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Mi propósito es aprender inglés. My aim is to learn English."
+            },
+            {
+              "kind": "speech",
+              "text": "A propósito — on purpose; by the way. Los propósitos de Año Nuevo — New Year resolutions."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "propósito is a learned borrowing from Latin propositum 'that which is proposed, an aim', built on proponere 'to put forward' (EtymDB)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el propósito",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el propósito*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el propósito, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el propósito*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with el propósito",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *el propósito*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Spanish for to schedule, then the Spanish for to plan, then say el propósito again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Spanish for to schedule, then the Spanish for to plan, then say *el propósito* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does el propósito mean? (\"The purpose, the aim; the resolution\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C615-intencion",
+      "sequence": 20520,
+      "title": "la intención — the intention",
+      "headword": "la intención",
+      "romanization": "la intención",
+      "gloss": "the intention",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1e54a8c819a8146d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Spanish for to plan, then the Spanish for the purpose."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: la intención",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la intención — \"the intention\"."
+            },
+            {
+              "kind": "speech",
+              "text": "No tengo intención de mudarme. I have no intention of moving house."
+            },
+            {
+              "kind": "speech",
+              "text": "Tener la intención de + infinitive."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "intención is a learned borrowing from Latin intentio 'a stretching, a purpose', built on intendere and tendere 'to stretch' (EtymDB)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la intención",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la intención*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la intención, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la intención*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with la intención",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *la intención*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Spanish for to plan, then the Spanish for the purpose, then say la intención again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Spanish for to plan, then the Spanish for the purpose, then say *la intención* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does la intención mean? (\"The intention\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C615-proponerse",
+      "sequence": 20530,
+      "title": "proponerse — to set out to, to resolve",
+      "headword": "proponerse",
+      "romanization": "proponerse",
+      "gloss": "to set out to, to resolve",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a8d9d88c23c4939d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Spanish for the purpose, then the Spanish for the intention."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: proponerse",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "proponerse — \"to set out to, to resolve\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Me propongo correr cada mañana. I have resolved to run every morning."
+            },
+            {
+              "kind": "speech",
+              "text": "Proponerse + infinitive is to make it your goal."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "proponerse is built on proponer, a learned borrowing from Latin proponere 'to put forward' and rebuilt on poner (EtymDB)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "proponerse",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *proponerse*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "proponerse, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *proponerse*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with proponerse",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *proponerse*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Spanish for the purpose, then the Spanish for the intention, then say proponerse again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Spanish for the purpose, then the Spanish for the intention, then say *proponerse* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does proponerse mean? (\"To set out to, to resolve\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-R615-repaso-608-615",
+      "sequence": 20540,
+      "title": "Repaso de los capítulos 608–615",
+      "headword": "(dialogue)",
+      "romanization": "(dialogue)",
+      "gloss": "a review of chapters 608-615",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:165780b4ebe26c5d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Spanish for to increase and to decrease."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to increase, to decrease, the increase, the growth, the trend",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to increase, to decrease, the increase, the growth, the trend]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the progress, to perfect, the challenge, to face, to persevere",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the progress, to perfect, the challenge, to face, to persevere]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the tolerance, to tolerate, the integration, the immigration, the living together",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the tolerance, to tolerate, the integration, the immigration, the living together]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the condition, as long as, unless, provided that, in case",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the condition, as long as, unless, provided that, in case]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "except if, on condition that, otherwise, in that case, in any case",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: except if, on condition that, otherwise, in that case, in any case]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to require, the requirement, the uncertainty, likely, the probability",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to require, the requirement, the uncertainty, likely, the probability]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to prevent, to risk, to guarantee, the guarantee, the protection",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to prevent, to risk, to guarantee, the guarantee, the protection]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to schedule, to plan, the purpose, the intention, to set out to",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to schedule, to plan, the purpose, the intention, to set out to]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "To increase? (aumentar.) To decrease? (disminuir.) The increase? (el aumento.) The growth? (el crecimiento.) The trend? (la tendencia.) The progress? (el progreso.) To perfect? (perfeccionar.) The challenge? (el desafío.) To face? (afrontar.) To persevere? (perseverar.) The tolerance? (la tolerancia.) To tolerate? (tolerar.) The integration? (la integración.) The immigration? (la inmigración.) The living together? (la convivencia.) The condition? (la condición.) As long as? (siempre que.) Unless? (a menos que.) Provided that? (con tal de que.) In case? (en caso de que.) Except if? (a no ser que.) On condition that? (a condición de que.) Otherwise? (de lo contrario.) In that case? (en ese caso.) In any case? (en todo caso.) To require? (requerir.) The requirement? (el requisito.) The uncertainty? (la incertidumbre.) Likely? (probable.) The probability? (la probabilidad.) To prevent? (prevenir.) To risk? (arriesgar.) To guarantee? (garantizar.) The guarantee? (la garantía.) The protection? (la protección.) To schedule? (programar.) To plan? (planificar.) The purpose? (el propósito.) The intention? (la intención.) To set out to? (proponerse.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

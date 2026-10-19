@@ -1,0 +1,11 @@
+{
+  "id": "ES-C732-enfermedad",
+  "pathSegment": "ES-PATH-732-SALUD",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ES-EXT-732-SALUD",
+      "order": 2
+    }
+  ]
+}

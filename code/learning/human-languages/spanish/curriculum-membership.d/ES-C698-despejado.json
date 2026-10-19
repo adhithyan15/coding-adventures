@@ -1,0 +1,11 @@
+{
+  "id": "ES-C698-despejado",
+  "pathSegment": "ES-PATH-698-CIELO",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ES-EXT-698-CIELO",
+      "order": 1
+    }
+  ]
+}

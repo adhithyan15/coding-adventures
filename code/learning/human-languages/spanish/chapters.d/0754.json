@@ -1,0 +1,19 @@
+{
+  "chapter": 754,
+  "title": "Aficiones tranquilas",
+  "label": "ch:es-aficiones-tranquilas",
+  "canDo": "I can talk about quiet hobbies: fishing, gardening, sewing, knitting and pottery.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "ES-C754-coser",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 754: I can talk about quiet hobbies: fishing, gardening, sewing, knitting and pottery.",
+    "assesses": [
+      "ES-LEX-C754-PESCA-03",
+      "ES-LEX-C754-PESCA-04",
+      "ES-LEX-C754-PESCA-05"
+    ]
+  }
+}

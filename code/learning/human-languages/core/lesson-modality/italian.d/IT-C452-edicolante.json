@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C452-edicolante",
+    "language": "italian",
+    "chapter": 452,
+    "sequence": 25530,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c4a0bdd525814c42"
+  },
+  "findings": []
+}

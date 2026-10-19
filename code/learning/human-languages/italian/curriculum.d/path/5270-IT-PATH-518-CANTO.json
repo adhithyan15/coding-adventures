@@ -1,0 +1,9 @@
+{
+  "id": "IT-PATH-518-CANTO",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "IT-EXT-518-CANTO"
+  ],
+  "after": []
+}

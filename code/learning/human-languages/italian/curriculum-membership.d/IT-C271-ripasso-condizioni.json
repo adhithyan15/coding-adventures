@@ -1,0 +1,11 @@
+{
+  "id": "IT-C271-ripasso-condizioni",
+  "pathSegment": "IT-PATH-271-SE",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "IT-EXT-271-SE",
+      "order": 3
+    }
+  ]
+}

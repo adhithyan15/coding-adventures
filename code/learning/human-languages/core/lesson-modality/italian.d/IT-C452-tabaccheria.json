@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C452-tabaccheria",
+    "language": "italian",
+    "chapter": 452,
+    "sequence": 25500,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:401e2f53c9cd3b4f"
+  },
+  "findings": []
+}

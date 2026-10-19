@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C464-brucare",
+    "language": "italian",
+    "chapter": 464,
+    "sequence": 26160,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:afe73260a2d6e5a5"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 703,
+  "title": "Al caer la tarde",
+  "label": "ch:es-al-caer-la-tarde",
+  "canDo": "I can describe the end of a day out: sunset, nightfall, the horizon and a rainbow.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "ES-R703-repaso-problemas-de-viaje",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 703: I can describe the end of a day out: sunset, nightfall, the horizon and a rainbow.",
+    "assesses": [
+      "ES-LEX-C703-ANOCHECER-03",
+      "ES-LEX-C703-ANOCHECER-04",
+      "ES-LEX-C703-ANOCHECER-05"
+    ]
+  }
+}

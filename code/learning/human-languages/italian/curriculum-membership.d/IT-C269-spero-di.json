@@ -1,0 +1,11 @@
+{
+  "id": "IT-C269-spero-di",
+  "pathSegment": "IT-PATH-269-SENTIMENTI",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "IT-EXT-269-SENTIMENTI",
+      "order": 1
+    }
+  ]
+}

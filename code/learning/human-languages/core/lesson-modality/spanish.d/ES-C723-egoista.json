@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C723-egoista",
+    "language": "spanish",
+    "chapter": 723,
+    "sequence": 26080,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2128276ad1b7515d"
+  },
+  "findings": []
+}

@@ -1,0 +1,8 @@
+{
+  "id": "IT-EXT-304-TERREMOTO",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can talk about an earthquake: the tremor, the rubble, the people who had to leave and the evacuation.",
+  "prerequisites": []
+}

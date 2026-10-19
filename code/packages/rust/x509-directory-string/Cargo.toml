@@ -1,0 +1,9 @@
+[package]
+name = "x509-directory-string"
+version = "0.1.0"
+edition = "2021"
+description = "Bounded RFC 5280 DirectoryString decoding and scalar comparison"
+
+[dependencies]
+der-asn1 = { path = "../der-asn1" }
+der-tlv = { path = "../der-tlv" }

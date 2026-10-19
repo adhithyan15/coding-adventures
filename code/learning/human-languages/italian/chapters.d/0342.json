@@ -1,0 +1,19 @@
+{
+  "chapter": 342,
+  "title": "Trovare un accordo",
+  "label": "ch:it-trovare-un-accordo",
+  "canDo": "I can admit someone is right, agree with them, give way and reach a compromise.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "IT-C342-cedere",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 342: I can admit someone is right, agree with them, give way and reach a compromise.",
+    "assesses": [
+      "IT-LEX-C342-COMPROMESSO-03",
+      "IT-LEX-C342-COMPROMESSO-04",
+      "IT-LEX-C342-COMPROMESSO-05"
+    ]
+  }
+}

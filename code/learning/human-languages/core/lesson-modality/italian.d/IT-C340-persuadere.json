@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C340-persuadere",
+    "language": "italian",
+    "chapter": 340,
+    "sequence": 19690,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a1ea3f2719b220c7"
+  },
+  "findings": []
+}

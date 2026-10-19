@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 295,
+  "sourceHash": "fnv1a64:49b8832d6ce251ec",
+  "lessonIds": [
+    "IT-C295-indagare",
+    "IT-C295-indagine",
+    "IT-C295-ispettore",
+    "IT-C295-indizio",
+    "IT-C295-impronta"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch295.txt",
+  "json": "italian/narration/ch295.json",
+  "textHash": "fnv1a64:31eacbdf92565562",
+  "jsonHash": "fnv1a64:be169b1c9f2669db",
+  "findings": []
+}

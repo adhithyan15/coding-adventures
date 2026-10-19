@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 529,
+  "sourceHash": "fnv1a64:da59c0297eff9a9f",
+  "lessonIds": [
+    "ES-C529-explosion",
+    "ES-C529-explotar",
+    "ES-C529-estallar",
+    "ES-C529-escombros",
+    "ES-C529-destruir"
+  ],
+  "tex": "spanish/book/chapters/ch529-la-explosion.tex"
+}

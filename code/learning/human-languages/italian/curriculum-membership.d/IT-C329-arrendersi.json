@@ -1,0 +1,11 @@
+{
+  "id": "IT-C329-arrendersi",
+  "pathSegment": "IT-PATH-329-RIVOLTA",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "IT-EXT-329-RIVOLTA",
+      "order": 3
+    }
+  ]
+}

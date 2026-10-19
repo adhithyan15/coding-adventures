@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C391-querela",
+    "language": "italian",
+    "chapter": 391,
+    "sequence": 22290,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:fec72f6c71a4e457"
+  },
+  "findings": []
+}

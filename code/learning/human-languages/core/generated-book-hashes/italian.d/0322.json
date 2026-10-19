@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 322,
+  "sourceHash": "fnv1a64:764fa6103c194090",
+  "lessonIds": [
+    "IT-C322-fuochi-d-artificio",
+    "IT-C322-botto",
+    "IT-C322-falo",
+    "IT-C322-lanterna",
+    "IT-C322-danzare"
+  ],
+  "tex": "italian/book/chapters/ch322-fuochi-e-falo.tex"
+}

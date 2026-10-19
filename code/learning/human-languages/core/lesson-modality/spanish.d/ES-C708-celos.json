@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C708-celos",
+    "language": "spanish",
+    "chapter": 708,
+    "sequence": 25300,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5ef411483158bc89"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "IT-C282-titolo",
+  "pathSegment": "IT-PATH-282-CRONACA",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "IT-EXT-282-CRONACA",
+      "order": 3
+    }
+  ]
+}

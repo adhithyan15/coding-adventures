@@ -1,0 +1,11 @@
+{
+  "id": "ES-C513-publicar",
+  "pathSegment": "ES-PATH-513-PRENSA",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "ES-EXT-513-PRENSA",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "IT-C375-stabilire",
+  "pathSegment": "IT-PATH-375-PROGRAMMA",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "IT-EXT-375-PROGRAMMA",
+      "order": 4
+    }
+  ]
+}

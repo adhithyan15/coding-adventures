@@ -1,0 +1,11 @@
+{
+  "id": "IT-C440-indicazione",
+  "pathSegment": "IT-PATH-440-INDICAZIONI",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "IT-EXT-440-INDICAZIONI",
+      "order": 1
+    }
+  ]
+}

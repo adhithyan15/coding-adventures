@@ -1,0 +1,11 @@
+{
+  "id": "IT-C347-giudicare",
+  "pathSegment": "IT-PATH-347-GIUDIZIO",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "IT-EXT-347-GIUDIZIO",
+      "order": 2
+    }
+  ]
+}

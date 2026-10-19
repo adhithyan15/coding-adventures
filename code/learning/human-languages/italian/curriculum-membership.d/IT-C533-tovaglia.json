@@ -1,0 +1,11 @@
+{
+  "id": "IT-C533-tovaglia",
+  "pathSegment": "IT-PATH-533-TAVOLA",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "IT-EXT-533-TAVOLA",
+      "order": 2
+    }
+  ]
+}

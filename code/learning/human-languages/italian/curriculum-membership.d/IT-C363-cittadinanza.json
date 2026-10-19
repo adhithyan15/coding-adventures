@@ -1,0 +1,11 @@
+{
+  "id": "IT-C363-cittadinanza",
+  "pathSegment": "IT-PATH-363-CITTADINO",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "IT-EXT-363-CITTADINO",
+      "order": 1
+    }
+  ]
+}

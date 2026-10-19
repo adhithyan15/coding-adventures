@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C733-resfriado",
+    "language": "spanish",
+    "chapter": 733,
+    "sequence": 26590,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f2e2e76055c36c59"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C339-convinto",
+    "language": "italian",
+    "chapter": 339,
+    "sequence": 19620,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:bc525d4dddf87677"
+  },
+  "findings": []
+}

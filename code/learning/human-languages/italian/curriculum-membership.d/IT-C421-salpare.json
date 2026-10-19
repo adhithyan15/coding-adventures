@@ -1,0 +1,11 @@
+{
+  "id": "IT-C421-salpare",
+  "pathSegment": "IT-PATH-421-PORTO",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "IT-EXT-421-PORTO",
+      "order": 4
+    }
+  ]
+}

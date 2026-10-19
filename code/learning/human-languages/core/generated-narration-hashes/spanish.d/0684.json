@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 684,
+  "sourceHash": "fnv1a64:abc2823e995e8350",
+  "lessonIds": [
+    "ES-C684-forastero",
+    "ES-C684-urbano",
+    "ES-C684-rural",
+    "ES-C684-residir",
+    "ES-C684-vecindario"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch684.txt",
+  "json": "spanish/narration/ch684.json",
+  "textHash": "fnv1a64:0c6b85b76ff84f20",
+  "jsonHash": "fnv1a64:bec997110c1251df",
+  "findings": []
+}

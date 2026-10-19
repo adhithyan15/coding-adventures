@@ -1,0 +1,11 @@
+{
+  "id": "ES-C558-festejar",
+  "pathSegment": "ES-PATH-558-HOMENAJE",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ES-EXT-558-HOMENAJE",
+      "order": 1
+    }
+  ]
+}

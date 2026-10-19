@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 520,
+  "sourceHash": "fnv1a64:d449d0134f263701",
+  "lessonIds": [
+    "ES-C520-delito",
+    "ES-C520-crimen",
+    "ES-C520-delincuente",
+    "ES-C520-victima",
+    "ES-C520-investigacion"
+  ],
+  "tex": "spanish/book/chapters/ch520-el-delito.tex"
+}

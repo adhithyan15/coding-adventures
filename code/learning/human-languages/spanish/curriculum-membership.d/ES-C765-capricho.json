@@ -1,0 +1,11 @@
+{
+  "id": "ES-C765-capricho",
+  "pathSegment": "ES-PATH-765-ILUSION",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ES-EXT-765-ILUSION",
+      "order": 2
+    }
+  ]
+}

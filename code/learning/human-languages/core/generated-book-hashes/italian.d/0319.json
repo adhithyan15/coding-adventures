@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 319,
+  "sourceHash": "fnv1a64:c250641567790f8a",
+  "lessonIds": [
+    "IT-C319-carnevale",
+    "IT-C319-maschera",
+    "IT-C319-coriandoli",
+    "IT-C319-mascherarsi",
+    "IT-C319-sfilare"
+  ],
+  "tex": "italian/book/chapters/ch319-il-carnevale.tex"
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C668-bascula",
+    "language": "spanish",
+    "chapter": 668,
+    "sequence": 23250,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7b4234f95a1b7b24"
+  },
+  "findings": []
+}

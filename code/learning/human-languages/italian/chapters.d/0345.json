@@ -1,0 +1,19 @@
+{
+  "chapter": 345,
+  "title": "Dire la propria",
+  "label": "ch:it-dire-la-propria",
+  "canDo": "I can express an idea, state something firmly and say whether a statement or a person is reliable.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "IT-C345-affidabile",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 345: I can express an idea, state something firmly and say whether a statement or a person is reliable.",
+    "assesses": [
+      "IT-LEX-C345-AFFERMARE-03",
+      "IT-LEX-C345-AFFERMARE-04",
+      "IT-LEX-C345-AFFERMARE-05"
+    ]
+  }
+}

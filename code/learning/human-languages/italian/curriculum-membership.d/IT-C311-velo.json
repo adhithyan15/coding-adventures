@@ -1,0 +1,11 @@
+{
+  "id": "IT-C311-velo",
+  "pathSegment": "IT-PATH-311-SPOSARSI",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "IT-EXT-311-SPOSARSI",
+      "order": 2
+    }
+  ]
+}

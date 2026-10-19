@@ -1,0 +1,19 @@
+{
+  "chapter": 577,
+  "title": "Defender una idea",
+  "label": "ch:es-defender-una-idea",
+  "canDo": "I can give reasons for an idea, answer an objection and say that it is reasonable.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "ES-C577-logico",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 577: I can give reasons for an idea, answer an objection and say that it is reasonable.",
+    "assesses": [
+      "ES-LEX-C577-DEFIENDE-03",
+      "ES-LEX-C577-DEFIENDE-04",
+      "ES-LEX-C577-DEFIENDE-05"
+    ]
+  }
+}

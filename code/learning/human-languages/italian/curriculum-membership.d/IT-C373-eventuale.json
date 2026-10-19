@@ -1,0 +1,11 @@
+{
+  "id": "IT-C373-eventuale",
+  "pathSegment": "IT-PATH-373-PURCHE",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "IT-EXT-373-PURCHE",
+      "order": 4
+    }
+  ]
+}

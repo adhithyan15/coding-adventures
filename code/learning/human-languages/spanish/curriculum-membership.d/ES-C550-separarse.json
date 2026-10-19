@@ -1,0 +1,11 @@
+{
+  "id": "ES-C550-separarse",
+  "pathSegment": "ES-PATH-550-DIVORCIO",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ES-EXT-550-DIVORCIO",
+      "order": 1
+    }
+  ]
+}

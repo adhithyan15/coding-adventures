@@ -1,0 +1,11 @@
+{
+  "id": "IT-C333-lessare",
+  "pathSegment": "IT-PATH-333-PENTOLA",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "IT-EXT-333-PENTOLA",
+      "order": 1
+    }
+  ]
+}

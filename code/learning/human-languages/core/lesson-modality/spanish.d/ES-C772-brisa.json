@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C772-brisa",
+    "language": "spanish",
+    "chapter": 772,
+    "sequence": 28600,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0380f652564d08ca"
+  },
+  "findings": []
+}

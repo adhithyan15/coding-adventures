@@ -1,0 +1,8 @@
+{
+  "id": "ES-EXT-574-ENTERARSE",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say how I found out about an incident: I got a notification or saw it on the TV news.",
+  "prerequisites": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 392,
+  "title": "In tribunale",
+  "label": "ch:it-in-tribunale",
+  "canDo": "I can describe a trial: the accused, the defence, the verdict, the conviction and the sentence.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "IT-C392-pena",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 392: I can describe a trial: the accused, the defence, the verdict, the conviction and the sentence.",
+    "assesses": [
+      "IT-LEX-C392-DIFESA-03",
+      "IT-LEX-C392-DIFESA-04",
+      "IT-LEX-C392-DIFESA-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "IT-C310-convivere",
+  "pathSegment": "IT-PATH-310-TRASFERIRSI",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "IT-EXT-310-TRASFERIRSI",
+      "order": 0
+    }
+  ]
+}

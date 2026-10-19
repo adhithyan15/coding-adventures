@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 539,
+  "sourceHash": "fnv1a64:c18717cc20a547bb",
+  "lessonIds": [
+    "ES-C539-semestre",
+    "ES-C539-quincena",
+    "ES-C539-lustro",
+    "ES-C539-milenio",
+    "ES-C539-periodo"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch539.txt",
+  "json": "spanish/narration/ch539.json",
+  "textHash": "fnv1a64:40c53779ad0758ee",
+  "jsonHash": "fnv1a64:977efae48779ccd5",
+  "findings": []
+}

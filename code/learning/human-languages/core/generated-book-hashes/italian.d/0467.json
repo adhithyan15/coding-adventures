@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 467,
+  "sourceHash": "fnv1a64:1f93622ac4667c86",
+  "lessonIds": [
+    "IT-C467-lampo",
+    "IT-C467-tuonare",
+    "IT-C467-lampeggiare",
+    "IT-C467-grandine",
+    "IT-C467-grandinare"
+  ],
+  "tex": "italian/book/chapters/ch467-il-temporale.tex"
+}

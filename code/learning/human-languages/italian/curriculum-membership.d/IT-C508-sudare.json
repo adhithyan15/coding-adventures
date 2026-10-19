@@ -1,0 +1,11 @@
+{
+  "id": "IT-C508-sudare",
+  "pathSegment": "IT-PATH-508-PALESTRA",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "IT-EXT-508-PALESTRA",
+      "order": 4
+    }
+  ]
+}

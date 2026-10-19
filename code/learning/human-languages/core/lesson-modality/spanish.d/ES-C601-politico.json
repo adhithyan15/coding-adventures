@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C601-politico",
+    "language": "spanish",
+    "chapter": 601,
+    "sequence": 19800,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:dd2601dfcc6f3b9e"
+  },
+  "findings": []
+}

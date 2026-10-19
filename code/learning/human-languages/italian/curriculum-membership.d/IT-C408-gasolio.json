@@ -1,0 +1,11 @@
+{
+  "id": "IT-C408-gasolio",
+  "pathSegment": "IT-PATH-408-BENZINAIO",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "IT-EXT-408-BENZINAIO",
+      "order": 1
+    }
+  ]
+}

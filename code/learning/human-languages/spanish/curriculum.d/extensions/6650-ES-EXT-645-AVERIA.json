@@ -1,0 +1,8 @@
+{
+  "id": "ES-EXT-645-AVERIA",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can explain that the car has broken down or has a flat tyre and ask for a mechanic.",
+  "prerequisites": []
+}

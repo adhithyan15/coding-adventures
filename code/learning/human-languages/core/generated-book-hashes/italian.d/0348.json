@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 348,
+  "sourceHash": "fnv1a64:be79521f9e955b51",
+  "lessonIds": [
+    "IT-C348-vantaggio",
+    "IT-C348-svantaggio",
+    "IT-C348-aspetto",
+    "IT-C348-critica",
+    "IT-C348-ribadire"
+  ],
+  "tex": "italian/book/chapters/ch348-pro-e-contro.tex"
+}

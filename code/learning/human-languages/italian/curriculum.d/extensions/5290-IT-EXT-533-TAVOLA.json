@@ -1,0 +1,8 @@
+{
+  "id": "IT-EXT-533-TAVOLA",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can talk about laying and clearing a table for a meal.",
+  "prerequisites": []
+}

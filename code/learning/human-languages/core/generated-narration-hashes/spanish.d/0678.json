@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 678,
+  "sourceHash": "fnv1a64:0610561f9819d674",
+  "lessonIds": [
+    "ES-C678-visitar",
+    "ES-C678-ermita",
+    "ES-C678-estatua",
+    "ES-C678-torre",
+    "ES-C678-galeria"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch678.txt",
+  "json": "spanish/narration/ch678.json",
+  "textHash": "fnv1a64:391f84c4e08a9eca",
+  "jsonHash": "fnv1a64:c5a6104322c4fc62",
+  "findings": []
+}

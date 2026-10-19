@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 422,
+  "sourceHash": "fnv1a64:0a171e62bff1a101",
+  "lessonIds": [
+    "IT-C422-battello",
+    "IT-C422-gommone",
+    "IT-C422-remo",
+    "IT-C422-remare",
+    "IT-C422-canoa"
+  ],
+  "tex": "italian/book/chapters/ch422-in-barca.tex"
+}

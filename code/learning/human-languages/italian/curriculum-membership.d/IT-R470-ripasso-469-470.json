@@ -1,0 +1,11 @@
+{
+  "id": "IT-R470-ripasso-469-470",
+  "pathSegment": "IT-PATH-470-PIOGGIA",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "IT-EXT-470-PIOGGIA",
+      "order": 5
+    }
+  ]
+}

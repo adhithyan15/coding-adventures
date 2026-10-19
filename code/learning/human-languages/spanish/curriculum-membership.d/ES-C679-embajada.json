@@ -1,0 +1,11 @@
+{
+  "id": "ES-C679-embajada",
+  "pathSegment": "ES-PATH-679-SERVICIOS",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ES-EXT-679-SERVICIOS",
+      "order": 1
+    }
+  ]
+}

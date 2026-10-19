@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 414,
+  "sourceHash": "fnv1a64:0ddd04b7ba23f732",
+  "lessonIds": [
+    "IT-C414-statale",
+    "IT-C414-provinciale",
+    "IT-C414-curva",
+    "IT-C414-buca",
+    "IT-C414-sterrato"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch414.txt",
+  "json": "italian/narration/ch414.json",
+  "textHash": "fnv1a64:904122aa0d52274a",
+  "jsonHash": "fnv1a64:21132f1a909b12a4",
+  "findings": []
+}

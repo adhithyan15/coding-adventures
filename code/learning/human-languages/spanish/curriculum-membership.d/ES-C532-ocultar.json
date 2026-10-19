@@ -1,0 +1,11 @@
+{
+  "id": "ES-C532-ocultar",
+  "pathSegment": "ES-PATH-532-SECRETO",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ES-EXT-532-SECRETO",
+      "order": 2
+    }
+  ]
+}

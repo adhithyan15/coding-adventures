@@ -1,0 +1,11 @@
+{
+  "id": "IT-C321-cenone",
+  "pathSegment": "IT-PATH-321-PRESEPE",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "IT-EXT-321-PRESEPE",
+      "order": 2
+    }
+  ]
+}

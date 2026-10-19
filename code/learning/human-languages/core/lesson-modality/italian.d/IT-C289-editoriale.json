@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C289-editoriale",
+    "language": "italian",
+    "chapter": 289,
+    "sequence": 16960,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0474b3499a471266"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "ES-C581-debido-a",
+  "pathSegment": "ES-PATH-581-CAUSA",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ES-EXT-581-CAUSA",
+      "order": 2
+    }
+  ]
+}

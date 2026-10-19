@@ -1,0 +1,11 @@
+{
+  "id": "IT-C459-addebitare",
+  "pathSegment": "IT-PATH-459-BANCA",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "IT-EXT-459-BANCA",
+      "order": 2
+    }
+  ]
+}

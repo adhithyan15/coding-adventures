@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 519,
+  "sourceHash": "fnv1a64:7d97d4cffc042281",
+  "lessonIds": [
+    "IT-C519-palcoscenico",
+    "IT-C519-sipario",
+    "IT-C519-platea",
+    "IT-C519-loggione",
+    "IT-C519-applauso"
+  ],
+  "tex": "italian/book/chapters/ch519-a-teatro.tex"
+}

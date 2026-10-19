@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 437,
+  "sourceHash": "fnv1a64:a9572446f030a9f2",
+  "lessonIds": [
+    "IT-C437-baccano",
+    "IT-C437-chiasso",
+    "IT-C437-scarafaggio",
+    "IT-C437-muffa",
+    "IT-C437-cigolare"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch437.txt",
+  "json": "italian/narration/ch437.json",
+  "textHash": "fnv1a64:b5311b655e341577",
+  "jsonHash": "fnv1a64:3acdfd0c974524c0",
+  "findings": []
+}

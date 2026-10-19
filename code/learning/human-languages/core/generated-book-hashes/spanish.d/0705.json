@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 705,
+  "sourceHash": "fnv1a64:790264132bef5dff",
+  "lessonIds": [
+    "ES-C705-orgullo",
+    "ES-C705-orgulloso",
+    "ES-C705-verguenza",
+    "ES-C705-avergonzado",
+    "ES-C705-avergonzarse"
+  ],
+  "tex": "spanish/book/chapters/ch705-orgullo-y-verguenza.tex"
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 483,
+  "title": "Piccoli incidenti",
+  "label": "ch:it-piccoli-incidenti",
+  "canDo": "I can talk about small injuries: bruises, scratches, burns and cuts.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "IT-C483-tagliarsi",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 483: I can talk about small injuries: bruises, scratches, burns and cuts.",
+    "assesses": [
+      "IT-LEX-C483-FERITE-03",
+      "IT-LEX-C483-FERITE-04",
+      "IT-LEX-C483-FERITE-05"
+    ]
+  }
+}

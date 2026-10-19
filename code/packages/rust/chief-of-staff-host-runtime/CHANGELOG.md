@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+- `run_deno_agent_verified` spawns through
+  `chief_of_staff_spawn_isolation::spawn`, under the process-wide spawn
+  lock (D18S P2.8b-1/2). It was the one std spawn site left outside the
+  lock: on Windows its child would inherit any handle that was
+  inheritable at that moment, a broker's keys included. Found by the
+  P2.8b-2 security review.
+
 - The Deno agent spawn isolates the agent's descriptors (D18S S-I2, S-I3;
   #13980 P2.2). stderr is `/dev/null`, where it used to be inherited.
   On Unix, nothing above fd 2 is inherited, the agent gets its own session,

@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 455,
+  "sourceHash": "fnv1a64:16356c9849689c8a",
+  "lessonIds": [
+    "IT-C455-calzolaio",
+    "IT-C455-risuolare",
+    "IT-C455-sarto",
+    "IT-C455-accorciare",
+    "IT-C455-fabbro"
+  ],
+  "tex": "italian/book/chapters/ch455-riparare-e-sistemare.tex"
+}

@@ -1,0 +1,9 @@
+{
+  "id": "IT-PATH-304-TERREMOTO",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "IT-EXT-304-TERREMOTO"
+  ],
+  "after": []
+}

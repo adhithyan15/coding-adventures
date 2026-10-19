@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 645,
+  "sourceHash": "fnv1a64:01f270a5ca5e3ff4",
+  "lessonIds": [
+    "ES-C645-pinchazo",
+    "ES-C645-averiarse",
+    "ES-C645-mecanico",
+    "ES-C645-neumatico",
+    "ES-C645-pinchar"
+  ],
+  "tex": "spanish/book/chapters/ch645-una-averia.tex"
+}

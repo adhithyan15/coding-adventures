@@ -1,0 +1,19 @@
+{
+  "chapter": 635,
+  "title": "Pactos y dudas",
+  "label": "ch:es-pactos-y-dudas",
+  "canDo": "I can make a deal, vouch for someone, question what I doubt and say whether ideas are consistent.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "ES-C635-dispuesto",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 635: I can make a deal, vouch for someone, question what I doubt and say whether ideas are consistent.",
+    "assesses": [
+      "ES-LEX-C635-PROMESA-03",
+      "ES-LEX-C635-PROMESA-04",
+      "ES-LEX-C635-PROMESA-05"
+    ]
+  }
+}

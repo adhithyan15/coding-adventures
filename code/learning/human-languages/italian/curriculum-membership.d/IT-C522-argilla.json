@@ -1,0 +1,11 @@
+{
+  "id": "IT-C522-argilla",
+  "pathSegment": "IT-PATH-522-SCULTURA",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "IT-EXT-522-SCULTURA",
+      "order": 3
+    }
+  ]
+}

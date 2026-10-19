@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 373,
+  "sourceHash": "fnv1a64:68126ade7abaa9ad",
+  "lessonIds": [
+    "IT-C373-purche",
+    "IT-C373-qualora",
+    "IT-C373-altrimenti",
+    "IT-C373-senno",
+    "IT-C373-eventuale"
+  ],
+  "tex": "italian/book/chapters/ch373-a-una-condizione.tex"
+}

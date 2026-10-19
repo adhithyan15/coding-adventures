@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 586,
+  "sourceHash": "fnv1a64:f3533a40d6c02a97",
+  "lessonIds": [
+    "ES-C586-justificar",
+    "ES-C586-justificacion",
+    "ES-C586-excusa",
+    "ES-C586-pretexto",
+    "ES-C586-demostrar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch586.txt",
+  "json": "spanish/narration/ch586.json",
+  "textHash": "fnv1a64:638a797e076cab8f",
+  "jsonHash": "fnv1a64:579049e4001e6fec",
+  "findings": []
+}

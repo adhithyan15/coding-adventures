@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 670,
+  "sourceHash": "fnv1a64:76f9aee030d1257f",
+  "lessonIds": [
+    "ES-C670-indicar",
+    "ES-C670-indicacion",
+    "ES-C670-doblar",
+    "ES-C670-atravesar",
+    "ES-C670-desviarse"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch670.txt",
+  "json": "spanish/narration/ch670.json",
+  "textHash": "fnv1a64:1bc8f3d3c55fef0d",
+  "jsonHash": "fnv1a64:4ab806cf4a6d1352",
+  "findings": []
+}

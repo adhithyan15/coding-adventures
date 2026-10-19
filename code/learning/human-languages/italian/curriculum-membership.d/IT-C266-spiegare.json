@@ -1,0 +1,11 @@
+{
+  "id": "IT-C266-spiegare",
+  "pathSegment": "IT-PATH-266-SPIEGARE",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "IT-EXT-266-SPIEGARE",
+      "order": 1
+    }
+  ]
+}

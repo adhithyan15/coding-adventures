@@ -1,0 +1,858 @@
+{
+  "version": 1,
+  "language": "italian",
+  "chapter": 436,
+  "title": "Luce e corrente",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:5bfa29b40395cce6",
+  "lessons": [
+    {
+      "id": "IT-C436-lampadina",
+      "sequence": 24680,
+      "title": "la lampadina — the light bulb",
+      "headword": "la lampadina",
+      "romanization": "la lampadina",
+      "gloss": "the light bulb",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:21b8acc685bbfd4d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Italian for to cool down, then the Italian for the water heater."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: la lampadina",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la lampadina — \"the light bulb\"."
+            },
+            {
+              "kind": "speech",
+              "text": "In bagno serve una lampadina nuova. A new bulb is needed in the bathroom."
+            },
+            {
+              "kind": "speech",
+              "text": "La lampada is a lamp."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "lampadina is a little lampada 'lamp', which is inherited from Latin lampas, from Greek lampás 'torch' (Lewis & Short)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la lampadina",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la lampadina*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la lampadina, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la lampadina*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with la lampadina",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *la lampadina*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Italian for to cool down, then the Italian for the water heater, then say la lampadina again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Italian for to cool down, then the Italian for the water heater, then say *la lampadina* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does la lampadina mean? (\"The light bulb\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "IT-C436-interruttore",
+      "sequence": 24690,
+      "title": "l'interruttore — the switch (for a light)",
+      "headword": "l'interruttore",
+      "romanization": "l'interruttore",
+      "gloss": "the switch (for a light)",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3db9b5939b5bdb76",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Italian for the water heater, then the Italian for the light bulb."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: l'interruttore",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "l'interruttore — \"the switch (for a light)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "L'interruttore è dietro la porta. The switch is behind the door."
+            },
+            {
+              "kind": "speech",
+              "text": "Built on interrompere: it interrupts the current."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "interruttore is a learned borrowing from Latin interruptor 'an interrupter', from interrumpere 'to break off', built on rumpere 'to break' (Lewis & Short)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "l'interruttore",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *l'interruttore*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "l'interruttore, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *l'interruttore*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with l'interruttore",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *l'interruttore*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Italian for the water heater, then the Italian for the light bulb, then say l'interruttore again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Italian for the water heater, then the Italian for the light bulb, then say *l'interruttore* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does l'interruttore mean? (\"The switch (for a light)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "IT-C436-fusibile",
+      "sequence": 24700,
+      "title": "il fusibile — the fuse",
+      "headword": "il fusibile",
+      "romanization": "il fusibile",
+      "gloss": "the fuse",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b00c44a2f6be17b0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Italian for the light bulb, then the Italian for the switch."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: il fusibile",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "il fusibile — \"the fuse\"."
+            },
+            {
+              "kind": "speech",
+              "text": "È saltato un fusibile. A fuse has blown."
+            },
+            {
+              "kind": "speech",
+              "text": "Saltare is the verb: the fuse jumps."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "fusibile is a learned borrowing from Late Latin fūsibilis 'that can be melted', from fundere 'to pour, to melt' (Lewis & Short): the wire melts and cuts the current."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "il fusibile",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *il fusibile*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "il fusibile, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *il fusibile*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with il fusibile",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *il fusibile*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Italian for the light bulb, then the Italian for the switch, then say il fusibile again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Italian for the light bulb, then the Italian for the switch, then say *il fusibile* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does il fusibile mean? (\"The fuse\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "IT-C436-ricaricare",
+      "sequence": 24710,
+      "title": "ricaricare — to recharge; to reload",
+      "headword": "ricaricare",
+      "romanization": "ricaricare",
+      "gloss": "to recharge; to reload",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2b06ec07063ab5d6",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Italian for the switch, then the Italian for the fuse."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ricaricare",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ricaricare — \"to recharge; to reload\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Devo ricaricare il telefono. I need to charge my phone."
+            },
+            {
+              "kind": "speech",
+              "text": "Il caricabatterie — the charger."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ricaricare is built from ri- 'again' and caricare 'to load', which is inherited from Late Latin carricāre, built on carrus 'cart'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ricaricare",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ricaricare*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ricaricare, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ricaricare*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with ricaricare",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *ricaricare*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Italian for the switch, then the Italian for the fuse, then say ricaricare again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Italian for the switch, then the Italian for the fuse, then say *ricaricare* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ricaricare mean? (\"To recharge; to reload\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "IT-C436-fulminarsi",
+      "sequence": 24720,
+      "title": "fulminarsi — to burn out (of a bulb)",
+      "headword": "fulminarsi",
+      "romanization": "fulminarsi",
+      "gloss": "to burn out (of a bulb)",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b72f8e8b1edd08a3",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Italian for the fuse, then the Italian for to recharge."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: fulminarsi",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "fulminarsi — \"to burn out (of a bulb)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Si è fulminata la lampadina della cucina. The kitchen bulb has burnt out."
+            },
+            {
+              "kind": "speech",
+              "text": "Fulminare also means to strike with lightning, or with a look."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "fulminarsi is built on fulmine 'lightning', which is inherited from Latin fulmen 'thunderbolt' (EtymDB)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "fulminarsi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *fulminarsi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "fulminarsi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *fulminarsi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with fulminarsi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *fulminarsi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Italian for the fuse, then the Italian for to recharge, then say fulminarsi again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Italian for the fuse, then the Italian for to recharge, then say *fulminarsi* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does fulminarsi mean? (\"To burn out (of a bulb)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "IT-R436-ripasso-429-436",
+      "sequence": 24730,
+      "title": "Ripasso dei capitoli 429–436",
+      "headword": "(dialogue)",
+      "romanization": "(dialogue)",
+      "gloss": "a review of chapters 429-436",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:09987d17bfd7815b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Italian for the hostel and the farm stay."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the hostel, the farm stay, the inn, the guesthouse, the campsite",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the hostel, the farm stay, the inn, the guesthouse, the campsite]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to pitch, the sleeping bag, the caravan, the camper van, the mosquito net",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to pitch, the sleeping bag, the caravan, the camper van, the mosquito net]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the deposit, the advance, to cancel, the cancellation fee, to bring forward",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the deposit, the advance, to cancel, the cancellation fee, to bring forward]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to lodge, to stay the night, the overnight stay, to stay, the porter",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to lodge, to stay the night, the overnight stay, to stay, the porter]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "double, the cot, the pillowcase, the bar of soap, the hair dryer",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: double, the cot, the pillowcase, the bar of soap, the hair dryer]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the tap, to drip, blocked, the drain, to unblock",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the tap, to drip, blocked, the drain, to unblock]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the heating, the radiator, the air conditioner, to cool down, the water heater",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the heating, the radiator, the air conditioner, to cool down, the water heater]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the light bulb, the switch, the fuse, to recharge, to burn out",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the light bulb, the switch, the fuse, to recharge, to burn out]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The hostel? (l'ostello.) The farm stay? (l'agriturismo.) The inn? (la locanda.) The guesthouse? (la pensione.) The campsite? (il campeggio.) To pitch? (piantare.) The sleeping bag? (il sacco a pelo.) The caravan? (la roulotte.) The camper van? (il camper.) The mosquito net? (la zanzariera.) The deposit? (la caparra.) The advance? (l'acconto.) To cancel? (disdire.) The cancellation fee? (la penale.) To bring forward? (anticipare.) To lodge? (alloggiare.) To stay the night? (pernottare.) The overnight stay? (il pernottamento.) To stay? (soggiornare.) The porter? (il portiere.) Double? (matrimoniale.) The cot? (la culla.) The pillowcase? (la federa.) The bar of soap? (la saponetta.) The hair dryer? (l'asciugacapelli.) The tap? (il rubinetto.) To drip? (gocciolare.) Blocked? (intasato.) The drain? (lo scarico.) To unblock? (sturare.) The heating? (il riscaldamento.) The radiator? (il termosifone.) The air conditioner? (il condizionatore.) To cool down? (rinfrescare.) The water heater? (lo scaldabagno.) The light bulb? (la lampadina.) The switch? (l'interruttore.) The fuse? (il fusibile.) To recharge? (ricaricare.) To burn out? (fulminarsi.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 697,
+  "title": "Lluvia",
+  "label": "ch:es-lluvia",
+  "canDo": "I can talk about rain, from a light drizzle to a sudden downpour, and say when it stops.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "ES-C697-lloviznar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 697: I can talk about rain, from a light drizzle to a sudden downpour, and say when it stops.",
+    "assesses": [
+      "ES-LEX-C697-LLUVIA-03",
+      "ES-LEX-C697-LLUVIA-04",
+      "ES-LEX-C697-LLUVIA-05"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C279-in-anticipo",
+    "language": "italian",
+    "chapter": 279,
+    "sequence": 16430,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a4906ee8a1ba5e2d"
+  },
+  "findings": []
+}

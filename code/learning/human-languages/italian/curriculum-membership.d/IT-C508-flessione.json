@@ -1,0 +1,11 @@
+{
+  "id": "IT-C508-flessione",
+  "pathSegment": "IT-PATH-508-PALESTRA",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "IT-EXT-508-PALESTRA",
+      "order": 2
+    }
+  ]
+}

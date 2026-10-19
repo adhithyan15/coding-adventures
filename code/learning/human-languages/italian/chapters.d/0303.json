@@ -1,0 +1,19 @@
+{
+  "chapter": 303,
+  "title": "Un boato",
+  "label": "ch:it-un-boato",
+  "canDo": "I can report an explosion: something blew up, burst and fell down.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "IT-C303-crollo",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 303: I can report an explosion: something blew up, burst and fell down.",
+    "assesses": [
+      "IT-LEX-C303-ESPLOSIONE-03",
+      "IT-LEX-C303-ESPLOSIONE-04",
+      "IT-LEX-C303-ESPLOSIONE-05"
+    ]
+  }
+}

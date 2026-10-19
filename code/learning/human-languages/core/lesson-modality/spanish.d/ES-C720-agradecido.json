@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C720-agradecido",
+    "language": "spanish",
+    "chapter": 720,
+    "sequence": 25940,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e7a76592aa7046db"
+  },
+  "findings": []
+}

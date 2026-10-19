@@ -1,0 +1,11 @@
+{
+  "id": "IT-C324-finale",
+  "pathSegment": "IT-PATH-324-MITO",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "IT-EXT-324-MITO",
+      "order": 3
+    }
+  ]
+}

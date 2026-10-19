@@ -1,0 +1,11 @@
+{
+  "id": "IT-C303-esplodere",
+  "pathSegment": "IT-PATH-303-ESPLOSIONE",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "IT-EXT-303-ESPLOSIONE",
+      "order": 1
+    }
+  ]
+}

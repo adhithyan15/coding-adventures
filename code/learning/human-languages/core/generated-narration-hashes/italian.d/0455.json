@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 455,
+  "sourceHash": "fnv1a64:b303e01b5bfa43ee",
+  "lessonIds": [
+    "IT-C455-calzolaio",
+    "IT-C455-risuolare",
+    "IT-C455-sarto",
+    "IT-C455-accorciare",
+    "IT-C455-fabbro"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch455.txt",
+  "json": "italian/narration/ch455.json",
+  "textHash": "fnv1a64:63d2091f2da1aae3",
+  "jsonHash": "fnv1a64:455ac0956f911edf",
+  "findings": []
+}

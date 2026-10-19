@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C320-onomastico",
+    "language": "italian",
+    "chapter": 320,
+    "sequence": 18530,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4670f0c0aea7bde4"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "IT-C301-sirena",
+  "pathSegment": "IT-PATH-301-SOCCORSO",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "IT-EXT-301-SOCCORSO",
+      "order": 4
+    }
+  ]
+}

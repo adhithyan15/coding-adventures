@@ -1,0 +1,9 @@
+{
+  "id": "IT-PATH-296-MOVENTE",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "IT-EXT-296-MOVENTE"
+  ],
+  "after": []
+}

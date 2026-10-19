@@ -1,0 +1,14 @@
+{
+  "language": "spanish",
+  "chapter": 591,
+  "sourceHash": "fnv1a64:cf3327bf20cf7a5e",
+  "lessonIds": [
+    "ES-C591-convenio",
+    "ES-C591-autonomo",
+    "ES-C591-funcionario",
+    "ES-C591-teletrabajo",
+    "ES-C591-sindicato",
+    "ES-R591-repaso-584-591"
+  ],
+  "tex": "spanish/book/chapters/ch591-formas-de-trabajar.tex"
+}

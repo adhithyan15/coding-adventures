@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 640,
+  "sourceHash": "fnv1a64:52b24900af596b1b",
+  "lessonIds": [
+    "ES-C640-veranear",
+    "ES-C640-automovil",
+    "ES-C640-circulacion",
+    "ES-C640-furgoneta",
+    "ES-C640-conductor"
+  ],
+  "tex": "spanish/book/chapters/ch640-como-nos-movemos.tex"
+}

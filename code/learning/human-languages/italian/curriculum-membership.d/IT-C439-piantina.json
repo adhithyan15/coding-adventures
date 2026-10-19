@@ -1,0 +1,11 @@
+{
+  "id": "IT-C439-piantina",
+  "pathSegment": "IT-PATH-439-ORIENTARSI",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "IT-EXT-439-ORIENTARSI",
+      "order": 3
+    }
+  ]
+}

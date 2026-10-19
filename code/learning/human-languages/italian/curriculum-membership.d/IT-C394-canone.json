@@ -1,0 +1,11 @@
+{
+  "id": "IT-C394-canone",
+  "pathSegment": "IT-PATH-394-BILANCIO",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "IT-EXT-394-BILANCIO",
+      "order": 3
+    }
+  ]
+}

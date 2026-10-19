@@ -1,0 +1,8 @@
+{
+  "id": "IT-EXT-363-CITTADINO",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can talk about citizens, citizenship, rights, freedom and equality.",
+  "prerequisites": []
+}

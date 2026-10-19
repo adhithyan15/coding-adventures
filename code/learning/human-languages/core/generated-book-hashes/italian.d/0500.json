@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 500,
+  "sourceHash": "fnv1a64:f288749170f63dc8",
+  "lessonIds": [
+    "IT-C500-cucire",
+    "IT-C500-ago",
+    "IT-C500-ricamare",
+    "IT-C500-uncinetto",
+    "IT-C500-rammendare"
+  ],
+  "tex": "italian/book/chapters/ch500-ago-e-filo.tex"
+}

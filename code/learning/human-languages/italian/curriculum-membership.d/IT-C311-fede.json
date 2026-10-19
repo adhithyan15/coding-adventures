@@ -1,0 +1,11 @@
+{
+  "id": "IT-C311-fede",
+  "pathSegment": "IT-PATH-311-SPOSARSI",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "IT-EXT-311-SPOSARSI",
+      "order": 1
+    }
+  ]
+}

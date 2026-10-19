@@ -1,0 +1,11 @@
+{
+  "id": "IT-C506-inquadrare",
+  "pathSegment": "IT-PATH-506-FOTO",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "IT-EXT-506-FOTO",
+      "order": 1
+    }
+  ]
+}

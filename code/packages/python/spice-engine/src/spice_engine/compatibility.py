@@ -998,6 +998,10 @@ class DeckAnalysisPlan:
     start_value: float | None = None
     stop_value: float | None = None
     step_value: float | None = None
+    secondary_source_name: str | None = None
+    secondary_start_value: float | None = None
+    secondary_stop_value: float | None = None
+    secondary_step_value: float | None = None
     sweep_kind: str | None = None
     point_count: int | None = None
     start_frequency: float | None = None
@@ -3281,13 +3285,16 @@ def _resolve_dc_analysis(
     line_number: int,
     state: _DeckAnalysisState,
 ) -> None:
-    if len(tokens) != 5:
+    if len(tokens) not in {5, 9}:
         _add_analysis_diagnostic(
             state,
             code="SPICE_DECK_ANALYSIS_ARGUMENT",
             directive=".dc",
             line_number=line_number,
-            message=".dc requires source, start, stop, and step tokens",
+            message=(
+                ".dc requires source, start, stop, and step tokens, with an "
+                "optional second source, start, stop, and step"
+            ),
         )
         return
     source_name = _unquote_token(tokens[1]).strip()
@@ -3328,6 +3335,63 @@ def _resolve_dc_analysis(
             token=tokens[4],
         )
         return
+    secondary_source_name: str | None = None
+    secondary_start_value: float | None = None
+    secondary_stop_value: float | None = None
+    secondary_step_value: float | None = None
+    if len(tokens) == 9:
+        secondary_source_name = _unquote_token(tokens[5]).strip()
+        if not secondary_source_name:
+            _add_analysis_diagnostic(
+                state,
+                code="SPICE_DECK_ANALYSIS_ARGUMENT",
+                directive=".dc",
+                line_number=line_number,
+                message=".dc secondary source name must not be empty",
+                token=tokens[5],
+            )
+            return
+        secondary_start_value = _parse_deck_analysis_value(
+            tokens[6], ".dc", line_number, state
+        )
+        secondary_stop_value = _parse_deck_analysis_value(
+            tokens[7], ".dc", line_number, state
+        )
+        secondary_step_value = _parse_deck_analysis_value(
+            tokens[8], ".dc", line_number, state
+        )
+        if (
+            secondary_start_value is None
+            or secondary_stop_value is None
+            or secondary_step_value is None
+        ):
+            return
+        if secondary_step_value == 0.0:
+            _add_analysis_diagnostic(
+                state,
+                code="SPICE_DECK_ANALYSIS_SWEEP",
+                directive=".dc",
+                line_number=line_number,
+                message=".dc secondary step value must be non-zero",
+                token=tokens[8],
+            )
+            return
+        if (
+            secondary_start_value < secondary_stop_value
+            and secondary_step_value < 0.0
+        ) or (
+            secondary_start_value > secondary_stop_value
+            and secondary_step_value > 0.0
+        ):
+            _add_analysis_diagnostic(
+                state,
+                code="SPICE_DECK_ANALYSIS_SWEEP",
+                directive=".dc",
+                line_number=line_number,
+                message=".dc secondary step direction must move from start toward stop",
+                token=tokens[8],
+            )
+            return
     state.analyses.append(
         DeckAnalysisPlan(
             directive=".dc",
@@ -3337,6 +3401,10 @@ def _resolve_dc_analysis(
             start_value=start_value,
             stop_value=stop_value,
             step_value=step_value,
+            secondary_source_name=secondary_source_name,
+            secondary_start_value=secondary_start_value,
+            secondary_stop_value=secondary_stop_value,
+            secondary_step_value=secondary_step_value,
         )
     )
 

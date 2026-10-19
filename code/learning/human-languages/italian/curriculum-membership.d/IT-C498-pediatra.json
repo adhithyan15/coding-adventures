@@ -1,0 +1,11 @@
+{
+  "id": "IT-C498-pediatra",
+  "pathSegment": "IT-PATH-498-BAMBINI",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "IT-EXT-498-BAMBINI",
+      "order": 1
+    }
+  ]
+}

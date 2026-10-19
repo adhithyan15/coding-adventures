@@ -1,0 +1,8 @@
+{
+  "id": "IT-EXT-525-LIBRERIA",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can talk about choosing and handling books in a bookshop.",
+  "prerequisites": []
+}

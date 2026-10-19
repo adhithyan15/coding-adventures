@@ -914,6 +914,7 @@ pub fn parse_zenuml(source: &str) -> Result<SequenceDiagram, ParseError> {
             pending_comments.push(comment.trim().to_string());
             continue;
         }
+        let line = line.strip_suffix(';').map(str::trim).unwrap_or(line);
         if !header_seen {
             header_seen = line == "zenuml";
             continue;
@@ -953,11 +954,18 @@ pub fn parse_zenuml(source: &str) -> Result<SequenceDiagram, ParseError> {
             scopes.push(ZenumlScope::Block(kind));
             continue;
         }
-        if let Some(created) = line.strip_prefix("new ") {
-            let id = created.split(['(', ' ']).next().unwrap_or("").trim();
-            push_zenuml_comments(&mut diagram, &scopes, &mut pending_comments, &[id]);
-            ensure_sequence_participant(&mut diagram, &mut participant_indices, id);
-            diagram.events.push(SequenceEvent::ParticipantCreated { participant: id.into() });
+        if let Some(binding) = parse_zenuml_creation(line) {
+            let active_parent = scopes.iter().rev().find_map(|scope| match scope {
+                ZenumlScope::Activation { participant, .. } => Some(participant.clone()),
+                ZenumlScope::Block(_) => None,
+            }).unwrap_or_else(|| binding.clone());
+            push_zenuml_comments(&mut diagram, &scopes, &mut pending_comments, &[&binding]);
+            ensure_sequence_participant(&mut diagram, &mut participant_indices, &binding);
+            diagram.events.push(SequenceEvent::ParticipantCreated { participant: binding.clone() });
+            if line.contains('{') {
+                diagram.events.push(SequenceEvent::Activation { participant: binding.clone(), active: true });
+                scopes.push(ZenumlScope::Activation { participant: binding, caller: active_parent });
+            }
             continue;
         }
         let return_line = line.strip_prefix("@return").map(str::trim).unwrap_or(line);
@@ -979,7 +987,17 @@ pub fn parse_zenuml(source: &str) -> Result<SequenceDiagram, ParseError> {
         if let Some(declaration) = line.strip_prefix('@') {
             let (annotation, id) = declaration.split_once(char::is_whitespace)
                 .ok_or_else(|| ParseError { message: "invalid ZenUML participant annotator".into(), line: 1, col: 1 })?;
-            let kind = match annotation { "Actor" => SequenceParticipantKind::Actor, "Database" => SequenceParticipantKind::Database, _ => unreachable!() };
+            let kind = match annotation {
+                "Actor" => SequenceParticipantKind::Actor,
+                "Boundary" => SequenceParticipantKind::Boundary,
+                "Control" => SequenceParticipantKind::Control,
+                "Entity" => SequenceParticipantKind::Entity,
+                "Database" => SequenceParticipantKind::Database,
+                "Collections" => SequenceParticipantKind::Collections,
+                "Queue" => SequenceParticipantKind::Queue,
+                "Starter" => SequenceParticipantKind::Participant,
+                _ => unreachable!(),
+            };
             upsert_sequence_participant(&mut diagram, &mut participant_indices, id.trim().into(), id.trim().into(), SequenceTextWrap::Default, kind);
             pending_comments.clear();
             continue;
@@ -1054,6 +1072,18 @@ fn zenuml_reply(from: &str, to: &str, label: &str) -> SequenceEvent {
         wrap: SequenceTextWrap::Default, line_style: SequenceLineStyle::Dotted,
         arrowhead: SequenceArrowhead::Open, bidirectional: false,
         central_connection: SequenceCentralConnection::None, activate: false, deactivate: false }
+}
+
+fn parse_zenuml_creation(line: &str) -> Option<String> {
+    let (prefix, created) = line.split_once("new ")?;
+    let class_name = created.split(['(', ' ', '{']).next()?.trim();
+    if class_name.is_empty() { return None; }
+    let binding = if prefix.trim().is_empty() {
+        class_name
+    } else {
+        prefix.trim().strip_suffix('=')?.split_whitespace().last()?
+    };
+    Some(binding.to_string())
 }
 
 fn push_zenuml_comments(

@@ -2153,7 +2153,15 @@ def format_dc_sweep_table(
         ),
         [],
     )
-    rows = ["\t".join(["Index", "Source", "Value", *selected_probes])]
+    has_secondary_axis = any(
+        point.secondary_source_name is not None
+        and point.secondary_source_value is not None
+        for point in result.points
+    )
+    headers = ["Index", "Source", "Value"]
+    if has_secondary_axis:
+        headers.extend(["SecondarySource", "SecondaryValue"])
+    rows = ["\t".join([*headers, *selected_probes])]
     for index, point in enumerate(result.points):
         values = [
             _format_table_number(
@@ -2166,16 +2174,21 @@ def format_dc_sweep_table(
             )
             for probe in selected_probes
         ]
-        rows.append(
-            "\t".join(
+        row = [
+            str(index),
+            result.source_name,
+            _format_table_number(point.source_value),
+        ]
+        if has_secondary_axis:
+            row.extend(
                 [
-                    str(index),
-                    result.source_name,
-                    _format_table_number(point.source_value),
-                    *values,
+                    point.secondary_source_name or "",
+                    _format_table_number(point.secondary_source_value)
+                    if point.secondary_source_value is not None
+                    else "",
                 ]
             )
-        )
+        rows.append("\t".join([*row, *values]))
     rows.append("")
     return "\n".join(rows)
 
@@ -4475,7 +4488,21 @@ def _run_deck_analysis_plan(
         start = _require_deck_plan_number(plan, "start_value")
         stop = _require_deck_plan_number(plan, "stop_value")
         step = _require_deck_plan_number(plan, "step_value")
-        result = dc_sweep(circuit, source_name, start, stop, step)
+        secondary_source_name = plan.secondary_source_name
+        if secondary_source_name is None:
+            result = dc_sweep(circuit, source_name, start, stop, step)
+        else:
+            result = dc_sweep_2d(
+                circuit,
+                source_name,
+                start,
+                stop,
+                step,
+                secondary_source_name,
+                _require_deck_plan_number(plan, "secondary_start_value"),
+                _require_deck_plan_number(plan, "secondary_stop_value"),
+                _require_deck_plan_number(plan, "secondary_step_value"),
+            )
         table = format_deck_dc_sweep_table(result, netlist)
         measurements = measure_dc_sweep_cards(
             result,
@@ -7253,6 +7280,8 @@ class DcSweepPoint:
     node_voltages: dict[str, float]
     branch_currents: dict[str, float]
     converged: bool
+    secondary_source_name: str | None = None
+    secondary_source_value: float | None = None
 
 
 @dataclass
@@ -14965,6 +14994,88 @@ def dc_sweep(
         )
 
     return DcSweepResult(points=points, source_name=source_name)
+
+
+def dc_sweep_2d(
+    circuit: Circuit,
+    source_name: str,
+    start: float,
+    stop: float,
+    step: float,
+    secondary_source_name: str,
+    secondary_start: float,
+    secondary_stop: float,
+    secondary_step: float,
+    *,
+    max_iterations: int = 50,
+    tol: float = 1e-6,
+) -> DcSweepResult:
+    """Run a two-axis DC source sweep with the second source as the outer loop."""
+    secondary = dc_sweep(
+        circuit,
+        secondary_source_name,
+        secondary_start,
+        secondary_stop,
+        secondary_step,
+        max_iterations=max_iterations,
+        tol=tol,
+    )
+    points: list[DcSweepPoint] = []
+    for outer in secondary.points:
+        swept_circuit = _circuit_with_source_value(
+            circuit, secondary_source_name, outer.source_value
+        )
+        inner = dc_sweep(
+            swept_circuit,
+            source_name,
+            start,
+            stop,
+            step,
+            max_iterations=max_iterations,
+            tol=tol,
+        )
+        points.extend(
+            DcSweepPoint(
+                source_value=point.source_value,
+                node_voltages=point.node_voltages,
+                branch_currents=point.branch_currents,
+                converged=point.converged,
+                secondary_source_name=secondary_source_name,
+                secondary_source_value=outer.source_value,
+            )
+            for point in inner.points
+        )
+    return DcSweepResult(points=points, source_name=source_name)
+
+
+def _circuit_with_source_value(circuit: Circuit, source_name: str, value: float) -> Circuit:
+    """Return a circuit copy with one independent source set to *value*."""
+    for index, element in enumerate(circuit.elements):
+        if isinstance(element, VoltageSource) and element.name == source_name:
+            elements = list(circuit.elements)
+            elements[index] = VoltageSource(
+                element.name,
+                element.n_plus,
+                element.n_minus,
+                value,
+                element.waveform,
+                element.ac,
+            )
+            return Circuit(elements=elements)
+        if isinstance(element, CurrentSource) and element.name == source_name:
+            elements = list(circuit.elements)
+            elements[index] = CurrentSource(
+                element.name,
+                element.n_plus,
+                element.n_minus,
+                value,
+                element.waveform,
+                element.ac,
+            )
+            return Circuit(elements=elements)
+    raise ValueError(
+        f"dc_sweep: no VoltageSource or CurrentSource named {source_name!r} found in the circuit"
+    )
 
 
 def dc_sweep_corners(

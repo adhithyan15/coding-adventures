@@ -1,0 +1,19 @@
+{
+  "chapter": 612,
+  "title": "Si no es así",
+  "label": "ch:es-si-no-es-asi",
+  "canDo": "I can say what happens otherwise, in that case or in any case.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "ES-C612-en-todo-caso",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 612: I can say what happens otherwise, in that case or in any case.",
+    "assesses": [
+      "ES-LEX-C612-SINO-03",
+      "ES-LEX-C612-SINO-04",
+      "ES-LEX-C612-SINO-05"
+    ]
+  }
+}

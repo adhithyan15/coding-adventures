@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 385,
+  "sourceHash": "fnv1a64:8220f6be7740215d",
+  "lessonIds": [
+    "IT-C385-vietato",
+    "IT-C385-proibire",
+    "IT-C385-tollerare",
+    "IT-C385-autorizzare",
+    "IT-C385-autorizzazione"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch385.txt",
+  "json": "italian/narration/ch385.json",
+  "textHash": "fnv1a64:b73285a030e1de54",
+  "jsonHash": "fnv1a64:ea38a1542eb938e8",
+  "findings": []
+}

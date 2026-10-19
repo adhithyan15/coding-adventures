@@ -1,0 +1,11 @@
+{
+  "id": "ES-C722-coraje",
+  "pathSegment": "ES-PATH-722-VALOR",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ES-EXT-722-VALOR",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 339,
+  "title": "Secondo me",
+  "label": "ch:it-secondo-me",
+  "canDo": "I can give my opinion and my point of view, say that I am convinced and that I support an idea.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "IT-C339-punto-di-vista",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 339: I can give my opinion and my point of view, say that I am convinced and that I support an idea.",
+    "assesses": [
+      "IT-LEX-C339-OPINIONE-03",
+      "IT-LEX-C339-OPINIONE-04",
+      "IT-LEX-C339-OPINIONE-05"
+    ]
+  }
+}

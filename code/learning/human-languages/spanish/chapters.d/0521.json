@@ -1,0 +1,19 @@
+{
+  "chapter": 521,
+  "title": "Siguiendo la pista",
+  "label": "ch:es-siguiendo-la-pista",
+  "canDo": "I can say that someone investigated a case, followed a lead, found proof and suspected someone.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "ES-C521-sospechar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 521: I can say that someone investigated a case, followed a lead, found proof and suspected someone.",
+    "assesses": [
+      "ES-LEX-C521-PISTA-03",
+      "ES-LEX-C521-PISTA-04",
+      "ES-LEX-C521-PISTA-05"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C458-spedizione",
+    "language": "italian",
+    "chapter": 458,
+    "sequence": 25820,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:86273a9a7da86ce1"
+  },
+  "findings": []
+}

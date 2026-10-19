@@ -1,0 +1,11 @@
+{
+  "id": "IT-R510-ripasso-503-510",
+  "pathSegment": "IT-PATH-510-SQUADRA",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "IT-EXT-510-SQUADRA",
+      "order": 5
+    }
+  ]
+}

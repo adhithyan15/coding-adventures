@@ -1,0 +1,19 @@
+{
+  "chapter": 404,
+  "title": "Non funziona",
+  "label": "ch:it-non-funziona",
+  "canDo": "I can say what is wrong with a device: it freezes, it needs restarting, it has a virus, and I need an antivirus.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "IT-R404-ripasso-final-404",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 404: I can say what is wrong with a device: it freezes, it needs restarting, it has a virus, and I need an antivirus.",
+    "assesses": [
+      "IT-LEX-C404-BLOCCO-03",
+      "IT-LEX-C404-BLOCCO-04",
+      "IT-LEX-C404-BLOCCO-05"
+    ]
+  }
+}

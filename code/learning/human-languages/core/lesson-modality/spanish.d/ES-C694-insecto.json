@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C694-insecto",
+    "language": "spanish",
+    "chapter": 694,
+    "sequence": 24580,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e7ae5a8bd5683c8c"
+  },
+  "findings": []
+}

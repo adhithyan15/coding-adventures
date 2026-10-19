@@ -1,0 +1,8 @@
+{
+  "id": "ES-EXT-622-REGLA",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can read the rules of a place and say what is obligatory.",
+  "prerequisites": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "IT-C477-nostalgia",
+  "pathSegment": "IT-PATH-477-NOSTALGIA",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "IT-EXT-477-NOSTALGIA",
+      "order": 0
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "IT-C377-disponibile",
+  "pathSegment": "IT-PATH-377-IMPEGNO",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "IT-EXT-377-IMPEGNO",
+      "order": 0
+    }
+  ]
+}

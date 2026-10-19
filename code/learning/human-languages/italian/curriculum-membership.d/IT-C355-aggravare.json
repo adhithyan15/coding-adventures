@@ -1,0 +1,11 @@
+{
+  "id": "IT-C355-aggravare",
+  "pathSegment": "IT-PATH-355-RIMEDIO",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "IT-EXT-355-RIMEDIO",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "ES-C578-oponerse",
+  "pathSegment": "ES-PATH-578-DESACUER",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ES-EXT-578-DESACUER",
+      "order": 2
+    }
+  ]
+}

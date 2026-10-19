@@ -1,0 +1,19 @@
+{
+  "chapter": 691,
+  "title": "La vida en el campo",
+  "label": "ch:es-la-vida-en-el-campo",
+  "canDo": "I can talk about life on the land: farmers, a country estate, a vineyard and growing crops.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "ES-C691-cultivar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 691: I can talk about life on the land: farmers, a country estate, a vineyard and growing crops.",
+    "assesses": [
+      "ES-LEX-C691-CAMPO-03",
+      "ES-LEX-C691-CAMPO-04",
+      "ES-LEX-C691-CAMPO-05"
+    ]
+  }
+}

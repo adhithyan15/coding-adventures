@@ -1,0 +1,11 @@
+{
+  "id": "IT-C387-condizione",
+  "pathSegment": "IT-PATH-387-REQUISITO",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "IT-EXT-387-REQUISITO",
+      "order": 4
+    }
+  ]
+}

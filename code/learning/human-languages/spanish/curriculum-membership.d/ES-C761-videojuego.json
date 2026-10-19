@@ -1,0 +1,11 @@
+{
+  "id": "ES-C761-videojuego",
+  "pathSegment": "ES-PATH-761-SERIE",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ES-EXT-761-SERIE",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "IT-C302-ustionarsi",
+  "pathSegment": "IT-PATH-302-INCENDIO",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "IT-EXT-302-INCENDIO",
+      "order": 4
+    }
+  ]
+}

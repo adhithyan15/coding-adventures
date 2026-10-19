@@ -1,0 +1,11 @@
+{
+  "id": "IT-C338-mestolo",
+  "pathSegment": "IT-PATH-338-FRUSTA",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "IT-EXT-338-FRUSTA",
+      "order": 4
+    }
+  ]
+}

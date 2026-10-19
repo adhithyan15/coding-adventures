@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 392,
+  "sourceHash": "fnv1a64:1e5945ea7a5a2ee4",
+  "lessonIds": [
+    "IT-C392-imputato",
+    "IT-C392-difesa",
+    "IT-C392-sentenza",
+    "IT-C392-condanna",
+    "IT-C392-pena"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch392.txt",
+  "json": "italian/narration/ch392.json",
+  "textHash": "fnv1a64:dce7fe70ec1e1225",
+  "jsonHash": "fnv1a64:e0a4f3f21df770fc",
+  "findings": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 628,
+  "sourceHash": "fnv1a64:c565edd6cf9c7261",
+  "lessonIds": [
+    "ES-C628-efectivo",
+    "ES-C628-transferencia",
+    "ES-C628-hipoteca",
+    "ES-C628-interes",
+    "ES-C628-retirar"
+  ],
+  "tex": "spanish/book/chapters/ch628-en-el-banco.tex"
+}

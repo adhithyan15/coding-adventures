@@ -1,0 +1,8 @@
+{
+  "id": "ES-EXT-770-COMERCIOS",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can explain why I go to a particular shop: the dry cleaner, the hardware shop, the butcher, the greengrocer, or a shop with a fitting room.",
+  "prerequisites": []
+}

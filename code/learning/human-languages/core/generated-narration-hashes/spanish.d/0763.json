@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 763,
+  "sourceHash": "fnv1a64:ff054f7e6a45a861",
+  "lessonIds": [
+    "ES-C763-escultura",
+    "ES-C763-retrato",
+    "ES-C763-lienzo",
+    "ES-C763-pintor",
+    "ES-C763-fotografiar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch763.txt",
+  "json": "spanish/narration/ch763.json",
+  "textHash": "fnv1a64:8ce0dbebce92e13c",
+  "jsonHash": "fnv1a64:e9daf2533345c791",
+  "findings": []
+}

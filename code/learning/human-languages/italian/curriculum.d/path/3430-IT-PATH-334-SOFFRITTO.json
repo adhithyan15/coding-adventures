@@ -1,0 +1,9 @@
+{
+  "id": "IT-PATH-334-SOFFRITTO",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "IT-EXT-334-SOFFRITTO"
+  ],
+  "after": []
+}

@@ -39,6 +39,33 @@
       "expected": { "min": 0.55, "max": 0.85 }
     },
     {
+      "id": "pnp-pullup",
+      "kind": "PNP",
+      "analysis": "op",
+      "sample": "op-node",
+      "deck": "* Berkeley SPICE v1 operating-point corpus: pnp-pullup\n.model Qp PNP(IS=1e-14 BF=100)\nVcc vcc 0 5\nVbase base 0 4.3\nQ1 out base vcc Qp\nRload out 0 1k\n.op\n.save V(out)\n.end\n",
+      "probe": "out",
+      "expected": { "min": 4.9, "max": 5.0 }
+    },
+    {
+      "id": "pjf-source-bias",
+      "kind": "PJF",
+      "analysis": "op",
+      "sample": "op-node",
+      "deck": "* Berkeley SPICE v1 operating-point corpus: pjf-source-bias\n.model Jp PJF(BETA=9e-4 VTO=1.8 LAMBDA=0.02)\nVss vss 0 -10\nVg gate 0 0\nRd vss drain 2k\nRs source 0 1k\nJ1 drain gate source Jp\n.op\n.save V(source)\n.end\n",
+      "probe": "source",
+      "expected": { "min": -0.95, "max": -0.8 }
+    },
+    {
+      "id": "pmos-level1-common-source",
+      "kind": "PMOS",
+      "analysis": "op",
+      "sample": "op-node",
+      "deck": "* Berkeley SPICE v1 operating-point corpus: pmos-level1-common-source\n.model Mp PMOS(LEVEL=1 VTO=-0.55 LAMBDA=0.04 NSUB=1.6 CBD=3e-13)\nVdd vdd 0 1.8\nVgate gate 0 0\nRload out 0 1k\nM1 out gate vdd vdd Mp\n.op\n.save V(out)\n.end\n",
+      "probe": "out",
+      "expected": { "min": 1.3, "max": 1.5 }
+    },
+    {
       "id": "diode-capacitance-ac",
       "kind": "D",
       "analysis": "ac",
@@ -73,6 +100,33 @@
       "deck": "* Berkeley SPICE v1 core corpus: mos-level1-capacitance-ac\n.model Mn NMOS(LEVEL=1 VTO=0.55 LAMBDA=0.04 NSUB=1.6 CBD=3e-13)\nVdrive in 0 0 AC 1\nRin in drain 5meg\nVgate gate 0 0\nM1 drain gate 0 0 Mn\n.ac dec 1 100k 100k\n.save V(drain)\n.end\n",
       "probe": "drain",
       "expected": { "min": 0.72, "max": 0.74 }
+    },
+    {
+      "id": "pnp-capacitance-ac",
+      "kind": "PNP",
+      "analysis": "ac",
+      "sample": "ac-first-magnitude",
+      "deck": "* Berkeley SPICE v1 core corpus: pnp-capacitance-ac\n.model Qp PNP(BF=125 CJE=2e-12 TF=1e-10)\nVcc vcc 0 5\nVdrive in 0 4.3 AC 1\nRin in base 1meg\nRc col 0 1k\nQ1 col base vcc Qp\n.ac dec 1 100k 100k\n.save V(base)\n.end\n",
+      "probe": "base",
+      "expected": { "min": 0.13, "max": 0.16 }
+    },
+    {
+      "id": "pjf-capacitance-ac",
+      "kind": "PJF",
+      "analysis": "ac",
+      "sample": "ac-first-magnitude",
+      "deck": "* Berkeley SPICE v1 core corpus: pjf-capacitance-ac\n.model Jp PJF(BETA=9e-4 VTO=1.8 LAMBDA=0.02 CGS=2n CGD=100p)\nVss vss 0 -10\nVdrive in 0 0 AC 1\nRin in source 1k\nRd vss drain 2k\nVgate gate 0 0\nJ1 drain gate source Jp\n.ac dec 1 100k 100k\n.save V(source)\n.end\n",
+      "probe": "source",
+      "expected": { "min": 0.31, "max": 0.35 }
+    },
+    {
+      "id": "pmos-level1-capacitance-ac",
+      "kind": "PMOS",
+      "analysis": "ac",
+      "sample": "ac-first-magnitude",
+      "deck": "* Berkeley SPICE v1 core corpus: pmos-level1-capacitance-ac\n.model Mp PMOS(LEVEL=1 VTO=-0.55 LAMBDA=0.04 NSUB=1.6 CBD=3e-13)\nVdd vdd 0 1.8\nVdrive in 0 0 AC 1\nRin in drain 1k\nVgate gate 0 1.8\nM1 drain gate vdd vdd Mp\n.ac dec 1 100k 100k\n.save V(drain)\n.end\n",
+      "probe": "drain",
+      "expected": { "min": 0.98, "max": 1.0 }
     },
     {
       "id": "diode-storage-charge",
@@ -111,6 +165,33 @@
       "expected": { "min": 0.68, "max": 0.73 }
     },
     {
+      "id": "pnp-storage-charge",
+      "kind": "PNP",
+      "analysis": "tran",
+      "sample": "tran-final-node",
+      "deck": "* Berkeley SPICE v1 core corpus: pnp-storage-charge\n.model Qp PNP(BF=125 CJE=2e-12 TF=1e-10)\nVcc vcc 0 5\nVbase base 0 4.3\nQ1 out base vcc Qp\nRload out 0 1k\nCstore out 0 100p\n.tran 20n 2u\n.save V(out)\n.end\n",
+      "probe": "out",
+      "expected": { "min": 4.9, "max": 5.0 }
+    },
+    {
+      "id": "pjf-storage-charge",
+      "kind": "PJF",
+      "analysis": "tran",
+      "sample": "tran-final-node",
+      "deck": "* Berkeley SPICE v1 core corpus: pjf-storage-charge\n.model Jp PJF(BETA=9e-4 VTO=1.8 LAMBDA=0.02 CGS=20p CGD=5p)\nVss vss 0 -10\nVg gate 0 0\nRd vss drain 2k\nRs source 0 1k\nJ1 drain gate source Jp\nCstore source 0 100p\n.tran 20n 2u\n.save V(source)\n.end\n",
+      "probe": "source",
+      "expected": { "min": -0.95, "max": -0.8 }
+    },
+    {
+      "id": "pmos-level1-storage-charge",
+      "kind": "PMOS",
+      "analysis": "tran",
+      "sample": "tran-final-node",
+      "deck": "* Berkeley SPICE v1 core corpus: pmos-level1-storage-charge\n.model Mp PMOS(LEVEL=1 VTO=-0.55 LAMBDA=0.04 NSUB=1.6 CGSO=20p CGDO=5p CGBO=1p CBS=4e-13 CBD=3e-13 PB=0.9 MJ=0.45)\nVdd vdd 0 1.8\nVgate gate 0 0\nRload out 0 1k\nM1 out gate vdd vdd Mp\nCstore out 0 100p\n.tran 20n 2u\n.save V(out)\n.end\n",
+      "probe": "out",
+      "expected": { "min": 1.3, "max": 1.5 }
+    },
+    {
       "id": "linear-divider-dc",
       "kind": "linear",
       "analysis": "dc",
@@ -120,6 +201,69 @@
       "expected": { "min": 0.499, "max": 0.501 }
     },
     {
+      "id": "diode-forward-bias-dc",
+      "kind": "D",
+      "analysis": "dc",
+      "sample": "dc-final-node",
+      "deck": "* Berkeley SPICE v1 core corpus: diode-forward-bias-dc\n.model Dfast D(IS=2e-14 CJO=1.5e-12 TT=4e-9)\nVbias vin 0 0.8\nRlimit vin out 1k\nD1 out 0 Dfast\n.dc Vbias 0 0.8 0.4\n.save V(out)\n.end\n",
+      "probe": "out",
+      "expected": { "min": 0.55, "max": 0.65 }
+    },
+    {
+      "id": "bjt-emitter-follower-dc",
+      "kind": "NPN",
+      "analysis": "dc",
+      "sample": "dc-final-node",
+      "deck": "* Berkeley SPICE v1 core corpus: bjt-emitter-follower-dc\n.model Qsmall NPN(BF=125 CJE=2e-12 TF=1e-10)\nVcc vcc 0 5\nVbase base 0 0.72\nQ1 vcc base out Qsmall\nRload out 0 1k\n.dc Vbase 0 0.72 0.36\n.save V(out)\n.end\n",
+      "probe": "out",
+      "expected": { "min": 0.08, "max": 0.18 }
+    },
+    {
+      "id": "jfet-source-bias-dc",
+      "kind": "NJF",
+      "analysis": "dc",
+      "sample": "dc-final-node",
+      "deck": "* Berkeley SPICE v1 core corpus: jfet-source-bias-dc\n.model Jn NJF(BETA=9e-4 VTO=-1.8 LAMBDA=0.02)\nVdd vdd 0 10\nVg gate 0 0\nRd vdd drain 2k\nRs source 0 1k\nJ1 drain gate source Jn\n.dc Vg -1.8 0 0.9\n.save V(source)\n.end\n",
+      "probe": "source",
+      "expected": { "min": 0.8, "max": 0.95 }
+    },
+    {
+      "id": "mos-level1-common-source-dc",
+      "kind": "NMOS",
+      "analysis": "dc",
+      "sample": "dc-final-node",
+      "deck": "* Berkeley SPICE v1 core corpus: mos-level1-common-source-dc\n.model Mn NMOS(LEVEL=1 VTO=0.55 LAMBDA=0.04 NSUB=1.6 CBD=3e-13)\nVdd vdd 0 1.8\nVgate gate 0 1.8\nRload vdd out 1k\nM1 out gate 0 0 Mn\n.dc Vgate 0 1.8 0.9\n.save V(out)\n.end\n",
+      "probe": "out",
+      "expected": { "min": 0.55, "max": 0.85 }
+    },
+    {
+      "id": "pnp-pullup-dc",
+      "kind": "PNP",
+      "analysis": "dc",
+      "sample": "dc-final-node",
+      "deck": "* Berkeley SPICE v1 core corpus: pnp-pullup-dc\n.model Qp PNP(IS=1e-14 BF=100)\nVcc vcc 0 5\nVbase base 0 4.3\nQ1 out base vcc Qp\nRload out 0 1k\n.dc Vbase 5 4.3 -0.35\n.save V(out)\n.end\n",
+      "probe": "out",
+      "expected": { "min": 4.9, "max": 5.0 }
+    },
+    {
+      "id": "pjf-source-bias-dc",
+      "kind": "PJF",
+      "analysis": "dc",
+      "sample": "dc-final-node",
+      "deck": "* Berkeley SPICE v1 core corpus: pjf-source-bias-dc\n.model Jp PJF(BETA=9e-4 VTO=1.8 LAMBDA=0.02)\nVss vss 0 -10\nVg gate 0 0\nRd vss drain 2k\nRs source 0 1k\nJ1 drain gate source Jp\n.dc Vg 1.8 0 -0.9\n.save V(source)\n.end\n",
+      "probe": "source",
+      "expected": { "min": -0.95, "max": -0.8 }
+    },
+    {
+      "id": "pmos-level1-common-source-dc",
+      "kind": "PMOS",
+      "analysis": "dc",
+      "sample": "dc-final-node",
+      "deck": "* Berkeley SPICE v1 core corpus: pmos-level1-common-source-dc\n.model Mp PMOS(LEVEL=1 VTO=-0.55 LAMBDA=0.04 NSUB=1.6 CBD=3e-13)\nVdd vdd 0 1.8\nVgate gate 0 0\nRload out 0 1k\nM1 out gate vdd vdd Mp\n.dc Vgate 1.8 0 -0.9\n.save V(out)\n.end\n",
+      "probe": "out",
+      "expected": { "min": 1.3, "max": 1.5 }
+    },
+    {
       "id": "linear-divider-tf",
       "kind": "linear",
       "analysis": "tf",
@@ -127,6 +271,69 @@
       "deck": "* Berkeley SPICE v1 core corpus: linear-divider-tf\nVin in 0 DC 1\nR1 in out 1k\nR2 out 0 1k\n.tf V(out) Vin\n.end\n",
       "probe": "out",
       "expected": { "min": 0.499, "max": 0.501 }
+    },
+    {
+      "id": "diode-forward-bias-tf",
+      "kind": "D",
+      "analysis": "tf",
+      "sample": "tf-ratio",
+      "deck": "* Berkeley SPICE v1 core corpus: diode-forward-bias-tf\n.model Dfast D(IS=2e-14 CJO=1.5e-12 TT=4e-9)\nVbias vin 0 0.8\nRlimit vin out 1k\nD1 out 0 Dfast\n.tf V(out) Vbias\n.end\n",
+      "probe": "out",
+      "expected": { "min": 0.10, "max": 0.13 }
+    },
+    {
+      "id": "bjt-emitter-follower-tf",
+      "kind": "NPN",
+      "analysis": "tf",
+      "sample": "tf-ratio",
+      "deck": "* Berkeley SPICE v1 core corpus: bjt-emitter-follower-tf\n.model Qsmall NPN(BF=125 CJE=2e-12 TF=1e-10)\nVcc vcc 0 5\nVbase base 0 0.72\nQ1 vcc base out Qsmall\nRload out 0 1k\n.tf V(out) Vbase\n.end\n",
+      "probe": "out",
+      "expected": { "min": 0.80, "max": 0.85 }
+    },
+    {
+      "id": "jfet-source-bias-tf",
+      "kind": "NJF",
+      "analysis": "tf",
+      "sample": "tf-ratio",
+      "deck": "* Berkeley SPICE v1 core corpus: jfet-source-bias-tf\n.model Jn NJF(BETA=9e-4 VTO=-1.8 LAMBDA=0.02)\nVdd vdd 0 10\nVg gate 0 0\nRd vdd drain 2k\nRs source 0 1k\nJ1 drain gate source Jn\n.tf V(source) Vg\n.end\n",
+      "probe": "source",
+      "expected": { "min": 0.62, "max": 0.67 }
+    },
+    {
+      "id": "mos-level1-common-source-tf",
+      "kind": "NMOS",
+      "analysis": "tf",
+      "sample": "tf-ratio",
+      "deck": "* Berkeley SPICE v1 core corpus: mos-level1-common-source-tf\n.model Mn NMOS(LEVEL=1 VTO=0.55 LAMBDA=0.04 NSUB=1.6 CBD=3e-13)\nVdd vdd 0 1.8\nVgate gate 0 1.8\nRload vdd out 1k\nM1 out gate 0 0 Mn\n.tf V(out) Vgate\n.end\n",
+      "probe": "out",
+      "expected": { "min": -0.65, "max": -0.58 }
+    },
+    {
+      "id": "pnp-pullup-tf",
+      "kind": "PNP",
+      "analysis": "tf",
+      "sample": "tf-ratio",
+      "deck": "* Berkeley SPICE v1 core corpus: pnp-pullup-tf\n.model Qp PNP(IS=1e-14 BF=100)\nVcc vcc 0 5\nVbase base 0 4.3\nQ1 out base vcc Qp\nRload out 0 1k\n.tf V(out) Vbase\n.end\n",
+      "probe": "out",
+      "expected": { "min": -6.2, "max": -5.6 }
+    },
+    {
+      "id": "pjf-source-bias-tf",
+      "kind": "PJF",
+      "analysis": "tf",
+      "sample": "tf-ratio",
+      "deck": "* Berkeley SPICE v1 core corpus: pjf-source-bias-tf\n.model Jp PJF(BETA=9e-4 VTO=1.8 LAMBDA=0.02)\nVss vss 0 -10\nVg gate 0 0\nRd vss drain 2k\nRs source 0 1k\nJ1 drain gate source Jp\n.tf V(source) Vg\n.end\n",
+      "probe": "source",
+      "expected": { "min": 0.62, "max": 0.67 }
+    },
+    {
+      "id": "pmos-level1-common-source-tf",
+      "kind": "PMOS",
+      "analysis": "tf",
+      "sample": "tf-ratio",
+      "deck": "* Berkeley SPICE v1 core corpus: pmos-level1-common-source-tf\n.model Mp PMOS(LEVEL=1 VTO=-0.55 LAMBDA=0.04 NSUB=1.6 CBD=3e-13)\nVdd vdd 0 1.8\nVgate gate 0 0\nRload out 0 1k\nM1 out gate vdd vdd Mp\n.tf V(out) Vgate\n.end\n",
+      "probe": "out",
+      "expected": { "min": -0.18, "max": -0.12 }
     }
   ]
 }

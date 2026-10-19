@@ -1,0 +1,9 @@
+{
+  "id": "ES-PATH-716-LASTIMA",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "ES-EXT-716-LASTIMA"
+  ],
+  "after": []
+}

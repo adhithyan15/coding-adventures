@@ -1,0 +1,11 @@
+{
+  "id": "IT-C364-manifestare",
+  "pathSegment": "IT-PATH-364-PROTESTA",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "IT-EXT-364-PROTESTA",
+      "order": 3
+    }
+  ]
+}

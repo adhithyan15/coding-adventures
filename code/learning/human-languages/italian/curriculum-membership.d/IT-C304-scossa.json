@@ -1,0 +1,11 @@
+{
+  "id": "IT-C304-scossa",
+  "pathSegment": "IT-PATH-304-TERREMOTO",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "IT-EXT-304-TERREMOTO",
+      "order": 1
+    }
+  ]
+}

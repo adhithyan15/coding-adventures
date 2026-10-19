@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C272-ripasso-condizionale",
+    "language": "italian",
+    "chapter": 272,
+    "sequence": 16030,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:cbdda4d225521846"
+  },
+  "findings": []
+}

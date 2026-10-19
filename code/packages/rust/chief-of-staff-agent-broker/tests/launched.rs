@@ -183,7 +183,7 @@ fn a_launched_broker_publishes_through_the_relay() {
         message_id: MessageId::from_uuid_v7(uuid_v7(101)).unwrap(),
         timestamp_ns: 7,
     }])));
-    let (mut child, mut relay) = start_relay(
+    let (child, mut relay) = start_relay(
         launched,
         backend,
         metadata,
@@ -212,9 +212,9 @@ fn a_launched_broker_publishes_through_the_relay() {
     );
     assert_eq!(relay.ended(), None);
 
-    // The supervisor's teardown: kill the session, reap, then stop.
-    chief_of_staff_spawn_isolation::kill_session(&child).unwrap();
-    child.wait().unwrap();
+    // The supervisor's teardown: end the broker (its session killed, then
+    // reaped), then stop.
+    child.end();
     assert!(relay.stop());
 }
 
@@ -285,7 +285,7 @@ fn the_launched_broker_is_confined() {
         READY,
     )
     .unwrap();
-    let (mut child, mut relay) = start_relay(
+    let (child, mut relay) = start_relay(
         launched,
         backend,
         Arc::new(Metadata(Mutex::new(Vec::new()))),
@@ -342,7 +342,6 @@ fn the_launched_broker_is_confined() {
         use std::os::unix::fs::MetadataExt;
         assert_eq!(mem.uid(), 0);
     }
-    chief_of_staff_spawn_isolation::kill_session(&child).unwrap();
-    child.wait().unwrap();
+    child.end();
     assert!(relay.stop());
 }

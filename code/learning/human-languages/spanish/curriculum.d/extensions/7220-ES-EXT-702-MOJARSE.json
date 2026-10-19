@@ -1,0 +1,8 @@
+{
+  "id": "ES-EXT-702-MOJARSE",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say I got caught in the rain: soaked, with puddles, mud and a raincoat.",
+  "prerequisites": []
+}

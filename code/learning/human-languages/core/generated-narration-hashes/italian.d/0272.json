@@ -1,0 +1,18 @@
+{
+  "language": "italian",
+  "chapter": 272,
+  "sourceHash": "fnv1a64:125184b888f2a55c",
+  "lessonIds": [
+    "IT-C272-potrei",
+    "IT-C272-sarebbe",
+    "IT-C272-ripasso-condizionale",
+    "IT-W272-sei-righe"
+  ],
+  "voiceLessons": 3,
+  "drivablePrefix": 3,
+  "text": "italian/narration/ch272.txt",
+  "json": "italian/narration/ch272.json",
+  "textHash": "fnv1a64:8fbebc7ccc5f11a7",
+  "jsonHash": "fnv1a64:3e7f1f48416e31a0",
+  "findings": []
+}

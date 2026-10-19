@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 574,
+  "sourceHash": "fnv1a64:261f9a5cf13c7c36",
+  "lessonIds": [
+    "ES-C574-enterarse",
+    "ES-C574-recibir",
+    "ES-C574-notificacion",
+    "ES-C574-telediario",
+    "ES-C574-incidente"
+  ],
+  "tex": "spanish/book/chapters/ch574-como-me-entere.tex"
+}

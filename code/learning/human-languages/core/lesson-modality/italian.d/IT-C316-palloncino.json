@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C316-palloncino",
+    "language": "italian",
+    "chapter": 316,
+    "sequence": 18340,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4ce1c03f1d3e3e34"
+  },
+  "findings": []
+}

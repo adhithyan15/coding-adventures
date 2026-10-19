@@ -1,0 +1,19 @@
+{
+  "chapter": 328,
+  "title": "Imperi e sovrani",
+  "label": "ch:it-imperi-e-sovrani",
+  "canDo": "I can talk about empires: the emperor, the ruler, governing and founding a city.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "IT-R328-ripasso-321-328",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 328: I can talk about empires: the emperor, the ruler, governing and founding a city.",
+    "assesses": [
+      "IT-LEX-C328-IMPERO-03",
+      "IT-LEX-C328-IMPERO-04",
+      "IT-LEX-C328-IMPERO-05"
+    ]
+  }
+}

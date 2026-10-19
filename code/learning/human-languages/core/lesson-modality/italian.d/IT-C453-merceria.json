@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C453-merceria",
+    "language": "italian",
+    "chapter": 453,
+    "sequence": 25570,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:be8832e6e5f0242e"
+  },
+  "findings": []
+}

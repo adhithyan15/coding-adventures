@@ -1,0 +1,11 @@
+{
+  "id": "IT-C392-difesa",
+  "pathSegment": "IT-PATH-392-DIFESA",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "IT-EXT-392-DIFESA",
+      "order": 1
+    }
+  ]
+}

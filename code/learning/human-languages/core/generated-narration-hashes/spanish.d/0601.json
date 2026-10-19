@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 601,
+  "sourceHash": "fnv1a64:d15c9496d9aa95bd",
+  "lessonIds": [
+    "ES-C601-gobierno",
+    "ES-C601-politica",
+    "ES-C601-politico",
+    "ES-C601-ministro",
+    "ES-C601-concejal"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch601.txt",
+  "json": "spanish/narration/ch601.json",
+  "textHash": "fnv1a64:23d69fb1ed22be35",
+  "jsonHash": "fnv1a64:cacae3cfaa7b267a",
+  "findings": []
+}

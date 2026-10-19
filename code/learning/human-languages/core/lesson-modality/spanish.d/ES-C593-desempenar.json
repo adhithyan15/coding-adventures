@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C593-desempenar",
+    "language": "spanish",
+    "chapter": 593,
+    "sequence": 19380,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:92e70f3ea380a536"
+  },
+  "findings": []
+}

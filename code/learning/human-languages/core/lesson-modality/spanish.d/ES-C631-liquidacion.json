@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C631-liquidacion",
+    "language": "spanish",
+    "chapter": 631,
+    "sequence": 21310,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8142934bb290c0db"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 766,
+  "sourceHash": "fnv1a64:8dd3bfa267be34ca",
+  "lessonIds": [
+    "ES-C766-reto",
+    "ES-C766-ambicion",
+    "ES-C766-creativo",
+    "ES-C766-logro",
+    "ES-C766-talento"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch766.txt",
+  "json": "spanish/narration/ch766.json",
+  "textHash": "fnv1a64:c64ac9d33b84b5ae",
+  "jsonHash": "fnv1a64:f951f9e94f1eff59",
+  "findings": []
+}

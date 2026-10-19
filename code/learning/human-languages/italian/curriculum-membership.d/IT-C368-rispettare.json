@@ -1,0 +1,11 @@
+{
+  "id": "IT-C368-rispettare",
+  "pathSegment": "IT-PATH-368-CONVIVENZA",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "IT-EXT-368-CONVIVENZA",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "ES-C618-seguramente",
+  "pathSegment": "ES-PATH-618-SUPONE",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "ES-EXT-618-SUPONE",
+      "order": 4
+    }
+  ]
+}

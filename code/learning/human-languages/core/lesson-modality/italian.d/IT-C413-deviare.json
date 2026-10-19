@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C413-deviare",
+    "language": "italian",
+    "chapter": 413,
+    "sequence": 23550,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d37ff09bc3bc7d0a"
+  },
+  "findings": []
+}

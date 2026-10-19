@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C522-scultore",
+    "language": "italian",
+    "chapter": 522,
+    "sequence": 29220,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b297ee12fb86d91d"
+  },
+  "findings": []
+}

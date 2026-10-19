@@ -1,0 +1,19 @@
+{
+  "chapter": 316,
+  "title": "La torta di compleanno",
+  "label": "ch:it-la-torta-di-compleanno",
+  "canDo": "I can describe a birthday party: the candles, the birthday person, wrapping presents, bows and balloons.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "IT-C316-palloncino",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 316: I can describe a birthday party: the candles, the birthday person, wrapping presents, bows and balloons.",
+    "assesses": [
+      "IT-LEX-C316-CANDELINE-03",
+      "IT-LEX-C316-CANDELINE-04",
+      "IT-LEX-C316-CANDELINE-05"
+    ]
+  }
+}

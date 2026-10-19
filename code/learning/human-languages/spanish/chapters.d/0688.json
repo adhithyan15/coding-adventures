@@ -1,0 +1,19 @@
+{
+  "chapter": 688,
+  "title": "El mar",
+  "label": "ch:es-el-mar",
+  "canDo": "I can talk about the sea: the ocean, waves, tides, bays and floating in the water.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "ES-C688-flotar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 688: I can talk about the sea: the ocean, waves, tides, bays and floating in the water.",
+    "assesses": [
+      "ES-LEX-C688-MAR-03",
+      "ES-LEX-C688-MAR-04",
+      "ES-LEX-C688-MAR-05"
+    ]
+  }
+}

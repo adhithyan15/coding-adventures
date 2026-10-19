@@ -1,0 +1,858 @@
+{
+  "version": 1,
+  "language": "italian",
+  "chapter": 412,
+  "title": "Pedoni e vigili",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:31ca45259150947e",
+  "lessons": [
+    {
+      "id": "IT-C412-vigile",
+      "sequence": 23450,
+      "title": "il vigile — the traffic warden, the local police officer",
+      "headword": "il vigile",
+      "romanization": "il vigile",
+      "gloss": "the traffic warden, the local police officer",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:93a3898d040eaf15",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Italian for the light, then the Italian for to unscrew."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: il vigile",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "il vigile — \"the traffic warden, the local police officer\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Il vigile ci ha fermato all'incrocio. The warden stopped us at the crossroads."
+            },
+            {
+              "kind": "speech",
+              "text": "In full il vigile urbano; i vigili del fuoco are firefighters."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "vigile is a learned borrowing from Latin vigil 'awake, watchful' (Lewis & Short): the one who keeps watch."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "il vigile",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *il vigile*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "il vigile, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *il vigile*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with il vigile",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *il vigile*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Italian for the light, then the Italian for to unscrew, then say il vigile again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Italian for the light, then the Italian for to unscrew, then say *il vigile* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does il vigile mean? (\"The traffic warden, the local police officer\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "IT-C412-pedone",
+      "sequence": 23460,
+      "title": "il pedone — the pedestrian",
+      "headword": "il pedone",
+      "romanization": "il pedone",
+      "gloss": "the pedestrian",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5c82764e73da4e52",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Italian for to unscrew, then the Italian for the traffic warden."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: il pedone",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "il pedone — \"the pedestrian\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Attenzione ai pedoni! Watch out for pedestrians!"
+            },
+            {
+              "kind": "speech",
+              "text": "La zona pedonale is a pedestrian zone. In chess, il pedone is a pawn."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "pedone is inherited from Late Latin pedō 'foot soldier', built on pēs, pedis 'foot' (EtymDB)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "il pedone",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *il pedone*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "il pedone, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *il pedone*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with il pedone",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *il pedone*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Italian for to unscrew, then the Italian for the traffic warden, then say il pedone again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Italian for to unscrew, then the Italian for the traffic warden, then say *il pedone* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does il pedone mean? (\"The pedestrian\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "IT-C412-strisce",
+      "sequence": 23470,
+      "title": "le strisce — the zebra crossing; the stripes",
+      "headword": "le strisce",
+      "romanization": "le strisce",
+      "gloss": "the zebra crossing; the stripes",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:eeac7ea4b1f9651a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Italian for the traffic warden, then the Italian for the pedestrian."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: le strisce",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "le strisce — \"the zebra crossing; the stripes\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Attraversa sulle strisce, è più sicuro. Cross at the zebra crossing, it is safer."
+            },
+            {
+              "kind": "speech",
+              "text": "Singular la striscia, a stripe; in full le strisce pedonali."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "strisce is the plural of striscia 'stripe', which EtymDB traces to Latin stria 'furrow, groove'; it is inherited."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "le strisce",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *le strisce*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "le strisce, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *le strisce*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with le strisce",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *le strisce*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Italian for the traffic warden, then the Italian for the pedestrian, then say le strisce again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Italian for the traffic warden, then the Italian for the pedestrian, then say *le strisce* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does le strisce mean? (\"The zebra crossing; the stripes\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "IT-C412-investire",
+      "sequence": 23480,
+      "title": "investire — to run over; to invest",
+      "headword": "investire",
+      "romanization": "investire",
+      "gloss": "to run over; to invest",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:303149e57b9ba8a4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Italian for the pedestrian, then the Italian for the zebra crossing."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: investire",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "investire — \"to run over; to invest\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Una macchina ha investito un gatto. A car ran over a cat."
+            },
+            {
+              "kind": "speech",
+              "text": "With money it means to invest: investire in una casa."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "investire is a learned borrowing from Latin investīre 'to clothe, to cover' (EtymDB), built on vestis 'clothing'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "investire",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *investire*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "investire, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *investire*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with investire",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *investire*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Italian for the pedestrian, then the Italian for the zebra crossing, then say investire again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Italian for the pedestrian, then the Italian for the zebra crossing, then say *investire* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does investire mean? (\"To run over; to invest\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "IT-C412-contravvenzione",
+      "sequence": 23490,
+      "title": "la contravvenzione — the fine, the traffic ticket",
+      "headword": "la contravvenzione",
+      "romanization": "la contravvenzione",
+      "gloss": "the fine, the traffic ticket",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:96eccefd938d281d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Italian for the zebra crossing, then the Italian for to run over."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: la contravvenzione",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la contravvenzione — \"the fine, the traffic ticket\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Il vigile mi ha fatto una contravvenzione. The warden gave me a ticket."
+            },
+            {
+              "kind": "speech",
+              "text": "Formal; in speech people say la multa."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "contravvenzione is a learned borrowing from Medieval Latin contrāventiō, built on contrā 'against' and venīre 'to come': coming against a rule."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la contravvenzione",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la contravvenzione*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la contravvenzione, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la contravvenzione*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with la contravvenzione",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *la contravvenzione*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Italian for the zebra crossing, then the Italian for to run over, then say la contravvenzione again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Italian for the zebra crossing, then the Italian for to run over, then say *la contravvenzione* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does la contravvenzione mean? (\"The fine, the traffic ticket\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "IT-R412-ripasso-405-412",
+      "sequence": 23500,
+      "title": "Strade, stazioni e alberghi",
+      "headword": "(dialogue)",
+      "romanization": "(dialogue)",
+      "gloss": "a review of chapters 405-412",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:09ea645e3fd3dfdf",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Italian for the toll booth and the lane."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the toll booth, the lane, the ring road, the junction, to overtake",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the toll booth, the lane, the ring road, the junction, to overtake]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to speed up, the brake, the braking, to steer, to skid",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to speed up, the brake, the braking, to steer, to skid]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the windscreen, the windscreen wiper, the wing mirror, the horn, to mist up",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the windscreen, the windscreen wiper, the wing mirror, the horn, to mist up]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the petrol station attendant, the diesel, the fuel, the tank, to refuel",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the petrol station attendant, the diesel, the fuel, the tank, to refuel]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to get a puncture, the puncture, the tyre, the jack, to pump up",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to get a puncture, the puncture, the tyre, the jack, to pump up]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the breakdown, to break down, the tow truck, to tow, the garage",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the breakdown, to break down, the tow truck, to tow, the garage]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the bonnet, the boot, the clutch, the light, to unscrew",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the bonnet, the boot, the clutch, the light, to unscrew]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the traffic warden, the pedestrian, the zebra crossing, to run over, the fine",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the traffic warden, the pedestrian, the zebra crossing, to run over, the fine]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The toll booth? (il casello.) The lane? (la corsia.) The ring road? (la tangenziale.) The junction? (lo svincolo.) To overtake? (sorpassare.) To speed up? (accelerare.) The brake? (il freno.) The braking? (la frenata.) To steer? (sterzare.) To skid? (sbandare.) The windscreen? (il parabrezza.) The windscreen wiper? (il tergicristallo.) The wing mirror? (lo specchietto.) The horn? (il clacson.) To mist up? (appannarsi.) The petrol station attendant? (il benzinaio.) The diesel? (il gasolio.) The fuel? (il carburante.) The tank? (il serbatoio.) To refuel? (rifornire.) To get a puncture? (forare.) The puncture? (la foratura.) The tyre? (lo pneumatico.) The jack? (il cric.) To pump up? (gonfiare.) The breakdown? (il guasto.) To break down? (guastarsi.) The tow truck? (il carro attrezzi.) To tow? (rimorchiare.) The garage? (l'officina.) The bonnet? (il cofano.) The boot? (il bagagliaio.) The clutch? (la frizione.) The light? (il fanale.) To unscrew? (svitare.) The traffic warden? (il vigile.) The pedestrian? (il pedone.) The zebra crossing? (le strisce.) To run over? (investire.) The fine? (la contravvenzione.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

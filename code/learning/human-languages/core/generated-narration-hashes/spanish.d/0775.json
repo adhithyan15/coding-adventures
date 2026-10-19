@@ -1,0 +1,20 @@
+{
+  "language": "spanish",
+  "chapter": 775,
+  "sourceHash": "fnv1a64:746757f599faeeb0",
+  "lessonIds": [
+    "ES-C775-nevera",
+    "ES-C775-cafetera",
+    "ES-C775-lata",
+    "ES-C775-trozo",
+    "ES-C775-olor",
+    "ES-R775-repaso-768-775"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "spanish/narration/ch775.txt",
+  "json": "spanish/narration/ch775.json",
+  "textHash": "fnv1a64:8b966e535a4116a0",
+  "jsonHash": "fnv1a64:c2c9b608962c283d",
+  "findings": []
+}

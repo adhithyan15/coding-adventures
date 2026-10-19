@@ -1,0 +1,11 @@
+{
+  "id": "ES-C711-emocionado",
+  "pathSegment": "ES-PATH-711-EMOCION",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ES-EXT-711-EMOCION",
+      "order": 1
+    }
+  ]
+}

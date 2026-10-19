@@ -1,0 +1,11 @@
+{
+  "id": "IT-C432-portiere",
+  "pathSegment": "IT-PATH-432-ALLOGGIO",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "IT-EXT-432-ALLOGGIO",
+      "order": 4
+    }
+  ]
+}

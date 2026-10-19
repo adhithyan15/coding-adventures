@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 342,
+  "sourceHash": "fnv1a64:0a2e87d7ebbb2f05",
+  "lessonIds": [
+    "IT-C342-ammettere",
+    "IT-C342-concordare",
+    "IT-C342-consenso",
+    "IT-C342-compromesso",
+    "IT-C342-cedere"
+  ],
+  "tex": "italian/book/chapters/ch342-trovare-un-accordo.tex"
+}

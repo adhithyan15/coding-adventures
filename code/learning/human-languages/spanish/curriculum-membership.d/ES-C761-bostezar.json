@@ -1,0 +1,11 @@
+{
+  "id": "ES-C761-bostezar",
+  "pathSegment": "ES-PATH-761-SERIE",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ES-EXT-761-SERIE",
+      "order": 3
+    }
+  ]
+}

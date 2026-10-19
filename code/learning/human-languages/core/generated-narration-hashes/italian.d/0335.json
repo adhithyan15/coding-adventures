@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 335,
+  "sourceHash": "fnv1a64:1c02b29bfb13a3c3",
+  "lessonIds": [
+    "IT-C335-impastare",
+    "IT-C335-impasto",
+    "IT-C335-lievito",
+    "IT-C335-lievitare",
+    "IT-C335-mattarello"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch335.txt",
+  "json": "italian/narration/ch335.json",
+  "textHash": "fnv1a64:25e0fef8d43b3c92",
+  "jsonHash": "fnv1a64:8a3894ae936a401f",
+  "findings": []
+}

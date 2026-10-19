@@ -1,0 +1,11 @@
+{
+  "id": "IT-C330-medioevo",
+  "pathSegment": "IT-PATH-330-SCAVI",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "IT-EXT-330-SCAVI",
+      "order": 1
+    }
+  ]
+}

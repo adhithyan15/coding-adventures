@@ -1,0 +1,11 @@
+{
+  "id": "IT-C511-pareggiare",
+  "pathSegment": "IT-PATH-511-RISULTATI",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "IT-EXT-511-RISULTATI",
+      "order": 2
+    }
+  ]
+}

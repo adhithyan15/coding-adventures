@@ -1,0 +1,11 @@
+{
+  "id": "IT-C451-gironzolare",
+  "pathSegment": "IT-PATH-451-PASSEGGIATA",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "IT-EXT-451-PASSEGGIATA",
+      "order": 1
+    }
+  ]
+}

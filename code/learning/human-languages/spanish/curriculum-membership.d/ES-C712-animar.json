@@ -1,0 +1,11 @@
+{
+  "id": "ES-C712-animar",
+  "pathSegment": "ES-PATH-712-ANIMO",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ES-EXT-712-ANIMO",
+      "order": 3
+    }
+  ]
+}

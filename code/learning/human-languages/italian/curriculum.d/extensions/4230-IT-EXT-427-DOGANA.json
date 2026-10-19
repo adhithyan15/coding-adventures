@@ -1,0 +1,8 @@
+{
+  "id": "IT-EXT-427-DOGANA",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can get through border and security checks: the customs officer, declaring, being searched and the border pass.",
+  "prerequisites": []
+}

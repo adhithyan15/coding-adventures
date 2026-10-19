@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 667,
+  "sourceHash": "fnv1a64:d71b2735d3669940",
+  "lessonIds": [
+    "ES-C667-apartamento",
+    "ES-C667-propietario",
+    "ES-C667-anfitrion",
+    "ES-C667-inquilino",
+    "ES-C667-alquilar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch667.txt",
+  "json": "spanish/narration/ch667.json",
+  "textHash": "fnv1a64:b6c04e3dedc76c6b",
+  "jsonHash": "fnv1a64:c620c2520877e808",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "IT-R536-ripasso-final-536",
+  "pathSegment": "IT-PATH-536-CASA",
+  "pathOrder": 6,
+  "extensions": [
+    {
+      "id": "IT-EXT-536-CASA",
+      "order": 6
+    }
+  ]
+}

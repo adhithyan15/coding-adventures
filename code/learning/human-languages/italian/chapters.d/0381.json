@@ -1,0 +1,19 @@
+{
+  "chapter": 381,
+  "title": "Studiare a fondo",
+  "label": "ch:it-studiare-a-fondo",
+  "canDo": "I can talk about advanced study: lecturers, a thesis supervisor, a scholarship, a doctorate and an exam session.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "IT-C381-appello",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 381: I can talk about advanced study: lecturers, a thesis supervisor, a scholarship, a doctorate and an exam session.",
+    "assesses": [
+      "IT-LEX-C381-DOCENTE-03",
+      "IT-LEX-C381-DOCENTE-04",
+      "IT-LEX-C381-DOCENTE-05"
+    ]
+  }
+}

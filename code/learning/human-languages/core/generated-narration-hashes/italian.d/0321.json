@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 321,
+  "sourceHash": "fnv1a64:bb4f9852dc184168",
+  "lessonIds": [
+    "IT-C321-presepe",
+    "IT-C321-panettone",
+    "IT-C321-cenone",
+    "IT-C321-addobbare",
+    "IT-C321-tombola"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch321.txt",
+  "json": "italian/narration/ch321.json",
+  "textHash": "fnv1a64:71a5f33083ce942e",
+  "jsonHash": "fnv1a64:9afb1362eb26e437",
+  "findings": []
+}

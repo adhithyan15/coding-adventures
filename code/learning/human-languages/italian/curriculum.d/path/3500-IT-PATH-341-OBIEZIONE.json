@@ -1,0 +1,9 @@
+{
+  "id": "IT-PATH-341-OBIEZIONE",
+  "spine_node": "SPINE-GIVE-REASONS",
+  "before": [],
+  "inline": [
+    "IT-EXT-341-OBIEZIONE"
+  ],
+  "after": []
+}

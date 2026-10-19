@@ -2,12 +2,12 @@
   "schemaVersion": 1,
   "suite": "berkeley-v1-release",
   "corpusGate": {
-    "minimumCoreCaseCount": 14,
+    "minimumCoreCaseCount": 37,
     "requiredAnalysisKinds": ["op", "dc", "ac", "tran", "tf"],
-    "requiredDeviceKinds": ["D", "NPN", "NJF", "NMOS"],
+    "requiredDeviceKinds": ["D", "NPN", "PNP", "NJF", "PJF", "NMOS", "PMOS"],
     "minimumSyntaxCaseCount": 9,
     "requiredSyntaxClassifications": ["supported", "supported-diagnostic", "deliberate-exclusion"],
-    "minimumCliSuccessCaseCount": 1,
+    "minimumCliSuccessCaseCount": 2,
     "minimumCliFailureCaseCount": 1
   },
   "cli": {

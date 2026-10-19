@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C465-lumaca",
+    "language": "italian",
+    "chapter": 465,
+    "sequence": 26200,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9596fa0a3fc05d41"
+  },
+  "findings": []
+}

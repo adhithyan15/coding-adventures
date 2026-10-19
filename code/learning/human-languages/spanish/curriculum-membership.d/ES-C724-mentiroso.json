@@ -1,0 +1,11 @@
+{
+  "id": "ES-C724-mentiroso",
+  "pathSegment": "ES-PATH-724-MENTIRA",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ES-EXT-724-MENTIRA",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "IT-C352-scatenare",
+  "pathSegment": "IT-PATH-352-IMPATTO",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "IT-EXT-352-IMPATTO",
+      "order": 3
+    }
+  ]
+}

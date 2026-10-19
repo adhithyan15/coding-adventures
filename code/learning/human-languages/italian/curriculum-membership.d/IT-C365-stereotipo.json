@@ -1,0 +1,11 @@
+{
+  "id": "IT-C365-stereotipo",
+  "pathSegment": "IT-PATH-365-GIUSTIZIA",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "IT-EXT-365-GIUSTIZIA",
+      "order": 4
+    }
+  ]
+}

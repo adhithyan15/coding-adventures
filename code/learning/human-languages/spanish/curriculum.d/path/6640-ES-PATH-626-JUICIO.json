@@ -1,0 +1,9 @@
+{
+  "id": "ES-PATH-626-JUICIO",
+  "spine_node": "SPINE-EXPRESS-CONDITION",
+  "before": [],
+  "inline": [
+    "ES-EXT-626-JUICIO"
+  ],
+  "after": []
+}

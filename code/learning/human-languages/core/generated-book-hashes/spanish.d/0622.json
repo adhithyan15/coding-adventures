@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 622,
+  "sourceHash": "fnv1a64:52c0d2e5ab6ae295",
+  "lessonIds": [
+    "ES-C622-normativa",
+    "ES-C622-reglamento",
+    "ES-C622-prohibicion",
+    "ES-C622-obligar",
+    "ES-C622-obligacion"
+  ],
+  "tex": "spanish/book/chapters/ch622-las-reglas.tex"
+}

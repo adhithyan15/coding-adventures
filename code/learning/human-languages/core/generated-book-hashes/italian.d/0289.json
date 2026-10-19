@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 289,
+  "sourceHash": "fnv1a64:e19f342e386dd239",
+  "lessonIds": [
+    "IT-C289-lettore",
+    "IT-C289-ascoltatore",
+    "IT-C289-spettatore",
+    "IT-C289-pubblico",
+    "IT-C289-editoriale"
+  ],
+  "tex": "italian/book/chapters/ch289-chi-legge-chi-guarda.tex"
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 298,
+  "title": "La banda",
+  "label": "ch:it-la-banda",
+  "canDo": "I can talk about a gang and its accomplice, an attack and a threat.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "IT-C298-minacciare",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 298: I can talk about a gang and its accomplice, an attack and a threat.",
+    "assesses": [
+      "IT-LEX-C298-BANDA-03",
+      "IT-LEX-C298-BANDA-04",
+      "IT-LEX-C298-BANDA-05"
+    ]
+  }
+}

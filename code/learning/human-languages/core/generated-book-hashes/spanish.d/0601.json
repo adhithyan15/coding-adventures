@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 601,
+  "sourceHash": "fnv1a64:e168ce63b5e3f0c4",
+  "lessonIds": [
+    "ES-C601-gobierno",
+    "ES-C601-politica",
+    "ES-C601-politico",
+    "ES-C601-ministro",
+    "ES-C601-concejal"
+  ],
+  "tex": "spanish/book/chapters/ch601-el-gobierno.tex"
+}

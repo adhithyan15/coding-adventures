@@ -1,0 +1,11 @@
+{
+  "id": "IT-C309-maggiorenne",
+  "pathSegment": "IT-PATH-309-GENERAZIONE",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "IT-EXT-309-GENERAZIONE",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 765,
+  "sourceHash": "fnv1a64:71f8279f8c11823b",
+  "lessonIds": [
+    "ES-C765-ilusion",
+    "ES-C765-anhelar",
+    "ES-C765-capricho",
+    "ES-C765-imaginacion",
+    "ES-C765-aspirar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch765.txt",
+  "json": "spanish/narration/ch765.json",
+  "textHash": "fnv1a64:4307282730fb741a",
+  "jsonHash": "fnv1a64:92ad50374d32c6fb",
+  "findings": []
+}

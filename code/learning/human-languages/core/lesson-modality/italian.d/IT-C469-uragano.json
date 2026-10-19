@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C469-uragano",
+    "language": "italian",
+    "chapter": 469,
+    "sequence": 26390,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:12e9fe989dd5ea9b"
+  },
+  "findings": []
+}

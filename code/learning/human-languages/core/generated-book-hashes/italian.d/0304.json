@@ -1,0 +1,14 @@
+{
+  "language": "italian",
+  "chapter": 304,
+  "sourceHash": "fnv1a64:38af5082abc40180",
+  "lessonIds": [
+    "IT-C304-terremoto",
+    "IT-C304-scossa",
+    "IT-C304-macerie",
+    "IT-C304-sfollato",
+    "IT-C304-evacuare",
+    "IT-R304-ripasso-297-304"
+  ],
+  "tex": "italian/book/chapters/ch304-la-terra-trema.tex"
+}

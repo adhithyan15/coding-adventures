@@ -1,0 +1,20 @@
+{
+  "language": "spanish",
+  "chapter": 695,
+  "sourceHash": "fnv1a64:48d69e89a4d3724e",
+  "lessonIds": [
+    "ES-C695-picar",
+    "ES-C695-fauna",
+    "ES-C695-flora",
+    "ES-C695-pescar",
+    "ES-C695-ciervo",
+    "ES-R695-repaso-688-695"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "spanish/narration/ch695.txt",
+  "json": "spanish/narration/ch695.json",
+  "textHash": "fnv1a64:a1a641451a243808",
+  "jsonHash": "fnv1a64:06c65a908d905157",
+  "findings": []
+}

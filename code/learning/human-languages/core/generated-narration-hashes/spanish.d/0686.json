@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 686,
+  "sourceHash": "fnv1a64:c8308402e823accb",
+  "lessonIds": [
+    "ES-C686-cima",
+    "ES-C686-pico",
+    "ES-C686-subida",
+    "ES-C686-roca",
+    "ES-C686-escalar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch686.txt",
+  "json": "spanish/narration/ch686.json",
+  "textHash": "fnv1a64:da64114e0bd8035f",
+  "jsonHash": "fnv1a64:3f1a3308774249b9",
+  "findings": []
+}

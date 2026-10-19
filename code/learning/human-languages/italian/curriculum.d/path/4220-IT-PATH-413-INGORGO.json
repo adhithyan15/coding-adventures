@@ -1,0 +1,9 @@
+{
+  "id": "IT-PATH-413-INGORGO",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "IT-EXT-413-INGORGO"
+  ],
+  "after": []
+}

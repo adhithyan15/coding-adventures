@@ -1,0 +1,19 @@
+{
+  "chapter": 710,
+  "title": "Los nervios",
+  "label": "ch:es-los-nervios",
+  "canDo": "I can say that I am nervous or stressed and that I need to calm down.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "ES-C710-calmar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 710: I can say that I am nervous or stressed and that I need to calm down.",
+    "assesses": [
+      "ES-LEX-C710-NERVIOS-03",
+      "ES-LEX-C710-NERVIOS-04",
+      "ES-LEX-C710-NERVIOS-05"
+    ]
+  }
+}

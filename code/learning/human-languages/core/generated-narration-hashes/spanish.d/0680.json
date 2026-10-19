@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 680,
+  "sourceHash": "fnv1a64:9b5832eb7f7c0065",
+  "lessonIds": [
+    "ES-C680-pasteleria",
+    "ES-C680-papeleria",
+    "ES-C680-peluqueria",
+    "ES-C680-lavanderia",
+    "ES-C680-heladeria"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch680.txt",
+  "json": "spanish/narration/ch680.json",
+  "textHash": "fnv1a64:bfebacf6b4ac59ba",
+  "jsonHash": "fnv1a64:b3477f1a467f0e6f",
+  "findings": []
+}

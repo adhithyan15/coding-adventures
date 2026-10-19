@@ -1,0 +1,19 @@
+{
+  "chapter": 619,
+  "title": "A lo mejor",
+  "label": "ch:es-a-lo-mejor",
+  "canDo": "I can say that something may happen and look ahead.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "ES-C619-predecir",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 619: I can say that something may happen and look ahead.",
+    "assesses": [
+      "ES-LEX-C619-QUIZA-03",
+      "ES-LEX-C619-QUIZA-04",
+      "ES-LEX-C619-QUIZA-05"
+    ]
+  }
+}

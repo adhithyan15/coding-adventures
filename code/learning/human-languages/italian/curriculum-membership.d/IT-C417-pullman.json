@@ -1,0 +1,11 @@
+{
+  "id": "IT-C417-pullman",
+  "pathSegment": "IT-PATH-417-FERMATA",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "IT-EXT-417-FERMATA",
+      "order": 3
+    }
+  ]
+}

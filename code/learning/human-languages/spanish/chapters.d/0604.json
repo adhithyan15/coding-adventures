@@ -1,0 +1,19 @@
+{
+  "chapter": 604,
+  "title": "Protestar",
+  "label": "ch:es-protestar",
+  "canDo": "I can say what people protest about, what they demand and what is controversial.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "ES-C604-reivindicar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 604: I can say what people protest about, what they demand and what is controversial.",
+    "assesses": [
+      "ES-LEX-C604-PROTESTA-03",
+      "ES-LEX-C604-PROTESTA-04",
+      "ES-LEX-C604-PROTESTA-05"
+    ]
+  }
+}

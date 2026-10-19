@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C489-sintomo",
+    "language": "italian",
+    "chapter": 489,
+    "sequence": 27530,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7d1fb5b072c0f8c9"
+  },
+  "findings": []
+}

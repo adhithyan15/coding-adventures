@@ -1,0 +1,19 @@
+{
+  "chapter": 655,
+  "title": "Un vuelo movido",
+  "label": "ch:es-un-vuelo-movido",
+  "canDo": "I can talk about a hard flight: jet lag, turbulence, feeling sick and the life jacket.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "ES-R655-repaso-648-655",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 655: I can talk about a hard flight: jet lag, turbulence, feeling sick and the life jacket.",
+    "assesses": [
+      "ES-LEX-C655-VUELO-03",
+      "ES-LEX-C655-VUELO-04",
+      "ES-LEX-C655-VUELO-05"
+    ]
+  }
+}

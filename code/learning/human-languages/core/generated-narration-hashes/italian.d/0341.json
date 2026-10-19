@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 341,
+  "sourceHash": "fnv1a64:78a18c25aa73be51",
+  "lessonIds": [
+    "IT-C341-disaccordo",
+    "IT-C341-obiettare",
+    "IT-C341-obiezione",
+    "IT-C341-ribattere",
+    "IT-C341-contraddire"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch341.txt",
+  "json": "italian/narration/ch341.json",
+  "textHash": "fnv1a64:d77204295c5ccbc1",
+  "jsonHash": "fnv1a64:8db7e4c4edd0a237",
+  "findings": []
+}

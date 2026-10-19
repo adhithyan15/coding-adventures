@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 487,
+  "sourceHash": "fnv1a64:f0cf0839838b9192",
+  "lessonIds": [
+    "IT-C487-masticare",
+    "IT-C487-digerire",
+    "IT-C487-malessere",
+    "IT-C487-vomitare",
+    "IT-C487-vertigini"
+  ],
+  "tex": "italian/book/chapters/ch487-stomaco-e-testa.tex"
+}

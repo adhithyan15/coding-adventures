@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C463-abbronzarsi",
+    "language": "italian",
+    "chapter": 463,
+    "sequence": 26080,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c6a2c811415033eb"
+  },
+  "findings": []
+}

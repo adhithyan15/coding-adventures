@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C303-esplosione",
+    "language": "italian",
+    "chapter": 303,
+    "sequence": 17630,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c56bded89ee6c8c6"
+  },
+  "findings": []
+}

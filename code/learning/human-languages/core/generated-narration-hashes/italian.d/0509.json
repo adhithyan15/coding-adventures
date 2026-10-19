@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 509,
+  "sourceHash": "fnv1a64:824b906b8e909318",
+  "lessonIds": [
+    "IT-C509-arbitro",
+    "IT-C509-fischiare",
+    "IT-C509-fallo",
+    "IT-C509-rigore",
+    "IT-C509-ammonire"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch509.txt",
+  "json": "italian/narration/ch509.json",
+  "textHash": "fnv1a64:f265c7dca1d560d4",
+  "jsonHash": "fnv1a64:a47a3d6ad5303092",
+  "findings": []
+}

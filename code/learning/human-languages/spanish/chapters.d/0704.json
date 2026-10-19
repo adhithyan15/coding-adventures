@@ -1,0 +1,19 @@
+{
+  "chapter": 704,
+  "title": "Alegrías y penas",
+  "label": "ch:es-alegrias-y-penas",
+  "canDo": "I can say when something fills me with joy, makes me sad or moves me to tears.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "ES-C704-llorar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 704: I can say when something fills me with joy, makes me sad or moves me to tears.",
+    "assesses": [
+      "ES-LEX-C704-ALEGRIA-03",
+      "ES-LEX-C704-ALEGRIA-04",
+      "ES-LEX-C704-ALEGRIA-05"
+    ]
+  }
+}

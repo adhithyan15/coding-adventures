@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C725-reconciliarse",
+    "language": "spanish",
+    "chapter": 725,
+    "sequence": 26200,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f38e6f5c91c9ee3e"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "IT-C340-argomentazione",
+  "pathSegment": "IT-PATH-340-DIBATTITO",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "IT-EXT-340-DIBATTITO",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 285,
+  "sourceHash": "fnv1a64:333b0d37ecd107a2",
+  "lessonIds": [
+    "IT-C285-dichiarazione",
+    "IT-C285-portavoce",
+    "IT-C285-conferenza-stampa",
+    "IT-C285-comunicato",
+    "IT-C285-smentita"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch285.txt",
+  "json": "italian/narration/ch285.json",
+  "textHash": "fnv1a64:4930beccd9a3f3de",
+  "jsonHash": "fnv1a64:05cce8542fc21c66",
+  "findings": []
+}

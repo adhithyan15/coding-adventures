@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 314,
+  "sourceHash": "fnv1a64:a5caf7d11b0a4dab",
+  "lessonIds": [
+    "IT-C314-testamento",
+    "IT-C314-ereditare",
+    "IT-C314-eredita",
+    "IT-C314-erede",
+    "IT-C314-tomba"
+  ],
+  "tex": "italian/book/chapters/ch314-il-testamento.tex"
+}

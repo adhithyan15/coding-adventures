@@ -1,0 +1,11 @@
+{
+  "id": "IT-C500-rammendare",
+  "pathSegment": "IT-PATH-500-CUCITO",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "IT-EXT-500-CUCITO",
+      "order": 4
+    }
+  ]
+}

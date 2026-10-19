@@ -1,0 +1,11 @@
+{
+  "id": "IT-C284-riferire",
+  "pathSegment": "IT-PATH-284-INCHIESTA",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "IT-EXT-284-INCHIESTA",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 350,
+  "title": "Siccome e poiché",
+  "label": "ch:it-siccome-e-poiche",
+  "canDo": "I can link a cause to its result: since, as, so and therefore, and say what something is due to.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "IT-C350-dovuto",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 350: I can link a cause to its result: since, as, so and therefore, and say what something is due to.",
+    "assesses": [
+      "IT-LEX-C350-SICCOME-03",
+      "IT-LEX-C350-SICCOME-04",
+      "IT-LEX-C350-SICCOME-05"
+    ]
+  }
+}

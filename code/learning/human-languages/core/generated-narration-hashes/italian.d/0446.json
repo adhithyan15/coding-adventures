@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 446,
+  "sourceHash": "fnv1a64:9456ea5e70509e95",
+  "lessonIds": [
+    "IT-C446-mura",
+    "IT-C446-rocca",
+    "IT-C446-borgo",
+    "IT-C446-chiostro",
+    "IT-C446-vagare"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch446.txt",
+  "json": "italian/narration/ch446.json",
+  "textHash": "fnv1a64:2bc5a98fd884ddb9",
+  "jsonHash": "fnv1a64:8edd894a05a19f84",
+  "findings": []
+}

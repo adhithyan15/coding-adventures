@@ -1,0 +1,11 @@
+{
+  "id": "IT-C472-generoso",
+  "pathSegment": "IT-PATH-472-DIFETTI",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "IT-EXT-472-DIFETTI",
+      "order": 2
+    }
+  ]
+}

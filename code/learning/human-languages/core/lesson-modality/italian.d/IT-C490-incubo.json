@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C490-incubo",
+    "language": "italian",
+    "chapter": 490,
+    "sequence": 27590,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a146f64a22c7402e"
+  },
+  "findings": []
+}

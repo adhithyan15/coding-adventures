@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 677,
+  "sourceHash": "fnv1a64:7fecf419b08a8488",
+  "lessonIds": [
+    "ES-C677-monumento",
+    "ES-C677-catedral",
+    "ES-C677-castillo",
+    "ES-C677-palacio",
+    "ES-C677-muralla"
+  ],
+  "tex": "spanish/book/chapters/ch677-monumentos.tex"
+}

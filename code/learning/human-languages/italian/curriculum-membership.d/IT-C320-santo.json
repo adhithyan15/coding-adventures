@@ -1,0 +1,11 @@
+{
+  "id": "IT-C320-santo",
+  "pathSegment": "IT-PATH-320-FIERA",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "IT-EXT-320-FIERA",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "IT-C323-narrare",
+  "pathSegment": "IT-PATH-323-FAVOLA",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "IT-EXT-323-FAVOLA",
+      "order": 3
+    }
+  ]
+}

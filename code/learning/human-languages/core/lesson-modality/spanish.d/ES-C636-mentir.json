@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C636-mentir",
+    "language": "spanish",
+    "chapter": 636,
+    "sequence": 21570,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:46ffbe3efc3ca687"
+  },
+  "findings": []
+}

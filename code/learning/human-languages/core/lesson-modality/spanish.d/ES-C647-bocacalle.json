@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C647-bocacalle",
+    "language": "spanish",
+    "chapter": 647,
+    "sequence": 22160,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:525d03320534d5fa"
+  },
+  "findings": []
+}

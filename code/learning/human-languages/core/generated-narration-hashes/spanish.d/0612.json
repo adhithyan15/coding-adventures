@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 612,
+  "sourceHash": "fnv1a64:b0e11cfc35914ccc",
+  "lessonIds": [
+    "ES-C612-a-no-ser-que",
+    "ES-C612-a-condicion-de-que",
+    "ES-C612-de-lo-contrario",
+    "ES-C612-en-ese-caso",
+    "ES-C612-en-todo-caso"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch612.txt",
+  "json": "spanish/narration/ch612.json",
+  "textHash": "fnv1a64:081f300fa68168a2",
+  "jsonHash": "fnv1a64:881286b16f712680",
+  "findings": []
+}

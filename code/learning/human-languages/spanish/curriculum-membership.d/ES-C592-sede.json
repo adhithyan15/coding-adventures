@@ -1,0 +1,11 @@
+{
+  "id": "ES-C592-sede",
+  "pathSegment": "ES-PATH-592-EMPRESA",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ES-EXT-592-EMPRESA",
+      "order": 3
+    }
+  ]
+}

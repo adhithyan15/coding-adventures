@@ -1,0 +1,11 @@
+{
+  "id": "IT-C529-colonna-sonora",
+  "pathSegment": "IT-PATH-529-CINEMA",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "IT-EXT-529-CINEMA",
+      "order": 3
+    }
+  ]
+}

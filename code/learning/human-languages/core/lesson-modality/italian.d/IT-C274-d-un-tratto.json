@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C274-d-un-tratto",
+    "language": "italian",
+    "chapter": 274,
+    "sequence": 16190,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c12f88a6181e5413"
+  },
+  "findings": []
+}

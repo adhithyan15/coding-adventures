@@ -1,0 +1,11 @@
+{
+  "id": "IT-C483-scottatura",
+  "pathSegment": "IT-PATH-483-FERITE",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "IT-EXT-483-FERITE",
+      "order": 2
+    }
+  ]
+}

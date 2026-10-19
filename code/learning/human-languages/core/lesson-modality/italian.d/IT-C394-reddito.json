@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C394-reddito",
+    "language": "italian",
+    "chapter": 394,
+    "sequence": 22420,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9c4b95c5293cfa15"
+  },
+  "findings": []
+}

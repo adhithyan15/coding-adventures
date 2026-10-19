@@ -1,0 +1,19 @@
+{
+  "chapter": 476,
+  "title": "Una grande delusione",
+  "label": "ch:it-una-grande-delusione",
+  "canDo": "I can talk about a disappointment and how friends comfort me.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "IT-C476-singhiozzare",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 476: I can talk about a disappointment and how friends comfort me.",
+    "assesses": [
+      "IT-LEX-C476-DELUSIONE-03",
+      "IT-LEX-C476-DELUSIONE-04",
+      "IT-LEX-C476-DELUSIONE-05"
+    ]
+  }
+}

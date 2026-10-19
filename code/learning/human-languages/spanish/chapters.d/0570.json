@@ -1,0 +1,19 @@
+{
+  "chapter": 570,
+  "title": "En la calle",
+  "label": "ch:es-en-la-calle",
+  "canDo": "I can talk about public unrest: a demonstration, a protest, riots, a scandal and a controversy.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "ES-C570-polemica",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 570: I can talk about public unrest: a demonstration, a protest, riots, a scandal and a controversy.",
+    "assesses": [
+      "ES-LEX-C570-PROTESTA-03",
+      "ES-LEX-C570-PROTESTA-04",
+      "ES-LEX-C570-PROTESTA-05"
+    ]
+  }
+}

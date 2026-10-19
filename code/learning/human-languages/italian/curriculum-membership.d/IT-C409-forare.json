@@ -1,0 +1,11 @@
+{
+  "id": "IT-C409-forare",
+  "pathSegment": "IT-PATH-409-GOMMA",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "IT-EXT-409-GOMMA",
+      "order": 0
+    }
+  ]
+}

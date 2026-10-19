@@ -1,0 +1,14 @@
+{
+  "language": "italian",
+  "chapter": 320,
+  "sourceHash": "fnv1a64:6bf2a0e35b462ddd",
+  "lessonIds": [
+    "IT-C320-fiera",
+    "IT-C320-palio",
+    "IT-C320-giostra",
+    "IT-C320-onomastico",
+    "IT-C320-santo",
+    "IT-R320-ripasso-313-320"
+  ],
+  "tex": "italian/book/chapters/ch320-feste-di-paese.tex"
+}

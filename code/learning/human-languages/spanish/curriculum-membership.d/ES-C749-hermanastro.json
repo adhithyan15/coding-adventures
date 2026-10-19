@@ -1,0 +1,11 @@
+{
+  "id": "ES-C749-hermanastro",
+  "pathSegment": "ES-PATH-749-EDADES",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ES-EXT-749-EDADES",
+      "order": 1
+    }
+  ]
+}

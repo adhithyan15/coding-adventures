@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 773,
+  "sourceHash": "fnv1a64:b35b2663d5344956",
+  "lessonIds": [
+    "ES-C773-cobertura",
+    "ES-C773-adaptador",
+    "ES-C773-aplicacion",
+    "ES-C773-enlace",
+    "ES-C773-recargar"
+  ],
+  "tex": "spanish/book/chapters/ch773-conectado-de-viaje.tex"
+}

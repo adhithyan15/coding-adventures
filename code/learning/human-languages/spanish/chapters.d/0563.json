@@ -1,0 +1,19 @@
+{
+  "chapter": 563,
+  "title": "Contar una historia",
+  "label": "ch:es-contar-una-historia",
+  "canDo": "I can talk about telling stories: a fable, an account, the narrator, and the verbs to narrate and to relate.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "ES-C563-narrador",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 563: I can talk about telling stories: a fable, an account, the narrator, and the verbs to narrate and to relate.",
+    "assesses": [
+      "ES-LEX-C563-RELATO-03",
+      "ES-LEX-C563-RELATO-04",
+      "ES-LEX-C563-RELATO-05"
+    ]
+  }
+}

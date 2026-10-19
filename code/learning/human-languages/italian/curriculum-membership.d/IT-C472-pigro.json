@@ -1,0 +1,11 @@
+{
+  "id": "IT-C472-pigro",
+  "pathSegment": "IT-PATH-472-DIFETTI",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "IT-EXT-472-DIFETTI",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "ES-C582-impacto",
+  "pathSegment": "ES-PATH-582-CONSEC",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ES-EXT-582-CONSEC",
+      "order": 1
+    }
+  ]
+}

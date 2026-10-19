@@ -1,0 +1,19 @@
+{
+  "chapter": 354,
+  "title": "Gli ostacoli",
+  "label": "ch:it-gli-ostacoli",
+  "canDo": "I can say what stands in the way, what prevents or hinders a plan and what favours it or makes it possible.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "IT-R354-ripasso-347-354",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 354: I can say what stands in the way, what prevents or hinders a plan and what favours it or makes it possible.",
+    "assesses": [
+      "IT-LEX-C354-OSTACOLO-03",
+      "IT-LEX-C354-OSTACOLO-04",
+      "IT-LEX-C354-OSTACOLO-05"
+    ]
+  }
+}

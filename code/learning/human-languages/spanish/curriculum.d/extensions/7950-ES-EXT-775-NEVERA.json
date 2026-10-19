@@ -1,0 +1,8 @@
+{
+  "id": "ES-EXT-775-NEVERA",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can describe my kitchen and what I find there: the fridge, the coffee maker, a tin, a piece of something, and the smell.",
+  "prerequisites": []
+}

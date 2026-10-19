@@ -1,0 +1,19 @@
+{
+  "chapter": 369,
+  "title": "La politica",
+  "label": "ch:it-la-politica",
+  "canDo": "I can talk about politics: a party, parliament, a minister, voters and electing someone.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "IT-C369-elettore",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 369: I can talk about politics: a party, parliament, a minister, voters and electing someone.",
+    "assesses": [
+      "IT-LEX-C369-PARTITO-03",
+      "IT-LEX-C369-PARTITO-04",
+      "IT-LEX-C369-PARTITO-05"
+    ]
+  }
+}

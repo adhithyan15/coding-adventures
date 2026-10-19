@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 377,
+  "sourceHash": "fnv1a64:887bc5b6bb567c41",
+  "lessonIds": [
+    "IT-C377-disponibile",
+    "IT-C377-impegnato",
+    "IT-C377-impegno",
+    "IT-C377-impegnarsi",
+    "IT-C377-flessibile"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch377.txt",
+  "json": "italian/narration/ch377.json",
+  "textHash": "fnv1a64:5ac2249d42011fce",
+  "jsonHash": "fnv1a64:0074242f824def94",
+  "findings": []
+}

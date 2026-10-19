@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 521,
+  "sourceHash": "fnv1a64:2fc424c6b76501f9",
+  "lessonIds": [
+    "IT-C521-pittura",
+    "IT-C521-pennello",
+    "IT-C521-tela",
+    "IT-C521-cavalletto",
+    "IT-C521-acquerello"
+  ],
+  "tex": "italian/book/chapters/ch521-pennelli-e-colori.tex"
+}

@@ -1,0 +1,11 @@
+{
+  "id": "ES-C694-ave",
+  "pathSegment": "ES-PATH-694-ANIMALES",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ES-EXT-694-ANIMALES",
+      "order": 1
+    }
+  ]
+}

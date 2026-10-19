@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 311,
+  "sourceHash": "fnv1a64:5c821c3b80db0050",
+  "lessonIds": [
+    "IT-C311-sposarsi",
+    "IT-C311-fede",
+    "IT-C311-velo",
+    "IT-C311-bouquet",
+    "IT-C311-bomboniera"
+  ],
+  "tex": "italian/book/chapters/ch311-il-giorno-del-si.tex"
+}

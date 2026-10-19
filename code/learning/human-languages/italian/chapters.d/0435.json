@@ -1,0 +1,19 @@
+{
+  "chapter": 435,
+  "title": "Caldo e freddo in camera",
+  "label": "ch:it-caldo-e-freddo-in-camera",
+  "canDo": "I can complain about the temperature: the heating, the radiator, the air conditioner, cooling down and the water heater.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "IT-C435-scaldabagno",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 435: I can complain about the temperature: the heating, the radiator, the air conditioner, cooling down and the water heater.",
+    "assesses": [
+      "IT-LEX-C435-RISCALDAMENTO-03",
+      "IT-LEX-C435-RISCALDAMENTO-04",
+      "IT-LEX-C435-RISCALDAMENTO-05"
+    ]
+  }
+}

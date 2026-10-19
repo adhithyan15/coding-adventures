@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 513,
+  "sourceHash": "fnv1a64:cc69264519079cb0",
+  "lessonIds": [
+    "IT-C513-gareggiare",
+    "IT-C513-cronometro",
+    "IT-C513-maratona",
+    "IT-C513-atleta",
+    "IT-C513-ansimare"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch513.txt",
+  "json": "italian/narration/ch513.json",
+  "textHash": "fnv1a64:9471768e254aa6c3",
+  "jsonHash": "fnv1a64:af1a3562a2ea177b",
+  "findings": []
+}

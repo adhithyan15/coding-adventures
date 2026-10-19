@@ -37,6 +37,10 @@ Selected `.options` keys can also be turned into engine-call arguments with
 Runnable `.op`, `.dc`, `.ac dec` / `.ac log`, and `.tran` cards can be planned
 and executed directly:
 
+`.dc` accepts either `source start stop step` or a second four-token source
+axis. Two-axis decks execute the first source as the inner loop and retain the
+second source as the outer-axis value on each result and selected-output row.
+
 ```python
 from spice_netlist_parser import run_netlist
 

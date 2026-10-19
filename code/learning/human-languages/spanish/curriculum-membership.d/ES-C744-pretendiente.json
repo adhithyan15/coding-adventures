@@ -1,0 +1,11 @@
+{
+  "id": "ES-C744-pretendiente",
+  "pathSegment": "ES-PATH-744-NOVIOS",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ES-EXT-744-NOVIOS",
+      "order": 3
+    }
+  ]
+}

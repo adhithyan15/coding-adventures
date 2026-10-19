@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 331,
+  "sourceHash": "fnv1a64:d4968f805cf4ad05",
+  "lessonIds": [
+    "IT-C331-ingredienti",
+    "IT-C331-dose",
+    "IT-C331-pizzico",
+    "IT-C331-cucchiaino",
+    "IT-C331-ciotola"
+  ],
+  "tex": "italian/book/chapters/ch331-gli-ingredienti.tex"
+}

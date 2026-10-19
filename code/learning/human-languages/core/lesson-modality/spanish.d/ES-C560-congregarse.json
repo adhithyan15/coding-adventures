@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C560-congregarse",
+    "language": "spanish",
+    "chapter": 560,
+    "sequence": 17640,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:41d296f474863943"
+  },
+  "findings": []
+}

@@ -1,0 +1,8 @@
+{
+  "id": "ES-EXT-769-GOTERA",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can tell someone that the roof leaked, something broke down, and that a plumber or an electrician came.",
+  "prerequisites": []
+}

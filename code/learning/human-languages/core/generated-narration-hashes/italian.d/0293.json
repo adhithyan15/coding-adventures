@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 293,
+  "sourceHash": "fnv1a64:285c4c3373b37a00",
+  "lessonIds": [
+    "IT-C293-scasso",
+    "IT-C293-scassinare",
+    "IT-C293-antifurto",
+    "IT-C293-allarme",
+    "IT-C293-vandalo"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch293.txt",
+  "json": "italian/narration/ch293.json",
+  "textHash": "fnv1a64:027cc15a715ce6be",
+  "jsonHash": "fnv1a64:7e1ce17b8efb41c0",
+  "findings": []
+}

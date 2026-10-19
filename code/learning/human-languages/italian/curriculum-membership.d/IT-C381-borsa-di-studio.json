@@ -1,0 +1,11 @@
+{
+  "id": "IT-C381-borsa-di-studio",
+  "pathSegment": "IT-PATH-381-DOCENTE",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "IT-EXT-381-DOCENTE",
+      "order": 2
+    }
+  ]
+}

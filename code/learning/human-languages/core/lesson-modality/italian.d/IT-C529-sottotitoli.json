@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C529-sottotitoli",
+    "language": "italian",
+    "chapter": 529,
+    "sequence": 29590,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e981a61d89a7e206"
+  },
+  "findings": []
+}

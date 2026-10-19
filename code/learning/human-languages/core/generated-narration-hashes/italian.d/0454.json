@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 454,
+  "sourceHash": "fnv1a64:62f92e31bf2f12c2",
+  "lessonIds": [
+    "IT-C454-salumeria",
+    "IT-C454-pescheria",
+    "IT-C454-fruttivendolo",
+    "IT-C454-pasticceria",
+    "IT-C454-rosticceria"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch454.txt",
+  "json": "italian/narration/ch454.json",
+  "textHash": "fnv1a64:445b941a5806d029",
+  "jsonHash": "fnv1a64:f447b9c2fd1e1d0e",
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C738-padecer",
+    "language": "spanish",
+    "chapter": 738,
+    "sequence": 26880,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:cfae0053445b4a1b"
+  },
+  "findings": []
+}

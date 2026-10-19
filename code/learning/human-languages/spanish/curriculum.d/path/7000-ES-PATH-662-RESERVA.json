@@ -1,0 +1,9 @@
+{
+  "id": "ES-PATH-662-RESERVA",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "ES-EXT-662-RESERVA"
+  ],
+  "after": []
+}

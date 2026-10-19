@@ -1,0 +1,19 @@
+{
+  "chapter": 281,
+  "title": "Il giorno prima, il giorno dopo",
+  "label": "ch:it-il-giorno-prima-il-giorno-dopo",
+  "canDo": "I can place events in time: the eve, the next day, this morning, last night and the whole morning.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "IT-C281-mattinata",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 281: I can place events in time: the eve, the next day, this morning, last night and the whole morning.",
+    "assesses": [
+      "IT-LEX-C281-VIGILIA-03",
+      "IT-LEX-C281-VIGILIA-04",
+      "IT-LEX-C281-VIGILIA-05"
+    ]
+  }
+}

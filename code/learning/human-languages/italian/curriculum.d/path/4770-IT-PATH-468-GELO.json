@@ -1,0 +1,9 @@
+{
+  "id": "IT-PATH-468-GELO",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "IT-EXT-468-GELO"
+  ],
+  "after": []
+}

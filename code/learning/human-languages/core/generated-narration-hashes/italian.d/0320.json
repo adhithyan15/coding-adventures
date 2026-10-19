@@ -1,0 +1,20 @@
+{
+  "language": "italian",
+  "chapter": 320,
+  "sourceHash": "fnv1a64:d3ee3c5bd844badb",
+  "lessonIds": [
+    "IT-C320-fiera",
+    "IT-C320-palio",
+    "IT-C320-giostra",
+    "IT-C320-onomastico",
+    "IT-C320-santo",
+    "IT-R320-ripasso-313-320"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "italian/narration/ch320.txt",
+  "json": "italian/narration/ch320.json",
+  "textHash": "fnv1a64:a27f23cc3c62bc73",
+  "jsonHash": "fnv1a64:85bda25d8e40aa0a",
+  "findings": []
+}

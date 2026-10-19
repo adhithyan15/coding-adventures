@@ -1,0 +1,11 @@
+{
+  "id": "IT-C494-lasciarsi",
+  "pathSegment": "IT-PATH-494-SEPARARSI",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "IT-EXT-494-SEPARARSI",
+      "order": 3
+    }
+  ]
+}

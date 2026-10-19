@@ -1,0 +1,8 @@
+{
+  "id": "IT-EXT-412-VIGILE",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can talk about road rules in town: the traffic warden, pedestrians, the zebra crossing, running someone over and fines.",
+  "prerequisites": []
+}

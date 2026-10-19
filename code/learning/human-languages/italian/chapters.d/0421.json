@@ -1,0 +1,19 @@
+{
+  "chapter": 421,
+  "title": "Al porto",
+  "label": "ch:it-al-porto",
+  "canDo": "I can get around a harbour: the pier, the jetty, boarding, landing and setting sail.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "IT-C421-salpare",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 421: I can get around a harbour: the pier, the jetty, boarding, landing and setting sail.",
+    "assesses": [
+      "IT-LEX-C421-PORTO-03",
+      "IT-LEX-C421-PORTO-04",
+      "IT-LEX-C421-PORTO-05"
+    ]
+  }
+}

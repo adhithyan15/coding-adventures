@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C606-participar",
+    "language": "spanish",
+    "chapter": 606,
+    "sequence": 20070,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:70f845d3ae7bb047"
+  },
+  "findings": []
+}

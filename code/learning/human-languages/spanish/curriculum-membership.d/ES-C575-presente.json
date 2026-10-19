@@ -1,0 +1,11 @@
+{
+  "id": "ES-C575-presente",
+  "pathSegment": "ES-PATH-575-PASADO",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ES-EXT-575-PASADO",
+      "order": 1
+    }
+  ]
+}

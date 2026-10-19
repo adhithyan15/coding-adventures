@@ -1,0 +1,11 @@
+{
+  "id": "IT-C488-anestesia",
+  "pathSegment": "IT-PATH-488-OSPEDALE",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "IT-EXT-488-OSPEDALE",
+      "order": 4
+    }
+  ]
+}

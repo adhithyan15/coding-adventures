@@ -1,0 +1,18 @@
+{
+  "language": "italian",
+  "chapter": 264,
+  "sourceHash": "fnv1a64:f610a9b8d7865d8a",
+  "lessonIds": [
+    "IT-C264-poi",
+    "IT-C264-raccontare",
+    "IT-C264-lettura",
+    "IT-C264-ripasso-racconto"
+  ],
+  "voiceLessons": 3,
+  "drivablePrefix": 2,
+  "text": "italian/narration/ch264.txt",
+  "json": "italian/narration/ch264.json",
+  "textHash": "fnv1a64:783df29d59ee6902",
+  "jsonHash": "fnv1a64:d3ea43c63ad986aa",
+  "findings": []
+}

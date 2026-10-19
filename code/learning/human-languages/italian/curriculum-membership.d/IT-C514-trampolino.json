@@ -1,0 +1,11 @@
+{
+  "id": "IT-C514-trampolino",
+  "pathSegment": "IT-PATH-514-ACQUA",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "IT-EXT-514-ACQUA",
+      "order": 4
+    }
+  ]
+}

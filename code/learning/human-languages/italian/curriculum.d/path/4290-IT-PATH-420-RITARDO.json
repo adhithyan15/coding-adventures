@@ -1,0 +1,9 @@
+{
+  "id": "IT-PATH-420-RITARDO",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "IT-EXT-420-RITARDO"
+  ],
+  "after": []
+}

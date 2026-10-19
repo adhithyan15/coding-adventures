@@ -11,6 +11,50 @@
         "analysisIndexes": [1, 2, 3, 4, 5],
         "recordCounts": [1, 2, 1, 1, 1]
       }
+    },
+    {
+      "id": "nested-dc-sweep",
+      "deck": "* Berkeley SPICE v1 nested DC CLI corpus\nV1 in 0 DC 0\nV2 bias 0 DC 0\nR1 in out 1k\nR2 out bias 1k\n.dc V1 0 1 1 V2 0 2 2\n.save V(out)\n.end\n",
+      "expected": {
+        "title": "Berkeley SPICE v1 nested DC CLI corpus",
+        "analysisKinds": ["dc"],
+        "analysisIndexes": [0],
+        "recordCounts": [4],
+        "records": [
+          {
+            "Index": "0",
+            "SecondarySource": "V2",
+            "SecondaryValue": "0.000000e+00",
+            "Source": "V1",
+            "V(out)": "0.000000e+00",
+            "Value": "0.000000e+00"
+          },
+          {
+            "Index": "1",
+            "SecondarySource": "V2",
+            "SecondaryValue": "0.000000e+00",
+            "Source": "V1",
+            "V(out)": "5.000000e-01",
+            "Value": "1.000000e+00"
+          },
+          {
+            "Index": "2",
+            "SecondarySource": "V2",
+            "SecondaryValue": "2.000000e+00",
+            "Source": "V1",
+            "V(out)": "1.000000e+00",
+            "Value": "0.000000e+00"
+          },
+          {
+            "Index": "3",
+            "SecondarySource": "V2",
+            "SecondaryValue": "2.000000e+00",
+            "Source": "V1",
+            "V(out)": "1.500000e+00",
+            "Value": "1.000000e+00"
+          }
+        ]
+      }
     }
   ],
   "failureCases": [

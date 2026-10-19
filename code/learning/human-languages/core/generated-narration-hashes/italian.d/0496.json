@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 496,
+  "sourceHash": "fnv1a64:b42a1719a1864395",
+  "lessonIds": [
+    "IT-C496-pannolino",
+    "IT-C496-passeggino",
+    "IT-C496-allattare",
+    "IT-C496-cullare",
+    "IT-C496-gattonare"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch496.txt",
+  "json": "italian/narration/ch496.json",
+  "textHash": "fnv1a64:cb9c0fc97f600335",
+  "jsonHash": "fnv1a64:1b046d6f5e3612ad",
+  "findings": []
+}

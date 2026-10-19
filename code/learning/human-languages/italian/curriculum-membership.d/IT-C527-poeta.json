@@ -1,0 +1,11 @@
+{
+  "id": "IT-C527-poeta",
+  "pathSegment": "IT-PATH-527-GENERI",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "IT-EXT-527-GENERI",
+      "order": 4
+    }
+  ]
+}

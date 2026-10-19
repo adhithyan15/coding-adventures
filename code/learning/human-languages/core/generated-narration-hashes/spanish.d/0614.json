@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 614,
+  "sourceHash": "fnv1a64:3a0b4e9e3e596bd5",
+  "lessonIds": [
+    "ES-C614-prevenir",
+    "ES-C614-arriesgar",
+    "ES-C614-garantizar",
+    "ES-C614-garantia",
+    "ES-C614-proteccion"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch614.txt",
+  "json": "spanish/narration/ch614.json",
+  "textHash": "fnv1a64:deb3f704141bb5ff",
+  "jsonHash": "fnv1a64:7517d47b90f0acb4",
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C672-indicador",
+    "language": "spanish",
+    "chapter": 672,
+    "sequence": 23440,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5d7b1f613f7ca028"
+  },
+  "findings": []
+}

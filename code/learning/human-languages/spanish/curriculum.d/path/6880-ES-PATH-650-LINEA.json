@@ -1,0 +1,9 @@
+{
+  "id": "ES-PATH-650-LINEA",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "ES-EXT-650-LINEA"
+  ],
+  "after": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "IT-C394-reddito",
+  "pathSegment": "IT-PATH-394-BILANCIO",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "IT-EXT-394-BILANCIO",
+      "order": 1
+    }
+  ]
+}

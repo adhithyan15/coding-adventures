@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 408,
+  "sourceHash": "fnv1a64:edd427722d518cb9",
+  "lessonIds": [
+    "IT-C408-benzinaio",
+    "IT-C408-gasolio",
+    "IT-C408-carburante",
+    "IT-C408-serbatoio",
+    "IT-C408-rifornire"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch408.txt",
+  "json": "italian/narration/ch408.json",
+  "textHash": "fnv1a64:cee9c017aa445098",
+  "jsonHash": "fnv1a64:578af8532e8e0672",
+  "findings": []
+}

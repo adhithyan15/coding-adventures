@@ -1,0 +1,11 @@
+{
+  "id": "ES-C512-acontecer",
+  "pathSegment": "ES-PATH-512-PASO",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ES-EXT-512-PASO",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C632-fraccionar",
+    "language": "spanish",
+    "chapter": 632,
+    "sequence": 21390,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3abf06945c868a25"
+  },
+  "findings": []
+}

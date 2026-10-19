@@ -1,0 +1,9 @@
+{
+  "id": "ES-PATH-557-LUTO",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "ES-EXT-557-LUTO"
+  ],
+  "after": []
+}

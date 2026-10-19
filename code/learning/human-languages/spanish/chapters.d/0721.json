@@ -1,0 +1,19 @@
+{
+  "chapter": 721,
+  "title": "Rasgos de personalidad",
+  "label": "ch:es-rasgos-de-personalidad",
+  "canDo": "I can describe someone's character, their strong points and their faults.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "ES-C721-valorar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 721: I can describe someone's character, their strong points and their faults.",
+    "assesses": [
+      "ES-LEX-C721-CARACTER-03",
+      "ES-LEX-C721-CARACTER-04",
+      "ES-LEX-C721-CARACTER-05"
+    ]
+  }
+}

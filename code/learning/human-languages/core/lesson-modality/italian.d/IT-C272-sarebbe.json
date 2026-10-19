@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C272-sarebbe",
+    "language": "italian",
+    "chapter": 272,
+    "sequence": 16020,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7e9041cf13a960e5"
+  },
+  "findings": []
+}

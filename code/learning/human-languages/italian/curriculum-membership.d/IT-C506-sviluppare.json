@@ -1,0 +1,11 @@
+{
+  "id": "IT-C506-sviluppare",
+  "pathSegment": "IT-PATH-506-FOTO",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "IT-EXT-506-FOTO",
+      "order": 4
+    }
+  ]
+}

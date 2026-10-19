@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 535,
+  "sourceHash": "fnv1a64:bb8fb40dff8231c1",
+  "lessonIds": [
+    "IT-C535-trapano",
+    "IT-C535-vite",
+    "IT-C535-cacciavite",
+    "IT-C535-aggiustare",
+    "IT-C535-imbiancare"
+  ],
+  "tex": "italian/book/chapters/ch535-fai-da-te.tex"
+}

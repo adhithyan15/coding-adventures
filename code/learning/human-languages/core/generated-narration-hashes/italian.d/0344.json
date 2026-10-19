@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 344,
+  "sourceHash": "fnv1a64:1eea71eec1edc3bb",
+  "lessonIds": [
+    "IT-C344-prova",
+    "IT-C344-evidente",
+    "IT-C344-ovvio",
+    "IT-C344-indiscutibile",
+    "IT-C344-palese"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch344.txt",
+  "json": "italian/narration/ch344.json",
+  "textHash": "fnv1a64:6c12420a0f30b25c",
+  "jsonHash": "fnv1a64:990852636707f9d9",
+  "findings": []
+}

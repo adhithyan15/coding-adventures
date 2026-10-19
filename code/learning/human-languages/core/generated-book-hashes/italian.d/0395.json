@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 395,
+  "sourceHash": "fnv1a64:600ac761af8bc340",
+  "lessonIds": [
+    "IT-C395-risparmio",
+    "IT-C395-investimento",
+    "IT-C395-interesse",
+    "IT-C395-tasso",
+    "IT-C395-inflazione"
+  ],
+  "tex": "italian/book/chapters/ch395-mettere-da-parte.tex"
+}

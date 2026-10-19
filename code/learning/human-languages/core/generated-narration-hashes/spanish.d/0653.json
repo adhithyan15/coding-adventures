@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 653,
+  "sourceHash": "fnv1a64:7a73b3a0e7380161",
+  "lessonIds": [
+    "ES-C653-embarcar",
+    "ES-C653-embarque",
+    "ES-C653-detector",
+    "ES-C653-bandeja",
+    "ES-C653-escala"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch653.txt",
+  "json": "spanish/narration/ch653.json",
+  "textHash": "fnv1a64:647d8d2b9850cb8a",
+  "jsonHash": "fnv1a64:11603ae542e627bd",
+  "findings": []
+}

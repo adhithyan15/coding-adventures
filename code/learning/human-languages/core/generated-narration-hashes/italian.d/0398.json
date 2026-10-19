@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 398,
+  "sourceHash": "fnv1a64:83e0759e72c1fb84",
+  "lessonIds": [
+    "IT-C398-guadagnare",
+    "IT-C398-guadagno",
+    "IT-C398-profitto",
+    "IT-C398-perdita",
+    "IT-C398-fallire"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch398.txt",
+  "json": "italian/narration/ch398.json",
+  "textHash": "fnv1a64:a2b9cea77da073c9",
+  "jsonHash": "fnv1a64:a76fe0d436179fff",
+  "findings": []
+}

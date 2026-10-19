@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C500-uncinetto",
+    "language": "italian",
+    "chapter": 500,
+    "sequence": 28110,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f9cbd5c2bef6e2fe"
+  },
+  "findings": []
+}

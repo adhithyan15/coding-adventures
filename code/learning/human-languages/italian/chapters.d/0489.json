@@ -1,0 +1,19 @@
+{
+  "chapter": 489,
+  "title": "Ammalarsi e guarire",
+  "label": "ch:it-ammalarsi-e-guarire",
+  "canDo": "I can describe getting ill: symptoms, diagnosis, infection and recovery.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "IT-C489-guarire",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 489: I can describe getting ill: symptoms, diagnosis, infection and recovery.",
+    "assesses": [
+      "IT-LEX-C489-GUARIRE-03",
+      "IT-LEX-C489-GUARIRE-04",
+      "IT-LEX-C489-GUARIRE-05"
+    ]
+  }
+}

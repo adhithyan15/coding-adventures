@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 683,
+  "sourceHash": "fnv1a64:976e999ec944eecc",
+  "lessonIds": [
+    "ES-C683-region",
+    "ES-C683-comarca",
+    "ES-C683-municipio",
+    "ES-C683-aldea",
+    "ES-C683-alcaldia"
+  ],
+  "tex": "spanish/book/chapters/ch683-regiones-y-pueblos.tex"
+}

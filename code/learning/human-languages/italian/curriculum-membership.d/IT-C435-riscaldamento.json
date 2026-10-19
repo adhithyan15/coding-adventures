@@ -1,0 +1,11 @@
+{
+  "id": "IT-C435-riscaldamento",
+  "pathSegment": "IT-PATH-435-RISCALDAMENTO",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "IT-EXT-435-RISCALDAMENTO",
+      "order": 0
+    }
+  ]
+}

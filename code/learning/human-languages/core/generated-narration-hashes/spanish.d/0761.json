@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 761,
+  "sourceHash": "fnv1a64:b7c66fee4b25b362",
+  "lessonIds": [
+    "ES-C761-serie",
+    "ES-C761-videojuego",
+    "ES-C761-cojin",
+    "ES-C761-bostezar",
+    "ES-C761-grabar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch761.txt",
+  "json": "spanish/narration/ch761.json",
+  "textHash": "fnv1a64:35f26f6dcdccf5ef",
+  "jsonHash": "fnv1a64:833675a78929bf1d",
+  "findings": []
+}

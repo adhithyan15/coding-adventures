@@ -1,0 +1,9 @@
+{
+  "id": "IT-PATH-455-ARTIGIANI",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "IT-EXT-455-ARTIGIANI"
+  ],
+  "after": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C745-ruptura",
+    "language": "spanish",
+    "chapter": 745,
+    "sequence": 27210,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9bc903d3edd8a7da"
+  },
+  "findings": []
+}

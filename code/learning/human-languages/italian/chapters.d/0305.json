@@ -1,0 +1,19 @@
+{
+  "chapter": 305,
+  "title": "Acqua e fango",
+  "label": "ch:it-acqua-e-fango",
+  "canDo": "I can talk about floods, landslides and avalanches, and say that someone drowned.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "IT-C305-annegare",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 305: I can talk about floods, landslides and avalanches, and say that someone drowned.",
+    "assesses": [
+      "IT-LEX-C305-ALLUVIONE-03",
+      "IT-LEX-C305-ALLUVIONE-04",
+      "IT-LEX-C305-ALLUVIONE-05"
+    ]
+  }
+}

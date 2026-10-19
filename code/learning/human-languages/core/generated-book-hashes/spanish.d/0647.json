@@ -1,0 +1,14 @@
+{
+  "language": "spanish",
+  "chapter": 647,
+  "sourceHash": "fnv1a64:a5c578689d447a34",
+  "lessonIds": [
+    "ES-C647-semaforo",
+    "ES-C647-bocacalle",
+    "ES-C647-calzada",
+    "ES-C647-peaton",
+    "ES-C647-rotonda",
+    "ES-R647-repaso-640-647"
+  ],
+  "tex": "spanish/book/chapters/ch647-cruzar-la-calle.tex"
+}

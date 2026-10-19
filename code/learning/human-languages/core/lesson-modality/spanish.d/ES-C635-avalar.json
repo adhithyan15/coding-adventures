@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C635-avalar",
+    "language": "spanish",
+    "chapter": 635,
+    "sequence": 21540,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5746a9a50f6da6df"
+  },
+  "findings": []
+}

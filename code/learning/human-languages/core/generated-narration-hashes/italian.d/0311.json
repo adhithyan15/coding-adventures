@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 311,
+  "sourceHash": "fnv1a64:a19cbf2bfd5faaac",
+  "lessonIds": [
+    "IT-C311-sposarsi",
+    "IT-C311-fede",
+    "IT-C311-velo",
+    "IT-C311-bouquet",
+    "IT-C311-bomboniera"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch311.txt",
+  "json": "italian/narration/ch311.json",
+  "textHash": "fnv1a64:4ae60e666db67e99",
+  "jsonHash": "fnv1a64:da9bb15f0acea90e",
+  "findings": []
+}

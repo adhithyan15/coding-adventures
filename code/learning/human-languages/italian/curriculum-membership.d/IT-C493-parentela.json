@@ -1,0 +1,11 @@
+{
+  "id": "IT-C493-parentela",
+  "pathSegment": "IT-PATH-493-PARENTI",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "IT-EXT-493-PARENTI",
+      "order": 3
+    }
+  ]
+}

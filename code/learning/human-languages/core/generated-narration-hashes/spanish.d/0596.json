@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 596,
+  "sourceHash": "fnv1a64:c49251dcd018dd99",
+  "lessonIds": [
+    "ES-C596-temario",
+    "ES-C596-matricula",
+    "ES-C596-tutoria",
+    "ES-C596-facultad",
+    "ES-C596-master"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch596.txt",
+  "json": "spanish/narration/ch596.json",
+  "textHash": "fnv1a64:027ec2dcbf010507",
+  "jsonHash": "fnv1a64:29526b279406d0bc",
+  "findings": []
+}

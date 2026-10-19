@@ -1,0 +1,19 @@
+{
+  "chapter": 699,
+  "title": "Rayos y truenos",
+  "label": "ch:es-rayos-y-truenos",
+  "canDo": "I can talk about a storm: lightning, thunder and hail.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "ES-C699-tronar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 699: I can talk about a storm: lightning, thunder and hail.",
+    "assesses": [
+      "ES-LEX-C699-TORMENTA-03",
+      "ES-LEX-C699-TORMENTA-04",
+      "ES-LEX-C699-TORMENTA-05"
+    ]
+  }
+}

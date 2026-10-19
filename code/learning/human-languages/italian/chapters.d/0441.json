@@ -1,0 +1,19 @@
+{
+  "chapter": 441,
+  "title": "Vie e vicoli",
+  "label": "ch:it-vie-e-vicoli",
+  "canDo": "I can describe streets: a fork in the road, an alley, a side street, an avenue and a one-way street.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "IT-C441-senso-unico",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 441: I can describe streets: a fork in the road, an alley, a side street, an avenue and a one-way street.",
+    "assesses": [
+      "IT-LEX-C441-VICOLI-03",
+      "IT-LEX-C441-VICOLI-04",
+      "IT-LEX-C441-VICOLI-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 322,
+  "sourceHash": "fnv1a64:ec371edff371d87f",
+  "lessonIds": [
+    "IT-C322-fuochi-d-artificio",
+    "IT-C322-botto",
+    "IT-C322-falo",
+    "IT-C322-lanterna",
+    "IT-C322-danzare"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch322.txt",
+  "json": "italian/narration/ch322.json",
+  "textHash": "fnv1a64:23cd7bd1341c3799",
+  "jsonHash": "fnv1a64:b5eb1a97c665f9f3",
+  "findings": []
+}

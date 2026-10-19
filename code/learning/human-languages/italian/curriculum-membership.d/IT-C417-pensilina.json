@@ -1,0 +1,11 @@
+{
+  "id": "IT-C417-pensilina",
+  "pathSegment": "IT-PATH-417-FERMATA",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "IT-EXT-417-FERMATA",
+      "order": 1
+    }
+  ]
+}

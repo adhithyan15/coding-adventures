@@ -1,0 +1,19 @@
+{
+  "chapter": 731,
+  "title": "Crecer por dentro",
+  "label": "ch:es-crecer-por-dentro",
+  "canDo": "I can talk about maturity and whether I see life with hope or gloom.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "ES-C731-pesimista",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 731: I can talk about maturity and whether I see life with hope or gloom.",
+    "assesses": [
+      "ES-LEX-C731-MADUREZ-03",
+      "ES-LEX-C731-MADUREZ-04",
+      "ES-LEX-C731-MADUREZ-05"
+    ]
+  }
+}

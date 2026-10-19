@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C572-evolucionar",
+    "language": "spanish",
+    "chapter": 572,
+    "sequence": 18270,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:da92c3f01be171c3"
+  },
+  "findings": []
+}

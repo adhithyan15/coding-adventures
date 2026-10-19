@@ -1,0 +1,11 @@
+{
+  "id": "IT-C341-contraddire",
+  "pathSegment": "IT-PATH-341-OBIEZIONE",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "IT-EXT-341-OBIEZIONE",
+      "order": 4
+    }
+  ]
+}

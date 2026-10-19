@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 587,
+  "sourceHash": "fnv1a64:b659df3a23235f21",
+  "lessonIds": [
+    "ES-C587-comprobar",
+    "ES-C587-evidente",
+    "ES-C587-obvio",
+    "ES-C587-certeza",
+    "ES-C587-aparentemente"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch587.txt",
+  "json": "spanish/narration/ch587.json",
+  "textHash": "fnv1a64:d8cee9e6a2553805",
+  "jsonHash": "fnv1a64:0fe5887f396f31b2",
+  "findings": []
+}

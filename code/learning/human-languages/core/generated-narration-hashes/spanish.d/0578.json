@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 578,
+  "sourceHash": "fnv1a64:504893e968bea41a",
+  "lessonIds": [
+    "ES-C578-desacuerdo",
+    "ES-C578-discrepar",
+    "ES-C578-oponerse",
+    "ES-C578-partidario",
+    "ES-C578-contrario"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch578.txt",
+  "json": "spanish/narration/ch578.json",
+  "textHash": "fnv1a64:4ee109b49761ea62",
+  "jsonHash": "fnv1a64:fe2f4c2239d826a7",
+  "findings": []
+}

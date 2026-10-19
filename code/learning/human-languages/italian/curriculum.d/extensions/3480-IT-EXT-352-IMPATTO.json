@@ -1,0 +1,8 @@
+{
+  "id": "IT-EXT-352-IMPATTO",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can describe the impact of an event, its knock-on effects and hidden sides, and say what set it off.",
+  "prerequisites": []
+}

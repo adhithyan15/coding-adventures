@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 409,
+  "sourceHash": "fnv1a64:9f6d76246fabe5ba",
+  "lessonIds": [
+    "IT-C409-forare",
+    "IT-C409-foratura",
+    "IT-C409-pneumatico",
+    "IT-C409-cric",
+    "IT-C409-gonfiare"
+  ],
+  "tex": "italian/book/chapters/ch409-una-gomma-a-terra.tex"
+}

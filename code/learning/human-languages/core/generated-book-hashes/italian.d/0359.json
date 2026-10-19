@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 359,
+  "sourceHash": "fnv1a64:23afbc435852c388",
+  "lessonIds": [
+    "IT-C359-sindacato",
+    "IT-C359-sciopero",
+    "IT-C359-scioperare",
+    "IT-C359-turno",
+    "IT-C359-straordinari"
+  ],
+  "tex": "italian/book/chapters/ch359-lo-sciopero.tex"
+}

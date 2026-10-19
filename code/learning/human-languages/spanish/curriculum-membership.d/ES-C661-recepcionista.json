@@ -1,0 +1,11 @@
+{
+  "id": "ES-C661-recepcionista",
+  "pathSegment": "ES-PATH-661-RECEPCION",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "ES-EXT-661-RECEPCION",
+      "order": 0
+    }
+  ]
+}

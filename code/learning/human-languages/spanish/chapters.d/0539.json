@@ -1,0 +1,19 @@
+{
+  "chapter": 539,
+  "title": "Semestres y quincenas",
+  "label": "ch:es-semestres-y-quincenas",
+  "canDo": "I can talk about stretches of time: half a year, a fortnight, five years, a millennium and a period.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "ES-C539-periodo",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 539: I can talk about stretches of time: half a year, a fortnight, five years, a millennium and a period.",
+    "assesses": [
+      "ES-LEX-C539-ANYO-03",
+      "ES-LEX-C539-ANYO-04",
+      "ES-LEX-C539-ANYO-05"
+    ]
+  }
+}

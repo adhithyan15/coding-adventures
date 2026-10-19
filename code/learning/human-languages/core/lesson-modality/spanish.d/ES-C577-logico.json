@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C577-logico",
+    "language": "spanish",
+    "chapter": 577,
+    "sequence": 18590,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ed6f4d80e8414d90"
+  },
+  "findings": []
+}

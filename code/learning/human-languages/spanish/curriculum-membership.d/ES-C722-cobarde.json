@@ -1,0 +1,11 @@
+{
+  "id": "ES-C722-cobarde",
+  "pathSegment": "ES-PATH-722-VALOR",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ES-EXT-722-VALOR",
+      "order": 3
+    }
+  ]
+}

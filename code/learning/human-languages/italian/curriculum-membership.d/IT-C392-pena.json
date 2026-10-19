@@ -1,0 +1,11 @@
+{
+  "id": "IT-C392-pena",
+  "pathSegment": "IT-PATH-392-DIFESA",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "IT-EXT-392-DIFESA",
+      "order": 4
+    }
+  ]
+}

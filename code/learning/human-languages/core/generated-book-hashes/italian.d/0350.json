@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 350,
+  "sourceHash": "fnv1a64:9d88c5b7a2cabcb5",
+  "lessonIds": [
+    "IT-C350-siccome",
+    "IT-C350-poiche",
+    "IT-C350-percio",
+    "IT-C350-pertanto",
+    "IT-C350-dovuto"
+  ],
+  "tex": "italian/book/chapters/ch350-siccome-e-poiche.tex"
+}

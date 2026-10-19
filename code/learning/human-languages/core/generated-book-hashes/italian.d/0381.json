@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 381,
+  "sourceHash": "fnv1a64:4b330e890d6d3747",
+  "lessonIds": [
+    "IT-C381-docente",
+    "IT-C381-relatore",
+    "IT-C381-borsa-di-studio",
+    "IT-C381-dottorato",
+    "IT-C381-appello"
+  ],
+  "tex": "italian/book/chapters/ch381-studiare-a-fondo.tex"
+}

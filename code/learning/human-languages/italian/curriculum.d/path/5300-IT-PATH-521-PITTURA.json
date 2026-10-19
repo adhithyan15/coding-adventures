@@ -1,0 +1,9 @@
+{
+  "id": "IT-PATH-521-PITTURA",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "IT-EXT-521-PITTURA"
+  ],
+  "after": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 755,
+  "sourceHash": "fnv1a64:cd7bf96a323cfc51",
+  "lessonIds": [
+    "ES-C755-calentamiento",
+    "ES-C755-trotar",
+    "ES-C755-atleta",
+    "ES-C755-lesionarse",
+    "ES-C755-musculo"
+  ],
+  "tex": "spanish/book/chapters/ch755-calentar-y-trotar.tex"
+}

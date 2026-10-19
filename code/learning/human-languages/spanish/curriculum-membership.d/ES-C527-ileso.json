@@ -1,0 +1,11 @@
+{
+  "id": "ES-C527-ileso",
+  "pathSegment": "ES-PATH-527-CHOQUE",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ES-EXT-527-CHOQUE",
+      "order": 3
+    }
+  ]
+}

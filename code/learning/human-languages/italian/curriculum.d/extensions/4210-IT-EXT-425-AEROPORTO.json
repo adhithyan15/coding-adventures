@@ -1,0 +1,8 @@
+{
+  "id": "IT-EXT-425-AEROPORTO",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can find my way through an airport: the terminal, a stopover, boarding, the shuttle bus and the time zone.",
+  "prerequisites": []
+}

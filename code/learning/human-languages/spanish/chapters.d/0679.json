@@ -1,0 +1,19 @@
+{
+  "chapter": 679,
+  "title": "Servicios de la ciudad",
+  "label": "ch:es-servicios-de-la-ciudad",
+  "canDo": "I can find the police station, the embassy, the tobacconist, stamps and the toilets.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "ES-R679-repaso-672-679",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 679: I can find the police station, the embassy, the tobacconist, stamps and the toilets.",
+    "assesses": [
+      "ES-LEX-C679-SERVICIOS-03",
+      "ES-LEX-C679-SERVICIOS-04",
+      "ES-LEX-C679-SERVICIOS-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 433,
+  "title": "In camera",
+  "label": "ch:it-in-camera",
+  "canDo": "I can ask for things in my room: a double room, a cot, a pillowcase, soap and a hair dryer.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "IT-C433-asciugacapelli",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 433: I can ask for things in my room: a double room, a cot, a pillowcase, soap and a hair dryer.",
+    "assesses": [
+      "IT-LEX-C433-CAMERA-03",
+      "IT-LEX-C433-CAMERA-04",
+      "IT-LEX-C433-CAMERA-05"
+    ]
+  }
+}

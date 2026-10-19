@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 608,
+  "sourceHash": "fnv1a64:3a366d13b85623b9",
+  "lessonIds": [
+    "ES-C608-aumentar",
+    "ES-C608-disminuir",
+    "ES-C608-aumento",
+    "ES-C608-crecimiento",
+    "ES-C608-tendencia"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch608.txt",
+  "json": "spanish/narration/ch608.json",
+  "textHash": "fnv1a64:07d9a4c2552edd52",
+  "jsonHash": "fnv1a64:2efc613f68aff802",
+  "findings": []
+}

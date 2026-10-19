@@ -1,0 +1,14 @@
+{
+  "format": "webpki-roots-canonical-v1",
+  "upstream_repository": "https://github.com/rustls/webpki-roots",
+  "upstream_release": "1.0.9",
+  "upstream_tag": "v/1.0.9",
+  "upstream_commit": "0a553dbc8b3f18ea05c4f881cffa3f2d005d0d30",
+  "crates_io_archive_sha256": "7dcd9d09a39985f5344844e66b0c530a33843579125f23e21e9f0f220850f22a",
+  "root_count": 121,
+  "root_set_sha256": "0aa729fbb339061e8aad2e49fefd83674cd6b2e45eeb586c0d456cf33b70dc01",
+  "reviewed_at": "2026-10-18",
+  "maximum_review_interval_days": 90,
+  "security_removal_review_days": 14,
+  "includes_os_enterprise_or_local_roots": false
+}

@@ -1,0 +1,11 @@
+{
+  "id": "IT-C433-culla",
+  "pathSegment": "IT-PATH-433-CAMERA",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "IT-EXT-433-CAMERA",
+      "order": 1
+    }
+  ]
+}

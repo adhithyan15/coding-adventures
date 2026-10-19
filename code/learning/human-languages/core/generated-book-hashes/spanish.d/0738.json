@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 738,
+  "sourceHash": "fnv1a64:3467ea761f2307f7",
+  "lessonIds": [
+    "ES-C738-diagnostico",
+    "ES-C738-diagnosticar",
+    "ES-C738-sintoma",
+    "ES-C738-tratamiento",
+    "ES-C738-padecer"
+  ],
+  "tex": "spanish/book/chapters/ch738-en-la-consulta-del-medico.tex"
+}

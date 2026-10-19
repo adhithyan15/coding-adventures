@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 316,
+  "sourceHash": "fnv1a64:dcc0f2720a847323",
+  "lessonIds": [
+    "IT-C316-candelina",
+    "IT-C316-festeggiato",
+    "IT-C316-incartare",
+    "IT-C316-fiocco",
+    "IT-C316-palloncino"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch316.txt",
+  "json": "italian/narration/ch316.json",
+  "textHash": "fnv1a64:c007a43b261c6cba",
+  "jsonHash": "fnv1a64:e869941224d9aab7",
+  "findings": []
+}

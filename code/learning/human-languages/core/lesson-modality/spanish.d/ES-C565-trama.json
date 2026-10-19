@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C565-trama",
+    "language": "spanish",
+    "chapter": 565,
+    "sequence": 17890,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:66768af61683820c"
+  },
+  "findings": []
+}

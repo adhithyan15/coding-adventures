@@ -1,0 +1,9 @@
+{
+  "id": "ES-PATH-537-ENTONCES",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "ES-EXT-537-ENTONCES"
+  ],
+  "after": []
+}

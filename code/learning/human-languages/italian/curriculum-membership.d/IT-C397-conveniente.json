@@ -1,0 +1,11 @@
+{
+  "id": "IT-C397-conveniente",
+  "pathSegment": "IT-PATH-397-GARANZIA",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "IT-EXT-397-GARANZIA",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 363,
+  "sourceHash": "fnv1a64:72dfab5d0acba319",
+  "lessonIds": [
+    "IT-C363-cittadino",
+    "IT-C363-cittadinanza",
+    "IT-C363-diritto",
+    "IT-C363-liberta",
+    "IT-C363-uguaglianza"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch363.txt",
+  "json": "italian/narration/ch363.json",
+  "textHash": "fnv1a64:36ff32202262e317",
+  "jsonHash": "fnv1a64:bd54bd1dce30644c",
+  "findings": []
+}

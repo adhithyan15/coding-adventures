@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 734,
+  "sourceHash": "fnv1a64:7311898a3e84a046",
+  "lessonIds": [
+    "ES-C734-quemarse",
+    "ES-C734-quemadura",
+    "ES-C734-venda",
+    "ES-C734-sangrar",
+    "ES-C734-cicatriz"
+  ],
+  "tex": "spanish/book/chapters/ch734-quemaduras-y-cortes.tex"
+}

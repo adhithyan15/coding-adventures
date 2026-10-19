@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 522,
+  "sourceHash": "fnv1a64:9649fbd3629d4d65",
+  "lessonIds": [
+    "ES-C522-juicio",
+    "ES-C522-juez",
+    "ES-C522-juzgar",
+    "ES-C522-condenar",
+    "ES-C522-carcel"
+  ],
+  "tex": "spanish/book/chapters/ch522-ante-el-juez.tex"
+}

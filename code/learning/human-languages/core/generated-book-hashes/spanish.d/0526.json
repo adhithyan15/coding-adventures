@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 526,
+  "sourceHash": "fnv1a64:5f1a9822ff8413de",
+  "lessonIds": [
+    "ES-C526-rescatar",
+    "ES-C526-rescate",
+    "ES-C526-salvar",
+    "ES-C526-sobrevivir",
+    "ES-C526-atrapar"
+  ],
+  "tex": "spanish/book/chapters/ch526-el-rescate.tex"
+}

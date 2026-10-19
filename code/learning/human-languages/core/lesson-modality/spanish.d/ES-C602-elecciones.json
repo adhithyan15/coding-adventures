@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C602-elecciones",
+    "language": "spanish",
+    "chapter": 602,
+    "sequence": 19840,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0bcfeb1fc6af6228"
+  },
+  "findings": []
+}

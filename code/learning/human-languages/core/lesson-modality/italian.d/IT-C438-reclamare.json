@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C438-reclamare",
+    "language": "italian",
+    "chapter": 438,
+    "sequence": 24800,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:468b809316408f2b"
+  },
+  "findings": []
+}

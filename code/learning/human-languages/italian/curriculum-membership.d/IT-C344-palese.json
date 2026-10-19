@@ -1,0 +1,11 @@
+{
+  "id": "IT-C344-palese",
+  "pathSegment": "IT-PATH-344-PROVA",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "IT-EXT-344-PROVA",
+      "order": 4
+    }
+  ]
+}

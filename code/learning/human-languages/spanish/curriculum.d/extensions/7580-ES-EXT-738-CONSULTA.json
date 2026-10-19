@@ -1,0 +1,8 @@
+{
+  "id": "ES-EXT-738-CONSULTA",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can explain my symptoms to a doctor and understand a diagnosis and a treatment.",
+  "prerequisites": []
+}

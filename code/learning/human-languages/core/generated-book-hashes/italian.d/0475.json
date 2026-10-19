@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 475,
+  "sourceHash": "fnv1a64:eef2a1653e1f897b",
+  "lessonIds": [
+    "IT-C475-spavento",
+    "IT-C475-spaventarsi",
+    "IT-C475-panico",
+    "IT-C475-sollievo",
+    "IT-C475-tranquillizzarsi"
+  ],
+  "tex": "italian/book/chapters/ch475-che-spavento.tex"
+}

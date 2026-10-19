@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C770-carniceria",
+    "language": "spanish",
+    "chapter": 770,
+    "sequence": 28530,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a5ea5c2a45344e74"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "IT-C428-finestrino",
+  "pathSegment": "IT-PATH-428-VOLO",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "IT-EXT-428-VOLO",
+      "order": 4
+    }
+  ]
+}

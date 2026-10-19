@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 600,
+  "sourceHash": "fnv1a64:ed8096df6f96fb8d",
+  "lessonIds": [
+    "ES-C600-ciudadania",
+    "ES-C600-colectivo",
+    "ES-C600-civismo",
+    "ES-C600-ciudadano",
+    "ES-C600-pertenecer"
+  ],
+  "tex": "spanish/book/chapters/ch600-la-sociedad.tex"
+}

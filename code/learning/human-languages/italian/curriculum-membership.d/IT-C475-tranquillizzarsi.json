@@ -1,0 +1,11 @@
+{
+  "id": "IT-C475-tranquillizzarsi",
+  "pathSegment": "IT-PATH-475-SPAVENTO",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "IT-EXT-475-SPAVENTO",
+      "order": 4
+    }
+  ]
+}

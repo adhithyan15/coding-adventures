@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 314,
+  "sourceHash": "fnv1a64:c5e1e22b6bfadc73",
+  "lessonIds": [
+    "IT-C314-testamento",
+    "IT-C314-ereditare",
+    "IT-C314-eredita",
+    "IT-C314-erede",
+    "IT-C314-tomba"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch314.txt",
+  "json": "italian/narration/ch314.json",
+  "textHash": "fnv1a64:cd92e4fa5762ad4a",
+  "jsonHash": "fnv1a64:eb6f54725925c019",
+  "findings": []
+}

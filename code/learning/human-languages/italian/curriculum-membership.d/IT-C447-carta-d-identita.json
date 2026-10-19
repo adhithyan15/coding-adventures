@@ -1,0 +1,11 @@
+{
+  "id": "IT-C447-carta-d-identita",
+  "pathSegment": "IT-PATH-447-UFFICI",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "IT-EXT-447-UFFICI",
+      "order": 4
+    }
+  ]
+}

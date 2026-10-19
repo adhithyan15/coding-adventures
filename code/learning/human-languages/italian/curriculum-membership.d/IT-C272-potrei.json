@@ -1,0 +1,11 @@
+{
+  "id": "IT-C272-potrei",
+  "pathSegment": "IT-PATH-272-CONDIZIONALE",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "IT-EXT-272-CONDIZIONALE",
+      "order": 0
+    }
+  ]
+}

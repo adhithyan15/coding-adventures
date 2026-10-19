@@ -1,0 +1,19 @@
+{
+  "chapter": 376,
+  "title": "Correre il rischio",
+  "label": "ch:it-correre-il-rischio",
+  "canDo": "I can weigh a risk: say whether something is risky, likely or unlikely, and talk about the probability.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "IT-C376-probabilita",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 376: I can weigh a risk: say whether something is risky, likely or unlikely, and talk about the probability.",
+    "assesses": [
+      "IT-LEX-C376-RISCHIO-03",
+      "IT-LEX-C376-RISCHIO-04",
+      "IT-LEX-C376-RISCHIO-05"
+    ]
+  }
+}

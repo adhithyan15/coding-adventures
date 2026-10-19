@@ -1,0 +1,19 @@
+{
+  "chapter": 285,
+  "title": "Le parole ufficiali",
+  "label": "ch:it-le-parole-ufficiali",
+  "canDo": "I can follow official words: a statement, a spokesperson, a press conference, a press release and a denial.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "IT-C285-smentita",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 285: I can follow official words: a statement, a spokesperson, a press conference, a press release and a denial.",
+    "assesses": [
+      "IT-LEX-C285-COMUNICATO-03",
+      "IT-LEX-C285-COMUNICATO-04",
+      "IT-LEX-C285-COMUNICATO-05"
+    ]
+  }
+}

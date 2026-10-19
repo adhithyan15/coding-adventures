@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C669-senalar",
+    "language": "spanish",
+    "chapter": 669,
+    "sequence": 23310,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e4b447cf7f62b921"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C645-neumatico",
+    "language": "spanish",
+    "chapter": 645,
+    "sequence": 22080,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:235e8b17b2351d87"
+  },
+  "findings": []
+}

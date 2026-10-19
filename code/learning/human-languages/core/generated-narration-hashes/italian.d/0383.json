@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 383,
+  "sourceHash": "fnv1a64:67495c067669304d",
+  "lessonIds": [
+    "IT-C383-bocciare",
+    "IT-C383-bocciatura",
+    "IT-C383-promuovere",
+    "IT-C383-valutazione",
+    "IT-C383-punteggio"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch383.txt",
+  "json": "italian/narration/ch383.json",
+  "textHash": "fnv1a64:657e6139e2623dee",
+  "jsonHash": "fnv1a64:72cec85dbdb99e95",
+  "findings": []
+}

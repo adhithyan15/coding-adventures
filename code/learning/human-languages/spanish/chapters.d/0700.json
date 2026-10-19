@@ -1,0 +1,19 @@
+{
+  "chapter": 700,
+  "title": "Nieve y hielo",
+  "label": "ch:es-nieve-y-hielo",
+  "canDo": "I can talk about winter weather: snow, snowfalls, blizzards and freezing.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "ES-C700-escarcha",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 700: I can talk about winter weather: snow, snowfalls, blizzards and freezing.",
+    "assesses": [
+      "ES-LEX-C700-NIEVE-03",
+      "ES-LEX-C700-NIEVE-04",
+      "ES-LEX-C700-NIEVE-05"
+    ]
+  }
+}

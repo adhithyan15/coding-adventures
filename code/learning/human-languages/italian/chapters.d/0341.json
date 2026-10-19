@@ -1,0 +1,19 @@
+{
+  "chapter": 341,
+  "title": "Non sono d'accordo",
+  "label": "ch:it-non-sono-d-accordo",
+  "canDo": "I can disagree politely: raise an objection, answer back and contradict what someone said.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "IT-C341-contraddire",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 341: I can disagree politely: raise an objection, answer back and contradict what someone said.",
+    "assesses": [
+      "IT-LEX-C341-OBIEZIONE-03",
+      "IT-LEX-C341-OBIEZIONE-04",
+      "IT-LEX-C341-OBIEZIONE-05"
+    ]
+  }
+}

@@ -1,0 +1,858 @@
+{
+  "version": 1,
+  "language": "italian",
+  "chapter": 336,
+  "title": "In forno",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:e5e5156f2dd86e48",
+  "lessons": [
+    {
+      "id": "IT-C336-preriscaldare",
+      "sequence": 19320,
+      "title": "preriscaldare — to preheat",
+      "headword": "preriscaldare",
+      "romanization": "preriscaldare",
+      "gloss": "to preheat",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ba44e3c3ffc76428",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Italian for to rise, then the Italian for the rolling pin."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: preriscaldare",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "preriscaldare — \"to preheat\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Preriscalda il forno a 180 gradi. Preheat the oven to 180 degrees."
+            },
+            {
+              "kind": "speech",
+              "text": "Il forno preriscaldato — the preheated oven."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "preriscaldare joins pre- \"before\", ri- and scaldare \"to warm\", from Late Latin excaldāre, built on calidus \"hot\" (Lewis & Short)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "preriscaldare",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *preriscaldare*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "preriscaldare, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *preriscaldare*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with preriscaldare",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *preriscaldare*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Italian for to rise, then the Italian for the rolling pin, then say preriscaldare again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Italian for to rise, then the Italian for the rolling pin, then say *preriscaldare* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does preriscaldare mean? (\"To preheat\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "IT-C336-infornare",
+      "sequence": 19330,
+      "title": "infornare — to put in the oven",
+      "headword": "infornare",
+      "romanization": "infornare",
+      "gloss": "to put in the oven",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:562bd9d1db5bb6b3",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Italian for the rolling pin, then the Italian for to preheat."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: infornare",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "infornare — \"to put in the oven\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Inforna la torta per quaranta minuti. Bake the cake for forty minutes."
+            },
+            {
+              "kind": "speech",
+              "text": "Built on forno, ‘oven’."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "infornare is built on forno \"oven\", inherited from Latin furnus (Lewis & Short)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "infornare",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *infornare*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "infornare, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *infornare*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with infornare",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *infornare*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Italian for the rolling pin, then the Italian for to preheat, then say infornare again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Italian for the rolling pin, then the Italian for to preheat, then say *infornare* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does infornare mean? (\"To put in the oven\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "IT-C336-sfornare",
+      "sequence": 19340,
+      "title": "sfornare — to take out of the oven; to turn out (lots of something)",
+      "headword": "sfornare",
+      "romanization": "sfornare",
+      "gloss": "to take out of the oven; to turn out (lots of something)",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2a775d9d16698564",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Italian for to preheat, then the Italian for to put in the oven."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: sfornare",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "sfornare — \"to take out of the oven; to turn out (lots of something)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Ho appena sfornato il pane. I have taken the bread out of the oven this minute."
+            },
+            {
+              "kind": "speech",
+              "text": "Also figurative: sforna un libro all'anno."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "sfornare is s- \"out of\" with forno \"oven\", from Latin furnus (Lewis & Short)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sfornare",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sfornare*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sfornare, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sfornare*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with sfornare",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *sfornare*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Italian for to preheat, then the Italian for to put in the oven, then say sfornare again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Italian for to preheat, then the Italian for to put in the oven, then say *sfornare* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does sfornare mean? (\"To take out of the oven; to turn out (lots of something)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "IT-C336-teglia",
+      "sequence": 19350,
+      "title": "la teglia — the baking tray, the baking tin",
+      "headword": "la teglia",
+      "romanization": "la teglia",
+      "gloss": "the baking tray, the baking tin",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5e581c4546042a76",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Italian for to put in the oven, then the Italian for to take out of the oven."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: la teglia",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la teglia — \"the baking tray, the baking tin\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Metti le patate nella teglia. Put the potatoes in the baking tray."
+            },
+            {
+              "kind": "speech",
+              "text": "La pizza in teglia — pizza baked in a tray."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "teglia is inherited from Latin tēgula \"a tile\" (EtymDB), from tegere \"to cover\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la teglia",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la teglia*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la teglia, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la teglia*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with la teglia",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *la teglia*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Italian for to put in the oven, then the Italian for to take out of the oven, then say la teglia again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Italian for to put in the oven, then the Italian for to take out of the oven, then say *la teglia* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does la teglia mean? (\"The baking tray, the baking tin\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "IT-C336-cottura",
+      "sequence": 19360,
+      "title": "la cottura — the cooking; the cooking time",
+      "headword": "la cottura",
+      "romanization": "la cottura",
+      "gloss": "the cooking; the cooking time",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b8d8d0aef29d9f2b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Italian for to take out of the oven, then the Italian for the baking tray."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: la cottura",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la cottura — \"the cooking; the cooking time\"."
+            },
+            {
+              "kind": "speech",
+              "text": "La cottura dura un'ora. The cooking takes an hour."
+            },
+            {
+              "kind": "speech",
+              "text": "Il tempo di cottura — cooking time; a metà cottura — halfway through."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "cottura is inherited from Latin coctūra \"a cooking\" (EtymDB), from coquere \"to cook\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la cottura",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la cottura*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la cottura, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la cottura*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with la cottura",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *la cottura*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Italian for to take out of the oven, then the Italian for the baking tray, then say la cottura again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Italian for to take out of the oven, then the Italian for the baking tray, then say *la cottura* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does la cottura mean? (\"The cooking; the cooking time\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "IT-R336-ripasso-329-336",
+      "sequence": 19370,
+      "title": "Ripasso dei capitoli 329–336",
+      "headword": "(dialogue)",
+      "romanization": "(dialogue)",
+      "gloss": "a review of chapters 329-336",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d855b6288cab20f7",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Italian for the revolt and to rebel."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the revolt, to rebel, to invade, to surrender, to free",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the revolt, to rebel, to invade, to surrender, to free]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the age, the Middle Ages, the ruins, the excavations, the archaeologist",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the age, the Middle Ages, the ruins, the excavations, the archaeologist]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the ingredients, the amount, the pinch, the teaspoon, the bowl",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the ingredients, the amount, the pinch, the teaspoon, the bowl]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the chopping board, to slice, to chop finely, to peel, to grate",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the chopping board, to slice, to chop finely, to peel, to grate]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to boil, to cook in boiling water, to drain, the lid, the shallow pan",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to boil, to cook in boiling water, to drain, the lid, the shallow pan]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to fry gently, to brown, to fry, to deglaze, the soffritto",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to fry gently, to brown, to fry, to deglaze, the soffritto]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to knead, the dough, the yeast, to rise, the rolling pin",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to knead, the dough, the yeast, to rise, the rolling pin]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to preheat, to put in the oven, to take out of the oven, the baking tray, the cooking",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to preheat, to put in the oven, to take out of the oven, the baking tray, the cooking]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The revolt? (la rivolta.) To rebel? (ribellarsi.) To invade? (invadere.) To surrender? (arrendersi.) To free? (liberare.) The age? (l'epoca.) The Middle Ages? (il medioevo.) The ruins? (le rovine.) The excavations? (gli scavi.) The archaeologist? (l'archeologo.) The ingredients? (gli ingredienti.) The amount? (la dose.) The pinch? (il pizzico.) The teaspoon? (il cucchiaino.) The bowl? (la ciotola.) The chopping board? (il tagliere.) To slice? (affettare.) To chop finely? (tritare.) To peel? (sbucciare.) To grate? (grattugiare.) To boil? (bollire.) To cook in boiling water? (lessare.) To drain? (scolare.) The lid? (il coperchio.) The shallow pan? (il tegame.) To fry gently? (soffriggere.) To brown? (rosolare.) To fry? (friggere.) To deglaze? (sfumare.) The soffritto? (il soffritto.) To knead? (impastare.) The dough? (l'impasto.) The yeast? (il lievito.) To rise? (lievitare.) The rolling pin? (il mattarello.) To preheat? (preriscaldare.) To put in the oven? (infornare.) To take out of the oven? (sfornare.) The baking tray? (la teglia.) The cooking? (la cottura.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

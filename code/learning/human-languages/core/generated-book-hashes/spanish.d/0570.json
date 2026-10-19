@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 570,
+  "sourceHash": "fnv1a64:cc063f63d7ee5b1a",
+  "lessonIds": [
+    "ES-C570-manifestacion",
+    "ES-C570-protesta",
+    "ES-C570-disturbio",
+    "ES-C570-escandalo",
+    "ES-C570-polemica"
+  ],
+  "tex": "spanish/book/chapters/ch570-en-la-calle.tex"
+}

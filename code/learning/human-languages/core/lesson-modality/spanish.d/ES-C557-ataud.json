@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C557-ataud",
+    "language": "spanish",
+    "chapter": 557,
+    "sequence": 17510,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:89c96e901e632a9c"
+  },
+  "findings": []
+}

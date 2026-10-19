@@ -1,0 +1,11 @@
+{
+  "id": "IT-C413-deviare",
+  "pathSegment": "IT-PATH-413-INGORGO",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "IT-EXT-413-INGORGO",
+      "order": 4
+    }
+  ]
+}

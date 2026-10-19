@@ -1,0 +1,8 @@
+{
+  "id": "IT-EXT-495-FAMIGLIE",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can describe new kinds of family: adoption and stepfamilies.",
+  "prerequisites": []
+}

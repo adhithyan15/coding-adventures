@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 651,
+  "sourceHash": "fnv1a64:d3f762cec1caca90",
+  "lessonIds": [
+    "ES-C651-vagon",
+    "ES-C651-maquinista",
+    "ES-C651-taquilla",
+    "ES-C651-litera",
+    "ES-C651-apearse"
+  ],
+  "tex": "spanish/book/chapters/ch651-en-el-tren.tex"
+}

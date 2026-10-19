@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C768-freir",
+    "language": "spanish",
+    "chapter": 768,
+    "sequence": 28410,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0fd5c7c4a67f0dde"
+  },
+  "findings": []
+}

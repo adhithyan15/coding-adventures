@@ -1,0 +1,11 @@
+{
+  "id": "IT-C433-asciugacapelli",
+  "pathSegment": "IT-PATH-433-CAMERA",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "IT-EXT-433-CAMERA",
+      "order": 4
+    }
+  ]
+}

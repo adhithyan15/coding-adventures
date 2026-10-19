@@ -1,0 +1,11 @@
+{
+  "id": "IT-C370-minoranza",
+  "pathSegment": "IT-PATH-370-MAGGIORANZA",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "IT-EXT-370-MAGGIORANZA",
+      "order": 1
+    }
+  ]
+}

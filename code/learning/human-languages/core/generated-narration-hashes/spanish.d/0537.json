@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 537,
+  "sourceHash": "fnv1a64:e32eacbbc9b9711e",
+  "lessonIds": [
+    "ES-C537-desde-entonces",
+    "ES-C537-hasta-entonces",
+    "ES-C537-al-dia-siguiente",
+    "ES-C537-hace-poco",
+    "ES-C537-anteayer"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch537.txt",
+  "json": "spanish/narration/ch537.json",
+  "textHash": "fnv1a64:840111c8dac2c7b5",
+  "jsonHash": "fnv1a64:547a7719c2df624c",
+  "findings": []
+}

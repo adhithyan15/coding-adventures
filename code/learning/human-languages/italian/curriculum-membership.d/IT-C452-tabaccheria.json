@@ -1,0 +1,11 @@
+{
+  "id": "IT-C452-tabaccheria",
+  "pathSegment": "IT-PATH-452-EDICOLA",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "IT-EXT-452-EDICOLA",
+      "order": 0
+    }
+  ]
+}

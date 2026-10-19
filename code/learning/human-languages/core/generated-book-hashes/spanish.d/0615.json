@@ -1,0 +1,14 @@
+{
+  "language": "spanish",
+  "chapter": 615,
+  "sourceHash": "fnv1a64:f5d8d3d860ad116a",
+  "lessonIds": [
+    "ES-C615-programar",
+    "ES-C615-planificar",
+    "ES-C615-proposito",
+    "ES-C615-intencion",
+    "ES-C615-proponerse",
+    "ES-R615-repaso-608-615"
+  ],
+  "tex": "spanish/book/chapters/ch615-planes.tex"
+}

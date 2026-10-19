@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 710,
+  "sourceHash": "fnv1a64:c3894a06cebba314",
+  "lessonIds": [
+    "ES-C710-nervios",
+    "ES-C710-estres",
+    "ES-C710-ansiedad",
+    "ES-C710-tension",
+    "ES-C710-calmar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch710.txt",
+  "json": "spanish/narration/ch710.json",
+  "textHash": "fnv1a64:b88fb91c1cedf7e3",
+  "jsonHash": "fnv1a64:0f370f94ab62f147",
+  "findings": []
+}

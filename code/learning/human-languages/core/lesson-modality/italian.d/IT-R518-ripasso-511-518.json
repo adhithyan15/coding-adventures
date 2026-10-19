@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-R518-ripasso-511-518",
+    "language": "italian",
+    "chapter": 518,
+    "sequence": 29050,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:189b4569947273b0"
+  },
+  "findings": []
+}

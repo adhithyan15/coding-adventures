@@ -1,0 +1,11 @@
+{
+  "id": "IT-C294-commissariato",
+  "pathSegment": "IT-PATH-294-PATTUGLIA",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "IT-EXT-294-PATTUGLIA",
+      "order": 1
+    }
+  ]
+}

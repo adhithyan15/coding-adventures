@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 676,
+  "sourceHash": "fnv1a64:9a0956a9b0424a73",
+  "lessonIds": [
+    "ES-C676-turismo",
+    "ES-C676-mirador",
+    "ES-C676-turistico",
+    "ES-C676-folleto",
+    "ES-C676-regatear"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch676.txt",
+  "json": "spanish/narration/ch676.json",
+  "textHash": "fnv1a64:c9e45d1a95a21f84",
+  "jsonHash": "fnv1a64:a08f63dffb6b62c7",
+  "findings": []
+}

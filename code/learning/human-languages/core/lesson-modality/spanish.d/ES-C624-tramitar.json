@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C624-tramitar",
+    "language": "spanish",
+    "chapter": 624,
+    "sequence": 20980,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:cdc41416863679e1"
+  },
+  "findings": []
+}

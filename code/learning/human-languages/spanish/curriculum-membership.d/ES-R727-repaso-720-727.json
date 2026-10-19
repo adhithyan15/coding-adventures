@@ -1,0 +1,11 @@
+{
+  "id": "ES-R727-repaso-720-727",
+  "pathSegment": "ES-PATH-727-SENSIBLE",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "ES-EXT-727-SENSIBLE",
+      "order": 5
+    }
+  ]
+}

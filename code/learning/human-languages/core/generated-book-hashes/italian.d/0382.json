@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 382,
+  "sourceHash": "fnv1a64:9364ca7633f1017a",
+  "lessonIds": [
+    "IT-C382-ripassare",
+    "IT-C382-interrogazione",
+    "IT-C382-memorizzare",
+    "IT-C382-appunti",
+    "IT-C382-manuale"
+  ],
+  "tex": "italian/book/chapters/ch382-prima-dell-esame.tex"
+}

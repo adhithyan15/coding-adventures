@@ -1,0 +1,11 @@
+{
+  "id": "IT-C334-rosolare",
+  "pathSegment": "IT-PATH-334-SOFFRITTO",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "IT-EXT-334-SOFFRITTO",
+      "order": 1
+    }
+  ]
+}

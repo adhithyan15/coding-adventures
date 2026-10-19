@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 731,
+  "sourceHash": "fnv1a64:42934278265d2c3a",
+  "lessonIds": [
+    "ES-C731-maduro",
+    "ES-C731-madurez",
+    "ES-C731-madurar",
+    "ES-C731-optimista",
+    "ES-C731-pesimista"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch731.txt",
+  "json": "spanish/narration/ch731.json",
+  "textHash": "fnv1a64:fca6bdb1b62fe907",
+  "jsonHash": "fnv1a64:2da581f05b593a3a",
+  "findings": []
+}

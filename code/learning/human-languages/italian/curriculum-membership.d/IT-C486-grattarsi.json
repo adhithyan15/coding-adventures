@@ -1,0 +1,11 @@
+{
+  "id": "IT-C486-grattarsi",
+  "pathSegment": "IT-PATH-486-PRURITO",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "IT-EXT-486-PRURITO",
+      "order": 2
+    }
+  ]
+}

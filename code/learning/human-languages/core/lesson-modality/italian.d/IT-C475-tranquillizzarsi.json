@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C475-tranquillizzarsi",
+    "language": "italian",
+    "chapter": 475,
+    "sequence": 26840,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5e86bd360b753e57"
+  },
+  "findings": []
+}

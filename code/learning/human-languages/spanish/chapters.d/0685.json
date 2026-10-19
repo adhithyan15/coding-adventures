@@ -1,0 +1,19 @@
+{
+  "chapter": 685,
+  "title": "El paisaje",
+  "label": "ch:es-el-paisaje",
+  "canDo": "I can describe a landscape: nature, mountain ranges, hills and deserts.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "ES-C685-desierto",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 685: I can describe a landscape: nature, mountain ranges, hills and deserts.",
+    "assesses": [
+      "ES-LEX-C685-PAISAJE-03",
+      "ES-LEX-C685-PAISAJE-04",
+      "ES-LEX-C685-PAISAJE-05"
+    ]
+  }
+}

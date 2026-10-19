@@ -1,0 +1,20 @@
+{
+  "language": "spanish",
+  "chapter": 615,
+  "sourceHash": "fnv1a64:001aada10960b828",
+  "lessonIds": [
+    "ES-C615-programar",
+    "ES-C615-planificar",
+    "ES-C615-proposito",
+    "ES-C615-intencion",
+    "ES-C615-proponerse",
+    "ES-R615-repaso-608-615"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "spanish/narration/ch615.txt",
+  "json": "spanish/narration/ch615.json",
+  "textHash": "fnv1a64:486904ae62ae8327",
+  "jsonHash": "fnv1a64:a37b16e4f97d8db7",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "ES-C690-sombrilla",
+  "pathSegment": "ES-PATH-690-PLAYA",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ES-EXT-690-PLAYA",
+      "order": 2
+    }
+  ]
+}

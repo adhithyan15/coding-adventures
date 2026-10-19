@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 682,
+  "sourceHash": "fnv1a64:b464483aa35fc1fb",
+  "lessonIds": [
+    "ES-C682-farola",
+    "ES-C682-papelera",
+    "ES-C682-contenedor",
+    "ES-C682-bordillo",
+    "ES-C682-peatonal"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch682.txt",
+  "json": "spanish/narration/ch682.json",
+  "textHash": "fnv1a64:d21947716369bc65",
+  "jsonHash": "fnv1a64:94c989f5f5a30009",
+  "findings": []
+}
