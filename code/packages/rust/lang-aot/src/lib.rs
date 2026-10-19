@@ -61,6 +61,11 @@ use interpreter_ir::module::IIRModule;
 pub mod jit_lisp;
 pub use jit_lisp::{run_macsyma_on_jit, run_mccarthy_on_jit};
 
+/// LANG83: the nine backend columns and the compile-time standard-operation
+/// check every code-generation entry point runs first.
+pub mod op_check;
+pub use op_check::{check_module_for, Backend, OpRefusal, UnsupportedOps};
+
 /// Source language a `lang-aot` invocation is compiling.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum Language {
@@ -347,6 +352,10 @@ pub enum LangAotError {
     /// the 8080 (1974) is the 8008's direct successor and the CPU inside
     /// the Altair 8800.
     Intel8080BackendError(String),
+    /// The module uses LANG83 standard operations the target backend refuses
+    /// (`check_module_for`). Raised before any lowering pass runs, so a refused
+    /// op is never miscompiled.
+    UnsupportedOps(UnsupportedOps),
 }
 
 impl fmt::Display for LangAotError {
@@ -379,6 +388,7 @@ impl fmt::Display for LangAotError {
             LangAotError::Intel8051BackendError(m) => write!(f, "intel8051: {m}"),
             LangAotError::Intel8086BackendError(m) => write!(f, "intel8086: {m}"),
             LangAotError::SparcV8BackendError(m) => write!(f, "sparc-v8: {m}"),
+            LangAotError::UnsupportedOps(e) => write!(f, "{e}"),
         }
     }
 }
@@ -391,6 +401,10 @@ impl From<twig_aot::AotError> for LangAotError {
 
 impl From<std::io::Error> for LangAotError {
     fn from(e: std::io::Error) -> Self { LangAotError::Io(e) }
+}
+
+impl From<UnsupportedOps> for LangAotError {
+    fn from(e: UnsupportedOps) -> Self { LangAotError::UnsupportedOps(e) }
 }
 
 /// Compile source text to an [`IIRModule`] using the matching frontend.
@@ -663,7 +677,23 @@ pub fn compile_source_to_llvm_with_target(
     module_name: &str,
     target_triple: &str,
 ) -> Result<String, LangAotError> {
-    let mut module = compile_source_to_iir(language, source, module_name)?;
+    let module = compile_source_to_iir(language, source, module_name)?;
+    compile_iir_to_llvm(module, module_name, target_triple)
+}
+
+/// The IIR-level LLVM entry point: an already-built [`IIRModule`] → textual
+/// LLVM IR for `target_triple`. [`compile_source_to_llvm_with_target`] is this
+/// plus the frontend; a test or tool that builds IIR directly (the LANG83
+/// conformance corpus) calls it without a source language.
+///
+/// Runs [`check_module_for`] first (LANG83), so a standard op LLVM refuses is a
+/// typed [`LangAotError::UnsupportedOps`] before any lowering pass runs.
+pub fn compile_iir_to_llvm(
+    mut module: IIRModule,
+    module_name: &str,
+    target_triple: &str,
+) -> Result<String, LangAotError> {
+    check_module_for(Backend::Llvm, &module)?;
     // E6d-8: lower dynamic `global_get`/`global_set` → `global_load`/`global_store`
     // before the value-model passes (as the native twig-aot path does).
     iir_builtin_lowering::lower_global_io(&mut module);
@@ -796,7 +826,13 @@ pub fn compile_source_to_wasm(
     source: &str,
     module_name: &str,
 ) -> Result<Vec<u8>, LangAotError> {
-    let mut module = compile_source_to_iir(language, source, module_name)?;
+    compile_iir_to_wasm(compile_source_to_iir(language, source, module_name)?)
+}
+
+/// The IIR-level WASM entry point: an already-built [`IIRModule`] → encoded
+/// wasm bytes. Runs [`check_module_for`] first (LANG83).
+pub fn compile_iir_to_wasm(mut module: IIRModule) -> Result<Vec<u8>, LangAotError> {
+    check_module_for(Backend::Wasm, &module)?;
     // E6d-8: lower `call_builtin "global_get"/"global_set"` (a forward-referenced
     // or closure-captured Twig `define`) to `global_load`/`global_store` — the
     // typed-global ops the code-gen backends accept. The native `twig-aot`
@@ -1058,7 +1094,16 @@ pub fn compile_source_to_jvm_class(
     source: &str,
     class_name: &str,
 ) -> Result<iir_to_jvm_class_file::JvmClassFile, LangAotError> {
-    let mut module = compile_source_to_iir(language, source, class_name)?;
+    compile_iir_to_jvm_class(compile_source_to_iir(language, source, class_name)?, class_name)
+}
+
+/// The IIR-level JVM entry point: an already-built [`IIRModule`] → a
+/// [`iir_to_jvm_class_file::JvmClassFile`]. Runs [`check_module_for`] first (LANG83).
+pub fn compile_iir_to_jvm_class(
+    mut module: IIRModule,
+    class_name: &str,
+) -> Result<iir_to_jvm_class_file::JvmClassFile, LangAotError> {
+    check_module_for(Backend::Jvm, &module)?;
     // E6d-8: dynamic global builtins → typed global_load/global_store.
     iir_builtin_lowering::lower_global_io(&mut module);
     // Closures first: `lower_closures_to_heap` emits `cons`/`car`/`cdr`, which
@@ -1192,7 +1237,18 @@ pub fn compile_source_to_cil_artifact(
     source: &str,
     name: &str,
 ) -> Result<iir_to_cil_bytecode::CILProgramArtifact, LangAotError> {
-    let mut module = compile_source_to_iir(language, source, name)?;
+    compile_iir_to_cil_artifact(compile_source_to_iir(language, source, name)?, name)
+}
+
+/// The IIR-level binary-CIL entry point (the in-repo `clr-simulator` path).
+/// Runs [`check_module_for`] first (LANG83). The CLR column's `op_support`
+/// describes the textual path; this narrower binary path still reports its own
+/// gaps through `ClrBackendError`.
+pub fn compile_iir_to_cil_artifact(
+    mut module: IIRModule,
+    name: &str,
+) -> Result<iir_to_cil_bytecode::CILProgramArtifact, LangAotError> {
+    check_module_for(Backend::Clr, &module)?;
     // E6d-8: dynamic global builtins → typed global_load/global_store.
     iir_builtin_lowering::lower_global_io(&mut module);
     // The managed value-model pipeline — the same backend-agnostic structural
@@ -1237,6 +1293,7 @@ pub fn compile_source_to_typed_cil_artifact(
     name: &str,
 ) -> Result<iir_to_cil_bytecode::CILProgramArtifact, LangAotError> {
     let module = compile_source_to_iir(language, source, name)?;
+    check_module_for(Backend::Clr, &module)?;
     let config = iir_to_cil_bytecode::IIRClrConfig::new(name);
     iir_to_cil_bytecode::lower_typed_scalars_to_cil(&module, &config)
         .map_err(|e| LangAotError::ClrBackendError(format!("{e:?}")))
@@ -1255,7 +1312,13 @@ pub fn compile_source_to_cil_text(
     source: &str,
     name: &str,
 ) -> Result<String, LangAotError> {
-    let mut module = compile_source_to_iir(language, source, name)?;
+    compile_iir_to_cil_text(compile_source_to_iir(language, source, name)?, name)
+}
+
+/// The IIR-level textual-CIL entry point (real `ilasm` + CoreCLR, the CLR
+/// column). Runs [`check_module_for`] first (LANG83).
+pub fn compile_iir_to_cil_text(mut module: IIRModule, name: &str) -> Result<String, LangAotError> {
+    check_module_for(Backend::Clr, &module)?;
     // E6d-8: dynamic global builtins → typed global_load/global_store.
     iir_builtin_lowering::lower_global_io(&mut module);
     // The same managed value-model pipeline the binary CIL path uses, so the
@@ -1345,7 +1408,13 @@ pub fn compile_source_to_beam(
     source: &str,
     module_name: &str,
 ) -> Result<Vec<u8>, LangAotError> {
-    let mut module = compile_source_to_iir(language, source, module_name)?;
+    compile_iir_to_beam(compile_source_to_iir(language, source, module_name)?, module_name)
+}
+
+/// The IIR-level BEAM entry point: an already-built [`IIRModule`] → `.beam`
+/// bytes. Runs [`check_module_for`] first (LANG83).
+pub fn compile_iir_to_beam(mut module: IIRModule, module_name: &str) -> Result<Vec<u8>, LangAotError> {
+    check_module_for(Backend::Beam, &module)?;
     // E6d-8: dynamic global builtins → typed global_load/global_store.
     iir_builtin_lowering::lower_global_io(&mut module);
     // BEAM uses the NATIVE Erlang-terms value model, not the managed structural
@@ -2642,7 +2711,22 @@ pub fn compile_file_to_linux_executable(
     let source = std::fs::read_to_string(src)?;
     let stem = src.file_stem().and_then(|s| s.to_str()).unwrap_or("lang");
     let module = compile_source_to_iir(language, &source, stem)?;
-    twig_aot::compile_module_to_linux_executable(&module, out)?;
+    compile_iir_to_host_executable(&module, out)
+}
+
+/// The IIR-level native entry point: an already-built [`IIRModule`] → a native
+/// executable for this host (x86-64 ELF on Linux, x86-64 PE on Windows, ARM64
+/// Mach-O on macOS — see [`Backend::native_host`]). Runs [`check_module_for`]
+/// first (LANG83).
+#[cfg(any(target_os = "linux", target_os = "windows", target_os = "macos"))]
+pub fn compile_iir_to_host_executable(module: &IIRModule, out: &Path) -> Result<(), LangAotError> {
+    check_module_for(Backend::native_host(), module)?;
+    #[cfg(target_os = "linux")]
+    twig_aot::compile_module_to_linux_executable(module, out)?;
+    #[cfg(target_os = "windows")]
+    twig_aot::compile_module_to_windows_executable(module, out)?;
+    #[cfg(target_os = "macos")]
+    twig_aot::compile_module_to_macos_executable(module, out)?;
     Ok(())
 }
 
@@ -2656,8 +2740,7 @@ pub fn compile_file_to_windows_executable(
     let source = std::fs::read_to_string(src)?;
     let stem = src.file_stem().and_then(|s| s.to_str()).unwrap_or("lang");
     let module = compile_source_to_iir(language, &source, stem)?;
-    twig_aot::compile_module_to_windows_executable(&module, out)?;
-    Ok(())
+    compile_iir_to_host_executable(&module, out)
 }
 
 /// macOS ARM64: source → IIR → Mach-O → executable (Unix host only).
@@ -2670,6 +2753,9 @@ pub fn compile_file_to_macos_executable(
     let source = std::fs::read_to_string(src)?;
     let stem = src.file_stem().and_then(|s| s.to_str()).unwrap_or("lang");
     let module = compile_source_to_iir(language, &source, stem)?;
+    // Always the ARM64 Mach-O path (on any Unix host), so check the AArch64
+    // declaration explicitly rather than `Backend::native_host()`.
+    check_module_for(Backend::Aarch64, &module)?;
     twig_aot::compile_module_to_macos_executable(&module, out)?;
     Ok(())
 }
