@@ -626,10 +626,16 @@ the exact requested OID. It embeds no purpose registry and gives
 `anyExtendedKeyUsage` no implicit wildcard meaning: callers that choose that
 OID request only that exact OID. Its opaque success evidence grants no key
 operation, signature, path, identity, time, trust, revocation, TLS, or network
-authority. Repository-owned signature verification, certificate path
-construction and validation, issuer/subject name policy, trust-root
-integration, revocation policy, TLS, and HTTP remain blockers, so concrete
-HTTPS remains unavailable.
+authority. A seventh bounded gate now fixes one certificate-link direction:
+it invokes one caller-supplied distinguished-name comparator exactly once with
+the child issuer Name followed by the candidate issuer subject Name. Mismatch
+fails closed with no Name or certificate bytes in the error; opaque success
+proves only that this comparator accepted this pair. The gate embeds no name
+normalization or equality rule, does not grant the candidate a CA role, and
+neither constructs nor validates a path. Repository-owned signature
+verification, complete distinguished-name policy, certificate path
+construction and validation, trust-root integration, revocation policy, TLS,
+and HTTP remain blockers, so concrete HTTPS remains unavailable.
 
 The current slices intentionally stop before provider HTTPS transport. The
 loopback host owns only local TCP and injected browser authority; custody owns

@@ -17,3 +17,6 @@
 - Add fail-closed authorization of one exact caller-supplied Extended Key Usage
   purpose over already validated end-entity role evidence, with no embedded
   registry or implicit `anyExtendedKeyUsage` wildcard.
+- Add a directed child-issuer to candidate-subject link gate over one
+  caller-supplied distinguished-name comparator, with redacted mismatch and no
+  built-in normalization, CA-role, path, signature, or trust claim.
