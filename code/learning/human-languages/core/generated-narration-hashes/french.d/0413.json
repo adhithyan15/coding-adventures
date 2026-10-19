@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 413,
+  "sourceHash": "fnv1a64:063d8a350921f6a3",
+  "lessonIds": [
+    "FR-C413-voie",
+    "FR-C413-composter",
+    "FR-C413-controleur",
+    "FR-C413-wagon",
+    "FR-C413-desservir"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch413.txt",
+  "json": "french/narration/ch413.json",
+  "textHash": "fnv1a64:e4ca26124526b1c5",
+  "jsonHash": "fnv1a64:da99c5a7f4538bcf",
+  "findings": []
+}

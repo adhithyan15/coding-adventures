@@ -74,8 +74,8 @@ ne sais pas* comes in useful:
 
 You have met **si** before, as the "yes" that contradicts a negative: *Tu ne
 viens pas ? — Si !* That one goes back to Latin *sīc*, "so, thus". The *si*
-of this lesson is inherited from Latin *sī*, "if", a conditional particle
-(Lewis & Short, under *si*). EtymDB 2.1 lists both Latin words behind the
+of this lesson is inherited from Latin *sī*, "if", the Latin word that opened
+a condition (Lewis & Short, under *si*). EtymDB 2.1 lists both Latin words behind the
 French spelling. Two words, worn into one shape.
 
 The ear tells them apart by their place. The "yes" *si* stands alone, as

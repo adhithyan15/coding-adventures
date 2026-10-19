@@ -51,9 +51,9 @@ with what you think about it.
 > think so.
 
 The *que* cannot be dropped, as English drops its *that*. After it, the verb
-stays plain: *je pense que c'est cher*. Only a denial, *je ne pense pas
-que…*, makes careful French bend the verb that follows into a form a later
-chapter builds.
+stays plain: *je pense que c'est cher*. A denial, *je ne pense pas
+que…*, can make careful French bend the verb that follows into a form a
+later chapter builds.
 
 Two near neighbours do the same job. **Je crois que**, from *croire*, sounds
 a shade less sure. **Je trouve que**, from *trouver*, is "I find that", for

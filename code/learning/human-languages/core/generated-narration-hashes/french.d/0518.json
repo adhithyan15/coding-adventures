@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 518,
+  "sourceHash": "fnv1a64:a73544faa9ea2680",
+  "lessonIds": [
+    "FR-C518-exposition",
+    "FR-C518-vernissage",
+    "FR-C518-galerie",
+    "FR-C518-oeuvre",
+    "FR-C518-encadrer"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch518.txt",
+  "json": "french/narration/ch518.json",
+  "textHash": "fnv1a64:556c796e4ab348bd",
+  "jsonHash": "fnv1a64:2f0a2d9b54548b94",
+  "findings": []
+}

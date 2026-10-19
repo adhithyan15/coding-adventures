@@ -1,0 +1,11 @@
+{
+  "id": "FR-C458-recif",
+  "pathSegment": "FR-PATH-458-LITTORAL",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FR-EXT-458-LITTORAL",
+      "order": 3
+    }
+  ]
+}

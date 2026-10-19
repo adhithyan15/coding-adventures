@@ -1,0 +1,11 @@
+{
+  "id": "FR-C394-emprunt",
+  "pathSegment": "FR-PATH-394-FAILLITE",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-394-FAILLITE",
+      "order": 4
+    }
+  ]
+}

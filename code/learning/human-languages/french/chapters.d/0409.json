@@ -1,0 +1,19 @@
+{
+  "chapter": 409,
+  "title": "Dans les virages",
+  "label": "ch:fr-dans-les-virages",
+  "canDo": "I can talk about the road surface and signalling: the indicator, the headlights, the bend, the carriageway and turning aside.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "FR-C409-devier",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 409: I can talk about the road surface and signalling: the indicator, the headlights, the bend, the carriageway and turning aside.",
+    "assesses": [
+      "FR-LEX-C409-VIRAGE-03",
+      "FR-LEX-C409-VIRAGE-04",
+      "FR-LEX-C409-VIRAGE-05"
+    ]
+  }
+}

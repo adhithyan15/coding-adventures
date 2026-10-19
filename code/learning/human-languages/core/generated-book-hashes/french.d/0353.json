@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 353,
+  "sourceHash": "fnv1a64:bdb222babe8b7a1e",
+  "lessonIds": [
+    "FR-C353-remede",
+    "FR-C353-remedier",
+    "FR-C353-aggraver",
+    "FR-C353-attenuer",
+    "FR-C353-compenser"
+  ],
+  "tex": "french/book/chapters/ch353-trouver-un-remede.tex"
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-R423-revision-416-423",
+    "language": "french",
+    "chapter": 423,
+    "sequence": 23520,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:dae12ee2eedaa490"
+  },
+  "findings": []
+}

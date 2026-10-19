@@ -1,0 +1,19 @@
+{
+  "chapter": 510,
+  "title": "Glace et neige",
+  "label": "ch:fr-glace-et-neige",
+  "canDo": "I can talk about skating and sledging.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "FR-C510-piste",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 510: I can talk about skating and sledging.",
+    "assesses": [
+      "FR-LEX-C510-GLACE-03",
+      "FR-LEX-C510-GLACE-04",
+      "FR-LEX-C510-GLACE-05"
+    ]
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "id": "FR-PATH-326-LIBERATION",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "FR-EXT-326-LIBERATION"
+  ],
+  "after": []
+}

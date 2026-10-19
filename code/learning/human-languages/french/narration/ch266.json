@@ -4,7 +4,7 @@
   "chapter": 266,
   "title": "If — si, s'il pleut, ça dépend",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:beb02b96f2aa1265",
+  "sourceHash": "fnv1a64:df740f701fe9dd42",
   "lessons": [
     {
       "id": "FR-C266-si",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f853ef2d4130a249",
+      "sourceHash": "fnv1a64:396087abdb55571d",
       "notice": null,
       "blocks": [
         {
@@ -94,7 +94,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "You have met si before, as the \"yes\" that contradicts a negative: Tu ne viens pas? — Si! That one goes back to Latin sīc, \"so, thus\". The si of this lesson is inherited from Latin sī, \"if\", a conditional particle (Lewis & Short, under si). EtymDB 2.1 lists both Latin words behind the French spelling. Two words, worn into one shape."
+              "text": "You have met si before, as the \"yes\" that contradicts a negative: Tu ne viens pas? — Si! That one goes back to Latin sīc, \"so, thus\". The si of this lesson is inherited from Latin sī, \"if\", the Latin word that opened a condition (Lewis & Short, under si). EtymDB 2.1 lists both Latin words behind the French spelling. Two words, worn into one shape."
             },
             {
               "kind": "speech",
@@ -183,7 +183,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:28c384c7854de0e3",
+      "sourceHash": "fnv1a64:1b9a7d5d589bcf2e",
       "notice": null,
       "blocks": [
         {
@@ -271,7 +271,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "rester goes back to Latin restāre (EtymDB 2.1), \"to stop behind, to keep back\" (Lewis & Short, under resto): re-, \"back\", plus stāre, \"to stand\", the standing verb behind j'étais. To stay is to stand still while the others go on."
+              "text": "rester goes back to Latin restāre (EtymDB 2.1), \"to stay behind, to hold still\" (Lewis & Short, under resto): re-, \"back\", plus stāre, \"to stand\", the standing verb behind j'étais. To stay is to stand still while the others go on."
             }
           ]
         },
@@ -356,7 +356,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d5f054ffb53be9a9",
+      "sourceHash": "fnv1a64:d342b49ae7dd43ff",
       "notice": null,
       "blocks": [
         {
@@ -439,7 +439,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "dépendre comes from Latin dēpendēre, \"to hang from, to hang down\" (Lewis & Short, under dependeo): dē, \"down from\", and pendēre, \"to hang\". To depend on something is to hang from it, and the answer swings until the condition settles. The same pendēre is inside pendant, which you met with pendant que. Its close relative pendere, \"to make hang, to weigh on the scales\" (Lewis & Short, under pendo), is the one behind penser. English pendant and pending belong to the family too."
+              "text": "dépendre has no parent in EtymDB 2.1; it is usually traced to Latin dēpendēre, \"to hang down from something\" (Lewis & Short, under dependeo): dē, \"down from\", and pendēre, \"to hang\". To depend on something is to hang from it, and the answer swings until the condition settles. The same pendēre is inside pendant, which you met with pendant que. Its close relative pendere, \"to make hang, to weigh on the scales\" (Lewis & Short, under pendo), is the one behind penser. English pendant and pending belong to the family too."
             }
           ]
         },

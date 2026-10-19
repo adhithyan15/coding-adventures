@@ -1,0 +1,11 @@
+{
+  "id": "FR-C498-feu-de-camp",
+  "pathSegment": "FR-PATH-498-PLEIN-AIR",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-498-PLEIN-AIR",
+      "order": 4
+    }
+  ]
+}

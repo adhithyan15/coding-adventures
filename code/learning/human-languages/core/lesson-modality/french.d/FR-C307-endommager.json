@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C307-endommager",
+    "language": "french",
+    "chapter": 307,
+    "sequence": 17500,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6e884ebba5f73ac2"
+  },
+  "findings": []
+}

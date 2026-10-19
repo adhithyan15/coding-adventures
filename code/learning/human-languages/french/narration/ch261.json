@@ -4,7 +4,7 @@
   "chapter": 261,
   "title": "Should, and Why — je devrais, expliquer",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:d64ff07ff38222ba",
+  "sourceHash": "fnv1a64:029996e8be7c166b",
   "lessons": [
     {
       "id": "FR-C261-je-devrais",
@@ -183,7 +183,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:45395bcb48a96644",
+      "sourceHash": "fnv1a64:2416a54482993e6e",
       "notice": null,
       "blocks": [
         {
@@ -248,7 +248,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "expliquer is a learned borrowing from Latin explicāre, \"to unfold, to unroll, to spread out\" (EtymDB 2.1; Lewis & Short, under explico), which is ex-, \"out\", plus plicāre, \"to fold\". To explain is to unfold: something was folded shut, and you open it out."
+              "text": "expliquer is a learned borrowing from Latin explicāre, \"to unfold, to open out flat\" (EtymDB 2.1; Lewis & Short, under explico), which is ex-, \"out\", plus plicāre, \"to fold\". To explain is to unfold: something was folded shut, and you open it out."
             },
             {
               "kind": "speech",

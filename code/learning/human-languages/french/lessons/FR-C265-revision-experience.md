@@ -56,7 +56,7 @@ passé composé for what is over, and *il y a* for "ago".
 > rester ici.*
 
 *Rester*, "to stay", is one of the standing verb's children, Latin
-*re-stāre*: to stand behind.
+*re-stāre*: to stay back.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[FR-GRAM-PENDANT-DUREE-02, FR-GRAM-PLUS-QUE-01, FR-GRAM-DEPUIS-PRESENT-01, FR-LEX-CETAIT-01, FR-ETYMON-ETRE-STARE-09, FR-GRAM-MON-REVE-02] -->

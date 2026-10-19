@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C447-teindre",
+    "language": "french",
+    "chapter": 447,
+    "sequence": 24730,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:91dc710bb5208808"
+  },
+  "findings": []
+}

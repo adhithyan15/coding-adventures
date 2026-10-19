@@ -1,0 +1,19 @@
+{
+  "chapter": 485,
+  "title": "Tomber malade et guérir",
+  "label": "ch:fr-tomber-malade-et-guerir",
+  "canDo": "I can talk about getting better after an illness.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "FR-C485-soigner",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 485: I can talk about getting better after an illness.",
+    "assesses": [
+      "FR-LEX-C485-GUERIR-03",
+      "FR-LEX-C485-GUERIR-04",
+      "FR-LEX-C485-GUERIR-05"
+    ]
+  }
+}

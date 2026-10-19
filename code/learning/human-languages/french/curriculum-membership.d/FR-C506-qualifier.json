@@ -1,0 +1,11 @@
+{
+  "id": "FR-C506-qualifier",
+  "pathSegment": "FR-PATH-506-RESULTATS",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FR-EXT-506-RESULTATS",
+      "order": 3
+    }
+  ]
+}

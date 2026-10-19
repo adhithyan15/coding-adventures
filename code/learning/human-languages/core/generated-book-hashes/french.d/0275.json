@@ -1,0 +1,14 @@
+{
+  "language": "french",
+  "chapter": 275,
+  "sourceHash": "fnv1a64:70aeb5d138237ebb",
+  "lessonIds": [
+    "FR-C275-ecouler",
+    "FR-C275-ajourner",
+    "FR-C275-aboutir",
+    "FR-C275-contretemps",
+    "FR-C275-echeance",
+    "FR-R275-revision-268-275"
+  ],
+  "tex": "french/book/chapters/ch275-le-temps-passe.tex"
+}

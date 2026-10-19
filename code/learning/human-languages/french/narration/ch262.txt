@@ -23,7 +23,7 @@ A second way asks for the place rather than the way, with où est, "where is". E
 Où est le musée? C'est loin? C'est près d'ici?
 
 The phrase, taken apart.
-excuser is inherited from Latin excūsāre (EtymDB 2.1), built on ex-, "out of", and causa, "a cause, a charge in court" (Lewis & Short, under excuso): to release someone from a charge, to free them from blame. So excusez-moi asks, at root, to be let off. English excuse is the same word, and cause is its second half.
+excuser is inherited from Latin excūsāre (EtymDB 2.1), built on ex-, "out of", and causa, "a cause, a charge in court" (Lewis & Short, under excuso): to clear someone of an accusation, to let them off. So excusez-moi asks, at root, to be let off. English excuse is the same word, and cause is its second half.
 
 Guided Practice.
 [pause 1 second]
@@ -61,7 +61,7 @@ Allez tout droit, puis tournez à gauche. — Go straight on, then turn left. Co
 Five verbs carry almost every set of directions: aller, tourner, continuer, traverser and prendre. The order words come back too: d'abord, puis, ensuite. And a kind stranger may end with a distance: C'est à deux minutes. — It's two minutes away.
 
 The phrase, taken apart.
-tout is inherited from Latin tōtus, "all, whole" (EtymDB 2.1), so tout droit is "all straight", the whole way. droit has no parent in EtymDB 2.1; it is usually traced to Latin dīrēctus, "set straight" (Lewis & Short, under directus), which English kept as direct. Droite, the right hand, is the same word in the feminine. That the right hand was named as the "straight" or proper one is the usual account, offered here as that.
+tout is inherited from Latin tōtus, "all, whole" (EtymDB 2.1), so tout droit is "all straight", the whole way. droit has no parent in EtymDB 2.1; it is usually traced to Latin dīrēctus, "set straight" (Lewis & Short, under dirigo), which English kept as direct. Droite, the right hand, is the same word in the feminine. That the right hand was named as the "straight" or proper one is the usual account, offered here as that.
 
 Guided Practice.
 [pause 1 second]

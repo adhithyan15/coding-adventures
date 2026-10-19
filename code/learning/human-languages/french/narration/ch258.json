@@ -4,7 +4,7 @@
   "chapter": 258,
   "title": "The Scene — c'était, il y avait, il faisait froid",
   "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:7176fd4aa0d56ee8",
+  "sourceHash": "fnv1a64:f87774c8e0c99782",
   "lessons": [
     {
       "id": "FR-C258-parlais",
@@ -366,7 +366,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:782b3b5084c21c79",
+      "sourceHash": "fnv1a64:333e67e460ff7e0f",
       "notice": null,
       "blocks": [
         {
@@ -401,7 +401,7 @@
             },
             {
               "kind": "speech",
-              "text": "Listen to the first syllable. The ai of faisait is said like the short e of le: \"fe-zè\". It is the one surprise in the whole recipe."
+              "text": "Listen to the first syllable. The ai of faisait is said like the short e of le: \"fe-zè\". It is the sound of nous faisons too, and the recipe carries it over."
             },
             {
               "kind": "speech",
@@ -417,7 +417,7 @@
             },
             {
               "kind": "speech",
-              "text": "In Québec, relaxed speech has its own word for a biting cold: il faisait frette. In a letter, everyone writes froid."
+              "text": "In Québec, relaxed speech has its own word for a biting cold: il faisait frette. In a letter, froid is the word to write."
             }
           ]
         },

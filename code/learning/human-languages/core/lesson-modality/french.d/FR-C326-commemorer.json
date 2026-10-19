@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C326-commemorer",
+    "language": "french",
+    "chapter": 326,
+    "sequence": 18510,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:640d7d3b1377f8a3"
+  },
+  "findings": []
+}

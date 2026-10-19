@@ -1,0 +1,11 @@
+{
+  "id": "FR-C283-filmer",
+  "pathSegment": "FR-PATH-283-ANTENNE",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-283-ANTENNE",
+      "order": 2
+    }
+  ]
+}

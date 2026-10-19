@@ -57,7 +57,7 @@ You have l'histoire, which is both "history" and "a story", so raconter une hist
 Grammar Lens: the backbone of a told story.
 Here is what a story tells, with both pasts to work with:
 C'était samedi. Il faisait beau. D'abord, je suis allé au marché. Ensuite, j'ai rencontré un ami, et nous avons parlé. Mais il a commencé à pleuvoir, et enfin je suis rentré à la maison. It was Saturday. The weather was fine. First I went to the market. Then I met a friend, and we talked. But it started to rain, and in the end I went back home.
-C'était, il faisait: the scene, held still. Je suis allé, j'ai rencontré, nous avons parlé, il a commencé, je suis rentré: the events, put in order by d'abord, ensuite and enfin. Mais marks the turn, the point where the story stops going the way it was going. Et adds; mais turns.
+Il fait beau is fine weather, with the beau you met inside beaucoup. C'était, il faisait: the scene, held still. Je suis allé, j'ai rencontré, nous avons parlé, il a commencé, je suis rentré: the events, put in order by d'abord, ensuite and enfin. Mais marks the turn, the point where the story stops going the way it was going. Et adds; mais turns.
 
 The word, taken apart: counting it out.
 raconter goes back to Old French raconter (EtymDB 2.1). It is built on conter, "to tell", which EtymDB 2.1 traces to Latin computāre, "to reckon up, to compute" (Lewis & Short, under computo), with re- and a- in front. To tell a story was to count it out, one piece after another. English kept both senses in one word: you count a sum, and you recount what happened.

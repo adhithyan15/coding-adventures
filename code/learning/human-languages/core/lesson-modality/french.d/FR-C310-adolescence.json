@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C310-adolescence",
+    "language": "french",
+    "chapter": 310,
+    "sequence": 17650,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0621b993a2b42eef"
+  },
+  "findings": []
+}

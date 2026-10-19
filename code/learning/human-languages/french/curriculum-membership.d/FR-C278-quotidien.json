@@ -1,0 +1,11 @@
+{
+  "id": "FR-C278-quotidien",
+  "pathSegment": "FR-PATH-278-PRESSE",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-278-PRESSE",
+      "order": 2
+    }
+  ]
+}

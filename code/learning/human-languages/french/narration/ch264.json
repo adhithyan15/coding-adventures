@@ -4,7 +4,7 @@
   "chapter": 264,
   "title": "How It Felt — j'étais content, j'espère",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:98753aae25f6074d",
+  "sourceHash": "fnv1a64:8bafba12566ff8a4",
   "lessons": [
     {
       "id": "FR-C264-jetais-content",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:acb1db53b97668d4",
+      "sourceHash": "fnv1a64:195e9da29eaaea80",
       "notice": null,
       "blocks": [
         {
@@ -102,7 +102,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "content comes from Latin contentus, \"satisfied\", the participle of continēre, \"to hold together\" (Lewis & Short, under contentus and contineo), itself con- plus tenēre, \"to hold\". EtymDB 2.1 follows it back through Old French content. To be content is to hold yourself in, wanting nothing further. inquiet is a borrowing from Latin inquiētus, \"restless\" (EtymDB 2.1; Lewis & Short): in-, \"not\", and quiētus, \"quiet\"."
+              "text": "content is usually traced to Latin contentus, \"satisfied\", the participle of continēre, \"to hold together\" (Lewis & Short, under contentus and contineo), itself con- plus tenēre, \"to hold\". EtymDB 2.1 follows it back through Old French content. To be content is to hold yourself in, wanting nothing further. inquiet is a borrowing from Latin inquiētus, \"restless\" (EtymDB 2.1; Lewis & Short): in-, \"not\", and quiētus, \"quiet\"."
             }
           ]
         },
@@ -187,7 +187,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:53da41748f6b301a",
+      "sourceHash": "fnv1a64:2909807796d9a7f8",
       "notice": null,
       "blocks": [
         {
@@ -232,7 +232,7 @@
             },
             {
               "kind": "speech",
-              "text": "espérer is a regular -er verb whose é opens to è where the ending goes quiet: j'espère, tu espères, but nous espérons. An infinitive straight after it, with nothing in between, makes the hope your own. Italian puts a small di there; French puts nothing."
+              "text": "espérer is an -er verb whose é opens to è where the ending goes quiet: j'espère, tu espères, but nous espérons. An infinitive straight after it, with nothing in between, makes the hope your own. Italian puts a small di there; French puts nothing."
             },
             {
               "kind": "speech",
@@ -270,7 +270,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "espérer is inherited from Latin spērāre, \"to hope, to look for, to expect\" (EtymDB 2.1; Lewis & Short, under spero), with an e- that French grew in front of sp-, as it grew an é- in front of the sc- of écrire. English desperate is the same verb with dē- in front: hope taken away. rêver goes back to Old French resver, \"to be delirious\" (EtymDB 2.1), and further than that the sources do not reach."
+              "text": "espérer is inherited from Latin spērāre, \"to hope, to expect\" (EtymDB 2.1; Lewis & Short, under spero), with an e- that French grew in front of sp-, as it grew an é- in front of the sc- of écrire. English desperate is the same verb with dē- in front: hope taken away. rêver goes back to Old French resver, \"to be delirious\" (EtymDB 2.1), and further than that the sources do not reach."
             }
           ]
         },

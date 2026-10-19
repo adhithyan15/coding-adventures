@@ -1,0 +1,8 @@
+{
+  "id": "FR-EXT-300-SECOURS",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can describe a rescue: the emergency services, coming to help, reviving someone, a tourniquet and a stretcher.",
+  "prerequisites": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 509,
+  "title": "Dans l'eau",
+  "label": "ch:fr-dans-l-eau",
+  "canDo": "I can talk about swimming, diving and rowing.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "FR-C509-ramer",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 509: I can talk about swimming, diving and rowing.",
+    "assesses": [
+      "FR-LEX-C509-EAU-03",
+      "FR-LEX-C509-EAU-04",
+      "FR-LEX-C509-EAU-05"
+    ]
+  }
+}

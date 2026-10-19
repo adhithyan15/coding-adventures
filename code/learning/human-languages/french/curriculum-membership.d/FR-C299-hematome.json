@@ -1,0 +1,11 @@
+{
+  "id": "FR-C299-hematome",
+  "pathSegment": "FR-PATH-299-CHUTE",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FR-EXT-299-CHUTE",
+      "order": 3
+    }
+  ]
+}

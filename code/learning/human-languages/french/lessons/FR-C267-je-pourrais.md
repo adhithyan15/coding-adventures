@@ -59,7 +59,7 @@ parleraient**. Beside the imparfait: *je parlais*, I was speaking; *je parlerais
 would speak. The infinitive inside it is the whole difference.
 
 A few common verbs squeeze their stem first. You have met two of them,
-*vouloir* in **je voudrais** and *devoir* in **je devrais**; the third is
+*vouloir* in **je voudrais** and *devoir* in **je devrais**; a third is
 *pouvoir*, **je pourrais**. *Aimer* follows the plain recipe: **j'aimerais**.
 
 Three jobs, all softening. A **polite request**: *Vous

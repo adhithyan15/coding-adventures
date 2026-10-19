@@ -1,0 +1,8 @@
+{
+  "id": "FR-EXT-447-PRESSING",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can get clothes cleaned and altered: the dry cleaner, the launderette, removing stains, dyeing and altering.",
+  "prerequisites": []
+}

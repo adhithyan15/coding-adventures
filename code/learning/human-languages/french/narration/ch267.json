@@ -4,7 +4,7 @@
   "chapter": 267,
   "title": "Would — the conditionnel, and Six Lines",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:a176ad57536e45d7",
+  "sourceHash": "fnv1a64:fce9b1d8b3a1356b",
   "lessons": [
     {
       "id": "FR-C267-je-pourrais",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:86c22885990fd68f",
+      "sourceHash": "fnv1a64:dde6fc24b7db334f",
       "notice": null,
       "blocks": [
         {
@@ -68,7 +68,7 @@
             },
             {
               "kind": "speech",
-              "text": "A few common verbs squeeze their stem first. You have met two of them, vouloir in je voudrais and devoir in je devrais; the third is pouvoir, je pourrais. Aimer follows the plain recipe: j'aimerais."
+              "text": "A few common verbs squeeze their stem first. You have met two of them, vouloir in je voudrais and devoir in je devrais; a third is pouvoir, je pourrais. Aimer follows the plain recipe: j'aimerais."
             },
             {
               "kind": "speech",
@@ -177,7 +177,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3f6d6bba2d3bc36e",
+      "sourceHash": "fnv1a64:3096c5d9f337eb5c",
       "notice": null,
       "blocks": [
         {
@@ -239,7 +239,7 @@
             },
             {
               "kind": "speech",
-              "text": "In relaxed speech, above all in Québec, you will hear si j'aurais for \"if I had\"; standard French keeps the imparfait after si, and so should a letter or an exam."
+              "text": "In relaxed speech, in Québec and in France alike, you may hear si j'aurais for \"if I had\"; standard French keeps the imparfait after si, and so should a letter or an exam."
             }
           ]
         },
@@ -480,7 +480,7 @@
         "writing-type",
         "writing-block"
       ],
-      "sourceHash": "fnv1a64:542fe8c34de17cec",
+      "sourceHash": "fnv1a64:ba1afde0dcc52ba8",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -618,7 +618,7 @@
             },
             {
               "kind": "speech",
-              "text": "Now go through your lines as you went through the journey in chapter two hundred and fifty-nine. Mark every verb S for scene or E for event. Lines one and two should be mostly S; three and four mostly E; five has one of each. A line about the weather marked E is the commonest slip: change il a plu back to il pleuvait."
+              "text": "Now go through your lines as you went through the journey in chapter two hundred and fifty-nine. Mark every verb S for scene or E for event. Line one should be all S; two mostly S, though its pendant verb is an E; three and four mostly E; five has one of each. A line about the weather marked E is the commonest slip: change il a plu back to il pleuvait."
             },
             {
               "kind": "pause",

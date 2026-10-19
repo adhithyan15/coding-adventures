@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C390-abonnement",
+    "language": "french",
+    "chapter": 390,
+    "sequence": 21790,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f11596097bc887c3"
+  },
+  "findings": []
+}

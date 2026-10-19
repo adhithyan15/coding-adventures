@@ -1,0 +1,11 @@
+{
+  "id": "FR-C342-juger",
+  "pathSegment": "FR-PATH-342-JUGEMENT",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FR-EXT-342-JUGEMENT",
+      "order": 1
+    }
+  ]
+}

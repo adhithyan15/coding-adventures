@@ -1,0 +1,19 @@
+{
+  "chapter": 328,
+  "title": "Couper les légumes",
+  "label": "ch:fr-couper-les-legumes",
+  "canDo": "I can describe getting vegetables ready: the chopping board, peeling, chopping, slicing thinly and grating.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "FR-C328-raper",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 328: I can describe getting vegetables ready: the chopping board, peeling, chopping, slicing thinly and grating.",
+    "assesses": [
+      "FR-LEX-C328-COUPER-03",
+      "FR-LEX-C328-COUPER-04",
+      "FR-LEX-C328-COUPER-05"
+    ]
+  }
+}

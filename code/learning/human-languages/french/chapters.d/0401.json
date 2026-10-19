@@ -1,0 +1,19 @@
+{
+  "chapter": 401,
+  "title": "Au volant",
+  "label": "ch:fr-au-volant",
+  "canDo": "I can describe how someone drives: speeding up, turning the wheel, skidding, stalling and the pedals.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "FR-C401-pedale",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 401: I can describe how someone drives: speeding up, turning the wheel, skidding, stalling and the pedals.",
+    "assesses": [
+      "FR-LEX-C401-CONDUITE-03",
+      "FR-LEX-C401-CONDUITE-04",
+      "FR-LEX-C401-CONDUITE-05"
+    ]
+  }
+}

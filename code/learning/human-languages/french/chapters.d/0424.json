@@ -1,0 +1,19 @@
+{
+  "chapter": 424,
+  "title": "Où dormir ?",
+  "label": "ch:fr-ou-dormir",
+  "canDo": "I can talk about places to stay: the inn, the holiday cottage, a night, staying somewhere and spending time there.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "FR-C424-sejourner",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 424: I can talk about places to stay: the inn, the holiday cottage, a night, staying somewhere and spending time there.",
+    "assesses": [
+      "FR-LEX-C424-HEBERGEMENT-03",
+      "FR-LEX-C424-HEBERGEMENT-04",
+      "FR-LEX-C424-HEBERGEMENT-05"
+    ]
+  }
+}

@@ -59,7 +59,7 @@ Here is a whole explanation, every word of it met before:
 Four moves, and a word for each: a view (je pense que), a cause pointing back (parce que), a consequence pointing forward (donc), and advice (je devrais). With both arrows you can build it cause first or claim first, and the listener can follow either.
 
 The word, taken apart: folded, and unfolded.
-expliquer is a learned borrowing from Latin explicāre, "to unfold, to unroll, to spread out" (EtymDB 2.1; Lewis & Short, under explico), which is ex-, "out", plus plicāre, "to fold". To explain is to unfold: something was folded shut, and you open it out.
+expliquer is a learned borrowing from Latin explicāre, "to unfold, to open out flat" (EtymDB 2.1; Lewis & Short, under explico), which is ex-, "out", plus plicāre, "to fold". To explain is to unfold: something was folded shut, and you open it out.
 The same plicāre came down into French the slow way, by mouth, and gave plier, "to fold", which you have (EtymDB 2.1). English kept the Latin in explicit, and complicated is the opposite: folded together.
 
 Guided Practice.

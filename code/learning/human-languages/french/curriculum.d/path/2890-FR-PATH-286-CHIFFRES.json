@@ -1,0 +1,9 @@
+{
+  "id": "FR-PATH-286-CHIFFRES",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "FR-EXT-286-CHIFFRES"
+  ],
+  "after": []
+}

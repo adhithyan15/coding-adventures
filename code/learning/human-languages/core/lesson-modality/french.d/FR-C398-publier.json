@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C398-publier",
+    "language": "french",
+    "chapter": 398,
+    "sequence": 22220,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:df2d954127b12c6d"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 299,
+  "title": "Une mauvaise chute",
+  "label": "ch:fr-une-mauvaise-chute",
+  "canDo": "I can describe a fall and what it does: a fall, spraining something, a bruise, a large bruise and a wound.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "FR-R299-revision-292-299",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 299: I can describe a fall and what it does: a fall, spraining something, a bruise, a large bruise and a wound.",
+    "assesses": [
+      "FR-LEX-C299-CHUTE-03",
+      "FR-LEX-C299-CHUTE-04",
+      "FR-LEX-C299-CHUTE-05"
+    ]
+  }
+}

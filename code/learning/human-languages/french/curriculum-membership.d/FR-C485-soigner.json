@@ -1,0 +1,11 @@
+{
+  "id": "FR-C485-soigner",
+  "pathSegment": "FR-PATH-485-GUERIR",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-485-GUERIR",
+      "order": 4
+    }
+  ]
+}

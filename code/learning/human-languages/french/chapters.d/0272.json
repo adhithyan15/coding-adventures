@@ -1,0 +1,19 @@
+{
+  "chapter": 272,
+  "title": "Jadis et naguère",
+  "label": "ch:fr-jadis-et-naguere",
+  "canDo": "I can talk about long ago and not so long ago: in olden days, formerly, before, until then and since then.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "FR-C272-depuis-lors",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 272: I can talk about long ago and not so long ago: in olden days, formerly, before, until then and since then.",
+    "assesses": [
+      "FR-LEX-C272-JADIS-03",
+      "FR-LEX-C272-JADIS-04",
+      "FR-LEX-C272-JADIS-05"
+    ]
+  }
+}

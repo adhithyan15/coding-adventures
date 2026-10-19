@@ -1,0 +1,9 @@
+{
+  "id": "FR-PATH-338-DOUTE",
+  "spine_node": "SPINE-GIVE-REASONS",
+  "before": [],
+  "inline": [
+    "FR-EXT-338-DOUTE"
+  ],
+  "after": []
+}

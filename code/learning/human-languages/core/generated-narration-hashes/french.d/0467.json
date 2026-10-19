@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 467,
+  "sourceHash": "fnv1a64:52f01eeded65933a",
+  "lessonIds": [
+    "FR-C467-tetu",
+    "FR-C467-paresse",
+    "FR-C467-avare",
+    "FR-C467-maladroit",
+    "FR-C467-etourdi"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch467.txt",
+  "json": "french/narration/ch467.json",
+  "textHash": "fnv1a64:8999eb61a7e80a78",
+  "jsonHash": "fnv1a64:ca603317b0770a81",
+  "findings": []
+}

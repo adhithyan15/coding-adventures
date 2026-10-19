@@ -1,0 +1,11 @@
+{
+  "id": "FR-C351-justifier",
+  "pathSegment": "FR-PATH-351-REACTION",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FR-EXT-351-REACTION",
+      "order": 3
+    }
+  ]
+}

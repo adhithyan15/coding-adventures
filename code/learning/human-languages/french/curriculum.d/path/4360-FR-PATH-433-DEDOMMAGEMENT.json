@@ -1,0 +1,9 @@
+{
+  "id": "FR-PATH-433-DEDOMMAGEMENT",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "FR-EXT-433-DEDOMMAGEMENT"
+  ],
+  "after": []
+}

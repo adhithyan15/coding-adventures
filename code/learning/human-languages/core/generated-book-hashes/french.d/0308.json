@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 308,
+  "sourceHash": "fnv1a64:03ccdea67a18aec3",
+  "lessonIds": [
+    "FR-C308-naissance",
+    "FR-C308-enceinte",
+    "FR-C308-accouchement",
+    "FR-C308-allaiter",
+    "FR-C308-berceau"
+  ],
+  "tex": "french/book/chapters/ch308-une-naissance.tex"
+}

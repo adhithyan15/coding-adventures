@@ -1,0 +1,11 @@
+{
+  "id": "FR-C351-pretexte",
+  "pathSegment": "FR-PATH-351-REACTION",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-351-REACTION",
+      "order": 2
+    }
+  ]
+}

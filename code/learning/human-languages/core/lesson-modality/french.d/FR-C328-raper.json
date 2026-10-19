@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C328-raper",
+    "language": "french",
+    "chapter": 328,
+    "sequence": 18610,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1a60eb9e18ada0c1"
+  },
+  "findings": []
+}

@@ -4,7 +4,7 @@
   "chapter": 259,
   "title": "D'abord, Ensuite, Enfin — A Story Told in Order",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:a0540392cb91f99b",
+  "sourceHash": "fnv1a64:f922b7c55a7af8d5",
   "lessons": [
     {
       "id": "FR-C259-dabord",
@@ -187,7 +187,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e9781d82a347c0d7",
+      "sourceHash": "fnv1a64:8aeffe247a5a32f7",
       "notice": null,
       "blocks": [
         {
@@ -241,7 +241,7 @@
             },
             {
               "kind": "speech",
-              "text": "C'était, il faisait: the scene, held still. Je suis allé, j'ai rencontré, nous avons parlé, il a commencé, je suis rentré: the events, put in order by d'abord, ensuite and enfin. Mais marks the turn, the point where the story stops going the way it was going. Et adds; mais turns."
+              "text": "Il fait beau is fine weather, with the beau you met inside beaucoup. C'était, il faisait: the scene, held still. Je suis allé, j'ai rencontré, nous avons parlé, il a commencé, je suis rentré: the events, put in order by d'abord, ensuite and enfin. Mais marks the turn, the point where the story stops going the way it was going. Et adds; mais turns."
             }
           ]
         },

@@ -1,0 +1,11 @@
+{
+  "id": "FR-C478-cil",
+  "pathSegment": "FR-PATH-478-VISAGE",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-478-VISAGE",
+      "order": 2
+    }
+  ]
+}

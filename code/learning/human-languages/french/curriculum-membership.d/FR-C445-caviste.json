@@ -1,0 +1,11 @@
+{
+  "id": "FR-C445-caviste",
+  "pathSegment": "FR-PATH-445-BOUTIQUES",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-445-BOUTIQUES",
+      "order": 4
+    }
+  ]
+}

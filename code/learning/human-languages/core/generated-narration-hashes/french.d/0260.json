@@ -1,7 +1,7 @@
 {
   "language": "french",
   "chapter": 260,
-  "sourceHash": "fnv1a64:427722cbb495e027",
+  "sourceHash": "fnv1a64:1d55254e96c8d86b",
   "lessonIds": [
     "FR-C260-je-pense-que",
     "FR-C260-donc",
@@ -11,7 +11,7 @@
   "drivablePrefix": 3,
   "text": "french/narration/ch260.txt",
   "json": "french/narration/ch260.json",
-  "textHash": "fnv1a64:fa9f4d9443ace022",
-  "jsonHash": "fnv1a64:673228f7e85fece1",
+  "textHash": "fnv1a64:38edf301c913c013",
+  "jsonHash": "fnv1a64:8afe23f116ce5850",
   "findings": []
 }

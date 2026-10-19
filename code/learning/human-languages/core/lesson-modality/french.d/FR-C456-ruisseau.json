@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C456-ruisseau",
+    "language": "french",
+    "chapter": 456,
+    "sequence": 25170,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2e6ea750bd60d7b2"
+  },
+  "findings": []
+}

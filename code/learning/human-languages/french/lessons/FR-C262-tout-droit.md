@@ -77,7 +77,7 @@ Five verbs carry almost every set of directions: *aller*, *tourner*,
 **tout** is inherited from Latin *tōtus*, "all, whole" (EtymDB 2.1), so
 *tout droit* is "all straight", the whole way. **droit** has no parent in
 EtymDB 2.1; it is usually traced to Latin *dīrēctus*, "set straight" (Lewis &
-Short, under *directus*), which English kept as **direct**. **Droite**, the
+Short, under *dirigo*), which English kept as **direct**. **Droite**, the
 right hand, is the same word in the feminine. That the right hand was named
 as the "straight" or proper one is the usual account, offered here as that.
 

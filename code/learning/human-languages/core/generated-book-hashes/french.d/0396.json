@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 396,
+  "sourceHash": "fnv1a64:262d976308b64aa0",
+  "lessonIds": [
+    "FR-C396-installer",
+    "FR-C396-desinstaller",
+    "FR-C396-appareil",
+    "FR-C396-logiciel",
+    "FR-C396-mise-a-jour"
+  ],
+  "tex": "french/book/chapters/ch396-installer-un-logiciel.tex"
+}

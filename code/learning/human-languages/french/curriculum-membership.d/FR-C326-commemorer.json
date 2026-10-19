@@ -1,0 +1,11 @@
+{
+  "id": "FR-C326-commemorer",
+  "pathSegment": "FR-PATH-326-LIBERATION",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-326-LIBERATION",
+      "order": 4
+    }
+  ]
+}

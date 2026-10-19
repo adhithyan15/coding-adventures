@@ -14,7 +14,7 @@ concept_tag: CONDITIONAL-REAL
 prerequisites: [FR-C266-si, FR-C21-le-temps-more, FR-C37-futur-proche, FR-C04-a-demain, FR-C16-stare]
 sounds: []
 roots: [stare-latin, pluere-latin]
-etymology_hook: "rester goes back to Latin restāre 'to stand behind, to stay back': staying is standing still"
+etymology_hook: "rester goes back to Latin restāre 'to stay back': re- 'back' + stāre 'to stand', so staying is standing still"
 duration:
   max_seconds: 295
 requires:
@@ -84,8 +84,8 @@ rains tomorrow", so here the ear is on your side.
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[FR-ETYMON-ETRE-STARE-09] -->
 
-**rester** goes back to Latin *restāre* (EtymDB 2.1), "to stop behind, to
-keep back" (Lewis & Short, under *resto*): *re-*, "back", plus *stāre*, "to
+**rester** goes back to Latin *restāre* (EtymDB 2.1), "to stay behind, to
+hold still" (Lewis & Short, under *resto*): *re-*, "back", plus *stāre*, "to
 stand", the standing verb behind *j'étais*. To stay is to stand still while
 the others go on.
 

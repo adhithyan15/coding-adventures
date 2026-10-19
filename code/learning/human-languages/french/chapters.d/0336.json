@@ -1,0 +1,19 @@
+{
+  "chapter": 336,
+  "title": "Pas d'accord",
+  "label": "ch:fr-pas-d-accord",
+  "canDo": "I can disagree politely: say we disagree, raise an objection, retort and contradict what someone said.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "FR-C336-contredire",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 336: I can disagree politely: say we disagree, raise an objection, retort and contradict what someone said.",
+    "assesses": [
+      "FR-LEX-C336-DESACCORD-03",
+      "FR-LEX-C336-DESACCORD-04",
+      "FR-LEX-C336-DESACCORD-05"
+    ]
+  }
+}

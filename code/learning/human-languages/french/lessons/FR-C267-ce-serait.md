@@ -71,8 +71,8 @@ might rain, and here is the plan. *S'il pleuvait, je resterais*: it is not
 raining, and I am imagining. The conditionnel goes in the result, and the
 *si* half takes the imparfait.
 
-In relaxed speech, above all in Québec, you will hear *si j'aurais* for "if I
-had"; standard French keeps the imparfait after *si*, and so should a
+In relaxed speech, in Québec and in France alike, you may hear *si j'aurais*
+for "if I had"; standard French keeps the imparfait after *si*, and so should a
 letter or an exam.
 
 ## The phrase, taken apart

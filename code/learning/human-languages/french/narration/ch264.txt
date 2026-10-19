@@ -24,7 +24,7 @@ J'étais content du voyage. — I was pleased with the trip. Je suis content de 
 De and le weld into du, and an infinitive can follow de directly. Fier works the same way: je suis fier de toi, I'm proud of you.
 
 The word, taken apart.
-content comes from Latin contentus, "satisfied", the participle of continēre, "to hold together" (Lewis & Short, under contentus and contineo), itself con- plus tenēre, "to hold". EtymDB 2.1 follows it back through Old French content. To be content is to hold yourself in, wanting nothing further. inquiet is a borrowing from Latin inquiētus, "restless" (EtymDB 2.1; Lewis & Short): in-, "not", and quiētus, "quiet".
+content is usually traced to Latin contentus, "satisfied", the participle of continēre, "to hold together" (Lewis & Short, under contentus and contineo), itself con- plus tenēre, "to hold". EtymDB 2.1 follows it back through Old French content. To be content is to hold yourself in, wanting nothing further. inquiet is a borrowing from Latin inquiētus, "restless" (EtymDB 2.1; Lewis & Short): in-, "not", and quiētus, "quiet".
 
 Guided Practice.
 [pause 1 second]
@@ -54,7 +54,7 @@ An experience has a past and a future. Last lesson was how it felt; this one is 
 You'll want to know: j'espère + an infinitive.
 j'espère + infinitive — "I hope to".
 J'espère revenir à Paris. — I hope to come back to Paris. J'espère parler français un jour. — I hope to speak French one day.
-espérer is a regular -er verb whose é opens to è where the ending goes quiet: j'espère, tu espères, but nous espérons. An infinitive straight after it, with nothing in between, makes the hope your own. Italian puts a small di there; French puts nothing.
+espérer is an -er verb whose é opens to è where the ending goes quiet: j'espère, tu espères, but nous espérons. An infinitive straight after it, with nothing in between, makes the hope your own. Italian puts a small di there; French puts nothing.
 When someone else is the one who will do it, the frame is j'espère que…, and the verb after it stays plain: J'espère que tu vas bien. — I hope you're well.
 
 Grammar Lens: mon rêve, c'est de…
@@ -64,7 +64,7 @@ You have le rêve, "the dream", and rêver, "to dream", which takes the same de:
 Three strengths, then, for the future: je voudrais partir, I'd like to; j'espère partir, I hope to; mon rêve, c'est de partir, it is my dream. Only the last needs a de.
 
 The phrase, taken apart.
-espérer is inherited from Latin spērāre, "to hope, to look for, to expect" (EtymDB 2.1; Lewis & Short, under spero), with an e- that French grew in front of sp-, as it grew an é- in front of the sc- of écrire. English desperate is the same verb with dē- in front: hope taken away. rêver goes back to Old French resver, "to be delirious" (EtymDB 2.1), and further than that the sources do not reach.
+espérer is inherited from Latin spērāre, "to hope, to expect" (EtymDB 2.1; Lewis & Short, under spero), with an e- that French grew in front of sp-, as it grew an é- in front of the sc- of écrire. English desperate is the same verb with dē- in front: hope taken away. rêver goes back to Old French resver, "to be delirious" (EtymDB 2.1), and further than that the sources do not reach.
 
 Guided Practice.
 [pause 1 second]

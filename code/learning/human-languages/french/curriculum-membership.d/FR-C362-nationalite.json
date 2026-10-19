@@ -1,0 +1,11 @@
+{
+  "id": "FR-C362-nationalite",
+  "pathSegment": "FR-PATH-362-CITOYEN",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-362-CITOYEN",
+      "order": 2
+    }
+  ]
+}

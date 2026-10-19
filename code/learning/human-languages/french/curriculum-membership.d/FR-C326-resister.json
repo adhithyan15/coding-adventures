@@ -1,0 +1,11 @@
+{
+  "id": "FR-C326-resister",
+  "pathSegment": "FR-PATH-326-LIBERATION",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-326-LIBERATION",
+      "order": 2
+    }
+  ]
+}

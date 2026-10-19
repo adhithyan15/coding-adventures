@@ -1,0 +1,11 @@
+{
+  "id": "FR-C298-blesse",
+  "pathSegment": "FR-PATH-298-CHOC",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FR-EXT-298-CHOC",
+      "order": 1
+    }
+  ]
+}

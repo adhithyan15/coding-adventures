@@ -1,0 +1,11 @@
+{
+  "id": "FR-C270-brusquement",
+  "pathSegment": "FR-PATH-270-SOUDAIN",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-270-SOUDAIN",
+      "order": 2
+    }
+  ]
+}

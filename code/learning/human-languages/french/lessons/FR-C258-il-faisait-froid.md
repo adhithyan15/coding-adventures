@@ -50,7 +50,8 @@ recipe. *Nous faisons* gives the stem *fais-*:
 > **Il faisait chaud.** — It was hot.
 
 Listen to the first syllable. The *ai* of *faisait* is said like the short
-*e* of *le*: "fe-zè". It is the one surprise in the whole recipe.
+*e* of *le*: "fe-zè". It is the sound of *nous faisons* too, and the
+recipe carries it over.
 
 Rain has a verb of its own. You have **il pleut**, "it's raining", and its
 past is **il pleuvait**, "it was raining".
@@ -63,7 +64,7 @@ happened in it:
 > *Il faisait froid et il pleuvait. Il n'y avait pas de soleil.*
 
 In Québec, relaxed speech has its own word for a biting cold: *il faisait
-frette*. In a letter, everyone writes *froid*.
+frette*. In a letter, *froid* is the word to write.
 
 ## The phrase, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

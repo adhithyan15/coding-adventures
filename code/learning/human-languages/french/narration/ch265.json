@@ -4,7 +4,7 @@
   "chapter": 265,
   "title": "More Than, and for How Long — plus … que, depuis, pendant",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:b336369d8e7ee203",
+  "sourceHash": "fnv1a64:d928dd26d16567dc",
   "lessons": [
     {
       "id": "FR-C265-plus-que",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:39ceb7385206510a",
+      "sourceHash": "fnv1a64:540169381ff89702",
       "notice": null,
       "blocks": [
         {
@@ -91,7 +91,7 @@
             },
             {
               "kind": "speech",
-              "text": "The commonest adjective of all refuses plus. Bon becomes meilleur, \"better\": Le café est meilleur que le thé. Its adverb, bien, becomes mieux: Tu parles mieux que moi. — You speak better than me."
+              "text": "One of the commonest adjectives refuses plus. Bon becomes meilleur, \"better\": Le café est meilleur que le thé. Its adverb, bien, becomes mieux: Tu parles mieux que moi. — You speak better than me."
             }
           ]
         },
@@ -359,7 +359,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0f489b1ab97bd358",
+      "sourceHash": "fnv1a64:0bc21d29ca289526",
       "notice": null,
       "blocks": [
         {
@@ -404,7 +404,7 @@
             },
             {
               "kind": "speech",
-              "text": "Rester, \"to stay\", is one of the standing verb's children, Latin re-stāre: to stand behind."
+              "text": "Rester, \"to stay\", is one of the standing verb's children, Latin re-stāre: to stay back."
             }
           ]
         },

@@ -1,0 +1,19 @@
+{
+  "chapter": 482,
+  "title": "Éternuements et allergies",
+  "label": "ch:fr-eternuements-et-allergies",
+  "canDo": "I can talk about allergies, sneezing and itching.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "FR-C482-gratter",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 482: I can talk about allergies, sneezing and itching.",
+    "assesses": [
+      "FR-LEX-C482-ALLERGIE-03",
+      "FR-LEX-C482-ALLERGIE-04",
+      "FR-LEX-C482-ALLERGIE-05"
+    ]
+  }
+}

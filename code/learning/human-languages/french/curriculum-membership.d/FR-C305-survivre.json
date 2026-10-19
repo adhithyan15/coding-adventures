@@ -1,0 +1,11 @@
+{
+  "id": "FR-C305-survivre",
+  "pathSegment": "FR-PATH-305-NAUFRAGE",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FR-EXT-305-NAUFRAGE",
+      "order": 3
+    }
+  ]
+}

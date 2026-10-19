@@ -1,0 +1,19 @@
+{
+  "chapter": 334,
+  "title": "Mon point de vue",
+  "label": "ch:fr-mon-point-de-vue",
+  "canDo": "I can give my point of view, maintain or claim something, state it firmly and say whether an answer is convincing.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "FR-C334-convaincant",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 334: I can give my point of view, maintain or claim something, state it firmly and say whether an answer is convincing.",
+    "assesses": [
+      "FR-LEX-C334-POINTDEVUE-03",
+      "FR-LEX-C334-POINTDEVUE-04",
+      "FR-LEX-C334-POINTDEVUE-05"
+    ]
+  }
+}

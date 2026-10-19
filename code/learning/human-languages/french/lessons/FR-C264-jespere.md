@@ -50,7 +50,7 @@ felt; this one is what you want next.
 > **J'espère revenir** à Paris. — I hope to come back to Paris.
 > **J'espère parler** français un jour. — I hope to speak French one day.
 
-**espérer** is a regular *-er* verb whose *é* opens to *è* where the ending
+**espérer** is an *-er* verb whose *é* opens to *è* where the ending
 goes quiet: *j'espère*, *tu espères*, but *nous espérons*. An infinitive
 straight after it, with nothing in between, makes the hope your own.
 Italian puts a small *di* there; French puts nothing.
@@ -77,7 +77,7 @@ my dream. Only the last needs a *de*.
 ## The phrase, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**espérer** is inherited from Latin *spērāre*, "to hope, to look for, to
+**espérer** is inherited from Latin *spērāre*, "to hope, to
 expect" (EtymDB 2.1; Lewis & Short, under *spero*), with an *e-* that French
 grew in front of *sp-*, as it grew an *é-* in front of the *sc-* of
 *écrire*. English **desperate** is the

@@ -1,0 +1,858 @@
+{
+  "version": 1,
+  "language": "french",
+  "chapter": 373,
+  "title": "Si j'ai le temps",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:8a49d32d7e3fb08c",
+  "lessons": [
+    {
+      "id": "FR-C373-disponible",
+      "sequence": 20890,
+      "title": "disponible — available, free",
+      "headword": "disponible",
+      "romanization": "disponible",
+      "gloss": "available, free",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:15258384edff36a5",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the French for the probability, then the French for even if it means."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: disponible",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "disponible — \"available, free\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Je suis disponible mardi après-midi. I am free on Tuesday afternoon."
+            },
+            {
+              "kind": "speech",
+              "text": "Of people and things: ce modèle n'est plus disponible."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "disponible is a learned borrowing from Medieval Latin dispōnibilis (EtymDB), from Latin dispōnere \"to set in order, to arrange\", built on pōnere \"to put\" (Lewis & Short)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "disponible",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *disponible*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "disponible, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *disponible*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with disponible",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *disponible*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the French for the probability, then the French for even if it means, then say disponible again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the French for the probability, then the French for even if it means, then say *disponible* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does disponible mean? (\"Available, free\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FR-C373-engager",
+      "sequence": 20900,
+      "title": "engager — to commit (mostly reflexive, s'engager); to hire",
+      "headword": "engager",
+      "romanization": "engager",
+      "gloss": "to commit (mostly reflexive, s'engager); to hire",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ba64627c1e0554f6",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the French for even if it means, then the French for available."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: engager",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "engager — \"to commit (mostly reflexive, s'engager); to hire\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Il s'est engagé à finir le travail avant vendredi. He committed to finishing the work before Friday."
+            },
+            {
+              "kind": "speech",
+              "text": "S'engager à + infinitive — to commit to doing. Engager quelqu'un — to hire someone. Nous engageons."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "engager is built from en- and gage \"a pledge\". gage is usually traced to a Frankish word for a pledge (EtymDB lists Germanic relatives such as Gothic wadi)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "engager",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *engager*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "engager, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *engager*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with engager",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *engager*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the French for even if it means, then the French for available, then say engager again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the French for even if it means, then the French for available, then say *engager* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does engager mean? (\"To commit (mostly reflexive, s'engager); to hire\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FR-C373-engagement",
+      "sequence": 20910,
+      "title": "l'engagement — the commitment",
+      "headword": "l'engagement",
+      "romanization": "l'engagement",
+      "gloss": "the commitment",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7f3509ec4b5ed98e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the French for available, then the French for to commit."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: l'engagement",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "l'engagement — \"the commitment\"."
+            },
+            {
+              "kind": "speech",
+              "text": "C'est un engagement important: je ne peux pas dire non. It is an important commitment: I cannot say no."
+            },
+            {
+              "kind": "speech",
+              "text": "Prendre un engagement — to make a commitment. Masculine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "engagement is built from engager and -ment (EtymDB). engager rests on gage \"a pledge\", usually traced to a Frankish word."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "l'engagement",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *l'engagement*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "l'engagement, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *l'engagement*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with l'engagement",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *l'engagement*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the French for available, then the French for to commit, then say l'engagement again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the French for available, then the French for to commit, then say *l'engagement* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does l'engagement mean? (\"The commitment\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FR-C373-flexible",
+      "sequence": 20920,
+      "title": "flexible — flexible",
+      "headword": "flexible",
+      "romanization": "flexible",
+      "gloss": "flexible",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:cf737d68085918ca",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the French for to commit, then the French for the commitment."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: flexible",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "flexible — \"flexible\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Mon patron est assez flexible sur les horaires. My boss is quite flexible about hours."
+            },
+            {
+              "kind": "speech",
+              "text": "One form for both genders. Close to souple."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "flexible is a learned borrowing from Latin flexibilis \"easily bent\" (EtymDB; Lewis & Short), from flectere \"to bend\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "flexible",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *flexible*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "flexible, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *flexible*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with flexible",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *flexible*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the French for to commit, then the French for the commitment, then say flexible again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the French for to commit, then the French for the commitment, then say *flexible* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does flexible mean? (\"Flexible\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FR-C373-envisager",
+      "sequence": 20930,
+      "title": "envisager — to consider, to plan on",
+      "headword": "envisager",
+      "romanization": "envisager",
+      "gloss": "to consider, to plan on",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:cffdf410632510a1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the French for the commitment, then the French for flexible."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: envisager",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "envisager — \"to consider, to plan on\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Nous envisageons de déménager l'année prochaine. We are considering moving next year."
+            },
+            {
+              "kind": "speech",
+              "text": "Envisager de + infinitive. Nous envisageons."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "envisager is built from en- and visage \"face\": to look something in the face. visage rests on Latin vīsus \"sight\", from vidēre \"to see\" (Lewis & Short)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "envisager",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *envisager*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "envisager, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *envisager*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with envisager",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *envisager*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the French for the commitment, then the French for flexible, then say envisager again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the French for the commitment, then the French for flexible, then say *envisager* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does envisager mean? (\"To consider, to plan on\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FR-R373-revision-366-373",
+      "sequence": 20940,
+      "title": "Retour sur les chapitres 366–373",
+      "headword": "(dialogue)",
+      "romanization": "(dialogue)",
+      "gloss": "a review of chapters 366-373",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c39bf4e7513902a0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the French for the volunteer and the volunteering."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the volunteer, the volunteering, the association, the solidarity, the community",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the volunteer, the volunteering, the association, the solidarity, the community]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to suppose, the hypothesis, to presume, plausible, the supposition",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to suppose, the hypothesis, to presume, plausible, the supposition]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "provided that, as long as, unless, in case, otherwise",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: provided that, as long as, unless, in case, otherwise]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "according to, possible, possibly, the possibility, for lack of",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: according to, possible, possibly, the possibility, for lack of]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the hitch, foreseeable, unpredictable, to adapt, supple",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the hitch, foreseeable, unpredictable, to adapt, supple]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to cancel, to postpone, temporary, final, to schedule",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to cancel, to postpone, temporary, final, to schedule]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the risk, risky, improbable, the probability, even if it means",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the risk, risky, improbable, the probability, even if it means]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "available, to commit, the commitment, flexible, to consider",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: available, to commit, the commitment, flexible, to consider]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The volunteer? (le bénévole.) The volunteering? (le bénévolat.) The association? (l'association.) The solidarity? (la solidarité.) The community? (la communauté.) To suppose? (supposer.) The hypothesis? (l'hypothèse.) To presume? (présumer.) Plausible? (plausible.) The supposition? (la supposition.) Provided that? (à condition que.) As long as? (pourvu que.) Unless? (à moins que.) In case? (au cas où.) Otherwise? (sinon.) According to? (selon.) Possible? (éventuel.) Possibly? (éventuellement.) The possibility? (l'éventualité.) For lack of? (faute de.) The hitch? (l'imprévu.) Foreseeable? (prévisible.) Unpredictable? (imprévisible.) To adapt? (adapter.) Supple? (souple.) To cancel? (annuler.) To postpone? (reporter.) Temporary? (provisoire.) Final? (définitif.) To schedule? (programmer.) The risk? (le risque.) Risky? (hasardeux.) Improbable? (improbable.) The probability? (la probabilité.) Even if it means? (quitte à.) Available? (disponible.) To commit? (engager.) The commitment? (l'engagement.) Flexible? (flexible.) To consider? (envisager.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

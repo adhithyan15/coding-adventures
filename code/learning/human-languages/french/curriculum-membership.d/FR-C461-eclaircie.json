@@ -1,0 +1,11 @@
+{
+  "id": "FR-C461-eclaircie",
+  "pathSegment": "FR-PATH-461-BRUINE",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FR-EXT-461-BRUINE",
+      "order": 3
+    }
+  ]
+}

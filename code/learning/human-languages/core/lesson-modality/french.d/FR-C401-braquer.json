@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C401-braquer",
+    "language": "french",
+    "chapter": 401,
+    "sequence": 22360,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ec4e0860eb4003c3"
+  },
+  "findings": []
+}

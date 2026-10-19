@@ -80,7 +80,7 @@ fier de toi*, I'm proud of you.
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**content** comes from Latin *contentus*, "satisfied", the participle of
+**content** is usually traced to Latin *contentus*, "satisfied", the participle of
 *continēre*, "to hold together" (Lewis & Short, under *contentus* and
 *contineo*), itself *con-* plus *tenēre*, "to hold". EtymDB 2.1 follows it
 back through Old French *content*. To be content is to hold yourself in,

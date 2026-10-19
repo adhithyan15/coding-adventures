@@ -1,7 +1,7 @@
 {
   "language": "french",
   "chapter": 261,
-  "sourceHash": "fnv1a64:d64ff07ff38222ba",
+  "sourceHash": "fnv1a64:029996e8be7c166b",
   "lessonIds": [
     "FR-C261-je-devrais",
     "FR-C261-expliquer",
@@ -11,7 +11,7 @@
   "drivablePrefix": 3,
   "text": "french/narration/ch261.txt",
   "json": "french/narration/ch261.json",
-  "textHash": "fnv1a64:aa769a1787ab34a2",
-  "jsonHash": "fnv1a64:25313d3441b102d7",
+  "textHash": "fnv1a64:478bc644cb6a431d",
+  "jsonHash": "fnv1a64:fe06d19f8bf6acb2",
   "findings": []
 }

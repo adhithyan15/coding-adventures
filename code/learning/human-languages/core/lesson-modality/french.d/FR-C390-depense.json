@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C390-depense",
+    "language": "french",
+    "chapter": 390,
+    "sequence": 21800,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5c9e6541dc7020f8"
+  },
+  "findings": []
+}

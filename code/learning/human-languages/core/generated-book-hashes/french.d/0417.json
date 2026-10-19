@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 417,
+  "sourceHash": "fnv1a64:e500257d5d23b883",
+  "lessonIds": [
+    "FR-C417-douanier",
+    "FR-C417-declarer",
+    "FR-C417-portique",
+    "FR-C417-fouiller",
+    "FR-C417-transiter"
+  ],
+  "tex": "french/book/chapters/ch417-a-la-douane.tex"
+}

@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 278,
+  "sourceHash": "fnv1a64:6bc99960d8028f68",
+  "lessonIds": [
+    "FR-C278-actualite",
+    "FR-C278-presse",
+    "FR-C278-quotidien",
+    "FR-C278-hebdomadaire",
+    "FR-C278-abonne"
+  ],
+  "tex": "french/book/chapters/ch278-la-presse.tex"
+}

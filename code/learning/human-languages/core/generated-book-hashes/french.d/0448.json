@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 448,
+  "sourceHash": "fnv1a64:ee13025302512bfc",
+  "lessonIds": [
+    "FR-C448-coiffeur",
+    "FR-C448-raser",
+    "FR-C448-opticien",
+    "FR-C448-horloger",
+    "FR-C448-bijoutier"
+  ],
+  "tex": "french/book/chapters/ch448-coiffeur-et-opticien.tex"
+}

@@ -1,0 +1,11 @@
+{
+  "id": "FR-C467-avare",
+  "pathSegment": "FR-PATH-467-DEFAUTS",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-467-DEFAUTS",
+      "order": 2
+    }
+  ]
+}

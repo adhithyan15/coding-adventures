@@ -1,0 +1,11 @@
+{
+  "id": "FR-R473-revision-466-473",
+  "pathSegment": "FR-PATH-473-ORGUEIL",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "FR-EXT-473-ORGUEIL",
+      "order": 5
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "FR-C528-epousseter",
+  "pathSegment": "FR-PATH-528-MENAGE",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FR-EXT-528-MENAGE",
+      "order": 1
+    }
+  ]
+}

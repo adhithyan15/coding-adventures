@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 452,
+  "sourceHash": "fnv1a64:c02c63cd22329841",
+  "lessonIds": [
+    "FR-C452-remise",
+    "FR-C452-rabais",
+    "FR-C452-marchander",
+    "FR-C452-brader",
+    "FR-C452-braderie"
+  ],
+  "tex": "french/book/chapters/ch452-les-bonnes-affaires.tex"
+}

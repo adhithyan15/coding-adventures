@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C480-boiter",
+    "language": "french",
+    "chapter": 480,
+    "sequence": 26440,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ce17ac09df9c6710"
+  },
+  "findings": []
+}

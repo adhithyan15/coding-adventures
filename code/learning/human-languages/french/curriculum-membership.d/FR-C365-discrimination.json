@@ -1,0 +1,11 @@
+{
+  "id": "FR-C365-discrimination",
+  "pathSegment": "FR-PATH-365-PAUVRETE",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-365-PAUVRETE",
+      "order": 2
+    }
+  ]
+}

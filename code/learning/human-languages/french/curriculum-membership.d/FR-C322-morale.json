@@ -1,0 +1,11 @@
+{
+  "id": "FR-C322-morale",
+  "pathSegment": "FR-PATH-322-RECIT",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-322-RECIT",
+      "order": 4
+    }
+  ]
+}

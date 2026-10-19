@@ -1,0 +1,11 @@
+{
+  "id": "FR-C357-apprentissage",
+  "pathSegment": "FR-PATH-357-STAGE",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FR-EXT-357-STAGE",
+      "order": 3
+    }
+  ]
+}

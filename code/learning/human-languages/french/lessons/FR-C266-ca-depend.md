@@ -75,8 +75,9 @@ maison.* The *ça dépend* announces a condition; the *si* sentence states it.
 ## The phrase, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[FR-ETYMON-PENSER-05, FR-GRAM-PENDANT-QUE-02] -->
 
-**dépendre** comes from Latin *dēpendēre*, "to hang from, to hang down"
-(Lewis & Short, under *dependeo*): *dē*, "down from", and *pendēre*, "to
+**dépendre** has no parent in EtymDB 2.1; it is usually traced to Latin
+*dēpendēre*, "to hang down from something" (Lewis & Short, under
+*dependeo*): *dē*, "down from", and *pendēre*, "to
 hang". To depend on something is to **hang from** it, and the answer swings
 until the condition settles. The same *pendēre* is inside *pendant*, which
 you met with *pendant que*. Its close relative *pendere*, "to make hang, to

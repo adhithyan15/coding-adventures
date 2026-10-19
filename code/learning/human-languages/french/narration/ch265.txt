@@ -21,7 +21,7 @@ Grammar Lens: le plus, and the one that refuses.
 For the most of all, give plus the article as well:
 le train le plus rapide — the fastest train la voiture la plus chère — the dearest car.
 These adjectives stay after the noun, as in le vin rouge, and the adjective takes its own article: le train le plus rapide, the article twice.
-The commonest adjective of all refuses plus. Bon becomes meilleur, "better": Le café est meilleur que le thé. Its adverb, bien, becomes mieux: Tu parles mieux que moi. — You speak better than me.
+One of the commonest adjectives refuses plus. Bon becomes meilleur, "better": Le café est meilleur que le thé. Its adverb, bien, becomes mieux: Tu parles mieux que moi. — You speak better than me.
 
 The word, taken apart.
 plus is inherited from Latin plūs, "more" (EtymDB 2.1), which English kept whole as plus. moins is inherited, through Old French meins, from Latin minus, "less" (EtymDB 2.1), English minus. meilleur is inherited, through Old French meillor, from Latin melior, "better" (EtymDB 2.1), which English kept in ameliorate, "to make better"; and mieux goes back to its neighbour melius.
@@ -95,7 +95,7 @@ Two chapters, and an experience can be told whole: how it felt, what you hope ne
 [pause 2 seconds]
 Here is a life in four lines:
 J'ai habité à Paris pendant deux ans. C'était une ville plus chère que Lyon, mais j'étais content. J'habite à Lyon depuis janvier. J'espère rester ici.
-Rester, "to stay", is one of the standing verb's children, Latin re-stāre: to stand behind.
+Rester, "to stay", is one of the standing verb's children, Latin re-stāre: to stay back.
 
 Guided Practice.
 [pause 1 second]

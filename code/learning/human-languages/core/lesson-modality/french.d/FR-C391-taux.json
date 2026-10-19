@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C391-taux",
+    "language": "french",
+    "chapter": 391,
+    "sequence": 21860,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:97eb2a6a05b0d865"
+  },
+  "findings": []
+}

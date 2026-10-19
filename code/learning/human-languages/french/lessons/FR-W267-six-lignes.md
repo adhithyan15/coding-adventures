@@ -79,8 +79,8 @@ right past for each line.
 
 [PAUSE 2s] Now go through your lines as you went through the journey in
 chapter two hundred and fifty-nine. Mark every verb **S** for scene or
-**E** for event. Lines one and two should be mostly **S**; three and four
-mostly **E**; five has one of each. A line about the weather marked **E**
+**E** for event. Line one should be all **S**; two mostly **S**, though its
+*pendant* verb is an **E**; three and four mostly **E**; five has one of each. A line about the weather marked **E**
 is the commonest slip: change *il a plu* back to *il pleuvait*.
 
 [PAUSE 2s] Then two spelling checks. The participle of an *-er* verb ends in

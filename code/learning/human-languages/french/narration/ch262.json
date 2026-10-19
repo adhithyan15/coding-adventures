@@ -4,7 +4,7 @@
   "chapter": 262,
   "title": "Finding the Way — excusez-moi, tout droit",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:aefc415609e158b6",
+  "sourceHash": "fnv1a64:c087ed11055f3a75",
   "lessons": [
     {
       "id": "FR-C262-excusez-moi",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:bd3eea917373a2ed",
+      "sourceHash": "fnv1a64:27e22eb80e39e17b",
       "notice": null,
       "blocks": [
         {
@@ -98,7 +98,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "excuser is inherited from Latin excūsāre (EtymDB 2.1), built on ex-, \"out of\", and causa, \"a cause, a charge in court\" (Lewis & Short, under excuso): to release someone from a charge, to free them from blame. So excusez-moi asks, at root, to be let off. English excuse is the same word, and cause is its second half."
+              "text": "excuser is inherited from Latin excūsāre (EtymDB 2.1), built on ex-, \"out of\", and causa, \"a cause, a charge in court\" (Lewis & Short, under excuso): to clear someone of an accusation, to let them off. So excusez-moi asks, at root, to be let off. English excuse is the same word, and cause is its second half."
             }
           ]
         },
@@ -183,7 +183,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:332183669c449d38",
+      "sourceHash": "fnv1a64:9ed62c7a27287722",
       "notice": null,
       "blocks": [
         {
@@ -258,7 +258,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "tout is inherited from Latin tōtus, \"all, whole\" (EtymDB 2.1), so tout droit is \"all straight\", the whole way. droit has no parent in EtymDB 2.1; it is usually traced to Latin dīrēctus, \"set straight\" (Lewis & Short, under directus), which English kept as direct. Droite, the right hand, is the same word in the feminine. That the right hand was named as the \"straight\" or proper one is the usual account, offered here as that."
+              "text": "tout is inherited from Latin tōtus, \"all, whole\" (EtymDB 2.1), so tout droit is \"all straight\", the whole way. droit has no parent in EtymDB 2.1; it is usually traced to Latin dīrēctus, \"set straight\" (Lewis & Short, under dirigo), which English kept as direct. Droite, the right hand, is the same word in the feminine. That the right hand was named as the \"straight\" or proper one is the usual account, offered here as that."
             }
           ]
         },

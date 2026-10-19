@@ -1,0 +1,11 @@
+{
+  "id": "FR-C518-vernissage",
+  "pathSegment": "FR-PATH-518-EXPOSITION",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FR-EXT-518-EXPOSITION",
+      "order": 1
+    }
+  ]
+}

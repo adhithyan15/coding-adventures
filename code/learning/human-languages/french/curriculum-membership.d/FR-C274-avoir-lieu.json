@@ -1,0 +1,11 @@
+{
+  "id": "FR-C274-avoir-lieu",
+  "pathSegment": "FR-PATH-274-SURVENIR",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-274-SURVENIR",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "FR-C479-bosse",
+  "pathSegment": "FR-PATH-479-BLESSURES",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-479-BLESSURES",
+      "order": 4
+    }
+  ]
+}

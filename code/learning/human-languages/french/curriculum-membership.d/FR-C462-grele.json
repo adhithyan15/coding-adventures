@@ -1,0 +1,11 @@
+{
+  "id": "FR-C462-grele",
+  "pathSegment": "FR-PATH-462-ORAGE",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-462-ORAGE",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "FR-C373-flexible",
+  "pathSegment": "FR-PATH-373-DISPONIBLE",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FR-EXT-373-DISPONIBLE",
+      "order": 3
+    }
+  ]
+}

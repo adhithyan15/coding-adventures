@@ -1,0 +1,11 @@
+{
+  "id": "FR-C368-pourvu-que",
+  "pathSegment": "FR-PATH-368-CONDITION",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FR-EXT-368-CONDITION",
+      "order": 1
+    }
+  ]
+}

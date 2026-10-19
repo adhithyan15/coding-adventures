@@ -1,0 +1,19 @@
+{
+  "chapter": 480,
+  "title": "Une jambe dans le plâtre",
+  "label": "ch:fr-une-jambe-dans-le-platre",
+  "canDo": "I can talk about a broken bone and getting about.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "FR-C480-os",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 480: I can talk about a broken bone and getting about.",
+    "assesses": [
+      "FR-LEX-C480-PLATRE-03",
+      "FR-LEX-C480-PLATRE-04",
+      "FR-LEX-C480-PLATRE-05"
+    ]
+  }
+}

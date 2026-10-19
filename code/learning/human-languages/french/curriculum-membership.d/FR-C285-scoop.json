@@ -1,0 +1,11 @@
+{
+  "id": "FR-C285-scoop",
+  "pathSegment": "FR-PATH-285-RUMEUR",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FR-EXT-285-RUMEUR",
+      "order": 1
+    }
+  ]
+}

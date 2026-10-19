@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C387-innocent",
+    "language": "french",
+    "chapter": 387,
+    "sequence": 21650,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e25a6d0cba0d206d"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "FR-C412-trajet",
+  "pathSegment": "FR-PATH-412-GUICHET",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-412-GUICHET",
+      "order": 2
+    }
+  ]
+}

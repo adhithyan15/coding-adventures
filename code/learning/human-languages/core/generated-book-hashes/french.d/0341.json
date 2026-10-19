@@ -1,0 +1,14 @@
+{
+  "language": "french",
+  "chapter": 341,
+  "sourceHash": "fnv1a64:9e06901e65c8b33b",
+  "lessonIds": [
+    "FR-C341-malentendu",
+    "FR-C341-clarifier",
+    "FR-C341-preciser",
+    "FR-C341-precision",
+    "FR-C341-eclaircir",
+    "FR-R341-revision-334-341"
+  ],
+  "tex": "french/book/chapters/ch341-je-m-explique.tex"
+}

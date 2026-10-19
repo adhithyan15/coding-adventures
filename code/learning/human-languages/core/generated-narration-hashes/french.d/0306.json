@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 306,
+  "sourceHash": "fnv1a64:d155f80b934a561d",
+  "lessonIds": [
+    "FR-C306-etouffer",
+    "FR-C306-intoxication",
+    "FR-C306-piquer",
+    "FR-C306-mordre",
+    "FR-C306-morsure"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch306.txt",
+  "json": "french/narration/ch306.json",
+  "textHash": "fnv1a64:277423ceca39ef46",
+  "jsonHash": "fnv1a64:18b0cc18faf2b660",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 516,
+  "sourceHash": "fnv1a64:4425839ea0ebc59d",
+  "lessonIds": [
+    "FR-C516-pinceau",
+    "FR-C516-toile",
+    "FR-C516-aquarelle",
+    "FR-C516-chevalet",
+    "FR-C516-esquisser"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch516.txt",
+  "json": "french/narration/ch516.json",
+  "textHash": "fnv1a64:03dd5a8298e03050",
+  "jsonHash": "fnv1a64:3cd4a0ab0200e701",
+  "findings": []
+}

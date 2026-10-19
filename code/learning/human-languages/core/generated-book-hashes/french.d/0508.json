@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 508,
+  "sourceHash": "fnv1a64:4f440bb1e751654b",
+  "lessonIds": [
+    "FR-C508-coureur",
+    "FR-C508-ligne-d-arrivee",
+    "FR-C508-marathon",
+    "FR-C508-relais",
+    "FR-C508-chronometrer"
+  ],
+  "tex": "french/book/chapters/ch508-la-course.tex"
+}

@@ -1,0 +1,11 @@
+{
+  "id": "FR-C383-exigence",
+  "pathSegment": "FR-PATH-383-CRITERE",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "FR-EXT-383-CRITERE",
+      "order": 0
+    }
+  ]
+}

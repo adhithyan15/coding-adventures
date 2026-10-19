@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 309,
+  "sourceHash": "fnv1a64:fc0ea36cede55654",
+  "lessonIds": [
+    "FR-C309-maternite",
+    "FR-C309-bapteme",
+    "FR-C309-baptiser",
+    "FR-C309-poussette",
+    "FR-C309-enfance"
+  ],
+  "tex": "french/book/chapters/ch309-les-premieres-annees.tex"
+}

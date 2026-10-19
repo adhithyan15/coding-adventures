@@ -208,7 +208,9 @@ it("pins French lesson-content budgets", () =>
     // 1376 -> 1412: chapters 258-267, the B1 core that realizes all five B1
     // spine nodes (imparfait, reasons, travel, experience, conditionnel):
     // 36 lessons, one reading and one writing, no idiom, sense or culture claim.
-    lessons: 1412,
+    // 1412 -> 2772: chapters 268-531, the B1 vocabulary: 1,320 word lessons (one
+    // headword each) and 40 spaced reviews. French attains B1 here.
+    lessons: 2772,
     idioms: 3,
     senses: 7,
     cultureClaims: 27,

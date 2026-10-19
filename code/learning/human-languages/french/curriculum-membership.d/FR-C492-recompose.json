@@ -1,0 +1,11 @@
+{
+  "id": "FR-C492-recompose",
+  "pathSegment": "FR-PATH-492-FAMILLES",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "FR-EXT-492-FAMILLES",
+      "order": 0
+    }
+  ]
+}

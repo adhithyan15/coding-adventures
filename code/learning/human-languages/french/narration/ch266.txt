@@ -22,7 +22,7 @@ After a verb of knowing or asking, si also means "whether", and your je ne sais 
 Je ne sais pas si c'est loin. — I don't know whether it's far.
 
 The word, taken apart: one spelling, two words.
-You have met si before, as the "yes" that contradicts a negative: Tu ne viens pas? — Si! That one goes back to Latin sīc, "so, thus". The si of this lesson is inherited from Latin sī, "if", a conditional particle (Lewis & Short, under si). EtymDB 2.1 lists both Latin words behind the French spelling. Two words, worn into one shape.
+You have met si before, as the "yes" that contradicts a negative: Tu ne viens pas? — Si! That one goes back to Latin sīc, "so, thus". The si of this lesson is inherited from Latin sī, "if", the Latin word that opened a condition (Lewis & Short, under si). EtymDB 2.1 lists both Latin words behind the French spelling. Two words, worn into one shape.
 The ear tells them apart by their place. The "yes" si stands alone, as an answer. The "if" si opens a whole clause.
 
 Guided Practice.
@@ -65,7 +65,7 @@ S'il pleut demain, je vais rester à la maison. — If it rains tomorrow, I'm go
 Il pleut, the present, even about tomorrow. English does the same, "if it rains tomorrow", so here the ear is on your side.
 
 The word, taken apart.
-rester goes back to Latin restāre (EtymDB 2.1), "to stop behind, to keep back" (Lewis & Short, under resto): re-, "back", plus stāre, "to stand", the standing verb behind j'étais. To stay is to stand still while the others go on.
+rester goes back to Latin restāre (EtymDB 2.1), "to stay behind, to hold still" (Lewis & Short, under resto): re-, "back", plus stāre, "to stand", the standing verb behind j'étais. To stay is to stand still while the others go on.
 
 Guided Practice.
 [pause 1 second]
@@ -105,7 +105,7 @@ De and le weld into du, as in content du voyage. English says depend on; French 
 Or name it with a whole si: Ça dépend. S'il pleut, je reste à la maison. The ça dépend announces a condition; the si sentence states it.
 
 The phrase, taken apart.
-dépendre comes from Latin dēpendēre, "to hang from, to hang down" (Lewis & Short, under dependeo): dē, "down from", and pendēre, "to hang". To depend on something is to hang from it, and the answer swings until the condition settles. The same pendēre is inside pendant, which you met with pendant que. Its close relative pendere, "to make hang, to weigh on the scales" (Lewis & Short, under pendo), is the one behind penser. English pendant and pending belong to the family too.
+dépendre has no parent in EtymDB 2.1; it is usually traced to Latin dēpendēre, "to hang down from something" (Lewis & Short, under dependeo): dē, "down from", and pendēre, "to hang". To depend on something is to hang from it, and the answer swings until the condition settles. The same pendēre is inside pendant, which you met with pendant que. Its close relative pendere, "to make hang, to weigh on the scales" (Lewis & Short, under pendo), is the one behind penser. English pendant and pending belong to the family too.
 
 Guided Practice.
 [pause 1 second]

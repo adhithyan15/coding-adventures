@@ -65,3 +65,16 @@ sense or culture claim is added. `tests/corpus/french.test.ts` pins the lesson
 count at 1412, the second connected composition and the reading's objective
 activity; `tests/levels.test.ts` moves French from the A2-reach list to the
 list of tracks that reach beyond A2.
+
+An independent review then found and fixed errors in 16 of the 36 lessons. The
+paradigms, auxiliaries and agreements all held. The fixes were:
+- overclaims, such as "in a letter, everyone writes *froid*" and "the commonest
+  adjective of all";
+- Latin glosses worded too close to Lewis & Short (*explico*, *excuso*,
+  *spero*, *resto*, *sī*), now written in our own words;
+- two origins EtymDB does not carry past Old French or at all, now hedged
+  (*content*, *dépendre*);
+- *il fait beau*, which the reading relied on but no lesson had given, now one
+  line in FR-C259-raconter;
+- the writing task's check, which now marks line two's *pendant* verb as an
+  event.

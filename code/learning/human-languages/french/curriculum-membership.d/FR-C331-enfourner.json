@@ -1,0 +1,11 @@
+{
+  "id": "FR-C331-enfourner",
+  "pathSegment": "FR-PATH-331-FOUR",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FR-EXT-331-FOUR",
+      "order": 1
+    }
+  ]
+}

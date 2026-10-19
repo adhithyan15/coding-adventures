@@ -1,0 +1,11 @@
+{
+  "id": "FR-R521-revision-514-521",
+  "pathSegment": "FR-PATH-521-AUTEURS",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "FR-EXT-521-AUTEURS",
+      "order": 5
+    }
+  ]
+}

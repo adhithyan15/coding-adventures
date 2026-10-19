@@ -1,0 +1,11 @@
+{
+  "id": "FR-C378-redoubler",
+  "pathSegment": "FR-PATH-378-ECHOUER",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FR-EXT-378-ECHOUER",
+      "order": 1
+    }
+  ]
+}

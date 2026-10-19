@@ -1,0 +1,11 @@
+{
+  "id": "FR-C274-derouler",
+  "pathSegment": "FR-PATH-274-SURVENIR",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FR-EXT-274-SURVENIR",
+      "order": 1
+    }
+  ]
+}

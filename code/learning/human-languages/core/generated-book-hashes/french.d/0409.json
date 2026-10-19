@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 409,
+  "sourceHash": "fnv1a64:8148e5f5d14f407c",
+  "lessonIds": [
+    "FR-C409-clignotant",
+    "FR-C409-phare",
+    "FR-C409-virage",
+    "FR-C409-chaussee",
+    "FR-C409-devier"
+  ],
+  "tex": "french/book/chapters/ch409-dans-les-virages.tex"
+}

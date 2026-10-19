@@ -73,7 +73,7 @@ A second way asks for the **place** rather than the **way**, with *où est*,
 
 **excuser** is inherited from Latin *excūsāre* (EtymDB 2.1), built on *ex-*,
 "out of", and *causa*, "a cause, a charge in court" (Lewis & Short, under
-*excuso*): to release someone from a charge, to free them from blame. So
+*excuso*): to clear someone of an accusation, to let them off. So
 *excusez-moi* asks, at root, to be let off. English **excuse** is the same
 word, and **cause** is its second half.
 

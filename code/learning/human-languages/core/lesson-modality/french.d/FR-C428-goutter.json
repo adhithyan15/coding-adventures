@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C428-goutter",
+    "language": "french",
+    "chapter": 428,
+    "sequence": 23760,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:66b5c1c4e1fbb8fc"
+  },
+  "findings": []
+}

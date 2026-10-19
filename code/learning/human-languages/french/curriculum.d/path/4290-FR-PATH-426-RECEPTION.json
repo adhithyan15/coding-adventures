@@ -1,0 +1,9 @@
+{
+  "id": "FR-PATH-426-RECEPTION",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "FR-EXT-426-RECEPTION"
+  ],
+  "after": []
+}

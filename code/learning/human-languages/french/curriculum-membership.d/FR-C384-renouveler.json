@@ -1,0 +1,11 @@
+{
+  "id": "FR-C384-renouveler",
+  "pathSegment": "FR-PATH-384-VALABLE",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FR-EXT-384-VALABLE",
+      "order": 3
+    }
+  ]
+}

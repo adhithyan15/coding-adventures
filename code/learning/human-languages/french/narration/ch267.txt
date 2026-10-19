@@ -15,7 +15,7 @@ Grammar Lens: the infinitive, plus the imparfait's endings.
 This is the conditionnel, French's "would". Keep the whole infinitive and add the endings of the imparfait, -ais for "I":
 parler, je parlerais — I would speak finir, je finirais — I would finish prendre, je prendrais — I would take.
 A verb in -re lets its final e go first: prendr-, prendrais. The other persons change only the ending: je parlerais, tu parlerais, il parlerait, nous parlerions, vous parleriez, ils parleraient. Beside the imparfait: je parlais, I was speaking; je parlerais, I would speak. The infinitive inside it is the whole difference.
-A few common verbs squeeze their stem first. You have met two of them, vouloir in je voudrais and devoir in je devrais; the third is pouvoir, je pourrais. Aimer follows the plain recipe: j'aimerais.
+A few common verbs squeeze their stem first. You have met two of them, vouloir in je voudrais and devoir in je devrais; a third is pouvoir, je pourrais. Aimer follows the plain recipe: j'aimerais.
 Three jobs, all softening. A polite request: Vous pourriez m'aider? — Could you help me? A wish: J'aimerais partir en vacances. — I'd like to go on holiday. And advice: À ta place, je dormirais. — In your place, I'd sleep.
 
 The word, taken apart: "I had to speak".
@@ -56,7 +56,7 @@ Grammar Lens: si, the imparfait, and the would.
 Now the condition that is not true. Put the si half in the imparfait, and the result in the conditionnel:
 Si j'avais le temps, je partirais en vacances. — If I had the time, I'd go on holiday. Si c'était moins cher, je prendrais le train. — If it were cheaper, I'd take the train.
 Set it beside last chapter's real condition. S'il pleut, je reste: it might rain, and here is the plan. S'il pleuvait, je resterais: it is not raining, and I am imagining. The conditionnel goes in the result, and the si half takes the imparfait.
-In relaxed speech, above all in Québec, you will hear si j'aurais for "if I had"; standard French keeps the imparfait after si, and so should a letter or an exam.
+In relaxed speech, in Québec and in France alike, you may hear si j'aurais for "if I had"; standard French keeps the imparfait after si, and so should a letter or an exam.
 
 The phrase, taken apart.
 être is inherited, through Old French estre, from Latin esse, "to be" (EtymDB 2.1). The stem ser- is usually traced to a spoken Latin infinitive essere, reshaped from esse, with the worn habēbat of the last lesson on its end: something like "had to be". Neither source records forms this late, so that step is the usual explanation rather than a cited one.
@@ -143,7 +143,7 @@ Use only words you already write. The exercise is choosing the right past for ea
 
 Wrap-up recall.
 [pause 2 seconds]
-Now go through your lines as you went through the journey in chapter two hundred and fifty-nine. Mark every verb S for scene or E for event. Lines one and two should be mostly S; three and four mostly E; five has one of each. A line about the weather marked E is the commonest slip: change il a plu back to il pleuvait.
+Now go through your lines as you went through the journey in chapter two hundred and fifty-nine. Mark every verb S for scene or E for event. Line one should be all S; two mostly S, though its pendant verb is an E; three and four mostly E; five has one of each. A line about the weather marked E is the commonest slip: change il a plu back to il pleuvait.
 [pause 2 seconds]
 Then two spelling checks. The participle of an -er verb ends in -é: j'ai parlé, je suis arrivé, and with être it agrees with a woman writing about herself: je suis arrivée. And the imparfait's endings are silent but spelled: -ais, -ait, -aient.
 [pause 2 seconds]

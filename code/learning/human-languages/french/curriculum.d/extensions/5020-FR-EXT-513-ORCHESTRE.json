@@ -1,0 +1,8 @@
+{
+  "id": "FR-EXT-513-ORCHESTRE",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can talk about playing in an orchestra.",
+  "prerequisites": []
+}

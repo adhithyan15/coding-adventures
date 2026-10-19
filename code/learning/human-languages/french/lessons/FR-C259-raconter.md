@@ -65,6 +65,7 @@ Here is what a story tells, with both pasts to work with:
 > met a friend, and we talked. But it started to rain, and in the end I went
 > back home.*
 
+*Il fait beau* is fine weather, with the *beau* you met inside *beaucoup*.
 *C'était*, *il faisait*: the scene, held still. *Je suis allé*, *j'ai
 rencontré*, *nous avons parlé*, *il a commencé*, *je suis rentré*: the
 events, put in order by *d'abord*, *ensuite* and *enfin*. **Mais** marks the

@@ -4,7 +4,7 @@
   "chapter": 260,
   "title": "What I Think, and So — je pense que, donc",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:427722cbb495e027",
+  "sourceHash": "fnv1a64:1d55254e96c8d86b",
   "lessons": [
     {
       "id": "FR-C260-je-pense-que",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2013502aa7145fee",
+      "sourceHash": "fnv1a64:a005d7e4831f5294",
       "notice": null,
       "blocks": [
         {
@@ -64,7 +64,7 @@
             },
             {
               "kind": "speech",
-              "text": "The que cannot be dropped, as English drops its that. After it, the verb stays plain: je pense que c'est cher. Only a denial, je ne pense pas que…, makes careful French bend the verb that follows into a form a later chapter builds."
+              "text": "The que cannot be dropped, as English drops its that. After it, the verb stays plain: je pense que c'est cher. A denial, je ne pense pas que…, can make careful French bend the verb that follows into a form a later chapter builds."
             },
             {
               "kind": "speech",

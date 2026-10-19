@@ -1,0 +1,11 @@
+{
+  "id": "FR-C414-terminus",
+  "pathSegment": "FR-PATH-414-COUCHETTE",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FR-EXT-414-COUCHETTE",
+      "order": 1
+    }
+  ]
+}

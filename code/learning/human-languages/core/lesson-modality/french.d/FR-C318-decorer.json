@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C318-decorer",
+    "language": "french",
+    "chapter": 318,
+    "sequence": 18100,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:59adab375a04ff14"
+  },
+  "findings": []
+}

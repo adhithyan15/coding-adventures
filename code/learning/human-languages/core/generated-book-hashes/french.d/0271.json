@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 271,
+  "sourceHash": "fnv1a64:c544c3fb21956349",
+  "lessonIds": [
+    "FR-C271-peu-a-peu",
+    "FR-C271-progressivement",
+    "FR-C271-au-fur-et-a-mesure",
+    "FR-C271-a-la-longue",
+    "FR-C271-tot-ou-tard"
+  ],
+  "tex": "french/book/chapters/ch271-peu-a-peu.tex"
+}

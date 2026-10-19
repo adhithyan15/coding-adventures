@@ -1,0 +1,11 @@
+{
+  "id": "FR-C332-egoutter",
+  "pathSegment": "FR-PATH-332-ASSAISONNER",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FR-EXT-332-ASSAISONNER",
+      "order": 1
+    }
+  ]
+}

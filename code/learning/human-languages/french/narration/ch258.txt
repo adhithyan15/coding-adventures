@@ -94,11 +94,11 @@ Say "there were a lot of people", the way last lesson built it. (Il y avait beau
 You'll want to know: il faisait froid, il faisait chaud.
 English says the weather was cold. French says it made cold, and you have that already: il fait froid. Move it into the past with the recipe. Nous faisons gives the stem fais-:
 Il faisait froid. — It was cold. Il faisait chaud. — It was hot.
-Listen to the first syllable. The ai of faisait is said like the short e of le: "fe-zè". It is the one surprise in the whole recipe.
+Listen to the first syllable. The ai of faisait is said like the short e of le: "fe-zè". It is the sound of nous faisons too, and the recipe carries it over.
 Rain has a verb of its own. You have il pleut, "it's raining", and its past is il pleuvait, "it was raining".
 Keep c'était and était for things. Le café était froid — the coffee was cold — is about the coffee. Il faisait froid is about the whole day. Put three of these together and you have a morning before anything has happened in it:
 Il faisait froid et il pleuvait. Il n'y avait pas de soleil.
-In Québec, relaxed speech has its own word for a biting cold: il faisait frette. In a letter, everyone writes froid.
+In Québec, relaxed speech has its own word for a biting cold: il faisait frette. In a letter, froid is the word to write.
 
 The phrase, taken apart.
 faire is inherited from Latin facere, "to make, to do" (EtymDB 2.1), and faisait goes back to its past faciēbat, "he was making" (Lewis & Short, under facio). English fact and factory share it.

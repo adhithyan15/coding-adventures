@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 424,
+  "sourceHash": "fnv1a64:a222af0e9a3b703f",
+  "lessonIds": [
+    "FR-C424-auberge",
+    "FR-C424-gite",
+    "FR-C424-nuitee",
+    "FR-C424-loger",
+    "FR-C424-sejourner"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch424.txt",
+  "json": "french/narration/ch424.json",
+  "textHash": "fnv1a64:6f7e707dcc9a16af",
+  "jsonHash": "fnv1a64:88eb1c9ddec4662c",
+  "findings": []
+}

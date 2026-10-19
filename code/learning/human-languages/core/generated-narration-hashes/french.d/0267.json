@@ -1,7 +1,7 @@
 {
   "language": "french",
   "chapter": 267,
-  "sourceHash": "fnv1a64:a176ad57536e45d7",
+  "sourceHash": "fnv1a64:fce9b1d8b3a1356b",
   "lessonIds": [
     "FR-C267-je-pourrais",
     "FR-C267-ce-serait",
@@ -12,7 +12,7 @@
   "drivablePrefix": 3,
   "text": "french/narration/ch267.txt",
   "json": "french/narration/ch267.json",
-  "textHash": "fnv1a64:209ab1d5422bd6ed",
-  "jsonHash": "fnv1a64:cbdf33753d71e8a8",
+  "textHash": "fnv1a64:75aae2c714032bf6",
+  "jsonHash": "fnv1a64:ecdc0461945a90a3",
   "findings": []
 }

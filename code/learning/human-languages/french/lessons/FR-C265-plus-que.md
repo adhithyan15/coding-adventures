@@ -73,7 +73,7 @@ These adjectives stay after the noun, as in *le vin rouge*, and the
 adjective takes its own article: *le train le plus rapide*, the article
 twice.
 
-The commonest adjective of all refuses *plus*. **Bon** becomes
+One of the commonest adjectives refuses *plus*. **Bon** becomes
 **meilleur**, "better": *Le café est **meilleur** que le thé.* Its
 adverb, *bien*, becomes **mieux**: *Tu parles **mieux** que moi.* —
 You speak better than me.

@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 453,
+  "sourceHash": "fnv1a64:9430e1a823859fcd",
+  "lessonIds": [
+    "FR-C453-emballage",
+    "FR-C453-emballer",
+    "FR-C453-livreur",
+    "FR-C453-carton",
+    "FR-C453-recommande"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch453.txt",
+  "json": "french/narration/ch453.json",
+  "textHash": "fnv1a64:b80d8aac25b6151b",
+  "jsonHash": "fnv1a64:dba034eaffb718f6",
+  "findings": []
+}

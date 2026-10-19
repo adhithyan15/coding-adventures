@@ -73,7 +73,7 @@ first or claim first, and the listener can follow either.
 <!-- hl-knowledge: introduces=[]; assesses=[FR-LEX-C148-VERBES148-04] -->
 
 **expliquer** is a learned borrowing from Latin *explicāre*, "to unfold, to
-unroll, to spread out" (EtymDB 2.1; Lewis & Short, under *explico*), which is
+open out flat" (EtymDB 2.1; Lewis & Short, under *explico*), which is
 *ex-*, "out", plus *plicāre*, "to fold". **To explain is to unfold**:
 something was folded shut, and you open it out.
 

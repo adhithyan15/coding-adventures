@@ -1,0 +1,11 @@
+{
+  "id": "FR-C362-egalite",
+  "pathSegment": "FR-PATH-362-CITOYEN",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-362-CITOYEN",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "FR-C296-echapper",
+  "pathSegment": "FR-PATH-296-BRAQUAGE",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-296-BRAQUAGE",
+      "order": 4
+    }
+  ]
+}
