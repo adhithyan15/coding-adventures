@@ -7,8 +7,8 @@ Implemented as a zero-external-dependency Rust composition above the complete
 
 ## Purpose
 
-Apply small, auditable RFC 5280 policy gates to one already decoded complete
-certificate. The first gate implements the certificate-wide unknown-critical-
+Apply small, auditable RFC 5280 policy gates to already decoded complete
+certificates. The first gate implements the certificate-wide unknown-critical-
 extension rule: every critical extension must be recognized by the caller's
 data-driven policy, while an unrecognized non-critical extension may be
 ignored. The second gate decodes Basic Constraints, Key Usage, and Extended
@@ -22,6 +22,10 @@ extension and applies the repository-owned RFC 9525 DNS-ID/IP-ID matcher to one
 already validated, caller-selected reference identity.
 The fifth gate classifies the certificate's already decoded inclusive validity
 interval at one explicit, already validated caller-supplied observation.
+The sixth gate authorizes one exact caller-supplied Extended Key Usage purpose
+over already validated end-entity role evidence. The seventh gate compares one
+child certificate's issuer Name with one candidate issuer certificate's
+subject Name through a caller-supplied name-comparison policy.
 
 ## Input contract
 
@@ -210,6 +214,37 @@ does not assert that the observation came from a trustworthy clock and grants
 no path, signature, identity, purpose, revocation, trust-root, TLS, socket,
 HTTP, or OAuth authority.
 
+## Certificate issuer-link contract
+
+The caller supplies one decoded child certificate, one decoded candidate issuer
+certificate, and a distinguished-name comparison function. The function is
+invoked exactly once with the child's issuer Name followed by the candidate
+issuer's subject Name. A `false` result fails closed as `NameMismatch`.
+
+```rust
+pub fn validate_certificate_issuer_link<'child, 'issuer>(
+    child: &X509Certificate<'child>,
+    candidate_issuer: &X509Certificate<'issuer>,
+    same_name: impl FnOnce(&X509Name<'child>, &X509Name<'issuer>) -> bool,
+) -> Result<ValidatedCertificateIssuerLink,
+            X509CertificateIssuerLinkError>;
+```
+
+The gate embeds no distinguished-name normalization or equality rule. A caller
+may use exact DER equality as an intentionally strict local policy, but that is
+not represented as complete RFC 5280 semantic name comparison. The callback
+keeps the comparison policy replaceable while fixing the link direction and
+the exact certificate fields supplied to it.
+
+Errors expose only a stable category and retain no child or issuer Name,
+certificate bytes, or callback data. Success returns opaque evidence that
+cannot be constructed outside the crate. It proves only that this one caller-
+supplied comparator accepted this child-issuer relationship. It neither proves
+that the candidate is a CA nor constructs or validates a certificate path.
+Critical-extension, CA-role, algorithm/key, signature, validity, purpose,
+identity, constraints, revocation, and trust-anchor checks remain separate
+mandatory gates.
+
 ## Tests
 
 Tests must cover:
@@ -269,6 +304,17 @@ Certificate validity-at-time tests must additionally cover:
 - redacted failures that expose neither certificate time values nor the caller
   observation.
 
+Certificate issuer-link tests must additionally cover:
+
+- passing the child's issuer and candidate issuer's subject to the comparator
+  in that exact order;
+- invoking the comparator exactly once on success and mismatch;
+- successful self-issued and distinct-certificate relationships when accepted
+  by caller policy;
+- fail-closed mismatch; and
+- redacted failure and opaque success evidence that retain no presented Name or
+  certificate bytes.
+
 ## Deliberate exclusions
 
 - an embedded extension registry or provider-specific OID table;
@@ -277,8 +323,8 @@ Certificate validity-at-time tests must additionally cover:
 - TLS key-usage selection or Extended Key Usage purpose authorization;
 - an embedded signature or public-key algorithm registry;
 - public-key or signature parsing, hashing, or signature verification;
-- issuer/subject distinguished-name comparison, path construction, or path
-  validation;
+- built-in distinguished-name normalization or semantic equality;
+- path construction or path validation;
 - clocks, trust roots, revocation, TLS records,
   handshakes, sockets, HTTP, or OAuth transport.
 
