@@ -1113,6 +1113,10 @@ fn layout_has_focusable(node: &LayoutNode) -> bool {
 /// Focus is restored only when the number of matching controls is
 /// unchanged: after a row is added or removed, "the third Delete button"
 /// may belong to another record, and no focus is safer than the wrong one.
+/// Rows reordered without a change in number still restore by position; a
+/// per-row accessible name (part of the signature) tells such rows apart, so
+/// only identically labelled controls in a re-sorted list remain, until `For`
+/// rows carry a stable key.
 /// Lookup is by tag name rather than a selector (the HTML parser accepts
 /// tag names that are not valid selectors), and both helpers swallow their
 /// own errors, so they can skip a restore but never stop a render.

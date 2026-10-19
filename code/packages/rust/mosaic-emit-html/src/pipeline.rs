@@ -1054,7 +1054,12 @@ function render() {
 // Two guards keep a guess from doing harm. Focus is restored only when the
 // number of matching controls is unchanged: if a row was added or removed,
 // "the third Delete button" may now belong to another record, and dropping
-// focus is safer than pressing the wrong one. And capture/restore can only
+// focus is safer than pressing the wrong one. (Rows reordered without a
+// change in number still restore by position. A row whose control carries
+// a per-row accessible name, as "Complete task: <name>" does, is already told
+// apart by its signature; identically labelled controls in a re-sorted list
+// are the one case left, until `For` rows carry a stable key.) And
+// capture/restore can only
 // skip restoring focus, never stop a render (an unusual tag name the HTML
 // parser accepts is not a valid selector, so elements are looked up by name,
 // not with querySelectorAll).
