@@ -3368,3 +3368,25 @@ fn zenuml_preserves_participant_kinds_assigned_creation_and_semicolons() {
             if from == "API" && to == "worker" && label == "worker.init()"
     )));
 }
+
+#[test]
+fn zenuml_preserves_custom_annotators_inline_comments_and_creation_labels() {
+    let diagram = parse_zenuml(
+        "zenuml\n@Service API\nClient->API.start() {\n  Worker worker = new Worker(config) // provision worker\n  worker.init() // initialize it\n}\n",
+    ).expect("ZenUML custom annotations and inline comments should parse");
+
+    let api = diagram.participants.iter().find(|participant| participant.id == "API").unwrap();
+    assert_eq!(api.kind, diagram_ir::SequenceParticipantKind::Participant);
+    let worker = diagram.participants.iter().find(|participant| participant.id == "worker").unwrap();
+    assert_eq!(worker.label.text, "Worker");
+    assert!(diagram.events.iter().any(|event| matches!(
+        event,
+        diagram_ir::SequenceEvent::Note { text, participants, .. }
+            if text == "provision worker" && participants == &["worker"]
+    )));
+    assert!(diagram.events.iter().any(|event| matches!(
+        event,
+        diagram_ir::SequenceEvent::Note { text, participants, .. }
+            if text == "initialize it" && participants == &["API", "worker"]
+    )));
+}

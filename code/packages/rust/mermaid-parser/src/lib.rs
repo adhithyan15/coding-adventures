@@ -914,6 +914,12 @@ pub fn parse_zenuml(source: &str) -> Result<SequenceDiagram, ParseError> {
             pending_comments.push(comment.trim().to_string());
             continue;
         }
+        let (line, inline_comment) = split_zenuml_inline_comment(line);
+        if let Some(comment) = inline_comment {
+            pending_comments.push(comment.to_string());
+        }
+        let line = line.trim();
+        if line.is_empty() { continue; }
         let line = line.strip_suffix(';').map(str::trim).unwrap_or(line);
         if !header_seen {
             header_seen = line == "zenuml";
@@ -921,6 +927,7 @@ pub fn parse_zenuml(source: &str) -> Result<SequenceDiagram, ParseError> {
         }
         if let Some(title) = line.strip_prefix("title ") {
             diagram.title = Some(title.trim().to_string());
+            pending_comments.clear();
             continue;
         }
         if line.starts_with('}') {
@@ -954,13 +961,20 @@ pub fn parse_zenuml(source: &str) -> Result<SequenceDiagram, ParseError> {
             scopes.push(ZenumlScope::Block(kind));
             continue;
         }
-        if let Some(binding) = parse_zenuml_creation(line) {
+        if let Some((binding, class_name)) = parse_zenuml_creation(line) {
             let active_parent = scopes.iter().rev().find_map(|scope| match scope {
                 ZenumlScope::Activation { participant, .. } => Some(participant.clone()),
                 ZenumlScope::Block(_) => None,
             }).unwrap_or_else(|| binding.clone());
             push_zenuml_comments(&mut diagram, &scopes, &mut pending_comments, &[&binding]);
-            ensure_sequence_participant(&mut diagram, &mut participant_indices, &binding);
+            upsert_sequence_participant(
+                &mut diagram,
+                &mut participant_indices,
+                binding.clone(),
+                class_name,
+                SequenceTextWrap::Default,
+                SequenceParticipantKind::Participant,
+            );
             diagram.events.push(SequenceEvent::ParticipantCreated { participant: binding.clone() });
             if line.contains('{') {
                 diagram.events.push(SequenceEvent::Activation { participant: binding.clone(), active: true });
@@ -996,7 +1010,7 @@ pub fn parse_zenuml(source: &str) -> Result<SequenceDiagram, ParseError> {
                 "Collections" => SequenceParticipantKind::Collections,
                 "Queue" => SequenceParticipantKind::Queue,
                 "Starter" => SequenceParticipantKind::Participant,
-                _ => unreachable!(),
+                _ => SequenceParticipantKind::Participant,
             };
             upsert_sequence_participant(&mut diagram, &mut participant_indices, id.trim().into(), id.trim().into(), SequenceTextWrap::Default, kind);
             pending_comments.clear();
@@ -1074,7 +1088,7 @@ fn zenuml_reply(from: &str, to: &str, label: &str) -> SequenceEvent {
         central_connection: SequenceCentralConnection::None, activate: false, deactivate: false }
 }
 
-fn parse_zenuml_creation(line: &str) -> Option<String> {
+fn parse_zenuml_creation(line: &str) -> Option<(String, String)> {
     let (prefix, created) = line.split_once("new ")?;
     let class_name = created.split(['(', ' ', '{']).next()?.trim();
     if class_name.is_empty() { return None; }
@@ -1083,7 +1097,38 @@ fn parse_zenuml_creation(line: &str) -> Option<String> {
     } else {
         prefix.trim().strip_suffix('=')?.split_whitespace().last()?
     };
-    Some(binding.to_string())
+    Some((binding.to_string(), class_name.to_string()))
+}
+
+fn split_zenuml_inline_comment(line: &str) -> (&str, Option<&str>) {
+    let bytes = line.as_bytes();
+    let mut quote = None;
+    let mut escaped = false;
+    for index in 0..bytes.len().saturating_sub(1) {
+        let byte = bytes[index];
+        if escaped {
+            escaped = false;
+            continue;
+        }
+        if byte == b'\\' && quote.is_some() {
+            escaped = true;
+            continue;
+        }
+        if matches!(byte, b'\'' | b'"') {
+            if quote == Some(byte) {
+                quote = None;
+            } else if quote.is_none() {
+                quote = Some(byte);
+            }
+            continue;
+        }
+        if quote.is_none() && byte == b'/' && bytes[index + 1] == b'/'
+            && (index == 0 || bytes[index - 1].is_ascii_whitespace())
+        {
+            return (&line[..index], Some(line[index + 2..].trim()));
+        }
+    }
+    (line, None)
 }
 
 fn push_zenuml_comments(
