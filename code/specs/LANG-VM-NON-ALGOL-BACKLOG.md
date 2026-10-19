@@ -532,8 +532,12 @@ generated files and transitive dependencies in each DAG ownership audit.
    not the default next PREP01 selection.
 2. **LANG79 Python:** arithmetic AST token validation is complete; broader
    native frontend semantics remain open. Host Python is oracle only.
-3. **LANG78 JavaScript:** restricted numeric division is complete; general
-   lexical-goal selection and broader native semantics remain open, Node oracle only.
+3. **LANG78 JavaScript:** restricted numeric division is complete. The next
+   bounded stage, top-level numeric `let`/`const` bindings with the early
+   duplicate-name SyntaxError and runtime TDZ/undeclared ReferenceErrors
+   (`javascript-iir-compiler` 0.2.0), is implemented locally pending its PR.
+   Assignment, control flow, general lexical-goal selection and broader native
+   semantics remain open, Node oracle only.
 4. **LANG82 continued:** the partial Perl 5.004_72 contract is complete.
    Continue distinct own-release source-backed pairs; full syntax remains open.
 5. **LANG80 Ruby:** arithmetic/grouping AST token validation is complete;
