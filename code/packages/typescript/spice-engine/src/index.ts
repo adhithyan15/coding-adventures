@@ -1394,6 +1394,8 @@ export interface DeckAnalysisPlan {
   readonly pointCount?: number;
   readonly startFrequencyHz?: number;
   readonly stopFrequencyHz?: number;
+  readonly frequenciesHz?: readonly number[];
+  readonly temperatureKelvin?: number;
   readonly stepTime?: number;
   readonly stopTime?: number;
   readonly startTime?: number;
@@ -6387,12 +6389,12 @@ function resolveNoiseAnalysis(
   lineNumber: number,
   state: DeckAnalysisState,
 ): void {
-  if (tokens.length !== 3 && tokens.length !== 7) {
+  if (tokens.length < 3) {
     addAnalysisDiagnostic(state, {
       code: "SPICE_DECK_ANALYSIS_ARGUMENT",
       directive: ".noise",
       lineNumber,
-      message: ".noise requires output voltage probe, input source, and optional sweep kind, point count, start frequency, and stop frequency tokens",
+      message: ".noise requires an output voltage probe and input source",
     });
     return;
   }
@@ -6423,18 +6425,10 @@ function resolveNoiseAnalysis(
   let pointCount: number | undefined;
   let startFrequencyHz: number | undefined;
   let stopFrequencyHz: number | undefined;
-  if (tokens.length === 7) {
-    sweepKind = normalizeAcSweepKind(tokens[3]);
-    if (sweepKind === undefined) {
-      addAnalysisDiagnostic(state, {
-        code: "SPICE_DECK_ANALYSIS_MODE",
-        directive: ".noise",
-        lineNumber,
-        message: `.noise sweep kind must be LIN, DEC, or OCT, got ${JSON.stringify(tokens[3])}`,
-        token: tokens[3],
-      });
-      return;
-    }
+  const frequenciesHz: number[] = [];
+  let temperatureKelvin = 300.0;
+  if (tokens.length === 7 && normalizeAcSweepKind(tokens[3]) !== undefined) {
+    sweepKind = normalizeAcSweepKind(tokens[3])!;
     pointCount = parseDeckAnalysisInteger(tokens[4], ".noise", lineNumber, state);
     startFrequencyHz = parseDeckAnalysisValue(tokens[5], ".noise", lineNumber, state);
     stopFrequencyHz = parseDeckAnalysisValue(tokens[6], ".noise", lineNumber, state);
@@ -6464,6 +6458,69 @@ function resolveNoiseAnalysis(
       });
       return;
     }
+  } else {
+    let tailIndex = 3;
+    while (tailIndex < tokens.length) {
+      const token = tokens[tailIndex]!;
+      const lowerToken = token.toLowerCase();
+      if (lowerToken === "temp") {
+        if (tailIndex + 1 >= tokens.length) {
+          addAnalysisDiagnostic(state, {
+            code: "SPICE_DECK_ANALYSIS_ARGUMENT",
+            directive: ".noise",
+            lineNumber,
+            message: ".noise temp requires a temperature value",
+            token,
+          });
+          return;
+        }
+        const parsedTemperature = parseDeckAnalysisValue(
+          tokens[tailIndex + 1]!,
+          ".noise",
+          lineNumber,
+          state,
+        );
+        if (parsedTemperature === undefined) return;
+        temperatureKelvin = parsedTemperature;
+        tailIndex += 2;
+        continue;
+      }
+      if (lowerToken.startsWith("temp=")) {
+        const parsedTemperature = parseDeckAnalysisValue(
+          token.split("=", 2)[1]!,
+          ".noise",
+          lineNumber,
+          state,
+        );
+        if (parsedTemperature === undefined) return;
+        temperatureKelvin = parsedTemperature;
+        tailIndex += 1;
+        continue;
+      }
+      const frequency = parseDeckAnalysisValue(token, ".noise", lineNumber, state);
+      if (frequency === undefined) return;
+      if (frequency <= 0.0) {
+        addAnalysisDiagnostic(state, {
+          code: "SPICE_DECK_ANALYSIS_SWEEP",
+          directive: ".noise",
+          lineNumber,
+          message: ".noise frequencies must be positive",
+          token,
+        });
+        return;
+      }
+      frequenciesHz.push(frequency);
+      tailIndex += 1;
+    }
+    if (temperatureKelvin <= 0.0) {
+      addAnalysisDiagnostic(state, {
+        code: "SPICE_DECK_ANALYSIS_SWEEP",
+        directive: ".noise",
+        lineNumber,
+        message: ".noise temperature must be positive",
+      });
+      return;
+    }
   }
 
   state.analyses.push({
@@ -6476,6 +6533,8 @@ function resolveNoiseAnalysis(
     pointCount,
     startFrequencyHz,
     stopFrequencyHz,
+    frequenciesHz,
+    temperatureKelvin,
     useInitialConditions: false,
   });
 }
@@ -13974,7 +14033,9 @@ function runDeckAnalysisPlan(
     const outputNode = requireDeckPlanString(plan.outputNode, plan, "outputNode");
     const inputSource = requireDeckPlanString(plan.sourceName, plan, "sourceName");
     const frequenciesHz = plan.sweepKind === undefined
-      ? undefined
+      ? (plan.frequenciesHz === undefined || plan.frequenciesHz.length === 0
+          ? undefined
+          : plan.frequenciesHz)
       : deckAcFrequencies(
           plan,
           plan.sweepKind,
@@ -13982,7 +14043,7 @@ function runDeckAnalysisPlan(
           requireDeckPlanNumber(plan.startFrequencyHz, plan, "startFrequencyHz"),
           requireDeckPlanNumber(plan.stopFrequencyHz, plan, "stopFrequencyHz"),
         );
-    const result = noiseAc(circuit, outputNode, inputSource, frequenciesHz);
+    const result = noiseAc(circuit, outputNode, inputSource, frequenciesHz, plan.temperatureKelvin);
     selectDeckMeasurementCardsForAnalysis(netlist, plan.analysis);
     selectDeckFourierCardsForAnalysis(netlist, plan.analysis);
     const measurements: ProbeMeasurement[] = [];

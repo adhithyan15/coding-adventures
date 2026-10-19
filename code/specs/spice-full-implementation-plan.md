@@ -5696,10 +5696,16 @@ model-card parameter, or a UI artifact is not a completion signal.
      cards across Python, Rust, and TypeScript. The shared CLI corpus runs both
      cards, while structured sensitivity/noise results deliberately remain out
      of waveform output selection and `.measure` handling.
-   - Discovery: parser-only explicit noise-frequency and temperature forms do
-     not yet share the deck runner's canonical three- or seven-token `.noise`
-     syntax. Keep that broader parser-to-deck-runner alignment as a separate
-     compatibility phase rather than treating it as Berkeley v1 conformance.
+   - **Parser-style `.noise` tails** (completed in the cross-language core
+     corpus slice): Python, Rust, and TypeScript deck runners now execute the
+     parser-supported explicit frequency list plus `temp VALUE` or `temp=VALUE`
+     forms, retaining default and LIN/DEC/OCT sweep behavior. The shared CLI
+     corpus executes a two-frequency, explicit-temperature tail through every
+     parser-to-engine path.
+   - Discovery: parser facades still do not parse the runner's canonical
+     LIN/DEC/OCT `.noise` sweep syntax. Keep that reverse syntax alignment as a
+     separate compatibility phase rather than treating it as Berkeley v1
+     conformance.
    - Expand deck-owned output compatibility beyond source-order analysis
      execution and stable artifact exports toward nested sweeps, raw-format
      interoperability, and remaining vendor-style output controls.

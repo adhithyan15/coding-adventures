@@ -7389,6 +7389,8 @@ pub struct DeckAnalysisPlan {
     pub point_count: Option<usize>,
     pub start_frequency_hz: Option<f64>,
     pub stop_frequency_hz: Option<f64>,
+    pub frequencies_hz: Vec<f64>,
+    pub temperature_kelvin: f64,
     pub step_time: Option<f64>,
     pub stop_time: Option<f64>,
     pub start_time: Option<f64>,
@@ -9774,6 +9776,8 @@ fn resolve_op_analysis(tokens: &[&str], line_number: usize, state: &mut DeckAnal
         point_count: None,
         start_frequency_hz: None,
         stop_frequency_hz: None,
+        frequencies_hz: Vec::new(),
+        temperature_kelvin: 300.0,
         step_time: None,
         stop_time: None,
         start_time: None,
@@ -9920,6 +9924,8 @@ fn resolve_dc_analysis(tokens: &[&str], line_number: usize, state: &mut DeckAnal
         point_count: None,
         start_frequency_hz: None,
         stop_frequency_hz: None,
+        frequencies_hz: Vec::new(),
+        temperature_kelvin: 300.0,
         step_time: None,
         stop_time: None,
         start_time: None,
@@ -10004,6 +10010,8 @@ fn resolve_ac_analysis(tokens: &[&str], line_number: usize, state: &mut DeckAnal
         point_count: Some(point_count),
         start_frequency_hz: Some(start_frequency_hz),
         stop_frequency_hz: Some(stop_frequency_hz),
+        frequencies_hz: Vec::new(),
+        temperature_kelvin: 300.0,
         step_time: None,
         stop_time: None,
         start_time: None,
@@ -10112,6 +10120,8 @@ fn resolve_tran_analysis(tokens: &[&str], line_number: usize, state: &mut DeckAn
         point_count: None,
         start_frequency_hz: None,
         stop_frequency_hz: None,
+        frequencies_hz: Vec::new(),
+        temperature_kelvin: 300.0,
         step_time: Some(step_time),
         stop_time: Some(stop_time),
         start_time,
@@ -10176,6 +10186,8 @@ fn resolve_tf_analysis(tokens: &[&str], line_number: usize, state: &mut DeckAnal
         point_count: None,
         start_frequency_hz: None,
         stop_frequency_hz: None,
+        frequencies_hz: Vec::new(),
+        temperature_kelvin: 300.0,
         step_time: None,
         stop_time: None,
         start_time: None,
@@ -10228,6 +10240,8 @@ fn resolve_sens_analysis(tokens: &[&str], line_number: usize, state: &mut DeckAn
         point_count: None,
         start_frequency_hz: None,
         stop_frequency_hz: None,
+        frequencies_hz: Vec::new(),
+        temperature_kelvin: 300.0,
         step_time: None,
         stop_time: None,
         start_time: None,
@@ -10237,13 +10251,13 @@ fn resolve_sens_analysis(tokens: &[&str], line_number: usize, state: &mut DeckAn
 }
 
 fn resolve_noise_analysis(tokens: &[&str], line_number: usize, state: &mut DeckAnalysisState) {
-    if !matches!(tokens.len(), 3 | 7) {
+    if tokens.len() < 3 {
         add_analysis_diagnostic(
             state,
             "SPICE_DECK_ANALYSIS_ARGUMENT",
             ".noise",
             line_number,
-            ".noise requires output voltage probe, input source, and optional sweep kind, point count, start frequency, and stop frequency tokens",
+            ".noise requires an output voltage probe and input source",
             None,
         );
         return;
@@ -10280,21 +10294,10 @@ fn resolve_noise_analysis(tokens: &[&str], line_number: usize, state: &mut DeckA
     let mut point_count = None;
     let mut start_frequency_hz = None;
     let mut stop_frequency_hz = None;
-    if tokens.len() == 7 {
-        let Some(parsed_sweep_kind) = normalize_ac_sweep_kind(tokens[3]) else {
-            add_analysis_diagnostic(
-                state,
-                "SPICE_DECK_ANALYSIS_MODE",
-                ".noise",
-                line_number,
-                &format!(
-                    ".noise sweep kind must be LIN, DEC, or OCT, got {:?}",
-                    tokens[3]
-                ),
-                Some(tokens[3].to_string()),
-            );
-            return;
-        };
+    let mut frequencies_hz = Vec::new();
+    let mut temperature_kelvin = 300.0;
+    if tokens.len() == 7 && normalize_ac_sweep_kind(tokens[3]).is_some() {
+        let parsed_sweep_kind = normalize_ac_sweep_kind(tokens[3]).unwrap();
         let parsed_point_count =
             parse_deck_analysis_integer(tokens[4], ".noise", line_number, state);
         let parsed_start_frequency =
@@ -10337,6 +10340,71 @@ fn resolve_noise_analysis(tokens: &[&str], line_number: usize, state: &mut DeckA
         point_count = Some(parsed_point_count);
         start_frequency_hz = Some(parsed_start_frequency);
         stop_frequency_hz = Some(parsed_stop_frequency);
+    } else {
+        let mut tail_index = 3;
+        while tail_index < tokens.len() {
+            let token = tokens[tail_index];
+            let lower_token = token.to_ascii_lowercase();
+            if lower_token == "temp" {
+                if tail_index + 1 >= tokens.len() {
+                    add_analysis_diagnostic(
+                        state,
+                        "SPICE_DECK_ANALYSIS_ARGUMENT",
+                        ".noise",
+                        line_number,
+                        ".noise temp requires a temperature value",
+                        Some(token.to_string()),
+                    );
+                    return;
+                }
+                let Some(parsed_temperature) =
+                    parse_deck_analysis_value(tokens[tail_index + 1], ".noise", line_number, state)
+                else {
+                    return;
+                };
+                temperature_kelvin = parsed_temperature;
+                tail_index += 2;
+                continue;
+            }
+            if let Some(value) = lower_token.strip_prefix("temp=") {
+                let Some(parsed_temperature) =
+                    parse_deck_analysis_value(value, ".noise", line_number, state)
+                else {
+                    return;
+                };
+                temperature_kelvin = parsed_temperature;
+                tail_index += 1;
+                continue;
+            }
+            let Some(frequency) = parse_deck_analysis_value(token, ".noise", line_number, state)
+            else {
+                return;
+            };
+            if frequency <= 0.0 {
+                add_analysis_diagnostic(
+                    state,
+                    "SPICE_DECK_ANALYSIS_SWEEP",
+                    ".noise",
+                    line_number,
+                    ".noise frequencies must be positive",
+                    Some(token.to_string()),
+                );
+                return;
+            }
+            frequencies_hz.push(frequency);
+            tail_index += 1;
+        }
+        if temperature_kelvin <= 0.0 {
+            add_analysis_diagnostic(
+                state,
+                "SPICE_DECK_ANALYSIS_SWEEP",
+                ".noise",
+                line_number,
+                ".noise temperature must be positive",
+                None,
+            );
+            return;
+        }
     }
 
     state.analyses.push(DeckAnalysisPlan {
@@ -10356,6 +10424,8 @@ fn resolve_noise_analysis(tokens: &[&str], line_number: usize, state: &mut DeckA
         point_count,
         start_frequency_hz,
         stop_frequency_hz,
+        frequencies_hz,
+        temperature_kelvin,
         step_time: None,
         stop_time: None,
         start_time: None,
@@ -11482,6 +11552,8 @@ fn implicit_deck_op_analysis_plan() -> DeckAnalysisPlan {
         point_count: None,
         start_frequency_hz: None,
         stop_frequency_hz: None,
+        frequencies_hz: Vec::new(),
+        temperature_kelvin: 300.0,
         step_time: None,
         stop_time: None,
         start_time: None,
@@ -16166,6 +16238,8 @@ fn deck_analysis_plans_for_execution(
             point_count: None,
             start_frequency_hz: None,
             stop_frequency_hz: None,
+            frequencies_hz: Vec::new(),
+            temperature_kelvin: 300.0,
             step_time: None,
             stop_time: None,
             start_time: None,
@@ -17156,9 +17230,15 @@ fn run_deck_analysis_plan(
                     require_deck_plan_number(plan.stop_frequency_hz, &plan, "stop_frequency_hz")?;
                 deck_ac_frequencies(&plan, sweep_kind, point_count, start, stop)?
             } else {
-                Vec::new()
+                plan.frequencies_hz.clone()
             };
-            let result = noise_ac(circuit, output_node, input_source, &frequencies, 300.0)?;
+            let result = noise_ac(
+                circuit,
+                output_node,
+                input_source,
+                &frequencies,
+                plan.temperature_kelvin,
+            )?;
             select_deck_measurement_cards_for_analysis(netlist, "noise")?;
             let measurements = Vec::new();
             let measurement_table = format_measurement_table(&measurements);

@@ -100,7 +100,7 @@
     },
     {
       "id": "engine-backed-analysis-plan",
-      "deck": "* Berkeley SPICE engine-backed analysis CLI corpus\nV1 in 0 DC 1 AC 1\nR1 in out 1k\nR2 out 0 1k\n.sens V(out)\n.noise V(out) V1\n.end\n",
+      "deck": "* Berkeley SPICE engine-backed analysis CLI corpus\nV1 in 0 DC 1 AC 1\nR1 in out 1k\nR2 out 0 1k\n.sens V(out)\n.noise V(out) V1 1k 2k temp=310\n.end\n",
       "expected": {
         "title": "Berkeley SPICE engine-backed analysis CLI corpus",
         "analysisKinds": ["sens", "noise"],

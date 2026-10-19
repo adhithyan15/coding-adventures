@@ -5084,7 +5084,7 @@ def _run_deck_analysis_plan(
     if plan.analysis == "noise":
         output_node = _require_deck_plan_string(plan, "output_node")
         input_source = _require_deck_plan_string(plan, "source_name")
-        frequencies: list[float] | None = None
+        frequencies: list[float] | tuple[float, ...] | None = plan.frequencies or None
         if plan.sweep_kind is not None:
             sweep_kind = _require_deck_plan_string(plan, "sweep_kind")
             point_count = _require_deck_plan_int(plan, "point_count")
@@ -5102,6 +5102,7 @@ def _run_deck_analysis_plan(
             output_node=output_node,
             input_source=input_source,
             freqs=frequencies,
+            temperature=plan.temperature,
         )
         _select_deck_measurement_cards_for_analysis(netlist, plan.analysis)
         measurements = []
