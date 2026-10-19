@@ -166,6 +166,34 @@ today would make `main` permanently red over years of authoring work:
 A ceiling is debt, never a licence. The corresponding backlog is the artifacts
 themselves, and it does not shrink because it has been written down.
 
+## 6c. Full-mock evidence must be read from the audited track
+
+The artifact audit establishes that a declared mock manifest, paper, rubric,
+or answer key is a regular file inside its track. That conclusion is not a
+capability to reopen its pathname later. A local concurrent actor can replace
+an intermediate directory with a Unix symlink or Windows junction after the
+audit, making a later pathname read consume unrelated bytes.
+
+The curriculum root and validator code are trusted; assessment-track
+descendants are not stable. Full-mock
+validation and completion reporting must open each evidence file relative to
+an already-open track directory, descending through directory handles without
+following symlinks or reparse points and reading the regular-file handle that
+was checked. A directory renamed after being opened may still supply its own
+original contents; a replacement at its old name must never redirect a read
+outside the track. An audit's `present` set can decide which declarations need
+validation, but cannot authorize a second pathname-based content read.
+
+Only established absence may count as missing evidence. If an audited-present
+file disappears or cannot be opened safely, the required artifact gate must
+fail rather than recategorize it as a missing part or successful mock. The
+anchored manifest bytes must still pass the existing JSON, unsafe-key, schema,
+paper, rubric, and answer-key checks; the boundary does not relax any content
+gate. A manifest's `.d` sibling must also be checked relative to the pinned
+parent, so replacing that parent's pathname cannot turn a sharded source into
+an accepted stale monolith. The same rule applies on Windows and Unix, with
+exercised swap fixtures where the platform allows them.
+
 ## 7. Acceptance tests
 
 The gate is complete when tests prove that:
@@ -185,3 +213,6 @@ The gate is complete when tests prove that:
    `ENOTDIR` mean absent; every other errno throws, naming it. `existsSync`
    collapses all of them into `false`, which is a statement about the
    repository that a failed `stat` is in no position to make.
+9. §6c: replacing a mock-evidence ancestor after audit cannot redirect the
+   manifest, paper, rubric, or answer-key bytes to a sibling or outside track;
+   an indeterminate anchored read fails the required gate on both platforms.
