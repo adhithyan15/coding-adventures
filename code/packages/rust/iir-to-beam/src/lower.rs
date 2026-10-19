@@ -1357,6 +1357,11 @@ pub fn lower_iir_to_beam(
                     // any OTHER live variable must be Y-spilled across it
                     // exactly like every other imported call here.
                     | "global_store"
+                    // `str_const` emits no call, but it now emits a
+                    // `test_heap` before its `put_list` chain (see its arm
+                    // below), and a `test_heap` that collects is the same
+                    // hazard as a call for every X register above `live`.
+                    | "str_const"
             ) && !(instr.op == "call_builtin" && matches!(instr.srcs.first(),
                 // BEAM07: `input_more`/`input_i64`/`input_str` each emit a
                 // real `call_ext` (`io:get_line/1`, and `input_i64`/
@@ -1828,6 +1833,23 @@ pub fn lower_iir_to_beam(
                 // text to `[byte, ...]` with `put_list`, building right to
                 // left from BEAM nil (`{a,0}`). This is the representation
                 // consumed by `erlang:'++'/2` and `io:put_chars/1` below.
+                //
+                // Each cons cell is two heap words, and `put_list` writes
+                // them WITHOUT checking for room -- the reservation is the
+                // compiler's job, via `test_heap`. This arm reserved nothing,
+                // so every string literal wrote 2 x len words past whatever
+                // the previous `test_heap` had left. Whether that ran into
+                // the stack depended on how full the heap happened to be, so
+                // it surfaced as an intermittent erl abort, "erl_gc.c, line
+                // 775: Overrun stack and heap": deterministic on one main CI
+                // shard (lang-aot beam_array_len `b11_str_3d`, Linux OTP
+                // 27.3.4.11), never on macOS. The same omission `alloc_array`
+                // and `array_set` were fixed for (see their arms).
+                //
+                // `test_heap` may collect, and only x0..x(live-1) survive a
+                // collection, so the live variables are parked in their Y
+                // slots around it (`str_const` is listed with the other GC
+                // points in `live_across`) and `live` is 0.
                 "str_const" => {
                     let rd = match &instr.dest {
                         Some(name) => var_reg!(name),
@@ -1843,6 +1865,15 @@ pub fn lower_iir_to_beam(
                             detail: "str_const must have one string literal source".into(),
                         }),
                     };
+                    if !text.is_empty() {
+                        let words = 2 * text.len() as u64;
+                        let cur_idx = instr_idx - 1;
+                        save_live_across_imported_call!(cur_idx);
+                        instrs.push(BEAMInstruction::new(OP_TEST_HEAP, vec![
+                            BEAMOperand::u(words), BEAMOperand::u(0),
+                        ]));
+                        restore_live_across_imported_call!(cur_idx);
+                    }
                     instrs.push(BEAMInstruction::new(OP_MOVE, vec![
                         BEAMOperand::a(0),
                         BEAMOperand::x(rd),

@@ -267,14 +267,22 @@ class OcamlGenericCiWorkflowTests(unittest.TestCase):
                 " || needs.detect.outputs.needs_ocaml == 'true'",
                 "",
             ),
-            self.mutate("job_flags=(-jobs 1)", "job_flags=(-jobs 2)"),
+            # A worker override on either build brings back the whole-shard
+            # serialization that timed out main (#17631).
             self.mutate(
-                '          $BT \\\n            "${job_flags[@]}" \\',
-                '          echo "${job_flags[@]}"\n          $BT \\',
+                "          $BT -root . -plan-file", "          $BT -jobs 1 -root . -plan-file"
             ),
             self.mutate(
-                '          $BT "${job_flags[@]}" -root .', "          $BT -root ."
+                "          $BT \\\n            -root . \\",
+                "          $BT \\\n            -root . \\\n            -jobs=1 \\",
             ),
+            self.mutate(
+                "          PLAN_FLAG=\"\"\n",
+                "          job_flags=(-jobs 1)\n          PLAN_FLAG=\"\"\n",
+            ),
+            # And both must still invoke the build tool at all.
+            self.mutate("          $BT -root . -plan-file", "          ./other -root . -plan-file"),
+            self.mutate("          $BT \\\n            -root . \\", "          $BT \\\n            -root=. \\"),
             self.mutate(
                 '              or flag("NEEDS_OCAML")',
                 '              or False or flag("NEEDS_OCAML")',
@@ -283,6 +291,37 @@ class OcamlGenericCiWorkflowTests(unittest.TestCase):
         for index, workflow in enumerate(cases):
             with self.subTest(case=index), self.assertRaises(toolchain.ContractError):
                 toolchain.validate_generic_ci_workflow_text(self.manifest, workflow)
+
+
+class OcamlExecutorLockTests(unittest.TestCase):
+    """The executor lock is what lets CI run OCaml beside other languages."""
+
+    def setUp(self) -> None:
+        self.source = (REPO_ROOT / toolchain.EXECUTOR_RELATIVE_PATH).read_text(
+            encoding="utf-8"
+        )
+
+    def test_checked_in_executor_takes_the_opam_switch_lock(self) -> None:
+        toolchain.validate_executor_opam_lock_text(self.source)
+        toolchain.validate_executor_opam_lock(REPO_ROOT)
+
+    def test_rejects_an_executor_without_the_lock(self) -> None:
+        cases = (
+            self.source.replace(toolchain.OPAM_LOCK_DECLARATION, "const Other = 1"),
+            self.source.replace("keys[OpamSwitchLockKey] = true", "_ = OpamSwitchLockKey"),
+            self.source.replace(
+                'if pkg.Language == "ocaml" || opamCommandRe.MatchString(command) {',
+                "if opamCommandRe.MatchString(command) {",
+            ),
+        )
+        for index, source in enumerate(cases):
+            self.assertNotEqual(source, self.source, index)
+            with self.subTest(case=index), self.assertRaises(toolchain.ContractError):
+                toolchain.validate_executor_opam_lock_text(source)
+
+    def test_rejects_a_missing_executor_file(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp, self.assertRaises(toolchain.ContractError):
+            toolchain.validate_executor_opam_lock(Path(tmp))
 
 
 class RestrictedWorkflowParserTests(unittest.TestCase):

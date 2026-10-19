@@ -5817,3 +5817,84 @@ fn beam13_real_erl_repeated_closure_calls_keep_dispatch_valid() {
     };
     assert_eq!(beam13_run_real_erl(&module, "iir_beam13_closure_stress"), "7");
 }
+
+// ===========================================================================
+// `str_const` reserves heap before its `put_list` chain
+// ===========================================================================
+//
+// The same omission as BEAM10's `alloc_array`/`array_set`, one arm over: a
+// string literal is built as `[byte, ...]` with one `put_list` per byte and
+// no `test_heap`, so every literal wrote 2 x len words past the reservation.
+// It surfaced as `erl_gc.c, line 775: Overrun stack and heap` from lang-aot's
+// `b11_str_3d` on one Linux CI shard (PR #17759), and never on macOS.
+
+#[test]
+fn str_const_reserves_two_words_per_byte_before_its_first_put_list() {
+    let module = make_module_single(vec![
+        IIRInstr::new("const", Some("k".into()), vec![Operand::Int(7)], "i64"),
+        IIRInstr::new("str_const", Some("w".into()), vec![Operand::Str("HELLO".into())], "str"),
+        IIRInstr::new("ret", None, vec![Operand::Var("k".into())], "i64"),
+    ]);
+    let beam = lower_iir_to_beam(&module, &IIRBeamConfig::default()).expect("lower");
+    let heap = first_index_of(&beam, 16).expect("str_const must emit a test_heap");
+    let put = first_index_of(&beam, 69).expect("str_const builds its list with put_list");
+    assert!(heap < put, "test_heap must come BEFORE the put_list chain ({heap} vs {put})");
+    let words = beam.instructions[heap].operands[0].value;
+    assert!(words >= 10, "\"HELLO\" is five cons cells, ten words; reserved {words}");
+}
+
+#[test]
+fn empty_str_const_needs_no_reservation() {
+    let module = make_module_single(vec![
+        IIRInstr::new("str_const", Some("w".into()), vec![Operand::Str("".into())], "str"),
+        IIRInstr::new("const", Some("k".into()), vec![Operand::Int(7)], "i64"),
+        IIRInstr::new("ret", None, vec![Operand::Var("k".into())], "i64"),
+    ]);
+    let beam = lower_iir_to_beam(&module, &IIRBeamConfig::default()).expect("lower");
+    assert_eq!(test_heap_count(&beam), 0, "an empty literal is just nil");
+}
+
+/// The behavioural half, on real `erl`: thousands of literals in one
+/// function, with an integer live across all of them. Without the
+/// reservation this writes far past the heap; with it, the collections the
+/// reservations trigger must also not lose the live integer.
+#[test]
+fn test_99_real_erl_many_string_literals_do_not_overrun_the_heap() {
+    if !erl_available() {
+        eprintln!("erl absent — skipping BEAM str_const heap-stress test");
+        return;
+    }
+    const N: usize = 3000;
+    let mut instrs = vec![IIRInstr::new("const", Some("k".into()), vec![Operand::Int(42)], "i64")];
+    for _ in 0..N {
+        instrs.push(IIRInstr::new(
+            "str_const",
+            Some("w".into()),
+            vec![Operand::Str("THE QUICK BROWN FOX JUMPS OVER THE LAZY".into())],
+            "str",
+        ));
+    }
+    instrs.push(IIRInstr::new("ret", None, vec![Operand::Var("k".into())], "i64"));
+
+    use iir_to_beam::encode_beam;
+    let m = make_module_fn("main", vec![], "i64", instrs);
+    let beam_cfg = IIRBeamConfig::new("iir_str_const_stress_test");
+    let beam_mod = lower_iir_to_beam(&m, &beam_cfg).expect("lower the stress module");
+    let bytes = encode_beam(&beam_mod);
+    let tmp = std::env::temp_dir().join(format!("iir_to_beam_str_tests_{}", std::process::id()));
+    std::fs::create_dir_all(&tmp).expect("temp dir");
+    std::fs::write(tmp.join("iir_str_const_stress_test.beam"), &bytes).expect("write .beam");
+    let output = std::process::Command::new("erl")
+        .arg("-noshell")
+        .arg("-pa").arg(tmp.to_str().expect("tmp path is UTF-8"))
+        .arg("-eval")
+        .arg("io:format(\"~w~n\",[iir_str_const_stress_test:main()]),halt(0).")
+        .output()
+        .expect("spawn erl");
+    assert!(
+        output.status.success(),
+        "{N} string literals crashed the emulator: {}",
+        String::from_utf8_lossy(&output.stderr)
+    );
+    assert_eq!(String::from_utf8_lossy(&output.stdout).trim(), "42");
+}
