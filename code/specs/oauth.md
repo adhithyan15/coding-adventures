@@ -693,8 +693,9 @@ canonical `sha256WithRSAEncryption` identifier with present NULL parameters,
 an already policy-validated issuer RSA key, an explicit modulus-byte ceiling,
 and a byte-aligned signature; it hashes the preserved `TBSCertificate` DER,
 applies RSAVP1, and validates the complete canonical SHA-256 encoded message.
-Its opaque result proves only that the supplied public key verified those exact
-signed bytes. Issuer selection and linkage, algorithm routing, certificate
+Its non-copyable borrowed result binds the exact certificate and validated
+issuer key and proves only that the key verified those exact signed bytes.
+Issuer selection and linkage, algorithm routing, certificate
 roles, path construction and validation, trust roots, time, names, revocation,
 TLS, HTTP, and network effects remain separate blockers.
 
