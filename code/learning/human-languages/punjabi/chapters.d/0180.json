@@ -1,0 +1,22 @@
+{
+  "chapter": 180,
+  "title": "People in the Big Room",
+  "label": "ch:pa-a2-place-reference",
+  "canDo": "I can understand and give one simple practical-place note about people in a room.",
+  "spineNodes": [
+    "SPINE-READ-PRACTICAL-TEXTS"
+  ],
+  "payoff": {
+    "lesson": "PA-C180-payoff",
+    "kind": "production",
+    "summary": "Retrieve a one-sentence place note through listening, speaking, reading, and bounded Gurmukhi writing after an atom-free review.",
+    "assesses": [
+      "PA-PLACE-LOK-PEOPLE-01",
+      "PA-PLACE-US-THAT-01",
+      "PA-PLACE-THAAN-LOCATION-01",
+      "PA-PLACE-KAMRE-ROOM-01",
+      "PA-PLACE-VADDE-BIG-01"
+    ],
+    "note": "This third Punjabi A2 mock-draft prerequisite tranche does not by itself unblock mock 1 and provides no mock, readiness, attainment, external-equivalence, or human-validation evidence."
+  }
+}
