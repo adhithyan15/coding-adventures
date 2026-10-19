@@ -65,6 +65,11 @@ use x86_64_encoder::{
 
 pub use x86_64_encoder::ExternalReloc as Reloc;
 
+/// LANG83: this backend's declaration for every standard operation (see the
+/// module docs and `code/specs/LANG83-iir-standard-operation-registry.md`).
+pub mod op_support;
+pub use op_support::{op_support, OP_SUPPORT};
+
 // ===========================================================================
 // GC precise-roots: reference-typed slots (AOT00-T1)
 // ===========================================================================
