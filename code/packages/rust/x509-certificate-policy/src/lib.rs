@@ -9,8 +9,10 @@
 //! Its server-identity gate decodes one Subject Alternative Name extension and
 //! applies the repository-owned DNS-ID/IP-ID matcher without Common Name
 //! fallback. Its validity gate classifies an explicit caller-owned observation
-//! against the decoded inclusive interval without reading a clock. None of
-//! these gates establishes certificate trust.
+//! against the decoded inclusive interval without reading a clock. Its purpose
+//! gate requires one exact caller-supplied Extended Key Usage OID over already
+//! validated end-entity role evidence. None of these gates establishes
+//! certificate trust.
 
 #![deny(unsafe_code)]
 
@@ -356,6 +358,111 @@ impl fmt::Display for X509CertificateValidityError {
 
 impl Error for X509CertificateValidityError {}
 
+/// One exact caller-supplied Extended Key Usage purpose.
+///
+/// Purpose selection is application policy data. This type deliberately
+/// embeds no purpose registry and gives no OID special treatment.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub struct X509CertificatePurposePolicy<'a> {
+    purpose: &'a [u64],
+}
+
+impl<'a> X509CertificatePurposePolicy<'a> {
+    pub const fn new(
+        purpose: &'a [u64],
+    ) -> Result<Self, X509CertificatePurposePolicyDefinitionError> {
+        if purpose.is_empty() {
+            return Err(X509CertificatePurposePolicyDefinitionError::new(
+                X509CertificatePurposePolicyDefinitionErrorKind::EmptyPurpose,
+            ));
+        }
+        Ok(Self { purpose })
+    }
+
+    pub const fn purpose(self) -> &'a [u64] {
+        self.purpose
+    }
+}
+
+/// Stable caller-purpose-policy construction failure categories.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum X509CertificatePurposePolicyDefinitionErrorKind {
+    EmptyPurpose,
+}
+
+/// A redacted invalid-purpose-policy error that retains no OID arcs.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub struct X509CertificatePurposePolicyDefinitionError {
+    kind: X509CertificatePurposePolicyDefinitionErrorKind,
+}
+
+impl X509CertificatePurposePolicyDefinitionError {
+    const fn new(kind: X509CertificatePurposePolicyDefinitionErrorKind) -> Self {
+        Self { kind }
+    }
+
+    pub const fn kind(self) -> X509CertificatePurposePolicyDefinitionErrorKind {
+        self.kind
+    }
+}
+
+impl fmt::Display for X509CertificatePurposePolicyDefinitionError {
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(
+            formatter,
+            "X.509 certificate purpose policy definition error {:?}",
+            self.kind
+        )
+    }
+}
+
+impl Error for X509CertificatePurposePolicyDefinitionError {}
+
+/// Stable certificate-purpose failure categories.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum X509CertificatePurposeErrorKind {
+    NotEndEntity,
+    MissingExtendedKeyUsage,
+    PurposeNotAsserted,
+}
+
+/// A redacted purpose-authorization failure that retains no OID arcs.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub struct X509CertificatePurposeError {
+    kind: X509CertificatePurposeErrorKind,
+}
+
+impl X509CertificatePurposeError {
+    const fn new(kind: X509CertificatePurposeErrorKind) -> Self {
+        Self { kind }
+    }
+
+    pub const fn kind(self) -> X509CertificatePurposeErrorKind {
+        self.kind
+    }
+}
+
+impl fmt::Display for X509CertificatePurposeError {
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(
+            formatter,
+            "X.509 certificate purpose policy error {:?}",
+            self.kind
+        )
+    }
+}
+
+impl Error for X509CertificatePurposeError {}
+
+/// Opaque evidence that one exact purpose was asserted for an end entity.
+///
+/// This value grants no key operation, signature, path, identity, validity,
+/// trust, revocation, TLS, or network authority.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub struct ValidatedCertificatePurpose {
+    private: (),
+}
+
 /// Opaque evidence that one explicit observation was inside the interval.
 ///
 /// This value proves nothing about the observation's source or freshness and
@@ -637,6 +744,35 @@ pub fn validate_certificate_validity_at(
             X509CertificateValidityErrorKind::Expired,
         )),
     }
+}
+
+/// Authorize one exact Extended Key Usage purpose for end-entity evidence.
+///
+/// The role evidence must come from [`validate_certificate_role_extensions`].
+/// Extended Key Usage must be present and contain the exact caller-supplied
+/// OID. No OID, including `anyExtendedKeyUsage`, receives wildcard semantics.
+/// This gate performs no key operation and establishes no certificate trust.
+pub fn validate_certificate_extended_key_purpose(
+    role_evidence: &ValidatedCertificateRoleExtensions<'_>,
+    policy: X509CertificatePurposePolicy<'_>,
+) -> Result<ValidatedCertificatePurpose, X509CertificatePurposeError> {
+    if role_evidence.role() != X509CertificateRole::EndEntity {
+        return Err(X509CertificatePurposeError::new(
+            X509CertificatePurposeErrorKind::NotEndEntity,
+        ));
+    }
+    let Some(extended_key_usage) = role_evidence.extended_key_usage() else {
+        return Err(X509CertificatePurposeError::new(
+            X509CertificatePurposeErrorKind::MissingExtendedKeyUsage,
+        ));
+    };
+    if !extended_key_usage.contains(policy.purpose()) {
+        return Err(X509CertificatePurposeError::new(
+            X509CertificatePurposeErrorKind::PurposeNotAsserted,
+        ));
+    }
+
+    Ok(ValidatedCertificatePurpose { private: () })
 }
 
 /// Select exactly one caller-supplied certificate algorithm profile.
