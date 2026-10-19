@@ -399,6 +399,21 @@ pub enum AotError {
     /// In `Lenient` mode this fires only for `ProvenUnsafe` outcomes.
     /// In `Strict` mode it also fires for `Unknown` outcomes.
     RefinementViolations(Vec<iir_refinement_pass::RefinementError>),
+    /// A direct `call` passes a different number of arguments than the
+    /// callee declares. Native code takes parameters from fixed registers and
+    /// stack slots, so a short call would make the callee read whatever the
+    /// caller left there — including its saved frame pointer and return
+    /// address once parameters spill to the stack.
+    CallArityMismatch {
+        /// Function containing the call.
+        caller: String,
+        /// Function being called.
+        callee: String,
+        /// Parameters the callee declares.
+        expected: usize,
+        /// Arguments the call passes.
+        got: usize,
+    },
 }
 
 impl std::fmt::Display for AotError {
@@ -412,6 +427,10 @@ impl std::fmt::Display for AotError {
             AotError::Io(e)                 => write!(f, "io: {e}"),
             AotError::Linker { status, stderr } =>
                 write!(f, "linker (ld) failed: status={status:?}: {stderr}"),
+            AotError::CallArityMismatch { caller, callee, expected, got } => write!(
+                f,
+                "'{caller}' calls '{callee}' with {got} argument(s); it declares {expected}"
+            ),
             AotError::RefinementViolations(errs) => {
                 write!(f, "{} refinement violation(s):", errs.len())?;
                 for e in errs {
@@ -1316,11 +1335,50 @@ fn build_gc_init_stackmaps_x86_64_msx64(
     Ok((a.finish().map_err(gc_asm_err_x86)?, relocs, faddr))
 }
 
+/// Refuse any direct `call` whose argument count differs from the callee's
+/// declared parameter count, before any native code is generated.
+///
+/// The native backends read parameter `k` from a fixed register or, past the
+/// ABI's registers, from the caller's outgoing stack area. They trust the
+/// caller to have filled exactly those locations. Only calls to functions
+/// defined in this module are checked; anything else is a runtime or linker
+/// symbol with its own ABI contract.
+fn check_direct_call_arities(module: &IIRModule) -> Result<(), AotError> {
+    let arity: HashMap<&str, usize> = module
+        .functions
+        .iter()
+        .map(|f| (f.name.as_str(), f.params.len()))
+        .collect();
+    for caller in &module.functions {
+        for instr in &caller.instructions {
+            if instr.op != "call" {
+                continue;
+            }
+            let Some(Operand::Var(callee)) = instr.srcs.first() else {
+                continue;
+            };
+            if let Some(&expected) = arity.get(callee.as_str()) {
+                let got = instr.srcs.len() - 1;
+                if got != expected {
+                    return Err(AotError::CallArityMismatch {
+                        caller: caller.name.clone(),
+                        callee: callee.clone(),
+                        expected,
+                        got,
+                    });
+                }
+            }
+        }
+    }
+    Ok(())
+}
+
 #[allow(clippy::type_complexity)]
 fn compile_module_x86_64_to_text(
     module: &IIRModule,
     abi: X86_64Abi,
 ) -> Result<(Vec<u8>, HashMap<String, usize>, usize, Vec<X86RelocRecord>), AotError> {
+    check_direct_call_arities(module)?;
     let global_slots = collect_global_slots(module);
 
     // Pass 1: compile each function with the x86_64 backend.
@@ -3356,6 +3414,7 @@ fn collect_global_slots(module: &IIRModule) -> HashMap<String, usize> {
 fn compile_module_to_text_raw(
     module: &IIRModule,
 ) -> Result<(Vec<u8>, HashMap<String, usize>, usize, Vec<GlobalByteReloc>, Vec<ExternBranchReloc>), AotError> {
+    check_direct_call_arities(module)?;
     // ── Collect global names (LANG39) ─────────────────────────────────────────
     let global_slots = collect_global_slots(module);
     let n_global_slots = global_slots.len();
@@ -3807,6 +3866,43 @@ mod tests {
             rsp_stores >= 4,
             "MsX64 places stack args with rsp-relative stores (SIB 24); found {rsp_stores}",
         );
+    }
+
+    /// A direct call that passes fewer arguments than a seven-parameter callee
+    /// declares is refused before codegen: the callee's seventh parameter would
+    /// otherwise be read from the caller's frame on x86_64 SysV.
+    #[test]
+    fn short_direct_call_is_refused_before_native_codegen() {
+        let params: Vec<(String, String)> =
+            (0..7).map(|i| (format!("p{i}"), "u64".to_string())).collect();
+        let wide = IIRFunction::new(
+            "wide", params, "u64",
+            vec![IIRInstr::new("ret", None, vec![Operand::Var("p6".into())], "u64")],
+        );
+        let main = IIRFunction::new(
+            "main", vec![], "u64",
+            vec![
+                IIRInstr::new("call", Some("r".into()),
+                    vec![Operand::Var("wide".into()), Operand::Int(1)], "u64"),
+                IIRInstr::new("ret", None, vec![Operand::Var("r".into())], "u64"),
+            ],
+        );
+        let mut m = IIRModule::new("m", "twig");
+        m.add_or_replace(wide);
+        m.add_or_replace(main);
+        m.entry_point = Some("main".into());
+        for abi in [X86_64Abi::SysV, X86_64Abi::MsX64] {
+            let err = compile_module_x86_64_to_text(&m, abi).err().expect("refused");
+            assert!(
+                matches!(&err, AotError::CallArityMismatch { caller, callee, expected: 7, got: 1 }
+                    if caller == "main" && callee == "wide"),
+                "{err:?}"
+            );
+        }
+        assert!(matches!(
+            compile_module_to_text_raw(&m),
+            Err(AotError::CallArityMismatch { .. })
+        ));
     }
 
     /// PR-x3 (UAF-critical): after linking a module whose `main` calls a helper, the

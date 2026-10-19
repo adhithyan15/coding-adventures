@@ -436,7 +436,8 @@ fn method_descriptor_words(descriptor: &str) -> Option<(u16, u16)> {
         } else {
             i += 1;
         }
-        words += if is_array { 1 } else { descriptor_words(std::str::from_utf8(&[ty]).ok()?) };
+        let ty_words = if is_array { 1 } else { descriptor_words(std::str::from_utf8(&[ty]).ok()?) };
+        words = words.checked_add(ty_words)?;
     }
     Some((words, descriptor_words(ret)))
 }
@@ -551,7 +552,10 @@ fn decode_stack_effect(
                 .and_then(method_descriptor_words)
                 .ok_or_else(|| format!("unresolvable method #{index} at pc {pc}"))?;
             let receiver = u16::from(op == INVOKEVIRTUAL);
-            simple(3, args + receiver, ret)
+            let pops = args
+                .checked_add(receiver)
+                .ok_or_else(|| format!("method #{index} at pc {pc} has too many argument words"))?;
+            simple(3, pops, ret)
         }
         GETSTATIC | PUTSTATIC => {
             let index = u16_at(pc + 1)?;
@@ -5014,7 +5018,7 @@ fn generate_call_closure_dispatch(
     class_name: &str,
     dispatch_table: &[&ClosureDispatchEntry], // sorted by dispatch_idx
     cp: &mut ConstantPoolBuilder,
-) -> JvmMethodInfo {
+) -> Result<JvmMethodInfo, IIRJvmError> {
     let mut code: Vec<u8> = Vec::new();
 
     // The CLOSURE parameter is in slot 0, ARGS parameter is in slot 1.
@@ -5154,8 +5158,12 @@ fn generate_call_closure_dispatch(
     cp.add_utf8("__callClosure");
 
     // Measured from the emitted dispatch bytecode, like every other method.
-    let max_stack = compute_max_stack(&code, &cp.entries)
-        .expect("the generated __callClosure dispatch is well-formed bytecode");
+    // A closure target whose return type the dispatch does not widen to
+    // `long` leaves the stack short of the closing `lreturn`; that is
+    // reported, not emitted.
+    let max_stack = compute_max_stack(&code, &cp.entries).map_err(|detail| {
+        IIRJvmError::StackDepthAnalysis { function: "__callClosure".to_string(), detail }
+    })?;
 
     let code_attribute = JvmCodeAttribute {
         name: "Code".to_string(),
@@ -5165,12 +5173,12 @@ fn generate_call_closure_dispatch(
         nested_attributes: vec![],
     };
 
-    JvmMethodInfo {
+    Ok(JvmMethodInfo {
         access_flags: ACC_PUBLIC | ACC_STATIC,
         name: "__callClosure".to_string(),
         descriptor,
         attributes: vec![JvmMethodAttribute::Code(code_attribute)],
-    }
+    })
 }
 
 // ---------------------------------------------------------------------------
@@ -5539,7 +5547,7 @@ pub fn lower_iir_to_jvm(
         sorted.sort_by_key(|e| e.dispatch_idx);
 
         let dispatch_method =
-            generate_call_closure_dispatch(&config.class_name, &sorted, &mut cp);
+            generate_call_closure_dispatch(&config.class_name, &sorted, &mut cp)?;
         methods.push(dispatch_method);
     }
 

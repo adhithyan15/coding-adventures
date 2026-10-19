@@ -117,6 +117,12 @@ pub enum X86_64Abi {
     MsX64,
 }
 
+/// Most arguments a call may pass on the stack, and most stack-passed
+/// parameters a function may declare. 255 matches the JVM's parameter-slot
+/// limit and keeps the per-call outgoing area (≤ 2 KiB plus shadow space)
+/// below one guard page, so no stack probing is needed when it is reserved.
+const MAX_STACK_ARGS: usize = 255;
+
 impl X86_64Abi {
     /// Integer argument registers in order.
     fn arg_regs(self) -> &'static [Reg] {
@@ -143,7 +149,9 @@ impl X86_64Abi {
     ///   ...                           [rsp + 40]     arg 6 (k = 1)
     /// ```
     fn outgoing_stack_arg_offset(self, k: usize) -> i32 {
-        (self.shadow_space() as usize + 8 * k) as i32
+        // `k < MAX_STACK_ARGS` at every caller, so this is at most a few KiB.
+        i32::try_from(self.shadow_space() as usize + 8 * k)
+            .expect("stack-argument offsets are bounded by MAX_STACK_ARGS")
     }
 
     /// `rbp`-relative offset where the **callee** finds stack-passed
@@ -507,6 +515,13 @@ fn compile_inner(
     abi: X86_64Abi,
     global_slots: &HashMap<String, usize>,
 ) -> Result<(Vec<u8>, Vec<ExternalReloc>, Vec<StackMapRecord>), BackendError> {
+    if ctx.params.len().saturating_sub(abi.max_args()) > MAX_STACK_ARGS {
+        return Err(BackendError::TooManyParams {
+            abi: match abi { X86_64Abi::SysV => "SysV", X86_64Abi::MsX64 => "MsX64" },
+            got: ctx.params.len(),
+            max: abi.max_args() + MAX_STACK_ARGS,
+        });
+    }
     // ---- Pre-pass: assign slots --------------------------------------------
     //
     // Params first, in arg-register order, so the prologue's stores
@@ -950,6 +965,12 @@ fn emit_instr(
         // RAX is the copy scratch; it is not an argument register in either
         // ABI, and the register arguments are loaded afterwards.
         let n_stack = arg_srcs.len().saturating_sub(abi.max_args());
+        if n_stack > MAX_STACK_ARGS {
+            return Err(BackendError::UnsupportedOp(format!(
+                "call: {} arguments exceed the {:?} limit of {}",
+                arg_srcs.len(), abi, abi.max_args() + MAX_STACK_ARGS
+            )));
+        }
         let stack_area = abi.outgoing_stack_area(n_stack);
         if stack_area != 0 {
             asm.sub_imm32(Reg::Rsp, stack_area);
@@ -3210,6 +3231,20 @@ mod tests {
                 "expected a 16-byte outgoing area");
         assert!(body_contains(&bytes, &[0x48, 0x81, 0xC4, 0x10, 0, 0, 0]),
                 "expected the outgoing area to be released after the call");
+    }
+
+    #[test]
+    fn stack_argument_count_is_capped() {
+        // 6 register + 256 stack-passed parameters exceeds MAX_STACK_ARGS.
+        let params: Vec<(String, String)> =
+            (0..262).map(|i| (format!("p{i}"), "u64".to_string())).collect();
+        let ctx = fn_ctx("huge", &params, "void");
+        assert!(compile_function(&ctx, &[], X86_64Abi::SysV).is_err());
+        let ctx = fn_ctx("caller", &[], "u64");
+        let mut srcs = vec![Op::Var("external".into())];
+        for i in 0..262 { srcs.push(Op::Int(i)); }
+        let ir = vec![instr("call", Some("r"), srcs), instr("ret_u64", None, vec![Op::Var("r".into())])];
+        assert!(compile_function(&ctx, &ir, X86_64Abi::SysV).is_err());
     }
 
     #[test]
