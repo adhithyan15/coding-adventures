@@ -671,6 +671,7 @@ export const CLI_ERROR_CODE = "SPICE_CLI_ERROR";
 export function runNetlistJson(text: string): string {
   const parsed = parseNetlist(text);
   const execution = runDeck(parsed.circuit, text);
+  const parserResults = runAnalysisPlan(parsed);
   return `${JSON.stringify(canonicalJson({
     schemaVersion: CLI_RESULT_SCHEMA_VERSION,
     title: parsed.title ?? null,
@@ -679,6 +680,8 @@ export function runNetlistJson(text: string): string {
       kind: item.plan.analysis,
       records: cliTableRecords(item.plan.analysis, item.table),
     })),
+    outputs: cliOutputArtifacts(selectOutputs(parsed, parserResults)),
+    measures: cliMeasureArtifacts(measureResults(parsed, parserResults)),
   }))}\n`;
 }
 
@@ -700,6 +703,48 @@ function cliTableRecords(analysis: string, table: string): unknown {
     : records;
 }
 
+function cliOutputArtifacts(outputs: readonly SelectedAnalysisOutput[]): readonly Record<string, unknown>[] {
+  return outputs.map((output) => ({
+    analysisIndex: output.index,
+    analysis: output.kind,
+    probes: output.probes.map(cliProbeText),
+    records: output.rows.map((row) => ({
+      index: row.index,
+      axisName: row.axisName ?? null,
+      axisValue: row.axisValue ?? null,
+      secondaryAxisName: row.secondaryAxisName ?? null,
+      secondaryAxisValue: row.secondaryAxisValue ?? null,
+      values: Object.fromEntries(
+        [...row.values.entries()].map(([name, value]) => [name, cliSelectedValue(value)]),
+      ),
+    })),
+  }));
+}
+
+function cliMeasureArtifacts(measures: readonly MeasureResult[]): readonly Record<string, unknown>[] {
+  return measures.map((measure) => ({
+    analysisIndex: measure.analysisIndex,
+    analysis: measure.analysis,
+    name: measure.name,
+    operation: measure.operation,
+    probe: cliProbeText(measure.probe),
+    value: measure.value,
+  }));
+}
+
+function cliProbeText(probe: OutputProbe): string {
+  if (probe.kind === "current") {
+    return `I(${probe.target})`;
+  }
+  return probe.negativeTarget === undefined
+    ? `V(${probe.target})`
+    : `V(${probe.target},${probe.negativeTarget})`;
+}
+
+function cliSelectedValue(value: SelectedOutputValue): number | { real: number; imag: number } {
+  return typeof value === "number" ? value : { real: value.real, imag: value.imag };
+}
+
 function canonicalJson(value: unknown): unknown {
   if (Array.isArray(value)) {
     return value.map(canonicalJson);
@@ -719,6 +764,9 @@ export function selectOutputs(
 ): SelectedAnalysisOutput[] {
   const selected: SelectedAnalysisOutput[] = [];
   for (const result of results) {
+    if (result.kind === "tf") {
+      continue;
+    }
     const probes = selectedOutputProbes(parsed, result.kind);
     if (probes.length === 0) {
       continue;

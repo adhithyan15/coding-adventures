@@ -5674,6 +5674,14 @@ model-card parameter, or a UI artifact is not a completion signal.
      a one-source DC sweep and a DC small-signal transfer-function fixture.
      The core gate requires 37 cases; temperature, parameter, corner, Monte
      Carlo, raw-format, and measurement expansion remain separate phases.
+   - **Deck-selected CLI artifacts** (completed in the cross-language CLI/API
+     slice): `run --json` now carries selected output rows and evaluated
+     supported measurements beside source-order analysis tables. Output rows
+     retain parser analysis indexes, axes, canonical probe text, and typed
+     real or complex values across Python, Rust, and TypeScript; transfer
+     analyses remain table-only because they do not expose selectable probe
+     rows. Raw-format interoperability and broader output-control semantics
+     remain separate phases.
    - Expand deck-owned output compatibility beyond source-order analysis
      execution and stable artifact exports toward nested sweeps, raw-format
      interoperability, and remaining vendor-style output controls.

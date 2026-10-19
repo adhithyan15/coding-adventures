@@ -1038,6 +1038,9 @@ pub const CLI_ERROR_CODE: &str = "SPICE_CLI_ERROR";
 pub fn run_netlist_json(text: &str) -> Result<String, AnalysisExecutionError> {
     let parsed = parse_netlist(text)?;
     let execution = run_deck(&parsed.circuit, text)?;
+    let parser_results = run_analysis_plan(&parsed)?;
+    let outputs = select_outputs(&parsed, &parser_results)?;
+    let measures = measure_results(&parsed, &parser_results)?;
     let analyses = execution
         .executions
         .iter()
@@ -1056,6 +1059,8 @@ pub fn run_netlist_json(text: &str) -> Result<String, AnalysisExecutionError> {
             "schemaVersion": CLI_RESULT_SCHEMA_VERSION,
             "title": parsed.title,
             "analyses": analyses,
+            "outputs": cli_output_artifacts(&outputs),
+            "measures": cli_measure_artifacts(&measures),
         }))
         .expect("CLI result envelope must serialize")
     ))
@@ -1103,12 +1108,83 @@ fn cli_table_records(analysis: &str, table: &str) -> serde_json::Value {
     serde_json::Value::Array(records)
 }
 
+fn cli_output_artifacts(outputs: &[SelectedAnalysisOutput]) -> Vec<serde_json::Value> {
+    outputs
+        .iter()
+        .map(|output| {
+            let records = output
+                .rows
+                .iter()
+                .map(|row| {
+                    let values = row
+                        .values
+                        .iter()
+                        .map(|(name, value)| (name.clone(), cli_selected_value(value)))
+                        .collect::<serde_json::Map<_, _>>();
+                    serde_json::json!({
+                        "index": row.index,
+                        "axisName": row.axis_name,
+                        "axisValue": row.axis_value,
+                        "secondaryAxisName": row.secondary_axis_name,
+                        "secondaryAxisValue": row.secondary_axis_value,
+                        "values": values,
+                    })
+                })
+                .collect::<Vec<_>>();
+            serde_json::json!({
+                "analysisIndex": output.index,
+                "analysis": format!("{:?}", output.kind).to_ascii_lowercase(),
+                "probes": output.probes.iter().map(cli_probe_text).collect::<Vec<_>>(),
+                "records": records,
+            })
+        })
+        .collect()
+}
+
+fn cli_measure_artifacts(measures: &[MeasureResult]) -> Vec<serde_json::Value> {
+    measures
+        .iter()
+        .map(|measure| serde_json::json!({
+            "analysisIndex": measure.analysis_index,
+            "analysis": measure.analysis,
+            "name": measure.name,
+            "operation": format!("{:?}", measure.operation).to_ascii_lowercase(),
+            "probe": cli_probe_text(&measure.probe),
+            "value": measure.value,
+        }))
+        .collect()
+}
+
+fn cli_probe_text(probe: &OutputProbe) -> String {
+    match probe {
+        OutputProbe::Voltage { node } => format!("V({node})"),
+        OutputProbe::DifferentialVoltage {
+            positive_node,
+            negative_node,
+        } => format!("V({positive_node},{negative_node})"),
+        OutputProbe::Current { source_name } => format!("I({source_name})"),
+    }
+}
+
+fn cli_selected_value(value: &SelectedOutputValue) -> serde_json::Value {
+    match value {
+        SelectedOutputValue::Real(value) => serde_json::json!(value),
+        SelectedOutputValue::Complex(value) => serde_json::json!({
+            "real": value.real,
+            "imag": value.imag,
+        }),
+    }
+}
+
 pub fn select_outputs(
     parsed: &ParsedNetlist,
     results: &[AnalysisExecutionResult],
 ) -> Result<Vec<SelectedAnalysisOutput>, NetlistParseError> {
     let mut selected = Vec::new();
     for result in results {
+        if result.kind == AnalysisKind::Tf {
+            continue;
+        }
         let probes = selected_output_probes(parsed, result.kind);
         if probes.is_empty() {
             continue;
