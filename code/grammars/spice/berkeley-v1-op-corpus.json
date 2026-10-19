@@ -39,6 +39,33 @@
       "expected": { "min": 0.55, "max": 0.85 }
     },
     {
+      "id": "pnp-pullup",
+      "kind": "PNP",
+      "analysis": "op",
+      "sample": "op-node",
+      "deck": "* Berkeley SPICE v1 operating-point corpus: pnp-pullup\n.model Qp PNP(IS=1e-14 BF=100)\nVcc vcc 0 5\nVbase base 0 4.3\nQ1 out base vcc Qp\nRload out 0 1k\n.op\n.save V(out)\n.end\n",
+      "probe": "out",
+      "expected": { "min": 4.9, "max": 5.0 }
+    },
+    {
+      "id": "pjf-source-bias",
+      "kind": "PJF",
+      "analysis": "op",
+      "sample": "op-node",
+      "deck": "* Berkeley SPICE v1 operating-point corpus: pjf-source-bias\n.model Jp PJF(BETA=9e-4 VTO=1.8 LAMBDA=0.02)\nVss vss 0 -10\nVg gate 0 0\nRd vss drain 2k\nRs source 0 1k\nJ1 drain gate source Jp\n.op\n.save V(source)\n.end\n",
+      "probe": "source",
+      "expected": { "min": -0.95, "max": -0.8 }
+    },
+    {
+      "id": "pmos-level1-common-source",
+      "kind": "PMOS",
+      "analysis": "op",
+      "sample": "op-node",
+      "deck": "* Berkeley SPICE v1 operating-point corpus: pmos-level1-common-source\n.model Mp PMOS(LEVEL=1 VTO=-0.55 LAMBDA=0.04 NSUB=1.6 CBD=3e-13)\nVdd vdd 0 1.8\nVgate gate 0 0\nRload out 0 1k\nM1 out gate vdd vdd Mp\n.op\n.save V(out)\n.end\n",
+      "probe": "out",
+      "expected": { "min": 1.3, "max": 1.5 }
+    },
+    {
       "id": "diode-capacitance-ac",
       "kind": "D",
       "analysis": "ac",
