@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+- Tests read the backend list from `mosaic_package_artifact_builder::Backend` (`Backend::NATIVE` / `Backend::ALL`) instead of a hand-kept copy, so a backend added to Mosaic is gated here automatically.
+
 ### Added — `RecordList`: multi-field, groupable rows (v0.16.0, J3a of #14416)
 
 `ListGroup` holds one string per row. Journal's timeline and search

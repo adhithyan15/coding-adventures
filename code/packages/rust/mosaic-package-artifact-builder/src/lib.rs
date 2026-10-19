@@ -266,7 +266,27 @@ impl Backend {
     /// Conforms to the UI29 §4.3 layout: `dist/react/`, `dist/swiftui/`,
     /// `dist/qt/`, `dist/webcomponent/`, `dist/html/`, `dist/xaml/`,
     /// `dist/flutter/`, `dist/compose/`.
-    fn dir_name(self) -> &'static str {
+    /// The native backends: every one [`Self::is_native`] accepts, in
+    /// [`Self::ALL`] order. Package gates iterate this instead of keeping
+    /// their own copy of the list, which drifted (a list per test file, 17
+    /// of them); `native_is_all_filtered_by_is_native` pins it.
+    pub const NATIVE: [Self; 5] = [
+        Self::SwiftUI,
+        Self::Qt,
+        Self::Xaml,
+        Self::Flutter,
+        Self::Compose,
+    ];
+
+    /// The backend a command-line or directory name names, the inverse of
+    /// [`Self::dir_name`].
+    pub fn from_dir_name(name: &str) -> Option<Self> {
+        Self::ALL.into_iter().find(|backend| backend.dir_name() == name)
+    }
+
+    /// The backend's name on the command line and in output directories
+    /// (`swiftui`, `webcomponent`, …).
+    pub fn dir_name(self) -> &'static str {
         match self {
             Backend::React => "react",
             Backend::Electron => "electron",
@@ -334,7 +354,9 @@ impl Backend {
         }
     }
 
-    fn is_native(self) -> bool {
+    /// Whether the backend builds a native application (as opposed to a web
+    /// one): the set the native-complete profile gates.
+    pub fn is_native(self) -> bool {
         matches!(
             self,
             Self::SwiftUI | Self::Qt | Self::Xaml | Self::Flutter | Self::Compose
@@ -11305,6 +11327,23 @@ fn validate_theme_name(name: &str) -> Result<(), BuildError> {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    /// `Backend::NATIVE` is exactly `ALL` filtered by `is_native`, in order,
+    /// so a new native backend cannot be missed by the gates that use it.
+    #[test]
+    fn native_is_all_filtered_by_is_native() {
+        let derived: Vec<Backend> = Backend::ALL.into_iter().filter(|b| b.is_native()).collect();
+        assert_eq!(Backend::NATIVE.to_vec(), derived);
+    }
+
+    /// Every backend round-trips through its command-line name.
+    #[test]
+    fn every_backend_round_trips_through_its_dir_name() {
+        for backend in Backend::ALL {
+            assert_eq!(Backend::from_dir_name(backend.dir_name()), Some(backend));
+        }
+        assert_eq!(Backend::from_dir_name("winui"), None);
+    }
     use tempfile::TempDir;
 
     // -----------------------------------------------------------------------

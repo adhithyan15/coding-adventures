@@ -138,16 +138,7 @@ fn layout_names_every_field_and_gates_every_optional_part() {
 /// The package builds for every backend (the web ones included).
 #[test]
 fn builds_on_every_backend() {
-    for backend in [
-        Backend::React,
-        Backend::WebComponent,
-        Backend::Html,
-        Backend::SwiftUI,
-        Backend::Compose,
-        Backend::Flutter,
-        Backend::Qt,
-        Backend::Xaml,
-    ] {
+    for backend in Backend::ALL {
         let out = tempfile::TempDir::new().unwrap();
         build_package(&BuildOptions {
             package_root: package_root(),

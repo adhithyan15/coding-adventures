@@ -124,6 +124,20 @@
   ],
   "commands": [
     {
+      "id": "backends",
+      "name": "backends",
+      "description": "Print the package backends, one per line, in build order. Build scripts read this instead of keeping their own list.",
+      "flags": [
+        {
+          "id": "native",
+          "long": "native",
+          "description": "Print only the native backends (the set the native-complete profile gates)",
+          "type": "boolean",
+          "required": false
+        }
+      ]
+    },
+    {
       "id": "pkg",
       "name": "pkg",
       "description": "Compile every component in a Mosaic package to a per-backend artifact tree (UI29 \u00a74.3).",
@@ -132,8 +146,19 @@
           "id": "backend",
           "long": "backend",
           "short": "b",
-          "description": "Backend to compile for: 'react', 'electron', 'swiftui', 'qt', 'xaml', 'webcomponent', 'html', 'flutter', or 'compose'",
-          "type": "string",
+          "description": "Backend to compile for",
+          "type": "enum",
+          "enum_values": [
+            "react",
+            "electron",
+            "swiftui",
+            "qt",
+            "webcomponent",
+            "html",
+            "xaml",
+            "flutter",
+            "compose"
+          ],
           "required": true
         },
         {

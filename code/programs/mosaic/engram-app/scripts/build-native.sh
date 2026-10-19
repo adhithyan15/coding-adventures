@@ -130,13 +130,21 @@ if ! command -v python3 >/dev/null 2>&1; then
   echo "error: python3 is required to read the package manifest" >&2
   exit 1
 fi
-STANDARD_RUNTIME_BACKENDS=" $(python3 - "$HERE/mosaic-package.toml" <<'PY'
+# The native backends are the compiler's own list (`mosaic-compile backends
+# --native`), never a copy: a native backend added to Mosaic is checked here
+# the next time this runs.
+NATIVE_BACKENDS="$(cd "$RUST" && cargo run -q -p mosaic-compile -- backends --native | tr '\n' ' ')"
+if [ -z "${NATIVE_BACKENDS// /}" ]; then
+  echo "error: mosaic-compile backends --native listed nothing" >&2
+  exit 1
+fi
+STANDARD_RUNTIME_BACKENDS=" $(python3 - "$HERE/mosaic-package.toml" "$NATIVE_BACKENDS" <<'PY'
 import sys
 import tomllib
 
 # Only the backends that produce a real native app; the web ones are not built
-# by this script at all.
-NATIVE = ("qt", "swiftui", "compose", "xaml", "flutter")
+# by this script at all. The list arrives from `mosaic-compile backends --native`.
+NATIVE = tuple(sys.argv[2].split())
 
 with open(sys.argv[1], "rb") as handle:
     manifest = tomllib.load(handle)

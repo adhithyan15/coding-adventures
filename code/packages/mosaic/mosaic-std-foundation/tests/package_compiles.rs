@@ -24,13 +24,7 @@ const COMPONENTS: &[&str] = &[
     "Surface",
 ];
 
-const NATIVE_BACKENDS: &[Backend] = &[
-    Backend::SwiftUI,
-    Backend::Qt,
-    Backend::Xaml,
-    Backend::Flutter,
-    Backend::Compose,
-];
+const NATIVE_BACKENDS: &[Backend] = &Backend::NATIVE;
 
 fn package_root() -> PathBuf {
     PathBuf::from(env!("CARGO_MANIFEST_DIR"))

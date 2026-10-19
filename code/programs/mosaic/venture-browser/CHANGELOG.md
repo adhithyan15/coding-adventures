@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+- `scripts/build-all.sh` and `scripts/build-all.ps1` ask `mosaic-compile backends` for their build matrix instead of keeping a copy, and the package test checks they do (it used to check each hand-copied name).
+
 - The Flutter live test runs in a 1024x700 window. It had been enlarged to
   1800x2400 to get past overflowing rows: the toolbar overflowed by 173 px at
   1400 wide, and at 1024 the page-actions row by 159 px and library-actions by

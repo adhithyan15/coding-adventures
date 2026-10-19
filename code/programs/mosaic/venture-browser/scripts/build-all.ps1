@@ -15,7 +15,21 @@ $outputRoot = if ([System.IO.Path]::IsPathRooted($Output)) {
 } else {
     [System.IO.Path]::GetFullPath((Join-Path $packageRoot $Output))
 }
-$backends = @("react", "electron", "swiftui", "qt", "webcomponent", "html", "xaml", "flutter", "compose")
+# The backend matrix is the compiler's own list, never a copy of it.
+$backendListArgs = @("run", "-q", "-p", "mosaic-compile")
+if ($Release) {
+    $backendListArgs += "--release"
+}
+$backendListArgs += @("--", "backends")
+Push-Location $rustWorkspace
+try {
+    $backends = @(& cargo @backendListArgs)
+    if ($LASTEXITCODE -ne 0 -or $backends.Count -eq 0) {
+        throw "mosaic-compile backends failed or listed nothing"
+    }
+} finally {
+    Pop-Location
+}
 $skipped = [System.Collections.Generic.List[string]]::new()
 $deferred = [System.Collections.Generic.List[string]]::new()
 

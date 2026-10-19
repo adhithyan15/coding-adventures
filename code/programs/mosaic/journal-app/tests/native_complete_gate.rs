@@ -19,13 +19,7 @@ use tempfile::TempDir;
 /// React, HTML, WebComponent and Electron are excluded on purpose: they report
 /// `profile.backend-not-native` by design, so including them would assert a
 /// failure rather than guard against one.
-const NATIVE_BACKENDS: &[Backend] = &[
-    Backend::Qt,
-    Backend::SwiftUI,
-    Backend::Compose,
-    Backend::Flutter,
-    Backend::Xaml,
-];
+const NATIVE_BACKENDS: &[Backend] = &Backend::NATIVE;
 
 /// Style properties this package is currently known to lose, by backend.
 /// Every entry is measured and the inverse-ratchet test rejects stale pins.

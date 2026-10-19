@@ -306,17 +306,21 @@ function Install-EngramFlutterHost {
     Add-EngramFlutterHostDependencies -PubspecPath (Join-Path $FlutterRoot "pubspec.yaml")
 }
 
-$backends = @(
-    "html",
-    "webcomponent",
-    "react",
-    "electron",
-    "swiftui",
-    "qt",
-    "xaml",
-    "flutter",
-    "compose"
-)
+# The backend matrix is the compiler's own list, never a copy of it.
+$backendListArgs = @("run", "-q", "-p", "mosaic-compile")
+if ($Release) {
+    $backendListArgs += "--release"
+}
+$backendListArgs += @("--", "backends")
+Push-Location $rustWorkspace
+try {
+    $backends = @(& cargo @backendListArgs)
+    if ($LASTEXITCODE -ne 0 -or $backends.Count -eq 0) {
+        throw "mosaic-compile backends failed or listed nothing"
+    }
+} finally {
+    Pop-Location
+}
 
 foreach ($backend in $backends) {
     Write-Host "==> Emitting EngramApp $backend project"

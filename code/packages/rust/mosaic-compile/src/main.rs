@@ -150,6 +150,15 @@ fn run(result: cli_builder::types::ParseResult) {
         run_pkg(&result);
         return;
     }
+    if result.command_path.iter().any(|c| c == "backends") {
+        let native_only = result
+            .flags
+            .get("native")
+            .and_then(|v| v.as_bool())
+            .unwrap_or(false);
+        print!("{}", backends_listing(native_only));
+        return;
+    }
 
     let flags = &result.flags;
     let args = &result.arguments;
@@ -210,17 +219,15 @@ fn run(result: cli_builder::types::ParseResult) {
     // UI30: pipeline mode supports every emit-only backend. Paint also keeps
     // its legacy single-file SOURCE mode for back-compat, while pipeline mode
     // renders typed components directly to PNG bytes.
-    let allowed_backends = [
-        "webcomponent",
-        "html",
-        "react",
-        "paint",
-        "xaml",
-        "swiftui",
-        "qt",
-        "flutter",
-        "compose",
-    ];
+    //
+    // Derived, not copied: the package backends (Electron reuses React's
+    // component artifacts and has no pipeline form of its own) plus Paint.
+    let allowed_backends: Vec<&str> = Backend::ALL
+        .into_iter()
+        .filter(|candidate| *candidate != Backend::Electron)
+        .map(Backend::dir_name)
+        .chain(["paint"])
+        .collect();
     if !allowed_backends.contains(&backend) {
         eprintln!(
             "mosaic-compile: --backend must be one of {allowed:?}, got '{backend}'",
@@ -1495,21 +1502,26 @@ fn emit_single_file<E: std::fmt::Display>(
 // `pkg` subcommand — package-artifact build (UI29 §4.3)
 // ===========================================================================
 
-const PKG_BACKENDS: &str = "react|electron|swiftui|qt|xaml|webcomponent|html|flutter|compose";
+/// The `--backend` names, `|`-joined for error messages: derived from
+/// `Backend::ALL`, never a copy (the CLI spec's `enum_values` is pinned to
+/// the same list by `cli_spec_backend_values_are_backend_all`).
+fn pkg_backends() -> String {
+    Backend::ALL.map(Backend::dir_name).join("|")
+}
+
+/// `mosaic-compile backends [--native]`: one backend name per line, in
+/// `Backend::ALL` order. Build scripts read this so their matrices cannot
+/// drift from the compiler's (Venture's and Engram's each kept a copy).
+fn backends_listing(native_only: bool) -> String {
+    Backend::ALL
+        .into_iter()
+        .filter(|backend| !native_only || backend.is_native())
+        .map(|backend| format!("{}\n", backend.dir_name()))
+        .collect()
+}
 
 fn pkg_backend_from_str(value: &str) -> Option<Backend> {
-    match value {
-        "react" => Some(Backend::React),
-        "electron" => Some(Backend::Electron),
-        "swiftui" => Some(Backend::SwiftUI),
-        "qt" => Some(Backend::Qt),
-        "xaml" => Some(Backend::Xaml),
-        "webcomponent" => Some(Backend::WebComponent),
-        "html" => Some(Backend::Html),
-        "flutter" => Some(Backend::Flutter),
-        "compose" => Some(Backend::Compose),
-        _ => None,
-    }
+    Backend::from_dir_name(value)
 }
 
 fn pkg_profile_from_str(value: &str) -> Option<BuildProfile> {
@@ -1525,7 +1537,7 @@ fn pkg_profile_from_str(value: &str) -> Option<BuildProfile> {
 /// Spec (mosaic-compile.json):
 ///
 /// ```text
-/// mosaic-compile pkg <PACKAGE_ROOT> --backend <react|electron|swiftui|qt|xaml|webcomponent|html|flutter|compose> --output <DIR> [--emit-project] [--profile permissive|native-complete] [--ios-ui-test <FILE.swift>]...
+/// mosaic-compile pkg <PACKAGE_ROOT> --backend <react|electron|swiftui|qt|webcomponent|html|xaml|flutter|compose> --output <DIR> [--emit-project] [--profile permissive|native-complete] [--ios-ui-test <FILE.swift>]...
 /// ```
 ///
 /// Required: `package_root` positional, `--backend`, `--output`. cli-builder
@@ -1644,7 +1656,8 @@ fn run_pkg(result: &cli_builder::types::ParseResult) {
     // Map the string to the typed `Backend`.
     let backend = pkg_backend_from_str(backend_str).unwrap_or_else(|| {
         eprintln!(
-            "mosaic-compile pkg: --backend must be one of {PKG_BACKENDS}, got '{backend_str}'"
+            "mosaic-compile pkg: --backend must be one of {}, got '{backend_str}'",
+            pkg_backends()
         );
         process::exit(1);
     });
@@ -1937,6 +1950,46 @@ fn split_package_search_path(value: &str, windows: bool) -> Vec<PathBuf> {
 
 #[cfg(test)]
 mod tests {
+    /// `backends` lists every package backend, and `--native` the native
+    /// ones, each in `Backend::ALL` order.
+    #[test]
+    fn backends_listing_follows_backend_all() {
+        assert_eq!(
+            backends_listing(false),
+            "react\nelectron\nswiftui\nqt\nwebcomponent\nhtml\nxaml\nflutter\ncompose\n"
+        );
+        assert_eq!(backends_listing(true), "swiftui\nqt\nxaml\nflutter\ncompose\n");
+    }
+
+    /// The CLI spec's `--backend` values are exactly the package backends,
+    /// in `Backend::ALL` order, so the help text cannot drift from them.
+    #[test]
+    fn cli_spec_backend_values_are_backend_all() {
+        let spec: serde_json::Value = serde_json::from_str(include_str!(
+            "../../../../specs/mosaic-compile.json"
+        ))
+        .expect("the CLI spec is JSON");
+        let backend_flag = spec["commands"]
+            .as_array()
+            .unwrap()
+            .iter()
+            .find(|command| command["id"] == "pkg")
+            .unwrap()["flags"]
+            .as_array()
+            .unwrap()
+            .iter()
+            .find(|flag| flag["id"] == "backend")
+            .unwrap()
+            .clone();
+        let values: Vec<&str> = backend_flag["enum_values"]
+            .as_array()
+            .unwrap()
+            .iter()
+            .map(|value| value.as_str().unwrap())
+            .collect();
+        assert_eq!(values, Backend::ALL.map(Backend::dir_name).to_vec());
+    }
+
     // --- --package-search-path splitting (#16931) ----------------------
 
     #[test]

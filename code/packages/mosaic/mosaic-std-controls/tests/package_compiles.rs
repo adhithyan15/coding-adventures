@@ -7,13 +7,7 @@ use mosaic_package_artifact_builder::{
 use tempfile::{Builder, TempDir};
 
 const COMPONENTS: &[&str] = &["Button", "Input", "Checkbox", "NumberInput", "Slider"];
-const NATIVE_BACKENDS: &[Backend] = &[
-    Backend::SwiftUI,
-    Backend::Qt,
-    Backend::Xaml,
-    Backend::Flutter,
-    Backend::Compose,
-];
+const NATIVE_BACKENDS: &[Backend] = &Backend::NATIVE;
 
 fn package_root() -> PathBuf {
     PathBuf::from(env!("CARGO_MANIFEST_DIR"))

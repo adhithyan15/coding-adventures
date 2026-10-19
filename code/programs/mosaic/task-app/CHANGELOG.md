@@ -7,6 +7,8 @@ All notable changes to the `task-app` web program are documented here.
 Entries added after `task-app-v0.5.8` accumulate here until the next version is
 cut.
 
+- Tests read the backend list from `mosaic_package_artifact_builder::Backend` (`Backend::NATIVE` / `Backend::ALL`) instead of a hand-kept copy, so a backend added to Mosaic is gated here automatically.
+
 ## [0.5.8] - 2026-10-16
 
 ### Fixed — Qt milestone diamonds retain their authored rotation (#17675)
