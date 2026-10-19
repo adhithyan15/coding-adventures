@@ -1109,39 +1109,59 @@ fn layout_has_focusable(node: &LayoutNode) -> bool {
 /// the matching controls it was, then restore focus, caret and scroll. A
 /// child-index path would land on a different control once an `If` or
 /// `For` changed the tree above it.
+///
+/// Focus is restored only when the number of matching controls is
+/// unchanged: after a row is added or removed, "the third Delete button"
+/// may belong to another record, and no focus is safer than the wrong one.
+/// Lookup is by tag name rather than a selector (the HTML parser accepts
+/// tag names that are not valid selectors), and both helpers swallow their
+/// own errors, so they can skip a restore but never stop a render.
 const FOCUS_KEEPER_JS: &str = r##"const MOSAIC_FOCUS_SIGNATURE = ["aria-label", "name", "placeholder", "oninput", "onchange", "onkeydown", "onclick"];
 
 function mosaicFocusSignature(element) {
   return [element.tagName, ...MOSAIC_FOCUS_SIGNATURE.map(name => element.getAttribute(name) ?? "")].join("\u0000");
 }
 
+function mosaicFocusTwins(root, name, signature) {
+  return [...root.querySelectorAll("*")].filter(element => element.localName === name && mosaicFocusSignature(element) === signature);
+}
+
 function mosaicCaptureFocus(root) {
-  const active = root.activeElement;
-  if (!active) return null;
-  const signature = mosaicFocusSignature(active);
-  const twins = [...root.querySelectorAll(active.tagName)].filter(element => mosaicFocusSignature(element) === signature);
-  const state = { signature, tag: active.tagName, occurrence: twins.indexOf(active), scrollTop: active.scrollTop };
-  if (typeof active.selectionStart === "number") {
-    state.selection = [active.selectionStart, active.selectionEnd, active.selectionDirection];
+  try {
+    const active = root.activeElement;
+    if (!active) return null;
+    const signature = mosaicFocusSignature(active);
+    const twins = mosaicFocusTwins(root, active.localName, signature);
+    const state = { signature, name: active.localName, occurrence: twins.indexOf(active), count: twins.length, scrollTop: active.scrollTop };
+    if (typeof active.selectionStart === "number") {
+      state.selection = [active.selectionStart, active.selectionEnd, active.selectionDirection];
+    }
+    return state;
+  } catch {
+    return null;
   }
-  return state;
 }
 
 function mosaicRestoreFocus(root, state) {
   if (state === null || state.occurrence < 0) return;
-  const twins = [...root.querySelectorAll(state.tag)].filter(element => mosaicFocusSignature(element) === state.signature);
-  const element = twins[state.occurrence];
-  if (element === undefined) return;
-  element.focus({ preventScroll: true });
-  if (state.selection !== undefined && typeof element.setSelectionRange === "function") {
-    const length = String(element.value ?? "").length;
-    try {
-      element.setSelectionRange(Math.min(state.selection[0], length), Math.min(state.selection[1], length), state.selection[2]);
-    } catch {
-      // Some input types (number, email) refuse a selection; focus is enough.
+  try {
+    const twins = mosaicFocusTwins(root, state.name, state.signature);
+    if (twins.length !== state.count) return;
+    const element = twins[state.occurrence];
+    if (element === undefined) return;
+    element.focus({ preventScroll: true });
+    if (state.selection !== undefined && typeof element.setSelectionRange === "function") {
+      const length = String(element.value ?? "").length;
+      try {
+        element.setSelectionRange(Math.min(state.selection[0], length), Math.min(state.selection[1], length), state.selection[2]);
+      } catch {
+        // Some input types (number, email) refuse a selection; focus is enough.
+      }
     }
+    element.scrollTop = state.scrollTop;
+  } catch {
+    // Restoring focus is a courtesy; it must never break a render.
   }
-  element.scrollTop = state.scrollTop;
 }
 
 "##;

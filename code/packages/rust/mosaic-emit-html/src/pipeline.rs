@@ -1050,6 +1050,14 @@ function render() {
 // tag, accessible name and event markers, plus which of the elements sharing
 // that signature it was. A child-index path would point at a different field
 // as soon as an If or For above it changed the tree.
+//
+// Two guards keep a guess from doing harm. Focus is restored only when the
+// number of matching controls is unchanged: if a row was added or removed,
+// "the third Delete button" may now belong to another record, and dropping
+// focus is safer than pressing the wrong one. And capture/restore can only
+// skip restoring focus, never stop a render (an unusual tag name the HTML
+// parser accepts is not a valid selector, so elements are looked up by name,
+// not with querySelectorAll).
 const FOCUS_SIGNATURE_ATTRIBUTES = [
   "aria-label",
   "name",
@@ -1065,29 +1073,51 @@ function focusSignature(element) {
   return [element.tagName, ...FOCUS_SIGNATURE_ATTRIBUTES.map(name => element.getAttribute(name) ?? "")].join("\u0000");
 }
 
+function focusTwins(name, signature) {
+  return [...root.getElementsByTagName(name)].filter(element => focusSignature(element) === signature);
+}
+
 function captureFocus() {
-  const active = document.activeElement;
-  if (active === null || active === root || !root.contains(active)) {
+  try {
+    const active = document.activeElement;
+    if (active === null || active === root || !root.contains(active)) {
+      return null;
+    }
+    const signature = focusSignature(active);
+    const twins = focusTwins(active.localName, signature);
+    const state = {
+      signature,
+      name: active.localName,
+      occurrence: twins.indexOf(active),
+      count: twins.length,
+      scrollTop: active.scrollTop,
+    };
+    if (typeof active.selectionStart === "number") {
+      state.selection = [active.selectionStart, active.selectionEnd, active.selectionDirection];
+    }
+    return state;
+  } catch {
     return null;
   }
-  const signature = focusSignature(active);
-  const twins = [...root.querySelectorAll(active.tagName)].filter(element => focusSignature(element) === signature);
-  const state = { signature, tag: active.tagName, occurrence: twins.indexOf(active), scrollTop: active.scrollTop };
-  if (typeof active.selectionStart === "number") {
-    state.selection = [active.selectionStart, active.selectionEnd, active.selectionDirection];
-  }
-  return state;
 }
 
 function restoreFocus(state) {
   if (state === null || state.occurrence < 0) {
     return;
   }
-  const twins = [...root.querySelectorAll(state.tag)].filter(element => focusSignature(element) === state.signature);
-  const element = twins[state.occurrence];
-  if (element === undefined) {
+  try {
+    restoreFocusUnguarded(state);
+  } catch {
+    // Restoring focus is a courtesy; it must never break a render.
+  }
+}
+
+function restoreFocusUnguarded(state) {
+  const twins = focusTwins(state.name, state.signature);
+  if (twins.length !== state.count) {
     return;
   }
+  const element = twins[state.occurrence];
   element.focus({ preventScroll: true });
   if (state.selection !== undefined && typeof element.setSelectionRange === "function") {
     const length = String(element.value ?? "").length;
