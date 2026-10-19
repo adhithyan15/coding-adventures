@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C180-lok",
+    "language": "punjabi",
+    "chapter": 180,
+    "sequence": 9400,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5c53e892c3243300"
+  },
+  "findings": []
+}
