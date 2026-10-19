@@ -190,7 +190,7 @@ behavior; partial or unsupported combinations remain reported degradations.
 | `read-only: slot: x`    | `readOnly: x`                                           |
 | `read-only: true/false` | `readOnly: true/false`                                  |
 | `placeholder: "..."`    | `placeholderText: "..."` on `TextField` / `TextArea`    |
-| `multiline: true`        | `TextArea` for legacy `Input`; Enter inserts a newline   |
+| `multiline: true`        | `TextArea`; Enter inserts a newline, Ctrl/Cmd+Enter commits (`Keys.onPressed`) |
 | `onChange: emit: onE`   | `onTextChanged: e(text)` for a one-parameter emit        |
 | `onCommit: emit: onE`   | `onAccepted: e(text)` (Enter)                           |
 | `onCancel: emit: onE`   | `Keys.onEscapePressed: { e(); event.accepted = true }`  |

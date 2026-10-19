@@ -109,15 +109,34 @@ area (#15930). Every backend lowers it to its native multi-line control:
 | Flutter | `TextField` | `TextField(maxLines: null, textInputAction: newline)` |
 
 Everything else the field carries — `value`, `placeholder`, `a11y-label`,
-`disabled`, `read-only`, `auto-focus`, `onChange`, `onCancel` — means the same in
-both shapes. The one difference is **Enter**: in a single-line field it raises
-`onCommit`; in a text area it inserts a line break. UI25 §4 also promised a
-Ctrl/Cmd+Enter commit for multi-line fields, but no backend ever implemented
-that accelerator, so today a multiline field has no commit key at all. Until
-one does, authors commit a text area from a button (as `DraftEditor`'s Save
-does), and the degradation report flags `onCommit` on a multiline field as
-`interaction.multiline-commit-unbound` on every backend rather than ship a
-handler nothing can fire. `multiline: false` is the default spelled out.
+`disabled`, `read-only`, `auto-focus`, `onChange`, `onCommit`, `onCancel` —
+means the same in both shapes. The one difference is the **commit key**: in a
+single-line field Enter raises `onCommit`; in a text area Enter inserts a line
+break, and `onCommit` is raised by **Ctrl+Enter** (Windows, Linux) or
+**Cmd+Enter** (macOS, iPadOS), the accelerator UI25 §4 specified. Backends
+that run on more than one platform accept either modifier everywhere rather
+than sniff the platform; neither chord means anything else in a text field.
+The chord is consumed, so it never adds a line break. The payload follows the
+single-line rule: a text-payload `onCommit` carries the field's current text.
+
+| Backend | Text-area commit |
+|---|---|
+| React, Web Components | `keydown`: `e.key === "Enter" && (e.ctrlKey \|\| e.metaKey)`, then `preventDefault()` |
+| HTML | `data-on-commit` plus `data-commit-key="mod+Enter"`; the generated `main.js` binds it as above |
+| SwiftUI | `_MosaicCommitChord`: `onKeyPress` on Return / keypad Enter with `.command` or `.control`, behind `#available(macOS 14, iOS 17)`; on macOS 13 / iOS 16 there is no chord |
+| Qt | `Keys.onPressed` on the `TextArea`: `Key_Return`/`Key_Enter` with `ControlModifier \| MetaModifier` (Qt swaps the two on macOS) |
+| WinUI (XAML) | `PreviewKeyDown` (a `KeyDown` handler never sees Enter on an `AcceptsReturn` box) with Control down; `e.Handled = true` |
+| Compose | `Modifier.onPreviewKeyEvent`: KeyDown `Enter`/`NumPadEnter` with `isCtrlPressed \|\| isMetaPressed` |
+| Flutter | `CallbackShortcuts` around the `TextField`: `SingleActivator(enter / numpadEnter, control: true)` and `meta: true` |
+
+The chord needs a hardware keyboard; a soft keyboard's Return key stays the
+line break, so a touch-only text area still wants a visible commit button (as
+`DraftEditor`'s Save). `multiline: false` is the default spelled out.
+
+*History:* #15930 first made `multiline` a kernel text area and, because no
+backend had built the accelerator, reported `onCommit` on one as
+`interaction.multiline-commit-unbound`. That report is gone now that every
+backend lowers the chord.
 
 This is the multiline capability UI29-3 counted on when it declined a separate
 `HostTextarea`, and it is what lets the legacy UI25 `Input` retire (U29-X1):
