@@ -23,6 +23,8 @@ UTF8String, PrintableString, UniversalString, and BMPString expose a borrowed,
 allocation-free Unicode scalar iterator. TeletexString deliberately does not:
 the package has no T.61 mapping table and refuses to reinterpret opaque bytes
 as ASCII or Unicode.
+The decoded value's public type has a private representation, so safe callers
+cannot forge malformed payloads that bypass the decoder's invariants.
 
 ## Comparison boundary
 

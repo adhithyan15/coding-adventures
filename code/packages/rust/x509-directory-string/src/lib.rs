@@ -75,34 +75,49 @@ impl fmt::Display for X509DirectoryStringError {
 impl Error for X509DirectoryStringError {}
 
 /// One borrowed, validated RFC 5280 DirectoryString alternative.
+///
+/// The representation is deliberately private: safe callers cannot bypass
+/// [`decode_x509_directory_string`] and forge malformed fixed-width contents.
+///
+/// ```compile_fail
+/// use x509_directory_string::X509DirectoryString;
+///
+/// let _forged = X509DirectoryString { value: () };
+/// ```
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
-pub enum X509DirectoryString<'a> {
+pub struct X509DirectoryString<'a> {
+    value: DirectoryStringValue<'a>,
+}
+
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+enum DirectoryStringValue<'a> {
     Utf8(&'a str),
     Printable(&'a str),
-    /// Non-empty T.61 contents retained without claiming a character mapping.
     Teletex(&'a [u8]),
-    /// Validated UCS-4 big-endian Unicode scalar contents.
     Universal(&'a [u8]),
-    /// Validated UCS-2 big-endian Unicode scalar contents.
     Bmp(&'a [u8]),
 }
 
 impl<'a> X509DirectoryString<'a> {
     pub const fn encoding(self) -> X509DirectoryStringEncoding {
-        match self {
-            Self::Utf8(_) => X509DirectoryStringEncoding::Utf8,
-            Self::Printable(_) => X509DirectoryStringEncoding::Printable,
-            Self::Teletex(_) => X509DirectoryStringEncoding::Teletex,
-            Self::Universal(_) => X509DirectoryStringEncoding::Universal,
-            Self::Bmp(_) => X509DirectoryStringEncoding::Bmp,
+        match self.value {
+            DirectoryStringValue::Utf8(_) => X509DirectoryStringEncoding::Utf8,
+            DirectoryStringValue::Printable(_) => X509DirectoryStringEncoding::Printable,
+            DirectoryStringValue::Teletex(_) => X509DirectoryStringEncoding::Teletex,
+            DirectoryStringValue::Universal(_) => X509DirectoryStringEncoding::Universal,
+            DirectoryStringValue::Bmp(_) => X509DirectoryStringEncoding::Bmp,
         }
     }
 
     /// Return the exact content octets, excluding the DER tag and length.
     pub fn contents(self) -> &'a [u8] {
-        match self {
-            Self::Utf8(value) | Self::Printable(value) => value.as_bytes(),
-            Self::Teletex(value) | Self::Universal(value) | Self::Bmp(value) => value,
+        match self.value {
+            DirectoryStringValue::Utf8(value) | DirectoryStringValue::Printable(value) => {
+                value.as_bytes()
+            }
+            DirectoryStringValue::Teletex(value)
+            | DirectoryStringValue::Universal(value)
+            | DirectoryStringValue::Bmp(value) => value,
         }
     }
 
@@ -112,12 +127,12 @@ impl<'a> X509DirectoryString<'a> {
     /// TeletexString returns `None`; callers must not infer a T.61 mapping from
     /// its opaque bytes.
     pub fn unicode_scalars(self) -> Option<X509DirectoryStringScalars<'a>> {
-        let source = match self {
-            Self::Utf8(value) => ScalarSource::Utf8(value.chars()),
-            Self::Printable(value) => ScalarSource::Printable(value.bytes()),
-            Self::Teletex(_) => return None,
-            Self::Universal(value) => ScalarSource::Universal(value),
-            Self::Bmp(value) => ScalarSource::Bmp(value),
+        let source = match self.value {
+            DirectoryStringValue::Utf8(value) => ScalarSource::Utf8(value.chars()),
+            DirectoryStringValue::Printable(value) => ScalarSource::Printable(value.bytes()),
+            DirectoryStringValue::Teletex(_) => return None,
+            DirectoryStringValue::Universal(value) => ScalarSource::Universal(value),
+            DirectoryStringValue::Bmp(value) => ScalarSource::Bmp(value),
         };
         Some(X509DirectoryStringScalars { source, offset: 0 })
     }
@@ -191,7 +206,9 @@ pub fn decode_x509_directory_string(
     match tag.number {
         UTF8_STRING_TAG => decode_utf8(contents, value_offset),
         PRINTABLE_STRING_TAG => decode_printable(contents, value_offset),
-        TELETEX_STRING_TAG => Ok(X509DirectoryString::Teletex(contents)),
+        TELETEX_STRING_TAG => Ok(X509DirectoryString {
+            value: DirectoryStringValue::Teletex(contents),
+        }),
         UNIVERSAL_STRING_TAG => decode_universal(contents, value_offset),
         BMP_STRING_TAG => decode_bmp(contents, value_offset),
         _ => Err(X509DirectoryStringError::new(
@@ -206,7 +223,9 @@ fn decode_utf8(
     value_offset: usize,
 ) -> Result<X509DirectoryString<'_>, X509DirectoryStringError> {
     std::str::from_utf8(contents)
-        .map(X509DirectoryString::Utf8)
+        .map(|value| X509DirectoryString {
+            value: DirectoryStringValue::Utf8(value),
+        })
         .map_err(|error| {
             X509DirectoryStringError::new(
                 X509DirectoryStringErrorKind::InvalidUtf8,
@@ -238,7 +257,9 @@ fn decode_printable(
             ));
         }
     };
-    Ok(X509DirectoryString::Printable(value))
+    Ok(X509DirectoryString {
+        value: DirectoryStringValue::Printable(value),
+    })
 }
 
 const fn is_printable_string_character(byte: u8) -> bool {
@@ -268,7 +289,9 @@ fn decode_universal(
             ));
         }
     }
-    Ok(X509DirectoryString::Universal(contents))
+    Ok(X509DirectoryString {
+        value: DirectoryStringValue::Universal(contents),
+    })
 }
 
 fn decode_bmp(
@@ -290,7 +313,9 @@ fn decode_bmp(
             ));
         }
     }
-    Ok(X509DirectoryString::Bmp(contents))
+    Ok(X509DirectoryString {
+        value: DirectoryStringValue::Bmp(contents),
+    })
 }
 
 enum ScalarSource<'a> {

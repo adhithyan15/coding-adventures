@@ -11,6 +11,9 @@ BMPString validate fixed-width Unicode scalar values and expose them through a
 borrowed iterator. TeletexString is retained only as non-empty opaque bytes:
 the package does not invent a T.61 character mapping.
 
+Decoded values use an opaque public struct with a private representation, so
+safe callers cannot construct malformed values that bypass these checks.
+
 The scalar comparator can compare the four Unicode-capable representations
 without allocation and refuses either Teletex operand. Its result is exact
 Unicode-scalar equality only. It deliberately performs no RFC 4518 StringPrep,

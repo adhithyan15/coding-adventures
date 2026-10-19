@@ -8,3 +8,5 @@
   UniversalString, and BMPString while retaining TeletexString as opaque.
 - Added fail-closed, representation-independent scalar equality that refuses
   TeletexString rather than inventing a T.61 mapping.
+- Kept the validated value representation private so safe callers cannot
+  forge malformed string payloads or bypass decoding.
