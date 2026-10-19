@@ -5660,6 +5660,11 @@ model-card parameter, or a UI artifact is not a completion signal.
      CLI corpus now locks the four-row nested sweep and raises its success gate
      to two cases. Temperature, parameter, corner, Monte Carlo, raw-format,
      and measurement expansion remain separate phases.
+   - **Signed nonlinear core corpus** (completed in the cross-language core
+     gate slice): the release manifest now requires all seven advertised
+     nonlinear model kinds. The shared operating-point corpus adds `PNP`,
+     `PJF`, and Level-1 `PMOS` fixtures alongside the original `NPN`, `NJF`,
+     and `NMOS` coverage.
    - Expand deck-owned output compatibility beyond source-order analysis
      execution and stable artifact exports toward nested sweeps, raw-format
      interoperability, and remaining vendor-style output controls.
