@@ -444,6 +444,39 @@ def _root(root):
     return real_root
 
 
+@contextmanager
+def _unix_directory(root, *parts):
+    """Pin every descendant to its already-open parent, rejecting symlinks."""
+    if (
+        not NOFOLLOW or not DIRECTORY
+        or os.open not in os.supports_dir_fd
+        or os.listdir not in os.supports_fd
+        or os.stat not in os.supports_dir_fd
+        or os.stat not in os.supports_follow_symlinks
+    ):
+        raise OSError("descriptor-relative no-follow ledger reads are unavailable")
+    current = _root(root)
+    descriptor = os.open(current, os.O_RDONLY | DIRECTORY | NOFOLLOW)
+    try:
+        for part in parts:
+            if not isinstance(part, str) or part in ("", ".", "..") or os.sep in part:
+                raise ValueError(f"unsafe ledger path component: {part!r}")
+            child_path = os.path.join(current, part)
+            try:
+                child = os.open(part, os.O_RDONLY | DIRECTORY | NOFOLLOW, dir_fd=descriptor)
+            except FileNotFoundError as cause:
+                raise ValueError(f"missing ledger directory: {child_path}") from cause
+            except OSError as cause:
+                raise ValueError(f"refusing non-directory ledger ancestor: {child_path}") from cause
+            previous = descriptor
+            descriptor = child
+            os.close(previous)
+            current = child_path
+        yield descriptor
+    finally:
+        os.close(descriptor)
+
+
 def _directory(root, *parts):
     """Return a real directory below root, refusing every symlink component."""
     real_root = _root(root)
@@ -504,9 +537,15 @@ def _read(root, *parts):
     if os.name == "nt":
         with _windows_directory(root, *parts[:-1]) as directory_handle:
             return json.loads(_windows_read_regular(directory_handle, parts[-1]))
-    descriptor = os.open(path, os.O_RDONLY | NOFOLLOW)
-    with os.fdopen(descriptor, encoding="utf-8") as handle:
-        return json.load(handle)
+    with _unix_directory(root, *parts[:-1]) as directory_fd:
+        try:
+            descriptor = os.open(parts[-1], os.O_RDONLY | NOFOLLOW, dir_fd=directory_fd)
+        except OSError as cause:
+            raise ValueError(f"refusing non-file ledger shard: {path}") from cause
+        with os.fdopen(descriptor, encoding="utf-8") as handle:
+            if not stat.S_ISREG(os.fstat(handle.fileno()).st_mode):
+                raise ValueError(f"refusing non-file ledger shard: {path}")
+            return json.load(handle)
 
 
 if os.name == "nt":
@@ -643,14 +682,14 @@ def _files(root, *parts):
                 _windows_checked_entry(directory_handle, name, directory=False)
                 names.append(name)
         return sorted(names)
-    with os.scandir(directory) as entries:
-        for entry in entries:
-            if not entry.name.endswith(".json"):
+    with _unix_directory(root, *parts) as directory_fd:
+        for name in os.listdir(directory_fd):
+            if not name.endswith(".json"):
                 continue
-            info = entry.stat(follow_symlinks=False)
-            if _is_reparse(info) or entry.is_symlink() or not stat.S_ISREG(info.st_mode):
-                raise ValueError(f"refusing non-file ledger shard: {entry.path}")
-            names.append(entry.name)
+            info = os.stat(name, dir_fd=directory_fd, follow_symlinks=False)
+            if _is_reparse(info) or stat.S_ISLNK(info.st_mode) or not stat.S_ISREG(info.st_mode):
+                raise ValueError(f"refusing non-file ledger shard: {directory}/{name}")
+            names.append(name)
     return sorted(names)
 
 
@@ -910,18 +949,18 @@ def _strict_directory_entries(root, *parts):
                 _windows_checked_entry(directory_handle, name, directory=is_directory)
                 entries.append((name, is_directory))
         return sorted(entries)
-    with os.scandir(directory) as iterator:
-        for entry in iterator:
-            info = entry.stat(follow_symlinks=False)
-            if _is_reparse(info) or entry.is_symlink():
+    with _unix_directory(root, *parts) as directory_fd:
+        for name in os.listdir(directory_fd):
+            info = os.stat(name, dir_fd=directory_fd, follow_symlinks=False)
+            if _is_reparse(info) or stat.S_ISLNK(info.st_mode):
                 raise ValueError(
-                    f"refusing link or reparse book-generation owner: {entry.path}"
+                    f"refusing link or reparse book-generation owner: {directory}/{name}"
                 )
             if not (stat.S_ISREG(info.st_mode) or stat.S_ISDIR(info.st_mode)):
                 raise ValueError(
-                    f"refusing special book-generation owner: {entry.path}"
+                    f"refusing special book-generation owner: {directory}/{name}"
                 )
-            entries.append((entry.name, stat.S_ISDIR(info.st_mode)))
+            entries.append((name, stat.S_ISDIR(info.st_mode)))
     return sorted(entries)
 
 
