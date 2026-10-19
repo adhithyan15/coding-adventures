@@ -45,6 +45,16 @@ def test_run_netlist_json_preserves_both_nested_dc_axes() -> None:
     assert payload["analyses"][0]["records"] == case["expected"]["records"]
 
 
+def test_run_netlist_json_exposes_deck_output_artifacts() -> None:
+    corpus = json.loads(_grammar_path("berkeley-v1-cli-corpus.json").read_text(encoding="utf-8"))
+    case = next(case for case in corpus["cases"] if case["id"] == "deck-output-artifacts")
+    payload = json.loads(run_netlist_json(case["deck"]))
+
+    assert payload["title"] == case["expected"]["title"]
+    assert payload["outputs"] == case["expected"]["outputs"]
+    assert payload["measures"] == case["expected"]["measures"]
+
+
 def test_module_cli_runs_a_deck_file_as_json(tmp_path: Path) -> None:
     case = _cli_case()
     deck_path = tmp_path / "core.cir"
