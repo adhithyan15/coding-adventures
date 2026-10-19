@@ -548,6 +548,35 @@ def _read(root, *parts):
             return json.load(handle)
 
 
+def read_track_regular_text(root, track, relative_path):
+    """Read mock evidence through pinned, no-follow track descendants.
+
+    The TypeScript assessment contract supplies the relative name, but this
+    process validates it again before any filesystem operation. An audit's
+    earlier path check is not a capability: only the regular-file handle opened
+    beneath the trusted root supplies the returned bytes.
+    """
+    _safe_track(track)
+    if not isinstance(relative_path, str) or not relative_path:
+        raise ValueError("empty mock evidence path")
+    parts = relative_path.split("/")
+    if any(
+        not part or part in (".", "..") or "\\" in part or ":" in part
+        or "\x00" in part or part.endswith((".", " "))
+        for part in parts
+    ):
+        raise ValueError(f"unsafe mock evidence path: {relative_path!r}")
+    if os.name == "nt":
+        with _windows_directory(root, track, *parts[:-1]) as directory_handle:
+            return _windows_read_regular(directory_handle, parts[-1])
+    with _unix_directory(root, track, *parts[:-1]) as directory_fd:
+        descriptor = os.open(parts[-1], os.O_RDONLY | NOFOLLOW, dir_fd=directory_fd)
+        with os.fdopen(descriptor, encoding="utf-8") as handle:
+            if not stat.S_ISREG(os.fstat(handle.fileno()).st_mode):
+                raise ValueError(f"refusing non-file mock evidence: {relative_path}")
+            return handle.read()
+
+
 if os.name == "nt":
     def _windows_write_if_changed(root, parts, body):
         _file(root, *parts, must_exist=False)

@@ -16,6 +16,7 @@ from sharded_ledger import (
     load_curriculum,
     load_script,
     load_script_inventory,
+    read_track_regular_text,
     write_book_generation_language,
     write_chapters,
     write_curriculum,
@@ -49,6 +50,39 @@ class ShardedLedgerSafetyTest(unittest.TestCase):
 
     def tearDown(self):
         self.temporary.cleanup()
+
+    def test_mock_evidence_reads_checked_regular_file_bytes(self):
+        path = self.root / "spanish" / "mocks" / "paper.md"
+        path.parent.mkdir(parents=True)
+        path.write_text("# Learner paper\n¡Hola!\n", encoding="utf-8")
+        self.assertEqual(
+            read_track_regular_text(self.root, "spanish", "mocks/paper.md"),
+            "# Learner paper\n¡Hola!\n",
+        )
+        with self.assertRaises(ValueError):
+            read_track_regular_text(self.root, "spanish", "../outside/paper.md")
+
+    def test_mock_evidence_rejects_ancestor_swap_after_audit(self):
+        directory = self.root / "spanish" / "mocks"
+        inside = directory / "paper.md"
+        inside.parent.mkdir(parents=True)
+        inside.write_text("inside learner paper", encoding="utf-8")
+        (self.outside / "paper.md").write_text("outside sentinel", encoding="utf-8")
+        # Model the TypeScript audit's earlier successful path observation.
+        self.assertEqual(inside.read_text(encoding="utf-8"), "inside learner paper")
+        moved = directory.with_name("mocks-moved")
+        os.rename(directory, moved)
+        link_directory(self.outside, directory)
+        try:
+            with self.assertRaises((OSError, ValueError)):
+                read_track_regular_text(self.root, "spanish", "mocks/paper.md")
+            self.assertEqual(
+                (self.outside / "paper.md").read_text(encoding="utf-8"),
+                "outside sentinel",
+            )
+        finally:
+            os.rmdir(directory)
+            os.rename(moved, directory)
 
     def chapter_document(self, *chapters):
         return {"version": 1, "language": "spanish", "chapters": list(chapters)}

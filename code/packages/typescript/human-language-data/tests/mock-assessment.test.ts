@@ -1,10 +1,11 @@
-import { cpSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { cpSync, existsSync, mkdirSync, mkdtempSync, readFileSync, renameSync, rmdirSync, rmSync, symlinkSync, unlinkSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { afterEach, beforeEach, describe, expect, it } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import { defaultCurriculumRoot, loadTaskShapeInventory } from "../src/loader.js";
 import { listMockAssessmentStatuses } from "../src/mock-assessment.js";
+import * as mockEvidenceReader from "../src/mock-evidence-read.js";
 import { runAssessmentArtifactCli } from "../src/assessment-artifact-cli.js";
 import type { TaskShapeInventory } from "../src/task-shapes.js";
 
@@ -71,6 +72,13 @@ describe("full-mock coverage measurement", () => {
     });
   });
 
+  it("round-trips non-Latin mock text through the anchored reader", () => {
+    const path = join(root, "spanish", "mocks", "a1", "mock-1.md");
+    write("spanish/mocks/a1/mock-1.md", `${readFileSync(path, "utf8")}\nਪੰਜਾਬੀ ਪੰਜਾਬੀ\n`);
+    expect(listMockAssessmentStatuses(root).find((status) => status.level === "A1"))
+      .toMatchObject({ completeMocks: 1 });
+  });
+
   it("refuses a declared manifest whose parts no longer cover the task inventory", () => {
     const path = join(root, "spanish", "mocks", "a1", "mock-1-manifest.json");
     const manifest = JSON.parse(readFileSync(path, "utf8"));
@@ -129,5 +137,32 @@ describe("full-mock coverage measurement", () => {
     write("spanish/mocks/a1/mock-1-manifest.json", `${JSON.stringify(manifest)}\n`);
     expect(() => runAssessmentArtifactCli(["--check"], root, () => {}, () => {}, () => {}))
       .toThrow(/part IDs/);
+  });
+
+  it("the required gate refuses a mock ancestor swapped to a junction after audit", () => {
+    const directory = join(root, "spanish", "mocks", "a1");
+    const moved = join(root, "spanish", "mocks", "a1-original");
+    const outside = join(root, "outside-mock-evidence");
+    cpSync(directory, outside, { recursive: true });
+    const originalRead = mockEvidenceReader.readMockEvidence;
+    let swapped = false;
+    const readSpy = vi.spyOn(mockEvidenceReader, "readMockEvidence").mockImplementation((...args) => {
+      renameSync(directory, moved);
+      symlinkSync(outside, directory, process.platform === "win32" ? "junction" : "dir");
+      swapped = true;
+      return originalRead(...args);
+    });
+    try {
+      expect(() => runAssessmentArtifactCli(["--check"], root, () => {}, () => {}, () => {}))
+        .toThrow(/anchored read failed/);
+      expect(swapped).toBe(true);
+    } finally {
+      readSpy.mockRestore();
+      if (swapped) {
+        if (process.platform === "win32") rmdirSync(directory);
+        else unlinkSync(directory);
+      }
+      if (existsSync(moved)) renameSync(moved, directory);
+    }
   });
 });

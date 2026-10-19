@@ -174,7 +174,8 @@ capability to reopen its pathname later. A local concurrent actor can replace
 an intermediate directory with a Unix symlink or Windows junction after the
 audit, making a later pathname read consume unrelated bytes.
 
-The curriculum root is trusted; its descendants are not stable. Full-mock
+The curriculum root and validator code are trusted; assessment-track
+descendants are not stable. Full-mock
 validation and completion reporting must open each evidence file relative to
 an already-open track directory, descending through directory handles without
 following symlinks or reparse points and reading the regular-file handle that
