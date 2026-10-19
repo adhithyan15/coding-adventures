@@ -2,8 +2,9 @@
 
 ## Status
 
-Planned as a zero-external-dependency Rust policy layer above
-`x509-subject-public-key-info` and `der-asn1`.
+Implemented as the zero-external-dependency Rust package
+`x509-rsa-public-key`, layered above `x509-subject-public-key-info` and
+`der-asn1`.
 
 ## Purpose
 

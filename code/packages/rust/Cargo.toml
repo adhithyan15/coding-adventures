@@ -1281,4 +1281,5 @@ members = [
   "pdp11-simulator",
   "pdp11-gatelevel",
   "pdp8-simulator",
+  "x509-rsa-public-key",
 ]
