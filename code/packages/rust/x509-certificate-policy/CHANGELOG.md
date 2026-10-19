@@ -14,3 +14,6 @@
   DNS-ID/IP-ID server-identity matching without Common Name fallback.
 - Add an ambient-clock-free complete-certificate validity gate for one explicit
   caller-owned observation with inclusive RFC 5280 endpoints.
+- Add fail-closed authorization of one exact caller-supplied Extended Key Usage
+  purpose over already validated end-entity role evidence, with no embedded
+  registry or implicit `anyExtendedKeyUsage` wildcard.

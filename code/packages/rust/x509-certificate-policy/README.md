@@ -24,11 +24,17 @@ interval against one explicit validated `X509Time`. The caller retains all
 authority and responsibility for clock acquisition, UTC conversion, freshness,
 and audit.
 
+Its purpose gate consumes already validated role evidence and authorizes one
+exact caller-supplied Extended Key Usage OID only for an end entity. Missing
+Extended Key Usage fails closed. The gate embeds no purpose registry, and
+`anyExtendedKeyUsage` is an ordinary exact OID rather than an implicit
+wildcard.
+
 An intended issuing CA must carry critical `cA = TRUE` Basic Constraints and
 Key Usage with `keyCertSign`. An intended end entity may omit those extensions,
 but it must not assert either CA status or certificate-signing usage. Extended
 Key Usage is decoded when present and retained as borrowed evidence without
-authorizing any purpose.
+authorizing any purpose until the separate purpose gate succeeds.
 
 ## Security boundary
 
@@ -62,6 +68,11 @@ observation fell within the inclusive interval. The gate reads no ambient clock
 and applies no tolerance. Its opaque evidence does not prove the observation's
 source or freshness and grants no other certificate or transport authority.
 
+Passing the purpose gate proves only that one exact OID was present in the
+already decoded Extended Key Usage of end-entity role evidence. It does not
+authorize a key operation and grants no signature, path, identity, validity,
+trust, revocation, TLS, HTTP, or OAuth transport authority.
+
 ## Example
 
 ```rust,no_run
@@ -69,9 +80,10 @@ use der_asn1::Asn1Limits;
 use tls_server_identity::ReferenceIdentity;
 use x509_certificate::decode_x509_certificate;
 use x509_certificate_policy::{
-    validate_certificate_algorithm_profile, validate_certificate_role_extensions,
-    validate_certificate_server_identity, validate_critical_extensions,
-    X509AlgorithmParametersPolicy, X509CertificateAlgorithmProfile, X509CertificateRole,
+    validate_certificate_algorithm_profile, validate_certificate_extended_key_purpose,
+    validate_certificate_role_extensions, validate_certificate_server_identity,
+    validate_critical_extensions, X509AlgorithmParametersPolicy,
+    X509CertificateAlgorithmProfile, X509CertificatePurposePolicy, X509CertificateRole,
 };
 
 # fn check(encoded: &[u8]) -> Result<(), Box<dyn std::error::Error>> {
@@ -91,6 +103,10 @@ let evidence = validate_certificate_role_extensions(
     Asn1Limits::default(),
 )?;
 assert_eq!(evidence.role(), X509CertificateRole::EndEntity);
+// Purpose OIDs remain caller-owned policy data. This exact serverAuth value
+// does not select a key operation or enable any cryptographic implementation.
+let purpose = X509CertificatePurposePolicy::new(&[1, 3, 6, 1, 5, 5, 7, 3, 1])?;
+let _purpose_evidence = validate_certificate_extended_key_purpose(&evidence, purpose)?;
 // These identifiers and encoded BIT STRING bounds are application policy data,
 // not an embedded registry, key-strength check, or permission to perform
 // cryptography.
