@@ -10,6 +10,23 @@
 use std::path::{Path, PathBuf};
 use std::process::Command;
 
+/// A scratch-name nonce that is unique for every call in this process.
+///
+/// The clock alone is not: macOS reports `SystemTime` in whole microseconds,
+/// so two tests running in parallel threads could read the same "nanos" and
+/// be handed the same directory, each seeing the other's files (this made
+/// `compose_fixtures` fail about one run in three). The counter makes every
+/// call distinct; the clock keeps names from a previous run apart.
+fn unique_nonce() -> String {
+    static NEXT: std::sync::atomic::AtomicU64 = std::sync::atomic::AtomicU64::new(0);
+    let n = NEXT.fetch_add(1, std::sync::atomic::Ordering::Relaxed);
+    let nanos = std::time::SystemTime::now()
+        .duration_since(std::time::UNIX_EPOCH)
+        .expect("system clock after epoch")
+        .as_nanos();
+    format!("{nanos}-{n}")
+}
+
 fn workspace_root() -> PathBuf {
     PathBuf::from(env!("CARGO_MANIFEST_DIR"))
         .parent()
@@ -128,8 +145,49 @@ fn jar_version(path: &Path) -> Vec<u64> {
 /// runtime: "fat file, but missing compatible architecture".
 const MIN_JNA_VERSION: &[u64] = &[5, 7, 0];
 
-fn jar(prefix: &str, environment_override: &str) -> Option<PathBuf> {
-    jar_at_least(prefix, environment_override, &[])
+/// Every cached `kotlinx-serialization` json/core jar pair of one version,
+/// newest first.
+///
+/// Newest is not automatically usable: a release is compiled by a recent
+/// Kotlin, and `kotlinc` refuses a jar whose metadata is newer than itself
+/// ("module was compiled with an incompatible version of Kotlin"). A Gradle
+/// cache that also serves a newer Compose project holds exactly such a jar
+/// (1.11.0, built by Kotlin 2.3, beside a local kotlinc 2.1), so the caller
+/// tries each pair in turn rather than trusting the first. Explicit
+/// `MOSAIC_KOTLINX_*` overrides are taken as the only candidate.
+fn serialization_jar_pairs() -> Vec<(PathBuf, PathBuf)> {
+    if let (Some(json), Some(core)) = (
+        std::env::var_os("MOSAIC_KOTLINX_JSON_JAR"),
+        std::env::var_os("MOSAIC_KOTLINX_CORE_JAR"),
+    ) {
+        let (json, core) = (PathBuf::from(json), PathBuf::from(core));
+        return if json.is_file() && core.is_file() {
+            vec![(json, core)]
+        } else {
+            Vec::new()
+        };
+    }
+    let Some(home) = std::env::var_os("HOME").map(PathBuf::from) else {
+        return Vec::new();
+    };
+    let gradle = home.join(".gradle");
+    let mut jsons = Vec::new();
+    collect_jars(&gradle, &versioned_jar("kotlinx-serialization-json-jvm-", &[]), 10, &mut jsons);
+    let mut cores = Vec::new();
+    collect_jars(&gradle, &versioned_jar("kotlinx-serialization-core-jvm-", &[]), 10, &mut cores);
+    let mut pairs: Vec<(PathBuf, PathBuf)> = jsons
+        .into_iter()
+        .filter_map(|json| {
+            let version = jar_version(&json);
+            cores
+                .iter()
+                .find(|core| jar_version(core) == version)
+                .map(|core| (json, core.clone()))
+        })
+        .collect();
+    pairs.sort_by(|a, b| jar_version(&b.0).cmp(&jar_version(&a.0)).then_with(|| b.0.cmp(&a.0)));
+    pairs.dedup_by(|a, b| jar_version(&a.0) == jar_version(&b.0));
+    pairs
 }
 
 /// Like [jar], but ignores cached jars older than `min_version`. An explicit
@@ -228,10 +286,10 @@ fn the_emitted_compose_host_answers_effects() {
         eprintln!("skipping Compose effect acceptance: kotlinc or java unavailable");
         return;
     }
-    let (Some(jna), Some(json), Some(core), Some(stdlib)) = (
+    let serialization = serialization_jar_pairs();
+    let (Some(jna), false, Some(stdlib)) = (
         jar_at_least("jna-", "MOSAIC_JNA_JAR", MIN_JNA_VERSION),
-        jar("kotlinx-serialization-json-jvm-", "MOSAIC_KOTLINX_JSON_JAR"),
-        jar("kotlinx-serialization-core-jvm-", "MOSAIC_KOTLINX_CORE_JAR"),
+        serialization.is_empty(),
         kotlin_stdlib(),
     ) else {
         eprintln!(
@@ -245,10 +303,7 @@ fn the_emitted_compose_host_answers_effects() {
     let project = std::env::temp_dir().join(format!(
         "mosaic-compose-effects-{}-{}",
         std::process::id(),
-        std::time::SystemTime::now()
-            .duration_since(std::time::UNIX_EPOCH)
-            .expect("system clock after epoch")
-            .as_nanos()
+        unique_nonce()
     ));
     std::fs::create_dir(&project).expect("create the driver project");
 
@@ -266,24 +321,41 @@ fn the_emitted_compose_host_answers_effects() {
     .expect("copy the driver");
 
     let separator = if cfg!(windows) { ";" } else { ":" };
-    let classpath = format!(
-        "{}{separator}{}{separator}{}",
-        jna.display(),
-        json.display(),
-        core.display()
-    );
-
-    run(
-        Command::new("kotlinc").current_dir(&project).args([
-            "-cp",
-            &classpath,
-            "MosaicRuntimeHost.kt",
-            "Driver.kt",
-            "-d",
-            "out",
-        ]),
-        "kotlinc",
-    );
+    // The newest serialization jars this kotlinc can read (see
+    // `serialization_jar_pairs`). Only a metadata-version refusal moves on to
+    // an older pair; any other compile error is the host's fault and fails.
+    let mut classpath = None;
+    for (json, core) in &serialization {
+        let candidate = format!(
+            "{}{separator}{}{separator}{}",
+            jna.display(),
+            json.display(),
+            core.display()
+        );
+        let output = Command::new("kotlinc")
+            .current_dir(&project)
+            .args(["-cp", &candidate, "MosaicRuntimeHost.kt", "Driver.kt", "-d", "out"])
+            .output()
+            .expect("run kotlinc");
+        let stderr = String::from_utf8_lossy(&output.stderr);
+        if output.status.success() {
+            classpath = Some(candidate);
+            break;
+        }
+        assert!(
+            stderr.contains("compiled with an incompatible version of Kotlin"),
+            "kotlinc failed ({}) with {}:\n{stderr}",
+            output.status,
+            json.display()
+        );
+    }
+    let Some(classpath) = classpath else {
+        eprintln!(
+            "skipping Compose effect acceptance: every cached kotlinx-serialization jar is newer \
+             than this kotlinc can read; set MOSAIC_KOTLINX_JSON_JAR and MOSAIC_KOTLINX_CORE_JAR"
+        );
+        return;
+    };
 
     let runtime = conformance_runtime();
     let run_classpath = format!("out{separator}{classpath}{separator}{}", stdlib.display());
