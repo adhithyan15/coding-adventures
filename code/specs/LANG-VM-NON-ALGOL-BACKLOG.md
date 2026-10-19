@@ -516,7 +516,23 @@ The refreshed inventory has 776 unique rows, 117 partial pairs and 659 pending,
 with none complete. The next selection rotates to PREP01 unsuffixed octal
 integer stringization, preserving raw spelling and generic bounds.
 
-The separately owned ALGOL campaign remains outside this backlog.
+PR #17284 delivered LANG79's float literal validation for caller-supplied
+Python ASTs and merged as `b0cd9e15aa467712fde66804071bec1b12fc0ed8`.
+FLOAT atoms now require the canonical `Name` kind with the `FLOAT` named type
+and a complete versioned ASCII spelling, checked before underscore removal
+and f64 conversion; valid exponent overflow still reaches IEEE infinity and
+fails only at display. Source behavior and resource bounds are unchanged.
+
+The next LANG79 selection is module-level float bindings (python-iir-compiler
+0.2.0): single-target `NAME = <float expression>`, rebinding, and NAME reads
+in every float-expression position. Bindings lower to `mov` into a `py:`
+register namespace. In this branch-free subset an unbound read is known at
+compile time and lowers to a raising `py_name_error` call, preserving earlier
+output as CPython does. Chained, tuple, annotated, augmented, attribute and
+subscript targets, binding `print`, integer values and unbound builtin or
+dunder reads are explicit compile errors; direct-AST NAME and EQUALS tokens
+require canonical kind and spelling. Host Python remains oracle only.
+
 
 The refreshed queue follows the user's 2026-10-11 consumer-priority correction.
 Alternate bounded work across the streams below; the list is not a requirement
@@ -530,8 +546,9 @@ generated files and transitive dependencies in each DAG ownership audit.
    Nib/Oct. The already published octal-stringize PR #17281 is existing work;
    further C-specific stages and full C preprocessing are long-term work,
    not the default next PREP01 selection.
-2. **LANG79 Python:** arithmetic AST token validation is complete; broader
-   native frontend semantics remain open. Host Python is oracle only.
+2. **LANG79 Python:** arithmetic and float-literal AST token validation are
+   complete; module-level float bindings are the current slice. Integers,
+   strings, control flow and functions remain open. Host Python is oracle only.
 3. **LANG78 JavaScript:** restricted numeric division is complete; general
    lexical-goal selection and broader native semantics remain open, Node oracle only.
 4. **LANG82 continued:** the partial Perl 5.004_72 contract is complete.
