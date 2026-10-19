@@ -5,6 +5,23 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ---
 
+## [0.7.0] — 2026-10-19 (LANG83 PR1b — floor division, `trap`, `write_i64`)
+
+- **`GenericCirJit` compiles the LANG83 PR1b ops** ([LANG83](../../../specs/LANG83-iir-standard-operation-registry.md)):
+  new bytecodes `DIV_FLOOR_I64` / `MOD_FLOOR_I64` (floor quotient / remainder;
+  zero divisor → `Trap.DivZero`, `MIN / -1` → `Trap.Overflow`, `MIN mod -1` → 0)
+  and `TRAP <kind id>` for `trap "<kind>"` (an unregistered kind refuses
+  compilation). A trap writes `trap: <kind>` (`generic_jit::trap_message`, the
+  same text `vm_core::VMError::Trap` displays) to the error slot and stops.
+- **`write_i64`** is `Lowered` on the same footing as `print_i64`/`putchar`:
+  `CALL_BUILTIN` to the embedder-registered handler.
+- **`CIRInstr::is_pure`** now treats `trap`, `i64_div_floor` and
+  `i64_mod_floor` as side-effecting, so `CIROptimizer`'s dead-code pass keeps a
+  floor divide whose quotient is unused (removing it would remove its trap).
+- `op_support`: the four PR1b ops flip to `Lowered`; the
+  `declared_support_matches_what_generic_jit_compiles` check registers
+  `write_i64` like the other output builtins.
+
 ## [0.6.0] — 2026-10-19 (LANG83 PR1a — standard operation support)
 
 - **LANG83 op support.** New `op_support` module (`OP_SUPPORT`, `op_support`).

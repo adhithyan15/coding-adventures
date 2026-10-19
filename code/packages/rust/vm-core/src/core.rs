@@ -1458,4 +1458,73 @@ mod tests {
         let r = vm.execute(&mut m, "main", &[]);
         assert!(r.is_err(), "aggregate over-allocation must trap, got {r:?}");
     }
+
+    // ── LANG83 PR1b: floor division, trap, legacy div edges ────────────────
+
+    fn run_i64_op(op: &str, a: i64, b: i64) -> Result<Value, crate::errors::VMError> {
+        let fn_ = IIRFunction::new(
+            "main", vec![], "i64",
+            vec![
+                IIRInstr::new("const", Some("a".into()), vec![Operand::Int(a)], "i64"),
+                IIRInstr::new("const", Some("b".into()), vec![Operand::Int(b)], "i64"),
+                IIRInstr::new(op, Some("r".into()),
+                    vec![Operand::Var("a".into()), Operand::Var("b".into())], "i64"),
+                IIRInstr::new("ret", None, vec![Operand::Var("r".into())], "i64"),
+            ],
+        );
+        let mut m = IIRModule::new("test", "test");
+        m.add_or_replace(fn_);
+        VMCore::new().execute(&mut m, "main", &[]).map(|o| o.unwrap())
+    }
+
+    fn lang83_trap_kind(r: Result<Value, crate::errors::VMError>) -> String {
+        match r {
+            Err(crate::errors::VMError::Trap { kind }) => kind,
+            other => panic!("expected a LANG83 trap, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn i64_div_and_mod_floor_follow_the_sign_table() {
+        // (a, b, floor quotient, floor remainder) — Python's // and %.
+        for (a, b, q, r) in [(7, 2, 3, 1), (-7, 2, -4, 1), (7, -2, -4, -1), (-7, -2, 3, -1), (6, 3, 2, 0), (-6, 3, -2, 0)] {
+            assert_eq!(run_i64_op("i64_div_floor", a, b).unwrap(), Value::Int(q), "{a} // {b}");
+            assert_eq!(run_i64_op("i64_mod_floor", a, b).unwrap(), Value::Int(r), "{a} % {b}");
+        }
+        assert_eq!(run_i64_op("i64_div_floor", i64::MIN, 1).unwrap(), Value::Int(i64::MIN));
+        assert_eq!(run_i64_op("i64_mod_floor", i64::MIN, 1).unwrap(), Value::Int(0));
+    }
+
+    #[test]
+    fn i64_floor_ops_trap_with_defined_kinds() {
+        assert_eq!(lang83_trap_kind(run_i64_op("i64_div_floor", 7, 0)), "Trap.DivZero");
+        assert_eq!(lang83_trap_kind(run_i64_op("i64_mod_floor", 7, 0)), "Trap.DivZero");
+        assert_eq!(lang83_trap_kind(run_i64_op("i64_div_floor", i64::MIN, -1)), "Trap.Overflow");
+        // MIN mod -1 is mathematically 0 — no trap.
+        assert_eq!(run_i64_op("i64_mod_floor", i64::MIN, -1).unwrap(), Value::Int(0));
+    }
+
+    #[test]
+    fn legacy_div_and_mod_no_longer_panic_on_min_by_minus_one() {
+        // Used to abort the host with "attempt to divide with overflow".
+        assert_eq!(run_i64_op("div", i64::MIN, -1).unwrap(), Value::Int(i64::MIN));
+        assert_eq!(run_i64_op("mod", i64::MIN, -1).unwrap(), Value::Int(0));
+        assert!(matches!(run_i64_op("div", 1, 0), Err(crate::errors::VMError::DivisionByZero)));
+    }
+
+    #[test]
+    fn trap_reports_its_kind_and_rejects_unregistered_kinds() {
+        let build = |kind: &str| {
+            let mut m = IIRModule::new("test", "test");
+            m.add_or_replace(IIRFunction::new(
+                "main", vec![], "void",
+                vec![IIRInstr::new("trap", None, vec![Operand::Str(kind.into())], "void")],
+            ));
+            m
+        };
+        let r = VMCore::new().execute(&mut build("Trap.User"), "main", &[]);
+        assert_eq!(lang83_trap_kind(r.map(|o| o.unwrap_or(Value::Null))), "Trap.User");
+        let r = VMCore::new().execute(&mut build("Not.A.Kind"), "main", &[]);
+        assert!(matches!(r, Err(crate::errors::VMError::Custom(_))), "{r:?}");
+    }
 }

@@ -236,6 +236,6 @@ cargo test -p vm-core
 `Lowered` or `Refused(reason)`, for every operation in the
 [LANG83](../../../specs/LANG83-iir-standard-operation-registry.md) standard registry
 (`interpreter_ir::op_registry::STANDARD_OPS`). Here the answer is **derived**: an Op is lowered iff the standard dispatch table has a handler, a Builtin iff the default `BuiltinRegistry` registers it. The default registry provides the standard output builtins `print_i64` (value + newline) and `putchar`, which write through the same stdout handle as `print_str`. `lang-aot` refuses a
-module that uses a refused op at compile time, with a typed error. The four
-LANG83 PR1b ops (`write_i64`, `i64_div_floor`, `i64_mod_floor`, `trap`) are
-refused until PR1b lowers them.
+module that uses a refused op at compile time, with a typed error. Since LANG83 PR1b every registry op is lowered here, including `write_i64`
+(no newline), `i64_div_floor`/`i64_mod_floor` (defined `Trap.DivZero` /
+`Trap.Overflow` edges) and `trap`, which surfaces as `VMError::Trap { kind }`.

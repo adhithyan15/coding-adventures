@@ -1,5 +1,28 @@
 # Changelog — vm-core
 
+## [0.28.0] — 2026-10-19 (LANG83 PR1b — floor division, `trap`, `write_i64`)
+
+- **`i64_div_floor` / `i64_mod_floor` handlers** ([LANG83](../../../specs/LANG83-iir-standard-operation-registry.md)):
+  floor quotient / remainder (Python `//` `%`, Ruby `/` `%`) with defined
+  edges — a zero divisor raises `Trap.DivZero`, `i64::MIN / -1` raises
+  `Trap.Overflow`, `i64::MIN mod -1` is `0`.
+- **`trap` handler.** `trap "<kind>"` returns the new `VMError::Trap { kind }`
+  for a kind in the closed `exception_kind` table; any other kind is malformed
+  IR (`VMError::Custom`). Every output builtin flushes as it writes, so output
+  before a trap is never lost.
+- **Default `write_i64` builtin** — decimal, no newline, same stdout handle as
+  `print_i64`/`putchar`/`print_str` (one ordered stream).
+- **Fixed: legacy `div`/`mod` no longer panic on `i64::MIN / -1`.** Rust's `/`
+  and `%` panic on that overflow in every build profile, aborting the host. The
+  legacy ops now use `wrapping_div`/`wrapping_rem` (`MIN`, `0`) — the JVM /
+  generic-JIT answer; their edges stay backend-dependent by design (LANG83
+  "Legacy edge behaviour"), so this picks a defined value instead of a crash.
+- `op_support` flips all four PR1b ops to `Lowered` with no edit to the
+  module itself — the answer is derived from the dispatch table and default
+  builtins.
+- Tests: sign table, both trap kinds, MIN/1, legacy MIN/−1, `trap` kind
+  validation, `VMError::Trap` display, `write_i64` registration.
+
 ## [0.27.0] — 2026-10-19 (LANG83 PR1a — standard operation support)
 
 - **LANG83 op support, derived.** New `op_support` module: `op_support(name)` and
