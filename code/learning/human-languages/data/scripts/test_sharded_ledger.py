@@ -108,7 +108,10 @@ class ShardedLedgerSafetyTest(unittest.TestCase):
                 "outside sentinel",
             )
         finally:
-            os.rmdir(directory)
+            if os.name == "nt":
+                os.rmdir(directory)  # Remove the junction, not its target.
+            else:
+                os.unlink(directory)  # Unix symlinks are not directories to rmdir.
             os.rename(moved, directory)
 
     def chapter_document(self, *chapters):
