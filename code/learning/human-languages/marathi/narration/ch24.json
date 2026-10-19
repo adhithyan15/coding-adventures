@@ -4,7 +4,7 @@
   "chapter": 24,
   "title": "A Message for Mira",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:3e57c8159acd153d",
+  "sourceHash": "fnv1a64:653ef2162ed5dba4",
   "lessons": [
     {
       "id": "MR-A1M01-reader-greeting",
@@ -1510,7 +1510,7 @@
         "writing-type",
         "writing-block"
       ],
-      "sourceHash": "fnv1a64:3f3e59209f2bed05",
+      "sourceHash": "fnv1a64:466ce729a6456ebf",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -1575,6 +1575,24 @@
                 "correct": "Keep the stopped first attempt as partial-timer evidence.",
                 "incorrect": "Keep the stopped first attempt; do not reveal a model until scoring is complete."
               }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": false,
+              "id": "MR-A1M19-separate-repair",
+              "prompt": "After scoring, on a separate line repair only the spelling in उदय भेटू.",
+              "assesses": [
+                "MR-A1-MESSAGE-LINE-SEE-TOMORROW"
+              ],
+              "responseSeconds": 15,
+              "acceptedResponses": [
+                "उद्या भेटू."
+              ],
+              "feedback": {
+                "correct": "This orthographic repair is separate from the stopped message attempt.",
+                "incorrect": "Correct only the tomorrow word; keep the first attempt unchanged."
+              }
             }
           ]
         }
@@ -1594,7 +1612,7 @@
         "writing-type",
         "writing-block"
       ],
-      "sourceHash": "fnv1a64:f037d55beda7baaa",
+      "sourceHash": "fnv1a64:7e19b7378c321264",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -1664,6 +1682,24 @@
               "feedback": {
                 "correct": "Preserve the timed first attempt and count its 30-40 words.",
                 "incorrect": "Preserve the timed first attempt; score before viewing any model."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": false,
+              "id": "MR-A1M20-separate-repair",
+              "prompt": "After scoring, on a separate line restore the missing subject in मराठी वाचतो.",
+              "assesses": [
+                "MR-A1-MESSAGE-LINE-READ-MARATHI"
+              ],
+              "responseSeconds": 15,
+              "acceptedResponses": [
+                "मी मराठी वाचतो."
+              ],
+              "feedback": {
+                "correct": "This Marathi-control repair is separate from the stopped message attempt.",
+                "incorrect": "Add only the missing subject; keep the timed first attempt unchanged."
               }
             }
           ]

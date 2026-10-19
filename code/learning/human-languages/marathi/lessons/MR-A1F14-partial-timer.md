@@ -50,6 +50,7 @@ follows next lesson.
 ## Wrap-up recall — score, then repair
 <!-- hl-knowledge: introduces=[]; assesses=[MR-A1-FORM-LABEL-NAAV, MR-A1-FORM-LABEL-SHAHAR, MR-A1-FORM-LABEL-BHASHA] -->
 <!-- hl-activity: {"id":"MR-A1F14-partial-timer-check","kind":"text","assesses":["MR-A1-FORM-LABEL-NAAV","MR-A1-FORM-LABEL-SHAHAR","MR-A1-FORM-LABEL-BHASHA"],"prompt":"In 60 seconds fill the name, city and language rows for Arun in Pune with Marathi; stop at the bell.","answer":"नाव: अरुण; शहर: पुणे; भाषा: मराठी","accepted":[],"feedback":{"correct":"Keep the stopped first attempt as partial-timer evidence.","incorrect":"Keep the stopped first attempt; score before viewing the reference values."},"response_seconds":60} -->
+<!-- hl-activity: {"id":"MR-A1F14-separate-repair","kind":"text","assesses":["MR-A1-FORM-LABEL-SHAHAR"],"prompt":"After scoring, on a separate line repair the misplaced city value in शहर: मराठी for this profile.","answer":"शहर: पुणे","accepted":[],"feedback":{"correct":"This row-organisation repair is separate from the stopped form attempt.","incorrect":"Put the city beside its label; keep the timed first attempt unchanged."},"response_seconds":15} -->
 
 Score **task fulfilment** (all three meanings), **organisation** (values
 beside the correct labels), **Marathi control** (the right Marathi forms),

@@ -4,7 +4,7 @@
   "chapter": 25,
   "title": "A Six-Field Profile",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:adeead1290b87679",
+  "sourceHash": "fnv1a64:0a2b80fa9c847772",
   "lessons": [
     {
       "id": "MR-A1F04-first-three-select",
@@ -862,7 +862,7 @@
         "writing-block",
         "eyes-or-hands-step"
       ],
-      "sourceHash": "fnv1a64:45808b8eb299060a",
+      "sourceHash": "fnv1a64:8fdd5a615725987e",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -926,6 +926,24 @@
                 "correct": "Keep the stopped first attempt as partial-timer evidence.",
                 "incorrect": "Keep the stopped first attempt; score before viewing the reference values."
               }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": false,
+              "id": "MR-A1F14-separate-repair",
+              "prompt": "After scoring, on a separate line repair the misplaced city value in शहर: मराठी for this profile.",
+              "assesses": [
+                "MR-A1-FORM-LABEL-SHAHAR"
+              ],
+              "responseSeconds": 15,
+              "acceptedResponses": [
+                "शहर: पुणे"
+              ],
+              "feedback": {
+                "correct": "This row-organisation repair is separate from the stopped form attempt.",
+                "incorrect": "Put the city beside its label; keep the timed first attempt unchanged."
+              }
             }
           ]
         }
@@ -945,7 +963,7 @@
         "writing-type",
         "writing-block"
       ],
-      "sourceHash": "fnv1a64:733345eaa1bbc4b8",
+      "sourceHash": "fnv1a64:2520e0612d949644",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -1012,6 +1030,24 @@
               "feedback": {
                 "correct": "Keep the six-field timed first attempt for separate scoring.",
                 "incorrect": "Keep the stopped first attempt; score before viewing reference values."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": false,
+              "id": "MR-A1F15-separate-repair",
+              "prompt": "After scoring, on a separate line repair the wrong friend value in मित्राचे नाव: अरुण for Profile C.",
+              "assesses": [
+                "MR-A1-FORM-LABEL-MITRACHE-NAAV"
+              ],
+              "responseSeconds": 15,
+              "acceptedResponses": [
+                "मित्राचे नाव: मीरा"
+              ],
+              "feedback": {
+                "correct": "This task-fulfilment repair is separate from the stopped form attempt.",
+                "incorrect": "Use the requested friend value; keep the timed first attempt unchanged."
               }
             }
           ]

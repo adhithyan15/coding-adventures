@@ -92,6 +92,10 @@ it("introduces a partial timer before a full timed named-reader message", () => 
     expect(lesson?.body).toContain("Marathi control");
     expect(lesson?.body).toContain("orthographic control");
     expect(lesson?.body).toContain("repair");
+    const activities = lesson?.blocks.flatMap((block) => block.activities ?? []) ?? [];
+    expect(activities).toHaveLength(2);
+    expect(activities[1]?.id).toContain("separate-repair");
+    expect(activities[1]?.responseSeconds).toBeLessThanOrEqual(20);
   }
   expect(lessons[1]?.body).toContain("partial timer");
   expect(lessons[2]?.body).toContain("30–40 words");

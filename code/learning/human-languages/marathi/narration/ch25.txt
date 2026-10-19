@@ -192,6 +192,7 @@ Set a 60-second partial timer. Fill just these three fields in Marathi Devanagar
 Wrap-up recall — score, then repair.
 Score task fulfilment (all three meanings), organisation (values beside the correct labels), Marathi control (the right Marathi forms), and orthographic control (Devanagari letters) separately. Make one 20-second repair on a separate line; do not replace the timed attempt. This is not a full A1 mock.
 [once you have stopped driving — question: In 60 seconds fill the name, city and language rows for Arun in Pune with Marathi; stop at the bell.]
+[once you have stopped driving — question: After scoring, on a separate line repair the misplaced city value in शहर: मराठी for this profile.]
 
 
 Lesson 12 of 12.
@@ -209,3 +210,4 @@ Set two minutes. Write all six fields in Marathi Devanagari from the meanings al
 Wrap-up recall — score, then repair.
 Score task fulfilment (all requested values), organisation (right row for each value), Marathi control (familiar noun and agreement forms), and orthographic control (Devanagari spelling) separately. Make one 20-second repair on another line; do not overwrite the stopped attempt. This is not a full A1 mock or a readiness claim.
 [once you have stopped driving — question: In 120 seconds complete Profile C's six Marathi fields from meanings alone; stop at the bell.]
+[once you have stopped driving — question: After scoring, on a separate line repair the wrong friend value in मित्राचे नाव: अरुण for Profile C.]
