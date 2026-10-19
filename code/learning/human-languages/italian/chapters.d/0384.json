@@ -1,0 +1,19 @@
+{
+  "chapter": 384,
+  "title": "Le regole",
+  "label": "ch:it-le-regole",
+  "canDo": "I can talk about rules: a norm, the regulations, what is compulsory or optional, and an obligation.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "IT-C384-obbligo",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 384: I can talk about rules: a norm, the regulations, what is compulsory or optional, and an obligation.",
+    "assesses": [
+      "IT-LEX-C384-NORMA-03",
+      "IT-LEX-C384-NORMA-04",
+      "IT-LEX-C384-NORMA-05"
+    ]
+  }
+}

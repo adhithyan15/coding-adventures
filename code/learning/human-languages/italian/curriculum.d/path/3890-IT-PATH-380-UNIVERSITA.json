@@ -1,0 +1,9 @@
+{
+  "id": "IT-PATH-380-UNIVERSITA",
+  "spine_node": "SPINE-EXPRESS-CONDITION",
+  "before": [],
+  "inline": [
+    "IT-EXT-380-UNIVERSITA"
+  ],
+  "after": []
+}

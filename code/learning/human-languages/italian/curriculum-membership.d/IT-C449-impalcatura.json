@@ -1,0 +1,11 @@
+{
+  "id": "IT-C449-impalcatura",
+  "pathSegment": "IT-PATH-449-LAVORI",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "IT-EXT-449-LAVORI",
+      "order": 1
+    }
+  ]
+}

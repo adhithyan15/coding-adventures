@@ -1,0 +1,8 @@
+{
+  "id": "IT-EXT-293-SCASSO",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say that thieves broke into a house: the break-in, the forced window, the burglar alarm and the vandals.",
+  "prerequisites": []
+}

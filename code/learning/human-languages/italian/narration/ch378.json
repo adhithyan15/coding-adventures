@@ -1,0 +1,858 @@
+{
+  "version": 1,
+  "language": "italian",
+  "chapter": 378,
+  "title": "Che cosa voglio fare",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:9edc061e2c2bd0c1",
+  "lessons": [
+    {
+      "id": "IT-C378-scopo",
+      "sequence": 21590,
+      "title": "lo scopo — the purpose, the aim",
+      "headword": "lo scopo",
+      "romanization": "lo scopo",
+      "gloss": "the purpose, the aim",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5181407b745f66c5",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Italian for to commit yourself, then the Italian for flexible."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: lo scopo",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "lo scopo — \"the purpose, the aim\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Lo scopo del viaggio è imparare la lingua. The aim of the trip is to learn the language."
+            },
+            {
+              "kind": "speech",
+              "text": "Allo scopo di — in order to. A che scopo? — what for?"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "scopo is a learned borrowing from Greek skopós \"a watcher; a mark to aim at\", through Latin scopos \"a mark to aim at\" (Lewis & Short), which EtymDB gives as the source of scopo (EtymDB); it is related to sképtesthai \"to look carefully\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lo scopo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lo scopo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lo scopo, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lo scopo*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with lo scopo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *lo scopo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Italian for to commit yourself, then the Italian for flexible, then say lo scopo again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Italian for to commit yourself, then the Italian for flexible, then say *lo scopo* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does lo scopo mean? (\"The purpose, the aim\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "IT-C378-intenzione",
+      "sequence": 21600,
+      "title": "l'intenzione — the intention",
+      "headword": "l'intenzione",
+      "romanization": "l'intenzione",
+      "gloss": "the intention",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:584d20b92539d793",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Italian for flexible, then the Italian for the purpose."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: l'intenzione",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "l'intenzione — \"the intention\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Non ho intenzione di cambiare lavoro. I have no intention of changing jobs."
+            },
+            {
+              "kind": "speech",
+              "text": "Avere intenzione di + infinitive — to intend to."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "intenzione is a learned borrowing from Latin intentiō \"a stretching, an effort, a purpose\" (Lewis & Short), from intendere \"to stretch towards\", built on tendere \"to stretch\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "l'intenzione",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *l'intenzione*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "l'intenzione, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *l'intenzione*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with l'intenzione",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *l'intenzione*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Italian for flexible, then the Italian for the purpose, then say l'intenzione again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Italian for flexible, then the Italian for the purpose, then say *l'intenzione* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does l'intenzione mean? (\"The intention\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "IT-C378-programmare",
+      "sequence": 21610,
+      "title": "programmare — to plan; to program",
+      "headword": "programmare",
+      "romanization": "programmare",
+      "gloss": "to plan; to program",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:91a66e08d91fd483",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Italian for the purpose, then the Italian for the intention."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: programmare",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "programmare — \"to plan; to program\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Abbiamo programmato le vacanze con sei mesi di anticipo. We planned the holidays six months in advance."
+            },
+            {
+              "kind": "speech",
+              "text": "Also to program a computer or a machine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "programmare is built on programma \"programme\", a learned borrowing from Late Latin programma \"a proclamation\" (EtymDB), from Greek prógramma \"a public notice\", from prográphein \"to write before\", on gráphein \"to write\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "programmare",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *programmare*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "programmare, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *programmare*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with programmare",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *programmare*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Italian for the purpose, then the Italian for the intention, then say programmare again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Italian for the purpose, then the Italian for the intention, then say *programmare* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does programmare mean? (\"To plan; to program\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "IT-C378-proposito",
+      "sequence": 21620,
+      "title": "il proposito — the resolution, the intention",
+      "headword": "il proposito",
+      "romanization": "il proposito",
+      "gloss": "the resolution, the intention",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9a1e89a9400117cc",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Italian for the intention, then the Italian for to plan."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: il proposito",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "il proposito — \"the resolution, the intention\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Il mio proposito per l'anno nuovo è fare più sport. My New Year's resolution is to do more sport."
+            },
+            {
+              "kind": "speech",
+              "text": "A proposito! — by the way! Di proposito — on purpose."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "proposito is a learned borrowing from Latin prōpositum \"a plan, a purpose\" (Lewis & Short), from prōpōnere \"to set forth\", built on pōnere \"to put\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "il proposito",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *il proposito*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "il proposito, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *il proposito*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with il proposito",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *il proposito*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Italian for the intention, then the Italian for to plan, then say il proposito again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Italian for the intention, then the Italian for to plan, then say *il proposito* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does il proposito mean? (\"The resolution, the intention\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "IT-C378-meta",
+      "sequence": 21630,
+      "title": "la meta — the goal; the destination",
+      "headword": "la meta",
+      "romanization": "la meta",
+      "gloss": "the goal; the destination",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d53f3828385e2e12",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Italian for to plan, then the Italian for the resolution."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: la meta",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la meta — \"the goal; the destination\"."
+            },
+            {
+              "kind": "speech",
+              "text": "La nostra meta è la cima della montagna. Our goal is the top of the mountain."
+            },
+            {
+              "kind": "speech",
+              "text": "Stress on the first syllable: mèta. Not to be mixed up with metà \"half\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "meta is a learned borrowing from Latin mēta \"a cone-shaped turning post in a racecourse; a limit, a goal\" (Lewis & Short)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la meta",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la meta*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la meta, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la meta*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with la meta",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *la meta*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Italian for to plan, then the Italian for the resolution, then say la meta again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Italian for to plan, then the Italian for the resolution, then say *la meta* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does la meta mean? (\"The goal; the destination\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "IT-R378-ripasso-371-378",
+      "sequence": 21640,
+      "title": "Ripasso dei capitoli 371–378",
+      "headword": "(dialogue)",
+      "romanization": "(dialogue)",
+      "gloss": "a review of chapters 371-378",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ac52cbe0f1a2e165",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Italian for relevant and crucial."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "relevant, crucial, essential, fundamental, the premise",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: relevant, crucial, essential, fundamental, the premise]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to suppose, the hypothesis, to presume, plausible, the precondition",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to suppose, the hypothesis, to presume, plausible, the precondition]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "provided that, if, otherwise, or else, possible",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: provided that, if, otherwise, or else, possible]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the unexpected problem, predictable, unpredictable, the alternative, to adapt",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the unexpected problem, predictable, unpredictable, the alternative, to adapt]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to cancel, to postpone, provisional, final, to fix",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to cancel, to postpone, provisional, final, to fix]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the risk, risky, likely, unlikely, the probability",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the risk, risky, likely, unlikely, the probability]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "available, busy, the commitment, to commit yourself, flexible",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: available, busy, the commitment, to commit yourself, flexible]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the purpose, the intention, to plan, the resolution, the goal",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the purpose, the intention, to plan, the resolution, the goal]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Relevant? (rilevante.) Crucial? (cruciale.) Essential? (essenziale.) Fundamental? (fondamentale.) The premise? (la premessa.) To suppose? (supporre.) The hypothesis? (l'ipotesi.) To presume? (presumere.) Plausible? (plausibile.) The precondition? (il presupposto.) Provided that? (purché.) If? (qualora.) Otherwise? (altrimenti.) Or else? (sennò.) Possible? (eventuale.) The unexpected problem? (l'imprevisto.) Predictable? (prevedibile.) Unpredictable? (imprevedibile.) The alternative? (l'alternativa.) To adapt? (adattarsi.) To cancel? (annullare.) To postpone? (rinviare.) Provisional? (provvisorio.) Final? (definitivo.) To fix? (stabilire.) The risk? (il rischio.) Risky? (rischioso.) Likely? (probabile.) Unlikely? (improbabile.) The probability? (la probabilità.) Available? (disponibile.) Busy? (impegnato.) The commitment? (l'impegno.) To commit yourself? (impegnarsi.) Flexible? (flessibile.) The purpose? (lo scopo.) The intention? (l'intenzione.) To plan? (programmare.) The resolution? (il proposito.) The goal? (la meta.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

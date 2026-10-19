@@ -1,0 +1,9 @@
+{
+  "id": "IT-PATH-479-ALLEGRIA",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "IT-EXT-479-ALLEGRIA"
+  ],
+  "after": []
+}

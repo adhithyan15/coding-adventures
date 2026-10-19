@@ -1,0 +1,11 @@
+{
+  "id": "IT-C483-tagliarsi",
+  "pathSegment": "IT-PATH-483-FERITE",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "IT-EXT-483-FERITE",
+      "order": 4
+    }
+  ]
+}

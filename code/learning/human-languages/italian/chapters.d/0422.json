@@ -1,0 +1,19 @@
+{
+  "chapter": 422,
+  "title": "In barca",
+  "label": "ch:it-in-barca",
+  "canDo": "I can talk about small boats: the lake boat, the dinghy, the oar, rowing and the canoe.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "IT-C422-canoa",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 422: I can talk about small boats: the lake boat, the dinghy, the oar, rowing and the canoe.",
+    "assesses": [
+      "IT-LEX-C422-BARCA-03",
+      "IT-LEX-C422-BARCA-04",
+      "IT-LEX-C422-BARCA-05"
+    ]
+  }
+}

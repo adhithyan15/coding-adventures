@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C434-sturare",
+    "language": "italian",
+    "chapter": 434,
+    "sequence": 24620,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:fc4031a88c2320c9"
+  },
+  "findings": []
+}

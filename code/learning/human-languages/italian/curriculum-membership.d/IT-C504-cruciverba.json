@@ -1,0 +1,11 @@
+{
+  "id": "IT-C504-cruciverba",
+  "pathSegment": "IT-PATH-504-CARTE",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "IT-EXT-504-CARTE",
+      "order": 4
+    }
+  ]
+}

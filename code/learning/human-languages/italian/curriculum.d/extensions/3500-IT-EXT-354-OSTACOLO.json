@@ -1,0 +1,8 @@
+{
+  "id": "IT-EXT-354-OSTACOLO",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say what stands in the way, what prevents or hinders a plan and what favours it or makes it possible.",
+  "prerequisites": []
+}

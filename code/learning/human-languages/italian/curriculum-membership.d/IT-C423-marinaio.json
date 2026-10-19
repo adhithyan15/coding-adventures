@@ -1,0 +1,11 @@
+{
+  "id": "IT-C423-marinaio",
+  "pathSegment": "IT-PATH-423-TRAGHETTO",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "IT-EXT-423-TRAGHETTO",
+      "order": 2
+    }
+  ]
+}

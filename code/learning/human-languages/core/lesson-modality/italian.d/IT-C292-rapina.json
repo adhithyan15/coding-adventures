@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C292-rapina",
+    "language": "italian",
+    "chapter": 292,
+    "sequence": 17070,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:049baccd47a24414"
+  },
+  "findings": []
+}

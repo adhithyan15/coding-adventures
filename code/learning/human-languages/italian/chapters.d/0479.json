@@ -1,0 +1,19 @@
+{
+  "chapter": 479,
+  "title": "Ridere di gusto",
+  "label": "ch:it-ridere-di-gusto",
+  "canDo": "I can describe joy, laughter and being moved.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "IT-C479-commuoversi",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 479: I can describe joy, laughter and being moved.",
+    "assesses": [
+      "IT-LEX-C479-ALLEGRIA-03",
+      "IT-LEX-C479-ALLEGRIA-04",
+      "IT-LEX-C479-ALLEGRIA-05"
+    ]
+  }
+}

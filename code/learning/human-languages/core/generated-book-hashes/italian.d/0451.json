@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 451,
+  "sourceHash": "fnv1a64:55a9c6ff559737d8",
+  "lessonIds": [
+    "IT-C451-lungomare",
+    "IT-C451-gironzolare",
+    "IT-C451-curiosare",
+    "IT-C451-sbirciare",
+    "IT-C451-vetrina"
+  ],
+  "tex": "italian/book/chapters/ch451-due-passi-in-citta.tex"
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C367-volontariato",
+    "language": "italian",
+    "chapter": 367,
+    "sequence": 21030,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e560817be322558f"
+  },
+  "findings": []
+}

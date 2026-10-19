@@ -1,0 +1,11 @@
+{
+  "id": "IT-C375-definitivo",
+  "pathSegment": "IT-PATH-375-PROGRAMMA",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "IT-EXT-375-PROGRAMMA",
+      "order": 3
+    }
+  ]
+}

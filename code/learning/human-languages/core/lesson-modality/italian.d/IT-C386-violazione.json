@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C386-violazione",
+    "language": "italian",
+    "chapter": 386,
+    "sequence": 22010,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:76ef6d186846ff5c"
+  },
+  "findings": []
+}

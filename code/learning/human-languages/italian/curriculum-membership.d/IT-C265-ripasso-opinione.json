@@ -1,0 +1,11 @@
+{
+  "id": "IT-C265-ripasso-opinione",
+  "pathSegment": "IT-PATH-265-OPINIONE",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "IT-EXT-265-OPINIONE",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "IT-C513-cronometro",
+  "pathSegment": "IT-PATH-513-GARA",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "IT-EXT-513-GARA",
+      "order": 1
+    }
+  ]
+}

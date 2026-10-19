@@ -1,0 +1,19 @@
+{
+  "chapter": 329,
+  "title": "La rivolta",
+  "label": "ch:it-la-rivolta",
+  "canDo": "I can tell how people rose up: the revolt, rebelling, invading, surrendering and setting free.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "IT-C329-liberare",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 329: I can tell how people rose up: the revolt, rebelling, invading, surrendering and setting free.",
+    "assesses": [
+      "IT-LEX-C329-RIVOLTA-03",
+      "IT-LEX-C329-RIVOLTA-04",
+      "IT-LEX-C329-RIVOLTA-05"
+    ]
+  }
+}

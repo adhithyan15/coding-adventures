@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C424-approdare",
+    "language": "italian",
+    "chapter": 424,
+    "sequence": 24080,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:72bdd9b7b53e27d7"
+  },
+  "findings": []
+}

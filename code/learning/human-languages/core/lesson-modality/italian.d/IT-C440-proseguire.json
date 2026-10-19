@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C440-proseguire",
+    "language": "italian",
+    "chapter": 440,
+    "sequence": 24920,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:38f957922c84b7e6"
+  },
+  "findings": []
+}

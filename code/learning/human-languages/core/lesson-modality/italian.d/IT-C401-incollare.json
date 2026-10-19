@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C401-incollare",
+    "language": "italian",
+    "chapter": 401,
+    "sequence": 22800,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:dc6e324d78a0013f"
+  },
+  "findings": []
+}

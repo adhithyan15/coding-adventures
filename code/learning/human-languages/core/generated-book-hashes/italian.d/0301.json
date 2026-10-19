@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 301,
+  "sourceHash": "fnv1a64:7a6985f138da4ae5",
+  "lessonIds": [
+    "IT-C301-soccorso",
+    "IT-C301-soccorrere",
+    "IT-C301-soccorritore",
+    "IT-C301-barella",
+    "IT-C301-sirena"
+  ],
+  "tex": "italian/book/chapters/ch301-arrivano-i-soccorsi.tex"
+}

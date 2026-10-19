@@ -1,0 +1,11 @@
+{
+  "id": "IT-C509-fallo",
+  "pathSegment": "IT-PATH-509-ARBITRO",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "IT-EXT-509-ARBITRO",
+      "order": 2
+    }
+  ]
+}

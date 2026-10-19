@@ -1,0 +1,9 @@
+{
+  "id": "IT-PATH-361-CARRIERA",
+  "spine_node": "SPINE-GIVE-REASONS",
+  "before": [],
+  "inline": [
+    "IT-EXT-361-CARRIERA"
+  ],
+  "after": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 273,
+  "sourceHash": "fnv1a64:7864ecc4eadade6b",
+  "lessonIds": [
+    "IT-C273-dapprima",
+    "IT-C273-innanzitutto",
+    "IT-C273-in-seguito",
+    "IT-C273-successivamente",
+    "IT-C273-dopodiche"
+  ],
+  "tex": "italian/book/chapters/ch273-prima-di-tutto.tex"
+}

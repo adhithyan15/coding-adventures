@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C503-gioco-da-tavolo",
+    "language": "italian",
+    "chapter": 503,
+    "sequence": 28270,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:196df62bc6a21290"
+  },
+  "findings": []
+}

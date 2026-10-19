@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C483-livido",
+    "language": "italian",
+    "chapter": 483,
+    "sequence": 27210,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:615c9a7602b4e173"
+  },
+  "findings": []
+}

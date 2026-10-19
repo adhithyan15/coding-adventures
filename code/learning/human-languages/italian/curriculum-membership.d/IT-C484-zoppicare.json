@@ -1,0 +1,11 @@
+{
+  "id": "IT-C484-zoppicare",
+  "pathSegment": "IT-PATH-484-GESSO",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "IT-EXT-484-GESSO",
+      "order": 4
+    }
+  ]
+}

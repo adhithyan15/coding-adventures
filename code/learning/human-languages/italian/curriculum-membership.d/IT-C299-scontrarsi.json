@@ -1,0 +1,11 @@
+{
+  "id": "IT-C299-scontrarsi",
+  "pathSegment": "IT-PATH-299-SCONTRO",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "IT-EXT-299-SCONTRO",
+      "order": 1
+    }
+  ]
+}

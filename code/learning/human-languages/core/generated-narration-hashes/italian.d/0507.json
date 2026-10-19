@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 507,
+  "sourceHash": "fnv1a64:1d023d19cec0483a",
+  "lessonIds": [
+    "IT-C507-giardinaggio",
+    "IT-C507-seminare",
+    "IT-C507-annaffiare",
+    "IT-C507-rastrello",
+    "IT-C507-zappare"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch507.txt",
+  "json": "italian/narration/ch507.json",
+  "textHash": "fnv1a64:485171eb50c64a88",
+  "jsonHash": "fnv1a64:573a1eb12bb07b3c",
+  "findings": []
+}

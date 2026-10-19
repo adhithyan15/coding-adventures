@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 472,
+  "sourceHash": "fnv1a64:11070c41d757a1f5",
+  "lessonIds": [
+    "IT-C472-testardo",
+    "IT-C472-pigro",
+    "IT-C472-generoso",
+    "IT-C472-avaro",
+    "IT-C472-vantarsi"
+  ],
+  "tex": "italian/book/chapters/ch472-pregi-e-difetti.tex"
+}

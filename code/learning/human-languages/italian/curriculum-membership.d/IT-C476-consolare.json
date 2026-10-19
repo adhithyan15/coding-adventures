@@ -1,0 +1,11 @@
+{
+  "id": "IT-C476-consolare",
+  "pathSegment": "IT-PATH-476-DELUSIONE",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "IT-EXT-476-DELUSIONE",
+      "order": 2
+    }
+  ]
+}

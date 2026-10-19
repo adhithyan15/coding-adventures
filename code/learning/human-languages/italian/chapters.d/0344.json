@@ -1,0 +1,19 @@
+{
+  "chapter": 344,
+  "title": "Le prove",
+  "label": "ch:it-le-prove",
+  "canDo": "I can talk about proof: say something is evident, obvious or beyond question, or that it is plain to see.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "IT-C344-palese",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 344: I can talk about proof: say something is evident, obvious or beyond question, or that it is plain to see.",
+    "assesses": [
+      "IT-LEX-C344-PROVA-03",
+      "IT-LEX-C344-PROVA-04",
+      "IT-LEX-C344-PROVA-05"
+    ]
+  }
+}

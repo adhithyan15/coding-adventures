@@ -1,0 +1,20 @@
+{
+  "chapter": 266,
+  "title": "Dovrei, Spiegare --- Advice, and the Shape of an Explanation",
+  "label": "ch:it-advice-and-explanation",
+  "canDo": "I can advise with dovrei and dovresti, and explain myself in four moves: an opinion, a cause, a consequence and advice.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "IT-C266-ripasso-spiegazione",
+    "kind": "production",
+    "summary": "Complete IT-C266-ripasso-spiegazione: answer a why-question with all four moves of an explanation.",
+    "assesses": [
+      "IT-LEX-DOVREI-01",
+      "IT-ETYMON-DEBERE-02",
+      "IT-GRAMMAR-SPIEGAZIONE-01",
+      "IT-ETYMON-SPIEGARE-02"
+    ]
+  }
+}

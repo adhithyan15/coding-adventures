@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 368,
+  "sourceHash": "fnv1a64:e37a8881a475b541",
+  "lessonIds": [
+    "IT-C368-convivenza",
+    "IT-C368-tolleranza",
+    "IT-C368-rispetto",
+    "IT-C368-rispettare",
+    "IT-C368-integrazione"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch368.txt",
+  "json": "italian/narration/ch368.json",
+  "textHash": "fnv1a64:1e1b5faa9d0ddd60",
+  "jsonHash": "fnv1a64:33e05f5c9689d186",
+  "findings": []
+}

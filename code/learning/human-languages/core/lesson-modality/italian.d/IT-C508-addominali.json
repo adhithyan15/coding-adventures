@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C508-addominali",
+    "language": "italian",
+    "chapter": 508,
+    "sequence": 28520,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f04f0a621b63b1b6"
+  },
+  "findings": []
+}

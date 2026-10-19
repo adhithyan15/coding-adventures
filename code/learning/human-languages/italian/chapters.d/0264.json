@@ -1,0 +1,22 @@
+{
+  "chapter": 264,
+  "title": "First, Then, In the End --- A Story Told in Order",
+  "label": "ch:it-a-story-told-in-order",
+  "canDo": "I can tell a short connected story in order with prima, poi and alla fine, and read one of about a hundred words.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "IT-C264-ripasso-racconto",
+    "kind": "production",
+    "summary": "Complete IT-C264-ripasso-racconto: retell the reading's journey aloud, choosing scene or event for every verb.",
+    "assesses": [
+      "IT-GRAMMAR-POI-01",
+      "IT-GRAMMAR-ALLA-FINE-02",
+      "IT-ETYMON-POI-03",
+      "IT-GRAMMAR-STORIA-IN-ORDINE-01",
+      "IT-ETYMON-RACCONTARE-02",
+      "IT-SKILL-READ-NARRATIVE-01"
+    ]
+  }
+}

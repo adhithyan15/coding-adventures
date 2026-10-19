@@ -1,0 +1,8 @@
+{
+  "id": "IT-EXT-441-VICOLI",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can describe streets: a fork in the road, an alley, a side street, an avenue and a one-way street.",
+  "prerequisites": []
+}

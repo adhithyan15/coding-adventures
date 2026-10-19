@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 533,
+  "sourceHash": "fnv1a64:55fbb93d4073a112",
+  "lessonIds": [
+    "IT-C533-apparecchiare",
+    "IT-C533-sparecchiare",
+    "IT-C533-tovaglia",
+    "IT-C533-tovagliolo",
+    "IT-C533-vassoio"
+  ],
+  "tex": "italian/book/chapters/ch533-a-tavola.tex"
+}

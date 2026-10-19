@@ -1,0 +1,11 @@
+{
+  "id": "IT-C474-lunatico",
+  "pathSegment": "IT-PATH-474-UMORE",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "IT-EXT-474-UMORE",
+      "order": 2
+    }
+  ]
+}

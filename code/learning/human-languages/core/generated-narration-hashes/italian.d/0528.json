@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 528,
+  "sourceHash": "fnv1a64:8516bff1c474c120",
+  "lessonIds": [
+    "IT-C528-serie",
+    "IT-C528-puntata",
+    "IT-C528-episodio",
+    "IT-C528-spoiler",
+    "IT-C528-telecomando"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch528.txt",
+  "json": "italian/narration/ch528.json",
+  "textHash": "fnv1a64:c85f5b46dea6dcdc",
+  "jsonHash": "fnv1a64:b28732e105319b6f",
+  "findings": []
+}

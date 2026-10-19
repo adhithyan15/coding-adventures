@@ -1,0 +1,11 @@
+{
+  "id": "IT-C407-clacson",
+  "pathSegment": "IT-PATH-407-VETRI",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "IT-EXT-407-VETRI",
+      "order": 3
+    }
+  ]
+}

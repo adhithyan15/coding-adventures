@@ -1,0 +1,11 @@
+{
+  "id": "IT-C333-scolare",
+  "pathSegment": "IT-PATH-333-PENTOLA",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "IT-EXT-333-PENTOLA",
+      "order": 2
+    }
+  ]
+}

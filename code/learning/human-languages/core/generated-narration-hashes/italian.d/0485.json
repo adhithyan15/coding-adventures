@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 485,
+  "sourceHash": "fnv1a64:0c62619c2f844e6a",
+  "lessonIds": [
+    "IT-C485-slogarsi",
+    "IT-C485-crampo",
+    "IT-C485-gonfio",
+    "IT-C485-garza",
+    "IT-C485-fasciare"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch485.txt",
+  "json": "italian/narration/ch485.json",
+  "textHash": "fnv1a64:0825765e42bb78bf",
+  "jsonHash": "fnv1a64:8453ffd186e92cca",
+  "findings": []
+}

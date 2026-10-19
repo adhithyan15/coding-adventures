@@ -1,0 +1,11 @@
+{
+  "id": "IT-C534-spugna",
+  "pathSegment": "IT-PATH-534-PIATTI",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "IT-EXT-534-PIATTI",
+      "order": 2
+    }
+  ]
+}

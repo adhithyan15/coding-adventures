@@ -1,0 +1,19 @@
+{
+  "chapter": 431,
+  "title": "Prenotare e disdire",
+  "label": "ch:it-prenotare-e-disdire",
+  "canDo": "I can handle a booking: the deposit, the advance, cancelling, the cancellation fee and bringing dates forward.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "IT-C431-anticipare",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 431: I can handle a booking: the deposit, the advance, cancelling, the cancellation fee and bringing dates forward.",
+    "assesses": [
+      "IT-LEX-C431-CAPARRA-03",
+      "IT-LEX-C431-CAPARRA-04",
+      "IT-LEX-C431-CAPARRA-05"
+    ]
+  }
+}

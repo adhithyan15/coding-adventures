@@ -1,0 +1,11 @@
+{
+  "id": "IT-C280-tuttora",
+  "pathSegment": "IT-PATH-280-FINORA",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "IT-EXT-280-FINORA",
+      "order": 2
+    }
+  ]
+}

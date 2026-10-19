@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C347-giudizio",
+    "language": "italian",
+    "chapter": 347,
+    "sequence": 20020,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3445c37a7c2f5f65"
+  },
+  "findings": []
+}

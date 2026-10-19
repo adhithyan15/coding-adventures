@@ -1,0 +1,11 @@
+{
+  "id": "IT-C314-tomba",
+  "pathSegment": "IT-PATH-314-EREDITA",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "IT-EXT-314-EREDITA",
+      "order": 4
+    }
+  ]
+}

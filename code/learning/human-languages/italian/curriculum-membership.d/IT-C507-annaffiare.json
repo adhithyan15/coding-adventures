@@ -1,0 +1,11 @@
+{
+  "id": "IT-C507-annaffiare",
+  "pathSegment": "IT-PATH-507-ORTO",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "IT-EXT-507-ORTO",
+      "order": 2
+    }
+  ]
+}

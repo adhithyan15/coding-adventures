@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C472-generoso",
+    "language": "italian",
+    "chapter": 472,
+    "sequence": 26670,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:43671d47a7e847a5"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C313-seppellire",
+    "language": "italian",
+    "chapter": 313,
+    "sequence": 18190,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:da18be065a273705"
+  },
+  "findings": []
+}

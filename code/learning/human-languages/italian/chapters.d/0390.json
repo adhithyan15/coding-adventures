@@ -1,0 +1,19 @@
+{
+  "chapter": 390,
+  "title": "Legale o no",
+  "label": "ch:it-legale-o-no",
+  "canDo": "I can say whether something is legal or illegal, allowed or not, and call out what is unauthorised.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "IT-C390-abusivo",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 390: I can say whether something is legal or illegal, allowed or not, and call out what is unauthorised.",
+    "assesses": [
+      "IT-LEX-C390-LEGALE-03",
+      "IT-LEX-C390-LEGALE-04",
+      "IT-LEX-C390-LEGALE-05"
+    ]
+  }
+}

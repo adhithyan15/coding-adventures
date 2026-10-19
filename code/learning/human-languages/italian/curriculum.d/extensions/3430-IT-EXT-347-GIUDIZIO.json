@@ -1,0 +1,8 @@
+{
+  "id": "IT-EXT-347-GIUDIZIO",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can evaluate something, give a judgement and say whether a view is objective or subjective.",
+  "prerequisites": []
+}

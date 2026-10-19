@@ -1,0 +1,20 @@
+{
+  "language": "italian",
+  "chapter": 370,
+  "sourceHash": "fnv1a64:80e3d4b2ff0bb151",
+  "lessonIds": [
+    "IT-C370-maggioranza",
+    "IT-C370-minoranza",
+    "IT-C370-democrazia",
+    "IT-C370-riforma",
+    "IT-C370-deputato",
+    "IT-R370-ripasso-363-370"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "italian/narration/ch370.txt",
+  "json": "italian/narration/ch370.json",
+  "textHash": "fnv1a64:89bbe76cb7f8d287",
+  "jsonHash": "fnv1a64:e76fa377e29df0d7",
+  "findings": []
+}

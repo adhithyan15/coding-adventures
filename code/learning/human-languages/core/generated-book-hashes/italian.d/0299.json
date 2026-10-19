@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 299,
+  "sourceHash": "fnv1a64:c3ff2c90426d8a20",
+  "lessonIds": [
+    "IT-C299-scontro",
+    "IT-C299-scontrarsi",
+    "IT-C299-schiantarsi",
+    "IT-C299-ammaccare",
+    "IT-C299-danneggiare"
+  ],
+  "tex": "italian/book/chapters/ch299-lo-scontro.tex"
+}

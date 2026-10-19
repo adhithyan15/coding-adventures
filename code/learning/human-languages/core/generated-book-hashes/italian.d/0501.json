@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 501,
+  "sourceHash": "fnv1a64:6d40d85520681bd8",
+  "lessonIds": [
+    "IT-C501-pescare",
+    "IT-C501-canna-da-pesca",
+    "IT-C501-esca",
+    "IT-C501-abboccare",
+    "IT-C501-borraccia"
+  ],
+  "tex": "italian/book/chapters/ch501-un-giorno-di-pesca.tex"
+}

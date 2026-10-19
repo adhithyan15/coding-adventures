@@ -1,0 +1,9 @@
+{
+  "id": "IT-PATH-393-CARCERE",
+  "spine_node": "SPINE-EXPRESS-CONDITION",
+  "before": [],
+  "inline": [
+    "IT-EXT-393-CARCERE"
+  ],
+  "after": []
+}

@@ -1,0 +1,20 @@
+{
+  "language": "italian",
+  "chapter": 510,
+  "sourceHash": "fnv1a64:d934d2f093b314a9",
+  "lessonIds": [
+    "IT-C510-attaccante",
+    "IT-C510-difensore",
+    "IT-C510-centrocampista",
+    "IT-C510-titolare",
+    "IT-C510-parare",
+    "IT-R510-ripasso-503-510"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "italian/narration/ch510.txt",
+  "json": "italian/narration/ch510.json",
+  "textHash": "fnv1a64:603aba4c22c95942",
+  "jsonHash": "fnv1a64:60d5a7164f5ad36f",
+  "findings": []
+}

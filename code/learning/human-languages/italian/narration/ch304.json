@@ -1,0 +1,858 @@
+{
+  "version": 1,
+  "language": "italian",
+  "chapter": 304,
+  "title": "La terra trema",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:88ae669eac3c92a8",
+  "lessons": [
+    {
+      "id": "IT-C304-terremoto",
+      "sequence": 17680,
+      "title": "il terremoto — the earthquake",
+      "headword": "il terremoto",
+      "romanization": "il terremoto",
+      "gloss": "the earthquake",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e38b6fc9e64c6faf",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Italian for the bang, then the Italian for the collapse."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: il terremoto",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "il terremoto — \"the earthquake\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Il terremoto è durato venti secondi. The earthquake lasted twenty seconds."
+            },
+            {
+              "kind": "speech",
+              "text": "A lively child is also un terremoto."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "terremoto is inherited from Latin terrae mōtus \"a moving of the earth\" (EtymDB)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "il terremoto",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *il terremoto*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "il terremoto, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *il terremoto*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with il terremoto",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *il terremoto*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Italian for the bang, then the Italian for the collapse, then say il terremoto again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Italian for the bang, then the Italian for the collapse, then say *il terremoto* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does il terremoto mean? (\"The earthquake\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "IT-C304-scossa",
+      "sequence": 17690,
+      "title": "la scossa — the tremor; the shock",
+      "headword": "la scossa",
+      "romanization": "la scossa",
+      "gloss": "the tremor; the shock",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4a91f86312d04411",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Italian for the collapse, then the Italian for the earthquake."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: la scossa",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la scossa — \"the tremor; the shock\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Stanotte abbiamo sentito una scossa. Last night we felt a tremor."
+            },
+            {
+              "kind": "speech",
+              "text": "Una scossa elettrica — an electric shock."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "scossa is built on scosso, the past participle of scuotere \"to shake\", from Latin excussus (EtymDB)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la scossa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la scossa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la scossa, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la scossa*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with la scossa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *la scossa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Italian for the collapse, then the Italian for the earthquake, then say la scossa again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Italian for the collapse, then the Italian for the earthquake, then say *la scossa* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does la scossa mean? (\"The tremor; the shock\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "IT-C304-macerie",
+      "sequence": 17700,
+      "title": "le macerie — the rubble, the debris",
+      "headword": "le macerie",
+      "romanization": "le macerie",
+      "gloss": "the rubble, the debris",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7693fe7ed5aaadcc",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Italian for the earthquake, then the Italian for the tremor."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: le macerie",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "le macerie — \"the rubble, the debris\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Sotto le macerie c'è ancora qualcuno. There is still someone under the rubble."
+            },
+            {
+              "kind": "speech",
+              "text": "Mostly plural."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "macerie is a learned borrowing from Latin māceria \"a garden wall\" (Lewis & Short): first a dry-stone wall, later its fallen stones."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "le macerie",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *le macerie*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "le macerie, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *le macerie*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with le macerie",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *le macerie*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Italian for the earthquake, then the Italian for the tremor, then say le macerie again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Italian for the earthquake, then the Italian for the tremor, then say *le macerie* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does le macerie mean? (\"The rubble, the debris\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "IT-C304-sfollato",
+      "sequence": 17710,
+      "title": "lo sfollato — the evacuee, the displaced person",
+      "headword": "lo sfollato",
+      "romanization": "lo sfollato",
+      "gloss": "the evacuee, the displaced person",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1096f042635ad435",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Italian for the tremor, then the Italian for the rubble."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: lo sfollato",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "lo sfollato — \"the evacuee, the displaced person\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Gli sfollati dormono nella palestra della scuola. The evacuees are sleeping in the school gym."
+            },
+            {
+              "kind": "speech",
+              "text": "From sfollare, to empty of people."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "sfollato is the past participle of sfollare \"to empty of people\", built on folla \"crowd\", which is usually traced to a Vulgar Latin fullāre \"to tread cloth\", built on fullo \"a fuller\" (Lewis & Short)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lo sfollato",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lo sfollato*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lo sfollato, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lo sfollato*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with lo sfollato",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *lo sfollato*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Italian for the tremor, then the Italian for the rubble, then say lo sfollato again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Italian for the tremor, then the Italian for the rubble, then say *lo sfollato* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does lo sfollato mean? (\"The evacuee, the displaced person\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "IT-C304-evacuare",
+      "sequence": 17720,
+      "title": "evacuare — to evacuate",
+      "headword": "evacuare",
+      "romanization": "evacuare",
+      "gloss": "to evacuate",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e873ef2077913c35",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Italian for the rubble, then the Italian for the evacuee."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: evacuare",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "evacuare — \"to evacuate\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Hanno evacuato tutto il paese. They evacuated the whole village."
+            },
+            {
+              "kind": "speech",
+              "text": "People or buildings: evacuare la scuola."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "evacuare is a learned borrowing from Latin ēvacuāre \"to empty out\" (EtymDB), built on vacuus \"empty\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "evacuare",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *evacuare*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "evacuare, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *evacuare*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with evacuare",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *evacuare*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Italian for the rubble, then the Italian for the evacuee, then say evacuare again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Italian for the rubble, then the Italian for the evacuee, then say *evacuare* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does evacuare mean? (\"To evacuate\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "IT-R304-ripasso-297-304",
+      "sequence": 17730,
+      "title": "Ripasso dei capitoli 297–304",
+      "headword": "(dialogue)",
+      "romanization": "(dialogue)",
+      "gloss": "a review of chapters 297-304",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:886759f3a197a273",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Italian for to arrest and the arrest."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to arrest, the arrest, the handcuffs, to capture, to flee",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to arrest, the arrest, the handcuffs, to capture, to flee]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the gang, the accomplice, to attack, the attack, to threaten",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the gang, the accomplice, to attack, the attack, to threaten]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the crash, to collide, to crash into something, to dent, to damage",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the crash, to collide, to crash into something, to dent, to damage]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to run over, the injured person, to injure, unhurt, to come through all right",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to run over, the injured person, to injure, unhurt, to come through all right]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "emergency help, to come to the aid of, the rescuer, the stretcher, the siren",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: emergency help, to come to the aid of, the rescuer, the stretcher, the siren]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the fire, to flare up, the fire extinguisher, the burn, to get burned",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the fire, to flare up, the fire extinguisher, the burn, to get burned]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the explosion, to explode, to burst, the bang, the collapse",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the explosion, to explode, to burst, the bang, the collapse]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the earthquake, the tremor, the rubble, the evacuee, to evacuate",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the earthquake, the tremor, the rubble, the evacuee, to evacuate]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "To arrest? (arrestare.) The arrest? (l'arresto.) The handcuffs? (le manette.) To capture? (catturare.) To flee? (fuggire.) The gang? (la banda.) The accomplice? (il complice.) To attack? (aggredire.) The attack? (l'aggressione.) To threaten? (minacciare.) The crash? (lo scontro.) To collide? (scontrarsi.) To crash into something? (schiantarsi.) To dent? (ammaccare.) To damage? (danneggiare.) To run over? (travolgere.) The injured person? (il ferito.) To injure? (ferire.) Unhurt? (illeso.) To come through all right? (cavarsela.) Emergency help? (il soccorso.) To come to the aid of? (soccorrere.) The rescuer? (il soccorritore.) The stretcher? (la barella.) The siren? (la sirena.) The fire? (l'incendio.) To flare up? (divampare.) The fire extinguisher? (l'estintore.) The burn? (l'ustione.) To get burned? (ustionarsi.) The explosion? (l'esplosione.) To explode? (esplodere.) To burst? (scoppiare.) The bang? (lo scoppio.) The collapse? (il crollo.) The earthquake? (il terremoto.) The tremor? (la scossa.) The rubble? (le macerie.) The evacuee? (lo sfollato.) To evacuate? (evacuare.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

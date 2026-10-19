@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 281,
+  "sourceHash": "fnv1a64:90c152a86bbba2e5",
+  "lessonIds": [
+    "IT-C281-vigilia",
+    "IT-C281-indomani",
+    "IT-C281-stamattina",
+    "IT-C281-stanotte",
+    "IT-C281-mattinata"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch281.txt",
+  "json": "italian/narration/ch281.json",
+  "textHash": "fnv1a64:8c302e585bc43bfe",
+  "jsonHash": "fnv1a64:30ab29543b5d573d",
+  "findings": []
+}

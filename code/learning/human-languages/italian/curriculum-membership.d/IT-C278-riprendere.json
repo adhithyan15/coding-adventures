@@ -1,0 +1,11 @@
+{
+  "id": "IT-C278-riprendere",
+  "pathSegment": "IT-PATH-278-PRINCIPIO",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "IT-EXT-278-PRINCIPIO",
+      "order": 4
+    }
+  ]
+}

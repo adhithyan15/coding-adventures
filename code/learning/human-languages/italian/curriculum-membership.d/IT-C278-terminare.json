@@ -1,0 +1,11 @@
+{
+  "id": "IT-C278-terminare",
+  "pathSegment": "IT-PATH-278-PRINCIPIO",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "IT-EXT-278-PRINCIPIO",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,9 @@
+{
+  "id": "IT-PATH-444-INDIRIZZO",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "IT-EXT-444-INDIRIZZO"
+  ],
+  "after": []
+}

@@ -1,0 +1,21 @@
+{
+  "language": "italian",
+  "chapter": 536,
+  "sourceHash": "fnv1a64:f7ab89ae2c3bb593",
+  "lessonIds": [
+    "IT-C536-inquilino",
+    "IT-C536-padrone-di-casa",
+    "IT-C536-arredare",
+    "IT-C536-mensola",
+    "IT-C536-comodino",
+    "IT-R536-ripasso-535-536",
+    "IT-R536-ripasso-final-536"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "italian/narration/ch536.txt",
+  "json": "italian/narration/ch536.json",
+  "textHash": "fnv1a64:4253903b9dbe2b2d",
+  "jsonHash": "fnv1a64:9c4502d6c6438bde",
+  "findings": []
+}

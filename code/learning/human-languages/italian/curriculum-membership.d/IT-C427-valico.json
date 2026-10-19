@@ -1,0 +1,11 @@
+{
+  "id": "IT-C427-valico",
+  "pathSegment": "IT-PATH-427-DOGANA",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "IT-EXT-427-DOGANA",
+      "order": 4
+    }
+  ]
+}

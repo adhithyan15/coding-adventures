@@ -1,0 +1,20 @@
+{
+  "language": "italian",
+  "chapter": 486,
+  "sourceHash": "fnv1a64:428dfa89568015fc",
+  "lessonIds": [
+    "IT-C486-starnutire",
+    "IT-C486-prurito",
+    "IT-C486-grattarsi",
+    "IT-C486-allergia",
+    "IT-C486-puntura",
+    "IT-R486-ripasso-479-486"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "italian/narration/ch486.txt",
+  "json": "italian/narration/ch486.json",
+  "textHash": "fnv1a64:e0573817fcd7c480",
+  "jsonHash": "fnv1a64:cdfef916051680cf",
+  "findings": []
+}

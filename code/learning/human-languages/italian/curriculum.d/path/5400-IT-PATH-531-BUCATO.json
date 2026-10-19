@@ -1,0 +1,9 @@
+{
+  "id": "IT-PATH-531-BUCATO",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "IT-EXT-531-BUCATO"
+  ],
+  "after": []
+}

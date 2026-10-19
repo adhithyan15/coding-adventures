@@ -1,0 +1,11 @@
+{
+  "id": "IT-C530-postare",
+  "pathSegment": "IT-PATH-530-ONLINE",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "IT-EXT-530-ONLINE",
+      "order": 3
+    }
+  ]
+}

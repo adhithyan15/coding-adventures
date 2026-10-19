@@ -1,0 +1,11 @@
+{
+  "language": "italian",
+  "chapter": 268,
+  "sourceHash": "fnv1a64:331ba9501bb6666f",
+  "lessonIds": [
+    "IT-C268-andata-e-ritorno",
+    "IT-C268-ho-perso",
+    "IT-C268-ripasso-stazione"
+  ],
+  "tex": "italian/book/chapters/ch268-a-return-ticket.tex"
+}

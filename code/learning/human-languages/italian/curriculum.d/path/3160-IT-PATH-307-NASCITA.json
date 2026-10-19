@@ -1,0 +1,9 @@
+{
+  "id": "IT-PATH-307-NASCITA",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "IT-EXT-307-NASCITA"
+  ],
+  "after": []
+}

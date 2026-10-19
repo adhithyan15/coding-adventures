@@ -1,0 +1,11 @@
+{
+  "id": "IT-C484-gesso",
+  "pathSegment": "IT-PATH-484-GESSO",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "IT-EXT-484-GESSO",
+      "order": 1
+    }
+  ]
+}

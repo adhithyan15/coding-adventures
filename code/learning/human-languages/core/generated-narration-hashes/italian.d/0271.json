@@ -1,0 +1,18 @@
+{
+  "language": "italian",
+  "chapter": 271,
+  "sourceHash": "fnv1a64:0dbbd7e558c6e06b",
+  "lessonIds": [
+    "IT-C271-se",
+    "IT-C271-se-piove",
+    "IT-C271-dipende",
+    "IT-C271-ripasso-condizioni"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 4,
+  "text": "italian/narration/ch271.txt",
+  "json": "italian/narration/ch271.json",
+  "textHash": "fnv1a64:fe6ba9117093858d",
+  "jsonHash": "fnv1a64:4d3bb46880d3230e",
+  "findings": []
+}

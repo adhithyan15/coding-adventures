@@ -1,0 +1,19 @@
+{
+  "chapter": 460,
+  "title": "Nel bosco",
+  "label": "ch:it-nel-bosco",
+  "canDo": "I can describe a walk in the woods: a clearing, a brook, a mountain stream, a bush and wading across.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "IT-R460-ripasso-453-460",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 460: I can describe a walk in the woods: a clearing, a brook, a mountain stream, a bush and wading across.",
+    "assesses": [
+      "IT-LEX-C460-BOSCO-03",
+      "IT-LEX-C460-BOSCO-04",
+      "IT-LEX-C460-BOSCO-05"
+    ]
+  }
+}

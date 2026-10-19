@@ -1,0 +1,9 @@
+{
+  "id": "IT-PATH-386-VIOLAZIONE",
+  "spine_node": "SPINE-EXPRESS-CONDITION",
+  "before": [],
+  "inline": [
+    "IT-EXT-386-VIOLAZIONE"
+  ],
+  "after": []
+}

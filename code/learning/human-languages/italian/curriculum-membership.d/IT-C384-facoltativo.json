@@ -1,0 +1,11 @@
+{
+  "id": "IT-C384-facoltativo",
+  "pathSegment": "IT-PATH-384-NORMA",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "IT-EXT-384-NORMA",
+      "order": 3
+    }
+  ]
+}

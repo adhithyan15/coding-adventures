@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 495,
+  "sourceHash": "fnv1a64:0af98eb97c6f0748",
+  "lessonIds": [
+    "IT-C495-adottare",
+    "IT-C495-adozione",
+    "IT-C495-patrigno",
+    "IT-C495-matrigna",
+    "IT-C495-fratellastro"
+  ],
+  "tex": "italian/book/chapters/ch495-famiglie-nuove.tex"
+}

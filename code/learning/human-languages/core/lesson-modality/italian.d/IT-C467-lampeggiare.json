@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C467-lampeggiare",
+    "language": "italian",
+    "chapter": 467,
+    "sequence": 26290,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e6ee1524a2fa4901"
+  },
+  "findings": []
+}

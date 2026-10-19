@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 369,
+  "sourceHash": "fnv1a64:9fb4e2d7d230f85b",
+  "lessonIds": [
+    "IT-C369-partito",
+    "IT-C369-parlamento",
+    "IT-C369-ministro",
+    "IT-C369-eleggere",
+    "IT-C369-elettore"
+  ],
+  "tex": "italian/book/chapters/ch369-la-politica.tex"
+}

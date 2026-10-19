@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C343-scettico",
+    "language": "italian",
+    "chapter": 343,
+    "sequence": 19810,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d3433ec4b7cb362c"
+  },
+  "findings": []
+}

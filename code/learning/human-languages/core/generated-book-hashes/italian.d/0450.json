@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 450,
+  "sourceHash": "fnv1a64:080c4a6b9e210c27",
+  "lessonIds": [
+    "IT-C450-sagra",
+    "IT-C450-corteo",
+    "IT-C450-processione",
+    "IT-C450-patrono",
+    "IT-C450-bancarella"
+  ],
+  "tex": "italian/book/chapters/ch450-feste-di-paese.tex"
+}

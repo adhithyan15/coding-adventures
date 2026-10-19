@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C281-mattinata",
+    "language": "italian",
+    "chapter": 281,
+    "sequence": 16550,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8cb1762a22e6d7c3"
+  },
+  "findings": []
+}

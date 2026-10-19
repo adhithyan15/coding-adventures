@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C293-vandalo",
+    "language": "italian",
+    "chapter": 293,
+    "sequence": 17160,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0ad4fd9130e94c4c"
+  },
+  "findings": []
+}

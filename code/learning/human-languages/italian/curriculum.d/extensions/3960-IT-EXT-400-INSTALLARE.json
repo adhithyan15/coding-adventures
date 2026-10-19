@@ -1,0 +1,8 @@
+{
+  "id": "IT-EXT-400-INSTALLARE",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can install and remove an app, talk about software and the device it runs on.",
+  "prerequisites": []
+}

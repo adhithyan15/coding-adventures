@@ -1,0 +1,8 @@
+{
+  "id": "IT-EXT-385-VIETATO",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say what is forbidden, banned or tolerated, and talk about permission and authorising something.",
+  "prerequisites": []
+}

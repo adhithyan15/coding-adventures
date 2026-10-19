@@ -1,0 +1,8 @@
+{
+  "id": "IT-EXT-454-ALIMENTARI",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can shop for food: the delicatessen, the fishmonger, the greengrocer, the cake shop and the rotisserie.",
+  "prerequisites": []
+}

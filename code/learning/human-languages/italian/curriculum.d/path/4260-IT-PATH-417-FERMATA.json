@@ -1,0 +1,9 @@
+{
+  "id": "IT-PATH-417-FERMATA",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "IT-EXT-417-FERMATA"
+  ],
+  "after": []
+}

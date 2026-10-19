@@ -1,0 +1,11 @@
+{
+  "id": "IT-C357-disoccupato",
+  "pathSegment": "IT-PATH-357-DIMISSIONI",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "IT-EXT-357-DIMISSIONI",
+      "order": 3
+    }
+  ]
+}

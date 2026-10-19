@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C414-statale",
+    "language": "italian",
+    "chapter": 414,
+    "sequence": 23560,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:94ec4c3fd2b03bd4"
+  },
+  "findings": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 524,
+  "sourceHash": "fnv1a64:8284d9a90e95f995",
+  "lessonIds": [
+    "IT-C524-romanziere",
+    "IT-C524-capitolo",
+    "IT-C524-ambientare",
+    "IT-C524-colpo-di-scena",
+    "IT-C524-epilogo"
+  ],
+  "tex": "italian/book/chapters/ch524-un-bel-romanzo.tex"
+}

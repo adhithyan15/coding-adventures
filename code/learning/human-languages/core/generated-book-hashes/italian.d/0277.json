@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 277,
+  "sourceHash": "fnv1a64:41671e36f7871466",
+  "lessonIds": [
+    "IT-C277-durare",
+    "IT-C277-durata",
+    "IT-C277-istante",
+    "IT-C277-attimo",
+    "IT-C277-fase"
+  ],
+  "tex": "italian/book/chapters/ch277-quanto-e-durato.tex"
+}

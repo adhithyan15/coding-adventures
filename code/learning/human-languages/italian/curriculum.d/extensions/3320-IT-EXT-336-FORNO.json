@@ -1,0 +1,8 @@
+{
+  "id": "IT-EXT-336-FORNO",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can describe baking: preheating, putting in and taking out, the baking tray and the cooking time.",
+  "prerequisites": []
+}

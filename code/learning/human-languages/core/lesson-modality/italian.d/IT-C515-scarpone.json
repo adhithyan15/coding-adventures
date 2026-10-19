@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C515-scarpone",
+    "language": "italian",
+    "chapter": 515,
+    "sequence": 28860,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8205203ff5cb7b3f"
+  },
+  "findings": []
+}

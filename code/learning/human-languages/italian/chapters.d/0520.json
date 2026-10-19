@@ -1,0 +1,19 @@
+{
+  "chapter": 520,
+  "title": "Sul palco",
+  "label": "ch:it-sul-palco",
+  "canDo": "I can talk about acting in a play.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "IT-C520-regista",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 520: I can talk about acting in a play.",
+    "assesses": [
+      "IT-LEX-C520-RECITARE-03",
+      "IT-LEX-C520-RECITARE-04",
+      "IT-LEX-C520-RECITARE-05"
+    ]
+  }
+}

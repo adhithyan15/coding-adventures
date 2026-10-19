@@ -1,0 +1,19 @@
+{
+  "chapter": 469,
+  "title": "Vento e tempesta",
+  "label": "ch:it-vento-e-tempesta",
+  "canDo": "I can describe wild weather: a blizzard, a hurricane, a gust of wind, the wind blowing and a cloudburst.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "IT-C469-nubifragio",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 469: I can describe wild weather: a blizzard, a hurricane, a gust of wind, the wind blowing and a cloudburst.",
+    "assesses": [
+      "IT-LEX-C469-TEMPESTA-03",
+      "IT-LEX-C469-TEMPESTA-04",
+      "IT-LEX-C469-TEMPESTA-05"
+    ]
+  }
+}

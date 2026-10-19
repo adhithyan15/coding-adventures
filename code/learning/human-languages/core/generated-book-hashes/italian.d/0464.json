@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 464,
+  "sourceHash": "fnv1a64:a0640f0a8d85d365",
+  "lessonIds": [
+    "IT-C464-cinghiale",
+    "IT-C464-cervo",
+    "IT-C464-lepre",
+    "IT-C464-falco",
+    "IT-C464-brucare"
+  ],
+  "tex": "italian/book/chapters/ch464-animali-selvatici.tex"
+}

@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 463,
+  "sourceHash": "fnv1a64:00fdd9559e8500ae",
+  "lessonIds": [
+    "IT-C463-scoglio",
+    "IT-C463-abbronzarsi",
+    "IT-C463-conchiglia",
+    "IT-C463-marea",
+    "IT-C463-tuffarsi"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch463.txt",
+  "json": "italian/narration/ch463.json",
+  "textHash": "fnv1a64:27443199fc258c85",
+  "jsonHash": "fnv1a64:36c28141ec21353e",
+  "findings": []
+}

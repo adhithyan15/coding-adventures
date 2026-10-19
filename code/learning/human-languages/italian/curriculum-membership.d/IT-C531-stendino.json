@@ -1,0 +1,11 @@
+{
+  "id": "IT-C531-stendino",
+  "pathSegment": "IT-PATH-531-BUCATO",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "IT-EXT-531-BUCATO",
+      "order": 2
+    }
+  ]
+}

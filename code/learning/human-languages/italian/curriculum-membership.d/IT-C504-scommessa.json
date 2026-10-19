@@ -1,0 +1,11 @@
+{
+  "id": "IT-C504-scommessa",
+  "pathSegment": "IT-PATH-504-CARTE",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "IT-EXT-504-CARTE",
+      "order": 3
+    }
+  ]
+}

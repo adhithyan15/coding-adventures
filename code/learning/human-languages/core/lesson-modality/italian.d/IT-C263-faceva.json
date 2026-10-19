@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C263-faceva",
+    "language": "italian",
+    "chapter": 263,
+    "sequence": 15720,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:cdad1d05e7830e48"
+  },
+  "findings": []
+}

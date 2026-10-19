@@ -1,0 +1,19 @@
+{
+  "chapter": 395,
+  "title": "Mettere da parte",
+  "label": "ch:it-mettere-da-parte",
+  "canDo": "I can talk about savings, investment, interest rates and inflation.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "IT-C395-inflazione",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 395: I can talk about savings, investment, interest rates and inflation.",
+    "assesses": [
+      "IT-LEX-C395-RISPARMIO-03",
+      "IT-LEX-C395-RISPARMIO-04",
+      "IT-LEX-C395-RISPARMIO-05"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C412-investire",
+    "language": "italian",
+    "chapter": 412,
+    "sequence": 23480,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:303149e57b9ba8a4"
+  },
+  "findings": []
+}

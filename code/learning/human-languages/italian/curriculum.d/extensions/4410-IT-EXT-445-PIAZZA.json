@@ -1,0 +1,8 @@
+{
+  "id": "IT-EXT-445-PIAZZA",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can describe the buildings round a square: the bell tower, the main church, the cathedral, the arcades and the loggia.",
+  "prerequisites": []
+}

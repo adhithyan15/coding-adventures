@@ -1,0 +1,19 @@
+{
+  "chapter": 372,
+  "title": "Supponiamo",
+  "label": "ch:it-supponiamo",
+  "canDo": "I can make a hypothesis: suppose or presume something, say it is plausible and name what it rests on.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "IT-C372-presupposto",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 372: I can make a hypothesis: suppose or presume something, say it is plausible and name what it rests on.",
+    "assesses": [
+      "IT-LEX-C372-IPOTESI-03",
+      "IT-LEX-C372-IPOTESI-04",
+      "IT-LEX-C372-IPOTESI-05"
+    ]
+  }
+}

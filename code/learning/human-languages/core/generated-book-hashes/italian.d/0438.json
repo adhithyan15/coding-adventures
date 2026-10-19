@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 438,
+  "sourceHash": "fnv1a64:8a4551aa76219748",
+  "lessonIds": [
+    "IT-C438-reclamo",
+    "IT-C438-reclamare",
+    "IT-C438-lamentela",
+    "IT-C438-rimediare",
+    "IT-C438-risarcire"
+  ],
+  "tex": "italian/book/chapters/ch438-il-reclamo.tex"
+}

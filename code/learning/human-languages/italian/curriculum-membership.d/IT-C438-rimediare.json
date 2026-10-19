@@ -1,0 +1,11 @@
+{
+  "id": "IT-C438-rimediare",
+  "pathSegment": "IT-PATH-438-RECLAMO",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "IT-EXT-438-RECLAMO",
+      "order": 3
+    }
+  ]
+}

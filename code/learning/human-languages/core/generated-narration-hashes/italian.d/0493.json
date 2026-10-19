@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 493,
+  "sourceHash": "fnv1a64:e0a43a2dfd60f2db",
+  "lessonIds": [
+    "IT-C493-cognato",
+    "IT-C493-cognata",
+    "IT-C493-bisnonno",
+    "IT-C493-parentela",
+    "IT-C493-assomigliare"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch493.txt",
+  "json": "italian/narration/ch493.json",
+  "textHash": "fnv1a64:b578853e738656ec",
+  "jsonHash": "fnv1a64:7426843fd5d67b1d",
+  "findings": []
+}

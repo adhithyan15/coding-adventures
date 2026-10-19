@@ -1,0 +1,19 @@
+{
+  "chapter": 529,
+  "title": "In lingua originale",
+  "label": "ch:it-in-lingua-originale",
+  "canDo": "I can talk about watching films dubbed or with subtitles.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "IT-C529-trailer",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 529: I can talk about watching films dubbed or with subtitles.",
+    "assesses": [
+      "IT-LEX-C529-CINEMA-03",
+      "IT-LEX-C529-CINEMA-04",
+      "IT-LEX-C529-CINEMA-05"
+    ]
+  }
+}

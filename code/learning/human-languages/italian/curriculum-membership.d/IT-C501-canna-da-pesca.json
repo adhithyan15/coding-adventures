@@ -1,0 +1,11 @@
+{
+  "id": "IT-C501-canna-da-pesca",
+  "pathSegment": "IT-PATH-501-PESCA",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "IT-EXT-501-PESCA",
+      "order": 1
+    }
+  ]
+}

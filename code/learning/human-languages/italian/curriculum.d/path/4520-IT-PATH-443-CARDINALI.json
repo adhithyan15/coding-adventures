@@ -1,0 +1,9 @@
+{
+  "id": "IT-PATH-443-CARDINALI",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "IT-EXT-443-CARDINALI"
+  ],
+  "after": []
+}

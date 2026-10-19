@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 449,
+  "sourceHash": "fnv1a64:cebd710729daab71",
+  "lessonIds": [
+    "IT-C449-condominio",
+    "IT-C449-impalcatura",
+    "IT-C449-gru",
+    "IT-C449-crollare",
+    "IT-C449-sgomberare"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch449.txt",
+  "json": "italian/narration/ch449.json",
+  "textHash": "fnv1a64:483b31fd66feaf0a",
+  "jsonHash": "fnv1a64:1f5be8d97b9a5e0d",
+  "findings": []
+}

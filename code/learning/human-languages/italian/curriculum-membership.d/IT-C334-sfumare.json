@@ -1,0 +1,11 @@
+{
+  "id": "IT-C334-sfumare",
+  "pathSegment": "IT-PATH-334-SOFFRITTO",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "IT-EXT-334-SOFFRITTO",
+      "order": 3
+    }
+  ]
+}

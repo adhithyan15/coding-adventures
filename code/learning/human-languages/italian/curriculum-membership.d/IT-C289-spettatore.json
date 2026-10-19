@@ -1,0 +1,11 @@
+{
+  "id": "IT-C289-spettatore",
+  "pathSegment": "IT-PATH-289-PUBBLICO",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "IT-EXT-289-PUBBLICO",
+      "order": 2
+    }
+  ]
+}

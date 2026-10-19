@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 515,
+  "sourceHash": "fnv1a64:1ddac33065b62121",
+  "lessonIds": [
+    "IT-C515-pattinare",
+    "IT-C515-scarpone",
+    "IT-C515-pista",
+    "IT-C515-sciatore",
+    "IT-C515-seggiovia"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch515.txt",
+  "json": "italian/narration/ch515.json",
+  "textHash": "fnv1a64:2318e48e8acca814",
+  "jsonHash": "fnv1a64:5f5837281cd20100",
+  "findings": []
+}

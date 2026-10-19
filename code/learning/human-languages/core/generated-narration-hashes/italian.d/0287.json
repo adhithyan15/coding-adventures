@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 287,
+  "sourceHash": "fnv1a64:503b72855ab0e61f",
+  "lessonIds": [
+    "IT-C287-diretta",
+    "IT-C287-trasmissione",
+    "IT-C287-trasmettere",
+    "IT-C287-canale",
+    "IT-C287-emittente"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch287.txt",
+  "json": "italian/narration/ch287.json",
+  "textHash": "fnv1a64:4017d3ffe6311940",
+  "jsonHash": "fnv1a64:6eaa53a289c8dd9b",
+  "findings": []
+}

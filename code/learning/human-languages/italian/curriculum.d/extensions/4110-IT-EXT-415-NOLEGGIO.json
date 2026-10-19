@@ -1,0 +1,8 @@
+{
+  "id": "IT-EXT-415-NOLEGGIO",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can hire a car: hiring, the rental, the number plate, the logbook and the insurance.",
+  "prerequisites": []
+}

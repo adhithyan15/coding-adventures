@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 329,
+  "sourceHash": "fnv1a64:e7916c38eca2ac97",
+  "lessonIds": [
+    "IT-C329-rivolta",
+    "IT-C329-ribellarsi",
+    "IT-C329-invadere",
+    "IT-C329-arrendersi",
+    "IT-C329-liberare"
+  ],
+  "tex": "italian/book/chapters/ch329-la-rivolta.tex"
+}

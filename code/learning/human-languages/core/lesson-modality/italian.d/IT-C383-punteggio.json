@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C383-punteggio",
+    "language": "italian",
+    "chapter": 383,
+    "sequence": 21890,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:599cf54cb2aabbe6"
+  },
+  "findings": []
+}

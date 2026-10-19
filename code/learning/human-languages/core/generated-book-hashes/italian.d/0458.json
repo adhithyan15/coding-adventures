@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 458,
+  "sourceHash": "fnv1a64:b860d4c14fdb99b5",
+  "lessonIds": [
+    "IT-C458-raccomandata",
+    "IT-C458-spedizione",
+    "IT-C458-mittente",
+    "IT-C458-affrancare",
+    "IT-C458-recapitare"
+  ],
+  "tex": "italian/book/chapters/ch458-alla-posta.tex"
+}

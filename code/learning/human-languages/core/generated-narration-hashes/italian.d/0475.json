@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 475,
+  "sourceHash": "fnv1a64:ad1b0f036600e048",
+  "lessonIds": [
+    "IT-C475-spavento",
+    "IT-C475-spaventarsi",
+    "IT-C475-panico",
+    "IT-C475-sollievo",
+    "IT-C475-tranquillizzarsi"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch475.txt",
+  "json": "italian/narration/ch475.json",
+  "textHash": "fnv1a64:5c4fa23ff380d301",
+  "jsonHash": "fnv1a64:629fffe567cb0cb7",
+  "findings": []
+}

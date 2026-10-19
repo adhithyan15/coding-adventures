@@ -1,0 +1,11 @@
+{
+  "id": "IT-C381-relatore",
+  "pathSegment": "IT-PATH-381-DOCENTE",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "IT-EXT-381-DOCENTE",
+      "order": 1
+    }
+  ]
+}

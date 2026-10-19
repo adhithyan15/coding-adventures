@@ -1,0 +1,19 @@
+{
+  "chapter": 356,
+  "title": "Cerco lavoro",
+  "label": "ch:it-cerco-lavoro",
+  "canDo": "I can apply for a job: send my CV, put myself forward as a candidate and talk about being taken on.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "IT-C356-assunzione",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 356: I can apply for a job: send my CV, put myself forward as a candidate and talk about being taken on.",
+    "assesses": [
+      "IT-LEX-C356-CANDIDATURA-03",
+      "IT-LEX-C356-CANDIDATURA-04",
+      "IT-LEX-C356-CANDIDATURA-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "IT-C310-rimpatriare",
+  "pathSegment": "IT-PATH-310-TRASFERIRSI",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "IT-EXT-310-TRASFERIRSI",
+      "order": 4
+    }
+  ]
+}

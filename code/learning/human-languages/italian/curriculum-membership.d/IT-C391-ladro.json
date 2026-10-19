@@ -1,0 +1,11 @@
+{
+  "id": "IT-C391-ladro",
+  "pathSegment": "IT-PATH-391-ACCUSA",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "IT-EXT-391-ACCUSA",
+      "order": 2
+    }
+  ]
+}

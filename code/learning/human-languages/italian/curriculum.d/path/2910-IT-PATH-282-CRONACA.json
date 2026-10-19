@@ -1,0 +1,9 @@
+{
+  "id": "IT-PATH-282-CRONACA",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "IT-EXT-282-CRONACA"
+  ],
+  "after": []
+}

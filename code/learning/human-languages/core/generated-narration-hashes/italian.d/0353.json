@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 353,
+  "sourceHash": "fnv1a64:db37d92b6c1d0b75",
+  "lessonIds": [
+    "IT-C353-reazione",
+    "IT-C353-reagire",
+    "IT-C353-pretesto",
+    "IT-C353-scusa",
+    "IT-C353-giustificare"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch353.txt",
+  "json": "italian/narration/ch353.json",
+  "textHash": "fnv1a64:ba5badf7b3d6ecd0",
+  "jsonHash": "fnv1a64:f3a20bbf9072f937",
+  "findings": []
+}

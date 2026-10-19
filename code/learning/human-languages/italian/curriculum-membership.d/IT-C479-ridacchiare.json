@@ -1,0 +1,11 @@
+{
+  "id": "IT-C479-ridacchiare",
+  "pathSegment": "IT-PATH-479-ALLEGRIA",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "IT-EXT-479-ALLEGRIA",
+      "order": 2
+    }
+  ]
+}

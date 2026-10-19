@@ -1,0 +1,11 @@
+{
+  "id": "IT-C382-ripassare",
+  "pathSegment": "IT-PATH-382-RIPASSO",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "IT-EXT-382-RIPASSO",
+      "order": 0
+    }
+  ]
+}

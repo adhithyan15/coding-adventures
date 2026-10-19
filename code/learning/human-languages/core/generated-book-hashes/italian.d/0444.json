@@ -1,0 +1,14 @@
+{
+  "language": "italian",
+  "chapter": 444,
+  "sourceHash": "fnv1a64:5dcdc1cc2dd00429",
+  "lessonIds": [
+    "IT-C444-quartiere",
+    "IT-C444-periferia",
+    "IT-C444-rintracciare",
+    "IT-C444-numero-civico",
+    "IT-C444-citofono",
+    "IT-R444-ripasso-437-444"
+  ],
+  "tex": "italian/book/chapters/ch444-l-indirizzo.tex"
+}

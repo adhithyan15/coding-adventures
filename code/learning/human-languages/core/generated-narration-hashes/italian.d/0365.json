@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 365,
+  "sourceHash": "fnv1a64:b53d5962c82d29c9",
+  "lessonIds": [
+    "IT-C365-giustizia",
+    "IT-C365-ingiusto",
+    "IT-C365-ingiustizia",
+    "IT-C365-pregiudizio",
+    "IT-C365-stereotipo"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch365.txt",
+  "json": "italian/narration/ch365.json",
+  "textHash": "fnv1a64:8794ce7acca1e61e",
+  "jsonHash": "fnv1a64:4be7210713b6ce13",
+  "findings": []
+}

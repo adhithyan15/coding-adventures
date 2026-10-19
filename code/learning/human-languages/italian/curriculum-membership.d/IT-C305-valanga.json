@@ -1,0 +1,11 @@
+{
+  "id": "IT-C305-valanga",
+  "pathSegment": "IT-PATH-305-ALLUVIONE",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "IT-EXT-305-ALLUVIONE",
+      "order": 3
+    }
+  ]
+}

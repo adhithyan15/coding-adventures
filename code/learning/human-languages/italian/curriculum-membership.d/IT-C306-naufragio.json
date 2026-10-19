@@ -1,0 +1,11 @@
+{
+  "id": "IT-C306-naufragio",
+  "pathSegment": "IT-PATH-306-SALVATAGGIO",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "IT-EXT-306-SALVATAGGIO",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "IT-C285-smentita",
+  "pathSegment": "IT-PATH-285-COMUNICATO",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "IT-EXT-285-COMUNICATO",
+      "order": 4
+    }
+  ]
+}

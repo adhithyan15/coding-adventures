@@ -1,0 +1,11 @@
+{
+  "id": "IT-C313-lutto",
+  "pathSegment": "IT-PATH-313-LUTTO",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "IT-EXT-313-LUTTO",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C516-strimpellare",
+    "language": "italian",
+    "chapter": 516,
+    "sequence": 28940,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f3b5e0b056b28c4d"
+  },
+  "findings": []
+}

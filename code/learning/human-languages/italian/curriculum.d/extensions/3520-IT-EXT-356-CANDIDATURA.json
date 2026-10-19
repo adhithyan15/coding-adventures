@@ -1,0 +1,8 @@
+{
+  "id": "IT-EXT-356-CANDIDATURA",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can apply for a job: send my CV, put myself forward as a candidate and talk about being taken on.",
+  "prerequisites": []
+}

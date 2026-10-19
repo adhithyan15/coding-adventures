@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 289,
+  "sourceHash": "fnv1a64:e88eda9de630efd9",
+  "lessonIds": [
+    "IT-C289-lettore",
+    "IT-C289-ascoltatore",
+    "IT-C289-spettatore",
+    "IT-C289-pubblico",
+    "IT-C289-editoriale"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch289.txt",
+  "json": "italian/narration/ch289.json",
+  "textHash": "fnv1a64:f7b00e4d647e3d4b",
+  "jsonHash": "fnv1a64:7021623f022c4104",
+  "findings": []
+}

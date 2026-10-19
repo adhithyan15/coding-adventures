@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 358,
+  "sourceHash": "fnv1a64:0adbf2b43ea33f0d",
+  "lessonIds": [
+    "IT-C358-tirocinio",
+    "IT-C358-tirocinante",
+    "IT-C358-apprendista",
+    "IT-C358-datore-di-lavoro",
+    "IT-C358-dipendente"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch358.txt",
+  "json": "italian/narration/ch358.json",
+  "textHash": "fnv1a64:40871ea36c7c7da5",
+  "jsonHash": "fnv1a64:8c36e8022717ac2c",
+  "findings": []
+}

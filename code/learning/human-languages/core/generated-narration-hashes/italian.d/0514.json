@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 514,
+  "sourceHash": "fnv1a64:3e1164dea5bf2012",
+  "lessonIds": [
+    "IT-C514-tuffo",
+    "IT-C514-cuffia",
+    "IT-C514-vela",
+    "IT-C514-immergersi",
+    "IT-C514-trampolino"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch514.txt",
+  "json": "italian/narration/ch514.json",
+  "textHash": "fnv1a64:5eb83920bac78512",
+  "jsonHash": "fnv1a64:4a21b82122a1556d",
+  "findings": []
+}

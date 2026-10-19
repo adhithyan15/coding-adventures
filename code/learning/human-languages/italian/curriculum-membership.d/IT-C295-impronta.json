@@ -1,0 +1,11 @@
+{
+  "id": "IT-C295-impronta",
+  "pathSegment": "IT-PATH-295-INDAGINE",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "IT-EXT-295-INDAGINE",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,9 @@
+{
+  "id": "IT-PATH-365-GIUSTIZIA",
+  "spine_node": "SPINE-GIVE-REASONS",
+  "before": [],
+  "inline": [
+    "IT-EXT-365-GIUSTIZIA"
+  ],
+  "after": []
+}

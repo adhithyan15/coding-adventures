@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 456,
+  "sourceHash": "fnv1a64:9bf0040a99874fc7",
+  "lessonIds": [
+    "IT-C456-parrucchiere",
+    "IT-C456-barbiere",
+    "IT-C456-estetista",
+    "IT-C456-ottico",
+    "IT-C456-smacchiare"
+  ],
+  "tex": "italian/book/chapters/ch456-capelli-e-occhiali.tex"
+}

@@ -1,0 +1,11 @@
+{
+  "id": "IT-C478-imbarazzo",
+  "pathSegment": "IT-PATH-478-VERGOGNA",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "IT-EXT-478-VERGOGNA",
+      "order": 2
+    }
+  ]
+}

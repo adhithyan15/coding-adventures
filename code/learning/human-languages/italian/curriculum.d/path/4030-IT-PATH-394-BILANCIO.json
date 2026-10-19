@@ -1,0 +1,9 @@
+{
+  "id": "IT-PATH-394-BILANCIO",
+  "spine_node": "SPINE-EXPRESS-CONDITION",
+  "before": [],
+  "inline": [
+    "IT-EXT-394-BILANCIO"
+  ],
+  "after": []
+}

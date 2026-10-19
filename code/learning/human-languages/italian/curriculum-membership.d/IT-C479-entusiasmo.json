@@ -1,0 +1,11 @@
+{
+  "id": "IT-C479-entusiasmo",
+  "pathSegment": "IT-PATH-479-ALLEGRIA",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "IT-EXT-479-ALLEGRIA",
+      "order": 3
+    }
+  ]
+}

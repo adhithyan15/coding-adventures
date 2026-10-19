@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C343-dubitare",
+    "language": "italian",
+    "chapter": 343,
+    "sequence": 19800,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f65e546b9b1574eb"
+  },
+  "findings": []
+}

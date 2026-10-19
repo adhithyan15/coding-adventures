@@ -1,0 +1,19 @@
+{
+  "chapter": 337,
+  "title": "Il tocco finale",
+  "label": "ch:it-il-tocco-finale",
+  "canDo": "I can finish a dish: dressing, salting, flavouring, stuffing and garnishing.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "IT-C337-guarnire",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 337: I can finish a dish: dressing, salting, flavouring, stuffing and garnishing.",
+    "assesses": [
+      "IT-LEX-C337-CONDIRE-03",
+      "IT-LEX-C337-CONDIRE-04",
+      "IT-LEX-C337-CONDIRE-05"
+    ]
+  }
+}

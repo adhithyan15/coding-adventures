@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C530-videogioco",
+    "language": "italian",
+    "chapter": 530,
+    "sequence": 29640,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:72c24f0aca76e40b"
+  },
+  "findings": []
+}

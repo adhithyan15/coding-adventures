@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C450-sagra",
+    "language": "italian",
+    "chapter": 450,
+    "sequence": 25400,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a118aabfe9352078"
+  },
+  "findings": []
+}

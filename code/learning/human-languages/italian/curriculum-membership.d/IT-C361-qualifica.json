@@ -1,0 +1,11 @@
+{
+  "id": "IT-C361-qualifica",
+  "pathSegment": "IT-PATH-361-CARRIERA",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "IT-EXT-361-CARRIERA",
+      "order": 1
+    }
+  ]
+}

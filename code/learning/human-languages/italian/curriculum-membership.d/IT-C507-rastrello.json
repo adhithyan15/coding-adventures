@@ -1,0 +1,11 @@
+{
+  "id": "IT-C507-rastrello",
+  "pathSegment": "IT-PATH-507-ORTO",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "IT-EXT-507-ORTO",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,9 @@
+{
+  "id": "IT-PATH-364-PROTESTA",
+  "spine_node": "SPINE-GIVE-REASONS",
+  "before": [],
+  "inline": [
+    "IT-EXT-364-PROTESTA"
+  ],
+  "after": []
+}

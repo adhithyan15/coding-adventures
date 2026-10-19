@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 522,
+  "sourceHash": "fnv1a64:7921ef057697d7d8",
+  "lessonIds": [
+    "IT-C522-scolpire",
+    "IT-C522-scultore",
+    "IT-C522-marmo",
+    "IT-C522-argilla",
+    "IT-C522-modellare"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch522.txt",
+  "json": "italian/narration/ch522.json",
+  "textHash": "fnv1a64:f812303aa67b548d",
+  "jsonHash": "fnv1a64:7bc7d97c088810f0",
+  "findings": []
+}

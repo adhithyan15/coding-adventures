@@ -1,0 +1,11 @@
+{
+  "id": "IT-C294-carabiniere",
+  "pathSegment": "IT-PATH-294-PATTUGLIA",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "IT-EXT-294-PATTUGLIA",
+      "order": 0
+    }
+  ]
+}

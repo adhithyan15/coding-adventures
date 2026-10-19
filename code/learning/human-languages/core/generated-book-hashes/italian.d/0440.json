@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 440,
+  "sourceHash": "fnv1a64:af3217920591cd1b",
+  "lessonIds": [
+    "IT-C440-navigatore",
+    "IT-C440-indicazione",
+    "IT-C440-svoltare",
+    "IT-C440-proseguire",
+    "IT-C440-imboccare"
+  ],
+  "tex": "italian/book/chapters/ch440-chiedere-la-strada.tex"
+}

@@ -1,0 +1,11 @@
+{
+  "id": "IT-C523-capolavoro",
+  "pathSegment": "IT-PATH-523-MOSTRA",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "IT-EXT-523-MOSTRA",
+      "order": 1
+    }
+  ]
+}

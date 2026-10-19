@@ -1,0 +1,19 @@
+{
+  "chapter": 353,
+  "title": "Come reagire",
+  "label": "ch:it-come-reagire",
+  "canDo": "I can describe how someone reacted, and tell an honest reason from a pretext or an excuse and justify myself.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "IT-C353-giustificare",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 353: I can describe how someone reacted, and tell an honest reason from a pretext or an excuse and justify myself.",
+    "assesses": [
+      "IT-LEX-C353-REAZIONE-03",
+      "IT-LEX-C353-REAZIONE-04",
+      "IT-LEX-C353-REAZIONE-05"
+    ]
+  }
+}

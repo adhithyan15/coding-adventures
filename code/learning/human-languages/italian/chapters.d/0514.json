@@ -1,0 +1,19 @@
+{
+  "chapter": 514,
+  "title": "In acqua",
+  "label": "ch:it-in-acqua",
+  "canDo": "I can talk about water sports.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "IT-C514-trampolino",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 514: I can talk about water sports.",
+    "assesses": [
+      "IT-LEX-C514-ACQUA-03",
+      "IT-LEX-C514-ACQUA-04",
+      "IT-LEX-C514-ACQUA-05"
+    ]
+  }
+}

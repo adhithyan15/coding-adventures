@@ -1,0 +1,14 @@
+{
+  "language": "italian",
+  "chapter": 436,
+  "sourceHash": "fnv1a64:c807327663f9760b",
+  "lessonIds": [
+    "IT-C436-lampadina",
+    "IT-C436-interruttore",
+    "IT-C436-fusibile",
+    "IT-C436-ricaricare",
+    "IT-C436-fulminarsi",
+    "IT-R436-ripasso-429-436"
+  ],
+  "tex": "italian/book/chapters/ch436-luce-e-corrente.tex"
+}

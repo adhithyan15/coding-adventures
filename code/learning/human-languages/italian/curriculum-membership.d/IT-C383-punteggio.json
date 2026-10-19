@@ -1,0 +1,11 @@
+{
+  "id": "IT-C383-punteggio",
+  "pathSegment": "IT-PATH-383-BOCCIATURA",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "IT-EXT-383-BOCCIATURA",
+      "order": 4
+    }
+  ]
+}

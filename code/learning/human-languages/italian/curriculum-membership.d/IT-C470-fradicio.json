@@ -1,0 +1,11 @@
+{
+  "id": "IT-C470-fradicio",
+  "pathSegment": "IT-PATH-470-PIOGGIA",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "IT-EXT-470-PIOGGIA",
+      "order": 3
+    }
+  ]
+}

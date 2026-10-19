@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C431-penale",
+    "language": "italian",
+    "chapter": 431,
+    "sequence": 24460,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:15668c4cddb308ab"
+  },
+  "findings": []
+}

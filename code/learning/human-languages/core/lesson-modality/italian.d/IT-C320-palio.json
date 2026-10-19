@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C320-palio",
+    "language": "italian",
+    "chapter": 320,
+    "sequence": 18510,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b587b5ba4e3f9dea"
+  },
+  "findings": []
+}

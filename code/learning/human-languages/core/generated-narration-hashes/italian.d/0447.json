@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 447,
+  "sourceHash": "fnv1a64:9f97e86c911e2db6",
+  "lessonIds": [
+    "IT-C447-questura",
+    "IT-C447-prefettura",
+    "IT-C447-caserma",
+    "IT-C447-segnalare",
+    "IT-C447-carta-d-identita"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch447.txt",
+  "json": "italian/narration/ch447.json",
+  "textHash": "fnv1a64:0e4a78880d2a2de9",
+  "jsonHash": "fnv1a64:20b1fbc6b5cb0d41",
+  "findings": []
+}

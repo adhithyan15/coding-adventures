@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 325,
+  "sourceHash": "fnv1a64:7804e7070963960e",
+  "lessonIds": [
+    "IT-C325-principe",
+    "IT-C325-principessa",
+    "IT-C325-regina",
+    "IT-C325-regno",
+    "IT-C325-regnare"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch325.txt",
+  "json": "italian/narration/ch325.json",
+  "textHash": "fnv1a64:8f1df431def855c5",
+  "jsonHash": "fnv1a64:d36bcc1b67a4abe4",
+  "findings": []
+}

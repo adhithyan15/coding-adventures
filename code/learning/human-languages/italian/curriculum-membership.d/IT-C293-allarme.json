@@ -1,0 +1,11 @@
+{
+  "id": "IT-C293-allarme",
+  "pathSegment": "IT-PATH-293-SCASSO",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "IT-EXT-293-SCASSO",
+      "order": 3
+    }
+  ]
+}

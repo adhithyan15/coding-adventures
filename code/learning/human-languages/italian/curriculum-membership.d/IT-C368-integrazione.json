@@ -1,0 +1,11 @@
+{
+  "id": "IT-C368-integrazione",
+  "pathSegment": "IT-PATH-368-CONVIVENZA",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "IT-EXT-368-CONVIVENZA",
+      "order": 4
+    }
+  ]
+}

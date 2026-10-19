@@ -1,0 +1,9 @@
+{
+  "id": "IT-PATH-312-ANTENATI",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "IT-EXT-312-ANTENATI"
+  ],
+  "after": []
+}

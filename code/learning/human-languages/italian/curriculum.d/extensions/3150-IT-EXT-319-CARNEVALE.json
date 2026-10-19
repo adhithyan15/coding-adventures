@@ -1,0 +1,8 @@
+{
+  "id": "IT-EXT-319-CARNEVALE",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can describe carnival: masks, confetti, dressing up and parading through the streets.",
+  "prerequisites": []
+}

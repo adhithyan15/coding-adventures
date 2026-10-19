@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C462-caverna",
+    "language": "italian",
+    "chapter": 462,
+    "sequence": 26050,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4c9006424f04766a"
+  },
+  "findings": []
+}

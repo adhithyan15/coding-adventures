@@ -1,0 +1,11 @@
+{
+  "id": "IT-C340-tesi",
+  "pathSegment": "IT-PATH-340-DIBATTITO",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "IT-EXT-340-DIBATTITO",
+      "order": 1
+    }
+  ]
+}

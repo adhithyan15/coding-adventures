@@ -1,0 +1,11 @@
+{
+  "id": "IT-C343-dubitare",
+  "pathSegment": "IT-PATH-343-DUBBIO",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "IT-EXT-343-DUBBIO",
+      "order": 0
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C285-conferenza-stampa",
+    "language": "italian",
+    "chapter": 285,
+    "sequence": 16730,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d2a3fd30cd16bb86"
+  },
+  "findings": []
+}

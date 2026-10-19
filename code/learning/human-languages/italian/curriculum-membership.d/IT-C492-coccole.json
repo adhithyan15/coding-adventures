@@ -1,0 +1,11 @@
+{
+  "id": "IT-C492-coccole",
+  "pathSegment": "IT-PATH-492-ABBRACCI",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "IT-EXT-492-ABBRACCI",
+      "order": 2
+    }
+  ]
+}

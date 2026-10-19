@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 345,
+  "sourceHash": "fnv1a64:8a92cbe26087da44",
+  "lessonIds": [
+    "IT-C345-esprimere",
+    "IT-C345-affermare",
+    "IT-C345-affermazione",
+    "IT-C345-attendibile",
+    "IT-C345-affidabile"
+  ],
+  "tex": "italian/book/chapters/ch345-dire-la-propria.tex"
+}

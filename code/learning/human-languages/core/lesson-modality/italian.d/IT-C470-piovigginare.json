@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C470-piovigginare",
+    "language": "italian",
+    "chapter": 470,
+    "sequence": 26430,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:361dc37067a5e504"
+  },
+  "findings": []
+}

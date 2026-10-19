@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 363,
+  "sourceHash": "fnv1a64:4b5e89ccdcb61528",
+  "lessonIds": [
+    "IT-C363-cittadino",
+    "IT-C363-cittadinanza",
+    "IT-C363-diritto",
+    "IT-C363-liberta",
+    "IT-C363-uguaglianza"
+  ],
+  "tex": "italian/book/chapters/ch363-cittadini.tex"
+}

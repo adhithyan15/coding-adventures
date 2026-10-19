@@ -1,0 +1,11 @@
+{
+  "id": "IT-C345-affermazione",
+  "pathSegment": "IT-PATH-345-AFFERMARE",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "IT-EXT-345-AFFERMARE",
+      "order": 2
+    }
+  ]
+}

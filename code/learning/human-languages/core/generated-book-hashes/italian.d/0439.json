@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 439,
+  "sourceHash": "fnv1a64:3efc1ee67d1cbc7f",
+  "lessonIds": [
+    "IT-C439-orientarsi",
+    "IT-C439-smarrirsi",
+    "IT-C439-cartina",
+    "IT-C439-piantina",
+    "IT-C439-bussola"
+  ],
+  "tex": "italian/book/chapters/ch439-orientarsi.tex"
+}

@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 441,
+  "sourceHash": "fnv1a64:8986a33c80bf5ac4",
+  "lessonIds": [
+    "IT-C441-bivio",
+    "IT-C441-vicolo",
+    "IT-C441-traversa",
+    "IT-C441-viale",
+    "IT-C441-senso-unico"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch441.txt",
+  "json": "italian/narration/ch441.json",
+  "textHash": "fnv1a64:3d6d42590ea02bf5",
+  "jsonHash": "fnv1a64:2909581f66141ded",
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C441-viale",
+    "language": "italian",
+    "chapter": 441,
+    "sequence": 24970,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9f60f1330a6246fa"
+  },
+  "findings": []
+}

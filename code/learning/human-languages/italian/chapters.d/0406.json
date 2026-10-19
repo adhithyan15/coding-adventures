@@ -1,0 +1,19 @@
+{
+  "chapter": 406,
+  "title": "Alla guida",
+  "label": "ch:it-alla-guida",
+  "canDo": "I can describe driving: speeding up, the brake, braking hard, steering and skidding.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "IT-C406-sbandare",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 406: I can describe driving: speeding up, the brake, braking hard, steering and skidding.",
+    "assesses": [
+      "IT-LEX-C406-GUIDA-03",
+      "IT-LEX-C406-GUIDA-04",
+      "IT-LEX-C406-GUIDA-05"
+    ]
+  }
+}

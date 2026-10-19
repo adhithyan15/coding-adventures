@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C375-definitivo",
+    "language": "italian",
+    "chapter": 375,
+    "sequence": 21470,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e3fdc426b3e42578"
+  },
+  "findings": []
+}

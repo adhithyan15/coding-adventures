@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 430,
+  "sourceHash": "fnv1a64:9f038d5e7cd4ab08",
+  "lessonIds": [
+    "IT-C430-piantare",
+    "IT-C430-sacco-a-pelo",
+    "IT-C430-roulotte",
+    "IT-C430-camper",
+    "IT-C430-zanzariera"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch430.txt",
+  "json": "italian/narration/ch430.json",
+  "textHash": "fnv1a64:23d9631dfbdbadde",
+  "jsonHash": "fnv1a64:6545a2867623fa4d",
+  "findings": []
+}

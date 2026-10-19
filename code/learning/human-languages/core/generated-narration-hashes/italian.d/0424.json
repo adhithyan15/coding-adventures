@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 424,
+  "sourceHash": "fnv1a64:b965a7a9b1381883",
+  "lessonIds": [
+    "IT-C424-boa",
+    "IT-C424-approdare",
+    "IT-C424-ormeggiare",
+    "IT-C424-salvagente",
+    "IT-C424-nausea"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch424.txt",
+  "json": "italian/narration/ch424.json",
+  "textHash": "fnv1a64:ece1dfa6181861b5",
+  "jsonHash": "fnv1a64:ea6523a63415f19b",
+  "findings": []
+}

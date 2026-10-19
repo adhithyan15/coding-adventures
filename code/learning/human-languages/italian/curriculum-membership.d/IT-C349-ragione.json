@@ -1,0 +1,11 @@
+{
+  "id": "IT-C349-ragione",
+  "pathSegment": "IT-PATH-349-CAUSA",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "IT-EXT-349-CAUSA",
+      "order": 4
+    }
+  ]
+}

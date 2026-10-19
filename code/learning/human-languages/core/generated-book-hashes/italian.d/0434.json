@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 434,
+  "sourceHash": "fnv1a64:95c65e2afaa02caa",
+  "lessonIds": [
+    "IT-C434-rubinetto",
+    "IT-C434-gocciolare",
+    "IT-C434-intasato",
+    "IT-C434-scarico",
+    "IT-C434-sturare"
+  ],
+  "tex": "italian/book/chapters/ch434-il-bagno-non-funziona.tex"
+}

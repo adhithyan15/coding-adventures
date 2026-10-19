@@ -1,0 +1,11 @@
+{
+  "id": "IT-C496-allattare",
+  "pathSegment": "IT-PATH-496-NEONATO",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "IT-EXT-496-NEONATO",
+      "order": 2
+    }
+  ]
+}

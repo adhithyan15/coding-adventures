@@ -1,0 +1,11 @@
+{
+  "id": "IT-C421-sbarcare",
+  "pathSegment": "IT-PATH-421-PORTO",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "IT-EXT-421-PORTO",
+      "order": 3
+    }
+  ]
+}

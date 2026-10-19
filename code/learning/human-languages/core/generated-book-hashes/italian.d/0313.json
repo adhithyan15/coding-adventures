@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 313,
+  "sourceHash": "fnv1a64:ea73b443c32cd784",
+  "lessonIds": [
+    "IT-C313-morte",
+    "IT-C313-defunto",
+    "IT-C313-funerale",
+    "IT-C313-lutto",
+    "IT-C313-seppellire"
+  ],
+  "tex": "italian/book/chapters/ch313-l-ultimo-saluto.tex"
+}

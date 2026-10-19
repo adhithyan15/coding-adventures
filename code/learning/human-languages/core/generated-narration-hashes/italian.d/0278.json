@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 278,
+  "sourceHash": "fnv1a64:465f4b279a7447dd",
+  "lessonIds": [
+    "IT-C278-principio",
+    "IT-C278-terminare",
+    "IT-C278-concludere",
+    "IT-C278-conclusione",
+    "IT-C278-riprendere"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch278.txt",
+  "json": "italian/narration/ch278.json",
+  "textHash": "fnv1a64:a824aa4c4183edb7",
+  "jsonHash": "fnv1a64:d845d64c7105f1d1",
+  "findings": []
+}

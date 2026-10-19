@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 285,
+  "sourceHash": "fnv1a64:7ccf676dad6a8edc",
+  "lessonIds": [
+    "IT-C285-dichiarazione",
+    "IT-C285-portavoce",
+    "IT-C285-conferenza-stampa",
+    "IT-C285-comunicato",
+    "IT-C285-smentita"
+  ],
+  "tex": "italian/book/chapters/ch285-le-parole-ufficiali.tex"
+}

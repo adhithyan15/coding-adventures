@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 527,
+  "sourceHash": "fnv1a64:de4171c1861ed8b0",
+  "lessonIds": [
+    "IT-C527-biografia",
+    "IT-C527-fantascienza",
+    "IT-C527-saggio",
+    "IT-C527-fumetto",
+    "IT-C527-poeta"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch527.txt",
+  "json": "italian/narration/ch527.json",
+  "textHash": "fnv1a64:761b8658f8eed757",
+  "jsonHash": "fnv1a64:8d39793c6520c881",
+  "findings": []
+}

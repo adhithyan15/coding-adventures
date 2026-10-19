@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C348-aspetto",
+    "language": "italian",
+    "chapter": 348,
+    "sequence": 20080,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:cc41fe973406ab88"
+  },
+  "findings": []
+}

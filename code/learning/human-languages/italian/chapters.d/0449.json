@@ -1,0 +1,19 @@
+{
+  "chapter": 449,
+  "title": "Lavori in corso",
+  "label": "ch:it-lavori-in-corso",
+  "canDo": "I can talk about building work: the block of flats, the scaffolding, the crane, things collapsing and clearing a space.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "IT-C449-sgomberare",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 449: I can talk about building work: the block of flats, the scaffolding, the crane, things collapsing and clearing a space.",
+    "assesses": [
+      "IT-LEX-C449-LAVORI-03",
+      "IT-LEX-C449-LAVORI-04",
+      "IT-LEX-C449-LAVORI-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 291,
+  "sourceHash": "fnv1a64:83106cb00edd7907",
+  "lessonIds": [
+    "IT-C291-scippo",
+    "IT-C291-scippare",
+    "IT-C291-borseggiatore",
+    "IT-C291-derubare",
+    "IT-C291-refurtiva"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch291.txt",
+  "json": "italian/narration/ch291.json",
+  "textHash": "fnv1a64:b166c95495104de6",
+  "jsonHash": "fnv1a64:99f7e8924a58fd71",
+  "findings": []
+}

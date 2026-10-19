@@ -1,0 +1,11 @@
+{
+  "id": "IT-C427-perquisire",
+  "pathSegment": "IT-PATH-427-DOGANA",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "IT-EXT-427-DOGANA",
+      "order": 2
+    }
+  ]
+}

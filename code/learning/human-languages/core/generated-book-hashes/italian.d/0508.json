@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 508,
+  "sourceHash": "fnv1a64:5e52f3d8f5e5b7ca",
+  "lessonIds": [
+    "IT-C508-allenarsi",
+    "IT-C508-allenamento",
+    "IT-C508-flessione",
+    "IT-C508-addominali",
+    "IT-C508-sudare"
+  ],
+  "tex": "italian/book/chapters/ch508-in-palestra.tex"
+}

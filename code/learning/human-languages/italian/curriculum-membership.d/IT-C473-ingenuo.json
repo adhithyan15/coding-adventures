@@ -1,0 +1,11 @@
+{
+  "id": "IT-C473-ingenuo",
+  "pathSegment": "IT-PATH-473-SINCERITA",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "IT-EXT-473-SINCERITA",
+      "order": 2
+    }
+  ]
+}

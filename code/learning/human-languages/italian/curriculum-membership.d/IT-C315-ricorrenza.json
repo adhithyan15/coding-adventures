@@ -1,0 +1,11 @@
+{
+  "id": "IT-C315-ricorrenza",
+  "pathSegment": "IT-PATH-315-AUGURI",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "IT-EXT-315-AUGURI",
+      "order": 1
+    }
+  ]
+}

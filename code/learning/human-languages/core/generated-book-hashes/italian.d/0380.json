@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 380,
+  "sourceHash": "fnv1a64:3c137dece54ef2ce",
+  "lessonIds": [
+    "IT-C380-facolta",
+    "IT-C380-matricola",
+    "IT-C380-iscriversi",
+    "IT-C380-iscrizione",
+    "IT-C380-semestre"
+  ],
+  "tex": "italian/book/chapters/ch380-all-universita.tex"
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C408-gasolio",
+    "language": "italian",
+    "chapter": 408,
+    "sequence": 23260,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:14d670bcb2c507e3"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 338,
+  "title": "Tutto insieme",
+  "label": "ch:it-tutto-insieme",
+  "canDo": "I can describe mixing: the whisk, beating eggs, whipping, blending and the ladle.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "IT-R338-ripasso-final-338",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 338: I can describe mixing: the whisk, beating eggs, whipping, blending and the ladle.",
+    "assesses": [
+      "IT-LEX-C338-FRUSTA-03",
+      "IT-LEX-C338-FRUSTA-04",
+      "IT-LEX-C338-FRUSTA-05"
+    ]
+  }
+}

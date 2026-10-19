@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C370-minoranza",
+    "language": "italian",
+    "chapter": 370,
+    "sequence": 21190,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:dd9abdcabfd19c6d"
+  },
+  "findings": []
+}

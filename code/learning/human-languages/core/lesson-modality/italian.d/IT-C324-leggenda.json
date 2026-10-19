@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C324-leggenda",
+    "language": "italian",
+    "chapter": 324,
+    "sequence": 18720,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a689516189148645"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "IT-C272-sarebbe",
+  "pathSegment": "IT-PATH-272-CONDIZIONALE",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "IT-EXT-272-CONDIZIONALE",
+      "order": 1
+    }
+  ]
+}

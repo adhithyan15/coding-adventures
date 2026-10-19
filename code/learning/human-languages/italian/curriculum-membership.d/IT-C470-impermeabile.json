@@ -1,0 +1,11 @@
+{
+  "id": "IT-C470-impermeabile",
+  "pathSegment": "IT-PATH-470-PIOGGIA",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "IT-EXT-470-PIOGGIA",
+      "order": 4
+    }
+  ]
+}

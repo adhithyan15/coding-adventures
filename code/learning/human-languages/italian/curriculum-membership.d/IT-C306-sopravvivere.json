@@ -1,0 +1,11 @@
+{
+  "id": "IT-C306-sopravvivere",
+  "pathSegment": "IT-PATH-306-SALVATAGGIO",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "IT-EXT-306-SALVATAGGIO",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 346,
+  "title": "Mi spiego meglio",
+  "label": "ch:it-mi-spiego-meglio",
+  "canDo": "I can clear up a misunderstanding: say I was misunderstood, clarify, add a precise detail and give an explanation.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "IT-R346-ripasso-339-346",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 346: I can clear up a misunderstanding: say I was misunderstood, clarify, add a precise detail and give an explanation.",
+    "assesses": [
+      "IT-LEX-C346-MALINTESO-03",
+      "IT-LEX-C346-MALINTESO-04",
+      "IT-LEX-C346-MALINTESO-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 371,
+  "title": "Ciò che conta",
+  "label": "ch:it-cio-che-conta",
+  "canDo": "I can say what matters in an argument: what is relevant, crucial, essential or fundamental, and the premise I start from.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "IT-C371-premessa",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 371: I can say what matters in an argument: what is relevant, crucial, essential or fundamental, and the premise I start from.",
+    "assesses": [
+      "IT-LEX-C371-RILEVANTE-03",
+      "IT-LEX-C371-RILEVANTE-04",
+      "IT-LEX-C371-RILEVANTE-05"
+    ]
+  }
+}

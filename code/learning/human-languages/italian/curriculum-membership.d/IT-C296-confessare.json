@@ -1,0 +1,11 @@
+{
+  "id": "IT-C296-confessare",
+  "pathSegment": "IT-PATH-296-MOVENTE",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "IT-EXT-296-MOVENTE",
+      "order": 4
+    }
+  ]
+}

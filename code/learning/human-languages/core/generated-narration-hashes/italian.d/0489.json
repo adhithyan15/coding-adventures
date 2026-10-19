@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 489,
+  "sourceHash": "fnv1a64:e9da8a03078f4514",
+  "lessonIds": [
+    "IT-C489-ammalarsi",
+    "IT-C489-sintomo",
+    "IT-C489-diagnosi",
+    "IT-C489-infezione",
+    "IT-C489-guarire"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch489.txt",
+  "json": "italian/narration/ch489.json",
+  "textHash": "fnv1a64:42ae05755446eaf4",
+  "jsonHash": "fnv1a64:9c81691cee69c79d",
+  "findings": []
+}

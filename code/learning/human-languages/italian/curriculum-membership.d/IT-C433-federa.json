@@ -1,0 +1,11 @@
+{
+  "id": "IT-C433-federa",
+  "pathSegment": "IT-PATH-433-CAMERA",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "IT-EXT-433-CAMERA",
+      "order": 2
+    }
+  ]
+}

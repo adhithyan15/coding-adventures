@@ -1,0 +1,858 @@
+{
+  "version": 1,
+  "language": "italian",
+  "chapter": 452,
+  "title": "Giornali e tabacchi",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:66eeeb46d2c3c99d",
+  "lessons": [
+    {
+      "id": "IT-C452-tabaccheria",
+      "sequence": 25500,
+      "title": "la tabaccheria — the tobacconist's",
+      "headword": "la tabaccheria",
+      "romanization": "la tabaccheria",
+      "gloss": "the tobacconist's",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:401e2f53c9cd3b4f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Italian for to peek, then the Italian for the shop window."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: la tabaccheria",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la tabaccheria — \"the tobacconist's\"."
+            },
+            {
+              "kind": "speech",
+              "text": "In tabaccheria compro i biglietti dell'autobus. At the tobacconist's I buy bus tickets."
+            },
+            {
+              "kind": "speech",
+              "text": "Marked by a big T sign; it sells tickets, stamps and phone credit too."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "tabaccheria is built on tabacco 'tobacco', which was borrowed from Spanish tabaco, a word of Caribbean origin."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la tabaccheria",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la tabaccheria*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la tabaccheria, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la tabaccheria*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with la tabaccheria",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *la tabaccheria*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Italian for to peek, then the Italian for the shop window, then say la tabaccheria again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Italian for to peek, then the Italian for the shop window, then say *la tabaccheria* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does la tabaccheria mean? (\"The tobacconist's\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "IT-C452-tabaccaio",
+      "sequence": 25510,
+      "title": "il tabaccaio — the tobacconist",
+      "headword": "il tabaccaio",
+      "romanization": "il tabaccaio",
+      "gloss": "the tobacconist",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4a3dc444d092ad3b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Italian for the shop window, then the Italian for the tobacconist's."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: il tabaccaio",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "il tabaccaio — \"the tobacconist\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Il tabaccaio mi dà il resto. The tobacconist gives me my change."
+            },
+            {
+              "kind": "speech",
+              "text": "The person; the shop is la tabaccheria."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "tabaccaio is built on tabacco 'tobacco', which was borrowed from Spanish tabaco, a word of Caribbean origin."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "il tabaccaio",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *il tabaccaio*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "il tabaccaio, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *il tabaccaio*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with il tabaccaio",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *il tabaccaio*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Italian for the shop window, then the Italian for the tobacconist's, then say il tabaccaio again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Italian for the shop window, then the Italian for the tobacconist's, then say *il tabaccaio* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does il tabaccaio mean? (\"The tobacconist\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "IT-C452-edicola",
+      "sequence": 25520,
+      "title": "l'edicola — the newsstand, the kiosk",
+      "headword": "l'edicola",
+      "romanization": "l'edicola",
+      "gloss": "the newsstand, the kiosk",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d0c4d8296b534e39",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Italian for the tobacconist's, then the Italian for the tobacconist."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: l'edicola",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "l'edicola — \"the newsstand, the kiosk\"."
+            },
+            {
+              "kind": "speech",
+              "text": "All'edicola compro il giornale ogni mattina. At the newsstand I buy the paper every morning."
+            },
+            {
+              "kind": "speech",
+              "text": "It also means a small shrine with a statue in a wall."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "edicola is a learned borrowing from Latin aedicula 'small shrine' (EtymDB), from aedēs 'temple, dwelling': the kiosk looks like a little shrine."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "l'edicola",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *l'edicola*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "l'edicola, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *l'edicola*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with l'edicola",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *l'edicola*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Italian for the tobacconist's, then the Italian for the tobacconist, then say l'edicola again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Italian for the tobacconist's, then the Italian for the tobacconist, then say *l'edicola* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does l'edicola mean? (\"The newsstand, the kiosk\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "IT-C452-edicolante",
+      "sequence": 25530,
+      "title": "l'edicolante — the newsagent",
+      "headword": "l'edicolante",
+      "romanization": "l'edicolante",
+      "gloss": "the newsagent",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c4a0bdd525814c42",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Italian for the tobacconist, then the Italian for the newsstand."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: l'edicolante",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "l'edicolante — \"the newsagent\"."
+            },
+            {
+              "kind": "speech",
+              "text": "L'edicolante mi tiene da parte la rivista. The newsagent keeps the magazine aside for me."
+            },
+            {
+              "kind": "speech",
+              "text": "The person who runs l'edicola."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "edicolante is built on edicola, a learned borrowing from Latin aedicula 'small shrine', from aedēs 'temple' (EtymDB)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "l'edicolante",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *l'edicolante*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "l'edicolante, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *l'edicolante*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with l'edicolante",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *l'edicolante*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Italian for the tobacconist, then the Italian for the newsstand, then say l'edicolante again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Italian for the tobacconist, then the Italian for the newsstand, then say *l'edicolante* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does l'edicolante mean? (\"The newsagent\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "IT-C452-cartoleria",
+      "sequence": 25540,
+      "title": "la cartoleria — the stationer's",
+      "headword": "la cartoleria",
+      "romanization": "la cartoleria",
+      "gloss": "the stationer's",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5a3101587f915732",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Italian for the newsstand, then the Italian for the newsagent."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: la cartoleria",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la cartoleria — \"the stationer's\"."
+            },
+            {
+              "kind": "speech",
+              "text": "In cartoleria compro quaderni e penne. At the stationer's I buy exercise books and pens."
+            },
+            {
+              "kind": "speech",
+              "text": "Busy in September, before school starts."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "cartoleria is built on carta 'paper', which is inherited from Latin charta, from Greek khártēs 'papyrus' (EtymDB)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la cartoleria",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la cartoleria*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la cartoleria, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la cartoleria*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with la cartoleria",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *la cartoleria*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Italian for the newsstand, then the Italian for the newsagent, then say la cartoleria again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Italian for the newsstand, then the Italian for the newsagent, then say *la cartoleria* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does la cartoleria mean? (\"The stationer's\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "IT-R452-ripasso-445-452",
+      "sequence": 25550,
+      "title": "Ripasso dei capitoli 445–452",
+      "headword": "(dialogue)",
+      "romanization": "(dialogue)",
+      "gloss": "a review of chapters 445-452",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ab7ab9bdf350491c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Italian for the bell tower and the main church."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the bell tower, the main church, the cathedral, the arcade, the loggia",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the bell tower, the main church, the cathedral, the arcade, the loggia]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the walls, the fortress, the village, the cloister, to wander",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the walls, the fortress, the village, the cloister, to wander]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the police headquarters, the prefecture, the barracks, to report, the identity card",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the police headquarters, the prefecture, the barracks, to report, the identity card]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the bench, the street lamp, the litter bin, the drain cover, to clutter",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the bench, the street lamp, the litter bin, the drain cover, to clutter]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the block of flats, the scaffolding, the crane, to collapse, to clear",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the block of flats, the scaffolding, the crane, to collapse, to clear]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the village food festival, the parade, the procession, the patron saint, the stall",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the village food festival, the parade, the procession, the patron saint, the stall]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the seafront, to wander around, to browse, to peek, the shop window",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the seafront, to wander around, to browse, to peek, the shop window]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the tobacconist's, the tobacconist, the newsstand, the newsagent, the stationer's",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the tobacconist's, the tobacconist, the newsstand, the newsagent, the stationer's]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The bell tower? (il campanile.) The main church? (il duomo.) The cathedral? (la cattedrale.) The arcade? (il portico.) The loggia? (la loggia.) The walls? (le mura.) The fortress? (la rocca.) The village? (il borgo.) The cloister? (il chiostro.) To wander? (vagare.) The police headquarters? (la questura.) The prefecture? (la prefettura.) The barracks? (la caserma.) To report? (segnalare.) The identity card? (la carta d'identità.) The bench? (la panchina.) The street lamp? (il lampione.) The litter bin? (il cestino.) The drain cover? (il tombino.) To clutter? (ingombrare.) The block of flats? (il condominio.) The scaffolding? (l'impalcatura.) The crane? (la gru.) To collapse? (crollare.) To clear? (sgomberare.) The village food festival? (la sagra.) The parade? (il corteo.) The procession? (la processione.) The patron saint? (il patrono.) The stall? (la bancarella.) The seafront? (il lungomare.) To wander around? (gironzolare.) To browse? (curiosare.) To peek? (sbirciare.) The shop window? (la vetrina.) The tobacconist's? (la tabaccheria.) The tobacconist? (il tabaccaio.) The newsstand? (l'edicola.) The newsagent? (l'edicolante.) The stationer's? (la cartoleria.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "IT-C487-digerire",
+  "pathSegment": "IT-PATH-487-STOMACO",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "IT-EXT-487-STOMACO",
+      "order": 1
+    }
+  ]
+}

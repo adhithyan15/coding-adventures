@@ -1,0 +1,11 @@
+{
+  "id": "IT-C516-violoncello",
+  "pathSegment": "IT-PATH-516-STRUMENTI",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "IT-EXT-516-STRUMENTI",
+      "order": 0
+    }
+  ]
+}

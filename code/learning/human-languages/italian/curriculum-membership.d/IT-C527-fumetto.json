@@ -1,0 +1,11 @@
+{
+  "id": "IT-C527-fumetto",
+  "pathSegment": "IT-PATH-527-GENERI",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "IT-EXT-527-GENERI",
+      "order": 3
+    }
+  ]
+}

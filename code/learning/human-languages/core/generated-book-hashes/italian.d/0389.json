@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 389,
+  "sourceHash": "fnv1a64:b837ee8b8d405dfb",
+  "lessonIds": [
+    "IT-C389-burocrazia",
+    "IT-C389-pratica",
+    "IT-C389-procedura",
+    "IT-C389-richiesta",
+    "IT-C389-certificato"
+  ],
+  "tex": "italian/book/chapters/ch389-la-burocrazia.tex"
+}

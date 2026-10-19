@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C321-tombola",
+    "language": "italian",
+    "chapter": 321,
+    "sequence": 18600,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4d33ba197c11cca5"
+  },
+  "findings": []
+}

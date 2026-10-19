@@ -1,0 +1,8 @@
+{
+  "id": "IT-EXT-357-DIMISSIONI",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can talk about leaving a job: resigning, a dismissal, the notice period and being out of work.",
+  "prerequisites": []
+}

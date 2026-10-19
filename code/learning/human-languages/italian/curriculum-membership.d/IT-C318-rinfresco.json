@@ -1,0 +1,11 @@
+{
+  "id": "IT-C318-rinfresco",
+  "pathSegment": "IT-PATH-318-RICEVIMENTO",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "IT-EXT-318-RICEVIMENTO",
+      "order": 3
+    }
+  ]
+}

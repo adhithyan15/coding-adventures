@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 360,
+  "sourceHash": "fnv1a64:7315591be387cbfc",
+  "lessonIds": [
+    "IT-C360-dirigente",
+    "IT-C360-reparto",
+    "IT-C360-mansione",
+    "IT-C360-proroga",
+    "IT-C360-consegna"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch360.txt",
+  "json": "italian/narration/ch360.json",
+  "textHash": "fnv1a64:bb6299ccabbf4e3c",
+  "jsonHash": "fnv1a64:2adf223211e54326",
+  "findings": []
+}

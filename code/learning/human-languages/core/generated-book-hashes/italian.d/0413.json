@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 413,
+  "sourceHash": "fnv1a64:3a5d3e108cc7f46f",
+  "lessonIds": [
+    "IT-C413-tamponare",
+    "IT-C413-tamponamento",
+    "IT-C413-ingorgo",
+    "IT-C413-deviazione",
+    "IT-C413-deviare"
+  ],
+  "tex": "italian/book/chapters/ch413-incidenti-e-code.tex"
+}

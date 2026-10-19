@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 294,
+  "sourceHash": "fnv1a64:1dc1421536436d97",
+  "lessonIds": [
+    "IT-C294-carabiniere",
+    "IT-C294-commissariato",
+    "IT-C294-pattuglia",
+    "IT-C294-telecamera",
+    "IT-C294-inseguimento"
+  ],
+  "tex": "italian/book/chapters/ch294-le-forze-dell-ordine.tex"
+}

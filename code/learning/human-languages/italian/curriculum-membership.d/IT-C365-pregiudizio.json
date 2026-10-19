@@ -1,0 +1,11 @@
+{
+  "id": "IT-C365-pregiudizio",
+  "pathSegment": "IT-PATH-365-GIUSTIZIA",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "IT-EXT-365-GIUSTIZIA",
+      "order": 3
+    }
+  ]
+}

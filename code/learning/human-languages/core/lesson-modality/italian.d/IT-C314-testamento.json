@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C314-testamento",
+    "language": "italian",
+    "chapter": 314,
+    "sequence": 18200,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2feec3d486225fc9"
+  },
+  "findings": []
+}

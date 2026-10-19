@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 520,
+  "sourceHash": "fnv1a64:29cb82642b26b074",
+  "lessonIds": [
+    "IT-C520-recitare",
+    "IT-C520-copione",
+    "IT-C520-ruolo",
+    "IT-C520-debuttare",
+    "IT-C520-regista"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch520.txt",
+  "json": "italian/narration/ch520.json",
+  "textHash": "fnv1a64:d6a0079ee77447b9",
+  "jsonHash": "fnv1a64:6c569730a9ddb19e",
+  "findings": []
+}

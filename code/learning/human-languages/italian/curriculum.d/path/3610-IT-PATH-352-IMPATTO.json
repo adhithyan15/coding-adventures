@@ -1,0 +1,9 @@
+{
+  "id": "IT-PATH-352-IMPATTO",
+  "spine_node": "SPINE-GIVE-REASONS",
+  "before": [],
+  "inline": [
+    "IT-EXT-352-IMPATTO"
+  ],
+  "after": []
+}

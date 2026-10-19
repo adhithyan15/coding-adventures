@@ -1,0 +1,19 @@
+{
+  "chapter": 511,
+  "title": "Il risultato",
+  "label": "ch:it-il-risultato",
+  "canDo": "I can talk about results: goals, draws and the league table.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "IT-C511-eliminare",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 511: I can talk about results: goals, draws and the league table.",
+    "assesses": [
+      "IT-LEX-C511-RISULTATI-03",
+      "IT-LEX-C511-RISULTATI-04",
+      "IT-LEX-C511-RISULTATI-05"
+    ]
+  }
+}

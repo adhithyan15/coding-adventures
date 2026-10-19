@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C395-inflazione",
+    "language": "italian",
+    "chapter": 395,
+    "sequence": 22510,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a8a353e1304e4ef1"
+  },
+  "findings": []
+}

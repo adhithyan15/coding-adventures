@@ -1,0 +1,11 @@
+{
+  "id": "IT-C406-sterzare",
+  "pathSegment": "IT-PATH-406-GUIDA",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "IT-EXT-406-GUIDA",
+      "order": 3
+    }
+  ]
+}

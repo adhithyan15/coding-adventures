@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 391,
+  "sourceHash": "fnv1a64:77c95ea8432c7045",
+  "lessonIds": [
+    "IT-C391-accusare",
+    "IT-C391-accusa",
+    "IT-C391-ladro",
+    "IT-C391-querela",
+    "IT-C391-corruzione"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch391.txt",
+  "json": "italian/narration/ch391.json",
+  "textHash": "fnv1a64:3e8b98e0ec84c453",
+  "jsonHash": "fnv1a64:0fe9edb7cc1976e3",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "IT-C412-contravvenzione",
+  "pathSegment": "IT-PATH-412-VIGILE",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "IT-EXT-412-VIGILE",
+      "order": 4
+    }
+  ]
+}

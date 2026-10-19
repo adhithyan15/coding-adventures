@@ -1,0 +1,11 @@
+{
+  "id": "IT-C473-bugiardo",
+  "pathSegment": "IT-PATH-473-SINCERITA",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "IT-EXT-473-SINCERITA",
+      "order": 1
+    }
+  ]
+}

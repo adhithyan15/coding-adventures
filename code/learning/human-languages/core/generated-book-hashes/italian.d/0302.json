@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 302,
+  "sourceHash": "fnv1a64:7ace3eefdc6d79f4",
+  "lessonIds": [
+    "IT-C302-incendio",
+    "IT-C302-divampare",
+    "IT-C302-estintore",
+    "IT-C302-ustione",
+    "IT-C302-ustionarsi"
+  ],
+  "tex": "italian/book/chapters/ch302-al-fuoco.tex"
+}

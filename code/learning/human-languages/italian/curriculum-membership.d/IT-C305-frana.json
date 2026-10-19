@@ -1,0 +1,11 @@
+{
+  "id": "IT-C305-frana",
+  "pathSegment": "IT-PATH-305-ALLUVIONE",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "IT-EXT-305-ALLUVIONE",
+      "order": 2
+    }
+  ]
+}

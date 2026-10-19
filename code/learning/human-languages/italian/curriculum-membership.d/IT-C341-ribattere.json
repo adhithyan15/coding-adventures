@@ -1,0 +1,11 @@
+{
+  "id": "IT-C341-ribattere",
+  "pathSegment": "IT-PATH-341-OBIEZIONE",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "IT-EXT-341-OBIEZIONE",
+      "order": 3
+    }
+  ]
+}

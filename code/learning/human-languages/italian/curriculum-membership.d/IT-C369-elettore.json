@@ -1,0 +1,11 @@
+{
+  "id": "IT-C369-elettore",
+  "pathSegment": "IT-PATH-369-PARTITO",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "IT-EXT-369-PARTITO",
+      "order": 4
+    }
+  ]
+}

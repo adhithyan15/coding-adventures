@@ -1,0 +1,19 @@
+{
+  "chapter": 412,
+  "title": "Pedoni e vigili",
+  "label": "ch:it-pedoni-e-vigili",
+  "canDo": "I can talk about road rules in town: the traffic warden, pedestrians, the zebra crossing, running someone over and fines.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "IT-R412-ripasso-405-412",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 412: I can talk about road rules in town: the traffic warden, pedestrians, the zebra crossing, running someone over and fines.",
+    "assesses": [
+      "IT-LEX-C412-VIGILE-03",
+      "IT-LEX-C412-VIGILE-04",
+      "IT-LEX-C412-VIGILE-05"
+    ]
+  }
+}

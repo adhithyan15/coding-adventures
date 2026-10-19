@@ -1,0 +1,11 @@
+{
+  "id": "IT-C358-datore-di-lavoro",
+  "pathSegment": "IT-PATH-358-DIPENDENTE",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "IT-EXT-358-DIPENDENTE",
+      "order": 3
+    }
+  ]
+}

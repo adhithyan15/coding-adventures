@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 302,
+  "sourceHash": "fnv1a64:098c09a6f6adae2d",
+  "lessonIds": [
+    "IT-C302-incendio",
+    "IT-C302-divampare",
+    "IT-C302-estintore",
+    "IT-C302-ustione",
+    "IT-C302-ustionarsi"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch302.txt",
+  "json": "italian/narration/ch302.json",
+  "textHash": "fnv1a64:25cfc62e4bf6c684",
+  "jsonHash": "fnv1a64:632b2938cd6e116c",
+  "findings": []
+}

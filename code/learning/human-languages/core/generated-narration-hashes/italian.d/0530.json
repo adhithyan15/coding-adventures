@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 530,
+  "sourceHash": "fnv1a64:cbadab362f5dee7a",
+  "lessonIds": [
+    "IT-C530-abbonarsi",
+    "IT-C530-streaming",
+    "IT-C530-videogioco",
+    "IT-C530-postare",
+    "IT-C530-follower"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch530.txt",
+  "json": "italian/narration/ch530.json",
+  "textHash": "fnv1a64:3def5880daaff6b1",
+  "jsonHash": "fnv1a64:5feca42bcd8c6153",
+  "findings": []
+}

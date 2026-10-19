@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 442,
+  "sourceHash": "fnv1a64:ca5b33c053bf8b15",
+  "lessonIds": [
+    "IT-C442-salita",
+    "IT-C442-discesa",
+    "IT-C442-costeggiare",
+    "IT-C442-sbucare",
+    "IT-C442-aggirare"
+  ],
+  "tex": "italian/book/chapters/ch442-su-e-giu.tex"
+}

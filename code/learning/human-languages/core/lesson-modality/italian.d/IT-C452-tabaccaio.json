@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C452-tabaccaio",
+    "language": "italian",
+    "chapter": 452,
+    "sequence": 25510,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4a3dc444d092ad3b"
+  },
+  "findings": []
+}

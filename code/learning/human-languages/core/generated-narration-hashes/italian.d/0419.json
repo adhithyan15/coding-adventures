@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 419,
+  "sourceHash": "fnv1a64:53584c1d3cc0763d",
+  "lessonIds": [
+    "IT-C419-vagone",
+    "IT-C419-carrozza",
+    "IT-C419-scompartimento",
+    "IT-C419-cuccetta",
+    "IT-C419-capotreno"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch419.txt",
+  "json": "italian/narration/ch419.json",
+  "textHash": "fnv1a64:9f24fb8ca81329f9",
+  "jsonHash": "fnv1a64:2a6d1a437c2055e9",
+  "findings": []
+}

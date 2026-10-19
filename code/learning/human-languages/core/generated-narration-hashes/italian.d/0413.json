@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 413,
+  "sourceHash": "fnv1a64:cc464489f2b3abe2",
+  "lessonIds": [
+    "IT-C413-tamponare",
+    "IT-C413-tamponamento",
+    "IT-C413-ingorgo",
+    "IT-C413-deviazione",
+    "IT-C413-deviare"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch413.txt",
+  "json": "italian/narration/ch413.json",
+  "textHash": "fnv1a64:382482efdb534a0c",
+  "jsonHash": "fnv1a64:55a9e6671ecfd46b",
+  "findings": []
+}

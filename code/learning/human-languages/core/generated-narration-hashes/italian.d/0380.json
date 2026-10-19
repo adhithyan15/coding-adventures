@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 380,
+  "sourceHash": "fnv1a64:7ab70e997da5f210",
+  "lessonIds": [
+    "IT-C380-facolta",
+    "IT-C380-matricola",
+    "IT-C380-iscriversi",
+    "IT-C380-iscrizione",
+    "IT-C380-semestre"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch380.txt",
+  "json": "italian/narration/ch380.json",
+  "textHash": "fnv1a64:ea063e712f6f7421",
+  "jsonHash": "fnv1a64:8664f19829b670da",
+  "findings": []
+}

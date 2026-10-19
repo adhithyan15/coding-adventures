@@ -1,0 +1,19 @@
+{
+  "chapter": 455,
+  "title": "Riparare e sistemare",
+  "label": "ch:it-riparare-e-sistemare",
+  "canDo": "I can get things mended: the cobbler, resoling, the tailor, taking up trousers and the locksmith.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "IT-C455-fabbro",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 455: I can get things mended: the cobbler, resoling, the tailor, taking up trousers and the locksmith.",
+    "assesses": [
+      "IT-LEX-C455-ARTIGIANI-03",
+      "IT-LEX-C455-ARTIGIANI-04",
+      "IT-LEX-C455-ARTIGIANI-05"
+    ]
+  }
+}

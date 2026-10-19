@@ -1,0 +1,11 @@
+{
+  "id": "IT-C445-duomo",
+  "pathSegment": "IT-PATH-445-PIAZZA",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "IT-EXT-445-PIAZZA",
+      "order": 1
+    }
+  ]
+}

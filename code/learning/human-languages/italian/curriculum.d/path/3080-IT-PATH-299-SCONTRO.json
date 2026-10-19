@@ -1,0 +1,9 @@
+{
+  "id": "IT-PATH-299-SCONTRO",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "IT-EXT-299-SCONTRO"
+  ],
+  "after": []
+}

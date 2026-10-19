@@ -1,0 +1,9 @@
+{
+  "id": "IT-PATH-355-RIMEDIO",
+  "spine_node": "SPINE-GIVE-REASONS",
+  "before": [],
+  "inline": [
+    "IT-EXT-355-RIMEDIO"
+  ],
+  "after": []
+}

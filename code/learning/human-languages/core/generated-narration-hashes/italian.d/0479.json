@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 479,
+  "sourceHash": "fnv1a64:4bfedf873da7bc2b",
+  "lessonIds": [
+    "IT-C479-allegria",
+    "IT-C479-risata",
+    "IT-C479-ridacchiare",
+    "IT-C479-entusiasmo",
+    "IT-C479-commuoversi"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch479.txt",
+  "json": "italian/narration/ch479.json",
+  "textHash": "fnv1a64:d55cfb1b039cc3ac",
+  "jsonHash": "fnv1a64:c71d1027af0d09c2",
+  "findings": []
+}

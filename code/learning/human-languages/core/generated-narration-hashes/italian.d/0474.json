@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 474,
+  "sourceHash": "fnv1a64:f1d91c0fdfff9bea",
+  "lessonIds": [
+    "IT-C474-umore",
+    "IT-C474-sereno",
+    "IT-C474-lunatico",
+    "IT-C474-innervosirsi",
+    "IT-C474-sbuffare"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch474.txt",
+  "json": "italian/narration/ch474.json",
+  "textHash": "fnv1a64:4e3b29d293f7cac6",
+  "jsonHash": "fnv1a64:537d35cd312fdec0",
+  "findings": []
+}

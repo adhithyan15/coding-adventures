@@ -1,0 +1,11 @@
+{
+  "id": "IT-C479-risata",
+  "pathSegment": "IT-PATH-479-ALLEGRIA",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "IT-EXT-479-ALLEGRIA",
+      "order": 1
+    }
+  ]
+}

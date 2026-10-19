@@ -1,0 +1,11 @@
+{
+  "id": "IT-C469-soffiare",
+  "pathSegment": "IT-PATH-469-TEMPESTA",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "IT-EXT-469-TEMPESTA",
+      "order": 3
+    }
+  ]
+}

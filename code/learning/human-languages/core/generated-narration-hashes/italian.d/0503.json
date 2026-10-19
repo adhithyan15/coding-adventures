@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 503,
+  "sourceHash": "fnv1a64:9e067e6051e9cd32",
+  "lessonIds": [
+    "IT-C503-scacchi",
+    "IT-C503-dama",
+    "IT-C503-dado",
+    "IT-C503-gioco-da-tavolo",
+    "IT-C503-barare"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch503.txt",
+  "json": "italian/narration/ch503.json",
+  "textHash": "fnv1a64:f6226f4f8d6c7702",
+  "jsonHash": "fnv1a64:dd9686d124c670fd",
+  "findings": []
+}

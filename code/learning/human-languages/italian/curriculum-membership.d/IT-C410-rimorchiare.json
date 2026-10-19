@@ -1,0 +1,11 @@
+{
+  "id": "IT-C410-rimorchiare",
+  "pathSegment": "IT-PATH-410-GUASTO",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "IT-EXT-410-GUASTO",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "IT-C348-ribadire",
+  "pathSegment": "IT-PATH-348-VANTAGGIO",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "IT-EXT-348-VANTAGGIO",
+      "order": 4
+    }
+  ]
+}

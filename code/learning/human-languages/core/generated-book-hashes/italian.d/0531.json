@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 531,
+  "sourceHash": "fnv1a64:8d1edfb577fe54f5",
+  "lessonIds": [
+    "IT-C531-bucato",
+    "IT-C531-appendere",
+    "IT-C531-stendino",
+    "IT-C531-molletta",
+    "IT-C531-ferro-da-stiro"
+  ],
+  "tex": "italian/book/chapters/ch531-il-bucato.tex"
+}

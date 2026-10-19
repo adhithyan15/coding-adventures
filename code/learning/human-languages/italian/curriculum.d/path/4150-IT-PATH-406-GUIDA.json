@@ -1,0 +1,9 @@
+{
+  "id": "IT-PATH-406-GUIDA",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "IT-EXT-406-GUIDA"
+  ],
+  "after": []
+}

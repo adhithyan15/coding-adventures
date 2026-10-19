@@ -1,0 +1,8 @@
+{
+  "id": "IT-EXT-401-FILE",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can work with files: delete, copy and paste them, and make a backup.",
+  "prerequisites": []
+}

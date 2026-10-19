@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C354-ostacolo",
+    "language": "italian",
+    "chapter": 354,
+    "sequence": 20360,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:28596c3a78cf9fd9"
+  },
+  "findings": []
+}

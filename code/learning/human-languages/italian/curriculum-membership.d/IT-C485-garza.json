@@ -1,0 +1,11 @@
+{
+  "id": "IT-C485-garza",
+  "pathSegment": "IT-PATH-485-STORTA",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "IT-EXT-485-STORTA",
+      "order": 3
+    }
+  ]
+}

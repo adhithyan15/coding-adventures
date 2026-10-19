@@ -1,0 +1,11 @@
+{
+  "id": "IT-C385-tollerare",
+  "pathSegment": "IT-PATH-385-VIETATO",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "IT-EXT-385-VIETATO",
+      "order": 2
+    }
+  ]
+}

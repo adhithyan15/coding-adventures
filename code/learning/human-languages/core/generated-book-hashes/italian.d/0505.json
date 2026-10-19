@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 505,
+  "sourceHash": "fnv1a64:15787a852b17ab88",
+  "lessonIds": [
+    "IT-C505-collezionare",
+    "IT-C505-collezione",
+    "IT-C505-puzzle",
+    "IT-C505-modellismo",
+    "IT-C505-assemblare"
+  ],
+  "tex": "italian/book/chapters/ch505-collezionisti.tex"
+}

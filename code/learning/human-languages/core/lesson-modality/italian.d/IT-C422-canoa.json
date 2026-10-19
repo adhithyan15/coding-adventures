@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C422-canoa",
+    "language": "italian",
+    "chapter": 422,
+    "sequence": 24010,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:858a8a988af9d56a"
+  },
+  "findings": []
+}

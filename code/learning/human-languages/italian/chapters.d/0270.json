@@ -1,0 +1,20 @@
+{
+  "chapter": 270,
+  "title": "More Than, For Three Years --- Comparing and How Long",
+  "label": "ch:it-comparing-and-how-long",
+  "canDo": "I can compare two things with più … di, name the most with il più, and say how long with da and per.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "IT-C270-ripasso-esperienza",
+    "kind": "production",
+    "summary": "Complete IT-C270-ripasso-esperienza: describe an experience with a feeling, a hope, a comparison and a length.",
+    "assesses": [
+      "IT-LEX-PIU-DI-01",
+      "IT-GRAMMAR-IL-PIU-02",
+      "IT-LEX-DA-DURATA-01",
+      "IT-GRAMMAR-PER-DURATA-02"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 495,
+  "title": "Famiglie nuove",
+  "label": "ch:it-famiglie-nuove",
+  "canDo": "I can describe new kinds of family: adoption and stepfamilies.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "IT-C495-fratellastro",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 495: I can describe new kinds of family: adoption and stepfamilies.",
+    "assesses": [
+      "IT-LEX-C495-FAMIGLIE-03",
+      "IT-LEX-C495-FAMIGLIE-04",
+      "IT-LEX-C495-FAMIGLIE-05"
+    ]
+  }
+}

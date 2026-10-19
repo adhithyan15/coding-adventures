@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 275,
+  "sourceHash": "fnv1a64:44a434e95362cbeb",
+  "lessonIds": [
+    "IT-C275-accadere",
+    "IT-C275-capitare",
+    "IT-C275-verificarsi",
+    "IT-C275-avvenire",
+    "IT-C275-accaduto"
+  ],
+  "tex": "italian/book/chapters/ch275-cosa-e-accaduto.tex"
+}

@@ -1,0 +1,8 @@
+{
+  "id": "IT-EXT-308-BATTESIMO",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can talk about a christening: christening a child, the godparents and confirmation.",
+  "prerequisites": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 326,
+  "sourceHash": "fnv1a64:3b2ca89d4c6f7e1d",
+  "lessonIds": [
+    "IT-C326-drago",
+    "IT-C326-strega",
+    "IT-C326-fata",
+    "IT-C326-mago",
+    "IT-C326-tesoro"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch326.txt",
+  "json": "italian/narration/ch326.json",
+  "textHash": "fnv1a64:71348768af27273b",
+  "jsonHash": "fnv1a64:336d7635492c7e67",
+  "findings": []
+}

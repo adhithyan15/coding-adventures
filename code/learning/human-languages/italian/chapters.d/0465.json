@@ -1,0 +1,19 @@
+{
+  "chapter": 465,
+  "title": "Piccoli animali",
+  "label": "ch:it-piccoli-animali",
+  "canDo": "I can name small creatures on a walk: the lizard, the viper, the toad, the snail, and slithering.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "IT-C465-strisciare",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 465: I can name small creatures on a walk: the lizard, the viper, the toad, the snail, and slithering.",
+    "assesses": [
+      "IT-LEX-C465-PICCOLI-03",
+      "IT-LEX-C465-PICCOLI-04",
+      "IT-LEX-C465-PICCOLI-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "IT-C351-influire",
+  "pathSegment": "IT-PATH-351-ORIGINE",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "IT-EXT-351-ORIGINE",
+      "order": 4
+    }
+  ]
+}

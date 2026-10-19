@@ -1,0 +1,19 @@
+{
+  "chapter": 323,
+  "title": "C'era una volta",
+  "label": "ch:it-c-era-una-volta",
+  "canDo": "I can begin and tell a story: once upon a time, the tale, the fable, narrating and the narrator.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "IT-C323-narratore",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 323: I can begin and tell a story: once upon a time, the tale, the fable, narrating and the narrator.",
+    "assesses": [
+      "IT-LEX-C323-FAVOLA-03",
+      "IT-LEX-C323-FAVOLA-04",
+      "IT-LEX-C323-FAVOLA-05"
+    ]
+  }
+}

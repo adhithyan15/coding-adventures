@@ -1,0 +1,11 @@
+{
+  "id": "IT-C379-frequentare",
+  "pathSegment": "IT-PATH-379-LICEO",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "IT-EXT-379-LICEO",
+      "order": 1
+    }
+  ]
+}

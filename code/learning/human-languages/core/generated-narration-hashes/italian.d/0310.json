@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 310,
+  "sourceHash": "fnv1a64:7644c8d4b3e4d115",
+  "lessonIds": [
+    "IT-C310-convivere",
+    "IT-C310-trasferirsi",
+    "IT-C310-integrarsi",
+    "IT-C310-ambientarsi",
+    "IT-C310-rimpatriare"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch310.txt",
+  "json": "italian/narration/ch310.json",
+  "textHash": "fnv1a64:16ade3531709d5f2",
+  "jsonHash": "fnv1a64:78d81eb09daa36bf",
+  "findings": []
+}

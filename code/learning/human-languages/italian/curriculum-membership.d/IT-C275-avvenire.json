@@ -1,0 +1,11 @@
+{
+  "id": "IT-C275-avvenire",
+  "pathSegment": "IT-PATH-275-ACCADERE",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "IT-EXT-275-ACCADERE",
+      "order": 3
+    }
+  ]
+}

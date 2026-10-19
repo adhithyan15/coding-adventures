@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C387-requisito",
+    "language": "italian",
+    "chapter": 387,
+    "sequence": 22060,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e3e60ef1bd99d21c"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "IT-C427-perquisizione",
+  "pathSegment": "IT-PATH-427-DOGANA",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "IT-EXT-427-DOGANA",
+      "order": 3
+    }
+  ]
+}

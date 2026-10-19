@@ -1,0 +1,19 @@
+{
+  "chapter": 462,
+  "title": "In montagna",
+  "label": "ch:it-in-montagna",
+  "canDo": "I can describe a mountain walk: the summit, the slope, a ravine, a cave and climbing.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "IT-C462-arrampicarsi",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 462: I can describe a mountain walk: the summit, the slope, a ravine, a cave and climbing.",
+    "assesses": [
+      "IT-LEX-C462-MONTAGNA-03",
+      "IT-LEX-C462-MONTAGNA-04",
+      "IT-LEX-C462-MONTAGNA-05"
+    ]
+  }
+}

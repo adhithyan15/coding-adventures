@@ -1,0 +1,11 @@
+{
+  "id": "IT-C468-rugiada",
+  "pathSegment": "IT-PATH-468-GELO",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "IT-EXT-468-GELO",
+      "order": 3
+    }
+  ]
+}

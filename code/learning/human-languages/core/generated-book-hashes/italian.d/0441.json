@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 441,
+  "sourceHash": "fnv1a64:c95ea8161b86cb92",
+  "lessonIds": [
+    "IT-C441-bivio",
+    "IT-C441-vicolo",
+    "IT-C441-traversa",
+    "IT-C441-viale",
+    "IT-C441-senso-unico"
+  ],
+  "tex": "italian/book/chapters/ch441-vie-e-vicoli.tex"
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C526-divorare",
+    "language": "italian",
+    "chapter": 526,
+    "sequence": 29440,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:025d5892b4aa5806"
+  },
+  "findings": []
+}

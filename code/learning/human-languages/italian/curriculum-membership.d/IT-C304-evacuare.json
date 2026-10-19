@@ -1,0 +1,11 @@
+{
+  "id": "IT-C304-evacuare",
+  "pathSegment": "IT-PATH-304-TERREMOTO",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "IT-EXT-304-TERREMOTO",
+      "order": 4
+    }
+  ]
+}

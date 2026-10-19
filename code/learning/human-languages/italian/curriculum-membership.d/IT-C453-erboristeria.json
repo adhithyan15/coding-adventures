@@ -1,0 +1,11 @@
+{
+  "id": "IT-C453-erboristeria",
+  "pathSegment": "IT-PATH-453-NEGOZI",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "IT-EXT-453-NEGOZI",
+      "order": 3
+    }
+  ]
+}

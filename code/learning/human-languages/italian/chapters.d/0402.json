@@ -1,0 +1,19 @@
+{
+  "chapter": 402,
+  "title": "In rete",
+  "label": "ch:it-in-rete",
+  "canDo": "I can talk about being online: the network and the connection, connecting and browsing, and a link.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "IT-R402-ripasso-395-402",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 402: I can talk about being online: the network and the connection, connecting and browsing, and a link.",
+    "assesses": [
+      "IT-LEX-C402-RETE-03",
+      "IT-LEX-C402-RETE-04",
+      "IT-LEX-C402-RETE-05"
+    ]
+  }
+}

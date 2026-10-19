@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C519-sipario",
+    "language": "italian",
+    "chapter": 519,
+    "sequence": 29070,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:507ed8e0440ac8bd"
+  },
+  "findings": []
+}
