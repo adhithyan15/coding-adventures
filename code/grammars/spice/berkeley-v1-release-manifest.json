@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "suite": "berkeley-v1-release",
   "corpusGate": {
-    "minimumCoreCaseCount": 23,
+    "minimumCoreCaseCount": 37,
     "requiredAnalysisKinds": ["op", "dc", "ac", "tran", "tf"],
     "requiredDeviceKinds": ["D", "NPN", "PNP", "NJF", "PJF", "NMOS", "PMOS"],
     "minimumSyntaxCaseCount": 9,
