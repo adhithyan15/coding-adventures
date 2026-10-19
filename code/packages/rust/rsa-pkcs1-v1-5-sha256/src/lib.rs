@@ -16,6 +16,8 @@
 //! position implied by the total input length, so the validator never searches
 //! for a convenient separator that could hide malformed padding.
 
+#![deny(unsafe_code)]
+
 use core::fmt;
 
 /// SHA-256 produces exactly 32 octets.
