@@ -585,6 +585,15 @@ be a stable equivalence relation and may run more than once for repeated
 attribute types. This structure is not DirectoryString decoding,
 normalization, complete RFC 5280 name equality, issuer selection, or path
 validation.
+A bounded `x509-directory-string` value layer now recognizes all five
+primitive, non-empty RFC 5280 DirectoryString alternatives. It validates
+UTF8String, PrintableString, UniversalString, and BMPString into
+allocation-free Unicode-scalar views while retaining TeletexString as opaque
+bytes, and it can compare exact scalar sequences across the four supported
+representations. It refuses Teletex comparison rather than inventing a T.61
+mapping. It performs no RFC 4518 StringPrep, case folding, normalization,
+insignificant-space handling, or attribute-OID schema selection, so it is not
+yet a complete value policy for issuer linking or path validation.
 A bounded `x509-certificate` structural composition now decodes complete RFC
 5280 `Certificate` and `TBSCertificate` values under one shared DER budget. It
 retains the exact signed bytes, composes the shipped field decoders, validates
@@ -641,7 +650,7 @@ fails closed with no Name or certificate bytes in the error; opaque success
 proves only that this comparator accepted this pair. The gate embeds no name
 normalization or equality rule, does not grant the candidate a CA role, and
 neither constructs nor validates a path. Repository-owned signature
-verification, DirectoryString and schema-specific value comparison,
+verification, RFC 4518 and schema-specific name value comparison,
 certificate path construction and validation, trust-root integration,
 revocation policy, TLS, and HTTP remain blockers, so concrete HTTPS remains
 unavailable.
