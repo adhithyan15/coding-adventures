@@ -666,6 +666,12 @@ excludes OS, enterprise, user-installed, and local roots and carries an
 explicit update cadence. It supplies data only: certificate parsing, path and
 hostname validation, signature verification, constraint and algorithm policy,
 revocation, TLS, HTTP, and platform trust remain separate blockers.
+The next bounded algorithm-specific prerequisite is specified as
+`x509-rsa-public-key`. It will require the exact RFC 3279 `rsaEncryption`
+SubjectPublicKeyInfo form, decode its nested PKCS #1 public modulus and
+exponent without allocation, and enforce caller-supplied inclusive modulus-bit
+and exponent-allowlist policy. It will not add modular arithmetic, signature
+verification, a general algorithm registry, or cryptographic authority.
 
 The current slices intentionally stop before provider HTTPS transport. The
 loopback host owns only local TCP and injected browser authority; custody owns
