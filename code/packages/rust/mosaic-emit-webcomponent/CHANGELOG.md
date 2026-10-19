@@ -4,6 +4,7 @@ All notable changes to this package will be documented in this file.
 
 ## [Unreleased]
 
+- **A text area commits on Ctrl+Enter or Cmd+Enter (UI25 §4).** A multiline `HostInput` or `Input`'s `onkeydown` commits on `event.key==='Enter'&&(event.ctrlKey||event.metaKey)` and calls `event.preventDefault()`; bare Enter stays its line break. Single-line fields keep bare Enter. As before on this backend, the commit dispatch carries no payload.
 - **A multiline `HostInput` is a `<textarea>` (#15930).** `multiline: true` was read only on the legacy `Input`, so the kernel `HostInput` became a one-line `<input>`. Both now share the text-area lowering. In either, a multiline field has no Enter-to-`onCommit` branch in its `onkeydown`: Enter is a line break there on every backend (UI29 §2.1). Escape still cancels.
 
 - **mosstyle `align` becomes flex alignment (#16932).** `align` is not a CSS property, so `align: center-vertical` reached the inline style verbatim and browsers discarded it. `translate_layout_alias` maps it as html and React do: `center-vertical` → `align-items: center`, `center-horizontal` → `justify-content: center`, `center` → both, `start`/`end` → `flex-start`/`flex-end`, `space-between` → `justify-content: space-between`. Any other value passes through unchanged.
