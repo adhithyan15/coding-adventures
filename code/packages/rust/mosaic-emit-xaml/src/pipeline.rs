@@ -28548,7 +28548,7 @@ mod projection_identity_tests {
     /// The clock alone is not: macOS reports `SystemTime` in whole microseconds,
     /// so two tests running in parallel threads could read the same "nanos" and
     /// be handed the same directory, each seeing the other's files (this made
-    /// `compose_fixtures` fail about one run in three). The counter makes every
+    /// `compose_fixtures` fail about one run in five). The counter makes every
     /// call distinct; the clock keeps names from a previous run apart.
     fn unique_nonce() -> String {
         static NEXT: std::sync::atomic::AtomicU64 = std::sync::atomic::AtomicU64::new(0);

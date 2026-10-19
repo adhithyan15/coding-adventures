@@ -15,7 +15,7 @@ use std::process::Command;
 /// The clock alone is not: macOS reports `SystemTime` in whole microseconds,
 /// so two tests running in parallel threads could read the same "nanos" and
 /// be handed the same directory, each seeing the other's files (this made
-/// `compose_fixtures` fail about one run in three). The counter makes every
+/// `compose_fixtures` fail about one run in five). The counter makes every
 /// call distinct; the clock keeps names from a previous run apart.
 fn unique_nonce() -> String {
     static NEXT: std::sync::atomic::AtomicU64 = std::sync::atomic::AtomicU64::new(0);
@@ -190,7 +190,7 @@ fn serialization_jar_pairs() -> Vec<(PathBuf, PathBuf)> {
     pairs
 }
 
-/// Like [jar], but ignores cached jars older than `min_version`. An explicit
+/// The newest cached jar named `<prefix><version>.jar`, ignoring any older than `min_version`. An explicit
 /// `environment_override` is still taken as given: whoever set it chose it.
 fn jar_at_least(prefix: &str, environment_override: &str, min_version: &[u64]) -> Option<PathBuf> {
     if let Some(path) = std::env::var_os(environment_override) {
