@@ -240,7 +240,7 @@ Certificate server-identity tests must additionally cover:
 - public-key or signature parsing, hashing, or signature verification;
 - issuer/subject distinguished-name comparison, path construction, or path
   validation;
-- clocks, hostname validation, trust roots, revocation, TLS records,
+- clocks, trust roots, revocation, TLS records,
   handshakes, sockets, HTTP, or OAuth transport.
 
 This slice also adds no process, filesystem, environment, clock, randomness,
