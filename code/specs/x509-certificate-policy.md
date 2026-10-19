@@ -16,7 +16,7 @@ Key Usage under one explicit semantic budget and enforces only their
 algorithm-independent issuing-CA or end-entity role relationships.
 The third gate selects exactly one caller-supplied certificate algorithm
 profile and checks its exact AlgorithmIdentifier parameter encodings and
-public-key and signature bit-length bounds.
+encoded public-key and signature BIT STRING length bounds.
 
 ## Input contract
 
@@ -104,8 +104,8 @@ contains:
 - one exact signature algorithm OID and either absent parameters or one exact
   canonical DER parameter element;
 - one exact subject-public-key algorithm OID and the same parameter policy;
-- an inclusive, nonzero subject-public-key bit-length range; and
-- an inclusive, nonzero certificate-signature bit-length range.
+- an inclusive, nonzero encoded subject-public-key BIT STRING length range; and
+- an inclusive, nonzero certificate-signature BIT STRING length range.
 
 Profile construction rejects empty OID arc slices, zero minimum lengths, and
 inverted ranges. The library embeds no algorithm registry, preferred profile,
@@ -114,9 +114,13 @@ or provider-specific OID table.
 Validation compares both complete certificate AlgorithmIdentifiers against
 every profile. Parameters match by presence and exact encoded DER bytes. Zero
 identifier matches fail as unsupported. More than one identifier match fails
-as ambiguous before any bit-length policy is applied. For exactly one match,
-the subject-public-key and certificate-signature BIT STRING lengths must fall
-within that profile's inclusive bounds.
+as ambiguous before any BIT STRING length policy is applied. For exactly one
+match, the subject-public-key and certificate-signature BIT STRING lengths
+must fall within that profile's inclusive bounds.
+
+The subject-public-key bound measures the complete encoded BIT STRING payload,
+not an algorithm-specific strength such as an RSA modulus size or EC group.
+Those semantics require a later repository-owned key parser and verifier.
 
 ```rust
 pub enum X509AlgorithmParametersPolicy<'a> {

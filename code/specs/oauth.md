@@ -599,9 +599,17 @@ explicit semantic budget. It requires critical `cA = TRUE` plus
 `keyCertSign` for an intended issuing CA, rejects CA or certificate-signing
 assertions for an intended end entity, and returns only borrowed decoded role
 evidence. It deliberately leaves key-usage selection, EKU purpose
-authorization, algorithms, signatures, names, paths, trust, clocks,
-revocation, and transport to later policy layers, so concrete HTTPS remains
-blocked.
+authorization, signatures, names, paths, trust, clocks, revocation, and
+transport to later policy layers. A third bounded gate selects exactly one
+caller-supplied signature/key AlgorithmIdentifier pair, including exact
+parameter presence or DER bytes, then checks inclusive encoded public-key and
+certificate-signature BIT STRING length ranges. The public-key bound is a
+wire-size policy, not algorithm-specific strength such as an RSA modulus size
+or EC group. It embeds no algorithm registry, parses no key or signature,
+chooses no verifier, and grants no cryptographic authority. Repository-owned
+key parsing and strength validation, signature verification, path/name
+validation, trust-root integration, revocation policy, TLS, and HTTP remain
+blockers, so concrete HTTPS remains unavailable.
 
 The current slices intentionally stop before provider HTTPS transport. The
 loopback host owns only local TCP and injected browser authority; custody owns

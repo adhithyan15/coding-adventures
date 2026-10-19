@@ -7,6 +7,13 @@ policy. Its certificate-role gate composes the repository-owned Basic
 Constraints, Key Usage, and Extended Key Usage decoders under one explicit
 semantic budget.
 
+Its algorithm-profile gate selects exactly one caller-supplied combination of
+signature AlgorithmIdentifier, subject-public-key AlgorithmIdentifier, exact
+parameter encodings, and inclusive bit-length ranges. It embeds no algorithm
+registry and does not parse keys or signatures or choose a verifier.
+The subject-public-key range measures its complete encoded BIT STRING, not an
+algorithm-specific strength such as an RSA modulus size or EC group.
+
 An intended issuing CA must carry critical `cA = TRUE` Basic Constraints and
 Key Usage with `keyCertSign`. An intended end entity may omit those extensions,
 but it must not assert either CA status or certificate-signing usage. Extended
@@ -28,7 +35,11 @@ recognized extension. The role gate does not select algorithm-dependent TLS
 key usages, authorize an Extended Key Usage purpose, or grant a certificate
 role or trust. It does not validate names, paths, signatures, algorithms,
 keys, validity against a clock, revocation, hostnames, trust roots, TLS, HTTP,
-or OAuth transport.
+or OAuth transport. Passing an algorithm profile proves only exact identifier,
+parameter, and bit-length checks; supplying an Ed25519, RSA, or other OID does
+not enable the algorithm or authorize a cryptographic implementation.
+Algorithm-specific key parsing and strength policy remain separate mandatory
+work for a repository-owned parser and verifier.
 
 ## Example
 
@@ -36,7 +47,9 @@ or OAuth transport.
 use der_asn1::Asn1Limits;
 use x509_certificate::decode_x509_certificate;
 use x509_certificate_policy::{
-    validate_certificate_role_extensions, validate_critical_extensions, X509CertificateRole,
+    validate_certificate_algorithm_profile, validate_certificate_role_extensions,
+    validate_critical_extensions, X509AlgorithmParametersPolicy, X509CertificateAlgorithmProfile,
+    X509CertificateRole,
 };
 
 # fn check(encoded: &[u8]) -> Result<(), Box<dyn std::error::Error>> {
@@ -55,6 +68,21 @@ let evidence = validate_certificate_role_extensions(
     Asn1Limits::default(),
 )?;
 assert_eq!(evidence.role(), X509CertificateRole::EndEntity);
+// These identifiers and encoded BIT STRING bounds are application policy data,
+// not an embedded registry, key-strength check, or permission to perform
+// cryptography.
+let profiles = [X509CertificateAlgorithmProfile::new(
+    &[1, 2, 840, 113_549, 1, 1, 11],
+    X509AlgorithmParametersPolicy::ExactDer(&[0x05, 0x00]),
+    &[1, 2, 840, 113_549, 1, 1, 1],
+    X509AlgorithmParametersPolicy::ExactDer(&[0x05, 0x00]),
+    2_048,
+    8_192,
+    2_048,
+    8_192,
+)?];
+let algorithm_evidence = validate_certificate_algorithm_profile(&certificate, &profiles)?;
+assert_eq!(algorithm_evidence.profile_index(), 0);
 # Ok(())
 # }
 ```

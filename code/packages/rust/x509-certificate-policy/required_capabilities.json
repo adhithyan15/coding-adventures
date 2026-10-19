@@ -3,5 +3,5 @@
   "version": 1,
   "package": "rust/x509-certificate-policy",
   "capabilities": [],
-  "justification": "Pure allocation-free policy over one already decoded caller-supplied RFC 5280 certificate and borrowed extension values. It performs no filesystem, network, process, environment, clock, key, signing, verification, revocation, trust-root, certificate-path, TLS, or cryptographic access."
+  "justification": "Pure allocation-free policy over one already decoded caller-supplied RFC 5280 certificate, borrowed extension values, and caller-supplied algorithm profile data. It compares identifiers, exact parameter bytes, and encoded BIT STRING lengths but performs no filesystem, network, process, environment, clock, algorithm-specific key parsing or strength validation, signing, verification, revocation, trust-root, certificate-path, TLS, or cryptographic access."
 }
