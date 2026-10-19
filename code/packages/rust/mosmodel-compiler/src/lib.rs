@@ -247,7 +247,8 @@ pub enum ErrorKind {
     /// A named component type was not found in the component library.
     MissingComponent,
     /// An emit takes a name the Mosaic runtime reserves (see
-    /// [`RESERVED_EMIT_NAMES`]).
+    /// [`RESERVED_EMIT_NAMES`]), or an emit parameter takes a key the
+    /// dispatched event object owns ([`RESERVED_EMIT_PARAM_NAMES`]).
     ReservedName,
 }
 
@@ -837,6 +838,20 @@ fn parse_emit_payload_type(node: &GrammarASTNode) -> Result<EmitPayloadType, Com
 /// `mosaic_app_runtime::ENVIRONMENT_CHANGED`.
 pub const RESERVED_EMIT_NAMES: &[&str] = &["environmentChanged"];
 
+/// Emit parameter names that collide with the dispatched event object's own
+/// keys, so a parameter can never overwrite or hijack them:
+///
+/// | name        | owned by                                                     |
+/// |-------------|--------------------------------------------------------------|
+/// | `type`      | the web backends' action object, `{ type: "save", value }`   |
+/// | `event`     | the native runtime envelope, `{ "event": "onSave", ... }`    |
+/// | `__proto__` | JavaScript object literals, where it sets the prototype      |
+///
+/// Before this list, `emit onSave ( type : text )` compiled, and a Web
+/// Component text field then dispatched `{type:'save',type:<typed text>}`:
+/// the user's text chose which action the host received.
+pub const RESERVED_EMIT_PARAM_NAMES: &[&str] = &["type", "event", "__proto__"];
+
 /// Validate a `MosmodelComponent` for semantic correctness.
 ///
 /// Checks (from the spec §5):
@@ -848,6 +863,7 @@ pub const RESERVED_EMIT_NAMES: &[&str] = &["environmentChanged"];
 /// 5. Types that cannot have defaults (`image`, `color`, `list`, component) don't.
 /// 6. Payload types exclude `image` and `node`.
 /// 7. No emit takes a name in [`RESERVED_EMIT_NAMES`].
+/// 8. No emit parameter takes a name in [`RESERVED_EMIT_PARAM_NAMES`].
 pub fn validate(component: &MosmodelComponent) -> Result<(), Vec<CompileError>> {
     let mut errors = Vec::new();
 
@@ -916,6 +932,21 @@ pub fn validate(component: &MosmodelComponent) -> Result<(), Vec<CompileError>> 
                     emit.name
                 ),
             });
+        }
+    }
+
+    // --- 8. No emit parameter shadows the event object's own keys ---
+    for emit in &component.emits {
+        for param in &emit.params {
+            if RESERVED_EMIT_PARAM_NAMES.contains(&param.name.as_str()) {
+                errors.push(CompileError {
+                    kind: ErrorKind::ReservedName,
+                    message: format!(
+                        "'{}' cannot be a parameter of '{}': the dispatched event object uses that key itself",
+                        param.name, emit.name
+                    ),
+                });
+            }
         }
     }
 
@@ -1587,6 +1618,30 @@ component Cube {
     fn validate_reserved_emit_name_is_exact() {
         let src = r#"component Foo { emit onEnvironmentChanged ; slot environmentChanged : text ; }"#;
         assert!(compile(src).is_ok());
+    }
+
+    /// An emit parameter cannot take a name the dispatched event object
+    /// already uses for itself. Web backends dispatch `{ type, <params> }`,
+    /// so a parameter named `type` overwrote the event's own discriminant
+    /// with the field's text; native backends forward `{ event, <params> }`
+    /// to the runtime; `__proto__` in an object literal sets the prototype
+    /// instead of a field.
+    #[test]
+    fn validate_reserved_emit_param_names() {
+        for name in ["type", "event"] {
+            let src = format!("component Foo {{ emit onSave ( {name} : text ) ; }}");
+            let errs = compile(&src).expect_err(name);
+            assert_eq!(errs.len(), 1, "{name}: {errs:?}");
+            assert_eq!(errs[0].kind, ErrorKind::ReservedName, "{name}");
+            assert!(errs[0].message.contains(&format!("'{name}'")), "{name}: {}", errs[0].message);
+        }
+        // `__proto__` is not an identifier in the grammar today, so it never
+        // reaches `validate`; the reserved list still names it in case the
+        // identifier rule ever widens.
+        assert!(compile("component Foo { emit onSave ( __proto__ : text ) ; }").is_err());
+        assert!(RESERVED_EMIT_PARAM_NAMES.contains(&"__proto__"));
+        // Only the exact envelope keys are reserved.
+        assert!(compile("component Foo { emit onSave ( value : text , event-type : text ) ; }").is_ok());
     }
 
     /// The compiler's reserved list is the runtime's: if the runtime renames

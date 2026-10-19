@@ -2,6 +2,18 @@
 
 ## [Unreleased]
 
+### Added — `ReservedName`: emit parameters named `type` or `event` are refused
+
+`validate` now refuses an emit parameter named in the new public
+`RESERVED_EMIT_PARAM_NAMES` (`type`, `event`, `__proto__`): keys the
+dispatched event object owns. The web backends dispatch `{ type, <params> }`,
+so `emit onSave ( type : text )` let a Web Component text field send
+`{type:'save',type:<typed text>}`, and the user's text chose which action the
+host received; the native runtime envelope carries `"event"` the same way.
+`__proto__` is not a grammar identifier today and is listed as defence in
+depth. No `.mil` in the repo uses these names (UI13 §6). Found by the security
+review of the Web Component text-field payload fix.
+
 ### Added — `ReservedName`: `emit environmentChanged` is refused (UI48 §7.1)
 
 The Mosaic runtime intercepts an event named `environmentChanged` — it is how

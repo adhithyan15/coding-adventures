@@ -470,6 +470,7 @@ public class GridView: NSView {
 | `UnknownConstruct` | Anything other than slot/emit in component body | `Unexpected token 'Box' — only slot and emit declarations are allowed here at line 9` |
 | `MissingComponent` | Named component type not found | `Component type 'CellAddress' not found in component library at line 12` |
 | `ReservedName` | An emit takes a name the runtime reserves | `'environmentChanged' is reserved by the Mosaic runtime (UI48) and cannot be an emit name` |
+| `ReservedName` | An emit parameter is named `type` or `event` (or `__proto__`): keys the dispatched event object owns — `{ type, ... }` on the web backends, `{ "event": ..., ... }` in the native runtime envelope. A parameter named `type` would let the field's text overwrite which action the host receives. | `'type' cannot be a parameter of 'onSave': the dispatched event object uses that key itself` |
 
 All errors include file path, line number, and column number.
 
