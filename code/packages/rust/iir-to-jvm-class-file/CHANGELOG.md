@@ -11,6 +11,9 @@ branches join, or a stack underflow is reported as the new
 `IIRJvmError::StackDepthAnalysis` instead of being emitted. `areturn` is now
 the named `ARETURN` constant instead of a raw `0xB0`, which the analysis found.
 
+Sizing `__callClosure` returns `StackDepthAnalysis` instead of panicking.
+Descriptor slot counts and invoke pop counts use checked `u16` arithmetic.
+
 ## 0.35.0 - 2026-10-05 - floating-point module globals
 
 Module globals carrying `f32` or `f64` values now use JVM fields with `F` or
