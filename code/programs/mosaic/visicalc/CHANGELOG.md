@@ -1,5 +1,13 @@
 # Changelog
 
+## 2026-10-19
+
+- `tests/web_demos_are_current.rs` runs the VisiCalc web demos' `--check`
+  scripts and the HTML demo's infinite-grid smoke test, so a change to this
+  package, to `mosaic-compile` or to `spreadsheet-wasm` that leaves the demos'
+  committed fragments, elements or engine bundle stale fails here (BUILD now
+  also depends on `rust/spreadsheet-wasm`). Unix-only, as the scripts are bash.
+
 ## 2026-09-20
 
 - Name inline cell editors through the shared grid editor-label slot and the Rust-selected absolute cell address (#15752).
