@@ -1,22 +1,292 @@
 //! # Data-driven RFC 5280 certificate policy gates
 //!
 //! This crate applies certificate-wide policy to already decoded values. It
-//! deliberately embeds no general extension registry, algorithm policy, trust,
+//! deliberately embeds no general extension or algorithm registry, trust,
 //! cryptographic authority, clock, TLS, or network. Its role gate enforces only
 //! algorithm-independent relationships among Basic Constraints, Key Usage,
-//! and Extended Key Usage.
+//! and Extended Key Usage. Its algorithm gate selects one exact caller-supplied
+//! profile without parsing keys or signatures or choosing a verifier.
 
 #![deny(unsafe_code)]
 
-use der_asn1::{Asn1Decoder, Asn1Limits, ObjectIdentifier};
+use der_asn1::{Asn1Decoder, Asn1Element, Asn1Limits, DerBitString, ObjectIdentifier};
 use std::error::Error;
 use std::fmt;
+use x509_algorithm_identifier::X509AlgorithmIdentifier;
 use x509_basic_constraints::{decode_basic_constraints, BasicConstraints, BASIC_CONSTRAINTS_OID};
 use x509_certificate::X509Certificate;
 use x509_extended_key_usage::{
     decode_extended_key_usage, ExtendedKeyUsage, EXTENDED_KEY_USAGE_OID,
 };
 use x509_key_usage::{decode_key_usage, KeyUsage, KeyUsageBit, KEY_USAGE_OID};
+
+/// Exact parameter-presence policy for one AlgorithmIdentifier.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum X509AlgorithmParametersPolicy<'a> {
+    /// Parameters must be absent.
+    Absent,
+    /// Parameters must equal these complete canonical DER element bytes.
+    ExactDer(&'a [u8]),
+}
+
+impl X509AlgorithmParametersPolicy<'_> {
+    fn matches(self, parameters: Option<Asn1Element<'_>>) -> bool {
+        match (self, parameters) {
+            (Self::Absent, None) => true,
+            (Self::ExactDer(expected), Some(actual)) => expected == actual.encoded(),
+            (Self::Absent | Self::ExactDer(_), _) => false,
+        }
+    }
+}
+
+/// One inclusive, nonzero bit-length range from a validated profile.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub struct X509BitLengthRange {
+    minimum_bits: usize,
+    maximum_bits: usize,
+}
+
+impl X509BitLengthRange {
+    const fn validated(minimum_bits: usize, maximum_bits: usize) -> Option<Self> {
+        if minimum_bits == 0 || minimum_bits > maximum_bits {
+            None
+        } else {
+            Some(Self {
+                minimum_bits,
+                maximum_bits,
+            })
+        }
+    }
+
+    pub const fn minimum_bits(self) -> usize {
+        self.minimum_bits
+    }
+
+    pub const fn maximum_bits(self) -> usize {
+        self.maximum_bits
+    }
+
+    const fn contains(self, bit_length: usize) -> bool {
+        self.minimum_bits <= bit_length && bit_length <= self.maximum_bits
+    }
+}
+
+/// Stable caller-profile construction failure categories.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum X509CertificateAlgorithmProfileDefinitionErrorKind {
+    EmptySignatureAlgorithm,
+    EmptySubjectPublicKeyAlgorithm,
+    InvalidSubjectPublicKeyBitLengthRange,
+    InvalidSignatureBitLengthRange,
+}
+
+/// A redacted invalid-profile error that retains no policy data.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub struct X509CertificateAlgorithmProfileDefinitionError {
+    kind: X509CertificateAlgorithmProfileDefinitionErrorKind,
+}
+
+impl X509CertificateAlgorithmProfileDefinitionError {
+    const fn new(kind: X509CertificateAlgorithmProfileDefinitionErrorKind) -> Self {
+        Self { kind }
+    }
+
+    pub const fn kind(self) -> X509CertificateAlgorithmProfileDefinitionErrorKind {
+        self.kind
+    }
+}
+
+impl fmt::Display for X509CertificateAlgorithmProfileDefinitionError {
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(
+            formatter,
+            "X.509 certificate algorithm profile definition error {:?}",
+            self.kind
+        )
+    }
+}
+
+impl Error for X509CertificateAlgorithmProfileDefinitionError {}
+
+/// One caller-supplied exact certificate algorithm and encoded-size profile.
+///
+/// This value is policy data only. It does not enable an algorithm or select a
+/// cryptographic implementation. The subject-public-key range measures the
+/// encoded BIT STRING, not algorithm-specific strength such as an RSA modulus.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub struct X509CertificateAlgorithmProfile<'a> {
+    signature_algorithm: &'a [u64],
+    signature_parameters: X509AlgorithmParametersPolicy<'a>,
+    subject_public_key_algorithm: &'a [u64],
+    subject_public_key_parameters: X509AlgorithmParametersPolicy<'a>,
+    subject_public_key_bit_length: X509BitLengthRange,
+    signature_bit_length: X509BitLengthRange,
+}
+
+impl<'a> X509CertificateAlgorithmProfile<'a> {
+    #[allow(clippy::too_many_arguments)]
+    pub const fn new(
+        signature_algorithm: &'a [u64],
+        signature_parameters: X509AlgorithmParametersPolicy<'a>,
+        subject_public_key_algorithm: &'a [u64],
+        subject_public_key_parameters: X509AlgorithmParametersPolicy<'a>,
+        subject_public_key_minimum_bits: usize,
+        subject_public_key_maximum_bits: usize,
+        signature_minimum_bits: usize,
+        signature_maximum_bits: usize,
+    ) -> Result<Self, X509CertificateAlgorithmProfileDefinitionError> {
+        if signature_algorithm.is_empty() {
+            return Err(X509CertificateAlgorithmProfileDefinitionError::new(
+                X509CertificateAlgorithmProfileDefinitionErrorKind::EmptySignatureAlgorithm,
+            ));
+        }
+        if subject_public_key_algorithm.is_empty() {
+            return Err(X509CertificateAlgorithmProfileDefinitionError::new(
+                X509CertificateAlgorithmProfileDefinitionErrorKind::EmptySubjectPublicKeyAlgorithm,
+            ));
+        }
+        let Some(subject_public_key_bit_length) = X509BitLengthRange::validated(
+            subject_public_key_minimum_bits,
+            subject_public_key_maximum_bits,
+        ) else {
+            return Err(X509CertificateAlgorithmProfileDefinitionError::new(
+                X509CertificateAlgorithmProfileDefinitionErrorKind::InvalidSubjectPublicKeyBitLengthRange,
+            ));
+        };
+        let Some(signature_bit_length) =
+            X509BitLengthRange::validated(signature_minimum_bits, signature_maximum_bits)
+        else {
+            return Err(X509CertificateAlgorithmProfileDefinitionError::new(
+                X509CertificateAlgorithmProfileDefinitionErrorKind::InvalidSignatureBitLengthRange,
+            ));
+        };
+
+        Ok(Self {
+            signature_algorithm,
+            signature_parameters,
+            subject_public_key_algorithm,
+            subject_public_key_parameters,
+            subject_public_key_bit_length,
+            signature_bit_length,
+        })
+    }
+
+    pub const fn signature_algorithm(&self) -> &'a [u64] {
+        self.signature_algorithm
+    }
+
+    pub const fn signature_parameters(&self) -> X509AlgorithmParametersPolicy<'a> {
+        self.signature_parameters
+    }
+
+    pub const fn subject_public_key_algorithm(&self) -> &'a [u64] {
+        self.subject_public_key_algorithm
+    }
+
+    pub const fn subject_public_key_parameters(&self) -> X509AlgorithmParametersPolicy<'a> {
+        self.subject_public_key_parameters
+    }
+
+    pub const fn subject_public_key_bit_length(&self) -> X509BitLengthRange {
+        self.subject_public_key_bit_length
+    }
+
+    pub const fn signature_bit_length(&self) -> X509BitLengthRange {
+        self.signature_bit_length
+    }
+
+    fn matches(
+        &self,
+        signature_algorithm: X509AlgorithmIdentifier<'_>,
+        subject_public_key_algorithm: X509AlgorithmIdentifier<'_>,
+    ) -> bool {
+        signature_algorithm
+            .algorithm()
+            .equals(self.signature_algorithm)
+            && self
+                .signature_parameters
+                .matches(signature_algorithm.parameters())
+            && subject_public_key_algorithm
+                .algorithm()
+                .equals(self.subject_public_key_algorithm)
+            && self
+                .subject_public_key_parameters
+                .matches(subject_public_key_algorithm.parameters())
+    }
+}
+
+/// Stable certificate algorithm-policy failure categories.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum X509CertificateAlgorithmErrorKind {
+    UnsupportedAlgorithmProfile,
+    AmbiguousAlgorithmProfile,
+    SubjectPublicKeyLengthOutOfPolicy,
+    SignatureLengthOutOfPolicy,
+}
+
+/// A redacted certificate algorithm-policy failure.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub struct X509CertificateAlgorithmError {
+    kind: X509CertificateAlgorithmErrorKind,
+}
+
+impl X509CertificateAlgorithmError {
+    const fn new(kind: X509CertificateAlgorithmErrorKind) -> Self {
+        Self { kind }
+    }
+
+    pub const fn kind(self) -> X509CertificateAlgorithmErrorKind {
+        self.kind
+    }
+}
+
+impl fmt::Display for X509CertificateAlgorithmError {
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(
+            formatter,
+            "X.509 certificate algorithm policy error {:?}",
+            self.kind
+        )
+    }
+}
+
+impl Error for X509CertificateAlgorithmError {}
+
+/// Borrowed algorithm and encoded bit-string evidence after one profile matches.
+///
+/// This value proves only the exact identifier and length checks. It does not
+/// parse keys or signatures, verify a signature, or establish certificate
+/// trust.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub struct ValidatedCertificateAlgorithmProfile<'a> {
+    profile_index: usize,
+    signature_algorithm: X509AlgorithmIdentifier<'a>,
+    subject_public_key_algorithm: X509AlgorithmIdentifier<'a>,
+    subject_public_key: DerBitString<'a>,
+    signature_value: DerBitString<'a>,
+}
+
+impl<'a> ValidatedCertificateAlgorithmProfile<'a> {
+    pub const fn profile_index(self) -> usize {
+        self.profile_index
+    }
+
+    pub const fn signature_algorithm(self) -> X509AlgorithmIdentifier<'a> {
+        self.signature_algorithm
+    }
+
+    pub const fn subject_public_key_algorithm(self) -> X509AlgorithmIdentifier<'a> {
+        self.subject_public_key_algorithm
+    }
+
+    pub const fn subject_public_key(self) -> DerBitString<'a> {
+        self.subject_public_key
+    }
+
+    pub const fn signature_value(self) -> DerBitString<'a> {
+        self.signature_value
+    }
+}
 
 /// Stable certificate-policy failure categories.
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
@@ -159,6 +429,65 @@ impl<'a> ValidatedCertificateRoleExtensions<'a> {
     pub fn extended_key_usage(&self) -> Option<&ExtendedKeyUsage<'a>> {
         self.extended_key_usage.as_ref()
     }
+}
+
+/// Select exactly one caller-supplied certificate algorithm profile.
+///
+/// Selection compares both AlgorithmIdentifier OIDs and their exact parameter
+/// encodings. Ambiguity is rejected before the selected profile's inclusive
+/// public-key and signature bit-length bounds are applied. This function does
+/// not parse either bit string or select or invoke a cryptographic verifier.
+pub fn validate_certificate_algorithm_profile<'certificate, 'policy>(
+    certificate: &X509Certificate<'certificate>,
+    profiles: &[X509CertificateAlgorithmProfile<'policy>],
+) -> Result<ValidatedCertificateAlgorithmProfile<'certificate>, X509CertificateAlgorithmError> {
+    let signature_algorithm = certificate.signature_algorithm();
+    let subject_public_key_info = certificate.tbs_certificate().subject_public_key_info();
+    let subject_public_key_algorithm = subject_public_key_info.algorithm();
+    let mut selected = None;
+
+    for (profile_index, profile) in profiles.iter().enumerate() {
+        if profile.matches(signature_algorithm, subject_public_key_algorithm) {
+            if selected.is_some() {
+                return Err(X509CertificateAlgorithmError::new(
+                    X509CertificateAlgorithmErrorKind::AmbiguousAlgorithmProfile,
+                ));
+            }
+            selected = Some((profile_index, profile));
+        }
+    }
+
+    let Some((profile_index, profile)) = selected else {
+        return Err(X509CertificateAlgorithmError::new(
+            X509CertificateAlgorithmErrorKind::UnsupportedAlgorithmProfile,
+        ));
+    };
+    let subject_public_key = subject_public_key_info.subject_public_key();
+    if !profile
+        .subject_public_key_bit_length
+        .contains(subject_public_key.bit_len())
+    {
+        return Err(X509CertificateAlgorithmError::new(
+            X509CertificateAlgorithmErrorKind::SubjectPublicKeyLengthOutOfPolicy,
+        ));
+    }
+    let signature_value = certificate.signature_value();
+    if !profile
+        .signature_bit_length
+        .contains(signature_value.bit_len())
+    {
+        return Err(X509CertificateAlgorithmError::new(
+            X509CertificateAlgorithmErrorKind::SignatureLengthOutOfPolicy,
+        ));
+    }
+
+    Ok(ValidatedCertificateAlgorithmProfile {
+        profile_index,
+        signature_algorithm,
+        subject_public_key_algorithm,
+        subject_public_key,
+        signature_value,
+    })
 }
 
 /// Require caller recognition of every critical certificate extension.
