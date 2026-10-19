@@ -92,10 +92,10 @@ exponent is the validated public `u64` value. Consequently intermediates stay
 bounded by approximately twice the caller-limited modulus width and the loop
 runs at most 64 exponent-bit iterations.
 
-The final nonnegative representative is converted back by repeated division by
-256 and left-padded to the exact modulus length. Producing more bytes than the
-modulus length is an internal invariant violation, not a recoverable input
-state.
+The final nonnegative representative is rendered with the integer substrate's
+reviewed lowercase-hexadecimal formatter, decoded nibble by nibble, and
+left-padded to the exact modulus length. Producing more bytes than the modulus
+length is an internal invariant violation, not a recoverable input state.
 
 All arithmetic is over public verification data. This slice does not claim a
 constant-time implementation and must not be reused for private RSA operations.
