@@ -4632,12 +4632,14 @@ fn emit_view_tree(
         // primitives backed by SwiftUI's `TextField` and `Button`
         // respectively. They read slot/emit refs off the node props; see
         // the per-function doc comments below for the full mapping.
-        // UI25's legacy `Input` remains the only authored primitive with a
-        // multiline contract. Keep accepting it until the kernel grows a
-        // dedicated multiline control; single-line Input shares HostInput's
-        // native lowering while multiline Input uses TextEditor.
-        "Input" => emit_legacy_input(node, indent, emits)?,
-        "HostInput" => emit_host_input(node, indent, emits)?,
+        // Both text primitives take `multiline: true` (UI29 §2.1, #15930):
+        // a multiline field is a `TextEditor`, a single-line one a
+        // `TextField`. HostInput used to go straight to the `TextField`
+        // path, so every multiline HostInput was drawn as one line here.
+        "Input" | "HostInput" if find_keyword_prop(node, "multiline") == Some("true") => {
+            emit_text_editor(node, indent)?
+        }
+        "Input" | "HostInput" => emit_host_input(node, indent, emits)?,
         "HostButton" => emit_host_button(node, indent, emits, for_payload)?,
         "HostSurface" => emit_host_surface(node, indent),
 
@@ -5797,9 +5799,6 @@ fn swift_collection_index_expr(
 // UI29 kernel partial — HostInput / HostButton emitters
 // =====================================================================
 
-/// Lower the still-supported UI25 `Input` primitive. `HostInput` deliberately
-/// covers only the single-line kernel surface, while UI25 `Input` also carries
-/// the multiline text-editor contract used by Trestle Notes.
 /// The `.disabled(...)` modifier for a text field, shared by `HostInput`'s
 /// `TextField` and the legacy multiline `TextEditor`.
 ///
@@ -5822,15 +5821,18 @@ fn text_field_disabled_modifier(node: &LayoutNode) -> Result<Option<String>, Pip
     Ok(None)
 }
 
-fn emit_legacy_input(
-    node: &LayoutNode,
-    indent: usize,
-    emits: &[EmitDecl],
-) -> Result<String, PipelineEmitError> {
-    if find_keyword_prop(node, "multiline") != Some("true") {
-        return emit_host_input(node, indent, emits);
-    }
-
+/// Lower a multiline text field — `HostInput` or the legacy `Input` with
+/// `multiline: true` — to a SwiftUI `TextEditor`.
+///
+/// | Moslayout prop        | SwiftUI surface                                        |
+/// |-----------------------|--------------------------------------------------------|
+/// | `value` + `onChange`  | `TextEditor(text: Binding(get:set:))`, as `TextField`   |
+/// | `placeholder: "..."`  | a `Text` overlay shown while the value is empty         |
+/// | `a11y-label`          | `.accessibilityLabel(...)` (placeholder as a fallback)  |
+/// | `disabled`/`read-only`| `.disabled(...)`, shared with `TextField`               |
+/// | `onCommit`            | none: Return inserts a newline in a `TextEditor`        |
+/// | `onCancel`            | `.onExitCommand` on macOS, as `TextField`               |
+fn emit_text_editor(node: &LayoutNode, indent: usize) -> Result<String, PipelineEmitError> {
     let pad = " ".repeat(indent);
     let child_pad = " ".repeat(indent + 4);
     let placeholder = find_string_prop(node, "placeholder").unwrap_or("");
@@ -5898,6 +5900,16 @@ fn emit_legacy_input(
     // HostInput. This path read only `read-only`, so `disabled` was dropped.
     if let Some(modifier) = text_field_disabled_modifier(node)? {
         output.push_str(&modifier);
+    }
+    // Escape cancels, as on the single-line `TextField`; macOS-only, so it is
+    // guarded exactly as there. There is no `onCommit` counterpart: Return
+    // is a line break in a `TextEditor` (#15930).
+    if let Some(emit_name) = find_emit_ref_prop(node, "onCancel") {
+        let case_name = to_camel_case_first_lower(&strip_on_prefix(emit_name));
+        validate_emit_name(&case_name)?;
+        output.push_str(&format!(
+            "\n{child_pad}#if os(macOS)\n{child_pad}.onExitCommand {{ dispatch(.{case_name}) }}\n{child_pad}#endif"
+        ));
     }
     output.push_str(&format!("\n{pad}}}\n"));
     Ok(output)
@@ -10106,6 +10118,67 @@ mod tests {
         assert!(out.contains("Text(\"Write something…\")"));
         assert!(out.contains(".accessibilityLabel(\"Write something…\")"));
         assert!(out.contains(".accessibilityIdentifier(\"notes-body-input\")"));
+    }
+
+    /// #15930 — a multiline `HostInput` is a `TextEditor`, like the legacy
+    /// `Input`. SwiftUI sent every HostInput to the `TextField` path, so the
+    /// note-type editor's card templates were single-line here.
+    #[test]
+    fn a_multiline_host_input_emits_a_text_editor_keeping_its_contract() {
+        let input = LayoutNode {
+            tag: "HostInput".to_string(),
+            part_name: Some("front-template-input".to_string()),
+            props: vec![
+                prop_slot_ref("value", "front-template"),
+                prop_keyword("multiline", "true"),
+                prop_string("placeholder", "{{Front}}"),
+                prop_string("a11y-label", "Front template"),
+                prop_keyword("auto-focus", "true"),
+                prop_emit_ref("onChange", "onFrontChange"),
+                prop_emit_ref("onCommit", "onSave"),
+                prop_emit_ref("onCancel", "onDiscard"),
+            ],
+            children: vec![],
+        };
+        let out = from_pipeline(
+            &component(
+                "Editor",
+                vec![slot("front-template", SlotType::Text, true)],
+                vec![
+                    emit("onFrontChange", vec![param("value", EmitPayloadType::Text)]),
+                    emit("onSave", vec![]),
+                    emit("onDiscard", vec![]),
+                ],
+            ),
+            &layout_with("Editor", container_node("Box", vec![input])),
+            &empty_style("Editor"),
+        )
+        .unwrap()
+        .output;
+
+        assert!(
+            out.contains("TextEditor(text: Binding(get: { frontTemplate }, set: { dispatch(.frontChange(value: $0)) }))"),
+            "got:\n{out}"
+        );
+        assert!(!out.contains("TextField("), "got:\n{out}");
+        assert!(out.contains("Text(\"{{Front}}\")"), "placeholder overlay:\n{out}");
+        assert!(
+            out.contains(".accessibilityLabel(Text(verbatim: \"Front template\"))"),
+            "got:\n{out}"
+        );
+        assert!(
+            out.contains(".accessibilityIdentifier(\"front-template-input\")"),
+            "got:\n{out}"
+        );
+        // Return is a line break in a TextEditor, so nothing commits on it.
+        assert!(!out.contains(".onSubmit"), "got:\n{out}");
+        // Escape still cancels, guarded to macOS as on TextField.
+        assert!(
+            out.contains("#if os(macOS)\n") && out.contains(".onExitCommand { dispatch(.discard) }"),
+            "got:\n{out}"
+        );
+        // `auto-focus` is keyed on the HostInput tag, not on TextField.
+        assert!(out.contains(".focused($isFocused)"), "got:\n{out}");
     }
 
     #[test]

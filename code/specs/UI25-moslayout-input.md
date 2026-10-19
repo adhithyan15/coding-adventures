@@ -113,7 +113,7 @@ emits with `connects` clauses (UI14 §6):
 | Native event | Payload  | When it fires |
 |---|---|---|
 | `onChange`   | `text`   | On every keystroke / IME composition step — the new value. |
-| `onCommit`   | (none)   | When the user presses Enter (single-line) or Ctrl/Cmd+Enter (multi-line), or the field loses focus from an explicit submit gesture. |
+| `onCommit`   | (none)   | When the user presses Enter (single-line) or Ctrl/Cmd+Enter (multi-line), or the field loses focus from an explicit submit gesture. **As built:** the multi-line Ctrl/Cmd+Enter accelerator was never implemented on any backend; Enter inserts a line break there and `onCommit` on a multiline field is reported as `interaction.multiline-commit-unbound` (UI29 §2.1, #15930). |
 | `onCancel`   | (none)   | When the user presses Escape. |
 
 Connects syntax (the right-hand side names a mosmodel emit):

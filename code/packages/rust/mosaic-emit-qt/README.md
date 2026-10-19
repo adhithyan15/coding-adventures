@@ -153,7 +153,7 @@ platform fonts and explicit host font choices remain unchanged.
 | `Divider`     | `Rectangle { height: 1; color: "#888"; Layout.fillWidth: true }`            |
 | `Stack`       | `Item { ... }` with `anchors.fill: parent` on each child — Z-axis overlay   |
 | `Input`       | `TextArea { ... }` when multiline; otherwise the `HostInput` lowering       |
-| `HostInput`   | `TextInput` or placeholder-capable `TextField` with native input semantics   |
+| `HostInput`   | `TextInput` or placeholder-capable `TextField` with native input semantics; `TextArea` with `multiline: true` |
 | `HostButton`  | `Button { text: ...; enabled: ...; onClicked: ... }` (from Controls 2.15)   |
 | `HostSlider`  | `Slider { value: ...; from: ...; to: ...; stepSize: ... }` with movement and release events |
 | `HostScroll`  | `ScrollView { ... children ... }` (from Controls 2.15)                      |
