@@ -323,6 +323,35 @@ fn rejects_unsupported_identifier_pair() {
 }
 
 #[test]
+fn rejects_nonmatching_subject_public_key_identifier_fields() {
+    for (key_oid, key_parameters) in [(OTHER_OID_DER, None), (KEY_OID_DER, Some(NULL_DER))] {
+        let encoded = certificate(
+            SIGNATURE_OID_DER,
+            None,
+            key_oid,
+            key_parameters,
+            &[0, 0xaa],
+            &[0, 0xbb],
+        );
+        let certificate = decode_x509_certificate(&encoded, Asn1Limits::default()).unwrap();
+        let profiles = [profile(
+            X509AlgorithmParametersPolicy::Absent,
+            X509AlgorithmParametersPolicy::Absent,
+            1,
+            8,
+            1,
+            8,
+        )];
+
+        let error = validate_certificate_algorithm_profile(&certificate, &profiles).unwrap_err();
+        assert_eq!(
+            error.kind(),
+            X509CertificateAlgorithmErrorKind::UnsupportedAlgorithmProfile
+        );
+    }
+}
+
+#[test]
 fn rejects_ambiguous_identifier_matches_before_length_policy() {
     let encoded = certificate(
         SIGNATURE_OID_DER,
