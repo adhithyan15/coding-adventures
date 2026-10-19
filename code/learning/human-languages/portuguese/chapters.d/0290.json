@@ -1,0 +1,19 @@
+{
+  "chapter": 290,
+  "title": "Armas e ameaças",
+  "label": "ch:pt-armas-e-ameacas",
+  "canDo": "I can talk about weapons and threats, and name a killer.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "PT-C290-assassino",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 290: I can talk about weapons and threats, and name a killer.",
+    "assesses": [
+      "PT-LEX-C290-ARMA-03",
+      "PT-LEX-C290-ARMA-04",
+      "PT-LEX-C290-ARMA-05"
+    ]
+  }
+}

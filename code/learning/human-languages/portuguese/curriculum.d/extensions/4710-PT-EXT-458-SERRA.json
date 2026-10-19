@@ -1,0 +1,8 @@
+{
+  "id": "PT-EXT-458-SERRA",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can describe a mountain walk: the mountain range, the hillside, the summit, a gorge and climbing.",
+  "prerequisites": []
+}

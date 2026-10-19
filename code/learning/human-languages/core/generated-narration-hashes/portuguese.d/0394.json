@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 394,
+  "sourceHash": "fnv1a64:bfe90ad17cc93793",
+  "lessonIds": [
+    "PT-C394-garantia",
+    "PT-C394-garantir",
+    "PT-C394-reembolso",
+    "PT-C394-reembolsar",
+    "PT-C394-credito"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch394.txt",
+  "json": "portuguese/narration/ch394.json",
+  "textHash": "fnv1a64:5a6fb9bf7dc3128b",
+  "jsonHash": "fnv1a64:0e0199efe3947b11",
+  "findings": []
+}

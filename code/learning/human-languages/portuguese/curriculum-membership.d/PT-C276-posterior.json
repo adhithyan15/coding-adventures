@@ -1,0 +1,11 @@
+{
+  "id": "PT-C276-posterior",
+  "pathSegment": "PT-PATH-276-QUINZENA",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PT-EXT-276-QUINZENA",
+      "order": 4
+    }
+  ]
+}

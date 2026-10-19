@@ -1,0 +1,9 @@
+{
+  "id": "PT-PATH-439-CARDEAIS",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "PT-EXT-439-CARDEAIS"
+  ],
+  "after": []
+}

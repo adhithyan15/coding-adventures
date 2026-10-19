@@ -1,0 +1,11 @@
+{
+  "id": "PT-C427-cancelamento",
+  "pathSegment": "PT-PATH-427-RESERVA",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PT-EXT-427-RESERVA",
+      "order": 2
+    }
+  ]
+}

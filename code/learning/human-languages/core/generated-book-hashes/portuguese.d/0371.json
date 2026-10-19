@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 371,
+  "sourceHash": "fnv1a64:33d2688e38d2f20d",
+  "lessonIds": [
+    "PT-C371-prever",
+    "PT-C371-previsivel",
+    "PT-C371-imprevisivel",
+    "PT-C371-imprevisto",
+    "PT-C371-alternativa"
+  ],
+  "tex": "portuguese/book/chapters/ch371-os-imprevistos.tex"
+}

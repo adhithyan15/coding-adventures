@@ -1,0 +1,19 @@
+{
+  "chapter": 408,
+  "title": "Peões e radares",
+  "label": "ch:pt-peoes-e-radares",
+  "canDo": "I can talk about road rules in town: pedestrians, the zebra crossing, running someone over, speed cameras and road checks.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "PT-R408-revisao-401-408",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 408: I can talk about road rules in town: pedestrians, the zebra crossing, running someone over, speed cameras and road checks.",
+    "assesses": [
+      "PT-LEX-C408-PEOES-03",
+      "PT-LEX-C408-PEOES-04",
+      "PT-LEX-C408-PEOES-05"
+    ]
+  }
+}

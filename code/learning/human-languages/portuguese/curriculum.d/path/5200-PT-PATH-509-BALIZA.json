@@ -1,0 +1,9 @@
+{
+  "id": "PT-PATH-509-BALIZA",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "PT-EXT-509-BALIZA"
+  ],
+  "after": []
+}

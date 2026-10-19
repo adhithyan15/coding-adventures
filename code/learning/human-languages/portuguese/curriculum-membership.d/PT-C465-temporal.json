@@ -1,0 +1,11 @@
+{
+  "id": "PT-C465-temporal",
+  "pathSegment": "PT-PATH-465-TEMPORAL",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PT-EXT-465-TEMPORAL",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 520,
+  "sourceHash": "fnv1a64:e8459727c995e06c",
+  "lessonIds": [
+    "PT-C520-cenario",
+    "PT-C520-encenar",
+    "PT-C520-encenacao",
+    "PT-C520-estreia",
+    "PT-C520-estrear"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch520.txt",
+  "json": "portuguese/narration/ch520.json",
+  "textHash": "fnv1a64:836b887709dfbc5c",
+  "jsonHash": "fnv1a64:5aeebca58260547a",
+  "findings": []
+}

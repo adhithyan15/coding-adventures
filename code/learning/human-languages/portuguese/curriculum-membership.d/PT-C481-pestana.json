@@ -1,0 +1,11 @@
+{
+  "id": "PT-C481-pestana",
+  "pathSegment": "PT-PATH-481-ROSTO",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PT-EXT-481-ROSTO",
+      "order": 1
+    }
+  ]
+}

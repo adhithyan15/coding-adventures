@@ -1,0 +1,9 @@
+{
+  "id": "PT-PATH-302-SISMO",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "PT-EXT-302-SISMO"
+  ],
+  "after": []
+}

@@ -1,0 +1,8 @@
+{
+  "id": "PT-EXT-387-TRIBUNAL",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can follow a court case: the complaint, the defendant, the witness, the defence and the sentence.",
+  "prerequisites": []
+}

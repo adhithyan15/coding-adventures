@@ -1,0 +1,19 @@
+{
+  "chapter": 334,
+  "title": "Até ficar dourado",
+  "label": "ch:pt-ate-ficar-dourado",
+  "canDo": "I can describe the last steps of a recipe: draining, covering, browning, grilling the top and stuffing.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "PT-R334-revisao-final-334",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 334: I can describe the last steps of a recipe: draining, covering, browning, grilling the top and stuffing.",
+    "assesses": [
+      "PT-LEX-C334-GRATINAR-03",
+      "PT-LEX-C334-GRATINAR-04",
+      "PT-LEX-C334-GRATINAR-05"
+    ]
+  }
+}

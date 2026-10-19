@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PT-C326-fada",
+    "language": "portuguese",
+    "chapter": 326,
+    "sequence": 18760,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1c87c44b2ed136d3"
+  },
+  "findings": []
+}

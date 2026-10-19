@@ -1,0 +1,9 @@
+{
+  "id": "PT-PATH-403-VIDROS",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "PT-EXT-403-VIDROS"
+  ],
+  "after": []
+}

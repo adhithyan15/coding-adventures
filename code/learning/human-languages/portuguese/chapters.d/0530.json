@@ -1,0 +1,19 @@
+{
+  "chapter": 530,
+  "title": "Senhorios e inquilinos",
+  "label": "ch:pt-senhorios-e-inquilinos",
+  "canDo": "I can talk about renting, furnishing and storage.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "PT-R530-revisao-523-530",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 530: I can talk about renting, furnishing and storage.",
+    "assesses": [
+      "PT-LEX-C530-SENHORIO-03",
+      "PT-LEX-C530-SENHORIO-04",
+      "PT-LEX-C530-SENHORIO-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 476,
+  "title": "Uma grande desilusão",
+  "label": "ch:pt-uma-grande-desilusao",
+  "canDo": "I can talk about disappointment and comfort.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "PT-C476-desabafar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 476: I can talk about disappointment and comfort.",
+    "assesses": [
+      "PT-LEX-C476-DESILUSAO-03",
+      "PT-LEX-C476-DESILUSAO-04",
+      "PT-LEX-C476-DESILUSAO-05"
+    ]
+  }
+}

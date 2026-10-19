@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PT-C327-reino",
+    "language": "portuguese",
+    "chapter": 327,
+    "sequence": 18790,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:cc9a12fff7bf9095"
+  },
+  "findings": []
+}

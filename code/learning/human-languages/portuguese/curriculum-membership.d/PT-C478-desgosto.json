@@ -1,0 +1,11 @@
+{
+  "id": "PT-C478-desgosto",
+  "pathSegment": "PT-PATH-478-SOLIDAO",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PT-EXT-478-SOLIDAO",
+      "order": 4
+    }
+  ]
+}

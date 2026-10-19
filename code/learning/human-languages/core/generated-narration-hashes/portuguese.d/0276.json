@@ -1,0 +1,20 @@
+{
+  "language": "portuguese",
+  "chapter": 276,
+  "sourceHash": "fnv1a64:ab75f0df96d18a62",
+  "lessonIds": [
+    "PT-C276-quinzena",
+    "PT-C276-trimestre",
+    "PT-C276-mensal",
+    "PT-C276-milenio",
+    "PT-C276-posterior",
+    "PT-R276-revisao-269-276"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "portuguese/narration/ch276.txt",
+  "json": "portuguese/narration/ch276.json",
+  "textHash": "fnv1a64:3c76da7ac9fdb1d8",
+  "jsonHash": "fnv1a64:73a6b9819e08f036",
+  "findings": []
+}

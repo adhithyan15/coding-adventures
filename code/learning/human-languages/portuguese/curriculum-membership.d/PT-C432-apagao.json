@@ -1,0 +1,11 @@
+{
+  "id": "PT-C432-apagao",
+  "pathSegment": "PT-PATH-432-LUZ",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PT-EXT-432-LUZ",
+      "order": 4
+    }
+  ]
+}

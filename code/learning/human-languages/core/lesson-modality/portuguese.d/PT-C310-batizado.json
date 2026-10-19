@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PT-C310-batizado",
+    "language": "portuguese",
+    "chapter": 310,
+    "sequence": 17900,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:19cd2d5c10d11243"
+  },
+  "findings": []
+}

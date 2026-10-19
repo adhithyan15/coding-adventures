@@ -1,0 +1,19 @@
+{
+  "chapter": 349,
+  "title": "Visto que e dado que",
+  "label": "ch:pt-visto-que-e-dado-que",
+  "canDo": "I can give reasons with since, given that and due to, and say what follows from them.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "PT-C349-devido-a",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 349: I can give reasons with since, given that and due to, and say what follows from them.",
+    "assesses": [
+      "PT-LEX-C349-VISTOQUE-03",
+      "PT-LEX-C349-VISTOQUE-04",
+      "PT-LEX-C349-VISTOQUE-05"
+    ]
+  }
+}

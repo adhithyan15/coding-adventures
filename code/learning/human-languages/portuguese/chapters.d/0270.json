@@ -1,0 +1,19 @@
+{
+  "chapter": 270,
+  "title": "Entretanto",
+  "label": "ch:pt-entretanto",
+  "canDo": "I can say that two things happened at the same time, or one right after the other.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "PT-C270-subitamente",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 270: I can say that two things happened at the same time, or one right after the other.",
+    "assesses": [
+      "PT-LEX-C270-ENTRETANTO-03",
+      "PT-LEX-C270-ENTRETANTO-04",
+      "PT-LEX-C270-ENTRETANTO-05"
+    ]
+  }
+}

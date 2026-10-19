@@ -1,0 +1,9 @@
+{
+  "id": "PT-PATH-488-CURA",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "PT-EXT-488-CURA"
+  ],
+  "after": []
+}

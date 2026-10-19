@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 422,
+  "sourceHash": "fnv1a64:631a04dcd79eddf7",
+  "lessonIds": [
+    "PT-C422-porao",
+    "PT-C422-balanca",
+    "PT-C422-empacotar",
+    "PT-C422-cadeado",
+    "PT-C422-extraviar"
+  ],
+  "tex": "portuguese/book/chapters/ch422-as-bagagens.tex"
+}

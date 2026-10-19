@@ -1,0 +1,19 @@
+{
+  "chapter": 482,
+  "title": "Da nuca ao calcanhar",
+  "label": "ch:pt-da-nuca-ao-calcanhar",
+  "canDo": "I can name more parts of the body.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "PT-R482-revisao-475-482",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 482: I can name more parts of the body.",
+    "assesses": [
+      "PT-LEX-C482-CORPO-03",
+      "PT-LEX-C482-CORPO-04",
+      "PT-LEX-C482-CORPO-05"
+    ]
+  }
+}

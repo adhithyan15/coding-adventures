@@ -1,0 +1,11 @@
+{
+  "id": "PT-C297-absolver",
+  "pathSegment": "PT-PATH-297-TRIBUNAL",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PT-EXT-297-TRIBUNAL",
+      "order": 4
+    }
+  ]
+}

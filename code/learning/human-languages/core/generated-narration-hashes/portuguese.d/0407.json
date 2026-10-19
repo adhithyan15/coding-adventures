@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 407,
+  "sourceHash": "fnv1a64:ca548076d438efd9",
+  "lessonIds": [
+    "PT-C407-capo",
+    "PT-C407-bagageira",
+    "PT-C407-pisca",
+    "PT-C407-parafuso",
+    "PT-C407-desaparafusar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch407.txt",
+  "json": "portuguese/narration/ch407.json",
+  "textHash": "fnv1a64:245189bd890b3e79",
+  "jsonHash": "fnv1a64:e0f7268da3b28f36",
+  "findings": []
+}

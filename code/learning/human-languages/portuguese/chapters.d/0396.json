@@ -1,0 +1,19 @@
+{
+  "chapter": 396,
+  "title": "A minha conta",
+  "label": "ch:pt-a-minha-conta",
+  "canDo": "I can manage an online account: use an app, log in as a user, keep a password and edit my profile.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "PT-C396-perfil",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 396: I can manage an online account: use an app, log in as a user, keep a password and edit my profile.",
+    "assesses": [
+      "PT-LEX-C396-CONTA-03",
+      "PT-LEX-C396-CONTA-04",
+      "PT-LEX-C396-CONTA-05"
+    ]
+  }
+}

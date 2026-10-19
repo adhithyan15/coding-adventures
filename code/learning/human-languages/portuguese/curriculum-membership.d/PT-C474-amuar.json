@@ -1,0 +1,11 @@
+{
+  "id": "PT-C474-amuar",
+  "pathSegment": "PT-PATH-474-RABUGENTO",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PT-EXT-474-RABUGENTO",
+      "order": 2
+    }
+  ]
+}

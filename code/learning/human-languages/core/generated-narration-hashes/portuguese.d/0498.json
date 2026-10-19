@@ -1,0 +1,20 @@
+{
+  "language": "portuguese",
+  "chapter": 498,
+  "sourceHash": "fnv1a64:ebd39b6a149f4bc1",
+  "lessonIds": [
+    "PT-C498-conviver",
+    "PT-C498-convivio",
+    "PT-C498-vizinhanca",
+    "PT-C498-confidente",
+    "PT-C498-lealdade",
+    "PT-R498-revisao-491-498"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "portuguese/narration/ch498.txt",
+  "json": "portuguese/narration/ch498.json",
+  "textHash": "fnv1a64:06647d267bbe82f1",
+  "jsonHash": "fnv1a64:2373c55040ac0c51",
+  "findings": []
+}

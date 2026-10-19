@@ -1,0 +1,14 @@
+{
+  "language": "portuguese",
+  "chapter": 464,
+  "sourceHash": "fnv1a64:db30ed802e6a2eaa",
+  "lessonIds": [
+    "PT-C464-geada",
+    "PT-C464-orvalho",
+    "PT-C464-congelar",
+    "PT-C464-congelador",
+    "PT-C464-derreter",
+    "PT-R464-revisao-457-464"
+  ],
+  "tex": "portuguese/book/chapters/ch464-o-gelo.tex"
+}

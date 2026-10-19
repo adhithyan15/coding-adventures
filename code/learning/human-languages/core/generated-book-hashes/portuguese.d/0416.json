@@ -1,0 +1,14 @@
+{
+  "language": "portuguese",
+  "chapter": 416,
+  "sourceHash": "fnv1a64:bdde79dd15af58a7",
+  "lessonIds": [
+    "PT-C416-painel",
+    "PT-C416-atraso",
+    "PT-C416-atrasar",
+    "PT-C416-suprimir",
+    "PT-C416-transbordo",
+    "PT-R416-revisao-409-416"
+  ],
+  "tex": "portuguese/book/chapters/ch416-atrasos-e-transbordos.tex"
+}

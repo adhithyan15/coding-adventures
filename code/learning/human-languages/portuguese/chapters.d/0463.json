@@ -1,0 +1,19 @@
+{
+  "chapter": 463,
+  "title": "A trovoada",
+  "label": "ch:pt-a-trovoada",
+  "canDo": "I can describe a thunderstorm: the thunderstorm, thundering, lightning flashing, hail and a downpour.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "PT-C463-aguaceiro",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 463: I can describe a thunderstorm: the thunderstorm, thundering, lightning flashing, hail and a downpour.",
+    "assesses": [
+      "PT-LEX-C463-TROVOADA-03",
+      "PT-LEX-C463-TROVOADA-04",
+      "PT-LEX-C463-TROVOADA-05"
+    ]
+  }
+}

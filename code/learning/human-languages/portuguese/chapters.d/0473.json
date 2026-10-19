@@ -1,0 +1,19 @@
+{
+  "chapter": 473,
+  "title": "Gentis e grosseiros",
+  "label": "ch:pt-gentis-e-grosseiros",
+  "canDo": "I can describe polite and rude behaviour.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "PT-C473-ofender",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 473: I can describe polite and rude behaviour.",
+    "assesses": [
+      "PT-LEX-C473-MANEIRAS-03",
+      "PT-LEX-C473-MANEIRAS-04",
+      "PT-LEX-C473-MANEIRAS-05"
+    ]
+  }
+}

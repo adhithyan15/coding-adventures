@@ -1,0 +1,9 @@
+{
+  "id": "PT-PATH-521-GENEROS",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "PT-EXT-521-GENEROS"
+  ],
+  "after": []
+}

@@ -1,0 +1,9 @@
+{
+  "id": "PT-PATH-501-JARDIM",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "PT-EXT-501-JARDIM"
+  ],
+  "after": []
+}

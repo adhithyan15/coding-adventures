@@ -1,0 +1,11 @@
+{
+  "id": "PT-C363-igualdade",
+  "pathSegment": "PT-PATH-363-CIDADAO",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PT-EXT-363-CIDADAO",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 273,
+  "title": "Por etapas",
+  "label": "ch:pt-por-etapas",
+  "canDo": "I can describe something step by step: its stages, phases, sequence and chronology.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "PT-C273-cronologia",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 273: I can describe something step by step: its stages, phases, sequence and chronology.",
+    "assesses": [
+      "PT-LEX-C273-ETAPA-03",
+      "PT-LEX-C273-ETAPA-04",
+      "PT-LEX-C273-ETAPA-05"
+    ]
+  }
+}

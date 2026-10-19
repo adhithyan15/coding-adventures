@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 418,
+  "sourceHash": "fnv1a64:aed389a89f5c540d",
+  "lessonIds": [
+    "PT-C418-bote",
+    "PT-C418-remo",
+    "PT-C418-remar",
+    "PT-C418-canoa",
+    "PT-C418-barqueiro"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch418.txt",
+  "json": "portuguese/narration/ch418.json",
+  "textHash": "fnv1a64:7d633ba216b08457",
+  "jsonHash": "fnv1a64:d17bbddda725449f",
+  "findings": []
+}

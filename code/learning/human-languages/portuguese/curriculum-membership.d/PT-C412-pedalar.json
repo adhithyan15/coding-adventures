@@ -1,0 +1,11 @@
+{
+  "id": "PT-C412-pedalar",
+  "pathSegment": "PT-PATH-412-RODAS",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-412-RODAS",
+      "order": 3
+    }
+  ]
+}

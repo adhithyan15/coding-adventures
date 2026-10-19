@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 362,
+  "sourceHash": "fnv1a64:d9a3d1765bcb97a7",
+  "lessonIds": [
+    "PT-C362-ordenado",
+    "PT-C362-subsidio",
+    "PT-C362-negociar",
+    "PT-C362-reforma",
+    "PT-C362-reformado"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch362.txt",
+  "json": "portuguese/narration/ch362.json",
+  "textHash": "fnv1a64:dc656f7845be5c46",
+  "jsonHash": "fnv1a64:b51eccfb4023fc59",
+  "findings": []
+}

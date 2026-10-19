@@ -1,0 +1,19 @@
+{
+  "chapter": 298,
+  "title": "Depois do veredicto",
+  "label": "ch:pt-depois-do-veredicto",
+  "canDo": "I can talk about a verdict, an appeal, and a prisoner being set free.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "PT-C298-libertar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 298: I can talk about a verdict, an appeal, and a prisoner being set free.",
+    "assesses": [
+      "PT-LEX-C298-RECURSO-03",
+      "PT-LEX-C298-RECURSO-04",
+      "PT-LEX-C298-RECURSO-05"
+    ]
+  }
+}

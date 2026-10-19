@@ -1,0 +1,11 @@
+{
+  "id": "PT-R400-revisao-399-400",
+  "pathSegment": "PT-PATH-400-PUBLICAR",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "PT-EXT-400-PUBLICAR",
+      "order": 5
+    }
+  ]
+}

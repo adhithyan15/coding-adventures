@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 320,
+  "sourceHash": "fnv1a64:1c9ccb83dc8ecd21",
+  "lessonIds": [
+    "PT-C320-costume",
+    "PT-C320-ritual",
+    "PT-C320-cerimonia",
+    "PT-C320-peregrino",
+    "PT-C320-peregrinacao"
+  ],
+  "tex": "portuguese/book/chapters/ch320-ritos-e-costumes.tex"
+}

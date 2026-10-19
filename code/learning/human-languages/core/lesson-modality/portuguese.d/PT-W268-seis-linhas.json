@@ -1,0 +1,27 @@
+{
+  "lesson": {
+    "id": "PT-W268-seis-linhas",
+    "language": "portuguese",
+    "chapter": 268,
+    "sequence": 15760,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "eyes-or-hands-step"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type",
+      "eyes-or-hands-step"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:a1ea4f4ecaf70790",
+    "detachableSegments": [
+      "Writing — connected composition"
+    ]
+  },
+  "findings": []
+}

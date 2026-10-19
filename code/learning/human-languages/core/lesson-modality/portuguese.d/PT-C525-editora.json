@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PT-C525-editora",
+    "language": "portuguese",
+    "chapter": 525,
+    "sequence": 28990,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d2077bc6d51763fd"
+  },
+  "findings": []
+}

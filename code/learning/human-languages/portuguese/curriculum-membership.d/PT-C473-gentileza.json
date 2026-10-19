@@ -1,0 +1,11 @@
+{
+  "id": "PT-C473-gentileza",
+  "pathSegment": "PT-PATH-473-MANEIRAS",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "PT-EXT-473-MANEIRAS",
+      "order": 0
+    }
+  ]
+}

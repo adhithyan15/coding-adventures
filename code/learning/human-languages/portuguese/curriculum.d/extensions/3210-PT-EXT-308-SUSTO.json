@@ -1,0 +1,8 @@
+{
+  "id": "PT-EXT-308-SUSTO",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can talk about frights and panic, fainting, and twisting an ankle.",
+  "prerequisites": []
+}

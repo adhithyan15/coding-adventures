@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PT-C376-caloiro",
+    "language": "portuguese",
+    "chapter": 376,
+    "sequence": 21310,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6c2a9dc9b3778754"
+  },
+  "findings": []
+}

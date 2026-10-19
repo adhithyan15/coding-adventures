@@ -1,0 +1,11 @@
+{
+  "id": "PT-C526-dobragem",
+  "pathSegment": "PT-PATH-526-SERIES",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PT-EXT-526-SERIES",
+      "order": 4
+    }
+  ]
+}

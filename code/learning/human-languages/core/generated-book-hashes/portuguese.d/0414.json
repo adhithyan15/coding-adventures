@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 414,
+  "sourceHash": "fnv1a64:31d9cd1365ed1eaa",
+  "lessonIds": [
+    "PT-C414-bilheteira",
+    "PT-C414-passe",
+    "PT-C414-validar",
+    "PT-C414-revisor",
+    "PT-C414-coima"
+  ],
+  "tex": "portuguese/book/chapters/ch414-os-bilhetes.tex"
+}

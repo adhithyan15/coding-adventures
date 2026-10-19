@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PT-C504-colecao",
+    "language": "portuguese",
+    "chapter": 504,
+    "sequence": 27890,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:99cf74865f69c47b"
+  },
+  "findings": []
+}

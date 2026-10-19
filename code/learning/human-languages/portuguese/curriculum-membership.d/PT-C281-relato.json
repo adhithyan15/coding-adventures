@@ -1,0 +1,11 @@
+{
+  "id": "PT-C281-relato",
+  "pathSegment": "PT-PATH-281-RELATAR",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PT-EXT-281-RELATAR",
+      "order": 2
+    }
+  ]
+}

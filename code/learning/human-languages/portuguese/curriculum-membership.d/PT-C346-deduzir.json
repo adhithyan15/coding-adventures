@@ -1,0 +1,11 @@
+{
+  "id": "PT-C346-deduzir",
+  "pathSegment": "PT-PATH-346-RACIOCINIO",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PT-EXT-346-RACIOCINIO",
+      "order": 1
+    }
+  ]
+}

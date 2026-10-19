@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 307,
+  "sourceHash": "fnv1a64:b82be7793e8fbb8e",
+  "lessonIds": [
+    "PT-C307-ferido",
+    "PT-C307-ferir",
+    "PT-C307-ferimento",
+    "PT-C307-fratura",
+    "PT-C307-gesso"
+  ],
+  "tex": "portuguese/book/chapters/ch307-feridos.tex"
+}

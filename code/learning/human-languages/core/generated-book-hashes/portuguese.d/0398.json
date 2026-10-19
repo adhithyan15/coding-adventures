@@ -1,0 +1,14 @@
+{
+  "language": "portuguese",
+  "chapter": 398,
+  "sourceHash": "fnv1a64:7353170a8ac83549",
+  "lessonIds": [
+    "PT-C398-ficheiro",
+    "PT-C398-copiar",
+    "PT-C398-guardar",
+    "PT-C398-anexo",
+    "PT-C398-anexar",
+    "PT-R398-revisao-391-398"
+  ],
+  "tex": "portuguese/book/chapters/ch398-ficheiros-e-pastas.tex"
+}

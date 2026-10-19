@@ -1,0 +1,11 @@
+{
+  "id": "PT-C324-conto",
+  "pathSegment": "PT-PATH-324-CONTO",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "PT-EXT-324-CONTO",
+      "order": 0
+    }
+  ]
+}

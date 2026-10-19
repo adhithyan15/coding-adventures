@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PT-R308-revisao-301-308",
+    "language": "portuguese",
+    "chapter": 308,
+    "sequence": 17840,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e0935f3432d46e61"
+  },
+  "findings": []
+}

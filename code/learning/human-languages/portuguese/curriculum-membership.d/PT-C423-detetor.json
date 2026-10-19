@@ -1,0 +1,11 @@
+{
+  "id": "PT-C423-detetor",
+  "pathSegment": "PT-PATH-423-CONTROLO",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-423-CONTROLO",
+      "order": 3
+    }
+  ]
+}

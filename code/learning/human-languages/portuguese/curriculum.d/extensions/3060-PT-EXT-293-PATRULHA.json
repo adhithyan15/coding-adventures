@@ -1,0 +1,8 @@
+{
+  "id": "PT-EXT-293-PATRULHA",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can talk about police officers on patrol and about watching over a place.",
+  "prerequisites": []
+}

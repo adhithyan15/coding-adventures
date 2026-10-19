@@ -1,0 +1,14 @@
+{
+  "language": "portuguese",
+  "chapter": 350,
+  "sourceHash": "fnv1a64:bfdf4ef21539dcf6",
+  "lessonIds": [
+    "PT-C350-origem",
+    "PT-C350-derivar",
+    "PT-C350-resultar",
+    "PT-C350-originar",
+    "PT-C350-gracas-a",
+    "PT-R350-revisao-343-350"
+  ],
+  "tex": "portuguese/book/chapters/ch350-de-onde-vem.tex"
+}

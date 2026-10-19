@@ -1,0 +1,11 @@
+{
+  "id": "PT-C507-caminhada",
+  "pathSegment": "PT-PATH-507-RODAS",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-507-RODAS",
+      "order": 3
+    }
+  ]
+}

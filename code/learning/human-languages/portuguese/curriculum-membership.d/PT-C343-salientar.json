@@ -1,0 +1,11 @@
+{
+  "id": "PT-C343-salientar",
+  "pathSegment": "PT-PATH-343-ESCLARECER",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PT-EXT-343-ESCLARECER",
+      "order": 4
+    }
+  ]
+}

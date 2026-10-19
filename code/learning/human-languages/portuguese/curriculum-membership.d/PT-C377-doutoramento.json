@@ -1,0 +1,11 @@
+{
+  "id": "PT-C377-doutoramento",
+  "pathSegment": "PT-PATH-377-DOCENTE",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PT-EXT-377-DOCENTE",
+      "order": 4
+    }
+  ]
+}

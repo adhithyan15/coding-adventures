@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 343,
+  "sourceHash": "fnv1a64:dd848f013f59c326",
+  "lessonIds": [
+    "PT-C343-equivoco",
+    "PT-C343-esclarecer",
+    "PT-C343-esclarecimento",
+    "PT-C343-sublinhar",
+    "PT-C343-salientar"
+  ],
+  "tex": "portuguese/book/chapters/ch343-explico-me-melhor.tex"
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 317,
+  "title": "Uma nova etapa",
+  "label": "ch:pt-uma-nova-etapa",
+  "canDo": "I can talk about retiring, pensioners, and leaving one’s country to live abroad.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "PT-C317-emigrante",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 317: I can talk about retiring, pensioners, and leaving one’s country to live abroad.",
+    "assesses": [
+      "PT-LEX-C317-REFORMA-03",
+      "PT-LEX-C317-REFORMA-04",
+      "PT-LEX-C317-REFORMA-05"
+    ]
+  }
+}

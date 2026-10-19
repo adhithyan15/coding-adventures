@@ -1,0 +1,19 @@
+{
+  "chapter": 380,
+  "title": "Se eu fosse ministro",
+  "label": "ch:pt-se-eu-fosse-ministro",
+  "canDo": "I can say what I would do in politics: ministers, parties, parliament, elections and voters.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "PT-C380-eleitor",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 380: I can say what I would do in politics: ministers, parties, parliament, elections and voters.",
+    "assesses": [
+      "PT-LEX-C380-POLITICA-03",
+      "PT-LEX-C380-POLITICA-04",
+      "PT-LEX-C380-POLITICA-05"
+    ]
+  }
+}

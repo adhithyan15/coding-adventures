@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PT-C513-maratona",
+    "language": "portuguese",
+    "chapter": 513,
+    "sequence": 28350,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d1bc8dafe1fe4d73"
+  },
+  "findings": []
+}

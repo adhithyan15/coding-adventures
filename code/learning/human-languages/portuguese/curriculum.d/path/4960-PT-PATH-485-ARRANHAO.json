@@ -1,0 +1,9 @@
+{
+  "id": "PT-PATH-485-ARRANHAO",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "PT-EXT-485-ARRANHAO"
+  ],
+  "after": []
+}

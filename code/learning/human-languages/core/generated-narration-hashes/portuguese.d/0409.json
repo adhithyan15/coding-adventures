@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 409,
+  "sourceHash": "fnv1a64:7c5ff1d84d6a0dfa",
+  "lessonIds": [
+    "PT-C409-engarrafamento",
+    "PT-C409-abrandar",
+    "PT-C409-colisao",
+    "PT-C409-embater",
+    "PT-C409-desvio"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch409.txt",
+  "json": "portuguese/narration/ch409.json",
+  "textHash": "fnv1a64:23516cfae532b7c1",
+  "jsonHash": "fnv1a64:deb75872e46039d0",
+  "findings": []
+}

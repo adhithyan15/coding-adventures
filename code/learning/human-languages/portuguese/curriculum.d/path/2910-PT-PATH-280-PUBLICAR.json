@@ -1,0 +1,9 @@
+{
+  "id": "PT-PATH-280-PUBLICAR",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "PT-EXT-280-PUBLICAR"
+  ],
+  "after": []
+}

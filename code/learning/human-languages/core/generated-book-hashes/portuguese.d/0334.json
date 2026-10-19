@@ -1,0 +1,15 @@
+{
+  "language": "portuguese",
+  "chapter": 334,
+  "sourceHash": "fnv1a64:332b06dc7ff236a2",
+  "lessonIds": [
+    "PT-C334-escorrer",
+    "PT-C334-tapar",
+    "PT-C334-dourar",
+    "PT-C334-gratinar",
+    "PT-C334-rechear",
+    "PT-R334-revisao-333-334",
+    "PT-R334-revisao-final-334"
+  ],
+  "tex": "portuguese/book/chapters/ch334-ate-ficar-dourado.tex"
+}

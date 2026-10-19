@@ -1,0 +1,858 @@
+{
+  "version": 1,
+  "language": "portuguese",
+  "chapter": 366,
+  "title": "Problemas sociais",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:42356f3c2ed823c3",
+  "lessons": [
+    {
+      "id": "PT-C366-pobreza",
+      "sequence": 20780,
+      "title": "a pobreza — the poverty",
+      "headword": "a pobreza",
+      "romanization": "a pobreza",
+      "gloss": "the poverty",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:860b6bdec77054d6",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Portuguese for the prejudice, then the Portuguese for the stereotype."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: a pobreza",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "a pobreza — \"the poverty\"."
+            },
+            {
+              "kind": "speech",
+              "text": "A pobreza diminuiu nos últimos anos. Poverty has gone down in recent years."
+            },
+            {
+              "kind": "speech",
+              "text": "Viver na pobreza — to live in poverty."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "pobreza is inherited from Old Portuguese pobreza (EtymDB), built on pobre \"poor\", from Latin pauper \"poor\" (Lewis & Short), with the suffix -eza."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a pobreza",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *a pobreza*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a pobreza, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *a pobreza*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with a pobreza",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *a pobreza*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Portuguese for the prejudice, then the Portuguese for the stereotype, then say a pobreza again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Portuguese for the prejudice, then the Portuguese for the stereotype, then say *a pobreza* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does a pobreza mean? (\"The poverty\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PT-C366-discriminacao",
+      "sequence": 20790,
+      "title": "a discriminação — the discrimination",
+      "headword": "a discriminação",
+      "romanization": "a discriminação",
+      "gloss": "the discrimination",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:fa2f9997f86b2218",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Portuguese for the stereotype, then the Portuguese for the poverty."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: a discriminação",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "a discriminação — \"the discrimination\"."
+            },
+            {
+              "kind": "speech",
+              "text": "A lei proíbe a discriminação no trabalho. The law forbids discrimination at work."
+            },
+            {
+              "kind": "speech",
+              "text": "Discriminação contra as mulheres — discrimination against women."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "discriminação is a learned borrowing from Late Latin discrīminātiō, a term of rhetoric for \"the contrasting of opposite thoughts\", on discrīmināre \"to divide, to separate\", built on discrīmen \"that which separates or divides\" (Lewis & Short)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a discriminação",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *a discriminação*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a discriminação, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *a discriminação*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with a discriminação",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *a discriminação*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Portuguese for the stereotype, then the Portuguese for the poverty, then say a discriminação again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Portuguese for the stereotype, then the Portuguese for the poverty, then say *a discriminação* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does a discriminação mean? (\"The discrimination\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PT-C366-discriminar",
+      "sequence": 20800,
+      "title": "discriminar — to discriminate (against)",
+      "headword": "discriminar",
+      "romanization": "discriminar",
+      "gloss": "to discriminate (against)",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:fbc5352221448a70",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Portuguese for the poverty, then the Portuguese for the discrimination."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: discriminar",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "discriminar — \"to discriminate (against)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Ninguém deve ser discriminado pela cor da pele. Nobody should be discriminated against for the colour of their skin."
+            },
+            {
+              "kind": "speech",
+              "text": "Discriminar alguém — to discriminate against someone."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "discriminar is a learned borrowing from Latin discrīmināre \"to divide, to separate\", built on discrīmen \"that which divides two things\" (Lewis & Short)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "discriminar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *discriminar*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "discriminar, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *discriminar*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with discriminar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *discriminar*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Portuguese for the poverty, then the Portuguese for the discrimination, then say discriminar again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Portuguese for the poverty, then the Portuguese for the discrimination, then say *discriminar* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does discriminar mean? (\"To discriminate (against)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PT-C366-imigracao",
+      "sequence": 20810,
+      "title": "a imigração — the immigration",
+      "headword": "a imigração",
+      "romanization": "a imigração",
+      "gloss": "the immigration",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0b4c00c7c54d88ee",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Portuguese for the discrimination, then the Portuguese for to discriminate."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: a imigração",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "a imigração — \"the immigration\"."
+            },
+            {
+              "kind": "speech",
+              "text": "A imigração mudou muito as cidades. Immigration has changed the cities a lot."
+            },
+            {
+              "kind": "speech",
+              "text": "Imigrante — immigrant; a emigração — emigration, very common in Portuguese history."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "imigração is built on imigrar \"to immigrate\", a learned borrowing from Latin immigrāre \"to remove or go into\" (Lewis & Short), from in and migrāre \"to move\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a imigração",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *a imigração*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a imigração, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *a imigração*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with a imigração",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *a imigração*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Portuguese for the discrimination, then the Portuguese for to discriminate, then say a imigração again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Portuguese for the discrimination, then the Portuguese for to discriminate, then say *a imigração* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does a imigração mean? (\"The immigration\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PT-C366-integracao",
+      "sequence": 20820,
+      "title": "a integração — the integration",
+      "headword": "a integração",
+      "romanization": "a integração",
+      "gloss": "the integration",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:72d7fe7538eb98d6",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Portuguese for to discriminate, then the Portuguese for the immigration."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: a integração",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "a integração — \"the integration\"."
+            },
+            {
+              "kind": "speech",
+              "text": "A língua ajuda muito na integração. The language helps a lot with integration."
+            },
+            {
+              "kind": "speech",
+              "text": "Integrar-se — to fit in."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "integração is a learned borrowing from Latin integrātiō \"a renewing, a restoring\" (EtymDB, Lewis & Short), from integrāre \"to make whole\", on integer \"whole, untouched\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a integração",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *a integração*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a integração, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *a integração*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with a integração",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *a integração*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Portuguese for to discriminate, then the Portuguese for the immigration, then say a integração again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Portuguese for to discriminate, then the Portuguese for the immigration, then say *a integração* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does a integração mean? (\"The integration\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PT-R366-revisao-359-366",
+      "sequence": 20830,
+      "title": "Revisão dos capítulos 359–366",
+      "headword": "(dialogue)",
+      "romanization": "(dialogue)",
+      "gloss": "a review of chapters 359-366",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:31e7e9b30af0ea2c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Portuguese for the manager and the department."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the manager, the department, the task, the staff member, to delegate",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the manager, the department, the task, the staff member, to delegate]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the promotion, to promote, the post, the rise, the qualification",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the promotion, to promote, the post, the rise, the qualification]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "stressed, worn out, the overtime, efficient, the productivity",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: stressed, worn out, the overtime, efficient, the productivity]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the salary, the allowance, to negotiate, the retirement, retired",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the salary, the allowance, to negotiate, the retirement, retired]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the citizen, the citizenship, the right, the freedom, the equality",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the citizen, the citizenship, the right, the freedom, the equality]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to protest, the protest, the demonstration, to show, to demand",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to protest, the protest, the demonstration, to show, to demand]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the justice, unfair, the injustice, the prejudice, the stereotype",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the justice, unfair, the injustice, the prejudice, the stereotype]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the poverty, the discrimination, to discriminate, the immigration, the integration",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the poverty, the discrimination, to discriminate, the immigration, the integration]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The manager? (o gerente.) The department? (o departamento.) The task? (a tarefa.) The staff member? (o colaborador.) To delegate? (delegar.) The promotion? (a promoção.) To promote? (promover.) The post? (o cargo.) The rise? (o aumento.) The qualification? (a qualificação.) Stressed? (stressado.) Worn out? (esgotado.) The overtime? (as horas extraordinárias.) Efficient? (eficiente.) The productivity? (a produtividade.) The salary? (o ordenado.) The allowance? (o subsídio.) To negotiate? (negociar.) The retirement? (a reforma.) Retired? (reformado.) The citizen? (o cidadão.) The citizenship? (a cidadania.) The right? (o direito.) The freedom? (a liberdade.) The equality? (a igualdade.) To protest? (protestar.) The protest? (o protesto.) The demonstration? (a manifestação.) To show? (manifestar.) To demand? (exigir.) The justice? (a justiça.) Unfair? (injusto.) The injustice? (a injustiça.) The prejudice? (o preconceito.) The stereotype? (o estereótipo.) The poverty? (a pobreza.) The discrimination? (a discriminação.) To discriminate? (discriminar.) The immigration? (a imigração.) The integration? (a integração.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

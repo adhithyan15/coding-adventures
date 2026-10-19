@@ -1,0 +1,11 @@
+{
+  "id": "PT-C366-discriminar",
+  "pathSegment": "PT-PATH-366-SOCIEDADE",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PT-EXT-366-SOCIEDADE",
+      "order": 2
+    }
+  ]
+}

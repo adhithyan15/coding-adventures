@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 298,
+  "sourceHash": "fnv1a64:5cc8e262aee3d449",
+  "lessonIds": [
+    "PT-C298-veredicto",
+    "PT-C298-recorrer",
+    "PT-C298-recurso",
+    "PT-C298-recluso",
+    "PT-C298-libertar"
+  ],
+  "tex": "portuguese/book/chapters/ch298-depois-do-veredicto.tex"
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PT-C286-delito",
+    "language": "portuguese",
+    "chapter": 286,
+    "sequence": 16670,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f30201357d2bcb27"
+  },
+  "findings": []
+}

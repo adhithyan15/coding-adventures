@@ -1,0 +1,9 @@
+{
+  "id": "PT-PATH-523-LIVROS",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "PT-EXT-523-LIVROS"
+  ],
+  "after": []
+}

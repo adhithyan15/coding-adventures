@@ -1,0 +1,11 @@
+{
+  "id": "PT-C393-deposito",
+  "pathSegment": "PT-PATH-393-BANCO",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PT-EXT-393-BANCO",
+      "order": 1
+    }
+  ]
+}

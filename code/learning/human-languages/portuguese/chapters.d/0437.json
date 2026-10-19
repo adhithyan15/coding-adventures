@@ -1,0 +1,19 @@
+{
+  "chapter": 437,
+  "title": "Ruas e becos",
+  "label": "ch:pt-ruas-e-becos",
+  "canDo": "I can describe streets: the avenue, the side street, the alley, the narrow lane and a fork in the road.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "PT-C437-bifurcacao",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 437: I can describe streets: the avenue, the side street, the alley, the narrow lane and a fork in the road.",
+    "assesses": [
+      "PT-LEX-C437-RUAS-03",
+      "PT-LEX-C437-RUAS-04",
+      "PT-LEX-C437-RUAS-05"
+    ]
+  }
+}

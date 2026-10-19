@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 500,
+  "sourceHash": "fnv1a64:94b897a4a9ac6b08",
+  "lessonIds": [
+    "PT-C500-costura",
+    "PT-C500-costurar",
+    "PT-C500-trico",
+    "PT-C500-tricotar",
+    "PT-C500-bordar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch500.txt",
+  "json": "portuguese/narration/ch500.json",
+  "textHash": "fnv1a64:1a49b97eb443b8a6",
+  "jsonHash": "fnv1a64:3956506c7f4b2aae",
+  "findings": []
+}

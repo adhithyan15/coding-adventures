@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PT-C406-oficina",
+    "language": "portuguese",
+    "chapter": 406,
+    "sequence": 22890,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:fe8df54d896e199c"
+  },
+  "findings": []
+}

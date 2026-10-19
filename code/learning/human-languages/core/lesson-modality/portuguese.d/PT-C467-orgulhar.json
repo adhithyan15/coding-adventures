@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PT-C467-orgulhar",
+    "language": "portuguese",
+    "chapter": 467,
+    "sequence": 26030,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:839d221216301116"
+  },
+  "findings": []
+}

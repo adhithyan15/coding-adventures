@@ -1,0 +1,19 @@
+{
+  "chapter": 411,
+  "title": "Um carro de aluguer",
+  "label": "ch:pt-um-carro-de-aluguer",
+  "canDo": "I can hire a car: the hire, the driver, the number plate, the mileage and the insurance excess.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "PT-C411-franquia",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 411: I can hire a car: the hire, the driver, the number plate, the mileage and the insurance excess.",
+    "assesses": [
+      "PT-LEX-C411-ALUGUER-03",
+      "PT-LEX-C411-ALUGUER-04",
+      "PT-LEX-C411-ALUGUER-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "PT-C404-abastecer",
+  "pathSegment": "PT-PATH-404-BOMBA",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-404-BOMBA",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "PT-C480-remorso",
+  "pathSegment": "PT-PATH-480-REMORSO",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PT-EXT-480-REMORSO",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 310,
+  "title": "O batizado",
+  "label": "ch:pt-o-batizado",
+  "canDo": "I can talk about a christening, godparents, and the first months of a baby’s life.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "PT-C310-amamentar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 310: I can talk about a christening, godparents, and the first months of a baby’s life.",
+    "assesses": [
+      "PT-LEX-C310-BATIZADO-03",
+      "PT-LEX-C310-BATIZADO-04",
+      "PT-LEX-C310-BATIZADO-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 436,
+  "title": "Pedir indicações",
+  "label": "ch:pt-pedir-indicacoes",
+  "canDo": "I can ask for and follow directions: directions, the roundabout, going round, the road junction and carrying on.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "PT-C436-prosseguir",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 436: I can ask for and follow directions: directions, the roundabout, going round, the road junction and carrying on.",
+    "assesses": [
+      "PT-LEX-C436-INDICACOES-03",
+      "PT-LEX-C436-INDICACOES-04",
+      "PT-LEX-C436-INDICACOES-05"
+    ]
+  }
+}

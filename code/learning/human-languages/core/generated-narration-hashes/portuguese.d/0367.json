@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 367,
+  "sourceHash": "fnv1a64:5c92bb2906828c37",
+  "lessonIds": [
+    "PT-C367-comunidade",
+    "PT-C367-associacao",
+    "PT-C367-voluntario",
+    "PT-C367-voluntariado",
+    "PT-C367-caridade"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch367.txt",
+  "json": "portuguese/narration/ch367.json",
+  "textHash": "fnv1a64:fcf44147ed1f03ca",
+  "jsonHash": "fnv1a64:2455ff28443a4378",
+  "findings": []
+}

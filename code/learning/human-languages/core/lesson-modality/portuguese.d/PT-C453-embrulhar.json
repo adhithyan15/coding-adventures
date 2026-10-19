@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PT-C453-embrulhar",
+    "language": "portuguese",
+    "chapter": 453,
+    "sequence": 25300,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:830aa25ef7e5dbae"
+  },
+  "findings": []
+}

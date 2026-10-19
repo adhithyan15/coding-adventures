@@ -1,0 +1,9 @@
+{
+  "id": "PT-PATH-320-CERIMONIA",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "PT-EXT-320-CERIMONIA"
+  ],
+  "after": []
+}

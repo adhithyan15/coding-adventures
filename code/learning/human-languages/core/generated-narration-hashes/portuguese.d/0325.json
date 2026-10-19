@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 325,
+  "sourceHash": "fnv1a64:0e47edb5149fa7c4",
+  "lessonIds": [
+    "PT-C325-personagem",
+    "PT-C325-protagonista",
+    "PT-C325-heroi",
+    "PT-C325-vilao",
+    "PT-C325-desfecho"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch325.txt",
+  "json": "portuguese/narration/ch325.json",
+  "textHash": "fnv1a64:9089812f02d3b878",
+  "jsonHash": "fnv1a64:9afbff718f6560ae",
+  "findings": []
+}

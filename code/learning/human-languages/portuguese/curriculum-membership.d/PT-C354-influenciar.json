@@ -1,0 +1,11 @@
+{
+  "id": "PT-C354-influenciar",
+  "pathSegment": "PT-PATH-354-INFLUENCIA",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PT-EXT-354-INFLUENCIA",
+      "order": 1
+    }
+  ]
+}

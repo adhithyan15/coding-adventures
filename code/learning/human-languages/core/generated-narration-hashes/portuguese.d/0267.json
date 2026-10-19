@@ -1,0 +1,18 @@
+{
+  "language": "portuguese",
+  "chapter": 267,
+  "sourceHash": "fnv1a64:c82febbedb344391",
+  "lessonIds": [
+    "PT-C267-se",
+    "PT-C267-se-chove",
+    "PT-C267-depende",
+    "PT-C267-revisao-condicoes"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 4,
+  "text": "portuguese/narration/ch267.txt",
+  "json": "portuguese/narration/ch267.json",
+  "textHash": "fnv1a64:8cf1c115f33f6162",
+  "jsonHash": "fnv1a64:1e54cd961b4e9e6e",
+  "findings": []
+}

@@ -1,0 +1,17 @@
+{
+  "language": "portuguese",
+  "chapter": 266,
+  "sourceHash": "fnv1a64:6d892c1a500049cc",
+  "lessonIds": [
+    "PT-C266-mais-do-que",
+    "PT-C266-ha-tres-anos-que",
+    "PT-C266-revisao-experiencia"
+  ],
+  "voiceLessons": 3,
+  "drivablePrefix": 3,
+  "text": "portuguese/narration/ch266.txt",
+  "json": "portuguese/narration/ch266.json",
+  "textHash": "fnv1a64:7acca76c46055a05",
+  "jsonHash": "fnv1a64:403a8f901d415c95",
+  "findings": []
+}

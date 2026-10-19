@@ -1,0 +1,11 @@
+{
+  "id": "PT-C463-trovoada",
+  "pathSegment": "PT-PATH-463-TROVOADA",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "PT-EXT-463-TROVOADA",
+      "order": 0
+    }
+  ]
+}

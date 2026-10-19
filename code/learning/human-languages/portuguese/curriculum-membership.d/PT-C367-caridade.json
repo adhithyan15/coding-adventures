@@ -1,0 +1,11 @@
+{
+  "id": "PT-C367-caridade",
+  "pathSegment": "PT-PATH-367-COMUNIDADE",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PT-EXT-367-COMUNIDADE",
+      "order": 4
+    }
+  ]
+}

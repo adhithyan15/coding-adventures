@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 528,
+  "sourceHash": "fnv1a64:ee8086fbfca32ec3",
+  "lessonIds": [
+    "PT-C528-aspirar",
+    "PT-C528-aspirador",
+    "PT-C528-varrer",
+    "PT-C528-esfregar",
+    "PT-C528-esfregona"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch528.txt",
+  "json": "portuguese/narration/ch528.json",
+  "textHash": "fnv1a64:f848e20fe8e7e571",
+  "jsonHash": "fnv1a64:b300a81035cc37a0",
+  "findings": []
+}

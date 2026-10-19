@@ -1,0 +1,9 @@
+{
+  "id": "PT-PATH-314-FALECER",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "PT-EXT-314-FALECER"
+  ],
+  "after": []
+}

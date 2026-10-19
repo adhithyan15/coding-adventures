@@ -1,0 +1,11 @@
+{
+  "id": "PT-C362-reformado",
+  "pathSegment": "PT-PATH-362-ORDENADO",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PT-EXT-362-ORDENADO",
+      "order": 4
+    }
+  ]
+}

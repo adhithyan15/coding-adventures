@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PT-C418-barqueiro",
+    "language": "portuguese",
+    "chapter": 418,
+    "sequence": 23510,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f2ab08d48d78d422"
+  },
+  "findings": []
+}

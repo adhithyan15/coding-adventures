@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PT-C306-resgate",
+    "language": "portuguese",
+    "chapter": 306,
+    "sequence": 17710,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0d5434dce20b6917"
+  },
+  "findings": []
+}

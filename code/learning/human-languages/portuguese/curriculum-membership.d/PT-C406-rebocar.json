@@ -1,0 +1,11 @@
+{
+  "id": "PT-C406-rebocar",
+  "pathSegment": "PT-PATH-406-AVARIA",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PT-EXT-406-AVARIA",
+      "order": 2
+    }
+  ]
+}

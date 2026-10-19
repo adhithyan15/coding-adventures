@@ -1,0 +1,19 @@
+{
+  "chapter": 422,
+  "title": "As bagagens",
+  "label": "ch:pt-as-bagagens",
+  "canDo": "I can deal with luggage: the hold, the scales, packing up, the padlock and bags that go missing.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "PT-C422-extraviar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 422: I can deal with luggage: the hold, the scales, packing up, the padlock and bags that go missing.",
+    "assesses": [
+      "PT-LEX-C422-BAGAGENS-03",
+      "PT-LEX-C422-BAGAGENS-04",
+      "PT-LEX-C422-BAGAGENS-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "PT-C381-regulamento",
+  "pathSegment": "PT-PATH-381-NORMA",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PT-EXT-381-NORMA",
+      "order": 1
+    }
+  ]
+}

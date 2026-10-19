@@ -1,0 +1,11 @@
+{
+  "id": "PT-C504-barro",
+  "pathSegment": "PT-PATH-504-OLARIA",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-504-OLARIA",
+      "order": 3
+    }
+  ]
+}

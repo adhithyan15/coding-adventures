@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 376,
+  "sourceHash": "fnv1a64:df382eda79361baf",
+  "lessonIds": [
+    "PT-C376-faculdade",
+    "PT-C376-caloiro",
+    "PT-C376-inscricao",
+    "PT-C376-semestre",
+    "PT-C376-propina"
+  ],
+  "tex": "portuguese/book/chapters/ch376-na-universidade.tex"
+}

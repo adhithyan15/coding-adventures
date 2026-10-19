@@ -1,0 +1,11 @@
+{
+  "id": "PT-C517-acordeao",
+  "pathSegment": "PT-PATH-517-SOPROS",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-517-SOPROS",
+      "order": 3
+    }
+  ]
+}

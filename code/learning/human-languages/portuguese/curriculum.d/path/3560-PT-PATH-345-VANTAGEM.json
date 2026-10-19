@@ -1,0 +1,9 @@
+{
+  "id": "PT-PATH-345-VANTAGEM",
+  "spine_node": "SPINE-GIVE-REASONS",
+  "before": [],
+  "inline": [
+    "PT-EXT-345-VANTAGEM"
+  ],
+  "after": []
+}

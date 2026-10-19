@@ -1,0 +1,9 @@
+{
+  "id": "PT-PATH-517-SOPROS",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "PT-EXT-517-SOPROS"
+  ],
+  "after": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "PT-C290-assassino",
+  "pathSegment": "PT-PATH-290-ARMA",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PT-EXT-290-ARMA",
+      "order": 4
+    }
+  ]
+}

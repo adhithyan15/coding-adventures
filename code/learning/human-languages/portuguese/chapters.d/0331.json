@@ -1,0 +1,19 @@
+{
+  "chapter": 331,
+  "title": "Cebola e alho",
+  "label": "ch:pt-cebola-e-alho",
+  "canDo": "I can describe seasoning food and starting a dish with a gentle fry on a low heat.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "PT-C331-lume-brando",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 331: I can describe seasoning food and starting a dish with a gentle fry on a low heat.",
+    "assesses": [
+      "PT-LEX-C331-REFOGAR-03",
+      "PT-LEX-C331-REFOGAR-04",
+      "PT-LEX-C331-REFOGAR-05"
+    ]
+  }
+}

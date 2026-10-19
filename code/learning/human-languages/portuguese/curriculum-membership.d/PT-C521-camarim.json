@@ -1,0 +1,11 @@
+{
+  "id": "PT-C521-camarim",
+  "pathSegment": "PT-PATH-521-GENEROS",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PT-EXT-521-GENEROS",
+      "order": 4
+    }
+  ]
+}

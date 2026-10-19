@@ -1,0 +1,19 @@
+{
+  "chapter": 447,
+  "title": "Dar uma volta",
+  "label": "ch:pt-dar-uma-volta",
+  "canDo": "I can talk about strolling round a town: the seafront, roaming, peeking, pottering about and the viewpoint.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "PT-C447-miradouro",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 447: I can talk about strolling round a town: the seafront, roaming, peeking, pottering about and the viewpoint.",
+    "assesses": [
+      "PT-LEX-C447-PASSEIO-03",
+      "PT-LEX-C447-PASSEIO-04",
+      "PT-LEX-C447-PASSEIO-05"
+    ]
+  }
+}

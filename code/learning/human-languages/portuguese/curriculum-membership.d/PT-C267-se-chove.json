@@ -1,0 +1,11 @@
+{
+  "id": "PT-C267-se-chove",
+  "pathSegment": "PT-PATH-267-SE",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PT-EXT-267-SE",
+      "order": 1
+    }
+  ]
+}

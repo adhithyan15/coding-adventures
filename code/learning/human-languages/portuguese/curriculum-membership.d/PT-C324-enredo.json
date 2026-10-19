@@ -1,0 +1,11 @@
+{
+  "id": "PT-C324-enredo",
+  "pathSegment": "PT-PATH-324-CONTO",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PT-EXT-324-CONTO",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PT-C393-deposito",
+    "language": "portuguese",
+    "chapter": 393,
+    "sequence": 22180,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:153135e26be9cfc9"
+  },
+  "findings": []
+}

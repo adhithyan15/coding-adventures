@@ -1,0 +1,9 @@
+{
+  "id": "PT-PATH-373-RISCO",
+  "spine_node": "SPINE-EXPRESS-CONDITION",
+  "before": [],
+  "inline": [
+    "PT-EXT-373-RISCO"
+  ],
+  "after": []
+}

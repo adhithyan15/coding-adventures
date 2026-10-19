@@ -1,0 +1,19 @@
+{
+  "chapter": 353,
+  "title": "Os obstáculos",
+  "label": "ch:pt-os-obstaculos",
+  "canDo": "I can talk about obstacles and challenges: what prevents, hinders or helps something along.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "PT-C353-favorecer",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 353: I can talk about obstacles and challenges: what prevents, hinders or helps something along.",
+    "assesses": [
+      "PT-LEX-C353-OBSTACULO-03",
+      "PT-LEX-C353-OBSTACULO-04",
+      "PT-LEX-C353-OBSTACULO-05"
+    ]
+  }
+}

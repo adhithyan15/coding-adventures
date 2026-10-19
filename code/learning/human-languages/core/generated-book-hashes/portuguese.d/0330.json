@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 330,
+  "sourceHash": "fnv1a64:c909b594341afb2e",
+  "lessonIds": [
+    "PT-C330-descascar",
+    "PT-C330-picar",
+    "PT-C330-ralar",
+    "PT-C330-desfiar",
+    "PT-C330-tigela"
+  ],
+  "tex": "portuguese/book/chapters/ch330-preparar-os-legumes.tex"
+}

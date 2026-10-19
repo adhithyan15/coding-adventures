@@ -1,0 +1,11 @@
+{
+  "id": "PT-C420-atracar",
+  "pathSegment": "PT-PATH-420-TERRA",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PT-EXT-420-TERRA",
+      "order": 2
+    }
+  ]
+}

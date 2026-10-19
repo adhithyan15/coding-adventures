@@ -1,0 +1,11 @@
+{
+  "id": "PT-C383-transgredir",
+  "pathSegment": "PT-PATH-383-EXCECAO",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PT-EXT-383-EXCECAO",
+      "order": 4
+    }
+  ]
+}

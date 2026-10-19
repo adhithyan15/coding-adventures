@@ -1,0 +1,19 @@
+{
+  "chapter": 341,
+  "title": "As provas",
+  "label": "ch:pt-as-provas",
+  "canDo": "I can talk about proof, call something evident, obvious or beyond dispute, and refute a claim.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "PT-C341-refutar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 341: I can talk about proof, call something evident, obvious or beyond dispute, and refute a claim.",
+    "assesses": [
+      "PT-LEX-C341-PROVA-03",
+      "PT-LEX-C341-PROVA-04",
+      "PT-LEX-C341-PROVA-05"
+    ]
+  }
+}

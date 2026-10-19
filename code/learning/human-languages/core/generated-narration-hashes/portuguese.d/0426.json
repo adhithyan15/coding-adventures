@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 426,
+  "sourceHash": "fnv1a64:7448d03425e80f05",
+  "lessonIds": [
+    "PT-C426-acampar",
+    "PT-C426-caravana",
+    "PT-C426-autocaravana",
+    "PT-C426-estaca",
+    "PT-C426-mosquiteiro"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch426.txt",
+  "json": "portuguese/narration/ch426.json",
+  "textHash": "fnv1a64:8500e27d3a979c53",
+  "jsonHash": "fnv1a64:316209c5e8435198",
+  "findings": []
+}

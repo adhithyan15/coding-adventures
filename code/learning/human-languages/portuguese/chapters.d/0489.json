@@ -1,0 +1,19 @@
+{
+  "chapter": 489,
+  "title": "Noites mal dormidas",
+  "label": "ch:pt-noites-mal-dormidas",
+  "canDo": "I can describe bad nights: snoring, yawning and cramps.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "PT-C489-caibra",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 489: I can describe bad nights: snoring, yawning and cramps.",
+    "assesses": [
+      "PT-LEX-C489-SONO-03",
+      "PT-LEX-C489-SONO-04",
+      "PT-LEX-C489-SONO-05"
+    ]
+  }
+}

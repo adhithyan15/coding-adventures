@@ -1,0 +1,858 @@
+{
+  "version": 1,
+  "language": "portuguese",
+  "chapter": 374,
+  "title": "O que quero fazer",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:3c9a6d8cd2ac9547",
+  "lessons": [
+    {
+      "id": "PT-C374-intencao",
+      "sequence": 21190,
+      "title": "a intenção — the intention",
+      "headword": "a intenção",
+      "romanization": "a intenção",
+      "gloss": "the intention",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:24e16f45331b211b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Portuguese for unlikely, then the Portuguese for the probability."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: a intenção",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "a intenção — \"the intention\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Não tenho intenção de mudar de emprego. I have no intention of changing jobs."
+            },
+            {
+              "kind": "speech",
+              "text": "Ter a intenção de + infinitive. Com boa intenção — meaning well."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "intenção is a learned borrowing from Latin intentiō \"a stretching out, a straining\", and later \"purpose\" (Lewis & Short), from intendere \"to stretch towards\", on tendere \"to stretch\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a intenção",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *a intenção*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a intenção, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *a intenção*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with a intenção",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *a intenção*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Portuguese for unlikely, then the Portuguese for the probability, then say a intenção again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Portuguese for unlikely, then the Portuguese for the probability, then say *a intenção* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does a intenção mean? (\"The intention\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PT-C374-proposito",
+      "sequence": 21200,
+      "title": "o propósito — the purpose, the aim",
+      "headword": "o propósito",
+      "romanization": "o propósito",
+      "gloss": "the purpose, the aim",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:303601657c2eb9d5",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Portuguese for the probability, then the Portuguese for the intention."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: o propósito",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "o propósito — \"the purpose, the aim\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Qual é o propósito desta reunião? What is the purpose of this meeting?"
+            },
+            {
+              "kind": "speech",
+              "text": "De propósito — on purpose; a propósito — by the way."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "propósito is a learned borrowing from Latin prōpositum \"a plan, a purpose\" (Lewis & Short), the participle of prōpōnere \"to set before\", on pōnere \"to put\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "o propósito",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *o propósito*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "o propósito, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *o propósito*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with o propósito",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *o propósito*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Portuguese for the probability, then the Portuguese for the intention, then say o propósito again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Portuguese for the probability, then the Portuguese for the intention, then say *o propósito* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does o propósito mean? (\"The purpose, the aim\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PT-C374-meta",
+      "sequence": 21210,
+      "title": "a meta — the goal, the target; the finishing line",
+      "headword": "a meta",
+      "romanization": "a meta",
+      "gloss": "the goal, the target; the finishing line",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0261efade28914f1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Portuguese for the intention, then the Portuguese for the purpose."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: a meta",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "a meta — \"the goal, the target; the finishing line\"."
+            },
+            {
+              "kind": "speech",
+              "text": "A minha meta é correr dez quilómetros. My goal is to run ten kilometres."
+            },
+            {
+              "kind": "speech",
+              "text": "In a race, a meta is the finishing line."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "meta is a learned borrowing from Latin mēta \"the turning post in a racecourse, a goal, a limit\" (EtymDB, Lewis & Short)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a meta",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *a meta*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a meta, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *a meta*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with a meta",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *a meta*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Portuguese for the intention, then the Portuguese for the purpose, then say a meta again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Portuguese for the intention, then the Portuguese for the purpose, then say *a meta* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does a meta mean? (\"The goal, the target; the finishing line\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PT-C374-disponivel",
+      "sequence": 21220,
+      "title": "disponível — available; free (to meet)",
+      "headword": "disponível",
+      "romanization": "disponível",
+      "gloss": "available; free (to meet)",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8200cb56c296dade",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Portuguese for the purpose, then the Portuguese for the goal."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: disponível",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "disponível — \"available; free (to meet)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Estou disponível na quinta à tarde. I am free on Thursday afternoon."
+            },
+            {
+              "kind": "speech",
+              "text": "Estar disponível — to be free; disponível em loja — in stock."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "disponível is built on dispor \"to arrange, to have at hand\", from Latin dispōnere \"to set in order\", on pōnere \"to put\" (Lewis & Short), with -ível."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "disponível",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *disponível*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "disponível, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *disponível*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with disponível",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *disponível*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Portuguese for the purpose, then the Portuguese for the goal, then say disponível again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Portuguese for the purpose, then the Portuguese for the goal, then say *disponível* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does disponível mean? (\"Available; free (to meet)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PT-C374-compromisso",
+      "sequence": 21230,
+      "title": "o compromisso — the commitment, the engagement; the compromise",
+      "headword": "o compromisso",
+      "romanization": "o compromisso",
+      "gloss": "the commitment, the engagement; the compromise",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:118c4b991e70b0fb",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Portuguese for the goal, then the Portuguese for available."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: o compromisso",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "o compromisso — \"the commitment, the engagement; the compromise\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Hoje não posso: tenho um compromisso às seis. I cannot today: I have an engagement at six."
+            },
+            {
+              "kind": "speech",
+              "text": "In Portugal um compromisso is often an appointment or an obligation; it can also be a compromise."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "compromisso is a learned borrowing from Latin comprōmissum \"a mutual promise to accept a judge's decision\" (EtymDB), on prōmittere \"to promise\", built on mittere \"to send\" (Lewis & Short)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "o compromisso",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *o compromisso*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "o compromisso, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *o compromisso*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with o compromisso",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *o compromisso*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Portuguese for the goal, then the Portuguese for available, then say o compromisso again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Portuguese for the goal, then the Portuguese for available, then say *o compromisso* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does o compromisso mean? (\"The commitment, the engagement; the compromise\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PT-R374-revisao-367-374",
+      "sequence": 21240,
+      "title": "Revisão dos capítulos 367–374",
+      "headword": "(dialogue)",
+      "romanization": "(dialogue)",
+      "gloss": "a review of chapters 367-374",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:021b7243e84764fb",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Portuguese for the community and the association."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the community, the association, the volunteer, the voluntary work, the charity",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the community, the association, the volunteer, the voluntary work, the charity]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to suppose, the supposition, the hypothesis, to presume, plausible",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to suppose, the supposition, the hypothesis, to presume, plausible]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the condition, provided that, as long as, in case, depending on",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the condition, provided that, as long as, in case, depending on]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "unless, except if, otherwise, possible, possibly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: unless, except if, otherwise, possible, possibly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to foresee, predictable, unpredictable, the unexpected problem, the alternative",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to foresee, predictable, unpredictable, the unexpected problem, the alternative]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to cancel, to postpone, provisional, final, flexible",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to cancel, to postpone, provisional, final, flexible]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the risk, risky, likely, unlikely, the probability",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the risk, risky, likely, unlikely, the probability]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the intention, the purpose, the goal, available, the commitment",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the intention, the purpose, the goal, available, the commitment]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The community? (a comunidade.) The association? (a associação.) The volunteer? (o voluntário.) The voluntary work? (o voluntariado.) The charity? (a caridade.) To suppose? (supor.) The supposition? (a suposição.) The hypothesis? (a hipótese.) To presume? (presumir.) Plausible? (plausível.) The condition? (a condição.) Provided that? (desde que.) As long as? (contanto que.) In case? (caso.) Depending on? (consoante.) Unless? (a menos que.) Except if? (a não ser que.) Otherwise? (senão.) Possible? (eventual.) Possibly? (eventualmente.) To foresee? (prever.) Predictable? (previsível.) Unpredictable? (imprevisível.) The unexpected problem? (o imprevisto.) The alternative? (a alternativa.) To cancel? (cancelar.) To postpone? (adiar.) Provisional? (provisório.) Final? (definitivo.) Flexible? (flexível.) The risk? (o risco.) Risky? (arriscado.) Likely? (provável.) Unlikely? (improvável.) The probability? (a probabilidade.) The intention? (a intenção.) The purpose? (o propósito.) The goal? (a meta.) Available? (disponível.) The commitment? (o compromisso.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

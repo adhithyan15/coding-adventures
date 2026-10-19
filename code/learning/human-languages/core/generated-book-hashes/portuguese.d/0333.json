@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 333,
+  "sourceHash": "fnv1a64:0c6bdd27b96e0f2d",
+  "lessonIds": [
+    "PT-C333-batedeira",
+    "PT-C333-peneirar",
+    "PT-C333-amassar",
+    "PT-C333-untar",
+    "PT-C333-polvilhar"
+  ],
+  "tex": "portuguese/book/chapters/ch333-um-bolo-caseiro.tex"
+}

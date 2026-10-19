@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 375,
+  "sourceHash": "fnv1a64:118579dae8e9b6d0",
+  "lessonIds": [
+    "PT-C375-escola-secundaria",
+    "PT-C375-frequentar",
+    "PT-C375-falta",
+    "PT-C375-pauta",
+    "PT-C375-disciplina"
+  ],
+  "tex": "portuguese/book/chapters/ch375-na-escola.tex"
+}

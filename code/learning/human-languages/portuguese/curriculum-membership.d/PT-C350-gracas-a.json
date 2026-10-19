@@ -1,0 +1,11 @@
+{
+  "id": "PT-C350-gracas-a",
+  "pathSegment": "PT-PATH-350-ORIGEM",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PT-EXT-350-ORIGEM",
+      "order": 4
+    }
+  ]
+}

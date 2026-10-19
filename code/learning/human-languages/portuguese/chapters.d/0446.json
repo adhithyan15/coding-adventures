@@ -1,0 +1,19 @@
+{
+  "chapter": 446,
+  "title": "Festas da terra",
+  "label": "ch:pt-festas-da-terra",
+  "canDo": "I can talk about a local festival: the open-air party, the pilgrimage festival, the procession, the patron saint and parading.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "PT-C446-desfilar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 446: I can talk about a local festival: the open-air party, the pilgrimage festival, the procession, the patron saint and parading.",
+    "assesses": [
+      "PT-LEX-C446-ARRAIAL-03",
+      "PT-LEX-C446-ARRAIAL-04",
+      "PT-LEX-C446-ARRAIAL-05"
+    ]
+  }
+}

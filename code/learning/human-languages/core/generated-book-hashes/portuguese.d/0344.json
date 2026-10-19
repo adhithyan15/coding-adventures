@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 344,
+  "sourceHash": "fnv1a64:2a1547a80f5db40a",
+  "lessonIds": [
+    "PT-C344-avaliar",
+    "PT-C344-juizo",
+    "PT-C344-julgar",
+    "PT-C344-objetivo",
+    "PT-C344-subjetivo"
+  ],
+  "tex": "portuguese/book/chapters/ch344-avaliar-e-julgar.tex"
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PT-C319-sardinhada",
+    "language": "portuguese",
+    "chapter": 319,
+    "sequence": 18390,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5fb7a16b44cfba69"
+  },
+  "findings": []
+}

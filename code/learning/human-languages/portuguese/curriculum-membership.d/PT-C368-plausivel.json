@@ -1,0 +1,11 @@
+{
+  "id": "PT-C368-plausivel",
+  "pathSegment": "PT-PATH-368-HIPOTESE",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PT-EXT-368-HIPOTESE",
+      "order": 4
+    }
+  ]
+}

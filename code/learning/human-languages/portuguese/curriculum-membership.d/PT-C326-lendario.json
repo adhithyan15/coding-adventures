@@ -1,0 +1,11 @@
+{
+  "id": "PT-C326-lendario",
+  "pathSegment": "PT-PATH-326-LENDA",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PT-EXT-326-LENDA",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "PT-C280-divulgar",
+  "pathSegment": "PT-PATH-280-PUBLICAR",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PT-EXT-280-PUBLICAR",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "PT-C397-desinstalar",
+  "pathSegment": "PT-PATH-397-INSTALAR",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-397-INSTALAR",
+      "order": 3
+    }
+  ]
+}

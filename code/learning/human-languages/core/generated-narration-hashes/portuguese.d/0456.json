@@ -1,0 +1,20 @@
+{
+  "language": "portuguese",
+  "chapter": 456,
+  "sourceHash": "fnv1a64:b1ea60919f82f314",
+  "lessonIds": [
+    "PT-C456-clareira",
+    "PT-C456-riacho",
+    "PT-C456-ribeira",
+    "PT-C456-arbusto",
+    "PT-C456-vadear",
+    "PT-R456-revisao-449-456"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "portuguese/narration/ch456.txt",
+  "json": "portuguese/narration/ch456.json",
+  "textHash": "fnv1a64:0db1ad26e03f6bcc",
+  "jsonHash": "fnv1a64:36d37df35a8eba54",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "PT-C470-elogiar",
+  "pathSegment": "PT-PATH-470-MODESTIA",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PT-EXT-470-MODESTIA",
+      "order": 4
+    }
+  ]
+}

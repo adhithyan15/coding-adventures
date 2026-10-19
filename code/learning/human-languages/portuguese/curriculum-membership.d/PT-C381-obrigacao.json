@@ -1,0 +1,11 @@
+{
+  "id": "PT-C381-obrigacao",
+  "pathSegment": "PT-PATH-381-NORMA",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PT-EXT-381-NORMA",
+      "order": 4
+    }
+  ]
+}

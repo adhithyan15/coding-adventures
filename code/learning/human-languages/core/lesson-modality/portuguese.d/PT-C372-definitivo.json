@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PT-C372-definitivo",
+    "language": "portuguese",
+    "chapter": 372,
+    "sequence": 21120,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ee3dc8966a5a01c6"
+  },
+  "findings": []
+}

@@ -1,0 +1,9 @@
+{
+  "id": "PT-PATH-518-CORO",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "PT-EXT-518-CORO"
+  ],
+  "after": []
+}

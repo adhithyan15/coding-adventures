@@ -1,0 +1,11 @@
+{
+  "id": "PT-C320-ritual",
+  "pathSegment": "PT-PATH-320-CERIMONIA",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PT-EXT-320-CERIMONIA",
+      "order": 1
+    }
+  ]
+}

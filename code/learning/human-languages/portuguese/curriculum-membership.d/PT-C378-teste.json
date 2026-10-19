@@ -1,0 +1,11 @@
+{
+  "id": "PT-C378-teste",
+  "pathSegment": "PT-PATH-378-REVER",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PT-EXT-378-REVER",
+      "order": 4
+    }
+  ]
+}

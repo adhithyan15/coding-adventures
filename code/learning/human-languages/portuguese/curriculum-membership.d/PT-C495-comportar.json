@@ -1,0 +1,11 @@
+{
+  "id": "PT-C495-comportar",
+  "pathSegment": "PT-PATH-495-EDUCAR",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PT-EXT-495-EDUCAR",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 285,
+  "title": "Quem ouve e quem lê",
+  "label": "ch:pt-quem-ouve-e-quem-le",
+  "canDo": "I can talk about interviews and about the people who listen to, watch and read the news.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "PT-C285-leitor",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 285: I can talk about interviews and about the people who listen to, watch and read the news.",
+    "assesses": [
+      "PT-LEX-C285-OUVINTE-03",
+      "PT-LEX-C285-OUVINTE-04",
+      "PT-LEX-C285-OUVINTE-05"
+    ]
+  }
+}

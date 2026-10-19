@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 527,
+  "sourceHash": "fnv1a64:b2b5889bdef2f033",
+  "lessonIds": [
+    "PT-C527-realizador",
+    "PT-C527-filmar",
+    "PT-C527-guiao",
+    "PT-C527-documentario",
+    "PT-C527-elenco"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch527.txt",
+  "json": "portuguese/narration/ch527.json",
+  "textHash": "fnv1a64:54303c3f731f1d60",
+  "jsonHash": "fnv1a64:150c12105b87d187",
+  "findings": []
+}

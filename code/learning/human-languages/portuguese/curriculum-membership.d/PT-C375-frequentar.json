@@ -1,0 +1,11 @@
+{
+  "id": "PT-C375-frequentar",
+  "pathSegment": "PT-PATH-375-ESCOLA",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PT-EXT-375-ESCOLA",
+      "order": 1
+    }
+  ]
+}

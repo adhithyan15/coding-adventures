@@ -1,0 +1,11 @@
+{
+  "id": "PT-C454-destinatario",
+  "pathSegment": "PT-PATH-454-CORREIOS",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PT-EXT-454-CORREIOS",
+      "order": 1
+    }
+  ]
+}

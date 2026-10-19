@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PT-C318-comemorar",
+    "language": "portuguese",
+    "chapter": 318,
+    "sequence": 18320,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e52983646598d99a"
+  },
+  "findings": []
+}

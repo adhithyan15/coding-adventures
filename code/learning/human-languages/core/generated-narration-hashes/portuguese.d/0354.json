@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 354,
+  "sourceHash": "fnv1a64:ee7a209667251fc3",
+  "lessonIds": [
+    "PT-C354-influencia",
+    "PT-C354-influenciar",
+    "PT-C354-agravar",
+    "PT-C354-atenuar",
+    "PT-C354-compensar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch354.txt",
+  "json": "portuguese/narration/ch354.json",
+  "textHash": "fnv1a64:94b088758b3125f1",
+  "jsonHash": "fnv1a64:8c0de1afddf40148",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "PT-R498-revisao-491-498",
+  "pathSegment": "PT-PATH-498-CONVIVIO",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "PT-EXT-498-CONVIVIO",
+      "order": 5
+    }
+  ]
+}

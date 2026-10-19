@@ -1,0 +1,9 @@
+{
+  "id": "PT-PATH-316-HERANCA",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "PT-EXT-316-HERANCA"
+  ],
+  "after": []
+}

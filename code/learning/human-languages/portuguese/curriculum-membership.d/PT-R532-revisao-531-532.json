@@ -1,0 +1,11 @@
+{
+  "id": "PT-R532-revisao-531-532",
+  "pathSegment": "PT-PATH-532-ACOLHEDORA",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "PT-EXT-532-ACOLHEDORA",
+      "order": 5
+    }
+  ]
+}

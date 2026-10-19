@@ -1,0 +1,11 @@
+{
+  "id": "PT-C292-fugitivo",
+  "pathSegment": "PT-PATH-292-FUGA",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-292-FUGA",
+      "order": 3
+    }
+  ]
+}

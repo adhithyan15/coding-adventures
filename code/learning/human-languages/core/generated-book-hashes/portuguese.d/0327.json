@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 327,
+  "sourceHash": "fnv1a64:603a9d0933876eca",
+  "lessonIds": [
+    "PT-C327-rei",
+    "PT-C327-rainha",
+    "PT-C327-reino",
+    "PT-C327-trono",
+    "PT-C327-coroa"
+  ],
+  "tex": "portuguese/book/chapters/ch327-reis-e-rainhas.tex"
+}

@@ -1,0 +1,11 @@
+{
+  "id": "PT-C446-romaria",
+  "pathSegment": "PT-PATH-446-ARRAIAL",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PT-EXT-446-ARRAIAL",
+      "order": 1
+    }
+  ]
+}

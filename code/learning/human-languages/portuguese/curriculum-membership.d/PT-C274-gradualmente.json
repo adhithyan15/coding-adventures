@@ -1,0 +1,11 @@
+{
+  "id": "PT-C274-gradualmente",
+  "pathSegment": "PT-PATH-274-OUTRORA",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-274-OUTRORA",
+      "order": 3
+    }
+  ]
+}

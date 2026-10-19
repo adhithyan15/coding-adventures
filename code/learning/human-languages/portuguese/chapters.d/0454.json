@@ -1,0 +1,19 @@
+{
+  "chapter": 454,
+  "title": "Nos correios",
+  "label": "ch:pt-nos-correios",
+  "canDo": "I can send things by post: the sender, the addressee, the postage, dispatching and registering a letter.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "PT-C454-registar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 454: I can send things by post: the sender, the addressee, the postage, dispatching and registering a letter.",
+    "assesses": [
+      "PT-LEX-C454-CORREIOS-03",
+      "PT-LEX-C454-CORREIOS-04",
+      "PT-LEX-C454-CORREIOS-05"
+    ]
+  }
+}

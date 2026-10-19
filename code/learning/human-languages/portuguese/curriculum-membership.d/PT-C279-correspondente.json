@@ -1,0 +1,11 @@
+{
+  "id": "PT-C279-correspondente",
+  "pathSegment": "PT-PATH-279-IMPRENSA",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-279-IMPRENSA",
+      "order": 3
+    }
+  ]
+}

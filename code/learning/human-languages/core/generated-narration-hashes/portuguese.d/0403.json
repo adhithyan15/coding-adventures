@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 403,
+  "sourceHash": "fnv1a64:5bb0a4165004dd72",
+  "lessonIds": [
+    "PT-C403-vidro",
+    "PT-C403-retrovisor",
+    "PT-C403-buzina",
+    "PT-C403-buzinar",
+    "PT-C403-embaciar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch403.txt",
+  "json": "portuguese/narration/ch403.json",
+  "textHash": "fnv1a64:918cbd8da665051b",
+  "jsonHash": "fnv1a64:ed6faa2050e6a4e7",
+  "findings": []
+}

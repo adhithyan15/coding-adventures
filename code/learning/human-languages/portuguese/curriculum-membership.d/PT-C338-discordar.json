@@ -1,0 +1,11 @@
+{
+  "id": "PT-C338-discordar",
+  "pathSegment": "PT-PATH-338-DESACORDO",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PT-EXT-338-DESACORDO",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 306,
+  "sourceHash": "fnv1a64:b1fa76b5ad404554",
+  "lessonIds": [
+    "PT-C306-evacuar",
+    "PT-C306-resgatar",
+    "PT-C306-resgate",
+    "PT-C306-sobreviver",
+    "PT-C306-sobrevivente"
+  ],
+  "tex": "portuguese/book/chapters/ch306-todos-salvos.tex"
+}

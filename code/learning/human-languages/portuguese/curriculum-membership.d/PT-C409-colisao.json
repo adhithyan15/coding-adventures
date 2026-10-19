@@ -1,0 +1,11 @@
+{
+  "id": "PT-C409-colisao",
+  "pathSegment": "PT-PATH-409-FILAS",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PT-EXT-409-FILAS",
+      "order": 2
+    }
+  ]
+}

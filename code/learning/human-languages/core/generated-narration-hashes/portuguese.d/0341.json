@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 341,
+  "sourceHash": "fnv1a64:35c4157c84f58600",
+  "lessonIds": [
+    "PT-C341-prova",
+    "PT-C341-evidente",
+    "PT-C341-obvio",
+    "PT-C341-indiscutivel",
+    "PT-C341-refutar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch341.txt",
+  "json": "portuguese/narration/ch341.json",
+  "textHash": "fnv1a64:3a8ba19211f72588",
+  "jsonHash": "fnv1a64:dbd158595e550880",
+  "findings": []
+}

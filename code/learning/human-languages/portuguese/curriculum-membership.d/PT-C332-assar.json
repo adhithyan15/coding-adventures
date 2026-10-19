@@ -1,0 +1,11 @@
+{
+  "id": "PT-C332-assar",
+  "pathSegment": "PT-PATH-332-FRITAR",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PT-EXT-332-FRITAR",
+      "order": 2
+    }
+  ]
+}

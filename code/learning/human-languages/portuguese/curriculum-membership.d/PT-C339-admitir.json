@@ -1,0 +1,11 @@
+{
+  "id": "PT-C339-admitir",
+  "pathSegment": "PT-PATH-339-ACORDO",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PT-EXT-339-ACORDO",
+      "order": 2
+    }
+  ]
+}

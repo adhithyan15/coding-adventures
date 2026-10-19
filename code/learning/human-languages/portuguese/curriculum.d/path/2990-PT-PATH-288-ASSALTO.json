@@ -1,0 +1,9 @@
+{
+  "id": "PT-PATH-288-ASSALTO",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "PT-EXT-288-ASSALTO"
+  ],
+  "after": []
+}

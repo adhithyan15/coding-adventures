@@ -1,0 +1,11 @@
+{
+  "id": "PT-C316-herdar",
+  "pathSegment": "PT-PATH-316-HERANCA",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PT-EXT-316-HERANCA",
+      "order": 1
+    }
+  ]
+}
