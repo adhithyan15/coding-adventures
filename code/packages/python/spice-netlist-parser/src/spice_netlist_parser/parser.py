@@ -125,7 +125,7 @@ class McAnalysis:
 
 @dataclass(frozen=True, slots=True)
 class NoiseAnalysis:
-    """A `.noise V(output_node) input_source [freq ...] [temp=<kelvin>]` card."""
+    """A `.noise V(output_node) input_source [sweep|freq ...] [temp=<kelvin>]` card."""
 
     output_node: str
     input_source: str
@@ -1953,10 +1953,10 @@ def _parse_directive(fields: list[str]) -> Analysis:
         )
     if directive == ".noise":
         _require_min_fields(fields, 3, ".noise")
-        freqs: list[float] = []
+        freqs = _parse_noise_frequencies(fields)
         temperature = 300.0
         temperature_is_explicit = False
-        tail_index = 3
+        tail_index = 7 if len(fields) == 7 and fields[3].lower() in {"lin", "dec", "oct"} else 3
         while tail_index < len(fields):
             token = fields[tail_index]
             lower_token = token.lower()
@@ -2039,6 +2039,37 @@ def _parse_directive(fields: list[str]) -> Analysis:
         _require_min_fields(fields, 2, ".options")
         return OptionsAnalysis(values=_parse_options(fields[1:]))
     raise NetlistParseError(f"unsupported directive {fields[0]!r}")
+
+
+def _parse_noise_frequencies(fields: list[str]) -> list[float]:
+    if len(fields) == 7 and fields[3].lower() in {"lin", "dec", "oct"}:
+        sweep_kind = fields[3].lower()
+        point_count_value = parse_value(fields[4])
+        if not point_count_value.is_integer() or point_count_value <= 0.0:
+            raise NetlistParseError(".noise point count must be a positive integer")
+        start_frequency = parse_value(fields[5])
+        stop_frequency = parse_value(fields[6])
+        if start_frequency <= 0.0 or stop_frequency < start_frequency:
+            raise NetlistParseError(
+                ".noise frequencies must be positive and stop must be >= start"
+            )
+        point_count = int(point_count_value)
+        if sweep_kind == "lin":
+            if point_count == 1:
+                return [start_frequency]
+            step = (stop_frequency - start_frequency) / (point_count - 1)
+            return [start_frequency + index * step for index in range(point_count)]
+        base = 10.0 if sweep_kind == "dec" else 2.0
+        ratio = base ** (1.0 / point_count)
+        epsilon = stop_frequency * 1.0e-12
+        frequencies: list[float] = []
+        frequency = start_frequency
+        while frequency <= stop_frequency + epsilon:
+            frequencies.append(frequency)
+            frequency *= ratio
+        return frequencies
+
+    return []
 
 
 def _parse_probe_card(fields: list[str]) -> ProbeAnalysis:

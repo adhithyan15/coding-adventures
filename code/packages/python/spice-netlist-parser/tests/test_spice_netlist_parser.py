@@ -857,6 +857,24 @@ Rbot out 0 1k
     assert isclose(parsed.noise_temperature_kelvin(card), 323.15, abs_tol=1e-12)
 
 
+def test_parse_noise_analysis_canonical_sweeps() -> None:
+    parsed = parse_netlist(
+        """
+Vin in 0 DC 1
+Rtop in out 1k
+Rbot out 0 1k
+.noise V(out) Vin LIN 2 1k 2k
+.noise V(out) Vin DEC 1 1 1k
+.noise V(out) Vin OCT 1 1 8
+"""
+    )
+
+    cards = parsed.noise_cards()
+    assert cards[0].freqs == pytest.approx((1e3, 2e3))
+    assert cards[1].freqs == pytest.approx((1.0, 10.0, 100.0, 1e3))
+    assert cards[2].freqs == pytest.approx((1.0, 2.0, 4.0, 8.0))
+
+
 def test_noise_analysis_card_rejects_non_voltage_output_probe() -> None:
     with pytest.raises(NetlistParseError, match=r"\.noise output must be a voltage probe"):
         parse_netlist(

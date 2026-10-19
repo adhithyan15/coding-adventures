@@ -1484,6 +1484,26 @@ Rbot out 0 1k
 }
 
 #[test]
+fn parses_canonical_noise_sweeps() {
+    let parsed = parse_netlist(
+        r#"
+Vin in 0 DC 1
+Rtop in out 1k
+Rbot out 0 1k
+.noise V(out) Vin LIN 2 1k 2k
+.noise V(out) Vin DEC 1 1 1k
+.noise V(out) Vin OCT 1 1 8
+"#,
+    )
+    .unwrap();
+
+    let cards = parsed.noise_cards();
+    assert_eq!(cards[0].frequencies_hz, vec![1e3, 2e3]);
+    assert_eq!(cards[1].frequencies_hz, vec![1.0, 10.0, 100.0, 1e3]);
+    assert_eq!(cards[2].frequencies_hz, vec![1.0, 2.0, 4.0, 8.0]);
+}
+
+#[test]
 fn rejects_noise_cards_without_voltage_output_probe() {
     let error = parse_netlist(
         r#"

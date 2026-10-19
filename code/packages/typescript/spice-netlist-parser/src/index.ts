@@ -3123,10 +3123,13 @@ function parseDirective(fields: readonly string[]): Analysis {
   }
   if (directive === ".noise") {
     requireMinFields(fields, 3, ".noise");
-    const frequenciesHz: number[] = [];
+    const canonicalSweep = fields.length === 7 && ["lin", "dec", "oct"].includes(fields[3].toLowerCase());
+    const frequenciesHz: number[] = canonicalSweep
+      ? noiseSweepFrequencies(fields[3], fields[4], fields[5], fields[6])
+      : [];
     let temperature = 300.0;
     let temperatureIsExplicit = false;
-    let tailIndex = 3;
+    let tailIndex = canonicalSweep ? 7 : 3;
     while (tailIndex < fields.length) {
       const token = fields[tailIndex];
       const lowerToken = token.toLowerCase();
@@ -3231,6 +3234,37 @@ function parseDirective(fields: readonly string[]): Analysis {
     return { kind: "options", values: parseOptions(fields.slice(1)) };
   }
   throw new NetlistParseError(`unsupported directive ${JSON.stringify(fields[0])}`);
+}
+
+function noiseSweepFrequencies(
+  mode: string,
+  pointCountToken: string,
+  startToken: string,
+  stopToken: string,
+): number[] {
+  const pointCountValue = parseValue(pointCountToken);
+  if (!Number.isInteger(pointCountValue) || pointCountValue <= 0) {
+    throw new NetlistParseError(".noise point count must be a positive integer");
+  }
+  const startHz = parseValue(startToken);
+  const stopHz = parseValue(stopToken);
+  if (startHz <= 0 || stopHz < startHz) {
+    throw new NetlistParseError(".noise frequencies must be positive and stop must be >= start");
+  }
+  const pointCount = pointCountValue;
+  if (mode.toLowerCase() === "lin") {
+    if (pointCount === 1) return [startHz];
+    const step = (stopHz - startHz) / (pointCount - 1);
+    return Array.from({ length: pointCount }, (_value, index) => startHz + index * step);
+  }
+  const base = mode.toLowerCase() === "dec" ? 10.0 : 2.0;
+  const ratio = base ** (1.0 / pointCount);
+  const epsilon = stopHz * 1.0e-12;
+  const frequencies: number[] = [];
+  for (let frequencyHz = startHz; frequencyHz <= stopHz + epsilon; frequencyHz *= ratio) {
+    frequencies.push(frequencyHz);
+  }
+  return frequencies;
 }
 
 function parseProbeCard(fields: readonly string[]): ProbeAnalysis {
