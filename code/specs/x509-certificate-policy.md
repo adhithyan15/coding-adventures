@@ -17,6 +17,9 @@ algorithm-independent issuing-CA or end-entity role relationships.
 The third gate selects exactly one caller-supplied certificate algorithm
 profile and checks its exact AlgorithmIdentifier parameter encodings and
 encoded public-key and signature BIT STRING length bounds.
+The fourth gate decodes the complete certificate's Subject Alternative Name
+extension and applies the repository-owned RFC 9525 DNS-ID/IP-ID matcher to one
+already validated, caller-selected reference identity.
 
 ## Input contract
 
@@ -145,6 +148,38 @@ verifies either bit string and grants no cryptographic or trust authority.
 Supplying an Ed25519, RSA, or other OID merely supplies policy data; it does
 not enable that algorithm or choose a verifier.
 
+## Certificate server-identity contract
+
+The caller supplies a complete decoded certificate, one already validated
+`ReferenceIdentity`, and an independent `Asn1Limits` budget for decoding the
+Subject Alternative Name extension. The certificate structure has already
+rejected duplicate extension OIDs.
+
+The gate requires one present, well-formed Subject Alternative Name extension,
+decodes all of its GeneralName values under the explicit budget, and passes
+only its typed DNS-ID and IP-ID values to `tls-server-identity`. DNS references
+therefore match only dNSName entries and IP references only iPAddress entries.
+The API has no subject Common Name input, so CN fallback is impossible.
+
+```rust
+pub fn validate_certificate_server_identity<'a>(
+    certificate: &X509Certificate<'a>,
+    reference: &ReferenceIdentity,
+    limits: Asn1Limits,
+) -> Result<ValidatedCertificateServerIdentity,
+            X509CertificateServerIdentityError>;
+```
+
+Errors distinguish an absent extension, malformed Subject Alternative Name,
+and closed mismatch. They expose at most the Subject Alternative Name
+extension's zero-based wire index and retain no certificate bytes or presented
+names. Successful evidence exposes only the matched identity kind and
+extension index.
+
+This gate does not replace `validate_critical_extensions` and does not prove
+the certificate's path, signature, validity, revocation status, key usage, or
+trust. It adds no clock, trust-root, TLS, socket, HTTP, or OAuth authority.
+
 ## Tests
 
 Tests must cover:
@@ -185,6 +220,16 @@ Certificate-algorithm tests must additionally cover:
 - redacted errors that expose no OID, parameter, key, signature, or
   certificate bytes.
 
+Certificate server-identity tests must additionally cover:
+
+- absent and malformed Subject Alternative Name extensions;
+- exact and wildcard DNS-ID matches without Common Name fallback;
+- exact IP-ID matches and rejection of textual IP values encoded as dNSName;
+- closed identity mismatch;
+- critical and non-critical Subject Alternative Name encodings; and
+- redacted errors and evidence that retain no presented names or certificate
+  bytes.
+
 ## Deliberate exclusions
 
 - an embedded extension registry or provider-specific OID table;
@@ -193,7 +238,8 @@ Certificate-algorithm tests must additionally cover:
 - TLS key-usage selection or Extended Key Usage purpose authorization;
 - an embedded signature or public-key algorithm registry;
 - public-key or signature parsing, hashing, or signature verification;
-- certificate name comparison, path construction, or path validation;
+- issuer/subject distinguished-name comparison, path construction, or path
+  validation;
 - clocks, hostname validation, trust roots, revocation, TLS records,
   handshakes, sockets, HTTP, or OAuth transport.
 
