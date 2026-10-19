@@ -3671,6 +3671,65 @@ mod tests {
         );
     }
 
+    // ── LANG83 PR1b: the native runtime's trap-kind table ─────────────────────
+
+    /// `__twig_trap(kind_id)` maps a stable id back to a kind name with a C
+    /// array. The ids come from `interpreter_ir::exception_kind`, so this pins
+    /// the C table to the Rust one: same names, same order, nothing missing.
+    #[test]
+    fn runtime_trap_kind_table_matches_exception_kind() {
+        let src = include_str!("../runtime/twig_runtime.c");
+        let start = src.find("TWIG_TRAP_KINDS[] = {").expect("runtime declares TWIG_TRAP_KINDS");
+        let body = &src[start..];
+        let body = &body[..body.find("};").expect("TWIG_TRAP_KINDS is terminated")];
+        let names: Vec<&str> = body.split('"').skip(1).step_by(2).collect();
+        assert_eq!(names, interpreter_ir::exception_kind::ALL_TRAP_KINDS);
+        for (i, name) in names.iter().enumerate() {
+            assert_eq!(interpreter_ir::exception_kind::trap_kind_id(name), Some(i as u32 + 1));
+        }
+        assert!(
+            interpreter_ir::exception_kind::LANGUAGE_TRAP_KINDS.is_empty(),
+            "a language trap kind was registered: extend __twig_trap's table for ids >= 1000"
+        );
+    }
+
+    /// LANG83 PR1b end to end on the host: `write_i64` shares stdout with
+    /// `putchar`, the floor ops round toward −∞, and a trap flushes the
+    /// buffered output *before* naming its kind on stderr and aborting.
+    #[cfg(target_os = "linux")]
+    #[test]
+    fn lang83_floor_ops_write_i64_and_trap_run_natively() {
+        use interpreter_ir::{IIRFunction, IIRInstr, IIRModule, Operand};
+        let v = |n: &str| Operand::Var(n.into());
+        let int = |d: &str, n: i64| IIRInstr::new("const", Some(d.into()), vec![Operand::Int(n)], "i64");
+        let call = |b: &str, a: &str| IIRInstr::new("call_builtin", None, vec![v(b), v(a)], "void");
+        let body = vec![
+            int("a", -7),
+            int("b", 2),
+            int("sp", 32),
+            int("z", 0),
+            IIRInstr::new("i64_div_floor", Some("q".into()), vec![v("a"), v("b")], "i64"),
+            IIRInstr::new("i64_mod_floor", Some("r".into()), vec![v("a"), v("b")], "i64"),
+            call("write_i64", "q"),
+            call("putchar", "sp"),
+            call("write_i64", "r"),
+            // 1 // 0 traps Trap.DivZero; the unused quotient must not be dropped.
+            IIRInstr::new("i64_div_floor", Some("dead".into()), vec![v("b"), v("z")], "i64"),
+            IIRInstr::new("ret", None, vec![v("z")], "i64"),
+        ];
+        let mut module = IIRModule::new("lang83", "iir");
+        module.entry_point = Some("main".into());
+        module.add_or_replace(IIRFunction::new("main", vec![], "i64", body));
+        let dir = tempfile::tempdir().expect("tempdir");
+        let exe = dir.path().join("lang83");
+        compile_module_to_linux_executable(&module, &exe).expect("compiles and links");
+        let out = std::process::Command::new(&exe).output().expect("runs");
+        assert_eq!(String::from_utf8_lossy(&out.stdout), "-4 1", "stdout flushed before the trap");
+        assert!(!out.status.success(), "a trap exits non-zero");
+        let stderr = String::from_utf8_lossy(&out.stderr);
+        assert!(stderr.contains("trap: Trap.DivZero"), "stderr names the kind: {stderr:?}");
+    }
+
     // ── AOT00-T1 x86_64 PR-x2: GC entry wrapper + no-op init ──────────────────
 
     /// The x86_64 wrapper is well-formed: `push rbp` … `ret`, with two intra-module
