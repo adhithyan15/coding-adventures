@@ -1,0 +1,3 @@
+python3 tools/verify_snapshot.py
+cargo test -p x509-webpki-roots-snapshot --test x509_webpki_roots_snapshot -- --nocapture
+cargo test -p x509-webpki-roots-snapshot --doc
