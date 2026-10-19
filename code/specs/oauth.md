@@ -654,6 +654,18 @@ verification, RFC 4518 and schema-specific name value comparison,
 certificate path construction and validation, trust-root integration,
 revocation policy, TLS, and HTTP remain blockers, so concrete HTTPS remains
 unavailable.
+A reviewed trust-root data prerequisite is now shipped as
+`x509-webpki-roots-snapshot`: the exact `webpki-roots` 1.0.9 Mozilla
+public-Web-PKI anchor set is pinned by upstream tag and commit, crates.io
+archive checksum, root count, and canonical root-set digest. Only generated
+anchor bytes enter production; neither `webpki-roots` nor its
+`rustls-pki-types` dependency is compiled or linked. Repository-owned code
+parses the allocation-free snapshot, and independent CI verification rejects
+unreviewed byte, order, count, format, or provenance drift. The static set
+excludes OS, enterprise, user-installed, and local roots and carries an
+explicit update cadence. It supplies data only: certificate parsing, path and
+hostname validation, signature verification, constraint and algorithm policy,
+revocation, TLS, HTTP, and platform trust remain separate blockers.
 
 The current slices intentionally stop before provider HTTPS transport. The
 loopback host owns only local TCP and injected browser authority; custody owns
