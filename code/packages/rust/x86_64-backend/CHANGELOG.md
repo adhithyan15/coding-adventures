@@ -1,4 +1,18 @@
 # Changelog — `x86_64-backend`
+## 0.40.0 - 2026-10-19 - stack-passed call arguments
+
+Calls and functions may now take more arguments than the ABI has integer
+registers. Overflow arguments use the standard layouts: SysV arguments 7 and up
+at `[rsp + 8·k]`, and Microsoft x64 arguments 5 and up at `[rsp + 32 + 8·k]`
+above the shadow space. Each call site reserves a 16-byte-aligned outgoing area
+and releases it after the call. Callees copy these arguments from
+`[rbp + 16 + …]` into their slots in the prologue. Previously such calls were
+refused with `too many arguments (8) for SysV ABI — max 6`, which kept every
+ALGOL program passing a captured 4-D array value formal (a handle, four lower
+bounds and three strides) off native x86-64. The two tests that pinned the
+refusal now pin successful compilation, and new tests pin the encoded stores
+and loads.
+
 ## Unreleased — FLOW-MATIC EOF peek (VM-039a)
 
 Support the zero-argument `input_more` builtin through the shared C runtime.

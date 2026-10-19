@@ -1,6 +1,41 @@
 # LANG VM non-ALGOL completion backlog
 
-Status date: 2026-10-11 — re-audited for PREP01 octal integer stringization
+Status date: 2026-10-19 — restarted after an eight-day pause; shared-backend
+reds VM-D005 and #12032 closed
+
+## Restart — 2026-10-19
+
+The non-ALGOL rotation made no merges between 2026-10-11 and 2026-10-19. In
+that time the separately owned ALGOL stream merged forty-four PRs, each raising
+one hand-enumerated `sign`-offset cap by a single unit. PR #17793 replaces that
+cap with the derived `2^53 - 1` exact-integer budget, and its lesson shard
+records the anti-pattern.
+
+A full local `lang_matrix` run then showed the remaining reds were shared
+backend defects, not ALGOL frontend gaps:
+
+- **VM-D005 (x86_64):** `x86_64-backend` refused calls with more than six
+  integer arguments. A captured 4-D array value formal is eight values (a
+  handle, four lower bounds and three strides). Overflow arguments now use the
+  standard SysV and Microsoft x64 stack layouts.
+- **#12032 (JVM):** `iir-to-jvm-class-file` declared a fixed `max_stack = 8`,
+  which captured 3-D and 4-D `double[]` stores exceed. `max_stack` is now
+  measured by a verifier-style stack-depth dataflow over the emitted bytecode.
+
+With both fixed, `lang-aot/BUILD` runs the full-corpus
+`matrix_every_proven_cell_agrees` aggregate and
+`proven_columns_do_not_silently_skip` in CI. Before this, only the non-ALGOL
+aggregate ran. The rotation resumes with the queue below, plus two items found
+during this audit:
+
+- **VM-078:** ALGOL accepts runtime reals that can become non-finite or exceed
+  the i64 range, such as `exp(exp(exp(pick())))` and `entier(exp(...))`. The
+  portable formatter and `real_to_int_*` have no specified cross-backend
+  behaviour for those values.
+- **VM-079:** `twig-aot`'s `gc_stress_live_bytes_differential_on_linux` and
+  `gc_recursive_frame_live_bytes_differential_on_linux` fail locally on
+  `origin/main` (x86_64 Linux). They need triage to decide whether this is a
+  host difference or a real precise-GC regression.
 
 This is the execution backlog for completing the shared LANG VM platform while
 the ALGOL campaign is owned separately. It complements
