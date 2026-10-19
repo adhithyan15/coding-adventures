@@ -12,3 +12,5 @@
   policy.
 - Add bounded complete-certificate Subject Alternative Name decoding and typed
   DNS-ID/IP-ID server-identity matching without Common Name fallback.
+- Add an ambient-clock-free complete-certificate validity gate for one explicit
+  caller-owned observation with inclusive RFC 5280 endpoints.
