@@ -618,10 +618,18 @@ already decoded inclusive certificate validity interval at one explicit
 validated caller-owned observation. It distinguishes not-yet-valid from
 expired without reading an ambient clock, applying tolerance, or claiming the
 observation's source or freshness; clock acquisition, conversion, and audit
-remain separate caller authority. Repository-owned signature verification,
-certificate path construction and validation, issuer/subject name policy,
-purpose, trust-root integration, revocation policy, TLS, and HTTP remain
-blockers, so concrete HTTPS remains unavailable.
+remain separate caller authority. A sixth bounded gate now authorizes one
+caller-supplied non-empty Extended Key Usage purpose over already validated
+end-entity role evidence. It fails closed when the role is not an end entity,
+the certificate omitted Extended Key Usage, or that extension does not contain
+the exact requested OID. It embeds no purpose registry and gives
+`anyExtendedKeyUsage` no implicit wildcard meaning: callers that choose that
+OID request only that exact OID. Its opaque success evidence grants no key
+operation, signature, path, identity, time, trust, revocation, TLS, or network
+authority. Repository-owned signature verification, certificate path
+construction and validation, issuer/subject name policy, trust-root
+integration, revocation policy, TLS, and HTTP remain blockers, so concrete
+HTTPS remains unavailable.
 
 The current slices intentionally stop before provider HTTPS transport. The
 loopback host owns only local TCP and injected browser authority; custody owns
