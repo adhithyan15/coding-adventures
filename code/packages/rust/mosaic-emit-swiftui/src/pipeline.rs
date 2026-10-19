@@ -8964,6 +8964,24 @@ mod tests {
     use mosmodel_compiler::EmitParam;
     use mosstyle_compiler::{PartStyle, StateStyle, StyleDef, StyleProp, StyleTransition};
 
+    /// A scratch-name nonce that is unique for every call in this process.
+    ///
+    /// The clock alone is not: macOS reports `SystemTime` in whole microseconds,
+    /// so two tests running in parallel threads could read the same "nanos" and
+    /// be handed the same directory, each seeing the other's files (this made
+    /// `compose_fixtures` fail about one run in three). The counter makes every
+    /// call distinct; the clock keeps names from a previous run apart.
+    #[cfg(target_os = "macos")] // its only caller type-checks with the macOS SDK
+    fn unique_nonce() -> String {
+        static NEXT: std::sync::atomic::AtomicU64 = std::sync::atomic::AtomicU64::new(0);
+        let n = NEXT.fetch_add(1, std::sync::atomic::Ordering::Relaxed);
+        let nanos = std::time::SystemTime::now()
+            .duration_since(std::time::UNIX_EPOCH)
+            .expect("system clock after epoch")
+            .as_nanos();
+        format!("{nanos}-{n}")
+    }
+
     // --- Story fixtures (#14459) ---------------------------------------
 
     /// A fixture value is written as a Swift literal of the slot's declared
@@ -9066,7 +9084,7 @@ mod tests {
     #[test]
     fn generated_typography_typechecks_with_swiftui() {
         let directory = std::env::temp_dir().join(format!("mosaic-swift-font-{}-{}", std::process::id(),
-            std::time::SystemTime::now().duration_since(std::time::UNIX_EPOCH).unwrap().as_nanos()));
+            unique_nonce()));
         std::fs::create_dir(&directory).unwrap();
         let mut paths = Vec::new();
         for name in ["ScaledFirst", "ScaledSecond"] {
