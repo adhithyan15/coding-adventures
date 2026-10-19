@@ -462,7 +462,7 @@ public class GridView: NSView {
 
 | Error | Condition | Example message |
 |---|---|---|
-| `DuplicateName` | Two slots or two emits share a name | `Duplicate slot name 'label' at line 4` |
+| `DuplicateName` | Two slots or two emits share a name, or two slots (or two parameters of one emit) camel-case to the same key, as `cell-value` and `cellValue` do | `Duplicate slot name 'label' at line 4` |
 | `NameConflict` | A slot and emit share a name | `'onClick' is declared as both a slot and an emit at line 6` |
 | `UnknownType` | A type name does not resolve | `Unknown type 'CelAddress' — did you mean 'CellAddress'? at line 8` |
 | `InvalidDefault` | Default value is type-incompatible | `Slot 'disabled' has type bool but default value "yes" is text at line 3` |
@@ -470,7 +470,7 @@ public class GridView: NSView {
 | `UnknownConstruct` | Anything other than slot/emit in component body | `Unexpected token 'Box' — only slot and emit declarations are allowed here at line 9` |
 | `MissingComponent` | Named component type not found | `Component type 'CellAddress' not found in component library at line 12` |
 | `ReservedName` | An emit takes a name the runtime reserves | `'environmentChanged' is reserved by the Mosaic runtime (UI48) and cannot be an emit name` |
-| `ReservedName` | An emit parameter is named `type` or `event` (or `__proto__`): keys the dispatched event object owns — `{ type, ... }` on the web backends, `{ "event": ..., ... }` in the native runtime envelope. A parameter named `type` would let the field's text overwrite which action the host receives. | `'type' cannot be a parameter of 'onSave': the dispatched event object uses that key itself` |
+| `ReservedName` | An emit parameter is named `type` or `event` (or `__proto__`), or a spelling that camel-cases to one, such as `Type`: keys the dispatched event object owns — `{ type, ... }` on the web backends, `{ "event": ..., ... }` in the native runtime envelope. A parameter named `type` would let the field's text overwrite which action the host receives. | `'type' cannot be a parameter of 'onSave': the dispatched event object uses that key itself` |
 
 All errors include file path, line number, and column number.
 
