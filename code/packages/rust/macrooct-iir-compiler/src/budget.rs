@@ -29,11 +29,13 @@
 //!
 //! [`MacroOctDialect`] is public, `Copy`, and documented as stateless: callers
 //! use it as a plain value. The budget needs per-translation-unit state (bytes
-//! already lexed), so it lives in [`BudgetedMacroOct`], a crate-private
-//! [`Dialect`] that delegates every question to `MacroOctDialect` and only adds
-//! the reservation in front of [`Dialect::lex`]. The pipeline in this crate
-//! always uses the wrapper; an embedder driving `MacroOctDialect` directly owns
-//! its own input limits, as the dialect's documentation says.
+//! already lexed), so it lives in [`BudgetedMacroOct`], a public [`Dialect`]
+//! that delegates every question to `MacroOctDialect` and only adds the
+//! reservation in front of [`Dialect::lex`]. Every entry point in this crate
+//! uses the wrapper. An embedder calling `source_preprocessor::preprocess`
+//! itself (for example over a `RootedFs`) should pass a fresh
+//! `BudgetedMacroOct::new(bounds)` per translation unit, never the bare
+//! `MacroOctDialect`, whose `lex` charges nothing.
 
 use std::cell::Cell;
 
@@ -95,15 +97,30 @@ impl PrelexBudget {
     }
 }
 
-/// [`MacroOctDialect`] plus one translation unit's [`PrelexBudget`].
+/// [`MacroOctDialect`] plus one translation unit's pre-lex byte budget.
+///
+/// Use one per translation unit: the budget is aggregate across the primary
+/// file and every include lexed through it. The primary file is lexed by the
+/// caller, not the engine, so charge it first with [`Self::reserve_primary`].
 #[derive(Debug)]
-pub(crate) struct BudgetedMacroOct {
+pub struct BudgetedMacroOct {
     pub(crate) budget: PrelexBudget,
 }
 
 impl BudgetedMacroOct {
-    pub(crate) fn new(bounds: Bounds) -> Self {
+    /// A dialect whose caps are the tightest of `bounds` and the defaults.
+    #[must_use]
+    pub fn new(bounds: Bounds) -> Self {
         Self { budget: PrelexBudget::new(bounds) }
+    }
+
+    /// Charge the primary source against this unit's budget; call it before
+    /// lexing the primary yourself.
+    ///
+    /// # Errors
+    /// The primary exceeds the per-file or aggregate pre-lex budget.
+    pub fn reserve_primary(&self, source: &str) -> Result<(), PpError> {
+        self.budget.reserve(source)
     }
 }
 

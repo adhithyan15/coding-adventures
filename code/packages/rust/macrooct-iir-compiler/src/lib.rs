@@ -10,7 +10,7 @@
 //!         ▼  macrooct-lexer          ← macrooct.tokens = oct.tokens + @directives
 //!     [Token]  with AT_INCLUDE / AT_IF / AT_ELSE / AT_END / AT_DEFINE
 //!         │
-//!         ▼  source_preprocessor::preprocess(…, &MacroOctDialect, …)
+//!         ▼  source_preprocessor::preprocess(…, &BudgetedMacroOct, …)
 //!     [Token]  pure Oct — every directive token consumed
 //!         │
 //!         ▼  Oct's parser grammar          UNCHANGED
@@ -92,9 +92,10 @@
 mod budget;
 pub mod dialect;
 
+pub use budget::BudgetedMacroOct;
 pub use dialect::MacroOctDialect;
 
-use budget::{BudgetedMacroOct, PrelexBudget};
+use budget::PrelexBudget;
 
 use coding_adventures_macrooct_lexer::try_tokenize_macrooct;
 use coding_adventures_source_preprocessor::{
@@ -197,7 +198,7 @@ pub fn preprocess_source(
     // (see `budget.rs`) before the lexer runs.
     let bounds = bounds.tighten(Bounds::default());
     let dialect = BudgetedMacroOct::new(bounds);
-    dialect.budget.reserve(source).map_err(MacroOctError::Preprocess)?;
+    dialect.reserve_primary(source).map_err(MacroOctError::Preprocess)?;
     let mut tokens = try_tokenize_macrooct(source).map_err(MacroOctError::Lex)?;
 
     // Keep a copy of the sentinel rather than synthesising one, so its line and

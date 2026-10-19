@@ -23,9 +23,11 @@ now rejected.
 
 ### Added
 
-- `budget.rs`: `PrelexBudget` plus the crate-private `BudgetedMacroOct`
-  wrapper. The wrapper adds the budget in front of `MacroOctDialect::lex`, so
-  `MacroOctDialect` stays a stateless public `Copy` value.
+- `BudgetedMacroOct` (public): `MacroOctDialect` plus one translation unit's
+  pre-lex budget, with `new(bounds)` and `reserve_primary(source)`. Every
+  entry point here uses it, and embedders calling the engine directly should
+  use it too. `MacroOctDialect` stays a stateless public `Copy` value, and its
+  docs now warn that its `lex` charges nothing.
 - `tests/prelex_budget.rs`: seven tests, one for each route by which bytes
   reach the lexer, plus a within-budget include program.
 
