@@ -269,7 +269,8 @@ fn runs_shared_berkeley_v1_core_corpus() {
             .collect::<Vec<_>>(),
         vec![
             "op", "op", "op", "op", "op", "op", "op", "ac", "ac", "ac", "ac", "ac", "ac",
-            "ac", "tran", "tran", "tran", "tran", "tran", "tran", "tran", "dc", "tf"
+            "ac", "tran", "tran", "tran", "tran", "tran", "tran", "tran", "dc", "dc", "dc",
+            "dc", "dc", "dc", "dc", "dc", "tf", "tf", "tf", "tf", "tf", "tf", "tf", "tf"
         ]
     );
 
