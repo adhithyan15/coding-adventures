@@ -5665,6 +5665,11 @@ model-card parameter, or a UI artifact is not a completion signal.
      nonlinear model kinds. The shared operating-point corpus adds `PNP`,
      `PJF`, and Level-1 `PMOS` fixtures alongside the original `NPN`, `NJF`,
      and `NMOS` coverage.
+   - **Signed nonlinear dynamic corpus** (completed in the cross-language core
+     gate slice): the shared release corpus now exercises `PNP`, `PJF`, and
+     Level-1 `PMOS` capacitance and storage behavior through AC and transient
+     analyses. The Berkeley v1 core gate requires 23 cases; nonlinear DC and
+     transfer-function coverage remain separate corpus phases.
    - Expand deck-owned output compatibility beyond source-order analysis
      execution and stable artifact exports toward nested sweeps, raw-format
      interoperability, and remaining vendor-style output controls.
