@@ -3892,7 +3892,9 @@ mod tests {
         m.add_or_replace(main);
         m.entry_point = Some("main".into());
         for abi in [X86_64Abi::SysV, X86_64Abi::MsX64] {
-            let err = compile_module_x86_64_to_text(&m, abi).err().expect("refused");
+            let Err(err) = compile_module_x86_64_to_text(&m, abi) else {
+                panic!("a 1-argument call to a 7-parameter function must be refused");
+            };
             assert!(
                 matches!(&err, AotError::CallArityMismatch { caller, callee, expected: 7, got: 1 }
                     if caller == "main" && callee == "wide"),
