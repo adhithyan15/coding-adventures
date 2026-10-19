@@ -1,5 +1,14 @@
 # Changelog — iir-to-jvm-class-file
 
+## 0.37.0 - 2026-10-19 - fail-closed real-to-integer narrowing
+
+Each `d2i`/`d2l` narrowing of `real_to_int_trunc` and `real_to_int_floor` is
+now preceded by a range check. The check throws `java.lang.ArithmeticException`
+for NaN, ±∞ and values outside the destination's integer range, where the JVM
+would otherwise saturate (NaN→0, +∞→MAX, −∞→MIN). This replaces the saturating
+lowering 0.18.0 documented as a divergence. The stack-depth analysis now
+models `dup2`, `new`, `invokespecial` and `athrow`.
+
 ## 0.36.0 - 2026-10-19 - measured operand-stack depth
 
 Each method's `max_stack` is now measured by walking the emitted bytecode with

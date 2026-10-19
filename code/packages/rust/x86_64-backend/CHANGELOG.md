@@ -1,4 +1,14 @@
 # Changelog — `x86_64-backend`
+
+## 0.41.0 - 2026-10-19 - fail-closed real-to-integer narrowing
+
+`real_to_int_trunc` and `real_to_int_floor` now trap with `ud2` instead of
+storing a wrong integer. `cvttsd2si` returns the integer-indefinite `i64::MIN`
+on NaN, ±∞ and out-of-range input, so `entier(exp(exp(4)))` printed a large
+*negative* number. The input is rounded in place (`roundsd` mode 1 for floor,
+3 for trunc), converted, converted back with `cvtsi2sd` and compared with
+`ucomisd`. An unordered or unequal compare falls through to the trap.
+
 ## 0.40.0 - 2026-10-19 - stack-passed call arguments
 
 Calls and functions may now take more arguments than the ABI has integer

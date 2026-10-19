@@ -3247,6 +3247,27 @@ fn main() { out(1, VALUE); }\n",
         expect: Expect::Trap,
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // ALGOL 60 — `entier` of a runtime real that no integer can hold fails
+    // closed on all seven standard backends. Without a range check, native
+    // x86-64 `cvttsd2si` returned i64::MIN (a sign-flipped answer), JVM `d2l`
+    // saturated to i64::MAX, and aarch64 `fcvtzs` saturated too. The first
+    // row is finite (exp(exp(4)) ≈ 5.1e23 > 2^63); the second overflows to +∞.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin real procedure pick; pick := 4.0; integer result; \
+                  result := entier(exp(exp(pick()))); output(result) end",
+        expect: Expect::Trap,
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin real procedure pick; pick := 2.0; integer result; \
+                  result := entier(exp(exp(exp(pick())))); output(result) end",
+        expect: Expect::Trap,
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
     // ALGOL 60 — a two-dimensional array formal infers its rank from `a[i,j]`
     // in `fill2`. The call ABI carries the shared handle plus both lower bounds
     // and the outer row-major stride: `array<i64>, i64, i64, i64`. `invoke`
@@ -16778,6 +16799,34 @@ fn algol_multidimensional_cross_coordinate_oob_traps_on_every_available_standard
             continue;
         };
         assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_out_of_range_entier_traps_on_every_available_standard_backend() {
+    let programs: Vec<_> = PROGRAMS
+        .iter()
+        .filter(|program| {
+            program.lang == Language::Algol60
+                && matches!(program.expect, Expect::Trap)
+                && (program.src.contains("result := entier(exp(exp(pick())))")
+                    || program.src.contains("result := entier(exp(exp(exp(pick()))))"))
+        })
+        .collect();
+    assert_eq!(programs.len(), 2, "both out-of-range entier trap programs must remain in the matrix");
+
+    for program in programs {
+        for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+            let toolchain_available = toolchain_available(backend);
+            let Some(result) = run(backend, program) else {
+                assert!(
+                    !toolchain_available,
+                    "{backend:?} toolchain is present but out-of-range entier execution did not complete"
+                );
+                continue;
+            };
+            assert_cell(backend, program, result);
+        }
     }
 }
 

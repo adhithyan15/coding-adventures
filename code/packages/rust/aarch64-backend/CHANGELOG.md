@@ -1,4 +1,15 @@
 # Changelog — `aarch64-backend`
+
+## Unreleased — fail-closed real-to-integer narrowing
+
+`real_to_int_trunc` and `real_to_int_floor` now trap with `udf #0xDEAD`
+instead of storing a saturated integer. `fcvtzs` saturates NaN to 0 and
+out-of-range values to `i64::MIN`/`MAX`. The input is rounded in place
+(`frintm` for floor, the new `frintz` for trunc), converted, converted back
+with `scvtf` and compared with `fcmp`. The code also traps on a result of
+`i64::MAX`, because `fcvtzs` saturates `2^63` to that value, which converts
+back to `2^63` exactly.
+
 ## Unreleased — FLOW-MATIC EOF peek (VM-039a)
 
 Support the zero-argument `input_more` builtin through the shared C runtime.

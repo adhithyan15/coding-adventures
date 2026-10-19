@@ -104,3 +104,4 @@ cargo test -p lang-aot --test lang_matrix twig_beam_match_union -- --exact
 cargo test -p lang-aot --test lang_matrix twig_beam_string_ops -- --exact
 cargo test -p lang-aot --test lang_matrix twig_beam_dynamic_arith_list_ops_and_closures -- --exact
 cargo test -p lang-aot --test lang_matrix every_backend_name_round_trips_through_the_single_cell_env_var -- --exact
+cargo test -p lang-aot --test lang_matrix algol_out_of_range_entier_traps_on_every_available_standard_backend -- --exact
