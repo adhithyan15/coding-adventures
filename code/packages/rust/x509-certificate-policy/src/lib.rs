@@ -11,8 +11,9 @@
 //! fallback. Its validity gate classifies an explicit caller-owned observation
 //! against the decoded inclusive interval without reading a clock. Its purpose
 //! gate requires one exact caller-supplied Extended Key Usage OID over already
-//! validated end-entity role evidence. None of these gates establishes
-//! certificate trust.
+//! validated end-entity role evidence. Its issuer-link gate fixes the direction
+//! of one caller-supplied Name comparison without embedding a normalization or
+//! equality rule. None of these gates establishes certificate trust.
 
 #![deny(unsafe_code)]
 
@@ -29,6 +30,7 @@ use x509_extended_key_usage::{
     decode_extended_key_usage, ExtendedKeyUsage, EXTENDED_KEY_USAGE_OID,
 };
 use x509_key_usage::{decode_key_usage, KeyUsage, KeyUsageBit, KEY_USAGE_OID};
+use x509_name::X509Name;
 use x509_subject_alt_name::{decode_subject_alt_name, SUBJECT_ALT_NAME_OID};
 use x509_time::X509Time;
 use x509_validity::X509ValidityStatus;
@@ -358,6 +360,41 @@ impl fmt::Display for X509CertificateValidityError {
 
 impl Error for X509CertificateValidityError {}
 
+/// Stable certificate issuer-link failure categories.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum X509CertificateIssuerLinkErrorKind {
+    /// The caller's Name policy rejected child issuer to candidate subject.
+    NameMismatch,
+}
+
+/// A redacted issuer-link failure that retains no Name or certificate bytes.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub struct X509CertificateIssuerLinkError {
+    kind: X509CertificateIssuerLinkErrorKind,
+}
+
+impl X509CertificateIssuerLinkError {
+    const fn new(kind: X509CertificateIssuerLinkErrorKind) -> Self {
+        Self { kind }
+    }
+
+    pub const fn kind(self) -> X509CertificateIssuerLinkErrorKind {
+        self.kind
+    }
+}
+
+impl fmt::Display for X509CertificateIssuerLinkError {
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(
+            formatter,
+            "X.509 certificate issuer link error {:?}",
+            self.kind
+        )
+    }
+}
+
+impl Error for X509CertificateIssuerLinkError {}
+
 /// One exact caller-supplied Extended Key Usage purpose.
 ///
 /// Purpose selection is application policy data. This type deliberately
@@ -460,6 +497,16 @@ impl Error for X509CertificatePurposeError {}
 /// trust, revocation, TLS, or network authority.
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub struct ValidatedCertificatePurpose {
+    private: (),
+}
+
+/// Opaque evidence that caller policy accepted one issuer-to-subject link.
+///
+/// This value carries no Name or certificate bytes. It proves no CA role,
+/// signature, path, validity, purpose, identity, trust, revocation, TLS, or
+/// network authority.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub struct ValidatedCertificateIssuerLink {
     private: (),
 }
 
@@ -744,6 +791,29 @@ pub fn validate_certificate_validity_at(
             X509CertificateValidityErrorKind::Expired,
         )),
     }
+}
+
+/// Apply one caller-supplied Name policy to one directed certificate link.
+///
+/// `same_name` is invoked exactly once with the child certificate's issuer
+/// followed by the candidate issuer certificate's subject. The callback owns
+/// all distinguished-name normalization and equality semantics. This gate
+/// neither grants the candidate a CA role nor constructs or validates a path.
+pub fn validate_certificate_issuer_link<'child, 'issuer>(
+    child: &X509Certificate<'child>,
+    candidate_issuer: &X509Certificate<'issuer>,
+    same_name: impl FnOnce(&X509Name<'child>, &X509Name<'issuer>) -> bool,
+) -> Result<ValidatedCertificateIssuerLink, X509CertificateIssuerLinkError> {
+    if !same_name(
+        child.tbs_certificate().issuer(),
+        candidate_issuer.tbs_certificate().subject(),
+    ) {
+        return Err(X509CertificateIssuerLinkError::new(
+            X509CertificateIssuerLinkErrorKind::NameMismatch,
+        ));
+    }
+
+    Ok(ValidatedCertificateIssuerLink { private: () })
 }
 
 /// Authorize one exact Extended Key Usage purpose for end-entity evidence.

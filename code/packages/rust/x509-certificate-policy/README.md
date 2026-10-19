@@ -30,6 +30,11 @@ Extended Key Usage fails closed. The gate embeds no purpose registry, and
 `anyExtendedKeyUsage` is an ordinary exact OID rather than an implicit
 wildcard.
 
+Its issuer-link gate invokes one caller-supplied distinguished-name comparator
+exactly once with a child certificate's issuer followed by a candidate issuer
+certificate's subject. It fixes the link direction without embedding or
+claiming a complete RFC 5280 name-normalization rule.
+
 An intended issuing CA must carry critical `cA = TRUE` Basic Constraints and
 Key Usage with `keyCertSign`. An intended end entity may omit those extensions,
 but it must not assert either CA status or certificate-signing usage. Extended
@@ -49,10 +54,12 @@ crate's role result proves only the extension relationships above; callers must
 still run the unknown-critical-extension gate and validate every other
 recognized extension. The role gate does not select algorithm-dependent TLS
 key usages, authorize an Extended Key Usage purpose, or grant a certificate
-role or trust. It does not validate issuer/subject name relationships, paths,
-signatures, algorithms, keys, validity against a clock, revocation, trust
-roots, TLS, HTTP, or OAuth transport. Passing an algorithm profile proves only
-exact identifier, parameter, and bit-length checks; supplying an Ed25519, RSA,
+role or trust. It provides no built-in issuer/subject name normalization or
+semantic equality and does not construct or validate paths, verify signatures,
+interpret keys, check validity against a clock, process revocation, select
+trust roots, or perform TLS, HTTP, or OAuth transport. Passing an algorithm
+profile proves only exact identifier, parameter, and bit-length checks;
+supplying an Ed25519, RSA,
 or other OID does not enable the algorithm or authorize a cryptographic
 implementation. Algorithm-specific key parsing and strength policy remain
 separate mandatory work for a repository-owned parser and verifier.
@@ -73,6 +80,12 @@ already decoded Extended Key Usage of end-entity role evidence. It does not
 authorize a key operation and grants no signature, path, identity, validity,
 trust, revocation, TLS, HTTP, or OAuth transport authority.
 
+Passing the issuer-link gate proves only that one caller-owned comparator
+accepted one directed child-issuer to candidate-subject pair. The opaque
+evidence retains neither Name nor certificate bytes. It does not prove
+standards-complete name equality, CA role, signature, path, constraints,
+validity, purpose, identity, trust, or revocation.
+
 ## Example
 
 ```rust,no_run
@@ -81,13 +94,16 @@ use tls_server_identity::ReferenceIdentity;
 use x509_certificate::decode_x509_certificate;
 use x509_certificate_policy::{
     validate_certificate_algorithm_profile, validate_certificate_extended_key_purpose,
-    validate_certificate_role_extensions, validate_certificate_server_identity,
-    validate_critical_extensions, X509AlgorithmParametersPolicy,
+    validate_certificate_issuer_link, validate_certificate_role_extensions,
+    validate_certificate_server_identity, validate_critical_extensions,
+    X509AlgorithmParametersPolicy,
     X509CertificateAlgorithmProfile, X509CertificatePurposePolicy, X509CertificateRole,
 };
 
-# fn check(encoded: &[u8]) -> Result<(), Box<dyn std::error::Error>> {
+# fn check(encoded: &[u8], candidate_issuer_encoded: &[u8]) -> Result<(), Box<dyn std::error::Error>> {
 let certificate = decode_x509_certificate(encoded, Asn1Limits::default())?;
+let candidate_issuer =
+    decode_x509_certificate(candidate_issuer_encoded, Asn1Limits::default())?;
 // This deliberately closed example recognizes only the three extensions its
 // next gate decodes. A broader profile must validate every additional OID it
 // recognizes before assigning trust.
@@ -107,6 +123,13 @@ assert_eq!(evidence.role(), X509CertificateRole::EndEntity);
 // does not select a key operation or enable any cryptographic implementation.
 let purpose = X509CertificatePurposePolicy::new(&[1, 3, 6, 1, 5, 5, 7, 3, 1])?;
 let _purpose_evidence = validate_certificate_extended_key_purpose(&evidence, purpose)?;
+// Exact DER is one intentionally strict caller policy, not a claim of complete
+// RFC 5280 distinguished-name normalization or semantic equality.
+let _issuer_link = validate_certificate_issuer_link(
+    &certificate,
+    &candidate_issuer,
+    |issuer, subject| issuer.encoded() == subject.encoded(),
+)?;
 // These identifiers and encoded BIT STRING bounds are application policy data,
 // not an embedded registry, key-strength check, or permission to perform
 // cryptography.
