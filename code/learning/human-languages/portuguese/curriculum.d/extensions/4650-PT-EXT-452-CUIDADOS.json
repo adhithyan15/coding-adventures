@@ -1,0 +1,8 @@
+{
+  "id": "PT-EXT-452-CUIDADOS",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can use personal services: the barber, trimming, the beautician, the optician and a stain.",
+  "prerequisites": []
+}

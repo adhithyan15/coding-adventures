@@ -1,0 +1,11 @@
+{
+  "id": "PT-C523-reler",
+  "pathSegment": "PT-PATH-523-LIVROS",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-523-LIVROS",
+      "order": 3
+    }
+  ]
+}

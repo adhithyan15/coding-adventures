@@ -1,0 +1,18 @@
+{
+  "language": "portuguese",
+  "chapter": 261,
+  "sourceHash": "fnv1a64:52bf4f5b9903d20d",
+  "lessonIds": [
+    "PT-C261-acho-que",
+    "PT-C261-porque",
+    "PT-C261-por-isso",
+    "PT-C261-revisao-opiniao"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 4,
+  "text": "portuguese/narration/ch261.txt",
+  "json": "portuguese/narration/ch261.json",
+  "textHash": "fnv1a64:38f36534530df0d9",
+  "jsonHash": "fnv1a64:a26450fbb7af3ed9",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 499,
+  "title": "Gratos e fiéis",
+  "label": "ch:pt-gratos-e-fieis",
+  "canDo": "I can talk about gratitude and faithfulness.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "PT-C499-fidelidade",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 499: I can talk about gratitude and faithfulness.",
+    "assesses": [
+      "PT-LEX-C499-GRATIDAO-03",
+      "PT-LEX-C499-GRATIDAO-04",
+      "PT-LEX-C499-GRATIDAO-05"
+    ]
+  }
+}

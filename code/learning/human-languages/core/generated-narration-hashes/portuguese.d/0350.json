@@ -1,0 +1,20 @@
+{
+  "language": "portuguese",
+  "chapter": 350,
+  "sourceHash": "fnv1a64:a36b24dc7c30e79a",
+  "lessonIds": [
+    "PT-C350-origem",
+    "PT-C350-derivar",
+    "PT-C350-resultar",
+    "PT-C350-originar",
+    "PT-C350-gracas-a",
+    "PT-R350-revisao-343-350"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "portuguese/narration/ch350.txt",
+  "json": "portuguese/narration/ch350.json",
+  "textHash": "fnv1a64:6073eb0725b2fc0e",
+  "jsonHash": "fnv1a64:2761308b6f7d5b27",
+  "findings": []
+}

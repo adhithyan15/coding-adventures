@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 452,
+  "sourceHash": "fnv1a64:c7dc786902ec7524",
+  "lessonIds": [
+    "PT-C452-barbeiro",
+    "PT-C452-aparar",
+    "PT-C452-esteticista",
+    "PT-C452-oculista",
+    "PT-C452-nodoa"
+  ],
+  "tex": "portuguese/book/chapters/ch452-cabelo-e-oculos.tex"
+}

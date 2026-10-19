@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 519,
+  "sourceHash": "fnv1a64:9d1c5014b181d11c",
+  "lessonIds": [
+    "PT-C519-ensaio",
+    "PT-C519-ensaiar",
+    "PT-C519-palco",
+    "PT-C519-plateia",
+    "PT-C519-aplauso"
+  ],
+  "tex": "portuguese/book/chapters/ch519-antes-do-espetaculo.tex"
+}

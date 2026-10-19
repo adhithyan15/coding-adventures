@@ -1,0 +1,11 @@
+{
+  "id": "PT-C303-alertar",
+  "pathSegment": "PT-PATH-303-CHEIA",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PT-EXT-303-CHEIA",
+      "order": 4
+    }
+  ]
+}

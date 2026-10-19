@@ -1,0 +1,19 @@
+{
+  "chapter": 295,
+  "title": "Suspeitos e detidos",
+  "label": "ch:pt-suspeitos-e-detidos",
+  "canDo": "I can talk about suspects, suspicion and arrests.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "PT-C295-detido",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 295: I can talk about suspects, suspicion and arrests.",
+    "assesses": [
+      "PT-LEX-C295-SUSPEITO-03",
+      "PT-LEX-C295-SUSPEITO-04",
+      "PT-LEX-C295-SUSPEITO-05"
+    ]
+  }
+}

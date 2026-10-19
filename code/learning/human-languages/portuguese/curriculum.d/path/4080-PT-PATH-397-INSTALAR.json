@@ -1,0 +1,9 @@
+{
+  "id": "PT-PATH-397-INSTALAR",
+  "spine_node": "SPINE-EXPRESS-CONDITION",
+  "before": [],
+  "inline": [
+    "PT-EXT-397-INSTALAR"
+  ],
+  "after": []
+}

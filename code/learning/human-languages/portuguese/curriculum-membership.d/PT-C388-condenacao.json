@@ -1,0 +1,11 @@
+{
+  "id": "PT-C388-condenacao",
+  "pathSegment": "PT-PATH-388-PENA",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-388-PENA",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "PT-C451-costureira",
+  "pathSegment": "PT-PATH-451-ARRANJOS",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PT-EXT-451-ARRANJOS",
+      "order": 1
+    }
+  ]
+}

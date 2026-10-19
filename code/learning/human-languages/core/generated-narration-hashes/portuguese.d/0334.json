@@ -1,0 +1,21 @@
+{
+  "language": "portuguese",
+  "chapter": 334,
+  "sourceHash": "fnv1a64:3ecf102311105f19",
+  "lessonIds": [
+    "PT-C334-escorrer",
+    "PT-C334-tapar",
+    "PT-C334-dourar",
+    "PT-C334-gratinar",
+    "PT-C334-rechear",
+    "PT-R334-revisao-333-334",
+    "PT-R334-revisao-final-334"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "portuguese/narration/ch334.txt",
+  "json": "portuguese/narration/ch334.json",
+  "textHash": "fnv1a64:b9ef8e7dd728b023",
+  "jsonHash": "fnv1a64:cc6367b20193ad21",
+  "findings": []
+}

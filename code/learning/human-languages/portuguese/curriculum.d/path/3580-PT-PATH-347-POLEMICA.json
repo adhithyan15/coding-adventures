@@ -1,0 +1,9 @@
+{
+  "id": "PT-PATH-347-POLEMICA",
+  "spine_node": "SPINE-GIVE-REASONS",
+  "before": [],
+  "inline": [
+    "PT-EXT-347-POLEMICA"
+  ],
+  "after": []
+}

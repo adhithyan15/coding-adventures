@@ -1,0 +1,11 @@
+{
+  "id": "PT-C530-despensa",
+  "pathSegment": "PT-PATH-530-SENHORIO",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-530-SENHORIO",
+      "order": 3
+    }
+  ]
+}

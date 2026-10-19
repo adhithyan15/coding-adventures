@@ -1,0 +1,19 @@
+{
+  "chapter": 330,
+  "title": "Preparar os legumes",
+  "label": "ch:pt-preparar-os-legumes",
+  "canDo": "I can describe getting food ready: peeling, chopping, grating and shredding, and the bowl it goes in.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "PT-C330-tigela",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 330: I can describe getting food ready: peeling, chopping, grating and shredding, and the bowl it goes in.",
+    "assesses": [
+      "PT-LEX-C330-DESCASCAR-03",
+      "PT-LEX-C330-DESCASCAR-04",
+      "PT-LEX-C330-DESCASCAR-05"
+    ]
+  }
+}

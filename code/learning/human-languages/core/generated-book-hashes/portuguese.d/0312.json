@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 312,
+  "sourceHash": "fnv1a64:4c08b9db01eee708",
+  "lessonIds": [
+    "PT-C312-noivado",
+    "PT-C312-alianca",
+    "PT-C312-casamento",
+    "PT-C312-pedir-em-casamento",
+    "PT-C312-matrimonio"
+  ],
+  "tex": "portuguese/book/chapters/ch312-noivos.tex"
+}

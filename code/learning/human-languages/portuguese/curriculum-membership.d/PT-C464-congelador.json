@@ -1,0 +1,11 @@
+{
+  "id": "PT-C464-congelador",
+  "pathSegment": "PT-PATH-464-GEADA",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-464-GEADA",
+      "order": 3
+    }
+  ]
+}

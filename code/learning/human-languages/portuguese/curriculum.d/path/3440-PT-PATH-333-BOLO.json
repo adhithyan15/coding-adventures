@@ -1,0 +1,9 @@
+{
+  "id": "PT-PATH-333-BOLO",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "PT-EXT-333-BOLO"
+  ],
+  "after": []
+}

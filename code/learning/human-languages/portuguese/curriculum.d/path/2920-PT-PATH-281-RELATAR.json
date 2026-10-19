@@ -1,0 +1,9 @@
+{
+  "id": "PT-PATH-281-RELATAR",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "PT-EXT-281-RELATAR"
+  ],
+  "after": []
+}

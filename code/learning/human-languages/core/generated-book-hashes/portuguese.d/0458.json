@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 458,
+  "sourceHash": "fnv1a64:35646e21f8f72bc2",
+  "lessonIds": [
+    "PT-C458-serra",
+    "PT-C458-encosta",
+    "PT-C458-cume",
+    "PT-C458-desfiladeiro",
+    "PT-C458-escalar"
+  ],
+  "tex": "portuguese/book/chapters/ch458-na-serra.tex"
+}

@@ -1,0 +1,8 @@
+{
+  "id": "PT-EXT-345-VANTAGEM",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can weigh up advantages and disadvantages, consider every aspect and take criticism.",
+  "prerequisites": []
+}

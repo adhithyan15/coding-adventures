@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 505,
+  "sourceHash": "fnv1a64:2db7de77cca53d4c",
+  "lessonIds": [
+    "PT-C505-pincel",
+    "PT-C505-aguarela",
+    "PT-C505-tela",
+    "PT-C505-cavalete",
+    "PT-C505-moldura"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch505.txt",
+  "json": "portuguese/narration/ch505.json",
+  "textHash": "fnv1a64:3a0fb138b44ff042",
+  "jsonHash": "fnv1a64:08c67b02981c30d9",
+  "findings": []
+}

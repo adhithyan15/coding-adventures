@@ -1,0 +1,19 @@
+{
+  "chapter": 427,
+  "title": "Reservar e desmarcar",
+  "label": "ch:pt-reservar-e-desmarcar",
+  "canDo": "I can handle a booking: the deposit, calling it off, the cancellation, bringing dates forward and rebooking.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "PT-C427-remarcar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 427: I can handle a booking: the deposit, calling it off, the cancellation, bringing dates forward and rebooking.",
+    "assesses": [
+      "PT-LEX-C427-RESERVA-03",
+      "PT-LEX-C427-RESERVA-04",
+      "PT-LEX-C427-RESERVA-05"
+    ]
+  }
+}

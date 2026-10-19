@@ -1,0 +1,9 @@
+{
+  "id": "PT-PATH-348-EFEITO",
+  "spine_node": "SPINE-GIVE-REASONS",
+  "before": [],
+  "inline": [
+    "PT-EXT-348-EFEITO"
+  ],
+  "after": []
+}

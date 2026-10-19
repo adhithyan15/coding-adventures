@@ -1,0 +1,11 @@
+{
+  "id": "PT-C462-transpirar",
+  "pathSegment": "PT-PATH-462-CALOR",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PT-EXT-462-CALOR",
+      "order": 4
+    }
+  ]
+}

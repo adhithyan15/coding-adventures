@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 495,
+  "sourceHash": "fnv1a64:b817eb0417958567",
+  "lessonIds": [
+    "PT-C495-educar",
+    "PT-C495-comportar",
+    "PT-C495-castigar",
+    "PT-C495-mesada",
+    "PT-C495-mimado"
+  ],
+  "tex": "portuguese/book/chapters/ch495-educar-os-filhos.tex"
+}

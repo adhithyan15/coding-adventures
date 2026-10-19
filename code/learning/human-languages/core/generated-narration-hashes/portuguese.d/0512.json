@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 512,
+  "sourceHash": "fnv1a64:763223efbd9261c4",
+  "lessonIds": [
+    "PT-C512-pavilhao",
+    "PT-C512-basquetebol",
+    "PT-C512-andebol",
+    "PT-C512-voleibol",
+    "PT-C512-ginastica"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch512.txt",
+  "json": "portuguese/narration/ch512.json",
+  "textHash": "fnv1a64:992716b240e6d033",
+  "jsonHash": "fnv1a64:f35732f353754f9e",
+  "findings": []
+}

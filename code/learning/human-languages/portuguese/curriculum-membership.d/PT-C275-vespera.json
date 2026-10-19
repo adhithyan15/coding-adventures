@@ -1,0 +1,11 @@
+{
+  "id": "PT-C275-vespera",
+  "pathSegment": "PT-PATH-275-ENTARDECER",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PT-EXT-275-ENTARDECER",
+      "order": 4
+    }
+  ]
+}

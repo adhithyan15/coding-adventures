@@ -1,0 +1,11 @@
+{
+  "id": "PT-C407-bagageira",
+  "pathSegment": "PT-PATH-407-CAPO",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PT-EXT-407-CAPO",
+      "order": 1
+    }
+  ]
+}

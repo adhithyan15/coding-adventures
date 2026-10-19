@@ -1,0 +1,11 @@
+{
+  "id": "PT-C346-criterio",
+  "pathSegment": "PT-PATH-346-RACIOCINIO",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PT-EXT-346-RACIOCINIO",
+      "order": 4
+    }
+  ]
+}

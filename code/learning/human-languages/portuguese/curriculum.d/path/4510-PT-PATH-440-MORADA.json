@@ -1,0 +1,9 @@
+{
+  "id": "PT-PATH-440-MORADA",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "PT-EXT-440-MORADA"
+  ],
+  "after": []
+}

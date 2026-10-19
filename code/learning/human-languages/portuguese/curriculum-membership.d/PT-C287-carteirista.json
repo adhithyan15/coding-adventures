@@ -1,0 +1,11 @@
+{
+  "id": "PT-C287-carteirista",
+  "pathSegment": "PT-PATH-287-ROUBO",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-287-ROUBO",
+      "order": 3
+    }
+  ]
+}

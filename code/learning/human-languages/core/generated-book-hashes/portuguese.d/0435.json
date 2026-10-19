@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 435,
+  "sourceHash": "fnv1a64:ffd6972f2ab8deeb",
+  "lessonIds": [
+    "PT-C435-orientar",
+    "PT-C435-bussola",
+    "PT-C435-desorientado",
+    "PT-C435-roteiro",
+    "PT-C435-localizar"
+  ],
+  "tex": "portuguese/book/chapters/ch435-orientar-se.tex"
+}

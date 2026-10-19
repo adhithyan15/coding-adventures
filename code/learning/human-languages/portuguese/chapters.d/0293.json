@@ -1,0 +1,19 @@
+{
+  "chapter": 293,
+  "title": "A polícia na rua",
+  "label": "ch:pt-a-policia-na-rua",
+  "canDo": "I can talk about police officers on patrol and about watching over a place.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "PT-C293-vigilancia",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 293: I can talk about police officers on patrol and about watching over a place.",
+    "assesses": [
+      "PT-LEX-C293-PATRULHA-03",
+      "PT-LEX-C293-PATRULHA-04",
+      "PT-LEX-C293-PATRULHA-05"
+    ]
+  }
+}

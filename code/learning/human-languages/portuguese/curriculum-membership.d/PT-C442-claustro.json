@@ -1,0 +1,11 @@
+{
+  "id": "PT-C442-claustro",
+  "pathSegment": "PT-PATH-442-HISTORICO",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-442-HISTORICO",
+      "order": 3
+    }
+  ]
+}

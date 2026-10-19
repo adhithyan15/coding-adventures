@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PT-C394-reembolsar",
+    "language": "portuguese",
+    "chapter": 394,
+    "sequence": 22250,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8bd367c707d6ce9f"
+  },
+  "findings": []
+}

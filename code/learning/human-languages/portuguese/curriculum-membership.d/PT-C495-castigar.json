@@ -1,0 +1,11 @@
+{
+  "id": "PT-C495-castigar",
+  "pathSegment": "PT-PATH-495-EDUCAR",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PT-EXT-495-EDUCAR",
+      "order": 2
+    }
+  ]
+}

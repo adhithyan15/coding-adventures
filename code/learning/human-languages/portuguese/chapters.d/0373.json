@@ -1,0 +1,19 @@
+{
+  "chapter": 373,
+  "title": "Correr riscos",
+  "label": "ch:pt-correr-riscos",
+  "canDo": "I can talk about risks and chances: how likely or unlikely something is.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "PT-C373-probabilidade",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 373: I can talk about risks and chances: how likely or unlikely something is.",
+    "assesses": [
+      "PT-LEX-C373-RISCO-03",
+      "PT-LEX-C373-RISCO-04",
+      "PT-LEX-C373-RISCO-05"
+    ]
+  }
+}

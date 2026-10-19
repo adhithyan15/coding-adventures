@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 290,
+  "sourceHash": "fnv1a64:4648aa62e6ebcf60",
+  "lessonIds": [
+    "PT-C290-arma",
+    "PT-C290-pistola",
+    "PT-C290-ameacar",
+    "PT-C290-ameaca",
+    "PT-C290-assassino"
+  ],
+  "tex": "portuguese/book/chapters/ch290-armas-e-ameacas.tex"
+}

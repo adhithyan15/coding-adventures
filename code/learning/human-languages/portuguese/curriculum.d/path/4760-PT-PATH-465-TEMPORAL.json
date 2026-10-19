@@ -1,0 +1,9 @@
+{
+  "id": "PT-PATH-465-TEMPORAL",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "PT-EXT-465-TEMPORAL"
+  ],
+  "after": []
+}

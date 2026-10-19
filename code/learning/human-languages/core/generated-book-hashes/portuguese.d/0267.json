@@ -1,0 +1,12 @@
+{
+  "language": "portuguese",
+  "chapter": 267,
+  "sourceHash": "fnv1a64:24a2de09f2dd2ee6",
+  "lessonIds": [
+    "PT-C267-se",
+    "PT-C267-se-chove",
+    "PT-C267-depende",
+    "PT-C267-revisao-condicoes"
+  ],
+  "tex": "portuguese/book/chapters/ch267-if-and-it-depends.tex"
+}

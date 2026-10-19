@@ -1,0 +1,11 @@
+{
+  "id": "PT-C305-socorrista",
+  "pathSegment": "PT-PATH-305-SOCORRO",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-305-SOCORRO",
+      "order": 3
+    }
+  ]
+}

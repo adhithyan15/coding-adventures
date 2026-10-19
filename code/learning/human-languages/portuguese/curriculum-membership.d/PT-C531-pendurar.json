@@ -1,0 +1,11 @@
+{
+  "id": "PT-C531-pendurar",
+  "pathSegment": "PT-PATH-531-BRICOLAGE",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PT-EXT-531-BRICOLAGE",
+      "order": 1
+    }
+  ]
+}

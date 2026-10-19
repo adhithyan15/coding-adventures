@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 282,
+  "sourceHash": "fnv1a64:c3925ac7d3ed8b89",
+  "lessonIds": [
+    "PT-C282-declaracao",
+    "PT-C282-comentario",
+    "PT-C282-confirmar",
+    "PT-C282-comunicado",
+    "PT-C282-comentador"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch282.txt",
+  "json": "portuguese/narration/ch282.json",
+  "textHash": "fnv1a64:4ebbd697d28a0036",
+  "jsonHash": "fnv1a64:c07d5bcc6f97d74d",
+  "findings": []
+}

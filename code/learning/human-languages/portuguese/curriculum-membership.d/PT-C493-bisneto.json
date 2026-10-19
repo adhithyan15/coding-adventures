@@ -1,0 +1,11 @@
+{
+  "id": "PT-C493-bisneto",
+  "pathSegment": "PT-PATH-493-GERACOES",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PT-EXT-493-GERACOES",
+      "order": 1
+    }
+  ]
+}

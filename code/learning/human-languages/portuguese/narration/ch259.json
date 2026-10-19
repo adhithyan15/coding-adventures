@@ -1,0 +1,961 @@
+{
+  "version": 1,
+  "language": "portuguese",
+  "chapter": 259,
+  "title": "The Scene --- Era, Tinha, Havia",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:122207c06abfe6a3",
+  "lessons": [
+    {
+      "id": "PT-C259-falava",
+      "sequence": 15400,
+      "title": "falava — the past that is still running",
+      "headword": "falava, comia, partia",
+      "romanization": "falava, comia, partia",
+      "gloss": "the pretérito imperfeito — a second past with no edge on it, built from two endings for all three verb families",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0d438612949bc87a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"I spoke\" the way chapter fifteen built it. (Falei.)"
+            },
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "That past has an edge: it happened, and it finished. Portuguese has a second past with no edge at all, and every story you tell from here on needs both of them."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: two endings, three families",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Take the infinitive and drop its last two letters. An -ar verb adds -ava; an -er or an -ir verb adds -ia:"
+            },
+            {
+              "kind": "speech",
+              "text": "fal-ar, falava — I was speaking, I used to speak com-er, comia — I was eating, I used to eat part-ir, partia — I was leaving."
+            },
+            {
+              "kind": "speech",
+              "text": "The other persons keep that ending and change only what comes after it: falava, falavas, falava, falávamos, falavam — I, you, he or she, we, they. And for the other two families: comia, comias, comia, comíamos, comiam."
+            },
+            {
+              "kind": "speech",
+              "text": "Two things to hear. The nós form carries a written accent, falávamos, comíamos, because the stress sits further back than usual. And the forms for \"I\" and for \"he or she\" are the same word: eu falava, ele falava. When it matters, keep the eu."
+            },
+            {
+              "kind": "speech",
+              "text": "This is the pretérito imperfeito, and almost every verb follows this one recipe. The few that refuse begin in the next lesson."
+            },
+            {
+              "kind": "speech",
+              "text": "What it means is \"was ‑ing\", or \"used to\": morava em Lisboa, I lived in Lisbon, back then, with no start and no finish in view. That is exactly what a story needs for its background."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart: where the v came from",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Latin already had this past, and it marked it with a b: Latin amābat, \"he was loving\", and habēbat, \"he was having\". In an -ar verb that b softened to a v, so falava goes back to a spoken Latin past of fābulārī, \"to talk\", the verb that gave falar (EtymDB 2.1). After e and i the b wore away entirely, which is why comia and partia end in a bare -ia."
+            },
+            {
+              "kind": "speech",
+              "text": "Neither EtymDB nor Lewis & Short records endings this late, so that last step is the usual account in histories of Portuguese, given here as one."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "falava, comia, partia — one ending for -ar, one for the rest",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *falava, comia, partia* — one ending for *-ar*, one for the rest]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "falava, falavas, falava, falávamos, falavam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *falava, falavas, falava, falávamos, falavam*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "trabalhava — chapter five's verb, still running in the past",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *trabalhava* — chapter five's verb, still running in the past]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the edge, then no edge — falei, then falava",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the edge, then no edge — *falei*, then *falava*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "How do you build \"I was eating\"? (Drop the -er of comer and add -ia: comia.) Which Latin letter became the -v- of falava? (The b of amābat.) Which past has an edge, and which has none? (Falei has one; falava has none.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PT-C259-tinha-havia",
+      "sequence": 15410,
+      "title": "tinha, havia — the words a scene is made of",
+      "headword": "tinha, havia",
+      "romanization": "tinha, havia",
+      "gloss": "had, there was — the imperfeito of ter and of há, and with era the three words a past scene is built from",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7a34ae9d20adb5d6",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Build \"I was speaking\" from falar. (Falava.) Say \"I am twenty\" the way chapter fourteen taught it. (Tenho vinte anos.) Then \"there is bread\". (Há pão.)"
+            },
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Hold on to all three. This lesson moves them into the past."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: era and tinha",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Only four verbs refuse last lesson's recipe, and two of them are the ones you use most. The first you met in chapter sixteen: ser gives era."
+            },
+            {
+              "kind": "speech",
+              "text": "era, eras, era, éramos, eram A estação era pequena. — The station was small."
+            },
+            {
+              "kind": "speech",
+              "text": "The second is ter, and it gives tinha:"
+            },
+            {
+              "kind": "speech",
+              "text": "tinha, tinhas, tinha, tínhamos, tinham Tinha vinte anos. — I was twenty. Tínhamos um cão. — We had a dog."
+            },
+            {
+              "kind": "speech",
+              "text": "Age is the clearest case. Tenho vinte anos is now; tinha vinte anos is the age you were, all through some stretch of the past. The other two refusers are vir, which gives vinha, and pôr, which gives punha; you will meet them when you need them."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "input",
+          "title": "You'll want to know: havia",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "You have há, \"there is\" and \"there are\". Its past is havia, and it follows the recipe after all, since it comes from haver:"
+            },
+            {
+              "kind": "speech",
+              "text": "Havia muitas pessoas. — There were a lot of people. Não havia pão. — There was no bread."
+            },
+            {
+              "kind": "speech",
+              "text": "Like há, it never changes for a plural: one havia for one thing or for a hundred. That is how a European Portuguese scene opens. In everyday Brazilian speech you will often hear tinha doing this job instead: tinha muitas pessoas."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ter is inherited from Latin tenēre, \"to hold\" (EtymDB 2.1; Lewis & Short, under teneo), and tinha goes back to its past tenēbat, \"he was holding\". havia goes back to habēbat, \"he was having\", the past of habēre, which gave haver (EtymDB 2.1). Its first b softened to v, as in falava, and the second wore away, as in comia."
+            },
+            {
+              "kind": "speech",
+              "text": "era is Latin erat, \"he was\" (Lewis & Short, under sum). Latin's own past of \"to be\" never had the b, which is why era looks nothing like falava. How the -nh- of tinha arose is not something either source traces, so it is left open here."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "era, tinha, havia",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *era, tinha, havia*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Tinha vinte anos. — then Tínhamos um cão.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Tinha vinte anos.* — then *Tínhamos um cão.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Havia muitas pessoas.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Havia muitas pessoas.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "from now to then — há becomes havia, tenho becomes tinha",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: from now to then — *há* becomes *havia*, *tenho* becomes *tinha*]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which Latin verb is inside tinha? (Tenēre, \"to hold\".) Why does era not end in -va? (Latin's own form never had the b.) Say \"there were a lot of people\". (Havia muitas pessoas.) And does havia change for a plural? (No.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PT-C259-fazia-frio",
+      "sequence": 15420,
+      "title": "fazia frio — the weather, made in the past",
+      "headword": "fazia frio, fazia calor",
+      "romanization": "fazia frio, fazia calor",
+      "gloss": "it was cold, it was hot — Portuguese makes its weather rather than being it, and in a story the weather is the scene",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:309ecf72e36244d3",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"there were a lot of people\" the way last lesson built it. (Havia muitas pessoas.) Then \"I was twenty\". (Tinha vinte anos.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: fazia frio, fazia calor",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "English says the weather was cold. Portuguese says it made cold:"
+            },
+            {
+              "kind": "speech",
+              "text": "Fazia frio. — It was cold. Fazia calor. — It was hot."
+            },
+            {
+              "kind": "speech",
+              "text": "Fazia is the imperfeito of fazer, \"to make, to do\", on the plain -er recipe: faz-er, fazia. frio is \"cold\" and calor is \"heat\", so the second one says, word for word, \"it was making heat\". Neither needs a subject: nobody is doing the making."
+            },
+            {
+              "kind": "speech",
+              "text": "Rain has a verb of its own. You have a chuva, \"the rain\", and its verb chover gives chovia, \"it was raining\", on the same recipe."
+            },
+            {
+              "kind": "speech",
+              "text": "Keep estava for things, with the adjectives you already own. O café estava frio — the coffee was cold — is about the coffee; estava quente, it was hot, about a cup or a room. Fazia frio is about the whole day. Put three of these together and you have a morning before anything has happened in it:"
+            },
+            {
+              "kind": "speech",
+              "text": "Fazia frio e chovia. Não havia sol."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The phrase, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "fazer is inherited from Latin facere, \"to make, to do\" (EtymDB 2.1), and fazia goes back to its past faciēbat, \"he was making\" (Lewis & Short, under facio). That facere is the root of English fact and factory."
+            },
+            {
+              "kind": "speech",
+              "text": "frio is inherited from Latin frīgidus, \"cold\" (EtymDB 2.1), worn short in the mouth, and English frigid borrowed the same word whole. calor is Latin calor, \"heat\", kept almost letter for letter (EtymDB 2.1; Lewis & Short). chover is inherited from spoken Latin plovere (EtymDB 2.1), a reshaping of classical pluere, \"to rain\" (Lewis & Short, under pluo)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Fazia frio. — then Fazia calor.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Fazia frio.* — then *Fazia calor.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chovia — chover on the plain recipe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chovia* — *chover* on the plain recipe]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a thing, then a day — O café estava frio. then Fazia frio.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a thing, then a day — *O café estava frio.* then *Fazia frio.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a whole morning — Fazia frio e chovia. Não havia sol.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a whole morning — *Fazia frio e chovia. Não havia sol.*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"it was hot\". (Fazia calor.) Which do you use for the coffee, estava or fazia? (Estava — it is about a thing.) Which Latin verb is inside fazia, and what English word shares it? (Facere, \"to make\" — fact, factory.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PT-C259-dormia-dormi",
+      "sequence": 15430,
+      "title": "dormia / dormi — the same sleep, told two ways",
+      "headword": "dormia / dormi",
+      "romanization": "dormia / dormi",
+      "gloss": "the same sleep in two pasts — the imperfeito paints the scene, the perfeito drops the events into it",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:edf4022812f21de6",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Paint a cold morning in two short sentences. (Fazia frio. Não havia sol.)"
+            },
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Nothing has happened in it yet. This lesson is about what happens."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: the edge for -er and -ir verbs",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Chapter fifteen gave you the past with an edge for -ar verbs: falei, falou. The -er and -ir verbs make it with an -i:"
+            },
+            {
+              "kind": "speech",
+              "text": "dormi — I slept, dormiu — he or she slept comi — I ate, comeu — he or she ate."
+            },
+            {
+              "kind": "speech",
+              "text": "The other persons follow: dormiste, dormimos, dormiram. Listen to the stress, which falls on that last -i: dor-MI. And set it beside the imperfeito: dormi has an edge, dormia has none. One letter apart, and they answer different questions."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: the scene and the events",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Take one fact, that you slept, and let the tense decide what kind of fact it is:"
+            },
+            {
+              "kind": "speech",
+              "text": "Dormia. — I was sleeping. (no edge: what was going on) Dormi. — I slept. (an edge: a thing that happened and ended)."
+            },
+            {
+              "kind": "speech",
+              "text": "Neither is more correct. A told story needs both, in a division of labour:"
+            },
+            {
+              "kind": "speech",
+              "text": "The imperfeito paints the scene: what was going on, what things were like. The perfeito drops the events into it: what happened."
+            },
+            {
+              "kind": "speech",
+              "text": "Fazia frio. Eu dormia. A minha mãe telefonou. — It was cold. I was asleep. My mother phoned."
+            },
+            {
+              "kind": "speech",
+              "text": "English has no separate ending for this. It leans on was ‑ing and used to and lets the context carry the rest. Portuguese settles it in the ending."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart: why \"imperfect\"",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "imperfeito is inherited from Latin imperfectus, \"unfinished\" (EtymDB 2.1): in-, \"not\", plus perfectus, \"carried all the way through\", which is itself per-, \"through\", plus facere, \"to make\" (Lewis & Short). That facere is the one inside last lesson's fazia."
+            },
+            {
+              "kind": "speech",
+              "text": "So the two names describe the two jobs. The perfeito is the past carried all the way through, to its edge. The imperfeito is the not-carried-through past: unfinished in time, with no edge on it."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the pair — dormia, then dormi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the pair — *dormia*, then *dormi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "comi, comeu — then dormi, dormiu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *comi, comeu* — then *dormi, dormiu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a scene, then an event — Chovia. A minha mãe telefonou.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a scene, then an event — *Chovia. A minha mãe telefonou.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Havia pão, por isso comi.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Havia pão, por isso comi.*]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "In a story, which past paints and which drops the events in? (The imperfeito paints; the perfeito drops them in.) Say \"I ate\". (Comi.) What does imperfectus say? (Not carried through.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PT-C259-estava-a",
+      "sequence": 15440,
+      "title": "estava a dormir quando… — the scene, and what cut into it",
+      "headword": "estava a dormir quando…",
+      "romanization": "estava a dormir quando…",
+      "gloss": "I was sleeping when… — estar a with an infinitive, the European way to hold a scene still, and quando for the event that cuts into it",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:92fd33171fc1860e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"I was sleeping\", then \"I slept\". (Dormia, then dormi.)"
+            },
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "There is a second way to say the first one, and in Portugal it is the way you will hear most."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: estava a, and an infinitive",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Take estar, put it in the imperfeito, add a and an infinitive:"
+            },
+            {
+              "kind": "speech",
+              "text": "Estava a dormir. — I was sleeping. Estava a ler. — I was reading. Estávamos a falar. — We were talking."
+            },
+            {
+              "kind": "speech",
+              "text": "Estar follows the plain -ar recipe here: estava, estavas, estava, estávamos, estavam. Only the estar changes; the infinitive after a stays as it is."
+            },
+            {
+              "kind": "speech",
+              "text": "Estava a ler and lia both paint the scene. Estava a holds it still at one moment, a reading caught in progress; lia can also mean \"I used to read\". The present works the same way: estou a ler, I am reading right now."
+            },
+            {
+              "kind": "speech",
+              "text": "This a plus infinitive is European. In Brazil the same idea takes a form ending in -ndo: estava dormindo. Both are understood everywhere; this book writes the European one."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: quando, where the event comes in",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "quando means \"when\", and it puts a scene and an event into one sentence:"
+            },
+            {
+              "kind": "speech",
+              "text": "Estava a dormir quando a minha mãe telefonou. — I was sleeping when my mother phoned. Estava a ler quando o telefone tocou. — I was reading when the phone rang."
+            },
+            {
+              "kind": "speech",
+              "text": "The estava a half is the scene, still running. The quando half is the event that cut into it, in the perfeito: telefonou, tocou. You can turn the sentence round, and the tenses keep their jobs: Quando o telefone tocou, eu estava a ler."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "estar is inherited from Latin stāre, \"to stand\" (EtymDB 2.1), so estava a ler is, word for word, \"I was standing at reading\": caught in the middle of it. quando is inherited from Latin quandō, \"when\" (EtymDB 2.1; Lewis & Short), almost unchanged."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Estava a dormir. — then Estávamos a falar.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Estava a dormir.* — then *Estávamos a falar.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Estava a ler quando o telefone tocou.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Estava a ler quando o telefone tocou.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the same, turned round — Quando o telefone tocou, eu estava a ler.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the same, turned round — *Quando o telefone tocou, eu estava a ler.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a scene of your own — Fazia frio e eu estava a … — then one thing that happened, with quando",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a scene of your own — *Fazia frio e eu estava a …* — then one thing that happened, with *quando*]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What goes between estava and the infinitive? (A.) In estava a ler quando o telefone tocou, which half is the scene? (Estava a ler.) Which past does the quando half take here? (The perfeito — tocou, the event.) And what does estar mean, at its root? (To stand.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PT-C259-revisao-quando",
+      "sequence": 15450,
+      "title": "Review — the scene, and what cut into it",
+      "headword": "(review)",
+      "romanization": "(review)",
+      "gloss": "a scene and an event in one breath — quando, the imperfeito and the perfeito together",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b634df23bf9b1758",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Build \"I was reading\" from ler. (Lia, or estava a ler.) Then say \"I had a dog\". (Tinha um cão.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Five lessons, and every piece of a scene is in your hands. The recipe, -ava and -ia, on almost any verb: falava, comia, partia. The four that refuse it, led by era and tinha. The scene-setter havia. The weather, made rather than being: fazia frio. The European estava a, for a moment caught in progress. And the division of labour: the imperfeito paints, the perfeito drops the events in."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The joint between the two is quando."
+            },
+            {
+              "kind": "speech",
+              "text": "Estava a ler quando a minha mãe telefonou. Estava à espera do autocarro quando começou a chover."
+            },
+            {
+              "kind": "speech",
+              "text": "The second one is worth hearing twice. The rain is an event here, because it began: começou. Once it is falling, it is scene again: chovia. And estar à espera, \"to be waiting\", is the European way to say it, with espera from your esperar."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a scene in three — Fazia frio. Havia muitas pessoas. Eu tinha fome.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a scene in three — *Fazia frio. Havia muitas pessoas. Eu tinha fome.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Estava a ler quando a minha mãe telefonou.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Estava a ler quando a minha mãe telefonou.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the rain as an event — começou a chover — then as a scene — chovia",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the rain as an event — *começou a chover* — then as a scene — *chovia*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "one of your own — Estava a … plus one thing that happened, with quando",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: one of your own — *Estava a …* plus one thing that happened, with *quando*]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "After quando, in these sentences, which past? (The perfeito — the event.) Why is começou a chover in the perfeito? (The rain began: that is an event.) What does imperfeito mean, taken apart? (Not carried through.) And where did the -v- of falava come from? (The b of Latin amābat.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

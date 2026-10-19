@@ -1,0 +1,11 @@
+{
+  "id": "PT-C404-atestar",
+  "pathSegment": "PT-PATH-404-BOMBA",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PT-EXT-404-BOMBA",
+      "order": 4
+    }
+  ]
+}

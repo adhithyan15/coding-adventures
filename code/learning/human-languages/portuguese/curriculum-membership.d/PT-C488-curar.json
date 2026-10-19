@@ -1,0 +1,11 @@
+{
+  "id": "PT-C488-curar",
+  "pathSegment": "PT-PATH-488-CURA",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PT-EXT-488-CURA",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 376,
+  "sourceHash": "fnv1a64:72c50404304095c9",
+  "lessonIds": [
+    "PT-C376-faculdade",
+    "PT-C376-caloiro",
+    "PT-C376-inscricao",
+    "PT-C376-semestre",
+    "PT-C376-propina"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch376.txt",
+  "json": "portuguese/narration/ch376.json",
+  "textHash": "fnv1a64:5d37dc9d8c195075",
+  "jsonHash": "fnv1a64:c1087daa391947d1",
+  "findings": []
+}

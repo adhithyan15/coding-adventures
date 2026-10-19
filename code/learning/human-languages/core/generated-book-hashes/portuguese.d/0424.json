@@ -1,0 +1,14 @@
+{
+  "language": "portuguese",
+  "chapter": 424,
+  "sourceHash": "fnv1a64:3a50486aebd0b581",
+  "lessonIds": [
+    "PT-C424-descolar",
+    "PT-C424-aterrar",
+    "PT-C424-turbulencia",
+    "PT-C424-hospedeira",
+    "PT-C424-tripulacao",
+    "PT-R424-revisao-417-424"
+  ],
+  "tex": "portuguese/book/chapters/ch424-em-voo.tex"
+}

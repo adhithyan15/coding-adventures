@@ -1,0 +1,19 @@
+{
+  "chapter": 455,
+  "title": "No banco",
+  "label": "ch:pt-no-banco",
+  "canDo": "I can manage money at the bank: a withdrawal, charging, debiting, the statement and the fee.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "PT-C455-comissao",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 455: I can manage money at the bank: a withdrawal, charging, debiting, the statement and the fee.",
+    "assesses": [
+      "PT-LEX-C455-BANCO-03",
+      "PT-LEX-C455-BANCO-04",
+      "PT-LEX-C455-BANCO-05"
+    ]
+  }
+}

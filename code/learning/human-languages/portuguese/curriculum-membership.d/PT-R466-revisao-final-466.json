@@ -1,0 +1,11 @@
+{
+  "id": "PT-R466-revisao-final-466",
+  "pathSegment": "PT-PATH-466-CHUVA",
+  "pathOrder": 6,
+  "extensions": [
+    {
+      "id": "PT-EXT-466-CHUVA",
+      "order": 6
+    }
+  ]
+}

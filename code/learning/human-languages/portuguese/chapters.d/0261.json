@@ -1,0 +1,22 @@
+{
+  "chapter": 261,
+  "title": "Acho Que --- What I Think, and Why",
+  "label": "ch:pt-what-i-think-and-why",
+  "canDo": "I can give my opinion with acho que or para mim, give a reason with porque, and run it forward with por isso or então.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "PT-C261-revisao-opiniao",
+    "kind": "production",
+    "summary": "Complete PT-C261-revisao-opiniao: an opinion, its reason and its consequence, said in either order.",
+    "assesses": [
+      "PT-GRAMMAR-ACHO-QUE-01",
+      "PT-LEX-PARA-MIM-02",
+      "PT-LEX-PORQUE-01",
+      "PT-GRAMMAR-PORQUE-E-QUE-02",
+      "PT-GRAMMAR-DUAS-SETAS-01",
+      "PT-GRAMMAR-ENTAO-PORTANTO-02"
+    ]
+  }
+}

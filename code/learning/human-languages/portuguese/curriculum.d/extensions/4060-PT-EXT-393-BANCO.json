@@ -1,0 +1,8 @@
+{
+  "id": "PT-EXT-393-BANCO",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can do things at the bank: check my balance, make a deposit and transfer money.",
+  "prerequisites": []
+}

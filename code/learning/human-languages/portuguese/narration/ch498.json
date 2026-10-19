@@ -1,0 +1,858 @@
+{
+  "version": 1,
+  "language": "portuguese",
+  "chapter": 498,
+  "title": "Amigos e vizinhos",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:ebd39b6a149f4bc1",
+  "lessons": [
+    {
+      "id": "PT-C498-conviver",
+      "sequence": 27580,
+      "title": "conviver — to socialise; to live together",
+      "headword": "conviver",
+      "romanization": "conviver",
+      "gloss": "to socialise; to live together",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:68f4d00745196657",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Portuguese for betrayal, then the Portuguese for to reconcile."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: conviver",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "conviver — \"to socialise; to live together\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Gosto de conviver com os colegas depois do trabalho. I like socialising with my colleagues after work."
+            },
+            {
+              "kind": "speech",
+              "text": "Conviver com — to get on with, to live alongside."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "conviver is a learned borrowing from Latin convīvere \"to live together, to dine together\" (Lewis & Short), built on vīvere \"to live\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "conviver",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *conviver*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "conviver, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *conviver*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with conviver",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *conviver*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Portuguese for betrayal, then the Portuguese for to reconcile, then say conviver again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Portuguese for betrayal, then the Portuguese for to reconcile, then say *conviver* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does conviver mean? (\"To socialise; to live together\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PT-C498-convivio",
+      "sequence": 27590,
+      "title": "o convívio — get-together; social life",
+      "headword": "o convívio",
+      "romanization": "o convívio",
+      "gloss": "get-together; social life",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a0c23bb0345dd881",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Portuguese for to reconcile, then the Portuguese for to socialise."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: o convívio",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "o convívio — \"get-together; social life\"."
+            },
+            {
+              "kind": "speech",
+              "text": "No sábado há um convívio na associação do bairro. On Saturday there is a get-together at the residents' association."
+            },
+            {
+              "kind": "speech",
+              "text": "In Portugal um convívio is often a party or a shared meal."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "convívio is a learned borrowing from Latin convīvium \"a feast, a dinner party\" (Lewis & Short), built on vīvere \"to live\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "o convívio",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *o convívio*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "o convívio, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *o convívio*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with o convívio",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *o convívio*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Portuguese for to reconcile, then the Portuguese for to socialise, then say o convívio again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Portuguese for to reconcile, then the Portuguese for to socialise, then say *o convívio* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does o convívio mean? (\"Get-together; social life\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PT-C498-vizinhanca",
+      "sequence": 27600,
+      "title": "a vizinhança — neighbourhood; the neighbours",
+      "headword": "a vizinhança",
+      "romanization": "a vizinhança",
+      "gloss": "neighbourhood; the neighbours",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ae0688fcb28b2aa8",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Portuguese for to socialise, then the Portuguese for get-together."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: a vizinhança",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "a vizinhança — \"neighbourhood; the neighbours\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Toda a vizinhança veio à festa. All the neighbours came to the party."
+            },
+            {
+              "kind": "speech",
+              "text": "Built on o vizinho."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "vizinhança is built on vizinho \"neighbour\", which is inherited from Latin vīcīnus \"near, neighbouring\" (Lewis & Short)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a vizinhança",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *a vizinhança*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a vizinhança, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *a vizinhança*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with a vizinhança",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *a vizinhança*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Portuguese for to socialise, then the Portuguese for get-together, then say a vizinhança again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Portuguese for to socialise, then the Portuguese for get-together, then say *a vizinhança* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does a vizinhança mean? (\"Neighbourhood; the neighbours\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PT-C498-confidente",
+      "sequence": 27610,
+      "title": "o confidente — confidant",
+      "headword": "o confidente",
+      "romanization": "o confidente",
+      "gloss": "confidant",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8ea103d581ca0025",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Portuguese for get-together, then the Portuguese for neighbourhood."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: o confidente",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "o confidente — \"confidant\"."
+            },
+            {
+              "kind": "speech",
+              "text": "O meu melhor amigo é o meu confidente. My best friend is my confidant."
+            },
+            {
+              "kind": "speech",
+              "text": "A woman is a confidente."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "confidente is a learned borrowing, perhaps through Italian, from Latin cōnfīdēns \"trusting\" (Lewis & Short), from cōnfīdere \"to trust fully\", built on fīdere \"to trust\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "o confidente",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *o confidente*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "o confidente, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *o confidente*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with o confidente",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *o confidente*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Portuguese for get-together, then the Portuguese for neighbourhood, then say o confidente again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Portuguese for get-together, then the Portuguese for neighbourhood, then say *o confidente* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does o confidente mean? (\"Confidant\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PT-C498-lealdade",
+      "sequence": 27620,
+      "title": "a lealdade — loyalty",
+      "headword": "a lealdade",
+      "romanization": "a lealdade",
+      "gloss": "loyalty",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:68aa119949bf3209",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Portuguese for neighbourhood, then the Portuguese for confidant."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: a lealdade",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "a lealdade — \"loyalty\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Admiro a lealdade do meu cão. I admire my dog's loyalty."
+            },
+            {
+              "kind": "speech",
+              "text": "The adjective is leal."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "lealdade is inherited, through Old Portuguese, from Medieval Latin lēgālitās (EtymDB), built on lēgālis \"of the law\", from lēx \"law\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a lealdade",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *a lealdade*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a lealdade, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *a lealdade*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with a lealdade",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *a lealdade*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Portuguese for neighbourhood, then the Portuguese for confidant, then say a lealdade again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Portuguese for neighbourhood, then the Portuguese for confidant, then say *a lealdade* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does a lealdade mean? (\"Loyalty\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PT-R498-revisao-491-498",
+      "sequence": 27630,
+      "title": "Revisão dos capítulos 491–498",
+      "headword": "(dialogue)",
+      "romanization": "(dialogue)",
+      "gloss": "a review of chapters 491-498",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6468e88ed5f32b7c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Portuguese for to date and relationship."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to date, relationship, passion, to fall in love, to hug",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to date, relationship, passion, to fall in love, to hug]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "brother-in-law, stepfather, stepmother, stepson, relative",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: brother-in-law, stepfather, stepmother, stepson, relative]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "great-grandfather, great-grandson, orphan, to adopt, adoption",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: great-grandfather, great-grandson, orphan, to adopt, adoption]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nappy, baby's bottle, dummy, to crawl, to rock",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: nappy, baby's bottle, dummy, to crawl, to rock]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to bring up, to behave, to punish, (monthly) pocket money, spoiled",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to bring up, to behave, to punish, (monthly) pocket money, spoiled]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tenderness, affectionate, affection, to stroke, to spoil",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: tenderness, affectionate, affection, to stroke, to spoil]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to quarrel, to separate, to betray, betrayal, to reconcile",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to quarrel, to separate, to betray, betrayal, to reconcile]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to socialise, get-together, neighbourhood, confidant, loyalty",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to socialise, get-together, neighbourhood, confidant, loyalty]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "To date? (namorar.) Relationship? (o namoro.) Passion? (a paixão.) To fall in love? (apaixonar.) To hug? (abraçar.) Brother-in-law? (o cunhado.) Stepfather? (o padrasto.) Stepmother? (a madrasta.) Stepson? (o enteado.) Relative? (o parente.) Great-grandfather? (o bisavô.) Great-grandson? (o bisneto.) Orphan? (o órfão.) To adopt? (adotar.) Adoption? (a adoção.) Nappy? (a fralda.) Baby's bottle? (o biberão.) Dummy? (a chupeta.) To crawl? (gatinhar.) To rock? (embalar.) To bring up? (educar.) To behave? (comportar.) To punish? (castigar.) (monthly) pocket money? (a mesada.) Spoiled? (mimado.) Tenderness? (a ternura.) Affectionate? (carinhoso.) Affection? (o afeto.) To stroke? (acariciar.) To spoil? (mimar.) To quarrel? (brigar.) To separate? (separar.) To betray? (trair.) Betrayal? (a traição.) To reconcile? (reconciliar.) To socialise? (conviver.) Get-together? (o convívio.) Neighbourhood? (a vizinhança.) Confidant? (o confidente.) Loyalty? (a lealdade.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

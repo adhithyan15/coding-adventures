@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 285,
+  "sourceHash": "fnv1a64:d9d61a14226a6ad6",
+  "lessonIds": [
+    "PT-C285-entrevistar",
+    "PT-C285-entrevistado",
+    "PT-C285-ouvinte",
+    "PT-C285-telespectador",
+    "PT-C285-leitor"
+  ],
+  "tex": "portuguese/book/chapters/ch285-quem-ouve-e-quem-le.tex"
+}

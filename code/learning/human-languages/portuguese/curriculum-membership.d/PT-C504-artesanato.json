@@ -1,0 +1,11 @@
+{
+  "id": "PT-C504-artesanato",
+  "pathSegment": "PT-PATH-504-OLARIA",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PT-EXT-504-OLARIA",
+      "order": 2
+    }
+  ]
+}

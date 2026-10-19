@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 496,
+  "sourceHash": "fnv1a64:46fbc02c8b567e8d",
+  "lessonIds": [
+    "PT-C496-ternura",
+    "PT-C496-carinhoso",
+    "PT-C496-afeto",
+    "PT-C496-acariciar",
+    "PT-C496-mimar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch496.txt",
+  "json": "portuguese/narration/ch496.json",
+  "textHash": "fnv1a64:be423f45ab61b204",
+  "jsonHash": "fnv1a64:9711b298e3fb0aa1",
+  "findings": []
+}

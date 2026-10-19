@@ -1,0 +1,638 @@
+{
+  "version": 1,
+  "language": "portuguese",
+  "chapter": 261,
+  "title": "Acho Que --- What I Think, and Why",
+  "drivablePrefix": 4,
+  "sourceHash": "fnv1a64:52bf4f5b9903d20d",
+  "lessons": [
+    {
+      "id": "PT-C261-acho-que",
+      "sequence": 15500,
+      "title": "acho que — I find that, which is to say, I think",
+      "headword": "acho que, para mim",
+      "romanization": "acho que, para mim",
+      "gloss": "I think, to my mind — achar, which is to find, and para mim for where you stand",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9c33b7c604c91551",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"I think so\" with the verb chapter nineteen gave you. (Penso que sim.)"
+            },
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Giving reasons starts with what you think."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: acho que",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "acho que — \"I think that\". It is the everyday opinion opener, in Portugal as much as in Brazil, from achar, a regular -ar verb meaning \"to find\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Acho que o museu é interessante. — I think the museum is interesting. Acho que o comboio é caro. — I think the train is expensive. Acho que sim. — I think so., Acho que não. — I don't think so."
+            },
+            {
+              "kind": "speech",
+              "text": "To hand the opinion back, use the same verb: to a friend, E tu, o que achas? — \"and you, what do you think?\" — and to o senhor or a senhora, O que acha?"
+            },
+            {
+              "kind": "speech",
+              "text": "Penso que says the same thing, a little more carefully. After either one the verb stays plain: acho que é verdade. Only a denial, não acho que…, makes careful Portuguese bend the verb, which is a later chapter's work."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: para mim",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "para mim — \"for me\", and so \"to my mind\":"
+            },
+            {
+              "kind": "speech",
+              "text": "Para mim, o comboio é caro, mas o museu é interessante. — To my mind, the train is expensive, but the museum is interesting."
+            },
+            {
+              "kind": "speech",
+              "text": "Mim is the form eu takes after para, and tu becomes ti, so para ti?, \"what about you?\", hands the view back in two words. Para mim puts your own standpoint first; acho que puts the opinion first."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "achar is inherited from Latin afflāre, \"to breathe upon\" (EtymDB 2.1), a hunter's word for catching a scent. To find a thing was to pick up its scent, so acho que is, at root, \"I find that\", as in English \"I find it expensive\"."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Acho que o museu é interessante.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Acho que o museu é interessante.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hand it back — E tu, o que achas?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: hand it back — *E tu, o que achas?*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "both answers — Acho que sim. then Acho que não.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: both answers — *Acho que sim.* then *Acho que não.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Para mim, o comboio é caro.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Para mim, o comboio é caro.*]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does achar mean, plainly? (To find.) Say \"I don't think so\". (Acho que não.) How do you ask a friend what they think? (O que achas?) And what does eu become after para? (Mim — para mim.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PT-C261-porque",
+      "sequence": 15510,
+      "title": "porque — because, at last",
+      "headword": "porque",
+      "romanization": "porque",
+      "gloss": "because — the word this book held back until now, and porque é que…? for the European why-question",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:875107362d0fd094",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"I think so\". (Acho que sim.) Then join two facts with the joiner from the writing chapters: \"it was cold, that's why I didn't go out\". (Fazia frio, por isso não saí.)"
+            },
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "When you wrote four lines, this book had no word for because. Here it is."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: porque",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "porque — \"because\". It goes in front of the reason:"
+            },
+            {
+              "kind": "speech",
+              "text": "Não saí porque chovia. — I didn't go out because it was raining. Apanhei o autocarro porque fazia frio. — I took the bus because it was cold."
+            },
+            {
+              "kind": "speech",
+              "text": "Notice the tenses keep their jobs. Não saí and apanhei are events, in the perfeito; the reasons, chovia and fazia frio, are scene, in the imperfeito. A reason in a story is very often part of the scene."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: porque é que…?",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The same word asks the question, and European Portuguese likes to ask it with é que after it, \"is it that\":"
+            },
+            {
+              "kind": "speech",
+              "text": "— Porque é que estudas português? — Porque gosto de Portugal. — Why are you learning Portuguese? — Because I like Portugal."
+            },
+            {
+              "kind": "speech",
+              "text": "When the word stands alone, or ends the sentence, it takes an accent and the stress moves: Não vou. — Porquê? — \"I'm not going.\" — \"Why?\""
+            },
+            {
+              "kind": "speech",
+              "text": "Brazil writes the question as two words, por que, and the lone one as por quê; the answer is porque everywhere."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "porque is two words grown together: por, \"for\", and que, \"what, that\" (EtymDB 2.1 lists the compound, with Italian perché beside it). que is inherited from Latin quid, \"what\" (EtymDB 2.1), and por is usually traced to Latin prō, \"for, on behalf of\". So the question and the answer are the same two words: \"for what\", and \"for this\"."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Não saí porque chovia.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Não saí porque chovia.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Apanhei o autocarro porque fazia frio.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Apanhei o autocarro porque fazia frio.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the question — Porque é que estudas português?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the question — *Porque é que estudas português?*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "your own answer — Porque …",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: your own answer — *Porque …*]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Where does porque go: before the reason, or before the result? (Before the reason.) Ask \"why are you learning Portuguese\" the European way. (Porque é que estudas português?) When does it take an accent? (When it stands alone or ends the sentence: porquê.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PT-C261-por-isso",
+      "sequence": 15520,
+      "title": "por isso, então — the arrow that points forward",
+      "headword": "por isso, então",
+      "romanization": "por isso, então",
+      "gloss": "so — two words you already own, running forward from a reason to what follows, where porque runs back",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:84ea334dc510b3e5",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Give an opinion with a reason: \"I think it's going to rain, because there's no sun.\" (Acho que vai chover, porque não há sol.)"
+            },
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Porque runs from the claim back to its reason. This lesson runs the other way."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: the two arrows",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The same two facts, in opposite orders:"
+            },
+            {
+              "kind": "speech",
+              "text": "Apanhei o autocarro porque chovia. — I took the bus because it was raining. Chovia, por isso apanhei o autocarro. — It was raining, so I took the bus."
+            },
+            {
+              "kind": "speech",
+              "text": "Porque points back, from what happened to its cause. Por isso points forward, from the cause to what followed; its isso, \"that\", reaches back to the cause, which is why the cause has to come first. Which one you reach for depends only on which fact you want to say first, and that is a choice about emphasis, not about grammar."
+            },
+            {
+              "kind": "speech",
+              "text": "The tenses keep their jobs. Chovia is the scene, the reason; apanhei is the event, the consequence."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: então and portanto",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "então can stand in the same place: Chovia, então apanhei o autocarro. It is lighter and more conversational, the \"so\" of a friend telling you about their day. portanto, which you also have, is the formal one: a letter, a report, an argument."
+            },
+            {
+              "kind": "speech",
+              "text": "spoken: então, neutral: por isso, written: portanto."
+            },
+            {
+              "kind": "speech",
+              "text": "All three point forward. Então also keeps its first meaning, \"then, at that time\", so in a story it can do both jobs at once."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "então is inherited from Latin in tunc, \"in that moment\" (EtymDB 2.1; Lewis & Short, under tunc): a word about time that became a word about consequence, exactly as English \"then\" did. isso is inherited from Latin ipsum, \"itself, that very thing\" (EtymDB 2.1), so por isso is \"for that very thing\"."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "back — Apanhei o autocarro porque chovia.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: back — *Apanhei o autocarro porque chovia.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "forward — Chovia, por isso apanhei o autocarro.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: forward — *Chovia, por isso apanhei o autocarro.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the same, to a friend — Chovia, então apanhei o autocarro.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the same, to a friend — *Chovia, então apanhei o autocarro.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Para mim, o comboio é caro, por isso apanho o autocarro.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Para mim, o comboio é caro, por isso apanho o autocarro.*]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which way does porque point, and which way por isso? (Porque back to the cause; por isso forward to the consequence.) Which of the three forward words is the spoken one, and which the written one? (Então spoken; portanto written.) What did Latin in tunc mean? (At that moment.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PT-C261-revisao-opiniao",
+      "sequence": 15530,
+      "title": "Review — what you think, why, and what follows",
+      "headword": "(review)",
+      "romanization": "(review)",
+      "gloss": "an opinion, its reason and what follows from it — three moves, said in either order",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:903994960bf027b8",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Someone asks O museu é interessante? Answer \"I think so\". (Acho que sim.) Then ask them back. (E tu, o que achas?)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Three moves, and you own words for each. An opinion: acho que, or para mim. A reason, pointing back: porque. A consequence, pointing forward: por isso, or então."
+            },
+            {
+              "kind": "speech",
+              "text": "Acho que o museu é interessante, porque é muito antigo. O comboio é caro, por isso apanho o autocarro."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The first sentence runs claim, then cause. The second runs cause, then consequence. Put them side by side and you can argue a small point in either direction, which is most of what giving reasons is."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Acho que o museu é interessante, porque é muito antigo.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Acho que o museu é interessante, porque é muito antigo.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the same facts, forward — O museu é muito antigo, por isso é interessante.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the same facts, forward — *O museu é muito antigo, por isso é interessante.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "O comboio é caro, então apanho o autocarro.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *O comboio é caro, então apanho o autocarro.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a reason in the past — Chovia, por isso não saí.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a reason in the past — *Chovia, por isso não saí.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "answer Porque é que estudas português? with a porque and a mas",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: answer *Porque é que estudas português?* with a *porque* and a *mas*]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Name the three moves and a word for each. (Opinion acho que, reason porque, consequence por isso or então.) Say \"to my mind\". (Para mim.) In chovia, por isso não saí, which half is the scene? (Chovia — the reason.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "PT-C333-peneirar",
+  "pathSegment": "PT-PATH-333-BOLO",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PT-EXT-333-BOLO",
+      "order": 1
+    }
+  ]
+}

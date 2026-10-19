@@ -1,0 +1,9 @@
+{
+  "id": "PT-PATH-460-SELVAGENS",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "PT-EXT-460-SELVAGENS"
+  ],
+  "after": []
+}

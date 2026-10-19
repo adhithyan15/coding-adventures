@@ -1,0 +1,19 @@
+{
+  "chapter": 344,
+  "title": "Avaliar e julgar",
+  "label": "ch:pt-avaliar-e-julgar",
+  "canDo": "I can evaluate and judge something and say whether a view is objective or subjective.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "PT-C344-subjetivo",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 344: I can evaluate and judge something and say whether a view is objective or subjective.",
+    "assesses": [
+      "PT-LEX-C344-JUIZO-03",
+      "PT-LEX-C344-JUIZO-04",
+      "PT-LEX-C344-JUIZO-05"
+    ]
+  }
+}

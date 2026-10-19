@@ -1,0 +1,11 @@
+{
+  "id": "PT-C293-patrulhar",
+  "pathSegment": "PT-PATH-293-PATRULHA",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PT-EXT-293-PATRULHA",
+      "order": 2
+    }
+  ]
+}

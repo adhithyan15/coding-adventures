@@ -1,0 +1,19 @@
+{
+  "chapter": 381,
+  "title": "As regras",
+  "label": "ch:pt-as-regras",
+  "canDo": "I can talk about rules: norms and regulations, what is compulsory or optional, and our obligations.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "PT-C381-obrigacao",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 381: I can talk about rules: norms and regulations, what is compulsory or optional, and our obligations.",
+    "assesses": [
+      "PT-LEX-C381-NORMA-03",
+      "PT-LEX-C381-NORMA-04",
+      "PT-LEX-C381-NORMA-05"
+    ]
+  }
+}

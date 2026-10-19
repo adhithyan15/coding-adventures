@@ -1,0 +1,18 @@
+{
+  "language": "portuguese",
+  "chapter": 268,
+  "sourceHash": "fnv1a64:39fb3480ab280342",
+  "lessonIds": [
+    "PT-C268-poderia",
+    "PT-C268-seria",
+    "PT-C268-revisao-condicional",
+    "PT-W268-seis-linhas"
+  ],
+  "voiceLessons": 3,
+  "drivablePrefix": 3,
+  "text": "portuguese/narration/ch268.txt",
+  "json": "portuguese/narration/ch268.json",
+  "textHash": "fnv1a64:5bad54f2922ef079",
+  "jsonHash": "fnv1a64:3ba25e4e6c7a6cfa",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 367,
+  "title": "Dar uma mão",
+  "label": "ch:pt-dar-uma-mao",
+  "canDo": "I can talk about the community, associations, volunteering and charity.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "PT-C367-caridade",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 367: I can talk about the community, associations, volunteering and charity.",
+    "assesses": [
+      "PT-LEX-C367-COMUNIDADE-03",
+      "PT-LEX-C367-COMUNIDADE-04",
+      "PT-LEX-C367-COMUNIDADE-05"
+    ]
+  }
+}

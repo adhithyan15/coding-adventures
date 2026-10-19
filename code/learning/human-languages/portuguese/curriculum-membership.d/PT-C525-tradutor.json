@@ -1,0 +1,11 @@
+{
+  "id": "PT-C525-tradutor",
+  "pathSegment": "PT-PATH-525-BIBLIOTECA",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PT-EXT-525-BIBLIOTECA",
+      "order": 4
+    }
+  ]
+}

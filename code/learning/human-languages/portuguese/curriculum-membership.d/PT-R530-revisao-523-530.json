@@ -1,0 +1,11 @@
+{
+  "id": "PT-R530-revisao-523-530",
+  "pathSegment": "PT-PATH-530-SENHORIO",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "PT-EXT-530-SENHORIO",
+      "order": 5
+    }
+  ]
+}

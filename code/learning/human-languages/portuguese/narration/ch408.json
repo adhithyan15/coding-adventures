@@ -1,0 +1,858 @@
+{
+  "version": 1,
+  "language": "portuguese",
+  "chapter": 408,
+  "title": "Peões e radares",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:b22301d26aa5ca4a",
+  "lessons": [
+    {
+      "id": "PT-C408-peao",
+      "sequence": 22950,
+      "title": "o peão — the pedestrian; the pawn (in chess)",
+      "headword": "o peão",
+      "romanization": "o peão",
+      "gloss": "the pedestrian; the pawn (in chess)",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e386a0306bbbb8fc",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Portuguese for the screw, then the Portuguese for to unscrew."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: o peão",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "o peão — \"the pedestrian; the pawn (in chess)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Esta rua é só para peões. This street is only for pedestrians."
+            },
+            {
+              "kind": "speech",
+              "text": "In Brazil: o pedestre."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "peão is inherited from Late Latin pedō, pedōnis 'foot soldier', built on pēs 'foot' (EtymDB), which also lists Spanish peón and French pion as its cousins."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "o peão",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *o peão*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "o peão, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *o peão*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with o peão",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *o peão*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Portuguese for the screw, then the Portuguese for to unscrew, then say o peão again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Portuguese for the screw, then the Portuguese for to unscrew, then say *o peão* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does o peão mean? (\"The pedestrian; the pawn (in chess)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PT-C408-passadeira",
+      "sequence": 22960,
+      "title": "a passadeira — the zebra crossing",
+      "headword": "a passadeira",
+      "romanization": "a passadeira",
+      "gloss": "the zebra crossing",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:14d859e280e36acd",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Portuguese for to unscrew, then the Portuguese for the pedestrian."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: a passadeira",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "a passadeira — \"the zebra crossing\"."
+            },
+            {
+              "kind": "speech",
+              "text": "O carro parou para nós na passadeira. The car stopped for us at the zebra crossing."
+            },
+            {
+              "kind": "speech",
+              "text": "In Brazil: a faixa de pedestres. Uma passadeira is also a long, narrow rug."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "passadeira is built on passar 'to cross, to pass' (EtymDB) with -deira, a place for doing it; passar goes back to Latin passus 'step'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a passadeira",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *a passadeira*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a passadeira, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *a passadeira*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with a passadeira",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *a passadeira*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Portuguese for to unscrew, then the Portuguese for the pedestrian, then say a passadeira again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Portuguese for to unscrew, then the Portuguese for the pedestrian, then say *a passadeira* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does a passadeira mean? (\"The zebra crossing\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PT-C408-atropelar",
+      "sequence": 22970,
+      "title": "atropelar — to run over, to knock down",
+      "headword": "atropelar",
+      "romanization": "atropelar",
+      "gloss": "to run over, to knock down",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:429a50adb78c89af",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Portuguese for the pedestrian, then the Portuguese for the zebra crossing."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: atropelar",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "atropelar — \"to run over, to knock down\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Um carro quase atropelou um cão na passadeira. A car almost ran over a dog on the zebra crossing."
+            },
+            {
+              "kind": "speech",
+              "text": "Ser atropelado — to be run over."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "atropelar is built from a- and tropel 'rush, trampling crowd'. The origin of tropel is not settled; EtymDB has no entry for these words."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "atropelar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *atropelar*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "atropelar, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *atropelar*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with atropelar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *atropelar*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Portuguese for the pedestrian, then the Portuguese for the zebra crossing, then say atropelar again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Portuguese for the pedestrian, then the Portuguese for the zebra crossing, then say *atropelar* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does atropelar mean? (\"To run over, to knock down\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PT-C408-radar",
+      "sequence": 22980,
+      "title": "o radar — the speed camera; the radar",
+      "headword": "o radar",
+      "romanization": "o radar",
+      "gloss": "the speed camera; the radar",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a14ff0a158f42e3b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Portuguese for the zebra crossing, then the Portuguese for to run over."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: o radar",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "o radar — \"the speed camera; the radar\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Há um radar à entrada da cidade. There is a speed camera at the entrance to the town."
+            },
+            {
+              "kind": "speech",
+              "text": "Also the radar of a ship or an airport."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "radar was borrowed from English radar, a word made from the first letters of radio detection and ranging (EtymDB lists English radar)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "o radar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *o radar*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "o radar, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *o radar*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with o radar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *o radar*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Portuguese for the zebra crossing, then the Portuguese for to run over, then say o radar again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Portuguese for the zebra crossing, then the Portuguese for to run over, then say *o radar* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does o radar mean? (\"The speed camera; the radar\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PT-C408-fiscalizar",
+      "sequence": 22990,
+      "title": "fiscalizar — to inspect, to check (officially)",
+      "headword": "fiscalizar",
+      "romanization": "fiscalizar",
+      "gloss": "to inspect, to check (officially)",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9e22d4eb704f35c4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Portuguese for to run over, then the Portuguese for the speed camera."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: fiscalizar",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "fiscalizar — \"to inspect, to check (officially)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "A polícia fiscaliza a velocidade nesta estrada. The police check speeds on this road."
+            },
+            {
+              "kind": "speech",
+              "text": "A fiscalização — the inspection, the checks."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "fiscalizar is built on fiscal 'inspector', from fisco 'treasury', which goes back to Latin fiscus 'basket; treasury' (EtymDB)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "fiscalizar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *fiscalizar*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "fiscalizar, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *fiscalizar*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with fiscalizar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *fiscalizar*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Portuguese for to run over, then the Portuguese for the speed camera, then say fiscalizar again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Portuguese for to run over, then the Portuguese for the speed camera, then say *fiscalizar* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does fiscalizar mean? (\"To inspect, to check (officially)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PT-R408-revisao-401-408",
+      "sequence": 23000,
+      "title": "Estradas, estações e alojamento",
+      "headword": "(dialogue)",
+      "romanization": "(dialogue)",
+      "gloss": "a review of chapters 401-408",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e4f3c947192aff62",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Portuguese for the lane and the hard shoulder."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the lane, the hard shoulder, the central reservation, the junction, to speed up",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the lane, the hard shoulder, the central reservation, the junction, to speed up]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the brake, to skid, the pedal, the clutch, to put into gear",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the brake, to skid, the pedal, the clutch, to put into gear]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the glass, the rear-view mirror, the horn, to honk, to mist up",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the glass, the rear-view mirror, the horn, to honk, to mist up]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "diesel, fuel, the hose, to fill up, to fill to the top",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: diesel, fuel, the hose, to fill up, to fill to the top]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the tyre, to puncture, the puncture, the wheel rim, the warning triangle",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the tyre, to puncture, the puncture, the wheel rim, the warning triangle]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the breakdown, to break down, to tow, the tow truck, the repair garage",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the breakdown, to break down, to tow, the tow truck, the repair garage]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the bonnet, the boot, the indicator, the screw, to unscrew",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the bonnet, the boot, the indicator, the screw, to unscrew]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the pedestrian, the zebra crossing, to run over, the speed camera, to inspect",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the pedestrian, the zebra crossing, to run over, the speed camera, to inspect]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The lane? (a faixa.) The hard shoulder? (a berma.) The central reservation? (o separador.) The junction? (o nó.) To speed up? (acelerar.) The brake? (o travão.) To skid? (derrapar.) The pedal? (o pedal.) The clutch? (a embraiagem.) To put into gear? (engatar.) The glass? (o vidro.) The rear-view mirror? (o retrovisor.) The horn? (a buzina.) To honk? (buzinar.) To mist up? (embaciar.) Diesel? (o gasóleo.) Fuel? (o combustível.) The hose? (a mangueira.) To fill up? (abastecer.) To fill to the top? (atestar.) The tyre? (o pneu.) To puncture? (furar.) The puncture? (o furo.) The wheel rim? (a jante.) The warning triangle? (o triângulo.) The breakdown? (a avaria.) To break down? (avariar.) To tow? (rebocar.) The tow truck? (o reboque.) The repair garage? (a oficina.) The bonnet? (o capô.) The boot? (a bagageira.) The indicator? (o pisca.) The screw? (o parafuso.) To unscrew? (desaparafusar.) The pedestrian? (o peão.) The zebra crossing? (a passadeira.) To run over? (atropelar.) The speed camera? (o radar.) To inspect? (fiscalizar.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 315,
+  "sourceHash": "fnv1a64:0978e6080df10841",
+  "lessonIds": [
+    "PT-C315-funeral",
+    "PT-C315-enterrar",
+    "PT-C315-enterro",
+    "PT-C315-cemiterio",
+    "PT-C315-tumulo"
+  ],
+  "tex": "portuguese/book/chapters/ch315-o-funeral.tex"
+}

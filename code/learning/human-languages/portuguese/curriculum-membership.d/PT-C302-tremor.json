@@ -1,0 +1,11 @@
+{
+  "id": "PT-C302-tremor",
+  "pathSegment": "PT-PATH-302-SISMO",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PT-EXT-302-SISMO",
+      "order": 2
+    }
+  ]
+}

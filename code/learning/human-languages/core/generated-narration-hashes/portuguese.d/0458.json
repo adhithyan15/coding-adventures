@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 458,
+  "sourceHash": "fnv1a64:604b3e7184b5f6c6",
+  "lessonIds": [
+    "PT-C458-serra",
+    "PT-C458-encosta",
+    "PT-C458-cume",
+    "PT-C458-desfiladeiro",
+    "PT-C458-escalar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch458.txt",
+  "json": "portuguese/narration/ch458.json",
+  "textHash": "fnv1a64:bf701f46ae563b09",
+  "jsonHash": "fnv1a64:08dd614680e00332",
+  "findings": []
+}

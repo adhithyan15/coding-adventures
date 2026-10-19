@@ -1,0 +1,19 @@
+{
+  "chapter": 387,
+  "title": "No tribunal",
+  "label": "ch:pt-no-tribunal",
+  "canDo": "I can follow a court case: the complaint, the defendant, the witness, the defence and the sentence.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "PT-C387-sentenca",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 387: I can follow a court case: the complaint, the defendant, the witness, the defence and the sentence.",
+    "assesses": [
+      "PT-LEX-C387-TRIBUNAL-03",
+      "PT-LEX-C387-TRIBUNAL-04",
+      "PT-LEX-C387-TRIBUNAL-05"
+    ]
+  }
+}

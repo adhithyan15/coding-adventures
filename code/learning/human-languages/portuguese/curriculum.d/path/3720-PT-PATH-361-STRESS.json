@@ -1,0 +1,9 @@
+{
+  "id": "PT-PATH-361-STRESS",
+  "spine_node": "SPINE-GIVE-REASONS",
+  "before": [],
+  "inline": [
+    "PT-EXT-361-STRESS"
+  ],
+  "after": []
+}

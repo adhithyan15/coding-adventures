@@ -1,0 +1,20 @@
+{
+  "language": "portuguese",
+  "chapter": 259,
+  "sourceHash": "fnv1a64:122207c06abfe6a3",
+  "lessonIds": [
+    "PT-C259-falava",
+    "PT-C259-tinha-havia",
+    "PT-C259-fazia-frio",
+    "PT-C259-dormia-dormi",
+    "PT-C259-estava-a",
+    "PT-C259-revisao-quando"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "portuguese/narration/ch259.txt",
+  "json": "portuguese/narration/ch259.json",
+  "textHash": "fnv1a64:ef3d17ed2ba7c1b9",
+  "jsonHash": "fnv1a64:e2bf98f4fc861f10",
+  "findings": []
+}

@@ -1,0 +1,8 @@
+{
+  "id": "PT-EXT-269-PRIMEIRO",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can put the steps of a story in order: firstly, initially, next, later and finally.",
+  "prerequisites": []
+}

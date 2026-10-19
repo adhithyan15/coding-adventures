@@ -1,0 +1,19 @@
+{
+  "chapter": 300,
+  "title": "O carro capotou",
+  "label": "ch:pt-o-carro-capotou",
+  "canDo": "I can say that a car overturned after hard braking, and talk about the damage.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "PT-R300-revisao-293-300",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 300: I can say that a car overturned after hard braking, and talk about the damage.",
+    "assesses": [
+      "PT-LEX-C300-CAPOTAR-03",
+      "PT-LEX-C300-CAPOTAR-04",
+      "PT-LEX-C300-CAPOTAR-05"
+    ]
+  }
+}

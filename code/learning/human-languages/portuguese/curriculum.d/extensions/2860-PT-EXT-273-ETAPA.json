@@ -1,0 +1,8 @@
+{
+  "id": "PT-EXT-273-ETAPA",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can describe something step by step: its stages, phases, sequence and chronology.",
+  "prerequisites": []
+}

@@ -1,0 +1,9 @@
+{
+  "id": "PT-PATH-353-OBSTACULO",
+  "spine_node": "SPINE-GIVE-REASONS",
+  "before": [],
+  "inline": [
+    "PT-EXT-353-OBSTACULO"
+  ],
+  "after": []
+}

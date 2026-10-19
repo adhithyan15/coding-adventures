@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PT-C463-trovoada",
+    "language": "portuguese",
+    "chapter": 463,
+    "sequence": 25770,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:39b7b1f01c6afcf7"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PT-C296-cela",
+    "language": "portuguese",
+    "chapter": 296,
+    "sequence": 17220,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ae79b23b52a59a46"
+  },
+  "findings": []
+}

@@ -1,0 +1,20 @@
+{
+  "language": "portuguese",
+  "chapter": 506,
+  "sourceHash": "fnv1a64:957b481b4a99836e",
+  "lessonIds": [
+    "PT-C506-mergulho",
+    "PT-C506-caiaque",
+    "PT-C506-velejar",
+    "PT-C506-prancha",
+    "PT-C506-surfar",
+    "PT-R506-revisao-499-506"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "portuguese/narration/ch506.txt",
+  "json": "portuguese/narration/ch506.json",
+  "textHash": "fnv1a64:8a15f1066d0b76b7",
+  "jsonHash": "fnv1a64:f3dde8b541f5ac27",
+  "findings": []
+}

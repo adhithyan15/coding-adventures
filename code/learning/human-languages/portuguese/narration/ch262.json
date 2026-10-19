@@ -1,0 +1,432 @@
+{
+  "version": 1,
+  "language": "portuguese",
+  "chapter": 262,
+  "title": "Devia --- What You Should Do, and Explaining Why",
+  "drivablePrefix": 3,
+  "sourceHash": "fnv1a64:ca5ea9a9776748fe",
+  "lessons": [
+    {
+      "id": "PT-C262-devia",
+      "sequence": 15540,
+      "title": "devia — what you ought to do about it",
+      "headword": "devia, deveria",
+      "romanization": "devia, deveria",
+      "gloss": "I should, I ought to — dever softened into advice, once with the imperfeito's -ia and once with gostaria's",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d40389fb68f48c81",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"I would like\". (Gostaria.) Then run a reason forward: \"I've got a cold, so I'm not going out.\" (Estou constipado, por isso não saio.)"
+            },
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "An explanation often ends on a third move: what somebody ought to do. That move has its own form."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: devia",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "You have dever, \"to have to, must\": devo estudar, I must study. Put it in the imperfeito and it softens into advice:"
+            },
+            {
+              "kind": "speech",
+              "text": "Devia estudar. — I should study. Devias descansar. — You should rest. (to a friend) Devia descansar. — You should rest. (to o senhor, a senhora or você)."
+            },
+            {
+              "kind": "speech",
+              "text": "A bare infinitive follows, with nothing in between. Devo estudar has no way out; devia estudar says I know I ought to, and have not promised. That softness is the register advice usually wants."
+            },
+            {
+              "kind": "speech",
+              "text": "This is the imperfeito doing a present job, and in Portugal it is the everyday way to say \"should\". The same verb has a second soft form, deveria, with the ending of your gostaria:"
+            },
+            {
+              "kind": "speech",
+              "text": "Deveria descansar mais. — I ought to rest more."
+            },
+            {
+              "kind": "speech",
+              "text": "Deveria is a little more careful, and in Brazil it is the usual one. Its -ia belongs to the would-form of Portuguese, which the last chapter of this run builds properly."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "dever is inherited from Latin dēbēre, \"to owe\" (EtymDB 2.1), and dēbēre is a compound: dē, \"from\", plus habēre, \"to have\" (Lewis & Short, under debeo). To owe is to have something from someone: you are holding what is theirs. a dívida, \"a debt\", which you have met, is the same family, and English took it as debt, due and duty."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "devia, devias, devia — then deveria",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *devia, devias, devia* — then *deveria*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the hard one, then the soft one — Devo estudar. then Devia estudar.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the hard one, then the soft one — *Devo estudar.* then *Devia estudar.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "advice to a friend with a cold — Estás constipado, então devias descansar.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: advice to a friend with a cold — *Estás constipado, então devias descansar.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Acho que devias descansar.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Acho que devias descansar.*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What is the difference between devo and devia? (Devo is \"I must\"; devia is \"I should\", softer.) Which soft form is more usual in Brazil? (Deveria.) What are the two Latin pieces of dēbēre? (Dē and habēre — to have from someone.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PT-C262-explicar",
+      "sequence": 15550,
+      "title": "explicar — to unfold",
+      "headword": "explicar",
+      "romanization": "explicar",
+      "gloss": "to explain — literally to unfold, and the name for the four moves this chapter and the last have given you",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c5702669cfe13441",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Four pieces are in your hands: acho que for an opinion, porque and por isso for the two arrows, devia for advice. This lesson puts them in a row, under the verb that names the act."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: the shape of an explanation",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "explicar, \"to explain\", is a regular -ar verb with one spelling catch. Its event past for \"I\" is expliquei: the c becomes qu before an e, so that it keeps its hard sound. The rest is plain: explico, explicas, explica, explicou."
+            },
+            {
+              "kind": "speech",
+              "text": "Here is a whole explanation, every word of it taught:"
+            },
+            {
+              "kind": "speech",
+              "text": "— Porque é que não sais? — Acho que vai chover. E estou constipado, porque ontem fazia frio. Por isso não saio. Devia descansar. — Why aren't you going out? — I think it's going to rain. And I've got a cold, because it was cold yesterday. So I'm not going out. I ought to rest."
+            },
+            {
+              "kind": "speech",
+              "text": "Four moves, and a word for each: an opinion (acho que), a cause pointing back (porque), a consequence pointing forward (por isso), and advice (devia). With both arrows, you can build it cause first or claim first."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart: folded, and unfolded",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "explicar is a learned borrowing from Latin explicāre, \"to unfold, to spread out\" (EtymDB 2.1; Lewis & Short, under explico), which is ex-, \"out\", plus plicāre, \"to fold\". To explain is to unfold: something was folded shut, and you open it out."
+            },
+            {
+              "kind": "speech",
+              "text": "The same plicāre also came down into Portuguese the slow way, by mouth, and wore into chegar, \"to arrive\" (EtymDB 2.1): Latin pl became Portuguese ch. The usual story of how folding became arriving is the sailor's, folding the sails at the end of a voyage; neither source tells it, so it is offered as the usual story only. English kept the Latin in explicit, and complicated is the opposite: folded together."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "explico, explicas, explica — then expliquei",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *explico, explicas, explica* — then *expliquei*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the four moves — Acho que vai chover, porque não há sol. Por isso não saio. Devia ler.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the four moves — *Acho que vai chover, porque não há sol. Por isso não saio. Devia ler.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the same, consequence first — Não saio porque chove.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the same, consequence first — *Não saio porque chove.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "explicar, chegar, then English explicit",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *explicar*, *chegar*, then English *explicit*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Name the four moves of an explanation and a word for each. (Opinion acho que, cause porque, consequence por isso, advice devia.) Why is there a qu in expliquei? (To keep the c hard.) What is explicar, taken apart? (Ex- and plicāre: to unfold.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PT-C262-revisao-explicacao",
+      "sequence": 15560,
+      "title": "Review — explain yourself",
+      "headword": "(review)",
+      "romanization": "(review)",
+      "gloss": "explain yourself — a question, and an answer in four moves, built twice with different facts",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:cbdb7fd42a349c4b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"you should rest\" to a friend. (Devias descansar.) Which English word for owing shares its Latin? (Debt, or due, or duty.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Two chapters, four moves. You can say what you think, why, what follows from it, and what ought to be done. And because chapter two hundred and fifty-nine gave you the scene, your reasons can reach into the past:"
+            },
+            {
+              "kind": "speech",
+              "text": "— Porque é que não foste ao mercado? — Fazia frio e eu estava constipado, por isso não saí. Acho que devia sair mais."
+            },
+            {
+              "kind": "speech",
+              "text": "The reason is scene, fazia and estava; the consequence is an event, não saí; the advice is about now. Three times in one answer."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the question — Porque é que não foste ao mercado?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the question — *Porque é que não foste ao mercado?*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the answer, all four moves — Fazia frio e eu estava constipado, por isso não saí. Acho que devia sair mais.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the answer, all four moves — *Fazia frio e eu estava constipado, por isso não saí. Acho que devia sair mais.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a different reason — Chovia, então estudei.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a different reason — *Chovia, então estudei.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the same answer, claim first — Não saí porque fazia frio.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the same answer, claim first — *Não saí porque fazia frio.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "an explanation of your own: para mim, a porque, a por isso, a devia",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: an explanation of your own: *para mim*, a *porque*, a *por isso*, a *devia*]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "In fazia frio, por isso não saí, which half is the scene and which the event? (Fazia frio is the scene; não saí is the event.) What does explicar do, literally? (It unfolds.) And what is softer than devo? (Devia.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

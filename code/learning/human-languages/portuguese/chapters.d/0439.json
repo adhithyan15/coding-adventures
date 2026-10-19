@@ -1,0 +1,19 @@
+{
+  "chapter": 439,
+  "title": "Norte, sul, leste e oeste",
+  "label": "ch:pt-norte-sul-leste-e-oeste",
+  "canDo": "I can place things on the compass: north-east, north-west, south-east, south-west and a landmark.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "PT-C439-marco",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 439: I can place things on the compass: north-east, north-west, south-east, south-west and a landmark.",
+    "assesses": [
+      "PT-LEX-C439-CARDEAIS-03",
+      "PT-LEX-C439-CARDEAIS-04",
+      "PT-LEX-C439-CARDEAIS-05"
+    ]
+  }
+}

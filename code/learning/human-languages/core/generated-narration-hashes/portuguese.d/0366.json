@@ -1,0 +1,20 @@
+{
+  "language": "portuguese",
+  "chapter": 366,
+  "sourceHash": "fnv1a64:42356f3c2ed823c3",
+  "lessonIds": [
+    "PT-C366-pobreza",
+    "PT-C366-discriminacao",
+    "PT-C366-discriminar",
+    "PT-C366-imigracao",
+    "PT-C366-integracao",
+    "PT-R366-revisao-359-366"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "portuguese/narration/ch366.txt",
+  "json": "portuguese/narration/ch366.json",
+  "textHash": "fnv1a64:26e78a7fa2a43da3",
+  "jsonHash": "fnv1a64:35fa3b250148be46",
+  "findings": []
+}

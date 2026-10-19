@@ -1,0 +1,11 @@
+{
+  "id": "PT-C423-carimbar",
+  "pathSegment": "PT-PATH-423-CONTROLO",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PT-EXT-423-CONTROLO",
+      "order": 4
+    }
+  ]
+}

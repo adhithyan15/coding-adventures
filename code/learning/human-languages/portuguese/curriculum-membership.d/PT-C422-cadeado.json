@@ -1,0 +1,11 @@
+{
+  "id": "PT-C422-cadeado",
+  "pathSegment": "PT-PATH-422-BAGAGENS",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-422-BAGAGENS",
+      "order": 3
+    }
+  ]
+}

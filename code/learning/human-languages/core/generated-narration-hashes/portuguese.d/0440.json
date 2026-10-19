@@ -1,0 +1,20 @@
+{
+  "language": "portuguese",
+  "chapter": 440,
+  "sourceHash": "fnv1a64:dccfa93cc9b5ba9d",
+  "lessonIds": [
+    "PT-C440-morada",
+    "PT-C440-periferia",
+    "PT-C440-freguesia",
+    "PT-C440-concelho",
+    "PT-C440-intercomunicador",
+    "PT-R440-revisao-433-440"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "portuguese/narration/ch440.txt",
+  "json": "portuguese/narration/ch440.json",
+  "textHash": "fnv1a64:ab59f582bc15f094",
+  "jsonHash": "fnv1a64:1e8fee68c78b98ea",
+  "findings": []
+}

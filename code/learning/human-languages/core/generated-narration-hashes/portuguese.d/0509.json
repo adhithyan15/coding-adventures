@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 509,
+  "sourceHash": "fnv1a64:46efc57d3bfaf4fb",
+  "lessonIds": [
+    "PT-C509-baliza",
+    "PT-C509-penalti",
+    "PT-C509-avancado",
+    "PT-C509-rematar",
+    "PT-C509-cabecear"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch509.txt",
+  "json": "portuguese/narration/ch509.json",
+  "textHash": "fnv1a64:a1169f1267e8d6c5",
+  "jsonHash": "fnv1a64:fd02f16d7e5fe463",
+  "findings": []
+}

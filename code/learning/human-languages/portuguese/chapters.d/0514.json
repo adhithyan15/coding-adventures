@@ -1,0 +1,19 @@
+{
+  "chapter": 514,
+  "title": "Ringues e espadas",
+  "label": "ch:pt-ringues-e-espadas",
+  "canDo": "I can talk about boxing, judo and fencing.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "PT-R514-revisao-507-514",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 514: I can talk about boxing, judo and fencing.",
+    "assesses": [
+      "PT-LEX-C514-RINGUE-03",
+      "PT-LEX-C514-RINGUE-04",
+      "PT-LEX-C514-RINGUE-05"
+    ]
+  }
+}

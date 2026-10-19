@@ -1,0 +1,11 @@
+{
+  "id": "PT-C292-escapar",
+  "pathSegment": "PT-PATH-292-FUGA",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PT-EXT-292-FUGA",
+      "order": 1
+    }
+  ]
+}

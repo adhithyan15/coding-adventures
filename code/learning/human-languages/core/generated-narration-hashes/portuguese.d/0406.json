@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 406,
+  "sourceHash": "fnv1a64:bad7aee70fd8862d",
+  "lessonIds": [
+    "PT-C406-avaria",
+    "PT-C406-avariar",
+    "PT-C406-rebocar",
+    "PT-C406-reboque",
+    "PT-C406-oficina"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch406.txt",
+  "json": "portuguese/narration/ch406.json",
+  "textHash": "fnv1a64:ed41bba921950e8f",
+  "jsonHash": "fnv1a64:3d289ac7ba3195c7",
+  "findings": []
+}

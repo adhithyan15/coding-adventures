@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 441,
+  "sourceHash": "fnv1a64:416973bfd5da31a2",
+  "lessonIds": [
+    "PT-C441-campanario",
+    "PT-C441-catedral",
+    "PT-C441-arcadas",
+    "PT-C441-chafariz",
+    "PT-C441-pelourinho"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch441.txt",
+  "json": "portuguese/narration/ch441.json",
+  "textHash": "fnv1a64:aa10cda3efea0ede",
+  "jsonHash": "fnv1a64:45dbac28a3b90c9f",
+  "findings": []
+}

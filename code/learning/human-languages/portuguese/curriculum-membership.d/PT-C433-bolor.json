@@ -1,0 +1,11 @@
+{
+  "id": "PT-C433-bolor",
+  "pathSegment": "PT-PATH-433-BARULHO",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-433-BARULHO",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 509,
+  "sourceHash": "fnv1a64:e3b4ae3cf9ff9c8d",
+  "lessonIds": [
+    "PT-C509-baliza",
+    "PT-C509-penalti",
+    "PT-C509-avancado",
+    "PT-C509-rematar",
+    "PT-C509-cabecear"
+  ],
+  "tex": "portuguese/book/chapters/ch509-na-baliza.tex"
+}

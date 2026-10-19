@@ -1,0 +1,11 @@
+{
+  "id": "PT-C457-cortica",
+  "pathSegment": "PT-PATH-457-ARVORES",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-457-ARVORES",
+      "order": 3
+    }
+  ]
+}

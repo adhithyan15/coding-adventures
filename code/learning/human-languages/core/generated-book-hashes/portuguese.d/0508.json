@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 508,
+  "sourceHash": "fnv1a64:57718578d5471c86",
+  "lessonIds": [
+    "PT-C508-arbitro",
+    "PT-C508-apito",
+    "PT-C508-apitar",
+    "PT-C508-bancada",
+    "PT-C508-suplente"
+  ],
+  "tex": "portuguese/book/chapters/ch508-o-arbitro-e-o-apito.tex"
+}

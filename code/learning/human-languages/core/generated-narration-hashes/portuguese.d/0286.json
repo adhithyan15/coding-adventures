@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 286,
+  "sourceHash": "fnv1a64:b8bf2857ddb363b6",
+  "lessonIds": [
+    "PT-C286-delito",
+    "PT-C286-vandalo",
+    "PT-C286-vandalismo",
+    "PT-C286-vitima",
+    "PT-C286-homicidio"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch286.txt",
+  "json": "portuguese/narration/ch286.json",
+  "textHash": "fnv1a64:0f04214063c67724",
+  "jsonHash": "fnv1a64:4402a73538a4c55d",
+  "findings": []
+}

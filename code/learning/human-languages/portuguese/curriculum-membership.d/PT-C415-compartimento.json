@@ -1,0 +1,11 @@
+{
+  "id": "PT-C415-compartimento",
+  "pathSegment": "PT-PATH-415-CARRUAGEM",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PT-EXT-415-CARRUAGEM",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PT-C409-embater",
+    "language": "portuguese",
+    "chapter": 409,
+    "sequence": 23040,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c5c3d2c28b4260f1"
+  },
+  "findings": []
+}

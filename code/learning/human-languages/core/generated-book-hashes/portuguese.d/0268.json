@@ -1,0 +1,12 @@
+{
+  "language": "portuguese",
+  "chapter": 268,
+  "sourceHash": "fnv1a64:c391d6464cfc470f",
+  "lessonIds": [
+    "PT-C268-poderia",
+    "PT-C268-seria",
+    "PT-C268-revisao-condicional",
+    "PT-W268-seis-linhas"
+  ],
+  "tex": "portuguese/book/chapters/ch268-the-condicional.tex"
+}

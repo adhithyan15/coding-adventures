@@ -1,0 +1,11 @@
+{
+  "id": "PT-C407-desaparafusar",
+  "pathSegment": "PT-PATH-407-CAPO",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PT-EXT-407-CAPO",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "language": "portuguese",
+  "chapter": 522,
+  "sourceHash": "fnv1a64:02e5e2811b12c7f5",
+  "lessonIds": [
+    "PT-C522-exposicao",
+    "PT-C522-galeria",
+    "PT-C522-retrato",
+    "PT-C522-esculpir",
+    "PT-C522-escultor",
+    "PT-R522-revisao-515-522"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "portuguese/narration/ch522.txt",
+  "json": "portuguese/narration/ch522.json",
+  "textHash": "fnv1a64:cdeff31ada699350",
+  "jsonHash": "fnv1a64:b8bd5d215b58a5d7",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 486,
+  "sourceHash": "fnv1a64:9e88927ebca7435f",
+  "lessonIds": [
+    "PT-C486-termometro",
+    "PT-C486-vacina",
+    "PT-C486-injecao",
+    "PT-C486-entorse",
+    "PT-C486-ligadura"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch486.txt",
+  "json": "portuguese/narration/ch486.json",
+  "textHash": "fnv1a64:8aaa7299cd7fba1c",
+  "jsonHash": "fnv1a64:d259088b90cfac79",
+  "findings": []
+}

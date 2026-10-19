@@ -1,0 +1,19 @@
+{
+  "chapter": 318,
+  "title": "Vamos festejar",
+  "label": "ch:pt-vamos-festejar",
+  "canDo": "I can talk about celebrating and commemorating, and about raising a toast.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "PT-C318-brindar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 318: I can talk about celebrating and commemorating, and about raising a toast.",
+    "assesses": [
+      "PT-LEX-C318-FESTEJAR-03",
+      "PT-LEX-C318-FESTEJAR-04",
+      "PT-LEX-C318-FESTEJAR-05"
+    ]
+  }
+}

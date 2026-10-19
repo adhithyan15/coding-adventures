@@ -1,0 +1,14 @@
+{
+  "language": "portuguese",
+  "chapter": 332,
+  "sourceHash": "fnv1a64:9139c837b46f6892",
+  "lessonIds": [
+    "PT-C332-fritar",
+    "PT-C332-cozer",
+    "PT-C332-assar",
+    "PT-C332-grelhar",
+    "PT-C332-ferver",
+    "PT-R332-revisao-325-332"
+  ],
+  "tex": "portuguese/book/chapters/ch332-ao-lume.tex"
+}

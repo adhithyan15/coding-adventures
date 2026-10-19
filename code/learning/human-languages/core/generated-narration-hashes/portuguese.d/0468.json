@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 468,
+  "sourceHash": "fnv1a64:940c727168a669ce",
+  "lessonIds": [
+    "PT-C468-inveja",
+    "PT-C468-invejoso",
+    "PT-C468-invejar",
+    "PT-C468-egoista",
+    "PT-C468-egoismo"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch468.txt",
+  "json": "portuguese/narration/ch468.json",
+  "textHash": "fnv1a64:938261f8999fdd9c",
+  "jsonHash": "fnv1a64:c4c50850d7365b79",
+  "findings": []
+}

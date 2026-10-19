@@ -1,0 +1,11 @@
+{
+  "id": "PT-C259-tinha-havia",
+  "pathSegment": "PT-PATH-259-CENA",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PT-EXT-259-CENA",
+      "order": 1
+    }
+  ]
+}

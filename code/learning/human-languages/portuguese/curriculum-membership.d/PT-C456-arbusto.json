@@ -1,0 +1,11 @@
+{
+  "id": "PT-C456-arbusto",
+  "pathSegment": "PT-PATH-456-BOSQUE",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-456-BOSQUE",
+      "order": 3
+    }
+  ]
+}

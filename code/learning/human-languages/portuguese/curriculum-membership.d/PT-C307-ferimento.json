@@ -1,0 +1,11 @@
+{
+  "id": "PT-C307-ferimento",
+  "pathSegment": "PT-PATH-307-FERIDO",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PT-EXT-307-FERIDO",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "language": "portuguese",
+  "chapter": 324,
+  "sourceHash": "fnv1a64:fe7c6b0898151dab",
+  "lessonIds": [
+    "PT-C324-conto",
+    "PT-C324-narrar",
+    "PT-C324-narrativa",
+    "PT-C324-narrador",
+    "PT-C324-enredo",
+    "PT-R324-revisao-317-324"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "portuguese/narration/ch324.txt",
+  "json": "portuguese/narration/ch324.json",
+  "textHash": "fnv1a64:96457aa3fc61b0a0",
+  "jsonHash": "fnv1a64:d57d14719e9dc698",
+  "findings": []
+}

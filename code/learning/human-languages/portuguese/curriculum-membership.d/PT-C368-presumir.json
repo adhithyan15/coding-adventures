@@ -1,0 +1,11 @@
+{
+  "id": "PT-C368-presumir",
+  "pathSegment": "PT-PATH-368-HIPOTESE",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-368-HIPOTESE",
+      "order": 3
+    }
+  ]
+}

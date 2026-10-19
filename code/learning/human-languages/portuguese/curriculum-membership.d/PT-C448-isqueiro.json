@@ -1,0 +1,11 @@
+{
+  "id": "PT-C448-isqueiro",
+  "pathSegment": "PT-PATH-448-TABACARIA",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PT-EXT-448-TABACARIA",
+      "order": 1
+    }
+  ]
+}

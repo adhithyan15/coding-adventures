@@ -1,0 +1,11 @@
+{
+  "id": "PT-C492-padrasto",
+  "pathSegment": "PT-PATH-492-FAMILIA",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PT-EXT-492-FAMILIA",
+      "order": 1
+    }
+  ]
+}

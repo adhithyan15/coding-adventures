@@ -1,0 +1,20 @@
+{
+  "language": "portuguese",
+  "chapter": 482,
+  "sourceHash": "fnv1a64:ca92e55e72c1d193",
+  "lessonIds": [
+    "PT-C482-nuca",
+    "PT-C482-coxa",
+    "PT-C482-anca",
+    "PT-C482-calcanhar",
+    "PT-C482-umbigo",
+    "PT-R482-revisao-475-482"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "portuguese/narration/ch482.txt",
+  "json": "portuguese/narration/ch482.json",
+  "textHash": "fnv1a64:d0d46ffbfeea9ab4",
+  "jsonHash": "fnv1a64:3f43ca70189d5ea0",
+  "findings": []
+}

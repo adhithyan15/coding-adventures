@@ -1,0 +1,11 @@
+{
+  "id": "PT-C428-hospedar",
+  "pathSegment": "PT-PATH-428-PERNOITAR",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-428-PERNOITAR",
+      "order": 3
+    }
+  ]
+}

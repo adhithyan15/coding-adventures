@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 422,
+  "sourceHash": "fnv1a64:8aaf434b0c2c11b1",
+  "lessonIds": [
+    "PT-C422-porao",
+    "PT-C422-balanca",
+    "PT-C422-empacotar",
+    "PT-C422-cadeado",
+    "PT-C422-extraviar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch422.txt",
+  "json": "portuguese/narration/ch422.json",
+  "textHash": "fnv1a64:fdf51a1e3b2e173b",
+  "jsonHash": "fnv1a64:98d07a65e84d2df5",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "PT-C401-faixa",
+  "pathSegment": "PT-PATH-401-AUTOESTRADA",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "PT-EXT-401-AUTOESTRADA",
+      "order": 0
+    }
+  ]
+}

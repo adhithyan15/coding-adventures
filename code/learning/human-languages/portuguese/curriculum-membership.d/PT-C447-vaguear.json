@@ -1,0 +1,11 @@
+{
+  "id": "PT-C447-vaguear",
+  "pathSegment": "PT-PATH-447-PASSEIO",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PT-EXT-447-PASSEIO",
+      "order": 1
+    }
+  ]
+}

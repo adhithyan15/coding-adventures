@@ -1,0 +1,19 @@
+{
+  "chapter": 347,
+  "title": "Um tema polémico",
+  "label": "ch:pt-um-tema-polemico",
+  "canDo": "I can talk about a controversial issue, dispute a claim, rebut it and say what is relevant.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "PT-C347-relevante",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 347: I can talk about a controversial issue, dispute a claim, rebut it and say what is relevant.",
+    "assesses": [
+      "PT-LEX-C347-POLEMICA-03",
+      "PT-LEX-C347-POLEMICA-04",
+      "PT-LEX-C347-POLEMICA-05"
+    ]
+  }
+}

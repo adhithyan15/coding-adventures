@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PT-C495-mimado",
+    "language": "portuguese",
+    "chapter": 495,
+    "sequence": 27470,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ed29757d3cca4474"
+  },
+  "findings": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 393,
+  "sourceHash": "fnv1a64:7c308124683a5ce6",
+  "lessonIds": [
+    "PT-C393-saldo",
+    "PT-C393-deposito",
+    "PT-C393-depositar",
+    "PT-C393-transferir",
+    "PT-C393-transferencia"
+  ],
+  "tex": "portuguese/book/chapters/ch393-no-banco.tex"
+}

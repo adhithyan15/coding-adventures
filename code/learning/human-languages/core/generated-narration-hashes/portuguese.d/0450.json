@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 450,
+  "sourceHash": "fnv1a64:d2fe016e174cf5ab",
+  "lessonIds": [
+    "PT-C450-mercearia",
+    "PT-C450-charcutaria",
+    "PT-C450-frutaria",
+    "PT-C450-garrafeira",
+    "PT-C450-fatiar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch450.txt",
+  "json": "portuguese/narration/ch450.json",
+  "textHash": "fnv1a64:970ab93d6b77edfa",
+  "jsonHash": "fnv1a64:d329017f9ed9152d",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 387,
+  "sourceHash": "fnv1a64:662d516527e3e501",
+  "lessonIds": [
+    "PT-C387-queixa",
+    "PT-C387-arguido",
+    "PT-C387-testemunha",
+    "PT-C387-defesa",
+    "PT-C387-sentenca"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch387.txt",
+  "json": "portuguese/narration/ch387.json",
+  "textHash": "fnv1a64:989b189dd3c55d0a",
+  "jsonHash": "fnv1a64:a21692f156857f23",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 385,
+  "title": "A burocracia",
+  "label": "ch:pt-a-burocracia",
+  "canDo": "I can deal with red tape: the process, the request, and what is legal or illegal.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "PT-C385-ilegal",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 385: I can deal with red tape: the process, the request, and what is legal or illegal.",
+    "assesses": [
+      "PT-LEX-C385-BUROCRACIA-03",
+      "PT-LEX-C385-BUROCRACIA-04",
+      "PT-LEX-C385-BUROCRACIA-05"
+    ]
+  }
+}

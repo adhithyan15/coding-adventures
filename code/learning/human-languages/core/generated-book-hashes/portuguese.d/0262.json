@@ -1,0 +1,11 @@
+{
+  "language": "portuguese",
+  "chapter": 262,
+  "sourceHash": "fnv1a64:07678bf16220f896",
+  "lessonIds": [
+    "PT-C262-devia",
+    "PT-C262-explicar",
+    "PT-C262-revisao-explicacao"
+  ],
+  "tex": "portuguese/book/chapters/ch262-should-and-explaining.tex"
+}

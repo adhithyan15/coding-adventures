@@ -1,0 +1,11 @@
+{
+  "id": "PT-C291-sequestro",
+  "pathSegment": "PT-PATH-291-RAPTO",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PT-EXT-291-RAPTO",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 287,
+  "title": "Roubos",
+  "label": "ch:pt-roubos",
+  "canDo": "I can talk about robbery and theft, pickpockets, and things that went missing.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "PT-C287-desaparecimento",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 287: I can talk about robbery and theft, pickpockets, and things that went missing.",
+    "assesses": [
+      "PT-LEX-C287-ROUBO-03",
+      "PT-LEX-C287-ROUBO-04",
+      "PT-LEX-C287-ROUBO-05"
+    ]
+  }
+}

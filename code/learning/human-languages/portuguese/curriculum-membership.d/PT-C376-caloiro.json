@@ -1,0 +1,11 @@
+{
+  "id": "PT-C376-caloiro",
+  "pathSegment": "PT-PATH-376-FACULDADE",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PT-EXT-376-FACULDADE",
+      "order": 1
+    }
+  ]
+}

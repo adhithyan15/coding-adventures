@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 436,
+  "sourceHash": "fnv1a64:f9fa0c250e073ebb",
+  "lessonIds": [
+    "PT-C436-indicacoes",
+    "PT-C436-rotunda",
+    "PT-C436-contornar",
+    "PT-C436-entroncamento",
+    "PT-C436-prosseguir"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch436.txt",
+  "json": "portuguese/narration/ch436.json",
+  "textHash": "fnv1a64:0a45560c2f1174d4",
+  "jsonHash": "fnv1a64:f4d0c62ea5d52fb8",
+  "findings": []
+}

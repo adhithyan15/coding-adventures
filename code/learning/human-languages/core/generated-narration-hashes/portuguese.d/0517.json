@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 517,
+  "sourceHash": "fnv1a64:2769b4050f77d243",
+  "lessonIds": [
+    "PT-C517-flauta",
+    "PT-C517-trompete",
+    "PT-C517-saxofone",
+    "PT-C517-acordeao",
+    "PT-C517-afinar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch517.txt",
+  "json": "portuguese/narration/ch517.json",
+  "textHash": "fnv1a64:60e664ccb9c93b45",
+  "jsonHash": "fnv1a64:1337ad2db2ba908c",
+  "findings": []
+}

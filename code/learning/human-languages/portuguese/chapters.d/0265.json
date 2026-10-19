@@ -1,0 +1,20 @@
+{
+  "chapter": 265,
+  "title": "Estava Contente --- How It Felt, and What I Hope",
+  "label": "ch:pt-how-it-felt-and-what-i-hope",
+  "canDo": "I can say how I felt with estar in the imperfeito, and say what I hope for with espero and o meu sonho é.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "PT-C265-revisao-sentimentos",
+    "kind": "production",
+    "summary": "Complete PT-C265-revisao-sentimentos: tell how an experience felt and what you hope comes next.",
+    "assesses": [
+      "PT-GRAMMAR-SENTIMENTO-ESTAVA-01",
+      "PT-GRAMMAR-CONTENTE-COM-02",
+      "PT-LEX-ESPERO-INFINITIVO-01",
+      "PT-GRAMMAR-O-MEU-SONHO-02"
+    ]
+  }
+}

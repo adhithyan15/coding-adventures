@@ -1,0 +1,9 @@
+{
+  "id": "PT-PATH-273-ETAPA",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "PT-EXT-273-ETAPA"
+  ],
+  "after": []
+}

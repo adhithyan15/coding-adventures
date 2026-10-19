@@ -1,0 +1,19 @@
+{
+  "chapter": 289,
+  "title": "Burlas e fraudes",
+  "label": "ch:pt-burlas-e-fraudes",
+  "canDo": "I can talk about fraud and scams, the con man and his accomplice.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "PT-C289-cumplice",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 289: I can talk about fraud and scams, the con man and his accomplice.",
+    "assesses": [
+      "PT-LEX-C289-BURLA-03",
+      "PT-LEX-C289-BURLA-04",
+      "PT-LEX-C289-BURLA-05"
+    ]
+  }
+}

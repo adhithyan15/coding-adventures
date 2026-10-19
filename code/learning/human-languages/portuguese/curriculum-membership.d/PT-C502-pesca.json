@@ -1,0 +1,11 @@
+{
+  "id": "PT-C502-pesca",
+  "pathSegment": "PT-PATH-502-PESCA",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PT-EXT-502-PESCA",
+      "order": 1
+    }
+  ]
+}

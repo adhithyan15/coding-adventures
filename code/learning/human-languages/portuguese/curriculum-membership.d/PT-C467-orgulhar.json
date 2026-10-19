@@ -1,0 +1,11 @@
+{
+  "id": "PT-C467-orgulhar",
+  "pathSegment": "PT-PATH-467-ORGULHO",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-467-ORGULHO",
+      "order": 3
+    }
+  ]
+}

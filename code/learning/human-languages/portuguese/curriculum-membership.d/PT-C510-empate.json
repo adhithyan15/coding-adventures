@@ -1,0 +1,11 @@
+{
+  "id": "PT-C510-empate",
+  "pathSegment": "PT-PATH-510-RESULTADO",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PT-EXT-510-RESULTADO",
+      "order": 1
+    }
+  ]
+}

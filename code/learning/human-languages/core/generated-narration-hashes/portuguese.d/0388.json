@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 388,
+  "sourceHash": "fnv1a64:1745ed51b152dac6",
+  "lessonIds": [
+    "PT-C388-punir",
+    "PT-C388-pena",
+    "PT-C388-prisao",
+    "PT-C388-condenacao",
+    "PT-C388-castigo"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch388.txt",
+  "json": "portuguese/narration/ch388.json",
+  "textHash": "fnv1a64:969bb8fcf303baa4",
+  "jsonHash": "fnv1a64:4816995c5d6fe652",
+  "findings": []
+}

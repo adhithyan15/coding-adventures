@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 453,
+  "sourceHash": "fnv1a64:6438e5315c597b69",
+  "lessonIds": [
+    "PT-C453-talao",
+    "PT-C453-pechincha",
+    "PT-C453-liquidacao",
+    "PT-C453-regatear",
+    "PT-C453-embrulhar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch453.txt",
+  "json": "portuguese/narration/ch453.json",
+  "textHash": "fnv1a64:53d9080864de85b1",
+  "jsonHash": "fnv1a64:39b506d271a5d842",
+  "findings": []
+}

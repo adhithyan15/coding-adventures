@@ -1,0 +1,11 @@
+{
+  "id": "PT-C479-magoa",
+  "pathSegment": "PT-PATH-479-PERDAO",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PT-EXT-479-PERDAO",
+      "order": 1
+    }
+  ]
+}

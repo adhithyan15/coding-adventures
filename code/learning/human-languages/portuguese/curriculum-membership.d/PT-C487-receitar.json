@@ -1,0 +1,11 @@
+{
+  "id": "PT-C487-receitar",
+  "pathSegment": "PT-PATH-487-CONSULTA",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-487-CONSULTA",
+      "order": 3
+    }
+  ]
+}

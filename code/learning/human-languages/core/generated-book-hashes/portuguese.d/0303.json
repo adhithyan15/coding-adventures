@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 303,
+  "sourceHash": "fnv1a64:82fe36f3ba926f66",
+  "lessonIds": [
+    "PT-C303-inundacao",
+    "PT-C303-inundar",
+    "PT-C303-afogamento",
+    "PT-C303-alerta",
+    "PT-C303-alertar"
+  ],
+  "tex": "portuguese/book/chapters/ch303-quando-a-agua-sobe.tex"
+}

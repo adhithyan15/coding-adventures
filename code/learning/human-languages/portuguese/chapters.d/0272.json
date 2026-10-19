@@ -1,0 +1,19 @@
+{
+  "chapter": 272,
+  "title": "Quanto tempo durou",
+  "label": "ch:pt-quanto-tempo-durou",
+  "canDo": "I can say how long something lasted, that it was prolonged, and that something happened in an instant.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "PT-C272-imediatamente",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 272: I can say how long something lasted, that it was prolonged, and that something happened in an instant.",
+    "assesses": [
+      "PT-LEX-C272-DURAR-03",
+      "PT-LEX-C272-DURAR-04",
+      "PT-LEX-C272-DURAR-05"
+    ]
+  }
+}

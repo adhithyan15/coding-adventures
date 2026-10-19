@@ -1,0 +1,11 @@
+{
+  "id": "PT-C374-proposito",
+  "pathSegment": "PT-PATH-374-INTENCAO",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PT-EXT-374-INTENCAO",
+      "order": 1
+    }
+  ]
+}

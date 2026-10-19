@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 441,
+  "sourceHash": "fnv1a64:e9e99b5b099b6c02",
+  "lessonIds": [
+    "PT-C441-campanario",
+    "PT-C441-catedral",
+    "PT-C441-arcadas",
+    "PT-C441-chafariz",
+    "PT-C441-pelourinho"
+  ],
+  "tex": "portuguese/book/chapters/ch441-na-praca.tex"
+}

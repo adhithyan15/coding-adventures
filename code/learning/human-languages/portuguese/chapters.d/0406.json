@@ -1,0 +1,19 @@
+{
+  "chapter": 406,
+  "title": "A avaria",
+  "label": "ch:pt-a-avaria",
+  "canDo": "I can deal with a breakdown: the breakdown, breaking down, towing, the tow truck and the repair garage.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "PT-C406-oficina",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 406: I can deal with a breakdown: the breakdown, breaking down, towing, the tow truck and the repair garage.",
+    "assesses": [
+      "PT-LEX-C406-AVARIA-03",
+      "PT-LEX-C406-AVARIA-04",
+      "PT-LEX-C406-AVARIA-05"
+    ]
+  }
+}

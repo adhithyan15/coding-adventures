@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PT-C392-taxa",
+    "language": "portuguese",
+    "chapter": 392,
+    "sequence": 22150,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:910ea5e05063d199"
+  },
+  "findings": []
+}

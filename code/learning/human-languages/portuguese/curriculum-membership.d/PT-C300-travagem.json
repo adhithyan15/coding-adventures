@@ -1,0 +1,11 @@
+{
+  "id": "PT-C300-travagem",
+  "pathSegment": "PT-PATH-300-CAPOTAR",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PT-EXT-300-CAPOTAR",
+      "order": 1
+    }
+  ]
+}

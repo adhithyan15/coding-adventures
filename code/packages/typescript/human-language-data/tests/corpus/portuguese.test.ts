@@ -46,7 +46,10 @@ it("pins Portuguese lesson-content budgets", () =>
     // attains A2 here.
     // 1296 -> 1299: chapters 256-258, the A1 writing stages Portuguese had
     // not proved. No new word or atom.
-    lessons: 1299,
+    // 1299 -> 1336: chapters 259-268, the B1 core that realizes all five B1
+    // spine nodes (imperfeito, reasons, travel, experience, condicional):
+    // 37 lessons, one reading and one writing, no idiom, sense or culture claim.
+    lessons: 1336,
     idioms: 7,
     senses: 7,
     cultureClaims: 11,
@@ -71,6 +74,9 @@ it("pins Portuguese's writing ladder IN ORDER, pre-A1 through A1", () => {
     // the point: a timed or connected paper before a controlled one is invalid.
     "controlled-composition",
     "timed-assessment-production",
+    "connected-composition",
+    // PT-W268-seis-linhas: six connected lines about a journey, the B1 core's
+    // writing task. A second connected composition, later in sequence.
     "connected-composition",
   ]);
   expect(portuguese.defects).toEqual([]);

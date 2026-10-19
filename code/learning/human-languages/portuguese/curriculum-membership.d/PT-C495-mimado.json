@@ -1,0 +1,11 @@
+{
+  "id": "PT-C495-mimado",
+  "pathSegment": "PT-PATH-495-EDUCAR",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PT-EXT-495-EDUCAR",
+      "order": 4
+    }
+  ]
+}

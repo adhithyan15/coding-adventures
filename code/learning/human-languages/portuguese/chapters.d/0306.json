@@ -1,0 +1,19 @@
+{
+  "chapter": 306,
+  "title": "Todos salvos",
+  "label": "ch:pt-todos-salvos",
+  "canDo": "I can tell how people were evacuated and rescued, and who survived.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "PT-C306-sobrevivente",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 306: I can tell how people were evacuated and rescued, and who survived.",
+    "assesses": [
+      "PT-LEX-C306-RESGATE-03",
+      "PT-LEX-C306-RESGATE-04",
+      "PT-LEX-C306-RESGATE-05"
+    ]
+  }
+}

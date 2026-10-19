@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 452,
+  "sourceHash": "fnv1a64:b97062593fa97f4f",
+  "lessonIds": [
+    "PT-C452-barbeiro",
+    "PT-C452-aparar",
+    "PT-C452-esteticista",
+    "PT-C452-oculista",
+    "PT-C452-nodoa"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch452.txt",
+  "json": "portuguese/narration/ch452.json",
+  "textHash": "fnv1a64:89c46b62d02792e4",
+  "jsonHash": "fnv1a64:5fbf14f34a010504",
+  "findings": []
+}

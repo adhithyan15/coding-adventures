@@ -1,0 +1,19 @@
+{
+  "chapter": 449,
+  "title": "Lojas pequenas",
+  "label": "ch:pt-lojas-pequenas",
+  "canDo": "I can find specialist shops: the household store, the haberdasher, the perfume shop, the herbalist and the jeweller.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "PT-C449-ourivesaria",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 449: I can find specialist shops: the household store, the haberdasher, the perfume shop, the herbalist and the jeweller.",
+    "assesses": [
+      "PT-LEX-C449-LOJAS-03",
+      "PT-LEX-C449-LOJAS-04",
+      "PT-LEX-C449-LOJAS-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 328,
+  "title": "Pelo mar fora",
+  "label": "ch:pt-pelo-mar-fora",
+  "canDo": "I can tell a sea story: sailing, navigators, caravels, shipwrecks and treasure.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "PT-C328-tesouro",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 328: I can tell a sea story: sailing, navigators, caravels, shipwrecks and treasure.",
+    "assesses": [
+      "PT-LEX-C328-NAVEGAR-03",
+      "PT-LEX-C328-NAVEGAR-04",
+      "PT-LEX-C328-NAVEGAR-05"
+    ]
+  }
+}

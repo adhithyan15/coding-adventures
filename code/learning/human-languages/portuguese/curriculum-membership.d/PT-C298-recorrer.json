@@ -1,0 +1,11 @@
+{
+  "id": "PT-C298-recorrer",
+  "pathSegment": "PT-PATH-298-RECURSO",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PT-EXT-298-RECURSO",
+      "order": 1
+    }
+  ]
+}

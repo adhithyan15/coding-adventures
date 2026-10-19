@@ -1,0 +1,11 @@
+{
+  "id": "PT-C390-culpado",
+  "pathSegment": "PT-PATH-390-CULPA",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-390-CULPA",
+      "order": 3
+    }
+  ]
+}

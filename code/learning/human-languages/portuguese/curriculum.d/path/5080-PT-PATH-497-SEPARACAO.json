@@ -1,0 +1,9 @@
+{
+  "id": "PT-PATH-497-SEPARACAO",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "PT-EXT-497-SEPARACAO"
+  ],
+  "after": []
+}

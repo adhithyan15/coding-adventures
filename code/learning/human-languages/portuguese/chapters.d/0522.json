@@ -1,0 +1,19 @@
+{
+  "chapter": 522,
+  "title": "Na galeria",
+  "label": "ch:pt-na-galeria",
+  "canDo": "I can talk about exhibitions, portraits and sculpture.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "PT-R522-revisao-515-522",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 522: I can talk about exhibitions, portraits and sculpture.",
+    "assesses": [
+      "PT-LEX-C522-GALERIA-03",
+      "PT-LEX-C522-GALERIA-04",
+      "PT-LEX-C522-GALERIA-05"
+    ]
+  }
+}

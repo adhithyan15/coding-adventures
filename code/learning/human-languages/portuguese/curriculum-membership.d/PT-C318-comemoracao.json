@@ -1,0 +1,11 @@
+{
+  "id": "PT-C318-comemoracao",
+  "pathSegment": "PT-PATH-318-FESTEJAR",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PT-EXT-318-FESTEJAR",
+      "order": 2
+    }
+  ]
+}

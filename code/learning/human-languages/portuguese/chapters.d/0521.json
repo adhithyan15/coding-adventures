@@ -1,0 +1,19 @@
+{
+  "chapter": 521,
+  "title": "Comédia, ópera e bailado",
+  "label": "ch:pt-comedia-opera-e-bailado",
+  "canDo": "I can talk about different kinds of show.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "PT-C521-camarim",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 521: I can talk about different kinds of show.",
+    "assesses": [
+      "PT-LEX-C521-GENEROS-03",
+      "PT-LEX-C521-GENEROS-04",
+      "PT-LEX-C521-GENEROS-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "PT-C410-serpentear",
+  "pathSegment": "PT-PATH-410-CURVAS",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PT-EXT-410-CURVAS",
+      "order": 4
+    }
+  ]
+}

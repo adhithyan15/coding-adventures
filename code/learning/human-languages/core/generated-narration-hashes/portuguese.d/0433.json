@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 433,
+  "sourceHash": "fnv1a64:05b20ad0c32aaf17",
+  "lessonIds": [
+    "PT-C433-algazarra",
+    "PT-C433-ranger",
+    "PT-C433-barata",
+    "PT-C433-bolor",
+    "PT-C433-sujidade"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch433.txt",
+  "json": "portuguese/narration/ch433.json",
+  "textHash": "fnv1a64:f8d1b32486938c6e",
+  "jsonHash": "fnv1a64:c999943c2fec29b7",
+  "findings": []
+}

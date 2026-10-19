@@ -1,0 +1,11 @@
+{
+  "id": "PT-C334-rechear",
+  "pathSegment": "PT-PATH-334-GRATINAR",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PT-EXT-334-GRATINAR",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 417,
+  "sourceHash": "fnv1a64:4c83c8b8841db5c4",
+  "lessonIds": [
+    "PT-C417-molhe",
+    "PT-C417-pontao",
+    "PT-C417-embarcar",
+    "PT-C417-desembarcar",
+    "PT-C417-zarpar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch417.txt",
+  "json": "portuguese/narration/ch417.json",
+  "textHash": "fnv1a64:b50ecba56331e282",
+  "jsonHash": "fnv1a64:944754198307e186",
+  "findings": []
+}

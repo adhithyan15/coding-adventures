@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PT-C272-instante",
+    "language": "portuguese",
+    "chapter": 272,
+    "sequence": 15970,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8ac0e3ef4870c5c2"
+  },
+  "findings": []
+}

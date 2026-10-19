@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PT-C363-cidadao",
+    "language": "portuguese",
+    "chapter": 363,
+    "sequence": 20630,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:66673145f02ad011"
+  },
+  "findings": []
+}

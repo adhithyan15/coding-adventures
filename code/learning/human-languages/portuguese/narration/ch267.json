@@ -1,0 +1,638 @@
+{
+  "version": 1,
+  "language": "portuguese",
+  "chapter": 267,
+  "title": "Se, and Depende --- If, and It Depends",
+  "drivablePrefix": 4,
+  "sourceHash": "fnv1a64:79f92841392cb6f6",
+  "lessons": [
+    {
+      "id": "PT-C267-se",
+      "sequence": 15690,
+      "title": "se — if",
+      "headword": "se",
+      "romanization": "se",
+      "gloss": "if — two letters that open a condition, spelled exactly like the se of como se chama, and a different Latin word altogether",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:61c201941b68417f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"I don't know\". (Não sei.) Then \"I have been studying Portuguese for three years\". (Há três anos que estudo português.)"
+            },
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Every sentence so far has said what is, or what was. This chapter says what follows if something else is true, and it begins with two letters."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: se opens a condition",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "se — \"if\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Se tens fome, come. — If you're hungry, eat. Se tens frio, fecha a janela. — If you're cold, shut the window."
+            },
+            {
+              "kind": "speech",
+              "text": "Whatever follows se is the condition; the rest of the sentence is what follows from it. The condition can come first, with a comma, or second, without one: Fecha a janela se tens frio. Notice that Portuguese has hunger and cold, tens fome, tens frio, where English is hungry and cold."
+            },
+            {
+              "kind": "speech",
+              "text": "se also means \"whether\", after a verb of knowing or asking, and here your não sei comes in useful:"
+            },
+            {
+              "kind": "speech",
+              "text": "Não sei se é verdade. — I don't know if it's true."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart: one spelling, two words",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "You have met se before, in como se chama and levantar-se. That one means \"oneself\", and it is a different word that happens to be spelled the same way. EtymDB 2.1 keeps the two apart: se, \"if\", is inherited from Latin sī, \"if\" (Lewis & Short, under si), whose vowel opened to e; and se, \"oneself\", is inherited from Latin sē, \"himself, herself, itself\"."
+            },
+            {
+              "kind": "speech",
+              "text": "The ear tells them apart by their place. The \"oneself\" se clings to a verb: chama-se, levanto-me, como se chama. The \"if\" se opens a whole clause."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Se tens fome, come.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Se tens fome, come.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the same, condition second — Come, se tens fome.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the same, condition second — *Come, se tens fome.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Se tens frio, fecha a janela.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Se tens frio, fecha a janela.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Não sei se é verdade.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Não sei se é verdade.*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which half of se tens fome, come is the condition? (Se tens fome.) What does se mean after não sei? (Whether, \"if\".) Which Latin words are behind the two kinds of se? (Sī, \"if\", and sē, \"oneself\".)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PT-C267-se-chove",
+      "sequence": 15700,
+      "title": "se chove, não saio — the condition that really happens",
+      "headword": "se chove, não saio",
+      "romanization": "se chove, não saio",
+      "gloss": "if it rains, I don't go out — a real condition, both halves in the plain present, for things that really do happen",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4fd502d33ccaffb5",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"if\". (Se.) Say \"it was raining\". (Chovia.) Now the present: \"it's raining\". (Chove.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: both halves in the present",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Se chove, não saio. — If it rains, I don't go out. Se o comboio é caro, apanho o autocarro. — If the train is expensive, I take the bus."
+            },
+            {
+              "kind": "speech",
+              "text": "This is a real condition: something true right now, or true whenever it happens. Portuguese puts both halves in the plain present, as English does, so there is nothing new to build."
+            },
+            {
+              "kind": "speech",
+              "text": "The result half can also be advice, with the devias of chapter two hundred and sixty-two:"
+            },
+            {
+              "kind": "speech",
+              "text": "Se estás constipado, devias descansar. — If you've got a cold, you should rest."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "A real condition is a plan with a branch in it. Someone who takes the train to work every day lives by two of them:"
+            },
+            {
+              "kind": "speech",
+              "text": "Se perco o comboio, apanho o autocarro. Se perco o autocarro, volto para casa."
+            },
+            {
+              "kind": "speech",
+              "text": "Compare por isso. Chove, por isso não saio says it is raining, and here is the consequence. Se chove, não saio says it might, and here is what happens if so. Same consequence; the second one has not decided yet whether the cause is true."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "grammar",
+          "title": "Grammar Lens: one occasion still to come",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The present is right for a habit, or for what holds now. For one particular occasion still to come, careful Portuguese bends the verb after se into a form of its own:"
+            },
+            {
+              "kind": "speech",
+              "text": "Se chover amanhã, não saio. — If it rains tomorrow, I won't go out."
+            },
+            {
+              "kind": "speech",
+              "text": "Chover, not chove. It looks like the infinitive here, though for most verbs it does not, and you only need to recognise it for now; a later chapter builds it. Brazil and Portugal share it."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "chover is inherited from spoken Latin plovere (EtymDB 2.1), a reshaping of classical pluere, \"to rain\" (Lewis & Short, under pluo). Latin pl- became Portuguese ch-: chuva from pluvia, cheio from plēnus, \"full\", and chegar from plicāre (all EtymDB 2.1). Four words, one sound change."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Se chove, não saio.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Se chove, não saio.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the branch — Se perco o comboio, apanho o autocarro.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the branch — *Se perco o comboio, apanho o autocarro.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "advice in the result — Se estás constipado, devias descansar.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: advice in the result — *Se estás constipado, devias descansar.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hear the special form — Se chover amanhã, não saio.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: hear the special form — *Se chover amanhã, não saio.*]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which tense goes in each half of a real condition? (The present, in both.) What is the difference between chove, por isso não saio and se chove, não saio? (The first says it is raining; the second has not decided.) Which other words show Latin pl- becoming ch-? (Chuva, cheio, chegar.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PT-C267-depende",
+      "sequence": 15710,
+      "title": "depende — the condition you do not have to finish",
+      "headword": "depende",
+      "romanization": "depende",
+      "gloss": "it depends — the condition you do not have to finish, and depende de when you want to name it after all",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ba62ce331c7f975f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"if it rains, I don't go out\". (Se chove, não saio.)"
+            },
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "That sentence names its condition. Sometimes you want the condition without saying what it is."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: depende",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "depende — \"it depends\"."
+            },
+            {
+              "kind": "speech",
+              "text": "— Vais à festa amanhã? — Depende. — Are you going to the party tomorrow? — It depends."
+            },
+            {
+              "kind": "speech",
+              "text": "You have depender, \"to depend\". Depende is its \"it\" form, and on its own it is a complete answer: it says a condition exists and declines to say which. That is exactly why it is so useful for a question you are not ready to answer."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: depende de",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Add de and you can name the condition after all:"
+            },
+            {
+              "kind": "speech",
+              "text": "Depende de ti. — It depends on you. Depende do comboio. — It depends on the train. Depende do dinheiro. — It depends on the money."
+            },
+            {
+              "kind": "speech",
+              "text": "De and o weld into do, and de and a into da: depende da hora. English says depend on; Portuguese says depende de, \"hangs from\", which is the older picture."
+            },
+            {
+              "kind": "speech",
+              "text": "Or name it with a whole se: Depende. Se chove, não vou. The depende announces a condition; the se sentence states it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "depender is a learned borrowing from Latin dēpendēre, \"to hang from, to hang down\" (EtymDB 2.1; Lewis & Short, under dependeo): dē, \"down from\", and pendēre, \"to hang\". To depend on something is to hang from it, and the answer swings until the condition settles. Chapter nineteen hung pensar from the same family, weighing by hanging; English pendant and pending belong to it too."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "answer Vais à festa amanhã? — Depende.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: answer *Vais à festa amanhã?* — *Depende.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "name it — Depende do comboio.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: name it — *Depende do comboio.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "name it with a whole condition — Depende. Se chove, não vou.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: name it with a whole condition — *Depende. Se chove, não vou.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hand it back — Depende de ti. O que achas?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: hand it back — *Depende de ti. O que achas?*]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does depende say, and what does it not say? (That there is a condition — not which.) What do you add to name it? (De: depende de ti.) What is hanging, in dēpendēre? (The answer, from the condition.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PT-C267-revisao-condicoes",
+      "sequence": 15720,
+      "title": "Review — plans with a branch in them",
+      "headword": "(review)",
+      "romanization": "(review)",
+      "gloss": "plans with a branch in them — se, the real condition, and depende, for when the branch is not yet known",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:65a6b121245bda58",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Someone asks Vais à festa amanhã? Give the answer that decides nothing. (Depende.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Three ways now to talk about a cause, and they differ in how sure you are."
+            },
+            {
+              "kind": "speech",
+              "text": "Chove, por isso não saio. — It is raining: decided. Se chove, não saio. — It might: the branch is ready. Depende. — Not even the branch is named yet."
+            },
+            {
+              "kind": "speech",
+              "text": "Put them together at a ticket window and you have a whole conversation:"
+            },
+            {
+              "kind": "speech",
+              "text": "— Queria um bilhete para Lisboa. — Ida e volta? — Depende. Se volto hoje, ida e volta. Se fico, só de ida."
+            },
+            {
+              "kind": "speech",
+              "text": "Fico is \"I stay\", from the ficar that tells where places are: a place stays where it is."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "decided — Chove, então não saio.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: decided — *Chove, então não saio.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a branch — Se chove, não saio.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a branch — *Se chove, não saio.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "not even the branch — Depende. — then name what it hangs from — Depende do comboio.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: not even the branch — *Depende.* — then name what it hangs from — *Depende do comboio.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "at the window — Depende. Se volto hoje, ida e volta. Se fico, só de ida.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: at the window — *Depende. Se volto hoje, ida e volta. Se fico, só de ida.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "one occasion still to come — Se chover amanhã, apanho o autocarro, porque é mais rápido do que ir a pé.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: one occasion still to come — *Se chover amanhã, apanho o autocarro, porque é mais rápido do que ir a pé.*]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Order the three from most sure to least. (Por isso, then se, then depende.) Which tense goes in both halves of se chove, não saio? (The present.) Which Latin word is the se of a condition? (Sī, \"if\".)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

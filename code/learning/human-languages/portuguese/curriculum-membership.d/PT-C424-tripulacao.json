@@ -1,0 +1,11 @@
+{
+  "id": "PT-C424-tripulacao",
+  "pathSegment": "PT-PATH-424-VOO",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PT-EXT-424-VOO",
+      "order": 4
+    }
+  ]
+}
