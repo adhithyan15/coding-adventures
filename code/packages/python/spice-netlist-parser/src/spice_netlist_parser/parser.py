@@ -712,6 +712,7 @@ def run_netlist_json(text: str) -> str:
 
     parsed = parse_netlist(text)
     execution = run_deck(parsed.circuit, text)
+    parser_results = run_analysis_plan(parsed)
     payload = {
         "schemaVersion": CLI_RESULT_SCHEMA_VERSION,
         "title": parsed.title,
@@ -723,6 +724,8 @@ def run_netlist_json(text: str) -> str:
             }
             for index, item in enumerate(execution.executions)
         ],
+        "outputs": _cli_output_artifacts(parsed, parser_results),
+        "measures": _cli_measure_artifacts(parsed, parser_results),
     }
     return json.dumps(payload, separators=(",", ":"), allow_nan=False, sort_keys=True) + "\n"
 
@@ -753,6 +756,65 @@ def _cli_table_records(analysis: str, table: str) -> list[dict[str, str]]:
     return records
 
 
+def _cli_output_artifacts(
+    parsed: ParsedNetlist,
+    results: list[AnalysisExecutionResult],
+) -> list[dict[str, object]]:
+    return [
+        {
+            "analysisIndex": output.index,
+            "analysis": output.kind,
+            "probes": [_cli_probe_text(probe) for probe in output.probes],
+            "records": [
+                {
+                    "index": row.index,
+                    "axisName": row.axis_name,
+                    "axisValue": row.axis_value,
+                    "secondaryAxisName": row.secondary_axis_name,
+                    "secondaryAxisValue": row.secondary_axis_value,
+                    "values": {
+                        name: _cli_selected_value(value)
+                        for name, value in row.values.items()
+                    },
+                }
+                for row in output.rows
+            ],
+        }
+        for output in select_outputs(parsed, results)
+    ]
+
+
+def _cli_measure_artifacts(
+    parsed: ParsedNetlist,
+    results: list[AnalysisExecutionResult],
+) -> list[dict[str, object]]:
+    return [
+        {
+            "analysisIndex": measure.analysis_index,
+            "analysis": measure.analysis,
+            "name": measure.name,
+            "operation": measure.operation,
+            "probe": _cli_probe_text(measure.probe),
+            "value": measure.value,
+        }
+        for measure in measure_results(parsed, results)
+    ]
+
+
+def _cli_probe_text(probe: OutputProbe) -> str:
+    if probe.kind == "current":
+        return f"I({probe.target})"
+    if probe.negative_target is not None:
+        return f"V({probe.target},{probe.negative_target})"
+    return f"V({probe.target})"
+
+
+def _cli_selected_value(value: SelectedOutputValue) -> float | dict[str, float]:
+    if isinstance(value, complex):
+        return {"real": value.real, "imag": value.imag}
+    return value
+
+
 def select_outputs(
     parsed: ParsedNetlist,
     results: list[AnalysisExecutionResult] | None = None,
@@ -762,6 +824,8 @@ def select_outputs(
     selected: list[SelectedAnalysisOutput] = []
     execution_results = run_analysis_plan(parsed) if results is None else results
     for result in execution_results:
+        if result.kind == "tf":
+            continue
         probes = _selected_output_probes(parsed, result.kind)
         if not probes:
             continue

@@ -59,6 +59,24 @@ describe("Berkeley SPICE CLI contract", () => {
     expect(payload.analyses[0]?.records).toEqual(testCase.expected.records);
   });
 
+  it("exposes deck-selected outputs and evaluated measures", () => {
+    const corpus = JSON.parse(readFileSync(
+      new URL("../../../../grammars/spice/berkeley-v1-cli-corpus.json", import.meta.url),
+      "utf8",
+    )) as {
+      cases: readonly {
+        id: string;
+        deck: string;
+        expected: { outputs: unknown; measures: unknown };
+      }[];
+    };
+    const testCase = corpus.cases.find((testCase) => testCase.id === "deck-output-artifacts")!;
+    const payload = JSON.parse(runNetlistJson(testCase.deck)) as { outputs: unknown; measures: unknown };
+
+    expect(payload.outputs).toEqual(testCase.expected.outputs);
+    expect(payload.measures).toEqual(testCase.expected.measures);
+  });
+
   it("runs the bundled CLI against standard input", () => {
     const corpus = JSON.parse(readFileSync(
       new URL("../../../../grammars/spice/berkeley-v1-cli-corpus.json", import.meta.url),
