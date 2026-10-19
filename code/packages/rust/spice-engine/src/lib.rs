@@ -7381,6 +7381,10 @@ pub struct DeckAnalysisPlan {
     pub start_value: Option<f64>,
     pub stop_value: Option<f64>,
     pub step_value: Option<f64>,
+    pub secondary_source_name: Option<String>,
+    pub secondary_start_value: Option<f64>,
+    pub secondary_stop_value: Option<f64>,
+    pub secondary_step_value: Option<f64>,
     pub sweep_kind: Option<String>,
     pub point_count: Option<usize>,
     pub start_frequency_hz: Option<f64>,
@@ -9762,6 +9766,10 @@ fn resolve_op_analysis(tokens: &[&str], line_number: usize, state: &mut DeckAnal
         start_value: None,
         stop_value: None,
         step_value: None,
+        secondary_source_name: None,
+        secondary_start_value: None,
+        secondary_stop_value: None,
+        secondary_step_value: None,
         sweep_kind: None,
         point_count: None,
         start_frequency_hz: None,
@@ -9775,13 +9783,13 @@ fn resolve_op_analysis(tokens: &[&str], line_number: usize, state: &mut DeckAnal
 }
 
 fn resolve_dc_analysis(tokens: &[&str], line_number: usize, state: &mut DeckAnalysisState) {
-    if tokens.len() != 5 {
+    if !matches!(tokens.len(), 5 | 9) {
         add_analysis_diagnostic(
             state,
             "SPICE_DECK_ANALYSIS_ARGUMENT",
             ".dc",
             line_number,
-            ".dc requires source, start, stop, and step tokens",
+            ".dc requires source, start, stop, and step tokens, with an optional second source, start, stop, and step",
             None,
         );
         return;
@@ -9830,6 +9838,71 @@ fn resolve_dc_analysis(tokens: &[&str], line_number: usize, state: &mut DeckAnal
         );
         return;
     }
+    let (secondary_source_name, secondary_start_value, secondary_stop_value, secondary_step_value) =
+        if tokens.len() == 9 {
+            let secondary_source_name = unquote_token(tokens[5]).trim().to_string();
+            if secondary_source_name.is_empty() {
+                add_analysis_diagnostic(
+                    state,
+                    "SPICE_DECK_ANALYSIS_ARGUMENT",
+                    ".dc",
+                    line_number,
+                    ".dc secondary source name must not be empty",
+                    Some(tokens[5].to_string()),
+                );
+                return;
+            }
+            let secondary_start_value =
+                parse_deck_analysis_value(tokens[6], ".dc", line_number, state);
+            let secondary_stop_value =
+                parse_deck_analysis_value(tokens[7], ".dc", line_number, state);
+            let secondary_step_value =
+                parse_deck_analysis_value(tokens[8], ".dc", line_number, state);
+            let (
+                Some(secondary_start_value),
+                Some(secondary_stop_value),
+                Some(secondary_step_value),
+            ) = (
+                secondary_start_value,
+                secondary_stop_value,
+                secondary_step_value,
+            )
+            else {
+                return;
+            };
+            if secondary_step_value == 0.0 {
+                add_analysis_diagnostic(
+                    state,
+                    "SPICE_DECK_ANALYSIS_SWEEP",
+                    ".dc",
+                    line_number,
+                    ".dc secondary step value must be non-zero",
+                    Some(tokens[8].to_string()),
+                );
+                return;
+            }
+            if (secondary_start_value < secondary_stop_value && secondary_step_value < 0.0)
+                || (secondary_start_value > secondary_stop_value && secondary_step_value > 0.0)
+            {
+                add_analysis_diagnostic(
+                    state,
+                    "SPICE_DECK_ANALYSIS_SWEEP",
+                    ".dc",
+                    line_number,
+                    ".dc secondary step direction must move from start toward stop",
+                    Some(tokens[8].to_string()),
+                );
+                return;
+            }
+            (
+                Some(secondary_source_name),
+                Some(secondary_start_value),
+                Some(secondary_stop_value),
+                Some(secondary_step_value),
+            )
+        } else {
+            (None, None, None, None)
+        };
     state.analyses.push(DeckAnalysisPlan {
         directive: ".dc".to_string(),
         analysis: "dc".to_string(),
@@ -9839,6 +9912,10 @@ fn resolve_dc_analysis(tokens: &[&str], line_number: usize, state: &mut DeckAnal
         start_value: Some(start_value),
         stop_value: Some(stop_value),
         step_value: Some(step_value),
+        secondary_source_name,
+        secondary_start_value,
+        secondary_stop_value,
+        secondary_step_value,
         sweep_kind: None,
         point_count: None,
         start_frequency_hz: None,
@@ -9919,6 +9996,10 @@ fn resolve_ac_analysis(tokens: &[&str], line_number: usize, state: &mut DeckAnal
         start_value: None,
         stop_value: None,
         step_value: None,
+        secondary_source_name: None,
+        secondary_start_value: None,
+        secondary_stop_value: None,
+        secondary_step_value: None,
         sweep_kind: Some(sweep_kind.to_string()),
         point_count: Some(point_count),
         start_frequency_hz: Some(start_frequency_hz),
@@ -10023,6 +10104,10 @@ fn resolve_tran_analysis(tokens: &[&str], line_number: usize, state: &mut DeckAn
         start_value: None,
         stop_value: None,
         step_value: None,
+        secondary_source_name: None,
+        secondary_start_value: None,
+        secondary_stop_value: None,
+        secondary_step_value: None,
         sweep_kind: None,
         point_count: None,
         start_frequency_hz: None,
@@ -10083,6 +10168,10 @@ fn resolve_tf_analysis(tokens: &[&str], line_number: usize, state: &mut DeckAnal
         start_value: None,
         stop_value: None,
         step_value: None,
+        secondary_source_name: None,
+        secondary_start_value: None,
+        secondary_stop_value: None,
+        secondary_step_value: None,
         sweep_kind: None,
         point_count: None,
         start_frequency_hz: None,
@@ -10131,6 +10220,10 @@ fn resolve_sens_analysis(tokens: &[&str], line_number: usize, state: &mut DeckAn
         start_value: None,
         stop_value: None,
         step_value: None,
+        secondary_source_name: None,
+        secondary_start_value: None,
+        secondary_stop_value: None,
+        secondary_step_value: None,
         sweep_kind: None,
         point_count: None,
         start_frequency_hz: None,
@@ -10255,6 +10348,10 @@ fn resolve_noise_analysis(tokens: &[&str], line_number: usize, state: &mut DeckA
         start_value: None,
         stop_value: None,
         step_value: None,
+        secondary_source_name: None,
+        secondary_start_value: None,
+        secondary_stop_value: None,
+        secondary_step_value: None,
         sweep_kind,
         point_count,
         start_frequency_hz,
@@ -11377,6 +11474,10 @@ fn implicit_deck_op_analysis_plan() -> DeckAnalysisPlan {
         start_value: None,
         stop_value: None,
         step_value: None,
+        secondary_source_name: None,
+        secondary_start_value: None,
+        secondary_stop_value: None,
+        secondary_step_value: None,
         sweep_kind: None,
         point_count: None,
         start_frequency_hz: None,
@@ -14072,10 +14173,15 @@ pub fn format_dc_sweep_table(
     } else {
         probes.iter().map(|probe| probe.to_string()).collect()
     };
-    let mut rows = vec![format!(
-        "Index\tSource\tValue\t{}",
-        selected_probes.join("\t")
-    )];
+    let has_secondary_axis = points
+        .iter()
+        .any(|point| point.secondary_source_name.is_some() && point.secondary_value.is_some());
+    let mut headers = vec!["Index", "Source", "Value"];
+    if has_secondary_axis {
+        headers.extend(["SecondarySource", "SecondaryValue"]);
+    }
+    headers.extend(selected_probes.iter().map(String::as_str));
+    let mut rows = vec![headers.join("\t")];
     for (index, point) in points.iter().enumerate() {
         let values: Result<Vec<String>, SpiceError> = selected_probes
             .iter()
@@ -14089,12 +14195,22 @@ pub fn format_dc_sweep_table(
                 .map(format_table_number)
             })
             .collect();
-        rows.push(format!(
-            "{index}\t{}\t{}\t{}",
-            source_name,
+        let mut row = vec![
+            index.to_string(),
+            source_name.to_string(),
             format_table_number(point.value),
-            values?.join("\t")
-        ));
+        ];
+        if has_secondary_axis {
+            row.push(point.secondary_source_name.clone().unwrap_or_default());
+            row.push(
+                point
+                    .secondary_value
+                    .map(format_table_number)
+                    .unwrap_or_default(),
+            );
+        }
+        row.extend(values?);
+        rows.push(row.join("\t"));
     }
     rows.push(String::new());
     Ok(rows.join("\n"))
@@ -16042,6 +16158,10 @@ fn deck_analysis_plans_for_execution(
             start_value: None,
             stop_value: None,
             step_value: None,
+            secondary_source_name: None,
+            secondary_start_value: None,
+            secondary_stop_value: None,
+            secondary_step_value: None,
             sweep_kind: None,
             point_count: None,
             start_frequency_hz: None,
@@ -16242,7 +16362,33 @@ fn run_deck_analysis_plan(
             let start = require_deck_plan_number(plan.start_value, &plan, "start_value")?;
             let stop = require_deck_plan_number(plan.stop_value, &plan, "stop_value")?;
             let step = require_deck_plan_number(plan.step_value, &plan, "step_value")?;
-            let result = dc_sweep(circuit, &source_name, start, stop, step)?;
+            let result = if let Some(secondary_source_name) = &plan.secondary_source_name {
+                dc_sweep_2d(
+                    circuit,
+                    &source_name,
+                    start,
+                    stop,
+                    step,
+                    secondary_source_name,
+                    require_deck_plan_number(
+                        plan.secondary_start_value,
+                        &plan,
+                        "secondary_start_value",
+                    )?,
+                    require_deck_plan_number(
+                        plan.secondary_stop_value,
+                        &plan,
+                        "secondary_stop_value",
+                    )?,
+                    require_deck_plan_number(
+                        plan.secondary_step_value,
+                        &plan,
+                        "secondary_step_value",
+                    )?,
+                )?
+            } else {
+                dc_sweep(circuit, &source_name, start, stop, step)?
+            };
             let table = format_deck_dc_sweep_table(&source_name, &result, netlist)?;
             let measurement_cards = select_deck_measurement_cards_for_analysis(netlist, "dc")?;
             let measurements = measure_dc_sweep_cards(&result, &measurement_cards)?;

@@ -2153,7 +2153,15 @@ def format_dc_sweep_table(
         ),
         [],
     )
-    rows = ["\t".join(["Index", "Source", "Value", *selected_probes])]
+    has_secondary_axis = any(
+        point.secondary_source_name is not None
+        and point.secondary_source_value is not None
+        for point in result.points
+    )
+    headers = ["Index", "Source", "Value"]
+    if has_secondary_axis:
+        headers.extend(["SecondarySource", "SecondaryValue"])
+    rows = ["\t".join([*headers, *selected_probes])]
     for index, point in enumerate(result.points):
         values = [
             _format_table_number(
@@ -2166,16 +2174,21 @@ def format_dc_sweep_table(
             )
             for probe in selected_probes
         ]
-        rows.append(
-            "\t".join(
+        row = [
+            str(index),
+            result.source_name,
+            _format_table_number(point.source_value),
+        ]
+        if has_secondary_axis:
+            row.extend(
                 [
-                    str(index),
-                    result.source_name,
-                    _format_table_number(point.source_value),
-                    *values,
+                    point.secondary_source_name or "",
+                    _format_table_number(point.secondary_source_value)
+                    if point.secondary_source_value is not None
+                    else "",
                 ]
             )
-        )
+        rows.append("\t".join([*row, *values]))
     rows.append("")
     return "\n".join(rows)
 
@@ -4475,7 +4488,21 @@ def _run_deck_analysis_plan(
         start = _require_deck_plan_number(plan, "start_value")
         stop = _require_deck_plan_number(plan, "stop_value")
         step = _require_deck_plan_number(plan, "step_value")
-        result = dc_sweep(circuit, source_name, start, stop, step)
+        secondary_source_name = plan.secondary_source_name
+        if secondary_source_name is None:
+            result = dc_sweep(circuit, source_name, start, stop, step)
+        else:
+            result = dc_sweep_2d(
+                circuit,
+                source_name,
+                start,
+                stop,
+                step,
+                secondary_source_name,
+                _require_deck_plan_number(plan, "secondary_start_value"),
+                _require_deck_plan_number(plan, "secondary_stop_value"),
+                _require_deck_plan_number(plan, "secondary_step_value"),
+            )
         table = format_deck_dc_sweep_table(result, netlist)
         measurements = measure_dc_sweep_cards(
             result,

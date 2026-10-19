@@ -38,6 +38,27 @@ describe("Berkeley SPICE CLI contract", () => {
     expect(payload.analyses.map((analysis) => analysis.records.length)).toEqual(testCase.expected.recordCounts);
   });
 
+  it("preserves both nested DC axes in the shared JSON envelope", () => {
+    const corpus = JSON.parse(readFileSync(
+      new URL("../../../../grammars/spice/berkeley-v1-cli-corpus.json", import.meta.url),
+      "utf8",
+    )) as {
+      cases: readonly {
+        id: string;
+        deck: string;
+        expected: { records: readonly Record<string, string>[] };
+      }[];
+    };
+    const testCase = corpus.cases.find((testCase) => testCase.id === "nested-dc-sweep")!;
+    const payload = JSON.parse(runNetlistJson(testCase.deck)) as {
+      analyses: readonly { kind: string; records: readonly Record<string, string>[] }[];
+    };
+
+    expect(payload.analyses).toHaveLength(1);
+    expect(payload.analyses[0]?.kind).toBe("dc");
+    expect(payload.analyses[0]?.records).toEqual(testCase.expected.records);
+  });
+
   it("runs the bundled CLI against standard input", () => {
     const corpus = JSON.parse(readFileSync(
       new URL("../../../../grammars/spice/berkeley-v1-cli-corpus.json", import.meta.url),
