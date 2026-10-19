@@ -1,7 +1,7 @@
 {
   "language": "portuguese",
   "chapter": 376,
-  "sourceHash": "fnv1a64:72c50404304095c9",
+  "sourceHash": "fnv1a64:4e44c6ec2394eb38",
   "lessonIds": [
     "PT-C376-faculdade",
     "PT-C376-caloiro",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "portuguese/narration/ch376.txt",
   "json": "portuguese/narration/ch376.json",
-  "textHash": "fnv1a64:5d37dc9d8c195075",
-  "jsonHash": "fnv1a64:c1087daa391947d1",
+  "textHash": "fnv1a64:f57bfe789e8c41f1",
+  "jsonHash": "fnv1a64:f122a3e3618fddd8",
   "findings": []
 }

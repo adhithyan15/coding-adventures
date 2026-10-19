@@ -1,7 +1,7 @@
 {
   "language": "portuguese",
   "chapter": 260,
-  "sourceHash": "fnv1a64:40aa27802756662f",
+  "sourceHash": "fnv1a64:77f72ab33b335e72",
   "lessonIds": [
     "PT-C260-no-fim",
     "PT-C260-contar",
@@ -12,7 +12,7 @@
   "drivablePrefix": 2,
   "text": "portuguese/narration/ch260.txt",
   "json": "portuguese/narration/ch260.json",
-  "textHash": "fnv1a64:06683840933410cc",
-  "jsonHash": "fnv1a64:a6755af52f382271",
+  "textHash": "fnv1a64:8966428472cddc2f",
+  "jsonHash": "fnv1a64:e6c97fecc63cd5b7",
   "findings": []
 }

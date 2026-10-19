@@ -58,11 +58,11 @@ Age is the clearest case. Tenho vinte anos is now; tinha vinte anos is the age y
 You'll want to know: havia.
 You have há, "there is" and "there are". Its past is havia, and it follows the recipe after all, since it comes from haver:
 Havia muitas pessoas. — There were a lot of people. Não havia pão. — There was no bread.
-Like há, it never changes for a plural: one havia for one thing or for a hundred. That is how a European Portuguese scene opens. In everyday Brazilian speech you will often hear tinha doing this job instead: tinha muitas pessoas.
+Like há, it does not change for a plural: one havia for one thing or for a hundred. That is how a European Portuguese scene opens. In everyday Brazilian speech you will often hear tinha doing this job instead: tinha muitas pessoas.
 
 The word, taken apart.
 ter is inherited from Latin tenēre, "to hold" (EtymDB 2.1; Lewis & Short, under teneo), and tinha goes back to its past tenēbat, "he was holding". havia goes back to habēbat, "he was having", the past of habēre, which gave haver (EtymDB 2.1). Its first b softened to v, as in falava, and the second wore away, as in comia.
-era is Latin erat, "he was" (Lewis & Short, under sum). Latin's own past of "to be" never had the b, which is why era looks nothing like falava. How the -nh- of tinha arose is not something either source traces, so it is left open here.
+era is Latin erat, "he was" (Lewis & Short, under sum). Latin's own past of "to be" had no b, which is why era looks nothing like falava. How the -nh- of tinha arose is not something either source traces, so it is left open here.
 
 Guided Practice.
 [pause 1 second]
@@ -77,7 +77,7 @@ Guided Practice.
 
 Wrap-up Recall.
 [pause 3 seconds]
-Which Latin verb is inside tinha? (Tenēre, "to hold".) Why does era not end in -va? (Latin's own form never had the b.) Say "there were a lot of people". (Havia muitas pessoas.) And does havia change for a plural? (No.)
+Which Latin verb is inside tinha? (Tenēre, "to hold".) Why does era not end in -va? (Latin's own form had no b.) Say "there were a lot of people". (Havia muitas pessoas.) And does havia change for a plural? (No.)
 
 
 Lesson 3 of 6.
@@ -171,7 +171,7 @@ Take estar, put it in the imperfeito, add a and an infinitive:
 Estava a dormir. — I was sleeping. Estava a ler. — I was reading. Estávamos a falar. — We were talking.
 Estar follows the plain -ar recipe here: estava, estavas, estava, estávamos, estavam. Only the estar changes; the infinitive after a stays as it is.
 Estava a ler and lia both paint the scene. Estava a holds it still at one moment, a reading caught in progress; lia can also mean "I used to read". The present works the same way: estou a ler, I am reading right now.
-This a plus infinitive is European. In Brazil the same idea takes a form ending in -ndo: estava dormindo. Both are understood everywhere; this book writes the European one.
+This a plus infinitive is the Portuguese norm. In Brazil, and in parts of southern Portugal, the same idea takes a form ending in -ndo: estava dormindo. Both are understood everywhere.
 
 Grammar Lens: quando, where the event comes in.
 quando means "when", and it puts a scene and an event into one sentence:

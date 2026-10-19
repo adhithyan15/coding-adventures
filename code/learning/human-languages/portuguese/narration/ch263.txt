@@ -13,16 +13,16 @@ You are in a town you do not know, and the station is somewhere.
 
 You'll want to know: desculpe.
 desculpe — "excuse me", said to someone you do not know.
-It is the polite form of desculpar, "to excuse", the one that goes with o senhor, a senhora and você, which a stranger in the street is owed. The same word apologises: bump into someone and you say desculpe! In Brazil the usual way to stop a stranger is com licença, "with permission"; in Portugal you hear that mostly when someone needs to get past.
+It is the polite form of desculpar, "to excuse", the one that goes with o senhor, a senhora and você, which a stranger in the street is owed. The same word apologises: bump into someone and you say desculpe! In Brazil you will also hear com licença, "with permission", for this; in Portugal you hear that mostly when someone needs to get past.
 
 Grammar Lens: como se vai para…?
 Desculpe, como se vai para a estação? — Excuse me, how do I get to the station?
-Word for word, "how does one go to the station". The se is the one in como se chama: it leaves the person out, so the question is about the way, not about you. para plus the place, with its article:
+Word for word, "how does one go to the station". The se leaves the person out, so the question is about the way, not about you. para plus the place, with its article:
 para a estação, para o museu, para o hotel.
 A second way to ask uses fica, the verb that tells where a place is: onde fica a estação, where the station is. Como se vai para asks for the way; onde fica asks for the place. Either can be followed by a short question that saves a walk, é longe, is it far.
 
 The phrase, taken apart.
-desculpar is built on Latin culpa, "fault, blame" (Lewis & Short), which Portuguese also inherited as a word of its own (EtymDB 2.1), with des-, "away", in front: to excuse someone is to take the fault away from them. EtymDB 2.1 has no row for desculpar itself, so that is the usual reading of its parts. English culpable shares the culpa.
+desculpar is built on Latin culpa, "fault, blame" (Lewis & Short), with des-, "away", in front: to excuse someone is to take the fault away from them. EtymDB 2.1 has no row for desculpar itself, so that is the usual reading of its parts. English culpable shares the culpa.
 
 Guided Practice.
 [pause 1 second]
@@ -35,7 +35,7 @@ Guided Practice.
 
 Wrap-up Recall.
 [pause 3 seconds]
-Who gets desculpe? (A stranger, anyone you call o senhor, a senhora or você.) Ask the way to the hotel. (Desculpe, como se vai para o hotel?) Which verb asks for the place rather than the way. (Fica — onde fica.)
+Who gets desculpe? (A stranger, anyone you call o senhor, a senhora or você.) Ask the way to the hotel. (Desculpe, como se vai para o hotel?) Which verb asks for the place rather than the way? (Fica — onde fica.)
 
 
 Lesson 2 of 3.
@@ -59,8 +59,8 @@ vire is virar, "to turn", made a polite instruction. siga is the same for seguir
 A long answer comes in the order you will walk it, depois marking each piece.
 
 The phrase, taken apart.
-direita has no parent in EtymDB 2.1. It is usually traced to Latin dīrēctus, "straight, set in a straight line", the participle of dīrigere (Lewis & Short, under dirigo): the straight hand, the proper one.
-esquerda is the surprise. It comes from Basque ezker, "left" (EtymDB 2.1), a word older than Latin's arrival in Iberia, as is Spanish izquierda. Latin's own word for the left hand, sinistra, lives on in English sinister.
+direita has no parent in EtymDB 2.1. It is usually traced to Latin dīrēctus, "straight, set in a straight line", the participle of dīrigere (Lewis & Short, under dirigo).
+esquerda is the surprise. It comes from Basque ezker, "left" (EtymDB 2.1), a language spoken in Iberia before Latin arrived, and so does Spanish izquierda. Latin's own word for the left hand, sinistra, lives on in English sinister.
 
 Guided Practice.
 [pause 1 second]

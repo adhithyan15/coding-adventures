@@ -4,7 +4,7 @@
   "chapter": 263,
   "title": "Desculpe, Como Se Vai Para --- Asking the Way",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:bd9d445f6fe91ce5",
+  "sourceHash": "fnv1a64:98e0dfd265f2e6c7",
   "lessons": [
     {
       "id": "PT-C263-desculpe",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8bdc75c4c783828a",
+      "sourceHash": "fnv1a64:948b120a79369f08",
       "notice": null,
       "blocks": [
         {
@@ -60,7 +60,7 @@
             },
             {
               "kind": "speech",
-              "text": "It is the polite form of desculpar, \"to excuse\", the one that goes with o senhor, a senhora and você, which a stranger in the street is owed. The same word apologises: bump into someone and you say desculpe! In Brazil the usual way to stop a stranger is com licença, \"with permission\"; in Portugal you hear that mostly when someone needs to get past."
+              "text": "It is the polite form of desculpar, \"to excuse\", the one that goes with o senhor, a senhora and você, which a stranger in the street is owed. The same word apologises: bump into someone and you say desculpe! In Brazil you will also hear com licença, \"with permission\", for this; in Portugal you hear that mostly when someone needs to get past."
             }
           ]
         },
@@ -75,7 +75,7 @@
             },
             {
               "kind": "speech",
-              "text": "Word for word, \"how does one go to the station\". The se is the one in como se chama: it leaves the person out, so the question is about the way, not about you. para plus the place, with its article:"
+              "text": "Word for word, \"how does one go to the station\". The se leaves the person out, so the question is about the way, not about you. para plus the place, with its article:"
             },
             {
               "kind": "speech",
@@ -94,7 +94,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "desculpar is built on Latin culpa, \"fault, blame\" (Lewis & Short), which Portuguese also inherited as a word of its own (EtymDB 2.1), with des-, \"away\", in front: to excuse someone is to take the fault away from them. EtymDB 2.1 has no row for desculpar itself, so that is the usual reading of its parts. English culpable shares the culpa."
+              "text": "desculpar is built on Latin culpa, \"fault, blame\" (Lewis & Short), with des-, \"away\", in front: to excuse someone is to take the fault away from them. EtymDB 2.1 has no row for desculpar itself, so that is the usual reading of its parts. English culpable shares the culpa."
             }
           ]
         },
@@ -151,7 +151,7 @@
             },
             {
               "kind": "speech",
-              "text": "Who gets desculpe? (A stranger, anyone you call o senhor, a senhora or você.) Ask the way to the hotel. (Desculpe, como se vai para o hotel?) Which verb asks for the place rather than the way. (Fica — onde fica.)"
+              "text": "Who gets desculpe? (A stranger, anyone you call o senhor, a senhora or você.) Ask the way to the hotel. (Desculpe, como se vai para o hotel?) Which verb asks for the place rather than the way? (Fica — onde fica.)"
             }
           ]
         }
@@ -170,7 +170,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3b9e91835855e8b1",
+      "sourceHash": "fnv1a64:9957b73186c11033",
       "notice": null,
       "blocks": [
         {
@@ -249,11 +249,11 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "direita has no parent in EtymDB 2.1. It is usually traced to Latin dīrēctus, \"straight, set in a straight line\", the participle of dīrigere (Lewis & Short, under dirigo): the straight hand, the proper one."
+              "text": "direita has no parent in EtymDB 2.1. It is usually traced to Latin dīrēctus, \"straight, set in a straight line\", the participle of dīrigere (Lewis & Short, under dirigo)."
             },
             {
               "kind": "speech",
-              "text": "esquerda is the surprise. It comes from Basque ezker, \"left\" (EtymDB 2.1), a word older than Latin's arrival in Iberia, as is Spanish izquierda. Latin's own word for the left hand, sinistra, lives on in English sinister."
+              "text": "esquerda is the surprise. It comes from Basque ezker, \"left\" (EtymDB 2.1), a language spoken in Iberia before Latin arrived, and so does Spanish izquierda. Latin's own word for the left hand, sinistra, lives on in English sinister."
             }
           ]
         },

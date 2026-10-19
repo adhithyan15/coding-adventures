@@ -4,7 +4,7 @@
   "chapter": 266,
   "title": "Mais Do Que --- More Than, and How Long",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:90aed5480ef4342c",
+  "sourceHash": "fnv1a64:6d892c1a500049cc",
   "lessons": [
     {
       "id": "PT-C266-mais-do-que",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7e1a2ddbece4ff81",
+      "sourceHash": "fnv1a64:739f08e1d5be70a5",
       "notice": null,
       "blocks": [
         {
@@ -64,7 +64,7 @@
             },
             {
               "kind": "speech",
-              "text": "English often builds the comparison into the adjective, faster, taller; Portuguese nearly always builds it with mais. After do que a person stays in the plain form, eu, tu: do que eu. You will also hear plain que, mais rápido que o autocarro, in Portugal and in Brazil alike."
+              "text": "English often builds the comparison into the adjective, faster, taller; Portuguese builds it with mais. After do que a person stays in the plain form, eu, tu: do que eu. You will also hear plain que, mais rápido que o autocarro, in Portugal and in Brazil alike."
             },
             {
               "kind": "speech",
@@ -91,7 +91,7 @@
             },
             {
               "kind": "speech",
-              "text": "Two adjectives refuse mais. Bom becomes melhor, \"better\", and mau becomes pior, \"worse\": o comboio é melhor do que o autocarro. You have heard both already, inside melhorar, \"to get better\", and piorar, \"to get worse\"."
+              "text": "A few adjectives refuse mais, and two of them come first. Bom becomes melhor, \"better\", and mau becomes pior, \"worse\": o comboio é melhor do que o autocarro. You have heard both already, inside melhorar, \"to get better\", and piorar, \"to get worse\"."
             }
           ]
         },

@@ -4,7 +4,7 @@
   "chapter": 268,
   "title": "Would, Could, Should --- The Condicional, and Six Lines",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:39fb3480ab280342",
+  "sourceHash": "fnv1a64:39541d54a0dda613",
   "lessons": [
     {
       "id": "PT-C268-poderia",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d66385b9f62e4ba3",
+      "sourceHash": "fnv1a64:eefc1eb085130b3f",
       "notice": null,
       "blocks": [
         {
@@ -87,7 +87,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Latin had no would-tense. Spoken Latin made one by gluing a past of habēre, \"to have\", onto the infinitive: roughly \"I had to speak\", which slid into \"I would speak\". Portuguese and Spanish chose the imperfect of that verb, habēbat, the same past that became havia; worn down on the end of a verb, it is the -ia of falaria. Italian glued on the perfect instead, which is why its endings do not match. Neither EtymDB nor Lewis & Short covers a change this late; this is the usual explanation in histories of Romance, given as that. The name condicional is a learned borrowing from Medieval Latin conditiōnālis (EtymDB 2.1)."
+              "text": "Latin had no would-tense. Spoken Latin made one by gluing a past of habēre, \"to have\", onto the infinitive: roughly \"I had to speak\", which slid into \"I would speak\". Portuguese and Spanish chose the imperfect of that verb, habēbat, the same past that became havia; worn down on the end of a verb, it is the -ia of falaria. Italian glued on the perfect instead, which is why its endings do not match. Neither EtymDB nor Lewis & Short covers a change this late; this is the usual explanation in histories of Romance, given as that. The name condicional comes from Medieval Latin conditiōnālis (EtymDB 2.1)."
             }
           ]
         },
@@ -348,7 +348,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f754180fa5baeba0",
+      "sourceHash": "fnv1a64:421db7168379641c",
       "notice": null,
       "blocks": [
         {
@@ -389,7 +389,7 @@
             },
             {
               "kind": "speech",
-              "text": "Vamos is \"shall we go\", from ir, and poderíamos is \"we could\", the nós form of poderia. And listen to se chover: one occasion still to come, so the special form you met last chapter."
+              "text": "Vamos is \"shall we go\", from ir, and poderíamos is \"we could\", the nós form of poderia: a soft suggestion, which is why it can follow se chover. And listen to se chover: one occasion still to come, so the special form you met last chapter."
             }
           ]
         },
@@ -485,7 +485,7 @@
         "writing-block",
         "eyes-or-hands-step"
       ],
-      "sourceHash": "fnv1a64:1daf9df8d6d0cb82",
+      "sourceHash": "fnv1a64:a1ea4f4ecaf70790",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -626,7 +626,7 @@
             },
             {
               "kind": "speech",
-              "text": "Now read your lines as you read the journey in chapter two hundred and sixty. Mark every verb C for cena, the scene, or E for evento. Lines one and five should be mostly C; three and four mostly E. A line about the weather marked E is the commonest slip: change choveu back to chovia."
+              "text": "Now read your lines as you read the journey in chapter two hundred and sixty. Mark every verb C for cena, the scene, or E for evento. Lines one and two should be mostly C; three and four mostly E; five has one of each. A line about the weather marked E is the commonest slip: change choveu back to chovia."
             },
             {
               "kind": "pause",

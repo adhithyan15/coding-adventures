@@ -4,7 +4,7 @@
   "chapter": 408,
   "title": "Peões e radares",
   "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:b22301d26aa5ca4a",
+  "sourceHash": "fnv1a64:13a59b5048191d9f",
   "lessons": [
     {
       "id": "PT-C408-peao",
@@ -719,7 +719,7 @@
     {
       "id": "PT-R408-revisao-401-408",
       "sequence": 23000,
-      "title": "Estradas, estações e alojamento",
+      "title": "Estradas e estações",
       "headword": "(dialogue)",
       "romanization": "(dialogue)",
       "gloss": "a review of chapters 401-408",
@@ -729,7 +729,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e4f3c947192aff62",
+      "sourceHash": "fnv1a64:941f416fbafd4292",
       "notice": null,
       "blocks": [
         {

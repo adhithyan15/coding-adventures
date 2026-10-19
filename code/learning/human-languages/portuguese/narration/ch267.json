@@ -4,7 +4,7 @@
   "chapter": 267,
   "title": "Se, and Depende --- If, and It Depends",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:79f92841392cb6f6",
+  "sourceHash": "fnv1a64:c82febbedb344391",
   "lessons": [
     {
       "id": "PT-C267-se",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:61c201941b68417f",
+      "sourceHash": "fnv1a64:7307d8fe30851bf7",
       "notice": null,
       "blocks": [
         {
@@ -87,7 +87,7 @@
             },
             {
               "kind": "speech",
-              "text": "The ear tells them apart by their place. The \"oneself\" se clings to a verb: chama-se, levanto-me, como se chama. The \"if\" se opens a whole clause."
+              "text": "The ear tells them apart by their place. The \"oneself\" se clings to a verb: chama-se, levanta-se, como se chama. The \"if\" se opens a whole clause."
             }
           ]
         },
@@ -172,7 +172,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4fd502d33ccaffb5",
+      "sourceHash": "fnv1a64:9699a52a2ef58ad5",
       "notice": null,
       "blocks": [
         {
@@ -188,7 +188,7 @@
             },
             {
               "kind": "speech",
-              "text": "Say \"if\". (Se.) Say \"it was raining\". (Chovia.) Now the present: \"it's raining\". (Chove.)"
+              "text": "Say \"if\". (Se.) Say \"it was raining\". (Chovia.) Now the present: \"it rains\". (Chove.)"
             }
           ]
         },
@@ -241,7 +241,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "The present is right for a habit, or for what holds now. For one particular occasion still to come, careful Portuguese bends the verb after se into a form of its own:"
+              "text": "The present is right for a habit, or for what holds now. For one particular occasion still to come, standard Portuguese bends the verb after se into a form of its own, the future subjunctive:"
             },
             {
               "kind": "speech",
@@ -249,7 +249,7 @@
             },
             {
               "kind": "speech",
-              "text": "Chover, not chove. It looks like the infinitive here, though for most verbs it does not, and you only need to recognise it for now; a later chapter builds it. Brazil and Portugal share it."
+              "text": "Chover, not chove. For a regular verb it sounds just like the infinitive; irregular verbs have forms of their own, which a later chapter builds. For now, recognise it. Brazil and Portugal share it."
             }
           ]
         },
@@ -260,7 +260,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "chover is inherited from spoken Latin plovere (EtymDB 2.1), a reshaping of classical pluere, \"to rain\" (Lewis & Short, under pluo). Latin pl- became Portuguese ch-: chuva from pluvia, cheio from plēnus, \"full\", and chegar from plicāre (all EtymDB 2.1). Four words, one sound change."
+              "text": "chover is inherited from spoken Latin plovere (EtymDB 2.1), a reshaping of classical pluere, \"to rain\" (Lewis & Short, under pluo). Latin pl- became Portuguese ch-: chuva from pluvia and chegar from plicāre (both EtymDB 2.1), and cheio, \"full\", usually traced to plēnus (Lewis & Short). Four words, one sound change."
             }
           ]
         },
@@ -345,7 +345,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ba62ce331c7f975f",
+      "sourceHash": "fnv1a64:1a5eda0df26f584f",
       "notice": null,
       "blocks": [
         {
@@ -424,7 +424,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "depender is a learned borrowing from Latin dēpendēre, \"to hang from, to hang down\" (EtymDB 2.1; Lewis & Short, under dependeo): dē, \"down from\", and pendēre, \"to hang\". To depend on something is to hang from it, and the answer swings until the condition settles. Chapter nineteen hung pensar from the same family, weighing by hanging; English pendant and pending belong to it too."
+              "text": "depender comes from Latin dēpendēre, \"to hang from, to hang down\" (EtymDB 2.1; Lewis & Short, under dependeo): dē, \"down from\", and pendēre, \"to hang\". To depend on something is to hang from it, and the answer swings until the condition settles. Chapter nineteen hung pensar from the same family, weighing by hanging; English pendant and pending belong to it too."
             }
           ]
         },
@@ -509,7 +509,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:65a6b121245bda58",
+      "sourceHash": "fnv1a64:a6f4c40490c46f78",
       "notice": null,
       "blocks": [
         {
@@ -606,11 +606,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "one occasion still to come — Se chover amanhã, apanho o autocarro, porque é mais rápido do que ir a pé.",
+              "instruction": "one occasion still to come — Se chover amanhã, apanho o autocarro, porque é mais rápido do que ir a pé. — a pé, on foot",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: one occasion still to come — *Se chover amanhã, apanho o autocarro, porque é mais rápido do que ir a pé.*]"
+              "source": "[YOU SAY: one occasion still to come — *Se chover amanhã, apanho o autocarro, porque é mais rápido do que ir a pé.* — *a pé*, on foot]"
             }
           ]
         },

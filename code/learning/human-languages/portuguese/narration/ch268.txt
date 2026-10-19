@@ -20,7 +20,7 @@ Three jobs, all of them about softening. A polite request: Poderia ajudar-me? �
 In everyday European speech the imperfeito often stands in for it, as queria did at the ticket window: podia ajudar-me?, gostava de viajar. Both are right. Notice also the me after the verb in ajudar-me; Brazil puts it first.
 
 The word, taken apart: "I had to speak".
-Latin had no would-tense. Spoken Latin made one by gluing a past of habēre, "to have", onto the infinitive: roughly "I had to speak", which slid into "I would speak". Portuguese and Spanish chose the imperfect of that verb, habēbat, the same past that became havia; worn down on the end of a verb, it is the -ia of falaria. Italian glued on the perfect instead, which is why its endings do not match. Neither EtymDB nor Lewis & Short covers a change this late; this is the usual explanation in histories of Romance, given as that. The name condicional is a learned borrowing from Medieval Latin conditiōnālis (EtymDB 2.1).
+Latin had no would-tense. Spoken Latin made one by gluing a past of habēre, "to have", onto the infinitive: roughly "I had to speak", which slid into "I would speak". Portuguese and Spanish chose the imperfect of that verb, habēbat, the same past that became havia; worn down on the end of a verb, it is the -ia of falaria. Italian glued on the perfect instead, which is why its endings do not match. Neither EtymDB nor Lewis & Short covers a change this late; this is the usual explanation in histories of Romance, given as that. The name condicional comes from Medieval Latin conditiōnālis (EtymDB 2.1).
 
 Guided Practice.
 [pause 1 second]
@@ -91,7 +91,7 @@ What you've built.
 Two chapters, and a whole way of talking about what has not happened yet. A real branch: se chove, não saio. A branch not yet named: depende, or depende de ti. And the softened result, in the condicional: poderia, deveria, seria.
 — Vamos ao parque amanhã? — Depende. Seria bom, mas se chover, poderíamos ir ao museu.
 [pause 2 seconds]
-Vamos is "shall we go", from ir, and poderíamos is "we could", the nós form of poderia. And listen to se chover: one occasion still to come, so the special form you met last chapter.
+Vamos is "shall we go", from ir, and poderíamos is "we could", the nós form of poderia: a soft suggestion, which is why it can follow se chover. And listen to se chover: one occasion still to come, so the special form you met last chapter.
 
 Guided Practice.
 [pause 1 second]
@@ -145,7 +145,7 @@ Use only words you already write. The whole exercise is choosing the right past 
 [once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 Wrap-up recall.
 [pause 2 seconds]
-Now read your lines as you read the journey in chapter two hundred and sixty. Mark every verb C for cena, the scene, or E for evento. Lines one and five should be mostly C; three and four mostly E. A line about the weather marked E is the commonest slip: change choveu back to chovia.
+Now read your lines as you read the journey in chapter two hundred and sixty. Mark every verb C for cena, the scene, or E for evento. Lines one and two should be mostly C; three and four mostly E; five has one of each. A line about the weather marked E is the commonest slip: change choveu back to chovia.
 [pause 2 seconds]
 Then two spelling checks. The nós form of the perfeito carries an accent in Portugal, chegámos, esperámos, and so does the imperfeito's, estávamos, tínhamos. And every til stays on: não, estação.
 [pause 2 seconds]

@@ -1,7 +1,7 @@
 {
   "language": "portuguese",
   "chapter": 268,
-  "sourceHash": "fnv1a64:39fb3480ab280342",
+  "sourceHash": "fnv1a64:39541d54a0dda613",
   "lessonIds": [
     "PT-C268-poderia",
     "PT-C268-seria",
@@ -12,7 +12,7 @@
   "drivablePrefix": 3,
   "text": "portuguese/narration/ch268.txt",
   "json": "portuguese/narration/ch268.json",
-  "textHash": "fnv1a64:5bad54f2922ef079",
-  "jsonHash": "fnv1a64:3ba25e4e6c7a6cfa",
+  "textHash": "fnv1a64:0997e05d33436e07",
+  "jsonHash": "fnv1a64:b443114d587a2349",
   "findings": []
 }

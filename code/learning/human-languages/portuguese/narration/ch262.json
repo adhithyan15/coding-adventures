@@ -4,7 +4,7 @@
   "chapter": 262,
   "title": "Devia --- What You Should Do, and Explaining Why",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:ca5ea9a9776748fe",
+  "sourceHash": "fnv1a64:f36e54985c090847",
   "lessons": [
     {
       "id": "PT-C262-devia",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d40389fb68f48c81",
+      "sourceHash": "fnv1a64:362782a9b138e2c1",
       "notice": null,
       "blocks": [
         {
@@ -76,7 +76,7 @@
             },
             {
               "kind": "speech",
-              "text": "Deveria is a little more careful, and in Brazil it is the usual one. Its -ia belongs to the would-form of Portuguese, which the last chapter of this run builds properly."
+              "text": "Deveria is a little more careful, and Brazil uses it more than Portugal. Its -ia belongs to the would-form of Portuguese, which the last chapter of this run builds properly."
             }
           ]
         },

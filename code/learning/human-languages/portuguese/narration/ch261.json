@@ -4,7 +4,7 @@
   "chapter": 261,
   "title": "Acho Que --- What I Think, and Why",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:52bf4f5b9903d20d",
+  "sourceHash": "fnv1a64:e1a204a727a6113a",
   "lessons": [
     {
       "id": "PT-C261-acho-que",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9c33b7c604c91551",
+      "sourceHash": "fnv1a64:84d846af3252ab57",
       "notice": null,
       "blocks": [
         {
@@ -98,7 +98,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "achar is inherited from Latin afflāre, \"to breathe upon\" (EtymDB 2.1), a hunter's word for catching a scent. To find a thing was to pick up its scent, so acho que is, at root, \"I find that\", as in English \"I find it expensive\"."
+              "text": "achar is inherited from Latin afflāre, \"to breathe upon\" (EtymDB 2.1; Lewis & Short, under afflo). The usual account, which neither source spells out, is a hound catching a scent: to find a thing was to pick up its breath. So acho que is, at root, \"I find that\", as in English \"I find it expensive\"."
             }
           ]
         },
@@ -183,7 +183,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:875107362d0fd094",
+      "sourceHash": "fnv1a64:5195c1e027b1617a",
       "notice": null,
       "blocks": [
         {
@@ -262,7 +262,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "porque is two words grown together: por, \"for\", and que, \"what, that\" (EtymDB 2.1 lists the compound, with Italian perché beside it). que is inherited from Latin quid, \"what\" (EtymDB 2.1), and por is usually traced to Latin prō, \"for, on behalf of\". So the question and the answer are the same two words: \"for what\", and \"for this\"."
+              "text": "porque is two words grown together: por, \"for\", and que, \"what, that\" (EtymDB 2.1 traces it to Old Portuguese porque, with Italian perché as its cousin). que is inherited from Latin quid, \"what\" (EtymDB 2.1), and por is usually traced to Latin prō, \"for, on behalf of\". So the question and the answer are the same two words: \"for what\", and \"for this\"."
             }
           ]
         },
@@ -347,7 +347,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:84ea334dc510b3e5",
+      "sourceHash": "fnv1a64:ba90b29d2e157545",
       "notice": null,
       "blocks": [
         {
@@ -407,11 +407,11 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "então can stand in the same place: Chovia, então apanhei o autocarro. It is lighter and more conversational, the \"so\" of a friend telling you about their day. portanto, which you also have, is the formal one: a letter, a report, an argument."
+              "text": "então can stand in the same place: Chovia, então apanhei o autocarro. It is lighter and more conversational, the \"so\" of a friend telling you about their day. portanto, which you also have, is the formal one for a letter or an argument, though in Portugal it is also a common filler in speech."
             },
             {
               "kind": "speech",
-              "text": "spoken: então, neutral: por isso, written: portanto."
+              "text": "chatty: então, neutral: por isso, formal: portanto."
             },
             {
               "kind": "speech",
@@ -492,7 +492,7 @@
             },
             {
               "kind": "speech",
-              "text": "Which way does porque point, and which way por isso? (Porque back to the cause; por isso forward to the consequence.) Which of the three forward words is the spoken one, and which the written one? (Então spoken; portanto written.) What did Latin in tunc mean? (At that moment.)"
+              "text": "Which way does porque point, and which way por isso? (Porque back to the cause; por isso forward to the consequence.) Which of the three forward words is the chatty one, and which the formal one? (Então chatty; portanto formal.) What did Latin in tunc mean? (At that moment.)"
             }
           ]
         }

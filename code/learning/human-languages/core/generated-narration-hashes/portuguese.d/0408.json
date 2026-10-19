@@ -1,7 +1,7 @@
 {
   "language": "portuguese",
   "chapter": 408,
-  "sourceHash": "fnv1a64:b22301d26aa5ca4a",
+  "sourceHash": "fnv1a64:13a59b5048191d9f",
   "lessonIds": [
     "PT-C408-peao",
     "PT-C408-passadeira",
@@ -14,7 +14,7 @@
   "drivablePrefix": 6,
   "text": "portuguese/narration/ch408.txt",
   "json": "portuguese/narration/ch408.json",
-  "textHash": "fnv1a64:d64e7f6a20b09a8d",
-  "jsonHash": "fnv1a64:66ef528454fb41d3",
+  "textHash": "fnv1a64:9bdfdd82dd565e6f",
+  "jsonHash": "fnv1a64:da6299dbb74616fc",
   "findings": []
 }

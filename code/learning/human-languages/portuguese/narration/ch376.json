@@ -4,7 +4,7 @@
   "chapter": 376,
   "title": "Na universidade",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:72c50404304095c9",
+  "sourceHash": "fnv1a64:4e44c6ec2394eb38",
   "lessons": [
     {
       "id": "PT-C376-faculdade",
@@ -303,7 +303,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6afa391a580e57f4",
+      "sourceHash": "fnv1a64:ebb644f750bb23a0",
       "notice": null,
       "blocks": [
         {
@@ -334,7 +334,7 @@
             },
             {
               "kind": "speech",
-              "text": "A inscrição no curso custa cinquenta euros. Enrolment on this course costs fifty euros."
+              "text": "A inscrição no curso custa cinquenta euros. Signing up for the classes costs fifty euros."
             },
             {
               "kind": "speech",

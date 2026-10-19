@@ -14,12 +14,12 @@ Now the same words go to work on a story. The scene is painted; the events need 
 Grammar Lens: three places in a story.
 Primeiro comprei o bilhete. — First I bought the ticket. Depois esperei o comboio. — Then I waited for the train. No fim, voltei para casa. — In the end, I went back home.
 Depois is the plain "then, after that". It stands between two events and points from the first to the second, and you can use it as many times as the story has events. A seguir, which you met as "next", does the same job.
-Depois can also take a noun, with de: depois do jantar, "after dinner", where de and o weld into do. A seguir stands better on its own.
+Depois can also take a noun, with de: depois do jantar, "after dinner", where de and o weld into do. A seguir takes a instead, a seguir ao jantar, and often stands alone.
 No fim is "in the end": the last event, and usually the outcome. You have finalmente too, "finally, at last", and it carries relief: something you were waiting for has come. No fim simply closes the story. Fazia frio e chovia, e no fim voltei para casa contente.
 Notice what these words do not touch: the scene. Fazia frio needs no depois. Order belongs to the events.
 
 The word, taken apart: after, and the end.
-depois is built from Latin dē and a spoken Latin postius, a form of post, "after, behind" (EtymDB 2.1, which lists it as a compound of the two). English keeps post in postpone and postscript.
+depois is usually traced to Latin dē and a spoken Latin postius, a form of post, "after, behind" (Lewis & Short, under post); EtymDB 2.1 follows it only to Old Portuguese depois. English keeps post in postpone and postscript.
 o fim, "the end", has no parent in EtymDB 2.1. It is usually traced to Latin fīnis, "boundary, end" (Lewis & Short), which English kept in final and finish, and which also gave finalmente.
 
 Guided Practice.

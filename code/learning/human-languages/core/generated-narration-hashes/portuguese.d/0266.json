@@ -1,7 +1,7 @@
 {
   "language": "portuguese",
   "chapter": 266,
-  "sourceHash": "fnv1a64:90aed5480ef4342c",
+  "sourceHash": "fnv1a64:6d892c1a500049cc",
   "lessonIds": [
     "PT-C266-mais-do-que",
     "PT-C266-ha-tres-anos-que",
@@ -11,7 +11,7 @@
   "drivablePrefix": 3,
   "text": "portuguese/narration/ch266.txt",
   "json": "portuguese/narration/ch266.json",
-  "textHash": "fnv1a64:e142ce604d726b9c",
-  "jsonHash": "fnv1a64:ef267c8431e26c79",
+  "textHash": "fnv1a64:7acca76c46055a05",
+  "jsonHash": "fnv1a64:403a8f901d415c95",
   "findings": []
 }

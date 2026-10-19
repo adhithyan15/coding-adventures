@@ -23,7 +23,7 @@ Para mim, o comboio é caro, mas o museu é interessante. — To my mind, the tr
 Mim is the form eu takes after para, and tu becomes ti, so para ti?, "what about you?", hands the view back in two words. Para mim puts your own standpoint first; acho que puts the opinion first.
 
 The word, taken apart.
-achar is inherited from Latin afflāre, "to breathe upon" (EtymDB 2.1), a hunter's word for catching a scent. To find a thing was to pick up its scent, so acho que is, at root, "I find that", as in English "I find it expensive".
+achar is inherited from Latin afflāre, "to breathe upon" (EtymDB 2.1; Lewis & Short, under afflo). The usual account, which neither source spells out, is a hound catching a scent: to find a thing was to pick up its breath. So acho que is, at root, "I find that", as in English "I find it expensive".
 
 Guided Practice.
 [pause 1 second]
@@ -62,7 +62,7 @@ When the word stands alone, or ends the sentence, it takes an accent and the str
 Brazil writes the question as two words, por que, and the lone one as por quê; the answer is porque everywhere.
 
 The word, taken apart.
-porque is two words grown together: por, "for", and que, "what, that" (EtymDB 2.1 lists the compound, with Italian perché beside it). que is inherited from Latin quid, "what" (EtymDB 2.1), and por is usually traced to Latin prō, "for, on behalf of". So the question and the answer are the same two words: "for what", and "for this".
+porque is two words grown together: por, "for", and que, "what, that" (EtymDB 2.1 traces it to Old Portuguese porque, with Italian perché as its cousin). que is inherited from Latin quid, "what" (EtymDB 2.1), and por is usually traced to Latin prō, "for, on behalf of". So the question and the answer are the same two words: "for what", and "for this".
 
 Guided Practice.
 [pause 1 second]
@@ -96,8 +96,8 @@ Porque points back, from what happened to its cause. Por isso points forward, fr
 The tenses keep their jobs. Chovia is the scene, the reason; apanhei is the event, the consequence.
 
 Grammar Lens: então and portanto.
-então can stand in the same place: Chovia, então apanhei o autocarro. It is lighter and more conversational, the "so" of a friend telling you about their day. portanto, which you also have, is the formal one: a letter, a report, an argument.
-spoken: então, neutral: por isso, written: portanto.
+então can stand in the same place: Chovia, então apanhei o autocarro. It is lighter and more conversational, the "so" of a friend telling you about their day. portanto, which you also have, is the formal one for a letter or an argument, though in Portugal it is also a common filler in speech.
+chatty: então, neutral: por isso, formal: portanto.
 All three point forward. Então also keeps its first meaning, "then, at that time", so in a story it can do both jobs at once.
 
 The word, taken apart.
@@ -116,7 +116,7 @@ Guided Practice.
 
 Wrap-up Recall.
 [pause 3 seconds]
-Which way does porque point, and which way por isso? (Porque back to the cause; por isso forward to the consequence.) Which of the three forward words is the spoken one, and which the written one? (Então spoken; portanto written.) What did Latin in tunc mean? (At that moment.)
+Which way does porque point, and which way por isso? (Porque back to the cause; por isso forward to the consequence.) Which of the three forward words is the chatty one, and which the formal one? (Então chatty; portanto formal.) What did Latin in tunc mean? (At that moment.)
 
 
 Lesson 4 of 4.

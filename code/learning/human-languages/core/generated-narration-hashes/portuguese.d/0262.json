@@ -1,7 +1,7 @@
 {
   "language": "portuguese",
   "chapter": 262,
-  "sourceHash": "fnv1a64:ca5ea9a9776748fe",
+  "sourceHash": "fnv1a64:f36e54985c090847",
   "lessonIds": [
     "PT-C262-devia",
     "PT-C262-explicar",
@@ -11,7 +11,7 @@
   "drivablePrefix": 3,
   "text": "portuguese/narration/ch262.txt",
   "json": "portuguese/narration/ch262.json",
-  "textHash": "fnv1a64:4289a67d70cb56e8",
-  "jsonHash": "fnv1a64:0e0b0a20e1c000ab",
+  "textHash": "fnv1a64:d038c27471102692",
+  "jsonHash": "fnv1a64:97192b50c8ceaee0",
   "findings": []
 }

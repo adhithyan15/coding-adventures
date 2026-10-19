@@ -1,7 +1,7 @@
 {
   "language": "portuguese",
   "chapter": 267,
-  "sourceHash": "fnv1a64:79f92841392cb6f6",
+  "sourceHash": "fnv1a64:c82febbedb344391",
   "lessonIds": [
     "PT-C267-se",
     "PT-C267-se-chove",
@@ -12,7 +12,7 @@
   "drivablePrefix": 4,
   "text": "portuguese/narration/ch267.txt",
   "json": "portuguese/narration/ch267.json",
-  "textHash": "fnv1a64:0a9292afd48aca3a",
-  "jsonHash": "fnv1a64:d0e39005444a107d",
+  "textHash": "fnv1a64:8cf1c115f33f6162",
+  "jsonHash": "fnv1a64:1e54cd961b4e9e6e",
   "findings": []
 }

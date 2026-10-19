@@ -20,7 +20,7 @@ Não sei se é verdade. — I don't know if it's true.
 
 The word, taken apart: one spelling, two words.
 You have met se before, in como se chama and levantar-se. That one means "oneself", and it is a different word that happens to be spelled the same way. EtymDB 2.1 keeps the two apart: se, "if", is inherited from Latin sī, "if" (Lewis & Short, under si), whose vowel opened to e; and se, "oneself", is inherited from Latin sē, "himself, herself, itself".
-The ear tells them apart by their place. The "oneself" se clings to a verb: chama-se, levanto-me, como se chama. The "if" se opens a whole clause.
+The ear tells them apart by their place. The "oneself" se clings to a verb: chama-se, levanta-se, como se chama. The "if" se opens a whole clause.
 
 Guided Practice.
 [pause 1 second]
@@ -43,7 +43,7 @@ se chove, não saio — the condition that really happens.
 
 Warm-up.
 [pause 2 seconds]
-Say "if". (Se.) Say "it was raining". (Chovia.) Now the present: "it's raining". (Chove.)
+Say "if". (Se.) Say "it was raining". (Chovia.) Now the present: "it rains". (Chove.)
 
 Grammar Lens: both halves in the present.
 Se chove, não saio. — If it rains, I don't go out. Se o comboio é caro, apanho o autocarro. — If the train is expensive, I take the bus.
@@ -57,12 +57,12 @@ Se perco o comboio, apanho o autocarro. Se perco o autocarro, volto para casa.
 Compare por isso. Chove, por isso não saio says it is raining, and here is the consequence. Se chove, não saio says it might, and here is what happens if so. Same consequence; the second one has not decided yet whether the cause is true.
 
 Grammar Lens: one occasion still to come.
-The present is right for a habit, or for what holds now. For one particular occasion still to come, careful Portuguese bends the verb after se into a form of its own:
+The present is right for a habit, or for what holds now. For one particular occasion still to come, standard Portuguese bends the verb after se into a form of its own, the future subjunctive:
 Se chover amanhã, não saio. — If it rains tomorrow, I won't go out.
-Chover, not chove. It looks like the infinitive here, though for most verbs it does not, and you only need to recognise it for now; a later chapter builds it. Brazil and Portugal share it.
+Chover, not chove. For a regular verb it sounds just like the infinitive; irregular verbs have forms of their own, which a later chapter builds. For now, recognise it. Brazil and Portugal share it.
 
 The word, taken apart.
-chover is inherited from spoken Latin plovere (EtymDB 2.1), a reshaping of classical pluere, "to rain" (Lewis & Short, under pluo). Latin pl- became Portuguese ch-: chuva from pluvia, cheio from plēnus, "full", and chegar from plicāre (all EtymDB 2.1). Four words, one sound change.
+chover is inherited from spoken Latin plovere (EtymDB 2.1), a reshaping of classical pluere, "to rain" (Lewis & Short, under pluo). Latin pl- became Portuguese ch-: chuva from pluvia and chegar from plicāre (both EtymDB 2.1), and cheio, "full", usually traced to plēnus (Lewis & Short). Four words, one sound change.
 
 Guided Practice.
 [pause 1 second]
@@ -101,7 +101,7 @@ De and o weld into do, and de and a into da: depende da hora. English says depen
 Or name it with a whole se: Depende. Se chove, não vou. The depende announces a condition; the se sentence states it.
 
 The word, taken apart.
-depender is a learned borrowing from Latin dēpendēre, "to hang from, to hang down" (EtymDB 2.1; Lewis & Short, under dependeo): dē, "down from", and pendēre, "to hang". To depend on something is to hang from it, and the answer swings until the condition settles. Chapter nineteen hung pensar from the same family, weighing by hanging; English pendant and pending belong to it too.
+depender comes from Latin dēpendēre, "to hang from, to hang down" (EtymDB 2.1; Lewis & Short, under dependeo): dē, "down from", and pendēre, "to hang". To depend on something is to hang from it, and the answer swings until the condition settles. Chapter nineteen hung pensar from the same family, weighing by hanging; English pendant and pending belong to it too.
 
 Guided Practice.
 [pause 1 second]
@@ -143,7 +143,7 @@ Guided Practice.
 [pause 8 seconds for the answer]
 [your turn — say: at the window — Depende. Se volto hoje, ida e volta. Se fico, só de ida.]
 [pause 8 seconds for the answer]
-[your turn — say: one occasion still to come — Se chover amanhã, apanho o autocarro, porque é mais rápido do que ir a pé.]
+[your turn — say: one occasion still to come — Se chover amanhã, apanho o autocarro, porque é mais rápido do que ir a pé. — a pé, on foot]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.

@@ -45,7 +45,7 @@ reviews_of: [PT-C376-caloiro]
 
 > A inscrição no curso custa cinquenta euros.
 >
-> *Enrolment on this course costs fifty euros.*
+> *Signing up for the classes costs fifty euros.*
 
 *Fazer a inscrição* — to enrol, to sign up.
 

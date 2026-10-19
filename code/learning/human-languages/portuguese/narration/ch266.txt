@@ -14,14 +14,14 @@ Those two words, mais and menos, are the whole of this lesson's new grammar.
 You'll want to know: mais … do que.
 To compare two things, put mais, "more", in front of the adjective and do que, "than", in front of the second thing:
 O comboio é mais rápido do que o autocarro. — The train is faster than the bus. O avião é mais caro do que o comboio. — The plane is dearer than the train. És mais alto do que eu. — You are taller than me.
-English often builds the comparison into the adjective, faster, taller; Portuguese nearly always builds it with mais. After do que a person stays in the plain form, eu, tu: do que eu. You will also hear plain que, mais rápido que o autocarro, in Portugal and in Brazil alike.
+English often builds the comparison into the adjective, faster, taller; Portuguese builds it with mais. After do que a person stays in the plain form, eu, tu: do que eu. You will also hear plain que, mais rápido que o autocarro, in Portugal and in Brazil alike.
 Its opposite is menos, "less": O autocarro é menos caro do que o comboio — the bus is less expensive than the train.
 
 Grammar Lens: o mais, and two that refuse.
 For the most of all, keep mais and give the noun its article:
 o comboio mais rápido — the fastest train a cidade mais bonita — the most beautiful city.
 The adjective still comes after the noun, and the article does the work of English -est. Who it is the most among comes with de: a cidade mais bonita de Portugal.
-Two adjectives refuse mais. Bom becomes melhor, "better", and mau becomes pior, "worse": o comboio é melhor do que o autocarro. You have heard both already, inside melhorar, "to get better", and piorar, "to get worse".
+A few adjectives refuse mais, and two of them come first. Bom becomes melhor, "better", and mau becomes pior, "worse": o comboio é melhor do que o autocarro. You have heard both already, inside melhorar, "to get better", and piorar, "to get worse".
 
 The word, taken apart.
 mais is inherited from Latin magis, "more" (EtymDB 2.1), and so is the mas of chapter two hundred and sixty: "more" became "rather", and "rather" became "but". menos has no parent in EtymDB 2.1; it is usually traced to Latin minus, "less" (Lewis & Short), which English kept whole as minus. melhor is inherited from Latin melior, "better" (EtymDB 2.1).

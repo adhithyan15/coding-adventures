@@ -4,7 +4,7 @@
   "chapter": 260,
   "title": "First, Then, In the End --- A Story Told in Order",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:40aa27802756662f",
+  "sourceHash": "fnv1a64:77f72ab33b335e72",
   "lessons": [
     {
       "id": "PT-C260-no-fim",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f72ca2acb69c46b2",
+      "sourceHash": "fnv1a64:e8c779dcb55cd3b6",
       "notice": null,
       "blocks": [
         {
@@ -64,7 +64,7 @@
             },
             {
               "kind": "speech",
-              "text": "Depois can also take a noun, with de: depois do jantar, \"after dinner\", where de and o weld into do. A seguir stands better on its own."
+              "text": "Depois can also take a noun, with de: depois do jantar, \"after dinner\", where de and o weld into do. A seguir takes a instead, a seguir ao jantar, and often stands alone."
             },
             {
               "kind": "speech",
@@ -83,7 +83,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "depois is built from Latin dē and a spoken Latin postius, a form of post, \"after, behind\" (EtymDB 2.1, which lists it as a compound of the two). English keeps post in postpone and postscript."
+              "text": "depois is usually traced to Latin dē and a spoken Latin postius, a form of post, \"after, behind\" (Lewis & Short, under post); EtymDB 2.1 follows it only to Old Portuguese depois. English keeps post in postpone and postscript."
             },
             {
               "kind": "speech",

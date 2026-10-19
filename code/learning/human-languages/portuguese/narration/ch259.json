@@ -4,7 +4,7 @@
   "chapter": 259,
   "title": "The Scene --- Era, Tinha, Havia",
   "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:122207c06abfe6a3",
+  "sourceHash": "fnv1a64:e690b1b2904782e5",
   "lessons": [
     {
       "id": "PT-C259-falava",
@@ -176,7 +176,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7a34ae9d20adb5d6",
+      "sourceHash": "fnv1a64:d64a0fff763ae848",
       "notice": null,
       "blocks": [
         {
@@ -248,7 +248,7 @@
             },
             {
               "kind": "speech",
-              "text": "Like há, it never changes for a plural: one havia for one thing or for a hundred. That is how a European Portuguese scene opens. In everyday Brazilian speech you will often hear tinha doing this job instead: tinha muitas pessoas."
+              "text": "Like há, it does not change for a plural: one havia for one thing or for a hundred. That is how a European Portuguese scene opens. In everyday Brazilian speech you will often hear tinha doing this job instead: tinha muitas pessoas."
             }
           ]
         },
@@ -263,7 +263,7 @@
             },
             {
               "kind": "speech",
-              "text": "era is Latin erat, \"he was\" (Lewis & Short, under sum). Latin's own past of \"to be\" never had the b, which is why era looks nothing like falava. How the -nh- of tinha arose is not something either source traces, so it is left open here."
+              "text": "era is Latin erat, \"he was\" (Lewis & Short, under sum). Latin's own past of \"to be\" had no b, which is why era looks nothing like falava. How the -nh- of tinha arose is not something either source traces, so it is left open here."
             }
           ]
         },
@@ -329,7 +329,7 @@
             },
             {
               "kind": "speech",
-              "text": "Which Latin verb is inside tinha? (Tenēre, \"to hold\".) Why does era not end in -va? (Latin's own form never had the b.) Say \"there were a lot of people\". (Havia muitas pessoas.) And does havia change for a plural? (No.)"
+              "text": "Which Latin verb is inside tinha? (Tenēre, \"to hold\".) Why does era not end in -va? (Latin's own form had no b.) Say \"there were a lot of people\". (Havia muitas pessoas.) And does havia change for a plural? (No.)"
             }
           ]
         }
@@ -671,7 +671,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:92fd33171fc1860e",
+      "sourceHash": "fnv1a64:554acbe32a7a13de",
       "notice": null,
       "blocks": [
         {
@@ -724,7 +724,7 @@
             },
             {
               "kind": "speech",
-              "text": "This a plus infinitive is European. In Brazil the same idea takes a form ending in -ndo: estava dormindo. Both are understood everywhere; this book writes the European one."
+              "text": "This a plus infinitive is the Portuguese norm. In Brazil, and in parts of southern Portugal, the same idea takes a form ending in -ndo: estava dormindo. Both are understood everywhere."
             }
           ]
         },
