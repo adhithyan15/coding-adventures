@@ -70,12 +70,16 @@ mkdir -p "$OUT_DIR"
 
 # Paths are remapped so the bytes do not depend on where the repository is
 # checked out: two checkouts at different paths then build an identical .wasm.
-REMAP="--remap-path-prefix=$WORKSPACE=/workspace"
-REMAP="$REMAP --remap-path-prefix=${CARGO_HOME:-$HOME/.cargo}=/cargo"
-REMAP="$REMAP --remap-path-prefix=${RUSTUP_HOME:-$HOME/.rustup}=/rustup"
+# CARGO_ENCODED_RUSTFLAGS separates flags with 0x1f, so a path with spaces
+# stays one flag; it also replaces any RUSTFLAGS in the environment, which
+# would otherwise change the bytes.
+SEP=$'\x1f'
+ENCODED="--remap-path-prefix=$WORKSPACE=/workspace"
+ENCODED="$ENCODED$SEP--remap-path-prefix=${CARGO_HOME:-$HOME/.cargo}=/cargo"
+ENCODED="$ENCODED$SEP--remap-path-prefix=${RUSTUP_HOME:-$HOME/.rustup}=/rustup"
 
 echo "Building spreadsheet-wasm for $TARGET (release)…"
-(cd "$WORKSPACE" && RUSTFLAGS="${RUSTFLAGS:-} $REMAP" \
+(cd "$WORKSPACE" && CARGO_ENCODED_RUSTFLAGS="$ENCODED" \
   cargo build -p spreadsheet-wasm --target "$TARGET" --release)
 
 SRC="$WORKSPACE/target/$TARGET/release/spreadsheet_wasm.wasm"
