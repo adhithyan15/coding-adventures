@@ -454,7 +454,7 @@ def _unix_directory(root, *parts):
         or os.stat not in os.supports_dir_fd
         or os.stat not in os.supports_follow_symlinks
     ):
-        raise OSError("descriptor-relative no-follow ledger reads are unavailable")
+        raise OSError("descriptor-relative no-follow ledger operations are unavailable")
     current = _root(root)
     descriptor = os.open(current, os.O_RDONLY | DIRECTORY | NOFOLLOW)
     try:
@@ -617,19 +617,24 @@ def _write_if_changed(root, *parts, value):
     if os.name == "nt":
         return _windows_write_if_changed(root, parts, body)
     path = _file(root, *parts, must_exist=False)
-    directory = os.path.dirname(path)
-    name = os.path.basename(path)
-    directory_fd = os.open(directory, os.O_RDONLY | DIRECTORY | NOFOLLOW)
+    name = parts[-1]
     temporary = f".{name}.{os.getpid()}.{secrets.token_hex(8)}.tmp"
-    try:
+    # The pathname check above rejects static links; only the parent-relative
+    # walk below is authoritative after another process can rename an ancestor.
+    with _unix_directory(root, *parts[:-1]) as directory_fd:
         mode = 0o644
-        if os.path.lexists(path):
+        try:
             info = os.stat(name, dir_fd=directory_fd, follow_symlinks=False)
+        except FileNotFoundError:
+            info = None
+        if info is not None:
             if stat.S_ISLNK(info.st_mode) or not stat.S_ISREG(info.st_mode):
                 raise ValueError(f"refusing non-file ledger shard: {path}")
             mode = stat.S_IMODE(info.st_mode)
             descriptor = os.open(name, os.O_RDONLY | NOFOLLOW, dir_fd=directory_fd)
             with os.fdopen(descriptor, encoding="utf-8") as handle:
+                if not stat.S_ISREG(os.fstat(handle.fileno()).st_mode):
+                    raise ValueError(f"refusing non-file ledger shard: {path}")
                 if handle.read() == body:
                     return
 
@@ -651,22 +656,18 @@ def _write_if_changed(root, *parts, value):
             except FileNotFoundError:
                 pass
             raise
-    finally:
-        os.close(directory_fd)
 
 
 def _remove(root, *parts):
     if os.name == "nt":
         return _windows_remove(root, parts)
     path = _file(root, *parts)
-    directory_fd = os.open(os.path.dirname(path), os.O_RDONLY | DIRECTORY | NOFOLLOW)
-    try:
-        info = os.stat(os.path.basename(path), dir_fd=directory_fd, follow_symlinks=False)
+    name = parts[-1]
+    with _unix_directory(root, *parts[:-1]) as directory_fd:
+        info = os.stat(name, dir_fd=directory_fd, follow_symlinks=False)
         if stat.S_ISLNK(info.st_mode) or not stat.S_ISREG(info.st_mode):
             raise ValueError(f"refusing non-file ledger shard: {path}")
-        os.unlink(os.path.basename(path), dir_fd=directory_fd)
-    finally:
-        os.close(directory_fd)
+        os.unlink(name, dir_fd=directory_fd)
 
 
 def _files(root, *parts):

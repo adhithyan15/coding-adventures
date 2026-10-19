@@ -221,6 +221,16 @@ enough: deterministic ancestor-swap fixtures must show that both enumerators
 and a shard read cannot consume an outside replacement. Concurrent changes
 within the pinned tree need not form a snapshot; errors must fail closed.
 
+The Unix compatibility writer and remover have the same ancestor-swap boundary.
+After pathname prevalidation, each directory component must be opened relative
+to the already-pinned parent descriptor with `O_DIRECTORY` and `O_NOFOLLOW`.
+The selected shard must be checked relative to that final descriptor; temporary
+creation, atomic replacement, and deletion must also use it. A replaced track
+ancestor must neither redirect a write nor remove an outside shard. Tests must
+swap that ancestor immediately after prevalidation for both operations and
+preserve outside sentinels. Existing mode preservation and static symlink
+rejection remain required; no pathname recheck can substitute for anchoring.
+
 ---
 
 ## 3. Generated artifacts are regenerated, never hand-merged
