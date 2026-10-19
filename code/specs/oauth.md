@@ -577,7 +577,7 @@ non-empty DER-ordered RDN sets, and OID-plus-opaque-value attributes under
 shared limits. It retains exact borrowed values and RDN boundaries without
 claiming DirectoryString normalization, semantic name equality, issuer/subject
 relationship decisions, or path validation.
-A bounded `x509-name-comparison` semantic layer next compares two decoded RDN
+A bounded `x509-name-comparison` semantic layer now compares two decoded RDN
 sequences in order, matches each RDN's attributes without depending on their
 DER SET order, requires exact canonical attribute OIDs, and delegates only the
 already framed attribute-value comparison to caller policy. The callback must

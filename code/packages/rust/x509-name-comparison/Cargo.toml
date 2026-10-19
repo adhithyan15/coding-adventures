@@ -1,0 +1,11 @@
+[package]
+name = "x509-name-comparison"
+version = "0.1.0"
+edition = "2021"
+description = "Data-driven comparison of bounded RFC 5280 distinguished names"
+
+[dependencies]
+x509-name = { path = "../x509-name" }
+
+[dev-dependencies]
+der-asn1 = { path = "../der-asn1" }

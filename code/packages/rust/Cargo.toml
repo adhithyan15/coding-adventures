@@ -792,6 +792,7 @@ members = [
     "x509-serial-number",
     "x509-certificate-version",
     "x509-name",
+    "x509-name-comparison",
     "x509-certificate",
     "x509-certificate-policy",
     "tls-server-identity",

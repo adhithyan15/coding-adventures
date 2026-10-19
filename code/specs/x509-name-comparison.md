@@ -2,7 +2,7 @@
 
 ## Status
 
-Specified for a zero-external-dependency Rust semantic layer above
+Implemented as a zero-external-dependency Rust semantic layer above
 `x509-name`.
 
 ## Purpose
@@ -43,7 +43,8 @@ supply a stable equivalence relation; stateful, directional, or
 non-transitive callbacks do not define a valid name-comparison policy.
 
 The function performs no allocation. It uses the existing bounds of at most
-32 RDNs and 64 total attributes and a fixed-width matched-attribute bitmap.
+32 RDNs and 64 total attributes, a fixed-width matched-attribute bitmap, and at
+most 4,096 candidate attribute comparisons across one Name comparison.
 It returns `false` on any sequence, RDN-size, OID, or caller-value mismatch.
 It returns no partial-match evidence and retains no input bytes.
 
@@ -68,4 +69,3 @@ Tests cover:
   constraints, or trust-anchor processing;
 - signature verification, algorithms, clocks, revocation, hostname
   verification, trust-root loading, TLS, sockets, HTTP, or OAuth transport.
-
