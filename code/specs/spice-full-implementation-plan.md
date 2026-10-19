@@ -5668,8 +5668,12 @@ model-card parameter, or a UI artifact is not a completion signal.
    - **Signed nonlinear dynamic corpus** (completed in the cross-language core
      gate slice): the shared release corpus now exercises `PNP`, `PJF`, and
      Level-1 `PMOS` capacitance and storage behavior through AC and transient
-     analyses. The Berkeley v1 core gate requires 23 cases; nonlinear DC and
-     transfer-function coverage remain separate corpus phases.
+     analyses. The Berkeley v1 core gate requires 23 cases.
+   - **Signed nonlinear DC and transfer corpus** (completed in the
+     cross-language core gate slice): every advertised nonlinear kind now has
+     a one-source DC sweep and a DC small-signal transfer-function fixture.
+     The core gate requires 37 cases; temperature, parameter, corner, Monte
+     Carlo, raw-format, and measurement expansion remain separate phases.
    - Expand deck-owned output compatibility beyond source-order analysis
      execution and stable artifact exports toward nested sweeps, raw-format
      interoperability, and remaining vendor-style output controls.
