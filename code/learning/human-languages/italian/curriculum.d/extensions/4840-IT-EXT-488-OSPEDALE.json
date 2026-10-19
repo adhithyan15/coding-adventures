@@ -3,6 +3,6 @@
   "stage": "B1",
   "kind": "required",
   "category": "vocabulary",
-  "canDo": "I can talk about going to hospital: the emergency room, nurses and surgery.",
+  "canDo": "I can talk about going to hospital: the emergency room, being admitted and surgery.",
   "prerequisites": []
 }

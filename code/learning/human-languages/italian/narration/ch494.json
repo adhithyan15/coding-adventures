@@ -4,7 +4,7 @@
   "chapter": 494,
   "title": "Quando finisce",
   "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:731f964b34d9f911",
+  "sourceHash": "fnv1a64:a1a4cef6deecd72d",
   "lessons": [
     {
       "id": "IT-C494-rapporto",
@@ -729,7 +729,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:255e974d418bb5e7",
+      "sourceHash": "fnv1a64:65fbf56472917c35",
       "notice": null,
       "blocks": [
         {
@@ -772,11 +772,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "emergency room, nurse, surgeon, to operate, anaesthesia",
+              "instruction": "emergency room, to admit to hospital, surgeon, to operate, anaesthesia",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: emergency room, nurse, surgeon, to operate, anaesthesia]"
+              "source": "[YOU SAY: emergency room, to admit to hospital, surgeon, to operate, anaesthesia]"
             },
             {
               "kind": "prompt",
@@ -847,7 +847,7 @@
             },
             {
               "kind": "speech",
-              "text": "To chew? (masticare.) To digest? (digerire.) Feeling unwell? (il malessere.) To vomit? (vomitare.) Dizziness? (le vertigini.) Emergency room? (il pronto soccorso.) Nurse? (l'infermiere.) Surgeon? (il chirurgo.) To operate? (operare.) Anaesthesia? (l'anestesia.) To fall ill? (ammalarsi.) Symptom? (il sintomo.) Diagnosis? (la diagnosi.) Infection? (l'infezione.) To recover? (guarire.) Insomnia? (l'insonnia.) To snore? (russare.) Nightmare? (l'incubo.) To yawn? (sbadigliare.) To stretch? (sgranchirsi.) Crush? (la cotta.) To court? (corteggiare.) Sweetheart? (l'innamorato.) Tenderness? (la tenerezza.) Kiss? (il bacio.) Hug? (l'abbraccio.) To cuddle? (coccolare.) Cuddles? (le coccole.) To grow fond of? (affezionarsi.) Affectionate? (affettuoso.) Brother-in-law? (il cognato.) Sister-in-law? (la cognata.) Great-grandfather? (il bisnonno.) Relatives? (la parentela.) To look like? (assomigliare.) Relationship? (il rapporto.) To separate? (separarsi.) Separation? (la separazione.) To break up? (lasciarsi.) To remarry? (risposarsi.)"
+              "text": "To chew? (masticare.) To digest? (digerire.) Feeling unwell? (il malessere.) To vomit? (vomitare.) Dizziness? (le vertigini.) Emergency room? (il pronto soccorso.) To admit to hospital? (ricoverare.) Surgeon? (il chirurgo.) To operate? (operare.) Anaesthesia? (l'anestesia.) To fall ill? (ammalarsi.) Symptom? (il sintomo.) Diagnosis? (la diagnosi.) Infection? (l'infezione.) To recover? (guarire.) Insomnia? (l'insonnia.) To snore? (russare.) Nightmare? (l'incubo.) To yawn? (sbadigliare.) To stretch? (sgranchirsi.) Crush? (la cotta.) To court? (corteggiare.) Sweetheart? (l'innamorato.) Tenderness? (la tenerezza.) Kiss? (il bacio.) Hug? (l'abbraccio.) To cuddle? (coccolare.) Cuddles? (le coccole.) To grow fond of? (affezionarsi.) Affectionate? (affettuoso.) Brother-in-law? (il cognato.) Sister-in-law? (la cognata.) Great-grandfather? (il bisnonno.) Relatives? (la parentela.) To look like? (assomigliare.) Relationship? (il rapporto.) To separate? (separarsi.) Separation? (la separazione.) To break up? (lasciarsi.) To remarry? (risposarsi.)"
             }
           ]
         }

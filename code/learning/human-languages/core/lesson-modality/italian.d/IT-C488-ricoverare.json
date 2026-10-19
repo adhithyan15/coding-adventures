@@ -1,6 +1,6 @@
 {
   "lesson": {
-    "id": "IT-C488-infermiere",
+    "id": "IT-C488-ricoverare",
     "language": "italian",
     "chapter": 488,
     "sequence": 27480,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:5a59ba7f55355830"
+    "sourceHash": "fnv1a64:ad050e429990b4c8"
   },
   "findings": []
 }

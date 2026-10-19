@@ -332,7 +332,7 @@ describe("the gate that would have caught the A2 claim", () => {
     // reviews for the older B1 atoms, which moved it from the A2 row of HELD to B1.
     // Italian followed as the second, with chapters 263-272 (the B1 core: the
     // imperfetto, reasons, travel, experience and the condizionale, realizing all
-    // five B1 nodes) and chapters 273-536 (1,320 headwords, 388 verbs).
+    // five B1 nodes) and chapters 273-536 (1,320 headwords, 389 verbs).
     for (const level of Object.values(HELD)) {
       expectedByLevel.set(level, (expectedByLevel.get(level) ?? 0) + 1);
     }

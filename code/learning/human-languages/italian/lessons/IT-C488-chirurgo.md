@@ -11,7 +11,7 @@ type: word
 headword: "il chirurgo"
 gloss: "surgeon"
 concept_tag: IT-REF-CHIRURGO
-prerequisites: [IT-C488-pronto-soccorso, IT-C488-infermiere]
+prerequisites: [IT-C488-pronto-soccorso, IT-C488-ricoverare]
 sounds: []
 roots: [cheir-greek, ergon-greek]
 etymology_hook: 'chirurgo ← Latin chirurgus, from Greek kheirourgos ''working with the hands'''
@@ -28,7 +28,7 @@ modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
 register: neutral
 variety: standard-contemporary
-reviews_of: [IT-C488-infermiere]
+reviews_of: [IT-C488-ricoverare]
 ---
 
 # il chirurgo — surgeon
@@ -36,7 +36,7 @@ reviews_of: [IT-C488-infermiere]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[IT-LEX-C488-OSPEDALE-01, IT-LEX-C488-OSPEDALE-02] -->
 
-[PAUSE 2s] Before the new one: say the Italian for emergency room, then the Italian for nurse.
+[PAUSE 2s] Before the new one: say the Italian for emergency room, then the Italian for to admit to hospital.
 
 ## You'll want to know: il chirurgo
 <!-- hl-knowledge: introduces=[IT-LEX-C488-OSPEDALE-03]; assesses=[] -->
@@ -66,7 +66,7 @@ One more word for telling, explaining and describing at B1.
 - [YOU SAY: *il chirurgo*]
 - [YOU SAY: *il chirurgo*, once more]
 - [YOU SAY: a sentence of your own with *il chirurgo*]
-- [YOU RECALL: say the Italian for emergency room, then the Italian for nurse, then say *il chirurgo* again]
+- [YOU RECALL: say the Italian for emergency room, then the Italian for to admit to hospital, then say *il chirurgo* again]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[IT-LEX-C488-OSPEDALE-03, IT-LEX-C488-OSPEDALE-01, IT-LEX-C488-OSPEDALE-02] -->

@@ -11,7 +11,7 @@ type: word
 headword: "operare"
 gloss: "to operate (on)"
 concept_tag: IT-VERB-OPERARE
-prerequisites: [IT-C488-infermiere, IT-C488-chirurgo]
+prerequisites: [IT-C488-ricoverare, IT-C488-chirurgo]
 sounds: []
 roots: [opus-latin]
 etymology_hook: 'operare ← Latin operari ''to work'', from opus ''work'''
@@ -36,7 +36,7 @@ reviews_of: [IT-C488-chirurgo]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[IT-LEX-C488-OSPEDALE-02, IT-LEX-C488-OSPEDALE-03] -->
 
-[PAUSE 2s] Before the new one: say the Italian for nurse, then the Italian for surgeon.
+[PAUSE 2s] Before the new one: say the Italian for to admit to hospital, then the Italian for surgeon.
 
 ## You'll want to know: operare
 <!-- hl-knowledge: introduces=[IT-LEX-C488-OSPEDALE-04]; assesses=[] -->
@@ -66,7 +66,7 @@ One more word for telling, explaining and describing at B1.
 - [YOU SAY: *operare*]
 - [YOU SAY: *operare*, once more]
 - [YOU SAY: a sentence of your own with *operare*]
-- [YOU RECALL: say the Italian for nurse, then the Italian for surgeon, then say *operare* again]
+- [YOU RECALL: say the Italian for to admit to hospital, then the Italian for surgeon, then say *operare* again]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[IT-LEX-C488-OSPEDALE-04, IT-LEX-C488-OSPEDALE-02, IT-LEX-C488-OSPEDALE-03] -->

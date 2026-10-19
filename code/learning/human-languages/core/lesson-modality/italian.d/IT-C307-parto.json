@@ -1,6 +1,6 @@
 {
   "lesson": {
-    "id": "IT-C307-gemelli",
+    "id": "IT-C307-parto",
     "language": "italian",
     "chapter": 307,
     "sequence": 17850,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:e8a5aceb95336c72"
+    "sourceHash": "fnv1a64:9a0176c499e5eb86"
   },
   "findings": []
 }

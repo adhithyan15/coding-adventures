@@ -4,7 +4,7 @@
   "chapter": 307,
   "title": "Benvenuto al mondo",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:1678d8fc6d5234ea",
+  "sourceHash": "fnv1a64:6247e89ee3207263",
   "lessons": [
     {
       "id": "IT-C307-nascita",
@@ -149,19 +149,19 @@
       ]
     },
     {
-      "id": "IT-C307-gemelli",
+      "id": "IT-C307-parto",
       "sequence": 17850,
-      "title": "i gemelli — the twins",
-      "headword": "i gemelli",
-      "romanization": "i gemelli",
-      "gloss": "the twins",
+      "title": "il parto — childbirth, the delivery",
+      "headword": "il parto",
+      "romanization": "il parto",
+      "gloss": "childbirth, the delivery",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e8a5aceb95336c72",
+      "sourceHash": "fnv1a64:9a0176c499e5eb86",
       "notice": null,
       "blocks": [
         {
@@ -184,19 +184,19 @@
         {
           "index": 1,
           "type": "input",
-          "title": "You'll want to know: i gemelli",
+          "title": "You'll want to know: il parto",
           "segments": [
             {
               "kind": "speech",
-              "text": "i gemelli — \"the twins\"."
+              "text": "il parto — \"childbirth, the delivery\"."
             },
             {
               "kind": "speech",
-              "text": "Mia sorella ha avuto due gemelli. My sister has had twins."
+              "text": "Il parto è andato bene: è nata una bambina. The birth went well: a baby girl was born."
             },
             {
               "kind": "speech",
-              "text": "Singular il gemello, la gemella; le gemelle for two girls."
+              "text": "Partorire is to give birth."
             }
           ]
         },
@@ -207,7 +207,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "gemelli is inherited from Latin gemellus \"a twin\", a little geminus \"twin-born\" (Lewis & Short)."
+              "text": "parto is inherited from Latin partus \"a bearing, a birth\" (Lewis & Short), built on parere \"to bring forth, to give birth\"."
             }
           ]
         },
@@ -236,38 +236,38 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "i gemelli",
+              "instruction": "il parto",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: *i gemelli*]"
+              "source": "[YOU SAY: *il parto*]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "i gemelli, once more",
+              "instruction": "il parto, once more",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: *i gemelli*, once more]"
+              "source": "[YOU SAY: *il parto*, once more]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "a sentence of your own with i gemelli",
+              "instruction": "a sentence of your own with il parto",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: a sentence of your own with *i gemelli*]"
+              "source": "[YOU SAY: a sentence of your own with *il parto*]"
             },
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say the Italian for to survive, then the Italian for the birth, then say i gemelli again",
+              "instruction": "say the Italian for to survive, then the Italian for the birth, then say il parto again",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say the Italian for to survive, then the Italian for the birth, then say *i gemelli* again]"
+              "source": "[YOU RECALL: say the Italian for to survive, then the Italian for the birth, then say *il parto* again]"
             }
           ]
         },
@@ -284,7 +284,7 @@
             },
             {
               "kind": "speech",
-              "text": "What does i gemelli mean? (\"The twins\".) Say it once more."
+              "text": "What does il parto mean? (\"Childbirth, the delivery\".) Say it once more."
             }
           ]
         }
@@ -303,7 +303,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:110976776f65fae9",
+      "sourceHash": "fnv1a64:0241d5a58cf7b36f",
       "notice": null,
       "blocks": [
         {
@@ -319,7 +319,7 @@
             },
             {
               "kind": "speech",
-              "text": "Before the new one: say the Italian for the birth, then the Italian for the twins."
+              "text": "Before the new one: say the Italian for the birth, then the Italian for childbirth."
             }
           ]
         },
@@ -405,11 +405,11 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say the Italian for the birth, then the Italian for the twins, then say il primogenito again",
+              "instruction": "say the Italian for the birth, then the Italian for childbirth, then say il primogenito again",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say the Italian for the birth, then the Italian for the twins, then say *il primogenito* again]"
+              "source": "[YOU RECALL: say the Italian for the birth, then the Italian for childbirth, then say *il primogenito* again]"
             }
           ]
         },
@@ -445,7 +445,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:205c3ccc552251fa",
+      "sourceHash": "fnv1a64:4c4fcbe4abe5541b",
       "notice": null,
       "blocks": [
         {
@@ -461,7 +461,7 @@
             },
             {
               "kind": "speech",
-              "text": "Before the new one: say the Italian for the twins, then the Italian for the first-born child."
+              "text": "Before the new one: say the Italian for childbirth, then the Italian for the first-born child."
             }
           ]
         },
@@ -547,11 +547,11 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say the Italian for the twins, then the Italian for the first-born child, then say svezzare again",
+              "instruction": "say the Italian for childbirth, then the Italian for the first-born child, then say svezzare again",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say the Italian for the twins, then the Italian for the first-born child, then say *svezzare* again]"
+              "source": "[YOU RECALL: say the Italian for childbirth, then the Italian for the first-born child, then say *svezzare* again]"
             }
           ]
         },

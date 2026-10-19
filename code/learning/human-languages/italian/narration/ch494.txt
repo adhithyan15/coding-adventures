@@ -183,7 +183,7 @@ Guided Practice.
 [pause 2 seconds after each]
 [your turn — say: to chew, to digest, feeling unwell, to vomit, dizziness]
 [pause 8 seconds for the answer]
-[your turn — say: emergency room, nurse, surgeon, to operate, anaesthesia]
+[your turn — say: emergency room, to admit to hospital, surgeon, to operate, anaesthesia]
 [pause 8 seconds for the answer]
 [your turn — say: to fall ill, symptom, diagnosis, infection, to recover]
 [pause 8 seconds for the answer]
@@ -200,4 +200,4 @@ Guided Practice.
 
 Wrap-up Recall.
 [pause 3 seconds]
-To chew? (masticare.) To digest? (digerire.) Feeling unwell? (il malessere.) To vomit? (vomitare.) Dizziness? (le vertigini.) Emergency room? (il pronto soccorso.) Nurse? (l'infermiere.) Surgeon? (il chirurgo.) To operate? (operare.) Anaesthesia? (l'anestesia.) To fall ill? (ammalarsi.) Symptom? (il sintomo.) Diagnosis? (la diagnosi.) Infection? (l'infezione.) To recover? (guarire.) Insomnia? (l'insonnia.) To snore? (russare.) Nightmare? (l'incubo.) To yawn? (sbadigliare.) To stretch? (sgranchirsi.) Crush? (la cotta.) To court? (corteggiare.) Sweetheart? (l'innamorato.) Tenderness? (la tenerezza.) Kiss? (il bacio.) Hug? (l'abbraccio.) To cuddle? (coccolare.) Cuddles? (le coccole.) To grow fond of? (affezionarsi.) Affectionate? (affettuoso.) Brother-in-law? (il cognato.) Sister-in-law? (la cognata.) Great-grandfather? (il bisnonno.) Relatives? (la parentela.) To look like? (assomigliare.) Relationship? (il rapporto.) To separate? (separarsi.) Separation? (la separazione.) To break up? (lasciarsi.) To remarry? (risposarsi.)
+To chew? (masticare.) To digest? (digerire.) Feeling unwell? (il malessere.) To vomit? (vomitare.) Dizziness? (le vertigini.) Emergency room? (il pronto soccorso.) To admit to hospital? (ricoverare.) Surgeon? (il chirurgo.) To operate? (operare.) Anaesthesia? (l'anestesia.) To fall ill? (ammalarsi.) Symptom? (il sintomo.) Diagnosis? (la diagnosi.) Infection? (l'infezione.) To recover? (guarire.) Insomnia? (l'insonnia.) To snore? (russare.) Nightmare? (l'incubo.) To yawn? (sbadigliare.) To stretch? (sgranchirsi.) Crush? (la cotta.) To court? (corteggiare.) Sweetheart? (l'innamorato.) Tenderness? (la tenerezza.) Kiss? (il bacio.) Hug? (l'abbraccio.) To cuddle? (coccolare.) Cuddles? (le coccole.) To grow fond of? (affezionarsi.) Affectionate? (affettuoso.) Brother-in-law? (il cognato.) Sister-in-law? (la cognata.) Great-grandfather? (il bisnonno.) Relatives? (la parentela.) To look like? (assomigliare.) Relationship? (il rapporto.) To separate? (separarsi.) Separation? (la separazione.) To break up? (lasciarsi.) To remarry? (risposarsi.)

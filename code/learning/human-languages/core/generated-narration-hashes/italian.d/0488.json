@@ -1,10 +1,10 @@
 {
   "language": "italian",
   "chapter": 488,
-  "sourceHash": "fnv1a64:e176e9072b77e79f",
+  "sourceHash": "fnv1a64:692eb323d1062413",
   "lessonIds": [
     "IT-C488-pronto-soccorso",
-    "IT-C488-infermiere",
+    "IT-C488-ricoverare",
     "IT-C488-chirurgo",
     "IT-C488-operare",
     "IT-C488-anestesia"
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "italian/narration/ch488.txt",
   "json": "italian/narration/ch488.json",
-  "textHash": "fnv1a64:02118e48bfbec88c",
-  "jsonHash": "fnv1a64:15a4a7b7d9187264",
+  "textHash": "fnv1a64:d48259211561b4df",
+  "jsonHash": "fnv1a64:e506c98f498cb8c9",
   "findings": []
 }

@@ -11,7 +11,7 @@ type: word
 headword: "il primogenito"
 gloss: "the first-born child"
 concept_tag: IT-REF-PRIMOGENITO
-prerequisites: [IT-C307-nascita, IT-C307-gemelli]
+prerequisites: [IT-C307-nascita, IT-C307-parto]
 sounds: []
 roots: [primus-latin, gignere-latin]
 etymology_hook: 'primogenito ← Latin prīmōgenitus ''first-born'''
@@ -28,7 +28,7 @@ modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
 register: neutral
 variety: standard-contemporary
-reviews_of: [IT-C307-gemelli]
+reviews_of: [IT-C307-parto]
 ---
 
 # il primogenito — the first-born child
@@ -36,7 +36,7 @@ reviews_of: [IT-C307-gemelli]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[IT-LEX-C307-NASCITA-01, IT-LEX-C307-NASCITA-02] -->
 
-[PAUSE 2s] Before the new one: say the Italian for the birth, then the Italian for the twins.
+[PAUSE 2s] Before the new one: say the Italian for the birth, then the Italian for childbirth.
 
 ## You'll want to know: il primogenito
 <!-- hl-knowledge: introduces=[IT-LEX-C307-NASCITA-03]; assesses=[] -->
@@ -66,7 +66,7 @@ One more word for telling, explaining and describing at B1.
 - [YOU SAY: *il primogenito*]
 - [YOU SAY: *il primogenito*, once more]
 - [YOU SAY: a sentence of your own with *il primogenito*]
-- [YOU RECALL: say the Italian for the birth, then the Italian for the twins, then say *il primogenito* again]
+- [YOU RECALL: say the Italian for the birth, then the Italian for childbirth, then say *il primogenito* again]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[IT-LEX-C307-NASCITA-03, IT-LEX-C307-NASCITA-01, IT-LEX-C307-NASCITA-02] -->

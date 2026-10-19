@@ -11,7 +11,7 @@ type: word
 headword: "svezzare"
 gloss: "to wean"
 concept_tag: IT-VERB-SVEZZARE
-prerequisites: [IT-C307-gemelli, IT-C307-primogenito]
+prerequisites: [IT-C307-parto, IT-C307-primogenito]
 sounds: []
 roots: [vitium-latin]
 etymology_hook: 'svezzare ← s- ''out of'' + vezzo ''habit'', from Latin vitium ''a fault'''
@@ -36,7 +36,7 @@ reviews_of: [IT-C307-primogenito]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[IT-LEX-C307-NASCITA-02, IT-LEX-C307-NASCITA-03] -->
 
-[PAUSE 2s] Before the new one: say the Italian for the twins, then the Italian for the first-born child.
+[PAUSE 2s] Before the new one: say the Italian for childbirth, then the Italian for the first-born child.
 
 ## You'll want to know: svezzare
 <!-- hl-knowledge: introduces=[IT-LEX-C307-NASCITA-04]; assesses=[] -->
@@ -66,7 +66,7 @@ One more word for telling, explaining and describing at B1.
 - [YOU SAY: *svezzare*]
 - [YOU SAY: *svezzare*, once more]
 - [YOU SAY: a sentence of your own with *svezzare*]
-- [YOU RECALL: say the Italian for the twins, then the Italian for the first-born child, then say *svezzare* again]
+- [YOU RECALL: say the Italian for childbirth, then the Italian for the first-born child, then say *svezzare* again]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[IT-LEX-C307-NASCITA-04, IT-LEX-C307-NASCITA-02, IT-LEX-C307-NASCITA-03] -->

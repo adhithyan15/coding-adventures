@@ -3,18 +3,18 @@ schema_version: 2
 introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
-id: IT-C307-gemelli
+id: IT-C307-parto
 spine_node: SPINE-NARRATE-EVENTS
 sequence: 17850
 chapter: 307
 type: word
-headword: "i gemelli"
-gloss: "the twins"
-concept_tag: IT-REF-GEMELLI
+headword: "il parto"
+gloss: "childbirth, the delivery"
+concept_tag: IT-REF-PARTO
 prerequisites: [IT-C306-sopravvivere, IT-C307-nascita]
 sounds: []
-roots: [geminus-latin]
-etymology_hook: 'gemelli ← Latin gemellus ''a twin'', a little geminus'
+roots: [parere-bear-latin]
+etymology_hook: 'parto ← Latin partus ''a bearing, a birth'', from parere ''to give birth'''
 duration:
   max_seconds: 200
 requires:
@@ -31,28 +31,28 @@ variety: standard-contemporary
 reviews_of: [IT-C307-nascita]
 ---
 
-# i gemelli — the twins
+# il parto — childbirth, the delivery
 
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[IT-LEX-C306-SALVATAGGIO-05, IT-LEX-C307-NASCITA-01] -->
 
 [PAUSE 2s] Before the new one: say the Italian for to survive, then the Italian for the birth.
 
-## You'll want to know: i gemelli
+## You'll want to know: il parto
 <!-- hl-knowledge: introduces=[IT-LEX-C307-NASCITA-02]; assesses=[] -->
 
-**i gemelli** — "the twins".
+**il parto** — "childbirth, the delivery".
 
-> Mia sorella ha avuto due gemelli.
+> Il parto è andato bene: è nata una bambina.
 >
-> *My sister has had twins.*
+> *The birth went well: a baby girl was born.*
 
-Singular *il gemello*, *la gemella*; *le gemelle* for two girls.
+*Partorire* is to give birth.
 
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-*gemelli* is inherited from Latin *gemellus* "a twin", a little *geminus* "twin-born" (Lewis & Short).
+*parto* is inherited from Latin *partus* "a bearing, a birth" (Lewis & Short), built on *parere* "to bring forth, to give birth".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
@@ -63,12 +63,12 @@ One more word for telling, explaining and describing at B1.
 <!-- hl-knowledge: introduces=[]; assesses=[IT-LEX-C307-NASCITA-02, IT-LEX-C306-SALVATAGGIO-05, IT-LEX-C307-NASCITA-01] -->
 
 [PAUSE 1s]
-- [YOU SAY: *i gemelli*]
-- [YOU SAY: *i gemelli*, once more]
-- [YOU SAY: a sentence of your own with *i gemelli*]
-- [YOU RECALL: say the Italian for to survive, then the Italian for the birth, then say *i gemelli* again]
+- [YOU SAY: *il parto*]
+- [YOU SAY: *il parto*, once more]
+- [YOU SAY: a sentence of your own with *il parto*]
+- [YOU RECALL: say the Italian for to survive, then the Italian for the birth, then say *il parto* again]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[IT-LEX-C307-NASCITA-02, IT-LEX-C306-SALVATAGGIO-05, IT-LEX-C307-NASCITA-01] -->
 
-[PAUSE 3s] What does i gemelli mean? ("The twins".) Say it once more.
+[PAUSE 3s] What does il parto mean? ("Childbirth, the delivery".) Say it once more.

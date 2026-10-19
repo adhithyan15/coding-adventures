@@ -1,7 +1,7 @@
 {
   "language": "italian",
   "chapter": 312,
-  "sourceHash": "fnv1a64:fd71e351b3ab3fcd",
+  "sourceHash": "fnv1a64:2466f0007a482e85",
   "lessonIds": [
     "IT-C312-antenato",
     "IT-C312-posteri",
@@ -14,7 +14,7 @@
   "drivablePrefix": 6,
   "text": "italian/narration/ch312.txt",
   "json": "italian/narration/ch312.json",
-  "textHash": "fnv1a64:3b7f2a1484b7f7e6",
-  "jsonHash": "fnv1a64:1e4cbe959e512f0a",
+  "textHash": "fnv1a64:6f4bb0676d2f4b71",
+  "jsonHash": "fnv1a64:0f543ab505da349e",
   "findings": []
 }

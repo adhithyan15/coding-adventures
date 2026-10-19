@@ -4,7 +4,7 @@
   "chapter": 488,
   "title": "Al pronto soccorso",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:e176e9072b77e79f",
+  "sourceHash": "fnv1a64:692eb323d1062413",
   "lessons": [
     {
       "id": "IT-C488-pronto-soccorso",
@@ -149,19 +149,19 @@
       ]
     },
     {
-      "id": "IT-C488-infermiere",
+      "id": "IT-C488-ricoverare",
       "sequence": 27480,
-      "title": "l'infermiere — nurse",
-      "headword": "l'infermiere",
-      "romanization": "l'infermiere",
-      "gloss": "nurse",
+      "title": "ricoverare — to admit to hospital",
+      "headword": "ricoverare",
+      "romanization": "ricoverare",
+      "gloss": "to admit to hospital",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5a59ba7f55355830",
+      "sourceHash": "fnv1a64:ad050e429990b4c8",
       "notice": null,
       "blocks": [
         {
@@ -184,19 +184,19 @@
         {
           "index": 1,
           "type": "input",
-          "title": "You'll want to know: l'infermiere",
+          "title": "You'll want to know: ricoverare",
           "segments": [
             {
               "kind": "speech",
-              "text": "l'infermiere — \"nurse\"."
+              "text": "ricoverare — \"to admit to hospital\"."
             },
             {
               "kind": "speech",
-              "text": "L'infermiere mi ha misurato la febbre. The nurse took my temperature."
+              "text": "Dopo l'incidente l'hanno ricoverato in ospedale. After the accident they admitted him to hospital."
             },
             {
               "kind": "speech",
-              "text": "A woman is l'infermiera."
+              "text": "Essere ricoverato is to be in hospital as a patient."
             }
           ]
         },
@@ -207,7 +207,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "infermiere is built on infermo \"sick\", inherited from Latin infirmus \"weak, not strong\" (Lewis & Short), from in- and firmus \"strong\"."
+              "text": "ricoverare is usually traced to Latin recuperāre \"to get back, to regain\" (Lewis & Short). The same verb also means to give shelter, and il ricovero is a shelter."
             }
           ]
         },
@@ -236,38 +236,38 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "l'infermiere",
+              "instruction": "ricoverare",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: *l'infermiere*]"
+              "source": "[YOU SAY: *ricoverare*]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "l'infermiere, once more",
+              "instruction": "ricoverare, once more",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: *l'infermiere*, once more]"
+              "source": "[YOU SAY: *ricoverare*, once more]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "a sentence of your own with l'infermiere",
+              "instruction": "a sentence of your own with ricoverare",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: a sentence of your own with *l'infermiere*]"
+              "source": "[YOU SAY: a sentence of your own with *ricoverare*]"
             },
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say the Italian for dizziness, then the Italian for emergency room, then say l'infermiere again",
+              "instruction": "say the Italian for dizziness, then the Italian for emergency room, then say ricoverare again",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say the Italian for dizziness, then the Italian for emergency room, then say *l'infermiere* again]"
+              "source": "[YOU RECALL: say the Italian for dizziness, then the Italian for emergency room, then say *ricoverare* again]"
             }
           ]
         },
@@ -284,7 +284,7 @@
             },
             {
               "kind": "speech",
-              "text": "What does l'infermiere mean? (\"Nurse\".) Say it once more."
+              "text": "What does ricoverare mean? (\"To admit to hospital\".) Say it once more."
             }
           ]
         }
@@ -303,7 +303,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4aa0abfe141cd3f9",
+      "sourceHash": "fnv1a64:a6e74ef9cc5e7409",
       "notice": null,
       "blocks": [
         {
@@ -319,7 +319,7 @@
             },
             {
               "kind": "speech",
-              "text": "Before the new one: say the Italian for emergency room, then the Italian for nurse."
+              "text": "Before the new one: say the Italian for emergency room, then the Italian for to admit to hospital."
             }
           ]
         },
@@ -405,11 +405,11 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say the Italian for emergency room, then the Italian for nurse, then say il chirurgo again",
+              "instruction": "say the Italian for emergency room, then the Italian for to admit to hospital, then say il chirurgo again",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say the Italian for emergency room, then the Italian for nurse, then say *il chirurgo* again]"
+              "source": "[YOU RECALL: say the Italian for emergency room, then the Italian for to admit to hospital, then say *il chirurgo* again]"
             }
           ]
         },
@@ -445,7 +445,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e26f091f5ea1469e",
+      "sourceHash": "fnv1a64:390a10b6ddcc9c5e",
       "notice": null,
       "blocks": [
         {
@@ -461,7 +461,7 @@
             },
             {
               "kind": "speech",
-              "text": "Before the new one: say the Italian for nurse, then the Italian for surgeon."
+              "text": "Before the new one: say the Italian for to admit to hospital, then the Italian for surgeon."
             }
           ]
         },
@@ -547,11 +547,11 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say the Italian for nurse, then the Italian for surgeon, then say operare again",
+              "instruction": "say the Italian for to admit to hospital, then the Italian for surgeon, then say operare again",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say the Italian for nurse, then the Italian for surgeon, then say *operare* again]"
+              "source": "[YOU RECALL: say the Italian for to admit to hospital, then the Italian for surgeon, then say *operare* again]"
             }
           ]
         },

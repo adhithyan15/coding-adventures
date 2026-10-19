@@ -3,18 +3,18 @@ schema_version: 2
 introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
-id: IT-C488-infermiere
+id: IT-C488-ricoverare
 spine_node: SPINE-DESCRIBE-EXPERIENCE
 sequence: 27480
 chapter: 488
 type: word
-headword: "l'infermiere"
-gloss: "nurse"
-concept_tag: IT-REF-INFERMIERE
+headword: "ricoverare"
+gloss: "to admit to hospital"
+concept_tag: IT-VERB-RICOVERARE
 prerequisites: [IT-C487-vertigini, IT-C488-pronto-soccorso]
 sounds: []
-roots: [firmus-latin]
-etymology_hook: 'infermiere ← infermo ''sick'', from Latin infirmus ''weak'''
+roots: [recuperare-latin]
+etymology_hook: 'ricoverare ← usually traced to Latin recuperare ''to get back, to recover'''
 duration:
   max_seconds: 200
 requires:
@@ -31,28 +31,28 @@ variety: standard-contemporary
 reviews_of: [IT-C488-pronto-soccorso]
 ---
 
-# l'infermiere — nurse
+# ricoverare — to admit to hospital
 
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[IT-LEX-C487-STOMACO-05, IT-LEX-C488-OSPEDALE-01] -->
 
 [PAUSE 2s] Before the new one: say the Italian for dizziness, then the Italian for emergency room.
 
-## You'll want to know: l'infermiere
+## You'll want to know: ricoverare
 <!-- hl-knowledge: introduces=[IT-LEX-C488-OSPEDALE-02]; assesses=[] -->
 
-**l'infermiere** — "nurse".
+**ricoverare** — "to admit to hospital".
 
-> L'infermiere mi ha misurato la febbre.
+> Dopo l'incidente l'hanno ricoverato in ospedale.
 >
-> *The nurse took my temperature.*
+> *After the accident they admitted him to hospital.*
 
-A woman is *l'infermiera*.
+*Essere ricoverato* is to be in hospital as a patient.
 
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-*infermiere* is built on *infermo* "sick", inherited from Latin *infirmus* "weak, not strong" (Lewis & Short), from *in-* and *firmus* "strong".
+*ricoverare* is usually traced to Latin *recuperāre* "to get back, to regain" (Lewis & Short). The same verb also means to give shelter, and *il ricovero* is a shelter.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
@@ -63,12 +63,12 @@ One more word for telling, explaining and describing at B1.
 <!-- hl-knowledge: introduces=[]; assesses=[IT-LEX-C488-OSPEDALE-02, IT-LEX-C487-STOMACO-05, IT-LEX-C488-OSPEDALE-01] -->
 
 [PAUSE 1s]
-- [YOU SAY: *l'infermiere*]
-- [YOU SAY: *l'infermiere*, once more]
-- [YOU SAY: a sentence of your own with *l'infermiere*]
-- [YOU RECALL: say the Italian for dizziness, then the Italian for emergency room, then say *l'infermiere* again]
+- [YOU SAY: *ricoverare*]
+- [YOU SAY: *ricoverare*, once more]
+- [YOU SAY: a sentence of your own with *ricoverare*]
+- [YOU RECALL: say the Italian for dizziness, then the Italian for emergency room, then say *ricoverare* again]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[IT-LEX-C488-OSPEDALE-02, IT-LEX-C487-STOMACO-05, IT-LEX-C488-OSPEDALE-01] -->
 
-[PAUSE 3s] What does l'infermiere mean? ("Nurse".) Say it once more.
+[PAUSE 3s] What does ricoverare mean? ("To admit to hospital".) Say it once more.
