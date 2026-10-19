@@ -10,3 +10,5 @@
 - Add registry-free selection of one exact caller-supplied certificate
   algorithm profile with parameter and inclusive encoded BIT STRING length
   policy.
+- Add bounded complete-certificate Subject Alternative Name decoding and typed
+  DNS-ID/IP-ID server-identity matching without Common Name fallback.

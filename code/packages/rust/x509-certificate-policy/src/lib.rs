@@ -6,12 +6,18 @@
 //! algorithm-independent relationships among Basic Constraints, Key Usage,
 //! and Extended Key Usage. Its algorithm gate selects one exact caller-supplied
 //! profile without parsing keys or signatures or choosing a verifier.
+//! Its server-identity gate decodes one Subject Alternative Name extension and
+//! applies the repository-owned DNS-ID/IP-ID matcher without Common Name
+//! fallback. None of these gates establishes certificate trust.
 
 #![deny(unsafe_code)]
 
 use der_asn1::{Asn1Decoder, Asn1Element, Asn1Limits, DerBitString, ObjectIdentifier};
 use std::error::Error;
 use std::fmt;
+use tls_server_identity::{
+    verify_server_identity, MatchKind, PresentedIdentities, ReferenceIdentity,
+};
 use x509_algorithm_identifier::X509AlgorithmIdentifier;
 use x509_basic_constraints::{decode_basic_constraints, BasicConstraints, BASIC_CONSTRAINTS_OID};
 use x509_certificate::X509Certificate;
@@ -19,6 +25,7 @@ use x509_extended_key_usage::{
     decode_extended_key_usage, ExtendedKeyUsage, EXTENDED_KEY_USAGE_OID,
 };
 use x509_key_usage::{decode_key_usage, KeyUsage, KeyUsageBit, KEY_USAGE_OID};
+use x509_subject_alt_name::{decode_subject_alt_name, SUBJECT_ALT_NAME_OID};
 
 /// Exact parameter-presence policy for one AlgorithmIdentifier.
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
@@ -252,6 +259,84 @@ impl fmt::Display for X509CertificateAlgorithmError {
 
 impl Error for X509CertificateAlgorithmError {}
 
+/// Stable complete-certificate server-identity failure categories.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum X509CertificateServerIdentityErrorKind {
+    MissingSubjectAlternativeName,
+    InvalidSubjectAlternativeName,
+    IdentityMismatch,
+}
+
+/// A redacted complete-certificate server-identity failure.
+///
+/// `extension_index` is present only when the certificate contained a Subject
+/// Alternative Name extension. No presented name or certificate byte is
+/// retained.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub struct X509CertificateServerIdentityError {
+    kind: X509CertificateServerIdentityErrorKind,
+    extension_index: Option<usize>,
+}
+
+impl X509CertificateServerIdentityError {
+    const fn new(
+        kind: X509CertificateServerIdentityErrorKind,
+        extension_index: Option<usize>,
+    ) -> Self {
+        Self {
+            kind,
+            extension_index,
+        }
+    }
+
+    pub const fn kind(self) -> X509CertificateServerIdentityErrorKind {
+        self.kind
+    }
+
+    pub const fn extension_index(self) -> Option<usize> {
+        self.extension_index
+    }
+}
+
+impl fmt::Display for X509CertificateServerIdentityError {
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        match self.extension_index {
+            Some(index) => write!(
+                formatter,
+                "X.509 certificate server identity error {:?} at extension index {}",
+                self.kind, index
+            ),
+            None => write!(
+                formatter,
+                "X.509 certificate server identity error {:?}",
+                self.kind
+            ),
+        }
+    }
+}
+
+impl Error for X509CertificateServerIdentityError {}
+
+/// Opaque evidence that one certificate Subject Alternative Name matched.
+///
+/// This value proves neither certificate trust nor path, signature, validity,
+/// revocation, key-usage, or TLS correctness.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub struct ValidatedCertificateServerIdentity {
+    extension_index: usize,
+    match_kind: MatchKind,
+}
+
+impl ValidatedCertificateServerIdentity {
+    pub const fn extension_index(self) -> usize {
+        self.extension_index
+    }
+
+    pub const fn match_kind(self) -> MatchKind {
+        self.match_kind
+    }
+}
+
 /// Borrowed algorithm and encoded bit-string evidence after one profile matches.
 ///
 /// This value proves only the exact identifier and length checks. It does not
@@ -429,6 +514,59 @@ impl<'a> ValidatedCertificateRoleExtensions<'a> {
     pub fn extended_key_usage(&self) -> Option<&ExtendedKeyUsage<'a>> {
         self.extended_key_usage.as_ref()
     }
+}
+
+/// Decode and match one complete certificate's Subject Alternative Name.
+///
+/// The caller-selected reference is already validated and unrestricted. DNS
+/// references are matched only against dNSName values and IP references only
+/// against iPAddress values. There is no subject Common Name input or fallback.
+/// This gate does not replace [`validate_critical_extensions`] and grants no
+/// certificate-path, signature, trust, clock, revocation, TLS, or network
+/// authority.
+pub fn validate_certificate_server_identity(
+    certificate: &X509Certificate<'_>,
+    reference: &ReferenceIdentity,
+    limits: Asn1Limits,
+) -> Result<ValidatedCertificateServerIdentity, X509CertificateServerIdentityError> {
+    let extension = certificate
+        .tbs_certificate()
+        .extensions()
+        .and_then(|extensions| {
+            extensions
+                .iter()
+                .enumerate()
+                .find(|(_, extension)| extension.extension_id().equals(SUBJECT_ALT_NAME_OID))
+        })
+        .ok_or_else(|| {
+            X509CertificateServerIdentityError::new(
+                X509CertificateServerIdentityErrorKind::MissingSubjectAlternativeName,
+                None,
+            )
+        })?;
+    let (extension_index, extension) = extension;
+    let mut decoder = Asn1Decoder::new(limits);
+    let names = decode_subject_alt_name(&mut decoder, extension).map_err(|_| {
+        X509CertificateServerIdentityError::new(
+            X509CertificateServerIdentityErrorKind::InvalidSubjectAlternativeName,
+            Some(extension_index),
+        )
+    })?;
+    let verified = verify_server_identity(
+        reference,
+        PresentedIdentities::new(names.dns_names(), names.ip_addresses()),
+    )
+    .map_err(|_| {
+        X509CertificateServerIdentityError::new(
+            X509CertificateServerIdentityErrorKind::IdentityMismatch,
+            Some(extension_index),
+        )
+    })?;
+
+    Ok(ValidatedCertificateServerIdentity {
+        extension_index,
+        match_kind: verified.kind(),
+    })
 }
 
 /// Select exactly one caller-supplied certificate algorithm profile.

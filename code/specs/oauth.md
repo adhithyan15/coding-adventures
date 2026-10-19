@@ -607,9 +607,16 @@ certificate-signature BIT STRING length ranges. The public-key bound is a
 wire-size policy, not algorithm-specific strength such as an RSA modulus size
 or EC group. It embeds no algorithm registry, parses no key or signature,
 chooses no verifier, and grants no cryptographic authority. Repository-owned
-key parsing and strength validation, signature verification, path/name
-validation, trust-root integration, revocation policy, TLS, and HTTP remain
-blockers, so concrete HTTPS remains unavailable.
+key parsing and strength validation remain separate. A fourth bounded gate now
+requires and decodes the complete certificate's Subject Alternative Name under
+an explicit caller budget, then applies the shipped RFC 9525 matcher to only
+typed DNS-ID and IP-ID values. It has no Common Name fallback and returns only
+the matched kind plus the extension's wire index. This proves only a name match
+for one caller-selected reference; it does not authenticate the certificate or
+replace critical-extension policy. Repository-owned signature verification,
+certificate path construction and validation, issuer/subject name policy,
+validity, purpose, trust-root integration, revocation policy, TLS, and HTTP
+remain blockers, so concrete HTTPS remains unavailable.
 
 The current slices intentionally stop before provider HTTPS transport. The
 loopback host owns only local TCP and injected browser authority; custody owns
