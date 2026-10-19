@@ -680,6 +680,14 @@ DigestInfo` form, at least eight `ff` padding bytes, the canonical SHA-256 DER
 trailer with present NULL parameters, and the complete caller-supplied digest.
 It performs no RSA arithmetic or hashing, and arbitrary caller-supplied bytes
 do not become an authenticated signature by passing this formatting gate.
+The next bounded prerequisite is specified as `rsa-public-operation`. It will
+consume only a previously validated RSA public key, enforce a separate
+caller-owned modulus-byte ceiling before allocation, reject non-modulus-width
+or out-of-range signature representatives, and recover the exact modulus-width
+RSAVP1 encoded message with repository-owned arithmetic. The specification adds
+no private-key operation, hashing, padding interpretation, certificate
+signature verdict, path trust, or transport readiness; implementation and
+composition remain pending.
 
 The current slices intentionally stop before provider HTTPS transport. The
 loopback host owns only local TCP and injected browser authority; custody owns
