@@ -1284,4 +1284,5 @@ members = [
   "x509-rsa-public-key",
   "rsa-pkcs1-v1-5-sha256",
   "rsa-public-operation",
+  "x509-rsa-pkcs1-v1-5-sha256-signature",
 ]

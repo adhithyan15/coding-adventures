@@ -686,7 +686,18 @@ before arbitrary-precision conversion, rejects non-modulus-width or
 out-of-range signature representatives, and recovers the exact modulus-width
 RSAVP1 encoded message with repository-owned arithmetic. It adds no private-key
 operation, hashing, padding interpretation, certificate-signature verdict,
-path trust, or transport readiness; verifier composition remains pending.
+path trust, or transport readiness; it is not by itself a verifier.
+A bounded `x509-rsa-pkcs1-v1-5-sha256-signature` composition now verifies one
+exact certificate signature with repository-owned primitives. It requires the
+canonical `sha256WithRSAEncryption` identifier with present NULL parameters,
+an already policy-validated issuer RSA key, an explicit modulus-byte ceiling,
+and a byte-aligned signature; it hashes the preserved `TBSCertificate` DER,
+applies RSAVP1, and validates the complete canonical SHA-256 encoded message.
+Its non-copyable borrowed result binds the exact certificate and validated
+issuer key and proves only that the key verified those exact signed bytes.
+Issuer selection and linkage, algorithm routing, certificate
+roles, path construction and validation, trust roots, time, names, revocation,
+TLS, HTTP, and network effects remain separate blockers.
 
 The current slices intentionally stop before provider HTTPS transport. The
 loopback host owns only local TCP and injected browser authority; custody owns
