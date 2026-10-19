@@ -92,6 +92,24 @@ def test_inspection_api_and_cli_expose_the_complete_runnable_plan() -> None:
     assert json.loads(completed.stdout) == payload
 
 
+def test_engine_backed_analysis_cards_are_inspectable_and_runnable() -> None:
+    corpus = json.loads(_grammar_path("berkeley-v1-cli-corpus.json").read_text(encoding="utf-8"))
+    case = next(case for case in corpus["cases"] if case["id"] == "engine-backed-analysis-plan")
+
+    inspection = json.loads(inspect_netlist_json(case["deck"]))
+    result = json.loads(run_netlist_json(case["deck"]))
+
+    assert [analysis["index"] for analysis in inspection["analyses"]] == case["expected"][
+        "analysisIndexes"
+    ]
+    assert [analysis["kind"] for analysis in inspection["analyses"]] == case["expected"][
+        "analysisKinds"
+    ]
+    assert [analysis["kind"] for analysis in result["analyses"]] == case["expected"][
+        "analysisKinds"
+    ]
+
+
 def test_module_cli_reports_a_stable_failure_code() -> None:
     corpus = json.loads(_grammar_path("berkeley-v1-cli-corpus.json").read_text(encoding="utf-8"))
     case = corpus["failureCases"][0]

@@ -23,9 +23,11 @@ import {
   mosfetFromModelCard,
   mutualInductor,
   normalizeModelCard,
+  noiseAc,
   formatDeckTableJson,
   runDeck,
   resistor,
+  sensDc,
   transmissionLine,
   vccs,
   vcvs,
@@ -43,6 +45,8 @@ import {
   type Element,
   type JfetPolarity,
   type MosfetLevel1Params,
+  type NoiseResult,
+  type SensResult,
   type TransientPoint,
   type TransientMethod,
   type TfResult,
@@ -212,14 +216,16 @@ export type Analysis =
   | PoleZeroAnalysis
   | OptionsAnalysis;
 
-export type RunnableAnalysis = OpAnalysis | TranAnalysis | DcAnalysis | AcAnalysis | TfAnalysis;
+export type RunnableAnalysis = OpAnalysis | TranAnalysis | DcAnalysis | AcAnalysis | TfAnalysis | SensAnalysis | NoiseAnalysis;
 export type AnalysisKind = RunnableAnalysis["kind"];
 export type AnalysisResult =
   | DcResult
   | readonly DcSweepPoint[]
   | readonly AcPoint[]
   | readonly TransientPoint[]
-  | TfResult;
+  | TfResult
+  | SensResult
+  | NoiseResult;
 export type SelectedOutputValue = number | Complex;
 
 export interface AnalysisPlanStep {
@@ -764,7 +770,7 @@ export function selectOutputs(
 ): SelectedAnalysisOutput[] {
   const selected: SelectedAnalysisOutput[] = [];
   for (const result of results) {
-    if (result.kind === "tf") {
+    if (result.kind === "tf" || result.kind === "sens" || result.kind === "noise") {
       continue;
     }
     const probes = selectedOutputProbes(parsed, result.kind);
@@ -817,7 +823,9 @@ function analysisPlanStep(index: number, analysis: Analysis): AnalysisPlanStep |
     analysis.kind === "tran" ||
     analysis.kind === "dc" ||
     analysis.kind === "ac" ||
-    analysis.kind === "tf"
+    analysis.kind === "tf" ||
+    analysis.kind === "sens" ||
+    analysis.kind === "noise"
   ) {
     return { index, kind: analysis.kind, analysis };
   }
@@ -876,6 +884,18 @@ function executeAnalysisStep(parsed: ParsedNetlist, step: AnalysisPlanStep): Ana
   }
   if (analysis.kind === "tf") {
     return tf(parsed.circuit, analysis.outputNode, analysis.inputSource);
+  }
+  if (analysis.kind === "sens") {
+    return sensDc(parsed.circuit, analysis.outputNode);
+  }
+  if (analysis.kind === "noise") {
+    return noiseAc(
+      parsed.circuit,
+      analysis.outputNode,
+      analysis.inputSource,
+      analysis.frequenciesHz.length === 0 ? undefined : analysis.frequenciesHz,
+      analysis.temperature,
+    );
   }
   throw new NetlistParseError(`analysis card at index ${step.index} is not executable`);
 }

@@ -90,6 +90,31 @@ C1 out 0 1u IC=0
     expect(runNetlist(deck)).toHaveLength(5);
   });
 
+  it("builds and runs engine-backed sensitivity and noise cards", () => {
+    const deck = `
+V1 in 0 DC 1 AC 1
+R1 in out 1k
+R2 out 0 1k
+.sens V(out)
+.noise V(out) V1
+.end
+`;
+    const parsed = parseNetlist(deck);
+
+    expect(parsed.analysisPlan().map((step) => [step.index, step.kind])).toEqual([
+      [0, "sens"],
+      [1, "noise"],
+    ]);
+    const results = parsed.runAnalysisPlan();
+    expect(results.map((result) => result.kind)).toEqual(["sens", "noise"]);
+    expect((results[0].result as { nominalVoltage: number }).nominalVoltage).toBeCloseTo(0.5, 9);
+    expect((results[0].result as { entries: readonly unknown[] }).entries).not.toHaveLength(0);
+    const noisePoints = (results[1].result as { points: readonly { frequencyHz: number }[] }).points;
+    expect(noisePoints).toHaveLength(50);
+    expect(noisePoints[0]?.frequencyHz).toBe(1);
+    expect(runNetlist(deck)).toHaveLength(2);
+  });
+
   it("runs two-axis DC sweeps with the second source as the outer axis", () => {
     const corpus = JSON.parse(readFileSync(
       new URL("../../../../grammars/spice/nested-dc-sweep-v1-corpus.json", import.meta.url),

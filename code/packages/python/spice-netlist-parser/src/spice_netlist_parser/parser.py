@@ -29,9 +29,11 @@ from spice_engine import (
     Inductor,
     Mosfet,
     MutualInductor,
+    NoiseResult,
     PulseWaveform,
     PwlWaveform,
     Resistor,
+    SensResult,
     SinWaveform,
     TfResult,
     TransientResult,
@@ -44,8 +46,10 @@ from spice_engine import (
     dc_sweep_2d,
     format_deck_table_json,
     mosfet_from_model_card,
+    noise_ac,
     normalize_model_card,
     run_deck,
+    sens_dc,
     tf,
     transient,
 )
@@ -252,15 +256,19 @@ type Analysis = (
     | PoleZeroAnalysis
     | OptionsAnalysis
 )
-type RunnableAnalysis = OpAnalysis | TranAnalysis | DcAnalysis | AcAnalysis | TfAnalysis
-type AnalysisKind = Literal["op", "tran", "dc", "ac", "tf"]
-type AnalysisResult = DcResult | DcSweepResult | AcResult | TransientResult | TfResult
+type RunnableAnalysis = (
+    OpAnalysis | TranAnalysis | DcAnalysis | AcAnalysis | TfAnalysis | SensAnalysis | NoiseAnalysis
+)
+type AnalysisKind = Literal["op", "tran", "dc", "ac", "tf", "sens", "noise"]
+type AnalysisResult = (
+    DcResult | DcSweepResult | AcResult | TransientResult | TfResult | SensResult | NoiseResult
+)
 type SelectedOutputValue = float | complex
 
 
 @dataclass(frozen=True, slots=True)
 class AnalysisPlanStep:
-    """One executable `.op`, `.dc`, `.ac`, `.tran`, or `.tf` card in deck order."""
+    """One executable deck-analysis card in source order."""
 
     index: int
     kind: AnalysisKind
@@ -824,7 +832,7 @@ def select_outputs(
     selected: list[SelectedAnalysisOutput] = []
     execution_results = run_analysis_plan(parsed) if results is None else results
     for result in execution_results:
-        if result.kind == "tf":
+        if result.kind in ("tf", "sens", "noise"):
             continue
         probes = _selected_output_probes(parsed, result.kind)
         if not probes:
@@ -887,6 +895,10 @@ def _analysis_plan_step(index: int, analysis: Analysis) -> AnalysisPlanStep | No
         return AnalysisPlanStep(index=index, kind="ac", analysis=analysis)
     if isinstance(analysis, TfAnalysis):
         return AnalysisPlanStep(index=index, kind="tf", analysis=analysis)
+    if isinstance(analysis, SensAnalysis):
+        return AnalysisPlanStep(index=index, kind="sens", analysis=analysis)
+    if isinstance(analysis, NoiseAnalysis):
+        return AnalysisPlanStep(index=index, kind="noise", analysis=analysis)
     return None
 
 
@@ -948,6 +960,16 @@ def _execute_analysis_step(parsed: ParsedNetlist, step: AnalysisPlanStep) -> Ana
             parsed.circuit,
             output_node=analysis.output_node,
             input_source=analysis.input_source,
+        )
+    if isinstance(analysis, SensAnalysis):
+        return sens_dc(parsed.circuit, output_node=analysis.output_node)
+    if isinstance(analysis, NoiseAnalysis):
+        return noise_ac(
+            parsed.circuit,
+            output_node=analysis.output_node,
+            input_source=analysis.input_source,
+            freqs=None if not analysis.freqs else list(analysis.freqs),
+            temperature=analysis.temperature,
         )
     raise NetlistParseError(f"analysis card at index {step.index} is not executable")
 
