@@ -141,7 +141,12 @@ backend lowers the chord.
 This is the multiline capability UI29-3 counted on when it declined a separate
 `HostTextarea`, and it is what lets the legacy UI25 `Input` retire (U29-X1):
 `Input ( multiline : true )` and `HostInput ( multiline : true )` now lower
-identically.
+identically. The last three packages that used the primitive form of the
+legacy `Input` (`DraftEditor`, `Notes`, `SpiceWorkbench`) now use
+`HostInput ( multiline : true )`, so no `.mll` in the repository uses the
+legacy `Input` primitive any more (bare `Input` inside the toolkit is the
+toolkit's own userland component). What remains for U29-X1 is deleting the
+emitter paths.
 
 `HostInput`'s portable `a11y-label` is its explicit accessible name. Literal
 and slot-backed values must reach each backend's native naming surface:
