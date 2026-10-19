@@ -1847,6 +1847,28 @@ fn push_text_field_aria_label(
     Ok(())
 }
 
+/// The `placeholder` attribute of a text primitive (`Input`, `HostInput`,
+/// `HostNumberInput`), from a literal or a slot:
+///
+/// | moslayout                   | JSX                                   |
+/// |-----------------------------|---------------------------------------|
+/// | `placeholder : "Search"`    | `placeholder="Search"` (escaped form when the text needs it) |
+/// | `placeholder : slot: hint`  | `placeholder={hint}`                  |
+///
+/// The slot form used to be dropped silently, so a hint bound to a slot
+/// (the note-type editor's templates, the SPICE workbench's netlist) never
+/// appeared on React while every native backend drew it.
+fn push_placeholder_attr(node: &LayoutNode, attrs: &mut String) -> Result<(), PipelineEmitError> {
+    if let Some(s) = find_string_prop(node, "placeholder") {
+        attrs.push_str(&jsx_string_attr("placeholder", s));
+    } else if let Some(slot) = find_slot_ref_prop(node, "placeholder") {
+        let camel = to_camel_case_first_lower(slot);
+        validate_slot_or_field_name(&camel).map_err(PipelineEmitError::UnsafeSlotName)?;
+        attrs.push_str(&format!(" placeholder={{{camel}}}"));
+    }
+    Ok(())
+}
+
 /// Lower a moslayout `Input` node to an `<input>` or `<textarea>` JSX line.
 ///
 /// ## Property handling
@@ -1946,12 +1968,8 @@ fn emit_input_jsx(
         }
     }
 
-    // placeholder="text"  — string-literal moslayout prop (post-PR-H).
-    // Escaping: simple strings stay as JSX quoted attributes; strings that
-    // need JavaScript escaping use JSX expression form.
-    if let Some(s) = find_string_prop(node, "placeholder") {
-        attrs.push_str(&jsx_string_attr("placeholder", s));
-    }
+    // placeholder — a literal or a slot (see `push_placeholder_attr`).
+    push_placeholder_attr(node, &mut attrs)?;
 
     // aria-label — the authored accessible name (UI29), which this path
     // dropped while HostInput carried it.
@@ -2117,10 +2135,8 @@ fn emit_host_input_jsx(
         }
     }
 
-    // placeholder="text" — string-literal moslayout prop.
-    if let Some(s) = find_string_prop(node, "placeholder") {
-        attrs.push_str(&jsx_string_attr("placeholder", s));
-    }
+    // placeholder — a literal or a slot (see `push_placeholder_attr`).
+    push_placeholder_attr(node, &mut attrs)?;
 
     if find_keyword_prop(node, "auto-focus") == Some("true") {
         attrs.push_str(" autoFocus");
@@ -3957,10 +3973,8 @@ fn emit_host_number_input_jsx(
         }
     }
 
-    // placeholder.
-    if let Some(s) = find_string_prop(node, "placeholder") {
-        attrs.push_str(&jsx_string_attr("placeholder", s));
-    }
+    // placeholder — a literal or a slot (see `push_placeholder_attr`).
+    push_placeholder_attr(node, &mut attrs)?;
 
     // disabled.
     if let Some(slot) = find_slot_ref_prop(node, "disabled") {
@@ -13620,6 +13634,34 @@ mod tests {
         let out = from_pipeline(&m, &l, &empty_style("X")).unwrap().output;
         assert!(out.contains("disabled={off}"), "got:\n{out}");
         assert!(!out.contains("readOnly"), "got:\n{out}");
+    }
+
+    /// A slot-bound `placeholder` reaches the native attribute on every text
+    /// primitive. React read only string literals, so `placeholder: slot: x`
+    /// silently drew no hint: the note-type editor's template fields and the
+    /// SPICE workbench's netlist lost theirs here while every native backend
+    /// showed them.
+    #[test]
+    fn a_slot_bound_placeholder_reaches_every_text_primitive() {
+        let m = component("X", vec![slot("hint", SlotType::Text, true)], vec![]);
+        let placeholder = LayoutProp {
+            name: "placeholder".to_string(),
+            value: LayoutPropValue::SlotRef("hint".to_string()),
+        };
+        let multiline = LayoutProp {
+            name: "multiline".to_string(),
+            value: LayoutPropValue::Keyword("true".to_string()),
+        };
+        for (what, l) in [
+            ("HostInput", host_input_layout(vec![placeholder.clone()])),
+            ("multiline HostInput", host_input_layout(vec![placeholder.clone(), multiline.clone()])),
+            ("Input", input_layout(vec![placeholder.clone()])),
+            ("multiline Input", input_layout(vec![placeholder.clone(), multiline.clone()])),
+            ("HostNumberInput", host_number_input_layout(vec![placeholder.clone()])),
+        ] {
+            let out = from_pipeline(&m, &l, &empty_style("X")).unwrap().output;
+            assert!(out.contains(" placeholder={hint}"), "{what}:\n{out}");
+        }
     }
 
 }

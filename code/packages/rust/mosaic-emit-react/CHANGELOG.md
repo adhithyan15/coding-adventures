@@ -1,5 +1,9 @@
 # Changelog
 
+## 2026-10-19 (Slot-bound placeholders)
+
+- **A `placeholder: slot:` reaches the field (#15930 follow-up).** `HostInput`, the legacy `Input` and `HostNumberInput` read only a string-literal `placeholder`, so a slot-bound hint was dropped without a report: the note-type editor's card templates and the SPICE workbench's netlist drew no hint on React while the native backends did. All three now share `push_placeholder_attr`, which emits `placeholder={slot}` for a slot and the escaped literal as before. Verified with `tsc --strict` on a generated component.
+
 ## 2026-10-19 (HostInput multiline)
 
 - **`HostInput ( multiline : true )` is a `<textarea>` (#15930).** React always drew a one-line `<input type="text">` for `HostInput` and ignored the keyword, on the theory that a userland `MultilineInput` would own text areas. None could: a text area cannot be composed from single-line fields. UI29-3 had already counted on HostInput's `multiline`, and XAML, Compose and Flutter honoured it, so the note-type editor's card templates were one line here and a text area there.

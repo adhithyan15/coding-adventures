@@ -4,6 +4,7 @@ All notable changes to this package will be documented in this file.
 
 ## [Unreleased]
 
+- **A `placeholder: slot:` reaches every text field (#15930 follow-up).** `HostNumberInput` took a slot-bound placeholder, but `HostInput` and `Input` (single-line and `<textarea>`) took only literals, so a slot-bound hint vanished from them. All three now share `placeholder_attr`: `placeholder="${escapeHtmlAttribute(slot)}"` for a slot. Verified in jsdom: a hint containing quotes and `<b>` reaches all three fields' `placeholder` exactly.
 - **A multiline `HostInput` is a `<textarea>` (#15930).** `multiline: true` was read only on the legacy `Input`, so the kernel `HostInput` became a one-line `<input>`. Both now share the text-area lowering. In either, a multiline field has no Enter-to-`onCommit` branch in its `onkeydown`: Enter is a line break there on every backend (UI29 §2.1). Escape still cancels.
 
 - **mosstyle `align` becomes flex alignment (#16932).** `align` is not a CSS property, so `align: center-vertical` reached the inline style verbatim and browsers discarded it. `translate_layout_alias` maps it as html and React do: `center-vertical` → `align-items: center`, `center-horizontal` → `justify-content: center`, `center` → both, `start`/`end` → `flex-start`/`flex-end`, `space-between` → `justify-content: space-between`. Any other value passes through unchanged.

@@ -32,9 +32,10 @@
 //
 // Why no body placeholder and no preview
 // --------------------------------------
-// The multi-line primitive's placeholder is literal-only on React,
-// WebComponent and SwiftUI (UI25), so a slot-bound one would vanish there; the
-// visible body label does that job. A markdown preview is a `node` slot with
+// The visible body label already says what goes in the body, so a hint
+// would only repeat it. (A slot-bound placeholder used to vanish on React,
+// Web Components and SwiftUI; every backend draws one now.) A markdown
+// preview is a `node` slot with
 // real costs (no .msl styling, one surface per native host, unescaped on the
 // HTML backend); it belongs to the one product that wants it (Journal),
 // composed beside this component, not inside it.

@@ -5821,13 +5821,37 @@ fn text_field_disabled_modifier(node: &LayoutNode) -> Result<Option<String>, Pip
     Ok(None)
 }
 
+/// A text primitive's `placeholder` as a Swift expression, from a literal or
+/// a slot; `None` when there is none (or it is the empty literal):
+///
+/// | moslayout                   | Swift                        |
+/// |-----------------------------|------------------------------|
+/// | `placeholder : "Search"`    | `"Search"` (escaped)         |
+/// | `placeholder : slot: hint`  | `hint` (a `String` property) |
+///
+/// Both forms fit every consumer: `TextField(_:text:)` and `Text(_:)` take a
+/// string literal or any `StringProtocol` value, and so does
+/// `.accessibilityLabel(_:)`. The slot form used to be dropped, so a
+/// slot-bound hint never appeared on SwiftUI.
+fn swift_placeholder_expr(node: &LayoutNode) -> Result<Option<String>, PipelineEmitError> {
+    if let Some(text) = find_string_prop(node, "placeholder") {
+        return Ok((!text.is_empty()).then(|| format!("\"{}\"", escape_swift_string(text))));
+    }
+    if let Some(slot) = find_slot_ref_prop(node, "placeholder") {
+        let camel = to_camel_case_first_lower(slot);
+        validate_slot_or_field_name(&camel).map_err(PipelineEmitError::UnsafeSlotName)?;
+        return Ok(Some(camel));
+    }
+    Ok(None)
+}
+
 /// Lower a multiline text field — `HostInput` or the legacy `Input` with
 /// `multiline: true` — to a SwiftUI `TextEditor`.
 ///
 /// | Moslayout prop        | SwiftUI surface                                        |
 /// |-----------------------|--------------------------------------------------------|
 /// | `value` + `onChange`  | `TextEditor(text: Binding(get:set:))`, as `TextField`   |
-/// | `placeholder: "..."`  | a `Text` overlay shown while the value is empty         |
+/// | `placeholder`         | a `Text` overlay shown while the value is empty (literal or slot) |
 /// | `a11y-label`          | `.accessibilityLabel(...)` (placeholder as a fallback)  |
 /// | `disabled`/`read-only`| `.disabled(...)`, shared with `TextField`               |
 /// | `onCommit`            | none: Return inserts a newline in a `TextEditor`        |
@@ -5835,8 +5859,7 @@ fn text_field_disabled_modifier(node: &LayoutNode) -> Result<Option<String>, Pip
 fn emit_text_editor(node: &LayoutNode, indent: usize) -> Result<String, PipelineEmitError> {
     let pad = " ".repeat(indent);
     let child_pad = " ".repeat(indent + 4);
-    let placeholder = find_string_prop(node, "placeholder").unwrap_or("");
-    let placeholder_lit = format!("\"{}\"", escape_swift_string(placeholder));
+    let placeholder = swift_placeholder_expr(node)?;
 
     let value_expr = match node.props.iter().find(|p| p.name == "value") {
         Some(p) => match &p.value {
@@ -5876,7 +5899,7 @@ fn emit_text_editor(node: &LayoutNode, indent: usize) -> Result<String, Pipeline
     };
 
     let mut output = format!("{pad}ZStack(alignment: .topLeading) {{\n");
-    if !placeholder.is_empty() {
+    if let Some(placeholder_lit) = &placeholder {
         output.push_str(&format!(
             "{child_pad}if {value_expr}.isEmpty {{\n{child_pad}    Text({placeholder_lit})\n{child_pad}        .foregroundColor(.secondary)\n{child_pad}        .padding(.horizontal, 5)\n{child_pad}        .padding(.vertical, 8)\n{child_pad}        .allowsHitTesting(false)\n{child_pad}        .accessibilityHidden(true)\n{child_pad}}}\n"
         ));
@@ -5887,7 +5910,7 @@ fn emit_text_editor(node: &LayoutNode, indent: usize) -> Result<String, Pipeline
     // placeholder unconditionally and drop the authored name (J3b-pre).
     if let Some(label) = swift_accessibility_label(node) {
         output.push_str(&format!(".accessibilityLabel({label})"));
-    } else if !placeholder.is_empty() {
+    } else if let Some(placeholder_lit) = &placeholder {
         output.push_str(&format!(".accessibilityLabel({placeholder_lit})"));
     }
     if let Some(part_name) = &node.part_name {
@@ -5962,8 +5985,7 @@ fn emit_host_input(
 
     // First arg: the placeholder string literal. We escape `\` and `"`
     // per Swift string-literal rules; everything else passes through.
-    let placeholder = find_string_prop(node, "placeholder").unwrap_or("");
-    let placeholder_lit = format!("\"{}\"", escape_swift_string(placeholder));
+    let placeholder_lit = swift_placeholder_expr(node)?.unwrap_or_else(|| "\"\"".to_string());
 
     // `value: slot: x` -> `text: .constant(x)`. If `value` is an Expr
     // (e.g. `value: ( v )` where `v` is a For-loop binding from the
@@ -7376,8 +7398,7 @@ fn emit_host_number_input(node: &LayoutNode, indent: usize) -> Result<String, Pi
     let pad = " ".repeat(indent);
     let mod_pad = " ".repeat(indent + 4);
 
-    let placeholder = find_string_prop(node, "placeholder").unwrap_or("");
-    let escaped_placeholder = escape_swift_string(placeholder);
+    let placeholder = swift_placeholder_expr(node)?.unwrap_or_else(|| "\"\"".to_string());
 
     let value_prop = find_prop_value(node, "value");
     let value_expr: String = match value_prop {
@@ -7410,7 +7431,7 @@ fn emit_host_number_input(node: &LayoutNode, indent: usize) -> Result<String, Pi
     let mut out = String::new();
     writeln!(
         out,
-        "{pad}TextField(\"{escaped_placeholder}\", value: {value_binding}, format: .number)"
+        "{pad}TextField({placeholder}, value: {value_binding}, format: .number)"
     )
     .unwrap();
 
@@ -10179,6 +10200,50 @@ mod tests {
         );
         // `auto-focus` is keyed on the HostInput tag, not on TextField.
         assert!(out.contains(".focused($isFocused)"), "got:\n{out}");
+    }
+
+    /// A slot-bound `placeholder` reaches every text primitive. SwiftUI read
+    /// only literals, so `placeholder: slot: x` drew an empty hint: the
+    /// note-type editor's templates and the SPICE workbench's netlist lost
+    /// theirs here while Qt, XAML, Compose and Flutter showed them.
+    #[test]
+    fn a_slot_bound_placeholder_reaches_every_text_primitive() {
+        let field = |tag: &str, multiline: bool| {
+            let mut props = vec![prop_slot_ref("value", "body"), prop_slot_ref("placeholder", "hint")];
+            if multiline {
+                props.push(prop_keyword("multiline", "true"));
+            }
+            let input = LayoutNode {
+                tag: tag.to_string(),
+                part_name: None,
+                props,
+                children: vec![],
+            };
+            from_pipeline(
+                &component(
+                    "Draft",
+                    vec![
+                        slot("body", SlotType::Text, true),
+                        slot("hint", SlotType::Text, true),
+                    ],
+                    vec![],
+                ),
+                &layout_with("Draft", container_node("Box", vec![input])),
+                &empty_style("Draft"),
+            )
+            .unwrap()
+            .output
+        };
+        let single = field("HostInput", false);
+        assert!(single.contains("TextField(hint, text: .constant(body))"), "{single}");
+        let number = field("HostNumberInput", false);
+        assert!(number.contains("TextField(hint, value: "), "{number}");
+        for tag in ["HostInput", "Input"] {
+            let multi = field(tag, true);
+            assert!(multi.contains("if body.isEmpty {"), "{tag}: {multi}");
+            assert!(multi.contains("Text(hint)"), "{tag}: {multi}");
+            assert!(multi.contains(".accessibilityLabel(hint)"), "{tag}: {multi}");
+        }
     }
 
     #[test]

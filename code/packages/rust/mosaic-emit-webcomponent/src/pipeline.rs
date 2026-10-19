@@ -1694,6 +1694,31 @@ fn layout_value_to_js_expr(v: &LayoutPropValue) -> String {
     }
 }
 
+/// The `placeholder` attribute of a text primitive (`Input`, `HostInput`,
+/// `HostNumberInput`), from a literal or a slot:
+///
+/// | moslayout                   | shadow-DOM attribute                          |
+/// |-----------------------------|-----------------------------------------------|
+/// | `placeholder : "Search"`    | `placeholder="Search"` (HTML-escaped)         |
+/// | `placeholder : slot: hint`  | `placeholder="${escapeHtmlAttribute(hint)}"`  |
+///
+/// The number input always took both; the text inputs took only the literal,
+/// so a slot-bound hint vanished from them.
+fn placeholder_attr(node: &LayoutNode) -> String {
+    if let Some(s) = find_string(node, "placeholder") {
+        format!(r#" placeholder="{}""#, escape_html_attribute(s))
+    } else if let Some(slot) = find_slot_ref(node, "placeholder") {
+        let camel = to_camel_case_first_lower(slot);
+        if is_safe_identifier(&camel) {
+            format!(r#" placeholder="${{escapeHtmlAttribute({camel})}}""#)
+        } else {
+            String::new()
+        }
+    } else {
+        String::new()
+    }
+}
+
 /// Lower a `HostInput` or compatibility `Input` node inside the shadow DOM.
 ///
 /// The wiring follows the React backend's HostInput surface but adapts
@@ -1744,10 +1769,8 @@ fn emit_host_input(node: &LayoutNode, part_styles: &HtmlStyles) -> String {
         }
     }
 
-    // placeholder="text"
-    if let Some(s) = find_string(node, "placeholder") {
-        attrs.push_str(&format!(r#" placeholder="{}""#, escape_html_attribute(s)));
-    }
+    // placeholder — a literal or a slot (see `placeholder_attr`).
+    attrs.push_str(&placeholder_attr(node));
 
     // readonly attribute — three cases. The kebab-name `read-only` is
     // the moslayout-compiler-emitted form (the React backend uses the
@@ -2695,17 +2718,8 @@ fn emit_host_number_input(node: &LayoutNode, part_styles: &HtmlStyles) -> String
         }
     }
 
-    // placeholder: string or slot.
-    if let Some(s) = find_string(node, "placeholder") {
-        attrs.push_str(&format!(r#" placeholder="{}""#, escape_html_attribute(s)));
-    } else if let Some(slot) = find_slot_ref(node, "placeholder") {
-        let camel = to_camel_case_first_lower(slot);
-        if is_safe_identifier(&camel) {
-            attrs.push_str(&format!(
-                r#" placeholder="${{escapeHtmlAttribute({camel})}}""#
-            ));
-        }
-    }
+    // placeholder — a literal or a slot (see `placeholder_attr`).
+    attrs.push_str(&placeholder_attr(node));
 
     // disabled (slot/keyword).
     if let Some(slot) = find_slot_ref(node, "disabled") {
@@ -8280,4 +8294,41 @@ mod tests {
         }
     }
 
+
+    /// A slot-bound `placeholder` reaches every text primitive, as it already
+    /// reached `HostNumberInput`. The text inputs read only literals, so a
+    /// slot-bound hint (the note-type editor's templates, the SPICE
+    /// workbench's netlist) was dropped here silently.
+    #[test]
+    fn a_slot_bound_placeholder_reaches_every_text_primitive() {
+        let m = component("X", vec![slot("hint", SlotType::Text, true)], vec![]);
+        for (tag, multiline) in [
+            ("HostInput", false),
+            ("HostInput", true),
+            ("Input", false),
+            ("Input", true),
+            ("HostNumberInput", false),
+        ] {
+            let mut root = leaf(tag);
+            if multiline {
+                root.props.push(LayoutProp {
+                    name: "multiline".to_string(),
+                    value: LayoutPropValue::Keyword("true".to_string()),
+                });
+            }
+            root.props.push(LayoutProp {
+                name: "placeholder".to_string(),
+                value: LayoutPropValue::SlotRef("hint".to_string()),
+            });
+            let l = LayoutDef {
+                component_name: "X".to_string(),
+                root,
+            };
+            let out = from_pipeline(&m, &l, &empty_style("X")).unwrap().output;
+            assert!(
+                out.contains(r#" placeholder="${escapeHtmlAttribute(hint)}""#),
+                "{tag} multiline:{multiline}:\n{out}"
+            );
+        }
+    }
 }
