@@ -2,8 +2,8 @@
 
 ## Status
 
-Specified for the zero-external-dependency Rust package
-`rsa-public-operation`. Implementation is pending.
+Implemented as the zero-external-dependency Rust package
+`rsa-public-operation`.
 
 ## Purpose
 
@@ -122,7 +122,7 @@ Tests must cover:
   modulus width;
 - at least one multi-limb vector independently computed with another exact
   integer implementation and pinned as static bytes;
-- exponents with one bit and multiple set bits, including `65537`;
+- sparse and dense permitted odd exponents, including `65537`;
 - stable redacted errors and opaque validated-key-only entry; and
 - source checks proving there is no `unsafe` code or private-RSA API.
 
