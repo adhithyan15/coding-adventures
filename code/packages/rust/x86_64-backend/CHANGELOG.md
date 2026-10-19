@@ -13,6 +13,11 @@ bounds and three strides) off native x86-64. The two tests that pinned the
 refusal now pin successful compilation, and new tests pin the encoded stores
 and loads.
 
+A function may declare, and a call may pass, at most 255 stack-passed
+arguments (`MAX_STACK_ARGS`). That keeps each outgoing area under one guard
+page. Beyond it, functions fail with `TooManyParams` and calls with
+`UnsupportedOp`.
+
 ## Unreleased — FLOW-MATIC EOF peek (VM-039a)
 
 Support the zero-argument `input_more` builtin through the shared C runtime.

@@ -23,11 +23,11 @@ bounded transform, additive composition with finite static terms, and
 multiplication or division of that additive form by finite static terms. A
 single additional built-in `entier` may wrap a supported bounded transform
 rooted in `sign(...)`, including the exact `entier(sign(...))` root. A real
-name-formal result is also allowed when its actual has the same proof. Up to
-forty-four exact additive offset units may remain inside that bounded transform,
-either as one exact `44` term or a checked sum of exact `1` through `43` terms,
-with the cap tracked through parentheses and supported wrappers and applied per
-conditional path. Unary
+name-formal result is also allowed when its actual has the same proof.
+Whole-number additive offsets may remain inside that bounded transform while
+their checked total stays within `2^53 - 1` units, so every path value remains
+an exact binary64 integer; the budget is tracked through parentheses and
+supported wrappers and applied per conditional path. Unary
 signs, arithmetic composition with finite static operands, and real-valued
 standard functions preserve it, while a finite static real actual is safe
 directly. Variable-free exact `sign` and exact-range `entier`
