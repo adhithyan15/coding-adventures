@@ -1,0 +1,11 @@
+{
+  "id": "PT-C313-separacao",
+  "pathSegment": "PT-PATH-313-BODAS",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-313-BODAS",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 467,
+  "sourceHash": "fnv1a64:69111d85afe32586",
+  "lessonIds": [
+    "PT-C467-orgulho",
+    "PT-C467-vaidade",
+    "PT-C467-vaidoso",
+    "PT-C467-orgulhar",
+    "PT-C467-gabar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch467.txt",
+  "json": "portuguese/narration/ch467.json",
+  "textHash": "fnv1a64:21e57cfd89405971",
+  "jsonHash": "fnv1a64:14d087b24b358c72",
+  "findings": []
+}

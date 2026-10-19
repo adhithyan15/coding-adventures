@@ -1,0 +1,19 @@
+{
+  "chapter": 453,
+  "title": "Na caixa",
+  "label": "ch:pt-na-caixa",
+  "canDo": "I can pay and wrap things: the till receipt, a bargain, a clearance sale, haggling and gift-wrapping.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "PT-C453-embrulhar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 453: I can pay and wrap things: the till receipt, a bargain, a clearance sale, haggling and gift-wrapping.",
+    "assesses": [
+      "PT-LEX-C453-CAIXA-03",
+      "PT-LEX-C453-CAIXA-04",
+      "PT-LEX-C453-CAIXA-05"
+    ]
+  }
+}

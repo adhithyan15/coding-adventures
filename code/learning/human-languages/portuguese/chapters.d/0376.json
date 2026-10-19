@@ -1,0 +1,19 @@
+{
+  "chapter": 376,
+  "title": "Na universidade",
+  "label": "ch:pt-na-universidade",
+  "canDo": "I can talk about starting university: the faculty, first-year students, enrolment, semesters and fees.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "PT-C376-propina",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 376: I can talk about starting university: the faculty, first-year students, enrolment, semesters and fees.",
+    "assesses": [
+      "PT-LEX-C376-FACULDADE-03",
+      "PT-LEX-C376-FACULDADE-04",
+      "PT-LEX-C376-FACULDADE-05"
+    ]
+  }
+}

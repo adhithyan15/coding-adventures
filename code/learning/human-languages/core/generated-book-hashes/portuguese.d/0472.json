@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 472,
+  "sourceHash": "fnv1a64:d670a45878a0bdb2",
+  "lessonIds": [
+    "PT-C472-esperto",
+    "PT-C472-astuto",
+    "PT-C472-ingenuo",
+    "PT-C472-desconfiar",
+    "PT-C472-desconfiado"
+  ],
+  "tex": "portuguese/book/chapters/ch472-espertos-e-ingenuos.tex"
+}

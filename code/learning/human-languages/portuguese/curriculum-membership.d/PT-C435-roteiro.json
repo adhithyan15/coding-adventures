@@ -1,0 +1,11 @@
+{
+  "id": "PT-C435-roteiro",
+  "pathSegment": "PT-PATH-435-ORIENTAR",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-435-ORIENTAR",
+      "order": 3
+    }
+  ]
+}

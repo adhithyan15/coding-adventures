@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 491,
+  "sourceHash": "fnv1a64:287ab61033239517",
+  "lessonIds": [
+    "PT-C491-namorar",
+    "PT-C491-namoro",
+    "PT-C491-paixao",
+    "PT-C491-apaixonar",
+    "PT-C491-abracar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch491.txt",
+  "json": "portuguese/narration/ch491.json",
+  "textHash": "fnv1a64:c6628491f59c5cfa",
+  "jsonHash": "fnv1a64:2dc5ccf67aa4499e",
+  "findings": []
+}

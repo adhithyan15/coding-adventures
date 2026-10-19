@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 413,
+  "sourceHash": "fnv1a64:265d3ef9a4120193",
+  "lessonIds": [
+    "PT-C413-abrigo",
+    "PT-C413-terminal",
+    "PT-C413-camioneta",
+    "PT-C413-itinerario",
+    "PT-C413-apear"
+  ],
+  "tex": "portuguese/book/chapters/ch413-na-paragem.tex"
+}

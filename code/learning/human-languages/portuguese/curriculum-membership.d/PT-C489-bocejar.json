@@ -1,0 +1,11 @@
+{
+  "id": "PT-C489-bocejar",
+  "pathSegment": "PT-PATH-489-SONO",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PT-EXT-489-SONO",
+      "order": 2
+    }
+  ]
+}

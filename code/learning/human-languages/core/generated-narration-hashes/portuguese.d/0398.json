@@ -1,0 +1,20 @@
+{
+  "language": "portuguese",
+  "chapter": 398,
+  "sourceHash": "fnv1a64:225e6ea6bb7e82d7",
+  "lessonIds": [
+    "PT-C398-ficheiro",
+    "PT-C398-copiar",
+    "PT-C398-guardar",
+    "PT-C398-anexo",
+    "PT-C398-anexar",
+    "PT-R398-revisao-391-398"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "portuguese/narration/ch398.txt",
+  "json": "portuguese/narration/ch398.json",
+  "textHash": "fnv1a64:58af1045516686ca",
+  "jsonHash": "fnv1a64:210b0c42119a7ac7",
+  "findings": []
+}

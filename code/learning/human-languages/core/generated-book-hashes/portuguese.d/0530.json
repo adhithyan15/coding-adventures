@@ -1,0 +1,14 @@
+{
+  "language": "portuguese",
+  "chapter": 530,
+  "sourceHash": "fnv1a64:c3aa1cb5cb116e80",
+  "lessonIds": [
+    "PT-C530-senhorio",
+    "PT-C530-inquilino",
+    "PT-C530-mobilar",
+    "PT-C530-despensa",
+    "PT-C530-humidade",
+    "PT-R530-revisao-523-530"
+  ],
+  "tex": "portuguese/book/chapters/ch530-senhorios-e-inquilinos.tex"
+}

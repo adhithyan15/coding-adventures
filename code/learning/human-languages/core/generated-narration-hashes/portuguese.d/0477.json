@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 477,
+  "sourceHash": "fnv1a64:2edef06f938e6bb4",
+  "lessonIds": [
+    "PT-C477-choro",
+    "PT-C477-solucar",
+    "PT-C477-suspirar",
+    "PT-C477-suspiro",
+    "PT-C477-gargalhada"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch477.txt",
+  "json": "portuguese/narration/ch477.json",
+  "textHash": "fnv1a64:4d9f5a0a98b61366",
+  "jsonHash": "fnv1a64:0671ab46aa7b7659",
+  "findings": []
+}

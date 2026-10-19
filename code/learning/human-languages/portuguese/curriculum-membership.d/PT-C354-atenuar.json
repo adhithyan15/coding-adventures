@@ -1,0 +1,11 @@
+{
+  "id": "PT-C354-atenuar",
+  "pathSegment": "PT-PATH-354-INFLUENCIA",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-354-INFLUENCIA",
+      "order": 3
+    }
+  ]
+}

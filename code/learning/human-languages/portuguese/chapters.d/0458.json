@@ -1,0 +1,19 @@
+{
+  "chapter": 458,
+  "title": "Na serra",
+  "label": "ch:pt-na-serra",
+  "canDo": "I can describe a mountain walk: the mountain range, the hillside, the summit, a gorge and climbing.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "PT-C458-escalar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 458: I can describe a mountain walk: the mountain range, the hillside, the summit, a gorge and climbing.",
+    "assesses": [
+      "PT-LEX-C458-SERRA-03",
+      "PT-LEX-C458-SERRA-04",
+      "PT-LEX-C458-SERRA-05"
+    ]
+  }
+}

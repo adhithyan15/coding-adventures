@@ -1,0 +1,11 @@
+{
+  "id": "PT-C339-consenso",
+  "pathSegment": "PT-PATH-339-ACORDO",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-339-ACORDO",
+      "order": 3
+    }
+  ]
+}

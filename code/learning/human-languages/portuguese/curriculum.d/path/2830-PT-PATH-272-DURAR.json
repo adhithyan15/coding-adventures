@@ -1,0 +1,9 @@
+{
+  "id": "PT-PATH-272-DURAR",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "PT-EXT-272-DURAR"
+  ],
+  "after": []
+}

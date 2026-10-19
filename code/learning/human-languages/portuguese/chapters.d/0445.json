@@ -1,0 +1,19 @@
+{
+  "chapter": 445,
+  "title": "Obras na rua",
+  "label": "ch:pt-obras-na-rua",
+  "canDo": "I can talk about building work: the scaffolding, the crane, the building site, collapsing and knocking things down.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "PT-C445-demolir",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 445: I can talk about building work: the scaffolding, the crane, the building site, collapsing and knocking things down.",
+    "assesses": [
+      "PT-LEX-C445-OBRAS-03",
+      "PT-LEX-C445-OBRAS-04",
+      "PT-LEX-C445-OBRAS-05"
+    ]
+  }
+}

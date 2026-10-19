@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 513,
+  "sourceHash": "fnv1a64:6a6df097bf3c8ba9",
+  "lessonIds": [
+    "PT-C513-maratona",
+    "PT-C513-atletismo",
+    "PT-C513-ciclismo",
+    "PT-C513-competir",
+    "PT-C513-cronometro"
+  ],
+  "tex": "portuguese/book/chapters/ch513-correr-e-pedalar.tex"
+}

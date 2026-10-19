@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 492,
+  "sourceHash": "fnv1a64:743b8e2ea324bdeb",
+  "lessonIds": [
+    "PT-C492-cunhado",
+    "PT-C492-padrasto",
+    "PT-C492-madrasta",
+    "PT-C492-enteado",
+    "PT-C492-parente"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch492.txt",
+  "json": "portuguese/narration/ch492.json",
+  "textHash": "fnv1a64:6044e976a6ec44ef",
+  "jsonHash": "fnv1a64:e43544f449655ebf",
+  "findings": []
+}

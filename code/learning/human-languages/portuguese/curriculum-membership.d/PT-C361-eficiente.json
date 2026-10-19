@@ -1,0 +1,11 @@
+{
+  "id": "PT-C361-eficiente",
+  "pathSegment": "PT-PATH-361-STRESS",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-361-STRESS",
+      "order": 3
+    }
+  ]
+}

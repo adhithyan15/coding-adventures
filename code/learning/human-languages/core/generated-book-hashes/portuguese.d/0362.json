@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 362,
+  "sourceHash": "fnv1a64:9bf618f95c882442",
+  "lessonIds": [
+    "PT-C362-ordenado",
+    "PT-C362-subsidio",
+    "PT-C362-negociar",
+    "PT-C362-reforma",
+    "PT-C362-reformado"
+  ],
+  "tex": "portuguese/book/chapters/ch362-o-ordenado-e-a-reforma.tex"
+}

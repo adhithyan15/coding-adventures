@@ -1,0 +1,9 @@
+{
+  "id": "PT-PATH-435-ORIENTAR",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "PT-EXT-435-ORIENTAR"
+  ],
+  "after": []
+}

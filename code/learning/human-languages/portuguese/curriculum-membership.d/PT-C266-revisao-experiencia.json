@@ -1,0 +1,11 @@
+{
+  "id": "PT-C266-revisao-experiencia",
+  "pathSegment": "PT-PATH-266-COMPARAR",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PT-EXT-266-COMPARAR",
+      "order": 2
+    }
+  ]
+}

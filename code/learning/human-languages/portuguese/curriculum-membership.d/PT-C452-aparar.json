@@ -1,0 +1,11 @@
+{
+  "id": "PT-C452-aparar",
+  "pathSegment": "PT-PATH-452-CUIDADOS",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PT-EXT-452-CUIDADOS",
+      "order": 1
+    }
+  ]
+}

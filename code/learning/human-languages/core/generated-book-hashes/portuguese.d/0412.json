@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 412,
+  "sourceHash": "fnv1a64:e422c67ab3cee1fc",
+  "lessonIds": [
+    "PT-C412-motorizada",
+    "PT-C412-trotinete",
+    "PT-C412-selim",
+    "PT-C412-pedalar",
+    "PT-C412-parquimetro"
+  ],
+  "tex": "portuguese/book/chapters/ch412-em-duas-rodas.tex"
+}

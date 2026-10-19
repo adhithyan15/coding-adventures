@@ -1,0 +1,19 @@
+{
+  "chapter": 297,
+  "title": "Em tribunal",
+  "label": "ch:pt-em-tribunal",
+  "canDo": "I can talk about reports to the police, statements and testimony, and how a case ended in court.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "PT-C297-absolver",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 297: I can talk about reports to the police, statements and testimony, and how a case ended in court.",
+    "assesses": [
+      "PT-LEX-C297-TRIBUNAL-03",
+      "PT-LEX-C297-TRIBUNAL-04",
+      "PT-LEX-C297-TRIBUNAL-05"
+    ]
+  }
+}

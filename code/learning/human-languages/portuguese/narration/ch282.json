@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "portuguese",
+  "chapter": 282,
+  "title": "O que foi dito",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:c3925ac7d3ed8b89",
+  "lessons": [
+    {
+      "id": "PT-C282-declaracao",
+      "sequence": 16460,
+      "title": "a declaração — the declaration, the public statement",
+      "headword": "a declaração",
+      "romanization": "a declaração",
+      "gloss": "the declaration, the public statement",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f873ed07d28fc50b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Portuguese for the written report, then the Portuguese for to announce in the news."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: a declaração",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "a declaração — \"the declaration, the public statement\"."
+            },
+            {
+              "kind": "speech",
+              "text": "O presidente fez uma declaração aos jornalistas. The president made a statement to the journalists."
+            },
+            {
+              "kind": "speech",
+              "text": "Fazer uma declaração — to make a statement. Also a form you fill in."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "declaração is a learned borrowing from Latin dēclārātiō \"a making clear\" (EtymDB), from dēclārāre, built on clārus \"clear\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a declaração",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *a declaração*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a declaração, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *a declaração*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with a declaração",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *a declaração*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Portuguese for the written report, then the Portuguese for to announce in the news, then say a declaração again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Portuguese for the written report, then the Portuguese for to announce in the news, then say *a declaração* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does a declaração mean? (\"The declaration, the public statement\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PT-C282-comentario",
+      "sequence": 16470,
+      "title": "o comentário — the comment, the remark",
+      "headword": "o comentário",
+      "romanization": "o comentário",
+      "gloss": "the comment, the remark",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:02bbba8b7788eedc",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Portuguese for to announce in the news, then the Portuguese for the declaration."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: o comentário",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "o comentário — \"the comment, the remark\"."
+            },
+            {
+              "kind": "speech",
+              "text": "O presidente não fez nenhum comentário. The president made no comment."
+            },
+            {
+              "kind": "speech",
+              "text": "Sem comentários — no comment."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "comentário is a learned borrowing from Latin commentārium \"notes, a commentary\" (Lewis & Short), related to comminīscī \"to devise\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "o comentário",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *o comentário*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "o comentário, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *o comentário*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with o comentário",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *o comentário*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Portuguese for to announce in the news, then the Portuguese for the declaration, then say o comentário again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Portuguese for to announce in the news, then the Portuguese for the declaration, then say *o comentário* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does o comentário mean? (\"The comment, the remark\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PT-C282-confirmar",
+      "sequence": 16480,
+      "title": "confirmar — to confirm",
+      "headword": "confirmar",
+      "romanization": "confirmar",
+      "gloss": "to confirm",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c1ac9f724e03c9c8",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Portuguese for the declaration, then the Portuguese for the comment."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: confirmar",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "confirmar — \"to confirm\"."
+            },
+            {
+              "kind": "speech",
+              "text": "A escola confirmou a data da festa. The school confirmed the date of the party."
+            },
+            {
+              "kind": "speech",
+              "text": "Also to confirm a booking: confirmar a reserva."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "confirmar is a learned borrowing from Latin cōnfirmāre \"to strengthen, to make sure\", built on firmus \"firm\" (Lewis & Short)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "confirmar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *confirmar*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "confirmar, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *confirmar*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with confirmar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *confirmar*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Portuguese for the declaration, then the Portuguese for the comment, then say confirmar again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Portuguese for the declaration, then the Portuguese for the comment, then say *confirmar* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does confirmar mean? (\"To confirm\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PT-C282-comunicado",
+      "sequence": 16490,
+      "title": "o comunicado — the press release, the official notice",
+      "headword": "o comunicado",
+      "romanization": "o comunicado",
+      "gloss": "the press release, the official notice",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:217a07221a378d96",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Portuguese for the comment, then the Portuguese for to confirm."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: o comunicado",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "o comunicado — \"the press release, the official notice\"."
+            },
+            {
+              "kind": "speech",
+              "text": "O clube divulgou um comunicado no site. The club put out a press release on its website."
+            },
+            {
+              "kind": "speech",
+              "text": "A short official text sent to the media."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "comunicado is the past participle of comunicar used as a noun; the verb comes from Latin commūnicāre \"to share\", built on commūnis \"common\" (Lewis & Short)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "o comunicado",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *o comunicado*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "o comunicado, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *o comunicado*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with o comunicado",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *o comunicado*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Portuguese for the comment, then the Portuguese for to confirm, then say o comunicado again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Portuguese for the comment, then the Portuguese for to confirm, then say *o comunicado* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does o comunicado mean? (\"The press release, the official notice\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PT-C282-comentador",
+      "sequence": 16500,
+      "title": "o comentador — the commentator, the pundit",
+      "headword": "o comentador",
+      "romanization": "o comentador",
+      "gloss": "the commentator, the pundit",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:306212e0aeea5c6f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Portuguese for to confirm, then the Portuguese for the press release."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: o comentador",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "o comentador — \"the commentator, the pundit\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Na televisão, um comentador explicou os resultados. On television a pundit explained the results."
+            },
+            {
+              "kind": "speech",
+              "text": "Portugal’s TV is full of comentadores of politics and football. A woman is a comentadora."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "comentador is built on comentar, a learned borrowing from Latin commentārī \"to think over, to study\"; Latin itself had commentātor \"a deviser, an interpreter\" (Lewis & Short)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "o comentador",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *o comentador*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "o comentador, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *o comentador*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with o comentador",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *o comentador*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Portuguese for to confirm, then the Portuguese for the press release, then say o comentador again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Portuguese for to confirm, then the Portuguese for the press release, then say *o comentador* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does o comentador mean? (\"The commentator, the pundit\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

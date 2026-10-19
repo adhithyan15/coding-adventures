@@ -1,0 +1,19 @@
+{
+  "chapter": 523,
+  "title": "Capítulo a capítulo",
+  "label": "ch:pt-capitulo-a-capitulo",
+  "canDo": "I can talk about novels, biographies and rereading.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "PT-C523-marcador",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 523: I can talk about novels, biographies and rereading.",
+    "assesses": [
+      "PT-LEX-C523-LIVROS-03",
+      "PT-LEX-C523-LIVROS-04",
+      "PT-LEX-C523-LIVROS-05"
+    ]
+  }
+}

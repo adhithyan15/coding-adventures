@@ -1,0 +1,858 @@
+{
+  "version": 1,
+  "language": "portuguese",
+  "chapter": 358,
+  "title": "A greve",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:9f1b0fe8a58f68de",
+  "lessons": [
+    {
+      "id": "PT-C358-funcionario",
+      "sequence": 20370,
+      "title": "o funcionário — the employee, the official, the clerk",
+      "headword": "o funcionário",
+      "romanization": "o funcionário",
+      "gloss": "the employee, the official, the clerk",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c3621e59de494976",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Portuguese for to employ, then the Portuguese for the employer."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: o funcionário",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "o funcionário — \"the employee, the official, the clerk\"."
+            },
+            {
+              "kind": "speech",
+              "text": "O funcionário do banco foi muito simpático. The bank clerk was very nice."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine a funcionária. Funcionário público — civil servant."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "funcionário was modelled on French fonctionnaire (EtymDB), built on função \"function\", from Latin fūnctiō \"a performing, an execution\" (Lewis & Short)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "o funcionário",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *o funcionário*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "o funcionário, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *o funcionário*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with o funcionário",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *o funcionário*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Portuguese for to employ, then the Portuguese for the employer, then say o funcionário again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Portuguese for to employ, then the Portuguese for the employer, then say *o funcionário* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does o funcionário mean? (\"The employee, the official, the clerk\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PT-C358-turno",
+      "sequence": 20380,
+      "title": "o turno — the shift; the turn",
+      "headword": "o turno",
+      "romanization": "o turno",
+      "gloss": "the shift; the turn",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ead5cdbd29b7b91d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Portuguese for the employer, then the Portuguese for the employee."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: o turno",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "o turno — \"the shift; the turn\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Esta semana trabalho no turno da noite. This week I am on the night shift."
+            },
+            {
+              "kind": "speech",
+              "text": "Por turnos — in shifts."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "turno was borrowed from Spanish turno (EtymDB), built on turnar \"to take turns\", which goes back to French tourner, from Latin tornāre \"to turn on a lathe\" (Lewis & Short)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "o turno",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *o turno*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "o turno, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *o turno*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with o turno",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *o turno*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Portuguese for the employer, then the Portuguese for the employee, then say o turno again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Portuguese for the employer, then the Portuguese for the employee, then say *o turno* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does o turno mean? (\"The shift; the turn\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PT-C358-sindicato",
+      "sequence": 20390,
+      "title": "o sindicato — the trade union",
+      "headword": "o sindicato",
+      "romanization": "o sindicato",
+      "gloss": "the trade union",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:af57dfe56fd955c8",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Portuguese for the employee, then the Portuguese for the shift."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: o sindicato",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "o sindicato — \"the trade union\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Ela entrou para o sindicato no primeiro ano. She joined the union in her first year."
+            },
+            {
+              "kind": "speech",
+              "text": "O sindicato dos professores — the teachers' union."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "sindicato is built on síndico \"representative\", from Latin syndicus, from Greek súndikos \"advocate\"; French syndicat \"trade union\", from Medieval Latin syndicātus, shaped the modern sense (EtymDB)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "o sindicato",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *o sindicato*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "o sindicato, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *o sindicato*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with o sindicato",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *o sindicato*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Portuguese for the employee, then the Portuguese for the shift, then say o sindicato again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Portuguese for the employee, then the Portuguese for the shift, then say *o sindicato* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does o sindicato mean? (\"The trade union\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PT-C358-greve",
+      "sequence": 20400,
+      "title": "a greve — the strike",
+      "headword": "a greve",
+      "romanization": "a greve",
+      "gloss": "the strike",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f3e52e14631de8f5",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Portuguese for the shift, then the Portuguese for the trade union."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: a greve",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "a greve — \"the strike\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Os comboios não circulam hoje por causa da greve. The trains are not running today because of the strike."
+            },
+            {
+              "kind": "speech",
+              "text": "Fazer greve — to go on strike; estar em greve — to be on strike."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "greve was borrowed from French grève, which first meant \"a sandy riverbank\"; the sense \"strike\" is usually explained by a riverside square in Paris where men out of work gathered. EtymDB lists the Portuguese word but gives no source for it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a greve",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *a greve*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a greve, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *a greve*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with a greve",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *a greve*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Portuguese for the shift, then the Portuguese for the trade union, then say a greve again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Portuguese for the shift, then the Portuguese for the trade union, then say *a greve* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does a greve mean? (\"The strike\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PT-C358-reivindicar",
+      "sequence": 20410,
+      "title": "reivindicar — to lay claim to, to demand (as a right)",
+      "headword": "reivindicar",
+      "romanization": "reivindicar",
+      "gloss": "to lay claim to, to demand (as a right)",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e82cc050a02f82c9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Portuguese for the trade union, then the Portuguese for the strike."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: reivindicar",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "reivindicar — \"to lay claim to, to demand (as a right)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Os trabalhadores reivindicam salários mais altos. The workers are demanding higher wages."
+            },
+            {
+              "kind": "speech",
+              "text": "Formal, of rights and pay; in speech pedir."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "reivindicar is formed from Latin rēs, reī \"thing\" and vindicāre \"to lay claim to, to avenge\" (EtymDB, Lewis & Short): to claim a thing as yours."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "reivindicar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *reivindicar*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "reivindicar, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *reivindicar*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with reivindicar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *reivindicar*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Portuguese for the trade union, then the Portuguese for the strike, then say reivindicar again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Portuguese for the trade union, then the Portuguese for the strike, then say *reivindicar* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does reivindicar mean? (\"To lay claim to, to demand (as a right)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PT-R358-revisao-351-358",
+      "sequence": 20420,
+      "title": "Revisão dos capítulos 351–358",
+      "headword": "(dialogue)",
+      "romanization": "(dialogue)",
+      "gloss": "a review of chapters 351-358",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d4befcac8b720d97",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Portuguese for the impact and the repercussion."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the impact, the repercussion, to involve, to entail, to trigger",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the impact, the repercussion, to involve, to entail, to trigger]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the reaction, to react, the pretext, the excuse, to justify",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the reaction, to react, the pretext, the excuse, to justify]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the obstacle, the challenge, to prevent, to make difficult, to favour",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the obstacle, the challenge, to prevent, to make difficult, to favour]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the influence, to influence, to make worse, to ease, to make up for",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the influence, to influence, to make worse, to ease, to make up for]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the vacancy, the CV, the application, the candidate, to hire",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the vacancy, the CV, the application, the candidate, to hire]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to fire, the resignation, the dismissal, unemployed, the unemployment",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to fire, the resignation, the dismissal, unemployed, the unemployment]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the internship, the intern, the apprentice, to employ, the employer",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the internship, the intern, the apprentice, to employ, the employer]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the employee, the shift, the trade union, the strike, to lay claim to",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the employee, the shift, the trade union, the strike, to lay claim to]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The impact? (o impacto.) The repercussion? (a repercussão.) To involve? (implicar.) To entail? (acarretar.) To trigger? (desencadear.) The reaction? (a reação.) To react? (reagir.) The pretext? (o pretexto.) The excuse? (a desculpa.) To justify? (justificar.) The obstacle? (o obstáculo.) The challenge? (o desafio.) To prevent? (impedir.) To make difficult? (dificultar.) To favour? (favorecer.) The influence? (a influência.) To influence? (influenciar.) To make worse? (agravar.) To ease? (atenuar.) To make up for? (compensar.) The vacancy? (a vaga.) The CV? (o currículo.) The application? (a candidatura.) The candidate? (o candidato.) To hire? (contratar.) To fire? (despedir.) The resignation? (a demissão.) The dismissal? (o despedimento.) Unemployed? (desempregado.) The unemployment? (o desemprego.) The internship? (o estágio.) The intern? (o estagiário.) The apprentice? (o aprendiz.) To employ? (empregar.) The employer? (a entidade patronal.) The employee? (o funcionário.) The shift? (o turno.) The trade union? (o sindicato.) The strike? (a greve.) To lay claim to? (reivindicar.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 454,
+  "sourceHash": "fnv1a64:3d88f1091274d73a",
+  "lessonIds": [
+    "PT-C454-remetente",
+    "PT-C454-destinatario",
+    "PT-C454-portes",
+    "PT-C454-expedir",
+    "PT-C454-registar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch454.txt",
+  "json": "portuguese/narration/ch454.json",
+  "textHash": "fnv1a64:080c87f3b7915fcc",
+  "jsonHash": "fnv1a64:3b04f820d2878c7b",
+  "findings": []
+}

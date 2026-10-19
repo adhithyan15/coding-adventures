@@ -1,0 +1,11 @@
+{
+  "id": "PT-C369-contanto-que",
+  "pathSegment": "PT-PATH-369-CONDICAO",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PT-EXT-369-CONDICAO",
+      "order": 2
+    }
+  ]
+}

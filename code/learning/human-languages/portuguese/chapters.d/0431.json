@@ -1,0 +1,19 @@
+{
+  "chapter": 431,
+  "title": "Calor e frio no quarto",
+  "label": "ch:pt-calor-e-frio-no-quarto",
+  "canDo": "I can complain about the temperature: the radiator, the heater, the water heater, the thermostat and airing the room.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "PT-C431-arejar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 431: I can complain about the temperature: the radiator, the heater, the water heater, the thermostat and airing the room.",
+    "assesses": [
+      "PT-LEX-C431-AQUECIMENTO-03",
+      "PT-LEX-C431-AQUECIMENTO-04",
+      "PT-LEX-C431-AQUECIMENTO-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "PT-C434-lamentar",
+  "pathSegment": "PT-PATH-434-RECLAMACAO",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-434-RECLAMACAO",
+      "order": 3
+    }
+  ]
+}

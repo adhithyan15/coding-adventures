@@ -2024,8 +2024,12 @@ fn emit_host_input(
 ) -> String {
     let pad = " ".repeat(indent);
     let mut attrs = String::new();
-    let multiline = node.tag == "Input"
-        && matches!(find_prop(node, "multiline"), Some(LayoutPropValue::Keyword(k)) if k == "true");
+    // `multiline: true` is a `<textarea>` on both primitives: the legacy
+    // `Input` and the kernel `HostInput` (UI29 §2.1). This read only the
+    // legacy tag, so a multiline `HostInput` became a one-line `<input>`
+    // (#15930).
+    let multiline =
+        matches!(find_prop(node, "multiline"), Some(LayoutPropValue::Keyword(k)) if k == "true");
     let mut textarea_value = String::new();
 
     // Portable input name -> native HTML accessible-name attribute.
@@ -2097,7 +2101,11 @@ fn emit_host_input(
         attrs.push_str(" autofocus");
     }
     append_emit_marker(&mut attrs, node, "onChange", "data-on-change");
-    append_emit_marker(&mut attrs, node, "onCommit", "data-on-commit");
+    // Enter is a line break in a text area, so a multiline field has no
+    // commit key and gets no commit marker for the host to bind (#15930).
+    if !multiline {
+        append_emit_marker(&mut attrs, node, "onCommit", "data-on-commit");
+    }
     append_emit_marker(&mut attrs, node, "onCancel", "data-on-cancel");
     if node.tag == "Input" {
         if let Some(LayoutPropValue::Number(value)) = find_prop(node, "max-length") {
@@ -5419,6 +5427,62 @@ mod tests {
         assert!(textarea.contains("aria-label=\"{{bodyLabel}}\""), "{textarea}");
         assert!(textarea.contains(" disabled"), "{textarea}");
         assert!(textarea.contains(">{{body}}</textarea>"), "{textarea}");
+    }
+
+    /// #15930 — the kernel `HostInput` honours `multiline: true` too. HTML
+    /// used to read the keyword only on the legacy `Input`, so a multiline
+    /// `HostInput` (the note-type editor's card templates) became a one-line
+    /// `<input>`.
+    #[test]
+    fn a_multiline_host_input_emits_a_named_textarea() {
+        let l = layout(
+            "Editor",
+            node_with_props(
+                "HostInput",
+                vec![
+                    prop_keyword("multiline", "true"),
+                    prop_slot("value", "front-template"),
+                    prop_slot("placeholder", "front-placeholder"),
+                    prop_slot("a11y-label", "front-label"),
+                    prop_keyword("auto-focus", "true"),
+                    prop_emit("onChange", "onFrontChange"),
+                ],
+            ),
+        );
+        let out = from_pipeline(&component("Editor", vec![]), &l, &empty_style("Editor"))
+            .unwrap()
+            .output;
+        let textarea = out.lines().find(|line| line.contains("<textarea")).expect("a textarea");
+        assert!(!out.contains("<input"), "{out}");
+        assert!(textarea.contains("aria-label=\"{{frontLabel}}\""), "{textarea}");
+        assert!(textarea.contains("placeholder=\"{{frontPlaceholder}}\""), "{textarea}");
+        assert!(textarea.contains(" autofocus"), "{textarea}");
+        assert!(textarea.contains("data-on-change=\"onFrontChange\""), "{textarea}");
+        assert!(textarea.contains(">{{frontTemplate}}</textarea>"), "{textarea}");
+    }
+
+    /// #15930 — Enter is a line break in a text area, so a multiline field
+    /// carries no commit marker for the host to bind to Enter. Cancel stays.
+    #[test]
+    fn a_multiline_field_has_no_commit_marker() {
+        for tag in ["HostInput", "Input"] {
+            let l = layout(
+                "Editor",
+                node_with_props(
+                    tag,
+                    vec![
+                        prop_keyword("multiline", "true"),
+                        prop_emit("onCommit", "onSave"),
+                        prop_emit("onCancel", "onDiscard"),
+                    ],
+                ),
+            );
+            let out = from_pipeline(&component("Editor", vec![]), &l, &empty_style("Editor"))
+                .unwrap()
+                .output;
+            assert!(!out.contains("data-on-commit"), "{tag}: {out}");
+            assert!(out.contains("data-on-cancel=\"onDiscard\""), "{tag}: {out}");
+        }
     }
 
     #[test]

@@ -1,0 +1,11 @@
+{
+  "id": "PT-C419-marinheiro",
+  "pathSegment": "PT-PATH-419-NAVIO",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PT-EXT-419-NAVIO",
+      "order": 2
+    }
+  ]
+}

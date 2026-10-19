@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PT-C389-criminoso",
+    "language": "portuguese",
+    "chapter": 389,
+    "sequence": 21970,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c15bd32df9722f91"
+  },
+  "findings": []
+}

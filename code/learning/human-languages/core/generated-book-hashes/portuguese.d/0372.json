@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 372,
+  "sourceHash": "fnv1a64:e309a668fd4e1dbb",
+  "lessonIds": [
+    "PT-C372-cancelar",
+    "PT-C372-adiar",
+    "PT-C372-provisorio",
+    "PT-C372-definitivo",
+    "PT-C372-flexivel"
+  ],
+  "tex": "portuguese/book/chapters/ch372-mudanca-de-planos.tex"
+}

@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 395,
+  "sourceHash": "fnv1a64:6af062c2b78d6fe5",
+  "lessonIds": [
+    "PT-C395-ganhar",
+    "PT-C395-lucro",
+    "PT-C395-perda",
+    "PT-C395-falir",
+    "PT-C395-endividado"
+  ],
+  "tex": "portuguese/book/chapters/ch395-ganhos-e-perdas.tex"
+}

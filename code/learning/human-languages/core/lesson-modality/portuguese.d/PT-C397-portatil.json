@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PT-C397-portatil",
+    "language": "portuguese",
+    "chapter": 397,
+    "sequence": 22380,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:07a9c6a3af9df573"
+  },
+  "findings": []
+}

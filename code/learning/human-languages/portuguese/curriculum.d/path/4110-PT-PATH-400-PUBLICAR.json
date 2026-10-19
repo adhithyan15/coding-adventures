@@ -1,0 +1,9 @@
+{
+  "id": "PT-PATH-400-PUBLICAR",
+  "spine_node": "SPINE-EXPRESS-CONDITION",
+  "before": [],
+  "inline": [
+    "PT-EXT-400-PUBLICAR"
+  ],
+  "after": []
+}

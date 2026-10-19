@@ -1,0 +1,19 @@
+{
+  "chapter": 412,
+  "title": "Em duas rodas",
+  "label": "ch:pt-em-duas-rodas",
+  "canDo": "I can talk about getting round on two wheels: the moped, the scooter, the saddle, pedalling and the parking meter.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "PT-C412-parquimetro",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 412: I can talk about getting round on two wheels: the moped, the scooter, the saddle, pedalling and the parking meter.",
+    "assesses": [
+      "PT-LEX-C412-RODAS-03",
+      "PT-LEX-C412-RODAS-04",
+      "PT-LEX-C412-RODAS-05"
+    ]
+  }
+}

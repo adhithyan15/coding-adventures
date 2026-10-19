@@ -1,0 +1,11 @@
+{
+  "id": "PT-C525-editora",
+  "pathSegment": "PT-PATH-525-BIBLIOTECA",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PT-EXT-525-BIBLIOTECA",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "PT-C305-sirene",
+  "pathSegment": "PT-PATH-305-SOCORRO",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PT-EXT-305-SOCORRO",
+      "order": 1
+    }
+  ]
+}

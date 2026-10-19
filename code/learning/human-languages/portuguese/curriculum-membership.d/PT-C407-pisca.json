@@ -1,0 +1,11 @@
+{
+  "id": "PT-C407-pisca",
+  "pathSegment": "PT-PATH-407-CAPO",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PT-EXT-407-CAPO",
+      "order": 2
+    }
+  ]
+}

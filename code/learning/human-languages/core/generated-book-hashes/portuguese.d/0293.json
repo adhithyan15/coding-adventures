@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 293,
+  "sourceHash": "fnv1a64:5075c87636c7a4d2",
+  "lessonIds": [
+    "PT-C293-agente",
+    "PT-C293-patrulha",
+    "PT-C293-patrulhar",
+    "PT-C293-vigiar",
+    "PT-C293-vigilancia"
+  ],
+  "tex": "portuguese/book/chapters/ch293-a-policia-na-rua.tex"
+}

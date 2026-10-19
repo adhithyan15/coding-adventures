@@ -1,0 +1,9 @@
+{
+  "id": "PT-PATH-419-NAVIO",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "PT-EXT-419-NAVIO"
+  ],
+  "after": []
+}

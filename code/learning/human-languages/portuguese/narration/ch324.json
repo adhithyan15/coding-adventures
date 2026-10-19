@@ -1,0 +1,858 @@
+{
+  "version": 1,
+  "language": "portuguese",
+  "chapter": 324,
+  "title": "Era uma vez",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:fe7c6b0898151dab",
+  "lessons": [
+    {
+      "id": "PT-C324-conto",
+      "sequence": 18610,
+      "title": "o conto — the short story, the tale",
+      "headword": "o conto",
+      "romanization": "o conto",
+      "gloss": "the short story, the tale",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:95e9689f491a7b4c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Portuguese for the Easter bread, then the Portuguese for the sugared almonds."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: o conto",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "o conto — \"the short story, the tale\"."
+            },
+            {
+              "kind": "speech",
+              "text": "O avô contava-nos um conto antes de dormir. Grandfather used to tell us a story before bed."
+            },
+            {
+              "kind": "speech",
+              "text": "Built on contar, ‘to tell’: contar um conto."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "conto is built on contar \"to count, to tell\", which is inherited from Latin computāre \"to reckon\" (Lewis & Short): to tell events one by one, like counting."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "o conto",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *o conto*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "o conto, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *o conto*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with o conto",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *o conto*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Portuguese for the Easter bread, then the Portuguese for the sugared almonds, then say o conto again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Portuguese for the Easter bread, then the Portuguese for the sugared almonds, then say *o conto* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does o conto mean? (\"The short story, the tale\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PT-C324-narrar",
+      "sequence": 18620,
+      "title": "narrar — to narrate, to tell",
+      "headword": "narrar",
+      "romanization": "narrar",
+      "gloss": "to narrate, to tell",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7cbd372d2d559f82",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Portuguese for the sugared almonds, then the Portuguese for the short story."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: narrar",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "narrar — \"to narrate, to tell\"."
+            },
+            {
+              "kind": "speech",
+              "text": "O livro narra a vida de um pescador. The book tells the life of a fisherman."
+            },
+            {
+              "kind": "speech",
+              "text": "More formal than contar."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "narrar is a learned borrowing from Latin nārrāre \"to tell, to relate\" (Lewis & Short)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "narrar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *narrar*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "narrar, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *narrar*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with narrar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *narrar*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Portuguese for the sugared almonds, then the Portuguese for the short story, then say narrar again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Portuguese for the sugared almonds, then the Portuguese for the short story, then say *narrar* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does narrar mean? (\"To narrate, to tell\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PT-C324-narrativa",
+      "sequence": 18630,
+      "title": "a narrativa — the narrative, the story as told",
+      "headword": "a narrativa",
+      "romanization": "a narrativa",
+      "gloss": "the narrative, the story as told",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:40f1617401a33783",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Portuguese for the short story, then the Portuguese for to narrate."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: a narrativa",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "a narrativa — \"the narrative, the story as told\"."
+            },
+            {
+              "kind": "speech",
+              "text": "A narrativa começa numa aldeia pequena. The narrative begins in a small village."
+            },
+            {
+              "kind": "speech",
+              "text": "Also an adjective: um texto narrativo."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "narrativa is built on narrativo (EtymDB), from Latin nārrātīvus, from nārrāre \"to tell\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a narrativa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *a narrativa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a narrativa, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *a narrativa*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with a narrativa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *a narrativa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Portuguese for the short story, then the Portuguese for to narrate, then say a narrativa again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Portuguese for the short story, then the Portuguese for to narrate, then say *a narrativa* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does a narrativa mean? (\"The narrative, the story as told\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PT-C324-narrador",
+      "sequence": 18640,
+      "title": "o narrador — the narrator",
+      "headword": "o narrador",
+      "romanization": "o narrador",
+      "gloss": "the narrator",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7829912d92c3683c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Portuguese for to narrate, then the Portuguese for the narrative."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: o narrador",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "o narrador — \"the narrator\"."
+            },
+            {
+              "kind": "speech",
+              "text": "O narrador é um menino de dez anos. The narrator is a ten-year-old boy."
+            },
+            {
+              "kind": "speech",
+              "text": "A woman is a narradora."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "narrador is a learned borrowing from Latin nārrātor \"a teller, a narrator\" (EtymDB), from nārrāre \"to tell\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "o narrador",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *o narrador*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "o narrador, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *o narrador*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with o narrador",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *o narrador*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Portuguese for to narrate, then the Portuguese for the narrative, then say o narrador again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Portuguese for to narrate, then the Portuguese for the narrative, then say *o narrador* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does o narrador mean? (\"The narrator\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PT-C324-enredo",
+      "sequence": 18650,
+      "title": "o enredo — the plot",
+      "headword": "o enredo",
+      "romanization": "o enredo",
+      "gloss": "the plot",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:423b6d90218cdf79",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Portuguese for the narrative, then the Portuguese for the narrator."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: o enredo",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "o enredo — \"the plot\"."
+            },
+            {
+              "kind": "speech",
+              "text": "O enredo do filme é muito complicado. The plot of the film is very complicated."
+            },
+            {
+              "kind": "speech",
+              "text": "Built on enredar, ‘to tangle up’."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "enredo is built on enredar \"to catch in a net, to entangle\", from rede \"a net\", which is inherited from Latin rēte \"a net\" (Lewis & Short)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "o enredo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *o enredo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "o enredo, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *o enredo*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with o enredo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *o enredo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Portuguese for the narrative, then the Portuguese for the narrator, then say o enredo again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Portuguese for the narrative, then the Portuguese for the narrator, then say *o enredo* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does o enredo mean? (\"The plot\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PT-R324-revisao-317-324",
+      "sequence": 18660,
+      "title": "Revisão dos capítulos 317–324",
+      "headword": "(dialogue)",
+      "romanization": "(dialogue)",
+      "gloss": "a review of chapters 317-324",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3e9e4aa04c043472",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Portuguese for to retire and the pensioner."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to retire, the pensioner, to emigrate, emigration, the emigrant",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to retire, the pensioner, to emigrate, emigration, the emigrant]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to celebrate, to commemorate, the commemoration, the toast, to toast",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to celebrate, to commemorate, the commemoration, the toast, to toast]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the saint, the march, the bush basil, the sardine feast, the street dance",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the saint, the march, the bush basil, the sardine feast, the street dance]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the custom, the ritual, the ceremony, the pilgrim, the pilgrimage",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the custom, the ritual, the ceremony, the pilgrim, the pilgrimage]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the carnival, the parade, the mask, the disguise, to disguise",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the carnival, the parade, the mask, the disguise, to disguise]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the fireworks, the rocket, the bonfire, to decorate, the decoration",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the fireworks, the rocket, the bonfire, to decorate, the decoration]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the Christmas Eve dinner, the nativity scene, the New Year celebration, the Easter bread, the sugared almonds",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the Christmas Eve dinner, the nativity scene, the New Year celebration, the Easter bread, the sugared almonds]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the short story, to narrate, the narrative, the narrator, the plot",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the short story, to narrate, the narrative, the narrator, the plot]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "To retire? (aposentar.) The pensioner? (o pensionista.) To emigrate? (emigrar.) Emigration? (a emigração.) The emigrant? (o emigrante.) To celebrate? (festejar.) To commemorate? (comemorar.) The commemoration? (a comemoração.) The toast? (o brinde.) To toast? (brindar.) The saint? (o santo.) The march? (a marcha.) The bush basil? (o manjerico.) The sardine feast? (a sardinhada.) The street dance? (o bailarico.) The custom? (o costume.) The ritual? (o ritual.) The ceremony? (a cerimónia.) The pilgrim? (o peregrino.) The pilgrimage? (a peregrinação.) The carnival? (o carnaval.) The parade? (o desfile.) The mask? (a máscara.) The disguise? (o disfarce.) To disguise? (disfarçar.) The fireworks? (o fogo de artifício.) The rocket? (o foguete.) The bonfire? (a fogueira.) To decorate? (enfeitar.) The decoration? (o enfeite.) The Christmas Eve dinner? (a consoada.) The nativity scene? (o presépio.) The New Year celebration? (a passagem de ano.) The Easter bread? (o folar.) The sugared almonds? (as amêndoas.) The short story? (o conto.) To narrate? (narrar.) The narrative? (a narrativa.) The narrator? (o narrador.) The plot? (o enredo.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

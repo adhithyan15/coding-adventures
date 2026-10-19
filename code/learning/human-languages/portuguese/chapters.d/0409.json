@@ -1,0 +1,19 @@
+{
+  "chapter": 409,
+  "title": "Acidentes e filas",
+  "label": "ch:pt-acidentes-e-filas",
+  "canDo": "I can report trouble on the road: a traffic jam, slowing down, a collision, crashing into something and a diversion.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "PT-C409-desvio",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 409: I can report trouble on the road: a traffic jam, slowing down, a collision, crashing into something and a diversion.",
+    "assesses": [
+      "PT-LEX-C409-FILAS-03",
+      "PT-LEX-C409-FILAS-04",
+      "PT-LEX-C409-FILAS-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 489,
+  "sourceHash": "fnv1a64:9d9ada6c40218d7d",
+  "lessonIds": [
+    "PT-C489-insonia",
+    "PT-C489-ressonar",
+    "PT-C489-bocejar",
+    "PT-C489-arrepio",
+    "PT-C489-caibra"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch489.txt",
+  "json": "portuguese/narration/ch489.json",
+  "textHash": "fnv1a64:89dd042d492af895",
+  "jsonHash": "fnv1a64:089a1953f1c981f4",
+  "findings": []
+}

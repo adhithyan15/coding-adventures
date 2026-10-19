@@ -1,0 +1,11 @@
+{
+  "id": "PT-C486-vacina",
+  "pathSegment": "PT-PATH-486-LIGADURA",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PT-EXT-486-LIGADURA",
+      "order": 1
+    }
+  ]
+}

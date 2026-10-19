@@ -1,0 +1,19 @@
+{
+  "chapter": 315,
+  "title": "O funeral",
+  "label": "ch:pt-o-funeral",
+  "canDo": "I can talk about a funeral, a burial and the cemetery.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "PT-C315-tumulo",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 315: I can talk about a funeral, a burial and the cemetery.",
+    "assesses": [
+      "PT-LEX-C315-FUNERAL-03",
+      "PT-LEX-C315-FUNERAL-04",
+      "PT-LEX-C315-FUNERAL-05"
+    ]
+  }
+}

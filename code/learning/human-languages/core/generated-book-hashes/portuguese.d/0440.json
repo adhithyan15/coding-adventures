@@ -1,0 +1,14 @@
+{
+  "language": "portuguese",
+  "chapter": 440,
+  "sourceHash": "fnv1a64:6f430e79089f6a30",
+  "lessonIds": [
+    "PT-C440-morada",
+    "PT-C440-periferia",
+    "PT-C440-freguesia",
+    "PT-C440-concelho",
+    "PT-C440-intercomunicador",
+    "PT-R440-revisao-433-440"
+  ],
+  "tex": "portuguese/book/chapters/ch440-a-morada.tex"
+}

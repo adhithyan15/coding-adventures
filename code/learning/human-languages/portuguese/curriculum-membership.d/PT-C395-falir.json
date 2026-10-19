@@ -1,0 +1,11 @@
+{
+  "id": "PT-C395-falir",
+  "pathSegment": "PT-PATH-395-LUCRO",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-395-LUCRO",
+      "order": 3
+    }
+  ]
+}

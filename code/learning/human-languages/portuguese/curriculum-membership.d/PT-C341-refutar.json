@@ -1,0 +1,11 @@
+{
+  "id": "PT-C341-refutar",
+  "pathSegment": "PT-PATH-341-PROVA",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PT-EXT-341-PROVA",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 304,
+  "sourceHash": "fnv1a64:4dde192cbd4b7c44",
+  "lessonIds": [
+    "PT-C304-catastrofe",
+    "PT-C304-desastre",
+    "PT-C304-tragedia",
+    "PT-C304-deslizamento",
+    "PT-C304-soterrar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch304.txt",
+  "json": "portuguese/narration/ch304.json",
+  "textHash": "fnv1a64:74cbec0068800801",
+  "jsonHash": "fnv1a64:165dfb03e205f656",
+  "findings": []
+}

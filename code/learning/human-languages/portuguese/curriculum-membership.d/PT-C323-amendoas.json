@@ -1,0 +1,11 @@
+{
+  "id": "PT-C323-amendoas",
+  "pathSegment": "PT-PATH-323-CONSOADA",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PT-EXT-323-CONSOADA",
+      "order": 4
+    }
+  ]
+}

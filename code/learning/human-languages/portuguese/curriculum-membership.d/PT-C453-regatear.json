@@ -1,0 +1,11 @@
+{
+  "id": "PT-C453-regatear",
+  "pathSegment": "PT-PATH-453-CAIXA",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-453-CAIXA",
+      "order": 3
+    }
+  ]
+}

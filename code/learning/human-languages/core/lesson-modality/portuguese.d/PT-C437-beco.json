@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PT-C437-beco",
+    "language": "portuguese",
+    "chapter": 437,
+    "sequence": 24460,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:153ba77067b43837"
+  },
+  "findings": []
+}

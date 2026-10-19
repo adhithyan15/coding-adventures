@@ -1,0 +1,11 @@
+{
+  "id": "PT-C282-comentario",
+  "pathSegment": "PT-PATH-282-AFIRMAR",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PT-EXT-282-AFIRMAR",
+      "order": 1
+    }
+  ]
+}

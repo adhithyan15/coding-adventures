@@ -1,0 +1,11 @@
+{
+  "id": "PT-C312-matrimonio",
+  "pathSegment": "PT-PATH-312-NOIVADO",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PT-EXT-312-NOIVADO",
+      "order": 4
+    }
+  ]
+}

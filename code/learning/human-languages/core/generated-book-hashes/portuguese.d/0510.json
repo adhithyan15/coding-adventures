@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 510,
+  "sourceHash": "fnv1a64:9b2af0fd7afb6b0b",
+  "lessonIds": [
+    "PT-C510-empatar",
+    "PT-C510-empate",
+    "PT-C510-adversario",
+    "PT-C510-derrotar",
+    "PT-C510-eliminar"
+  ],
+  "tex": "portuguese/book/chapters/ch510-ganhar-empatar-perder.tex"
+}

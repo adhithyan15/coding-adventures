@@ -1,0 +1,11 @@
+{
+  "id": "PT-C491-namoro",
+  "pathSegment": "PT-PATH-491-NAMORO",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PT-EXT-491-NAMORO",
+      "order": 1
+    }
+  ]
+}

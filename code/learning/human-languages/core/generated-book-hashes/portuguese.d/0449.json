@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 449,
+  "sourceHash": "fnv1a64:22e5daa4b47d77fd",
+  "lessonIds": [
+    "PT-C449-drogaria",
+    "PT-C449-retrosaria",
+    "PT-C449-perfumaria",
+    "PT-C449-ervanaria",
+    "PT-C449-ourivesaria"
+  ],
+  "tex": "portuguese/book/chapters/ch449-lojas-pequenas.tex"
+}

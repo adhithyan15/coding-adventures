@@ -1,0 +1,19 @@
+{
+  "chapter": 402,
+  "title": "Ao volante",
+  "label": "ch:pt-ao-volante",
+  "canDo": "I can describe driving: the brake, skidding, the pedal, the clutch and putting the car in gear.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "PT-C402-engatar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 402: I can describe driving: the brake, skidding, the pedal, the clutch and putting the car in gear.",
+    "assesses": [
+      "PT-LEX-C402-VOLANTE-03",
+      "PT-LEX-C402-VOLANTE-04",
+      "PT-LEX-C402-VOLANTE-05"
+    ]
+  }
+}

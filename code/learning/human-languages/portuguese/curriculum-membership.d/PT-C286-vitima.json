@@ -1,0 +1,11 @@
+{
+  "id": "PT-C286-vitima",
+  "pathSegment": "PT-PATH-286-DELITO",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-286-DELITO",
+      "order": 3
+    }
+  ]
+}

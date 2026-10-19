@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 403,
+  "sourceHash": "fnv1a64:a7bf1fda823c9c5e",
+  "lessonIds": [
+    "PT-C403-vidro",
+    "PT-C403-retrovisor",
+    "PT-C403-buzina",
+    "PT-C403-buzinar",
+    "PT-C403-embaciar"
+  ],
+  "tex": "portuguese/book/chapters/ch403-vidros-e-espelhos.tex"
+}

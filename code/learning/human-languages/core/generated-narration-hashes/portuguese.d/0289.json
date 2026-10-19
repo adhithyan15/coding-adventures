@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 289,
+  "sourceHash": "fnv1a64:12644719450ce852",
+  "lessonIds": [
+    "PT-C289-fraude",
+    "PT-C289-burla",
+    "PT-C289-burlar",
+    "PT-C289-burlao",
+    "PT-C289-cumplice"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch289.txt",
+  "json": "portuguese/narration/ch289.json",
+  "textHash": "fnv1a64:1d033e6ce38ddcff",
+  "jsonHash": "fnv1a64:0f9a1998651b5acf",
+  "findings": []
+}

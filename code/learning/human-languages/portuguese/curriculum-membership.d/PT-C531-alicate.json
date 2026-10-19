@@ -1,0 +1,11 @@
+{
+  "id": "PT-C531-alicate",
+  "pathSegment": "PT-PATH-531-BRICOLAGE",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PT-EXT-531-BRICOLAGE",
+      "order": 4
+    }
+  ]
+}

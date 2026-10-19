@@ -1,0 +1,9 @@
+{
+  "id": "PT-PATH-284-ESCANDALO",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "PT-EXT-284-ESCANDALO"
+  ],
+  "after": []
+}

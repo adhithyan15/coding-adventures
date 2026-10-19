@@ -1,0 +1,11 @@
+{
+  "id": "PT-C503-baralho",
+  "pathSegment": "PT-PATH-503-JOGOS",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PT-EXT-503-JOGOS",
+      "order": 1
+    }
+  ]
+}

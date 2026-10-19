@@ -1,0 +1,11 @@
+{
+  "id": "PT-C524-declamar",
+  "pathSegment": "PT-PATH-524-POESIA",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PT-EXT-524-POESIA",
+      "order": 4
+    }
+  ]
+}

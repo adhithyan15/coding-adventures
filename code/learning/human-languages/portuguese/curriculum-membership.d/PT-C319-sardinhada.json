@@ -1,0 +1,11 @@
+{
+  "id": "PT-C319-sardinhada",
+  "pathSegment": "PT-PATH-319-SANTOS",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-319-SANTOS",
+      "order": 3
+    }
+  ]
+}

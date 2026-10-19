@@ -1,0 +1,19 @@
+{
+  "chapter": 358,
+  "title": "A greve",
+  "label": "ch:pt-a-greve",
+  "canDo": "I can talk about strikes and unions: staff, shifts and what workers demand.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "PT-R358-revisao-351-358",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 358: I can talk about strikes and unions: staff, shifts and what workers demand.",
+    "assesses": [
+      "PT-LEX-C358-GREVE-03",
+      "PT-LEX-C358-GREVE-04",
+      "PT-LEX-C358-GREVE-05"
+    ]
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "id": "PT-PATH-455-BANCO",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "PT-EXT-455-BANCO"
+  ],
+  "after": []
+}

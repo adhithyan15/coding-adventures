@@ -1,0 +1,19 @@
+{
+  "chapter": 462,
+  "title": "O calor",
+  "label": "ch:pt-o-calor",
+  "canDo": "I can talk about hot weather: muggy days, the drought, a light breeze, sunstroke and sweating.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "PT-C462-transpirar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 462: I can talk about hot weather: muggy days, the drought, a light breeze, sunstroke and sweating.",
+    "assesses": [
+      "PT-LEX-C462-CALOR-03",
+      "PT-LEX-C462-CALOR-04",
+      "PT-LEX-C462-CALOR-05"
+    ]
+  }
+}

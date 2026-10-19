@@ -1,0 +1,9 @@
+{
+  "id": "PT-PATH-434-RECLAMACAO",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "PT-EXT-434-RECLAMACAO"
+  ],
+  "after": []
+}

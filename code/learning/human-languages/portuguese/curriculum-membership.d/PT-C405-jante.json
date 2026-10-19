@@ -1,0 +1,11 @@
+{
+  "id": "PT-C405-jante",
+  "pathSegment": "PT-PATH-405-PNEU",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-405-PNEU",
+      "order": 3
+    }
+  ]
+}

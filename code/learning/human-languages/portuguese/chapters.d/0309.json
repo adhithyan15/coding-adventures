@@ -1,0 +1,19 @@
+{
+  "chapter": 309,
+  "title": "Nasceu o bebé",
+  "label": "ch:pt-nasceu-o-bebe",
+  "canDo": "I can talk about a birth: pregnancy, the delivery and the newborn baby.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "PT-C309-recem-nascido",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 309: I can talk about a birth: pregnancy, the delivery and the newborn baby.",
+    "assesses": [
+      "PT-LEX-C309-NASCIMENTO-03",
+      "PT-LEX-C309-NASCIMENTO-04",
+      "PT-LEX-C309-NASCIMENTO-05"
+    ]
+  }
+}

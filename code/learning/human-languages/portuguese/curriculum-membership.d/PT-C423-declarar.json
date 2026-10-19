@@ -1,0 +1,11 @@
+{
+  "id": "PT-C423-declarar",
+  "pathSegment": "PT-PATH-423-CONTROLO",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PT-EXT-423-CONTROLO",
+      "order": 1
+    }
+  ]
+}

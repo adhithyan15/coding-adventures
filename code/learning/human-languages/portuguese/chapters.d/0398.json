@@ -1,0 +1,19 @@
+{
+  "chapter": 398,
+  "title": "Ficheiros e pastas",
+  "label": "ch:pt-ficheiros-e-pastas",
+  "canDo": "I can work with computer files: copy them, save them and send them as attachments.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "PT-R398-revisao-391-398",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 398: I can work with computer files: copy them, save them and send them as attachments.",
+    "assesses": [
+      "PT-LEX-C398-FICHEIRO-03",
+      "PT-LEX-C398-FICHEIRO-04",
+      "PT-LEX-C398-FICHEIRO-05"
+    ]
+  }
+}

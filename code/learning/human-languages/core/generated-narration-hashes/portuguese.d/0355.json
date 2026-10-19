@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 355,
+  "sourceHash": "fnv1a64:c98de56685473ee5",
+  "lessonIds": [
+    "PT-C355-vaga",
+    "PT-C355-curriculo",
+    "PT-C355-candidatura",
+    "PT-C355-candidato",
+    "PT-C355-contratar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch355.txt",
+  "json": "portuguese/narration/ch355.json",
+  "textHash": "fnv1a64:72aead23ba09ad17",
+  "jsonHash": "fnv1a64:5f94b10ce0f98cc2",
+  "findings": []
+}

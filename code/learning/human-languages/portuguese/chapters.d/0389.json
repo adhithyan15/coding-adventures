@@ -1,0 +1,19 @@
+{
+  "chapter": 389,
+  "title": "O crime não compensa",
+  "label": "ch:pt-o-crime-nao-compensa",
+  "canDo": "I can talk about crime and corruption, and the fines and sanctions that follow.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "PT-C389-multar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 389: I can talk about crime and corruption, and the fines and sanctions that follow.",
+    "assesses": [
+      "PT-LEX-C389-CRIME-03",
+      "PT-LEX-C389-CRIME-04",
+      "PT-LEX-C389-CRIME-05"
+    ]
+  }
+}

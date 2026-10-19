@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 368,
+  "sourceHash": "fnv1a64:3322b0a6e6ea892d",
+  "lessonIds": [
+    "PT-C368-supor",
+    "PT-C368-suposicao",
+    "PT-C368-hipotese",
+    "PT-C368-presumir",
+    "PT-C368-plausivel"
+  ],
+  "tex": "portuguese/book/chapters/ch368-suponhamos.tex"
+}

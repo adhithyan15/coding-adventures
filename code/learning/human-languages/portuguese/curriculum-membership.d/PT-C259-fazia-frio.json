@@ -1,0 +1,11 @@
+{
+  "id": "PT-C259-fazia-frio",
+  "pathSegment": "PT-PATH-259-CENA",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PT-EXT-259-CENA",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,9 @@
+{
+  "id": "PT-PATH-404-BOMBA",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "PT-EXT-404-BOMBA"
+  ],
+  "after": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PT-R334-revisao-333-334",
+    "language": "portuguese",
+    "chapter": 334,
+    "sequence": 19180,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5311572e11bcc946"
+  },
+  "findings": []
+}

@@ -1,0 +1,20 @@
+{
+  "language": "portuguese",
+  "chapter": 358,
+  "sourceHash": "fnv1a64:9f1b0fe8a58f68de",
+  "lessonIds": [
+    "PT-C358-funcionario",
+    "PT-C358-turno",
+    "PT-C358-sindicato",
+    "PT-C358-greve",
+    "PT-C358-reivindicar",
+    "PT-R358-revisao-351-358"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "portuguese/narration/ch358.txt",
+  "json": "portuguese/narration/ch358.json",
+  "textHash": "fnv1a64:3ef311d3466288ed",
+  "jsonHash": "fnv1a64:50f7128b30c3154c",
+  "findings": []
+}

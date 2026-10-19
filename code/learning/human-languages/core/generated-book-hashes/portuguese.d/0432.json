@@ -1,0 +1,14 @@
+{
+  "language": "portuguese",
+  "chapter": 432,
+  "sourceHash": "fnv1a64:6959e28f71243a78",
+  "lessonIds": [
+    "PT-C432-fusivel",
+    "PT-C432-fundir",
+    "PT-C432-disjuntor",
+    "PT-C432-recarregar",
+    "PT-C432-apagao",
+    "PT-R432-revisao-425-432"
+  ],
+  "tex": "portuguese/book/chapters/ch432-luz-e-corrente.tex"
+}

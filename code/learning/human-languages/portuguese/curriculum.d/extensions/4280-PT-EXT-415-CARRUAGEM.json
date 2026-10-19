@@ -1,0 +1,8 @@
+{
+  "id": "PT-EXT-415-CARRUAGEM",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can find my place on a train: the carriage, the compartment, the bunk, the train driver and the engine.",
+  "prerequisites": []
+}

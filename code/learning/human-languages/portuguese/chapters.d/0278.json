@@ -1,0 +1,19 @@
+{
+  "chapter": 278,
+  "title": "O noticiário da noite",
+  "label": "ch:pt-o-noticiario-da-noite",
+  "canDo": "I can talk about the news on radio and TV: the bulletin, the presenter, live coverage and the broadcast.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "PT-C278-transmissao",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 278: I can talk about the news on radio and TV: the bulletin, the presenter, live coverage and the broadcast.",
+    "assesses": [
+      "PT-LEX-C278-NOTICIARIO-03",
+      "PT-LEX-C278-NOTICIARIO-04",
+      "PT-LEX-C278-NOTICIARIO-05"
+    ]
+  }
+}

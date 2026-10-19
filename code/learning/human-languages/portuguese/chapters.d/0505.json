@@ -1,0 +1,19 @@
+{
+  "chapter": 505,
+  "title": "Pincéis e telas",
+  "label": "ch:pt-pinceis-e-telas",
+  "canDo": "I can talk about painting as a hobby.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "PT-C505-moldura",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 505: I can talk about painting as a hobby.",
+    "assesses": [
+      "PT-LEX-C505-PINTURA-03",
+      "PT-LEX-C505-PINTURA-04",
+      "PT-LEX-C505-PINTURA-05"
+    ]
+  }
+}

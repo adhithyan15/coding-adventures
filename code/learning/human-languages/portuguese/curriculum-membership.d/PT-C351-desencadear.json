@@ -1,0 +1,11 @@
+{
+  "id": "PT-C351-desencadear",
+  "pathSegment": "PT-PATH-351-IMPACTO",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PT-EXT-351-IMPACTO",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 460,
+  "sourceHash": "fnv1a64:699615817f8dfde3",
+  "lessonIds": [
+    "PT-C460-javali",
+    "PT-C460-veado",
+    "PT-C460-lebre",
+    "PT-C460-falcao",
+    "PT-C460-pastar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch460.txt",
+  "json": "portuguese/narration/ch460.json",
+  "textHash": "fnv1a64:7cc85500681f6305",
+  "jsonHash": "fnv1a64:0010b84943ee1d5e",
+  "findings": []
+}

@@ -1,0 +1,9 @@
+{
+  "id": "PT-PATH-365-JUSTICA",
+  "spine_node": "SPINE-GIVE-REASONS",
+  "before": [],
+  "inline": [
+    "PT-EXT-365-JUSTICA"
+  ],
+  "after": []
+}

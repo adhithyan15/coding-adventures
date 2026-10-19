@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 305,
+  "sourceHash": "fnv1a64:016d88dc86773624",
+  "lessonIds": [
+    "PT-C305-ambulancia",
+    "PT-C305-sirene",
+    "PT-C305-socorrer",
+    "PT-C305-socorrista",
+    "PT-C305-maca"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch305.txt",
+  "json": "portuguese/narration/ch305.json",
+  "textHash": "fnv1a64:67a4a2aa0de4fdb8",
+  "jsonHash": "fnv1a64:14390111eca3e935",
+  "findings": []
+}

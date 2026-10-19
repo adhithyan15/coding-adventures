@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 512,
+  "sourceHash": "fnv1a64:216feb485f06452b",
+  "lessonIds": [
+    "PT-C512-pavilhao",
+    "PT-C512-basquetebol",
+    "PT-C512-andebol",
+    "PT-C512-voleibol",
+    "PT-C512-ginastica"
+  ],
+  "tex": "portuguese/book/chapters/ch512-no-pavilhao.tex"
+}

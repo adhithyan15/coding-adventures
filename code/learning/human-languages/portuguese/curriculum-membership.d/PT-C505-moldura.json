@@ -1,0 +1,11 @@
+{
+  "id": "PT-C505-moldura",
+  "pathSegment": "PT-PATH-505-PINTURA",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PT-EXT-505-PINTURA",
+      "order": 4
+    }
+  ]
+}

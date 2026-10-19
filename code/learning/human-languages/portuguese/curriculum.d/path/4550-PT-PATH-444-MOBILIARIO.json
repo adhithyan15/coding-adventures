@@ -1,0 +1,9 @@
+{
+  "id": "PT-PATH-444-MOBILIARIO",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "PT-EXT-444-MOBILIARIO"
+  ],
+  "after": []
+}

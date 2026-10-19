@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 439,
+  "sourceHash": "fnv1a64:619e7b61dda466e2",
+  "lessonIds": [
+    "PT-C439-nordeste",
+    "PT-C439-noroeste",
+    "PT-C439-sudeste",
+    "PT-C439-sudoeste",
+    "PT-C439-marco"
+  ],
+  "tex": "portuguese/book/chapters/ch439-norte-sul-leste-e-oeste.tex"
+}

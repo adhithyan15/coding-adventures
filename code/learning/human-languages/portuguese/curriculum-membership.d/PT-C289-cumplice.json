@@ -1,0 +1,11 @@
+{
+  "id": "PT-C289-cumplice",
+  "pathSegment": "PT-PATH-289-BURLA",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PT-EXT-289-BURLA",
+      "order": 4
+    }
+  ]
+}

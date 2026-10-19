@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 428,
+  "sourceHash": "fnv1a64:0c23ecc192dc6482",
+  "lessonIds": [
+    "PT-C428-alojamento",
+    "PT-C428-pernoitar",
+    "PT-C428-dormida",
+    "PT-C428-hospedar",
+    "PT-C428-porteiro"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch428.txt",
+  "json": "portuguese/narration/ch428.json",
+  "textHash": "fnv1a64:45ccc4cb86b79fd0",
+  "jsonHash": "fnv1a64:dd8b93c441667799",
+  "findings": []
+}

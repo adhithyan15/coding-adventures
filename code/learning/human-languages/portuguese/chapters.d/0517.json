@@ -1,0 +1,19 @@
+{
+  "chapter": 517,
+  "title": "Flautas e trompetes",
+  "label": "ch:pt-flautas-e-trompetes",
+  "canDo": "I can talk about wind instruments and tuning.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "PT-C517-afinar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 517: I can talk about wind instruments and tuning.",
+    "assesses": [
+      "PT-LEX-C517-SOPROS-03",
+      "PT-LEX-C517-SOPROS-04",
+      "PT-LEX-C517-SOPROS-05"
+    ]
+  }
+}

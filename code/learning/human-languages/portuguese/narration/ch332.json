@@ -1,0 +1,858 @@
+{
+  "version": 1,
+  "language": "portuguese",
+  "chapter": 332,
+  "title": "Ao lume",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:b12b5c34a7cb3af4",
+  "lessons": [
+    {
+      "id": "PT-C332-fritar",
+      "sequence": 19020,
+      "title": "fritar — to fry",
+      "headword": "fritar",
+      "romanization": "fritar",
+      "gloss": "to fry",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ec750ca494dd956b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Portuguese for the onion and olive oil base, then the Portuguese for low heat."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: fritar",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "fritar — \"to fry\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Ela fritou dois ovos para o pequeno-almoço. She fried two eggs for breakfast."
+            },
+            {
+              "kind": "speech",
+              "text": "Batatas fritas — chips, crisps."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "fritar is built on frito \"fried\" (EtymDB), which goes back to Latin frīctus, from frīgere \"to roast, to fry\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "fritar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *fritar*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "fritar, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *fritar*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with fritar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *fritar*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Portuguese for the onion and olive oil base, then the Portuguese for low heat, then say fritar again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Portuguese for the onion and olive oil base, then the Portuguese for low heat, then say *fritar* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does fritar mean? (\"To fry\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PT-C332-cozer",
+      "sequence": 19030,
+      "title": "cozer — to cook in water, to boil (food)",
+      "headword": "cozer",
+      "romanization": "cozer",
+      "gloss": "to cook in water, to boil (food)",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f637fdf899858233",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Portuguese for low heat, then the Portuguese for to fry."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: cozer",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "cozer — \"to cook in water, to boil (food)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Cozemos o arroz em água com sal. We cook the rice in salted water."
+            },
+            {
+              "kind": "speech",
+              "text": "Not coser, to sew; they sound the same."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "cozer is inherited from Vulgar Latin cocere, from Latin coquere \"to cook\" (EtymDB)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cozer",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cozer*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cozer, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cozer*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with cozer",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *cozer*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Portuguese for low heat, then the Portuguese for to fry, then say cozer again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Portuguese for low heat, then the Portuguese for to fry, then say *cozer* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does cozer mean? (\"To cook in water, to boil (food)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PT-C332-assar",
+      "sequence": 19040,
+      "title": "assar — to roast, to bake",
+      "headword": "assar",
+      "romanization": "assar",
+      "gloss": "to roast, to bake",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b21ba8a920939902",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Portuguese for to fry, then the Portuguese for to cook in water."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: assar",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "assar — \"to roast, to bake\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Ao domingo, o meu pai assa um frango. On Sundays my father roasts a chicken."
+            },
+            {
+              "kind": "speech",
+              "text": "Frango assado — roast chicken."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "assar is inherited from Latin assāre \"to roast\" (EtymDB), from assus \"roasted, dry\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "assar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *assar*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "assar, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *assar*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with assar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *assar*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Portuguese for to fry, then the Portuguese for to cook in water, then say assar again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Portuguese for to fry, then the Portuguese for to cook in water, then say *assar* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does assar mean? (\"To roast, to bake\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PT-C332-grelhar",
+      "sequence": 19050,
+      "title": "grelhar — to grill",
+      "headword": "grelhar",
+      "romanization": "grelhar",
+      "gloss": "to grill",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:261e484a7ebd5c30",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Portuguese for to cook in water, then the Portuguese for to roast."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: grelhar",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "grelhar — \"to grill\"."
+            },
+            {
+              "kind": "speech",
+              "text": "No verão, grelhamos peixe no quintal. In summer we grill fish in the back yard."
+            },
+            {
+              "kind": "speech",
+              "text": "Peixe grelhado — grilled fish."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "grelhar is built on grelha \"a grill\", borrowed from Old French greille (EtymDB), which goes back to Latin crāticula \"a small gridiron\", from crātis \"a wickerwork\" (Lewis & Short)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "grelhar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *grelhar*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "grelhar, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *grelhar*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with grelhar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *grelhar*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Portuguese for to cook in water, then the Portuguese for to roast, then say grelhar again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Portuguese for to cook in water, then the Portuguese for to roast, then say *grelhar* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does grelhar mean? (\"To grill\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PT-C332-ferver",
+      "sequence": 19060,
+      "title": "ferver — to boil",
+      "headword": "ferver",
+      "romanization": "ferver",
+      "gloss": "to boil",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1fe0f6b2f166d7ac",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Portuguese for to roast, then the Portuguese for to grill."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ferver",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ferver — \"to boil\"."
+            },
+            {
+              "kind": "speech",
+              "text": "A água já está a ferver. The water is already boiling."
+            },
+            {
+              "kind": "speech",
+              "text": "The water ferve; the food coze."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ferver is inherited from Latin fervēre \"to boil, to be hot\" (EtymDB)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ferver",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ferver*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ferver, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ferver*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with ferver",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *ferver*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Portuguese for to roast, then the Portuguese for to grill, then say ferver again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Portuguese for to roast, then the Portuguese for to grill, then say *ferver* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ferver mean? (\"To boil\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PT-R332-revisao-325-332",
+      "sequence": 19070,
+      "title": "Revisão dos capítulos 325–332",
+      "headword": "(dialogue)",
+      "romanization": "(dialogue)",
+      "gloss": "a review of chapters 325-332",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:81897dbc323f5f94",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Portuguese for the character and the protagonist."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the character, the protagonist, the hero, the villain, the ending",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the character, the protagonist, the hero, the villain, the ending]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the legend, legendary, the myth, the fable, the fairy",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the legend, legendary, the myth, the fable, the fairy]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the king, the queen, the kingdom, the throne, the crown",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the king, the queen, the kingdom, the throne, the crown]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the navigator, the caravel, to be shipwrecked, the shipwreck, the treasure",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the navigator, the caravel, to be shipwrecked, the shipwreck, the treasure]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the ancestor, the battle, to invade, to conquer, the revolution",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the ancestor, the battle, to invade, to conquer, the revolution]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to peel, to chop finely, to grate, to shred, the bowl",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to peel, to chop finely, to grate, to shred, the bowl]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to season, the seasoning, to sauté gently, the onion and olive oil base, low heat",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to season, the seasoning, to sauté gently, the onion and olive oil base, low heat]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to fry, to cook in water, to roast, to grill, to boil",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to fry, to cook in water, to roast, to grill, to boil]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The character? (a personagem.) The protagonist? (o protagonista.) The hero? (o herói.) The villain? (o vilão.) The ending? (o desfecho.) The legend? (a lenda.) Legendary? (lendário.) The myth? (o mito.) The fable? (a fábula.) The fairy? (a fada.) The king? (o rei.) The queen? (a rainha.) The kingdom? (o reino.) The throne? (o trono.) The crown? (a coroa.) The navigator? (o navegador.) The caravel? (a caravela.) To be shipwrecked? (naufragar.) The shipwreck? (o naufrágio.) The treasure? (o tesouro.) The ancestor? (o antepassado.) The battle? (a batalha.) To invade? (invadir.) To conquer? (conquistar.) The revolution? (a revolução.) To peel? (descascar.) To chop finely? (picar.) To grate? (ralar.) To shred? (desfiar.) The bowl? (a tigela.) To season? (temperar.) The seasoning? (o tempero.) To sauté gently? (refogar.) The onion and olive oil base? (o refogado.) Low heat? (o lume brando.) To fry? (fritar.) To cook in water? (cozer.) To roast? (assar.) To grill? (grelhar.) To boil? (ferver.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

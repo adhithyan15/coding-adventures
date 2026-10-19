@@ -1,0 +1,11 @@
+{
+  "id": "PT-C374-disponivel",
+  "pathSegment": "PT-PATH-374-INTENCAO",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-374-INTENCAO",
+      "order": 3
+    }
+  ]
+}

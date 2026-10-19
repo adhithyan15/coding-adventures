@@ -1,0 +1,11 @@
+{
+  "id": "PT-C366-imigracao",
+  "pathSegment": "PT-PATH-366-SOCIEDADE",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-366-SOCIEDADE",
+      "order": 3
+    }
+  ]
+}

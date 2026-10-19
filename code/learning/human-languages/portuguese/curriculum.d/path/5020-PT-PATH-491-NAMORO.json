@@ -1,0 +1,9 @@
+{
+  "id": "PT-PATH-491-NAMORO",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "PT-EXT-491-NAMORO"
+  ],
+  "after": []
+}

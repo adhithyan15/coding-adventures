@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 326,
+  "sourceHash": "fnv1a64:451df18e8633e7a7",
+  "lessonIds": [
+    "PT-C326-lenda",
+    "PT-C326-lendario",
+    "PT-C326-mito",
+    "PT-C326-fabula",
+    "PT-C326-fada"
+  ],
+  "tex": "portuguese/book/chapters/ch326-lendas-e-mitos.tex"
+}

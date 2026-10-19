@@ -1,0 +1,11 @@
+{
+  "id": "PT-C396-aceder",
+  "pathSegment": "PT-PATH-396-CONTA",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PT-EXT-396-CONTA",
+      "order": 2
+    }
+  ]
+}

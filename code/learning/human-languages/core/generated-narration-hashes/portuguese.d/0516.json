@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 516,
+  "sourceHash": "fnv1a64:f0ea786a2b43b7a2",
+  "lessonIds": [
+    "PT-C516-orquestra",
+    "PT-C516-maestro",
+    "PT-C516-sinfonia",
+    "PT-C516-violoncelo",
+    "PT-C516-harpa"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch516.txt",
+  "json": "portuguese/narration/ch516.json",
+  "textHash": "fnv1a64:c131378dc247f293",
+  "jsonHash": "fnv1a64:366217ea3454413b",
+  "findings": []
+}

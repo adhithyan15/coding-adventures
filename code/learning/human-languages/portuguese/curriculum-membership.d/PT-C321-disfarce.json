@@ -1,0 +1,11 @@
+{
+  "id": "PT-C321-disfarce",
+  "pathSegment": "PT-PATH-321-CARNAVAL",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-321-CARNAVAL",
+      "order": 3
+    }
+  ]
+}

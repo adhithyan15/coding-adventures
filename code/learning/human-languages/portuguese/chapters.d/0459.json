@@ -1,0 +1,19 @@
+{
+  "chapter": 459,
+  "title": "Nas rochas",
+  "label": "ch:pt-nas-rochas",
+  "canDo": "I can describe a day on a rocky shore: the rocks, the tide, seashells, getting a tan and diving in.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "PT-C459-mergulhar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 459: I can describe a day on a rocky shore: the rocks, the tide, seashells, getting a tan and diving in.",
+    "assesses": [
+      "PT-LEX-C459-ROCHEDOS-03",
+      "PT-LEX-C459-ROCHEDOS-04",
+      "PT-LEX-C459-ROCHEDOS-05"
+    ]
+  }
+}

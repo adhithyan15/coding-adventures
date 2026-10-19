@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 478,
+  "sourceHash": "fnv1a64:3f1ae95122bde775",
+  "lessonIds": [
+    "PT-C478-nostalgia",
+    "PT-C478-melancolia",
+    "PT-C478-solidao",
+    "PT-C478-solitario",
+    "PT-C478-desgosto"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch478.txt",
+  "json": "portuguese/narration/ch478.json",
+  "textHash": "fnv1a64:9fbfc6a5f8eda645",
+  "jsonHash": "fnv1a64:4e9c69ecc4308870",
+  "findings": []
+}

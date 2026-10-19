@@ -1,0 +1,19 @@
+{
+  "chapter": 268,
+  "title": "Would, Could, Should --- The Condicional, and Six Lines",
+  "label": "ch:pt-the-condicional",
+  "canDo": "I can say what would happen with the condicional, and write six connected lines about a journey that end looking forward.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "PT-W268-seis-linhas",
+    "kind": "task",
+    "summary": "Complete PT-W268-seis-linhas: six lines to one reader, the scene in the imperfeito, events in order, a reason, and a last line with espero, seria or se.",
+    "assesses": [
+      "PT-GRAMMAR-CONDICIONAL-01",
+      "PT-LEX-SERIA-01",
+      "PT-GRAMMAR-SERIA-BOM-02"
+    ]
+  }
+}

@@ -1,0 +1,858 @@
+{
+  "version": 1,
+  "language": "portuguese",
+  "chapter": 342,
+  "title": "Dizer o que se pensa",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:4ad4cbac10158433",
+  "lessons": [
+    {
+      "id": "PT-C342-afirmar",
+      "sequence": 19550,
+      "title": "afirmar — to state, to assert",
+      "headword": "afirmar",
+      "romanization": "afirmar",
+      "gloss": "to state, to assert",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c254101043a98931",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Portuguese for indisputable, then the Portuguese for to refute."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: afirmar",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "afirmar — \"to state, to assert\"."
+            },
+            {
+              "kind": "speech",
+              "text": "O jornal afirma que o preço do pão vai subir. The newspaper states that the price of bread is going to rise."
+            },
+            {
+              "kind": "speech",
+              "text": "Afirmar que takes the indicative."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "afirmar is a learned borrowing from Latin affirmāre \"to present as firm, to assert\" (EtymDB, Lewis & Short), built from ad and firmāre \"to make firm\", from firmus \"firm\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "afirmar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *afirmar*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "afirmar, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *afirmar*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with afirmar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *afirmar*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Portuguese for indisputable, then the Portuguese for to refute, then say afirmar again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Portuguese for indisputable, then the Portuguese for to refute, then say *afirmar* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does afirmar mean? (\"To state, to assert\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PT-C342-afirmacao",
+      "sequence": 19560,
+      "title": "a afirmação — the statement, the assertion",
+      "headword": "a afirmação",
+      "romanization": "a afirmação",
+      "gloss": "the statement, the assertion",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:dbff8a3b5d7f7415",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Portuguese for to refute, then the Portuguese for to state."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: a afirmação",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "a afirmação — \"the statement, the assertion\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Essa afirmação não é verdade. That statement is not true."
+            },
+            {
+              "kind": "speech",
+              "text": "Fazer uma afirmação — to make a statement."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "afirmação is a learned borrowing from Latin affirmātiō \"affirmation, declaration\" (EtymDB), from affirmāre \"to assert\", on firmus \"firm\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a afirmação",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *a afirmação*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a afirmação, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *a afirmação*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with a afirmação",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *a afirmação*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Portuguese for to refute, then the Portuguese for to state, then say a afirmação again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Portuguese for to refute, then the Portuguese for to state, then say *a afirmação* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does a afirmação mean? (\"The statement, the assertion\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PT-C342-fiavel",
+      "sequence": 19570,
+      "title": "fiável — reliable, trustworthy",
+      "headword": "fiável",
+      "romanization": "fiável",
+      "gloss": "reliable, trustworthy",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:37a37f679f04b418",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Portuguese for to state, then the Portuguese for the statement."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: fiável",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "fiável — \"reliable, trustworthy\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Este carro é velho, mas é muito fiável. This car is old, but it is very reliable."
+            },
+            {
+              "kind": "speech",
+              "text": "European Portuguese; in Brazil confiável. Uma fonte fiável — a reliable source."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "fiável is built on fiar \"to trust, to give credit\" with -ável; fiar is inherited from Vulgar Latin fīdāre, a form of Latin fīdere \"to trust\" (Lewis & Short)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "fiável",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *fiável*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "fiável, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *fiável*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with fiável",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *fiável*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Portuguese for to state, then the Portuguese for the statement, then say fiável again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Portuguese for to state, then the Portuguese for the statement, then say *fiável* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does fiável mean? (\"Reliable, trustworthy\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PT-C342-credivel",
+      "sequence": 19580,
+      "title": "credível — credible, believable",
+      "headword": "credível",
+      "romanization": "credível",
+      "gloss": "credible, believable",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c1bb29fe46267c93",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Portuguese for the statement, then the Portuguese for reliable."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: credível",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "credível — \"credible, believable\"."
+            },
+            {
+              "kind": "speech",
+              "text": "A história dele não é muito credível. His story is not very credible."
+            },
+            {
+              "kind": "speech",
+              "text": "Of a person or a story. Pouco credível — hard to believe."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "credível is a learned formation on Latin crēdibilis \"worthy of belief, credible\" (Lewis & Short), from crēdere \"to believe, to trust\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "credível",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *credível*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "credível, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *credível*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with credível",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *credível*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Portuguese for the statement, then the Portuguese for reliable, then say credível again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Portuguese for the statement, then the Portuguese for reliable, then say *credível* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does credível mean? (\"Credible, believable\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PT-C342-alegar",
+      "sequence": 19590,
+      "title": "alegar — to claim, to allege",
+      "headword": "alegar",
+      "romanization": "alegar",
+      "gloss": "to claim, to allege",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8658aeb032dc33dd",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Portuguese for reliable, then the Portuguese for credible."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: alegar",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "alegar — \"to claim, to allege\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Ele alegou que estava doente. He claimed that he was ill."
+            },
+            {
+              "kind": "speech",
+              "text": "Often of an excuse that may not be true."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "alegar is a learned borrowing from Latin allēgāre \"to send with a commission, to bring forward, to cite\" (EtymDB, Lewis & Short), built from ad and lēgāre \"to send, to depute\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "alegar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *alegar*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "alegar, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *alegar*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with alegar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *alegar*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Portuguese for reliable, then the Portuguese for credible, then say alegar again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Portuguese for reliable, then the Portuguese for credible, then say *alegar* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does alegar mean? (\"To claim, to allege\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PT-R342-revisao-335-342",
+      "sequence": 19600,
+      "title": "Razões e opiniões",
+      "headword": "(dialogue)",
+      "romanization": "(dialogue)",
+      "gloss": "a review of chapters 335-342",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:01a79eab02b1298b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Portuguese for the opinion and convinced."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the opinion, convinced, the point of view, to give an opinion, to maintain",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the opinion, convinced, the point of view, to give an opinion, to maintain]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the topic, the issue, the debate, to debate, the argument",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the topic, the issue, the debate, to debate, the argument]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to argue, logical, convincing, to persuade, the firm belief",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to argue, logical, convincing, to persuade, the firm belief]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the disagreement, to disagree, to object, the objection, to contradict",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the disagreement, to disagree, to object, the objection, to contradict]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the agreement, to agree, to admit, the consensus, to give in",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the agreement, to agree, to admit, the consensus, to give in]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to doubt, sceptical, to deny, absurd, debatable",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to doubt, sceptical, to deny, absurd, debatable]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the proof, evident, obvious, indisputable, to refute",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the proof, evident, obvious, indisputable, to refute]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to state, the statement, reliable, credible, to claim",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to state, the statement, reliable, credible, to claim]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The opinion? (a opinião.) Convinced? (convencido.) The point of view? (o ponto de vista.) To give an opinion? (opinar.) To maintain? (sustentar.) The topic? (o tema.) The issue? (a questão.) The debate? (o debate.) To debate? (debater.) The argument? (o argumento.) To argue? (argumentar.) Logical? (lógico.) Convincing? (convincente.) To persuade? (persuadir.) The firm belief? (a convicção.) The disagreement? (o desacordo.) To disagree? (discordar.) To object? (objetar.) The objection? (a objeção.) To contradict? (contradizer.) The agreement? (o acordo.) To agree? (concordar.) To admit? (admitir.) The consensus? (o consenso.) To give in? (ceder.) To doubt? (duvidar.) Sceptical? (cético.) To deny? (negar.) Absurd? (absurdo.) Debatable? (discutível.) The proof? (a prova.) Evident? (evidente.) Obvious? (óbvio.) Indisputable? (indiscutível.) To refute? (refutar.) To state? (afirmar.) The statement? (a afirmação.) Reliable? (fiável.) Credible? (credível.) To claim? (alegar.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

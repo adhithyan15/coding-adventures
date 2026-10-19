@@ -1,0 +1,20 @@
+{
+  "language": "portuguese",
+  "chapter": 390,
+  "sourceHash": "fnv1a64:20950a3d8812b7a8",
+  "lessonIds": [
+    "PT-C390-julgamento",
+    "PT-C390-testemunhar",
+    "PT-C390-culpa",
+    "PT-C390-culpado",
+    "PT-C390-inocente",
+    "PT-R390-revisao-383-390"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "portuguese/narration/ch390.txt",
+  "json": "portuguese/narration/ch390.json",
+  "textHash": "fnv1a64:ca061b5a68dc7fa0",
+  "jsonHash": "fnv1a64:d28903bb03a75835",
+  "findings": []
+}

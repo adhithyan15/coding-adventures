@@ -1,0 +1,19 @@
+{
+  "chapter": 452,
+  "title": "Cabelo e óculos",
+  "label": "ch:pt-cabelo-e-oculos",
+  "canDo": "I can use personal services: the barber, trimming, the beautician, the optician and a stain.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "PT-C452-nodoa",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 452: I can use personal services: the barber, trimming, the beautician, the optician and a stain.",
+    "assesses": [
+      "PT-LEX-C452-CUIDADOS-03",
+      "PT-LEX-C452-CUIDADOS-04",
+      "PT-LEX-C452-CUIDADOS-05"
+    ]
+  }
+}

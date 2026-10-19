@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 425,
+  "sourceHash": "fnv1a64:7cefb8ad045eb9dc",
+  "lessonIds": [
+    "PT-C425-albergue",
+    "PT-C425-pousada",
+    "PT-C425-estalagem",
+    "PT-C425-residencial",
+    "PT-C425-campismo"
+  ],
+  "tex": "portuguese/book/chapters/ch425-onde-dormir.tex"
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 478,
+  "title": "Solidão e saudade",
+  "label": "ch:pt-solidao-e-saudade",
+  "canDo": "I can talk about nostalgia, loneliness and sorrow.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "PT-C478-desgosto",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 478: I can talk about nostalgia, loneliness and sorrow.",
+    "assesses": [
+      "PT-LEX-C478-SOLIDAO-03",
+      "PT-LEX-C478-SOLIDAO-04",
+      "PT-LEX-C478-SOLIDAO-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "PT-C460-pastar",
+  "pathSegment": "PT-PATH-460-SELVAGENS",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PT-EXT-460-SELVAGENS",
+      "order": 4
+    }
+  ]
+}

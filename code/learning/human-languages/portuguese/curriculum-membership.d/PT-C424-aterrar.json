@@ -1,0 +1,11 @@
+{
+  "id": "PT-C424-aterrar",
+  "pathSegment": "PT-PATH-424-VOO",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PT-EXT-424-VOO",
+      "order": 1
+    }
+  ]
+}

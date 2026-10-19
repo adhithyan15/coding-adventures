@@ -1,0 +1,19 @@
+{
+  "chapter": 313,
+  "title": "Casamentos e separações",
+  "label": "ch:pt-casamentos-e-separacoes",
+  "canDo": "I can talk about honeymoons and anniversaries, divorce, separation and moving house.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "PT-C313-mudanca",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 313: I can talk about honeymoons and anniversaries, divorce, separation and moving house.",
+    "assesses": [
+      "PT-LEX-C313-BODAS-03",
+      "PT-LEX-C313-BODAS-04",
+      "PT-LEX-C313-BODAS-05"
+    ]
+  }
+}

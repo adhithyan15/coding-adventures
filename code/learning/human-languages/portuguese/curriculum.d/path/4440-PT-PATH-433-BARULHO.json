@@ -1,0 +1,9 @@
+{
+  "id": "PT-PATH-433-BARULHO",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "PT-EXT-433-BARULHO"
+  ],
+  "after": []
+}

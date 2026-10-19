@@ -1,0 +1,8 @@
+{
+  "id": "PT-EXT-416-ATRASOS",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can deal with delays and changes: the departures board, the delay, running late, a cancelled service and changing trains.",
+  "prerequisites": []
+}

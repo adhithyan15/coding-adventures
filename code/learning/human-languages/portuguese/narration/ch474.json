@@ -1,0 +1,858 @@
+{
+  "version": 1,
+  "language": "portuguese",
+  "chapter": 474,
+  "title": "Rabugentos e birras",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:bd5d9e2f4538ed19",
+  "lessons": [
+    {
+      "id": "PT-C474-rabugento",
+      "sequence": 26350,
+      "title": "rabugento — grumpy",
+      "headword": "rabugento",
+      "romanization": "rabugento",
+      "gloss": "grumpy",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d936d7e99da5ba97",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Portuguese for unfriendly, then the Portuguese for to offend."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: rabugento",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "rabugento — \"grumpy\"."
+            },
+            {
+              "kind": "speech",
+              "text": "De manhã, antes do café, sou rabugento. In the morning, before coffee, I am grumpy."
+            },
+            {
+              "kind": "speech",
+              "text": "Informal. Ser rabugento is a trait; estar rabugento is a mood."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "rabugento is built on rabugem \"mange in dogs\" (EtymDB), which goes back to Latin rōbīgō \"rust, blight\" (Lewis & Short): a grumpy person is as touchy as a dog with mange."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rabugento",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rabugento*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rabugento, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rabugento*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with rabugento",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *rabugento*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Portuguese for unfriendly, then the Portuguese for to offend, then say rabugento again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Portuguese for unfriendly, then the Portuguese for to offend, then say *rabugento* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does rabugento mean? (\"Grumpy\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PT-C474-resmungao",
+      "sequence": 26360,
+      "title": "resmungão — grumbler; grumbling",
+      "headword": "resmungão",
+      "romanization": "resmungão",
+      "gloss": "grumbler; grumbling",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c1e2577fdd967431",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Portuguese for to offend, then the Portuguese for grumpy."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: resmungão",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "resmungão — \"grumbler; grumbling\"."
+            },
+            {
+              "kind": "speech",
+              "text": "O meu avô é um resmungão, mas tem bom coração. My grandfather is a grumbler, but he has a good heart."
+            },
+            {
+              "kind": "speech",
+              "text": "Built on resmungar \"to grumble\" with -ão; a woman is resmungona."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "resmungão is built on resmungar \"to grumble\" with -ão (EtymDB); the origin of the verb itself is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "resmungão",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *resmungão*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "resmungão, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *resmungão*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with resmungão",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *resmungão*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Portuguese for to offend, then the Portuguese for grumpy, then say resmungão again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Portuguese for to offend, then the Portuguese for grumpy, then say *resmungão* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does resmungão mean? (\"Grumbler; grumbling\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PT-C474-amuar",
+      "sequence": 26370,
+      "title": "amuar — to sulk",
+      "headword": "amuar",
+      "romanization": "amuar",
+      "gloss": "to sulk",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e09990921880732c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Portuguese for grumpy, then the Portuguese for grumbler."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: amuar",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "amuar — \"to sulk\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Quando perde um jogo, o miúdo amua e não fala com ninguém. When he loses a game, the kid sulks and does not talk to anyone."
+            },
+            {
+              "kind": "speech",
+              "text": "A sulk is um amuo."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "amuar is built with the prefix a- (EtymDB), but the origin of the rest of the word is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "amuar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *amuar*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "amuar, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *amuar*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with amuar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *amuar*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Portuguese for grumpy, then the Portuguese for grumbler, then say amuar again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Portuguese for grumpy, then the Portuguese for grumbler, then say *amuar* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does amuar mean? (\"To sulk\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PT-C474-birra",
+      "sequence": 26380,
+      "title": "a birra — tantrum",
+      "headword": "a birra",
+      "romanization": "a birra",
+      "gloss": "tantrum",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4aedc8db630554bc",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Portuguese for grumbler, then the Portuguese for to sulk."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: a birra",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "a birra — \"tantrum\"."
+            },
+            {
+              "kind": "speech",
+              "text": "O menino fez uma birra no supermercado. The little boy threw a tantrum in the supermarket."
+            },
+            {
+              "kind": "speech",
+              "text": "Fazer uma birra — to throw a tantrum. In Brazil birra can also mean stubbornness."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "birra is traced in EtymDB to Spanish birria, which goes back to Latin verrēs \"a boar\"; the link is not certain."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a birra",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *a birra*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a birra, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *a birra*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with a birra",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *a birra*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Portuguese for grumbler, then the Portuguese for to sulk, then say a birra again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Portuguese for grumbler, then the Portuguese for to sulk, then say *a birra* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does a birra mean? (\"Tantrum\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PT-C474-choramingar",
+      "sequence": 26390,
+      "title": "choramingar — to whine, to whimper",
+      "headword": "choramingar",
+      "romanization": "choramingar",
+      "gloss": "to whine, to whimper",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e87d10717bb8c098",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Portuguese for to sulk, then the Portuguese for tantrum."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: choramingar",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "choramingar — \"to whine, to whimper\"."
+            },
+            {
+              "kind": "speech",
+              "text": "O cão choramingava à porta. The dog was whimpering at the door."
+            },
+            {
+              "kind": "speech",
+              "text": "Built on chorar \"to cry\": a small, whining cry."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "choramingar is built on chorar \"to cry\", which is inherited from Latin plōrāre \"to wail\" (Lewis & Short)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "choramingar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *choramingar*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "choramingar, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *choramingar*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with choramingar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *choramingar*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Portuguese for to sulk, then the Portuguese for tantrum, then say choramingar again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Portuguese for to sulk, then the Portuguese for tantrum, then say *choramingar* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does choramingar mean? (\"To whine, to whimper\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PT-R474-revisao-467-474",
+      "sequence": 26400,
+      "title": "Sentimentos e saúde",
+      "headword": "(dialogue)",
+      "romanization": "(dialogue)",
+      "gloss": "a review of chapters 467-474",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:32685b1cd17f66ee",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Portuguese for pride and vanity."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pride, vanity, vain, to be proud, to boast",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: pride, vanity, vain, to be proud, to boast]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "envy, envious, to envy, selfish, selfishness",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: envy, envious, to envy, selfish, selfishness]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "stubborn, stubbornness, to insist, miserly, stingy",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: stubborn, stubbornness, to insist, miserly, stingy]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "humble, humility, modest, modesty, to praise",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: humble, humility, modest, modesty, to praise]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sincerity, frankness, to deceive, liar, to pretend",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: sincerity, frankness, to deceive, liar, to pretend]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "clever, cunning, naive, to suspect, suspicious",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: clever, cunning, naive, to suspect, suspicious]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kindness, polite, rude, unfriendly, to offend",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: kindness, polite, rude, unfriendly, to offend]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "grumpy, grumbler, to sulk, tantrum, to whine",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: grumpy, grumbler, to sulk, tantrum, to whine]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Pride? (o orgulho.) Vanity? (a vaidade.) Vain? (vaidoso.) To be proud? (orgulhar.) To boast? (gabar.) Envy? (a inveja.) Envious? (invejoso.) To envy? (invejar.) Selfish? (egoísta.) Selfishness? (o egoísmo.) Stubborn? (teimoso.) Stubbornness? (a teimosia.) To insist? (teimar.) Miserly? (avarento.) Stingy? (sovina.) Humble? (humilde.) Humility? (a humildade.) Modest? (modesto.) Modesty? (a modéstia.) To praise? (elogiar.) Sincerity? (a sinceridade.) Frankness? (a franqueza.) To deceive? (iludir.) Liar? (mentiroso.) To pretend? (fingir.) Clever? (esperto.) Cunning? (astuto.) Naive? (ingénuo.) To suspect? (desconfiar.) Suspicious? (desconfiado.) Kindness? (a gentileza.) Polite? (delicado.) Rude? (grosseiro.) Unfriendly? (antipático.) To offend? (ofender.) Grumpy? (rabugento.) Grumbler? (resmungão.) To sulk? (amuar.) Tantrum? (a birra.) To whine? (choramingar.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

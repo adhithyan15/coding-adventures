@@ -1,0 +1,9 @@
+{
+  "id": "PT-PATH-339-ACORDO",
+  "spine_node": "SPINE-GIVE-REASONS",
+  "before": [],
+  "inline": [
+    "PT-EXT-339-ACORDO"
+  ],
+  "after": []
+}

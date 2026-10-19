@@ -1,0 +1,11 @@
+{
+  "id": "PT-C390-testemunhar",
+  "pathSegment": "PT-PATH-390-CULPA",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PT-EXT-390-CULPA",
+      "order": 1
+    }
+  ]
+}

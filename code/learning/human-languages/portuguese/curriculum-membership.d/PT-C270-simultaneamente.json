@@ -1,0 +1,11 @@
+{
+  "id": "PT-C270-simultaneamente",
+  "pathSegment": "PT-PATH-270-ENTRETANTO",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PT-EXT-270-ENTRETANTO",
+      "order": 1
+    }
+  ]
+}

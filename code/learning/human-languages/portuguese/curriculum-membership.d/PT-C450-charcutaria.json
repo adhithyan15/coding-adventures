@@ -1,0 +1,11 @@
+{
+  "id": "PT-C450-charcutaria",
+  "pathSegment": "PT-PATH-450-MERCEARIA",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PT-EXT-450-MERCEARIA",
+      "order": 1
+    }
+  ]
+}

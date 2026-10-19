@@ -1,0 +1,11 @@
+{
+  "id": "PT-C430-entupir",
+  "pathSegment": "PT-PATH-430-BANHO",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PT-EXT-430-BANHO",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "PT-C506-mergulho",
+  "pathSegment": "PT-PATH-506-AGUA",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "PT-EXT-506-AGUA",
+      "order": 0
+    }
+  ]
+}

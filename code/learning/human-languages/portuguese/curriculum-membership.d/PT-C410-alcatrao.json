@@ -1,0 +1,11 @@
+{
+  "id": "PT-C410-alcatrao",
+  "pathSegment": "PT-PATH-410-CURVAS",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-410-CURVAS",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 311,
+  "title": "As idades da vida",
+  "label": "ch:pt-as-idades-da-vida",
+  "canDo": "I can talk about the ages of life: childhood, adolescence, youth, old age and generations.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "PT-C311-geracao",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 311: I can talk about the ages of life: childhood, adolescence, youth, old age and generations.",
+    "assesses": [
+      "PT-LEX-C311-IDADES-03",
+      "PT-LEX-C311-IDADES-04",
+      "PT-LEX-C311-IDADES-05"
+    ]
+  }
+}

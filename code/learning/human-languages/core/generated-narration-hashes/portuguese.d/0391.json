@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 391,
+  "sourceHash": "fnv1a64:65329781c2768871",
+  "lessonIds": [
+    "PT-C391-rendimento",
+    "PT-C391-orcamento",
+    "PT-C391-despesa",
+    "PT-C391-prestacao",
+    "PT-C391-poupanca"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch391.txt",
+  "json": "portuguese/narration/ch391.json",
+  "textHash": "fnv1a64:c8fd53d3b4d0f6f8",
+  "jsonHash": "fnv1a64:dd76bffaf27b7742",
+  "findings": []
+}

@@ -1,0 +1,9 @@
+{
+  "id": "PT-PATH-276-QUINZENA",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "PT-EXT-276-QUINZENA"
+  ],
+  "after": []
+}

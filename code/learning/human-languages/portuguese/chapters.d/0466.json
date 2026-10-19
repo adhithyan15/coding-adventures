@@ -1,0 +1,19 @@
+{
+  "chapter": 466,
+  "title": "Depois da chuva",
+  "label": "ch:pt-depois-da-chuva",
+  "canDo": "I can talk about rainy weather and what follows: drizzle, a sky that clears, puddles, getting soaked and the raincoat.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "PT-R466-revisao-final-466",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 466: I can talk about rainy weather and what follows: drizzle, a sky that clears, puddles, getting soaked and the raincoat.",
+    "assesses": [
+      "PT-LEX-C466-CHUVA-03",
+      "PT-LEX-C466-CHUVA-04",
+      "PT-LEX-C466-CHUVA-05"
+    ]
+  }
+}

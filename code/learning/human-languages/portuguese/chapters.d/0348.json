@@ -1,0 +1,19 @@
+{
+  "chapter": 348,
+  "title": "Causas e efeitos",
+  "label": "ch:pt-causas-e-efeitos",
+  "canDo": "I can talk about causes and effects: what caused or brought about something, and with what consequences.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "PT-C348-consequencia",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 348: I can talk about causes and effects: what caused or brought about something, and with what consequences.",
+    "assesses": [
+      "PT-LEX-C348-EFEITO-03",
+      "PT-LEX-C348-EFEITO-04",
+      "PT-LEX-C348-EFEITO-05"
+    ]
+  }
+}

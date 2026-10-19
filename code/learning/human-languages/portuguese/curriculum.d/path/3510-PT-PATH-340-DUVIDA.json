@@ -1,0 +1,9 @@
+{
+  "id": "PT-PATH-340-DUVIDA",
+  "spine_node": "SPINE-GIVE-REASONS",
+  "before": [],
+  "inline": [
+    "PT-EXT-340-DUVIDA"
+  ],
+  "after": []
+}

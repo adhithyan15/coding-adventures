@@ -1,0 +1,11 @@
+{
+  "id": "PT-C371-imprevisto",
+  "pathSegment": "PT-PATH-371-IMPREVISTO",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-371-IMPREVISTO",
+      "order": 3
+    }
+  ]
+}

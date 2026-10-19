@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 288,
+  "sourceHash": "fnv1a64:67b39f3b9dfe53ac",
+  "lessonIds": [
+    "PT-C288-assalto",
+    "PT-C288-assaltar",
+    "PT-C288-assaltante",
+    "PT-C288-arrombar",
+    "PT-C288-arrombamento"
+  ],
+  "tex": "portuguese/book/chapters/ch288-um-assalto.tex"
+}

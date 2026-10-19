@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 393,
+  "sourceHash": "fnv1a64:c64be17652f7ae0b",
+  "lessonIds": [
+    "PT-C393-saldo",
+    "PT-C393-deposito",
+    "PT-C393-depositar",
+    "PT-C393-transferir",
+    "PT-C393-transferencia"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch393.txt",
+  "json": "portuguese/narration/ch393.json",
+  "textHash": "fnv1a64:f6e3fb156c1b8da3",
+  "jsonHash": "fnv1a64:bc581267c7a1a02c",
+  "findings": []
+}

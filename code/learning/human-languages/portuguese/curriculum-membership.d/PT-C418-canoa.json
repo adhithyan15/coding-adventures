@@ -1,0 +1,11 @@
+{
+  "id": "PT-C418-canoa",
+  "pathSegment": "PT-PATH-418-BARCO",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-418-BARCO",
+      "order": 3
+    }
+  ]
+}

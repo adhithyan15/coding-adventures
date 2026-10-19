@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 531,
+  "sourceHash": "fnv1a64:6dc61f824f6d73c6",
+  "lessonIds": [
+    "PT-C531-consertar",
+    "PT-C531-pendurar",
+    "PT-C531-martelar",
+    "PT-C531-berbequim",
+    "PT-C531-alicate"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch531.txt",
+  "json": "portuguese/narration/ch531.json",
+  "textHash": "fnv1a64:13f5e61eb0e70c1b",
+  "jsonHash": "fnv1a64:401b485bb9abcdfa",
+  "findings": []
+}

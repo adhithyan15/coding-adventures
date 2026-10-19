@@ -1,0 +1,19 @@
+{
+  "chapter": 281,
+  "title": "Os factos",
+  "label": "ch:pt-os-factos",
+  "canDo": "I can report the facts, give an account of what happened, and say that the news reported it.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "PT-C281-noticiar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 281: I can report the facts, give an account of what happened, and say that the news reported it.",
+    "assesses": [
+      "PT-LEX-C281-RELATAR-03",
+      "PT-LEX-C281-RELATAR-04",
+      "PT-LEX-C281-RELATAR-05"
+    ]
+  }
+}

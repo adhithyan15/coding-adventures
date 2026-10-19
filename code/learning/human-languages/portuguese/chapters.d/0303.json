@@ -1,0 +1,19 @@
+{
+  "chapter": 303,
+  "title": "Quando a água sobe",
+  "label": "ch:pt-quando-a-agua-sobe",
+  "canDo": "I can talk about floods and drowning, and about warnings and alerts.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "PT-C303-alertar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 303: I can talk about floods and drowning, and about warnings and alerts.",
+    "assesses": [
+      "PT-LEX-C303-CHEIA-03",
+      "PT-LEX-C303-CHEIA-04",
+      "PT-LEX-C303-CHEIA-05"
+    ]
+  }
+}

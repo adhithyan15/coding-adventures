@@ -1,0 +1,20 @@
+{
+  "language": "portuguese",
+  "chapter": 342,
+  "sourceHash": "fnv1a64:4ad4cbac10158433",
+  "lessonIds": [
+    "PT-C342-afirmar",
+    "PT-C342-afirmacao",
+    "PT-C342-fiavel",
+    "PT-C342-credivel",
+    "PT-C342-alegar",
+    "PT-R342-revisao-335-342"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "portuguese/narration/ch342.txt",
+  "json": "portuguese/narration/ch342.json",
+  "textHash": "fnv1a64:b1c3bf32ac186560",
+  "jsonHash": "fnv1a64:e7f7eb05cf01fce0",
+  "findings": []
+}

@@ -1,0 +1,20 @@
+{
+  "language": "portuguese",
+  "chapter": 432,
+  "sourceHash": "fnv1a64:c1cd212d3505ad38",
+  "lessonIds": [
+    "PT-C432-fusivel",
+    "PT-C432-fundir",
+    "PT-C432-disjuntor",
+    "PT-C432-recarregar",
+    "PT-C432-apagao",
+    "PT-R432-revisao-425-432"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "portuguese/narration/ch432.txt",
+  "json": "portuguese/narration/ch432.json",
+  "textHash": "fnv1a64:982fc0db0449ab58",
+  "jsonHash": "fnv1a64:930ffb7208952d86",
+  "findings": []
+}

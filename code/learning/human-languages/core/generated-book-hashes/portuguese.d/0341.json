@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 341,
+  "sourceHash": "fnv1a64:c200e7d856d552eb",
+  "lessonIds": [
+    "PT-C341-prova",
+    "PT-C341-evidente",
+    "PT-C341-obvio",
+    "PT-C341-indiscutivel",
+    "PT-C341-refutar"
+  ],
+  "tex": "portuguese/book/chapters/ch341-as-provas.tex"
+}

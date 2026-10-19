@@ -1,0 +1,19 @@
+{
+  "chapter": 337,
+  "title": "Dar argumentos",
+  "label": "ch:pt-dar-argumentos",
+  "canDo": "I can argue for an idea, call an answer logical or convincing and try to persuade someone.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "PT-C337-conviccao",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 337: I can argue for an idea, call an answer logical or convincing and try to persuade someone.",
+    "assesses": [
+      "PT-LEX-C337-ARGUMENTAR-03",
+      "PT-LEX-C337-ARGUMENTAR-04",
+      "PT-LEX-C337-ARGUMENTAR-05"
+    ]
+  }
+}

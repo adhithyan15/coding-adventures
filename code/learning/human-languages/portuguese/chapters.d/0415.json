@@ -1,0 +1,19 @@
+{
+  "chapter": 415,
+  "title": "No comboio",
+  "label": "ch:pt-no-comboio",
+  "canDo": "I can find my place on a train: the carriage, the compartment, the bunk, the train driver and the engine.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "PT-C415-locomotiva",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 415: I can find my place on a train: the carriage, the compartment, the bunk, the train driver and the engine.",
+    "assesses": [
+      "PT-LEX-C415-CARRUAGEM-03",
+      "PT-LEX-C415-CARRUAGEM-04",
+      "PT-LEX-C415-CARRUAGEM-05"
+    ]
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "id": "PT-PATH-496-CARINHO",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "PT-EXT-496-CARINHO"
+  ],
+  "after": []
+}

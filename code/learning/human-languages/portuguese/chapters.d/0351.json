@@ -1,0 +1,19 @@
+{
+  "chapter": 351,
+  "title": "As repercussões",
+  "label": "ch:pt-as-repercussoes",
+  "canDo": "I can talk about the impact and knock-on effects of an event, and what it involves or sets off.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "PT-C351-desencadear",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 351: I can talk about the impact and knock-on effects of an event, and what it involves or sets off.",
+    "assesses": [
+      "PT-LEX-C351-IMPACTO-03",
+      "PT-LEX-C351-IMPACTO-04",
+      "PT-LEX-C351-IMPACTO-05"
+    ]
+  }
+}

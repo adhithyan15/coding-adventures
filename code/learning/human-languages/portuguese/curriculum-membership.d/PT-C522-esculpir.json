@@ -1,0 +1,11 @@
+{
+  "id": "PT-C522-esculpir",
+  "pathSegment": "PT-PATH-522-GALERIA",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-522-GALERIA",
+      "order": 3
+    }
+  ]
+}

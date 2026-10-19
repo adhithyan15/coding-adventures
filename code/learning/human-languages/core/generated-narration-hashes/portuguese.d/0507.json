@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 507,
+  "sourceHash": "fnv1a64:869c459b579c7d8a",
+  "lessonIds": [
+    "PT-C507-skate",
+    "PT-C507-patinar",
+    "PT-C507-patins",
+    "PT-C507-caminhada",
+    "PT-C507-alpinismo"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch507.txt",
+  "json": "portuguese/narration/ch507.json",
+  "textHash": "fnv1a64:17a1eca2ec16de0d",
+  "jsonHash": "fnv1a64:05078b7957a56ffd",
+  "findings": []
+}

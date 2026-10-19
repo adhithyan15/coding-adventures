@@ -1,0 +1,9 @@
+{
+  "id": "PT-PATH-357-ESTAGIO",
+  "spine_node": "SPINE-GIVE-REASONS",
+  "before": [],
+  "inline": [
+    "PT-EXT-357-ESTAGIO"
+  ],
+  "after": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "PT-C339-ceder",
+  "pathSegment": "PT-PATH-339-ACORDO",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PT-EXT-339-ACORDO",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "PT-C500-costurar",
+  "pathSegment": "PT-PATH-500-COSTURA",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PT-EXT-500-COSTURA",
+      "order": 1
+    }
+  ]
+}

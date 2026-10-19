@@ -1,0 +1,21 @@
+{
+  "language": "portuguese",
+  "chapter": 532,
+  "sourceHash": "fnv1a64:5917329ace689817",
+  "lessonIds": [
+    "PT-C532-lareira",
+    "PT-C532-almofada",
+    "PT-C532-estante",
+    "PT-C532-soalho",
+    "PT-C532-decoracao",
+    "PT-R532-revisao-531-532",
+    "PT-R532-revisao-final-532"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "portuguese/narration/ch532.txt",
+  "json": "portuguese/narration/ch532.json",
+  "textHash": "fnv1a64:317a163b06a528f2",
+  "jsonHash": "fnv1a64:80d5cb2de7f0f2ab",
+  "findings": []
+}

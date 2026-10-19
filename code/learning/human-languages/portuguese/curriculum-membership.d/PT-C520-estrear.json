@@ -1,0 +1,11 @@
+{
+  "id": "PT-C520-estrear",
+  "pathSegment": "PT-PATH-520-TEATRO",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PT-EXT-520-TEATRO",
+      "order": 4
+    }
+  ]
+}

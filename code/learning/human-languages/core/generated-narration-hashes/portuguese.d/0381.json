@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 381,
+  "sourceHash": "fnv1a64:dda57ec1ca169494",
+  "lessonIds": [
+    "PT-C381-norma",
+    "PT-C381-regulamento",
+    "PT-C381-obrigatorio",
+    "PT-C381-facultativo",
+    "PT-C381-obrigacao"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch381.txt",
+  "json": "portuguese/narration/ch381.json",
+  "textHash": "fnv1a64:52af87df0b6b8c0e",
+  "jsonHash": "fnv1a64:4be1a490b80799fa",
+  "findings": []
+}

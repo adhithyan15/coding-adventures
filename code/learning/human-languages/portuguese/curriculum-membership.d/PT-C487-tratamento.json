@@ -1,0 +1,11 @@
+{
+  "id": "PT-C487-tratamento",
+  "pathSegment": "PT-PATH-487-CONSULTA",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PT-EXT-487-CONSULTA",
+      "order": 4
+    }
+  ]
+}

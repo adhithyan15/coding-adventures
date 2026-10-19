@@ -1,0 +1,19 @@
+{
+  "chapter": 464,
+  "title": "O gelo",
+  "label": "ch:pt-o-gelo",
+  "canDo": "I can describe a cold spell: the frost, the dew, freezing, the freezer and melting.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "PT-R464-revisao-457-464",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 464: I can describe a cold spell: the frost, the dew, freezing, the freezer and melting.",
+    "assesses": [
+      "PT-LEX-C464-GEADA-03",
+      "PT-LEX-C464-GEADA-04",
+      "PT-LEX-C464-GEADA-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "PT-C519-palco",
+  "pathSegment": "PT-PATH-519-ENSAIO",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PT-EXT-519-ENSAIO",
+      "order": 2
+    }
+  ]
+}

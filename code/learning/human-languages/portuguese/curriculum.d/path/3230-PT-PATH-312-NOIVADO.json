@@ -1,0 +1,9 @@
+{
+  "id": "PT-PATH-312-NOIVADO",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "PT-EXT-312-NOIVADO"
+  ],
+  "after": []
+}

@@ -1,0 +1,9 @@
+{
+  "id": "PT-PATH-325-HEROI",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "PT-EXT-325-HEROI"
+  ],
+  "after": []
+}

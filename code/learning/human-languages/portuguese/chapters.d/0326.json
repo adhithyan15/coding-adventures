@@ -1,0 +1,19 @@
+{
+  "chapter": 326,
+  "title": "Lendas e mitos",
+  "label": "ch:pt-lendas-e-mitos",
+  "canDo": "I can talk about legends, myths, fables and fairies.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "PT-C326-fada",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 326: I can talk about legends, myths, fables and fairies.",
+    "assesses": [
+      "PT-LEX-C326-LENDA-03",
+      "PT-LEX-C326-LENDA-04",
+      "PT-LEX-C326-LENDA-05"
+    ]
+  }
+}

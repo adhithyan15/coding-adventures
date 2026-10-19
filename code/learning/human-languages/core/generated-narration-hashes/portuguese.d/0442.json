@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 442,
+  "sourceHash": "fnv1a64:a302df2b140715a9",
+  "lessonIds": [
+    "PT-C442-muralha",
+    "PT-C442-fortaleza",
+    "PT-C442-mosteiro",
+    "PT-C442-claustro",
+    "PT-C442-deambular"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch442.txt",
+  "json": "portuguese/narration/ch442.json",
+  "textHash": "fnv1a64:c8b5e1017ec8931b",
+  "jsonHash": "fnv1a64:62dbc6d2b384f7e3",
+  "findings": []
+}

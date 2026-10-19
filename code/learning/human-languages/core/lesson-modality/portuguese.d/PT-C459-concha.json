@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PT-C459-concha",
+    "language": "portuguese",
+    "chapter": 459,
+    "sequence": 25590,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2720b4f261b2efed"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 368,
+  "sourceHash": "fnv1a64:1413edd1a5256c2c",
+  "lessonIds": [
+    "PT-C368-supor",
+    "PT-C368-suposicao",
+    "PT-C368-hipotese",
+    "PT-C368-presumir",
+    "PT-C368-plausivel"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch368.txt",
+  "json": "portuguese/narration/ch368.json",
+  "textHash": "fnv1a64:8987a90daadaaefc",
+  "jsonHash": "fnv1a64:01a86b75014a0a63",
+  "findings": []
+}

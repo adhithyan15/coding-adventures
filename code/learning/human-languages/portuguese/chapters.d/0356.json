@@ -1,0 +1,19 @@
+{
+  "chapter": 356,
+  "title": "Deixar o emprego",
+  "label": "ch:pt-deixar-o-emprego",
+  "canDo": "I can talk about losing or leaving a job: being fired, resigning and unemployment.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "PT-C356-desemprego",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 356: I can talk about losing or leaving a job: being fired, resigning and unemployment.",
+    "assesses": [
+      "PT-LEX-C356-DESPEDIMENTO-03",
+      "PT-LEX-C356-DESPEDIMENTO-04",
+      "PT-LEX-C356-DESPEDIMENTO-05"
+    ]
+  }
+}

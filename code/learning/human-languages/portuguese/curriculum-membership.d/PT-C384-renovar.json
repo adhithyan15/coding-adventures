@@ -1,0 +1,11 @@
+{
+  "id": "PT-C384-renovar",
+  "pathSegment": "PT-PATH-384-VALIDO",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-384-VALIDO",
+      "order": 3
+    }
+  ]
+}

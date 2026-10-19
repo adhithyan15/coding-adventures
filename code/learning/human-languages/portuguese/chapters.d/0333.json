@@ -1,0 +1,19 @@
+{
+  "chapter": 333,
+  "title": "Um bolo caseiro",
+  "label": "ch:pt-um-bolo-caseiro",
+  "canDo": "I can describe baking a cake: the mixer, sifting, kneading, greasing the tin and dusting.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "PT-C333-polvilhar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 333: I can describe baking a cake: the mixer, sifting, kneading, greasing the tin and dusting.",
+    "assesses": [
+      "PT-LEX-C333-BOLO-03",
+      "PT-LEX-C333-BOLO-04",
+      "PT-LEX-C333-BOLO-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "PT-C388-prisao",
+  "pathSegment": "PT-PATH-388-PENA",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PT-EXT-388-PENA",
+      "order": 2
+    }
+  ]
+}

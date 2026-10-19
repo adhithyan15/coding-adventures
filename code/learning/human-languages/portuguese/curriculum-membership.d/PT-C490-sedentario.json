@@ -1,0 +1,11 @@
+{
+  "id": "PT-C490-sedentario",
+  "pathSegment": "PT-PATH-490-FORMA",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PT-EXT-490-FORMA",
+      "order": 1
+    }
+  ]
+}

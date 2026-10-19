@@ -1,0 +1,19 @@
+{
+  "chapter": 471,
+  "title": "Sinceridade e mentiras",
+  "label": "ch:pt-sinceridade-e-mentiras",
+  "canDo": "I can talk about honesty, lies and pretending.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "PT-C471-fingir",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 471: I can talk about honesty, lies and pretending.",
+    "assesses": [
+      "PT-LEX-C471-MENTIRA-03",
+      "PT-LEX-C471-MENTIRA-04",
+      "PT-LEX-C471-MENTIRA-05"
+    ]
+  }
+}

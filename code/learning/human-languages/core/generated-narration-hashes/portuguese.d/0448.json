@@ -1,0 +1,20 @@
+{
+  "language": "portuguese",
+  "chapter": 448,
+  "sourceHash": "fnv1a64:1496bb8457cf6235",
+  "lessonIds": [
+    "PT-C448-tabacaria",
+    "PT-C448-isqueiro",
+    "PT-C448-fosforo",
+    "PT-C448-raspadinha",
+    "PT-C448-folhear",
+    "PT-R448-revisao-441-448"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "portuguese/narration/ch448.txt",
+  "json": "portuguese/narration/ch448.json",
+  "textHash": "fnv1a64:e7ef262fa4648b81",
+  "jsonHash": "fnv1a64:fc390a28402336a0",
+  "findings": []
+}

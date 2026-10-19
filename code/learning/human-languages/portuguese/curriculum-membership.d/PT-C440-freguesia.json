@@ -1,0 +1,11 @@
+{
+  "id": "PT-C440-freguesia",
+  "pathSegment": "PT-PATH-440-MORADA",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PT-EXT-440-MORADA",
+      "order": 2
+    }
+  ]
+}

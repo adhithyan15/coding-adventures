@@ -1,0 +1,19 @@
+{
+  "chapter": 291,
+  "title": "Raptos e reféns",
+  "label": "ch:pt-raptos-e-refens",
+  "canDo": "I can understand news about kidnappings and hostages.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "PT-C291-refem",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 291: I can understand news about kidnappings and hostages.",
+    "assesses": [
+      "PT-LEX-C291-RAPTO-03",
+      "PT-LEX-C291-RAPTO-04",
+      "PT-LEX-C291-RAPTO-05"
+    ]
+  }
+}

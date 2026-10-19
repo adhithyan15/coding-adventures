@@ -1,0 +1,14 @@
+{
+  "language": "portuguese",
+  "chapter": 358,
+  "sourceHash": "fnv1a64:0aba490d894a9435",
+  "lessonIds": [
+    "PT-C358-funcionario",
+    "PT-C358-turno",
+    "PT-C358-sindicato",
+    "PT-C358-greve",
+    "PT-C358-reivindicar",
+    "PT-R358-revisao-351-358"
+  ],
+  "tex": "portuguese/book/chapters/ch358-a-greve.tex"
+}

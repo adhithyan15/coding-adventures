@@ -1,0 +1,19 @@
+{
+  "chapter": 314,
+  "title": "Uma perda na família",
+  "label": "ch:pt-uma-perda-na-familia",
+  "canDo": "I can talk about a death in the family, mourning and the wake, in respectful words.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "PT-C314-velorio",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 314: I can talk about a death in the family, mourning and the wake, in respectful words.",
+    "assesses": [
+      "PT-LEX-C314-FALECER-03",
+      "PT-LEX-C314-FALECER-04",
+      "PT-LEX-C314-FALECER-05"
+    ]
+  }
+}

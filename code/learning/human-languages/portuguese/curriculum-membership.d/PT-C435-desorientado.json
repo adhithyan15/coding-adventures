@@ -1,0 +1,11 @@
+{
+  "id": "PT-C435-desorientado",
+  "pathSegment": "PT-PATH-435-ORIENTAR",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PT-EXT-435-ORIENTAR",
+      "order": 2
+    }
+  ]
+}

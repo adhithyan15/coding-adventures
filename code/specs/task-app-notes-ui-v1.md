@@ -50,6 +50,13 @@ component," which doesn't exist yet. A note body genuinely needs multiple
 lines — a single-line body field would be a real UX regression, not just
 an aesthetic gap.
 
+> **Update (#15930):** the gap below is closed. `HostInput` now takes
+> `multiline: true` on every backend and lowers exactly as the legacy
+> `Input ( multiline : true )` does (UI29 §2.1), so this call site can move
+> to `HostInput` as part of retiring `Input` (U29-X1). No userland
+> `MultilineInput` is needed: a text area cannot be composed from
+> single-line fields, so it belongs in the kernel.
+
 **Decision**: use the legacy `Input` primitive directly for the body
 field, with `multiline: true`. This is a disclosed, deliberate use of an
 existing, still-functioning, still-emitter-supported primitive for a real

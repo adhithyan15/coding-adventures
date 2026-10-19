@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 500,
+  "sourceHash": "fnv1a64:ab1f8369ddf37b4d",
+  "lessonIds": [
+    "PT-C500-costura",
+    "PT-C500-costurar",
+    "PT-C500-trico",
+    "PT-C500-tricotar",
+    "PT-C500-bordar"
+  ],
+  "tex": "portuguese/book/chapters/ch500-agulhas-e-linhas.tex"
+}

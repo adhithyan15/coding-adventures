@@ -1,0 +1,19 @@
+{
+  "chapter": 513,
+  "title": "Correr e pedalar",
+  "label": "ch:pt-correr-e-pedalar",
+  "canDo": "I can talk about running, athletics and cycling.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "PT-C513-cronometro",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 513: I can talk about running, athletics and cycling.",
+    "assesses": [
+      "PT-LEX-C513-CORRIDA-03",
+      "PT-LEX-C513-CORRIDA-04",
+      "PT-LEX-C513-CORRIDA-05"
+    ]
+  }
+}

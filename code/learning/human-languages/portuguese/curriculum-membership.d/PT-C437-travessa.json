@@ -1,0 +1,11 @@
+{
+  "id": "PT-C437-travessa",
+  "pathSegment": "PT-PATH-437-RUAS",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PT-EXT-437-RUAS",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "PT-C433-ranger",
+  "pathSegment": "PT-PATH-433-BARULHO",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PT-EXT-433-BARULHO",
+      "order": 1
+    }
+  ]
+}

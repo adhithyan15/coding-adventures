@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 297,
+  "sourceHash": "fnv1a64:27beaf08e206c5c0",
+  "lessonIds": [
+    "PT-C297-denuncia",
+    "PT-C297-depoimento",
+    "PT-C297-testemunho",
+    "PT-C297-condenar",
+    "PT-C297-absolver"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch297.txt",
+  "json": "portuguese/narration/ch297.json",
+  "textHash": "fnv1a64:e2c81591c9f3316c",
+  "jsonHash": "fnv1a64:babea7517377efc0",
+  "findings": []
+}

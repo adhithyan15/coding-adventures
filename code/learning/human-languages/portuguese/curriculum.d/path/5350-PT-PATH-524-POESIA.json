@@ -1,0 +1,9 @@
+{
+  "id": "PT-PATH-524-POESIA",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "PT-EXT-524-POESIA"
+  ],
+  "after": []
+}

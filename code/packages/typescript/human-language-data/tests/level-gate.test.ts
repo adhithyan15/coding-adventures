@@ -333,6 +333,9 @@ describe("the gate that would have caught the A2 claim", () => {
     // Italian followed as the second, with chapters 263-272 (the B1 core: the
     // imperfetto, reasons, travel, experience and the condizionale, realizing all
     // five B1 nodes) and chapters 273-536 (1,320 headwords, 389 verbs).
+    // Portuguese followed as the third, with chapters 259-268 (the B1 core: the
+    // imperfeito, reasons, travel, experience and the condicional, realizing all
+    // five B1 nodes) and chapters 269-532 (1,320 headwords, 363 verbs).
     for (const level of Object.values(HELD)) {
       expectedByLevel.set(level, (expectedByLevel.get(level) ?? 0) + 1);
     }

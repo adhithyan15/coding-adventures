@@ -1,0 +1,11 @@
+{
+  "id": "PT-C367-voluntariado",
+  "pathSegment": "PT-PATH-367-COMUNIDADE",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-367-COMUNIDADE",
+      "order": 3
+    }
+  ]
+}

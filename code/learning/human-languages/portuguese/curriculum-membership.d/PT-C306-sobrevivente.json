@@ -1,0 +1,11 @@
+{
+  "id": "PT-C306-sobrevivente",
+  "pathSegment": "PT-PATH-306-RESGATE",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PT-EXT-306-RESGATE",
+      "order": 4
+    }
+  ]
+}

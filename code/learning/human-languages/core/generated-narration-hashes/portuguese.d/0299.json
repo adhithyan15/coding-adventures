@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 299,
+  "sourceHash": "fnv1a64:7e858e90e1cd678f",
+  "lessonIds": [
+    "PT-C299-acidente",
+    "PT-C299-choque",
+    "PT-C299-chocar",
+    "PT-C299-colidir",
+    "PT-C299-sinistro"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch299.txt",
+  "json": "portuguese/narration/ch299.json",
+  "textHash": "fnv1a64:3dec65d1e48915a5",
+  "jsonHash": "fnv1a64:326a453e420cc7b4",
+  "findings": []
+}

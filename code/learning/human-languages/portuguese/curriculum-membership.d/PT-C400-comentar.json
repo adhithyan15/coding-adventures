@@ -1,0 +1,11 @@
+{
+  "id": "PT-C400-comentar",
+  "pathSegment": "PT-PATH-400-PUBLICAR",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PT-EXT-400-PUBLICAR",
+      "order": 1
+    }
+  ]
+}

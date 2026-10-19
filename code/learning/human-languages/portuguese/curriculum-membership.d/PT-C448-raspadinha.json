@@ -1,0 +1,11 @@
+{
+  "id": "PT-C448-raspadinha",
+  "pathSegment": "PT-PATH-448-TABACARIA",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-448-TABACARIA",
+      "order": 3
+    }
+  ]
+}

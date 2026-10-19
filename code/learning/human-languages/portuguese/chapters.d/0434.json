@@ -1,0 +1,19 @@
+{
+  "chapter": 434,
+  "title": "A reclamação",
+  "label": "ch:pt-a-reclamacao",
+  "canDo": "I can make a complaint and get it put right: complaining, the complaint, grumbling, regretting and compensation.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "PT-C434-indemnizacao",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 434: I can make a complaint and get it put right: complaining, the complaint, grumbling, regretting and compensation.",
+    "assesses": [
+      "PT-LEX-C434-RECLAMACAO-03",
+      "PT-LEX-C434-RECLAMACAO-04",
+      "PT-LEX-C434-RECLAMACAO-05"
+    ]
+  }
+}

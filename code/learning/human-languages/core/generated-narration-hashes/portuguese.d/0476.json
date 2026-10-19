@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 476,
+  "sourceHash": "fnv1a64:2d5845c7176df85f",
+  "lessonIds": [
+    "PT-C476-desilusao",
+    "PT-C476-desiludir",
+    "PT-C476-desanimado",
+    "PT-C476-consolar",
+    "PT-C476-desabafar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch476.txt",
+  "json": "portuguese/narration/ch476.json",
+  "textHash": "fnv1a64:ca8113af8772da5a",
+  "jsonHash": "fnv1a64:5d60ba4b765eaebc",
+  "findings": []
+}

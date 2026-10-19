@@ -1,0 +1,11 @@
+{
+  "id": "PT-C527-documentario",
+  "pathSegment": "PT-PATH-527-FILMAR",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-527-FILMAR",
+      "order": 3
+    }
+  ]
+}

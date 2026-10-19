@@ -1,0 +1,9 @@
+{
+  "id": "PT-PATH-379-CHUMBAR",
+  "spine_node": "SPINE-EXPRESS-CONDITION",
+  "before": [],
+  "inline": [
+    "PT-EXT-379-CHUMBAR"
+  ],
+  "after": []
+}

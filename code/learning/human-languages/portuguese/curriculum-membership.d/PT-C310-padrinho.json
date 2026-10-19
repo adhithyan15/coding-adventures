@@ -1,0 +1,11 @@
+{
+  "id": "PT-C310-padrinho",
+  "pathSegment": "PT-PATH-310-BATIZADO",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PT-EXT-310-BATIZADO",
+      "order": 2
+    }
+  ]
+}

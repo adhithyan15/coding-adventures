@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 379,
+  "sourceHash": "fnv1a64:8aae5d913874f457",
+  "lessonIds": [
+    "PT-C379-chumbar",
+    "PT-C379-aprovar",
+    "PT-C379-avaliacao",
+    "PT-C379-media",
+    "PT-C379-licenciatura"
+  ],
+  "tex": "portuguese/book/chapters/ch379-passar-ou-chumbar.tex"
+}

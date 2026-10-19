@@ -1,0 +1,11 @@
+{
+  "id": "PT-C402-pedal",
+  "pathSegment": "PT-PATH-402-VOLANTE",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PT-EXT-402-VOLANTE",
+      "order": 2
+    }
+  ]
+}

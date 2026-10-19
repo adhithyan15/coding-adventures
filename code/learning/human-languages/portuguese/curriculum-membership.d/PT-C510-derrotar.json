@@ -1,0 +1,11 @@
+{
+  "id": "PT-C510-derrotar",
+  "pathSegment": "PT-PATH-510-RESULTADO",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-510-RESULTADO",
+      "order": 3
+    }
+  ]
+}
