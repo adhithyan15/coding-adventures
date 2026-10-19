@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 429,
+  "sourceHash": "fnv1a64:c9c9cd8a5e0e4503",
+  "lessonIds": [
+    "PT-C429-berco",
+    "PT-C429-fronha",
+    "PT-C429-secador",
+    "PT-C429-cabide",
+    "PT-C429-roupao"
+  ],
+  "tex": "portuguese/book/chapters/ch429-no-quarto.tex"
+}

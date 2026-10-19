@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 361,
+  "sourceHash": "fnv1a64:e8a990faa8dff69b",
+  "lessonIds": [
+    "PT-C361-stressado",
+    "PT-C361-esgotado",
+    "PT-C361-horas-extraordinarias",
+    "PT-C361-eficiente",
+    "PT-C361-produtividade"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch361.txt",
+  "json": "portuguese/narration/ch361.json",
+  "textHash": "fnv1a64:f92d13e97cf7b403",
+  "jsonHash": "fnv1a64:8cf28fb44d7aa052",
+  "findings": []
+}

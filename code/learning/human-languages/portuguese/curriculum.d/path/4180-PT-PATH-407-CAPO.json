@@ -1,0 +1,9 @@
+{
+  "id": "PT-PATH-407-CAPO",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "PT-EXT-407-CAPO"
+  ],
+  "after": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 499,
+  "sourceHash": "fnv1a64:d5964f7d5bc96f0f",
+  "lessonIds": [
+    "PT-C499-grato",
+    "PT-C499-gratidao",
+    "PT-C499-ingrato",
+    "PT-C499-fiel",
+    "PT-C499-fidelidade"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch499.txt",
+  "json": "portuguese/narration/ch499.json",
+  "textHash": "fnv1a64:7f6eb1ec542fe45b",
+  "jsonHash": "fnv1a64:3f29b656a2d4e562",
+  "findings": []
+}

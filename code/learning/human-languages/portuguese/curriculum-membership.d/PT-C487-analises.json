@@ -1,0 +1,11 @@
+{
+  "id": "PT-C487-analises",
+  "pathSegment": "PT-PATH-487-CONSULTA",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PT-EXT-487-CONSULTA",
+      "order": 1
+    }
+  ]
+}

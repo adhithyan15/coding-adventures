@@ -1,0 +1,11 @@
+{
+  "id": "PT-C337-conviccao",
+  "pathSegment": "PT-PATH-337-ARGUMENTAR",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PT-EXT-337-ARGUMENTAR",
+      "order": 4
+    }
+  ]
+}

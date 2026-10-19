@@ -1,0 +1,11 @@
+{
+  "id": "PT-C450-frutaria",
+  "pathSegment": "PT-PATH-450-MERCEARIA",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PT-EXT-450-MERCEARIA",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "PT-C531-berbequim",
+  "pathSegment": "PT-PATH-531-BRICOLAGE",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-531-BRICOLAGE",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 349,
+  "sourceHash": "fnv1a64:2c196f937f27453e",
+  "lessonIds": [
+    "PT-C349-visto-que",
+    "PT-C349-dado-que",
+    "PT-C349-uma-vez-que",
+    "PT-C349-consequentemente",
+    "PT-C349-devido-a"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch349.txt",
+  "json": "portuguese/narration/ch349.json",
+  "textHash": "fnv1a64:168c41240e42e3c2",
+  "jsonHash": "fnv1a64:409d19b8f7240df2",
+  "findings": []
+}

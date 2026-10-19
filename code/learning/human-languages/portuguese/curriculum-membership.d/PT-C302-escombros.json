@@ -1,0 +1,11 @@
+{
+  "id": "PT-C302-escombros",
+  "pathSegment": "PT-PATH-302-SISMO",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PT-EXT-302-SISMO",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "PT-R374-revisao-367-374",
+  "pathSegment": "PT-PATH-374-INTENCAO",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "PT-EXT-374-INTENCAO",
+      "order": 5
+    }
+  ]
+}

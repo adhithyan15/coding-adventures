@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 523,
+  "sourceHash": "fnv1a64:79661b09cb57bd59",
+  "lessonIds": [
+    "PT-C523-capitulo",
+    "PT-C523-romancista",
+    "PT-C523-biografia",
+    "PT-C523-reler",
+    "PT-C523-marcador"
+  ],
+  "tex": "portuguese/book/chapters/ch523-capitulo-a-capitulo.tex"
+}

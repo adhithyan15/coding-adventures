@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PT-C400-bloquear",
+    "language": "portuguese",
+    "chapter": 400,
+    "sequence": 22570,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:40174d898ae71570"
+  },
+  "findings": []
+}

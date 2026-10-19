@@ -1,0 +1,9 @@
+{
+  "id": "PT-PATH-366-SOCIEDADE",
+  "spine_node": "SPINE-GIVE-REASONS",
+  "before": [],
+  "inline": [
+    "PT-EXT-366-SOCIEDADE"
+  ],
+  "after": []
+}

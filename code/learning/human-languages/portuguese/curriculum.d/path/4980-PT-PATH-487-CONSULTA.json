@@ -1,0 +1,9 @@
+{
+  "id": "PT-PATH-487-CONSULTA",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "PT-EXT-487-CONSULTA"
+  ],
+  "after": []
+}

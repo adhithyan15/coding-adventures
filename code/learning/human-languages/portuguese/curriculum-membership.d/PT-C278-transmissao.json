@@ -1,0 +1,11 @@
+{
+  "id": "PT-C278-transmissao",
+  "pathSegment": "PT-PATH-278-NOTICIARIO",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PT-EXT-278-NOTICIARIO",
+      "order": 4
+    }
+  ]
+}

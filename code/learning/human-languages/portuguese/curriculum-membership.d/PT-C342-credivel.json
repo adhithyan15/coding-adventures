@@ -1,0 +1,11 @@
+{
+  "id": "PT-C342-credivel",
+  "pathSegment": "PT-PATH-342-AFIRMAR",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-342-AFIRMAR",
+      "order": 3
+    }
+  ]
+}

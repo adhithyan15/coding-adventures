@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PT-C313-bodas",
+    "language": "portuguese",
+    "chapter": 313,
+    "sequence": 18060,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:41dcd1be6143368b"
+  },
+  "findings": []
+}

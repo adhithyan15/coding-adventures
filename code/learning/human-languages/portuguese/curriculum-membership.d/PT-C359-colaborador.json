@@ -1,0 +1,11 @@
+{
+  "id": "PT-C359-colaborador",
+  "pathSegment": "PT-PATH-359-DEPARTAMENTO",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-359-DEPARTAMENTO",
+      "order": 3
+    }
+  ]
+}

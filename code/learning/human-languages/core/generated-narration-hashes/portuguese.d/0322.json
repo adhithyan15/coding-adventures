@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 322,
+  "sourceHash": "fnv1a64:8145cd73f16a8dc8",
+  "lessonIds": [
+    "PT-C322-fogo-de-artificio",
+    "PT-C322-foguete",
+    "PT-C322-fogueira",
+    "PT-C322-enfeitar",
+    "PT-C322-enfeite"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch322.txt",
+  "json": "portuguese/narration/ch322.json",
+  "textHash": "fnv1a64:abf58b093113f9e2",
+  "jsonHash": "fnv1a64:5765d4a9234d4748",
+  "findings": []
+}

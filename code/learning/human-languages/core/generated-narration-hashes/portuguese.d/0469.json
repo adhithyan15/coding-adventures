@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 469,
+  "sourceHash": "fnv1a64:30fd8342a3b24dfe",
+  "lessonIds": [
+    "PT-C469-teimoso",
+    "PT-C469-teimosia",
+    "PT-C469-teimar",
+    "PT-C469-avarento",
+    "PT-C469-sovina"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch469.txt",
+  "json": "portuguese/narration/ch469.json",
+  "textHash": "fnv1a64:9a0eb0807affd15d",
+  "jsonHash": "fnv1a64:63c1a52a1336f9ee",
+  "findings": []
+}

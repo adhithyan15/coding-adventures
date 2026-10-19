@@ -1,0 +1,11 @@
+{
+  "id": "PT-C388-castigo",
+  "pathSegment": "PT-PATH-388-PENA",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PT-EXT-388-PENA",
+      "order": 4
+    }
+  ]
+}

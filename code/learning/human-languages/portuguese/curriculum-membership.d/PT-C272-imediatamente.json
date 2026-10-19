@@ -1,0 +1,11 @@
+{
+  "id": "PT-C272-imediatamente",
+  "pathSegment": "PT-PATH-272-DURAR",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PT-EXT-272-DURAR",
+      "order": 4
+    }
+  ]
+}

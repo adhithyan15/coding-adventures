@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 518,
+  "sourceHash": "fnv1a64:6b38f75b604659d6",
+  "lessonIds": [
+    "PT-C518-coro",
+    "PT-C518-melodia",
+    "PT-C518-refrao",
+    "PT-C518-cantarolar",
+    "PT-C518-assobiar"
+  ],
+  "tex": "portuguese/book/chapters/ch518-cantar-em-coro.tex"
+}

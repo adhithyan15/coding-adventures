@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 337,
+  "sourceHash": "fnv1a64:53a2cfaee7d9d405",
+  "lessonIds": [
+    "PT-C337-argumentar",
+    "PT-C337-logico",
+    "PT-C337-convincente",
+    "PT-C337-persuadir",
+    "PT-C337-conviccao"
+  ],
+  "tex": "portuguese/book/chapters/ch337-dar-argumentos.tex"
+}

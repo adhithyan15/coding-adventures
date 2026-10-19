@@ -1,0 +1,19 @@
+{
+  "chapter": 492,
+  "title": "Uma família alargada",
+  "label": "ch:pt-uma-familia-alargada",
+  "canDo": "I can talk about in-laws, step-parents and relatives.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "PT-C492-parente",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 492: I can talk about in-laws, step-parents and relatives.",
+    "assesses": [
+      "PT-LEX-C492-FAMILIA-03",
+      "PT-LEX-C492-FAMILIA-04",
+      "PT-LEX-C492-FAMILIA-05"
+    ]
+  }
+}

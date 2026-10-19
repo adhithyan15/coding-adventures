@@ -1,0 +1,11 @@
+{
+  "id": "PT-C484-nausea",
+  "pathSegment": "PT-PATH-484-ENXAQUECA",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-484-ENXAQUECA",
+      "order": 3
+    }
+  ]
+}

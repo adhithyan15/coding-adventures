@@ -1,0 +1,19 @@
+{
+  "chapter": 277,
+  "title": "De vez em quando",
+  "label": "ch:pt-de-vez-em-quando",
+  "canDo": "I can say how often something happened: frequently, occasionally, usually, daily, or beforehand.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "PT-C277-previamente",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 277: I can say how often something happened: frequently, occasionally, usually, daily, or beforehand.",
+    "assesses": [
+      "PT-LEX-C277-FREQUENCIA-03",
+      "PT-LEX-C277-FREQUENCIA-04",
+      "PT-LEX-C277-FREQUENCIA-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 465,
+  "title": "Vento e tempestade",
+  "label": "ch:pt-vento-e-tempestade",
+  "canDo": "I can describe wild weather: a gust of wind, the wind blowing, a storm, a hurricane and a blizzard.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "PT-C465-nevasca",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 465: I can describe wild weather: a gust of wind, the wind blowing, a storm, a hurricane and a blizzard.",
+    "assesses": [
+      "PT-LEX-C465-TEMPORAL-03",
+      "PT-LEX-C465-TEMPORAL-04",
+      "PT-LEX-C465-TEMPORAL-05"
+    ]
+  }
+}

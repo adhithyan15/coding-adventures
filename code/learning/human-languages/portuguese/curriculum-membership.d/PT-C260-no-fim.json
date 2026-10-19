@@ -1,0 +1,11 @@
+{
+  "id": "PT-C260-no-fim",
+  "pathSegment": "PT-PATH-260-ORDEM",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "PT-EXT-260-ORDEM",
+      "order": 0
+    }
+  ]
+}

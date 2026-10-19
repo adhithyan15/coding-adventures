@@ -1,0 +1,19 @@
+{
+  "chapter": 405,
+  "title": "Um pneu furado",
+  "label": "ch:pt-um-pneu-furado",
+  "canDo": "I can deal with a flat tyre: the tyre, getting a puncture, the hole, the rim and the warning triangle.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "PT-C405-triangulo",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 405: I can deal with a flat tyre: the tyre, getting a puncture, the hole, the rim and the warning triangle.",
+    "assesses": [
+      "PT-LEX-C405-PNEU-03",
+      "PT-LEX-C405-PNEU-04",
+      "PT-LEX-C405-PNEU-05"
+    ]
+  }
+}

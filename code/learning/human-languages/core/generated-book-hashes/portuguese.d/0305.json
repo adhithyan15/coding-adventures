@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 305,
+  "sourceHash": "fnv1a64:c5cdab66593d3995",
+  "lessonIds": [
+    "PT-C305-ambulancia",
+    "PT-C305-sirene",
+    "PT-C305-socorrer",
+    "PT-C305-socorrista",
+    "PT-C305-maca"
+  ],
+  "tex": "portuguese/book/chapters/ch305-chegou-a-ambulancia.tex"
+}

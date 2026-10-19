@@ -1,0 +1,19 @@
+{
+  "chapter": 352,
+  "title": "Como reagir",
+  "label": "ch:pt-como-reagir",
+  "canDo": "I can describe how people react, give an excuse or a pretext, and justify a decision.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "PT-C352-justificar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 352: I can describe how people react, give an excuse or a pretext, and justify a decision.",
+    "assesses": [
+      "PT-LEX-C352-REACAO-03",
+      "PT-LEX-C352-REACAO-04",
+      "PT-LEX-C352-REACAO-05"
+    ]
+  }
+}

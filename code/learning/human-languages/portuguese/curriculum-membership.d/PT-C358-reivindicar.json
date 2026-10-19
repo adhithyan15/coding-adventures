@@ -1,0 +1,11 @@
+{
+  "id": "PT-C358-reivindicar",
+  "pathSegment": "PT-PATH-358-GREVE",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PT-EXT-358-GREVE",
+      "order": 4
+    }
+  ]
+}

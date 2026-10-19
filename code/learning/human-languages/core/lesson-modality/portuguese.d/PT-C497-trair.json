@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PT-C497-trair",
+    "language": "portuguese",
+    "chapter": 497,
+    "sequence": 27550,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b3a9cb60aa48e30e"
+  },
+  "findings": []
+}

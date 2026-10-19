@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 385,
+  "sourceHash": "fnv1a64:66a8f9e3a3b1c7b8",
+  "lessonIds": [
+    "PT-C385-burocracia",
+    "PT-C385-processo",
+    "PT-C385-pedido",
+    "PT-C385-legal",
+    "PT-C385-ilegal"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch385.txt",
+  "json": "portuguese/narration/ch385.json",
+  "textHash": "fnv1a64:3727ef94c3e62419",
+  "jsonHash": "fnv1a64:b66c7663fa476060",
+  "findings": []
+}

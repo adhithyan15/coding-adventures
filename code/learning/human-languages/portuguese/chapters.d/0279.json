@@ -1,0 +1,19 @@
+{
+  "chapter": 279,
+  "title": "A imprensa",
+  "label": "ch:pt-a-imprensa",
+  "canDo": "I can talk about the press: reports, reporters, correspondents and headlines.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "PT-C279-manchete",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 279: I can talk about the press: reports, reporters, correspondents and headlines.",
+    "assesses": [
+      "PT-LEX-C279-IMPRENSA-03",
+      "PT-LEX-C279-IMPRENSA-04",
+      "PT-LEX-C279-IMPRENSA-05"
+    ]
+  }
+}

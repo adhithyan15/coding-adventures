@@ -1,0 +1,19 @@
+{
+  "chapter": 443,
+  "title": "Serviços públicos",
+  "label": "ch:pt-servicos-publicos",
+  "canDo": "I can deal with public offices: the police station, the barracks, the registry office, reporting a crime and applying for something.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "PT-C443-requerer",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 443: I can deal with public offices: the police station, the barracks, the registry office, reporting a crime and applying for something.",
+    "assesses": [
+      "PT-LEX-C443-SERVICOS-03",
+      "PT-LEX-C443-SERVICOS-04",
+      "PT-LEX-C443-SERVICOS-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "PT-C283-porta-voz",
+  "pathSegment": "PT-PATH-283-BOATO",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PT-EXT-283-BOATO",
+      "order": 4
+    }
+  ]
+}

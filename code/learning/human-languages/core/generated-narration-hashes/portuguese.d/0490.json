@@ -1,0 +1,20 @@
+{
+  "language": "portuguese",
+  "chapter": 490,
+  "sourceHash": "fnv1a64:a8c8f340385332db",
+  "lessonIds": [
+    "PT-C490-saudavel",
+    "PT-C490-sedentario",
+    "PT-C490-alongar",
+    "PT-C490-suar",
+    "PT-C490-massagem",
+    "PT-R490-revisao-483-490"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "portuguese/narration/ch490.txt",
+  "json": "portuguese/narration/ch490.json",
+  "textHash": "fnv1a64:0e6ba1884fbf5fde",
+  "jsonHash": "fnv1a64:f51c61c08eb69eff",
+  "findings": []
+}

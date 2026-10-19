@@ -1,0 +1,11 @@
+{
+  "id": "PT-C277-ocasionalmente",
+  "pathSegment": "PT-PATH-277-FREQUENCIA",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PT-EXT-277-FREQUENCIA",
+      "order": 1
+    }
+  ]
+}

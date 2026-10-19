@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 395,
+  "sourceHash": "fnv1a64:678499fc159e9621",
+  "lessonIds": [
+    "PT-C395-ganhar",
+    "PT-C395-lucro",
+    "PT-C395-perda",
+    "PT-C395-falir",
+    "PT-C395-endividado"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch395.txt",
+  "json": "portuguese/narration/ch395.json",
+  "textHash": "fnv1a64:ed304bc3edda27b4",
+  "jsonHash": "fnv1a64:9226fdea3fdc08ea",
+  "findings": []
+}

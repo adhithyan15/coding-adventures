@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PT-C532-estante",
+    "language": "portuguese",
+    "chapter": 532,
+    "sequence": 29350,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f56312218178e18d"
+  },
+  "findings": []
+}

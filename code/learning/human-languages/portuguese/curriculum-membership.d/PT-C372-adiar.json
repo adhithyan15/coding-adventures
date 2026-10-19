@@ -1,0 +1,11 @@
+{
+  "id": "PT-C372-adiar",
+  "pathSegment": "PT-PATH-372-PLANOS",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PT-EXT-372-PLANOS",
+      "order": 1
+    }
+  ]
+}

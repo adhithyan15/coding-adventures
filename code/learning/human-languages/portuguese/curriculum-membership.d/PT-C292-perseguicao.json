@@ -1,0 +1,11 @@
+{
+  "id": "PT-C292-perseguicao",
+  "pathSegment": "PT-PATH-292-FUGA",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PT-EXT-292-FUGA",
+      "order": 4
+    }
+  ]
+}

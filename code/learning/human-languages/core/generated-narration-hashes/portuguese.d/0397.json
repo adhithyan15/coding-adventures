@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 397,
+  "sourceHash": "fnv1a64:04f45b31cc44dadd",
+  "lessonIds": [
+    "PT-C397-dispositivo",
+    "PT-C397-portatil",
+    "PT-C397-instalar",
+    "PT-C397-desinstalar",
+    "PT-C397-atualizar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch397.txt",
+  "json": "portuguese/narration/ch397.json",
+  "textHash": "fnv1a64:82e5452ff3047d58",
+  "jsonHash": "fnv1a64:c123fff880e3f616",
+  "findings": []
+}

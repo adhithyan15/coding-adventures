@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 524,
+  "sourceHash": "fnv1a64:5b7fcfceb3b8ab49",
+  "lessonIds": [
+    "PT-C524-poesia",
+    "PT-C524-poeta",
+    "PT-C524-verso",
+    "PT-C524-rima",
+    "PT-C524-declamar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch524.txt",
+  "json": "portuguese/narration/ch524.json",
+  "textHash": "fnv1a64:d04861c5d428b9bc",
+  "jsonHash": "fnv1a64:b3dcbfc7e0a4c080",
+  "findings": []
+}

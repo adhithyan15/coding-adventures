@@ -1,0 +1,11 @@
+{
+  "id": "PT-C518-cantarolar",
+  "pathSegment": "PT-PATH-518-CORO",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-518-CORO",
+      "order": 3
+    }
+  ]
+}

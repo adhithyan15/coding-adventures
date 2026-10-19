@@ -1,0 +1,9 @@
+{
+  "id": "PT-PATH-428-PERNOITAR",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "PT-EXT-428-PERNOITAR"
+  ],
+  "after": []
+}

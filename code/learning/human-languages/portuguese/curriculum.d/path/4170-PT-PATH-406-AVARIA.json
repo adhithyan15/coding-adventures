@@ -1,0 +1,9 @@
+{
+  "id": "PT-PATH-406-AVARIA",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "PT-EXT-406-AVARIA"
+  ],
+  "after": []
+}

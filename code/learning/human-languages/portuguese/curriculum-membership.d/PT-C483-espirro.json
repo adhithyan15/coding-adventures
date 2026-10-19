@@ -1,0 +1,11 @@
+{
+  "id": "PT-C483-espirro",
+  "pathSegment": "PT-PATH-483-ALERGIA",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PT-EXT-483-ALERGIA",
+      "order": 1
+    }
+  ]
+}

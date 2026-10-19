@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 459,
+  "sourceHash": "fnv1a64:daa819ab925fce63",
+  "lessonIds": [
+    "PT-C459-rochedo",
+    "PT-C459-mare",
+    "PT-C459-concha",
+    "PT-C459-bronzear",
+    "PT-C459-mergulhar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch459.txt",
+  "json": "portuguese/narration/ch459.json",
+  "textHash": "fnv1a64:29a36e3a6b3c77a3",
+  "jsonHash": "fnv1a64:6c769ab6d970131b",
+  "findings": []
+}

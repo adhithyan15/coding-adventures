@@ -1,0 +1,858 @@
+{
+  "version": 1,
+  "language": "portuguese",
+  "chapter": 482,
+  "title": "Da nuca ao calcanhar",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:ca92e55e72c1d193",
+  "lessons": [
+    {
+      "id": "PT-C482-nuca",
+      "sequence": 26760,
+      "title": "a nuca — nape (of the neck)",
+      "headword": "a nuca",
+      "romanization": "a nuca",
+      "gloss": "nape (of the neck)",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6a525f1f7f379ada",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Portuguese for nostril, then the Portuguese for gum."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: a nuca",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "a nuca — \"nape (of the neck)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "O sol queimou-me a nuca. The sun burned the back of my neck."
+            },
+            {
+              "kind": "speech",
+              "text": "The back of the neck; the front is a garganta."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "nuca comes from Medieval Latin nucha, which is usually traced to an Arabic word for the spinal marrow."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a nuca",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *a nuca*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a nuca, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *a nuca*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with a nuca",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *a nuca*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Portuguese for nostril, then the Portuguese for gum, then say a nuca again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Portuguese for nostril, then the Portuguese for gum, then say *a nuca* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does a nuca mean? (\"Nape (of the neck)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PT-C482-coxa",
+      "sequence": 26770,
+      "title": "a coxa — thigh",
+      "headword": "a coxa",
+      "romanization": "a coxa",
+      "gloss": "thigh",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a3f339b25efcb5ea",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Portuguese for gum, then the Portuguese for nape."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: a coxa",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "a coxa — \"thigh\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Depois da corrida, doem-me as coxas. After the run, my thighs ache."
+            },
+            {
+              "kind": "speech",
+              "text": "Of a chicken: a coxa de frango — a chicken leg."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "coxa is inherited, through Old Portuguese coixa (EtymDB), from Latin coxa \"hip\" (Lewis & Short); the meaning moved down to the thigh."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a coxa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *a coxa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a coxa, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *a coxa*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with a coxa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *a coxa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Portuguese for gum, then the Portuguese for nape, then say a coxa again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Portuguese for gum, then the Portuguese for nape, then say *a coxa* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does a coxa mean? (\"Thigh\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PT-C482-anca",
+      "sequence": 26780,
+      "title": "a anca — hip",
+      "headword": "a anca",
+      "romanization": "a anca",
+      "gloss": "hip",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:30daf38bc34727dc",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Portuguese for nape, then the Portuguese for thigh."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: a anca",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "a anca — \"hip\"."
+            },
+            {
+              "kind": "speech",
+              "text": "A avó partiu a anca numa queda. Grandma broke her hip in a fall."
+            },
+            {
+              "kind": "speech",
+              "text": "In Brazil the usual word is o quadril."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "anca comes from Vulgar Latin hanca (EtymDB), which was taken from a Germanic word for the hip."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a anca",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *a anca*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a anca, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *a anca*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with a anca",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *a anca*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Portuguese for nape, then the Portuguese for thigh, then say a anca again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Portuguese for nape, then the Portuguese for thigh, then say *a anca* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does a anca mean? (\"Hip\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PT-C482-calcanhar",
+      "sequence": 26790,
+      "title": "o calcanhar — heel",
+      "headword": "o calcanhar",
+      "romanization": "o calcanhar",
+      "gloss": "heel",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:42abcd6d8c2b9346",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Portuguese for thigh, then the Portuguese for hip."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: o calcanhar",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "o calcanhar — \"heel\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Os sapatos novos fizeram-me uma ferida no calcanhar. The new shoes gave me a sore on my heel."
+            },
+            {
+              "kind": "speech",
+              "text": "The heel of a shoe is o salto."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "calcanhar is usually traced to Vulgar Latin forms built on Latin calcāneum \"heel\" (Lewis & Short), from calx \"heel\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "o calcanhar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *o calcanhar*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "o calcanhar, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *o calcanhar*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with o calcanhar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *o calcanhar*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Portuguese for thigh, then the Portuguese for hip, then say o calcanhar again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Portuguese for thigh, then the Portuguese for hip, then say *o calcanhar* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does o calcanhar mean? (\"Heel\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PT-C482-umbigo",
+      "sequence": 26800,
+      "title": "o umbigo — navel, belly button",
+      "headword": "o umbigo",
+      "romanization": "o umbigo",
+      "gloss": "navel, belly button",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:908def5c969e6e90",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Portuguese for hip, then the Portuguese for heel."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: o umbigo",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "o umbigo — \"navel, belly button\"."
+            },
+            {
+              "kind": "speech",
+              "text": "O bebé ri quando lhe tocam no umbigo. The baby laughs when someone touches his belly button."
+            },
+            {
+              "kind": "speech",
+              "text": "Olhar para o próprio umbigo — to think only of yourself."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "umbigo is inherited, through Old Portuguese umbiigo, from Latin umbilīcus \"navel\" (EtymDB)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "o umbigo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *o umbigo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "o umbigo, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *o umbigo*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with o umbigo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *o umbigo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Portuguese for hip, then the Portuguese for heel, then say o umbigo again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Portuguese for hip, then the Portuguese for heel, then say *o umbigo* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does o umbigo mean? (\"Navel, belly button\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PT-R482-revisao-475-482",
+      "sequence": 26810,
+      "title": "Revisão dos capítulos 475–482",
+      "headword": "(dialogue)",
+      "romanization": "(dialogue)",
+      "gloss": "a review of chapters 475-482",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4728a9c05ea5d735",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Portuguese for nervousness and to irritate."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nervousness, to irritate, impatient, to calm, relief",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: nervousness, to irritate, impatient, to calm, relief]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "disappointment, to disappoint, discouraged, to console, to get something off your chest",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: disappointment, to disappoint, discouraged, to console, to get something off your chest]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "crying, to sob, to sigh, sigh, burst of laughter",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: crying, to sob, to sigh, sigh, burst of laughter]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nostalgia, melancholy, loneliness, lonely, grief",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: nostalgia, melancholy, loneliness, lonely, grief]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to hurt, hurt, grudge, to forgive, forgiveness",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to hurt, hurt, grudge, to forgive, forgiveness]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to regret, regret, remorse, to embarrass, ashamed",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to regret, regret, remorse, to embarrass, ashamed]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "eyebrow, eyelash, eyelid, nostril, gum",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: eyebrow, eyelash, eyelid, nostril, gum]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nape, thigh, hip, heel, navel",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: nape, thigh, hip, heel, navel]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Nervousness? (o nervosismo.) To irritate? (irritar.) Impatient? (impaciente.) To calm? (acalmar.) Relief? (o alívio.) Disappointment? (a desilusão.) To disappoint? (desiludir.) Discouraged? (desanimado.) To console? (consolar.) To get something off your chest? (desabafar.) Crying? (o choro.) To sob? (soluçar.) To sigh? (suspirar.) Sigh? (o suspiro.) Burst of laughter? (a gargalhada.) Nostalgia? (a nostalgia.) Melancholy? (a melancolia.) Loneliness? (a solidão.) Lonely? (solitário.) Grief? (o desgosto.) To hurt? (magoar.) Hurt? (a mágoa.) Grudge? (o rancor.) To forgive? (perdoar.) Forgiveness? (o perdão.) To regret? (arrepender.) Regret? (o arrependimento.) Remorse? (o remorso.) To embarrass? (envergonhar.) Ashamed? (envergonhado.) Eyebrow? (a sobrancelha.) Eyelash? (a pestana.) Eyelid? (a pálpebra.) Nostril? (a narina.) Gum? (a gengiva.) Nape? (a nuca.) Thigh? (a coxa.) Hip? (a anca.) Heel? (o calcanhar.) Navel? (o umbigo.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

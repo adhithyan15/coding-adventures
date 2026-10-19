@@ -1,0 +1,11 @@
+{
+  "id": "PT-C380-eleger",
+  "pathSegment": "PT-PATH-380-POLITICA",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-380-POLITICA",
+      "order": 3
+    }
+  ]
+}

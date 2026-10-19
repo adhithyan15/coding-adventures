@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 516,
+  "sourceHash": "fnv1a64:bfba9ba25d638c4c",
+  "lessonIds": [
+    "PT-C516-orquestra",
+    "PT-C516-maestro",
+    "PT-C516-sinfonia",
+    "PT-C516-violoncelo",
+    "PT-C516-harpa"
+  ],
+  "tex": "portuguese/book/chapters/ch516-a-orquestra.tex"
+}

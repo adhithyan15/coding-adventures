@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 323,
+  "sourceHash": "fnv1a64:a0e1952594d214aa",
+  "lessonIds": [
+    "PT-C323-consoada",
+    "PT-C323-presepio",
+    "PT-C323-passagem-de-ano",
+    "PT-C323-folar",
+    "PT-C323-amendoas"
+  ],
+  "tex": "portuguese/book/chapters/ch323-a-consoada.tex"
+}

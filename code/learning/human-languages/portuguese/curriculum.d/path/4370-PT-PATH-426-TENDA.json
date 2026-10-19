@@ -1,0 +1,9 @@
+{
+  "id": "PT-PATH-426-TENDA",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "PT-EXT-426-TENDA"
+  ],
+  "after": []
+}

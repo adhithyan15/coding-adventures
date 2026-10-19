@@ -1,0 +1,20 @@
+{
+  "language": "portuguese",
+  "chapter": 408,
+  "sourceHash": "fnv1a64:13a59b5048191d9f",
+  "lessonIds": [
+    "PT-C408-peao",
+    "PT-C408-passadeira",
+    "PT-C408-atropelar",
+    "PT-C408-radar",
+    "PT-C408-fiscalizar",
+    "PT-R408-revisao-401-408"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "portuguese/narration/ch408.txt",
+  "json": "portuguese/narration/ch408.json",
+  "textHash": "fnv1a64:9bdfdd82dd565e6f",
+  "jsonHash": "fnv1a64:da6299dbb74616fc",
+  "findings": []
+}

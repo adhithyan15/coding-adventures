@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PT-R416-revisao-409-416",
+    "language": "portuguese",
+    "chapter": 416,
+    "sequence": 23410,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:15c89f9b9ee14f33"
+  },
+  "findings": []
+}

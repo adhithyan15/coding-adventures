@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PT-C454-remetente",
+    "language": "portuguese",
+    "chapter": 454,
+    "sequence": 25310,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c36505bb46c15640"
+  },
+  "findings": []
+}

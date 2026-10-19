@@ -1,0 +1,11 @@
+{
+  "id": "PT-C329-conquistar",
+  "pathSegment": "PT-PATH-329-BATALHA",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-329-BATALHA",
+      "order": 3
+    }
+  ]
+}

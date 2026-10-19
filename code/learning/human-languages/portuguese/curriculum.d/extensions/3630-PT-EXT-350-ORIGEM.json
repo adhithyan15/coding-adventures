@@ -1,0 +1,8 @@
+{
+  "id": "PT-EXT-350-ORIGEM",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say where something comes from, what it results from and what it gives rise to.",
+  "prerequisites": []
+}

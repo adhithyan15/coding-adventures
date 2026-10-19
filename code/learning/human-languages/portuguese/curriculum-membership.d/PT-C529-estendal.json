@@ -1,0 +1,11 @@
+{
+  "id": "PT-C529-estendal",
+  "pathSegment": "PT-PATH-529-ROUPA",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PT-EXT-529-ROUPA",
+      "order": 2
+    }
+  ]
+}

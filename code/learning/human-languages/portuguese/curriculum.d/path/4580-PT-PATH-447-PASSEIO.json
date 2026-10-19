@@ -1,0 +1,9 @@
+{
+  "id": "PT-PATH-447-PASSEIO",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "PT-EXT-447-PASSEIO"
+  ],
+  "after": []
+}

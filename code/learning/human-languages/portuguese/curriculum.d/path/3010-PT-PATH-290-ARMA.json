@@ -1,0 +1,9 @@
+{
+  "id": "PT-PATH-290-ARMA",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "PT-EXT-290-ARMA"
+  ],
+  "after": []
+}

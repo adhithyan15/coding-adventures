@@ -1,0 +1,11 @@
+{
+  "id": "PT-C351-acarretar",
+  "pathSegment": "PT-PATH-351-IMPACTO",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-351-IMPACTO",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,858 @@
+{
+  "version": 1,
+  "language": "portuguese",
+  "chapter": 424,
+  "title": "Em voo",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:0251ebc41717a973",
+  "lessons": [
+    {
+      "id": "PT-C424-descolar",
+      "sequence": 23770,
+      "title": "descolar — to take off (of a plane); to come unstuck",
+      "headword": "descolar",
+      "romanization": "descolar",
+      "gloss": "to take off (of a plane); to come unstuck",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:260fda367596a41c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Portuguese for the detector, then the Portuguese for to stamp."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: descolar",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "descolar — \"to take off (of a plane); to come unstuck\"."
+            },
+            {
+              "kind": "speech",
+              "text": "O avião descolou com meia hora de atraso. The plane took off half an hour late."
+            },
+            {
+              "kind": "speech",
+              "text": "In Brazil: decolar. A sticker that comes off also descola."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "descolar is built from des- 'un-' and colar 'to stick', on cola 'glue' (EtymDB): the plane comes unstuck from the ground."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "descolar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *descolar*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "descolar, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *descolar*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with descolar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *descolar*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Portuguese for the detector, then the Portuguese for to stamp, then say descolar again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Portuguese for the detector, then the Portuguese for to stamp, then say *descolar* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does descolar mean? (\"To take off (of a plane); to come unstuck\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PT-C424-aterrar",
+      "sequence": 23780,
+      "title": "aterrar — to land (of a plane)",
+      "headword": "aterrar",
+      "romanization": "aterrar",
+      "gloss": "to land (of a plane)",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6fd6690e31642d36",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Portuguese for to stamp, then the Portuguese for to take off."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: aterrar",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "aterrar — \"to land (of a plane)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Aterrámos às onze da noite. We landed at eleven at night."
+            },
+            {
+              "kind": "speech",
+              "text": "In Brazil: aterrissar. The noun is a aterragem."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "aterrar 'to land' is built from a-, terra 'ground' and -ar; terra is inherited from Latin terra 'earth' (Lewis & Short)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "aterrar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *aterrar*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "aterrar, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *aterrar*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with aterrar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *aterrar*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Portuguese for to stamp, then the Portuguese for to take off, then say aterrar again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Portuguese for to stamp, then the Portuguese for to take off, then say *aterrar* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does aterrar mean? (\"To land (of a plane)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PT-C424-turbulencia",
+      "sequence": 23790,
+      "title": "a turbulência — turbulence",
+      "headword": "a turbulência",
+      "romanization": "a turbulência",
+      "gloss": "turbulence",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:27650342e09612c2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Portuguese for to take off, then the Portuguese for to land."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: a turbulência",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "a turbulência — \"turbulence\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Durante a turbulência, as pessoas ficaram nervosas. During the turbulence, people got nervous."
+            },
+            {
+              "kind": "speech",
+              "text": "The adjective is turbulento."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "turbulência is a learned borrowing from Latin turbulentia (EtymDB), from turbulentus 'stormy', built on turba 'uproar, crowd'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a turbulência",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *a turbulência*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a turbulência, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *a turbulência*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with a turbulência",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *a turbulência*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Portuguese for to take off, then the Portuguese for to land, then say a turbulência again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Portuguese for to take off, then the Portuguese for to land, then say *a turbulência* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does a turbulência mean? (\"Turbulence\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PT-C424-hospedeira",
+      "sequence": 23800,
+      "title": "a hospedeira — the flight attendant",
+      "headword": "a hospedeira",
+      "romanization": "a hospedeira",
+      "gloss": "the flight attendant",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a296ebf96e52719d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Portuguese for to land, then the Portuguese for turbulence."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: a hospedeira",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "a hospedeira — \"the flight attendant\"."
+            },
+            {
+              "kind": "speech",
+              "text": "A hospedeira trouxe água e bolachas. The flight attendant brought water and biscuits."
+            },
+            {
+              "kind": "speech",
+              "text": "Hospedeira de bordo in full; airlines now say assistente de bordo. In Brazil: a aeromoça."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "hospedeira is built on hóspede 'guest', which goes back to Latin hospes 'host, guest' (Lewis & Short): the woman who looks after the guests."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a hospedeira",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *a hospedeira*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a hospedeira, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *a hospedeira*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with a hospedeira",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *a hospedeira*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Portuguese for to land, then the Portuguese for turbulence, then say a hospedeira again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Portuguese for to land, then the Portuguese for turbulence, then say *a hospedeira* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does a hospedeira mean? (\"The flight attendant\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PT-C424-tripulacao",
+      "sequence": 23810,
+      "title": "a tripulação — the crew",
+      "headword": "a tripulação",
+      "romanization": "a tripulação",
+      "gloss": "the crew",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b14f66866e3bd519",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Portuguese for turbulence, then the Portuguese for the flight attendant."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: a tripulação",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "a tripulação — \"the crew\"."
+            },
+            {
+              "kind": "speech",
+              "text": "A tripulação deseja-nos uma boa viagem. The crew wishes us a good trip."
+            },
+            {
+              "kind": "speech",
+              "text": "The verb tripular means to crew a ship or plane."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "tripulação is built on tripular 'to crew'. The origin of tripular is not settled; one view links it with Latin interpolāre 'to refurbish', and EtymDB has no entry for it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a tripulação",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *a tripulação*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a tripulação, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *a tripulação*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with a tripulação",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *a tripulação*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Portuguese for turbulence, then the Portuguese for the flight attendant, then say a tripulação again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Portuguese for turbulence, then the Portuguese for the flight attendant, then say *a tripulação* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does a tripulação mean? (\"The crew\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PT-R424-revisao-417-424",
+      "sequence": 23820,
+      "title": "Revisão dos capítulos 417–424",
+      "headword": "(dialogue)",
+      "romanization": "(dialogue)",
+      "gloss": "a review of chapters 417-424",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:de5eb7a44b0e2384",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Portuguese for the breakwater and the pontoon."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the breakwater, the pontoon, to board, to go ashore, to set sail",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the breakwater, the pontoon, to board, to go ashore, to set sail]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the dinghy, the oar, to row, the canoe, the boatman",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the dinghy, the oar, to row, the canoe, the boatman]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the cruise, the cabin, the sailor, the bow, the stern",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the cruise, the cabin, the sailor, the bow, the stern]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the buoy, the anchor, to moor, seasickness, to feel sick",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the buoy, the anchor, to moor, seasickness, to feel sick]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the stopover, the boarding, the shuttle, the runway, the time zone",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the stopover, the boarding, the shuttle, the runway, the time zone]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the hold, the scales, to pack up, the padlock, to lose",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the hold, the scales, to pack up, the padlock, to lose]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to search, to declare, to confiscate, the detector, to stamp",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to search, to declare, to confiscate, the detector, to stamp]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to take off, to land, turbulence, the flight attendant, the crew",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to take off, to land, turbulence, the flight attendant, the crew]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The breakwater? (o molhe.) The pontoon? (o pontão.) To board? (embarcar.) To go ashore? (desembarcar.) To set sail? (zarpar.) The dinghy? (o bote.) The oar? (o remo.) To row? (remar.) The canoe? (a canoa.) The boatman? (o barqueiro.) The cruise? (o cruzeiro.) The cabin? (o camarote.) The sailor? (o marinheiro.) The bow? (a proa.) The stern? (a popa.) The buoy? (a boia.) The anchor? (a âncora.) To moor? (atracar.) Seasickness? (o enjoo.) To feel sick? (enjoar.) The stopover? (a escala.) The boarding? (o embarque.) The shuttle? (o vaivém.) The runway? (a pista.) The time zone? (o fuso.) The hold? (o porão.) The scales? (a balança.) To pack up? (empacotar.) The padlock? (o cadeado.) To lose? (extraviar.) To search? (revistar.) To declare? (declarar.) To confiscate? (apreender.) The detector? (o detetor.) To stamp? (carimbar.) To take off? (descolar.) To land? (aterrar.) Turbulence? (a turbulência.) The flight attendant? (a hospedeira.) The crew? (a tripulação.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

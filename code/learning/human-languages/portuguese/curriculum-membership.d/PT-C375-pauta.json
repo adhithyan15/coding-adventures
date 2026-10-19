@@ -1,0 +1,11 @@
+{
+  "id": "PT-C375-pauta",
+  "pathSegment": "PT-PATH-375-ESCOLA",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-375-ESCOLA",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 330,
+  "sourceHash": "fnv1a64:596b7cff87091689",
+  "lessonIds": [
+    "PT-C330-descascar",
+    "PT-C330-picar",
+    "PT-C330-ralar",
+    "PT-C330-desfiar",
+    "PT-C330-tigela"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch330.txt",
+  "json": "portuguese/narration/ch330.json",
+  "textHash": "fnv1a64:26bf2d26eaa9c228",
+  "jsonHash": "fnv1a64:da2710f7da8ab1a8",
+  "findings": []
+}

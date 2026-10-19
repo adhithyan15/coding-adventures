@@ -1,0 +1,19 @@
+{
+  "chapter": 342,
+  "title": "Dizer o que se pensa",
+  "label": "ch:pt-dizer-o-que-se-pensa",
+  "canDo": "I can state and claim things, and say whether a person or a source is reliable and credible.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "PT-R342-revisao-335-342",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 342: I can state and claim things, and say whether a person or a source is reliable and credible.",
+    "assesses": [
+      "PT-LEX-C342-AFIRMAR-03",
+      "PT-LEX-C342-AFIRMAR-04",
+      "PT-LEX-C342-AFIRMAR-05"
+    ]
+  }
+}

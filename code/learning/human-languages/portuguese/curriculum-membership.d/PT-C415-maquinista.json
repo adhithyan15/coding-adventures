@@ -1,0 +1,11 @@
+{
+  "id": "PT-C415-maquinista",
+  "pathSegment": "PT-PATH-415-CARRUAGEM",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-415-CARRUAGEM",
+      "order": 3
+    }
+  ]
+}

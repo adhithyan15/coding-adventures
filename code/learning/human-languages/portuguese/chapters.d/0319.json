@@ -1,0 +1,19 @@
+{
+  "chapter": 319,
+  "title": "Os santos populares",
+  "label": "ch:pt-os-santos-populares",
+  "canDo": "I can describe a June street festival: the saints, the parades, basil pots, sardines and dancing.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "PT-C319-bailarico",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 319: I can describe a June street festival: the saints, the parades, basil pots, sardines and dancing.",
+    "assesses": [
+      "PT-LEX-C319-SANTOS-03",
+      "PT-LEX-C319-SANTOS-04",
+      "PT-LEX-C319-SANTOS-05"
+    ]
+  }
+}

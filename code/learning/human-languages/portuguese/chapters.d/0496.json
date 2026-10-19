@@ -1,0 +1,19 @@
+{
+  "chapter": 496,
+  "title": "Ternura e carinho",
+  "label": "ch:pt-ternura-e-carinho",
+  "canDo": "I can talk about tenderness and affection.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "PT-C496-mimar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 496: I can talk about tenderness and affection.",
+    "assesses": [
+      "PT-LEX-C496-CARINHO-03",
+      "PT-LEX-C496-CARINHO-04",
+      "PT-LEX-C496-CARINHO-05"
+    ]
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 299,
+  "sourceHash": "fnv1a64:71431b0396700da4",
+  "lessonIds": [
+    "PT-C299-acidente",
+    "PT-C299-choque",
+    "PT-C299-chocar",
+    "PT-C299-colidir",
+    "PT-C299-sinistro"
+  ],
+  "tex": "portuguese/book/chapters/ch299-um-acidente-na-estrada.tex"
+}

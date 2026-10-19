@@ -1,0 +1,8 @@
+{
+  "id": "PT-EXT-429-QUARTO",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can ask for things in my room: a cot, a pillowcase, a hair dryer, a hanger and a bathrobe.",
+  "prerequisites": []
+}

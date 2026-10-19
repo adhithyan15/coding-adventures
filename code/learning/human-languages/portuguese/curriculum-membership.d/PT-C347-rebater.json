@@ -1,0 +1,11 @@
+{
+  "id": "PT-C347-rebater",
+  "pathSegment": "PT-PATH-347-POLEMICA",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-347-POLEMICA",
+      "order": 3
+    }
+  ]
+}

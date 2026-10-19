@@ -1,0 +1,9 @@
+{
+  "id": "PT-PATH-449-LOJAS",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "PT-EXT-449-LOJAS"
+  ],
+  "after": []
+}

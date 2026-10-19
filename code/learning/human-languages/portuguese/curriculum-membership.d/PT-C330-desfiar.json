@@ -1,0 +1,11 @@
+{
+  "id": "PT-C330-desfiar",
+  "pathSegment": "PT-PATH-330-DESCASCAR",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-330-DESCASCAR",
+      "order": 3
+    }
+  ]
+}

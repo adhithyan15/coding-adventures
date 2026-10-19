@@ -1,0 +1,19 @@
+{
+  "chapter": 435,
+  "title": "Orientar-se",
+  "label": "ch:pt-orientar-se",
+  "canDo": "I can find my bearings: getting my bearings, the compass, feeling lost, the travel plan and locating a place.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "PT-C435-localizar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 435: I can find my bearings: getting my bearings, the compass, feeling lost, the travel plan and locating a place.",
+    "assesses": [
+      "PT-LEX-C435-ORIENTAR-03",
+      "PT-LEX-C435-ORIENTAR-04",
+      "PT-LEX-C435-ORIENTAR-05"
+    ]
+  }
+}

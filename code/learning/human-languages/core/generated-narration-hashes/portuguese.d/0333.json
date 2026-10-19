@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 333,
+  "sourceHash": "fnv1a64:3003fd7a454ebfac",
+  "lessonIds": [
+    "PT-C333-batedeira",
+    "PT-C333-peneirar",
+    "PT-C333-amassar",
+    "PT-C333-untar",
+    "PT-C333-polvilhar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch333.txt",
+  "json": "portuguese/narration/ch333.json",
+  "textHash": "fnv1a64:67d4c349a0208a5f",
+  "jsonHash": "fnv1a64:078ad35c1dc0265a",
+  "findings": []
+}

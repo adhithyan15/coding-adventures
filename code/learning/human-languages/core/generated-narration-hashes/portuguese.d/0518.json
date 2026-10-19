@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 518,
+  "sourceHash": "fnv1a64:8981d4b6fd96275a",
+  "lessonIds": [
+    "PT-C518-coro",
+    "PT-C518-melodia",
+    "PT-C518-refrao",
+    "PT-C518-cantarolar",
+    "PT-C518-assobiar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch518.txt",
+  "json": "portuguese/narration/ch518.json",
+  "textHash": "fnv1a64:abe79b8516d72954",
+  "jsonHash": "fnv1a64:7d15f47f40153da6",
+  "findings": []
+}

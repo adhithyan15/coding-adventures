@@ -1,0 +1,19 @@
+{
+  "chapter": 360,
+  "title": "Subir na empresa",
+  "label": "ch:pt-subir-na-empresa",
+  "canDo": "I can talk about getting on at work: a promotion, a post, a pay rise and qualifications.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "PT-C360-qualificacao",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 360: I can talk about getting on at work: a promotion, a post, a pay rise and qualifications.",
+    "assesses": [
+      "PT-LEX-C360-PROMOCAO-03",
+      "PT-LEX-C360-PROMOCAO-04",
+      "PT-LEX-C360-PROMOCAO-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 525,
+  "sourceHash": "fnv1a64:9ca059f894873f58",
+  "lessonIds": [
+    "PT-C525-bibliotecario",
+    "PT-C525-requisitar",
+    "PT-C525-editora",
+    "PT-C525-traducao",
+    "PT-C525-tradutor"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch525.txt",
+  "json": "portuguese/narration/ch525.json",
+  "textHash": "fnv1a64:a730c0f6ccb2c0d2",
+  "jsonHash": "fnv1a64:96857fd66fee2efa",
+  "findings": []
+}

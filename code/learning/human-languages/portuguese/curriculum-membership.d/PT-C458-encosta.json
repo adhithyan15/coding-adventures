@@ -1,0 +1,11 @@
+{
+  "id": "PT-C458-encosta",
+  "pathSegment": "PT-PATH-458-SERRA",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PT-EXT-458-SERRA",
+      "order": 1
+    }
+  ]
+}

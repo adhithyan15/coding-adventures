@@ -1,0 +1,17 @@
+{
+  "language": "portuguese",
+  "chapter": 264,
+  "sourceHash": "fnv1a64:39bba38b18f50046",
+  "lessonIds": [
+    "PT-C264-ida-e-volta",
+    "PT-C264-perdi-o-comboio",
+    "PT-C264-revisao-estacao"
+  ],
+  "voiceLessons": 3,
+  "drivablePrefix": 3,
+  "text": "portuguese/narration/ch264.txt",
+  "json": "portuguese/narration/ch264.json",
+  "textHash": "fnv1a64:b388f672af23d399",
+  "jsonHash": "fnv1a64:159173562b4cfd64",
+  "findings": []
+}

@@ -1,0 +1,9 @@
+{
+  "id": "PT-PATH-493-GERACOES",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "PT-EXT-493-GERACOES"
+  ],
+  "after": []
+}

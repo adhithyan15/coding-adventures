@@ -1,0 +1,11 @@
+{
+  "id": "PT-C494-chupeta",
+  "pathSegment": "PT-PATH-494-BEBE",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PT-EXT-494-BEBE",
+      "order": 2
+    }
+  ]
+}

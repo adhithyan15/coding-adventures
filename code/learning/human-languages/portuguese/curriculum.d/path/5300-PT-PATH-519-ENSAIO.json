@@ -1,0 +1,9 @@
+{
+  "id": "PT-PATH-519-ENSAIO",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "PT-EXT-519-ENSAIO"
+  ],
+  "after": []
+}

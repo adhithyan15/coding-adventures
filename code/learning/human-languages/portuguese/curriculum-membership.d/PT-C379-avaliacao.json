@@ -1,0 +1,11 @@
+{
+  "id": "PT-C379-avaliacao",
+  "pathSegment": "PT-PATH-379-CHUMBAR",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PT-EXT-379-CHUMBAR",
+      "order": 2
+    }
+  ]
+}

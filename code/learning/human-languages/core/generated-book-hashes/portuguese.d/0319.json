@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 319,
+  "sourceHash": "fnv1a64:191838eabc92dd8c",
+  "lessonIds": [
+    "PT-C319-santo",
+    "PT-C319-marcha",
+    "PT-C319-manjerico",
+    "PT-C319-sardinhada",
+    "PT-C319-bailarico"
+  ],
+  "tex": "portuguese/book/chapters/ch319-os-santos-populares.tex"
+}

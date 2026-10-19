@@ -1,0 +1,11 @@
+{
+  "id": "PT-C458-desfiladeiro",
+  "pathSegment": "PT-PATH-458-SERRA",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-458-SERRA",
+      "order": 3
+    }
+  ]
+}

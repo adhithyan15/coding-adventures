@@ -1,0 +1,20 @@
+{
+  "language": "portuguese",
+  "chapter": 332,
+  "sourceHash": "fnv1a64:b12b5c34a7cb3af4",
+  "lessonIds": [
+    "PT-C332-fritar",
+    "PT-C332-cozer",
+    "PT-C332-assar",
+    "PT-C332-grelhar",
+    "PT-C332-ferver",
+    "PT-R332-revisao-325-332"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "portuguese/narration/ch332.txt",
+  "json": "portuguese/narration/ch332.json",
+  "textHash": "fnv1a64:faf4edb88a29306a",
+  "jsonHash": "fnv1a64:b91c5a11d44458a3",
+  "findings": []
+}

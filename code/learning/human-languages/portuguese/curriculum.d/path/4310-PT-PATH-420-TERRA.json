@@ -1,0 +1,9 @@
+{
+  "id": "PT-PATH-420-TERRA",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "PT-EXT-420-TERRA"
+  ],
+  "after": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "PT-C365-preconceito",
+  "pathSegment": "PT-PATH-365-JUSTICA",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-365-JUSTICA",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "PT-C344-avaliar",
+  "pathSegment": "PT-PATH-344-JUIZO",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "PT-EXT-344-JUIZO",
+      "order": 0
+    }
+  ]
+}

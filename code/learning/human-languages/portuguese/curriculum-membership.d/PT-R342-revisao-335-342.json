@@ -1,0 +1,11 @@
+{
+  "id": "PT-R342-revisao-335-342",
+  "pathSegment": "PT-PATH-342-AFIRMAR",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "PT-EXT-342-AFIRMAR",
+      "order": 5
+    }
+  ]
+}

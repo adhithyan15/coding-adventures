@@ -1,0 +1,11 @@
+{
+  "id": "PT-C452-nodoa",
+  "pathSegment": "PT-PATH-452-CUIDADOS",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PT-EXT-452-CUIDADOS",
+      "order": 4
+    }
+  ]
+}

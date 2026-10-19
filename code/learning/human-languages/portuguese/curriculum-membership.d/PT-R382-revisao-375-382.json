@@ -1,0 +1,11 @@
+{
+  "id": "PT-R382-revisao-375-382",
+  "pathSegment": "PT-PATH-382-PROIBIDO",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "PT-EXT-382-PROIBIDO",
+      "order": 5
+    }
+  ]
+}

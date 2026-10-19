@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 428,
+  "sourceHash": "fnv1a64:397d7a39ccc81ac0",
+  "lessonIds": [
+    "PT-C428-alojamento",
+    "PT-C428-pernoitar",
+    "PT-C428-dormida",
+    "PT-C428-hospedar",
+    "PT-C428-porteiro"
+  ],
+  "tex": "portuguese/book/chapters/ch428-pernoitar.tex"
+}

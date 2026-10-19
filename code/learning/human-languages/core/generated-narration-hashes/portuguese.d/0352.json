@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 352,
+  "sourceHash": "fnv1a64:fec98fb39ee37ecd",
+  "lessonIds": [
+    "PT-C352-reacao",
+    "PT-C352-reagir",
+    "PT-C352-pretexto",
+    "PT-C352-desculpa",
+    "PT-C352-justificar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch352.txt",
+  "json": "portuguese/narration/ch352.json",
+  "textHash": "fnv1a64:b72fd0be76b3c318",
+  "jsonHash": "fnv1a64:744c4068f55d80c4",
+  "findings": []
+}

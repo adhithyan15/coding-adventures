@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PT-C275-entardecer",
+    "language": "portuguese",
+    "chapter": 275,
+    "sequence": 16110,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2665dfeef9925268"
+  },
+  "findings": []
+}

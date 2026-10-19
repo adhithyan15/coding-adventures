@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 488,
+  "sourceHash": "fnv1a64:051cba770b10fac0",
+  "lessonIds": [
+    "PT-C488-repouso",
+    "PT-C488-curar",
+    "PT-C488-cura",
+    "PT-C488-recuperar",
+    "PT-C488-recuperacao"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch488.txt",
+  "json": "portuguese/narration/ch488.json",
+  "textHash": "fnv1a64:cf3724febafca2bc",
+  "jsonHash": "fnv1a64:74a2bd8e70a11553",
+  "findings": []
+}

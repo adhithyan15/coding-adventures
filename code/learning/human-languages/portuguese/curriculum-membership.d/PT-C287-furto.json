@@ -1,0 +1,11 @@
+{
+  "id": "PT-C287-furto",
+  "pathSegment": "PT-PATH-287-ROUBO",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PT-EXT-287-ROUBO",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "PT-C332-cozer",
+  "pathSegment": "PT-PATH-332-FRITAR",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PT-EXT-332-FRITAR",
+      "order": 1
+    }
+  ]
+}

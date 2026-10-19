@@ -1,0 +1,19 @@
+{
+  "chapter": 340,
+  "title": "Tenho as minhas dúvidas",
+  "label": "ch:pt-tenho-as-minhas-duvidas",
+  "canDo": "I can express doubt, deny something and call an idea absurd or debatable.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "PT-C340-discutivel",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 340: I can express doubt, deny something and call an idea absurd or debatable.",
+    "assesses": [
+      "PT-LEX-C340-DUVIDA-03",
+      "PT-LEX-C340-DUVIDA-04",
+      "PT-LEX-C340-DUVIDA-05"
+    ]
+  }
+}

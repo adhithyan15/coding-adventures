@@ -1,0 +1,9 @@
+{
+  "id": "PT-PATH-424-VOO",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "PT-EXT-424-VOO"
+  ],
+  "after": []
+}

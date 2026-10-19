@@ -1,0 +1,19 @@
+{
+  "chapter": 393,
+  "title": "No banco",
+  "label": "ch:pt-no-banco",
+  "canDo": "I can do things at the bank: check my balance, make a deposit and transfer money.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "PT-C393-transferencia",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 393: I can do things at the bank: check my balance, make a deposit and transfer money.",
+    "assesses": [
+      "PT-LEX-C393-BANCO-03",
+      "PT-LEX-C393-BANCO-04",
+      "PT-LEX-C393-BANCO-05"
+    ]
+  }
+}

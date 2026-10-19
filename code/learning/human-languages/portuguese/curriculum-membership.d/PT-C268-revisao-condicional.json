@@ -1,0 +1,11 @@
+{
+  "id": "PT-C268-revisao-condicional",
+  "pathSegment": "PT-PATH-268-CONDICIONAL",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PT-EXT-268-CONDICIONAL",
+      "order": 2
+    }
+  ]
+}

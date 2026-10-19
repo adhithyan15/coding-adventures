@@ -1,0 +1,20 @@
+{
+  "language": "portuguese",
+  "chapter": 514,
+  "sourceHash": "fnv1a64:f3f5d42670a5f274",
+  "lessonIds": [
+    "PT-C514-boxe",
+    "PT-C514-ringue",
+    "PT-C514-espada",
+    "PT-C514-judo",
+    "PT-C514-esgrima",
+    "PT-R514-revisao-507-514"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "portuguese/narration/ch514.txt",
+  "json": "portuguese/narration/ch514.json",
+  "textHash": "fnv1a64:cbfc8cd2d7099600",
+  "jsonHash": "fnv1a64:c878e7f41f6f2ea7",
+  "findings": []
+}

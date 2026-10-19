@@ -1,0 +1,11 @@
+{
+  "id": "PT-C399-navegar",
+  "pathSegment": "PT-PATH-399-REDE",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PT-EXT-399-REDE",
+      "order": 1
+    }
+  ]
+}

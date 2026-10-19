@@ -1,0 +1,11 @@
+{
+  "id": "PT-C411-condutor",
+  "pathSegment": "PT-PATH-411-ALUGUER",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PT-EXT-411-ALUGUER",
+      "order": 1
+    }
+  ]
+}

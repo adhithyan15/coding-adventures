@@ -1,0 +1,11 @@
+{
+  "id": "PT-C421-escala",
+  "pathSegment": "PT-PATH-421-AEROPORTO",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "PT-EXT-421-AEROPORTO",
+      "order": 0
+    }
+  ]
+}

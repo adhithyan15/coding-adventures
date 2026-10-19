@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PT-C427-remarcar",
+    "language": "portuguese",
+    "chapter": 427,
+    "sequence": 23970,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1db952dd6de85e81"
+  },
+  "findings": []
+}

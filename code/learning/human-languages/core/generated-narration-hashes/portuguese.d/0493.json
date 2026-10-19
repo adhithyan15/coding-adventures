@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 493,
+  "sourceHash": "fnv1a64:4adaa8d330ed147b",
+  "lessonIds": [
+    "PT-C493-bisavo",
+    "PT-C493-bisneto",
+    "PT-C493-orfao",
+    "PT-C493-adotar",
+    "PT-C493-adocao"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch493.txt",
+  "json": "portuguese/narration/ch493.json",
+  "textHash": "fnv1a64:2d079faaa0da3949",
+  "jsonHash": "fnv1a64:e76616ad64a69497",
+  "findings": []
+}

@@ -1,0 +1,9 @@
+{
+  "id": "PT-PATH-431-AQUECIMENTO",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "PT-EXT-431-AQUECIMENTO"
+  ],
+  "after": []
+}

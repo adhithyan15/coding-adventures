@@ -1,0 +1,11 @@
+{
+  "id": "PT-C532-decoracao",
+  "pathSegment": "PT-PATH-532-ACOLHEDORA",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PT-EXT-532-ACOLHEDORA",
+      "order": 4
+    }
+  ]
+}

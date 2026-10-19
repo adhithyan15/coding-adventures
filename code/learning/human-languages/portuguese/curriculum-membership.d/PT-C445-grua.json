@@ -1,0 +1,11 @@
+{
+  "id": "PT-C445-grua",
+  "pathSegment": "PT-PATH-445-OBRAS",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PT-EXT-445-OBRAS",
+      "order": 1
+    }
+  ]
+}

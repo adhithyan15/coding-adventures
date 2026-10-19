@@ -1,0 +1,9 @@
+{
+  "id": "PT-PATH-328-NAVEGAR",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "PT-EXT-328-NAVEGAR"
+  ],
+  "after": []
+}

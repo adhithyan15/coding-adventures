@@ -1,0 +1,11 @@
+{
+  "id": "PT-C493-adotar",
+  "pathSegment": "PT-PATH-493-GERACOES",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-493-GERACOES",
+      "order": 3
+    }
+  ]
+}

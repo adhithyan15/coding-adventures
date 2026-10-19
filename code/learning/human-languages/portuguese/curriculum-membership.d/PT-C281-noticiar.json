@@ -1,0 +1,11 @@
+{
+  "id": "PT-C281-noticiar",
+  "pathSegment": "PT-PATH-281-RELATAR",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PT-EXT-281-RELATAR",
+      "order": 4
+    }
+  ]
+}

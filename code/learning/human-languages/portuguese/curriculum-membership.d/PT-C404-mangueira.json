@@ -1,0 +1,11 @@
+{
+  "id": "PT-C404-mangueira",
+  "pathSegment": "PT-PATH-404-BOMBA",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PT-EXT-404-BOMBA",
+      "order": 2
+    }
+  ]
+}

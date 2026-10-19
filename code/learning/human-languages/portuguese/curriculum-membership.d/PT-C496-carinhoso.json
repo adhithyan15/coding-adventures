@@ -1,0 +1,11 @@
+{
+  "id": "PT-C496-carinhoso",
+  "pathSegment": "PT-PATH-496-CARINHO",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PT-EXT-496-CARINHO",
+      "order": 1
+    }
+  ]
+}

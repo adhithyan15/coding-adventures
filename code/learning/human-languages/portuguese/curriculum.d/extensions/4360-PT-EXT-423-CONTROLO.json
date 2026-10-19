@@ -1,0 +1,8 @@
+{
+  "id": "PT-EXT-423-CONTROLO",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can get through border and security checks: searching, declaring, confiscating, the detector and stamping a passport.",
+  "prerequisites": []
+}

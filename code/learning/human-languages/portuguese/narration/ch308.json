@@ -1,0 +1,858 @@
+{
+  "version": 1,
+  "language": "portuguese",
+  "chapter": 308,
+  "title": "Que susto!",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:de65ca82d4558b3f",
+  "lessons": [
+    {
+      "id": "PT-C308-susto",
+      "sequence": 17790,
+      "title": "o susto — the fright, the scare",
+      "headword": "o susto",
+      "romanization": "o susto",
+      "gloss": "the fright, the scare",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3273f00feb93b381",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Portuguese for the fracture, then the Portuguese for the plaster."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: o susto",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "o susto — \"the fright, the scare\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Que susto! Pensei que estava sozinho em casa. What a fright! I thought I was alone in the house."
+            },
+            {
+              "kind": "speech",
+              "text": "Pregar um susto a alguém — to give someone a fright."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The origin of susto is not settled; EtymDB lists it only beside Spanish susto."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "o susto",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *o susto*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "o susto, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *o susto*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with o susto",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *o susto*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Portuguese for the fracture, then the Portuguese for the plaster, then say o susto again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Portuguese for the fracture, then the Portuguese for the plaster, then say *o susto* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does o susto mean? (\"The fright, the scare\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PT-C308-assustar",
+      "sequence": 17800,
+      "title": "assustar — to frighten, to scare",
+      "headword": "assustar",
+      "romanization": "assustar",
+      "gloss": "to frighten, to scare",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6a8935ad2301b616",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Portuguese for the plaster, then the Portuguese for the fright."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: assustar",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "assustar — \"to frighten, to scare\"."
+            },
+            {
+              "kind": "speech",
+              "text": "O barulho assustou as crianças. The noise frightened the children."
+            },
+            {
+              "kind": "speech",
+              "text": "Assustar-se — to get a fright."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "assustar is built on susto \"a fright\"; EtymDB lists it beside Spanish asustar, and the origin is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "assustar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *assustar*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "assustar, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *assustar*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with assustar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *assustar*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Portuguese for the plaster, then the Portuguese for the fright, then say assustar again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Portuguese for the plaster, then the Portuguese for the fright, then say *assustar* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does assustar mean? (\"To frighten, to scare\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PT-C308-panico",
+      "sequence": 17810,
+      "title": "o pânico — panic",
+      "headword": "o pânico",
+      "romanization": "o pânico",
+      "gloss": "panic",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ea030536b3cf1170",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Portuguese for the fright, then the Portuguese for to frighten."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: o pânico",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "o pânico — \"panic\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Houve pânico no centro comercial. There was panic in the shopping centre."
+            },
+            {
+              "kind": "speech",
+              "text": "Entrar em pânico — to panic."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "pânico comes from Greek panikós \"of Pan\" (EtymDB), the god of the wild whose sudden cry was said to spread terror."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "o pânico",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *o pânico*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "o pânico, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *o pânico*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with o pânico",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *o pânico*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Portuguese for the fright, then the Portuguese for to frighten, then say o pânico again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Portuguese for the fright, then the Portuguese for to frighten, then say *o pânico* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does o pânico mean? (\"Panic\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PT-C308-desmaiar",
+      "sequence": 17820,
+      "title": "desmaiar — to faint",
+      "headword": "desmaiar",
+      "romanization": "desmaiar",
+      "gloss": "to faint",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c6ac0eb805f2aca2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Portuguese for to frighten, then the Portuguese for panic."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: desmaiar",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "desmaiar — \"to faint\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Com o calor, uma senhora desmaiou no autocarro. In the heat, a lady fainted on the bus."
+            },
+            {
+              "kind": "speech",
+              "text": "O desmaio — the faint."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "desmaiar came from Old French desmaier (EtymDB), from Vulgar Latin exmagāre \"to rob of strength\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "desmaiar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *desmaiar*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "desmaiar, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *desmaiar*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with desmaiar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *desmaiar*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Portuguese for to frighten, then the Portuguese for panic, then say desmaiar again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Portuguese for to frighten, then the Portuguese for panic, then say *desmaiar* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does desmaiar mean? (\"To faint\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PT-C308-torcer",
+      "sequence": 17830,
+      "title": "torcer — to twist, to sprain; to support (a team)",
+      "headword": "torcer",
+      "romanization": "torcer",
+      "gloss": "to twist, to sprain; to support (a team)",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6c90e06fbd34948e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Portuguese for panic, then the Portuguese for to faint."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: torcer",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "torcer — \"to twist, to sprain; to support (a team)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Torci o pé nas escadas. I twisted my ankle on the stairs."
+            },
+            {
+              "kind": "speech",
+              "text": "Torcer por uma equipa — to support a team."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "torcer is inherited from Vulgar Latin torcēre, from Latin torquēre \"to twist\" (EtymDB)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "torcer",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *torcer*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "torcer, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *torcer*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with torcer",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *torcer*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Portuguese for panic, then the Portuguese for to faint, then say torcer again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Portuguese for panic, then the Portuguese for to faint, then say *torcer* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does torcer mean? (\"To twist, to sprain; to support (a team)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PT-R308-revisao-301-308",
+      "sequence": 17840,
+      "title": "Revisão dos capítulos 301–308",
+      "headword": "(dialogue)",
+      "romanization": "(dialogue)",
+      "gloss": "a review of chapters 301-308",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e0935f3432d46e61",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Portuguese for the fire and the explosion."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the fire, the explosion, to explode, the fire extinguisher, the burn",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the fire, the explosion, to explode, the fire extinguisher, the burn]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the quake, the earthquake, the tremor, to collapse, the rubble",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the quake, the earthquake, the tremor, to collapse, the rubble]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the flood, to flood, the drowning, the alert, to warn",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the flood, to flood, the drowning, the alert, to warn]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the catastrophe, the disaster, the tragedy, the landslide, to bury under earth or rubble",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the catastrophe, the disaster, the tragedy, the landslide, to bury under earth or rubble]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the ambulance, the siren, to help, the first-aider, the stretcher",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the ambulance, the siren, to help, the first-aider, the stretcher]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to evacuate, to rescue, the rescue, to survive, the survivor",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to evacuate, to rescue, the rescue, to survive, the survivor]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the injured person, to injure, the injury, the fracture, the plaster",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the injured person, to injure, the injury, the fracture, the plaster]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the fright, to frighten, panic, to faint, to twist",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the fright, to frighten, panic, to faint, to twist]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The fire? (o incêndio.) The explosion? (a explosão.) To explode? (explodir.) The fire extinguisher? (o extintor.) The burn? (a queimadura.) The quake? (o sismo.) The earthquake? (o terramoto.) The tremor? (o tremor.) To collapse? (ruir.) The rubble? (os escombros.) The flood? (a inundação.) To flood? (inundar.) The drowning? (o afogamento.) The alert? (o alerta.) To warn? (alertar.) The catastrophe? (a catástrofe.) The disaster? (o desastre.) The tragedy? (a tragédia.) The landslide? (o deslizamento.) To bury under earth or rubble? (soterrar.) The ambulance? (a ambulância.) The siren? (a sirene.) To help? (socorrer.) The first-aider? (o socorrista.) The stretcher? (a maca.) To evacuate? (evacuar.) To rescue? (resgatar.) The rescue? (o resgate.) To survive? (sobreviver.) The survivor? (o sobrevivente.) The injured person? (o ferido.) To injure? (ferir.) The injury? (o ferimento.) The fracture? (a fratura.) The plaster? (o gesso.) The fright? (o susto.) To frighten? (assustar.) Panic? (o pânico.) To faint? (desmaiar.) To twist? (torcer.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

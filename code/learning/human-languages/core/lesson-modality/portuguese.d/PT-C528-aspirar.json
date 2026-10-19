@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PT-C528-aspirar",
+    "language": "portuguese",
+    "chapter": 528,
+    "sequence": 29120,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b3ba6e2dc70cc308"
+  },
+  "findings": []
+}

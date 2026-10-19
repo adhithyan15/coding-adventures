@@ -1,0 +1,11 @@
+{
+  "id": "PT-C506-prancha",
+  "pathSegment": "PT-PATH-506-AGUA",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-506-AGUA",
+      "order": 3
+    }
+  ]
+}

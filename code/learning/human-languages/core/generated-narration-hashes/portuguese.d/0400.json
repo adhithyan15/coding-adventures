@@ -1,0 +1,21 @@
+{
+  "language": "portuguese",
+  "chapter": 400,
+  "sourceHash": "fnv1a64:fb8682cc39fb1db3",
+  "lessonIds": [
+    "PT-C400-publicar",
+    "PT-C400-comentar",
+    "PT-C400-seguidor",
+    "PT-C400-reencaminhar",
+    "PT-C400-bloquear",
+    "PT-R400-revisao-399-400",
+    "PT-R400-revisao-final-400"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "portuguese/narration/ch400.txt",
+  "json": "portuguese/narration/ch400.json",
+  "textHash": "fnv1a64:af8dbfc8581c8654",
+  "jsonHash": "fnv1a64:166069429a7e75f1",
+  "findings": []
+}

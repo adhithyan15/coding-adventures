@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 389,
+  "sourceHash": "fnv1a64:13dc33948df0a0f7",
+  "lessonIds": [
+    "PT-C389-crime",
+    "PT-C389-criminoso",
+    "PT-C389-corrupcao",
+    "PT-C389-sancao",
+    "PT-C389-multar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch389.txt",
+  "json": "portuguese/narration/ch389.json",
+  "textHash": "fnv1a64:06278757a4558892",
+  "jsonHash": "fnv1a64:0fa0b6a088620b31",
+  "findings": []
+}

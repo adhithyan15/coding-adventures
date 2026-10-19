@@ -1,0 +1,19 @@
+{
+  "chapter": 420,
+  "title": "Chegar a terra",
+  "label": "ch:pt-chegar-a-terra",
+  "canDo": "I can talk about reaching land: the buoy, the anchor, mooring, seasickness and feeling sick.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "PT-C420-enjoar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 420: I can talk about reaching land: the buoy, the anchor, mooring, seasickness and feeling sick.",
+    "assesses": [
+      "PT-LEX-C420-TERRA-03",
+      "PT-LEX-C420-TERRA-04",
+      "PT-LEX-C420-TERRA-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 521,
+  "sourceHash": "fnv1a64:ad053816faf71dbf",
+  "lessonIds": [
+    "PT-C521-comedia",
+    "PT-C521-opera",
+    "PT-C521-bailado",
+    "PT-C521-bailarina",
+    "PT-C521-camarim"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch521.txt",
+  "json": "portuguese/narration/ch521.json",
+  "textHash": "fnv1a64:c70dfaf566452b44",
+  "jsonHash": "fnv1a64:04bbf625f63f5890",
+  "findings": []
+}

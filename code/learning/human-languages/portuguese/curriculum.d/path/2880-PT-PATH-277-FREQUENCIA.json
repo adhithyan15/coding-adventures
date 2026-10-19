@@ -1,0 +1,9 @@
+{
+  "id": "PT-PATH-277-FREQUENCIA",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "PT-EXT-277-FREQUENCIA"
+  ],
+  "after": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "PT-C401-berma",
+  "pathSegment": "PT-PATH-401-AUTOESTRADA",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PT-EXT-401-AUTOESTRADA",
+      "order": 1
+    }
+  ]
+}

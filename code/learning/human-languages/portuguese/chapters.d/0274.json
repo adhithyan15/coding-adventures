@@ -1,0 +1,19 @@
+{
+  "chapter": 274,
+  "title": "Noutros tempos",
+  "label": "ch:pt-noutros-tempos",
+  "canDo": "I can talk about long ago, about lately, and about change that came gradually, little by little.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "PT-C274-aos-poucos",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 274: I can talk about long ago, about lately, and about change that came gradually, little by little.",
+    "assesses": [
+      "PT-LEX-C274-OUTRORA-03",
+      "PT-LEX-C274-OUTRORA-04",
+      "PT-LEX-C274-OUTRORA-05"
+    ]
+  }
+}

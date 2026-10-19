@@ -1,0 +1,8 @@
+{
+  "id": "PT-EXT-382-PROIBIDO",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say what is forbidden, tolerated or authorised, and talk about breaking a rule.",
+  "prerequisites": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 291,
+  "sourceHash": "fnv1a64:0ad35911771fd175",
+  "lessonIds": [
+    "PT-C291-rapto",
+    "PT-C291-raptar",
+    "PT-C291-sequestro",
+    "PT-C291-sequestrar",
+    "PT-C291-refem"
+  ],
+  "tex": "portuguese/book/chapters/ch291-raptos-e-refens.tex"
+}

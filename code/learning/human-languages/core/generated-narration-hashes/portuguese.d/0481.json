@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 481,
+  "sourceHash": "fnv1a64:6de707dfecc28e65",
+  "lessonIds": [
+    "PT-C481-sobrancelha",
+    "PT-C481-pestana",
+    "PT-C481-palpebra",
+    "PT-C481-narina",
+    "PT-C481-gengiva"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch481.txt",
+  "json": "portuguese/narration/ch481.json",
+  "textHash": "fnv1a64:648ef33a80f65d9a",
+  "jsonHash": "fnv1a64:51c7b38b817b279e",
+  "findings": []
+}

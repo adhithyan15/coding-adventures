@@ -1,0 +1,11 @@
+{
+  "id": "PT-C399-hiperligacao",
+  "pathSegment": "PT-PATH-399-REDE",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PT-EXT-399-REDE",
+      "order": 4
+    }
+  ]
+}

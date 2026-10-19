@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PT-C279-reportagem",
+    "language": "portuguese",
+    "chapter": 279,
+    "sequence": 16320,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4c0831392c1f88a3"
+  },
+  "findings": []
+}

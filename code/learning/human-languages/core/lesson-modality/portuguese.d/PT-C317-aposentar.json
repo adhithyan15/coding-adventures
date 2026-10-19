@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PT-C317-aposentar",
+    "language": "portuguese",
+    "chapter": 317,
+    "sequence": 18260,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9a25d3bb435798d7"
+  },
+  "findings": []
+}

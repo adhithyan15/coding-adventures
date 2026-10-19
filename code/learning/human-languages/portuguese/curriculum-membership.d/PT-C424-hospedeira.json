@@ -1,0 +1,11 @@
+{
+  "id": "PT-C424-hospedeira",
+  "pathSegment": "PT-PATH-424-VOO",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-424-VOO",
+      "order": 3
+    }
+  ]
+}

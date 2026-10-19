@@ -1,0 +1,11 @@
+{
+  "id": "PT-C404-combustivel",
+  "pathSegment": "PT-PATH-404-BOMBA",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PT-EXT-404-BOMBA",
+      "order": 1
+    }
+  ]
+}

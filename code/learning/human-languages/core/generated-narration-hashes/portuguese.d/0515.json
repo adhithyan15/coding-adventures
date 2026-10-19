@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 515,
+  "sourceHash": "fnv1a64:0e636c91392c8536",
+  "lessonIds": [
+    "PT-C515-balneario",
+    "PT-C515-claque",
+    "PT-C515-lesao",
+    "PT-C515-lesionar",
+    "PT-C515-batota"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch515.txt",
+  "json": "portuguese/narration/ch515.json",
+  "textHash": "fnv1a64:649cec5cf42bd8dd",
+  "jsonHash": "fnv1a64:5d28a6e9729f6b42",
+  "findings": []
+}

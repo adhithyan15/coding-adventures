@@ -1,0 +1,9 @@
+{
+  "id": "PT-PATH-390-CULPA",
+  "spine_node": "SPINE-EXPRESS-CONDITION",
+  "before": [],
+  "inline": [
+    "PT-EXT-390-CULPA"
+  ],
+  "after": []
+}

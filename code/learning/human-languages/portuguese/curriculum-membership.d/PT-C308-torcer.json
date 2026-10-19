@@ -1,0 +1,11 @@
+{
+  "id": "PT-C308-torcer",
+  "pathSegment": "PT-PATH-308-SUSTO",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PT-EXT-308-SUSTO",
+      "order": 4
+    }
+  ]
+}

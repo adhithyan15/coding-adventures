@@ -1,0 +1,9 @@
+{
+  "id": "PT-PATH-469-TEIMOSIA",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "PT-EXT-469-TEIMOSIA"
+  ],
+  "after": []
+}

@@ -1,0 +1,8 @@
+{
+  "id": "PT-EXT-359-DEPARTAMENTO",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can describe an office: the manager, the department, my tasks and colleagues, and what I delegate.",
+  "prerequisites": []
+}

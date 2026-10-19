@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 410,
+  "sourceHash": "fnv1a64:ea3c8eeca0d2314c",
+  "lessonIds": [
+    "PT-C410-curva",
+    "PT-C410-lomba",
+    "PT-C410-atalho",
+    "PT-C410-alcatrao",
+    "PT-C410-serpentear"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch410.txt",
+  "json": "portuguese/narration/ch410.json",
+  "textHash": "fnv1a64:818db6523cff49c6",
+  "jsonHash": "fnv1a64:3aaa4bcc7bb3d96e",
+  "findings": []
+}

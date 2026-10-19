@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 473,
+  "sourceHash": "fnv1a64:5a3a8901b8856f03",
+  "lessonIds": [
+    "PT-C473-gentileza",
+    "PT-C473-delicado",
+    "PT-C473-grosseiro",
+    "PT-C473-antipatico",
+    "PT-C473-ofender"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch473.txt",
+  "json": "portuguese/narration/ch473.json",
+  "textHash": "fnv1a64:fe99bad2861dc20a",
+  "jsonHash": "fnv1a64:ef3adc1f0d71ffc0",
+  "findings": []
+}

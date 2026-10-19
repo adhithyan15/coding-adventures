@@ -1,0 +1,11 @@
+{
+  "id": "PT-C378-manual",
+  "pathSegment": "PT-PATH-378-REVER",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PT-EXT-378-REVER",
+      "order": 2
+    }
+  ]
+}

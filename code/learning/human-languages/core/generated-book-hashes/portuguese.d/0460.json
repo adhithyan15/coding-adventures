@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 460,
+  "sourceHash": "fnv1a64:73eaeca7738bf485",
+  "lessonIds": [
+    "PT-C460-javali",
+    "PT-C460-veado",
+    "PT-C460-lebre",
+    "PT-C460-falcao",
+    "PT-C460-pastar"
+  ],
+  "tex": "portuguese/book/chapters/ch460-animais-selvagens.tex"
+}

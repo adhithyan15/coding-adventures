@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PT-C527-guiao",
+    "language": "portuguese",
+    "chapter": 527,
+    "sequence": 29090,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6bd51c77067c44ae"
+  },
+  "findings": []
+}

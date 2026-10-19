@@ -1,0 +1,11 @@
+{
+  "id": "PT-C311-adolescencia",
+  "pathSegment": "PT-PATH-311-IDADES",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PT-EXT-311-IDADES",
+      "order": 1
+    }
+  ]
+}

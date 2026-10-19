@@ -1,0 +1,11 @@
+{
+  "id": "PT-C289-burla",
+  "pathSegment": "PT-PATH-289-BURLA",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PT-EXT-289-BURLA",
+      "order": 1
+    }
+  ]
+}

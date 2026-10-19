@@ -1,0 +1,19 @@
+{
+  "chapter": 529,
+  "title": "A roupa lavada",
+  "label": "ch:pt-a-roupa-lavada",
+  "canDo": "I can talk about hanging out the washing and ironing.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "PT-C529-engomar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 529: I can talk about hanging out the washing and ironing.",
+    "assesses": [
+      "PT-LEX-C529-ROUPA-03",
+      "PT-LEX-C529-ROUPA-04",
+      "PT-LEX-C529-ROUPA-05"
+    ]
+  }
+}
