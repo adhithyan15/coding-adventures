@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "MR-A1M20-timed-message",
+    "language": "marathi",
+    "chapter": 24,
+    "sequence": 15922,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:f037d55beda7baaa",
+    "detachableSegments": [
+      "Writing — full task timer"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "MR-A1F15-timed-form",
+    "language": "marathi",
+    "chapter": 25,
+    "sequence": 15924,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:733345eaa1bbc4b8",
+    "detachableSegments": [
+      "Writing — full task timer"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

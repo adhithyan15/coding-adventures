@@ -2,5 +2,10 @@
   "id": "MR-A1M19-partial-timer",
   "pathSegment": "MR-PATH-022",
   "pathOrder": 18,
-  "extensions": [{ "id": "MR-EXT-025-A1-NAMED-READER-MESSAGE", "order": 18 }]
+  "extensions": [
+    {
+      "id": "MR-EXT-025-A1-NAMED-READER-MESSAGE",
+      "order": 18
+    }
+  ]
 }

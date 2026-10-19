@@ -4,7 +4,7 @@
   "chapter": 24,
   "title": "A Message for Mira",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:38905d0ad2bbe192",
+  "sourceHash": "fnv1a64:3e57c8159acd153d",
   "lessons": [
     {
       "id": "MR-A1M01-reader-greeting",
@@ -1490,6 +1490,180 @@
               "feedback": {
                 "correct": "The named-reader message is independently produced within the A1 word range.",
                 "incorrect": "Do not reveal a model during scoring; record the first failed block or repair dimension for the next lesson."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-A1M19-partial-timer",
+      "sequence": 15921,
+      "title": "Give the message its first gentle timer",
+      "headword": "partial-timer named-reader message",
+      "romanization": "",
+      "gloss": "write the practised opening and closing under a generous partial timer",
+      "script": "devanagari",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block"
+      ],
+      "sourceHash": "fnv1a64:3f3e59209f2bed05",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on"
+        ],
+        "waitUntilStopped": [
+          "Wrap-up recall — score, then repair"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Wrap-up recall — score, then repair."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Close the earlier message. Mira is your reader; introduce Arun, thank her, and say you will meet tomorrow. This is familiar material, not new vocabulary."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "writing",
+          "title": "Writing — generous partial timer",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Set a 90-second partial timer. On blank paper write only the opening and closing lines, without a model or romanization. Stop when it rings; keep the first attempt visible. The full 30–40-word message comes next lesson."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up recall — score, then repair",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Check task fulfilment (reader, introduction, thanks, tomorrow), organisation (opening before closing), Marathi control (familiar forms), and orthographic control (Devanagari letters and spacing). After scoring, make one 20-second repair to your weakest dimension on a separate line. Do not replace the timed attempt. This is not a full A1 mock."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": false,
+              "id": "MR-A1M19-partial-timer-check",
+              "prompt": "In 90 seconds, write the familiar opening and closing for a message to Mira introducing Arun and meeting tomorrow; stop at the bell.",
+              "assesses": [
+                "MR-A1-MESSAGE-LINE-GREETING",
+                "MR-A1-MESSAGE-LINE-NAME",
+                "MR-A1-MESSAGE-LINE-MEETING",
+                "MR-A1-MESSAGE-LINE-THANKS",
+                "MR-A1-MESSAGE-LINE-SEE-AGAIN",
+                "MR-A1-MESSAGE-LINE-SEE-TOMORROW"
+              ],
+              "responseSeconds": 90,
+              "acceptedResponses": [
+                "नमस्कार मीरा. माझं नाव अरुण आहे. भेटून आनंद झाला. धन्यवाद. पुन्हा भेटू. उद्या भेटू."
+              ],
+              "feedback": {
+                "correct": "Keep the stopped first attempt as partial-timer evidence.",
+                "incorrect": "Keep the stopped first attempt; do not reveal a model until scoring is complete."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-A1M20-timed-message",
+      "sequence": 15922,
+      "title": "A full message to Mira under a timer",
+      "headword": "timed named-reader message",
+      "romanization": "",
+      "gloss": "independently write the full familiar message under a target task timer",
+      "script": "devanagari",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block"
+      ],
+      "sourceHash": "fnv1a64:f037d55beda7baaa",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on"
+        ],
+        "waitUntilStopped": [
+          "Wrap-up recall — score, then repair"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Wrap-up recall — score, then repair."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Mira is reading. Introduce Arun, tell her the six Marathi skills you have practised, thank her, and close with tomorrow's meeting."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "writing",
+          "title": "Writing — full task timer",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Set three minutes. Write 30–40 words in Devanagari from reader and purpose alone. No line bank, romanization, or visible model. Stop at the bell and preserve the first attempt before checking it."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up recall — score, then repair",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Score task fulfilment (named reader, purpose, 30–40 words), organisation (opening, skills, closing), Marathi control (the practised forms), and orthographic control (Devanagari spelling and spacing) separately. Make one 20-second repair on another line; the stopped attempt remains the evidence. This is not a full A1 mock or a readiness claim."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": false,
+              "id": "MR-A1M20-timed-message-check",
+              "prompt": "In 180 seconds write a 30-40-word message to Mira introducing Arun, six practised Marathi skills, thanks and tomorrow's meeting; stop at the bell.",
+              "assesses": [
+                "MR-A1-MESSAGE-LINE-GREETING",
+                "MR-A1-MESSAGE-LINE-NAME",
+                "MR-A1-MESSAGE-LINE-MEETING",
+                "MR-A1-MESSAGE-LINE-KNOW-MARATHI",
+                "MR-A1-MESSAGE-LINE-READ-MARATHI",
+                "MR-A1-MESSAGE-LINE-WRITE-NAME",
+                "MR-A1-MESSAGE-LINE-SPEAK",
+                "MR-A1-MESSAGE-LINE-THINK",
+                "MR-A1-MESSAGE-LINE-UNDERSTAND-MARATHI",
+                "MR-A1-MESSAGE-LINE-THANKS",
+                "MR-A1-MESSAGE-LINE-SEE-AGAIN",
+                "MR-A1-MESSAGE-LINE-SEE-TOMORROW"
+              ],
+              "responseSeconds": 180,
+              "acceptedResponses": [
+                "नमस्कार मीरा. माझं नाव अरुण आहे. भेटून आनंद झाला. मला मराठी येते. मी मराठी वाचतो. मी माझं नाव लिहितो. मी बोलतो. मी विचार करतो. मला मराठी समजते. धन्यवाद. पुन्हा भेटू. उद्या भेटू."
+              ],
+              "feedback": {
+                "correct": "Preserve the timed first attempt and count its 30-40 words.",
+                "incorrect": "Preserve the timed first attempt; score before viewing any model."
               }
             }
           ]
