@@ -189,8 +189,10 @@ file disappears or cannot be opened safely, the required artifact gate must
 fail rather than recategorize it as a missing part or successful mock. The
 anchored manifest bytes must still pass the existing JSON, unsafe-key, schema,
 paper, rubric, and answer-key checks; the boundary does not relax any content
-gate. The same rule applies on Windows and Unix, with exercised swap fixtures
-where the platform allows them.
+gate. A manifest's `.d` sibling must also be checked relative to the pinned
+parent, so replacing that parent's pathname cannot turn a sharded source into
+an accepted stale monolith. The same rule applies on Windows and Unix, with
+exercised swap fixtures where the platform allows them.
 
 ## 7. Acceptance tests
 

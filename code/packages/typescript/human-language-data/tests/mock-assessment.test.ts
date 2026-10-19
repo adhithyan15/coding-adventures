@@ -139,6 +139,12 @@ describe("full-mock coverage measurement", () => {
       .toThrow(/part IDs/);
   });
 
+  it("refuses a stale manifest monolith when its shard directory exists", () => {
+    mkdirSync(join(root, "spanish", "mocks", "a1", "mock-1-manifest.d"));
+    expect(() => runAssessmentArtifactCli(["--check"], root, () => {}, () => {}, () => {}))
+      .toThrow(/anchored read failed/);
+  });
+
   it("the required gate refuses a mock ancestor swapped to a junction after audit", () => {
     const directory = join(root, "spanish", "mocks", "a1");
     const moved = join(root, "spanish", "mocks", "a1-original");

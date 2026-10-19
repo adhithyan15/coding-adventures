@@ -548,7 +548,7 @@ def _read(root, *parts):
             return json.load(handle)
 
 
-def read_track_regular_text(root, track, relative_path):
+def read_track_regular_text(root, track, relative_path, *, reject_sharded_sibling=False):
     """Read mock evidence through pinned, no-follow track descendants.
 
     The TypeScript assessment contract supplies the relative name, but this
@@ -559,6 +559,8 @@ def read_track_regular_text(root, track, relative_path):
     _safe_track(track)
     if not isinstance(relative_path, str) or not relative_path:
         raise ValueError("empty mock evidence path")
+    if reject_sharded_sibling and not relative_path.endswith(".json"):
+        raise ValueError("sharded-sibling check requires a JSON mock ledger")
     parts = relative_path.split("/")
     if any(
         not part or part in (".", "..") or "\\" in part or ":" in part
@@ -568,8 +570,25 @@ def read_track_regular_text(root, track, relative_path):
         raise ValueError(f"unsafe mock evidence path: {relative_path!r}")
     if os.name == "nt":
         with _windows_directory(root, track, *parts[:-1]) as directory_handle:
+            if reject_sharded_sibling:
+                shard = parts[-1][:-5] + ".d"
+                try:
+                    sibling = _windows_open_relative(directory_handle, shard, directory=True)
+                except FileNotFoundError:
+                    pass
+                else:
+                    _close_handle(sibling)
+                    raise ValueError(f"refusing sharded mock ledger: {relative_path}")
             return _windows_read_regular(directory_handle, parts[-1])
     with _unix_directory(root, track, *parts[:-1]) as directory_fd:
+        if reject_sharded_sibling:
+            shard = parts[-1][:-5] + ".d"
+            try:
+                os.stat(shard, dir_fd=directory_fd, follow_symlinks=False)
+            except FileNotFoundError:
+                pass
+            else:
+                raise ValueError(f"refusing sharded mock ledger: {relative_path}")
         descriptor = os.open(parts[-1], os.O_RDONLY | NOFOLLOW, dir_fd=directory_fd)
         with os.fdopen(descriptor, encoding="utf-8") as handle:
             if not stat.S_ISREG(os.fstat(handle.fileno()).st_mode):

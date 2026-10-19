@@ -5,7 +5,7 @@ import { auditTrackArtifacts } from "./assessment-artifacts.js";
 import { loadAssessmentContracts, loadAssessmentPolicy, loadTaskShapeInventory, listTaskShapeInventories, defaultCurriculumRoot } from "./loader.js";
 import { parseMockManifest, validateMockAnswerKey, validateMockPaper, validateMockRubric } from "./mock-manifest.js";
 import { readMockEvidence } from "./mock-evidence-read.js";
-import { isSharded, parseLedgerText, shardDirectoryFor } from "./shard.js";
+import { parseLedgerText } from "./shard.js";
 
 export interface MockAssessmentCoverage {
   language: string;
@@ -28,16 +28,18 @@ export function validateDeclaredMockManifests(root = defaultCurriculumRoot()): v
     if (!contract.levels.some((level) => level.fullMocks.some((mock) => mock.manifest !== undefined))) continue;
     const present = new Set(auditTrackArtifacts(root, language, contract).present);
     const requested = new Set<string>();
+    const ledgers = new Set<string>();
     for (const level of contract.levels) {
       for (const mock of level.fullMocks) {
         if (mock.manifest === undefined || !present.has(mock.manifest)) continue;
+        ledgers.add(mock.manifest);
         for (const reference of [mock.manifest, mock.paper, mock.rubric, mock.answerKey]) {
           const path = reference?.split("#", 1)[0];
           if (path !== undefined && present.has(path)) requested.add(path);
         }
       }
     }
-    const evidence = readMockEvidence(root, language, [...requested]);
+    const evidence = readMockEvidence(root, language, [...requested], [...ledgers]);
     for (const level of contract.levels) {
       for (const mock of level.fullMocks) {
         if (mock.manifest === undefined || !present.has(mock.manifest)) continue;
@@ -72,6 +74,7 @@ export function listMockAssessmentStatuses(root = defaultCurriculumRoot()): Mock
     // silently let evidence from another track satisfy this status.
     const present = new Set(auditTrackArtifacts(root, language, contract).present);
     const requested = new Set<string>();
+    const ledgers = new Set<string>();
     for (const level of contract.levels) {
       if (!haveShape.has(`${language}/${level.level}`)) continue;
       for (const mock of level.fullMocks) {
@@ -79,10 +82,11 @@ export function listMockAssessmentStatuses(root = defaultCurriculumRoot()): Mock
           .map((reference) => reference?.split("#", 1)[0]);
         if (paths.some((path) => path === undefined || !present.has(path))) continue;
         if (new Set(paths).size !== paths.length) continue;
+        ledgers.add(paths[3]!);
         for (const path of paths) requested.add(path!);
       }
     }
-    const evidence = readMockEvidence(root, language, [...requested]);
+    const evidence = readMockEvidence(root, language, [...requested], [...ledgers]);
     return contract.levels.map((level) => {
       const shapeId = `${language}/${level.level}`;
       if (!haveShape.has(shapeId)) {
@@ -130,8 +134,5 @@ function readMockManifest(
   evidence: Map<string, string>, root: string, language: string, path: string,
 ): unknown {
   const fullPath = join(root, language, path);
-  if (isSharded(fullPath)) {
-    throw new Error(`'${fullPath}': is sharded into '${shardDirectoryFor(fullPath)}'`);
-  }
   return parseLedgerText(requiredEvidence(evidence, path), fullPath);
 }

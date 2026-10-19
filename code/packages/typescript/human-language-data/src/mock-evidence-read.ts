@@ -7,14 +7,16 @@ import { fileURLToPath } from "node:url";
  * parent handle (NtCreateFile on Windows, dir_fd/O_NOFOLLOW on Unix). Node's
  * path-based fs.open cannot provide that guarantee for a swapped ancestor.
  */
-export function readMockEvidence(root: string, track: string, paths: readonly string[]): Map<string, string> {
+export function readMockEvidence(
+  root: string, track: string, paths: readonly string[], ledgers: readonly string[],
+): Map<string, string> {
   if (paths.length === 0) return new Map();
   const script = fileURLToPath(new URL(
     "../../../../learning/human-languages/data/scripts/mock_evidence_read.py", import.meta.url,
   ));
   const python = process.platform === "win32" ? "python" : "python3";
   const result = spawnSync(python, [script], {
-    input: JSON.stringify({ root, track, paths }),
+    input: JSON.stringify({ root, track, paths, ledgers }),
     encoding: "utf8",
     maxBuffer: 64 * 1024 * 1024,
   });
