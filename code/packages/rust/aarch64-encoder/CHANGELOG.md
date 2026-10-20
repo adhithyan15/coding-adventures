@@ -1,5 +1,11 @@
 # Changelog — `aarch64-encoder`
 
+## Unreleased — `FRINTZ`
+
+Added `Assembler::frintz` (`FRINTZ Dd, Dn`, `0x1E65C000`), which rounds a
+double toward zero. aarch64-backend uses it to truncate before its
+real-to-integer range check.
+
 ## Unreleased — 2026-08-18
 
 Brought under CI: the crate had no `BUILD` file, so nothing ever ran its tests
