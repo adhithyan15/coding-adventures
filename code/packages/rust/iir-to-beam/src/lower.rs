@@ -2657,7 +2657,7 @@ pub fn lower_iir_to_beam(
                     instrs.push(label(l_done));
                 }
 
-// ── LANG83 PR4: overflow-checked arithmetic ─────────────────
+                // ── LANG83 PR4: overflow-checked arithmetic ─────────────────
                 //
                 // Erlang integers are unbounded: `+`, `-` and `*` never
                 // overflow, they promote to a bignum. That makes the check
