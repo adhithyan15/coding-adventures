@@ -644,7 +644,18 @@ fn check_atom(node: &GrammarASTNode) -> Result<(), ParseError> {
         })
         .ok_or_else(|| ParseError { message: "empty atom node".into(), line, column })?;
     match tok.effective_type_name() {
-        "SYMBOL" => Ok(()),
+        // Re-check the lexer's `SYMBOL = /[A-Z][A-Z0-9-]*/` shape.  Source
+        // text can never break it, but `compile_ast` is public and a
+        // hand-built tree could carry any text in a SYMBOL token — e.g.
+        // `*CLOSURE*`, which would let a `QUOTE` forge a closure value.
+        // Holding every caller to the lexer's alphabet keeps the closure
+        // tag un-forgeable for CST callers too.
+        "SYMBOL" if is_lexer_symbol(&tok.value) => Ok(()),
+        "SYMBOL" => Err(ParseError {
+            message: format!("symbol {:?} is not a McCarthy Lisp symbol", tok.value),
+            line: tok.line,
+            column: tok.column,
+        }),
         "INTEGER" => match i64::from_str(&tok.value) {
             Ok(_) => Ok(()),
             Err(_) => Err(ParseError {
@@ -659,6 +670,21 @@ fn check_atom(node: &GrammarASTNode) -> Result<(), ParseError> {
             column: tok.column,
         }),
     }
+}
+
+/// Does `text` match `mccarthy_lisp.tokens`' `SYMBOL = /[A-Z][A-Z0-9-]*/`?
+///
+/// | text        | match? | why                          |
+/// |-------------|--------|------------------------------|
+/// | `CAR`       | yes    | letters only                 |
+/// | `X1-Y`      | yes    | digits, `-` after a letter   |
+/// | `1X`        | no     | must start with `A`–`Z`      |
+/// | `*CLOSURE*` | no     | `*` is outside the alphabet  |
+/// | (empty)     | no     | needs at least one letter    |
+fn is_lexer_symbol(text: &str) -> bool {
+    let mut bytes = text.bytes();
+    matches!(bytes.next(), Some(b'A'..=b'Z'))
+        && bytes.all(|b| matches!(b, b'A'..=b'Z' | b'0'..=b'9' | b'-'))
 }
 
 /// `list = LPAREN list_body RPAREN` — check every `sexpr` in the body.

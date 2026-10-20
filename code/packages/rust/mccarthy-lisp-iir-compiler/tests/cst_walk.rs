@@ -180,6 +180,46 @@ fn hand_built_over_deep_tree_is_rejected() {
         .unwrap();
 }
 
+/// Replace the text of the first SYMBOL token found depth-first.
+fn rename_first_symbol(node: &mut GrammarASTNode, text: &str) -> bool {
+    for child in &mut node.children {
+        match child {
+            ASTNodeOrToken::Token(t) if t.effective_type_name() == "SYMBOL" => {
+                t.value = text.to_string();
+                return true;
+            }
+            ASTNodeOrToken::Node(n) => {
+                if rename_first_symbol(n, text) {
+                    return true;
+                }
+            }
+            ASTNodeOrToken::Token(_) => {}
+        }
+    }
+    false
+}
+
+#[test]
+fn hand_built_symbols_outside_the_lexer_alphabet_are_rejected() {
+    // `'(*CLOSURE* LAMBDA-0)` would forge a closure value if `compile_ast`
+    // trusted SYMBOL token text.  Source text cannot spell `*CLOSURE*`
+    // (the lexer's SYMBOL is /[A-Z][A-Z0-9-]*/), so validation holds a
+    // hand-built tree to the same alphabet.
+    for bad in ["*CLOSURE*", "v0", "", "1X", "A B"] {
+        let mut cst = parse_to_cst("'(X LAMBDA-0)").unwrap();
+        assert!(rename_first_symbol(&mut cst, bad));
+        let e = compile_ast(&cst, "m").unwrap_err();
+        assert!(e.message.starts_with("parse: "), "{bad:?}: {}", e.message);
+        assert!(e.message.contains("is not a McCarthy Lisp symbol"), "{bad:?}: {}", e.message);
+    }
+    // Symbols the lexer could have produced still compile.
+    for good in ["X", "X1-Y", "CAR"] {
+        let mut cst = parse_to_cst("'(X LAMBDA-0)").unwrap();
+        assert!(rename_first_symbol(&mut cst, good));
+        assert!(compile_ast(&cst, "m").is_ok(), "{good:?}");
+    }
+}
+
 // ============================================================
 // 3. CST edge cases, end to end
 // ============================================================

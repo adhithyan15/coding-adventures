@@ -32,6 +32,12 @@ which ran `parse_to_cst` and then `extract_program` to build a
   past `MAX_AST_DEPTH`. The messages are the same `parse: parse error at
   L:C: …` texts, and errors come in the same depth-first order, so an
   overflowing literal is still reported before any lowering error.
+* **Symbols keep the lexer's alphabet.** `compile_ast` is public, so a
+  hand-built tree could put any text in a `SYMBOL` token, `*CLOSURE*`
+  included, and then `'(*CLOSURE* LAMBDA-0)` would forge a closure value.
+  `check_cst` now holds every `SYMBOL` to the lexer's `[A-Z][A-Z0-9-]*`,
+  so the closure tag stays un-forgeable for CST callers too. Source text
+  was never affected.
 * **Same IIR.** The old and new compilers were run over 4,286 inputs and their
   `Debug` dumps diffed byte for byte, with no differences. The inputs were
   every string literal in this crate's tests, the parser and VM crates, and
