@@ -1,0 +1,19 @@
+{
+  "chapter": 391,
+  "title": "Steuern und Zinsen",
+  "label": "ch:ge-steuern-und-zinsen",
+  "canDo": "I can talk about taxes and interest, investing, buying something big and taking out insurance.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "GE-C391-versichern",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 391: I can talk about taxes and interest, investing, buying something big and taking out insurance.",
+    "assesses": [
+      "GE-LEX-C391-STEUER-03",
+      "GE-LEX-C391-STEUER-04",
+      "GE-LEX-C391-STEUER-05"
+    ]
+  }
+}

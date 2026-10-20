@@ -1,0 +1,8 @@
+{
+  "id": "GE-EXT-410-UNFALL",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can describe a small accident: the rear-end collision, driving into a car, skidding, the pedestrian and the cyclist.",
+  "prerequisites": []
+}

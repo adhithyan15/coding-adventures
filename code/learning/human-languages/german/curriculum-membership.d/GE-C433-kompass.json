@@ -1,0 +1,11 @@
+{
+  "id": "GE-C433-kompass",
+  "pathSegment": "GE-PATH-433-KOMPASS",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GE-EXT-433-KOMPASS",
+      "order": 1
+    }
+  ]
+}

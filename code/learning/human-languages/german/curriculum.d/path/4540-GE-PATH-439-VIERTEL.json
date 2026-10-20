@@ -1,0 +1,9 @@
+{
+  "id": "GE-PATH-439-VIERTEL",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "GE-EXT-439-VIERTEL"
+  ],
+  "after": []
+}

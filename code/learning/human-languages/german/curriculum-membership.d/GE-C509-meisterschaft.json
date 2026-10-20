@@ -1,0 +1,11 @@
+{
+  "id": "GE-C509-meisterschaft",
+  "pathSegment": "GE-PATH-509-WETTKAMPF",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GE-EXT-509-WETTKAMPF",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 322,
+  "sourceHash": "fnv1a64:09067bf70182c6b9",
+  "lessonIds": [
+    "GE-C322-zutat",
+    "GE-C322-prise",
+    "GE-C322-essloeffel",
+    "GE-C322-abmessen",
+    "GE-C322-schuessel"
+  ],
+  "tex": "german/book/chapters/ch322-die-zutaten.tex"
+}

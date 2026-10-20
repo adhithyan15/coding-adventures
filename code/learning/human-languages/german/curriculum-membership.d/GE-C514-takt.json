@@ -1,0 +1,11 @@
+{
+  "id": "GE-C514-takt",
+  "pathSegment": "GE-PATH-514-MELODIE",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GE-EXT-514-MELODIE",
+      "order": 2
+    }
+  ]
+}

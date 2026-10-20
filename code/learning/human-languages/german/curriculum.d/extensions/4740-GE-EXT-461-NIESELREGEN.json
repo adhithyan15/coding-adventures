@@ -1,0 +1,8 @@
+{
+  "id": "GE-EXT-461-NIESELREGEN",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can talk about light rain: drizzle, drizzling, the shower, the sunny spell and the sky clearing.",
+  "prerequisites": []
+}

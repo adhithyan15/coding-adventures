@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C319-sieg",
+    "language": "german",
+    "chapter": 319,
+    "sequence": 17460,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3b3e57160c376853"
+  },
+  "findings": []
+}

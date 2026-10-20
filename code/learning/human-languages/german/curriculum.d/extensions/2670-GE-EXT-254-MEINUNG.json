@@ -1,0 +1,8 @@
+{
+  "id": "GE-EXT-254-MEINUNG",
+  "stage": "B1",
+  "kind": "required",
+  "category": "grammar",
+  "canDo": "I can give an opinion with ich finde, dass or meiner Meinung nach, and draw a consequence with darum.",
+  "prerequisites": []
+}

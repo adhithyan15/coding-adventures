@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 415,
+  "sourceHash": "fnv1a64:7708c811d71512d2",
+  "lessonIds": [
+    "GE-C415-schliessfach",
+    "GE-C415-gepaeckaufbewahrung",
+    "GE-C415-rolltreppe",
+    "GE-C415-schwarzfahren",
+    "GE-C415-anstellen"
+  ],
+  "tex": "german/book/chapters/ch415-am-gro-en-bahnhof.tex"
+}

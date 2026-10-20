@@ -1,0 +1,15 @@
+{
+  "language": "german",
+  "chapter": 465,
+  "sourceHash": "fnv1a64:cb289e24a5345c2b",
+  "lessonIds": [
+    "GE-C465-sturm",
+    "GE-C465-boee",
+    "GE-C465-orkan",
+    "GE-C465-ueberschwemmen",
+    "GE-C465-pfuetze",
+    "GE-R465-review-462-465",
+    "GE-R465-review-final-465"
+  ],
+  "tex": "german/book/chapters/ch465-sturm-und-hochwasser.tex"
+}

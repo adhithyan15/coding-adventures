@@ -1,0 +1,11 @@
+{
+  "id": "GE-C496-schnuller",
+  "pathSegment": "GE-PATH-496-BABY",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-496-BABY",
+      "order": 4
+    }
+  ]
+}

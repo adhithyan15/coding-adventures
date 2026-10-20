@@ -1,0 +1,20 @@
+{
+  "language": "german",
+  "chapter": 489,
+  "sourceHash": "fnv1a64:dee9ed5cf4445d89",
+  "lessonIds": [
+    "GE-C489-verwandt",
+    "GE-C489-verwandtschaft",
+    "GE-C489-neffe",
+    "GE-C489-nichte",
+    "GE-C489-schwager",
+    "GE-R489-review-482-489"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "german/narration/ch489.txt",
+  "json": "german/narration/ch489.json",
+  "textHash": "fnv1a64:d130b649ed43ed23",
+  "jsonHash": "fnv1a64:a38755f14a646b6c",
+  "findings": []
+}

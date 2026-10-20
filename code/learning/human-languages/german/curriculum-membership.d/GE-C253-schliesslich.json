@@ -1,0 +1,11 @@
+{
+  "id": "GE-C253-schliesslich",
+  "pathSegment": "GE-PATH-253-REIHENFOLGE",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GE-EXT-253-REIHENFOLGE",
+      "order": 1
+    }
+  ]
+}

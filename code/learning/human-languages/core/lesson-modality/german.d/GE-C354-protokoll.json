@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C354-protokoll",
+    "language": "german",
+    "chapter": 354,
+    "sequence": 19250,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6a720649570d85eb"
+  },
+  "findings": []
+}

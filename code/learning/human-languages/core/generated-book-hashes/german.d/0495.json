@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 495,
+  "sourceHash": "fnv1a64:b531ec0382d7a523",
+  "lessonIds": [
+    "GE-C495-erziehen",
+    "GE-C495-erziehung",
+    "GE-C495-verwoehnen",
+    "GE-C495-gehorchen",
+    "GE-C495-pubertaet"
+  ],
+  "tex": "german/book/chapters/ch495-kinder-erziehen.tex"
+}

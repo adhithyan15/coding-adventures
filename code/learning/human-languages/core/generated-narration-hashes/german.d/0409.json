@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 409,
+  "sourceHash": "fnv1a64:542d80adbd1fa781",
+  "lessonIds": [
+    "GE-C409-baustelle",
+    "GE-C409-umleitung",
+    "GE-C409-umleiten",
+    "GE-C409-sperren",
+    "GE-C409-raststaette"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch409.txt",
+  "json": "german/narration/ch409.json",
+  "textHash": "fnv1a64:4f260defcc924f78",
+  "jsonHash": "fnv1a64:f0dd814acde1b51f",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "GE-C472-einsamkeit",
+  "pathSegment": "GE-PATH-472-SEHNSUCHT",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GE-EXT-472-SEHNSUCHT",
+      "order": 2
+    }
+  ]
+}

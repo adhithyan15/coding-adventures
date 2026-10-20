@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C491-ehepartner",
+    "language": "german",
+    "chapter": 491,
+    "sequence": 26310,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:07e37ad2074d9759"
+  },
+  "findings": []
+}

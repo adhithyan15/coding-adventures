@@ -1,0 +1,9 @@
+{
+  "id": "GE-PATH-376-LERNEN",
+  "spine_node": "SPINE-EXPRESS-CONDITION",
+  "before": [],
+  "inline": [
+    "GE-EXT-376-LERNEN"
+  ],
+  "after": []
+}

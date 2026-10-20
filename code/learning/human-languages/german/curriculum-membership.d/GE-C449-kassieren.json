@@ -1,0 +1,11 @@
+{
+  "id": "GE-C449-kassieren",
+  "pathSegment": "GE-PATH-449-KASSE",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GE-EXT-449-KASSE",
+      "order": 1
+    }
+  ]
+}

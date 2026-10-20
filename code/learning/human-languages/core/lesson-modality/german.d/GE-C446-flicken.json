@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C446-flicken",
+    "language": "german",
+    "chapter": 446,
+    "sequence": 23990,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:26d5a2ecf520e712"
+  },
+  "findings": []
+}

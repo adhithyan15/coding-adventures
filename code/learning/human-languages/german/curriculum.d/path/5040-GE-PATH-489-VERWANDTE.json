@@ -1,0 +1,9 @@
+{
+  "id": "GE-PATH-489-VERWANDTE",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "GE-EXT-489-VERWANDTE"
+  ],
+  "after": []
+}

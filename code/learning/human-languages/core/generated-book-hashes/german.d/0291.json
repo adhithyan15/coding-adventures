@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 291,
+  "sourceHash": "fnv1a64:8317b9c4f600a325",
+  "lessonIds": [
+    "GE-C291-notruf",
+    "GE-C291-notarzt",
+    "GE-C291-hubschrauber",
+    "GE-C291-sanitaeter",
+    "GE-C291-notaufnahme"
+  ],
+  "tex": "german/book/chapters/ch291-der-notruf.tex"
+}

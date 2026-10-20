@@ -1,0 +1,11 @@
+{
+  "id": "GE-C484-augenbraue",
+  "pathSegment": "GE-PATH-484-GESICHT",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-484-GESICHT",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 444,
+  "sourceHash": "fnv1a64:be27c460975a0071",
+  "lessonIds": [
+    "GE-C444-baumarkt",
+    "GE-C444-schreibwarengeschaeft",
+    "GE-C444-buchhandlung",
+    "GE-C444-blumenladen",
+    "GE-C444-kleben"
+  ],
+  "tex": "german/book/chapters/ch444-noch-mehr-laden.tex"
+}

@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 438,
+  "sourceHash": "fnv1a64:b5d5b0c70654ec7d",
+  "lessonIds": [
+    "GE-C438-altstadt",
+    "GE-C438-kathedrale",
+    "GE-C438-glockenturm",
+    "GE-C438-stadtmauer",
+    "GE-C438-stadttor"
+  ],
+  "tex": "german/book/chapters/ch438-die-alte-stadt.tex"
+}

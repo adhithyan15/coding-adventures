@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 275,
+  "sourceHash": "fnv1a64:160bcf4d22f901db",
+  "lessonIds": [
+    "GE-C275-angeblich",
+    "GE-C275-offenbar",
+    "GE-C275-zufolge",
+    "GE-C275-vermuten",
+    "GE-C275-vermutlich"
+  ],
+  "tex": "german/book/chapters/ch275-angeblich.tex"
+}

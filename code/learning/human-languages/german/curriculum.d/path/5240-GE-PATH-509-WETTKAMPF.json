@@ -1,0 +1,9 @@
+{
+  "id": "GE-PATH-509-WETTKAMPF",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "GE-EXT-509-WETTKAMPF"
+  ],
+  "after": []
+}

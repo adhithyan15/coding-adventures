@@ -1,0 +1,14 @@
+{
+  "language": "german",
+  "chapter": 309,
+  "sourceHash": "fnv1a64:dc1f108d5d5f771e",
+  "lessonIds": [
+    "GE-C309-schmuecken",
+    "GE-C309-girlande",
+    "GE-C309-aufhaengen",
+    "GE-C309-luftballon",
+    "GE-C309-feuerwerk",
+    "GE-R309-review-302-309"
+  ],
+  "tex": "german/book/chapters/ch309-alles-ist-geschmuckt.tex"
+}

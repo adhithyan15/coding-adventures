@@ -1,0 +1,9 @@
+{
+  "id": "GE-PATH-300-SCHEIDUNG",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "GE-EXT-300-SCHEIDUNG"
+  ],
+  "after": []
+}

@@ -1,0 +1,8 @@
+{
+  "id": "GE-EXT-338-VERMUTUNG",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can make a guess, state an assumption, and say how things seem or plainly are.",
+  "prerequisites": []
+}

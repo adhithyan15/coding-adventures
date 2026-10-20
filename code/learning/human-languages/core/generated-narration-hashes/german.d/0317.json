@@ -1,0 +1,20 @@
+{
+  "language": "german",
+  "chapter": 317,
+  "sourceHash": "fnv1a64:4badea8a083fab84",
+  "lessonIds": [
+    "GE-C317-erzaehlung",
+    "GE-C317-nacherzaehlen",
+    "GE-C317-vorlesen",
+    "GE-C317-ueberliefern",
+    "GE-C317-schicksal",
+    "GE-R317-review-310-317"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "german/narration/ch317.txt",
+  "json": "german/narration/ch317.json",
+  "textHash": "fnv1a64:a87d146719585ee0",
+  "jsonHash": "fnv1a64:bb08345de8b1e457",
+  "findings": []
+}

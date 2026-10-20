@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 267,
+  "sourceHash": "fnv1a64:5a6245e5177ce929",
+  "lessonIds": [
+    "GE-C267-dauern",
+    "GE-C267-vergehen",
+    "GE-C267-andauern",
+    "GE-C267-fortsetzen",
+    "GE-C267-unterbrechen"
+  ],
+  "tex": "german/book/chapters/ch267-es-dauert-lange.tex"
+}

@@ -1,0 +1,11 @@
+{
+  "id": "GE-C474-neugier",
+  "pathSegment": "GE-PATH-474-STAUNEN",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-474-STAUNEN",
+      "order": 3
+    }
+  ]
+}

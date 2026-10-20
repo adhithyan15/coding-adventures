@@ -1,0 +1,11 @@
+{
+  "id": "GE-C435-verfahren",
+  "pathSegment": "GE-PATH-435-UMWEG",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-435-UMWEG",
+      "order": 4
+    }
+  ]
+}

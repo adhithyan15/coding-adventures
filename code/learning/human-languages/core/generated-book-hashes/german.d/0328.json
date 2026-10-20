@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 328,
+  "sourceHash": "fnv1a64:40f27f3e194130d5",
+  "lessonIds": [
+    "GE-C328-sieb",
+    "GE-C328-abgiessen",
+    "GE-C328-abtropfen",
+    "GE-C328-abschmecken",
+    "GE-C328-wuerzen"
+  ],
+  "tex": "german/book/chapters/ch328-abgie-en-und-abschmecken.tex"
+}

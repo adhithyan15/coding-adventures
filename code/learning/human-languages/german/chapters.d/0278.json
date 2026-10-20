@@ -1,0 +1,19 @@
+{
+  "chapter": 278,
+  "title": "Verhandlungen",
+  "label": "ch:ge-verhandlungen",
+  "canDo": "I can report talks and agreements: to negotiate, a negotiation, a contract, to sign and a conference.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "GE-C278-konferenz",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 278: I can report talks and agreements: to negotiate, a negotiation, a contract, to sign and a conference.",
+    "assesses": [
+      "GE-LEX-C278-VERHANDELN-03",
+      "GE-LEX-C278-VERHANDELN-04",
+      "GE-LEX-C278-VERHANDELN-05"
+    ]
+  }
+}

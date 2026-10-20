@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 306,
+  "sourceHash": "fnv1a64:ec7c994a420c4971",
+  "lessonIds": [
+    "GE-C306-gratulieren",
+    "GE-C306-glueckwunsch",
+    "GE-C306-ueberreichen",
+    "GE-C306-beschenken",
+    "GE-C306-auspacken"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch306.txt",
+  "json": "german/narration/ch306.json",
+  "textHash": "fnv1a64:378c58d44519bf0c",
+  "jsonHash": "fnv1a64:ae68aafc3c53fc5d",
+  "findings": []
+}

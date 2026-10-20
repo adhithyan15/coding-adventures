@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 313,
+  "sourceHash": "fnv1a64:a3730df9621f824f",
+  "lessonIds": [
+    "GE-C313-maerchen",
+    "GE-C313-legende",
+    "GE-C313-fabel",
+    "GE-C313-hexe",
+    "GE-C313-zauberer"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch313.txt",
+  "json": "german/narration/ch313.json",
+  "textHash": "fnv1a64:b7deff3510695388",
+  "jsonHash": "fnv1a64:053fe29dd911bfec",
+  "findings": []
+}

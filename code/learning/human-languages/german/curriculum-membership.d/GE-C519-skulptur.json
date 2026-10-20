@@ -1,0 +1,11 @@
+{
+  "id": "GE-C519-skulptur",
+  "pathSegment": "GE-PATH-519-GALERIE",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GE-EXT-519-GALERIE",
+      "order": 2
+    }
+  ]
+}

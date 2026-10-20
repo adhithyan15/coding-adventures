@@ -1,0 +1,11 @@
+{
+  "id": "GE-C280-tatort",
+  "pathSegment": "GE-PATH-280-VERBRECHEN",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-280-VERBRECHEN",
+      "order": 4
+    }
+  ]
+}

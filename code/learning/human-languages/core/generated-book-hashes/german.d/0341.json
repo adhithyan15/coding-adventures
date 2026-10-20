@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 341,
+  "sourceHash": "fnv1a64:61cc28be03cbd727",
+  "lessonIds": [
+    "GE-C341-obwohl",
+    "GE-C341-zwar",
+    "GE-C341-allerdings",
+    "GE-C341-dennoch",
+    "GE-C341-tatsaechlich"
+  ],
+  "tex": "german/book/chapters/ch341-obwohl-es-regnet.tex"
+}

@@ -1,0 +1,11 @@
+{
+  "id": "GE-C345-nachweisen",
+  "pathSegment": "GE-PATH-345-ZUSAMMENHANG",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-345-ZUSAMMENHANG",
+      "order": 4
+    }
+  ]
+}

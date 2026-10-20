@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 510,
+  "sourceHash": "fnv1a64:21474a16aa698470",
+  "lessonIds": [
+    "GE-C510-tribuene",
+    "GE-C510-zuschauer",
+    "GE-C510-anfeuern",
+    "GE-C510-jubel",
+    "GE-C510-buhen"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch510.txt",
+  "json": "german/narration/ch510.json",
+  "textHash": "fnv1a64:35edd3a6d7ce19e0",
+  "jsonHash": "fnv1a64:02df51cd1cc13797",
+  "findings": []
+}

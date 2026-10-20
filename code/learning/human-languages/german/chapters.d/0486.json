@@ -1,0 +1,19 @@
+{
+  "chapter": 486,
+  "title": "Müde und erschöpft",
+  "label": "ch:ge-mude-und-erschopft",
+  "canDo": "I can talk about tiredness and sleep problems.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "GE-C486-albtraum",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 486: I can talk about tiredness and sleep problems.",
+    "assesses": [
+      "GE-LEX-C486-MUEDE-03",
+      "GE-LEX-C486-MUEDE-04",
+      "GE-LEX-C486-MUEDE-05"
+    ]
+  }
+}

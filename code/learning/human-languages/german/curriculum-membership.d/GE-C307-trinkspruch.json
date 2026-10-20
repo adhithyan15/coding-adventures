@@ -1,0 +1,11 @@
+{
+  "id": "GE-C307-trinkspruch",
+  "pathSegment": "GE-PATH-307-GASTGEBER",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-307-GASTGEBER",
+      "order": 4
+    }
+  ]
+}

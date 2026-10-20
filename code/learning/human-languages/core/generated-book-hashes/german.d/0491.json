@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 491,
+  "sourceHash": "fnv1a64:982adcae68a2a642",
+  "lessonIds": [
+    "GE-C491-halbbruder",
+    "GE-C491-pate",
+    "GE-C491-patenkind",
+    "GE-C491-ehepartner",
+    "GE-C491-nachwuchs"
+  ],
+  "tex": "german/book/chapters/ch491-paten-und-nachwuchs.tex"
+}

@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 383,
+  "sourceHash": "fnv1a64:6bbd0c0d4e29fd48",
+  "lessonIds": [
+    "GE-C383-behoerde",
+    "GE-C383-antrag",
+    "GE-C383-beantragen",
+    "GE-C383-formular",
+    "GE-C383-unterschrift"
+  ],
+  "tex": "german/book/chapters/ch383-bei-der-behorde.tex"
+}

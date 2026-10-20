@@ -1,0 +1,11 @@
+{
+  "id": "GE-C346-anlass",
+  "pathSegment": "GE-PATH-346-ZWECK",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-346-ZWECK",
+      "order": 4
+    }
+  ]
+}

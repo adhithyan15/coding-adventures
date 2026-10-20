@@ -1,0 +1,11 @@
+{
+  "id": "GE-C491-pate",
+  "pathSegment": "GE-PATH-491-PATEN",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GE-EXT-491-PATEN",
+      "order": 1
+    }
+  ]
+}

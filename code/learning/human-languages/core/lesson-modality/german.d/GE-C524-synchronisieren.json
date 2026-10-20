@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C524-synchronisieren",
+    "language": "german",
+    "chapter": 524,
+    "sequence": 28010,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2ac08096979d6235"
+  },
+  "findings": []
+}

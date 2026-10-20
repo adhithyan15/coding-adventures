@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 356,
+  "sourceHash": "fnv1a64:57d1080f05f122f3",
+  "lessonIds": [
+    "GE-C356-karriere",
+    "GE-C356-aufstieg",
+    "GE-C356-herausforderung",
+    "GE-C356-bewaeltigen",
+    "GE-C356-scheitern"
+  ],
+  "tex": "german/book/chapters/ch356-karriere-machen.tex"
+}

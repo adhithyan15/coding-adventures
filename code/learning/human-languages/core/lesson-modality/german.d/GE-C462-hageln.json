@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C462-hageln",
+    "language": "german",
+    "chapter": 462,
+    "sequence": 24810,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:944ef42f7bd57972"
+  },
+  "findings": []
+}

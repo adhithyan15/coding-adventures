@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 302,
+  "sourceHash": "fnv1a64:5746977f6cd26140",
+  "lessonIds": [
+    "GE-C302-rente",
+    "GE-C302-ruhestand",
+    "GE-C302-rentner",
+    "GE-C302-jubilaeum",
+    "GE-C302-abschied"
+  ],
+  "tex": "german/book/chapters/ch302-der-ruhestand.tex"
+}

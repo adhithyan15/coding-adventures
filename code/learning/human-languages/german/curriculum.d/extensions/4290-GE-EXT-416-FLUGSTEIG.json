@@ -1,0 +1,8 @@
+{
+  "id": "GE-EXT-416-FLUGSTEIG",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can check in for a flight: checking in, the boarding pass, the gate, hand luggage and checking a bag in.",
+  "prerequisites": []
+}

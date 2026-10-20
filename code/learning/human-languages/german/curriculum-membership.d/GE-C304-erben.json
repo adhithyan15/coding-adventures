@@ -1,0 +1,11 @@
+{
+  "id": "GE-C304-erben",
+  "pathSegment": "GE-PATH-304-TRAUER",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-304-TRAUER",
+      "order": 4
+    }
+  ]
+}

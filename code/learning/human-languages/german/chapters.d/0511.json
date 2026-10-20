@@ -1,0 +1,19 @@
+{
+  "chapter": 511,
+  "title": "Im Wasser",
+  "label": "ch:ge-im-wasser",
+  "canDo": "I can talk about water sports.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "GE-C511-kanu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 511: I can talk about water sports.",
+    "assesses": [
+      "GE-LEX-C511-WASSERSPORT-03",
+      "GE-LEX-C511-WASSERSPORT-04",
+      "GE-LEX-C511-WASSERSPORT-05"
+    ]
+  }
+}

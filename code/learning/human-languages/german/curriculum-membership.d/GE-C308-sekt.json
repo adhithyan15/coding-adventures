@@ -1,0 +1,11 @@
+{
+  "id": "GE-C308-sekt",
+  "pathSegment": "GE-PATH-308-ANSTOSSEN",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GE-EXT-308-ANSTOSSEN",
+      "order": 1
+    }
+  ]
+}

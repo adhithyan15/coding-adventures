@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 451,
+  "sourceHash": "fnv1a64:d0a19f7f154584b6",
+  "lessonIds": [
+    "GE-C451-reduzieren",
+    "GE-C451-sonderangebot",
+    "GE-C451-schnaeppchen",
+    "GE-C451-feilschen",
+    "GE-C451-flohmarkt"
+  ],
+  "tex": "german/book/chapters/ch451-gute-angebote.tex"
+}

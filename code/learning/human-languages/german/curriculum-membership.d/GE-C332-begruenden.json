@@ -1,0 +1,11 @@
+{
+  "id": "GE-C332-begruenden",
+  "pathSegment": "GE-PATH-332-BEGRUENDEN",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "GE-EXT-332-BEGRUENDEN",
+      "order": 0
+    }
+  ]
+}

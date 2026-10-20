@@ -1,0 +1,11 @@
+{
+  "id": "GE-C410-schleudern",
+  "pathSegment": "GE-PATH-410-UNFALL",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GE-EXT-410-UNFALL",
+      "order": 2
+    }
+  ]
+}

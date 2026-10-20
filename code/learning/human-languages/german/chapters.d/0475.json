@@ -1,0 +1,19 @@
+{
+  "chapter": 475,
+  "title": "Angeber und Bescheidene",
+  "label": "ch:ge-angeber-und-bescheidene",
+  "canDo": "I can talk about showing off and modesty.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "GE-C475-eitel",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 475: I can talk about showing off and modesty.",
+    "assesses": [
+      "GE-LEX-C475-ANGEBER-03",
+      "GE-LEX-C475-ANGEBER-04",
+      "GE-LEX-C475-ANGEBER-05"
+    ]
+  }
+}

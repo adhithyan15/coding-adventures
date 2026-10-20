@@ -1,0 +1,9 @@
+{
+  "id": "GE-PATH-486-MUEDE",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "GE-EXT-486-MUEDE"
+  ],
+  "after": []
+}

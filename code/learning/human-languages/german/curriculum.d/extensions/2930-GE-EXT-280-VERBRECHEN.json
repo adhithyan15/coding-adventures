@@ -1,0 +1,8 @@
+{
+  "id": "GE-EXT-280-VERBRECHEN",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can talk about a crime: a crime, a criminal, an offender, a victim and the crime scene.",
+  "prerequisites": []
+}

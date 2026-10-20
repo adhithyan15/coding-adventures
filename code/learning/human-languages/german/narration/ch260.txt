@@ -1,0 +1,162 @@
+German, chapter 260: If — wenn, falls, es kommt darauf an.
+4 lessons. All 4 can be done entirely by ear.
+
+
+Lesson 1 of 4.
+wenn, falls — if.
+
+Warm-up.
+[pause 2 seconds]
+Every time I was in Berlin, I visited my grandmother. Say it with wenn. (Wenn ich in Berlin war, besuchte ich meine Großmutter.)
+[pause 1 second]
+That wenn was "whenever". The same word also means "if".
+
+Grammar Lens: wenn for if.
+German's everyday "if" is wenn, and its verb goes to the end as before:
+Wenn du Zeit hast, komm! — If you have time, come!
+English speakers hear "when" in it at first, and often that is fine: "if" and "whenever" sit close together.
+When you need it to be only "if", "in case it happens", German has falls:
+Falls der Zug Verspätung hat, rufe ich dich an. — If the train is late, I'll call you.
+Falls does not mean "when". It is a little more careful than wenn, and it suits a plan with a fallback in it. Both send the verb to the end.
+
+The word, taken apart.
+falls is built on der Fall, "the case", which EtymDB 2.1 traces through Middle High German val to Old High German val, "a fall"; it belongs with the verb fallen. The -s is the old adverb ending of rechts and links, so falls is "in case", by the usual account grown out of phrases like im Falle, "in the case".
+wenn is the old twin of wann, from chapter two hundred and fifty-two.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: Wenn du Zeit hast, komm!]
+[pause 8 seconds for the answer]
+[your turn — say: Falls der Zug Verspätung hat, rufe ich dich an.]
+[pause 8 seconds for the answer]
+[your turn — say: the verb last in both: hast, hat]
+[pause 8 seconds for the answer]
+[your turn — say: der Fall, the case; falls, in case]
+[pause 8 seconds for the answer]
+[your turn — say: one of your own with falls, about tomorrow]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+"If you have time"? (Wenn du Zeit hast.) Which word means only "if, in case", and not "when"? (Falls.) Which noun is inside it? (Der Fall, the case.)
+
+
+Lesson 2 of 4.
+wenn es regnet — a real condition.
+
+Warm-up.
+[pause 2 seconds]
+Say "it's raining". (Es regnet.) Then "if you have time". (Wenn du Zeit hast.)
+
+Grammar Lens: the present, for tomorrow too.
+A real condition is one that may well come true. German puts both halves in the present, even when they are about tomorrow:
+Wenn es morgen regnet, fahren wir nicht. — If it rains tomorrow, we won't go. Wenn ich müde bin, nehme ich ein Taxi. — If I'm tired, I take a taxi.
+English does the same in the if half: "if it rains". German usually goes one step further and keeps the other half in the present as well, where English would say "we won't go". The word morgen already tells you it is tomorrow.
+
+Why it's said this way: verb, comma, verb.
+You heard it first with als. When the wenn clause comes first, it fills the first place of the whole sentence, so the main verb comes next, right after the comma:
+Wenn es morgen regnet, fahren wir nicht.
+Two verbs side by side, one ending the condition, one opening the result.
+Turn it round, and each clause keeps its own order:
+Wir fahren nicht, wenn es morgen regnet.
+Some speakers add dann to the result. It takes the place after the comma, and the verb still comes second: Wenn es regnet, dann fahren wir nicht.
+
+The word, taken apart.
+regnen is built on der Regen, from Old High German regan, which EtymDB 2.1 sets beside English rain: one inherited word. Es regnet and "it rains" both need an empty es, it, because nobody does the raining.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: Wenn es morgen regnet, fahren wir nicht.]
+[pause 8 seconds for the answer]
+[your turn — say: the two verbs at the comma: regnet, fahren]
+[pause 8 seconds for the answer]
+[your turn — say: turned round: Wir fahren nicht, wenn es morgen regnet.]
+[pause 8 seconds for the answer]
+[your turn — say: Wenn ich müde bin, nehme ich ein Taxi.]
+[pause 8 seconds for the answer]
+[your turn — say: with falls: Falls es regnet, bleiben wir in der Wohnung.]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+"If it rains tomorrow, we won't go"? (Wenn es morgen regnet, fahren wir nicht.) Which tense for tomorrow, in both halves? (The present.) After a wenn clause, what comes straight after the comma? (The main verb.)
+
+
+Lesson 3 of 4.
+es kommt darauf an — it depends.
+
+Warm-up.
+[pause 2 seconds]
+Say "if it rains tomorrow, we won't go". (Wenn es morgen regnet, fahren wir nicht.)
+[pause 1 second]
+Now someone asks if you are coming, and the honest answer is "it depends".
+
+You'll want to know: es kommt darauf an.
+Es kommt darauf an. — "It depends": ess kommt dah-ROWF ahn.
+Kommst du morgen? — Es kommt darauf an.
+It is ankommen, split as usual, with darauf, "on that", in the middle. In quick speech it shrinks to kommt drauf an.
+To name the thing it depends on, swap darauf for auf and the thing:
+Es kommt auf das Wetter an. — It depends on the weather.
+And to ask "on what?", German builds the question the way it built warum: worauf?
+
+Grammar Lens: das hängt davon ab, ob …
+The second way is das hängt davon ab, "that depends on it". It is abhängen, to hang off, split like ankommen:
+Das hängt vom Wetter ab. — That depends on the weather.
+With abhängen the thing comes after von: vom Wetter, from von dem.
+When what it depends on is a whole question, German opens it with ob, "whether", and the verb goes to the end:
+Das hängt davon ab, ob es regnet. — That depends on whether it rains. Es kommt darauf an, ob ich Zeit habe. — It depends on whether I have time.
+Ob is the "if" of "I don't know if": it asks, where wenn sets a condition.
+
+The word, taken apart.
+ankommen is an- + kommen, and EtymDB 2.1 sets English oncome, from Old English oncuman, beside it. hängen from Middle High German hengen from Old High German hengen (EtymDB 2.1). Abhängen, to hang off, gives the same picture as English depend, from Latin dēpendēre, "to hang down from": what depends on a thing hangs from it.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: Es kommt darauf an.]
+[pause 8 seconds for the answer]
+[your turn — say: Es kommt auf das Wetter an.]
+[pause 8 seconds for the answer]
+[your turn — say: Das hängt vom Wetter ab.]
+[pause 8 seconds for the answer]
+[your turn — say: Das hängt davon ab, ob es regnet.]
+[pause 8 seconds for the answer]
+[your turn — say: Kommst du morgen? Es kommt darauf an, ob ich Zeit habe.]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+"It depends"? (Es kommt darauf an.) "That depends on the weather"? (Das hängt vom Wetter ab.) Which word means "whether", and where does its verb go? (Ob, and the verb goes to the end.)
+
+
+Lesson 4 of 4.
+Review — if, and it depends.
+
+Warm-up.
+[pause 2 seconds]
+Say "in case the train is late". (Falls der Zug Verspätung hat.)
+
+What you've built.
+Three lessons, and a plan can now branch. A real condition with wenn, or with falls when you mean only "in case". Both halves in the present, even for tomorrow. Verb, comma, verb when the condition comes first. And when you cannot promise, es kommt darauf an or das hängt davon ab, with ob for the open question.
+[pause 2 seconds]
+One exchange that uses most of it:
+Kommst du morgen? Es kommt darauf an, ob ich Zeit habe. Wenn ich Zeit habe, komme ich. Falls nicht, rufe ich dich an.
+Falls nicht, "if not", is a whole condition in two words.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: Wenn es morgen regnet, fahren wir nicht.]
+[pause 8 seconds for the answer]
+[your turn — say: Falls der Zug Verspätung hat, rufe ich dich an.]
+[pause 8 seconds for the answer]
+[your turn — say: Es kommt darauf an, ob ich Zeit habe.]
+[pause 8 seconds for the answer]
+[your turn — say: Wenn ich Zeit habe, komme ich. Falls nicht, rufe ich dich an.]
+[pause 8 seconds for the answer]
+[your turn — say: your own plan for the weekend, with one wenn and one falls nicht]
+[pause 8 seconds for the answer]
+[your turn — say: Es regnet seit zwei Tagen. Falls es morgen regnet, sollte man einen Regenschirm mitnehmen.]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Which tense in both halves of a real condition about tomorrow? (The present.) "If not"? (Falls nicht.) "That depends on whether it rains"? (Das hängt davon ab, ob es regnet.)

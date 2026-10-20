@@ -1,0 +1,858 @@
+{
+  "version": 1,
+  "language": "german",
+  "chapter": 361,
+  "title": "Ein neues Land",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:b8fd3772d446ef40",
+  "lessons": [
+    {
+      "id": "GE-C361-einwanderung",
+      "sequence": 19580,
+      "title": "die Einwanderung — immigration",
+      "headword": "die Einwanderung",
+      "romanization": "die Einwanderung",
+      "gloss": "immigration",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:76256000f17c239d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the German for to discriminate against, then the German for equal rights."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: die Einwanderung",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "die Einwanderung — \"immigration\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Die Stadt ist durch Einwanderung schnell gewachsen. The city has grown quickly through immigration."
+            },
+            {
+              "kind": "speech",
+              "text": "From einwandern — to immigrate, with sein. Der Einwanderer — the immigrant."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Einwanderung is the noun of einwandern \"to immigrate\", built on wandern \"to wander\", inherited from Old High German wandarōn and Proto-Germanic wandrōną (EtymDB)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "die Einwanderung",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *die Einwanderung*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "die Einwanderung, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *die Einwanderung*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with die Einwanderung",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *die Einwanderung*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the German for to discriminate against, then the German for equal rights, then say die Einwanderung again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the German for to discriminate against, then the German for equal rights, then say *die Einwanderung* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does die Einwanderung mean? (\"Immigration\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GE-C361-flucht",
+      "sequence": 19590,
+      "title": "die Flucht — flight, escape",
+      "headword": "die Flucht",
+      "romanization": "die Flucht",
+      "gloss": "flight, escape",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:fcd4d8bb603587ed",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the German for equal rights, then the German for immigration."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: die Flucht",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "die Flucht — \"flight, escape\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Nach der Flucht lebte die Familie zwei Jahre in einem Lager. After their flight the family lived in a camp for two years."
+            },
+            {
+              "kind": "speech",
+              "text": "Auf der Flucht — on the run. The verb is fliehen — to flee."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Flucht is inherited from Middle High German vluht, Old High German fluht and Proto-Germanic fluhtiz \"flight\" (EtymDB), the noun of the verb for fleeing."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "die Flucht",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *die Flucht*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "die Flucht, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *die Flucht*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with die Flucht",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *die Flucht*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the German for equal rights, then the German for immigration, then say die Flucht again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the German for equal rights, then the German for immigration, then say *die Flucht* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does die Flucht mean? (\"Flight, escape\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GE-C361-fluechtling",
+      "sequence": 19600,
+      "title": "der Flüchtling — the refugee",
+      "headword": "der Flüchtling",
+      "romanization": "der Flüchtling",
+      "gloss": "the refugee",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7fbf4c0bf3241ee5",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the German for immigration, then the German for flight."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: der Flüchtling",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "der Flüchtling — \"the refugee\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Die Schule hat zwanzig junge Flüchtlinge aufgenommen. The school has taken in twenty young refugees."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: die Flüchtlinge. Today people also say der Geflüchtete, die Geflüchtete."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Flüchtling is built on flüchten \"to flee\", from Flucht \"flight\", Old High German fluht (EtymDB), with the ending -ling for a person."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "der Flüchtling",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *der Flüchtling*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "der Flüchtling, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *der Flüchtling*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with der Flüchtling",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *der Flüchtling*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the German for immigration, then the German for flight, then say der Flüchtling again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the German for immigration, then the German for flight, then say *der Flüchtling* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does der Flüchtling mean? (\"The refugee\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GE-C361-integrieren",
+      "sequence": 19610,
+      "title": "integrieren — to integrate",
+      "headword": "integrieren",
+      "romanization": "integrieren",
+      "gloss": "to integrate",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4c419abc7561645a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the German for flight, then the German for the refugee."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: integrieren",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "integrieren — \"to integrate\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Der Verein hilft, neue Nachbarn zu integrieren. The club helps to integrate new neighbours."
+            },
+            {
+              "kind": "speech",
+              "text": "Sich integrieren — to fit in. Perfekt: hat integriert."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "integrieren is a learned borrowing from Latin integrāre \"to make whole, to renew\" (EtymDB; Lewis & Short), from integer \"whole, untouched\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "integrieren",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *integrieren*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "integrieren, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *integrieren*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with integrieren",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *integrieren*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the German for flight, then the German for the refugee, then say integrieren again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the German for flight, then the German for the refugee, then say *integrieren* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does integrieren mean? (\"To integrate\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GE-C361-gewalt",
+      "sequence": 19620,
+      "title": "die Gewalt — violence; power, force",
+      "headword": "die Gewalt",
+      "romanization": "die Gewalt",
+      "gloss": "violence; power, force",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:20bf1744feb1adcd",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the German for the refugee, then the German for to integrate."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: die Gewalt",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "die Gewalt — \"violence; power, force\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Gewalt ist keine Lösung. Violence is no solution."
+            },
+            {
+              "kind": "speech",
+              "text": "No plural in this sense. Also power: die Gewalt über das Auto verlieren — to lose control of the car."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Gewalt is inherited from Middle High German gewalt \"strength, power\" and Old High German giwalt (EtymDB), from Proto-Germanic waldą, built on waldaną \"to rule\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "die Gewalt",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *die Gewalt*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "die Gewalt, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *die Gewalt*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with die Gewalt",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *die Gewalt*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the German for the refugee, then the German for to integrate, then say die Gewalt again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the German for the refugee, then the German for to integrate, then say *die Gewalt* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does die Gewalt mean? (\"Violence; power, force\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GE-R361-review-354-361",
+      "sequence": 19630,
+      "title": "Words from chapters 354–361 — a review",
+      "headword": "(dialogue)",
+      "romanization": "(dialogue)",
+      "gloss": "a review of chapters 354-361",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e5be68835e528906",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the German for the meeting and the session."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the meeting, the session, the minutes, to present, the presentation",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the meeting, the session, the minutes, to present, the presentation]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the project, the order, to work together, the cooperation, to organize",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the project, the order, to work together, the cooperation, to organize]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the career, the rise, the challenge, to cope with, to fail",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the career, the rise, the challenge, to cope with, to fail]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the trade union, the works council, the demand, to support, the support",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the trade union, the works council, the demand, to support, the support]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "society, democracy, to vote, the vote, to contribute",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: society, democracy, to vote, the vote, to contribute]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "justice, inequality, poverty, wealth, to put at a disadvantage",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: justice, inequality, poverty, wealth, to put at a disadvantage]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the prejudice, tolerance, the minority, to discriminate against, equal rights",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the prejudice, tolerance, the minority, to discriminate against, equal rights]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "immigration, flight, the refugee, to integrate, violence",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: immigration, flight, the refugee, to integrate, violence]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The meeting? (die Besprechung.) The session? (die Sitzung.) The minutes? (das Protokoll.) To present? (präsentieren.) The presentation? (die Präsentation.) The project? (das Projekt.) The order? (der Auftrag.) To work together? (zusammenarbeiten.) The cooperation? (die Zusammenarbeit.) To organize? (organisieren.) The career? (die Karriere.) The rise? (der Aufstieg.) The challenge? (die Herausforderung.) To cope with? (bewältigen.) To fail? (scheitern.) The trade union? (die Gewerkschaft.) The works council? (der Betriebsrat.) The demand? (die Forderung.) To support? (unterstützen.) The support? (die Unterstützung.) Society? (die Gesellschaft.) Democracy? (die Demokratie.) To vote? (abstimmen.) The vote? (die Abstimmung.) To contribute? (beitragen.) Justice? (die Gerechtigkeit.) Inequality? (die Ungleichheit.) Poverty? (die Armut.) Wealth? (der Reichtum.) To put at a disadvantage? (benachteiligen.) The prejudice? (das Vorurteil.) Tolerance? (die Toleranz.) The minority? (die Minderheit.) To discriminate against? (diskriminieren.) Equal rights? (die Gleichberechtigung.) Immigration? (die Einwanderung.) Flight? (die Flucht.) The refugee? (der Flüchtling.) To integrate? (integrieren.) Violence? (die Gewalt.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

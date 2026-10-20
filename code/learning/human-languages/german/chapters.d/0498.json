@@ -1,0 +1,19 @@
+{
+  "chapter": 498,
+  "title": "Freunde und Nachbarn",
+  "label": "ch:ge-freunde-und-nachbarn",
+  "canDo": "I can talk about friends, neighbours and hospitality.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "GE-C498-gastfreundschaft",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 498: I can talk about friends, neighbours and hospitality.",
+    "assesses": [
+      "GE-LEX-C498-FREUNDE-03",
+      "GE-LEX-C498-FREUNDE-04",
+      "GE-LEX-C498-FREUNDE-05"
+    ]
+  }
+}

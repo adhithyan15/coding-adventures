@@ -1,0 +1,11 @@
+{
+  "id": "GE-R301-review-294-301",
+  "pathSegment": "GE-PATH-301-KUENDIGEN",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "GE-EXT-301-KUENDIGEN",
+      "order": 5
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C255-review",
+    "language": "german",
+    "chapter": 255,
+    "sequence": 14240,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7230a16e1d0ebd6d"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 393,
+  "title": "Dateien und Ordner",
+  "label": "ch:ge-dateien-und-ordner",
+  "canDo": "I can talk about files and folders, saving work, and sending attachments.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "GE-R393-review-386-393",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 393: I can talk about files and folders, saving work, and sending attachments.",
+    "assesses": [
+      "GE-LEX-C393-DATEI-03",
+      "GE-LEX-C393-DATEI-04",
+      "GE-LEX-C393-DATEI-05"
+    ]
+  }
+}

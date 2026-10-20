@@ -1,0 +1,19 @@
+{
+  "chapter": 331,
+  "title": "Jemanden überzeugen",
+  "label": "ch:ge-jemanden-uberzeugen",
+  "canDo": "I can convince someone, talk someone into something, argue my case and say whether an answer is convincing.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "GE-C331-argumentieren",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 331: I can convince someone, talk someone into something, argue my case and say whether an answer is convincing.",
+    "assesses": [
+      "GE-LEX-C331-UEBERZEUGEN-03",
+      "GE-LEX-C331-UEBERZEUGEN-04",
+      "GE-LEX-C331-UEBERZEUGEN-05"
+    ]
+  }
+}

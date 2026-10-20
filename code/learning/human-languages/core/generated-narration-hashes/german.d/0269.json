@@ -1,0 +1,20 @@
+{
+  "language": "german",
+  "chapter": 269,
+  "sourceHash": "fnv1a64:c9f5da33e703f4cc",
+  "lessonIds": [
+    "GE-C269-jahrzehnt",
+    "GE-C269-jahrtausend",
+    "GE-C269-epoche",
+    "GE-C269-jahrelang",
+    "GE-C269-stundenlang",
+    "GE-R269-review-262-269"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "german/narration/ch269.txt",
+  "json": "german/narration/ch269.json",
+  "textHash": "fnv1a64:17873ce7a1b3bb91",
+  "jsonHash": "fnv1a64:df8318d0c9de2593",
+  "findings": []
+}

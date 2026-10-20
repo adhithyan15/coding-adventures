@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C336-einerseits",
+    "language": "german",
+    "chapter": 336,
+    "sequence": 18330,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a34aa7c5b6703125"
+  },
+  "findings": []
+}

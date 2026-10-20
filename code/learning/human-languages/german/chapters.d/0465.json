@@ -1,0 +1,19 @@
+{
+  "chapter": 465,
+  "title": "Sturm und Hochwasser",
+  "label": "ch:ge-sturm-und-hochwasser",
+  "canDo": "I can talk about stormy weather and floods: the storm, the gust, the hurricane, flooding and the puddle.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "GE-R465-review-final-465",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 465: I can talk about stormy weather and floods: the storm, the gust, the hurricane, flooding and the puddle.",
+    "assesses": [
+      "GE-LEX-C465-STURM-03",
+      "GE-LEX-C465-STURM-04",
+      "GE-LEX-C465-STURM-05"
+    ]
+  }
+}

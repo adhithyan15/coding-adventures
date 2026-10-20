@@ -1,0 +1,11 @@
+{
+  "id": "GE-C322-prise",
+  "pathSegment": "GE-PATH-322-ZUTAT",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GE-EXT-322-ZUTAT",
+      "order": 1
+    }
+  ]
+}

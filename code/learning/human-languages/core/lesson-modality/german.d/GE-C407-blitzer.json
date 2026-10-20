@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C407-blitzer",
+    "language": "german",
+    "chapter": 407,
+    "sequence": 21970,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5dfd65ab793d1c18"
+  },
+  "findings": []
+}

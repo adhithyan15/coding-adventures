@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 532,
+  "sourceHash": "fnv1a64:6ad80bc59d4c08be",
+  "lessonIds": [
+    "GE-C532-wohngemeinschaft",
+    "GE-C532-mitbewohner",
+    "GE-C532-hausordnung",
+    "GE-C532-hausmeister",
+    "GE-C532-treppenhaus"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch532.txt",
+  "json": "german/narration/ch532.json",
+  "textHash": "fnv1a64:5478ce27782bee89",
+  "jsonHash": "fnv1a64:0273d4c536faebb6",
+  "findings": []
+}

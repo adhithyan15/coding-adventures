@@ -1,0 +1,11 @@
+{
+  "id": "GE-C492-kuscheln",
+  "pathSegment": "GE-PATH-492-VERLIEBT",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GE-EXT-492-VERLIEBT",
+      "order": 2
+    }
+  ]
+}

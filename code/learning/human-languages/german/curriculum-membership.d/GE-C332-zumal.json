@@ -1,0 +1,11 @@
+{
+  "id": "GE-C332-zumal",
+  "pathSegment": "GE-PATH-332-BEGRUENDEN",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-332-BEGRUENDEN",
+      "order": 3
+    }
+  ]
+}

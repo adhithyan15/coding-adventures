@@ -1,0 +1,858 @@
+{
+  "version": 1,
+  "language": "german",
+  "chapter": 445,
+  "title": "Schuhe und Schlüssel",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:82c0b6a1b32cf555",
+  "lessons": [
+    {
+      "id": "GE-C445-schuster",
+      "sequence": 23900,
+      "title": "der Schuster — the cobbler, the shoemaker",
+      "headword": "der Schuster",
+      "romanization": "der Schuster",
+      "gloss": "the cobbler, the shoemaker",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ffa8e531d82e4bfa",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the German for the flower shop, then the German for to stick."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: der Schuster",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "der Schuster — \"the cobbler, the shoemaker\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Der Schuster repariert meine alten Stiefel. The cobbler repairs my old boots."
+            },
+            {
+              "kind": "speech",
+              "text": "Same form in the plural. Also der Schuhmacher."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Schuster comes from Middle High German schuochsūtære 'shoe-stitcher' (EtymDB), built from Schuh 'shoe' and sūtære, from Latin sūtor 'cobbler', from suere 'to sew' (Lewis & Short)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "der Schuster",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *der Schuster*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "der Schuster, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *der Schuster*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with der Schuster",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *der Schuster*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the German for the flower shop, then the German for to stick, then say der Schuster again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the German for the flower shop, then the German for to stick, then say *der Schuster* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does der Schuster mean? (\"The cobbler, the shoemaker\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GE-C445-besohlen",
+      "sequence": 23910,
+      "title": "besohlen — to resole",
+      "headword": "besohlen",
+      "romanization": "besohlen",
+      "gloss": "to resole",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b874020474dcf0f0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the German for to stick, then the German for the cobbler."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: besohlen",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "besohlen — \"to resole\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Der Schuster besohlt die Stiefel bis Freitag. The cobbler will resole the boots by Friday."
+            },
+            {
+              "kind": "speech",
+              "text": "Inseparable: er besohlt, er hat besohlt."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "besohlen is built from be- and Sohle 'sole', which goes back to Old High German sola (EtymDB) and is usually traced to Latin solea 'sandal' (Lewis & Short)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "besohlen",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *besohlen*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "besohlen, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *besohlen*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with besohlen",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *besohlen*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the German for to stick, then the German for the cobbler, then say besohlen again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the German for to stick, then the German for the cobbler, then say *besohlen* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does besohlen mean? (\"To resole\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GE-C445-polieren",
+      "sequence": 23920,
+      "title": "polieren — to polish",
+      "headword": "polieren",
+      "romanization": "polieren",
+      "gloss": "to polish",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:08091665045f8037",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the German for the cobbler, then the German for to resole."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: polieren",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "polieren — \"to polish\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Vor der Hochzeit poliert er seine Schuhe. Before the wedding he polishes his shoes."
+            },
+            {
+              "kind": "speech",
+              "text": "Past participle without ge-: ich habe poliert."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "polieren is inherited from Middle High German polieren (EtymDB), a borrowing through Old French polir from Latin polīre 'to make smooth, to polish' (Lewis & Short)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "polieren",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *polieren*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "polieren, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *polieren*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with polieren",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *polieren*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the German for the cobbler, then the German for to resole, then say polieren again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the German for the cobbler, then the German for to resole, then say *polieren* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does polieren mean? (\"To polish\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GE-C445-schluesseldienst",
+      "sequence": 23930,
+      "title": "der Schlüsseldienst — the locksmith (service)",
+      "headword": "der Schlüsseldienst",
+      "romanization": "der Schlüsseldienst",
+      "gloss": "the locksmith (service)",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6bf21224a0d6a175",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the German for to resole, then the German for to polish."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: der Schlüsseldienst",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "der Schlüsseldienst — \"the locksmith (service)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Sie hat ihren Schlüssel verloren und ruft den Schlüsseldienst. She has lost her key and calls the locksmith."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: die Schlüsseldienste. The craftsman is der Schlosser."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Schlüsseldienst is built from Schlüssel 'key', inherited from Old High German sluzzil, from schließen 'to lock' (EtymDB), and Dienst 'service', from Middle High German dienst (EtymDB)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "der Schlüsseldienst",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *der Schlüsseldienst*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "der Schlüsseldienst, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *der Schlüsseldienst*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with der Schlüsseldienst",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *der Schlüsseldienst*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the German for to resole, then the German for to polish, then say der Schlüsseldienst again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the German for to resole, then the German for to polish, then say *der Schlüsseldienst* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does der Schlüsseldienst mean? (\"The locksmith (service)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GE-C445-aufschliessen",
+      "sequence": 23940,
+      "title": "aufschließen — to unlock",
+      "headword": "aufschließen",
+      "romanization": "aufschließen",
+      "gloss": "to unlock",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6bdb843b897e873b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the German for to polish, then the German for the locksmith."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: aufschließen",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "aufschließen — \"to unlock\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Der Mann schließt die Tür in einer Minute auf. The man unlocks the door in one minute."
+            },
+            {
+              "kind": "speech",
+              "text": "Separable: ich schließe auf, ich habe aufgeschlossen."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "aufschließen is built from auf 'open' and schließen 'to lock, to close', inherited from Old High German sliozan (EtymDB)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "aufschließen",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *aufschließen*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "aufschließen, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *aufschließen*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with aufschließen",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *aufschließen*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the German for to polish, then the German for the locksmith, then say aufschließen again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the German for to polish, then the German for the locksmith, then say *aufschließen* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does aufschließen mean? (\"To unlock\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GE-R445-review-438-445",
+      "sequence": 23950,
+      "title": "Words from chapters 438–445 — a review",
+      "headword": "(dialogue)",
+      "romanization": "(dialogue)",
+      "gloss": "a review of chapters 438-445",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8f26a592df61ce82",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the German for the old town and the cathedral."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the old town, the cathedral, the bell tower, the town wall, the town gate",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the old town, the cathedral, the bell tower, the town wall, the town gate]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the district, the neighbourhood, the suburb, the police station, the barracks",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the district, the neighbourhood, the suburb, the police station, the barracks]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the pavement, the park bench, the street lamp, the cobbles, the fountain",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the pavement, the park bench, the street lamp, the cobbles, the fountain]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the façade, the shop window, the gutter, the covered market, the pillar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the façade, the shop window, the gutter, the covered market, the pillar]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the black ice, to clear, to grit, the snowplough, to slip",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the black ice, to clear, to grit, the snowplough, to slip]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the delicatessen, the cake shop, the greengrocer, the chemist, the health food shop",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the delicatessen, the cake shop, the greengrocer, the chemist, the health food shop]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the DIY store, the stationer, the bookshop, the flower shop, to stick",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the DIY store, the stationer, the bookshop, the flower shop, to stick]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the cobbler, to resole, to polish, the locksmith, to unlock",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the cobbler, to resole, to polish, the locksmith, to unlock]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The old town? (die Altstadt.) The cathedral? (die Kathedrale.) The bell tower? (der Glockenturm.) The town wall? (die Stadtmauer.) The town gate? (das Stadttor.) The district? (der Stadtteil.) The neighbourhood? (das Viertel.) The suburb? (der Vorort.) The police station? (das Polizeirevier.) The barracks? (die Kaserne.) The pavement? (der Bürgersteig.) The park bench? (die Parkbank.) The street lamp? (die Laterne.) The cobbles? (das Kopfsteinpflaster.) The fountain? (der Brunnen.) The façade? (die Fassade.) The shop window? (das Schaufenster.) The gutter? (die Dachrinne.) The covered market? (die Markthalle.) The pillar? (die Säule.) The black ice? (das Glatteis.) To clear? (räumen.) To grit? (streuen.) The snowplough? (der Schneepflug.) To slip? (rutschen.) The delicatessen? (das Feinkostgeschäft.) The cake shop? (die Konditorei.) The greengrocer? (der Gemüsehändler.) The chemist? (die Drogerie.) The health food shop? (das Reformhaus.) The DIY store? (der Baumarkt.) The stationer? (das Schreibwarengeschäft.) The bookshop? (die Buchhandlung.) The flower shop? (der Blumenladen.) To stick? (kleben.) The cobbler? (der Schuster.) To resole? (besohlen.) To polish? (polieren.) The locksmith? (der Schlüsseldienst.) To unlock? (aufschließen.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

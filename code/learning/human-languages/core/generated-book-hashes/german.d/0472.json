@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 472,
+  "sourceHash": "fnv1a64:b94d5a34dc246f64",
+  "lessonIds": [
+    "GE-C472-sehnen",
+    "GE-C472-sehnsucht",
+    "GE-C472-einsamkeit",
+    "GE-C472-heimweh",
+    "GE-C472-vermissen"
+  ],
+  "tex": "german/book/chapters/ch472-sehnsucht-und-heimweh.tex"
+}

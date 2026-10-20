@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C293-waldbrand",
+    "language": "german",
+    "chapter": 293,
+    "sequence": 16120,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6959b602d28f5e09"
+  },
+  "findings": []
+}

@@ -1,0 +1,8 @@
+{
+  "id": "GE-EXT-275-ANGEBLICH",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can report what others say without promising it is true: supposedly, apparently, according to, to suspect and presumably.",
+  "prerequisites": []
+}

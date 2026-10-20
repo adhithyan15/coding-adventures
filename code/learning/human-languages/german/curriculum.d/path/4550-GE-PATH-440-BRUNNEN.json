@@ -1,0 +1,9 @@
+{
+  "id": "GE-PATH-440-BRUNNEN",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "GE-EXT-440-BRUNNEN"
+  ],
+  "after": []
+}

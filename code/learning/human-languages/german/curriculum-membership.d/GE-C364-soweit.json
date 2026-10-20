@@ -1,0 +1,11 @@
+{
+  "id": "GE-C364-soweit",
+  "pathSegment": "GE-PATH-364-BEDINGUNG",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-364-BEDINGUNG",
+      "order": 4
+    }
+  ]
+}

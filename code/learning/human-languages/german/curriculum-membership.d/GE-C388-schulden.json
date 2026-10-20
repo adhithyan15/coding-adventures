@@ -1,0 +1,11 @@
+{
+  "id": "GE-C388-schulden",
+  "pathSegment": "GE-PATH-388-KREDIT",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GE-EXT-388-KREDIT",
+      "order": 2
+    }
+  ]
+}

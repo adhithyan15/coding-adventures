@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 501,
+  "sourceHash": "fnv1a64:8af58e87c1215032",
+  "lessonIds": [
+    "GE-C501-brettspiel",
+    "GE-C501-schach",
+    "GE-C501-wuerfel",
+    "GE-C501-mogeln",
+    "GE-C501-runde"
+  ],
+  "tex": "german/book/chapters/ch501-brettspiele.tex"
+}

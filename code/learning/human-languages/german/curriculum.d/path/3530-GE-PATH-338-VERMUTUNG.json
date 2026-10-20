@@ -1,0 +1,9 @@
+{
+  "id": "GE-PATH-338-VERMUTUNG",
+  "spine_node": "SPINE-GIVE-REASONS",
+  "before": [],
+  "inline": [
+    "GE-EXT-338-VERMUTUNG"
+  ],
+  "after": []
+}

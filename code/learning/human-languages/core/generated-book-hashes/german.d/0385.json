@@ -1,0 +1,14 @@
+{
+  "language": "german",
+  "chapter": 385,
+  "sourceHash": "fnv1a64:f02fe27327c8beb1",
+  "lessonIds": [
+    "GE-C385-ausnahme",
+    "GE-C385-bestrafen",
+    "GE-C385-gesetzlich",
+    "GE-C385-rechtlich",
+    "GE-C385-regelung",
+    "GE-R385-review-378-385"
+  ],
+  "tex": "german/book/chapters/ch385-regeln-und-ausnahmen.tex"
+}

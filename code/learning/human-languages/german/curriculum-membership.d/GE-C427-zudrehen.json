@@ -1,0 +1,11 @@
+{
+  "id": "GE-C427-zudrehen",
+  "pathSegment": "GE-PATH-427-KLIMA",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-427-KLIMA",
+      "order": 4
+    }
+  ]
+}

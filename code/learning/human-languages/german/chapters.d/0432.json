@@ -1,0 +1,19 @@
+{
+  "chapter": 432,
+  "title": "Geld zurück",
+  "label": "ch:ge-geld-zuruck",
+  "canDo": "I can take a problem to the manager: the manager, the inconvenience, the deposit, compensating someone and the compensation.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "GE-C432-entschaedigung",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 432: I can take a problem to the manager: the manager, the inconvenience, the deposit, compensating someone and the compensation.",
+    "assesses": [
+      "GE-LEX-C432-ENTSCHAEDIGUNG-03",
+      "GE-LEX-C432-ENTSCHAEDIGUNG-04",
+      "GE-LEX-C432-ENTSCHAEDIGUNG-05"
+    ]
+  }
+}

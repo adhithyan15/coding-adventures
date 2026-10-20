@@ -1,0 +1,11 @@
+{
+  "id": "GE-C391-zins",
+  "pathSegment": "GE-PATH-391-STEUER",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GE-EXT-391-STEUER",
+      "order": 1
+    }
+  ]
+}

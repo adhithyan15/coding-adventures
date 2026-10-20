@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 512,
+  "sourceHash": "fnv1a64:22baa331797935fe",
+  "lessonIds": [
+    "GE-C512-schlitten",
+    "GE-C512-rodeln",
+    "GE-C512-schlittschuh",
+    "GE-C512-piste",
+    "GE-C512-skilift"
+  ],
+  "tex": "german/book/chapters/ch512-im-schnee.tex"
+}

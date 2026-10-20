@@ -1,0 +1,9 @@
+{
+  "id": "GE-PATH-426-REZEPTION",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "GE-EXT-426-REZEPTION"
+  ],
+  "after": []
+}

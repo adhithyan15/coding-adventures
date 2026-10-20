@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 384,
+  "sourceHash": "fnv1a64:2321443ca2c6c19c",
+  "lessonIds": [
+    "GE-C384-genehmigung",
+    "GE-C384-genehmigen",
+    "GE-C384-gueltig",
+    "GE-C384-verlaengern",
+    "GE-C384-ablaufen"
+  ],
+  "tex": "german/book/chapters/ch384-die-genehmigung.tex"
+}

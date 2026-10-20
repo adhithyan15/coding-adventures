@@ -1,0 +1,20 @@
+{
+  "language": "german",
+  "chapter": 421,
+  "sourceHash": "fnv1a64:3a2fe73b53001ecb",
+  "lessonIds": [
+    "GE-C421-faehre",
+    "GE-C421-ueberfahrt",
+    "GE-C421-kabine",
+    "GE-C421-schwimmweste",
+    "GE-C421-seekrank",
+    "GE-R421-review-414-421"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "german/narration/ch421.txt",
+  "json": "german/narration/ch421.json",
+  "textHash": "fnv1a64:3d6af7df54bc6303",
+  "jsonHash": "fnv1a64:f8f38c7ec4a169c0",
+  "findings": []
+}

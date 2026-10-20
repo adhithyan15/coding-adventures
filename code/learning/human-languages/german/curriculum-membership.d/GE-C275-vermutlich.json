@@ -1,0 +1,11 @@
+{
+  "id": "GE-C275-vermutlich",
+  "pathSegment": "GE-PATH-275-ANGEBLICH",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-275-ANGEBLICH",
+      "order": 4
+    }
+  ]
+}

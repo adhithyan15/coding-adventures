@@ -1,0 +1,11 @@
+{
+  "id": "GE-C336-nachgeben",
+  "pathSegment": "GE-PATH-336-EINIGUNG",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GE-EXT-336-EINIGUNG",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 378,
+  "sourceHash": "fnv1a64:9f2910f561538621",
+  "lessonIds": [
+    "GE-C378-hausarbeit",
+    "GE-C378-referat",
+    "GE-C378-aufsatz",
+    "GE-C378-zusammenfassung",
+    "GE-C378-zusammenfassen"
+  ],
+  "tex": "german/book/chapters/ch378-die-hausarbeit.tex"
+}

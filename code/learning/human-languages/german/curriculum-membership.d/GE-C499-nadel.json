@@ -1,0 +1,11 @@
+{
+  "id": "GE-C499-nadel",
+  "pathSegment": "GE-PATH-499-HANDARBEIT",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "GE-EXT-499-HANDARBEIT",
+      "order": 0
+    }
+  ]
+}

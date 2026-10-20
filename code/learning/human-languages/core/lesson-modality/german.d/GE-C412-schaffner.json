@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C412-schaffner",
+    "language": "german",
+    "chapter": 412,
+    "sequence": 22240,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:cd62970fed75a4ae"
+  },
+  "findings": []
+}

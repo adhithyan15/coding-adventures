@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C279-stattfinden",
+    "language": "german",
+    "chapter": 279,
+    "sequence": 15390,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7d546745de9b0cbe"
+  },
+  "findings": []
+}

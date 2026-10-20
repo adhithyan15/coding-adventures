@@ -1,0 +1,11 @@
+{
+  "id": "GE-C450-einloesen",
+  "pathSegment": "GE-PATH-450-GELDAUTOMAT",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-450-GELDAUTOMAT",
+      "order": 3
+    }
+  ]
+}

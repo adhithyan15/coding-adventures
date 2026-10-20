@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 398,
+  "sourceHash": "fnv1a64:a621fe3e26cc4d6f",
+  "lessonIds": [
+    "GE-C398-landstrasse",
+    "GE-C398-ausfahrt",
+    "GE-C398-auffahrt",
+    "GE-C398-kreisverkehr",
+    "GE-C398-abbiegen"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch398.txt",
+  "json": "german/narration/ch398.json",
+  "textHash": "fnv1a64:083ad078f9d8463a",
+  "jsonHash": "fnv1a64:20b9372f0729ac8b",
+  "findings": []
+}

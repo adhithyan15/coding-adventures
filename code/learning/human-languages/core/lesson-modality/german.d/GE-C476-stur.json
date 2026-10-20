@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C476-stur",
+    "language": "german",
+    "chapter": 476,
+    "sequence": 25510,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1886d423813e2018"
+  },
+  "findings": []
+}

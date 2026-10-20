@@ -1,0 +1,11 @@
+{
+  "id": "GE-C422-ablegen",
+  "pathSegment": "GE-PATH-422-KREUZFAHRT",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GE-EXT-422-KREUZFAHRT",
+      "order": 2
+    }
+  ]
+}

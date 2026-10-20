@@ -1,0 +1,19 @@
+{
+  "chapter": 492,
+  "title": "Verliebt",
+  "label": "ch:ge-verliebt",
+  "canDo": "I can talk about falling in love.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "GE-C492-kuss",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 492: I can talk about falling in love.",
+    "assesses": [
+      "GE-LEX-C492-VERLIEBT-03",
+      "GE-LEX-C492-VERLIEBT-04",
+      "GE-LEX-C492-VERLIEBT-05"
+    ]
+  }
+}

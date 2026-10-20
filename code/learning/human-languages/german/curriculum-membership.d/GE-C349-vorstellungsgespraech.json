@@ -1,0 +1,11 @@
+{
+  "id": "GE-C349-vorstellungsgespraech",
+  "pathSegment": "GE-PATH-349-STELLE",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GE-EXT-349-STELLE",
+      "order": 1
+    }
+  ]
+}

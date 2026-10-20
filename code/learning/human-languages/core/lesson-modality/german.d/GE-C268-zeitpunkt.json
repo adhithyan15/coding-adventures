@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C268-zeitpunkt",
+    "language": "german",
+    "chapter": 268,
+    "sequence": 14810,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a182202a3ac46a5c"
+  },
+  "findings": []
+}

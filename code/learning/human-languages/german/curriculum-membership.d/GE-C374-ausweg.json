@@ -1,0 +1,11 @@
+{
+  "id": "GE-C374-ausweg",
+  "pathSegment": "GE-PATH-374-ENTSCHLUSS",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GE-EXT-374-ENTSCHLUSS",
+      "order": 2
+    }
+  ]
+}
