@@ -1,0 +1,19 @@
+{
+  "chapter": 163,
+  "title": "A Clean, Quiet and Handy Home",
+  "label": "ch:ja-a-clean-quiet-and-handy-home",
+  "canDo": "I can describe what my home is like.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-DO"
+  ],
+  "payoff": {
+    "lesson": "JA-R163-review-158-163",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 163: I can describe what my home is like.",
+    "assesses": [
+      "JA-LEX-C163-HOME163-03",
+      "JA-LEX-C163-HOME163-04",
+      "JA-LEX-C163-HOME163-05"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C210-ueru",
+    "language": "japanese",
+    "chapter": 210,
+    "sequence": 12630,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:46cfd073365c4e9f"
+  },
+  "findings": []
+}

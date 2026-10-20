@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C247-yuuki",
+    "language": "japanese",
+    "chapter": 247,
+    "sequence": 14820,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6d6e1ce930d4b858"
+  },
+  "findings": []
+}

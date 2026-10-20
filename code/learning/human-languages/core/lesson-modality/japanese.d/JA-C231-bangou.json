@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C231-bangou",
+    "language": "japanese",
+    "chapter": 231,
+    "sequence": 13970,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1a9a359585ee2208"
+  },
+  "findings": []
+}

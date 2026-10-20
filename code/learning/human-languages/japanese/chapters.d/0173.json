@@ -1,0 +1,19 @@
+{
+  "chapter": 173,
+  "title": "Food, Drinks and Leftovers",
+  "label": "ch:ja-food-drinks-and-leftovers",
+  "canDo": "I can talk about food and drink, and what is left over.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-DO"
+  ],
+  "payoff": {
+    "lesson": "JA-C173-ajiwau",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 173: I can talk about food and drink, and what is left over.",
+    "assesses": [
+      "JA-LEX-C173-FOOD173-03",
+      "JA-LEX-C173-FOOD173-04",
+      "JA-LEX-C173-FOOD173-05"
+    ]
+  }
+}

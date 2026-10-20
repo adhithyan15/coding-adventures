@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 236,
+  "sourceHash": "fnv1a64:07646d06d8063112",
+  "lessonIds": [
+    "JA-C236-eiga",
+    "JA-C236-miru",
+    "JA-C236-kiku",
+    "JA-C236-ongaku",
+    "JA-C236-ensou"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch236.txt",
+  "json": "japanese/narration/ch236.json",
+  "textHash": "fnv1a64:8472aa404baf1151",
+  "jsonHash": "fnv1a64:90ace987db97dd85",
+  "findings": []
+}

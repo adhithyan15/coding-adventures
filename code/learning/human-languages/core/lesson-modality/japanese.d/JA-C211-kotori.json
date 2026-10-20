@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C211-kotori",
+    "language": "japanese",
+    "chapter": 211,
+    "sequence": 12700,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4ab8581886af82f7"
+  },
+  "findings": []
+}

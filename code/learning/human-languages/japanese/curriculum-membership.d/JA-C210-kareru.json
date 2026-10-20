@@ -1,0 +1,11 @@
+{
+  "id": "JA-C210-kareru",
+  "pathSegment": "JA-PATH-210-PLANT210",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "JA-EXT-210-PLANT210",
+      "order": 4
+    }
+  ]
+}

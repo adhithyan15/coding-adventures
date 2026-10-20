@@ -1,0 +1,19 @@
+{
+  "chapter": 193,
+  "title": "Shrines, Temples and Cinemas",
+  "label": "ch:ja-shrines-temples-and-cinemas",
+  "canDo": "I can name the sights of a town.",
+  "spineNodes": [
+    "SPINE-READ-PRACTICAL-TEXTS"
+  ],
+  "payoff": {
+    "lesson": "JA-C193-mieru",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 193: I can name the sights of a town.",
+    "assesses": [
+      "JA-LEX-C193-SIGHT193-03",
+      "JA-LEX-C193-SIGHT193-04",
+      "JA-LEX-C193-SIGHT193-05"
+    ]
+  }
+}

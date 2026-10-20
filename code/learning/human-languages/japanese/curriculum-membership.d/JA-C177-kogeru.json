@@ -1,0 +1,11 @@
+{
+  "id": "JA-C177-kogeru",
+  "pathSegment": "JA-PATH-177-TASTE177",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-177-TASTE177",
+      "order": 3
+    }
+  ]
+}

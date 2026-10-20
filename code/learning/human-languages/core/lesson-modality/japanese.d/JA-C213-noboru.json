@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C213-noboru",
+    "language": "japanese",
+    "chapter": 213,
+    "sequence": 12800,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0de8c6163d18bc10"
+  },
+  "findings": []
+}

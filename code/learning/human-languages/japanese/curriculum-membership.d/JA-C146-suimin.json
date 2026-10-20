@@ -1,0 +1,11 @@
+{
+  "id": "JA-C146-suimin",
+  "pathSegment": "JA-PATH-146-SLEEP146",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "JA-EXT-146-SLEEP146",
+      "order": 4
+    }
+  ]
+}

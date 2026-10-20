@@ -1,0 +1,11 @@
+{
+  "id": "JA-C152-isogu",
+  "pathSegment": "JA-PATH-152-READY152",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "JA-EXT-152-READY152",
+      "order": 1
+    }
+  ]
+}

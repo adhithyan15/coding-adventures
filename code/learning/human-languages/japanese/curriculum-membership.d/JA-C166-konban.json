@@ -1,0 +1,11 @@
+{
+  "id": "JA-C166-konban",
+  "pathSegment": "JA-PATH-166-TIMEOFDAY166",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-166-TIMEOFDAY166",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 157,
+  "title": "A Dining Table, a Vase and a Jacket on a Chair",
+  "label": "ch:ja-a-dining-table-a-vase-and-a-jacket-on-a-chair",
+  "canDo": "I can say where I put and hang things in a room.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-DO"
+  ],
+  "payoff": {
+    "lesson": "JA-R157-review-152-157",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 157: I can say where I put and hang things in a room.",
+    "assesses": [
+      "JA-LEX-C157-TABLE157-03",
+      "JA-LEX-C157-TABLE157-04",
+      "JA-LEX-C157-TABLE157-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 189,
+  "title": "Weighing and Handing Over",
+  "label": "ch:ja-weighing-and-handing-over",
+  "canDo": "I can weigh, deliver and hand over parcels.",
+  "spineNodes": [
+    "SPINE-READ-PRACTICAL-TEXTS"
+  ],
+  "payoff": {
+    "lesson": "JA-R189-review-184-189",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 189: I can weigh, deliver and hand over parcels.",
+    "assesses": [
+      "JA-LEX-C189-PARCEL189-03",
+      "JA-LEX-C189-PARCEL189-04",
+      "JA-LEX-C189-PARCEL189-05"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C158-kagi",
+    "language": "japanese",
+    "chapter": 158,
+    "sequence": 9420,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6383fa044479ac1a"
+  },
+  "findings": []
+}

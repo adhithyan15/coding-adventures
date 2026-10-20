@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C226-ukeru",
+    "language": "japanese",
+    "chapter": 226,
+    "sequence": 13730,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:73813b8b97618b8e"
+  },
+  "findings": []
+}

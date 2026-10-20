@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C175-abura",
+    "language": "japanese",
+    "chapter": 175,
+    "sequence": 10590,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:14aa3de926e32f92"
+  },
+  "findings": []
+}

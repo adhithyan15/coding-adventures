@@ -1,0 +1,11 @@
+{
+  "id": "JA-C208-kumori",
+  "pathSegment": "JA-PATH-208-FORECAST208",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "JA-EXT-208-FORECAST208",
+      "order": 1
+    }
+  ]
+}

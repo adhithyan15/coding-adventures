@@ -1,0 +1,19 @@
+{
+  "chapter": 247,
+  "title": "Praise and Scolding",
+  "label": "ch:ja-praise-and-scolding",
+  "canDo": "I can ask who praises and who scolds.",
+  "spineNodes": [
+    "SPINE-NEGATE-AND-ASK"
+  ],
+  "payoff": {
+    "lesson": "JA-R247-review-242-247",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 247: I can ask who praises and who scolds.",
+    "assesses": [
+      "JA-LEX-C247-PRAISE247-03",
+      "JA-LEX-C247-PRAISE247-04",
+      "JA-LEX-C247-PRAISE247-05"
+    ]
+  }
+}

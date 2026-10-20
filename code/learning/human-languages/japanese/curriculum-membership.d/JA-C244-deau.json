@@ -1,0 +1,11 @@
+{
+  "id": "JA-C244-deau",
+  "pathSegment": "JA-PATH-244-MEET244",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "JA-EXT-244-MEET244",
+      "order": 1
+    }
+  ]
+}

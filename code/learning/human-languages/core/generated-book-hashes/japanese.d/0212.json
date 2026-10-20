@@ -1,0 +1,13 @@
+{
+  "language": "japanese",
+  "chapter": 212,
+  "sourceHash": "fnv1a64:38dfa287558f6eba",
+  "lessonIds": [
+    "JA-C212-kion",
+    "JA-C212-agaru",
+    "JA-C212-hieru",
+    "JA-C212-kooru",
+    "JA-C212-tokeru"
+  ],
+  "tex": "japanese/book/chapters/ch212-cold-nights-and-warm-afternoons.tex"
+}

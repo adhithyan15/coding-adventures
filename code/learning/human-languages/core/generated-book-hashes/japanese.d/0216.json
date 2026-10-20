@@ -1,0 +1,13 @@
+{
+  "language": "japanese",
+  "chapter": 216,
+  "sourceHash": "fnv1a64:dca0e9bb88b13d7f",
+  "lessonIds": [
+    "JA-C216-byouki",
+    "JA-C216-guai",
+    "JA-C216-tsukareru",
+    "JA-C216-naoru",
+    "JA-C216-furueru"
+  ],
+  "tex": "japanese/book/chapters/ch216-feeling-unwell.tex"
+}

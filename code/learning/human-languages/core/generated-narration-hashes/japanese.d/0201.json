@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 201,
+  "sourceHash": "fnv1a64:ca1f735cc3398373",
+  "lessonIds": [
+    "JA-C201-wataru",
+    "JA-C201-komu",
+    "JA-C201-yokogiru",
+    "JA-C201-tobidasu",
+    "JA-C201-butsukaru"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch201.txt",
+  "json": "japanese/narration/ch201.json",
+  "textHash": "fnv1a64:bdeb2de2f0d8fbfa",
+  "jsonHash": "fnv1a64:80c80c1607d61972",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 213,
+  "sourceHash": "fnv1a64:602313dec9a56bd4",
+  "lessonIds": [
+    "JA-C213-hikaru",
+    "JA-C213-tsuki",
+    "JA-C213-shizumu",
+    "JA-C213-noboru",
+    "JA-C213-atatamaru"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch213.txt",
+  "json": "japanese/narration/ch213.json",
+  "textHash": "fnv1a64:adec994b79aafb23",
+  "jsonHash": "fnv1a64:cb4297c9067e1ba8",
+  "findings": []
+}

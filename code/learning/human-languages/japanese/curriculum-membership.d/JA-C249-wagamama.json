@@ -1,0 +1,11 @@
+{
+  "id": "JA-C249-wagamama",
+  "pathSegment": "JA-PATH-249-HEART249",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "JA-EXT-249-HEART249",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "language": "japanese",
+  "chapter": 164,
+  "sourceHash": "fnv1a64:9fc9ae24198a517e",
+  "lessonIds": [
+    "JA-C164-kayoubi",
+    "JA-C164-suiyoubi",
+    "JA-C164-mokuyoubi",
+    "JA-C164-kinyoubi",
+    "JA-C164-nichiyoubi"
+  ],
+  "tex": "japanese/book/chapters/ch164-tuesday-through-to-sunday.tex"
+}

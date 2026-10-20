@@ -1,0 +1,19 @@
+{
+  "chapter": 210,
+  "title": "Trees and Growing Things",
+  "label": "ch:ja-trees-and-growing-things",
+  "canDo": "I can say what I will plant and how it grows.",
+  "spineNodes": [
+    "SPINE-TALK-ABOUT-FUTURE"
+  ],
+  "payoff": {
+    "lesson": "JA-C210-kareru",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 210: I can say what I will plant and how it grows.",
+    "assesses": [
+      "JA-LEX-C210-PLANT210-03",
+      "JA-LEX-C210-PLANT210-04",
+      "JA-LEX-C210-PLANT210-05"
+    ]
+  }
+}

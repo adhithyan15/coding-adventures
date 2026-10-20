@@ -1,0 +1,934 @@
+{
+  "version": 1,
+  "language": "japanese",
+  "chapter": 215,
+  "title": "Arms, Fingers and Necks",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:ae692b2d5dd9fbc9",
+  "lessons": [
+    {
+      "id": "JA-C215-karada",
+      "sequence": 12870,
+      "title": "からだ (karada) — the body",
+      "headword": "からだ",
+      "romanization": "karada",
+      "gloss": "the body",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:fbb2b2c4b259d6a9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to burn, then the Japanese for to vanish."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: からだ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "からだ — karada — \"the body\"."
+            },
+            {
+              "kind": "speech",
+              "text": "これは からだに いいですか。 — kore wa karada ni ii desu ka — \"Is this good for your body?\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "からだ (karada) is a native Japanese word (wago), inherited rather than borrowed from Chinese; its kanji was attached later as a kun'yomi, and its older origin is not settled (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "karada",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *karada*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "karada, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *karada*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kore wa karada ni ii desu ka — Is this good for your body?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kore wa karada ni ii desu ka* — Is this good for your body?]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to burn, then the Japanese for to vanish, then say karada again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to burn, then the Japanese for to vanish, then say *karada* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does からだ (karada) mean? (\"The body\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C215-karada-type",
+              "prompt": "Say the Japanese for 'the body'.",
+              "assesses": [
+                "JA-LEX-C215-BODY215-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "からだ",
+                "karada"
+              ],
+              "feedback": {
+                "correct": "Right: からだ (karada) is 'the body'.",
+                "incorrect": "'The body' is からだ (karada)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C215-yubi",
+      "sequence": 12880,
+      "title": "ゆび (yubi) — a finger; a toe",
+      "headword": "ゆび",
+      "romanization": "yubi",
+      "gloss": "a finger; a toe",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:dd2f9ba36731a7de",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to vanish, then the Japanese for the body."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ゆび",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ゆび — yubi — \"a finger; a toe\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ゆびが うごきません。 — yubi ga ugokimasen — \"My finger does not move.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ゆび (yubi) is a native Japanese word (wago), inherited rather than borrowed from Chinese; its kanji was attached later as a kun'yomi, and its older origin is not settled (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yubi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yubi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yubi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yubi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yubi ga ugokimasen — My finger does not move.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yubi ga ugokimasen* — My finger does not move.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to vanish, then the Japanese for the body, then say yubi again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to vanish, then the Japanese for the body, then say *yubi* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ゆび (yubi) mean? (\"A finger; a toe\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C215-yubi-type",
+              "prompt": "Say the Japanese for 'a finger'.",
+              "assesses": [
+                "JA-LEX-C215-BODY215-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "ゆび",
+                "yubi"
+              ],
+              "feedback": {
+                "correct": "Right: ゆび (yubi) is 'a finger; a toe'.",
+                "incorrect": "'A finger' is ゆび (yubi)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C215-ude",
+      "sequence": 12890,
+      "title": "うで (ude) — an arm",
+      "headword": "うで",
+      "romanization": "ude",
+      "gloss": "an arm",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:eb5132d0dddf3380",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for the body, then the Japanese for a finger."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: うで",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "うで — ude — \"an arm\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ちちは うでが つよいです。 — chichi wa ude ga tsuyoi desu — \"My father has strong arms.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "うで (ude) is a native Japanese word (wago), inherited rather than borrowed from Chinese; its kanji was attached later as a kun'yomi, and its older origin is not settled (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ude",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ude*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ude, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ude*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chichi wa ude ga tsuyoi desu — My father has strong arms.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chichi wa ude ga tsuyoi desu* — My father has strong arms.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for the body, then the Japanese for a finger, then say ude again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for the body, then the Japanese for a finger, then say *ude* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does うで (ude) mean? (\"An arm\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C215-ude-type",
+              "prompt": "Say the Japanese for 'an arm'.",
+              "assesses": [
+                "JA-LEX-C215-BODY215-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "うで",
+                "ude"
+              ],
+              "feedback": {
+                "correct": "Right: うで (ude) is 'an arm'.",
+                "incorrect": "'An arm' is うで (ude)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C215-kubi",
+      "sequence": 12900,
+      "title": "くび (kubi) — a neck",
+      "headword": "くび",
+      "romanization": "kubi",
+      "gloss": "a neck",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:510c7ca12344a519",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for a finger, then the Japanese for an arm."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: くび",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "くび — kubi — \"a neck\"."
+            },
+            {
+              "kind": "speech",
+              "text": "くびが いたいですか。 — kubi ga itai desu ka — \"Does your neck hurt?\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "くび (kubi) is a native Japanese word (wago), inherited rather than borrowed from Chinese; its kanji was attached later as a kun'yomi, and its older origin is not settled (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kubi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kubi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kubi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kubi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kubi ga itai desu ka — Does your neck hurt?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kubi ga itai desu ka* — Does your neck hurt?]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for a finger, then the Japanese for an arm, then say kubi again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for a finger, then the Japanese for an arm, then say *kubi* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does くび (kubi) mean? (\"A neck\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C215-kubi-type",
+              "prompt": "Say the Japanese for 'a neck'.",
+              "assesses": [
+                "JA-LEX-C215-BODY215-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "くび",
+                "kubi"
+              ],
+              "feedback": {
+                "correct": "Right: くび (kubi) is 'a neck'.",
+                "incorrect": "'A neck' is くび (kubi)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C215-seki",
+      "sequence": 12910,
+      "title": "せき (seki) — a cough",
+      "headword": "せき",
+      "romanization": "seki",
+      "gloss": "a cough",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9949eac0bb7fd94e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for an arm, then the Japanese for a neck."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: せき",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "せき — seki — \"a cough\"."
+            },
+            {
+              "kind": "speech",
+              "text": "せきは でません。 — seki wa demasen — \"I do not have a cough.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "せき (seki) is a native Japanese word (wago), inherited rather than borrowed from Chinese; its kanji spelling came later, and its older origin is not settled (JMdict)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "seki",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *seki*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "seki, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *seki*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "seki wa demasen — I do not have a cough.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *seki wa demasen* — I do not have a cough.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for an arm, then the Japanese for a neck, then say seki again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for an arm, then the Japanese for a neck, then say *seki* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does せき (seki) mean? (\"A cough\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C215-seki-type",
+              "prompt": "Say the Japanese for 'a cough'.",
+              "assesses": [
+                "JA-LEX-C215-BODY215-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "せき",
+                "seki"
+              ],
+              "feedback": {
+                "correct": "Right: せき (seki) is 'a cough'.",
+                "incorrect": "'A cough' is せき (seki)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-R215-review-210-215",
+      "sequence": 12920,
+      "title": "Words from chapters 210–215 — a review",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of chapters 210-215",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e746fd5e8d0ce377",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Japanese for a tree and to plant."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a tree, to plant, a plant, to grow, to wither",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a tree, to plant, a plant, to grow, to wither]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "an animal, a monkey, a rabbit, a small bird, to increase",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: an animal, a monkey, a rabbit, a small bird, to increase]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "air temperature, to rise, to get cold, to freeze, to melt",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: air temperature, to rise, to get cold, to freeze, to melt]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to shine, the moon, to sink, to climb, to get warm",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to shine, the moon, to sink, to climb, to get warm]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a storm, to shake, a fire, to burn, to vanish",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a storm, to shake, a fire, to burn, to vanish]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the body, a finger, an arm, a neck, a cough",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the body, a finger, an arm, a neck, a cough]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A tree? (き, ki.) To plant? (うえる, ueru.) A plant? (しょくぶつ, shokubutsu.) To grow? (そだつ, sodatsu.) To wither? (かれる, kareru.) An animal? (どうぶつ, dōbutsu.) A monkey? (さる, saru.) A rabbit? (うさぎ, usagi.) A small bird? (ことり, kotori.) To increase? (ふえる, fueru.) Air temperature? (きおん, kion.) To rise? (あがる, agaru.) To get cold? (ひえる, hieru.) To freeze? (こおる, kōru.) To melt? (とける, tokeru.) To shine? (ひかる, hikaru.) The moon? (つき, tsuki.) To sink? (しずむ, shizumu.) To climb? (のぼる, noboru.) To get warm? (あたたまる, atatamaru.) A storm? (あらし, arashi.) To shake? (ゆれる, yureru.) A fire? (ひ, hi.) To burn? (もえる, moeru.) To vanish? (きえる, kieru.) The body? (からだ, karada.) A finger? (ゆび, yubi.) An arm? (うで, ude.) A neck? (くび, kubi.) A cough? (せき, seki.)"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-R215-review-210-215-type",
+              "prompt": "Say the Japanese for 'a tree'.",
+              "assesses": [
+                "JA-LEX-C210-PLANT210-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "き",
+                "ki"
+              ],
+              "feedback": {
+                "correct": "Right: き (ki) is 'a tree; wood'.",
+                "incorrect": "'A tree' is き (ki)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

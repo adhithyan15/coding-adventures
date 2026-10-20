@@ -1,0 +1,803 @@
+{
+  "version": 1,
+  "language": "japanese",
+  "chapter": 184,
+  "title": "Goods, Queues and Exchanges",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:ef4510ad26f5b275",
+  "lessons": [
+    {
+      "id": "JA-C184-shinamono",
+      "sequence": 11020,
+      "title": "しなもの (shinamono) — goods; article, item",
+      "headword": "しなもの",
+      "romanization": "shinamono",
+      "gloss": "goods; article, item",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d2ebb48d4b0ce0ba",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to choose, then the Japanese for to line up."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: しなもの",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "しなもの — shinamono — \"goods; article, item\"."
+            },
+            {
+              "kind": "speech",
+              "text": "この みせの しなものは やすいです。 — kono mise no shinamono wa yasui desu — \"The goods in this shop are cheap.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "しなもの (shinamono) is native Japanese, built from shina, \"article, goods\", and mono, \"thing\", both inherited rather than borrowed (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shinamono",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shinamono*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shinamono, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shinamono*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kono mise no shinamono wa yasui desu — The goods in this shop are cheap.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kono mise no shinamono wa yasui desu* — The goods in this shop are cheap.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to choose, then the Japanese for to line up, then say shinamono again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to choose, then the Japanese for to line up, then say *shinamono* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does しなもの (shinamono) mean? (\"Goods; article, item\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C184-shinamono-type",
+              "prompt": "Say the Japanese for 'goods'.",
+              "assesses": [
+                "JA-LEX-C184-GOODS184-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "しなもの",
+                "shinamono"
+              ],
+              "feedback": {
+                "correct": "Right: しなもの (shinamono) is 'goods; article, item'.",
+                "incorrect": "'Goods' is しなもの (shinamono)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C184-retsu",
+      "sequence": 11030,
+      "title": "れつ (retsu) — queue; line, row",
+      "headword": "れつ",
+      "romanization": "retsu",
+      "gloss": "queue; line, row",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e9a7c789cd30aaef",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to line up, then the Japanese for goods."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: れつ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "れつ — retsu — \"queue; line, row\"."
+            },
+            {
+              "kind": "speech",
+              "text": "みせの まえに ながい れつが あります。 — mise no mae ni nagai retsu ga arimasu — \"There is a long queue in front of the shop.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "れつ (retsu) is Sino-Japanese (kango): one Chinese character, \"row, file\", read with its on'yomi, a reading borrowed from Chinese (Middle Chinese ljet) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "retsu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *retsu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "retsu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *retsu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mise no mae ni nagai retsu ga arimasu — There is a long queue in front of the shop.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mise no mae ni nagai retsu ga arimasu* — There is a long queue in front of the shop.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to line up, then the Japanese for goods, then say retsu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to line up, then the Japanese for goods, then say *retsu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does れつ (retsu) mean? (\"Queue; line, row\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C184-retsu-type",
+              "prompt": "Say the Japanese for 'queue'.",
+              "assesses": [
+                "JA-LEX-C184-GOODS184-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "れつ",
+                "retsu"
+              ],
+              "feedback": {
+                "correct": "Right: れつ (retsu) is 'queue; line, row'.",
+                "incorrect": "'Queue' is れつ (retsu)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C184-torikaeru",
+      "sequence": 11040,
+      "title": "とりかえる (torikaeru) — to exchange; to swap, to replace",
+      "headword": "とりかえる",
+      "romanization": "torikaeru",
+      "gloss": "to exchange; to swap, to replace",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4b2fbf6e6ac68523",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for goods, then the Japanese for queue."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: とりかえる",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "とりかえる — torikaeru — \"to exchange; to swap, to replace\"."
+            },
+            {
+              "kind": "speech",
+              "text": "てんいんが くつを とりかえます。 — ten'in ga kutsu o torikaemasu — \"The shop assistant exchanges the shoes.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite とりかえます, torikaemasu; an ichidan verb."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "とりかえる (torikaeru) is native Japanese, built from tori, the stem of toru, \"to take\", and kaeru, \"to exchange\", both inherited rather than borrowed (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "torikaeru",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *torikaeru*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "torikaeru, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *torikaeru*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ten'in ga kutsu o torikaemasu — The shop assistant exchanges the shoes.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ten'in ga kutsu o torikaemasu* — The shop assistant exchanges the shoes.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for goods, then the Japanese for queue, then say torikaeru again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for goods, then the Japanese for queue, then say *torikaeru* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does とりかえる (torikaeru) mean? (\"To exchange; to swap, to replace\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C184-torikaeru-type",
+              "prompt": "Say the Japanese for 'to exchange'.",
+              "assesses": [
+                "JA-LEX-C184-GOODS184-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "とりかえる",
+                "torikaeru"
+              ],
+              "feedback": {
+                "correct": "Right: とりかえる (torikaeru) is 'to exchange; to swap, to replace'.",
+                "incorrect": "'To exchange' is とりかえる (torikaeru)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C184-zenbu",
+      "sequence": 11050,
+      "title": "ぜんぶ (zenbu) — all of it; everything, in all",
+      "headword": "ぜんぶ",
+      "romanization": "zenbu",
+      "gloss": "all of it; everything, in all",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:374f3f5f3e51424b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for queue, then the Japanese for to exchange."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ぜんぶ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ぜんぶ — zenbu — \"all of it; everything, in all\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ぜんぶで せんえんです。 — zenbu de sen'en desu — \"It comes to a thousand yen in all.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ぜんぶ (zenbu) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are zen, \"whole\" (Middle Chinese dzjwen) and bu, \"part, section\" (buX) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "zenbu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *zenbu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "zenbu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *zenbu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "zenbu de sen'en desu — It comes to a thousand yen in all.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *zenbu de sen'en desu* — It comes to a thousand yen in all.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for queue, then the Japanese for to exchange, then say zenbu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for queue, then the Japanese for to exchange, then say *zenbu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ぜんぶ (zenbu) mean? (\"All of it; everything, in all\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C184-zenbu-type",
+              "prompt": "Say the Japanese for 'all of it'.",
+              "assesses": [
+                "JA-LEX-C184-GOODS184-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "ぜんぶ",
+                "zenbu"
+              ],
+              "feedback": {
+                "correct": "Right: ぜんぶ (zenbu) is 'all of it; everything, in all'.",
+                "incorrect": "'All of it' is ぜんぶ (zenbu)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C184-choudo",
+      "sequence": 11060,
+      "title": "ちょうど (chōdo) — exactly; precisely, right",
+      "headword": "ちょうど",
+      "romanization": "chōdo",
+      "gloss": "exactly; precisely, right",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:531f9b780873e4dd",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to exchange, then the Japanese for all of it."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ちょうど",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ちょうど — chōdo — \"exactly; precisely, right\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ちょうど せんえんです。 — chōdo sen'en desu — \"It is exactly a thousand yen.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ちょうど (chōdo) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are chō (Middle Chinese teng) and do, \"degree\" (duH); JMdict marks it as usually written in kana (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chōdo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chōdo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chōdo, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chōdo*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chōdo sen'en desu — It is exactly a thousand yen.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chōdo sen'en desu* — It is exactly a thousand yen.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to exchange, then the Japanese for all of it, then say chōdo again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to exchange, then the Japanese for all of it, then say *chōdo* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ちょうど (chōdo) mean? (\"Exactly; precisely, right\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C184-choudo-type",
+              "prompt": "Say the Japanese for 'exactly'.",
+              "assesses": [
+                "JA-LEX-C184-GOODS184-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "ちょうど",
+                "chōdo",
+                "choudo",
+                "choodo",
+                "chodo"
+              ],
+              "feedback": {
+                "correct": "Right: ちょうど (chōdo) is 'exactly; precisely, right'.",
+                "incorrect": "'Exactly' is ちょうど (chōdo)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

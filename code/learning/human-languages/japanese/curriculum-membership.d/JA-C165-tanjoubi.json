@@ -1,0 +1,11 @@
+{
+  "id": "JA-C165-tanjoubi",
+  "pathSegment": "JA-PATH-165-DATES165",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "JA-EXT-165-DATES165",
+      "order": 4
+    }
+  ]
+}

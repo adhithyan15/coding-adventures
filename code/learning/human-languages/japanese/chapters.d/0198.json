@@ -1,0 +1,19 @@
+{
+  "chapter": 198,
+  "title": "Getting On and Off the Train",
+  "label": "ch:ja-getting-on-and-off-the-train",
+  "canDo": "I can say how I ride trains, bicycles and the subway.",
+  "spineNodes": [
+    "SPINE-READ-PRACTICAL-TEXTS"
+  ],
+  "payoff": {
+    "lesson": "JA-C198-tsuku",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 198: I can say how I ride trains, bicycles and the subway.",
+    "assesses": [
+      "JA-LEX-C198-RIDE198-03",
+      "JA-LEX-C198-RIDE198-04",
+      "JA-LEX-C198-RIDE198-05"
+    ]
+  }
+}

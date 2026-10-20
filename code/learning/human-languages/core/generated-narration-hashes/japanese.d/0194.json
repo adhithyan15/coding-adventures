@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 194,
+  "sourceHash": "fnv1a64:9c07a77656f9f13e",
+  "lessonIds": [
+    "JA-C194-migi",
+    "JA-C194-massugu",
+    "JA-C194-magaru",
+    "JA-C194-tooru",
+    "JA-C194-hakubutsukan"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch194.txt",
+  "json": "japanese/narration/ch194.json",
+  "textHash": "fnv1a64:414fa78a21cc2297",
+  "jsonHash": "fnv1a64:9de668f3aa071368",
+  "findings": []
+}

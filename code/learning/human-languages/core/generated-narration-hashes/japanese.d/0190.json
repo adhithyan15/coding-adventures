@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 190,
+  "sourceHash": "fnv1a64:94866e08867add34",
+  "lessonIds": [
+    "JA-C190-tatemono",
+    "JA-C190-shoutengai",
+    "JA-C190-hyakkaten",
+    "JA-C190-hairu",
+    "JA-C190-aku"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch190.txt",
+  "json": "japanese/narration/ch190.json",
+  "textHash": "fnv1a64:0017c86562abef64",
+  "jsonHash": "fnv1a64:6208722e590d7d08",
+  "findings": []
+}

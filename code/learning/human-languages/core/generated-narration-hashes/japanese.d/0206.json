@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 206,
+  "sourceHash": "fnv1a64:1feff9d941f14828",
+  "lessonIds": [
+    "JA-C206-norimono",
+    "JA-C206-koutsuu",
+    "JA-C206-juutai",
+    "JA-C206-joukyaku",
+    "JA-C206-yoyaku"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch206.txt",
+  "json": "japanese/narration/ch206.json",
+  "textHash": "fnv1a64:7b3cda432cd89650",
+  "jsonHash": "fnv1a64:4a80e799f356afa5",
+  "findings": []
+}
