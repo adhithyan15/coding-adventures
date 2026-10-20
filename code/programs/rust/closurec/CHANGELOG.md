@@ -102,6 +102,13 @@ while the separate empty probe has its intended policy, reopen its active path
 with production verification access and verify identity, zero length and policy.
 Unsupported verification policies now reject before original mutation.
 
+### Fixed - a constant `switch` no longer loses a nested `break` (#17842)
+
+`while(c--){switch(1){case 1:if(x)break;b();break}d()}` collapsed the switch,
+so its inner `break` exited the loop and `d()` never ran. The fix is in
+`closure-pass-dce`. `tests/regression_switch_collapse_break.rs` runs both
+shapes under node at SIMPLE and ADVANCED.
+
 ### Fixed locally - verified Windows publication policies (CV02)
 
 Create prepared directories and files with atomically protected current-user
