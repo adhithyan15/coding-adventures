@@ -235,6 +235,24 @@ historical context with status `RESOLVED` and a link to the fix PR.
   - 10 inline tests pin every rule + edge case (function-expression doesn't get trailing `;`, if/while/for body slots preserved, dedup works, multi-stmt drops only last `;`, top-level `var` unchanged).
   - The pre-existing `tests/diff/whitespace-only/expected.stdout` was updated — its hand-written golden predicted `function add(a,b){return a+b;}` (closurec's old shape), but upstream Closure actually emits `function add(a,b){return a+b};`. Re-captured from upstream JAR to match the now-correct output.
 
+### CCR-084 (#15919) — a block-final `throw` keeps its `;` (exception to gap-030 rule A)
+
+- **Upstream rule.** At the audited commit `10ca677a`, `CodeGenerator` ends
+  `THROW` with `cc.endStatement(/* needSemiColon= */ true, …)`. The source
+  comment explains why: "Must have a ';' after a throw statement, otherwise
+  safari can't parse this". Every other terminator (`return`, `break`,
+  `continue`, expression statements, `var`) uses the plain `endStatement`,
+  which lets a following `}` absorb the `;`. The printer is shared by all
+  compilation levels.
+- **Slice 1, AST emitter (SIMPLE/ADVANCED): resolved.**
+  `ThrowStatement` is removed from `last_stmt_uses_terminator_semi`, so
+  neither `emit_block_statement` nor `emit_switch` pops a `throw`'s `;`.
+  `function f(){throw 1}` now emits `function f(){throw 1;}`.
+- **Slice 2, WHITESPACE_ONLY token path (`whitespace_only.rs`): open.** Rule
+  A still drops the `;`, and a `throw` that was ASI-terminated before `}`
+  gets none. Upstream WHITESPACE_ONLY bytes are in #15919, probed under Java
+  21.0.10.
+
 ### gap-031 — empty `{}` body collapses to `;`
 
 - **Status:** **RESOLVED** in CLOC12.41 (PR pending). `minify_for_loop` flipped IGNORED → PASS.
