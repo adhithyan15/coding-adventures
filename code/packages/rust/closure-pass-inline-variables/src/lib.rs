@@ -356,6 +356,9 @@ fn inline_variables_program(
     // serialized AST as well, which sees every one (see
     // `count_binding_sites`).
     let program_json = serde_json::to_value(&*program).unwrap_or(serde_json::Value::Null);
+    // One walk for every name, so checking each candidate is a lookup.
+    let mut binding_sites: HashMap<String, usize> = HashMap::new();
+    count_binding_sites(&program_json, &mut binding_sites);
 
     // Phase 2 — collect candidates from top-level `const` declarators
     // whose initializer is a literal and whose name is declared once.
@@ -384,7 +387,7 @@ fn inline_variables_program(
         if decl_counts.get(&id.name).copied().unwrap_or(0) != 1 {
             continue; // shadowed somewhere — can't resolve uses by name
         }
-        if count_binding_sites(&program_json, &id.name) != 1 {
+        if binding_sites.get(&id.name).copied().unwrap_or(0) != 1 {
             continue; // shadowed inside an expression (function, arrow, class, catch)
         }
         let init = match &d.init {
@@ -1320,7 +1323,7 @@ fn program_contains_with(v: &serde_json::Value) -> bool {
 /// nobody remembered to visit must fail *closed*, and here that means any
 /// node whose type is one of the write forms disqualifies the name if the
 /// name appears anywhere beneath the written side.
-/// How many places in the serialized program bind `name`?
+/// Count, for every name, how many places in the serialized program bind it.
 ///
 /// The binding forms, in the AST's serde shape:
 ///
@@ -1332,41 +1335,44 @@ fn program_contains_with(v: &serde_json::Value) -> bool {
 ///
 /// It reaches every depth, including function and arrow expressions, methods
 /// and class expressions, which the typed `count_decl_names_*` walk skips.
+/// One walk serves every candidate, so the check is linear in program size.
 /// Over-counting is safe, since it can only decline a candidate. Labels live
 /// in their own namespace and are not counted.
 ///
 /// ```js
 /// const T = true;
-/// (function (T) { if (T) a(); else b(); })(false);   // 2 sites: keep T
+/// (function (T) { if (T) a(); else b(); })(false);   // T: 2 sites, so keep it
 /// ```
-fn count_binding_sites(v: &serde_json::Value, name: &str) -> usize {
-    let named = |b: Option<&serde_json::Value>| {
-        b.and_then(|b| b.get("name"))
-            .and_then(serde_json::Value::as_str)
-            == Some(name)
-    };
+fn count_binding_sites(v: &serde_json::Value, out: &mut HashMap<String, usize>) {
+    fn bump(b: Option<&serde_json::Value>, out: &mut HashMap<String, usize>) {
+        if let Some(name) = b.and_then(|b| b.get("name")).and_then(serde_json::Value::as_str) {
+            *out.entry(name.to_string()).or_insert(0) += 1;
+        }
+    }
     match v {
         serde_json::Value::Object(map) => {
-            let mut n = 0;
-            if named(map.get("id")) {
-                n += 1;
-            }
-            if named(map.get("param")) {
-                n += 1;
-            }
+            bump(map.get("id"), out);
+            bump(map.get("param"), out);
             if let Some(serde_json::Value::Array(params)) = map.get("params") {
                 for p in params {
-                    if named(Some(p)) || named(p.get("left")) || named(p.get("argument")) {
-                        n += 1;
-                    }
+                    // A param is exactly one of the three shapes.
+                    let site = [Some(p), p.get("left"), p.get("argument")]
+                        .into_iter()
+                        .flatten()
+                        .find(|b| b.get("name").is_some_and(serde_json::Value::is_string));
+                    bump(site, out);
                 }
             }
-            n + map.values().map(|child| count_binding_sites(child, name)).sum::<usize>()
+            for child in map.values() {
+                count_binding_sites(child, out);
+            }
         }
         serde_json::Value::Array(items) => {
-            items.iter().map(|child| count_binding_sites(child, name)).sum()
+            for child in items {
+                count_binding_sites(child, out);
+            }
         }
-        _ => 0,
+        _ => {}
     }
 }
 
