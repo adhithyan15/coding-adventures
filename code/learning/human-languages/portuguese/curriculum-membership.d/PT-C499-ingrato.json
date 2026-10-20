@@ -1,0 +1,11 @@
+{
+  "id": "PT-C499-ingrato",
+  "pathSegment": "PT-PATH-499-GRATIDAO",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PT-EXT-499-GRATIDAO",
+      "order": 2
+    }
+  ]
+}

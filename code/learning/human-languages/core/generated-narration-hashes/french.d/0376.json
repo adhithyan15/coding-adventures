@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 376,
+  "sourceHash": "fnv1a64:03cb75f8ef11164f",
+  "lessonIds": [
+    "FR-C376-faculte",
+    "FR-C376-inscrire",
+    "FR-C376-inscription",
+    "FR-C376-semestre",
+    "FR-C376-amphitheatre"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch376.txt",
+  "json": "french/narration/ch376.json",
+  "textHash": "fnv1a64:cca99c699395460d",
+  "jsonHash": "fnv1a64:133b8cbd0125f019",
+  "findings": []
+}

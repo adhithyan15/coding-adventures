@@ -1,0 +1,9 @@
+{
+  "id": "LA-PATH-308-IUDEX",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "LA-EXT-308-IUDEX"
+  ],
+  "after": []
+}

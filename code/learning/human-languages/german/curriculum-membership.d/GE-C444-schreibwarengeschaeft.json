@@ -1,0 +1,11 @@
+{
+  "id": "GE-C444-schreibwarengeschaeft",
+  "pathSegment": "GE-PATH-444-BAUMARKT",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GE-EXT-444-BAUMARKT",
+      "order": 1
+    }
+  ]
+}

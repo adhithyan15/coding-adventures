@@ -1,0 +1,19 @@
+{
+  "chapter": 490,
+  "title": "Manter a forma",
+  "label": "ch:pt-manter-a-forma",
+  "canDo": "I can talk about keeping fit and healthy.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "PT-R490-revisao-483-490",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 490: I can talk about keeping fit and healthy.",
+    "assesses": [
+      "PT-LEX-C490-FORMA-03",
+      "PT-LEX-C490-FORMA-04",
+      "PT-LEX-C490-FORMA-05"
+    ]
+  }
+}

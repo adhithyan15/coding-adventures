@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C369-garantie",
+    "language": "german",
+    "chapter": 369,
+    "sequence": 20020,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a5af92e56894cb6c"
+  },
+  "findings": []
+}

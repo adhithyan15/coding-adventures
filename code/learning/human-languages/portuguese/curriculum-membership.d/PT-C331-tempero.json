@@ -1,0 +1,11 @@
+{
+  "id": "PT-C331-tempero",
+  "pathSegment": "PT-PATH-331-REFOGAR",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PT-EXT-331-REFOGAR",
+      "order": 1
+    }
+  ]
+}

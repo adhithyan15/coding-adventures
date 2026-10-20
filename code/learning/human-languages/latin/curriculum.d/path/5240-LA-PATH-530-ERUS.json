@@ -1,0 +1,9 @@
+{
+  "id": "LA-PATH-530-ERUS",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "LA-EXT-530-ERUS"
+  ],
+  "after": []
+}

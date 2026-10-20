@@ -1,0 +1,11 @@
+{
+  "id": "LA-C337-certamen",
+  "pathSegment": "LA-PATH-337-PALMA",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "LA-EXT-337-PALMA",
+      "order": 3
+    }
+  ]
+}

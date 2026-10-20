@@ -1,0 +1,9 @@
+{
+  "id": "PT-PATH-293-PATRULHA",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "PT-EXT-293-PATRULHA"
+  ],
+  "after": []
+}

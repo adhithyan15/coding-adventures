@@ -1,0 +1,11 @@
+{
+  "id": "PT-C348-causar",
+  "pathSegment": "PT-PATH-348-EFEITO",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PT-EXT-348-EFEITO",
+      "order": 2
+    }
+  ]
+}

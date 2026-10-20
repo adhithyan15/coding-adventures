@@ -1,0 +1,19 @@
+{
+  "chapter": 523,
+  "title": "Vor dem Fernseher",
+  "label": "ch:ge-vor-dem-fernseher",
+  "canDo": "I can talk about watching television.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "GE-C523-einschaltquote",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 523: I can talk about watching television.",
+    "assesses": [
+      "GE-LEX-C523-FERNSEHEN-03",
+      "GE-LEX-C523-FERNSEHEN-04",
+      "GE-LEX-C523-FERNSEHEN-05"
+    ]
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "language": "portuguese",
+  "chapter": 464,
+  "sourceHash": "fnv1a64:d86eccf8bc3e7db6",
+  "lessonIds": [
+    "PT-C464-geada",
+    "PT-C464-orvalho",
+    "PT-C464-congelar",
+    "PT-C464-congelador",
+    "PT-C464-derreter",
+    "PT-R464-revisao-457-464"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "portuguese/narration/ch464.txt",
+  "json": "portuguese/narration/ch464.json",
+  "textHash": "fnv1a64:bdb69a936b211113",
+  "jsonHash": "fnv1a64:f7f3fab6c1da09ba",
+  "findings": []
+}

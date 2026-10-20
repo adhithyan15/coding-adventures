@@ -1,0 +1,11 @@
+{
+  "id": "PT-C431-esquentador",
+  "pathSegment": "PT-PATH-431-AQUECIMENTO",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PT-EXT-431-AQUECIMENTO",
+      "order": 2
+    }
+  ]
+}

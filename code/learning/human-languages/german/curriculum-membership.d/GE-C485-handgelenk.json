@@ -1,0 +1,11 @@
+{
+  "id": "GE-C485-handgelenk",
+  "pathSegment": "GE-PATH-485-GELENKE",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GE-EXT-485-GELENKE",
+      "order": 2
+    }
+  ]
+}

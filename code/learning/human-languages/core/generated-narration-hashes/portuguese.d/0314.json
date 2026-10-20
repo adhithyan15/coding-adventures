@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 314,
+  "sourceHash": "fnv1a64:8bcb9c3972d5ac86",
+  "lessonIds": [
+    "PT-C314-falecimento",
+    "PT-C314-falecer",
+    "PT-C314-obito",
+    "PT-C314-luto",
+    "PT-C314-velorio"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch314.txt",
+  "json": "portuguese/narration/ch314.json",
+  "textHash": "fnv1a64:3bbe46d03de8de72",
+  "jsonHash": "fnv1a64:d0429d31c004c36f",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 504,
+  "sourceHash": "fnv1a64:7b08ea620c8f1b25",
+  "lessonIds": [
+    "PT-C504-colecao",
+    "PT-C504-colecionar",
+    "PT-C504-artesanato",
+    "PT-C504-barro",
+    "PT-C504-olaria"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch504.txt",
+  "json": "portuguese/narration/ch504.json",
+  "textHash": "fnv1a64:a4242fc8dce3cb9e",
+  "jsonHash": "fnv1a64:15cb1c308b975773",
+  "findings": []
+}

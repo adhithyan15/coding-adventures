@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C340-eques",
+    "language": "latin",
+    "chapter": 340,
+    "sequence": 18320,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9d280cb03a87e4c3"
+  },
+  "findings": []
+}

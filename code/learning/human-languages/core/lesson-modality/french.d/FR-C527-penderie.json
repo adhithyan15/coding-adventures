@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C527-penderie",
+    "language": "french",
+    "chapter": 527,
+    "sequence": 28850,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:157e0f80157fe67b"
+  },
+  "findings": []
+}

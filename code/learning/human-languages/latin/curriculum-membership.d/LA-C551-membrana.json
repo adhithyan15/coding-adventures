@@ -1,0 +1,11 @@
+{
+  "id": "LA-C551-membrana",
+  "pathSegment": "LA-PATH-551-CAPS",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "LA-EXT-551-CAPS",
+      "order": 2
+    }
+  ]
+}

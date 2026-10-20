@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PT-C416-atraso",
+    "language": "portuguese",
+    "chapter": 416,
+    "sequence": 23370,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e7a369ae269135b8"
+  },
+  "findings": []
+}

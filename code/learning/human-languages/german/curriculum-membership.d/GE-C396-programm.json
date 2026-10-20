@@ -1,0 +1,11 @@
+{
+  "id": "GE-C396-programm",
+  "pathSegment": "GE-PATH-396-COMPUTER",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-396-COMPUTER",
+      "order": 4
+    }
+  ]
+}

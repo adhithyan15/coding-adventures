@@ -1,0 +1,14 @@
+{
+  "language": "french",
+  "chapter": 489,
+  "sourceHash": "fnv1a64:8f48ff2d43b2de55",
+  "lessonIds": [
+    "FR-C489-fiancailles",
+    "FR-C489-alliance",
+    "FR-C489-noces",
+    "FR-C489-lune-de-miel",
+    "FR-C489-ceremonie",
+    "FR-R489-revision-482-489"
+  ],
+  "tex": "french/book/chapters/ch489-fiancailles-et-noces.tex"
+}

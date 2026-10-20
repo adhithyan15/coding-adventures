@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 305,
+  "sourceHash": "fnv1a64:503d9ba44894a8b2",
+  "lessonIds": [
+    "FR-C305-naufrage",
+    "FR-C305-ecraser",
+    "FR-C305-rescape",
+    "FR-C305-survivre",
+    "FR-C305-catastrophe"
+  ],
+  "tex": "french/book/chapters/ch305-les-rescapes.tex"
+}

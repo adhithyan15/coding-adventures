@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 338,
+  "sourceHash": "fnv1a64:ae006e9fd641b9f5",
+  "lessonIds": [
+    "PT-C338-desacordo",
+    "PT-C338-discordar",
+    "PT-C338-objetar",
+    "PT-C338-objecao",
+    "PT-C338-contradizer"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch338.txt",
+  "json": "portuguese/narration/ch338.json",
+  "textHash": "fnv1a64:8b2e6177d3214e65",
+  "jsonHash": "fnv1a64:54bdc3224b3c4344",
+  "findings": []
+}

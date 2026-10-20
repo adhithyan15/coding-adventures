@@ -1,0 +1,11 @@
+{
+  "id": "PT-C522-escultor",
+  "pathSegment": "PT-PATH-522-GALERIA",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PT-EXT-522-GALERIA",
+      "order": 4
+    }
+  ]
+}

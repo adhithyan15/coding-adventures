@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C451-sciscitor",
+    "language": "latin",
+    "chapter": 451,
+    "sequence": 24040,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3aada55c7879732a"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-R301-review-294-301",
+    "language": "german",
+    "chapter": 301,
+    "sequence": 16540,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b2070a5d1eea458b"
+  },
+  "findings": []
+}

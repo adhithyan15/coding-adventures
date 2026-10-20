@@ -1,0 +1,11 @@
+{
+  "id": "GE-C267-vergehen",
+  "pathSegment": "GE-PATH-267-DAUERN",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GE-EXT-267-DAUERN",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "FR-C435-fleche",
+  "pathSegment": "FR-PATH-435-PANNEAUX",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FR-EXT-435-PANNEAUX",
+      "order": 1
+    }
+  ]
+}

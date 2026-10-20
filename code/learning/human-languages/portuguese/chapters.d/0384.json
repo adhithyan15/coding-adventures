@@ -1,0 +1,19 @@
+{
+  "chapter": 384,
+  "title": "Documentos em dia",
+  "label": "ch:pt-documentos-em-dia",
+  "canDo": "I can talk about documents: whether they are valid or have expired, certificates, and renewing them.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "PT-C384-certificado",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 384: I can talk about documents: whether they are valid or have expired, certificates, and renewing them.",
+    "assesses": [
+      "PT-LEX-C384-VALIDO-03",
+      "PT-LEX-C384-VALIDO-04",
+      "PT-LEX-C384-VALIDO-05"
+    ]
+  }
+}

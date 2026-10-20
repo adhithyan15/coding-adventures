@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 398,
+  "sourceHash": "fnv1a64:7847175a61938a84",
+  "lessonIds": [
+    "FR-C398-reseau",
+    "FR-C398-connexion",
+    "FR-C398-naviguer",
+    "FR-C398-lien",
+    "FR-C398-publier"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch398.txt",
+  "json": "french/narration/ch398.json",
+  "textHash": "fnv1a64:e9034042ae2d1089",
+  "jsonHash": "fnv1a64:82d513208844ebf2",
+  "findings": []
+}

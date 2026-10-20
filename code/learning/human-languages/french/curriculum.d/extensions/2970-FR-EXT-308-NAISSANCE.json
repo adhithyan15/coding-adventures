@@ -1,0 +1,8 @@
+{
+  "id": "FR-EXT-308-NAISSANCE",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can talk about a birth: the birth, being pregnant, the delivery, breastfeeding and the cradle.",
+  "prerequisites": []
+}

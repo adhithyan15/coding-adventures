@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C451-percontor",
+    "language": "latin",
+    "chapter": 451,
+    "sequence": 24030,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:fb65ea6097a7f499"
+  },
+  "findings": []
+}

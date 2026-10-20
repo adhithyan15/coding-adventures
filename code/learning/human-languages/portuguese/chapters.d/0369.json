@@ -1,0 +1,19 @@
+{
+  "chapter": 369,
+  "title": "Com uma condição",
+  "label": "ch:pt-com-uma-condicao",
+  "canDo": "I can set conditions: provided that, as long as, in case, and depending on something.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "PT-C369-consoante",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 369: I can set conditions: provided that, as long as, in case, and depending on something.",
+    "assesses": [
+      "PT-LEX-C369-CONDICAO-03",
+      "PT-LEX-C369-CONDICAO-04",
+      "PT-LEX-C369-CONDICAO-05"
+    ]
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 442,
+  "sourceHash": "fnv1a64:e4ad8faa45a2ea10",
+  "lessonIds": [
+    "GE-C442-glatteis",
+    "GE-C442-raeumen",
+    "GE-C442-streuen",
+    "GE-C442-schneepflug",
+    "GE-C442-rutschen"
+  ],
+  "tex": "german/book/chapters/ch442-schnee-in-der-stadt.tex"
+}

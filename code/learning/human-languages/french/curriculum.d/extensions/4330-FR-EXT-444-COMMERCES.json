@@ -1,0 +1,8 @@
+{
+  "id": "FR-EXT-444-COMMERCES",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can shop for food in small shops: the delicatessen, the fishmonger, the caterer, the grocer and the greengrocer.",
+  "prerequisites": []
+}

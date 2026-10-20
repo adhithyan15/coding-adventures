@@ -1,0 +1,19 @@
+{
+  "chapter": 429,
+  "title": "No quarto",
+  "label": "ch:pt-no-quarto",
+  "canDo": "I can ask for things in my room: a cot, a pillowcase, a hair dryer, a hanger and a bathrobe.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "PT-C429-roupao",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 429: I can ask for things in my room: a cot, a pillowcase, a hair dryer, a hanger and a bathrobe.",
+    "assesses": [
+      "PT-LEX-C429-QUARTO-03",
+      "PT-LEX-C429-QUARTO-04",
+      "PT-LEX-C429-QUARTO-05"
+    ]
+  }
+}

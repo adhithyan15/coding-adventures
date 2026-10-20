@@ -1,0 +1,11 @@
+{
+  "id": "PT-C322-fogueira",
+  "pathSegment": "PT-PATH-322-FOGUETE",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PT-EXT-322-FOGUETE",
+      "order": 2
+    }
+  ]
+}

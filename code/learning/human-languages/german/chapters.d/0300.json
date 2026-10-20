@@ -1,0 +1,19 @@
+{
+  "chapter": 300,
+  "title": "Neue Wege",
+  "label": "ch:ge-neue-wege",
+  "canDo": "I can tell about changes in a family: a divorce, to divorce, a separation, to adopt and to go through.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "GE-C300-erleben",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 300: I can tell about changes in a family: a divorce, to divorce, a separation, to adopt and to go through.",
+    "assesses": [
+      "GE-LEX-C300-SCHEIDUNG-03",
+      "GE-LEX-C300-SCHEIDUNG-04",
+      "GE-LEX-C300-SCHEIDUNG-05"
+    ]
+  }
+}

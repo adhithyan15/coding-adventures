@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 273,
+  "sourceHash": "fnv1a64:434af0e35b6a80bd",
+  "lessonIds": [
+    "PT-C273-etapa",
+    "PT-C273-fase",
+    "PT-C273-sequencia",
+    "PT-C273-sucessao",
+    "PT-C273-cronologia"
+  ],
+  "tex": "portuguese/book/chapters/ch273-por-etapas.tex"
+}

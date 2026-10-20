@@ -1,0 +1,19 @@
+{
+  "chapter": 489,
+  "title": "Neffen und Nichten",
+  "label": "ch:ge-neffen-und-nichten",
+  "canDo": "I can talk about my wider family.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "GE-R489-review-482-489",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 489: I can talk about my wider family.",
+    "assesses": [
+      "GE-LEX-C489-VERWANDTE-03",
+      "GE-LEX-C489-VERWANDTE-04",
+      "GE-LEX-C489-VERWANDTE-05"
+    ]
+  }
+}

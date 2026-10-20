@@ -1,0 +1,11 @@
+{
+  "id": "PT-C481-narina",
+  "pathSegment": "PT-PATH-481-ROSTO",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-481-ROSTO",
+      "order": 3
+    }
+  ]
+}

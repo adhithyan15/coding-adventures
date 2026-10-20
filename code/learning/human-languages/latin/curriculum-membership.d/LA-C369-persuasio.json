@@ -1,0 +1,11 @@
+{
+  "id": "LA-C369-persuasio",
+  "pathSegment": "LA-PATH-369-HORTOR",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "LA-EXT-369-HORTOR",
+      "order": 2
+    }
+  ]
+}

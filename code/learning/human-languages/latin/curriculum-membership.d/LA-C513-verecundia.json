@@ -1,0 +1,11 @@
+{
+  "id": "LA-C513-verecundia",
+  "pathSegment": "LA-PATH-513-MISE",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "LA-EXT-513-MISE",
+      "order": 4
+    }
+  ]
+}

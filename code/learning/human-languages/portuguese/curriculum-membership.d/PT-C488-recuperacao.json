@@ -1,0 +1,11 @@
+{
+  "id": "PT-C488-recuperacao",
+  "pathSegment": "PT-PATH-488-CURA",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PT-EXT-488-CURA",
+      "order": 4
+    }
+  ]
+}

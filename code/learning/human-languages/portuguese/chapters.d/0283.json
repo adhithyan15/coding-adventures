@@ -1,0 +1,19 @@
+{
+  "chapter": 283,
+  "title": "Boatos e desmentidos",
+  "label": "ch:pt-boatos-e-desmentidos",
+  "canDo": "I can talk about rumours and denials, and name the spokesperson.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "PT-C283-porta-voz",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 283: I can talk about rumours and denials, and name the spokesperson.",
+    "assesses": [
+      "PT-LEX-C283-BOATO-03",
+      "PT-LEX-C283-BOATO-04",
+      "PT-LEX-C283-BOATO-05"
+    ]
+  }
+}

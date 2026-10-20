@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PT-C380-eleitor",
+    "language": "portuguese",
+    "chapter": 380,
+    "sequence": 21540,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8178343e4647a55d"
+  },
+  "findings": []
+}

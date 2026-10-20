@@ -11713,8 +11713,11 @@ fn emit_host_input(
     }
 
     // onCommit / onCancel → merged KeyDown handler keyed on Enter / Escape.
+    // A multiline TextBox (`AcceptsReturn`) spends Enter on a line break, so
+    // it has no commit key; every backend agrees on that (#15930).
+    let multiline = find_prop_keyword(node, "multiline") == Some("true");
     let commit = match find_prop_value(node, "onCommit") {
-        Some(LayoutPropValue::EmitRef(e)) => Some(e.clone()),
+        Some(LayoutPropValue::EmitRef(e)) if !multiline => Some(e.clone()),
         _ => None,
     };
     let cancel = match find_prop_value(node, "onCancel") {
@@ -19244,6 +19247,42 @@ mod tests {
             "got:\n{}",
             r.xaml
         );
+    }
+
+    /// #15930 — a multiline TextBox spends Enter on a line break, so the
+    /// merged KeyDown handler carries no Enter-to-commit branch; Escape
+    /// still cancels. Every backend lowers a multiline field this way.
+    #[test]
+    fn multiline_host_input_does_not_commit_on_enter() {
+        let c = component(
+            "Foo",
+            vec![],
+            vec![emit("onSave", vec![]), emit("onDiscard", vec![])],
+        );
+        let l = layout_with_root(
+            "Foo",
+            host_input_node(
+                None,
+                vec![
+                    LayoutProp {
+                        name: "multiline".to_string(),
+                        value: LayoutPropValue::Keyword("true".to_string()),
+                    },
+                    LayoutProp {
+                        name: "onCommit".to_string(),
+                        value: LayoutPropValue::EmitRef("onSave".to_string()),
+                    },
+                    LayoutProp {
+                        name: "onCancel".to_string(),
+                        value: LayoutPropValue::EmitRef("onDiscard".to_string()),
+                    },
+                ],
+            ),
+        );
+        let r = compile(&c, &l, &empty_style("Foo"));
+        let cb = &r.code_behind;
+        assert!(!cb.contains("VirtualKey.Enter"), "got:\n{cb}");
+        assert!(cb.contains("VirtualKey.Escape"), "got:\n{cb}");
     }
 
     #[test]
@@ -28504,6 +28543,23 @@ mod colour_keyword_tests {
 mod projection_identity_tests {
     use super::*;
 
+    /// A scratch-name nonce that is unique for every call in this process.
+    ///
+    /// The clock alone is not: macOS reports `SystemTime` in whole microseconds,
+    /// so two tests running in parallel threads could read the same "nanos" and
+    /// be handed the same directory, each seeing the other's files (this made
+    /// `compose_fixtures` fail about one run in five). The counter makes every
+    /// call distinct; the clock keeps names from a previous run apart.
+    fn unique_nonce() -> String {
+        static NEXT: std::sync::atomic::AtomicU64 = std::sync::atomic::AtomicU64::new(0);
+        let n = NEXT.fetch_add(1, std::sync::atomic::Ordering::Relaxed);
+        let nanos = std::time::SystemTime::now()
+            .duration_since(std::time::UNIX_EPOCH)
+            .expect("system clock after epoch")
+            .as_nanos();
+        format!("{nanos}-{n}")
+    }
+
     #[test]
     fn retained_projections_execute_data_and_owner_updates() {
         use std::{fs, process::Command};
@@ -28539,8 +28595,8 @@ mod projection_identity_tests {
             }], nested_projections: vec![],
         };
         let dir = std::env::temp_dir().join(format!("mosaic-identity-{}-{}", std::process::id(),
-            std::time::SystemTime::now().duration_since(std::time::UNIX_EPOCH).unwrap().as_nanos()));
-        fs::create_dir_all(&dir).unwrap();
+            unique_nonce()));
+        fs::create_dir(&dir).unwrap();
         for name in ["Directory.Build.props", "Directory.Build.targets"] { fs::write(dir.join(name), "<Project />").unwrap(); }
         fs::write(dir.join("Probe.csproj"), "<Project Sdk=\"Microsoft.NET.Sdk\"><PropertyGroup><OutputType>Exe</OutputType><TargetFramework>net9.0</TargetFramework><Nullable>enable</Nullable><ImplicitUsings>enable</ImplicitUsings></PropertyGroup></Project>").unwrap();
         let options = EmitOptions::default();

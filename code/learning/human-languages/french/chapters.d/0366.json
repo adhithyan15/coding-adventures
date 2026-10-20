@@ -1,0 +1,19 @@
+{
+  "chapter": 366,
+  "title": "Donner un coup de main",
+  "label": "ch:fr-donner-un-coup-de-main",
+  "canDo": "I can talk about helping others: volunteering, a volunteer, an association, solidarity and the community.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "FR-C366-communaute",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 366: I can talk about helping others: volunteering, a volunteer, an association, solidarity and the community.",
+    "assesses": [
+      "FR-LEX-C366-BENEVOLAT-03",
+      "FR-LEX-C366-BENEVOLAT-04",
+      "FR-LEX-C366-BENEVOLAT-05"
+    ]
+  }
+}

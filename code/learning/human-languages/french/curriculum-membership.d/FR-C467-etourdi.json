@@ -1,0 +1,11 @@
+{
+  "id": "FR-C467-etourdi",
+  "pathSegment": "FR-PATH-467-DEFAUTS",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-467-DEFAUTS",
+      "order": 4
+    }
+  ]
+}

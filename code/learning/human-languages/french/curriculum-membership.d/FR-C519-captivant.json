@@ -1,0 +1,11 @@
+{
+  "id": "FR-C519-captivant",
+  "pathSegment": "FR-PATH-519-ROMAN",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-519-ROMAN",
+      "order": 4
+    }
+  ]
+}

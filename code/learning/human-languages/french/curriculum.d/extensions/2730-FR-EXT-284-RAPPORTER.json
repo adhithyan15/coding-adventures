@@ -1,0 +1,8 @@
+{
+  "id": "FR-EXT-284-RAPPORTER",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can report what people said and found out: revealing, reporting, denying, recounting and commenting.",
+  "prerequisites": []
+}

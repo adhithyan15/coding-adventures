@@ -1,0 +1,11 @@
+{
+  "id": "GE-C271-schlagzeile",
+  "pathSegment": "GE-PATH-271-MELDUNG",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-271-MELDUNG",
+      "order": 3
+    }
+  ]
+}

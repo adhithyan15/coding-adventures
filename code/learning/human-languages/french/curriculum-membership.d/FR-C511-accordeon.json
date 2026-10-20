@@ -1,0 +1,11 @@
+{
+  "id": "FR-C511-accordeon",
+  "pathSegment": "FR-PATH-511-INSTRUMENTS",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FR-EXT-511-INSTRUMENTS",
+      "order": 3
+    }
+  ]
+}

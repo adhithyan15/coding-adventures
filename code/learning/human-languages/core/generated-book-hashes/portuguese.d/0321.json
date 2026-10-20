@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 321,
+  "sourceHash": "fnv1a64:c5ab6d3dd7128dc9",
+  "lessonIds": [
+    "PT-C321-carnaval",
+    "PT-C321-desfile",
+    "PT-C321-mascara",
+    "PT-C321-disfarce",
+    "PT-C321-disfarcar"
+  ],
+  "tex": "portuguese/book/chapters/ch321-no-carnaval.tex"
+}

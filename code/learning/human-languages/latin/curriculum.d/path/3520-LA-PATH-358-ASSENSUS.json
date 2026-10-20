@@ -1,0 +1,9 @@
+{
+  "id": "LA-PATH-358-ASSENSUS",
+  "spine_node": "SPINE-GIVE-REASONS",
+  "before": [],
+  "inline": [
+    "LA-EXT-358-ASSENSUS"
+  ],
+  "after": []
+}

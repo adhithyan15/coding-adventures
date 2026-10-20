@@ -1,0 +1,11 @@
+{
+  "id": "PT-C440-intercomunicador",
+  "pathSegment": "PT-PATH-440-MORADA",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PT-EXT-440-MORADA",
+      "order": 4
+    }
+  ]
+}

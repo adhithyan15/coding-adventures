@@ -1,0 +1,11 @@
+{
+  "id": "GE-C315-zwerg",
+  "pathSegment": "GE-PATH-315-RITTER",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-315-RITTER",
+      "order": 4
+    }
+  ]
+}

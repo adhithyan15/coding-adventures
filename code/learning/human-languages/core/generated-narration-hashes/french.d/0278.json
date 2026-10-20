@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 278,
+  "sourceHash": "fnv1a64:715b6fb20a7f382f",
+  "lessonIds": [
+    "FR-C278-actualite",
+    "FR-C278-presse",
+    "FR-C278-quotidien",
+    "FR-C278-hebdomadaire",
+    "FR-C278-abonne"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch278.txt",
+  "json": "french/narration/ch278.json",
+  "textHash": "fnv1a64:63dfee0fc44e515f",
+  "jsonHash": "fnv1a64:3af6f563d507d19b",
+  "findings": []
+}

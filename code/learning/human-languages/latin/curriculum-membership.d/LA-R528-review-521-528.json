@@ -1,0 +1,11 @@
+{
+  "id": "LA-R528-review-521-528",
+  "pathSegment": "LA-PATH-528-GENS",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "LA-EXT-528-GENS",
+      "order": 5
+    }
+  ]
+}

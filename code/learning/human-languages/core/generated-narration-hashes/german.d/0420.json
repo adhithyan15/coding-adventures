@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 420,
+  "sourceHash": "fnv1a64:e40ec84f2c9b46a4",
+  "lessonIds": [
+    "GE-C420-stornieren",
+    "GE-C420-stornierung",
+    "GE-C420-umbuchen",
+    "GE-C420-erstatten",
+    "GE-C420-erstattung"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch420.txt",
+  "json": "german/narration/ch420.json",
+  "textHash": "fnv1a64:85c4948df29d338d",
+  "jsonHash": "fnv1a64:c9e79d7da59d9fbd",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "PT-C410-lomba",
+  "pathSegment": "PT-PATH-410-CURVAS",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PT-EXT-410-CURVAS",
+      "order": 1
+    }
+  ]
+}

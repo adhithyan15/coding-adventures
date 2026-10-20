@@ -1,0 +1,21 @@
+{
+  "chapter": 285,
+  "title": "Asking the Way",
+  "label": "ch:la-asking-the-way",
+  "canDo": "I can ask the way politely, follow directions to the right, to the left and straight on, and talk about a journey.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "LA-R285-asking-the-way",
+    "kind": "production",
+    "summary": "Complete LA-R285-asking-the-way: I can ask the way politely, follow directions to the right, to the left and straight on, and talk about a journey.",
+    "assesses": [
+      "LA-LEX-C285-VIA-01",
+      "LA-GRAMMAR-C285-QUA-VIA-02",
+      "LA-GRAMMAR-C285-DIRECTIO-01",
+      "LA-LEX-C285-ITER-01",
+      "LA-LEX-C285-ITER-FACIO-02"
+    ]
+  }
+}

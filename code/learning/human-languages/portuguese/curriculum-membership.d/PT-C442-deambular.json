@@ -1,0 +1,11 @@
+{
+  "id": "PT-C442-deambular",
+  "pathSegment": "PT-PATH-442-HISTORICO",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PT-EXT-442-HISTORICO",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "PT-C498-confidente",
+  "pathSegment": "PT-PATH-498-CONVIVIO",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-498-CONVIVIO",
+      "order": 3
+    }
+  ]
+}

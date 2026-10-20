@@ -1,0 +1,11 @@
+{
+  "id": "FR-C273-prochainement",
+  "pathSegment": "FR-PATH-273-VEILLE",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-273-VEILLE",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "FR-C330-bouillir",
+  "pathSegment": "FR-PATH-330-MIJOTER",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "FR-EXT-330-MIJOTER",
+      "order": 0
+    }
+  ]
+}

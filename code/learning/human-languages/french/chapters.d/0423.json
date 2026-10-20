@@ -1,0 +1,19 @@
+{
+  "chapter": 423,
+  "title": "En croisière",
+  "label": "ch:fr-en-croisiere",
+  "canDo": "I can talk about a cruise: the cruise, coming alongside, pitching, capsizing and drifting.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "FR-R423-revision-416-423",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 423: I can talk about a cruise: the cruise, coming alongside, pitching, capsizing and drifting.",
+    "assesses": [
+      "FR-LEX-C423-CROISIERE-03",
+      "FR-LEX-C423-CROISIERE-04",
+      "FR-LEX-C423-CROISIERE-05"
+    ]
+  }
+}

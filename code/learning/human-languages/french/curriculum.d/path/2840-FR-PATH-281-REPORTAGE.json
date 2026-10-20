@@ -1,0 +1,9 @@
+{
+  "id": "FR-PATH-281-REPORTAGE",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "FR-EXT-281-REPORTAGE"
+  ],
+  "after": []
+}

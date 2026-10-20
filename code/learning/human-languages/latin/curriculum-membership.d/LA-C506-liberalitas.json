@@ -1,0 +1,11 @@
+{
+  "id": "LA-C506-liberalitas",
+  "pathSegment": "LA-PATH-506-COMI",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "LA-EXT-506-COMI",
+      "order": 4
+    }
+  ]
+}

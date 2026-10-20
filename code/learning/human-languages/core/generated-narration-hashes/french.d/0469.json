@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 469,
+  "sourceHash": "fnv1a64:76088ad54cfb07e1",
+  "lessonIds": [
+    "FR-C469-humeur",
+    "FR-C469-serein",
+    "FR-C469-lunatique",
+    "FR-C469-enerver",
+    "FR-C469-agacer"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch469.txt",
+  "json": "french/narration/ch469.json",
+  "textHash": "fnv1a64:9b22c62cf902f606",
+  "jsonHash": "fnv1a64:716e6ca9b36d2f14",
+  "findings": []
+}

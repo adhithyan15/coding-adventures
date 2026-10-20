@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 368,
+  "sourceHash": "fnv1a64:30db99b8998882a6",
+  "lessonIds": [
+    "GE-C368-stattdessen",
+    "GE-C368-anstatt",
+    "GE-C368-ohne-dass",
+    "GE-C368-verzichten",
+    "GE-C368-ersetzen"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch368.txt",
+  "json": "german/narration/ch368.json",
+  "textHash": "fnv1a64:64e99c5059832c80",
+  "jsonHash": "fnv1a64:f6525b9f1a29985d",
+  "findings": []
+}

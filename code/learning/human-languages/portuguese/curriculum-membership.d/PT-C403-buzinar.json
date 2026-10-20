@@ -1,0 +1,11 @@
+{
+  "id": "PT-C403-buzinar",
+  "pathSegment": "PT-PATH-403-VIDROS",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-403-VIDROS",
+      "order": 3
+    }
+  ]
+}

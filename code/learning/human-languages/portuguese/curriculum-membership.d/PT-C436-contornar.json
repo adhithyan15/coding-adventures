@@ -1,0 +1,11 @@
+{
+  "id": "PT-C436-contornar",
+  "pathSegment": "PT-PATH-436-INDICACOES",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PT-EXT-436-INDICACOES",
+      "order": 2
+    }
+  ]
+}

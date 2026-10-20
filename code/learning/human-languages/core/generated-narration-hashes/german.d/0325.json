@@ -1,0 +1,20 @@
+{
+  "language": "german",
+  "chapter": 325,
+  "sourceHash": "fnv1a64:17438e75764ac55b",
+  "lessonIds": [
+    "GE-C325-teig",
+    "GE-C325-hefe",
+    "GE-C325-kneten",
+    "GE-C325-ausrollen",
+    "GE-C325-nudelholz",
+    "GE-R325-review-318-325"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "german/narration/ch325.txt",
+  "json": "german/narration/ch325.json",
+  "textHash": "fnv1a64:fb3223726dfeaed3",
+  "jsonHash": "fnv1a64:2de711dc671ae189",
+  "findings": []
+}

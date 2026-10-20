@@ -1,0 +1,8 @@
+{
+  "id": "FR-EXT-344-RAISONNEMENT",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can reason, follow a line of reasoning, draw a conclusion and qualify what I said with a nuance.",
+  "prerequisites": []
+}

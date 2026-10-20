@@ -1,0 +1,11 @@
+{
+  "id": "PT-C379-media",
+  "pathSegment": "PT-PATH-379-CHUMBAR",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-379-CHUMBAR",
+      "order": 3
+    }
+  ]
+}

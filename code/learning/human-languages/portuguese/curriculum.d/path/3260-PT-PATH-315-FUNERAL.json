@@ -1,0 +1,9 @@
+{
+  "id": "PT-PATH-315-FUNERAL",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "PT-EXT-315-FUNERAL"
+  ],
+  "after": []
+}

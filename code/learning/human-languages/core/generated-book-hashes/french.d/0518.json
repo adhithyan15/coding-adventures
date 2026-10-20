@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 518,
+  "sourceHash": "fnv1a64:dd3e245a0c37c882",
+  "lessonIds": [
+    "FR-C518-exposition",
+    "FR-C518-vernissage",
+    "FR-C518-galerie",
+    "FR-C518-oeuvre",
+    "FR-C518-encadrer"
+  ],
+  "tex": "french/book/chapters/ch518-une-exposition.tex"
+}

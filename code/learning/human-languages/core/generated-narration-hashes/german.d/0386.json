@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 386,
+  "sourceHash": "fnv1a64:4fb87ef0f00233fa",
+  "lessonIds": [
+    "GE-C386-klagen",
+    "GE-C386-klage",
+    "GE-C386-prozess",
+    "GE-C386-haften",
+    "GE-C386-haftung"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch386.txt",
+  "json": "german/narration/ch386.json",
+  "textHash": "fnv1a64:0c9ff49a557c502a",
+  "jsonHash": "fnv1a64:fb47741ce57bdad3",
+  "findings": []
+}

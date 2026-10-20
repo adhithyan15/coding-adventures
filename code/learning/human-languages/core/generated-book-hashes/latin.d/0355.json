@@ -1,0 +1,13 @@
+{
+  "language": "latin",
+  "chapter": 355,
+  "sourceHash": "fnv1a64:a23fd707d480f495",
+  "lessonIds": [
+    "LA-C355-condio",
+    "LA-C355-condimentum",
+    "LA-C355-aspergo",
+    "LA-C355-infundo",
+    "LA-C355-colo"
+  ],
+  "tex": "latin/book/chapters/ch355-condimenta.tex"
+}

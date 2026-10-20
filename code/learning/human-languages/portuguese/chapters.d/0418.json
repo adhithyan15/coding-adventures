@@ -1,0 +1,19 @@
+{
+  "chapter": 418,
+  "title": "De barco",
+  "label": "ch:pt-de-barco",
+  "canDo": "I can talk about small boats: the dinghy, the oar, rowing, the canoe and the boatman.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "PT-C418-barqueiro",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 418: I can talk about small boats: the dinghy, the oar, rowing, the canoe and the boatman.",
+    "assesses": [
+      "PT-LEX-C418-BARCO-03",
+      "PT-LEX-C418-BARCO-04",
+      "PT-LEX-C418-BARCO-05"
+    ]
+  }
+}

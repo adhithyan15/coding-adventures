@@ -1,0 +1,19 @@
+{
+  "chapter": 526,
+  "title": "Laver le linge",
+  "label": "ch:fr-laver-le-linge",
+  "canDo": "I can talk about doing the washing.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "FR-C526-cintre",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 526: I can talk about doing the washing.",
+    "assesses": [
+      "FR-LEX-C526-LINGE-03",
+      "FR-LEX-C526-LINGE-04",
+      "FR-LEX-C526-LINGE-05"
+    ]
+  }
+}

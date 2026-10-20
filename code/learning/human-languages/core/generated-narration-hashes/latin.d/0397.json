@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 397,
+  "sourceHash": "fnv1a64:c1243ffe28320b70",
+  "lessonIds": [
+    "LA-C397-iusiurandum",
+    "LA-C397-conventio",
+    "LA-C397-paciscor",
+    "LA-C397-pactum",
+    "LA-C397-stipulor"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch397.txt",
+  "json": "latin/narration/ch397.json",
+  "textHash": "fnv1a64:333284368477ed79",
+  "jsonHash": "fnv1a64:a4a9ebb39f2d981a",
+  "findings": []
+}

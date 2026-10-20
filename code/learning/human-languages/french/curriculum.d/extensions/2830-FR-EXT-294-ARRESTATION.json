@@ -1,0 +1,8 @@
+{
+  "id": "FR-EXT-294-ARRESTATION",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can describe an arrest: stopping someone, the arrest, handcuffs, police custody and questioning.",
+  "prerequisites": []
+}

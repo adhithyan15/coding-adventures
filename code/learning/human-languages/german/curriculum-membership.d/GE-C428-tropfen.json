@@ -1,0 +1,11 @@
+{
+  "id": "GE-C428-tropfen",
+  "pathSegment": "GE-PATH-428-ABFLUSS",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GE-EXT-428-ABFLUSS",
+      "order": 2
+    }
+  ]
+}

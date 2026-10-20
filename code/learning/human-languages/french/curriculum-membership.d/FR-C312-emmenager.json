@@ -1,0 +1,11 @@
+{
+  "id": "FR-C312-emmenager",
+  "pathSegment": "FR-PATH-312-DEMENAGEMENT",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FR-EXT-312-DEMENAGEMENT",
+      "order": 1
+    }
+  ]
+}

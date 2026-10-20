@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 404,
+  "sourceHash": "fnv1a64:c7dc5c48b7312739",
+  "lessonIds": [
+    "PT-C404-gasoleo",
+    "PT-C404-combustivel",
+    "PT-C404-mangueira",
+    "PT-C404-abastecer",
+    "PT-C404-atestar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch404.txt",
+  "json": "portuguese/narration/ch404.json",
+  "textHash": "fnv1a64:017ee778e814c4da",
+  "jsonHash": "fnv1a64:390fe4a622888bd2",
+  "findings": []
+}

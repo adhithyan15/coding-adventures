@@ -1,0 +1,11 @@
+{
+  "id": "GE-C465-orkan",
+  "pathSegment": "GE-PATH-465-STURM",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GE-EXT-465-STURM",
+      "order": 2
+    }
+  ]
+}

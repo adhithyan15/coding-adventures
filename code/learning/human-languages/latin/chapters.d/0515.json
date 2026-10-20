@@ -1,0 +1,19 @@
+{
+  "chapter": 515,
+  "title": "The face",
+  "label": "ch:la-the-face",
+  "canDo": "I can describe a face.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "LA-C515-palpebra",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 515: I can describe a face.",
+    "assesses": [
+      "LA-LEX-C515-VULT-03",
+      "LA-LEX-C515-VULT-04",
+      "LA-LEX-C515-VULT-05"
+    ]
+  }
+}

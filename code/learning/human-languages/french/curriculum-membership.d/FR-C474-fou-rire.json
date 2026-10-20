@@ -1,0 +1,11 @@
+{
+  "id": "FR-C474-fou-rire",
+  "pathSegment": "FR-PATH-474-GAIETE",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-474-GAIETE",
+      "order": 2
+    }
+  ]
+}

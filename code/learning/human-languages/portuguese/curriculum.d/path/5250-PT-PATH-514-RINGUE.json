@@ -1,0 +1,9 @@
+{
+  "id": "PT-PATH-514-RINGUE",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "PT-EXT-514-RINGUE"
+  ],
+  "after": []
+}

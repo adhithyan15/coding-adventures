@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 485,
+  "sourceHash": "fnv1a64:55128eb73d568ffe",
+  "lessonIds": [
+    "FR-C485-guerir",
+    "FR-C485-guerison",
+    "FR-C485-retablir",
+    "FR-C485-convalescence",
+    "FR-C485-soigner"
+  ],
+  "tex": "french/book/chapters/ch485-tomber-malade-et-guerir.tex"
+}

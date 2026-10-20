@@ -1,0 +1,19 @@
+{
+  "chapter": 386,
+  "title": "As acusações",
+  "label": "ch:pt-as-acusacoes",
+  "canDo": "I can talk about accusations: thieves, charges, and what is lawful or unlawful.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "PT-C386-ilicito",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 386: I can talk about accusations: thieves, charges, and what is lawful or unlawful.",
+    "assesses": [
+      "PT-LEX-C386-ACUSACAO-03",
+      "PT-LEX-C386-ACUSACAO-04",
+      "PT-LEX-C386-ACUSACAO-05"
+    ]
+  }
+}

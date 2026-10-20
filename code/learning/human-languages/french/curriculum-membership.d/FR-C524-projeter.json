@@ -1,0 +1,11 @@
+{
+  "id": "FR-C524-projeter",
+  "pathSegment": "FR-PATH-524-CINEMA",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FR-EXT-524-CINEMA",
+      "order": 1
+    }
+  ]
+}

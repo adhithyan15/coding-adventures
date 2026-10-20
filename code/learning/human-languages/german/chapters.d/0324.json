@@ -1,0 +1,19 @@
+{
+  "chapter": 324,
+  "title": "Rühren",
+  "label": "ch:ge-ruhren",
+  "canDo": "I can describe mixing: to stir, to give a stir, to whisk, to crack an egg and a whisk.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "GE-C324-schneebesen",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 324: I can describe mixing: to stir, to give a stir, to whisk, to crack an egg and a whisk.",
+    "assesses": [
+      "GE-LEX-C324-RUEHREN-03",
+      "GE-LEX-C324-RUEHREN-04",
+      "GE-LEX-C324-RUEHREN-05"
+    ]
+  }
+}

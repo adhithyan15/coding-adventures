@@ -1,0 +1,11 @@
+{
+  "id": "LA-C339-agmen",
+  "pathSegment": "LA-PATH-339-PROELIUM",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "LA-EXT-339-PROELIUM",
+      "order": 2
+    }
+  ]
+}

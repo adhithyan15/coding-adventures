@@ -1,0 +1,8 @@
+{
+  "id": "FR-EXT-263-BILLET",
+  "stage": "B1",
+  "kind": "required",
+  "category": "grammar",
+  "canDo": "I can buy a return or a one-way ticket, ask when and where the train leaves, and report a problem.",
+  "prerequisites": []
+}

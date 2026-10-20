@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 273,
+  "sourceHash": "fnv1a64:7630c0dfe28768ec",
+  "lessonIds": [
+    "FR-C273-veille",
+    "FR-C273-lendemain",
+    "FR-C273-surlendemain",
+    "FR-C273-dernierement",
+    "FR-C273-prochainement"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch273.txt",
+  "json": "french/narration/ch273.json",
+  "textHash": "fnv1a64:eeff20fa907c9f8f",
+  "jsonHash": "fnv1a64:f72e7304b2c3b079",
+  "findings": []
+}

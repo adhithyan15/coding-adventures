@@ -1,0 +1,11 @@
+{
+  "id": "PT-C478-solitario",
+  "pathSegment": "PT-PATH-478-SOLIDAO",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-478-SOLIDAO",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 365,
+  "sourceHash": "fnv1a64:5088c9d7d97636f0",
+  "lessonIds": [
+    "GE-C365-es-sei-denn",
+    "GE-C365-ausser-wenn",
+    "GE-C365-andernfalls",
+    "GE-C365-ansonsten",
+    "GE-C365-notfalls"
+  ],
+  "tex": "german/book/chapters/ch365-es-sei-denn.tex"
+}

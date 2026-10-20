@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 302,
+  "sourceHash": "fnv1a64:5e3e333dc6c0505a",
+  "lessonIds": [
+    "PT-C302-sismo",
+    "PT-C302-terramoto",
+    "PT-C302-tremor",
+    "PT-C302-ruir",
+    "PT-C302-escombros"
+  ],
+  "tex": "portuguese/book/chapters/ch302-a-terra-tremeu.tex"
+}

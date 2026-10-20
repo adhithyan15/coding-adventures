@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "latin",
+  "chapter": 501,
+  "title": "Moods and feelings",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:711dfd75019092b5",
+  "lessons": [
+    {
+      "id": "LA-C501-commoveo",
+      "sequence": 26610,
+      "title": "commoveō, commovēre — to move deeply, disturb",
+      "headword": "commoveō, commovēre",
+      "romanization": "commoveō, commovēre",
+      "gloss": "to move deeply, disturb",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2cd71032ddcc0dd9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for to envy, then the Latin for a rival."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: commoveō, commovēre",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "commoveō, commovēre — \"to move deeply, disturb\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Lacrimae fīliae patrem valdē commovent. His daughter's tears move the father deeply."
+            },
+            {
+              "kind": "speech",
+              "text": "commoveō, commovēre, commōvī, commōtum. Of the body, to shake; of the mind, to stir or upset. English commotion."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "commoveō is built on con- and moveō \"to move\" (Lewis & Short; EtymDB). English commotion comes from the related noun commōtiō."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "commoveō, commovēre",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *commoveō, commovēre*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "commoveō, commovēre, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *commoveō, commovēre*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with commoveō, commovēre",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *commoveō, commovēre*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for to envy, then the Latin for a rival, then say commoveō, commovēre again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for to envy, then the Latin for a rival, then say *commoveō, commovēre* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does commoveō, commovēre mean? (\"To move deeply, disturb\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C501-afficio",
+      "sequence": 26620,
+      "title": "afficiō, afficere — to affect, fill with a feeling",
+      "headword": "afficiō, afficere",
+      "romanization": "afficiō, afficere",
+      "gloss": "to affect, fill with a feeling",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2210930d51e46819",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for a rival, then the Latin for to move deeply."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: afficiō, afficere",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "afficiō, afficere — \"to affect, fill with a feeling\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Nūntius malus omnēs dolōre afficit. The bad news fills everyone with grief."
+            },
+            {
+              "kind": "speech",
+              "text": "afficiō, afficere, affēcī, affectum. Aliquem laetitiā afficere — to fill someone with joy; in the passive, dolōre afficior — I am stricken with pain. English affect."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "afficiō is built on ad- and faciō \"to do, make\" (Lewis & Short): to do something to someone. English affect comes from it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "afficiō, afficere",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *afficiō, afficere*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "afficiō, afficere, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *afficiō, afficere*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with afficiō, afficere",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *afficiō, afficere*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for a rival, then the Latin for to move deeply, then say afficiō, afficere again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for a rival, then the Latin for to move deeply, then say *afficiō, afficere* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does afficiō, afficere mean? (\"To affect, fill with a feeling\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C501-affectus",
+      "sequence": 26630,
+      "title": "affectus, affectūs — a mood, state of mind",
+      "headword": "affectus, affectūs",
+      "romanization": "affectus, affectūs",
+      "gloss": "a mood, state of mind",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5f95e156c2985206",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for to move deeply, then the Latin for to affect."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: affectus, affectūs",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "affectus, affectūs — \"a mood, state of mind\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Affectūs animī in vōce audīmus. We hear the moods of the mind in the voice."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine, fourth declension, from afficiō. English affection comes from the related affectiō."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "affectus is the action noun of afficiō \"to affect\" (EtymDB; Lewis & Short): the state into which something puts the mind."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "affectus, affectūs",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *affectus, affectūs*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "affectus, affectūs, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *affectus, affectūs*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with affectus, affectūs",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *affectus, affectūs*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for to move deeply, then the Latin for to affect, then say affectus, affectūs again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for to move deeply, then the Latin for to affect, then say *affectus, affectūs* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does affectus, affectūs mean? (\"A mood, state of mind\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C501-tranquillus",
+      "sequence": 26640,
+      "title": "tranquillus, tranquilla, tranquillum — calm, peaceful",
+      "headword": "tranquillus, tranquilla, tranquillum",
+      "romanization": "tranquillus, tranquilla, tranquillum",
+      "gloss": "calm, peaceful",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f088dbe68ee6afcb",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for to affect, then the Latin for a mood."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: tranquillus, tranquilla, tranquillum",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "tranquillus, tranquilla, tranquillum — \"calm, peaceful\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Post tempestātem mare tranquillum est. After the storm the sea is calm."
+            },
+            {
+              "kind": "speech",
+              "text": "Of the weather and the sea, and of a quiet mind. English tranquil."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "tranquillus goes back to Proto-Italic (EtymDB), but its further origin is not settled. English tranquil comes from it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tranquillus, tranquilla, tranquillum",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tranquillus, tranquilla, tranquillum*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tranquillus, tranquilla, tranquillum, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tranquillus, tranquilla, tranquillum*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with tranquillus, tranquilla, tranquillum",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *tranquillus, tranquilla, tranquillum*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for to affect, then the Latin for a mood, then say tranquillus, tranquilla, tranquillum again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for to affect, then the Latin for a mood, then say *tranquillus, tranquilla, tranquillum* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does tranquillus, tranquilla, tranquillum mean? (\"Calm, peaceful\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C501-securus",
+      "sequence": 26650,
+      "title": "sēcūrus, sēcūra, sēcūrum — free from care, untroubled",
+      "headword": "sēcūrus, sēcūra, sēcūrum",
+      "romanization": "sēcūrus, sēcūra, sēcūrum",
+      "gloss": "free from care, untroubled",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:714ef7d6751f169e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for a mood, then the Latin for calm."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: sēcūrus, sēcūra, sēcūrum",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "sēcūrus, sēcūra, sēcūrum — \"free from care, untroubled\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Post labōrem agricola sēcūrus dormit. After his work the farmer sleeps free from care."
+            },
+            {
+              "kind": "speech",
+              "text": "sē- 'without' + cūra 'care'. In classical Latin it means carefree rather than safe. English secure."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "sēcūrus is built on sē- \"without\" and cūra \"care\" (Lewis & Short; EtymDB). English secure and sure come from it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sēcūrus, sēcūra, sēcūrum",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sēcūrus, sēcūra, sēcūrum*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sēcūrus, sēcūra, sēcūrum, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sēcūrus, sēcūra, sēcūrum*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with sēcūrus, sēcūra, sēcūrum",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *sēcūrus, sēcūra, sēcūrum*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for a mood, then the Latin for calm, then say sēcūrus, sēcūra, sēcūrum again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for a mood, then the Latin for calm, then say *sēcūrus, sēcūra, sēcūrum* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does sēcūrus, sēcūra, sēcūrum mean? (\"Free from care, untroubled\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

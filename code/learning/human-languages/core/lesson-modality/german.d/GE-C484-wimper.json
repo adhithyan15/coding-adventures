@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C484-wimper",
+    "language": "german",
+    "chapter": 484,
+    "sequence": 25960,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:340d173a3f523bc1"
+  },
+  "findings": []
+}

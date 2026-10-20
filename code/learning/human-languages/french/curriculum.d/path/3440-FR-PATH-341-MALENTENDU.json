@@ -1,0 +1,9 @@
+{
+  "id": "FR-PATH-341-MALENTENDU",
+  "spine_node": "SPINE-GIVE-REASONS",
+  "before": [],
+  "inline": [
+    "FR-EXT-341-MALENTENDU"
+  ],
+  "after": []
+}

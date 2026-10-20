@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 268,
+  "sourceHash": "fnv1a64:717ac9a010353031",
+  "lessonIds": [
+    "FR-C268-tout-d-abord",
+    "FR-C268-en-premier-lieu",
+    "FR-C268-par-la-suite",
+    "FR-C268-en-dernier-lieu",
+    "FR-C268-pour-finir"
+  ],
+  "tex": "french/book/chapters/ch268-tout-d-abord.tex"
+}

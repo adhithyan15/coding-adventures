@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 499,
+  "sourceHash": "fnv1a64:408b61685c92ea5d",
+  "lessonIds": [
+    "FR-C499-jeu-de-societe",
+    "FR-C499-de",
+    "FR-C499-pion",
+    "FR-C499-echiquier",
+    "FR-C499-tricher"
+  ],
+  "tex": "french/book/chapters/ch499-jeux-de-societe.tex"
+}

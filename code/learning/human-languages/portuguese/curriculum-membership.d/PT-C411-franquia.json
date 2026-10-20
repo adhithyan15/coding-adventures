@@ -1,0 +1,11 @@
+{
+  "id": "PT-C411-franquia",
+  "pathSegment": "PT-PATH-411-ALUGUER",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PT-EXT-411-ALUGUER",
+      "order": 4
+    }
+  ]
+}

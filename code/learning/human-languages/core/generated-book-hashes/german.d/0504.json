@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 504,
+  "sourceHash": "fnv1a64:d9804bda97a314ea",
+  "lessonIds": [
+    "GE-C504-umgraben",
+    "GE-C504-spaten",
+    "GE-C504-saeen",
+    "GE-C504-samen",
+    "GE-C504-ernte"
+  ],
+  "tex": "german/book/chapters/ch504-saen-und-umgraben.tex"
+}

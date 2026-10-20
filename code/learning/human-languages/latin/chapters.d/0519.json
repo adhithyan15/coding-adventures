@@ -1,0 +1,19 @@
+{
+  "chapter": 519,
+  "title": "The senses",
+  "label": "ch:la-the-senses",
+  "canDo": "I can talk about sight, hearing, touch and smell.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "LA-C519-percipio",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 519: I can talk about sight, hearing, touch and smell.",
+    "assesses": [
+      "LA-LEX-C519-SENS-03",
+      "LA-LEX-C519-SENS-04",
+      "LA-LEX-C519-SENS-05"
+    ]
+  }
+}

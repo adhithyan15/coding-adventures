@@ -1,0 +1,9 @@
+{
+  "id": "PT-PATH-382-PROIBIDO",
+  "spine_node": "SPINE-EXPRESS-CONDITION",
+  "before": [],
+  "inline": [
+    "PT-EXT-382-PROIBIDO"
+  ],
+  "after": []
+}

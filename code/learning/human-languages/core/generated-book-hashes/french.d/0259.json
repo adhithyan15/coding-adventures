@@ -1,0 +1,12 @@
+{
+  "language": "french",
+  "chapter": 259,
+  "sourceHash": "fnv1a64:b345291a7c078f5a",
+  "lessonIds": [
+    "FR-C259-dabord",
+    "FR-C259-raconter",
+    "FR-C259-lecture",
+    "FR-C259-revision-histoire"
+  ],
+  "tex": "french/book/chapters/ch259-a-story-told-in-order.tex"
+}

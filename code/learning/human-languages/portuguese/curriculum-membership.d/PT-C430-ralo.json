@@ -1,0 +1,11 @@
+{
+  "id": "PT-C430-ralo",
+  "pathSegment": "PT-PATH-430-BANHO",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PT-EXT-430-BANHO",
+      "order": 1
+    }
+  ]
+}

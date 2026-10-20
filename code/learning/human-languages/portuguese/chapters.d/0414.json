@@ -1,0 +1,19 @@
+{
+  "chapter": 414,
+  "title": "Os bilhetes",
+  "label": "ch:pt-os-bilhetes",
+  "canDo": "I can buy and use tickets: the ticket office, the travel pass, validating it, the inspector and the fine.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "PT-C414-coima",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 414: I can buy and use tickets: the ticket office, the travel pass, validating it, the inspector and the fine.",
+    "assesses": [
+      "PT-LEX-C414-BILHETEIRA-03",
+      "PT-LEX-C414-BILHETEIRA-04",
+      "PT-LEX-C414-BILHETEIRA-05"
+    ]
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "id": "PT-PATH-305-SOCORRO",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "PT-EXT-305-SOCORRO"
+  ],
+  "after": []
+}

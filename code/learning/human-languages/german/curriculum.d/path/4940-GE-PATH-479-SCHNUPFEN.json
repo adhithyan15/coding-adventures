@@ -1,0 +1,9 @@
+{
+  "id": "GE-PATH-479-SCHNUPFEN",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "GE-EXT-479-SCHNUPFEN"
+  ],
+  "after": []
+}

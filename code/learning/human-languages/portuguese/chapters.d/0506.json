@@ -1,0 +1,19 @@
+{
+  "chapter": 506,
+  "title": "Desportos de água",
+  "label": "ch:pt-desportos-de-agua",
+  "canDo": "I can talk about swimming, kayaking, sailing and surfing.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "PT-R506-revisao-499-506",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 506: I can talk about swimming, kayaking, sailing and surfing.",
+    "assesses": [
+      "PT-LEX-C506-AGUA-03",
+      "PT-LEX-C506-AGUA-04",
+      "PT-LEX-C506-AGUA-05"
+    ]
+  }
+}

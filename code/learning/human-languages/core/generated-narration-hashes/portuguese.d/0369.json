@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 369,
+  "sourceHash": "fnv1a64:9746419a057eff82",
+  "lessonIds": [
+    "PT-C369-condicao",
+    "PT-C369-desde-que",
+    "PT-C369-contanto-que",
+    "PT-C369-caso",
+    "PT-C369-consoante"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch369.txt",
+  "json": "portuguese/narration/ch369.json",
+  "textHash": "fnv1a64:966d9bb8e6eb6d72",
+  "jsonHash": "fnv1a64:03ced93ad72a0e36",
+  "findings": []
+}

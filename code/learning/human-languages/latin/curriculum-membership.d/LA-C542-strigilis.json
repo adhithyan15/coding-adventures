@@ -1,0 +1,11 @@
+{
+  "id": "LA-C542-strigilis",
+  "pathSegment": "LA-PATH-542-STRI",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "LA-EXT-542-STRI",
+      "order": 0
+    }
+  ]
+}

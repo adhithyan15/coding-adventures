@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C485-madeo",
+    "language": "latin",
+    "chapter": 485,
+    "sequence": 25780,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:26476853f3d5e528"
+  },
+  "findings": []
+}

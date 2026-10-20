@@ -17518,3 +17518,63 @@ retained. Neutral 15-test/359-row and reporter ten-test checks pass, as do 1,209
 lesson shards. Full materialized Git-visible inventory matches the immutable
 report, including special buckets. Native execution was Windows only; platform
 plan inspection and script execution do not claim native Linux/macOS runs.
+
+## Post-#17677 inventory and backlog reconciliation (2026-10-18)
+
+Go opcode-provider PR #17677 merged externally as
+`a9f4f459c4789405e2b7d44a2493111817388a95` from reviewed head
+`20e8a010c6f4cf55f13c96de817c652292df7aca`. Both required gates passed;
+29 checks succeeded, eight conditional checks skipped and the documented
+CodeQL aggregate was neutral. Actual Go analysis succeeded. Hosted Linux,
+Windows and macOS fronts built the provider and Go build tool on the recorded
+GitHub test merge; local coverage remains a separate Windows measurement.
+The agent performed no manual merge.
+
+The fresh immutable main inventory has 1,508 established identities, 4,790
+occupied slots, 1,550 all-reported identities and 5,198 roots across fifteen
+established lanes. There are zero collisions or unknown buckets. Compared with
+the saved `76955b07` observation, 52 package files were added, with no new or
+removed root or identity/lane gap. Five OCaml identities remain emerging.
+
+Before selecting a successor, register the 24 reviewed finite classifiers from
+the parallel audits: LP00; CAS matching, substitution, pretty printing, list,
+complex and number-theory contracts; LEF/DEF and GDSII; floorplan, placement,
+routing, DRC/LVS, NLDM and technology mapping; resistor, power supply,
+oscillator and electronics models; Oct and Prolog lexer/parser profiles; and
+Nib source-preserving formatting. Six declared prerequisite edges remain.
+These are classification tasks, with explicit finite-domain and reference
+ambiguities in the journal, not completed ports or physical/native guarantees.
+
+Add the required .NET adapter-closure dependency on shared-input digest
+evidence. Keep Haskell coverage and duplicate-fixture CI sequencing optional;
+the full combined .NET digest edge remains scope-conditional. The resulting
+1,480-owner / 2,543-edge graph has no normalized collisions, missing dependency
+or cycle. The independently reviewed scopes and audit evidence remain in the
+dedicated parity coordination checkpoint.
+
+Register nine additional pending core-profile adopters for the existing
+Elixir, Go, Haskell, Lua, Perl, Python, Ruby, Rust and TypeScript compiler-IR
+roots. None currently reads the new shared profile; the six missing-lane port
+owners do not cover this gap. The graph is now 1,489 owners / 2,552 edges,
+without collisions or cycles. These additions precede successor selection.
+
+Select exactly `compiler-ir-aot-neutral-conformance`. Its prior graph has
+14 direct / 19 transitive dependents, including six ports and four immediately
+unblocked foundations/classifiers; the new nine adopters stay pending too.
+The [named BF03 profile](BF03-core-profile.md) resolves ID loss and core-opcode
+admission before tests. This tranche delivers only neutral data/text fixtures
+and their independent validator. Source maps, all native adopters and backend
+execution remain separate. Fourteen live open PR file inventories clear the
+direct product scope; shared workflow/journal hunks are unrelated and retained.
+
+Local foundation validation on source `ccef78f8cf5`: all 50 cases and 25 core
+opcodes pass across 11 tests. Validator coverage is 333/341 statements (97.65%)
+and 180/188 branches (95.74%). CI registry (19), parity reporter (10), STP01
+neutral (15), and lessons (31) tests pass, as do Ruff, Bandit, compilation,
+and the lessons validator. The actual Go build-tool BUILD passes all 15
+package suites; vet and build pass. Its repository plan validates 45 Starlark
+BUILD files and discovers 5,328 packages with no affected native packages
+for this neutral-only change. Both independent security reviews pass the
+exact source head. The Git-visible inventory equals the immutable main
+report. These observations qualify the neutral foundation only; nine existing
+IR lane adopters and six missing-lane ports remain pending.

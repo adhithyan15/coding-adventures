@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 406,
+  "sourceHash": "fnv1a64:b16b52c512614d12",
+  "lessonIds": [
+    "LA-C406-ingeniosus",
+    "LA-C406-attentus",
+    "LA-C406-tardus",
+    "LA-C406-sedulus",
+    "LA-C406-neglegens"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch406.txt",
+  "json": "latin/narration/ch406.json",
+  "textHash": "fnv1a64:87df649ab137d25f",
+  "jsonHash": "fnv1a64:238bca936e5406f4",
+  "findings": []
+}

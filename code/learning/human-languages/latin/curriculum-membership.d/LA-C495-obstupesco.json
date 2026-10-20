@@ -1,0 +1,11 @@
+{
+  "id": "LA-C495-obstupesco",
+  "pathSegment": "LA-PATH-495-MIRA",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "LA-EXT-495-MIRA",
+      "order": 4
+    }
+  ]
+}

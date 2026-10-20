@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C358-demokratie",
+    "language": "german",
+    "chapter": 358,
+    "sequence": 19440,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ded0b62550c21fa8"
+  },
+  "findings": []
+}

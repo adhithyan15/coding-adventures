@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C342-supero",
+    "language": "latin",
+    "chapter": 342,
+    "sequence": 18420,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e5163377a7bf2e81"
+  },
+  "findings": []
+}

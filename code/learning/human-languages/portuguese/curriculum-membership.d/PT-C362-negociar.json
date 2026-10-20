@@ -1,0 +1,11 @@
+{
+  "id": "PT-C362-negociar",
+  "pathSegment": "PT-PATH-362-ORDENADO",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PT-EXT-362-ORDENADO",
+      "order": 2
+    }
+  ]
+}

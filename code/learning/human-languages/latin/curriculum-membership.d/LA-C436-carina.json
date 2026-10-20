@@ -1,0 +1,11 @@
+{
+  "id": "LA-C436-carina",
+  "pathSegment": "LA-PATH-436-PUPPIS",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "LA-EXT-436-PUPPIS",
+      "order": 2
+    }
+  ]
+}

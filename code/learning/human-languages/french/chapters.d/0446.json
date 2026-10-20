@@ -1,0 +1,19 @@
+{
+  "chapter": 446,
+  "title": "Chez le cordonnier",
+  "label": "ch:fr-chez-le-cordonnier",
+  "canDo": "I can get things mended: the cobbler, resoling, polishing, the locksmith and sewing back.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "FR-C446-recoudre",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 446: I can get things mended: the cobbler, resoling, polishing, the locksmith and sewing back.",
+    "assesses": [
+      "FR-LEX-C446-CORDONNIER-03",
+      "FR-LEX-C446-CORDONNIER-04",
+      "FR-LEX-C446-CORDONNIER-05"
+    ]
+  }
+}

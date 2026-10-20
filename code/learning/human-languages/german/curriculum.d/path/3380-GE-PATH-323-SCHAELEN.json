@@ -1,0 +1,9 @@
+{
+  "id": "GE-PATH-323-SCHAELEN",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "GE-EXT-323-SCHAELEN"
+  ],
+  "after": []
+}

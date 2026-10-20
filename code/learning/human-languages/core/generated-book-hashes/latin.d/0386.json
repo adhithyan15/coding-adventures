@@ -1,0 +1,13 @@
+{
+  "language": "latin",
+  "chapter": 386,
+  "sourceHash": "fnv1a64:d43e9761b7300bd0",
+  "lessonIds": [
+    "LA-C386-societas",
+    "LA-C386-humanitas",
+    "LA-C386-mos",
+    "LA-C386-institutum",
+    "LA-C386-concordia"
+  ],
+  "tex": "latin/book/chapters/ch386-living-together.tex"
+}

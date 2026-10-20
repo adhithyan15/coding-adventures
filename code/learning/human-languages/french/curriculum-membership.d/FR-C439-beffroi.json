@@ -1,0 +1,11 @@
+{
+  "id": "FR-C439-beffroi",
+  "pathSegment": "FR-PATH-439-CLOCHERS",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FR-EXT-439-CLOCHERS",
+      "order": 3
+    }
+  ]
+}

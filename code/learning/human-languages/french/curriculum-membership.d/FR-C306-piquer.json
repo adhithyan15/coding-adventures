@@ -1,0 +1,11 @@
+{
+  "id": "FR-C306-piquer",
+  "pathSegment": "FR-PATH-306-PIQURES",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-306-PIQURES",
+      "order": 2
+    }
+  ]
+}

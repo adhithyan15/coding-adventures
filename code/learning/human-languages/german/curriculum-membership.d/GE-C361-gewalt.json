@@ -1,0 +1,11 @@
+{
+  "id": "GE-C361-gewalt",
+  "pathSegment": "GE-PATH-361-EINWANDERUNG",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-361-EINWANDERUNG",
+      "order": 4
+    }
+  ]
+}

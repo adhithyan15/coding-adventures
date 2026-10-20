@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 503,
+  "sourceHash": "fnv1a64:9d92cbdf6a5ab602",
+  "lessonIds": [
+    "GE-C503-gaertnern",
+    "GE-C503-unkraut",
+    "GE-C503-jaeten",
+    "GE-C503-giesskanne",
+    "GE-C503-kompost"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch503.txt",
+  "json": "german/narration/ch503.json",
+  "textHash": "fnv1a64:b4c1aa41253461ff",
+  "jsonHash": "fnv1a64:f0ef22f83832d347",
+  "findings": []
+}

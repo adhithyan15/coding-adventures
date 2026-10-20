@@ -1,0 +1,11 @@
+{
+  "id": "PT-R308-revisao-301-308",
+  "pathSegment": "PT-PATH-308-SUSTO",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "PT-EXT-308-SUSTO",
+      "order": 5
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 459,
+  "sourceHash": "fnv1a64:b89c10994b5eb763",
+  "lessonIds": [
+    "FR-C459-ecureuil",
+    "FR-C459-herisson",
+    "FR-C459-sanglier",
+    "FR-C459-cerf",
+    "FR-C459-biche"
+  ],
+  "tex": "french/book/chapters/ch459-les-animaux-des-bois.tex"
+}

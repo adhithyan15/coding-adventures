@@ -1,0 +1,11 @@
+{
+  "id": "LA-C330-exsequiae",
+  "pathSegment": "LA-PATH-330-FUNUS",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "LA-EXT-330-FUNUS",
+      "order": 4
+    }
+  ]
+}

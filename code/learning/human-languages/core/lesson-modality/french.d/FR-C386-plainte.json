@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C386-plainte",
+    "language": "french",
+    "chapter": 386,
+    "sequence": 21590,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:211525a8295328fa"
+  },
+  "findings": []
+}

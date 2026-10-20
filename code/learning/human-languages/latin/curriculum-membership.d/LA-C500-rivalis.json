@@ -1,0 +1,11 @@
+{
+  "id": "LA-C500-rivalis",
+  "pathSegment": "LA-PATH-500-CUPI",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "LA-EXT-500-CUPI",
+      "order": 4
+    }
+  ]
+}

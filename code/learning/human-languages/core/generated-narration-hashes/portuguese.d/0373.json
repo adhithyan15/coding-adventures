@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 373,
+  "sourceHash": "fnv1a64:567c410e319bf5d4",
+  "lessonIds": [
+    "PT-C373-risco",
+    "PT-C373-arriscado",
+    "PT-C373-provavel",
+    "PT-C373-improvavel",
+    "PT-C373-probabilidade"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch373.txt",
+  "json": "portuguese/narration/ch373.json",
+  "textHash": "fnv1a64:264be9cd25188c85",
+  "jsonHash": "fnv1a64:f2320bcda636466d",
+  "findings": []
+}

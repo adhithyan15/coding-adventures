@@ -1,0 +1,11 @@
+{
+  "id": "PT-C469-sovina",
+  "pathSegment": "PT-PATH-469-TEIMOSIA",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PT-EXT-469-TEIMOSIA",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 507,
+  "title": "Halbzeit und Elfmeter",
+  "label": "ch:ge-halbzeit-und-elfmeter",
+  "canDo": "I can talk about the stages of a match.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "GE-C507-abseits",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 507: I can talk about the stages of a match.",
+    "assesses": [
+      "GE-LEX-C507-SPIEL-03",
+      "GE-LEX-C507-SPIEL-04",
+      "GE-LEX-C507-SPIEL-05"
+    ]
+  }
+}

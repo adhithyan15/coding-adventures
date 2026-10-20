@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 364,
+  "sourceHash": "fnv1a64:474b636ba8384a33",
+  "lessonIds": [
+    "PT-C364-protestar",
+    "PT-C364-protesto",
+    "PT-C364-manifestacao",
+    "PT-C364-manifestar",
+    "PT-C364-exigir"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch364.txt",
+  "json": "portuguese/narration/ch364.json",
+  "textHash": "fnv1a64:6ef3e4b696287aeb",
+  "jsonHash": "fnv1a64:7ff87c0eb4f7930f",
+  "findings": []
+}

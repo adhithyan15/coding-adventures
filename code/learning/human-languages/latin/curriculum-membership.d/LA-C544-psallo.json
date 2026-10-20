@@ -1,0 +1,11 @@
+{
+  "id": "LA-C544-psallo",
+  "pathSegment": "LA-PATH-544-CITH",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "LA-EXT-544-CITH",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "LA-C503-lepidus",
+  "pathSegment": "LA-PATH-503-INDO",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "LA-EXT-503-INDO",
+      "order": 3
+    }
+  ]
+}

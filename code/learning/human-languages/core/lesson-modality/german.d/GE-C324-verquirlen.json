@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C324-verquirlen",
+    "language": "german",
+    "chapter": 324,
+    "sequence": 17690,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:446779f37c3997b8"
+  },
+  "findings": []
+}

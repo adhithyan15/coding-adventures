@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 363,
+  "sourceHash": "fnv1a64:72d5e0305a0aed85",
+  "lessonIds": [
+    "FR-C363-manifestation",
+    "FR-C363-manifester",
+    "FR-C363-manifestant",
+    "FR-C363-banderole",
+    "FR-C363-protester"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch363.txt",
+  "json": "french/narration/ch363.json",
+  "textHash": "fnv1a64:cc5e846427c90e77",
+  "jsonHash": "fnv1a64:0638001fcc50bd98",
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PT-C502-pescar",
+    "language": "portuguese",
+    "chapter": 502,
+    "sequence": 27790,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3dd8ab37be17096b"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 395,
+  "title": "Mon compte en ligne",
+  "label": "ch:fr-mon-compte-en-ligne",
+  "canDo": "I can manage an online account: the user, the password, the username, logging in and getting access.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "FR-C395-acceder",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 395: I can manage an online account: the user, the password, the username, logging in and getting access.",
+    "assesses": [
+      "FR-LEX-C395-COMPTE-03",
+      "FR-LEX-C395-COMPTE-04",
+      "FR-LEX-C395-COMPTE-05"
+    ]
+  }
+}

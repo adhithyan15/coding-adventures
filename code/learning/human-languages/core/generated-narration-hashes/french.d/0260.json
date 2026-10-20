@@ -1,0 +1,17 @@
+{
+  "language": "french",
+  "chapter": 260,
+  "sourceHash": "fnv1a64:1d55254e96c8d86b",
+  "lessonIds": [
+    "FR-C260-je-pense-que",
+    "FR-C260-donc",
+    "FR-C260-revision-opinion"
+  ],
+  "voiceLessons": 3,
+  "drivablePrefix": 3,
+  "text": "french/narration/ch260.txt",
+  "json": "french/narration/ch260.json",
+  "textHash": "fnv1a64:38edf301c913c013",
+  "jsonHash": "fnv1a64:8afe23f116ce5850",
+  "findings": []
+}

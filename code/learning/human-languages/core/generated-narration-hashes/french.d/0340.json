@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 340,
+  "sourceHash": "fnv1a64:fdf59142e3d03e93",
+  "lessonIds": [
+    "FR-C340-fiable",
+    "FR-C340-credible",
+    "FR-C340-douteux",
+    "FR-C340-vraisemblable",
+    "FR-C340-invraisemblable"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch340.txt",
+  "json": "french/narration/ch340.json",
+  "textHash": "fnv1a64:b5fb34eab0ab6db2",
+  "jsonHash": "fnv1a64:d8176883e731c14c",
+  "findings": []
+}

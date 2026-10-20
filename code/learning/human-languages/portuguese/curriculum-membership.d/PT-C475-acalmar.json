@@ -1,0 +1,11 @@
+{
+  "id": "PT-C475-acalmar",
+  "pathSegment": "PT-PATH-475-NERVOS",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-475-NERVOS",
+      "order": 3
+    }
+  ]
+}

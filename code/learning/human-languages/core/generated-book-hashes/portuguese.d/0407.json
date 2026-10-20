@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 407,
+  "sourceHash": "fnv1a64:a869a40f2e4d1f3a",
+  "lessonIds": [
+    "PT-C407-capo",
+    "PT-C407-bagageira",
+    "PT-C407-pisca",
+    "PT-C407-parafuso",
+    "PT-C407-desaparafusar"
+  ],
+  "tex": "portuguese/book/chapters/ch407-debaixo-do-capo.tex"
+}

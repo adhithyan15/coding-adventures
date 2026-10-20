@@ -1,0 +1,11 @@
+{
+  "id": "FR-C410-aire",
+  "pathSegment": "FR-PATH-410-BOUCHONS",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FR-EXT-410-BOUCHONS",
+      "order": 3
+    }
+  ]
+}

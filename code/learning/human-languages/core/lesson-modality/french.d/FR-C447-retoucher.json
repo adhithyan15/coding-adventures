@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C447-retoucher",
+    "language": "french",
+    "chapter": 447,
+    "sequence": 24740,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ca97b27257502c63"
+  },
+  "findings": []
+}

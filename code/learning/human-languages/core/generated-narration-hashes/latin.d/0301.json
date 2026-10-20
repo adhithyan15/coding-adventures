@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 301,
+  "sourceHash": "fnv1a64:892794f9158dff19",
+  "lessonIds": [
+    "LA-C301-susurrus",
+    "LA-C301-susurro",
+    "LA-C301-vulgo",
+    "LA-C301-crebresco",
+    "LA-C301-perhibeo"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch301.txt",
+  "json": "latin/narration/ch301.json",
+  "textHash": "fnv1a64:3e9e93cad01bdb8e",
+  "jsonHash": "fnv1a64:6a0858efe2a642e7",
+  "findings": []
+}

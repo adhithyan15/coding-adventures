@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C292-empreinte",
+    "language": "french",
+    "chapter": 292,
+    "sequence": 16770,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:555a0ce573581ebc"
+  },
+  "findings": []
+}

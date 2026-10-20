@@ -1,0 +1,11 @@
+{
+  "id": "FR-C320-bougie",
+  "pathSegment": "FR-PATH-320-TOAST",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FR-EXT-320-TOAST",
+      "order": 3
+    }
+  ]
+}

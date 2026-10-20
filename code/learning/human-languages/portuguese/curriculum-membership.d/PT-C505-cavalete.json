@@ -1,0 +1,11 @@
+{
+  "id": "PT-C505-cavalete",
+  "pathSegment": "PT-PATH-505-PINTURA",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-505-PINTURA",
+      "order": 3
+    }
+  ]
+}

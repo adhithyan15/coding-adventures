@@ -698,6 +698,16 @@ issuer key and proves only that the key verified those exact signed bytes.
 Issuer selection and linkage, algorithm routing, certificate
 roles, path construction and validation, trust roots, time, names, revocation,
 TLS, HTTP, and network effects remain separate blockers.
+A bounded `x509-rsa-sha256-issuer-link` composition now authenticates one
+directed child-to-candidate-issuer link for that exact algorithm. Caller-owned
+Name policy is invoked once in the fixed child-issuer to candidate-subject
+direction; the exact candidate must pass issuing-CA role checks and
+caller-supplied RSA key-strength policy before its key verifies the child's
+preserved signed bytes. Non-copyable evidence binds the exact child, candidate
+issuer, and validated key. The composition does not process other critical
+extensions, validity, path length, name constraints, trust anchors, path
+construction, revocation, TLS, HTTP, or network effects, so concrete HTTPS
+remains unavailable.
 
 The current slices intentionally stop before provider HTTPS transport. The
 loopback host owns only local TCP and injected browser authority; custody owns

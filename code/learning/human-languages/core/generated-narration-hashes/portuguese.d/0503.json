@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 503,
+  "sourceHash": "fnv1a64:7de4ac83429355a9",
+  "lessonIds": [
+    "PT-C503-xadrez",
+    "PT-C503-baralho",
+    "PT-C503-tabuleiro",
+    "PT-C503-puzzle",
+    "PT-C503-palavras-cruzadas"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch503.txt",
+  "json": "portuguese/narration/ch503.json",
+  "textHash": "fnv1a64:477702b6431385bd",
+  "jsonHash": "fnv1a64:c8faecbc04b9064c",
+  "findings": []
+}

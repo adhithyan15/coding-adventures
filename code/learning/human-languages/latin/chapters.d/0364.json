@@ -1,0 +1,19 @@
+{
+  "chapter": 364,
+  "title": "Drawing a Conclusion",
+  "label": "ch:la-drawing-a-conclusion",
+  "canDo": "I can draw a conclusion, reason a thing out, say what a word means and voice a suspicion.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "LA-R364-review-357-364",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 364: I can draw a conclusion, reason a thing out, say what a word means and voice a suspicion.",
+    "assesses": [
+      "LA-LEX-C364-CONCLUDO-03",
+      "LA-LEX-C364-CONCLUDO-04",
+      "LA-LEX-C364-CONCLUDO-05"
+    ]
+  }
+}

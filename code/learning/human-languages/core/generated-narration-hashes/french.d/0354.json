@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 354,
+  "sourceHash": "fnv1a64:e3893b366e62ef06",
+  "lessonIds": [
+    "FR-C354-cv",
+    "FR-C354-candidat",
+    "FR-C354-candidature",
+    "FR-C354-postuler",
+    "FR-C354-embauche"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch354.txt",
+  "json": "french/narration/ch354.json",
+  "textHash": "fnv1a64:74684db3453a0a22",
+  "jsonHash": "fnv1a64:6675e512a45140bc",
+  "findings": []
+}

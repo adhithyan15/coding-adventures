@@ -1,0 +1,8 @@
+{
+  "id": "GE-EXT-444-BAUMARKT",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can find other shops: the DIY store, the stationer, the bookshop, the flower shop and gluing things.",
+  "prerequisites": []
+}

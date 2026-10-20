@@ -1,0 +1,11 @@
+{
+  "id": "PT-C333-amassar",
+  "pathSegment": "PT-PATH-333-BOLO",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PT-EXT-333-BOLO",
+      "order": 2
+    }
+  ]
+}

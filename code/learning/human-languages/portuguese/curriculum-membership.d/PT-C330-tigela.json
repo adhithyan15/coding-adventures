@@ -1,0 +1,11 @@
+{
+  "id": "PT-C330-tigela",
+  "pathSegment": "PT-PATH-330-DESCASCAR",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PT-EXT-330-DESCASCAR",
+      "order": 4
+    }
+  ]
+}

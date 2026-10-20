@@ -1,0 +1,11 @@
+{
+  "id": "PT-C382-violar",
+  "pathSegment": "PT-PATH-382-PROIBIDO",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-382-PROIBIDO",
+      "order": 3
+    }
+  ]
+}

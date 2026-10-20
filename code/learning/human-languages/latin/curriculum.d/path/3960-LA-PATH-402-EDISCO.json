@@ -1,0 +1,9 @@
+{
+  "id": "LA-PATH-402-EDISCO",
+  "spine_node": "SPINE-EXPRESS-CONDITION",
+  "before": [],
+  "inline": [
+    "LA-EXT-402-EDISCO"
+  ],
+  "after": []
+}

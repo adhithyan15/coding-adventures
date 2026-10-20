@@ -1,0 +1,9 @@
+{
+  "id": "GE-PATH-433-KOMPASS",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "GE-EXT-433-KOMPASS"
+  ],
+  "after": []
+}

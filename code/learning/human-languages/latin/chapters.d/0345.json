@@ -1,0 +1,19 @@
+{
+  "chapter": 345,
+  "title": "Rēgēs et dictātōrēs",
+  "label": "ch:la-reges-et-dictatores",
+  "canDo": "I can talk about early rulers and the people: a king, to reign, a tyrant, the common people and a dictator.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "LA-C345-dictator",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 345: I can talk about early rulers and the people: a king, to reign, a tyrant, the common people and a dictator.",
+    "assesses": [
+      "LA-LEX-C345-REX-03",
+      "LA-LEX-C345-REX-04",
+      "LA-LEX-C345-REX-05"
+    ]
+  }
+}

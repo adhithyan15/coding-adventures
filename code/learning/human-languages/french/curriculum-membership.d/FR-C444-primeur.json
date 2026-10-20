@@ -1,0 +1,11 @@
+{
+  "id": "FR-C444-primeur",
+  "pathSegment": "FR-PATH-444-COMMERCES",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-444-COMMERCES",
+      "order": 4
+    }
+  ]
+}

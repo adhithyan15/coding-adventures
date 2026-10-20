@@ -1,0 +1,9 @@
+{
+  "id": "PT-PATH-520-TEATRO",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "PT-EXT-520-TEATRO"
+  ],
+  "after": []
+}

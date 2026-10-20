@@ -1,0 +1,11 @@
+{
+  "id": "FR-C362-citoyennete",
+  "pathSegment": "FR-PATH-362-CITOYEN",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FR-EXT-362-CITOYEN",
+      "order": 1
+    }
+  ]
+}

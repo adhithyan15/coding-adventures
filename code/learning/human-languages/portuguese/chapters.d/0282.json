@@ -1,0 +1,19 @@
+{
+  "chapter": 282,
+  "title": "O que foi dito",
+  "label": "ch:pt-o-que-foi-dito",
+  "canDo": "I can report what people said: a statement, a comment, a confirmation, a press release and the pundits’ views.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "PT-C282-comentador",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 282: I can report what people said: a statement, a comment, a confirmation, a press release and the pundits’ views.",
+    "assesses": [
+      "PT-LEX-C282-AFIRMAR-03",
+      "PT-LEX-C282-AFIRMAR-04",
+      "PT-LEX-C282-AFIRMAR-05"
+    ]
+  }
+}

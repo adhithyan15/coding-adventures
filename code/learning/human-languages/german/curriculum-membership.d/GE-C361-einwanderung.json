@@ -1,0 +1,11 @@
+{
+  "id": "GE-C361-einwanderung",
+  "pathSegment": "GE-PATH-361-EINWANDERUNG",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "GE-EXT-361-EINWANDERUNG",
+      "order": 0
+    }
+  ]
+}

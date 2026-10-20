@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 429,
+  "sourceHash": "fnv1a64:c7dfbefbf43681d0",
+  "lessonIds": [
+    "PT-C429-berco",
+    "PT-C429-fronha",
+    "PT-C429-secador",
+    "PT-C429-cabide",
+    "PT-C429-roupao"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch429.txt",
+  "json": "portuguese/narration/ch429.json",
+  "textHash": "fnv1a64:13bf1ed67f06ec77",
+  "jsonHash": "fnv1a64:3969fa6070f0d9ef",
+  "findings": []
+}

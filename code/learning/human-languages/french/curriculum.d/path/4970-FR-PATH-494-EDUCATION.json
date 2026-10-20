@@ -1,0 +1,9 @@
+{
+  "id": "FR-PATH-494-EDUCATION",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "FR-EXT-494-EDUCATION"
+  ],
+  "after": []
+}

@@ -1,0 +1,8 @@
+{
+  "id": "FR-EXT-351-REACTION",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can describe how someone reacted, tell a real reason from a pretext, and justify a decision.",
+  "prerequisites": []
+}

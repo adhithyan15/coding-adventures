@@ -1,0 +1,11 @@
+{
+  "id": "PT-C338-objecao",
+  "pathSegment": "PT-PATH-338-DESACORDO",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-338-DESACORDO",
+      "order": 3
+    }
+  ]
+}

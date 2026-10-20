@@ -1,0 +1,19 @@
+{
+  "chapter": 549,
+  "title": "Poems and readings",
+  "label": "ch:la-poems-and-readings",
+  "canDo": "I can talk about poems and public readings.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "LA-C549-auditor",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 549: I can talk about poems and public readings.",
+    "assesses": [
+      "LA-LEX-C549-POEM-03",
+      "LA-LEX-C549-POEM-04",
+      "LA-LEX-C549-POEM-05"
+    ]
+  }
+}

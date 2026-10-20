@@ -1,0 +1,19 @@
+{
+  "chapter": 343,
+  "title": "Triumphus",
+  "label": "ch:la-triumphus",
+  "canDo": "I can tell how a war ended: a prisoner, to surrender, a surrender, a treaty and the triumph.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "LA-C343-triumphus",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 343: I can tell how a war ended: a prisoner, to surrender, a surrender, a treaty and the triumph.",
+    "assesses": [
+      "LA-LEX-C343-TRIUMPHUS-03",
+      "LA-LEX-C343-TRIUMPHUS-04",
+      "LA-LEX-C343-TRIUMPHUS-05"
+    ]
+  }
+}

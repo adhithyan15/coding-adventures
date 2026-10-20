@@ -1,0 +1,9 @@
+{
+  "id": "LA-PATH-283-SENTENTIA",
+  "spine_node": "SPINE-GIVE-REASONS",
+  "before": [],
+  "inline": [
+    "LA-EXT-283-SENTENTIA"
+  ],
+  "after": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "FR-C460-nuageux",
+  "pathSegment": "FR-PATH-460-METEO",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-460-METEO",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C437-remigo",
+    "language": "latin",
+    "chapter": 437,
+    "sequence": 23350,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:84ceeaf48e89d6d0"
+  },
+  "findings": []
+}

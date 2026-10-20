@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 415,
+  "sourceHash": "fnv1a64:108b22eda4a6fc15",
+  "lessonIds": [
+    "PT-C415-carruagem",
+    "PT-C415-compartimento",
+    "PT-C415-beliche",
+    "PT-C415-maquinista",
+    "PT-C415-locomotiva"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch415.txt",
+  "json": "portuguese/narration/ch415.json",
+  "textHash": "fnv1a64:14328c0988fa6fa4",
+  "jsonHash": "fnv1a64:e372bd0e04aee11b",
+  "findings": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 380,
+  "sourceHash": "fnv1a64:d904d0c29c8f52a8",
+  "lessonIds": [
+    "PT-C380-ministro",
+    "PT-C380-partido",
+    "PT-C380-parlamento",
+    "PT-C380-eleger",
+    "PT-C380-eleitor"
+  ],
+  "tex": "portuguese/book/chapters/ch380-se-eu-fosse-ministro.tex"
+}

@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 357,
+  "sourceHash": "fnv1a64:21d1bb8e5d8637f3",
+  "lessonIds": [
+    "PT-C357-estagio",
+    "PT-C357-estagiario",
+    "PT-C357-aprendiz",
+    "PT-C357-empregar",
+    "PT-C357-entidade-patronal"
+  ],
+  "tex": "portuguese/book/chapters/ch357-o-primeiro-emprego.tex"
+}

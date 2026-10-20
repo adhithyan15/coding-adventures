@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PT-R456-revisao-449-456",
+    "language": "portuguese",
+    "chapter": 456,
+    "sequence": 25460,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e52e0af768c968d4"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "GE-C303-friedhof",
+  "pathSegment": "GE-PATH-303-BEERDIGUNG",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-303-BEERDIGUNG",
+      "order": 4
+    }
+  ]
+}

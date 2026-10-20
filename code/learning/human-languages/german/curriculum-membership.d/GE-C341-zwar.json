@@ -1,0 +1,11 @@
+{
+  "id": "GE-C341-zwar",
+  "pathSegment": "GE-PATH-341-OBWOHL",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GE-EXT-341-OBWOHL",
+      "order": 1
+    }
+  ]
+}

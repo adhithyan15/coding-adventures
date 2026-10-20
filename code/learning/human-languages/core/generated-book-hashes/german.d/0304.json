@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 304,
+  "sourceHash": "fnv1a64:20135390ed595042",
+  "lessonIds": [
+    "GE-C304-trauer",
+    "GE-C304-trauern",
+    "GE-C304-beileid",
+    "GE-C304-witwe",
+    "GE-C304-erben"
+  ],
+  "tex": "german/book/chapters/ch304-die-trauer.tex"
+}

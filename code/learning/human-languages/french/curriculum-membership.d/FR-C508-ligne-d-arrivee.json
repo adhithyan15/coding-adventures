@@ -1,0 +1,11 @@
+{
+  "id": "FR-C508-ligne-d-arrivee",
+  "pathSegment": "FR-PATH-508-COURSE",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FR-EXT-508-COURSE",
+      "order": 1
+    }
+  ]
+}

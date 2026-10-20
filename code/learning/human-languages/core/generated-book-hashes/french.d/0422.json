@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 422,
+  "sourceHash": "fnv1a64:740d91feb92073d0",
+  "lessonIds": [
+    "FR-C422-ferry",
+    "FR-C422-traversee",
+    "FR-C422-cabine",
+    "FR-C422-gilet",
+    "FR-C422-debarquer"
+  ],
+  "tex": "french/book/chapters/ch422-la-traversee.tex"
+}

@@ -1,0 +1,11 @@
+{
+  "id": "LA-C537-reconcilio",
+  "pathSegment": "LA-PATH-537-IURG",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "LA-EXT-537-IURG",
+      "order": 1
+    }
+  ]
+}

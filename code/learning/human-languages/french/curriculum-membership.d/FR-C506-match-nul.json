@@ -1,0 +1,11 @@
+{
+  "id": "FR-C506-match-nul",
+  "pathSegment": "FR-PATH-506-RESULTATS",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "FR-EXT-506-RESULTATS",
+      "order": 0
+    }
+  ]
+}

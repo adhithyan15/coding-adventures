@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C318-uro",
+    "language": "latin",
+    "chapter": 318,
+    "sequence": 17190,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1ac1830ae826540c"
+  },
+  "findings": []
+}

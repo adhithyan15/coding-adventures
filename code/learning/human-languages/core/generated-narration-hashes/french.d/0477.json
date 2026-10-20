@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 477,
+  "sourceHash": "fnv1a64:7757ef476e04f599",
+  "lessonIds": [
+    "FR-C477-cuisse",
+    "FR-C477-mollet",
+    "FR-C477-talon",
+    "FR-C477-orteil",
+    "FR-C477-hanche"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch477.txt",
+  "json": "french/narration/ch477.json",
+  "textHash": "fnv1a64:a7c413cf437e3198",
+  "jsonHash": "fnv1a64:caef6b69890de837",
+  "findings": []
+}

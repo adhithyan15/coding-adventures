@@ -1,0 +1,11 @@
+{
+  "id": "FR-C347-par-consequent",
+  "pathSegment": "FR-PATH-347-PUISQUE",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FR-EXT-347-PUISQUE",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 512,
+  "sourceHash": "fnv1a64:1d2658bab2f288b4",
+  "lessonIds": [
+    "GE-C512-schlitten",
+    "GE-C512-rodeln",
+    "GE-C512-schlittschuh",
+    "GE-C512-piste",
+    "GE-C512-skilift"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch512.txt",
+  "json": "german/narration/ch512.json",
+  "textHash": "fnv1a64:b0805d2be085f5de",
+  "jsonHash": "fnv1a64:08e013feb40c6661",
+  "findings": []
+}

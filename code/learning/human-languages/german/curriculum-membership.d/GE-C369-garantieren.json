@@ -1,0 +1,11 @@
+{
+  "id": "GE-C369-garantieren",
+  "pathSegment": "GE-PATH-369-RISIKO",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-369-RISIKO",
+      "order": 4
+    }
+  ]
+}

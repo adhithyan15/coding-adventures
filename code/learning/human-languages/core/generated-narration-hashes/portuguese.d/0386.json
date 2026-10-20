@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 386,
+  "sourceHash": "fnv1a64:b6ad9d95cac5e2b8",
+  "lessonIds": [
+    "PT-C386-ladrao",
+    "PT-C386-acusar",
+    "PT-C386-acusacao",
+    "PT-C386-licito",
+    "PT-C386-ilicito"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch386.txt",
+  "json": "portuguese/narration/ch386.json",
+  "textHash": "fnv1a64:f5fa93df2b9e6012",
+  "jsonHash": "fnv1a64:d3252ad3152bc9b5",
+  "findings": []
+}

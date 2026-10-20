@@ -1,0 +1,19 @@
+{
+  "chapter": 410,
+  "title": "Estradas do campo",
+  "label": "ch:pt-estradas-do-campo",
+  "canDo": "I can describe country roads: bends, speed bumps, shortcuts, tarmac and roads that wind.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "PT-C410-serpentear",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 410: I can describe country roads: bends, speed bumps, shortcuts, tarmac and roads that wind.",
+    "assesses": [
+      "PT-LEX-C410-CURVAS-03",
+      "PT-LEX-C410-CURVAS-04",
+      "PT-LEX-C410-CURVAS-05"
+    ]
+  }
+}

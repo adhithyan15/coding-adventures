@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 521,
+  "sourceHash": "fnv1a64:8d9fd394b0579a8e",
+  "lessonIds": [
+    "PT-C521-comedia",
+    "PT-C521-opera",
+    "PT-C521-bailado",
+    "PT-C521-bailarina",
+    "PT-C521-camarim"
+  ],
+  "tex": "portuguese/book/chapters/ch521-comedia-opera-e-bailado.tex"
+}

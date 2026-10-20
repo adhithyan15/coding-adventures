@@ -1,0 +1,11 @@
+{
+  "id": "PT-C426-mosquiteiro",
+  "pathSegment": "PT-PATH-426-TENDA",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PT-EXT-426-TENDA",
+      "order": 4
+    }
+  ]
+}

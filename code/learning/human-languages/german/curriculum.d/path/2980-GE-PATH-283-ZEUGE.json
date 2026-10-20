@@ -1,0 +1,9 @@
+{
+  "id": "GE-PATH-283-ZEUGE",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "GE-EXT-283-ZEUGE"
+  ],
+  "after": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 371,
+  "sourceHash": "fnv1a64:583d7e1ca3eb8659",
+  "lessonIds": [
+    "PT-C371-prever",
+    "PT-C371-previsivel",
+    "PT-C371-imprevisivel",
+    "PT-C371-imprevisto",
+    "PT-C371-alternativa"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch371.txt",
+  "json": "portuguese/narration/ch371.json",
+  "textHash": "fnv1a64:3f5868e48492d1de",
+  "jsonHash": "fnv1a64:d9f39edb663b9222",
+  "findings": []
+}

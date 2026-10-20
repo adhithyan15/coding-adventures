@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 502,
+  "sourceHash": "fnv1a64:9ca9330e6d4d8118",
+  "lessonIds": [
+    "PT-C502-pescar",
+    "PT-C502-pesca",
+    "PT-C502-isca",
+    "PT-C502-anzol",
+    "PT-C502-cacar"
+  ],
+  "tex": "portuguese/book/chapters/ch502-pescar-e-cacar.tex"
+}

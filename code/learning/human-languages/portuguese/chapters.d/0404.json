@@ -1,0 +1,19 @@
+{
+  "chapter": 404,
+  "title": "Na bomba de gasolina",
+  "label": "ch:pt-na-bomba-de-gasolina",
+  "canDo": "I can fill up the car: diesel, fuel, the hose, filling up and filling the tank to the top.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "PT-C404-atestar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 404: I can fill up the car: diesel, fuel, the hose, filling up and filling the tank to the top.",
+    "assesses": [
+      "PT-LEX-C404-BOMBA-03",
+      "PT-LEX-C404-BOMBA-04",
+      "PT-LEX-C404-BOMBA-05"
+    ]
+  }
+}

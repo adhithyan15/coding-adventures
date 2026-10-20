@@ -1,0 +1,8 @@
+{
+  "id": "FR-EXT-527-REPASSAGE",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can talk about ironing and putting clothes away.",
+  "prerequisites": []
+}

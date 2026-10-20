@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C350-befristet",
+    "language": "german",
+    "chapter": 350,
+    "sequence": 19060,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c56b6708eb0f9d11"
+  },
+  "findings": []
+}

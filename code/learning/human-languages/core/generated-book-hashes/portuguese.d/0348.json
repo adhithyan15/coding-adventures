@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 348,
+  "sourceHash": "fnv1a64:7ee4d13cf94d219a",
+  "lessonIds": [
+    "PT-C348-efeito",
+    "PT-C348-provocar",
+    "PT-C348-causar",
+    "PT-C348-fator",
+    "PT-C348-consequencia"
+  ],
+  "tex": "portuguese/book/chapters/ch348-causas-e-efeitos.tex"
+}

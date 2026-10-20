@@ -1,0 +1,9 @@
+{
+  "id": "PT-PATH-266-COMPARAR",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "PT-EXT-266-COMPARAR"
+  ],
+  "after": []
+}

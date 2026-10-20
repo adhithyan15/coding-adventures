@@ -1,0 +1,14 @@
+{
+  "language": "french",
+  "chapter": 521,
+  "sourceHash": "fnv1a64:1820e1466a205c1d",
+  "lessonIds": [
+    "FR-C521-lecteur",
+    "FR-C521-narrateur",
+    "FR-C521-heros",
+    "FR-C521-dedicace",
+    "FR-C521-dedicacer",
+    "FR-R521-revision-514-521"
+  ],
+  "tex": "french/book/chapters/ch521-auteurs-et-lecteurs.tex"
+}

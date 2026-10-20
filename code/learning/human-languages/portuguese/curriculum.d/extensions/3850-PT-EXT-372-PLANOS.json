@@ -1,0 +1,8 @@
+{
+  "id": "PT-EXT-372-PLANOS",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can change plans: cancel or postpone, say whether something is provisional or final, and be flexible.",
+  "prerequisites": []
+}

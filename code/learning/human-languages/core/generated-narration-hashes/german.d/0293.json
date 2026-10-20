@@ -1,0 +1,20 @@
+{
+  "language": "german",
+  "chapter": 293,
+  "sourceHash": "fnv1a64:6885a3378a049192",
+  "lessonIds": [
+    "GE-C293-brennen",
+    "GE-C293-rauch",
+    "GE-C293-flamme",
+    "GE-C293-loeschen",
+    "GE-C293-waldbrand",
+    "GE-R293-review-286-293"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "german/narration/ch293.txt",
+  "json": "german/narration/ch293.json",
+  "textHash": "fnv1a64:488c3aa16966e52e",
+  "jsonHash": "fnv1a64:f5790ccaa6fd7ac1",
+  "findings": []
+}

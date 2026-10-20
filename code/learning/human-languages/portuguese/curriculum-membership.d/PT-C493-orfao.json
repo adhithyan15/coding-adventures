@@ -1,0 +1,11 @@
+{
+  "id": "PT-C493-orfao",
+  "pathSegment": "PT-PATH-493-GERACOES",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PT-EXT-493-GERACOES",
+      "order": 2
+    }
+  ]
+}

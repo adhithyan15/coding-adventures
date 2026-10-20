@@ -1,0 +1,19 @@
+{
+  "chapter": 473,
+  "title": "Fierté et modestie",
+  "label": "ch:fr-fierte-et-modestie",
+  "canDo": "I can talk about pride, vanity and modesty.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "FR-R473-revision-466-473",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 473: I can talk about pride, vanity and modesty.",
+    "assesses": [
+      "FR-LEX-C473-ORGUEIL-03",
+      "FR-LEX-C473-ORGUEIL-04",
+      "FR-LEX-C473-ORGUEIL-05"
+    ]
+  }
+}

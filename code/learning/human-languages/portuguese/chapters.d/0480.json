@@ -1,0 +1,19 @@
+{
+  "chapter": 480,
+  "title": "Culpa e vergonha",
+  "label": "ch:pt-culpa-e-vergonha",
+  "canDo": "I can talk about regret, remorse and shame.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "PT-C480-envergonhado",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 480: I can talk about regret, remorse and shame.",
+    "assesses": [
+      "PT-LEX-C480-REMORSO-03",
+      "PT-LEX-C480-REMORSO-04",
+      "PT-LEX-C480-REMORSO-05"
+    ]
+  }
+}

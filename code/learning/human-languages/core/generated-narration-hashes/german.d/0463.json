@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 463,
+  "sourceHash": "fnv1a64:4a8977b889ac016f",
+  "lessonIds": [
+    "GE-C463-raureif",
+    "GE-C463-gefrieren",
+    "GE-C463-tauen",
+    "GE-C463-tauwetter",
+    "GE-C463-bibbern"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch463.txt",
+  "json": "german/narration/ch463.json",
+  "textHash": "fnv1a64:5ce86f4cab3598d2",
+  "jsonHash": "fnv1a64:a5412699f6e81a30",
+  "findings": []
+}

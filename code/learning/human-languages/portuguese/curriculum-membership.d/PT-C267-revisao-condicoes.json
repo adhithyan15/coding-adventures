@@ -1,0 +1,11 @@
+{
+  "id": "PT-C267-revisao-condicoes",
+  "pathSegment": "PT-PATH-267-SE",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-267-SE",
+      "order": 3
+    }
+  ]
+}

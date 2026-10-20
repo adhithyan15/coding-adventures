@@ -1,0 +1,9 @@
+{
+  "id": "PT-PATH-269-PRIMEIRO",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "PT-EXT-269-PRIMEIRO"
+  ],
+  "after": []
+}

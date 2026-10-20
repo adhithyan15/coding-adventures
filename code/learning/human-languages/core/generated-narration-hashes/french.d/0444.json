@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 444,
+  "sourceHash": "fnv1a64:1cfcbf709999bc92",
+  "lessonIds": [
+    "FR-C444-charcuterie",
+    "FR-C444-poissonnerie",
+    "FR-C444-traiteur",
+    "FR-C444-epicier",
+    "FR-C444-primeur"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch444.txt",
+  "json": "french/narration/ch444.json",
+  "textHash": "fnv1a64:c8af4be3e90b0f35",
+  "jsonHash": "fnv1a64:00ef2925089a5cd2",
+  "findings": []
+}

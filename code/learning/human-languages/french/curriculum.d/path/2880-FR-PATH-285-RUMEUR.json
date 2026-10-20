@@ -1,0 +1,9 @@
+{
+  "id": "FR-PATH-285-RUMEUR",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "FR-EXT-285-RUMEUR"
+  ],
+  "after": []
+}

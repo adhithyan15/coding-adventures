@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C459-exstruo",
+    "language": "latin",
+    "chapter": 459,
+    "sequence": 24480,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7be94f624bdb557f"
+  },
+  "findings": []
+}

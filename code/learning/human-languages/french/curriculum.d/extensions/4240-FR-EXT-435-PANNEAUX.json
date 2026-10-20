@@ -1,0 +1,8 @@
+{
+  "id": "FR-EXT-435-PANNEAUX",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can follow signs: the sign, the arrow, the crossroads, the marker post and the corner.",
+  "prerequisites": []
+}

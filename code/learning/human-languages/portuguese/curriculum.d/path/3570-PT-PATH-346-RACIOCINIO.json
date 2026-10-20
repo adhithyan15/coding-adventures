@@ -1,0 +1,9 @@
+{
+  "id": "PT-PATH-346-RACIOCINIO",
+  "spine_node": "SPINE-GIVE-REASONS",
+  "before": [],
+  "inline": [
+    "PT-EXT-346-RACIOCINIO"
+  ],
+  "after": []
+}

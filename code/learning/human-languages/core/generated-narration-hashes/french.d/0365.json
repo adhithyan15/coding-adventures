@@ -1,0 +1,20 @@
+{
+  "language": "french",
+  "chapter": 365,
+  "sourceHash": "fnv1a64:8265223a61754ed2",
+  "lessonIds": [
+    "FR-C365-pauvrete",
+    "FR-C365-inegalite",
+    "FR-C365-discrimination",
+    "FR-C365-discriminer",
+    "FR-C365-immigration",
+    "FR-R365-revision-358-365"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "french/narration/ch365.txt",
+  "json": "french/narration/ch365.json",
+  "textHash": "fnv1a64:1928fc1d07708f79",
+  "jsonHash": "fnv1a64:e2403c9270f2f02f",
+  "findings": []
+}

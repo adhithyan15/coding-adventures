@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 286,
+  "sourceHash": "fnv1a64:2912293f816257f9",
+  "lessonIds": [
+    "PT-C286-delito",
+    "PT-C286-vandalo",
+    "PT-C286-vandalismo",
+    "PT-C286-vitima",
+    "PT-C286-homicidio"
+  ],
+  "tex": "portuguese/book/chapters/ch286-delitos-e-vitimas.tex"
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C305-dolus",
+    "language": "latin",
+    "chapter": 305,
+    "sequence": 16550,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9adeec03e524a0fe"
+  },
+  "findings": []
+}

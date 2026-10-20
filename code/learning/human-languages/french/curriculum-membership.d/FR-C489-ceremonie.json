@@ -1,0 +1,11 @@
+{
+  "id": "FR-C489-ceremonie",
+  "pathSegment": "FR-PATH-489-NOCES",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-489-NOCES",
+      "order": 4
+    }
+  ]
+}

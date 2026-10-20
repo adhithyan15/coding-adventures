@@ -1,0 +1,11 @@
+{
+  "id": "PT-C474-choramingar",
+  "pathSegment": "PT-PATH-474-RABUGENTO",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PT-EXT-474-RABUGENTO",
+      "order": 4
+    }
+  ]
+}

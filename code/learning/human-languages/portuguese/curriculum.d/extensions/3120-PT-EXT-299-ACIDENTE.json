@@ -1,0 +1,8 @@
+{
+  "id": "PT-EXT-299-ACIDENTE",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can describe a road accident: the crash, what collided with what, and the mishap.",
+  "prerequisites": []
+}

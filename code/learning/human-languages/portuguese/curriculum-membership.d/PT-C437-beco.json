@@ -1,0 +1,11 @@
+{
+  "id": "PT-C437-beco",
+  "pathSegment": "PT-PATH-437-RUAS",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PT-EXT-437-RUAS",
+      "order": 2
+    }
+  ]
+}

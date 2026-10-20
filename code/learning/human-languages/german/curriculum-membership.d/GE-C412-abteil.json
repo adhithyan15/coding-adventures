@@ -1,0 +1,11 @@
+{
+  "id": "GE-C412-abteil",
+  "pathSegment": "GE-PATH-412-BAHNSTEIG",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GE-EXT-412-BAHNSTEIG",
+      "order": 2
+    }
+  ]
+}

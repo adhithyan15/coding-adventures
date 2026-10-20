@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C518-oeuvre",
+    "language": "french",
+    "chapter": 518,
+    "sequence": 28390,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ac843498b1ddf004"
+  },
+  "findings": []
+}

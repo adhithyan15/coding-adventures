@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 477,
+  "sourceHash": "fnv1a64:12b1bbd184b75480",
+  "lessonIds": [
+    "FR-C477-cuisse",
+    "FR-C477-mollet",
+    "FR-C477-talon",
+    "FR-C477-orteil",
+    "FR-C477-hanche"
+  ],
+  "tex": "french/book/chapters/ch477-de-la-hanche-au-talon.tex"
+}

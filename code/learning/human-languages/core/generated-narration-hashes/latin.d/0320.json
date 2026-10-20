@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 320,
+  "sourceHash": "fnv1a64:64e7eabf9c2e2f09",
+  "lessonIds": [
+    "LA-C320-pavor",
+    "LA-C320-metus",
+    "LA-C320-formido",
+    "LA-C320-pavidus",
+    "LA-C320-trepido"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch320.txt",
+  "json": "latin/narration/ch320.json",
+  "textHash": "fnv1a64:61b096bf258c13a1",
+  "jsonHash": "fnv1a64:7cdedfcbdad76d38",
+  "findings": []
+}

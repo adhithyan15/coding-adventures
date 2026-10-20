@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 364,
+  "sourceHash": "fnv1a64:a032794a0bba8284",
+  "lessonIds": [
+    "FR-C364-justice",
+    "FR-C364-injuste",
+    "FR-C364-injustice",
+    "FR-C364-prejuge",
+    "FR-C364-stereotype"
+  ],
+  "tex": "french/book/chapters/ch364-juste-et-injuste.tex"
+}

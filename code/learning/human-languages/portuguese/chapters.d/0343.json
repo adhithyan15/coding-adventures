@@ -1,0 +1,19 @@
+{
+  "chapter": 343,
+  "title": "Explico-me melhor",
+  "label": "ch:pt-explico-me-melhor",
+  "canDo": "I can clear up a misunderstanding, clarify what I meant and stress the important point.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "PT-C343-salientar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 343: I can clear up a misunderstanding, clarify what I meant and stress the important point.",
+    "assesses": [
+      "PT-LEX-C343-ESCLARECER-03",
+      "PT-LEX-C343-ESCLARECER-04",
+      "PT-LEX-C343-ESCLARECER-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "PT-C428-porteiro",
+  "pathSegment": "PT-PATH-428-PERNOITAR",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PT-EXT-428-PERNOITAR",
+      "order": 4
+    }
+  ]
+}

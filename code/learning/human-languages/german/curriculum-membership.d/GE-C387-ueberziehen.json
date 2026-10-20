@@ -1,0 +1,11 @@
+{
+  "id": "GE-C387-ueberziehen",
+  "pathSegment": "GE-PATH-387-KONTO",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GE-EXT-387-KONTO",
+      "order": 2
+    }
+  ]
+}

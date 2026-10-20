@@ -1,0 +1,11 @@
+{
+  "id": "PT-C391-rendimento",
+  "pathSegment": "PT-PATH-391-ORCAMENTO",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "PT-EXT-391-ORCAMENTO",
+      "order": 0
+    }
+  ]
+}

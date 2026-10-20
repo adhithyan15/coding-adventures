@@ -1,0 +1,11 @@
+{
+  "id": "PT-C476-desabafar",
+  "pathSegment": "PT-PATH-476-DESILUSAO",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PT-EXT-476-DESILUSAO",
+      "order": 4
+    }
+  ]
+}

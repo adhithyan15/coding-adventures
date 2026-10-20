@@ -1,0 +1,11 @@
+{
+  "id": "PT-C314-obito",
+  "pathSegment": "PT-PATH-314-FALECER",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PT-EXT-314-FALECER",
+      "order": 2
+    }
+  ]
+}

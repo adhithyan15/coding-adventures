@@ -83,7 +83,7 @@ component package.
 | `Icon` | icon glyph | `<span className="icon">` | `Image(systemName: ...)` | `Text { font.family: iconFont }` |
 | `If` | conditional render *(new)* | `{cond ? <a/> : <b/>}` | `if cond { ... } else { ... }` | `Loader { active: cond; ... }` |
 | `For` | iterate over a list *(new)* | `{coll.map((x, i) => <child/>)}` | `ForEach(coll, id: \.self) { x in ... }` | `Repeater { model: coll; delegate: ... }` |
-| `HostInput` | native single-line text input *(new)* | `<input type="text">` | `TextField(...)` | `TextInput { ... }` |
+| `HostInput` | native text input; a text area with `multiline: true` *(new)* | `<input type="text">` / `<textarea>` | `TextField(...)` / `TextEditor(...)` | `TextInput { ... }` / `TextArea { ... }` |
 | `HostButton` | native push button *(new)* | `<button>` | `Button { ... } label: { ... }` | `Button { ... }` |
 | `HostTable` | semantic data table *(new)* | `<table>` (with `<colgroup>`/`<thead>`/`<tbody>` slots) | `SwiftUI.Table { ... }` | `TableView { ... }` |
 | `HostScroll` | scrollable viewport *(new)* | `<div style={overflow:auto}>` | `ScrollView { ... }` | `Flickable { ... }` / `ScrollView` |
@@ -96,12 +96,62 @@ trap: normal keyboard and pointer traversal remain platform-native. Web emitters
 use the corresponding `autofocus`/`autoFocus` surface, while SwiftUI, XAML,
 Compose, Flutter, and Qt use their native focus APIs.
 
+`HostInput` also accepts `multiline: true`, which makes it the kernel's text
+area (#15930). Every backend lowers it to its native multi-line control:
+
+| Backend | Single-line (default) | `multiline: true` |
+|---|---|---|
+| React, HTML, Web Components | `<input type="text">` | `<textarea>` |
+| SwiftUI | `TextField` | `TextEditor` |
+| Qt | `TextInput` / `TextField` | `TextArea` |
+| WinUI (XAML) | `TextBox` | `TextBox AcceptsReturn="True" TextWrapping="Wrap"` |
+| Compose | `BasicTextField(singleLine = true)` | `BasicTextField(singleLine = false, minLines = 8)` |
+| Flutter | `TextField` | `TextField(maxLines: null, textInputAction: newline)` |
+
+Everything else the field carries — `value`, `placeholder`, `a11y-label`,
+`disabled`, `read-only`, `auto-focus`, `onChange`, `onCancel` — means the same in
+both shapes. The one difference is **Enter**: in a single-line field it raises
+`onCommit`; in a text area it inserts a line break. UI25 §4 also promised a
+Ctrl/Cmd+Enter commit for multi-line fields, but no backend ever implemented
+that accelerator, so today a multiline field has no commit key at all. Until
+one does, authors commit a text area from a button (as `DraftEditor`'s Save
+does), and the degradation report flags `onCommit` on a multiline field as
+`interaction.multiline-commit-unbound` on every backend rather than ship a
+handler nothing can fire. `multiline: false` is the default spelled out.
+
+This is the multiline capability UI29-3 counted on when it declined a separate
+`HostTextarea`, and it is what lets the legacy UI25 `Input` retire (U29-X1):
+`Input ( multiline : true )` and `HostInput ( multiline : true )` now lower
+identically.
+
 `HostInput`'s portable `a11y-label` is its explicit accessible name. Literal
 and slot-backed values must reach each backend's native naming surface:
 `aria-label` on web inputs, `Accessible.name` on Qt, `Semantics.label` on
 Flutter, Compose `contentDescription`, SwiftUI `.accessibilityLabel`, and
 WinUI `AutomationProperties.Name`. A backend must report a native-complete
 degradation rather than silently discard an authored name it cannot lower.
+
+`placeholder` follows the same rule. It is ghost text, so it is often data a
+host supplies (a localised hint, the toolkit `Input`'s own `placeholder`
+slot), and a literal, a slot, a `For` binding and an expression must all reach
+the native placeholder surface, in both the single-line and the text-area
+shape:
+
+| Backend | Single-line | `multiline: true` |
+|---|---|---|
+| React | `placeholder="…"` / `placeholder={x}` | same, on `<textarea>` |
+| Web Components | `placeholder="${escapeHtmlAttribute(x)}"` | same, on `<textarea>` |
+| HTML | `placeholder="{{x}}"` | same, on `<textarea>` |
+| SwiftUI | `TextField` title, `String(describing: x)` for a bound value | a `Text(verbatim:)` overlay while the value is empty, and the fallback `.accessibilityLabel` |
+| Qt | `placeholderText: x` | same, on `TextArea` |
+| WinUI (XAML) | `PlaceholderText="{x:Bind X, Mode=OneWay}"` | same |
+| Compose | the `decorationBox` placeholder `Text` | same |
+| Flutter | `InputDecoration(hintText: x)` | same |
+
+React, Web Components, SwiftUI and Flutter read literals only until the
+slot-bound placeholder fix, so a bound placeholder vanished on those four
+with no degradation reported. A name that is not an identifier in the target
+language is an `UnsafeSlotName` error on all four, never spliced into source.
 
 `HostButton` takes its content from `label`. Children nested inside a
 `HostButton` are **not** a portable content model yet: only XAML and HTML
@@ -535,10 +585,12 @@ parallel once grammar is in. U29-P1 fans in from all of them.
   Column, Input become userland.
 - **UI24 emit→dispatch**: unchanged. The Flux pattern flows through
   component packages identically.
-- **UI25 Input**: the kernel's `HostInput` *is* what UI25 specified;
-  the rich `Input` (placeholder, validation, multiline, maxLength) is
-  the first candidate after `mosaic-pkg-grid` for promotion to a
-  userland package, e.g. `mosaic-pkg-input`.
+- **UI25 Input**: the kernel's `HostInput` *is* what UI25 specified,
+  including `multiline` (§2.1, #15930: a text area cannot be composed from
+  single-line fields, so it stays in the kernel). The rest of the rich
+  `Input` (validation, maxLength) is the first candidate after
+  `mosaic-pkg-grid` for promotion to a userland package, e.g.
+  `mosaic-pkg-input`.
 - **UI26 VisiCalc**: the demo migrates per §5.2.
 - **UI27 Grid v2**: the sub-part / state-suffix patterns it introduced
   remain valid — they apply to whichever component (kernel or

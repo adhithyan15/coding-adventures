@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C464-trutina",
+    "language": "latin",
+    "chapter": 464,
+    "sequence": 24710,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e594cda84ed118dc"
+  },
+  "findings": []
+}

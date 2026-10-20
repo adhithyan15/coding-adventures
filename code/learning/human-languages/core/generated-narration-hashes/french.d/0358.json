@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 358,
+  "sourceHash": "fnv1a64:2ea8c5a198d2027c",
+  "lessonIds": [
+    "FR-C358-syndicat",
+    "FR-C358-greve",
+    "FR-C358-greviste",
+    "FR-C358-salarie",
+    "FR-C358-heures-supplementaires"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch358.txt",
+  "json": "french/narration/ch358.json",
+  "textHash": "fnv1a64:fe65a07300098684",
+  "jsonHash": "fnv1a64:7efa1831671d7644",
+  "findings": []
+}

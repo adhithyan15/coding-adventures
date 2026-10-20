@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 359,
+  "sourceHash": "fnv1a64:f3266acbfcaa7cb2",
+  "lessonIds": [
+    "PT-C359-gerente",
+    "PT-C359-departamento",
+    "PT-C359-tarefa",
+    "PT-C359-colaborador",
+    "PT-C359-delegar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch359.txt",
+  "json": "portuguese/narration/ch359.json",
+  "textHash": "fnv1a64:7114b019413cae03",
+  "jsonHash": "fnv1a64:55af7c3dc530bb53",
+  "findings": []
+}

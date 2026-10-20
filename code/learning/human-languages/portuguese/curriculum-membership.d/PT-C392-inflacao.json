@@ -1,0 +1,11 @@
+{
+  "id": "PT-C392-inflacao",
+  "pathSegment": "PT-PATH-392-INVESTIR",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PT-EXT-392-INVESTIR",
+      "order": 4
+    }
+  ]
+}

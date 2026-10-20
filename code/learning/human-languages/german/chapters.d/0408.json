@@ -1,0 +1,19 @@
+{
+  "chapter": 408,
+  "title": "Wer fährt zuerst",
+  "label": "ch:ge-wer-fahrt-zuerst",
+  "canDo": "I can talk about right of way and other drivers: right of way, overtaking, tailgating, oncoming traffic and swerving.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "GE-C408-ausweichen",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 408: I can talk about right of way and other drivers: right of way, overtaking, tailgating, oncoming traffic and swerving.",
+    "assesses": [
+      "GE-LEX-C408-VORFAHRT-03",
+      "GE-LEX-C408-VORFAHRT-04",
+      "GE-LEX-C408-VORFAHRT-05"
+    ]
+  }
+}

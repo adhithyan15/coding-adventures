@@ -1,0 +1,11 @@
+{
+  "id": "PT-C453-pechincha",
+  "pathSegment": "PT-PATH-453-CAIXA",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PT-EXT-453-CAIXA",
+      "order": 1
+    }
+  ]
+}

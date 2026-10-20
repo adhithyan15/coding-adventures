@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 426,
+  "sourceHash": "fnv1a64:e0b44616619f88a6",
+  "lessonIds": [
+    "PT-C426-acampar",
+    "PT-C426-caravana",
+    "PT-C426-autocaravana",
+    "PT-C426-estaca",
+    "PT-C426-mosquiteiro"
+  ],
+  "tex": "portuguese/book/chapters/ch426-no-parque-de-campismo.tex"
+}

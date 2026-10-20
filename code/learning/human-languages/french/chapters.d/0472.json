@@ -1,0 +1,19 @@
+{
+  "chapter": 472,
+  "title": "Souvenirs et regrets",
+  "label": "ch:fr-souvenirs-et-regrets",
+  "canDo": "I can talk about memories, regrets and being moved.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "FR-C472-bouleverser",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 472: I can talk about memories, regrets and being moved.",
+    "assesses": [
+      "FR-LEX-C472-NOSTALGIE-03",
+      "FR-LEX-C472-NOSTALGIE-04",
+      "FR-LEX-C472-NOSTALGIE-05"
+    ]
+  }
+}

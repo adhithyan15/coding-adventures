@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C423-matrose",
+    "language": "german",
+    "chapter": 423,
+    "sequence": 22810,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9e5aed57bac52aa5"
+  },
+  "findings": []
+}

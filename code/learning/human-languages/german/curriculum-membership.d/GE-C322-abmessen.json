@@ -1,0 +1,11 @@
+{
+  "id": "GE-C322-abmessen",
+  "pathSegment": "GE-PATH-322-ZUTAT",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-322-ZUTAT",
+      "order": 3
+    }
+  ]
+}

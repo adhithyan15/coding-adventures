@@ -1,0 +1,19 @@
+{
+  "chapter": 420,
+  "title": "Buying and Selling",
+  "label": "ch:la-buying-and-selling",
+  "canDo": "I can say what something costs, talk about an auction and bidding, and name the buyer and the seller.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "LA-R420-review-413-420",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 420: I can say what something costs, talk about an auction and bidding, and name the buyer and the seller.",
+    "assesses": [
+      "LA-LEX-C420-AUCTIO-03",
+      "LA-LEX-C420-AUCTIO-04",
+      "LA-LEX-C420-AUCTIO-05"
+    ]
+  }
+}

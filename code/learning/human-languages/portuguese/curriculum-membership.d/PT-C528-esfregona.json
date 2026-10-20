@@ -1,0 +1,11 @@
+{
+  "id": "PT-C528-esfregona",
+  "pathSegment": "PT-PATH-528-LIMPEZA",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PT-EXT-528-LIMPEZA",
+      "order": 4
+    }
+  ]
+}

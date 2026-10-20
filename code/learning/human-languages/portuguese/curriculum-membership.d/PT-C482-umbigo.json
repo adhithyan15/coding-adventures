@@ -1,0 +1,11 @@
+{
+  "id": "PT-C482-umbigo",
+  "pathSegment": "PT-PATH-482-CORPO",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PT-EXT-482-CORPO",
+      "order": 4
+    }
+  ]
+}

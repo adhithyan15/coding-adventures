@@ -1,0 +1,9 @@
+{
+  "id": "GE-PATH-522-VERLAG",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "GE-EXT-522-VERLAG"
+  ],
+  "after": []
+}

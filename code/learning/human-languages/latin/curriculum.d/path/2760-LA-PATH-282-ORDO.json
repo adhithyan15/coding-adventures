@@ -1,0 +1,9 @@
+{
+  "id": "LA-PATH-282-ORDO",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "LA-EXT-282-ORDO"
+  ],
+  "after": []
+}

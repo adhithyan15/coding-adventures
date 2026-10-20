@@ -1,0 +1,11 @@
+{
+  "id": "GE-C479-schweiss",
+  "pathSegment": "GE-PATH-479-SCHNUPFEN",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-479-SCHNUPFEN",
+      "order": 3
+    }
+  ]
+}

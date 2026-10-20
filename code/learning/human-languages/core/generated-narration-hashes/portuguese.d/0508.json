@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 508,
+  "sourceHash": "fnv1a64:e069d6f04f532064",
+  "lessonIds": [
+    "PT-C508-arbitro",
+    "PT-C508-apito",
+    "PT-C508-apitar",
+    "PT-C508-bancada",
+    "PT-C508-suplente"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch508.txt",
+  "json": "portuguese/narration/ch508.json",
+  "textHash": "fnv1a64:b2f98f1492de5f59",
+  "jsonHash": "fnv1a64:839a7b2cd4abe3d8",
+  "findings": []
+}

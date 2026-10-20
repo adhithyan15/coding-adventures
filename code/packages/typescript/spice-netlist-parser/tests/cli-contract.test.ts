@@ -177,6 +177,7 @@ describe("Berkeley SPICE CLI contract", () => {
       minimumCoreCaseCount: number;
       requiredAnalysisKinds: readonly string[];
       requiredDeviceKinds: readonly string[];
+      requiredCoreKinds: readonly string[];
       minimumSyntaxCaseCount: number;
       requiredSyntaxClassifications: readonly string[];
       minimumCliSuccessCaseCount: number;
@@ -197,6 +198,8 @@ describe("Berkeley SPICE CLI contract", () => {
       .toEqual(expect.objectContaining(new Set(gate.requiredAnalysisKinds)));
     expect(new Set(coreCases.map((testCase) => testCase.kind)))
       .toEqual(expect.objectContaining(new Set(gate.requiredDeviceKinds)));
+    expect(new Set(coreCases.map((testCase) => testCase.kind)))
+      .toEqual(expect.objectContaining(new Set(gate.requiredCoreKinds)));
     expect(syntaxCases.length).toBeGreaterThanOrEqual(gate.minimumSyntaxCaseCount);
     expect(new Set(syntaxCases.map((testCase) => testCase.classification)))
       .toEqual(expect.objectContaining(new Set(gate.requiredSyntaxClassifications)));

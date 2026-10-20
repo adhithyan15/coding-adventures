@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C437-funis",
+    "language": "latin",
+    "chapter": 437,
+    "sequence": 23320,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:69b9e321bfdc456c"
+  },
+  "findings": []
+}

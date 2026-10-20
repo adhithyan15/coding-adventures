@@ -1,0 +1,11 @@
+{
+  "id": "GE-C455-fliessen",
+  "pathSegment": "GE-PATH-455-WASSERFALL",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-455-WASSERFALL",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,8 @@
+{
+  "id": "FR-EXT-424-HEBERGEMENT",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can talk about places to stay: the inn, the holiday cottage, a night, staying somewhere and spending time there.",
+  "prerequisites": []
+}

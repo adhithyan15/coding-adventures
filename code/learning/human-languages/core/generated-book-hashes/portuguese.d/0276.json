@@ -1,0 +1,14 @@
+{
+  "language": "portuguese",
+  "chapter": 276,
+  "sourceHash": "fnv1a64:511633868aed9cb5",
+  "lessonIds": [
+    "PT-C276-quinzena",
+    "PT-C276-trimestre",
+    "PT-C276-mensal",
+    "PT-C276-milenio",
+    "PT-C276-posterior",
+    "PT-R276-revisao-269-276"
+  ],
+  "tex": "portuguese/book/chapters/ch276-quinzenas-e-trimestres.tex"
+}

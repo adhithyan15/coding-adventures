@@ -1,0 +1,11 @@
+{
+  "id": "GE-C514-rhythmus",
+  "pathSegment": "GE-PATH-514-MELODIE",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GE-EXT-514-MELODIE",
+      "order": 1
+    }
+  ]
+}

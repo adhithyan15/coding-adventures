@@ -1,0 +1,11 @@
+{
+  "id": "PT-C299-colidir",
+  "pathSegment": "PT-PATH-299-ACIDENTE",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-299-ACIDENTE",
+      "order": 3
+    }
+  ]
+}

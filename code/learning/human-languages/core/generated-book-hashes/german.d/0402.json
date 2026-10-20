@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 402,
+  "sourceHash": "fnv1a64:e8d37b4263588210",
+  "lessonIds": [
+    "GE-C402-tanken",
+    "GE-C402-volltanken",
+    "GE-C402-benzin",
+    "GE-C402-zapfsaeule",
+    "GE-C402-oelwechsel"
+  ],
+  "tex": "german/book/chapters/ch402-an-der-tankstelle.tex"
+}

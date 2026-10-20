@@ -1,0 +1,11 @@
+{
+  "id": "PT-C351-implicar",
+  "pathSegment": "PT-PATH-351-IMPACTO",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PT-EXT-351-IMPACTO",
+      "order": 2
+    }
+  ]
+}

@@ -172,8 +172,8 @@ R2 out 0 1k
     expect(corpus.schemaVersion).toBe(1);
     expect(corpus.suite).toBe("berkeley-v1-core");
     expect(corpus.cases.map((testCase) => testCase.analysis)).toEqual([
-      "op", "op", "op", "op", "op", "op", "op", "ac", "ac", "ac", "ac", "ac", "ac", "ac",
-      "tran", "tran", "tran", "tran", "tran", "tran", "tran", "dc", "dc", "dc", "dc", "dc",
+      "op", "op", "op", "op", "op", "op", "op", "op", "op", "ac", "ac", "ac", "ac", "ac",
+      "ac", "ac", "ac", "tran", "tran", "tran", "tran", "tran", "tran", "tran", "dc", "dc", "dc", "dc", "dc",
       "dc", "dc", "dc", "tf", "tf", "tf", "tf", "tf", "tf", "tf", "tf",
     ]);
 
@@ -843,6 +843,22 @@ Rbot out 0 1k
 
     expect(card.temperatureIsExplicit).toBeUndefined();
     expect(parsed.noiseTemperatureKelvin(card)).toBeCloseTo(323.15, 12);
+  });
+
+  it("parses canonical .noise LIN, DEC, and OCT sweeps", () => {
+    const parsed = parseNetlist(`
+Vin in 0 DC 1
+Rtop in out 1k
+Rbot out 0 1k
+.noise V(out) Vin LIN 2 1k 2k
+.noise V(out) Vin DEC 1 1 1k
+.noise V(out) Vin OCT 1 1 8
+`);
+
+    const cards = parsed.noiseCards();
+    expect(cards[0]?.frequenciesHz).toEqual([1e3, 2e3]);
+    expect(cards[1]?.frequenciesHz).toEqual([1, 10, 100, 1e3]);
+    expect(cards[2]?.frequenciesHz).toEqual([1, 2, 4, 8]);
   });
 
   it("rejects .noise cards without a voltage output probe", () => {

@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 272,
+  "sourceHash": "fnv1a64:23a55502d3fb0675",
+  "lessonIds": [
+    "PT-C272-durar",
+    "PT-C272-prolongar",
+    "PT-C272-instante",
+    "PT-C272-periodo",
+    "PT-C272-imediatamente"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch272.txt",
+  "json": "portuguese/narration/ch272.json",
+  "textHash": "fnv1a64:85b4ee01a94b444d",
+  "jsonHash": "fnv1a64:96168d7fbedfa271",
+  "findings": []
+}

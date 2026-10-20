@@ -1,0 +1,11 @@
+{
+  "id": "PT-C444-obstruir",
+  "pathSegment": "PT-PATH-444-MOBILIARIO",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PT-EXT-444-MOBILIARIO",
+      "order": 4
+    }
+  ]
+}

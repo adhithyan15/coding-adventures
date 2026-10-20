@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PT-C421-pista",
+    "language": "portuguese",
+    "chapter": 421,
+    "sequence": 23650,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5ec5b98864a876c1"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "FR-C501-modelisme",
+  "pathSegment": "FR-PATH-501-COLLECTIONS",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FR-EXT-501-COLLECTIONS",
+      "order": 3
+    }
+  ]
+}

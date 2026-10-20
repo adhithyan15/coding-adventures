@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PT-C305-socorrista",
+    "language": "portuguese",
+    "chapter": 305,
+    "sequence": 17670,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3df9a81af935b0e2"
+  },
+  "findings": []
+}

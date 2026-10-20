@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C317-carnaval",
+    "language": "french",
+    "chapter": 317,
+    "sequence": 18030,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:077ac915212ce7a9"
+  },
+  "findings": []
+}

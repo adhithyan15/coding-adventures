@@ -1,0 +1,11 @@
+{
+  "id": "PT-C357-empregar",
+  "pathSegment": "PT-PATH-357-ESTAGIO",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-357-ESTAGIO",
+      "order": 3
+    }
+  ]
+}

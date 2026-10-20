@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PT-C527-filmar",
+    "language": "portuguese",
+    "chapter": 527,
+    "sequence": 29080,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:059abdf7a0412966"
+  },
+  "findings": []
+}

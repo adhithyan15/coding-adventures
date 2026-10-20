@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PT-C340-negar",
+    "language": "portuguese",
+    "chapter": 340,
+    "sequence": 19470,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0c6d5bc32b876533"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "PT-C525-requisitar",
+  "pathSegment": "PT-PATH-525-BIBLIOTECA",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PT-EXT-525-BIBLIOTECA",
+      "order": 1
+    }
+  ]
+}

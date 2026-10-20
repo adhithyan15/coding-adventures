@@ -1,0 +1,19 @@
+{
+  "chapter": 531,
+  "title": "Le bricolage",
+  "label": "ch:fr-le-bricolage",
+  "canDo": "I can talk about small repair jobs at home.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "FR-R531-revision-final-531",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 531: I can talk about small repair jobs at home.",
+    "assesses": [
+      "FR-LEX-C531-BRICOLAGE-03",
+      "FR-LEX-C531-BRICOLAGE-04",
+      "FR-LEX-C531-BRICOLAGE-05"
+    ]
+  }
+}

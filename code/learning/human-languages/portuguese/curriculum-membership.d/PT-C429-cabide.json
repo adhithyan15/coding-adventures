@@ -1,0 +1,11 @@
+{
+  "id": "PT-C429-cabide",
+  "pathSegment": "PT-PATH-429-QUARTO",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-429-QUARTO",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 508,
+  "title": "O árbitro e o apito",
+  "label": "ch:pt-o-arbitro-e-o-apito",
+  "canDo": "I can talk about the referee, the stands and the bench.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "PT-C508-suplente",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 508: I can talk about the referee, the stands and the bench.",
+    "assesses": [
+      "PT-LEX-C508-ARBITRO-03",
+      "PT-LEX-C508-ARBITRO-04",
+      "PT-LEX-C508-ARBITRO-05"
+    ]
+  }
+}

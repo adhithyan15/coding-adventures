@@ -1,0 +1,11 @@
+{
+  "id": "GE-C368-verzichten",
+  "pathSegment": "GE-PATH-368-STATTDESSEN",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-368-STATTDESSEN",
+      "order": 3
+    }
+  ]
+}

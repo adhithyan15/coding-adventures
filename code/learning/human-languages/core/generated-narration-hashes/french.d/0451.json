@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 451,
+  "sourceHash": "fnv1a64:f83eafa276d2ea61",
+  "lessonIds": [
+    "FR-C451-retrait",
+    "FR-C451-crediter",
+    "FR-C451-regler",
+    "FR-C451-decouvert",
+    "FR-C451-releve"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch451.txt",
+  "json": "french/narration/ch451.json",
+  "textHash": "fnv1a64:1423bc11ecb0fe9a",
+  "jsonHash": "fnv1a64:3de1c07a0bd19408",
+  "findings": []
+}

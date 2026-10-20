@@ -1,0 +1,19 @@
+{
+  "chapter": 336,
+  "title": "Eine Einigung finden",
+  "label": "ch:ge-eine-einigung-finden",
+  "canDo": "I can weigh up both sides of a question, give way and reach an agreement.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "GE-C336-andererseits",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 336: I can weigh up both sides of a question, give way and reach an agreement.",
+    "assesses": [
+      "GE-LEX-C336-EINIGUNG-03",
+      "GE-LEX-C336-EINIGUNG-04",
+      "GE-LEX-C336-EINIGUNG-05"
+    ]
+  }
+}

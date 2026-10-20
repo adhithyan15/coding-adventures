@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C327-sponsa",
+    "language": "latin",
+    "chapter": 327,
+    "sequence": 17640,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:40e2085a98365aa6"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C412-kontrollieren",
+    "language": "german",
+    "chapter": 412,
+    "sequence": 22250,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7adbe1ed37956c9f"
+  },
+  "findings": []
+}

@@ -1,0 +1,8 @@
+{
+  "id": "FR-EXT-407-STATIONNEMENT",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can talk about parking in town: parking, stopping, the ticket machine, a tight parking space and the pound.",
+  "prerequisites": []
+}

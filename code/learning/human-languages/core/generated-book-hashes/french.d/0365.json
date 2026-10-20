@@ -1,0 +1,14 @@
+{
+  "language": "french",
+  "chapter": 365,
+  "sourceHash": "fnv1a64:0deda0f9bf74b7df",
+  "lessonIds": [
+    "FR-C365-pauvrete",
+    "FR-C365-inegalite",
+    "FR-C365-discrimination",
+    "FR-C365-discriminer",
+    "FR-C365-immigration",
+    "FR-R365-revision-358-365"
+  ],
+  "tex": "french/book/chapters/ch365-les-problemes-sociaux.tex"
+}

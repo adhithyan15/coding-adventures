@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 274,
+  "sourceHash": "fnv1a64:082f4d85128b1642",
+  "lessonIds": [
+    "PT-C274-outrora",
+    "PT-C274-ultimamente",
+    "PT-C274-afinal",
+    "PT-C274-gradualmente",
+    "PT-C274-aos-poucos"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch274.txt",
+  "json": "portuguese/narration/ch274.json",
+  "textHash": "fnv1a64:a9f41ed4aa35b550",
+  "jsonHash": "fnv1a64:9e2d370060535627",
+  "findings": []
+}

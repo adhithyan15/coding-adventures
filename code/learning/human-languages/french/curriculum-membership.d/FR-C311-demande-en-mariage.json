@@ -1,0 +1,11 @@
+{
+  "id": "FR-C311-demande-en-mariage",
+  "pathSegment": "FR-PATH-311-OUI",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FR-EXT-311-OUI",
+      "order": 1
+    }
+  ]
+}

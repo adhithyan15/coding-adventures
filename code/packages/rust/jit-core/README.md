@@ -113,8 +113,26 @@ impl Backend for MyBackend {
         // your `compile_function` placed the parameters.
         Value::Null  // stub
     }
+
+    // Optional: if `run` can fail, record the failure and return it (once)
+    // from here.  `JITCore` calls this after EVERY run and turns `Some(err)`
+    // into an `Err` that stops the whole program — never a silent `Null`.
+    // fn take_error(&self) -> Option<VMError> { None }
 }
 ```
+
+### Run-time failures fail closed
+
+`run` returns a plain `Value`, so a backend whose compiled code can fail (a
+LANG83 `trap`, an `i64_div_floor` overflow, a `div` by zero, a malformed
+binary, fuel exhaustion) records the failure on the side and implements
+`Backend::take_error`.  `JITCore` drains it after every run — in the handler it
+registers with vm-core and in `JITCore::execute` — so the failure surfaces as
+`Err(VMError::…)` from `execute` / `execute_with_jit`, and an interpreted caller
+of a failing compiled function stops at the `call`.  `GenericCirJit` maps its
+error slot to `VMError::Trap { kind }` (`trap: <kind>`),
+`VMError::DivisionByZero`, or `VMError::Custom`, and the slot is empty again
+when `JITCore` returns.
 
 ### Compiling functions with parameters
 
@@ -166,3 +184,13 @@ LANG02  vm-core         — register interpreter
 LANG03  jit-core        — THIS PACKAGE: JIT specialisation + compilation
 LANG04  (future)        — codegen-core bridge
 ```
+
+## LANG83 operation support
+
+`jit_core::op_support::op_support(name)` (and `OP_SUPPORT`) is this backend's answer,
+`Lowered` or `Refused(reason)`, for every operation in the
+[LANG83](../../../specs/LANG83-iir-standard-operation-registry.md) standard registry
+(`interpreter_ir::op_registry::STANDARD_OPS`). "Lowered" means `GenericCirJit` compiles the op to JIT bytecode. An op that only runs because `JITCore` falls back to the vm-core interpreter is declared `Refused`, so interpreter fallback cannot pass as JIT support. A test checks every row against the real compiler. `lang-aot` refuses a
+module that uses a refused op at compile time, with a typed error. Since LANG83 PR1b, `GenericCirJit` compiles `i64_div_floor`/`i64_mod_floor`
+(`DIV_FLOOR_I64`/`MOD_FLOOR_I64`), `trap` (`TRAP`, error slot
+`trap: <kind>`, surfaced by `JITCore` as `VMError::Trap`) and `write_i64` (`CALL_BUILTIN`), so all four are `Lowered`.

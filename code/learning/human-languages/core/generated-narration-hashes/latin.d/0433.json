@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 433,
+  "sourceHash": "fnv1a64:11d94d0d17814146",
+  "lessonIds": [
+    "LA-C433-iumentum",
+    "LA-C433-caballus",
+    "LA-C433-mula",
+    "LA-C433-clitellae",
+    "LA-C433-onero"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch433.txt",
+  "json": "latin/narration/ch433.json",
+  "textHash": "fnv1a64:e81abfb0f4f64d18",
+  "jsonHash": "fnv1a64:4982de8544c8ff49",
+  "findings": []
+}

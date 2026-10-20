@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 487,
+  "sourceHash": "fnv1a64:a6c82d3813b488b4",
+  "lessonIds": [
+    "GE-C487-hausarzt",
+    "GE-C487-facharzt",
+    "GE-C487-untersuchen",
+    "GE-C487-behandeln",
+    "GE-C487-verschreiben"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch487.txt",
+  "json": "german/narration/ch487.json",
+  "textHash": "fnv1a64:563f4d1628f3a6ce",
+  "jsonHash": "fnv1a64:acf91b77dc43ecc3",
+  "findings": []
+}

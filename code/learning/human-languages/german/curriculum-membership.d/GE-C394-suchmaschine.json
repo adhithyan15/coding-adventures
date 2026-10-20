@@ -1,0 +1,11 @@
+{
+  "id": "GE-C394-suchmaschine",
+  "pathSegment": "GE-PATH-394-INTERNET",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GE-EXT-394-INTERNET",
+      "order": 2
+    }
+  ]
+}

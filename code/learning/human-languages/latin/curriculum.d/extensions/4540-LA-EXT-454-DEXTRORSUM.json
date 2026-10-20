@@ -1,0 +1,8 @@
+{
+  "id": "LA-EXT-454-DEXTRORSUM",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can give directions: to the right, to the left, at a slant, going round, and taking a detour.",
+  "prerequisites": []
+}

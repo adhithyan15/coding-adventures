@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C491-separer",
+    "language": "french",
+    "chapter": 491,
+    "sequence": 26990,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:03c55ee2f9237db7"
+  },
+  "findings": []
+}

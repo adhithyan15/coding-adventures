@@ -1,0 +1,11 @@
+{
+  "id": "GE-C425-aufbauen",
+  "pathSegment": "GE-PATH-425-CAMPING",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-425-CAMPING",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PT-C380-ministro",
+    "language": "portuguese",
+    "chapter": 380,
+    "sequence": 21500,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8e44bbe3a3414a02"
+  },
+  "findings": []
+}

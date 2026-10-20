@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PT-C451-remendar",
+    "language": "portuguese",
+    "chapter": 451,
+    "sequence": 25200,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b7731ace4c600f2d"
+  },
+  "findings": []
+}

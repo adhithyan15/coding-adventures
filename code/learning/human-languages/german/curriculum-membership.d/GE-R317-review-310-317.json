@@ -1,0 +1,11 @@
+{
+  "id": "GE-R317-review-310-317",
+  "pathSegment": "GE-PATH-317-ERZAEHLUNG",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "GE-EXT-317-ERZAEHLUNG",
+      "order": 5
+    }
+  ]
+}

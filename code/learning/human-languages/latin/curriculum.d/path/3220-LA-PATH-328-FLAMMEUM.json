@@ -1,0 +1,9 @@
+{
+  "id": "LA-PATH-328-FLAMMEUM",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "LA-EXT-328-FLAMMEUM"
+  ],
+  "after": []
+}

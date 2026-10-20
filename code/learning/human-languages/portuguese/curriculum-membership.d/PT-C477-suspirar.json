@@ -1,0 +1,11 @@
+{
+  "id": "PT-C477-suspirar",
+  "pathSegment": "PT-PATH-477-CHORO",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PT-EXT-477-CHORO",
+      "order": 2
+    }
+  ]
+}

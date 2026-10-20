@@ -1,0 +1,14 @@
+{
+  "language": "german",
+  "chapter": 269,
+  "sourceHash": "fnv1a64:09b63ad6a8000360",
+  "lessonIds": [
+    "GE-C269-jahrzehnt",
+    "GE-C269-jahrtausend",
+    "GE-C269-epoche",
+    "GE-C269-jahrelang",
+    "GE-C269-stundenlang",
+    "GE-R269-review-262-269"
+  ],
+  "tex": "german/book/chapters/ch269-jahrzehnte.tex"
+}

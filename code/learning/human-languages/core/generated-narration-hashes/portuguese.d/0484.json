@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 484,
+  "sourceHash": "fnv1a64:ce7660979e65fdb9",
+  "lessonIds": [
+    "PT-C484-enxaqueca",
+    "PT-C484-tonto",
+    "PT-C484-tontura",
+    "PT-C484-nausea",
+    "PT-C484-vomitar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch484.txt",
+  "json": "portuguese/narration/ch484.json",
+  "textHash": "fnv1a64:ce48e30a0206aa9e",
+  "jsonHash": "fnv1a64:aea4bbd810b86934",
+  "findings": []
+}

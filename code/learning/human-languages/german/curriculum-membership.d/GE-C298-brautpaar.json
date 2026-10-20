@@ -1,0 +1,11 @@
+{
+  "id": "GE-C298-brautpaar",
+  "pathSegment": "GE-PATH-298-VERLOBUNG",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-298-VERLOBUNG",
+      "order": 4
+    }
+  ]
+}

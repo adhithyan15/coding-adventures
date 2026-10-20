@@ -1,0 +1,11 @@
+{
+  "id": "PT-C382-autorizar",
+  "pathSegment": "PT-PATH-382-PROIBIDO",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PT-EXT-382-PROIBIDO",
+      "order": 2
+    }
+  ]
+}

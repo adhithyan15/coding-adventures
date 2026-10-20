@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 517,
+  "sourceHash": "fnv1a64:322f10601c5759d3",
+  "lessonIds": [
+    "FR-C517-sculpture",
+    "FR-C517-sculpter",
+    "FR-C517-argile",
+    "FR-C517-marbre",
+    "FR-C517-sculpteur"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch517.txt",
+  "json": "french/narration/ch517.json",
+  "textHash": "fnv1a64:6dd852df310e15be",
+  "jsonHash": "fnv1a64:524759dd2d0fdc27",
+  "findings": []
+}

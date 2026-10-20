@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 275,
+  "sourceHash": "fnv1a64:02752f04d9bdbf25",
+  "lessonIds": [
+    "PT-C275-amanhecer",
+    "PT-C275-entardecer",
+    "PT-C275-anoitecer",
+    "PT-C275-crepusculo",
+    "PT-C275-vespera"
+  ],
+  "tex": "portuguese/book/chapters/ch275-ao-fim-do-dia.tex"
+}

@@ -1,0 +1,11 @@
+{
+  "id": "GE-C414-fernverkehr",
+  "pathSegment": "GE-PATH-414-PENDELN",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GE-EXT-414-PENDELN",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 484,
+  "title": "Stirn, Wange und Kinn",
+  "label": "ch:ge-stirn-wange-und-kinn",
+  "canDo": "I can describe the parts of a face.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "GE-C484-wimper",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 484: I can describe the parts of a face.",
+    "assesses": [
+      "GE-LEX-C484-GESICHT-03",
+      "GE-LEX-C484-GESICHT-04",
+      "GE-LEX-C484-GESICHT-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 475,
+  "title": "Harvest, Reaper, Sickle, Ear of grain, Wheat",
+  "label": "ch:la-harvest-reaper-sickle-ear-of-grain-wheat",
+  "canDo": "I can talk about the grain harvest: the harvest, the reapers, the sickle, the ears of grain and the wheat.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "LA-C475-triticum",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 475: I can talk about the grain harvest: the harvest, the reapers, the sickle, the ears of grain and the wheat.",
+    "assesses": [
+      "LA-LEX-C475-MESSIS-03",
+      "LA-LEX-C475-MESSIS-04",
+      "LA-LEX-C475-MESSIS-05"
+    ]
+  }
+}

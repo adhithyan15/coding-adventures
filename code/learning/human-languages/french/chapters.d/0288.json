@@ -1,0 +1,19 @@
+{
+  "chapter": 288,
+  "title": "Attention aux escrocs",
+  "label": "ch:fr-attention-aux-escrocs",
+  "canDo": "I can talk about thieves and tricksters: pickpockets, scams, con artists, swindling and fraud.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "FR-C288-escroquerie",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 288: I can talk about thieves and tricksters: pickpockets, scams, con artists, swindling and fraud.",
+    "assesses": [
+      "FR-LEX-C288-ARNAQUE-03",
+      "FR-LEX-C288-ARNAQUE-04",
+      "FR-LEX-C288-ARNAQUE-05"
+    ]
+  }
+}

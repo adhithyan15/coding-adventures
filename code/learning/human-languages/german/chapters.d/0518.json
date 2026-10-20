@@ -1,0 +1,19 @@
+{
+  "chapter": 518,
+  "title": "Pinsel und Leinwand",
+  "label": "ch:ge-pinsel-und-leinwand",
+  "canDo": "I can talk about painting.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "GE-C518-aquarell",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 518: I can talk about painting.",
+    "assesses": [
+      "GE-LEX-C518-MALEN-03",
+      "GE-LEX-C518-MALEN-04",
+      "GE-LEX-C518-MALEN-05"
+    ]
+  }
+}

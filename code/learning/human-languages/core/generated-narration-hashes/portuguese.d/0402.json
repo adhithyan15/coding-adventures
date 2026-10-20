@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 402,
+  "sourceHash": "fnv1a64:03bfbc3c1f7871c3",
+  "lessonIds": [
+    "PT-C402-travao",
+    "PT-C402-derrapar",
+    "PT-C402-pedal",
+    "PT-C402-embraiagem",
+    "PT-C402-engatar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch402.txt",
+  "json": "portuguese/narration/ch402.json",
+  "textHash": "fnv1a64:213f38ae31e98285",
+  "jsonHash": "fnv1a64:1bcd07761424f543",
+  "findings": []
+}

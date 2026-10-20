@@ -1,0 +1,9 @@
+{
+  "id": "PT-PATH-308-SUSTO",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "PT-EXT-308-SUSTO"
+  ],
+  "after": []
+}

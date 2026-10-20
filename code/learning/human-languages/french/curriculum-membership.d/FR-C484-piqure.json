@@ -1,0 +1,11 @@
+{
+  "id": "FR-C484-piqure",
+  "pathSegment": "FR-PATH-484-URGENCES",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FR-EXT-484-URGENCES",
+      "order": 3
+    }
+  ]
+}

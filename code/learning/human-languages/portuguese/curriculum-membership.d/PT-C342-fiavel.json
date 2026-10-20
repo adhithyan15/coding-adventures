@@ -1,0 +1,11 @@
+{
+  "id": "PT-C342-fiavel",
+  "pathSegment": "PT-PATH-342-AFIRMAR",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PT-EXT-342-AFIRMAR",
+      "order": 2
+    }
+  ]
+}

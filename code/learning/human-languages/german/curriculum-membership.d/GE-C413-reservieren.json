@@ -1,0 +1,11 @@
+{
+  "id": "GE-C413-reservieren",
+  "pathSegment": "GE-PATH-413-NACHTZUG",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-413-NACHTZUG",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "GE-C436-passant",
+  "pathSegment": "GE-PATH-436-GASSE",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-436-GASSE",
+      "order": 4
+    }
+  ]
+}

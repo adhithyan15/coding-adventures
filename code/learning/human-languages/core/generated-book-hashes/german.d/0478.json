@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 478,
+  "sourceHash": "fnv1a64:22e8db5bbdd0e5c7",
+  "lessonIds": [
+    "GE-C478-reue",
+    "GE-C478-bereuen",
+    "GE-C478-verzeihen",
+    "GE-C478-beleidigen",
+    "GE-C478-kraenken"
+  ],
+  "tex": "german/book/chapters/ch478-reue-und-verzeihung.tex"
+}

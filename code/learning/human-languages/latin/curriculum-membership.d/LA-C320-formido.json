@@ -1,0 +1,11 @@
+{
+  "id": "LA-C320-formido",
+  "pathSegment": "LA-PATH-320-PAVOR",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "LA-EXT-320-PAVOR",
+      "order": 2
+    }
+  ]
+}

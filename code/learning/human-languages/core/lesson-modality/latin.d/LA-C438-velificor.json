@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C438-velificor",
+    "language": "latin",
+    "chapter": 438,
+    "sequence": 23390,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:254fb7308b209297"
+  },
+  "findings": []
+}

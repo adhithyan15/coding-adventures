@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 320,
+  "sourceHash": "fnv1a64:f1a7e2736e549d3a",
+  "lessonIds": [
+    "GE-C320-mittelalter",
+    "GE-C320-antike",
+    "GE-C320-chronik",
+    "GE-C320-vorfahr",
+    "GE-C320-untergang"
+  ],
+  "tex": "german/book/chapters/ch320-im-mittelalter.tex"
+}

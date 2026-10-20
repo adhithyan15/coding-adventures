@@ -1,0 +1,11 @@
+{
+  "id": "LA-C465-sextarius",
+  "pathSegment": "LA-PATH-465-MODIUS",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "LA-EXT-465-MODIUS",
+      "order": 1
+    }
+  ]
+}

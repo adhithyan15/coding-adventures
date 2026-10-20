@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PT-C373-provavel",
+    "language": "portuguese",
+    "chapter": 373,
+    "sequence": 21160,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:aff1d9a60914d4e6"
+  },
+  "findings": []
+}

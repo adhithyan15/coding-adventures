@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C450-einloesen",
+    "language": "german",
+    "chapter": 450,
+    "sequence": 24190,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8b7c84eaca4037c2"
+  },
+  "findings": []
+}

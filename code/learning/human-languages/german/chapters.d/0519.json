@@ -1,0 +1,19 @@
+{
+  "chapter": 519,
+  "title": "In der Galerie",
+  "label": "ch:ge-in-der-galerie",
+  "canDo": "I can talk about art exhibitions.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "GE-C519-kunstwerk",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 519: I can talk about art exhibitions.",
+    "assesses": [
+      "GE-LEX-C519-GALERIE-03",
+      "GE-LEX-C519-GALERIE-04",
+      "GE-LEX-C519-GALERIE-05"
+    ]
+  }
+}

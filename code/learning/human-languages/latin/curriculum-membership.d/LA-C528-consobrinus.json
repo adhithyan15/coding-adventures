@@ -1,0 +1,11 @@
+{
+  "id": "LA-C528-consobrinus",
+  "pathSegment": "LA-PATH-528-GENS",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "LA-EXT-528-GENS",
+      "order": 3
+    }
+  ]
+}

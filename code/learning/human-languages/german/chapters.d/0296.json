@@ -1,0 +1,19 @@
+{
+  "chapter": 296,
+  "title": "Die Geburt",
+  "label": "ch:ge-die-geburt",
+  "canDo": "I can tell how a life begins: birth, pregnant, pregnancy, to baptise and a christening.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "GE-C296-taufe",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 296: I can tell how a life begins: birth, pregnant, pregnancy, to baptise and a christening.",
+    "assesses": [
+      "GE-LEX-C296-GEBURT-03",
+      "GE-LEX-C296-GEBURT-04",
+      "GE-LEX-C296-GEBURT-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 402,
+  "title": "Learning by Heart",
+  "label": "ch:la-learning-by-heart",
+  "canDo": "I can say that I learn something by heart or thoroughly, that I study and rehearse it, and that I remember it.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "LA-C402-recordor",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 402: I can say that I learn something by heart or thoroughly, that I study and rehearse it, and that I remember it.",
+    "assesses": [
+      "LA-LEX-C402-EDISCO-03",
+      "LA-LEX-C402-EDISCO-04",
+      "LA-LEX-C402-EDISCO-05"
+    ]
+  }
+}

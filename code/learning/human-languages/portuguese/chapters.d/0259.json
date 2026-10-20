@@ -1,0 +1,26 @@
+{
+  "chapter": 259,
+  "title": "The Scene --- Era, Tinha, Havia",
+  "label": "ch:pt-the-scene",
+  "canDo": "I can paint the scene of a past story with the pretérito imperfeito, and drop the events into it with the pretérito perfeito.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "PT-C259-revisao-quando",
+    "kind": "production",
+    "summary": "Complete PT-C259-revisao-quando: a scene in the imperfeito and an event that cuts into it, joined with quando.",
+    "assesses": [
+      "PT-GRAMMAR-IMPERFEITO-01",
+      "PT-ETYMON-IMPERFEITO-BA-02",
+      "PT-LEX-TINHA-01",
+      "PT-LEX-HAVIA-02",
+      "PT-LEX-FAZIA-FRIO-01",
+      "PT-GRAMMAR-CENA-EVENTO-01",
+      "PT-GRAMMAR-PERFEITO-I-02",
+      "PT-ETYMON-IMPERFECTUS-03",
+      "PT-GRAMMAR-ESTAVA-A-01",
+      "PT-GRAMMAR-QUANDO-CENA-02"
+    ]
+  }
+}

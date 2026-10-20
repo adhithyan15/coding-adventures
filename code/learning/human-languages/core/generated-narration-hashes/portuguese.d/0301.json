@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 301,
+  "sourceHash": "fnv1a64:594b7789847866f3",
+  "lessonIds": [
+    "PT-C301-incendio",
+    "PT-C301-explosao",
+    "PT-C301-explodir",
+    "PT-C301-extintor",
+    "PT-C301-queimadura"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch301.txt",
+  "json": "portuguese/narration/ch301.json",
+  "textHash": "fnv1a64:eaaaa0ff63086d51",
+  "jsonHash": "fnv1a64:2da4477671d1a718",
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C325-patrimoine",
+    "language": "french",
+    "chapter": 325,
+    "sequence": 18440,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6a5757b3d2af000a"
+  },
+  "findings": []
+}

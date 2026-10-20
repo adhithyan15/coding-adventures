@@ -1,0 +1,19 @@
+{
+  "chapter": 294,
+  "title": "A investigação",
+  "label": "ch:pt-a-investigacao",
+  "canDo": "I can talk about a police investigation: the inspector, the detective and the clues.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "PT-C294-indicio",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 294: I can talk about a police investigation: the inspector, the detective and the clues.",
+    "assesses": [
+      "PT-LEX-C294-INVESTIGAR-03",
+      "PT-LEX-C294-INVESTIGAR-04",
+      "PT-LEX-C294-INVESTIGAR-05"
+    ]
+  }
+}

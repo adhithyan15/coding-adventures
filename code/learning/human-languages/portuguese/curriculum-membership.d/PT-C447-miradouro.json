@@ -1,0 +1,11 @@
+{
+  "id": "PT-C447-miradouro",
+  "pathSegment": "PT-PATH-447-PASSEIO",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PT-EXT-447-PASSEIO",
+      "order": 4
+    }
+  ]
+}

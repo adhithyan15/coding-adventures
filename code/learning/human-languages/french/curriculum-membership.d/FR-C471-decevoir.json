@@ -1,0 +1,11 @@
+{
+  "id": "FR-C471-decevoir",
+  "pathSegment": "FR-PATH-471-DECEPTION",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FR-EXT-471-DECEPTION",
+      "order": 1
+    }
+  ]
+}

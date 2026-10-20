@@ -33,6 +33,8 @@
  * | Symbol                | Purpose                                      |
  * |-----------------------|----------------------------------------------|
  * | `__twig_print_i64`    | Print a signed 64-bit integer + newline.     |
+ * | `__twig_write_i64`    | LANG83: print a signed 64-bit integer, no newline. |
+ * | `__twig_trap`         | LANG83: flush stdout, report the trap kind on stderr, abort. |
  * | `__twig_putchar`      | Write one byte to stdout.                    |
  * | `__twig_getchar`      | Read one byte from stdin (-1 on EOF).        |
  * | `__twig_print_string` | Write `len` bytes from `ptr` to stdout.      |
@@ -122,6 +124,66 @@ void __twig_print_i64(int64_t val) {
     twig_runtime_ensure_stdout_binary();
     printf("%lld\n", (long long)val);
     fflush(stdout);
+}
+
+/* __twig_write_i64 — LANG83 `write_i64`: a signed 64-bit integer in decimal,
+ * with NO newline (Perl `print`, Python `print(x, end="")`).
+ *
+ * Same `FILE *` as `__twig_print_i64` / `__twig_putchar` /
+ * `__twig_print_string`, so mixed output is one ordered stream. Like
+ * `__twig_putchar` (and unlike `__twig_print_i64`) it does not flush per call:
+ * a no-newline writer is typically called in a loop, and every exit path
+ * flushes — normal `exit`, and `__twig_trap` below.
+ */
+void __twig_write_i64(int64_t val) {
+    twig_runtime_ensure_stdout_binary();
+    printf("%lld", (long long)val);
+}
+
+/* The closed LANG83 trap-kind table, indexed by stable id
+ * (`interpreter_ir::exception_kind::trap_kind_id`): built-in kinds are 1..=6
+ * in `ALL_TRAP_KINDS` order. Append-only; a Rust test
+ * (`twig-aot` `runtime_trap_kind_table_matches_exception_kind`) pins this
+ * array to the Rust table so the two cannot drift. Language kinds (ids from
+ * 1000) are added by the PR that first emits one. */
+static const char *const TWIG_TRAP_KINDS[] = {
+    "Trap.Bounds",    /* 1 */
+    "Trap.Null",      /* 2 */
+    "Trap.DivZero",   /* 3 */
+    "Trap.ConvRange", /* 4 */
+    "Trap.Overflow",  /* 5 */
+    "Trap.User",      /* 6 */
+};
+
+/* __twig_trap — LANG83 `trap kind` (and the defined traps of `i64_div_floor`
+ * / `i64_mod_floor`): terminate the program observably.
+ *
+ * Order matters, and is the LANG83 contract:
+ *   1. flush stdout — every byte the program wrote before the trap reaches
+ *      its consumer (`putchar` / `write_i64` do not flush per call, and
+ *      `abort` does not flush stdio);
+ *   2. name the kind on stderr (`trap: Trap.DivZero`), so a harness can tell
+ *      which trap fired;
+ *   3. `abort()` — a non-zero, signal-terminated exit, like the backends'
+ *      `ud2`/`udf` hardware traps.
+ * The backends emit `mov edi, id; call __twig_trap; ud2` (x86-64) or
+ * `mov w0, id; bl __twig_trap; udf` (AArch64); this never returns.
+ */
+#if defined(__GNUC__) || defined(__clang__)
+__attribute__((noreturn))
+#elif defined(_MSC_VER)
+__declspec(noreturn)
+#endif
+void __twig_trap(int32_t kind_id) {
+    const size_t n = sizeof(TWIG_TRAP_KINDS) / sizeof(TWIG_TRAP_KINDS[0]);
+    fflush(stdout);
+    if (kind_id >= 1 && (size_t)kind_id <= n) {
+        fprintf(stderr, "trap: %s\n", TWIG_TRAP_KINDS[kind_id - 1]);
+    } else {
+        fprintf(stderr, "trap: unknown kind id %d\n", (int)kind_id);
+    }
+    fflush(stderr);
+    abort();
 }
 
 /* __twig_putchar — write one byte to stdout.

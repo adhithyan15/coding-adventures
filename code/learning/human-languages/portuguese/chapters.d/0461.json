@@ -1,0 +1,19 @@
+{
+  "chapter": 461,
+  "title": "Bichos pequenos",
+  "label": "ch:pt-bichos-pequenos",
+  "canDo": "I can name small creatures on a walk: the lizard, the viper, the toad, the snail, and crawling.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "PT-C461-rastejar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 461: I can name small creatures on a walk: the lizard, the viper, the toad, the snail, and crawling.",
+    "assesses": [
+      "PT-LEX-C461-PEQUENOS-03",
+      "PT-LEX-C461-PEQUENOS-04",
+      "PT-LEX-C461-PEQUENOS-05"
+    ]
+  }
+}

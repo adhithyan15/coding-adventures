@@ -1,0 +1,11 @@
+{
+  "id": "LA-C382-patricius",
+  "pathSegment": "LA-PATH-382-SENATOR",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "LA-EXT-382-SENATOR",
+      "order": 1
+    }
+  ]
+}

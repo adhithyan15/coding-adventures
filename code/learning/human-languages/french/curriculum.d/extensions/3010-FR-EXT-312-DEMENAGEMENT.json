@@ -1,0 +1,8 @@
+{
+  "id": "FR-EXT-312-DEMENAGEMENT",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can talk about moving: the move, moving in, the house-warming, the tenant and the lease.",
+  "prerequisites": []
+}

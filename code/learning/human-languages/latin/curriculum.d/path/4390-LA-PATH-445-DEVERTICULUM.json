@@ -1,0 +1,9 @@
+{
+  "id": "LA-PATH-445-DEVERTICULUM",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "LA-EXT-445-DEVERTICULUM"
+  ],
+  "after": []
+}

@@ -1,0 +1,858 @@
+{
+  "version": 1,
+  "language": "french",
+  "chapter": 283,
+  "title": "À l'antenne",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:3733a92efd7d21b6",
+  "lessons": [
+    {
+      "id": "FR-C283-diffuser",
+      "sequence": 16260,
+      "title": "diffuser — to broadcast; to spread",
+      "headword": "diffuser",
+      "romanization": "diffuser",
+      "gloss": "to broadcast; to spread",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:670d79bba01e9209",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the French for the editorial, then the French for short news items."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: diffuser",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "diffuser — \"to broadcast; to spread\"."
+            },
+            {
+              "kind": "speech",
+              "text": "La télé a diffusé le match en direct. The TV broadcast the match live."
+            },
+            {
+              "kind": "speech",
+              "text": "Also to spread news or a smell: diffuser une information."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "diffuser is built on diffus \"spread out\" (EtymDB), a learned borrowing from Latin diffūsus, the past participle of diffundere \"to pour out\" (Lewis & Short)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "diffuser",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *diffuser*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "diffuser, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *diffuser*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with diffuser",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *diffuser*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the French for the editorial, then the French for short news items, then say diffuser again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the French for the editorial, then the French for short news items, then say *diffuser* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does diffuser mean? (\"To broadcast; to spread\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FR-C283-diffusion",
+      "sequence": 16270,
+      "title": "la diffusion — the broadcasting, the showing; the spread",
+      "headword": "la diffusion",
+      "romanization": "la diffusion",
+      "gloss": "the broadcasting, the showing; the spread",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e774b15010854139",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the French for short news items, then the French for to broadcast."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: la diffusion",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la diffusion — \"the broadcasting, the showing; the spread\"."
+            },
+            {
+              "kind": "speech",
+              "text": "La diffusion du match commence à vingt heures. The broadcast of the match starts at eight in the evening."
+            },
+            {
+              "kind": "speech",
+              "text": "En diffusion — being shown, on air."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "diffusion is a learned borrowing from Latin diffūsiō \"a spreading out\" (EtymDB), from diffundere \"to pour out\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la diffusion",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la diffusion*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la diffusion, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la diffusion*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with la diffusion",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *la diffusion*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the French for short news items, then the French for to broadcast, then say la diffusion again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the French for short news items, then the French for to broadcast, then say *la diffusion* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does la diffusion mean? (\"The broadcasting, the showing; the spread\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FR-C283-filmer",
+      "sequence": 16280,
+      "title": "filmer — to film",
+      "headword": "filmer",
+      "romanization": "filmer",
+      "gloss": "to film",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c2db08d49fe6d039",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the French for to broadcast, then the French for the broadcasting."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: filmer",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "filmer — \"to film\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Un homme a tout filmé avec son téléphone. A man filmed everything with his phone."
+            },
+            {
+              "kind": "speech",
+              "text": "Se faire filmer — to get filmed."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "filmer is built on film, which was borrowed from English film \"a thin skin, a coating\" (EtymDB lists the verb without a parent)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "filmer",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *filmer*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "filmer, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *filmer*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with filmer",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *filmer*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the French for to broadcast, then the French for the broadcasting, then say filmer again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the French for to broadcast, then the French for the broadcasting, then say *filmer* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does filmer mean? (\"To film\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FR-C283-interviewer",
+      "sequence": 16290,
+      "title": "interviewer — to interview",
+      "headword": "interviewer",
+      "romanization": "interviewer",
+      "gloss": "to interview",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0a263a8fcb026b07",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the French for the broadcasting, then the French for to film."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: interviewer",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "interviewer — \"to interview\"."
+            },
+            {
+              "kind": "speech",
+              "text": "La journaliste a interviewé le maire. The journalist interviewed the mayor."
+            },
+            {
+              "kind": "speech",
+              "text": "It ends in the French -er sound of parler. The noun is l'interview, feminine; in Québec, l'entrevue."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "interviewer was borrowed from English interview, which itself comes from French entrevue \"a meeting face to face\" (EtymDB), built on voir, from Latin vidēre."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "interviewer",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *interviewer*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "interviewer, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *interviewer*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with interviewer",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *interviewer*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the French for the broadcasting, then the French for to film, then say interviewer again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the French for the broadcasting, then the French for to film, then say *interviewer* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does interviewer mean? (\"To interview\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FR-C283-antenne",
+      "sequence": 16300,
+      "title": "l'antenne — the aerial, the antenna; being on air",
+      "headword": "l'antenne",
+      "romanization": "l'antenne",
+      "gloss": "the aerial, the antenna; being on air",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e6fb1a8649fe4f41",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the French for to film, then the French for to interview."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: l'antenne",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "l'antenne — \"the aerial, the antenna; being on air\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Le chanteur a parlé pendant dix minutes à l'antenne. The singer spoke on air for ten minutes."
+            },
+            {
+              "kind": "speech",
+              "text": "Être à l'antenne — to be on air. Also an insect's feeler."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "antenne is a learned borrowing from Latin antemna \"a sail yard\" (EtymDB), first said of an insect's feelers, then of a radio mast."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "l'antenne",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *l'antenne*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "l'antenne, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *l'antenne*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with l'antenne",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *l'antenne*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the French for to film, then the French for to interview, then say l'antenne again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the French for to film, then the French for to interview, then say *l'antenne* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does l'antenne mean? (\"The aerial, the antenna; being on air\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FR-R283-revision-276-283",
+      "sequence": 16310,
+      "title": "Retour sur les chapitres 276–283",
+      "headword": "(dialogue)",
+      "romanization": "(dialogue)",
+      "gloss": "a review of chapters 276-283",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a5ca29e5b15886db",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the French for the time and the decade."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the time, the decade, the millennium, the era, the length",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the time, the decade, the millennium, the era, the length]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the step, the phase, the chronology, the instant, at the end of",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the step, the phase, the chronology, the instant, at the end of]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the news, the press, the daily paper, the weekly, the subscriber",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the news, the press, the daily paper, the weekly, the subscriber]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to write, the newsroom, to print, to come out, the publication",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to write, the newsroom, to print, to come out, the publication]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the television news, the presenter, the viewer, the listener, the microphone",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the television news, the presenter, the viewer, the listener, the microphone]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the report, the special correspondent, the correspondent, the dispatch, the news agency",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the report, the special correspondent, the correspondent, the dispatch, the news agency]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the headline, the banner headline, the section, the editorial, short news items",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the headline, the banner headline, the section, the editorial, short news items]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to broadcast, the broadcasting, to film, to interview, the aerial",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to broadcast, the broadcasting, to film, to interview, the aerial]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The time? (l'époque.) The decade? (la décennie.) The millennium? (le millénaire.) The era? (l'ère.) The length? (la durée.) The step? (l'étape.) The phase? (la phase.) The chronology? (la chronologie.) The instant? (l'instant.) At the end of? (à l'issue de.) The news? (l'actualité.) The press? (la presse.) The daily paper? (le quotidien.) The weekly? (l'hebdomadaire.) The subscriber? (l'abonné.) To write? (rédiger.) The newsroom? (la rédaction.) To print? (imprimer.) To come out? (paraître.) The publication? (la parution.) The television news? (le journal télévisé.) The presenter? (le présentateur.) The viewer? (le téléspectateur.) The listener? (l'auditeur.) The microphone? (le micro.) The report? (le reportage.) The special correspondent? (l'envoyé spécial.) The correspondent? (le correspondant.) The dispatch? (la dépêche.) The news agency? (l'agence de presse.) The headline? (le gros titre.) The banner headline? (la manchette.) The section? (la rubrique.) The editorial? (l'éditorial.) Short news items? (les faits divers.) To broadcast? (diffuser.) The broadcasting? (la diffusion.) To film? (filmer.) To interview? (interviewer.) The aerial? (l'antenne.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

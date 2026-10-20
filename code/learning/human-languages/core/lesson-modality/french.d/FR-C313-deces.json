@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C313-deces",
+    "language": "french",
+    "chapter": 313,
+    "sequence": 17840,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:fe84c5e6e2761c8a"
+  },
+  "findings": []
+}

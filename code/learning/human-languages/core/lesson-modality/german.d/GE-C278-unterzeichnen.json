@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C278-unterzeichnen",
+    "language": "german",
+    "chapter": 278,
+    "sequence": 15350,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5027197498fbac22"
+  },
+  "findings": []
+}

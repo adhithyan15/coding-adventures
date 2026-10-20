@@ -1,0 +1,8 @@
+{
+  "id": "FR-EXT-327-RECETTE",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can talk about a recipe: the recipe, the ingredients, a pinch, a spoonful and preheating the oven.",
+  "prerequisites": []
+}

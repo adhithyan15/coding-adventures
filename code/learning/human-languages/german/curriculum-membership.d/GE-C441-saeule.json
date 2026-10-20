@@ -1,0 +1,11 @@
+{
+  "id": "GE-C441-saeule",
+  "pathSegment": "GE-PATH-441-FASSADE",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-441-FASSADE",
+      "order": 4
+    }
+  ]
+}

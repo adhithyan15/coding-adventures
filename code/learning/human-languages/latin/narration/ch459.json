@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "latin",
+  "chapter": 459,
+  "title": "Colonnade, Temple, Shrine, Sacred boundary, To build up",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:9a8a0eda70779a41",
+  "lessons": [
+    {
+      "id": "LA-C459-porticus",
+      "sequence": 24440,
+      "title": "porticus, porticūs — a colonnade, a covered walk, a portico",
+      "headword": "porticus, porticūs",
+      "romanization": "porticus, porticūs",
+      "gloss": "a colonnade, a covered walk, a portico",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:28f721b2f3bbdfe2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for a sewer, then the Latin for a water tower."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: porticus, porticūs",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "porticus, porticūs — \"a colonnade, a covered walk, a portico\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Aestāte cīvēs in porticū ambulant, quod ibi umbra est. In summer the citizens walk in the colonnade, because there is shade there."
+            },
+            {
+              "kind": "speech",
+              "text": "Fourth declension, feminine: porticus, porticūs f. English portico and porch come from it."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "porticus is built on porta 'gate, passage' (EtymDB): a covered passage. English portico comes from it through Italian, and porch through French."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "porticus, porticūs",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *porticus, porticūs*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "porticus, porticūs, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *porticus, porticūs*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with porticus, porticūs",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *porticus, porticūs*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for a sewer, then the Latin for a water tower, then say porticus, porticūs again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for a sewer, then the Latin for a water tower, then say *porticus, porticūs* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does porticus, porticūs mean? (\"A colonnade, a covered walk, a portico\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C459-aedes",
+      "sequence": 24450,
+      "title": "aedēs, aedis — a temple; (plural) a house",
+      "headword": "aedēs, aedis",
+      "romanization": "aedēs, aedis",
+      "gloss": "a temple; (plural) a house",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b678a114be6964f1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for a water tower, then the Latin for a colonnade."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: aedēs, aedis",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "aedēs, aedis — \"a temple; (plural) a house\"."
+            },
+            {
+              "kind": "speech",
+              "text": "In forō aedēs magna et antīqua est. In the forum there is a great old temple."
+            },
+            {
+              "kind": "speech",
+              "text": "Third declension, feminine: aedēs or aedis, aedis f. In the singular a temple, a house of a god; in the plural a house of people, with all its rooms."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "aedēs is usually traced to PIE h₂eydʰ- 'to burn', since Lewis & Short give 'hearth' as an early sense; aestās 'summer' is from the same root. English edifice comes from aedificium, built on it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "aedēs, aedis",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *aedēs, aedis*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "aedēs, aedis, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *aedēs, aedis*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with aedēs, aedis",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *aedēs, aedis*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for a water tower, then the Latin for a colonnade, then say aedēs, aedis again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for a water tower, then the Latin for a colonnade, then say *aedēs, aedis* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does aedēs, aedis mean? (\"A temple; (plural) a house\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C459-aedicula",
+      "sequence": 24460,
+      "title": "aedicula, aediculae — a shrine, a small temple; a niche",
+      "headword": "aedicula, aediculae",
+      "romanization": "aedicula, aediculae",
+      "gloss": "a shrine, a small temple; a niche",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:324d3009cd8eaeb5",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for a colonnade, then the Latin for a temple."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: aedicula, aediculae",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "aedicula, aediculae — \"a shrine, a small temple; a niche\"."
+            },
+            {
+              "kind": "speech",
+              "text": "In compitō aedicula parva est, et viātōrēs ibi flōrēs pōnunt. At the crossroads there is a small shrine, and travellers put flowers there."
+            },
+            {
+              "kind": "speech",
+              "text": "First declension, feminine: aedicula, aediculae f., a diminutive of aedēs. A little shrine, or a niche for a statue."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "aedicula is a diminutive of aedēs 'temple, house' (Lewis & Short), made with -cula. English keeps aedicule in architecture."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "aedicula, aediculae",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *aedicula, aediculae*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "aedicula, aediculae, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *aedicula, aediculae*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with aedicula, aediculae",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *aedicula, aediculae*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for a colonnade, then the Latin for a temple, then say aedicula, aediculae again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for a colonnade, then the Latin for a temple, then say *aedicula, aediculae* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does aedicula, aediculae mean? (\"A shrine, a small temple; a niche\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C459-pomerium",
+      "sequence": 24470,
+      "title": "pōmērium, pōmēriī — the sacred boundary (of a city)",
+      "headword": "pōmērium, pōmēriī",
+      "romanization": "pōmērium, pōmēriī",
+      "gloss": "the sacred boundary (of a city)",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6daab0866c59d86d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for a temple, then the Latin for a shrine."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: pōmērium, pōmēriī",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "pōmērium, pōmēriī — \"the sacred boundary (of a city)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Intrā pōmērium mīlitēs arma nōn gerunt. Inside the sacred boundary soldiers do not carry weapons."
+            },
+            {
+              "kind": "speech",
+              "text": "Second declension, neuter: pōmērium, pōmēriī n., also pōmoerium. The holy line round a Roman town, marked with stones."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "pōmērium is usually explained, as by ancient writers, as post 'behind' and moerus, an old form of mūrus 'wall' (Lewis & Short): the strip of land along the wall. EtymDB lists it without a parent."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pōmērium, pōmēriī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pōmērium, pōmēriī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pōmērium, pōmēriī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pōmērium, pōmēriī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with pōmērium, pōmēriī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *pōmērium, pōmēriī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for a temple, then the Latin for a shrine, then say pōmērium, pōmēriī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for a temple, then the Latin for a shrine, then say *pōmērium, pōmēriī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does pōmērium, pōmēriī mean? (\"The sacred boundary (of a city)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C459-exstruo",
+      "sequence": 24480,
+      "title": "exstruō, exstruere — to build up, to raise, to pile up",
+      "headword": "exstruō, exstruere",
+      "romanization": "exstruō, exstruere",
+      "gloss": "to build up, to raise, to pile up",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7be94f624bdb557f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for a shrine, then the Latin for the sacred boundary."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: exstruō, exstruere",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "exstruō, exstruere — \"to build up, to raise, to pile up\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Cīvēs novam porticum in forō exstruunt. The citizens put up a new colonnade in the forum."
+            },
+            {
+              "kind": "speech",
+              "text": "exstruō, exstruere, exstrūxī, exstrūctum. Also to pile up: mēnsās epulīs exstruere, to load tables with food."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "exstruō is built from ex- 'up, out' and struō 'to pile up, to build' (EtymDB; Lewis & Short). English construct and structure come from struō."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "exstruō, exstruere",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *exstruō, exstruere*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "exstruō, exstruere, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *exstruō, exstruere*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with exstruō, exstruere",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *exstruō, exstruere*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for a shrine, then the Latin for the sacred boundary, then say exstruō, exstruere again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for a shrine, then the Latin for the sacred boundary, then say *exstruō, exstruere* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does exstruō, exstruere mean? (\"To build up, to raise, to pile up\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

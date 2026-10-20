@@ -1,0 +1,11 @@
+{
+  "id": "PT-C412-parquimetro",
+  "pathSegment": "PT-PATH-412-RODAS",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PT-EXT-412-RODAS",
+      "order": 4
+    }
+  ]
+}

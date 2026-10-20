@@ -1,0 +1,8 @@
+{
+  "id": "GE-EXT-404-REIFEN",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can deal with a flat tyre: the tyre, the flat, pumping it up, the jack and the warning triangle.",
+  "prerequisites": []
+}

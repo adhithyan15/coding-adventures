@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 503,
+  "sourceHash": "fnv1a64:ad1bba22a6e101a1",
+  "lessonIds": [
+    "FR-C503-jardinage",
+    "FR-C503-jardiner",
+    "FR-C503-semer",
+    "FR-C503-arroser",
+    "FR-C503-arrosoir"
+  ],
+  "tex": "french/book/chapters/ch503-le-jardinage.tex"
+}

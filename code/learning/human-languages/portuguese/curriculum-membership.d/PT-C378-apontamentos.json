@@ -1,0 +1,11 @@
+{
+  "id": "PT-C378-apontamentos",
+  "pathSegment": "PT-PATH-378-REVER",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PT-EXT-378-REVER",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "PT-C373-probabilidade",
+  "pathSegment": "PT-PATH-373-RISCO",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PT-EXT-373-RISCO",
+      "order": 4
+    }
+  ]
+}

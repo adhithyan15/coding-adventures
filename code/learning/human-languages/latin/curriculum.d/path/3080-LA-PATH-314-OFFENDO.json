@@ -1,0 +1,9 @@
+{
+  "id": "LA-PATH-314-OFFENDO",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "LA-EXT-314-OFFENDO"
+  ],
+  "after": []
+}

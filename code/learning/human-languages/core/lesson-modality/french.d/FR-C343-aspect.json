@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C343-aspect",
+    "language": "french",
+    "chapter": 343,
+    "sequence": 19380,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d5c2a7f9cc5f6fdc"
+  },
+  "findings": []
+}

@@ -1,0 +1,9 @@
+{
+  "id": "FR-PATH-437-RUELLES",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "FR-EXT-437-RUELLES"
+  ],
+  "after": []
+}

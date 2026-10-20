@@ -1,0 +1,11 @@
+{
+  "id": "FR-C478-narine",
+  "pathSegment": "FR-PATH-478-VISAGE",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FR-EXT-478-VISAGE",
+      "order": 3
+    }
+  ]
+}

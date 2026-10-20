@@ -1,0 +1,11 @@
+{
+  "id": "GE-C304-witwe",
+  "pathSegment": "GE-PATH-304-TRAUER",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-304-TRAUER",
+      "order": 3
+    }
+  ]
+}

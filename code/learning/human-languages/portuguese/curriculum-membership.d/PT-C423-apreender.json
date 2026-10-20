@@ -1,0 +1,11 @@
+{
+  "id": "PT-C423-apreender",
+  "pathSegment": "PT-PATH-423-CONTROLO",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PT-EXT-423-CONTROLO",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 318,
+  "title": "Le feu d'artifice",
+  "label": "ch:fr-le-feu-d-artifice",
+  "canDo": "I can describe a night of celebration: fireworks, firecrackers, the dance, garlands and decorating.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "FR-C318-decorer",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 318: I can describe a night of celebration: fireworks, firecrackers, the dance, garlands and decorating.",
+    "assesses": [
+      "FR-LEX-C318-ARTIFICE-03",
+      "FR-LEX-C318-ARTIFICE-04",
+      "FR-LEX-C318-ARTIFICE-05"
+    ]
+  }
+}

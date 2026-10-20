@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 526,
+  "sourceHash": "fnv1a64:737c27701dac1d39",
+  "lessonIds": [
+    "GE-C526-staub",
+    "GE-C526-wischen",
+    "GE-C526-fegen",
+    "GE-C526-staubsaugen",
+    "GE-C526-lappen"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch526.txt",
+  "json": "german/narration/ch526.json",
+  "textHash": "fnv1a64:9de02dab9588d3ec",
+  "jsonHash": "fnv1a64:87d3beaa9b9a18d6",
+  "findings": []
+}

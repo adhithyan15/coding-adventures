@@ -1,0 +1,13 @@
+{
+  "language": "latin",
+  "chapter": 484,
+  "sourceHash": "fnv1a64:9ddd8991cdca6bbf",
+  "lessonIds": [
+    "LA-C484-fagus",
+    "LA-C484-abies",
+    "LA-C484-ulmus",
+    "LA-C484-fraxinus",
+    "LA-C484-opacus"
+  ],
+  "tex": "latin/book/chapters/ch484-beech-fir-elm-ash-shady.tex"
+}

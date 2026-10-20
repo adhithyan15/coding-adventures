@@ -1,0 +1,11 @@
+{
+  "id": "GE-C393-ordner",
+  "pathSegment": "GE-PATH-393-DATEI",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GE-EXT-393-DATEI",
+      "order": 2
+    }
+  ]
+}

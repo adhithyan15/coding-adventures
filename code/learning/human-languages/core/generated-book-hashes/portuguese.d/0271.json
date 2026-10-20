@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 271,
+  "sourceHash": "fnv1a64:0824f0f68295b70b",
+  "lessonIds": [
+    "PT-C271-ocorrer",
+    "PT-C271-suceder",
+    "PT-C271-decorrer",
+    "PT-C271-acontecimento",
+    "PT-C271-ocorrencia"
+  ],
+  "tex": "portuguese/book/chapters/ch271-o-que-ocorreu.tex"
+}

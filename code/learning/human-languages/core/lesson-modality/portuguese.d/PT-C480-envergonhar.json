@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PT-C480-envergonhar",
+    "language": "portuguese",
+    "chapter": 480,
+    "sequence": 26690,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:eaa3364438311629"
+  },
+  "findings": []
+}

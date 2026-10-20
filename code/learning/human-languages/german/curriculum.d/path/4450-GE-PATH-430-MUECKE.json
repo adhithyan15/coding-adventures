@@ -1,0 +1,9 @@
+{
+  "id": "GE-PATH-430-MUECKE",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "GE-EXT-430-MUECKE"
+  ],
+  "after": []
+}

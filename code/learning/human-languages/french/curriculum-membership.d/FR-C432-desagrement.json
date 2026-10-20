@@ -1,0 +1,11 @@
+{
+  "id": "FR-C432-desagrement",
+  "pathSegment": "FR-PATH-432-GERANT",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FR-EXT-432-GERANT",
+      "order": 1
+    }
+  ]
+}

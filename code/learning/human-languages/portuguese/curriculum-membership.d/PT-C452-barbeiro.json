@@ -1,0 +1,11 @@
+{
+  "id": "PT-C452-barbeiro",
+  "pathSegment": "PT-PATH-452-CUIDADOS",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "PT-EXT-452-CUIDADOS",
+      "order": 0
+    }
+  ]
+}

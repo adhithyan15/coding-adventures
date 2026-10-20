@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 503,
+  "sourceHash": "fnv1a64:a5bb8c0f5e92599f",
+  "lessonIds": [
+    "PT-C503-xadrez",
+    "PT-C503-baralho",
+    "PT-C503-tabuleiro",
+    "PT-C503-puzzle",
+    "PT-C503-palavras-cruzadas"
+  ],
+  "tex": "portuguese/book/chapters/ch503-jogos-de-mesa.tex"
+}

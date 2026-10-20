@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 310,
+  "sourceHash": "fnv1a64:d6ce64a8c44b8e0e",
+  "lessonIds": [
+    "FR-C310-adolescence",
+    "FR-C310-adolescent",
+    "FR-C310-jeunesse",
+    "FR-C310-rentree",
+    "FR-C310-majeur"
+  ],
+  "tex": "french/book/chapters/ch310-la-jeunesse.tex"
+}

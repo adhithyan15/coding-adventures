@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C493-umarmung",
+    "language": "german",
+    "chapter": 493,
+    "sequence": 26390,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0425509d6000f46d"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C374-entschluss",
+    "language": "german",
+    "chapter": 374,
+    "sequence": 20260,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:33f7bb5ecb248dc3"
+  },
+  "findings": []
+}

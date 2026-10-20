@@ -1,0 +1,9 @@
+{
+  "id": "PT-PATH-377-DOCENTE",
+  "spine_node": "SPINE-EXPRESS-CONDITION",
+  "before": [],
+  "inline": [
+    "PT-EXT-377-DOCENTE"
+  ],
+  "after": []
+}

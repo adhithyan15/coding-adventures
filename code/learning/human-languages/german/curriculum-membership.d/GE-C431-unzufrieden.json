@@ -1,0 +1,11 @@
+{
+  "id": "GE-C431-unzufrieden",
+  "pathSegment": "GE-PATH-431-BESCHWERDE",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-431-BESCHWERDE",
+      "order": 4
+    }
+  ]
+}

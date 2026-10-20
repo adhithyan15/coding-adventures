@@ -1,0 +1,8 @@
+{
+  "id": "GE-EXT-278-VERHANDELN",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can report talks and agreements: to negotiate, a negotiation, a contract, to sign and a conference.",
+  "prerequisites": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 515,
+  "sourceHash": "fnv1a64:b50235c4856a2c48",
+  "lessonIds": [
+    "LA-C515-vultus",
+    "LA-C515-facies",
+    "LA-C515-crinis",
+    "LA-C515-supercilium",
+    "LA-C515-palpebra"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch515.txt",
+  "json": "latin/narration/ch515.json",
+  "textHash": "fnv1a64:f244034c2ee2040e",
+  "jsonHash": "fnv1a64:b6f4c5611ed5ec35",
+  "findings": []
+}

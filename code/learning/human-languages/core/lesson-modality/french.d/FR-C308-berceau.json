@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C308-berceau",
+    "language": "french",
+    "chapter": 308,
+    "sequence": 17590,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:16a8c7144ea154da"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "GE-C407-bussgeld",
+  "pathSegment": "GE-PATH-407-BLITZER",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-407-BLITZER",
+      "order": 3
+    }
+  ]
+}

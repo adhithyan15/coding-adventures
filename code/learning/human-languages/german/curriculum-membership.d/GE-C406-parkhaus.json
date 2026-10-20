@@ -1,0 +1,11 @@
+{
+  "id": "GE-C406-parkhaus",
+  "pathSegment": "GE-PATH-406-PARKEN",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-406-PARKEN",
+      "order": 3
+    }
+  ]
+}

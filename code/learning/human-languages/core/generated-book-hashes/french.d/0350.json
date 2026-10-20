@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 350,
+  "sourceHash": "fnv1a64:219c6c7cc755649f",
+  "lessonIds": [
+    "FR-C350-impact",
+    "FR-C350-repercussion",
+    "FR-C350-declencher",
+    "FR-C350-susciter",
+    "FR-C350-motif"
+  ],
+  "tex": "french/book/chapters/ch350-les-repercussions.tex"
+}

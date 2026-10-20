@@ -306,9 +306,9 @@ fn runs_shared_berkeley_v1_core_corpus() {
             .map(|case| case["analysis"].as_str().unwrap())
             .collect::<Vec<_>>(),
         vec![
-            "op", "op", "op", "op", "op", "op", "op", "ac", "ac", "ac", "ac", "ac", "ac",
-            "ac", "tran", "tran", "tran", "tran", "tran", "tran", "tran", "dc", "dc", "dc",
-            "dc", "dc", "dc", "dc", "dc", "tf", "tf", "tf", "tf", "tf", "tf", "tf", "tf"
+            "op", "op", "op", "op", "op", "op", "op", "op", "op", "ac", "ac", "ac", "ac", "ac",
+            "ac", "ac", "ac", "tran", "tran", "tran", "tran", "tran", "tran", "tran", "dc", "dc",
+            "dc", "dc", "dc", "dc", "dc", "dc", "tf", "tf", "tf", "tf", "tf", "tf", "tf", "tf"
         ]
     );
 
@@ -1481,6 +1481,26 @@ Rbot out 0 1k
             .unwrap(),
         323.15,
     );
+}
+
+#[test]
+fn parses_canonical_noise_sweeps() {
+    let parsed = parse_netlist(
+        r#"
+Vin in 0 DC 1
+Rtop in out 1k
+Rbot out 0 1k
+.noise V(out) Vin LIN 2 1k 2k
+.noise V(out) Vin DEC 1 1 1k
+.noise V(out) Vin OCT 1 1 8
+"#,
+    )
+    .unwrap();
+
+    let cards = parsed.noise_cards();
+    assert_eq!(cards[0].frequencies_hz, vec![1e3, 2e3]);
+    assert_eq!(cards[1].frequencies_hz, vec![1.0, 10.0, 100.0, 1e3]);
+    assert_eq!(cards[2].frequencies_hz, vec![1.0, 2.0, 4.0, 8.0]);
 }
 
 #[test]

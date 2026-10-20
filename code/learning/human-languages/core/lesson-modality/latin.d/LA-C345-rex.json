@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C345-rex",
+    "language": "latin",
+    "chapter": 345,
+    "sequence": 18560,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7345e33aec3dc7a6"
+  },
+  "findings": []
+}

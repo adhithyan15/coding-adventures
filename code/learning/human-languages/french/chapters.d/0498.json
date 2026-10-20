@@ -1,0 +1,19 @@
+{
+  "chapter": 498,
+  "title": "En plein air",
+  "label": "ch:fr-en-plein-air",
+  "canDo": "I can talk about climbing and evenings outdoors.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "FR-C498-feu-de-camp",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 498: I can talk about climbing and evenings outdoors.",
+    "assesses": [
+      "FR-LEX-C498-PLEIN-AIR-03",
+      "FR-LEX-C498-PLEIN-AIR-04",
+      "FR-LEX-C498-PLEIN-AIR-05"
+    ]
+  }
+}

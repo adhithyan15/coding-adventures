@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 517,
+  "sourceHash": "fnv1a64:61b87926e77d45fa",
+  "lessonIds": [
+    "GE-C517-schauspieler",
+    "GE-C517-regisseur",
+    "GE-C517-publikum",
+    "GE-C517-klatschen",
+    "GE-C517-applaus"
+  ],
+  "tex": "german/book/chapters/ch517-im-theater.tex"
+}

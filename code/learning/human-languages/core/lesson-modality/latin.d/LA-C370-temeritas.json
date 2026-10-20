@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C370-temeritas",
+    "language": "latin",
+    "chapter": 370,
+    "sequence": 19900,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d3e046b0e08a6f3a"
+  },
+  "findings": []
+}

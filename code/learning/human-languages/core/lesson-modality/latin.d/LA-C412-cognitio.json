@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C412-cognitio",
+    "language": "latin",
+    "chapter": 412,
+    "sequence": 22010,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b958d4499dd70f7f"
+  },
+  "findings": []
+}

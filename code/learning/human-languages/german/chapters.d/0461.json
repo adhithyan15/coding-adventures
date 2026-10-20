@@ -1,0 +1,19 @@
+{
+  "chapter": 461,
+  "title": "Schauer und Nieselregen",
+  "label": "ch:ge-schauer-und-nieselregen",
+  "canDo": "I can talk about light rain: drizzle, drizzling, the shower, the sunny spell and the sky clearing.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "GE-R461-review-454-461",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 461: I can talk about light rain: drizzle, drizzling, the shower, the sunny spell and the sky clearing.",
+    "assesses": [
+      "GE-LEX-C461-NIESELREGEN-03",
+      "GE-LEX-C461-NIESELREGEN-04",
+      "GE-LEX-C461-NIESELREGEN-05"
+    ]
+  }
+}

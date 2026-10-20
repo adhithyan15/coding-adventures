@@ -1,0 +1,11 @@
+{
+  "id": "GE-C509-medaille",
+  "pathSegment": "GE-PATH-509-WETTKAMPF",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-509-WETTKAMPF",
+      "order": 3
+    }
+  ]
+}

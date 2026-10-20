@@ -1,0 +1,19 @@
+{
+  "chapter": 297,
+  "title": "Accident de la route",
+  "label": "ch:fr-accident-de-la-route",
+  "canDo": "I can describe a road accident: a pile-up, a reckless driver, speeding, the accident report and a skid.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "FR-C297-derapage",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 297: I can describe a road accident: a pile-up, a reckless driver, speeding, the accident report and a skid.",
+    "assesses": [
+      "FR-LEX-C297-ROUTE-03",
+      "FR-LEX-C297-ROUTE-04",
+      "FR-LEX-C297-ROUTE-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "GE-C442-rutschen",
+  "pathSegment": "GE-PATH-442-GLATTEIS",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-442-GLATTEIS",
+      "order": 4
+    }
+  ]
+}

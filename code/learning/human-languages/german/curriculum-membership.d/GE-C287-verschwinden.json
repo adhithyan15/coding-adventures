@@ -1,0 +1,11 @@
+{
+  "id": "GE-C287-verschwinden",
+  "pathSegment": "GE-PATH-287-GEFAENGNIS",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-287-GEFAENGNIS",
+      "order": 3
+    }
+  ]
+}

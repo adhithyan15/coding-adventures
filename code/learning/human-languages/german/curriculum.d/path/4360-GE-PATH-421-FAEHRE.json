@@ -1,0 +1,9 @@
+{
+  "id": "GE-PATH-421-FAEHRE",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "GE-EXT-421-FAEHRE"
+  ],
+  "after": []
+}

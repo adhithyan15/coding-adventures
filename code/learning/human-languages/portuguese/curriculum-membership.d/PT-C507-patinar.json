@@ -1,0 +1,11 @@
+{
+  "id": "PT-C507-patinar",
+  "pathSegment": "PT-PATH-507-RODAS",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PT-EXT-507-RODAS",
+      "order": 1
+    }
+  ]
+}

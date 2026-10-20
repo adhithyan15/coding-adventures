@@ -1,0 +1,11 @@
+{
+  "id": "GE-C512-rodeln",
+  "pathSegment": "GE-PATH-512-WINTERSPORT",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GE-EXT-512-WINTERSPORT",
+      "order": 1
+    }
+  ]
+}

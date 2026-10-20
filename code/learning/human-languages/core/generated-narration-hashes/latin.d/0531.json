@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 531,
+  "sourceHash": "fnv1a64:845c042db2f7ddb8",
+  "lessonIds": [
+    "LA-C531-atriensis",
+    "LA-C531-ianitor",
+    "LA-C531-ostiarius",
+    "LA-C531-lecticarius",
+    "LA-C531-vilica"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch531.txt",
+  "json": "latin/narration/ch531.json",
+  "textHash": "fnv1a64:a06e51da5ee61ec5",
+  "jsonHash": "fnv1a64:60fd427bbe9fc7d6",
+  "findings": []
+}

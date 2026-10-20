@@ -1,0 +1,19 @@
+{
+  "chapter": 412,
+  "title": "The Inquiry",
+  "label": "ch:la-the-inquiry",
+  "canDo": "I can talk about a judicial inquiry and the man who runs it, questioning a witness, an informer and a defence.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "LA-R412-review-405-412",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 412: I can talk about a judicial inquiry and the man who runs it, questioning a witness, an informer and a defence.",
+    "assesses": [
+      "LA-LEX-C412-COGNITIO-03",
+      "LA-LEX-C412-COGNITIO-04",
+      "LA-LEX-C412-COGNITIO-05"
+    ]
+  }
+}

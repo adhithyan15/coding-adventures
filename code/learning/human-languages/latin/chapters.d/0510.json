@@ -1,0 +1,19 @@
+{
+  "chapter": 510,
+  "title": "Folly and madness",
+  "label": "ch:la-folly-and-madness",
+  "canDo": "I can describe foolish and crazy behaviour.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "LA-C510-deliro",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 510: I can describe foolish and crazy behaviour.",
+    "assesses": [
+      "LA-LEX-C510-INSA-03",
+      "LA-LEX-C510-INSA-04",
+      "LA-LEX-C510-INSA-05"
+    ]
+  }
+}

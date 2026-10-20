@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 265,
+  "sourceHash": "fnv1a64:9ee92273d7eab7d3",
+  "lessonIds": [
+    "GE-C265-inzwischen",
+    "GE-C265-mittlerweile",
+    "GE-C265-waehrenddessen",
+    "GE-C265-bisher",
+    "GE-C265-laengst"
+  ],
+  "tex": "german/book/chapters/ch265-inzwischen.tex"
+}

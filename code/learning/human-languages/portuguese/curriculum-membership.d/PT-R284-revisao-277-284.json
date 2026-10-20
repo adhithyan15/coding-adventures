@@ -1,0 +1,11 @@
+{
+  "id": "PT-R284-revisao-277-284",
+  "pathSegment": "PT-PATH-284-ESCANDALO",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "PT-EXT-284-ESCANDALO",
+      "order": 5
+    }
+  ]
+}

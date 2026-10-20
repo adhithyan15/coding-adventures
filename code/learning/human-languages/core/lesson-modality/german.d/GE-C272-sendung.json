@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C272-sendung",
+    "language": "german",
+    "chapter": 272,
+    "sequence": 15010,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:96c8297db021e754"
+  },
+  "findings": []
+}

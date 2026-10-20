@@ -1,0 +1,19 @@
+{
+  "chapter": 345,
+  "title": "Prós e contras",
+  "label": "ch:pt-pros-e-contras",
+  "canDo": "I can weigh up advantages and disadvantages, consider every aspect and take criticism.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "PT-C345-ponderar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 345: I can weigh up advantages and disadvantages, consider every aspect and take criticism.",
+    "assesses": [
+      "PT-LEX-C345-VANTAGEM-03",
+      "PT-LEX-C345-VANTAGEM-04",
+      "PT-LEX-C345-VANTAGEM-05"
+    ]
+  }
+}

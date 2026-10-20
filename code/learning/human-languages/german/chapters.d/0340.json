@@ -1,0 +1,19 @@
+{
+  "chapter": 340,
+  "title": "Kritik üben",
+  "label": "ch:ge-kritik-uben",
+  "canDo": "I can judge and assess something and voice criticism.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "GE-C340-kritik",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 340: I can judge and assess something and voice criticism.",
+    "assesses": [
+      "GE-LEX-C340-KRITIK-03",
+      "GE-LEX-C340-KRITIK-04",
+      "GE-LEX-C340-KRITIK-05"
+    ]
+  }
+}

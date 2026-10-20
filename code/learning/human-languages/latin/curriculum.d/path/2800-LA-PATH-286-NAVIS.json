@@ -1,0 +1,9 @@
+{
+  "id": "LA-PATH-286-NAVIS",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "LA-EXT-286-NAVIS"
+  ],
+  "after": []
+}

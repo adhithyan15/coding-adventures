@@ -1,0 +1,19 @@
+{
+  "chapter": 405,
+  "title": "Counting and Dictation",
+  "label": "ch:la-counting-and-dictation",
+  "canDo": "I can talk about a counting board and pebbles for counting, listing things one by one, dictating to pupils and a set task.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "LA-C405-pensum",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 405: I can talk about a counting board and pebbles for counting, listing things one by one, dictating to pupils and a set task.",
+    "assesses": [
+      "LA-LEX-C405-CALCULUS-03",
+      "LA-LEX-C405-CALCULUS-04",
+      "LA-LEX-C405-CALCULUS-05"
+    ]
+  }
+}

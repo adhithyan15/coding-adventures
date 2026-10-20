@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "latin",
+  "chapter": 494,
+  "title": "Hatred and disgust",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:3be5747248d8193d",
+  "lessons": [
+    {
+      "id": "LA-C494-odi",
+      "sequence": 26250,
+      "title": "ōdī, ōdisse — to hate",
+      "headword": "ōdī, ōdisse",
+      "romanization": "ōdī, ōdisse",
+      "gloss": "to hate",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0957fab6abc6b875",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for unworthy, then the Latin for to be indignant."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ōdī, ōdisse",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ōdī, ōdisse — \"to hate\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Fēlēs aquam ōdit. The cat hates water."
+            },
+            {
+              "kind": "speech",
+              "text": "Perfect in form, present in meaning: ōdī — I hate, ōderam — I hated, ōderō — I shall hate. Future participle ōsūrus."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ōdī is inherited, through Proto-Italic ōdai, from a Proto-Indo-European root meaning \"to hate\" (EtymDB). The noun odium \"hatred\", source of English odium and odious, is built on it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ōdī, ōdisse",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ōdī, ōdisse*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ōdī, ōdisse, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ōdī, ōdisse*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with ōdī, ōdisse",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *ōdī, ōdisse*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for unworthy, then the Latin for to be indignant, then say ōdī, ōdisse again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for unworthy, then the Latin for to be indignant, then say *ōdī, ōdisse* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ōdī, ōdisse mean? (\"To hate\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C494-odiosus",
+      "sequence": 26260,
+      "title": "odiōsus, odiōsa, odiōsum — hateful, tiresome",
+      "headword": "odiōsus, odiōsa, odiōsum",
+      "romanization": "odiōsus, odiōsa, odiōsum",
+      "gloss": "hateful, tiresome",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f86856951f6a22a3",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for to be indignant, then the Latin for to hate."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: odiōsus, odiōsa, odiōsum",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "odiōsus, odiōsa, odiōsum — \"hateful, tiresome\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Iter longum et odiōsum fuit. The journey was long and tiresome."
+            },
+            {
+              "kind": "speech",
+              "text": "Built on odium — hatred. In everyday Latin it often means no more than annoying. English odious."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "odiōsus is built on odium \"hatred\" with the ending -ōsus \"full of\" (Lewis & Short; EtymDB). English odious comes from it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "odiōsus, odiōsa, odiōsum",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *odiōsus, odiōsa, odiōsum*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "odiōsus, odiōsa, odiōsum, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *odiōsus, odiōsa, odiōsum*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with odiōsus, odiōsa, odiōsum",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *odiōsus, odiōsa, odiōsum*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for to be indignant, then the Latin for to hate, then say odiōsus, odiōsa, odiōsum again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for to be indignant, then the Latin for to hate, then say *odiōsus, odiōsa, odiōsum* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does odiōsus, odiōsa, odiōsum mean? (\"Hateful, tiresome\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C494-fastidio",
+      "sequence": 26270,
+      "title": "fastīdiō, fastīdīre — to turn up one's nose at, feel disgust at",
+      "headword": "fastīdiō, fastīdīre",
+      "romanization": "fastīdiō, fastīdīre",
+      "gloss": "to turn up one's nose at, feel disgust at",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0f275cdfad245394",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for to hate, then the Latin for hateful."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: fastīdiō, fastīdīre",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "fastīdiō, fastīdīre — \"to turn up one's nose at, feel disgust at\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Puer holera fastīdit. The boy turns up his nose at vegetables."
+            },
+            {
+              "kind": "speech",
+              "text": "fastīdiō, fastīdīre, fastīdīvī, fastīdītum, with the accusative."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "fastīdiō is built on fastīdium \"loathing\" (Lewis & Short; EtymDB)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "fastīdiō, fastīdīre",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *fastīdiō, fastīdīre*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "fastīdiō, fastīdīre, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *fastīdiō, fastīdīre*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with fastīdiō, fastīdīre",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *fastīdiō, fastīdīre*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for to hate, then the Latin for hateful, then say fastīdiō, fastīdīre again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for to hate, then the Latin for hateful, then say *fastīdiō, fastīdīre* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does fastīdiō, fastīdīre mean? (\"To turn up one's nose at, feel disgust at\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C494-fastidium",
+      "sequence": 26280,
+      "title": "fastīdium, fastīdiī — disgust, squeamishness; disdain",
+      "headword": "fastīdium, fastīdiī",
+      "romanization": "fastīdium, fastīdiī",
+      "gloss": "disgust, squeamishness; disdain",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4ea9bac96cc71a77",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for hateful, then the Latin for to turn up one's nose at."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: fastīdium, fastīdiī",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "fastīdium, fastīdiī — \"disgust, squeamishness; disdain\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Aeger cibum cum fastīdiō spectat. The sick man looks at the food with disgust."
+            },
+            {
+              "kind": "speech",
+              "text": "Neuter, second declension. Disgust of the stomach, and the scorn of a snob."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "fastīdium is a native Latin word; Lewis & Short compares fastus \"pride\", but the origin is not settled. English fastidious comes from fastīdiōsus, built on it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "fastīdium, fastīdiī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *fastīdium, fastīdiī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "fastīdium, fastīdiī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *fastīdium, fastīdiī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with fastīdium, fastīdiī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *fastīdium, fastīdiī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for hateful, then the Latin for to turn up one's nose at, then say fastīdium, fastīdiī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for hateful, then the Latin for to turn up one's nose at, then say *fastīdium, fastīdiī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does fastīdium, fastīdiī mean? (\"Disgust, squeamishness; disdain\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C494-taedet",
+      "sequence": 26290,
+      "title": "taedet, taedēre — it wearies, it disgusts",
+      "headword": "taedet, taedēre",
+      "romanization": "taedet, taedēre",
+      "gloss": "it wearies, it disgusts",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:72d308d1361f71a0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for to turn up one's nose at, then the Latin for disgust."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: taedet, taedēre",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "taedet, taedēre — \"it wearies, it disgusts\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Mē taedet longārum ōrātiōnum. I am weary of long speeches."
+            },
+            {
+              "kind": "speech",
+              "text": "Impersonal: taedet, taedēre, taeduit or taesum est. The person in the accusative, the thing in the genitive: mē taedet labōris — I am sick of the work. Taedium, already known, is built on it."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "taedet is a native Latin impersonal verb, and the noun taedium \"weariness\" is built on it (Lewis & Short); its deeper origin is not settled. English tedium and tedious come from taedium."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "taedet, taedēre",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *taedet, taedēre*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "taedet, taedēre, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *taedet, taedēre*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with taedet, taedēre",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *taedet, taedēre*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for to turn up one's nose at, then the Latin for disgust, then say taedet, taedēre again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for to turn up one's nose at, then the Latin for disgust, then say *taedet, taedēre* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does taedet, taedēre mean? (\"It wearies, it disgusts\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 520,
+  "title": "Estreias",
+  "label": "ch:pt-estreias",
+  "canDo": "I can talk about staging a play and opening night.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "PT-C520-estrear",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 520: I can talk about staging a play and opening night.",
+    "assesses": [
+      "PT-LEX-C520-TEATRO-03",
+      "PT-LEX-C520-TEATRO-04",
+      "PT-LEX-C520-TEATRO-05"
+    ]
+  }
+}

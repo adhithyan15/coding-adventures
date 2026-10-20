@@ -1,0 +1,9 @@
+{
+  "id": "PT-PATH-415-CARRUAGEM",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "PT-EXT-415-CARRUAGEM"
+  ],
+  "after": []
+}

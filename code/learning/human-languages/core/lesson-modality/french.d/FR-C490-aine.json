@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C490-aine",
+    "language": "french",
+    "chapter": 490,
+    "sequence": 26960,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7f1faf4d97322d1e"
+  },
+  "findings": []
+}

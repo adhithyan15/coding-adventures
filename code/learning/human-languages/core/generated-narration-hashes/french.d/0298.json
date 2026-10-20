@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 298,
+  "sourceHash": "fnv1a64:177308bc40a0172d",
+  "lessonIds": [
+    "FR-C298-renverser",
+    "FR-C298-blesse",
+    "FR-C298-choc",
+    "FR-C298-airbag",
+    "FR-C298-cabosser"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch298.txt",
+  "json": "french/narration/ch298.json",
+  "textHash": "fnv1a64:8df9065a4cfa4901",
+  "jsonHash": "fnv1a64:13837a439910f2fb",
+  "findings": []
+}

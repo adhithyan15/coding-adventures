@@ -1,0 +1,9 @@
+{
+  "id": "PT-PATH-429-QUARTO",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "PT-EXT-429-QUARTO"
+  ],
+  "after": []
+}

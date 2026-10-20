@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 401,
+  "sourceHash": "fnv1a64:6cb17937db742a03",
+  "lessonIds": [
+    "PT-C401-faixa",
+    "PT-C401-berma",
+    "PT-C401-separador",
+    "PT-C401-no",
+    "PT-C401-acelerar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch401.txt",
+  "json": "portuguese/narration/ch401.json",
+  "textHash": "fnv1a64:32e495c986323499",
+  "jsonHash": "fnv1a64:6b884c84701c94d5",
+  "findings": []
+}

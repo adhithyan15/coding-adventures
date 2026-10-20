@@ -1,0 +1,13 @@
+{
+  "language": "latin",
+  "chapter": 345,
+  "sourceHash": "fnv1a64:fe8c17f7e6f35d9e",
+  "lessonIds": [
+    "LA-C345-rex",
+    "LA-C345-regno",
+    "LA-C345-tyrannus",
+    "LA-C345-plebs",
+    "LA-C345-dictator"
+  ],
+  "tex": "latin/book/chapters/ch345-reges-et-dictatores.tex"
+}

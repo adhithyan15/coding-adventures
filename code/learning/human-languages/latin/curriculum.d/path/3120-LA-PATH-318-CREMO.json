@@ -1,0 +1,9 @@
+{
+  "id": "LA-PATH-318-CREMO",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "LA-EXT-318-CREMO"
+  ],
+  "after": []
+}

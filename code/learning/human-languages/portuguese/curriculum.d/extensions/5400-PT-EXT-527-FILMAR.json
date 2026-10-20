@@ -1,0 +1,8 @@
+{
+  "id": "PT-EXT-527-FILMAR",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can talk about directors, scripts and documentaries.",
+  "prerequisites": []
+}

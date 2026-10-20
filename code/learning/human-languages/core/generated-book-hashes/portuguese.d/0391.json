@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 391,
+  "sourceHash": "fnv1a64:f234f1e64a9266b1",
+  "lessonIds": [
+    "PT-C391-rendimento",
+    "PT-C391-orcamento",
+    "PT-C391-despesa",
+    "PT-C391-prestacao",
+    "PT-C391-poupanca"
+  ],
+  "tex": "portuguese/book/chapters/ch391-as-contas-da-casa.tex"
+}

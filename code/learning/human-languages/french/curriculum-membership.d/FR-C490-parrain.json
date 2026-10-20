@@ -1,0 +1,11 @@
+{
+  "id": "FR-C490-parrain",
+  "pathSegment": "FR-PATH-490-PARRAIN",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "FR-EXT-490-PARRAIN",
+      "order": 0
+    }
+  ]
+}

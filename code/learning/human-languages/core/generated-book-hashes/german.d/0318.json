@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 318,
+  "sourceHash": "fnv1a64:11d6c7455cf2e3cc",
+  "lessonIds": [
+    "GE-C318-krieg",
+    "GE-C318-frieden",
+    "GE-C318-schlacht",
+    "GE-C318-besiegen",
+    "GE-C318-niederlage"
+  ],
+  "tex": "german/book/chapters/ch318-krieg-und-frieden.tex"
+}

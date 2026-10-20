@@ -1,0 +1,19 @@
+{
+  "chapter": 352,
+  "title": "Pānis domesticus",
+  "label": "ch:la-panis-domesticus",
+  "canDo": "I can tell how bread was made: the millstone, the sieve, to knead, the yeast and the baking pot.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "LA-C352-clibanus",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 352: I can tell how bread was made: the millstone, the sieve, to knead, the yeast and the baking pot.",
+    "assesses": [
+      "LA-LEX-C352-SUBIGO-03",
+      "LA-LEX-C352-SUBIGO-04",
+      "LA-LEX-C352-SUBIGO-05"
+    ]
+  }
+}

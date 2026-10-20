@@ -1,0 +1,11 @@
+{
+  "id": "FR-C472-regretter",
+  "pathSegment": "FR-PATH-472-NOSTALGIE",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FR-EXT-472-NOSTALGIE",
+      "order": 1
+    }
+  ]
+}

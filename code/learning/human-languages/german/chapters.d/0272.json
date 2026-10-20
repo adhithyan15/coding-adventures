@@ -1,0 +1,19 @@
+{
+  "chapter": 272,
+  "title": "Im Radio",
+  "label": "ch:ge-im-radio",
+  "canDo": "I can talk about where the news comes from: a broadcast, radio, the press, a journalist and the front page.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "GE-C272-titelseite",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 272: I can talk about where the news comes from: a broadcast, radio, the press, a journalist and the front page.",
+    "assesses": [
+      "GE-LEX-C272-SENDUNG-03",
+      "GE-LEX-C272-SENDUNG-04",
+      "GE-LEX-C272-SENDUNG-05"
+    ]
+  }
+}

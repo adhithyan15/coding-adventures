@@ -1,0 +1,9 @@
+{
+  "id": "LA-PATH-502-IOCU",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "LA-EXT-502-IOCU"
+  ],
+  "after": []
+}

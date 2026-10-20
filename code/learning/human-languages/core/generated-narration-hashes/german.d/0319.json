@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 319,
+  "sourceHash": "fnv1a64:4566b3b8bd57402b",
+  "lessonIds": [
+    "GE-C319-kaiser",
+    "GE-C319-herrschen",
+    "GE-C319-regieren",
+    "GE-C319-erobern",
+    "GE-C319-sieg"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch319.txt",
+  "json": "german/narration/ch319.json",
+  "textHash": "fnv1a64:b11a4d26b4cf5834",
+  "jsonHash": "fnv1a64:c6f06ee1ee9b6c42",
+  "findings": []
+}

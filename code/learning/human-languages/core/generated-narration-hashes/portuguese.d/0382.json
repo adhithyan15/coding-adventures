@@ -1,0 +1,20 @@
+{
+  "language": "portuguese",
+  "chapter": 382,
+  "sourceHash": "fnv1a64:6b489da1799ab1a4",
+  "lessonIds": [
+    "PT-C382-proibido",
+    "PT-C382-tolerar",
+    "PT-C382-autorizar",
+    "PT-C382-violar",
+    "PT-C382-violacao",
+    "PT-R382-revisao-375-382"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "portuguese/narration/ch382.txt",
+  "json": "portuguese/narration/ch382.json",
+  "textHash": "fnv1a64:e1e4a3dc452cdfc1",
+  "jsonHash": "fnv1a64:e38010b376ed5622",
+  "findings": []
+}

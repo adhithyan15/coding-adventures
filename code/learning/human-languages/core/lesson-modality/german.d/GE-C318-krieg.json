@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C318-krieg",
+    "language": "german",
+    "chapter": 318,
+    "sequence": 17370,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a56fd7fdaa7eb932"
+  },
+  "findings": []
+}

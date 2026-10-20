@@ -1,0 +1,19 @@
+{
+  "chapter": 488,
+  "title": "Ficar bom",
+  "label": "ch:pt-ficar-bom",
+  "canDo": "I can talk about getting better after an illness.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "PT-C488-recuperacao",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 488: I can talk about getting better after an illness.",
+    "assesses": [
+      "PT-LEX-C488-CURA-03",
+      "PT-LEX-C488-CURA-04",
+      "PT-LEX-C488-CURA-05"
+    ]
+  }
+}

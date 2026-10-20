@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 409,
+  "sourceHash": "fnv1a64:e0bf78395f09a27f",
+  "lessonIds": [
+    "PT-C409-engarrafamento",
+    "PT-C409-abrandar",
+    "PT-C409-colisao",
+    "PT-C409-embater",
+    "PT-C409-desvio"
+  ],
+  "tex": "portuguese/book/chapters/ch409-acidentes-e-filas.tex"
+}

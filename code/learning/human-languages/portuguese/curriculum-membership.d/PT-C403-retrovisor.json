@@ -1,0 +1,11 @@
+{
+  "id": "PT-C403-retrovisor",
+  "pathSegment": "PT-PATH-403-VIDROS",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PT-EXT-403-VIDROS",
+      "order": 1
+    }
+  ]
+}

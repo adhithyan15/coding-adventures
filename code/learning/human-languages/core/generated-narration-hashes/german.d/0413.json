@@ -1,0 +1,20 @@
+{
+  "language": "german",
+  "chapter": 413,
+  "sourceHash": "fnv1a64:adfac84b53c21bcc",
+  "lessonIds": [
+    "GE-C413-schlafwagen",
+    "GE-C413-speisewagen",
+    "GE-C413-endstation",
+    "GE-C413-reservieren",
+    "GE-C413-weiterfahren",
+    "GE-R413-review-406-413"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "german/narration/ch413.txt",
+  "json": "german/narration/ch413.json",
+  "textHash": "fnv1a64:e58cb3216b3101bb",
+  "jsonHash": "fnv1a64:f5eb5b1190d895a2",
+  "findings": []
+}

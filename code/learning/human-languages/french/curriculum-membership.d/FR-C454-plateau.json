@@ -1,0 +1,11 @@
+{
+  "id": "FR-C454-plateau",
+  "pathSegment": "FR-PATH-454-RELIEF",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FR-EXT-454-RELIEF",
+      "order": 1
+    }
+  ]
+}

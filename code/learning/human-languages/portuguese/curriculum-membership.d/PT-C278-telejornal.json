@@ -1,0 +1,11 @@
+{
+  "id": "PT-C278-telejornal",
+  "pathSegment": "PT-PATH-278-NOTICIARIO",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PT-EXT-278-NOTICIARIO",
+      "order": 1
+    }
+  ]
+}

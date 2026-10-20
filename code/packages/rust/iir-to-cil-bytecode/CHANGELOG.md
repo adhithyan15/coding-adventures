@@ -1,5 +1,41 @@
 # Changelog — iir-to-cil-bytecode
 
+## [0.47.0] — 2026-10-19 (LANG83 PR1b — floor division, `trap`, `write_i64` on the textual path)
+
+- **`i64_div_floor` / `i64_mod_floor`** on `emit_il` ([LANG83](../../../specs/LANG83-iir-standard-operation-registry.md)):
+  CIL `div`/`rem` would throw `DivideByZeroException` / `OverflowException`, so
+  both edges are branched around first (`ldc.i8 0; bne.un`, then `-1` and
+  (div) `MIN` compares, to per-function `'__lang83_<n>'` labels — the prefix
+  grows a leading `_` until no name the function mentions starts with it, so
+  a user label or branch target spelled `__lang83_1` cannot collide with an
+  internal label; security review note). Div traps
+  `Trap.Overflow` on `MIN / -1`; mod stores 0 for any `b == -1`. Floor fix-up
+  with no scratch locals: `adj = ((a rem b) ^ b < 0) & ((a rem b) != 0)`,
+  `div − conv.i8(adj)` / `rem + conv.i8(adj)·b`. The dest must be `int64`.
+- **`trap "<kind>"`** → `Console.Out.Flush()`, then
+  `throw new System.Exception("<kind>")` (CoreCLR reports
+  `Unhandled exception. System.Exception: <kind>` and exits non-zero).
+- **`write_i64`** → `Console.Write(int64)`, the same writer as every other
+  output builtin.
+- The binary `lower_iir_to_cil` path (32-bit `clr-simulator`) does not lower
+  these ops and refuses them with a typed `UnsupportedOp`; `op_support`
+  describes the textual path, which is now `Lowered` for all four.
+- Tests (`tests/lang83_pr1b.rs`): line-by-line IL for both floor ops (guards
+  before `div`/`rem`, trap sequences, every branch label defined once), trap,
+  `write_i64`, unregistered kind refused, binary path refuses. Not executed
+  locally (no `dotnet`); CI's CLR column runs it on CoreCLR.
+
+## [0.46.0] — 2026-10-19 (LANG83 PR1a — standard operation support)
+
+- **LANG83 op support.** New `op_support` module exporting `OP_SUPPORT` and
+  `op_support(name) -> OpSupport`: this backend's declaration for every entry of
+  `interpreter_ir::op_registry::STANDARD_OPS` ([LANG83](../../../specs/LANG83-iir-standard-operation-registry.md)). The table describes the textual `emit_il` path (real CoreCLR, the matrix's CLR column), where every existing registered op is `Lowered`; the binary simulator path is narrower and documented as such. The four PR1b ops
+  (`write_i64`, `i64_div_floor`, `i64_mod_floor`, `trap`) are
+  `Refused("not yet lowered; LANG83 PR1b")`. `lang-aot`'s `check_module_for`
+  uses the table to refuse an unsupported op at compile time.
+- Tests: every registry entry is declared exactly once; the PR1b ops are
+  refused; the Builtin rows agree with `validate::CALL_BUILTIN_SUPPORTED_NAMES`.
+
 ## Unreleased — strict encoded string input (CLR15)
 
 Extend only `lower_typed_scalars_to_cil` with `str` transport through locals,

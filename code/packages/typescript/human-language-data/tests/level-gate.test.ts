@@ -333,6 +333,18 @@ describe("the gate that would have caught the A2 claim", () => {
     // Italian followed as the second, with chapters 263-272 (the B1 core: the
     // imperfetto, reasons, travel, experience and the condizionale, realizing all
     // five B1 nodes) and chapters 273-536 (1,320 headwords, 389 verbs).
+    // Portuguese followed as the third, with chapters 259-268 (the B1 core: the
+    // imperfeito, reasons, travel, experience and the condicional, realizing all
+    // five B1 nodes) and chapters 269-532 (1,320 headwords, 363 verbs).
+    // French followed as the fourth, with chapters 258-267 (the B1 core: the
+    // imparfait, reasons, travel, experience and the conditionnel, realizing all
+    // five B1 nodes) and chapters 268-531 (1,320 headwords, 388 verbs).
+    // German followed as the fifth, with chapters 252-261 (the B1 core: the
+    // Präteritum, reasons, travel, experience and the Konjunktiv II, realizing
+    // all five B1 nodes) and chapters 262-533 (1,360 headwords, 485 verbs).
+    // Latin followed as the sixth, with chapters 281-290 (the B1 core: both
+    // pasts, reasons, travel, experience and the subjunctive, realizing all
+    // five B1 nodes) and chapters 291-554 (1,320 headwords, 403 verbs).
     for (const level of Object.values(HELD)) {
       expectedByLevel.set(level, (expectedByLevel.get(level) ?? 0) + 1);
     }

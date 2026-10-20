@@ -1,0 +1,19 @@
+{
+  "chapter": 419,
+  "title": "No navio",
+  "label": "ch:pt-no-navio",
+  "canDo": "I can talk about a voyage: the cruise, the cabin, the sailor, the bow and the stern.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "PT-C419-popa",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 419: I can talk about a voyage: the cruise, the cabin, the sailor, the bow and the stern.",
+    "assesses": [
+      "PT-LEX-C419-NAVIO-03",
+      "PT-LEX-C419-NAVIO-04",
+      "PT-LEX-C419-NAVIO-05"
+    ]
+  }
+}

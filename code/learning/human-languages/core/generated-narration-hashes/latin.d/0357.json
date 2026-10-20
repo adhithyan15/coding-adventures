@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 357,
+  "sourceHash": "fnv1a64:173f7da59032801c",
+  "lessonIds": [
+    "LA-C357-arbitror",
+    "LA-C357-existimo",
+    "LA-C357-censeo",
+    "LA-C357-opinor",
+    "LA-C357-opinio"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch357.txt",
+  "json": "latin/narration/ch357.json",
+  "textHash": "fnv1a64:42b60477643d068a",
+  "jsonHash": "fnv1a64:f5d671b107508403",
+  "findings": []
+}

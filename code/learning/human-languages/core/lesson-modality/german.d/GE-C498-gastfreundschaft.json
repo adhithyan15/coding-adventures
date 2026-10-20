@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C498-gastfreundschaft",
+    "language": "german",
+    "chapter": 498,
+    "sequence": 26680,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:599d7d261410ce30"
+  },
+  "findings": []
+}

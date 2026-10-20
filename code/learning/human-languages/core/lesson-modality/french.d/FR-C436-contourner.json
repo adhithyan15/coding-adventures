@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C436-contourner",
+    "language": "french",
+    "chapter": 436,
+    "sequence": 24170,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:22a75dd2c9a4364a"
+  },
+  "findings": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "latin",
+  "chapter": 543,
+  "sourceHash": "fnv1a64:826fe8eac85b5cc6",
+  "lessonIds": [
+    "LA-C543-cantus",
+    "LA-C543-cantio",
+    "LA-C543-cantilena",
+    "LA-C543-concino",
+    "LA-C543-canorus"
+  ],
+  "tex": "latin/book/chapters/ch543-song.tex"
+}

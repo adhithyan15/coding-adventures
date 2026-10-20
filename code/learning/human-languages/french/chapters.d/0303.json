@@ -1,0 +1,19 @@
+{
+  "chapter": 303,
+  "title": "Quand la terre tremble",
+  "label": "ch:fr-quand-la-terre-tremble",
+  "canDo": "I can talk about natural disasters: an earthquake, an avalanche, a rockfall, things caving in and the rubble.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "FR-C303-decombres",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 303: I can talk about natural disasters: an earthquake, an avalanche, a rockfall, things caving in and the rubble.",
+    "assesses": [
+      "FR-LEX-C303-SEISME-03",
+      "FR-LEX-C303-SEISME-04",
+      "FR-LEX-C303-SEISME-05"
+    ]
+  }
+}

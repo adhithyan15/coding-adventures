@@ -1,0 +1,11 @@
+{
+  "id": "PT-C424-turbulencia",
+  "pathSegment": "PT-PATH-424-VOO",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PT-EXT-424-VOO",
+      "order": 2
+    }
+  ]
+}

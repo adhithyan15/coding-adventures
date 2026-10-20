@@ -1,0 +1,8 @@
+{
+  "id": "PT-EXT-433-BARULHO",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can complain about noise and dirt: a racket, creaking, a cockroach, mould and dirt.",
+  "prerequisites": []
+}

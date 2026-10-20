@@ -1,0 +1,8 @@
+{
+  "id": "FR-EXT-371-ANNULER",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can change a plan: cancel it, put it off, say it is temporary or final, and schedule something new.",
+  "prerequisites": []
+}

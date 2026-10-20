@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C316-eripio",
+    "language": "latin",
+    "chapter": 316,
+    "sequence": 17080,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:67bd5abfad3a500c"
+  },
+  "findings": []
+}

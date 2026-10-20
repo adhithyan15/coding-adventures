@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C439-clocher",
+    "language": "french",
+    "chapter": 439,
+    "sequence": 24310,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ceab5b2c6fc47758"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "FR-C330-cocotte",
+  "pathSegment": "FR-PATH-330-MIJOTER",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-330-MIJOTER",
+      "order": 4
+    }
+  ]
+}

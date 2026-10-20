@@ -1,0 +1,19 @@
+{
+  "chapter": 395,
+  "title": "Ganhos e perdas",
+  "label": "ch:pt-ganhos-e-perdas",
+  "canDo": "I can talk about earning, profit and loss, going bankrupt and being in debt.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "PT-C395-endividado",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 395: I can talk about earning, profit and loss, going bankrupt and being in debt.",
+    "assesses": [
+      "PT-LEX-C395-LUCRO-03",
+      "PT-LEX-C395-LUCRO-04",
+      "PT-LEX-C395-LUCRO-05"
+    ]
+  }
+}

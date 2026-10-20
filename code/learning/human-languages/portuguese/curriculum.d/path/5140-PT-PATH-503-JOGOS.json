@@ -1,0 +1,9 @@
+{
+  "id": "PT-PATH-503-JOGOS",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "PT-EXT-503-JOGOS"
+  ],
+  "after": []
+}

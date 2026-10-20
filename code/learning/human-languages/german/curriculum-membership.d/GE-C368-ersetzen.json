@@ -1,0 +1,11 @@
+{
+  "id": "GE-C368-ersetzen",
+  "pathSegment": "GE-PATH-368-STATTDESSEN",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-368-STATTDESSEN",
+      "order": 4
+    }
+  ]
+}

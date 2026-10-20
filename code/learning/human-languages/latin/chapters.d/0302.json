@@ -1,0 +1,19 @@
+{
+  "chapter": 302,
+  "title": "Speculātōrēs",
+  "label": "ch:la-speculatores",
+  "canDo": "I can tell how secrets came out: a spy, a scout, to search out, to betray and to disclose.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "LA-C302-patefacio",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 302: I can tell how secrets came out: a spy, a scout, to search out, to betray and to disclose.",
+    "assesses": [
+      "LA-LEX-C302-SPECULATOR-03",
+      "LA-LEX-C302-SPECULATOR-04",
+      "LA-LEX-C302-SPECULATOR-05"
+    ]
+  }
+}

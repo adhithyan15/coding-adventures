@@ -1,0 +1,19 @@
+{
+  "chapter": 469,
+  "title": "Teimosos e sovinas",
+  "label": "ch:pt-teimosos-e-sovinas",
+  "canDo": "I can describe stubborn and stingy people.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "PT-C469-sovina",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 469: I can describe stubborn and stingy people.",
+    "assesses": [
+      "PT-LEX-C469-TEIMOSIA-03",
+      "PT-LEX-C469-TEIMOSIA-04",
+      "PT-LEX-C469-TEIMOSIA-05"
+    ]
+  }
+}

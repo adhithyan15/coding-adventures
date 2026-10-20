@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C271-schlagzeile",
+    "language": "german",
+    "chapter": 271,
+    "sequence": 14990,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:601955183be4cf98"
+  },
+  "findings": []
+}

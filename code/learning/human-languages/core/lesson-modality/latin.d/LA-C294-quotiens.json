@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C294-quotiens",
+    "language": "latin",
+    "chapter": 294,
+    "sequence": 15990,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2c73d724d9c8ec27"
+  },
+  "findings": []
+}

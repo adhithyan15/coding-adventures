@@ -1,0 +1,19 @@
+{
+  "chapter": 417,
+  "title": "No porto",
+  "label": "ch:pt-no-porto",
+  "canDo": "I can get around a harbour: the breakwater, the pontoon, boarding, going ashore and setting sail.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "PT-C417-zarpar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 417: I can get around a harbour: the breakwater, the pontoon, boarding, going ashore and setting sail.",
+    "assesses": [
+      "PT-LEX-C417-PORTO-03",
+      "PT-LEX-C417-PORTO-04",
+      "PT-LEX-C417-PORTO-05"
+    ]
+  }
+}

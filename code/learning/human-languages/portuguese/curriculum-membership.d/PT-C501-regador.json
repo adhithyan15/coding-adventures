@@ -1,0 +1,11 @@
+{
+  "id": "PT-C501-regador",
+  "pathSegment": "PT-PATH-501-JARDIM",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-501-JARDIM",
+      "order": 3
+    }
+  ]
+}

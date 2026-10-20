@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 357,
+  "sourceHash": "fnv1a64:55e6d1ba13eff6c7",
+  "lessonIds": [
+    "PT-C357-estagio",
+    "PT-C357-estagiario",
+    "PT-C357-aprendiz",
+    "PT-C357-empregar",
+    "PT-C357-entidade-patronal"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch357.txt",
+  "json": "portuguese/narration/ch357.json",
+  "textHash": "fnv1a64:536be146e47dfa68",
+  "jsonHash": "fnv1a64:2e74bafddfca196d",
+  "findings": []
+}

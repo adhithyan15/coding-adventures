@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 280,
+  "sourceHash": "fnv1a64:d166b592d15ca609",
+  "lessonIds": [
+    "PT-C280-imprimir",
+    "PT-C280-publicacao",
+    "PT-C280-divulgar",
+    "PT-C280-edicao",
+    "PT-C280-artigo"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch280.txt",
+  "json": "portuguese/narration/ch280.json",
+  "textHash": "fnv1a64:57f401740e6ce0cc",
+  "jsonHash": "fnv1a64:642a6f1ea3c1b125",
+  "findings": []
+}

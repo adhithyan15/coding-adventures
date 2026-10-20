@@ -1,0 +1,11 @@
+{
+  "id": "GE-C368-anstatt",
+  "pathSegment": "GE-PATH-368-STATTDESSEN",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GE-EXT-368-STATTDESSEN",
+      "order": 1
+    }
+  ]
+}

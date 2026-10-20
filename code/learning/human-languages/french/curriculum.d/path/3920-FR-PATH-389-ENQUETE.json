@@ -1,0 +1,9 @@
+{
+  "id": "FR-PATH-389-ENQUETE",
+  "spine_node": "SPINE-EXPRESS-CONDITION",
+  "before": [],
+  "inline": [
+    "FR-EXT-389-ENQUETE"
+  ],
+  "after": []
+}

@@ -1,0 +1,21 @@
+{
+  "language": "latin",
+  "chapter": 356,
+  "sourceHash": "fnv1a64:668e5155457290d0",
+  "lessonIds": [
+    "LA-C356-appono",
+    "LA-C356-ministro",
+    "LA-C356-triclinium",
+    "LA-C356-discumbo",
+    "LA-C356-ferculum",
+    "LA-R356-review-355-356",
+    "LA-R356-review-final-356"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "latin/narration/ch356.txt",
+  "json": "latin/narration/ch356.json",
+  "textHash": "fnv1a64:adcab9bff32e2a3d",
+  "jsonHash": "fnv1a64:42bdb870d5be50ce",
+  "findings": []
+}

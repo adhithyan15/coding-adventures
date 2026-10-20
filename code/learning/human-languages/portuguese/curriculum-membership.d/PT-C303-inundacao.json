@@ -1,0 +1,11 @@
+{
+  "id": "PT-C303-inundacao",
+  "pathSegment": "PT-PATH-303-CHEIA",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "PT-EXT-303-CHEIA",
+      "order": 0
+    }
+  ]
+}

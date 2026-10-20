@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C446-cordonnier",
+    "language": "french",
+    "chapter": 446,
+    "sequence": 24650,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:fd0fead992be28f5"
+  },
+  "findings": []
+}

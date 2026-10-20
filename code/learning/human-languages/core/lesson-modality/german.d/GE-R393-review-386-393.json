@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-R393-review-386-393",
+    "language": "german",
+    "chapter": 393,
+    "sequence": 21270,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0a182f61164f4528"
+  },
+  "findings": []
+}

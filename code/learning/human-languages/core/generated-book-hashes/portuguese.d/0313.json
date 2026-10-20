@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 313,
+  "sourceHash": "fnv1a64:a6705e124e766380",
+  "lessonIds": [
+    "PT-C313-lua-de-mel",
+    "PT-C313-bodas",
+    "PT-C313-divorcio",
+    "PT-C313-separacao",
+    "PT-C313-mudanca"
+  ],
+  "tex": "portuguese/book/chapters/ch313-casamentos-e-separacoes.tex"
+}

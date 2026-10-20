@@ -1,0 +1,11 @@
+{
+  "id": "PT-C296-preso",
+  "pathSegment": "PT-PATH-296-ALGEMAS",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-296-ALGEMAS",
+      "order": 3
+    }
+  ]
+}

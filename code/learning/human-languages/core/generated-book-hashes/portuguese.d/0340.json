@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 340,
+  "sourceHash": "fnv1a64:61a01e2acc342d1e",
+  "lessonIds": [
+    "PT-C340-duvidar",
+    "PT-C340-cetico",
+    "PT-C340-negar",
+    "PT-C340-absurdo",
+    "PT-C340-discutivel"
+  ],
+  "tex": "portuguese/book/chapters/ch340-tenho-as-minhas-duvidas.tex"
+}

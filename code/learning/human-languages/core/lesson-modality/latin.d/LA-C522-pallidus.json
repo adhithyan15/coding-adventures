@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C522-pallidus",
+    "language": "latin",
+    "chapter": 522,
+    "sequence": 27700,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:226b78ed11d86122"
+  },
+  "findings": []
+}

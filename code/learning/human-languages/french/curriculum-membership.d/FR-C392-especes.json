@@ -1,0 +1,11 @@
+{
+  "id": "FR-C392-especes",
+  "pathSegment": "FR-PATH-392-BANQUE",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "FR-EXT-392-BANQUE",
+      "order": 0
+    }
+  ]
+}

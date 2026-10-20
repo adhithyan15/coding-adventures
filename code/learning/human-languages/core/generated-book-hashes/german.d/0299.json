@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 299,
+  "sourceHash": "fnv1a64:367f25418da86d3c",
+  "lessonIds": [
+    "GE-C299-ehe",
+    "GE-C299-ehemann",
+    "GE-C299-ehefrau",
+    "GE-C299-trauung",
+    "GE-C299-standesamt"
+  ],
+  "tex": "german/book/chapters/ch299-die-ehe.tex"
+}

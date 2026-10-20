@@ -1,0 +1,11 @@
+{
+  "id": "PT-C477-gargalhada",
+  "pathSegment": "PT-PATH-477-CHORO",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PT-EXT-477-CHORO",
+      "order": 4
+    }
+  ]
+}

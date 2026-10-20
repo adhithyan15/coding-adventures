@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 304,
+  "sourceHash": "fnv1a64:ef8849fdd9b638ce",
+  "lessonIds": [
+    "PT-C304-catastrofe",
+    "PT-C304-desastre",
+    "PT-C304-tragedia",
+    "PT-C304-deslizamento",
+    "PT-C304-soterrar"
+  ],
+  "tex": "portuguese/book/chapters/ch304-catastrofes.tex"
+}

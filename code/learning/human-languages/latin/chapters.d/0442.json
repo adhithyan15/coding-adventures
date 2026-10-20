@@ -1,0 +1,19 @@
+{
+  "chapter": 442,
+  "title": "Open sea, High sea, Level sea, Of the sea, Coastal",
+  "label": "ch:la-open-sea-high-sea-level-sea-of-the-sea-coastal",
+  "canDo": "I can talk about the open sea and the coast: the open sea, the high sea, the level sea, things of the sea, and coastal places.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "LA-C442-maritimus",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 442: I can talk about the open sea and the coast: the open sea, the high sea, the level sea, things of the sea, and coastal places.",
+    "assesses": [
+      "LA-LEX-C442-SALUM-03",
+      "LA-LEX-C442-SALUM-04",
+      "LA-LEX-C442-SALUM-05"
+    ]
+  }
+}

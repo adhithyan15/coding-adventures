@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 517,
+  "sourceHash": "fnv1a64:58a0e45c0a463ab3",
+  "lessonIds": [
+    "PT-C517-flauta",
+    "PT-C517-trompete",
+    "PT-C517-saxofone",
+    "PT-C517-acordeao",
+    "PT-C517-afinar"
+  ],
+  "tex": "portuguese/book/chapters/ch517-flautas-e-trompetes.tex"
+}

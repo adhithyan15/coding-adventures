@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C468-naif",
+    "language": "french",
+    "chapter": 468,
+    "sequence": 25820,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:386bb4ef1cd0b18c"
+  },
+  "findings": []
+}

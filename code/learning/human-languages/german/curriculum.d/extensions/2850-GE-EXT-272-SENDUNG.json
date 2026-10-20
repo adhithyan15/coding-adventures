@@ -1,0 +1,8 @@
+{
+  "id": "GE-EXT-272-SENDUNG",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can talk about where the news comes from: a broadcast, radio, the press, a journalist and the front page.",
+  "prerequisites": []
+}

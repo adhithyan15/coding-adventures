@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 323,
+  "sourceHash": "fnv1a64:6136fd8d509014b2",
+  "lessonIds": [
+    "PT-C323-consoada",
+    "PT-C323-presepio",
+    "PT-C323-passagem-de-ano",
+    "PT-C323-folar",
+    "PT-C323-amendoas"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch323.txt",
+  "json": "portuguese/narration/ch323.json",
+  "textHash": "fnv1a64:debfc1175178b976",
+  "jsonHash": "fnv1a64:65c46c521751ee0d",
+  "findings": []
+}

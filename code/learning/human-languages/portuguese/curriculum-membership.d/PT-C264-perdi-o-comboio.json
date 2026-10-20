@@ -1,0 +1,11 @@
+{
+  "id": "PT-C264-perdi-o-comboio",
+  "pathSegment": "PT-PATH-264-BILHETE",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PT-EXT-264-BILHETE",
+      "order": 1
+    }
+  ]
+}

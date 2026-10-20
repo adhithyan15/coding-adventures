@@ -1,0 +1,19 @@
+{
+  "chapter": 334,
+  "title": "Zustimmen und zugeben",
+  "label": "ch:ge-zustimmen-und-zugeben",
+  "canDo": "I can agree with someone, say I am happy with a plan, admit a mistake and concede a point.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "GE-C334-einraeumen",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 334: I can agree with someone, say I am happy with a plan, admit a mistake and concede a point.",
+    "assesses": [
+      "GE-LEX-C334-ZUSTIMMEN-03",
+      "GE-LEX-C334-ZUSTIMMEN-04",
+      "GE-LEX-C334-ZUSTIMMEN-05"
+    ]
+  }
+}

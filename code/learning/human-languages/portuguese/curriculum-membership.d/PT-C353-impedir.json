@@ -1,0 +1,11 @@
+{
+  "id": "PT-C353-impedir",
+  "pathSegment": "PT-PATH-353-OBSTACULO",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PT-EXT-353-OBSTACULO",
+      "order": 2
+    }
+  ]
+}

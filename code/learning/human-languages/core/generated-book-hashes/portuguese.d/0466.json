@@ -1,0 +1,15 @@
+{
+  "language": "portuguese",
+  "chapter": 466,
+  "sourceHash": "fnv1a64:e35f8efa26648454",
+  "lessonIds": [
+    "PT-C466-chuviscar",
+    "PT-C466-desanuviar",
+    "PT-C466-poca",
+    "PT-C466-encharcado",
+    "PT-C466-gabardina",
+    "PT-R466-revisao-465-466",
+    "PT-R466-revisao-final-466"
+  ],
+  "tex": "portuguese/book/chapters/ch466-depois-da-chuva.tex"
+}

@@ -1,0 +1,11 @@
+{
+  "id": "FR-C282-faits-divers",
+  "pathSegment": "FR-PATH-282-TITRES",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-282-TITRES",
+      "order": 4
+    }
+  ]
+}

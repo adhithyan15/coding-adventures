@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 417,
+  "sourceHash": "fnv1a64:eda0e839a6bb4c6b",
+  "lessonIds": [
+    "PT-C417-molhe",
+    "PT-C417-pontao",
+    "PT-C417-embarcar",
+    "PT-C417-desembarcar",
+    "PT-C417-zarpar"
+  ],
+  "tex": "portuguese/book/chapters/ch417-no-porto.tex"
+}

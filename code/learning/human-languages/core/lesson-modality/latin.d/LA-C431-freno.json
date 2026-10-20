@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C431-freno",
+    "language": "latin",
+    "chapter": 431,
+    "sequence": 23040,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2ac40625da20331f"
+  },
+  "findings": []
+}

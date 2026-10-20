@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 349,
+  "sourceHash": "fnv1a64:bf541cf39eeafd8c",
+  "lessonIds": [
+    "PT-C349-visto-que",
+    "PT-C349-dado-que",
+    "PT-C349-uma-vez-que",
+    "PT-C349-consequentemente",
+    "PT-C349-devido-a"
+  ],
+  "tex": "portuguese/book/chapters/ch349-visto-que-e-dado-que.tex"
+}

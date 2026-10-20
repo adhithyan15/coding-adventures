@@ -1,0 +1,8 @@
+{
+  "id": "PT-EXT-310-BATIZADO",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can talk about a christening, godparents, and the first months of a baby’s life.",
+  "prerequisites": []
+}

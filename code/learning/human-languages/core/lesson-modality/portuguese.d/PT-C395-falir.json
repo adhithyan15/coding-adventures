@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PT-C395-falir",
+    "language": "portuguese",
+    "chapter": 395,
+    "sequence": 22300,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b0c7663ee28beb81"
+  },
+  "findings": []
+}

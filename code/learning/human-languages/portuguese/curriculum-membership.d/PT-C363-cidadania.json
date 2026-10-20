@@ -1,0 +1,11 @@
+{
+  "id": "PT-C363-cidadania",
+  "pathSegment": "PT-PATH-363-CIDADAO",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PT-EXT-363-CIDADAO",
+      "order": 1
+    }
+  ]
+}

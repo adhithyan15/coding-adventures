@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.3.0 — slots no longer collide with Qt Quick's `Item`
+
+- **Breaking: `Column`'s `key` and `width` slots are `column-key` and
+  `column-width`, and `Cell`'s `height` is `row-height`.** A slot becomes a QML
+  property, and `width` and `height` are FINAL on Qt Quick's `Item`, so
+  `Column.qml` and `Cell.qml` failed to load at all ("Cannot override FINAL
+  property") — and with them every Grid and Sheet on Qt. `key` is a special
+  prop React never passes to a component. RowHeaderGrid passes `row-height`;
+  `mosaic-pkg-sheet` and VisiCalc now depend on 0.3.0. Verified with
+  `qmltestrunner`: both load, and `columnWidth` binds.
+
 ## 2026-09-24
 
 - **A light theme.** `Grid.light.msl`, `Cell.light.msl` and `RowHeaderGrid.light.msl` carry the dark theme's parts and states, one for one, in the light palette of VisiCalc's own `Grid.light.msl`. The package shipped only a dark theme, so every light-themed consumer embedded a VS Code-dark grid: Trestle's Sheet view, and VisiCalc's light build around its `RowHeaderGrid`.

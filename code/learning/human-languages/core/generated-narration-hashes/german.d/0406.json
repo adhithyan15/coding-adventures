@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 406,
+  "sourceHash": "fnv1a64:5d961ef2b0317b14",
+  "lessonIds": [
+    "GE-C406-einparken",
+    "GE-C406-ausparken",
+    "GE-C406-parkluecke",
+    "GE-C406-parkhaus",
+    "GE-C406-parkschein"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch406.txt",
+  "json": "german/narration/ch406.json",
+  "textHash": "fnv1a64:efe2476140c6d0b3",
+  "jsonHash": "fnv1a64:79c759e3620d6b76",
+  "findings": []
+}
