@@ -380,6 +380,14 @@ applier, and the supervisor holds the broker child it ends. `broker-e2e`'s
 supervised tests run the confined broker end to end on Windows. A change to
 any of the three must run those tests natively.
 
+It MUST also include `typescript/ir-to-jvm-class-file`. Its secure class-file
+writer has a Windows-only walk (path checks, reparse-point rejection, temp file
+plus replace) because Windows Python cannot open a directory or use `dir_fd`.
+A TypeScript change sets no Windows toolchain flag, and main builds only on
+Linux, so without the gate that walk runs natively only when some unrelated
+gated package happens to share the PR. That is how its original breakage sat
+latent from #829 until #17722.
+
 ### Closure compiler native Windows acceptance
 
 The Windows general package-test step is conditional on

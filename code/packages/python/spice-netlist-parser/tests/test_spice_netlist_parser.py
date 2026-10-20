@@ -199,6 +199,7 @@ def test_runs_shared_berkeley_v1_core_corpus() -> None:
         "op",
         "op",
         "op",
+        "op",
         "ac",
         "ac",
         "ac",
@@ -234,6 +235,15 @@ def test_runs_shared_berkeley_v1_core_corpus() -> None:
 
     for case in corpus["cases"]:
         results = parse_netlist(case["deck"]).run_analysis_plan()
+        if case["sample"] == "temperature-op-node":
+            expected = case["expected"]
+            assert [result.kind for result in results] == [case["analysis"]] * len(expected["temperaturesKelvin"]), case["id"]
+            assert [result.temperature_kelvin for result in results] == expected["temperaturesKelvin"], case["id"]
+            for execution, window in zip(results, expected["windows"], strict=True):
+                value = execution.result.node_voltages[case["probe"]]
+                assert window["min"] <= value <= window["max"], case["id"]
+            continue
+
         assert [result.kind for result in results] == [case["analysis"]], case["id"]
         result = results[0].result
         if case["sample"] == "op-node":
@@ -460,6 +470,13 @@ def test_operating_temperature_defaults_without_temp_cards() -> None:
     assert parsed.operating_temperature_kelvin(default=301.0) == 301.0
     with pytest.raises(NetlistParseError, match=r"temperature index 3 exceeds \.temp entries"):
         parse_netlist(".temp 27").operating_temperature_kelvin(3)
+
+
+def test_analysis_temperature_rejects_values_below_absolute_zero() -> None:
+    parsed = parse_netlist(".temp -274\n.op")
+
+    with pytest.raises(NetlistParseError, match="finite positive Kelvin"):
+        parsed.analysis_temperatures_kelvin()
 
 
 def test_temp_card_rejects_missing_temperatures() -> None:

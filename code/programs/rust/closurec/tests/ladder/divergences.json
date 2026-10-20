@@ -304,17 +304,6 @@
    "upstream_exit": 0,
    "upstream_stdout": "for(let a of[1,2,3])console.log(a);\n"
   },
-  "ladder_t6_let_const_simple": {
-   "closurec_exit": 0,
-   "closurec_stdout": "let a=1;const b=2;console.log(a+2);\n",
-   "issue": "https://github.com/adhithyan15/coding-adventures/issues/15863",
-   "level": "SIMPLE",
-   "reason": "At SIMPLE this runs the OPPOSITE way to every other rung: closurec propagates the const into its use site and upstream does not, so we optimize MORE than the oracle. That may be a win or an unsound propagation \u2014 tracked as CCR-078. At ADVANCED the ordinary CCR-068 gap applies.",
-   "rung": "let_const",
-   "tier": 6,
-   "upstream_exit": 0,
-   "upstream_stdout": "let a=1;const b=2;console.log(a+b);\n"
-  },
   "ladder_t6_local_const_advanced": {
    "closurec_exit": 0,
    "closurec_stdout": "function f(){const b=2;return b+1}console.log(f());\n",

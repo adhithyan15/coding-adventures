@@ -10,7 +10,10 @@ for the architecture, component catalog, and phasing plan.
 
 ## v0.1 — exports so far
 
-**11 of 13 Tier-1 components shipped:**
+One entry per component in `mosaic-package.toml`'s `[components].exports`.
+`tests/package_compiles.rs` fails if an export is missing here or an entry
+names something the manifest does not export, so this list cannot fall behind
+the package:
 
 - **`Alert`** — colored banner with the same closed eight-value `variant`
   axis as Button and an optional inline dismiss button. UI49 states color
@@ -100,6 +103,22 @@ for the architecture, component catalog, and phasing plan.
   as DropdownMenu, but onChange carries the selected option *text*.
   Slots: `value`, `options: list<text>`, `placeholder`, `open`,
   `disabled`. Emits: `onToggle`, `onChange(value: text)`.
+- **`Breadcrumb`** — hierarchical trail (Home / Library / Data). Each crumb
+  is a `HostLink` in a `For` over `crumbs: list<text>`; the last crumb is the
+  current location and does not fire. Emit: `onSelect(index: number)`.
+- **`ButtonGroup`** — a row of related buttons sharing one border, rounded
+  only at the outer edges. A `For` over `items: list<text>` of `HostButton`s.
+  Emit: `onSelect(index: number)`.
+- **`Nav`** — a horizontal row of `HostLink`s, with the `active-index` link
+  rendered through its own part. Slots: `items: list<text>`, `active-index`
+  (-1 for none). Emit: `onSelect(index: number)`.
+- **`NumberInput`** — styled numeric input wrapping the kernel
+  `HostNumberInput` (numeric keypad, steppers and range validation come from
+  the kernel). Slots: `value: number`, `placeholder`, `disabled`. Emit:
+  `onChange(value: number)`, on commit only, never per keystroke.
+- **`Tooltip`** — plain-text hover help around a visible label: the kernel
+  `HostTooltip` wrapping a `Text`. Slots: `message` (the tooltip body),
+  `label` (the visible text).
 
 Every component ships `.light.msl` and `.dark.msl` themes.
 

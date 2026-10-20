@@ -169,6 +169,14 @@ mod apple {
         env!("CARGO_MANIFEST_DIR"),
         "/../../../grammars/mermaid/railroad-11.16.1-visual-corpus.json"
     ));
+    const ZENUML_CORPUS: &str = include_str!(concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/../../../grammars/mermaid/zenuml-11.16.1-corpus.json"
+    ));
+    const ZENUML_VISUAL_CORPUS: &str = include_str!(concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/../../../grammars/mermaid/zenuml-11.16.1-visual-corpus.json"
+    ));
 
     #[test]
     fn render_dot_diagram_to_png() {
@@ -4866,6 +4874,43 @@ line "Target" [35, 50, 68, 82]"##,
         assert!(scene.instructions.iter().any(|instruction| matches!(instruction, PaintInstruction::GlyphRun(_))));
         let pixels = render(&scene); write_png(&pixels, "/tmp/mermaid_zenuml_e2e.png").expect("PNG write failed");
         assert!(pixels.width > 0 && pixels.height > 0);
+    }
+
+    #[test]
+    fn render_complete_pinned_zenuml_visual_corpus_to_png() {
+        let syntax: Value = serde_json::from_str(ZENUML_CORPUS)
+            .expect("ZenUML syntax corpus must be JSON");
+        let visual: Value = serde_json::from_str(ZENUML_VISUAL_CORPUS)
+            .expect("ZenUML visual corpus must be JSON");
+        let valid = syntax["valid"].as_array().expect("valid fixture array");
+        let fixture_ids = visual["fixtures"].as_array().expect("visual fixture array");
+        assert_eq!(fixture_ids.len(), valid.len(), "visual corpus must cover every upstream fixture");
+
+        let shaper = CoreTextShaper;
+        let metrics = CoreTextMetrics;
+        let resolver = CoreTextResolver::new();
+        for id in fixture_ids {
+            let id = id.as_str().expect("visual fixture id");
+            let fixture = valid.iter().find(|fixture| fixture["id"] == id)
+                .unwrap_or_else(|| panic!("visual fixture {id} missing from syntax corpus"));
+            let diagram = parse_zenuml(fixture["source"].as_str().expect("fixture source"))
+                .unwrap_or_else(|error| panic!("ZenUML visual fixture {id} failed: {error}"));
+            let layout = layout_sequence_diagram(&diagram);
+            let scene = diagram_to_paint_sequence(&layout, &DiagramToPaintOptions {
+                background: layout_ir::Color { r: 255, g: 255, b: 255, a: 255 },
+                device_pixel_ratio: 2.0,
+                label_font: font_spec("Helvetica", 13.0),
+                title_font: font_spec("Helvetica", 18.0),
+                shaper: &shaper,
+                metrics: &metrics,
+                resolver: &resolver,
+            });
+            assert!(!scene.instructions.is_empty(), "visual fixture {id} must lower to paint");
+            let pixels = render(&scene);
+            assert!(pixels.width > 0 && pixels.height > 0, "visual fixture {id} must render");
+            write_png(&pixels, &format!("/tmp/mermaid_zenuml_11_16_1_{id}.png"))
+                .unwrap_or_else(|error| panic!("visual fixture {id} PNG failed: {error}"));
+        }
     }
 
     #[test]

@@ -1004,7 +1004,7 @@ fn validate_manifest(root: &Path, manifest: &OracleManifest) -> Vec<String> {
             }
         }
 
-        if set.default_harness.is_some() == !set.harnesses.is_empty() {
+        if set.default_harness.is_some() != set.harnesses.is_empty() {
             errors.push(format!(
                 "fixture set {} must use exactly one harness mapping mode",
                 set.id

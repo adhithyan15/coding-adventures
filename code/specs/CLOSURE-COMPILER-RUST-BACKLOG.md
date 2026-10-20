@@ -96,7 +96,7 @@ measures agreement with the pinned oracle:
 | Level | Rungs agreeing |
 |---|---:|
 | `WHITESPACE_ONLY` | 55 / 58 |
-| `SIMPLE` | 35 / 58 |
+| `SIMPLE` | 36 / 58 |
 | `ADVANCED` | 24 / 58 |
 
 WHITESPACE_ONLY is strong. SIMPLE is real but partial. ADVANCED is mostly
