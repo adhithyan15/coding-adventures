@@ -212,6 +212,17 @@ pub fn whitespace_only_minify(
         s
     });
 
+    // #17840: the `;` spliced in at ASI points. It is a separate instance from
+    // `synth_semi` so the emit loop can recognise it by address (see the class
+    // body note there). Only `.value`/`.type_` matter for re-stitching.
+    let synth_asi_semi: Option<lexer::token::Token> = tokens.first().map(|t| {
+        let mut s = t.clone();
+        s.value = ";".to_string();
+        s.type_ = lexer::token::TokenType::Semicolon;
+        s.type_name = None;
+        s
+    });
+
     // gap-093 needs a synthetic `(`/`)` pair to WRAP a numeric
     // literal that is the object of a member access — `1 .x` and
     // `1..toString()` must become `(1).x` / `(1).toString()`,
@@ -257,11 +268,44 @@ pub fn whitespace_only_minify(
         s
     });
 
-    let mut kept: Vec<_> = tokens
-        .iter()
-        .filter(|t| !is_trivia(t))
-        .filter(|t| !is_eof(t))
-        .collect();
+    // #17840 — restore the statement boundaries that newlines provided.
+    // Dropping trivia drops newlines too, and on its own that turns
+    // `a()⏎b()` into the invalid `a()b()`. The parser's ASI module knows
+    // exactly where ECMAScript inserts a `;`. That covers the line-terminator
+    // rule, `}`/end of input, and restricted productions such as
+    // `return⏎x`. We splice `synth_asi_semi` in at each of those points.
+    // The token vector itself is left alone, because the CV map below is keyed
+    // on pointers into it. A program the grammar can't parse at all keeps the
+    // old behaviour: no insertions, and the same output as before.
+    let asi_points: Vec<usize> = match synth_asi_semi.as_ref() {
+        Some(_) => coding_adventures_javascript_parser::asi::asi_insertion_points(
+            tokens.clone(),
+            version,
+        )
+        .unwrap_or_default(),
+        None => Vec::new(),
+    };
+    let mut kept: Vec<&lexer::token::Token> = Vec::with_capacity(tokens.len() + asi_points.len());
+    {
+        let mut points = asi_points.iter().peekable();
+        for (i, t) in tokens.iter().enumerate() {
+            while points.peek() == Some(&&i) {
+                if let Some(semi) = synth_asi_semi.as_ref() {
+                    kept.push(semi);
+                }
+                points.next();
+            }
+            if !is_trivia(t) && !is_eof(t) {
+                kept.push(t);
+            }
+        }
+        // A point at `tokens.len()` (after everything) is the end of input.
+        for _ in points {
+            if let Some(semi) = synth_asi_semi.as_ref() {
+                kept.push(semi);
+            }
+        }
+    }
 
     // gap-093 + gap-098: NUMBER-followed-by-DOT normalisation. The
     // lexer splits a number's trailing dot off into its own DOT token
@@ -2563,10 +2607,11 @@ pub fn whitespace_only_minify(
     //     depth scan, and the token AFTER `)` must be a `{`;
     //   - the body has NO nested `{` and NO control-flow keyword at
     //     depth 1 (this is also the dangling-else guard for `if`),
-    //     and EXACTLY ZERO top-level `;` (i.e. a single,
-    //     un-terminated statement). Bodies that already end in `;`
-    //     are left to the gap-032 emit-time flatten; multi-statement
-    //     bodies (`{a();b()}`) and empty bodies (`{}`) are untouched.
+    //     and either ZERO top-level `;` (a single un-terminated
+    //     statement) or exactly ONE that is the body's last token (a
+    //     single terminated statement, #17840: the shape the ASI splice
+    //     produces). Multi-statement bodies (`{a();b()}`) and empty
+    //     bodies (`{}`) are untouched.
     //
     // All bracket checks route through `is_structural_punct`, so a
     // literal `"{"`/`")"` can never be mistaken for a delimiter.
@@ -2679,13 +2724,24 @@ pub fn whitespace_only_minify(
             }
             if let Some(bc) = body_close {
                 let non_empty = bc > body_open + 1;
+                // #17840: a single statement whose ONE top-level `;` is its
+                // own terminator, right before the `}`, qualifies too. The
+                // ASI splice turns `with(o){a()}` into `with(o){a();}`
+                // before this pass runs, and the emit-time gap-032 flatten
+                // that handles explicit `;` bodies doesn't cover `with`.
+                let terminated_single = top_semis == 1
+                    && bc > body_open + 2
+                    && is_structural_punct(kept[bc - 1], ";");
                 if non_empty
                     && !has_nested_brace
                     && !has_blocking_keyword
-                    && top_semis == 0
+                    && (top_semis == 0 || terminated_single)
                 {
                     if let Some(semi) = synth_semi.as_ref() {
                         drops.push(body_open); // loop-body `{`
+                        if terminated_single {
+                            drops.push(bc - 1); // the body's own `;`
+                        }
                         kept[bc] = semi; // `}` → synthetic `;`
                         i = bc + 1;
                         continue;
@@ -3136,6 +3192,19 @@ pub fn whitespace_only_minify(
     while idx < kept.len() {
         let tok = kept[idx];
         let val = tok.value.as_str();
+
+        // #17840: closurec's grammar wants a separator between class members,
+        // so ASI may place a `;` directly in a class body
+        // (`class P{m(){}⏎n(){}}`). There it would be an empty class element,
+        // which upstream never prints (`class P{m(){}n(){}}`). Drop it.
+        if synth_asi_semi
+            .as_ref()
+            .is_some_and(|semi| std::ptr::eq(tok, semi))
+            && brace_stack.last() == Some(&BlockKind::Class)
+        {
+            idx += 1;
+            continue;
+        }
 
         // gap-045: single-arg arrow function — drop the
         // enclosing parens around a bare-identifier param.
@@ -9060,13 +9129,14 @@ mod tests {
     /// `if(b)`. The existing no-control-flow-keyword guard prevents
     /// the brace-drop (the body contains `if`). The decisive property
     /// is that the braces survive (verified against the JAR, which
-    /// keeps them too — the only diff is an unrelated EOF trailing
-    /// `;` after the bare `else` arm).
+    /// keeps them too). Since #17840 the EOF `;` that ASI supplies after
+    /// the bare `else` arm is emitted as well, so this is now byte-identical
+    /// to the `v20260915` jar: `if(a){if(b)c()}else d();`.
     #[test]
     fn gap079_dangling_else_kept() {
         assert_eq!(
             minify("if(a){if(b)c()}else d()"),
-            "if(a){if(b)c()}else d()"
+            "if(a){if(b)c()}else d();"
         );
     }
 

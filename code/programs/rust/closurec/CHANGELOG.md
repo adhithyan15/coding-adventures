@@ -116,6 +116,24 @@ ACL rejection. Strict all-target Linux/macOS cross-checks pass; native Unix runt
 and final complete security review remain pending. All 20 Windows publication
 units and four artifact process tests pass after integration. #16905 remains draft.
 
+### Fixed - WHITESPACE_ONLY keeps newline statement boundaries (#17840, CCR-080 #15867)
+
+WHITESPACE_ONLY dropped every newline without restoring the statement
+boundary it supplied. `a()⏎b()` compiled to the SyntaxError `a()b()`, and so
+did any semicolon-light program.
+
+The token path now splices a `;` wherever ECMAScript ASI inserts one. The
+positions come from `javascript_parser::asi::asi_insertion_points`. The
+end-of-input point is also CCR-080's missing program-final `;` after a
+`do…while`. Two follow-on fixes keep the output byte-identical to upstream:
+
+- An ASI `;` that lands directly in a class body is dropped.
+- The gap-074/076/079 body flatten also takes a single statement that ends
+  in its own `;` (`with(o){a();}` → `with(o)a();`).
+
+`tests/regression_ws_newline_asi.rs` checks 23 shapes against bytes captured
+from the `v20260915` jar, and confirms each output parses under node.
+
 ### Fixed locally - fresh verification opens during policy preflight (CV02)
 
 Independent review found that retained probe handles continued to permit policy

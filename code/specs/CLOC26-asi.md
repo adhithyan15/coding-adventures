@@ -254,6 +254,36 @@ that closurec now optimizes semicolon-light source.
 * **Regression**: the full existing fixture suite must stay byte-identical
   (proves no over-insertion).
 
+## Phase 4 — insertion points for WHITESPACE_ONLY, and postfix `++`/`--` (#17840)
+
+**Problem.** closurec's WHITESPACE_ONLY path re-stitches tokens without
+parsing. It drops newline trivia, and with it every statement boundary a
+newline supplied. `a()⏎b()` became the SyntaxError `a()b()`.
+
+**`asi_insertion_points(tokens, version) -> Vec<usize>`.** This runs the same
+algorithm as `parse_with_asi`: the restricted-production pre-pass, then
+retry-on-error. It tracks which tokens are synthetic, and returns the input
+index *before which* each `;` goes. Callers that keep their own token vector
+can splice at those points without taking a rewritten stream. WHITESPACE_ONLY
+needs this, because its correlation-vector map is keyed on pointers into the
+original tokens. On an unparseable program it errors exactly as
+`parse_with_asi` does, and WHITESPACE_ONLY then keeps its old behaviour.
+
+**Postfix `++`/`--` restricted production.** `UpdateExpression :
+LeftHandSideExpression [no LineTerminator here] ++` means a newline-led
+`++`/`--` after a token that can end an expression starts a new statement:
+`x = 1⏎++y` is `x = 1; ++y`. The grammar is newline-blind and reads `1 ++`
+as postfix, then fails at `y`. Retry-on-error can't recover, because `y` isn't
+newline-led. The pre-pass therefore inserts the `;` proactively.
+
+It does so only after a token that can end an expression: an identifier,
+number, string, `)`, `]`, `}`, or one of `this`/`true`/`false`/`null`/`super`.
+After `=` or `(` the `++` is already prefix (`x =⏎++y` → `x = ++y`).
+
+**Measured** against the pinned `v20260915` jar at WHITESPACE_ONLY: 23
+semicolon-light shapes (`tests/regression_ws_newline_asi.rs`) are now
+byte-identical. That includes CCR-080's program-final `;` after a `do…while`.
+
 ## Non-goals
 
 * No grammar-file changes (semicolons stay mandatory in `es2025.grammar`).
