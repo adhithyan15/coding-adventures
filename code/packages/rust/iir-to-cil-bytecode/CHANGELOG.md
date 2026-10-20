@@ -19,6 +19,32 @@
   CoreCLR (SDK 10, `DOTNET_ROLL_FORWARD=Major`): all eleven Perl CLR matrix
   cells now print their expected output.
 
+## [0.48.0] — 2026-10-20 (LANG83 PR4 — overflow-checked arithmetic on the textual path)
+
+- **`i64_add_ovf` / `i64_sub_ovf` / `i64_mul_ovf` / `i64_neg_ovf`**
+  ([LANG83](../../../specs/LANG83-iir-standard-operation-registry.md) PR4),
+  `int64` destinations only. The overflow condition is branched around first
+  and the plain wrapping instruction runs last:
+  - add / sub: `((a ^ r) & (b ^ r))` / `((a ^ b) & (a ^ r))`, then
+    `ldc.i8 0; bge OK`;
+  - neg: `ldc.i8 MIN; bne.un OK`;
+  - mul: `a != -1 || b != MIN` (which also keeps the check's own `div` from
+    seeing `MIN / -1`, which would throw), then `a == 0 || (a*b)/a == b`.
+
+  A failing test runs PR1b's `Console.Out.Flush()` +
+  `throw new System.Exception("Trap.Overflow")`. `add.ovf` / `sub.ovf` /
+  `mul.ovf` are deliberately not used: their `OverflowException` carries no
+  kind and skips the flush, and mapping it would need a `.try`/`catch`
+  region, which this path has never emitted and which CoreCLR checks more
+  strictly than `ilasm`. Internal labels use the PR1b unforgeable prefix.
+- The binary `lower_iir_to_cil` path (32-bit simulator) refuses the PR4 ops
+  with a typed error, like the PR1b ops.
+- `op_support`: all four `Lowered`.
+- New `tests/lang83_pr4.rs` pins the IL and runs a stack-depth model over
+  every emitted line: no underflow, every conditional branch and every label
+  at an empty stack, every branch target defined once, nothing reachable after
+  `throw`.
+
 ## [0.47.0] — 2026-10-19 (LANG83 PR1b — floor division, `trap`, `write_i64` on the textual path)
 
 - **`i64_div_floor` / `i64_mod_floor`** on `emit_il` ([LANG83](../../../specs/LANG83-iir-standard-operation-registry.md)):

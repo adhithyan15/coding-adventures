@@ -7,6 +7,10 @@ All notable changes to the `task-app` web program are documented here.
 Entries added after `task-app-v0.5.8` accumulate here until the next version is
 cut.
 
+- The Web Component acceptance test types into the task name with an `input`
+  event. A Web Component text field now dispatches `onChange` per keystroke, as
+  on every other backend, and keeps focus across the re-render that follows.
+
 ### Changed — web host theme colours are generated from the stylesheets
 
 The new `tests/host_theme_tokens.rs` reads `TaskApp.{light,dark}.msl` with

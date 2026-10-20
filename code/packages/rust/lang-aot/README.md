@@ -711,6 +711,14 @@ against a host `perl` (the compiled programs never run on it), and
 through lang-aot (`--lang perl@<release>`) is phase 4b; the frontend already
 does it (`perl_iir_compiler::compile_source_at`).
 
+Since LANG83 PR4 every backend also lowers the overflow-checked
+`i64_add_ovf`, `i64_sub_ovf`, `i64_mul_ovf` and `i64_neg_ovf`: the exact
+result, or `Trap.Overflow` when it does not fit in an i64 (the hook Python's
+and Ruby's integer subsets use to promote to a bignum). The conformance suite
+runs them at the i64 bounds and one step past them on every executable column.
+The JVM wide-model evidence for ops is now derived from the registry: every Op
+with an `i64` operand type keeps its module on `long`.
+
 ## Limitations
 
 - **Host-targets-host only.** Same V1 policy as `twig-aot`.  Use the

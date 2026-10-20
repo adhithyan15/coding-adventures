@@ -65,3 +65,6 @@ module that uses a refused op at compile time, with a typed error. Since LANG83 
 (`__twig_write_i64`), `i64_div_floor`/`i64_mod_floor` (explicit zero and
 `MIN / -1` checks before `SDIV`, which would otherwise silently return 0 or
 `MIN`) and `trap` (`bl __twig_trap` with the stable kind id, then `udf`).
+LANG83 PR4 adds the overflow-checked `i64_add_ovf`/`i64_sub_ovf`/`i64_neg_ovf`
+(`adds`/`subs`/`negs`, then `b.vc` over a `Trap.Overflow` trap call) and
+`i64_mul_ovf` (`mul` + `smulh`, `cmp hi, lo, asr #63`, `b.eq` over the trap).

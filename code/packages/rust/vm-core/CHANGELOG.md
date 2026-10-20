@@ -1,5 +1,20 @@
 # Changelog — vm-core
 
+## [0.29.0] — 2026-10-20 (LANG83 PR4 — overflow-checked arithmetic)
+
+- **`i64_add_ovf` / `i64_sub_ovf` / `i64_mul_ovf` / `i64_neg_ovf` handlers**
+  ([LANG83](../../../specs/LANG83-iir-standard-operation-registry.md) PR4):
+  Rust's `checked_add` / `checked_sub` / `checked_mul` / `checked_neg`; a
+  `None` (the exact result does not fit in i64) returns
+  `VMError::Trap { kind: "Trap.Overflow" }`. Defined on i64 only, so no
+  narrow-width masking.
+- `op_support` is derived from the dispatch table, so all four flip to
+  `Lowered` with no edit there.
+- Tests pin the exact results at the range edges (`MAX + 0`, `MIN - 0`,
+  `-2^32 * 2^31 = MIN`, `3_037_000_499²`, `-MAX`) and the trap one step past
+  them (`MAX + 1`, `MIN - 1`, `0 - MIN`, `MIN * -1`, `-1 * MIN`, `2^32 * 2^31`,
+  `3_037_000_500²`, `-MIN`).
+
 ## [0.28.0] — 2026-10-19 (LANG83 PR1b — floor division, `trap`, `write_i64`)
 
 - **`i64_div_floor` / `i64_mod_floor` handlers** ([LANG83](../../../specs/LANG83-iir-standard-operation-registry.md)):
