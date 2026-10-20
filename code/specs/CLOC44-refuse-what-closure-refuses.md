@@ -105,5 +105,13 @@ The refusals already captured in `tests/oracle/upstream-refusals-v20260915.json`
 | `simple-try-catch` | `JSC_PARSE_ERROR` "return must be inside function" |
 | `simple-with` | `JSC_USE_OF_WITH` |
 
+Found since, and not yet captured as fixtures:
+
+| Shape | Upstream |
+|---|---|
+| ADVANCED with an undeclared global (`f();throw 1;g()`) | `JSC_UNDEFINED_VARIABLE` "variable f is undeclared", once per undeclared name. Exit status is the error count (3 there). Default externs (`console`, …) count as declared. |
+| `throw 1;class C{}` at SIMPLE/ADVANCED | `INTERNAL COMPILER ERROR`, exit 254. That is an upstream crash, not a refusal, so mirroring it is out of scope. |
+
 Each later slice captures upstream's stderr and exit status into the fixture,
-then implements the check.
+then implements the check. The undeclared-global slice needs the default
+externs list, so it comes after the externs work.
