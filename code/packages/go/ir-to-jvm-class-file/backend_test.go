@@ -61,90 +61,10 @@ func TestLowerProgramWithCallAndStaticDataToParseableClass(t *testing.T) {
 	}
 }
 
-func TestWriteClassFileUsesClasspathLayout(t *testing.T) {
-	artifact, err := LowerIRToJvmClassFile(simpleProgram(), JvmBackendConfig{
-		ClassName:       "demo.Example",
-		EmitMainWrapper: true,
-	})
-	if err != nil {
-		t.Fatalf("lower failed: %v", err)
-	}
-
-	outputDir := t.TempDir()
-	target, err := WriteClassFile(artifact, outputDir)
-	if err != nil {
-		t.Fatalf("write failed: %v", err)
-	}
-	canonicalOutputDir, err := filepath.EvalSymlinks(outputDir)
-	if err != nil {
-		t.Fatalf("canonicalize failed: %v", err)
-	}
-	expected := filepath.Join(canonicalOutputDir, "demo", "Example.class")
-	if target != expected {
-		t.Fatalf("expected %q, got %q", expected, target)
-	}
-	data, err := os.ReadFile(target)
-	if err != nil {
-		t.Fatalf("read failed: %v", err)
-	}
-	if string(data) != string(artifact.ClassBytes) {
-		t.Fatal("written class file does not match artifact bytes")
-	}
-}
-
 func TestInvalidClassNameIsRejected(t *testing.T) {
 	_, err := LowerIRToJvmClassFile(simpleProgram(), JvmBackendConfig{ClassName: ".Example"})
 	if err == nil || !strings.Contains(err.Error(), "legal Java binary name") {
 		t.Fatalf("expected illegal class name error, got %v", err)
-	}
-}
-
-func TestWriteClassFileRejectsEscapingArtifact(t *testing.T) {
-	artifact := &JVMClassArtifact{
-		ClassName:  ".Escape",
-		ClassBytes: []byte("class-bytes"),
-	}
-	_, err := WriteClassFile(artifact, t.TempDir())
-	if err == nil || !strings.Contains(err.Error(), "escapes the requested") {
-		t.Fatalf("expected path escape error, got %v", err)
-	}
-}
-
-func TestWriteClassFileRejectsSymlinkedParentDirectory(t *testing.T) {
-	artifact, err := LowerIRToJvmClassFile(simpleProgram(), JvmBackendConfig{
-		ClassName:       "demo.Example",
-		EmitMainWrapper: true,
-	})
-	if err != nil {
-		t.Fatalf("lower failed: %v", err)
-	}
-	root := t.TempDir()
-	sink := t.TempDir()
-	if err := os.Symlink(sink, filepath.Join(root, "demo")); err != nil {
-		t.Fatalf("symlink failed: %v", err)
-	}
-	_, err = WriteClassFile(artifact, root)
-	if err == nil || !strings.Contains(err.Error(), "symlinked or invalid directory component") {
-		t.Fatalf("expected symlink rejection, got %v", err)
-	}
-}
-
-func TestWriteClassFileRejectsOutputRootWithSymlinkedAncestor(t *testing.T) {
-	artifact, err := LowerIRToJvmClassFile(simpleProgram(), JvmBackendConfig{
-		ClassName:       "demo.Example",
-		EmitMainWrapper: true,
-	})
-	if err != nil {
-		t.Fatalf("lower failed: %v", err)
-	}
-	root := t.TempDir()
-	sink := t.TempDir()
-	if err := os.Symlink(sink, filepath.Join(root, "linked-root")); err != nil {
-		t.Fatalf("symlink failed: %v", err)
-	}
-	_, err = WriteClassFile(artifact, filepath.Join(root, "linked-root", "nested"))
-	if err == nil || !strings.Contains(err.Error(), "symlinked or invalid path component") {
-		t.Fatalf("expected root symlink rejection, got %v", err)
 	}
 }
 

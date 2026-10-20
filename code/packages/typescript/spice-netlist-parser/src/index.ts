@@ -13,6 +13,7 @@ import {
   currentSourceWithWaveform,
   diode,
   acSweep,
+  circuitAtTemperature,
   dcOp,
   dcSweep,
   dcSweep2d,
@@ -239,6 +240,7 @@ export interface AnalysisExecutionResult {
   readonly kind: AnalysisKind;
   readonly analysis: RunnableAnalysis;
   readonly result: AnalysisResult;
+  readonly temperatureKelvin?: number;
 }
 
 export interface SelectedOutputRow {
@@ -255,6 +257,7 @@ export interface SelectedAnalysisOutput {
   readonly kind: AnalysisKind;
   readonly probes: readonly OutputProbe[];
   readonly rows: readonly SelectedOutputRow[];
+  readonly temperatureKelvin?: number;
 }
 
 export interface MeasureResult {
@@ -264,6 +267,7 @@ export interface MeasureResult {
   readonly operation: MeasureOperation;
   readonly probe: OutputProbe;
   readonly value: number;
+  readonly temperatureKelvin?: number;
 }
 
 export interface ModelCard {
@@ -475,6 +479,19 @@ export class ParsedNetlist {
     return this.operatingTemperatureKelvin(temperatureIndex, defaultTemperatureKelvin);
   }
 
+  analysisTemperaturesKelvin(): readonly number[] | readonly [undefined] {
+    const temperaturesKelvin = this.tempCards()
+      .flatMap((card) => card.temperaturesCelsius)
+      .map((temperature) => temperature + 273.15);
+    if (temperaturesKelvin.length === 0) {
+      return [undefined];
+    }
+    if (temperaturesKelvin.some((temperature) => !Number.isFinite(temperature) || temperature <= 0.0)) {
+      throw new NetlistParseError(".temp values must convert to finite positive Kelvin temperatures");
+    }
+    return temperaturesKelvin;
+  }
+
   private mergedOptions(): Map<string, OptionValue> {
     const values = new Map<string, OptionValue>();
     for (const options of this.optionsCards()) {
@@ -658,34 +675,51 @@ export function runAnalysisPlan(
   parsed: ParsedNetlist,
   plan: readonly AnalysisPlanStep[] = buildAnalysisPlan(parsed),
 ): AnalysisExecutionResult[] {
-  return plan.map((step) => ({
-    index: step.index,
-    kind: step.kind,
-    analysis: step.analysis,
-    result: executeAnalysisStep(parsed, step),
-  }));
+  return parsed.analysisTemperaturesKelvin().flatMap((temperatureKelvin) => {
+    const circuit = temperatureKelvin === undefined
+      ? parsed.circuit
+      : circuitAtTemperature(parsed.circuit, temperatureKelvin);
+    return plan.map((step) => ({
+      index: step.index,
+      kind: step.kind,
+      analysis: step.analysis,
+      result: executeAnalysisStep(parsed, step, circuit, temperatureKelvin),
+      ...(temperatureKelvin === undefined ? {} : { temperatureKelvin }),
+    }));
+  });
 }
 
 export function runNetlist(text: string): AnalysisExecutionResult[] {
   return runAnalysisPlan(parseNetlist(text));
 }
 
-export const CLI_RESULT_SCHEMA_VERSION = 1;
+export const CLI_RESULT_SCHEMA_VERSION = 2;
 export const CLI_INSPECTION_SCHEMA_VERSION = 1;
 export const CLI_ERROR_CODE = "SPICE_CLI_ERROR";
 
 export function runNetlistJson(text: string): string {
   const parsed = parseNetlist(text);
-  const execution = runDeck(parsed.circuit, text);
   const parserResults = runAnalysisPlan(parsed);
+  const plan = buildAnalysisPlan(parsed);
+  const analyses = parsed.analysisTemperaturesKelvin().flatMap((temperatureKelvin) => {
+    const circuit = temperatureKelvin === undefined
+      ? parsed.circuit
+      : circuitAtTemperature(parsed.circuit, temperatureKelvin);
+    const execution = runDeck(circuit, text);
+    if (execution.executions.length !== plan.length) {
+      throw new NetlistParseError("deck execution plan did not match the parser analysis plan");
+    }
+    return execution.executions.map((item, index) => ({
+      index: plan[index]!.index,
+      kind: plan[index]!.kind,
+      temperatureKelvin: temperatureKelvin ?? null,
+      records: cliTableRecords(item.plan.analysis, item.table),
+    }));
+  });
   return `${JSON.stringify(canonicalJson({
     schemaVersion: CLI_RESULT_SCHEMA_VERSION,
     title: parsed.title ?? null,
-    analyses: execution.executions.map((item, index) => ({
-      index,
-      kind: item.plan.analysis,
-      records: cliTableRecords(item.plan.analysis, item.table),
-    })),
+    analyses,
     outputs: cliOutputArtifacts(selectOutputs(parsed, parserResults)),
     measures: cliMeasureArtifacts(measureResults(parsed, parserResults)),
   }))}\n`;
@@ -713,6 +747,7 @@ function cliOutputArtifacts(outputs: readonly SelectedAnalysisOutput[]): readonl
   return outputs.map((output) => ({
     analysisIndex: output.index,
     analysis: output.kind,
+    temperatureKelvin: output.temperatureKelvin ?? null,
     probes: output.probes.map(cliProbeText),
     records: output.rows.map((row) => ({
       index: row.index,
@@ -735,6 +770,7 @@ function cliMeasureArtifacts(measures: readonly MeasureResult[]): readonly Recor
     operation: measure.operation,
     probe: cliProbeText(measure.probe),
     value: measure.value,
+    temperatureKelvin: measure.temperatureKelvin ?? null,
   }));
 }
 
@@ -782,6 +818,7 @@ export function selectOutputs(
       kind: result.kind,
       probes,
       rows: selectedOutputRows(result, probes),
+      ...(result.temperatureKelvin === undefined ? {} : { temperatureKelvin: result.temperatureKelvin }),
     });
   }
   return selected;
@@ -791,16 +828,27 @@ export function measureResults(
   parsed: ParsedNetlist,
   results: readonly AnalysisExecutionResult[] = runAnalysisPlan(parsed),
 ): MeasureResult[] {
-  return parsed.measureCards().map((card) => {
-    const execution = findMeasureExecutionResult(card, results);
-    return {
+  return parsed.measureCards().flatMap((card) => {
+    const temperatures = new Set<number | undefined>();
+    const matching = results.filter((result) => {
+      if (!analysisNameMatches(card.analysis, result.kind) || temperatures.has(result.temperatureKelvin)) {
+        return false;
+      }
+      temperatures.add(result.temperatureKelvin);
+      return true;
+    });
+    if (matching.length === 0) {
+      findMeasureExecutionResult(card, results);
+    }
+    return matching.map((execution) => ({
       analysisIndex: execution.index,
       analysis: card.analysis,
       name: card.name,
       operation: card.operation,
       probe: card.probe,
       value: evaluateMeasure(card, execution),
-    };
+      ...(execution.temperatureKelvin === undefined ? {} : { temperatureKelvin: execution.temperatureKelvin }),
+    }));
   });
 }
 
@@ -832,10 +880,15 @@ function analysisPlanStep(index: number, analysis: Analysis): AnalysisPlanStep |
   return undefined;
 }
 
-function executeAnalysisStep(parsed: ParsedNetlist, step: AnalysisPlanStep): AnalysisResult {
+function executeAnalysisStep(
+  parsed: ParsedNetlist,
+  step: AnalysisPlanStep,
+  circuit: Circuit,
+  temperatureKelvin: number | undefined,
+): AnalysisResult {
   const analysis = step.analysis;
   if (analysis.kind === "op") {
-    return dcOp(parsed.circuit, parsed.dcOpOptions());
+    return dcOp(circuit, parsed.dcOpOptions());
   }
   if (analysis.kind === "dc") {
     if (analysis.secondarySourceName !== undefined) {
@@ -847,7 +900,7 @@ function executeAnalysisStep(parsed: ParsedNetlist, step: AnalysisPlanStep): Ana
         throw new NetlistParseError("nested .dc analysis requires complete secondary sweep bounds");
       }
       return dcSweep2d(
-        parsed.circuit,
+        circuit,
         analysis.sourceName,
         analysis.start,
         analysis.stop,
@@ -859,7 +912,7 @@ function executeAnalysisStep(parsed: ParsedNetlist, step: AnalysisPlanStep): Ana
       );
     }
     return dcSweep(
-      parsed.circuit,
+      circuit,
       analysis.sourceName,
       analysis.start,
       analysis.stop,
@@ -868,7 +921,7 @@ function executeAnalysisStep(parsed: ParsedNetlist, step: AnalysisPlanStep): Ana
   }
   if (analysis.kind === "ac") {
     return acSweep(
-      parsed.circuit,
+      circuit,
       analysis.startHz,
       analysis.stopHz,
       executableAcPointsPerDecade(analysis),
@@ -876,25 +929,27 @@ function executeAnalysisStep(parsed: ParsedNetlist, step: AnalysisPlanStep): Ana
   }
   if (analysis.kind === "tran") {
     return transient(
-      parsed.circuit,
+      circuit,
       analysis.timeStep,
       analysis.stopTime,
       parsed.transientMethod(analysis) ?? "euler",
     );
   }
   if (analysis.kind === "tf") {
-    return tf(parsed.circuit, analysis.outputNode, analysis.inputSource);
+    return tf(circuit, analysis.outputNode, analysis.inputSource);
   }
   if (analysis.kind === "sens") {
-    return sensDc(parsed.circuit, analysis.outputNode);
+    return sensDc(circuit, analysis.outputNode);
   }
   if (analysis.kind === "noise") {
     return noiseAc(
-      parsed.circuit,
+      circuit,
       analysis.outputNode,
       analysis.inputSource,
       analysis.frequenciesHz.length === 0 ? undefined : analysis.frequenciesHz,
-      analysis.temperature,
+      analysis.temperatureIsExplicit === true
+        ? analysis.temperature
+        : temperatureKelvin ?? analysis.temperature,
     );
   }
   throw new NetlistParseError(`analysis card at index ${step.index} is not executable`);

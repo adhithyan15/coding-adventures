@@ -6,11 +6,15 @@ layout SpiceWorkbench {
     }
     Column [ deck-editor ] {
       Text [ netlist-label ] ( content : slot: netlist-label )
-      Input [ netlist-input ] (
+      // The netlist is the kernel's text area (#15930): Enter is a line
+      // break, and Ctrl+Enter (Cmd+Enter on macOS) runs the deck, as the Run
+      // button does (UI25 §4). It was the retiring legacy `Input` (U29-X1).
+      HostInput [ netlist-input ] (
         multiline : true ,
         value : slot: netlist-text ,
         placeholder : slot: netlist-placeholder ,
-        onChange : emit: onNetlistChange
+        onChange : emit: onNetlistChange ,
+        onCommit : emit: onRun
       )
       Row [ workbench-actions ] {
         HostButton [ inspect-button ] ( label : slot: inspect-label , onClick : emit: onInspect )

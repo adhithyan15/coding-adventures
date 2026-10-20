@@ -1,5 +1,3 @@
-# Changelog
-
 ## Unreleased
 
 - add the first Go `compiler-ir` to JVM `.class` backend
