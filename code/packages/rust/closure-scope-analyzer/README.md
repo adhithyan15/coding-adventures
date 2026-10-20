@@ -73,7 +73,7 @@ for reference in &analysis.references {
 
 ## Status
 
-`analyze` walks the whole program (v0.21.0). The status notes that used to
+`analyze` walks the whole program (v0.22.0). The status notes that used to
 live here described v0.1.0 and v0.2.0; `CHANGELOG.md` has the full history.
 
 ## Which constructs open a scope
@@ -84,6 +84,7 @@ live here described v0.1.0 and v0.2.0; `CHANGELOG.md` has the full history.
 | a function body | `Function` | params, `var` (hoisted), its own `let`/`const` |
 | a `{ … }` block | `Block` | `let`, `const`, class and function declarations |
 | `for`/`for-in`/`for-of` with a `let`/`const` head | `Block` | the head binding |
+| a `switch` case block (all cases share it) | `Block` | `let`/`const` declared in any case |
 
 The last row is why
 
