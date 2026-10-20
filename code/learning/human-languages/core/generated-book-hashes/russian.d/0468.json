@@ -1,0 +1,15 @@
+{
+  "language": "russian",
+  "chapter": 468,
+  "sourceHash": "fnv1a64:7632f65322254b8d",
+  "lessonIds": [
+    "RU-C468-zhara",
+    "RU-C468-dushnyy",
+    "RU-C468-dukhota",
+    "RU-C468-potet",
+    "RU-C468-tayat",
+    "RU-R468-review-467-468",
+    "RU-R468-review-final-468"
+  ],
+  "tex": "russian/book/chapters/ch468-heat.tex"
+}

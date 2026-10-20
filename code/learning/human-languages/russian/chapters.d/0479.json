@@ -1,0 +1,19 @@
+{
+  "chapter": 479,
+  "title": "Trust and Betrayal",
+  "label": "ch:ru-trust-and-betrayal",
+  "canDo": "I can talk about trust, respect and betrayal.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "RU-C479-iskrenniy",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 479: I can talk about trust, respect and betrayal.",
+    "assesses": [
+      "RU-LEX-C479-TRUST-03",
+      "RU-LEX-C479-TRUST-04",
+      "RU-LEX-C479-TRUST-05"
+    ]
+  }
+}

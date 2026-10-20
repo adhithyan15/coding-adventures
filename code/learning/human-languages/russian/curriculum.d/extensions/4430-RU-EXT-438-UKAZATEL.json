@@ -1,0 +1,8 @@
+{
+  "id": "RU-EXT-438-UKAZATEL",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can follow signs: a signpost, a sign on a door, an arrow, a landmark and a route map.",
+  "prerequisites": []
+}

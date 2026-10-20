@@ -1,0 +1,19 @@
+{
+  "chapter": 428,
+  "title": "A bed for the night",
+  "label": "ch:ru-a-bed-for-the-night",
+  "canDo": "I can find somewhere to sleep: a hostel, a holiday camp, a bed for the night, spending the night and a booking.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "RU-C428-bron",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 428: I can find somewhere to sleep: a hostel, a holiday camp, a bed for the night, spending the night and a booking.",
+    "assesses": [
+      "RU-LEX-C428-NOCHLEG-03",
+      "RU-LEX-C428-NOCHLEG-04",
+      "RU-LEX-C428-NOCHLEG-05"
+    ]
+  }
+}

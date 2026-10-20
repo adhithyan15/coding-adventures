@@ -1,0 +1,20 @@
+{
+  "language": "russian",
+  "chapter": 318,
+  "sourceHash": "fnv1a64:e44d0ffb0bb2d82e",
+  "lessonIds": [
+    "RU-C318-traditsiya",
+    "RU-C318-obychay",
+    "RU-C318-obryad",
+    "RU-C318-bal",
+    "RU-C318-gulyanye",
+    "RU-R318-review-311-318"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "russian/narration/ch318.txt",
+  "json": "russian/narration/ch318.json",
+  "textHash": "fnv1a64:933810843340d700",
+  "jsonHash": "fnv1a64:9c413bfe1b58bacd",
+  "findings": []
+}

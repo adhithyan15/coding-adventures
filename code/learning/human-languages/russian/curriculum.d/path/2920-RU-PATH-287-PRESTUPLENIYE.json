@@ -1,0 +1,9 @@
+{
+  "id": "RU-PATH-287-PRESTUPLENIYE",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "RU-EXT-287-PRESTUPLENIYE"
+  ],
+  "after": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 294,
+  "title": "Guilt and punishment",
+  "label": "ch:ru-guilt-and-punishment",
+  "canDo": "I can say that someone was guilty, was punished, confessed or was acquitted.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "RU-R294-review-287-294",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 294: I can say that someone was guilty, was punished, confessed or was acquitted.",
+    "assesses": [
+      "RU-LEX-C294-NAKAZANIYE-03",
+      "RU-LEX-C294-NAKAZANIYE-04",
+      "RU-LEX-C294-NAKAZANIYE-05"
+    ]
+  }
+}

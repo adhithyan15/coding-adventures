@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C454-utsenka",
+    "language": "russian",
+    "chapter": 454,
+    "sequence": 25820,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:bf6a7162a1affc45"
+  },
+  "findings": []
+}

@@ -56,6 +56,8 @@ def test_run_netlist_json_expands_global_temperature_cards() -> None:
     assert [len(analysis["records"]) for analysis in payload["analyses"]] == case["expected"]["recordCounts"]
     assert [output["temperatureKelvin"] for output in payload["outputs"]] == case["expected"]["outputTemperaturesKelvin"]
     assert [measure["temperatureKelvin"] for measure in payload["measures"]] == case["expected"]["measureTemperaturesKelvin"]
+    assert [measure["analysis"] for measure in payload["measures"]] == case["expected"]["measureAnalyses"]
+    assert [measure["name"] for measure in payload["measures"]] == case["expected"]["measureNames"]
 
 
 def test_run_netlist_json_exposes_deck_output_artifacts() -> None:

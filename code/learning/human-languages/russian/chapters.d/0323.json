@@ -1,0 +1,19 @@
+{
+  "chapter": 323,
+  "title": "War",
+  "label": "ch:ru-war",
+  "canDo": "I can talk about a war, a battle, an engagement, fighting and an enemy.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "RU-C323-vrag",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 323: I can talk about a war, a battle, an engagement, fighting and an enemy.",
+    "assesses": [
+      "RU-LEX-C323-VOYNA-03",
+      "RU-LEX-C323-VOYNA-04",
+      "RU-LEX-C323-VOYNA-05"
+    ]
+  }
+}

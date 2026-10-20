@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 340,
+  "sourceHash": "fnv1a64:a7aa803120a7580c",
+  "lessonIds": [
+    "RU-C340-soglashatsya",
+    "RU-C340-soglasie",
+    "RU-C340-nesoglasie",
+    "RU-C340-vozrazhat",
+    "RU-C340-vozrazhenie"
+  ],
+  "tex": "russian/book/chapters/ch340-agreeing-and-objecting.tex"
+}

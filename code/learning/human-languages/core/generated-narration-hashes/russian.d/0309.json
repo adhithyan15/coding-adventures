@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 309,
+  "sourceHash": "fnv1a64:8e9b3fd256334774",
+  "lessonIds": [
+    "RU-C309-pokhorony",
+    "RU-C309-khoronit",
+    "RU-C309-smert",
+    "RU-C309-vdova",
+    "RU-C309-naslednik"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch309.txt",
+  "json": "russian/narration/ch309.json",
+  "textHash": "fnv1a64:7528d2521a2215e9",
+  "jsonHash": "fnv1a64:9832398d0d9dee8a",
+  "findings": []
+}

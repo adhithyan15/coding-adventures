@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C458-ravnina",
+    "language": "russian",
+    "chapter": 458,
+    "sequence": 26010,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:acd67c0742ff769e"
+  },
+  "findings": []
+}

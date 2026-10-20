@@ -1,0 +1,9 @@
+{
+  "id": "RU-PATH-351-POSKOLKU",
+  "spine_node": "SPINE-GIVE-REASONS",
+  "before": [],
+  "inline": [
+    "RU-EXT-351-POSKOLKU"
+  ],
+  "after": []
+}

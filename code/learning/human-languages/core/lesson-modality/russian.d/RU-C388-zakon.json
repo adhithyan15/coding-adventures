@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C388-zakon",
+    "language": "russian",
+    "chapter": 388,
+    "sequence": 22410,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c25a52d537624e56"
+  },
+  "findings": []
+}

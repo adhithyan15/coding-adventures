@@ -1,0 +1,9 @@
+{
+  "id": "RU-PATH-497-UPBRINGING",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "RU-EXT-497-UPBRINGING"
+  ],
+  "after": []
+}

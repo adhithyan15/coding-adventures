@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 512,
+  "sourceHash": "fnv1a64:1e6e4069180a4797",
+  "lessonIds": [
+    "RU-C512-marafon",
+    "RU-C512-begun",
+    "RU-C512-finish",
+    "RU-C512-otstavat",
+    "RU-C512-distantsiya"
+  ],
+  "tex": "russian/book/chapters/ch512-the-marathon.tex"
+}

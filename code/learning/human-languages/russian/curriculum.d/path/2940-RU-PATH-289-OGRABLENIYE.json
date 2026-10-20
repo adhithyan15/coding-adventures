@@ -1,0 +1,9 @@
+{
+  "id": "RU-PATH-289-OGRABLENIYE",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "RU-EXT-289-OGRABLENIYE"
+  ],
+  "after": []
+}

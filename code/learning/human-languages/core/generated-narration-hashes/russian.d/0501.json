@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 501,
+  "sourceHash": "fnv1a64:2d3b33ab642161ee",
+  "lessonIds": [
+    "RU-C501-nitka",
+    "RU-C501-igolka",
+    "RU-C501-napyorstok",
+    "RU-C501-vykroyka",
+    "RU-C501-podshivat"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch501.txt",
+  "json": "russian/narration/ch501.json",
+  "textHash": "fnv1a64:571c406d248c4f93",
+  "jsonHash": "fnv1a64:4ae73417e3c7a9b8",
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C499-naveshchat",
+    "language": "russian",
+    "chapter": 499,
+    "sequence": 28130,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b47181b1791cdc62"
+  },
+  "findings": []
+}

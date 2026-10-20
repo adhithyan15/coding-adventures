@@ -1,0 +1,11 @@
+{
+  "id": "RU-C381-zachyot",
+  "pathSegment": "RU-PATH-381-SESSIYA",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "RU-EXT-381-SESSIYA",
+      "order": 1
+    }
+  ]
+}

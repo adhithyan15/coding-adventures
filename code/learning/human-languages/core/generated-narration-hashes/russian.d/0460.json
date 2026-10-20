@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 460,
+  "sourceHash": "fnv1a64:7e432468f9a16dc6",
+  "lessonIds": [
+    "RU-C460-ruchey",
+    "RU-C460-boloto",
+    "RU-C460-rodnik",
+    "RU-C460-prud",
+    "RU-C460-zhurchat"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch460.txt",
+  "json": "russian/narration/ch460.json",
+  "textHash": "fnv1a64:6489e673cddcfd98",
+  "jsonHash": "fnv1a64:ac73135388ad5618",
+  "findings": []
+}

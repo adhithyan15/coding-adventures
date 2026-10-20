@@ -1,0 +1,11 @@
+{
+  "id": "RU-C474-bespokoystvo",
+  "pathSegment": "RU-PATH-474-WORRY",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "RU-EXT-474-WORRY",
+      "order": 3
+    }
+  ]
+}

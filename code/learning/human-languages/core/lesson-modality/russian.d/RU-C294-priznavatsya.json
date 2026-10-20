@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C294-priznavatsya",
+    "language": "russian",
+    "chapter": 294,
+    "sequence": 17600,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:bef227cf05487194"
+  },
+  "findings": []
+}

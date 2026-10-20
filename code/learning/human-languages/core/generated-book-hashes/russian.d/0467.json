@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 467,
+  "sourceHash": "fnv1a64:4a31ddcd9a961ef8",
+  "lessonIds": [
+    "RU-C467-moroz",
+    "RU-C467-gololyod",
+    "RU-C467-metel",
+    "RU-C467-myorznut",
+    "RU-C467-poskolznutsya"
+  ],
+  "tex": "russian/book/chapters/ch467-frost-and-ice.tex"
+}

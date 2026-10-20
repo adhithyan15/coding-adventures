@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C327-klad",
+    "language": "russian",
+    "chapter": 327,
+    "sequence": 19310,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4851e63136e0c9f8"
+  },
+  "findings": []
+}

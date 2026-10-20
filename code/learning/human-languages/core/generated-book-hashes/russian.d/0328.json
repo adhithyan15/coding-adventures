@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 328,
+  "sourceHash": "fnv1a64:9e80b669eda6d5c8",
+  "lessonIds": [
+    "RU-C328-lomtik",
+    "RU-C328-kusochek",
+    "RU-C328-narezat",
+    "RU-C328-natirat",
+    "RU-C328-tyorka"
+  ],
+  "tex": "russian/book/chapters/ch328-slicing-and-grating.tex"
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C296-evakuirovat",
+    "language": "russian",
+    "chapter": 296,
+    "sequence": 17710,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f4121bae22dd6f19"
+  },
+  "findings": []
+}

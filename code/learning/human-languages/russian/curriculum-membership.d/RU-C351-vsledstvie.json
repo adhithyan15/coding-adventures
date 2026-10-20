@@ -1,0 +1,11 @@
+{
+  "id": "RU-C351-vsledstvie",
+  "pathSegment": "RU-PATH-351-POSKOLKU",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "RU-EXT-351-POSKOLKU",
+      "order": 3
+    }
+  ]
+}

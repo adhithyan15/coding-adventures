@@ -1,0 +1,9 @@
+{
+  "id": "RU-PATH-331-TESTO",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "RU-EXT-331-TESTO"
+  ],
+  "after": []
+}

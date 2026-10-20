@@ -1,0 +1,11 @@
+{
+  "id": "RU-C408-prevyshat",
+  "pathSegment": "RU-PATH-408-SKOROST",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "RU-EXT-408-SKOROST",
+      "order": 1
+    }
+  ]
+}

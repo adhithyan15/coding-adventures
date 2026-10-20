@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 377,
+  "sourceHash": "fnv1a64:b7e7e6a85e72ece6",
+  "lessonIds": [
+    "RU-C377-perenosit",
+    "RU-C377-peredumyvat",
+    "RU-C377-otkazyvatsya",
+    "RU-C377-naznachat",
+    "RU-C377-sobiratsya"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch377.txt",
+  "json": "russian/narration/ch377.json",
+  "textHash": "fnv1a64:bfdd8808f513b1b5",
+  "jsonHash": "fnv1a64:c04351c0eefda5e9",
+  "findings": []
+}

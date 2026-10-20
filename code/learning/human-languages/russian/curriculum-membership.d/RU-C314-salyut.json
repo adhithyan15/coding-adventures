@@ -1,0 +1,11 @@
+{
+  "id": "RU-C314-salyut",
+  "pathSegment": "RU-PATH-314-SALYUT",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "RU-EXT-314-SALYUT",
+      "order": 0
+    }
+  ]
+}

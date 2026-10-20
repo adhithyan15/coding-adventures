@@ -1,0 +1,11 @@
+{
+  "id": "RU-C299-dezhurnyy",
+  "pathSegment": "RU-PATH-299-SIRENA",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "RU-EXT-299-SIRENA",
+      "order": 3
+    }
+  ]
+}

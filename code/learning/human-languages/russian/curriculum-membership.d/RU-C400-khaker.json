@@ -1,0 +1,11 @@
+{
+  "id": "RU-C400-khaker",
+  "pathSegment": "RU-PATH-400-BEZOPASNOST",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "RU-EXT-400-BEZOPASNOST",
+      "order": 2
+    }
+  ]
+}

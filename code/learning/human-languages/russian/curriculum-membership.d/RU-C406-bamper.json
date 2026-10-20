@@ -1,0 +1,11 @@
+{
+  "id": "RU-C406-bamper",
+  "pathSegment": "RU-PATH-406-BAGAZHNIK",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "RU-EXT-406-BAGAZHNIK",
+      "order": 1
+    }
+  ]
+}

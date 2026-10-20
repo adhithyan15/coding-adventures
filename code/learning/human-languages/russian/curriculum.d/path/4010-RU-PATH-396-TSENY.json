@@ -1,0 +1,9 @@
+{
+  "id": "RU-PATH-396-TSENY",
+  "spine_node": "SPINE-EXPRESS-CONDITION",
+  "before": [],
+  "inline": [
+    "RU-EXT-396-TSENY"
+  ],
+  "after": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "RU-C504-kubik",
+  "pathSegment": "RU-PATH-504-BOARDGAMES",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "RU-EXT-504-BOARDGAMES",
+      "order": 2
+    }
+  ]
+}

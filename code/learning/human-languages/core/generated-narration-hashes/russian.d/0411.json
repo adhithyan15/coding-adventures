@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 411,
+  "sourceHash": "fnv1a64:24c25805c80a7060",
+  "lessonIds": [
+    "RU-C411-poputchik",
+    "RU-C411-poputka",
+    "RU-C411-podvozit",
+    "RU-C411-vysazhivat",
+    "RU-C411-pristyogivatsya"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch411.txt",
+  "json": "russian/narration/ch411.json",
+  "textHash": "fnv1a64:ea09c8f87946e432",
+  "jsonHash": "fnv1a64:d52a0eccd1c04cde",
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C301-katastrofa",
+    "language": "russian",
+    "chapter": 301,
+    "sequence": 17930,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2993b56c7c43492b"
+  },
+  "findings": []
+}

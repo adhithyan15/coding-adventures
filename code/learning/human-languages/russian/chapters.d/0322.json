@@ -1,0 +1,19 @@
+{
+  "chapter": 322,
+  "title": "Knights",
+  "label": "ch:ru-knights",
+  "canDo": "I can talk about a knight, armour, a sword, a shield and a throne.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "RU-C322-tron",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 322: I can talk about a knight, armour, a sword, a shield and a throne.",
+    "assesses": [
+      "RU-LEX-C322-RYTSAR-03",
+      "RU-LEX-C322-RYTSAR-04",
+      "RU-LEX-C322-RYTSAR-05"
+    ]
+  }
+}

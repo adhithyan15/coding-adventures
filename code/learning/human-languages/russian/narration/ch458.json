@@ -1,0 +1,858 @@
+{
+  "version": 1,
+  "language": "russian",
+  "chapter": 458,
+  "title": "Mountains and valleys",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:09cf7e319ffedc2b",
+  "lessons": [
+    {
+      "id": "RU-C458-ravnina",
+      "sequence": 26010,
+      "title": "равнина (ravnína) — a plain (flat land)",
+      "headword": "равнина",
+      "romanization": "ravnína",
+      "gloss": "a plain (flat land)",
+      "script": "cyrillic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:acd67c0742ff769e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Russian for to deliver, then the Russian for a courier."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: равнина",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "равнина (ravnína) — \"a plain (flat land)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "За рекой начинается широкая равнина. Za rekóy nachináyetsya shirókaya ravnína. Beyond the river a wide plain begins."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine. Равнина has the Church Slavonic ра- where native ровный has ро-."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "равнина (ravnína) is built on равный, the Church Slavonic shape of native ровный 'level, even', with -ина. EtymDB takes ровный from Proto-Slavic orvĭnŭ."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ravnína",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ravnína*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ravnína, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ravnína*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with ravnína",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *ravnína*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Russian for to deliver, then the Russian for a courier, then say ravnína again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Russian for to deliver, then the Russian for a courier, then say *ravnína* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does равнина (ravnína) mean? (\"A plain (flat land)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "RU-C458-dolina",
+      "sequence": 26020,
+      "title": "долина (dolína) — a valley",
+      "headword": "долина",
+      "romanization": "dolína",
+      "gloss": "a valley",
+      "script": "cyrillic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1dad03d9403dbef3",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Russian for a courier, then the Russian for a plain."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: долина",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "долина (dolína) — \"a valley\"."
+            },
+            {
+              "kind": "speech",
+              "text": "В долине течёт маленькая река. V dolíne techyót málenkaya reká. A small river flows through the valley."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "долина (dolína) is built on the old word дол 'a valley', still heard in по горам, по долам 'over hill and dale'. Дол is inherited from Proto-Slavic dolŭ 'a dale, a valley' (EtymDB); EtymDB lists долина (dolína) itself without a source."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dolína",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dolína*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dolína, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dolína*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with dolína",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *dolína*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Russian for a courier, then the Russian for a plain, then say dolína again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Russian for a courier, then the Russian for a plain, then say *dolína* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does долина (dolína) mean? (\"A valley\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "RU-C458-sklon",
+      "sequence": 26030,
+      "title": "склон (sklon) — a slope",
+      "headword": "склон",
+      "romanization": "sklon",
+      "gloss": "a slope",
+      "script": "cyrillic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0f1a483aa5654692",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Russian for a plain, then the Russian for a valley."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: склон",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "склон (sklon) — \"a slope\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Зимой на этом склоне катаются на лыжах. Zimóy na étom sklóne katáyutsya na lýzhakh. In winter people ski on this slope."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine. На склоне лет — in old age."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "склон (sklon) is built on склонить 'to bend, to incline', from клонить 'to lean'. EtymDB lists склон (sklon) without a deeper source."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sklon",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sklon*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sklon, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sklon*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with sklon",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *sklon*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Russian for a plain, then the Russian for a valley, then say sklon again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Russian for a plain, then the Russian for a valley, then say *sklon* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does склон (sklon) mean? (\"A slope\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "RU-C458-vershina",
+      "sequence": 26040,
+      "title": "вершина (vershína) — a summit, a peak",
+      "headword": "вершина",
+      "romanization": "vershína",
+      "gloss": "a summit, a peak",
+      "script": "cyrillic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:82314cd49168da24",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Russian for a valley, then the Russian for a slope."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: вершина",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "вершина (vershína) — \"a summit, a peak\"."
+            },
+            {
+              "kind": "speech",
+              "text": "До вершины горы мы шли пять часов. Do vershíny gorý my shli pyat chasóv. It took us five hours to walk to the top of the mountain."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine. Built on верх — the top."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "вершина (vershína) is built on верх 'the top' with -ина. EtymDB lists вершина (vershína) without a deeper source."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vershína",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vershína*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vershína, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vershína*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with vershína",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *vershína*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Russian for a valley, then the Russian for a slope, then say vershína again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Russian for a valley, then the Russian for a slope, then say *vershína* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does вершина (vershína) mean? (\"A summit, a peak\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "RU-C458-ushchelye",
+      "sequence": 26050,
+      "title": "ущелье (ushchélye) — a gorge, a ravine",
+      "headword": "ущелье",
+      "romanization": "ushchélye",
+      "gloss": "a gorge, a ravine",
+      "script": "cyrillic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:075a335d299c0404",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Russian for a slope, then the Russian for a summit."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ущелье",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ущелье (ushchélye) — \"a gorge, a ravine\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Дорога идёт по узкому ущелью. Doróga idyót po úzkomu ushchélyu. The road runs through a narrow gorge."
+            },
+            {
+              "kind": "speech",
+              "text": "Neuter."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ущелье (ushchélye) is usually traced to щель 'a crack, a gap', with у- and -ье: a deep crack between mountains. EtymDB does not list it, so the line is hedged."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ushchélye",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ushchélye*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ushchélye, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ushchélye*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with ushchélye",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *ushchélye*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Russian for a slope, then the Russian for a summit, then say ushchélye again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Russian for a slope, then the Russian for a summit, then say *ushchélye* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ущелье (ushchélye) mean? (\"A gorge, a ravine\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "RU-R458-review-451-458",
+      "sequence": 26060,
+      "title": "Words from chapters 451–458 — a review",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of chapters 451-458",
+      "script": "cyrillic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f794b7a262d2a02a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Russian for an embassy and a passport for travel abroad."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "an embassy, a passport for travel abroad, a small parcel, an addressee, to issue",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: an embassy, a passport for travel abroad, a small parcel, an addressee, to issue]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a bakery, a grocery store, a counter, a shop assistant, to weigh",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a bakery, a grocery store, a counter, a shop assistant, to weigh]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a fitting room, to try on, a size, to pinch, to exchange",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a fitting room, to try on, a size, to pinch, to exchange]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sale, a markdown, a special offer, to haggle, to overpay",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sale, a markdown, a special offer, to haggle, to overpay]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to settle up, payment, a bank card, to break, to shortchange",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to settle up, payment, a bank card, to break, to shortchange]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a bureau de change, a foreign currency, a warranty, faulty, to save",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a bureau de change, a foreign currency, a warranty, faulty, to save]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to pack, to wrap, delivery, to deliver, a courier",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to pack, to wrap, delivery, to deliver, a courier]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a plain, a valley, a slope, a summit, a gorge",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a plain, a valley, a slope, a summit, a gorge]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "An embassy? (посольство.) A passport for travel abroad? (загранпаспорт.) A small parcel? (бандероль.) An addressee? (получатель.) To issue? (выдавать.) A bakery? (булочная.) A grocery store? (гастроном.) A counter? (прилавок.) A shop assistant? (продавщица.) To weigh? (взвешивать.) A fitting room? (примерочная.) To try on? (примерять.) A size? (размер.) To pinch? (жать.) To exchange? (обменивать.) A sale? (распродажа.) A markdown? (уценка.) A special offer? (акция.) To haggle? (торговаться.) To overpay? (переплачивать.) To settle up? (расплачиваться.) Payment? (оплата.) A bank card? (карточка.) To break? (разменивать.) To shortchange? (обсчитывать.) A bureau de change? (обменник.) A foreign currency? (валюта.) A warranty? (гарантия.) Faulty? (бракованный.) To save? (экономить.) To pack? (упаковывать.) To wrap? (заворачивать.) Delivery? (доставка.) To deliver? (доставлять.) A courier? (курьер.) A plain? (равнина (ravnína).) A valley? (долина (dolína).) A slope? (склон (sklon).) A summit? (вершина (vershína).) A gorge? (ущелье (ushchélye).)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

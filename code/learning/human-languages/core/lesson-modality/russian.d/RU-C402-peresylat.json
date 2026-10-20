@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C402-peresylat",
+    "language": "russian",
+    "chapter": 402,
+    "sequence": 23160,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f86895c626c109f1"
+  },
+  "findings": []
+}

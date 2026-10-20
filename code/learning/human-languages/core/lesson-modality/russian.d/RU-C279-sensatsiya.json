@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C279-sensatsiya",
+    "language": "russian",
+    "chapter": 279,
+    "sequence": 16850,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d73b7bf589b22cbf"
+  },
+  "findings": []
+}

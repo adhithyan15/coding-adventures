@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C517-kompozitor",
+    "language": "russian",
+    "chapter": 517,
+    "sequence": 29100,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e5b927b1a5e4f909"
+  },
+  "findings": []
+}

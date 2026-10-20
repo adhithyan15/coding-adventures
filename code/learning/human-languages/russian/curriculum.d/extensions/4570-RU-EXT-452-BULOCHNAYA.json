@@ -1,0 +1,8 @@
+{
+  "id": "RU-EXT-452-BULOCHNAYA",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can shop for food: the bakery, the grocery, the counter, the shop assistant and weighing.",
+  "prerequisites": []
+}

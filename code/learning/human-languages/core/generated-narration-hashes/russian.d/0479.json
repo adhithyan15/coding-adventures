@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 479,
+  "sourceHash": "fnv1a64:12a7017c3c547c88",
+  "lessonIds": [
+    "RU-C479-doveriye",
+    "RU-C479-doveryat",
+    "RU-C479-predavat",
+    "RU-C479-uvazhat",
+    "RU-C479-iskrenniy"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch479.txt",
+  "json": "russian/narration/ch479.json",
+  "textHash": "fnv1a64:0079aeca8cd391f0",
+  "jsonHash": "fnv1a64:2c0acb7c756b6706",
+  "findings": []
+}

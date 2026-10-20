@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 394,
+  "sourceHash": "fnv1a64:c26397cc1d3c6915",
+  "lessonIds": [
+    "RU-C394-dolg",
+    "RU-C394-kredit",
+    "RU-C394-odalzhivat",
+    "RU-C394-vozvrashchat",
+    "RU-C394-procent"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch394.txt",
+  "json": "russian/narration/ch394.json",
+  "textHash": "fnv1a64:8d2c536e0fcf8477",
+  "jsonHash": "fnv1a64:fbe4e76e16484828",
+  "findings": []
+}

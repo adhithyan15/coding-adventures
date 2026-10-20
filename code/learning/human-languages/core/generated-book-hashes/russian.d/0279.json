@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 279,
+  "sourceHash": "fnv1a64:7989e67fef3817a5",
+  "lessonIds": [
+    "RU-C279-izvestiye",
+    "RU-C279-vypusk",
+    "RU-C279-zagolovok",
+    "RU-C279-statya",
+    "RU-C279-sensatsiya"
+  ],
+  "tex": "russian/book/chapters/ch279-news-and-headlines.tex"
+}

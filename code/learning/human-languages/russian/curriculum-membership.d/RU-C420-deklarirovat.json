@@ -1,0 +1,11 @@
+{
+  "id": "RU-C420-deklarirovat",
+  "pathSegment": "RU-PATH-420-DOSMOTR",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "RU-EXT-420-DOSMOTR",
+      "order": 4
+    }
+  ]
+}

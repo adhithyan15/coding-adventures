@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 451,
+  "sourceHash": "fnv1a64:6e0b8154a37e96b9",
+  "lessonIds": [
+    "RU-C451-posolstvo",
+    "RU-C451-zagranpasport",
+    "RU-C451-banderol",
+    "RU-C451-poluchatel",
+    "RU-C451-vydavat"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch451.txt",
+  "json": "russian/narration/ch451.json",
+  "textHash": "fnv1a64:d4a42db3a2b85d9a",
+  "jsonHash": "fnv1a64:fe5003d20d33b55b",
+  "findings": []
+}

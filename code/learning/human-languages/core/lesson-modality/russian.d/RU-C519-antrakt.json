@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C519-antrakt",
+    "language": "russian",
+    "chapter": 519,
+    "sequence": 29170,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:eec6c9a672a1e42b"
+  },
+  "findings": []
+}

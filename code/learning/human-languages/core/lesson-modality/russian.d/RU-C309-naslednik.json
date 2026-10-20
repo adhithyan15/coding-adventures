@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C309-naslednik",
+    "language": "russian",
+    "chapter": 309,
+    "sequence": 18380,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:18b98788c155bb94"
+  },
+  "findings": []
+}

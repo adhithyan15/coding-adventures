@@ -1,0 +1,19 @@
+{
+  "chapter": 344,
+  "title": "Logic and conclusions",
+  "label": "ch:ru-logic-and-conclusions",
+  "canDo": "I can follow the logic of an argument, say whether it is logical, draw a conclusion, reason aloud and call something obvious.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "RU-R344-review-337-344",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 344: I can follow the logic of an argument, say whether it is logical, draw a conclusion, reason aloud and call something obvious.",
+    "assesses": [
+      "RU-LEX-C344-LOGIKA-03",
+      "RU-LEX-C344-LOGIKA-04",
+      "RU-LEX-C344-LOGIKA-05"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C445-klumba",
+    "language": "russian",
+    "chapter": 445,
+    "sequence": 25390,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ed1a75f08c6e69b4"
+  },
+  "findings": []
+}

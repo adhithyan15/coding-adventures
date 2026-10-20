@@ -1,0 +1,19 @@
+{
+  "chapter": 327,
+  "title": "Treasure and finds",
+  "label": "ch:ru-treasure-and-finds",
+  "canDo": "I can talk about an archaeologist, a dig, a find, treasure and a buried hoard.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "RU-C327-klad",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 327: I can talk about an archaeologist, a dig, a find, treasure and a buried hoard.",
+    "assesses": [
+      "RU-LEX-C327-KLAD-03",
+      "RU-LEX-C327-KLAD-04",
+      "RU-LEX-C327-KLAD-05"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C293-sud",
+    "language": "russian",
+    "chapter": 293,
+    "sequence": 17520,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d03415a7fdfa6385"
+  },
+  "findings": []
+}

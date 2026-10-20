@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 327,
+  "sourceHash": "fnv1a64:f3980c363de08731",
+  "lessonIds": [
+    "RU-C327-arkheolog",
+    "RU-C327-raskopki",
+    "RU-C327-nakhodka",
+    "RU-C327-sokrovishche",
+    "RU-C327-klad"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch327.txt",
+  "json": "russian/narration/ch327.json",
+  "textHash": "fnv1a64:c802260ae5c31764",
+  "jsonHash": "fnv1a64:ee5ab95e9c9fa19a",
+  "findings": []
+}

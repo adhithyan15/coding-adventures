@@ -1,0 +1,11 @@
+{
+  "id": "RU-C503-krossvord",
+  "pathSegment": "RU-PATH-503-COLLECTING",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "RU-EXT-503-COLLECTING",
+      "order": 3
+    }
+  ]
+}

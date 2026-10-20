@@ -1,0 +1,11 @@
+{
+  "id": "RU-C476-ispug",
+  "pathSegment": "RU-PATH-476-FRIGHT",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "RU-EXT-476-FRIGHT",
+      "order": 0
+    }
+  ]
+}

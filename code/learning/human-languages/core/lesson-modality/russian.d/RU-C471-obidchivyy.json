@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C471-obidchivyy",
+    "language": "russian",
+    "chapter": 471,
+    "sequence": 26730,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2a6224eb6b339a0b"
+  },
+  "findings": []
+}

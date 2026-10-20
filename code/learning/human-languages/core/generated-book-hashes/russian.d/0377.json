@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 377,
+  "sourceHash": "fnv1a64:eb7e4a101a236e3e",
+  "lessonIds": [
+    "RU-C377-perenosit",
+    "RU-C377-peredumyvat",
+    "RU-C377-otkazyvatsya",
+    "RU-C377-naznachat",
+    "RU-C377-sobiratsya"
+  ],
+  "tex": "russian/book/chapters/ch377-changing-plans.tex"
+}

@@ -1,0 +1,8 @@
+{
+  "id": "RU-EXT-400-BEZOPASNOST",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can talk about safety online: a password, a hacker, breaking into an account, and a virus.",
+  "prerequisites": []
+}

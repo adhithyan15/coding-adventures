@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C503-razgadyvat",
+    "language": "russian",
+    "chapter": 503,
+    "sequence": 28380,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0b7aca1d0d5262d1"
+  },
+  "findings": []
+}

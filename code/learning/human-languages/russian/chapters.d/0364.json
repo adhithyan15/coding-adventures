@@ -1,0 +1,19 @@
+{
+  "chapter": 364,
+  "title": "Society and its people",
+  "label": "ch:ru-society-and-its-people",
+  "canDo": "I can talk about society, the population of a place and its inhabitants, and about public and social questions.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "RU-C364-zhitel",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 364: I can talk about society, the population of a place and its inhabitants, and about public and social questions.",
+    "assesses": [
+      "RU-LEX-C364-OBSHCHESTVO-03",
+      "RU-LEX-C364-OBSHCHESTVO-04",
+      "RU-LEX-C364-OBSHCHESTVO-05"
+    ]
+  }
+}

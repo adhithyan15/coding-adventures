@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 374,
+  "sourceHash": "fnv1a64:f2af280b0af2c665",
+  "lessonIds": [
+    "RU-C374-rasschityvat",
+    "RU-C374-ozhidat",
+    "RU-C374-ozhidanie",
+    "RU-C374-udavatsya",
+    "RU-C374-poluchatsya"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch374.txt",
+  "json": "russian/narration/ch374.json",
+  "textHash": "fnv1a64:3f65b40a68ca80b9",
+  "jsonHash": "fnv1a64:7663ae3d427b5e16",
+  "findings": []
+}

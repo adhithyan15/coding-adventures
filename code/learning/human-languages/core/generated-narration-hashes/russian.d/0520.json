@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 520,
+  "sourceHash": "fnv1a64:a8555d95dd6036a1",
+  "lessonIds": [
+    "RU-C520-rezhissyor",
+    "RU-C520-aktrisa",
+    "RU-C520-rol",
+    "RU-C520-zritel",
+    "RU-C520-snimatsya"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch520.txt",
+  "json": "russian/narration/ch520.json",
+  "textHash": "fnv1a64:c467dad36f8d965b",
+  "jsonHash": "fnv1a64:fa6248c552ba55c5",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "RU-C262-rasskazat",
+  "pathSegment": "RU-PATH-262-STORY",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "RU-EXT-262-STORY",
+      "order": 1
+    }
+  ]
+}

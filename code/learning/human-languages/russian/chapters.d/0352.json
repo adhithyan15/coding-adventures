@@ -1,0 +1,19 @@
+{
+  "chapter": 352,
+  "title": "Whose fault is it?",
+  "label": "ch:ru-whose-fault-is-it",
+  "canDo": "I can say whose fault something is, who is to blame and who is responsible, and talk about an excuse.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "RU-R352-review-345-352",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 352: I can say whose fault something is, who is to blame and who is responsible, and talk about an excuse.",
+    "assesses": [
+      "RU-LEX-C352-VINA-03",
+      "RU-LEX-C352-VINA-04",
+      "RU-LEX-C352-VINA-05"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C390-poryadok",
+    "language": "russian",
+    "chapter": 390,
+    "sequence": 22530,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:fa25ebe16e7691a7"
+  },
+  "findings": []
+}

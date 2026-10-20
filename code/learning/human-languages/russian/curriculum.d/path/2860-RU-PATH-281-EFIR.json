@@ -1,0 +1,9 @@
+{
+  "id": "RU-PATH-281-EFIR",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "RU-EXT-281-EFIR"
+  ],
+  "after": []
+}

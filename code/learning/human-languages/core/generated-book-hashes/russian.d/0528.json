@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 528,
+  "sourceHash": "fnv1a64:a0d9fd79cf06fd8d",
+  "lessonIds": [
+    "RU-C528-pristavka",
+    "RU-C528-videoigra",
+    "RU-C528-bloger",
+    "RU-C528-podpischik",
+    "RU-C528-geymer"
+  ],
+  "tex": "russian/book/chapters/ch528-consoles-and-bloggers.tex"
+}

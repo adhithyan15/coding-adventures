@@ -1,0 +1,11 @@
+{
+  "id": "RU-C337-tochka-zreniya",
+  "pathSegment": "RU-PATH-337-TOCHKAZRENIYA",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "RU-EXT-337-TOCHKAZRENIYA",
+      "order": 0
+    }
+  ]
+}

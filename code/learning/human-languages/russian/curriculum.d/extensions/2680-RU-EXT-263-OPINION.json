@@ -1,0 +1,8 @@
+{
+  "id": "RU-EXT-263-OPINION",
+  "stage": "B1",
+  "kind": "required",
+  "category": "grammar",
+  "canDo": "I can give my opinion with я думаю, что, по-моему and мне кажется, что, and draw a result with поэтому and так что.",
+  "prerequisites": []
+}

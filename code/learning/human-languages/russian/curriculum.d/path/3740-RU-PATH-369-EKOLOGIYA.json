@@ -1,0 +1,9 @@
+{
+  "id": "RU-PATH-369-EKOLOGIYA",
+  "spine_node": "SPINE-GIVE-REASONS",
+  "before": [],
+  "inline": [
+    "RU-EXT-369-EKOLOGIYA"
+  ],
+  "after": []
+}

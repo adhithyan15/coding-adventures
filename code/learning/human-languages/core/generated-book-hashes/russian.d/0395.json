@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 395,
+  "sourceHash": "fnv1a64:f9f7dd0764e5fb1b",
+  "lessonIds": [
+    "RU-C395-sberezheniya",
+    "RU-C395-vkladyvat",
+    "RU-C395-vklad",
+    "RU-C395-stoimost",
+    "RU-C395-byudzhet"
+  ],
+  "tex": "russian/book/chapters/ch395-savings-and-budgets.tex"
+}

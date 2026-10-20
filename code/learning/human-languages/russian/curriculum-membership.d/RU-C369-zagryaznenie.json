@@ -1,0 +1,11 @@
+{
+  "id": "RU-C369-zagryaznenie",
+  "pathSegment": "RU-PATH-369-EKOLOGIYA",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "RU-EXT-369-EKOLOGIYA",
+      "order": 1
+    }
+  ]
+}

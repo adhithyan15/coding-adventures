@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C369-zagryaznyat",
+    "language": "russian",
+    "chapter": 369,
+    "sequence": 21460,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:bcab25cb93f111fc"
+  },
+  "findings": []
+}

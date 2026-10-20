@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 279,
+  "sourceHash": "fnv1a64:2b4ce7485119d4e0",
+  "lessonIds": [
+    "RU-C279-izvestiye",
+    "RU-C279-vypusk",
+    "RU-C279-zagolovok",
+    "RU-C279-statya",
+    "RU-C279-sensatsiya"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch279.txt",
+  "json": "russian/narration/ch279.json",
+  "textHash": "fnv1a64:a7eb6f907c3e5284",
+  "jsonHash": "fnv1a64:b0434d3d832b4d89",
+  "findings": []
+}

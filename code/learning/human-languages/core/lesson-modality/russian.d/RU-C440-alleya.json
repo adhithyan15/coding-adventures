@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C440-alleya",
+    "language": "russian",
+    "chapter": 440,
+    "sequence": 25130,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ae81785e63bf9a7d"
+  },
+  "findings": []
+}

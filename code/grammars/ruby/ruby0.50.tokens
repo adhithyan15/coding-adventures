@@ -1,0 +1,196 @@
+# Ruby 0.50 (1994-08-10?) tokens: LANG84 R0 lexical slice.
+# @version 1
+# PARTIAL: lexes only the R0 constructs listed below; see code/grammars/ruby/README.md.
+# source_ref: https://github.com/ruby/ruby/tree/v0_50
+# source_sha: 6e3090413652b6592346556149fed1e9aec5495d
+# evidence: parse.y blob ff1a7f669d3eb9c8c4630442422e647d30ed3828; keywords blob -; defs/keywords blob -; prism/config.yml blob -
+# basis: reviewed against the tag's own syntax files. yylex delta from 0.49 is outside R0 except that a backtick now opens an xstring (no longer a token); kwtable adds __FILE__ and __LINE__ and drops func; the subset's yacc rules are unchanged.
+
+# ---------------------------------------------------------------------------
+# R0 lexical slice (LANG84 phase 3.2) for the 1994 0.4x/0.5x lexer. Ruby at
+# this point is a different language from 1.x: there is no ternary `?:` (a
+# `?` always starts a character literal), no `:sym` (symbols are written
+# `\sym`), no @@class variables, no `0b`/`0o`/`0d` prefixes and no `->` or
+# `&.`. Upper-case names are ordinary identifiers; constants are spelled
+# `%Name`. Everything below is read from that release's parse.y `yylex()`.
+#
+# Lexed: integers (decimal with `_` ignored, 0x hex, leading-0 octal), floats,
+# a sign folded into a number in expression-start position (`-1` is ONE
+# INTEGER token there, as in yylex's `start_num` path), identifiers,
+# %constants, @ivar, $gvar (including the one-character specials), `?c`
+# character literals (an INTEGER in this release), the `\` symbol prefix,
+# keywords, every operator and punctuator, `#` comments, `\` line
+# continuation, NEWLINE and `;`.
+#
+# NOT lexed: strings and backticks (lexer error; a backtick opens an
+# xstring from this release on), regexps (`/` is division
+# here; parse.y switches the lexer into regexp mode from the PARSER, an E7
+# concern), character escapes `?\n` (lexer error).
+#
+# Known R0 divergences (each has a test):
+#   * yylex drops a newline when lex_state is EXPR_BEG. This pair always
+#     emits NEWLINE and the paired .grammar accepts NEWLINE exactly where
+#     the lexer would have been in EXPR_BEG.
+#   * F10 transitions do not fire on the engine's built-in NEWLINE token, so
+#     the first token of a line keeps the previous line's mode: after
+#     `x = 1` + newline, `-2` lexes as MINUS NUMBER where yylex (back in
+#     EXPR_BEG) folds it into one INTEGER.
+# ---------------------------------------------------------------------------
+
+# --- numeric literals (yylex `start_num`) -----------------------------------
+# yylex reads a decimal literal as: digits and `_` (ignored), at most one
+# `.digit` fraction, at most one `e`/`E` with an optional sign, in either
+# order. `0x` reads hex digits (none is allowed); `0` followed by a digit
+# reads an octal run of 0-9. Nothing checks the following character.
+HEX_INTEGER   = /0[xX][0-9a-fA-F]*/
+OCTAL_INTEGER = /0[0-9]+/
+FLOAT         = /[0-9][0-9_]*(?:\.[0-9][0-9_]*(?:[eE][-+]?[0-9_]*)?|[eE][-+]?[0-9_]*(?:\.[0-9][0-9_]*)?)/
+DOT_FLOAT     = /\.[0-9][0-9_]*(?:[eE][-+]?[0-9_]*)?/ -> FLOAT
+NUMBER        = /[0-9][0-9_]*/
+
+# --- identifiers and variables ----------------------------------------------
+NAME         = /[A-Za-z_][A-Za-z0-9_]*/
+IVAR         = /@[A-Za-z0-9_]+/
+AT           = "@"
+GVAR_SPECIAL = /\$[*$?!@\/\\,._&~=]/ -> GVAR
+GVAR         = /\$[A-Za-z0-9_]+/
+DOLLAR       = "$"
+CHAR         = /\?[ -\[\]-~\t]/
+
+# --- operators, longest spelling first --------------------------------------
+STAR_STAR_EQUALS   = "**="
+STAR_STAR          = "**"
+STAR_EQUALS        = "*="
+STAR               = "*"
+NOT_EQUALS         = "!="
+NOT_MATCH          = "!~"
+BANG               = "!"
+EQUALS_EQUALS      = "=="
+MATCH              = "=~"
+HASH_ROCKET        = "=>"
+EQUALS             = "="
+SPACESHIP          = "<=>"
+LESS_EQUALS        = "<="
+LEFT_SHIFT_EQUALS  = "<<="
+LEFT_SHIFT         = "<<"
+LESS_THAN          = "<"
+GREATER_EQUALS     = ">="
+RIGHT_SHIFT_EQUALS = ">>="
+RIGHT_SHIFT        = ">>"
+GREATER_THAN       = ">"
+AND_AND            = "&&"
+AMPERSAND_EQUALS   = "&="
+AMPERSAND          = "&"
+OR_OR              = "||"
+PIPE_EQUALS        = "|="
+PIPE               = "|"
+PLUS_EQUALS        = "+="
+PLUS               = "+"
+MINUS_EQUALS       = "-="
+MINUS              = "-"
+DOT3               = "..."
+DOT2               = ".."
+DOT                = "."
+COLON_COLON        = "::"
+COLON              = ":"
+SLASH_EQUALS       = "/="
+SLASH              = "/"
+CARET_EQUALS       = "^="
+CARET              = "^"
+PERCENT_EQUALS     = "%="
+PERCENT            = "%"
+BACKSLASH          = "\"
+TILDE              = "~"
+COMMA              = ","
+SEMICOLON          = ";"
+LPAREN             = "("
+RPAREN             = ")"
+LBRACKET           = "["
+RBRACKET           = "]"
+LBRACE             = "{"
+RBRACE             = "}"
+
+# --- lexer states as F10 flat modes -----------------------------------------
+# yylex tests lex_state in two R0 places: `+`/`-` followed by a digit folds
+# into the number, and `%` starts a %Constant, both only in EXPR_BEG or
+# EXPR_MID. Mode `beg` stands for those two states and `default` for
+# EXPR_END. The lexer starts in EXPR_BEG (the `program` action sets it).
+start_mode: beg
+
+group beg:
+  SIGNED_FLOAT   = /[-+][0-9][0-9_]*(?:\.[0-9][0-9_]*(?:[eE][-+]?[0-9_]*)?|[eE][-+]?[0-9_]*(?:\.[0-9][0-9_]*)?)/ -> FLOAT
+  SIGNED_INTEGER = /[-+][0-9][0-9_]*/ -> NUMBER
+  CONSTANT       = /%[A-Za-z0-9_]*/
+
+skip:
+  # `__END__` is a keyword whose token number is 0: the parser sees end of
+  # input wherever the identifier appears.
+  END_OF_PROGRAM    = /__END__\b[\s\S]*/
+  LINE_CONTINUATION = /\\\n/
+  WHITESPACE        = /[ \t\f\r]+/
+  COMMENT           = /#[^\n]*/
+
+# Each rule mirrors the `lex_state = ...` assignment on yylex's path for that
+# token. A token with no rule leaves the mode alone, which is exactly what
+# yylex does for `...`, a bare `@` or `$`, and the KEEP_STATE keywords.
+transitions:
+  on (NUMBER | FLOAT | HEX_INTEGER | OCTAL_INTEGER | CHAR | NAME | IVAR | GVAR | CONSTANT | RPAREN | RBRACKET | RBRACE) -> set-mode default
+  on KEYWORD="break"    -> set-mode default
+  on KEYWORD="continue" -> set-mode default
+  on KEYWORD="end"      -> set-mode default
+  on KEYWORD="nil"      -> set-mode default
+  on KEYWORD="redo"     -> set-mode default
+  on KEYWORD="retry"    -> set-mode default
+  on KEYWORD="self"     -> set-mode default
+  on KEYWORD="super"    -> set-mode default
+  on KEYWORD="__FILE__" -> set-mode default
+  on KEYWORD="__LINE__" -> set-mode default
+  on KEYWORD="else"     -> set-mode beg
+  on KEYWORD="elsif"    -> set-mode beg
+  on KEYWORD="ensure"   -> set-mode beg
+  on KEYWORD="in"       -> set-mode beg
+  on KEYWORD="include"  -> set-mode beg
+  on KEYWORD="resque"   -> set-mode beg
+  on KEYWORD="return"   -> set-mode beg
+  on KEYWORD="then"     -> set-mode beg
+  on KEYWORD="undef"    -> set-mode beg
+  on KEYWORD="unless"   -> set-mode beg
+  on KEYWORD="until"    -> set-mode beg
+  on KEYWORD="when"     -> set-mode beg
+  on KEYWORD="yield"    -> set-mode beg
+  on (STAR_STAR_EQUALS | STAR_STAR | STAR_EQUALS | STAR | NOT_EQUALS | NOT_MATCH | BANG | EQUALS_EQUALS | MATCH | HASH_ROCKET | EQUALS | SPACESHIP | LESS_EQUALS | LEFT_SHIFT_EQUALS | LEFT_SHIFT | LESS_THAN | GREATER_EQUALS | RIGHT_SHIFT_EQUALS | RIGHT_SHIFT | GREATER_THAN | AND_AND | AMPERSAND_EQUALS | AMPERSAND | OR_OR | PIPE_EQUALS | PIPE | PLUS_EQUALS | PLUS | MINUS_EQUALS | MINUS | DOT2 | DOT | COLON_COLON | COLON | SLASH_EQUALS | SLASH | CARET_EQUALS | CARET | PERCENT_EQUALS | PERCENT | BACKSLASH | TILDE | COMMA | SEMICOLON | LPAREN | LBRACKET | LBRACE) -> set-mode beg
+
+keywords:
+  __FILE__
+  __LINE__
+  break
+  case
+  class
+  continue
+  def
+  do
+  else
+  elsif
+  end
+  ensure
+  for
+  if
+  in
+  include
+  module
+  nil
+  protect
+  redo
+  resque
+  retry
+  return
+  self
+  super
+  then
+  undef
+  unless
+  until
+  using
+  when
+  while
+  yield

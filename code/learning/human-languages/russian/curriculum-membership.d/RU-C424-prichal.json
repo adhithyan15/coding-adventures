@@ -1,0 +1,11 @@
+{
+  "id": "RU-C424-prichal",
+  "pathSegment": "RU-PATH-424-PAROM",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "RU-EXT-424-PAROM",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 308,
+  "sourceHash": "fnv1a64:5604398fc428d0d2",
+  "lessonIds": [
+    "RU-C308-vypusknik",
+    "RU-C308-postupat",
+    "RU-C308-okanchivat",
+    "RU-C308-diplom",
+    "RU-C308-attestat"
+  ],
+  "tex": "russian/book/chapters/ch308-school-and-university.tex"
+}

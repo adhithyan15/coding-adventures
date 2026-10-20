@@ -1,0 +1,22 @@
+{
+  "chapter": 269,
+  "title": "If, and It Depends",
+  "label": "ch:ru-if-and-it-depends",
+  "canDo": "I can say what will happen if something happens, with если and the future in both halves, and answer a question with это зависит от ...",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "RU-C269-review",
+    "kind": "production",
+    "summary": "Complete RU-C269-review: a weekend plan with если and the future, a whether-question with ли, and an answer that depends.",
+    "assesses": [
+      "RU-GRAMMAR-YESLI-CLAUSE-01",
+      "RU-GRAMMAR-LI-NOT-YESLI-01",
+      "RU-GRAMMAR-YESLI-FUTURE-01",
+      "RU-GRAMMAR-PERFECTIVE-FUTURE-01",
+      "RU-LEX-ZAVISIT-OT-01",
+      "RU-GRAMMAR-OT-GENITIVE-01"
+    ]
+  }
+}

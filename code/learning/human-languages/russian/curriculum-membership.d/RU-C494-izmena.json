@@ -1,0 +1,11 @@
+{
+  "id": "RU-C494-izmena",
+  "pathSegment": "RU-PATH-494-MARRIAGE",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "RU-EXT-494-MARRIAGE",
+      "order": 2
+    }
+  ]
+}

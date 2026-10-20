@@ -1,0 +1,19 @@
+{
+  "chapter": 380,
+  "title": "What will happen",
+  "label": "ch:ru-what-will-happen",
+  "canDo": "I can predict what will happen, guess right, talk about a deadline, and say whether something is permanent or temporary.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "RU-C380-vremennyy",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 380: I can predict what will happen, guess right, talk about a deadline, and say whether something is permanent or temporary.",
+    "assesses": [
+      "RU-LEX-C380-BUDUSHCHEYE-03",
+      "RU-LEX-C380-BUDUSHCHEYE-04",
+      "RU-LEX-C380-BUDUSHCHEYE-05"
+    ]
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 421,
+  "sourceHash": "fnv1a64:69f4998ad5649e2d",
+  "lessonIds": [
+    "RU-C421-vzletat",
+    "RU-C421-vzlyot",
+    "RU-C421-prizemlyatsya",
+    "RU-C421-illyuminator",
+    "RU-C421-trap"
+  ],
+  "tex": "russian/book/chapters/ch421-take-off-and-landing.tex"
+}

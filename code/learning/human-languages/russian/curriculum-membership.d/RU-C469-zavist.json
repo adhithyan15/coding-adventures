@@ -1,0 +1,11 @@
+{
+  "id": "RU-C469-zavist",
+  "pathSegment": "RU-PATH-469-JEALOUSY",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "RU-EXT-469-JEALOUSY",
+      "order": 3
+    }
+  ]
+}
