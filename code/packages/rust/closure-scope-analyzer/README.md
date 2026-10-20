@@ -73,12 +73,29 @@ for reference in &analysis.references {
 
 ## Status
 
-- **v0.1.0 (this release):** types + entry function + serde + tests.
-  The body of `analyze` returns a single global scope and no bindings
-  — i.e., it doesn't walk the AST yet.  The contract is the unblocker
-  for the five consumer passes.
-- **v0.2.0 (CLOC13.0, planned):** real body — walks the Program,
-  builds the scope tree, populates bindings and references.
+`analyze` walks the whole program (v0.21.0). The status notes that used to
+live here described v0.1.0 and v0.2.0; `CHANGELOG.md` has the full history.
+
+## Which constructs open a scope
+
+| Construct | Scope kind | Holds |
+|---|---|---|
+| the program | `Global` | top-level `var`, `let`, `const`, functions |
+| a function body | `Function` | params, `var` (hoisted), its own `let`/`const` |
+| a `{ … }` block | `Block` | `let`, `const`, class and function declarations |
+| `for`/`for-in`/`for-of` with a `let`/`const` head | `Block` | the head binding |
+
+The last row is why
+
+```js
+var x = 1;
+for (let x of [7]) console.log(x);
+console.log(x);
+```
+
+keeps `var x = 1`: the read after the loop resolves past the loop scope to
+the outer binding (#16008). A `var` head opens no scope; it hoists like any
+other `var`.
 
 ## Why a separate crate
 
