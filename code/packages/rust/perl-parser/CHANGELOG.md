@@ -2,6 +2,14 @@
 
 ## Unreleased
 
+- LANG84 phase 4b: regenerated for the new `perl5.38.0` partial pair
+  (118 checked releases, 2 parser tables). New
+  `perl_5_38_0_has_its_own_partial_pair_grounded_in_its_tag` checks the
+  pair's cited tag and blob IDs and probes CR whitespace, the 250/251-digit
+  bound, and refusal of octal, `_`, float, exponent, radix, FF/VT, comment,
+  POD, `__END__`, decrement and other out-of-subset forms. 5.38.0 joins the
+  shared leading-zero, unknown-character and digit-bound probe lists.
+
 - LANG84 phase 4a: compile every checked release pair (117 pairs, 2 distinct
   parser tables) and export `INVENTORY_RELEASES`, `SUPPORTED_RELEASES`,
   `release_parser_grammar(id)`, `unversioned_parser_grammar()` and

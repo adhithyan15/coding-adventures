@@ -2,7 +2,7 @@
 // Source family: perl (release list from code/grammars/perl/releases.csv)
 // Regenerate with: grammar-tools generate-rust-compiled-grammars perl
 //
-// 117 compiled releases share 5 distinct TokenGrammar value(s) (LANG84 deduplication:
+// 118 compiled releases share 5 distinct TokenGrammar value(s) (LANG84 deduplication:
 // grammars equal apart from comments and line numbers share one module, whose
 // line numbers come from the first release in the class).
 // Call `token_grammar` instead of reading and parsing grammar files at runtime.
@@ -906,6 +906,7 @@ pub const SUPPORTED_RELEASES: &[&str] = &[
     "5.004_70",
     "5.004_71",
     "5.004_72",
+    "5.38.0",
     "5.38.2",
     "5.44.0",
     "5.45.3",
@@ -1032,6 +1033,7 @@ pub fn token_grammar(release: &str) -> Option<TokenGrammar> {
         | "5.004_71"
             => Some(g_70013ef7ab94::token_grammar()),
         "5.004_72"
+        | "5.38.0"
             => Some(g_a196e6b62667::token_grammar()),
         "5.38.2"
         | "5.44.0"
@@ -1478,7 +1480,7 @@ mod g_70013ef7ab94 {
     }
 }
 
-// 1 release(s), first 5.004_72
+// 2 release(s), first 5.004_72
 mod g_a196e6b62667 {
     // AUTO-GENERATED FILE — DO NOT EDIT
     // Source: perl5.004_72.tokens

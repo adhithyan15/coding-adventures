@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- LANG84 phase 4b: regenerated for the new `perl5.38.0` partial pair
+  (118 checked releases, still 5 distinct token tables: 5.38.0 shares
+  5.004_72's). The unversioned table remains for `tokenize_perl` only.
+
 - LANG84 phase 4a: compile every checked release pair. `_grammar.rs` is now
   generated from `releases.csv` (117 pairs, 5 distinct tables) and exports
   `INVENTORY_RELEASES`, `SUPPORTED_RELEASES`, `release_token_grammar(id)`

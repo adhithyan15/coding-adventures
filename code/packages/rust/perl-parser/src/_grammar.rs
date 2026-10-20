@@ -2,7 +2,7 @@
 // Source family: perl (release list from code/grammars/perl/releases.csv)
 // Regenerate with: grammar-tools generate-rust-compiled-grammars perl
 //
-// 117 compiled releases share 2 distinct ParserGrammar value(s) (LANG84 deduplication:
+// 118 compiled releases share 2 distinct ParserGrammar value(s) (LANG84 deduplication:
 // grammars equal apart from comments and line numbers share one module, whose
 // line numbers come from the first release in the class).
 // Call `parser_grammar` instead of reading and parsing grammar files at runtime.
@@ -906,6 +906,7 @@ pub const SUPPORTED_RELEASES: &[&str] = &[
     "5.004_70",
     "5.004_71",
     "5.004_72",
+    "5.38.0",
     "5.38.2",
     "5.44.0",
     "5.45.3",
@@ -1029,6 +1030,7 @@ pub fn parser_grammar(release: &str) -> Option<ParserGrammar> {
         | "5.004_70"
         | "5.004_71"
         | "5.004_72"
+        | "5.38.0"
             => Some(g_02ebbe6b48c3::parser_grammar()),
         "5.38.2"
         | "5.44.0"
@@ -1130,7 +1132,7 @@ mod generic {
     }
 }
 
-// 114 release(s), first 1.000
+// 115 release(s), first 1.000
 mod g_02ebbe6b48c3 {
     // AUTO-GENERATED FILE — DO NOT EDIT
     // Source: perl1.000.grammar

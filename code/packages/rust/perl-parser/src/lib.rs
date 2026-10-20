@@ -274,6 +274,7 @@ mod tests {
                     | "5.004_70"
                     | "5.004_71"
                     | "5.004_72"
+                    | "5.38.0"
                     | "5.38.2"
                     | "5.44.0"
                     | "5.45.3"
@@ -445,6 +446,7 @@ mod tests {
                     | "5.004_70"
                     | "5.004_71"
                     | "5.004_72"
+                    | "5.38.0"
             ) {
                 let unknown = GrammarLexer::new("print(1);\u{0001}", &token_grammar).tokenize();
                 assert!(
@@ -514,6 +516,7 @@ mod tests {
                     | "5.004_70"
                     | "5.004_71"
                     | "5.004_72"
+                    | "5.38.0"
             ) {
                 let accepted = format!("print({});", "9".repeat(250));
                 let tokens = GrammarLexer::new(&accepted, &token_grammar)
@@ -868,6 +871,96 @@ mod tests {
                     });
             assert!(rejected, "5.004_72: unsupported context accepted: {source}");
         }
+    }
+
+    /// LANG84 phase 4b: the default release's own pair, grounded in the
+    /// `v5.38.0` tag's `perly.y`, `toke.c`, `keywords.h` and `parser.h`.
+    #[test]
+    fn perl_5_38_0_has_its_own_partial_pair_grounded_in_its_tag() {
+        let directory = Path::new(env!("CARGO_MANIFEST_DIR")).join("../../../grammars/perl");
+        let inventory = std::fs::read_to_string(directory.join("releases.csv")).unwrap();
+        assert!(inventory
+            .lines()
+            .any(|row| row.starts_with("5.38.0,") && row.ends_with(",partial")));
+        let token_text = std::fs::read_to_string(directory.join("perl5.38.0.tokens")).unwrap();
+        let grammar_text = std::fs::read_to_string(directory.join("perl5.38.0.grammar")).unwrap();
+        // The headers cite the tag and the exact blobs the rules come from.
+        for text in [&token_text, &grammar_text] {
+            for evidence in [
+                "https://github.com/Perl/perl5/tree/v5.38.0",
+                "f47267bec5921b10a8cc16545c9fdf11972c5f2d",
+                "c0c09092c5e9305af5638535effebf18ea62cfe3",
+                "1f81b3614c9a186468098cb15216c1dfe7ab3f2c",
+                "feae6f6dce7ac861ac1ca207c097e51209a2191b",
+                "46d6a19c7b1e8638c26ceaa8b30dfa3e75b8f62c",
+                "PARTIAL",
+            ] {
+                assert!(text.contains(evidence), "5.38.0 pair lacks {evidence}");
+            }
+        }
+        // The compiled tables are the ones the frontend uses by default.
+        let token_grammar = coding_adventures_perl_lexer::release_token_grammar("5.38.0").unwrap();
+        let parser_grammar = release_parser_grammar("5.38.0").unwrap();
+        let parses = |source: &str| {
+            GrammarLexer::new(source, &token_grammar)
+                .tokenize()
+                .is_ok_and(|tokens| {
+                    GrammarParser::new(tokens, parser_grammar.clone())
+                        .with_max_depth(MAX_RULE_DEPTH)
+                        .parse()
+                        .is_ok()
+                })
+        };
+        // CR is whitespace: yylex falls through to the space case unless
+        // PERL_STRICT_CR is defined, which a default build does not do.
+        for source in [
+            "print(1);\r\nprint(2);\r\n",
+            "print\r(1\r+\r2);",
+            "print (1);",
+            "print(1- -2);",
+            "print((1 + 2) * -3);",
+        ] {
+            assert!(parses(source), "5.38.0: supported form rejected: {source:?}");
+        }
+        for source in [
+            // scan_num: a leading 0 is octal (and 8/9 are illegal there),
+            // `_` separators, fractions, exponents and radix prefixes are
+            // all real 5.38.0 syntax outside this subset.
+            "print(012);",
+            "print(08);",
+            "print(1_000);",
+            "print(1.5);",
+            "print(1e3);",
+            "print(0x1F);",
+            "print(0b101);",
+            "print(0o17);",
+            // FF and VT are whitespace upstream; this subset excludes them.
+            "print(1)\x0c;",
+            "print(1)\x0b;",
+            // print without parentheses, a list, a filehandle, other ops.
+            "print 1;",
+            "print(1, 2);",
+            "print(STDOUT 1);",
+            "print(+1);",
+            "print(2 ** 3);",
+            "print(7 / 2);",
+            "print(7 % 2);",
+            "printf(1);",
+            "say(1);",
+            // Comments, POD and the decrement token.
+            "print(1); # one",
+            "=pod\n\n=cut\nprint(1);",
+            "print(1);\n__END__\n",
+            "print(1--2);",
+            "print(--1);",
+            "use v5.38; print(1);",
+            "BEGIN { print(1); }",
+        ] {
+            assert!(!parses(source), "5.38.0: unsupported form accepted: {source:?}");
+        }
+        // toke.c scan_num: tokenbuf[256] minus six reserved bytes.
+        assert!(parses(&format!("print({});", "9".repeat(250))));
+        assert!(!parses(&format!("print({});", "9".repeat(251))));
     }
 
     #[test]
