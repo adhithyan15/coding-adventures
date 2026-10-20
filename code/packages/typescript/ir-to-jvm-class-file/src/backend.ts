@@ -846,7 +846,35 @@ export function lowerIrToJvmClassFile(
   return new Lowerer(program, config).lower();
 }
 
+/**
+ * How the embedded Python helper should defend the write against symlink
+ * tricks.
+ *
+ * | value           | walk used                                                     |
+ * |-----------------|---------------------------------------------------------------|
+ * | `"auto"`        | directory-FD walk when Python's `os.supports_dir_fd` covers   |
+ * |                 | `open` and `mkdir` (POSIX); otherwise path checks (Windows)   |
+ * | `"path-checks"` | always the path-check walk (what `"auto"` picks on Windows)   |
+ *
+ * Windows has no `dir_fd=` support and cannot `os.open()` a bare directory
+ * at all (it fails with `PermissionError: [Errno 13]`), so the FD walk is
+ * simply unavailable there. `"path-checks"` can be forced so the Windows
+ * code path is exercised by the test suite on Linux and macOS too.
+ *
+ * @internal Not re-exported from the package entry point.
+ */
+export type ClassFileWriteStrategy = "auto" | "path-checks";
+
 export function writeClassFile(artifact: JVMClassArtifact, outputDir: string): string {
+  return writeClassFileWithStrategy(artifact, outputDir, "auto");
+}
+
+/** @internal Test seam for {@link ClassFileWriteStrategy}; prefer `writeClassFile`. */
+export function writeClassFileWithStrategy(
+  artifact: JVMClassArtifact,
+  outputDir: string,
+  strategy: ClassFileWriteStrategy,
+): string {
   if (!JAVA_BINARY_NAME_RE.test(artifact.className)) {
     throw new JvmBackendError(`Class name "${artifact.className}" escapes the requested classpath root`);
   }
@@ -855,7 +883,7 @@ export function writeClassFile(artifact: JVMClassArtifact, outputDir: string): s
   const payload = Buffer.from(artifact.classBytes).toString("base64");
   const result = spawnSync(
     "python3",
-    ["-c", SECURE_CLASS_WRITER, root, relativePath, payload],
+    ["-c", SECURE_CLASS_WRITER, root, relativePath, payload, strategy],
     { encoding: "utf8" },
   );
   if (result.error) {
@@ -1022,78 +1050,165 @@ function asLabel(operand: IrOperand): IrLabel {
   return operand;
 }
 
+/**
+ * Normalise `classFilename` into a POSIX relative path for the Python helper.
+ *
+ * The result is always joined with `/`, never with `node:path`'s `join`: on
+ * Windows that would yield `demo\Example.class`, which the helper parses
+ * with `PurePosixPath` as ONE component, so the per-directory symlink checks
+ * would never see `demo` at all. For the same reason any component carrying
+ * a Windows separator (`\`), a drive / alternate-data-stream colon (`:`) or
+ * a NUL byte is rejected outright: each could steer the write elsewhere once
+ * the operating system reinterprets it.
+ *
+ *   demo/Example.class    -> demo/Example.class
+ *   //demo//Example.class -> demo/Example.class
+ *   ../Example.class      -> JvmBackendError
+ *   demo\Example.class    -> JvmBackendError
+ *   C:/Example.class      -> JvmBackendError
+ */
 function validatedOutputRelativePath(classFilename: string): string {
   const parts = classFilename.split("/").filter(Boolean);
-  if (parts.length === 0 || parts.some((component) => component === "." || component === "..")) {
+  if (
+    parts.length === 0
+    || parts.some((component) => component === "." || component === "..")
+    || parts.some((component) => /[\\:\0]/.test(component))
+  ) {
     throw new JvmBackendError("Resolved class-file path escapes the requested classpath root");
   }
-  return join(...parts);
+  return parts.join("/");
 }
 
+// The writer runs in Python because Node has no portable `openat`/`mkdirat`.
+// Arguments: root, POSIX relative path, base64 payload, strategy.
+//
+// 1. Walk up from the requested root until an existing ancestor is found; it
+//    must be a real directory (not a symlink or junction). Missing components
+//    below it are created by the chosen strategy.
+// 2. "dir-fd" (POSIX): open each directory relative to its parent's FD with
+//    O_NOFOLLOW, so a symlink swapped in after validation cannot redirect us.
+// 3. "path-checks" (Windows, or forced by tests): lstat every component,
+//    refuse links/junctions, then write a sibling temp file and os.replace()
+//    it over the target. os.replace (MoveFileEx on Windows) swaps the
+//    directory entry itself instead of following a link planted there.
+//    Unlike step 2 this is not race-free for intermediate directories (a
+//    link swapped in between the check and the mkdir is not caught). That is
+//    the most Windows' path APIs allow, and exploiting it already requires
+//    local write access to the output tree during the build.
 const SECURE_CLASS_WRITER = `
 import base64
+import contextlib
 import os
 import pathlib
 import sys
+import tempfile
 
 root = pathlib.Path(sys.argv[1])
 if not root.is_absolute():
     root = pathlib.Path.cwd() / root
 relative_path = pathlib.PurePosixPath(sys.argv[2])
 payload = base64.b64decode(sys.argv[3])
+strategy = sys.argv[4] if len(sys.argv) > 4 else "auto"
+if strategy not in ("auto", "path-checks"):
+    raise RuntimeError("Unknown class-file write strategy: " + strategy)
 
-open_directory_flags = os.O_RDONLY
-if hasattr(os, "O_DIRECTORY"):
-    open_directory_flags |= os.O_DIRECTORY
-if hasattr(os, "O_NOFOLLOW"):
-    open_directory_flags |= os.O_NOFOLLOW
+INVALID_DIRECTORY = "Refusing to write through symlinked or invalid directory"
+INVALID_FILE = "Refusing to write through symlinked or invalid output file"
 
-open_file_flags = os.O_WRONLY | os.O_CREAT | os.O_TRUNC
-if hasattr(os, "O_NOFOLLOW"):
-    open_file_flags |= os.O_NOFOLLOW
 
-directory_fds = []
-try:
-    missing_parts = []
-    current_root = root
-    while True:
+def is_link_like(path):
+    if os.path.islink(path):
+        return True
+    # Windows junctions are reparse points that islink() does not report.
+    isjunction = getattr(os.path, "isjunction", None)
+    return bool(isjunction is not None and isjunction(path))
+
+
+missing_parts = []
+current_root = root
+while True:
+    try:
+        os.lstat(current_root)
+    except FileNotFoundError:
+        parent = current_root.parent
+        if parent == current_root:
+            raise
+        missing_parts.insert(0, current_root.name)
+        current_root = parent
+        continue
+    if not os.path.isdir(current_root) or is_link_like(current_root):
+        raise RuntimeError(INVALID_DIRECTORY)
+    canonical_root = pathlib.Path(os.path.realpath(current_root))
+    break
+
+components = missing_parts + list(relative_path.parts[:-1])
+
+
+def write_via_dir_fd():
+    open_directory_flags = os.O_RDONLY
+    if hasattr(os, "O_DIRECTORY"):
+        open_directory_flags |= os.O_DIRECTORY
+    if hasattr(os, "O_NOFOLLOW"):
+        open_directory_flags |= os.O_NOFOLLOW
+
+    open_file_flags = os.O_WRONLY | os.O_CREAT | os.O_TRUNC
+    if hasattr(os, "O_NOFOLLOW"):
+        open_file_flags |= os.O_NOFOLLOW
+
+    directory_fds = []
+    try:
+        current_fd = os.open(canonical_root, open_directory_flags)
+        directory_fds.append(current_fd)
+        for component in components:
+            try:
+                os.mkdir(component, dir_fd=current_fd)
+            except FileExistsError:
+                pass
+            next_fd = os.open(component, open_directory_flags, dir_fd=current_fd)
+            directory_fds.append(next_fd)
+            current_fd = next_fd
+        file_fd = os.open(relative_path.name, open_file_flags, 0o644, dir_fd=current_fd)
+        with os.fdopen(file_fd, "wb", closefd=True) as handle:
+            handle.write(payload)
+    finally:
+        for directory_fd in reversed(directory_fds):
+            os.close(directory_fd)
+
+
+def write_via_path_checks():
+    current = canonical_root
+    for component in components:
+        current = current / component
+        if is_link_like(current):
+            raise RuntimeError(INVALID_DIRECTORY)
         try:
-            metadata = os.lstat(current_root)
-            if not os.path.isdir(current_root) or os.path.islink(current_root):
-                raise RuntimeError("Refusing to write through symlinked or invalid directory")
-            canonical_root = pathlib.Path(os.path.realpath(current_root))
-            break
-        except FileNotFoundError:
-            parent = current_root.parent
-            if parent == current_root:
-                raise
-            missing_parts.insert(0, current_root.name)
-            current_root = parent
-
-    current_fd = os.open(canonical_root, open_directory_flags)
-    directory_fds.append(current_fd)
-    for component in missing_parts:
-        try:
-            os.mkdir(component, dir_fd=current_fd)
+            os.mkdir(current)
         except FileExistsError:
             pass
-        next_fd = os.open(component, open_directory_flags, dir_fd=current_fd)
-        directory_fds.append(next_fd)
-        current_fd = next_fd
-    for component in relative_path.parts[:-1]:
-        try:
-            os.mkdir(component, dir_fd=current_fd)
-        except FileExistsError:
-            pass
-        next_fd = os.open(component, open_directory_flags, dir_fd=current_fd)
-        directory_fds.append(next_fd)
-        current_fd = next_fd
-    file_fd = os.open(relative_path.name, open_file_flags, 0o644, dir_fd=current_fd)
-    with os.fdopen(file_fd, "wb", closefd=True) as handle:
-        handle.write(payload)
-finally:
-    for directory_fd in reversed(directory_fds):
-        os.close(directory_fd)
+        if is_link_like(current) or not os.path.isdir(current):
+            raise RuntimeError(INVALID_DIRECTORY)
+    target = current / relative_path.name
+    if is_link_like(target) or os.path.isdir(target):
+        raise RuntimeError(INVALID_FILE)
+    tmp_fd, tmp_name = tempfile.mkstemp(dir=current, prefix=".", suffix=".class.tmp")
+    try:
+        with os.fdopen(tmp_fd, "wb") as handle:
+            handle.write(payload)
+        os.replace(tmp_name, target)
+    except BaseException:
+        with contextlib.suppress(FileNotFoundError):
+            os.remove(tmp_name)
+        raise
+
+
+if (
+    strategy == "auto"
+    and os.open in os.supports_dir_fd
+    and os.mkdir in os.supports_dir_fd
+):
+    write_via_dir_fd()
+else:
+    write_via_path_checks()
 `;
 
 function u1(value: number): Uint8Array {
