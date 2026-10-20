@@ -9,8 +9,8 @@
 //! it was chosen to find the edge.
 //!
 //! A deliberately ordered ladder does. The committed oracle fixtures now cover
-//! 57 rungs ramped from trivial to hard. The divergence ledger records agreement
-//! of 54/57 at `WHITESPACE_ONLY`, 34/57 at `SIMPLE`, and 24/57 at `ADVANCED`,
+//! 58 rungs ramped from trivial to hard. The divergence ledger records agreement
+//! of 55/58 at `WHITESPACE_ONLY`, 36/58 at `SIMPLE`, and 24/58 at `ADVANCED`,
 //! while the selected golden corpus reports 100%.
 //!
 //! # The ordering is the point

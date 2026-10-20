@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 444,
+  "sourceHash": "fnv1a64:419cfad38a8ed7bf",
+  "lessonIds": [
+    "RU-C444-ratusha",
+    "RU-C444-sobor",
+    "RU-C444-kolokolnya",
+    "RU-C444-krepost",
+    "RU-C444-meriya"
+  ],
+  "tex": "russian/book/chapters/ch444-the-old-town.tex"
+}

@@ -1,0 +1,9 @@
+{
+  "id": "RU-PATH-412-PESHEKHOD",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "RU-EXT-412-PESHEKHOD"
+  ],
+  "after": []
+}

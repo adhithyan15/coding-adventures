@@ -1,0 +1,11 @@
+{
+  "id": "RU-C528-podpischik",
+  "pathSegment": "RU-PATH-528-GAMING",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "RU-EXT-528-GAMING",
+      "order": 3
+    }
+  ]
+}

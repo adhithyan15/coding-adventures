@@ -1,0 +1,11 @@
+{
+  "id": "RU-C338-ubeditelnyy",
+  "pathSegment": "RU-PATH-338-DOVOD",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "RU-EXT-338-DOVOD",
+      "order": 4
+    }
+  ]
+}

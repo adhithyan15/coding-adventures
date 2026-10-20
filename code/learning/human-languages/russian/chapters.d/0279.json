@@ -1,0 +1,19 @@
+{
+  "chapter": 279,
+  "title": "News and headlines",
+  "label": "ch:ru-news-and-headlines",
+  "canDo": "I can talk about the news: a piece of news, a bulletin, a headline, an article and a sensation.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "RU-C279-sensatsiya",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 279: I can talk about the news: a piece of news, a bulletin, a headline, an article and a sensation.",
+    "assesses": [
+      "RU-LEX-C279-IZVESTIYE-03",
+      "RU-LEX-C279-IZVESTIYE-04",
+      "RU-LEX-C279-IZVESTIYE-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "RU-C309-vdova",
+  "pathSegment": "RU-PATH-309-POKHORONY",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "RU-EXT-309-POKHORONY",
+      "order": 3
+    }
+  ]
+}

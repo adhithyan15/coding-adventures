@@ -1,0 +1,20 @@
+{
+  "language": "russian",
+  "chapter": 476,
+  "sourceHash": "fnv1a64:74548e14f5108bd1",
+  "lessonIds": [
+    "RU-C476-ispug",
+    "RU-C476-pugatsya",
+    "RU-C476-vzdragivat",
+    "RU-C476-trus",
+    "RU-C476-smelost",
+    "RU-R476-review-469-476"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "russian/narration/ch476.txt",
+  "json": "russian/narration/ch476.json",
+  "textHash": "fnv1a64:babb39f31211a5eb",
+  "jsonHash": "fnv1a64:67497382b21e7d5a",
+  "findings": []
+}

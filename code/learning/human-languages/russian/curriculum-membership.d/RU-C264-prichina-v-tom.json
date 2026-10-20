@@ -1,0 +1,11 @@
+{
+  "id": "RU-C264-prichina-v-tom",
+  "pathSegment": "RU-PATH-264-ADVICE",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "RU-EXT-264-ADVICE",
+      "order": 1
+    }
+  ]
+}

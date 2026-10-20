@@ -1,0 +1,11 @@
+{
+  "id": "RU-C269-yesli-budet",
+  "pathSegment": "RU-PATH-269-IF",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "RU-EXT-269-IF",
+      "order": 1
+    }
+  ]
+}

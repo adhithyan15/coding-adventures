@@ -1,0 +1,19 @@
+{
+  "chapter": 482,
+  "title": "Temple, Eyelid and Jaw",
+  "label": "ch:ru-temple-eyelid-and-jaw",
+  "canDo": "I can name the smaller parts of the head and face.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "RU-C482-chelyust",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 482: I can name the smaller parts of the head and face.",
+    "assesses": [
+      "RU-LEX-C482-HEAD-03",
+      "RU-LEX-C482-HEAD-04",
+      "RU-LEX-C482-HEAD-05"
+    ]
+  }
+}

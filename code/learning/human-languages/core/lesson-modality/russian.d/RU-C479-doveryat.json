@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C479-doveryat",
+    "language": "russian",
+    "chapter": 479,
+    "sequence": 27120,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e2595c7eb3ac6617"
+  },
+  "findings": []
+}

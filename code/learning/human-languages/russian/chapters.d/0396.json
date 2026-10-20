@@ -1,0 +1,19 @@
+{
+  "chapter": 396,
+  "title": "Rising prices",
+  "label": "ch:ru-rising-prices",
+  "canDo": "I can say that prices go up or down, talk about inflation and the exchange rate, and change money.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "RU-C396-obmen",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 396: I can say that prices go up or down, talk about inflation and the exchange rate, and change money.",
+    "assesses": [
+      "RU-LEX-C396-TSENY-03",
+      "RU-LEX-C396-TSENY-04",
+      "RU-LEX-C396-TSENY-05"
+    ]
+  }
+}

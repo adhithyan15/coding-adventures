@@ -1,0 +1,858 @@
+{
+  "version": 1,
+  "language": "russian",
+  "chapter": 326,
+  "title": "Ancestors and chronicles",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:563ecc1c91a2945d",
+  "lessons": [
+    {
+      "id": "RU-C326-predok",
+      "sequence": 19210,
+      "title": "предок (prédok) — an ancestor",
+      "headword": "предок",
+      "romanization": "prédok",
+      "gloss": "an ancestor",
+      "script": "cyrillic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d6422294f2844806",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Russian for to conquer, then the Russian for to rule."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: предок",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "предок (prédok) — \"an ancestor\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Наши предки жили в этой деревне. Náshi prédki zhíli v étoy derévne. Our ancestors lived in this village."
+            },
+            {
+              "kind": "speech",
+              "text": "Genitive предка. In slang предки are one's parents."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "предок (prédok) is a Church Slavonic word, prědŭkŭ (EtymDB), built on пред- \"before\", the church shape of native перед: the one who went before."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "prédok",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *prédok*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "prédok, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *prédok*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with prédok",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *prédok*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Russian for to conquer, then the Russian for to rule, then say prédok again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Russian for to conquer, then the Russian for to rule, then say *prédok* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does предок (prédok) mean? (\"An ancestor\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "RU-C326-potomok",
+      "sequence": 19220,
+      "title": "потомок (potómok) — a descendant",
+      "headword": "потомок",
+      "romanization": "potómok",
+      "gloss": "a descendant",
+      "script": "cyrillic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f23d4da30daa8595",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Russian for to rule, then the Russian for an ancestor."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: потомок",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "потомок (potómok) — \"a descendant\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Он потомок известного художника. On potómok izvéstnovo khudózhnika. He is a descendant of a famous painter."
+            },
+            {
+              "kind": "speech",
+              "text": "Genitive потомка."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "потомок (potómok) is usually traced to потом \"afterwards\", from по and том, a form of тот \"that\": the one who comes after. EtymDB lists no parent."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "potómok",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *potómok*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "potómok, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *potómok*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with potómok",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *potómok*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Russian for to rule, then the Russian for an ancestor, then say potómok again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Russian for to rule, then the Russian for an ancestor, then say *potómok* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does потомок (potómok) mean? (\"A descendant\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "RU-C326-letopis",
+      "sequence": 19230,
+      "title": "летопись (létopis) — a chronicle, annals",
+      "headword": "летопись",
+      "romanization": "létopis",
+      "gloss": "a chronicle, annals",
+      "script": "cyrillic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:25b5ee7bcd6a94c9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Russian for an ancestor, then the Russian for a descendant."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: летопись",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "летопись (létopis) — \"a chronicle, annals\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Город впервые упоминается в летописи. Górod vpervýye upomináyetsya v létopisi. The town is first mentioned in a chronicle."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine. The old chronicles of Rus were written year by year."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "летопись (létopis) joins лето \"summer, year\", Proto-Slavic lěto \"year\", and писать \"to write\", Proto-Slavic pisati (EtymDB): a record kept year by year."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "létopis",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *létopis*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "létopis, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *létopis*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with létopis",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *létopis*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Russian for an ancestor, then the Russian for a descendant, then say létopis again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Russian for an ancestor, then the Russian for a descendant, then say *létopis* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does летопись (létopis) mean? (\"A chronicle, annals\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "RU-C326-knyaz",
+      "sequence": 19240,
+      "title": "князь (knyaz) — a prince of old Rus, a ruling prince",
+      "headword": "князь",
+      "romanization": "knyaz",
+      "gloss": "a prince of old Rus, a ruling prince",
+      "script": "cyrillic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d922e21df92240a7",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Russian for a descendant, then the Russian for a chronicle."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: князь",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "князь (knyaz) — \"a prince of old Rus, a ruling prince\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Князь жил в большом доме на холме. Knyaz zhil v bolshóm dóme na kholmé. The prince lived in a big house on a hill."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural князья. Княгиня — a princess, a prince's wife."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "князь (knyaz) is inherited from Proto-Slavic kŭnędzĭ, an early borrowing from Proto-Germanic kuningaz \"king\" (EtymDB); English king is a cousin."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "knyaz",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *knyaz*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "knyaz, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *knyaz*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with knyaz",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *knyaz*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Russian for a descendant, then the Russian for a chronicle, then say knyaz again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Russian for a descendant, then the Russian for a chronicle, then say *knyaz* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does князь (knyaz) mean? (\"A prince of old Rus, a ruling prince\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "RU-C326-osnovyvat",
+      "sequence": 19250,
+      "title": "основывать (osnóvyvat) — to found",
+      "headword": "основывать",
+      "romanization": "osnóvyvat",
+      "gloss": "to found",
+      "script": "cyrillic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8593765d20030fb1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Russian for a chronicle, then the Russian for a prince of old Rus."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: основывать",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "основывать (osnóvyvat) — \"to found\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Город основали в двенадцатом веке. Górod osnováli v dvenádtsatom véke. The town was founded in the twelfth century."
+            },
+            {
+              "kind": "speech",
+              "text": "Imperfective; perfective основать (osnovát). Основатель — a founder."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "основывать (osnóvyvat) is built on о- and основа \"a base\", inherited from Proto-Slavic osnova (EtymDB), first the warp threads on a loom, a cousin of сновать \"to warp, to dart to and fro\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "osnóvyvat",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *osnóvyvat*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "osnóvyvat, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *osnóvyvat*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with osnóvyvat",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *osnóvyvat*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Russian for a chronicle, then the Russian for a prince of old Rus, then say osnóvyvat again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Russian for a chronicle, then the Russian for a prince of old Rus, then say *osnóvyvat* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does основывать (osnóvyvat) mean? (\"To found\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "RU-R326-review-319-326",
+      "sequence": 19260,
+      "title": "Words from chapters 319–326 — a review",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of chapters 319-326",
+      "script": "cyrillic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e36845e47402994c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Russian for a legend and a myth."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a legend, a myth, a hero, a storyteller, to make up",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a legend, a myth, a hero, a storyteller, to make up]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a wizard, a witch, a monster, a dragon, to turn into",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a wizard, a witch, a monster, a dragon, to turn into]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a king, a queen, a princess, a prince, a kingdom",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a king, a queen, a princess, a prince, a kingdom]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a knight, armour, a sword, a shield, a throne",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a knight, armour, a sword, a shield, a throne]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a war, a battle, a pitched battle, to fight, an enemy",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a war, a battle, a pitched battle, to fight, an enemy]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a victory, to win, to wage war, to die, to free",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a victory, to win, to wage war, to die, to free]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "an empire, a revolution, an uprising, to conquer, to rule",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: an empire, a revolution, an uprising, to conquer, to rule]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "an ancestor, a descendant, a chronicle, a prince of old Rus, to found",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: an ancestor, a descendant, a chronicle, a prince of old Rus, to found]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A legend? (легенда.) A myth? (миф.) A hero? (герой.) A storyteller? (рассказчик.) To make up? (сочинять.) A wizard? (волшебник.) A witch? (ведьма.) A monster? (чудовище.) A dragon? (дракон.) To turn into? (превращаться.) A king? (король.) A queen? (королева.) A princess? (принцесса.) A prince? (принц.) A kingdom? (королевство.) A knight? (рыцарь.) Armour? (доспехи.) A sword? (меч.) A shield? (щит.) A throne? (трон.) A war? (война.) A battle? (битва.) A pitched battle? (сражение.) To fight? (сражаться.) An enemy? (враг.) A victory? (победа.) To win? (побеждать.) To wage war? (воевать.) To die? (погибать.) To free? (освобождать.) An empire? (империя.) A revolution? (революция.) An uprising? (восстание.) To conquer? (завоёвывать.) To rule? (править.) An ancestor? (предок (prédok).) A descendant? (потомок (potómok).) A chronicle? (летопись (létopis).) A prince of old Rus? (князь (knyaz).) To found? (основывать (osnóvyvat).)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

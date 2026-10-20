@@ -934,12 +934,28 @@ fn concretize_scalar_any_for_jvm(module: &mut IIRModule) {
     // `Int`, but `lstore` would tag it as `Long` in the verifier's type state →
     // `VerifyError: type mismatch` when the subsequent `iload` reads an `Int`
     // slot that the verifier sees as `Long`. (BA-JVM-INPUT)
-    const WIDE_I64_BUILTINS: &[&str] = &["print_i64", "input_i64", "input_more"];
+    //
+    // LANG83 PR1b: `write_i64` is a wide builtin like `print_i64`, and the
+    // `i64_div_floor` / `i64_mod_floor` ops are *defined* on i64 (their
+    // `MIN / -1` edge is an i64 fact) — narrowing a module that uses them to
+    // i32 would change their semantics, so they keep the module wide too.
+    //
+    // LANG83 PR4: the same holds for the overflow-checked `i64_*_ovf` ops,
+    // whose trap fires at the i64 bounds. Rather than extend a hand-kept list
+    // (which is how a new i64 op gets forgotten), the op side is *derived*:
+    // every registry Op with an `i64` operand type is wide-model evidence.
+    const WIDE_I64_BUILTINS: &[&str] = &["print_i64", "write_i64", "input_i64", "input_more"];
+    let is_wide_i64_op = |op: &str| {
+        interpreter_ir::op_registry::lookup(op).is_some_and(|spec| {
+            spec.kind == interpreter_ir::op_registry::OpKind::Op && spec.operand_types.contains(&"i64")
+        })
+    };
     let module_prints = module.functions.iter().any(|f| {
         f.instructions.iter().any(|i| {
-            i.op == "call_builtin"
-                && matches!(i.srcs.first(),
-                    Some(interpreter_ir::Operand::Var(n)) if WIDE_I64_BUILTINS.contains(&n.as_str()))
+            is_wide_i64_op(&i.op)
+                || (i.op == "call_builtin"
+                    && matches!(i.srcs.first(),
+                        Some(interpreter_ir::Operand::Var(n)) if WIDE_I64_BUILTINS.contains(&n.as_str())))
         })
     });
     // Narrowing an explicit i64 constant that does not fit in i32 is a semantic
@@ -3058,6 +3074,42 @@ mod tests {
             instr.op == "mul" && instr.dest.as_deref() == Some("product")
         }).expect("the RNG multiplies its state before modulo");
         assert_eq!(product.type_hint, "i64", "small RNG operands can produce a wide product");
+    }
+
+    /// LANG83: every registry op defined on i64 (PR1b's floor ops, PR4's
+    /// `i64_*_ovf`) keeps a module on the JVM's wide model even with no
+    /// `print_i64` — the evidence is derived from the registry, so a module
+    /// whose only i64 fact is the op itself is not narrowed to `int`. A module
+    /// with only width-agnostic ops still narrows.
+    #[test]
+    fn jvm_concretization_keeps_modules_using_i64_registry_ops_wide() {
+        use interpreter_ir::{IIRFunction, IIRInstr, IIRModule, Operand};
+        let module_with = |op: &str| {
+            let v = |n: &str| Operand::Var(n.into());
+            let mut m = IIRModule::new("m", "test");
+            m.add_or_replace(IIRFunction::new(
+                "main",
+                vec![],
+                "i64",
+                vec![
+                    IIRInstr::new("const", Some("a".into()), vec![Operand::Int(2_000_000_000)], "i64"),
+                    IIRInstr::new(op, Some("r".into()), vec![v("a"), v("a")], "i64"),
+                    IIRInstr::new("ret", None, vec![v("r")], "i64"),
+                ],
+            ));
+            m
+        };
+        for op in ["i64_add_ovf", "i64_sub_ovf", "i64_mul_ovf", "i64_div_floor", "i64_mod_floor"] {
+            let mut m = module_with(op);
+            concretize_scalar_any_for_jvm(&mut m);
+            let main = m.get_function("main").unwrap();
+            assert_eq!(main.return_type, "i64", "{op} keeps the module wide");
+            assert!(main.instructions.iter().all(|i| i.type_hint == "i64"), "{op}: {:?}", main.instructions);
+        }
+        // The legacy, width-agnostic `add` carries no such evidence.
+        let mut m = module_with("add");
+        concretize_scalar_any_for_jvm(&mut m);
+        assert_eq!(m.get_function("main").unwrap().return_type, "i32", "plain add still narrows");
     }
 
     #[test]

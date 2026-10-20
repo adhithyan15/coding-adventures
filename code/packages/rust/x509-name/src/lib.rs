@@ -152,6 +152,7 @@ impl<'name, 'a> X509RelativeDistinguishedName<'name, 'a> {
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct X509Name<'a> {
     encoded: &'a [u8],
+    contents: &'a [u8],
     attributes: [Option<X509AttributeTypeAndValue<'a>>; MAX_X509_NAME_ATTRIBUTES],
     rdn_ends: [usize; MAX_X509_NAME_RDNS],
     rdn_count: usize,
@@ -162,6 +163,12 @@ impl<'a> X509Name<'a> {
     /// Return the exact canonical DER encoding of the Name.
     pub const fn encoded(&self) -> &'a [u8] {
         self.encoded
+    }
+
+    /// Return the canonical DER contents of the Name sequence without its
+    /// outer tag and length.
+    pub const fn contents(&self) -> &'a [u8] {
+        self.contents
     }
 
     pub const fn rdn_count(&self) -> usize {
@@ -232,6 +239,7 @@ pub fn decode_x509_name<'a>(
     element: Asn1Element<'a>,
 ) -> Result<X509Name<'a>, X509NameError> {
     let encoded = element.encoded();
+    let contents = element.value();
     let value_offset = element.header().len();
     let value_length = element.value().len();
     let mut rdns = decoder
@@ -320,6 +328,7 @@ pub fn decode_x509_name<'a>(
 
     Ok(X509Name {
         encoded,
+        contents,
         attributes,
         rdn_ends,
         rdn_count,

@@ -2,6 +2,36 @@
 
 All notable changes to the `coding-adventures-closure-scope-analyzer` crate will be documented in this file.
 
+## [0.22.0] - 2026-10-20
+
+### Fixed — a `switch` case block gets its own scope — #17836
+
+A `switch` used to walk its cases in the enclosing scope. A case's `let x`
+was therefore registered beside an outer `var x`. The read after the
+`switch` resolved to the case binding, remove-unused-vars deleted the outer
+`var`, and ADVANCED output threw `ReferenceError`.
+
+The discriminant still walks in the enclosing scope. Every case test and
+consequent now walks in one new `ScopeKind::Block` scope shared by all cases
+(ECMAScript §14.12.4). `var` inside a case still hoists. Three new unit tests
+cover this.
+
+## [0.21.0] - 2026-10-19
+
+### Fixed — lexical `for` heads get their own loop scope — #16008
+
+A `for` / `for-in` / `for-of` whose head is a `let` or `const` declaration now
+opens a `ScopeKind::Block` loop scope. The head binding lives there, and the
+head, test, update, `right` and body all walk inside it (ECMAScript §14.7.4.2,
+§14.7.5.6). Before, the head binding was registered in the enclosing scope
+beside any outer binding of the same name, so in
+`var x = 1; for (let x of [7]) …; console.log(x);` the trailing read resolved
+to the loop's `x`. remove-unused-vars then deleted the outer `var` and the
+output threw `ReferenceError`. `var` and expression heads are unchanged: they
+open no scope. Six new unit tests cover the `for` / `for-in` / `for-of` ×
+`let` / `const` × `var` / `const`-outer matrix, `right`-side resolution, and the
+unchanged `var` and expression heads.
+
 ## [0.20.0] - 2026-07-14
 
 ### Changed — collect references inside default-parameter expressions — CLOC12.191 PR1

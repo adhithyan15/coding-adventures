@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 525,
+  "sourceHash": "fnv1a64:7315cb549d520a04",
+  "lessonIds": [
+    "RU-C525-poet",
+    "RU-C525-stikhotvoreniye",
+    "RU-C525-rifma",
+    "RU-C525-rifmovat",
+    "RU-C525-naizust"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch525.txt",
+  "json": "russian/narration/ch525.json",
+  "textHash": "fnv1a64:b68441b3c3ab9790",
+  "jsonHash": "fnv1a64:c0803ce54b78163b",
+  "findings": []
+}

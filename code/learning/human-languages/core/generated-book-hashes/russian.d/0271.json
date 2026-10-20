@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 271,
+  "sourceHash": "fnv1a64:9e6df6f098354800",
+  "lessonIds": [
+    "RU-C271-vnezapno",
+    "RU-C271-mgnovenno",
+    "RU-C271-totchas",
+    "RU-C271-nemedlenno",
+    "RU-C271-mgnovenie"
+  ],
+  "tex": "russian/book/chapters/ch271-suddenly-and-at-once.tex"
+}

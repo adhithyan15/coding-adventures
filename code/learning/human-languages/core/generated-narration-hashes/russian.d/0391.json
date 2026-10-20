@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 391,
+  "sourceHash": "fnv1a64:6145d32ab165016a",
+  "lessonIds": [
+    "RU-C391-zakonodatelstvo",
+    "RU-C391-konstituciya",
+    "RU-C391-grazhdanstvo",
+    "RU-C391-yuridicheskiy",
+    "RU-C391-ogranichenie"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch391.txt",
+  "json": "russian/narration/ch391.json",
+  "textHash": "fnv1a64:c68af644c6bc09f7",
+  "jsonHash": "fnv1a64:6bf2d1446dddf0a6",
+  "findings": []
+}

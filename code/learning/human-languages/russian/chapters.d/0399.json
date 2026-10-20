@@ -1,0 +1,19 @@
+{
+  "chapter": 399,
+  "title": "Online",
+  "label": "ch:ru-online",
+  "canDo": "I can talk about the internet, a website and a link, a browser and a search engine.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "RU-C399-poiskovik",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 399: I can talk about the internet, a website and a link, a browser and a search engine.",
+    "assesses": [
+      "RU-LEX-C399-SET-03",
+      "RU-LEX-C399-SET-04",
+      "RU-LEX-C399-SET-05"
+    ]
+  }
+}

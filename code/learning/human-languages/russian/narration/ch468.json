@@ -1,0 +1,878 @@
+{
+  "version": 1,
+  "language": "russian",
+  "chapter": 468,
+  "title": "Heat",
+  "drivablePrefix": 7,
+  "sourceHash": "fnv1a64:86f8ead3cfa38c18",
+  "lessons": [
+    {
+      "id": "RU-C468-zhara",
+      "sequence": 26530,
+      "title": "жара (zhará) — hot weather, heat",
+      "headword": "жара",
+      "romanization": "zhará",
+      "gloss": "hot weather, heat",
+      "script": "cyrillic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4a5dcd3759081059",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Russian for to feel the cold, then the Russian for to slip."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: жара",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "жара (zhará) — \"hot weather, heat\"."
+            },
+            {
+              "kind": "speech",
+              "text": "В июле в городе стояла жара. V iyúle v górode stoyála zhará. In July the town had a spell of hot weather."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine. В жару — in hot weather."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "жара (zhará) goes with жар 'heat'. EtymDB takes жара (zhará) from Proto-Slavic žārĭ and the PIE root gʷʰer- 'to heat'; the same root is in гореть 'to burn'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "zhará",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *zhará*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "zhará, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *zhará*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with zhará",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *zhará*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Russian for to feel the cold, then the Russian for to slip, then say zhará again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Russian for to feel the cold, then the Russian for to slip, then say *zhará* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does жара (zhará) mean? (\"Hot weather, heat\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "RU-C468-dushnyy",
+      "sequence": 26540,
+      "title": "душный (dúshnyy) — stuffy, close",
+      "headword": "душный",
+      "romanization": "dúshnyy",
+      "gloss": "stuffy, close",
+      "script": "cyrillic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:702867829a0f5573",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Russian for to slip, then the Russian for hot weather."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: душный",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "душный (dúshnyy) — \"stuffy, close\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Был душный летний вечер. Byl dúshnyy létniy vécher. It was a stuffy summer evening."
+            },
+            {
+              "kind": "speech",
+              "text": "Душно — it is stuffy."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "душный (dúshnyy) is built on дух 'breath, air' with -ный: air that chokes the breath. EtymDB lists душный (dúshnyy) without a deeper source."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dúshnyy",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dúshnyy*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dúshnyy, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dúshnyy*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with dúshnyy",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *dúshnyy*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Russian for to slip, then the Russian for hot weather, then say dúshnyy again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Russian for to slip, then the Russian for hot weather, then say *dúshnyy* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does душный (dúshnyy) mean? (\"Stuffy, close\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "RU-C468-dukhota",
+      "sequence": 26550,
+      "title": "духота (dukhotá) — stuffiness, close heat",
+      "headword": "духота",
+      "romanization": "dukhotá",
+      "gloss": "stuffiness, close heat",
+      "script": "cyrillic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ff67afe2b2fae251",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Russian for hot weather, then the Russian for stuffy."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: духота",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "духота (dukhotá) — \"stuffiness, close heat\"."
+            },
+            {
+              "kind": "speech",
+              "text": "В вагоне была ужасная духота. V vagóne bylá uzhásnaya dukhotá. It was terribly stuffy in the carriage."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "духота (dukhotá) is built on дух 'breath, air' with -ота: heavy air one can hardly breathe. EtymDB does not list it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dukhotá",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dukhotá*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dukhotá, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dukhotá*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with dukhotá",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *dukhotá*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Russian for hot weather, then the Russian for stuffy, then say dukhotá again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Russian for hot weather, then the Russian for stuffy, then say *dukhotá* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does духота (dukhotá) mean? (\"Stuffiness, close heat\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "RU-C468-potet",
+      "sequence": 26560,
+      "title": "потеть (potét) — to sweat",
+      "headword": "потеть",
+      "romanization": "potét",
+      "gloss": "to sweat",
+      "script": "cyrillic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:215fec2d04b5b5a8",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Russian for stuffy, then the Russian for stuffiness."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: потеть",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "потеть (potét) — \"to sweat\"."
+            },
+            {
+              "kind": "speech",
+              "text": "В жару я сильно потею. V zharú ya sílno potéyu. In hot weather I sweat a lot."
+            },
+            {
+              "kind": "speech",
+              "text": "Imperfective; perfective вспотеть. Present потею, потеешь. Окна потеют — the windows mist up."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "потеть (potét) is built on пот 'sweat', which is inherited from Proto-Slavic potŭ 'sweat' (EtymDB); EtymDB lists потеть (potét) itself without a source."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "potét",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *potét*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "potét, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *potét*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with potét",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *potét*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Russian for stuffy, then the Russian for stuffiness, then say potét again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Russian for stuffy, then the Russian for stuffiness, then say *potét* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does потеть (potét) mean? (\"To sweat\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "RU-C468-tayat",
+      "sequence": 26570,
+      "title": "таять (táyat) — to melt, to thaw",
+      "headword": "таять",
+      "romanization": "táyat",
+      "gloss": "to melt, to thaw",
+      "script": "cyrillic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:19d4b1a154e76480",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Russian for stuffiness, then the Russian for to sweat."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: таять",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "таять (táyat) — \"to melt, to thaw\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Мороженое быстро тает на солнце. Morózhenoye býstro táyet na sólntse. The ice cream melts quickly in the sun."
+            },
+            {
+              "kind": "speech",
+              "text": "Imperfective; perfective растаять. Present таю, таешь."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "таять (táyat) is inherited from Proto-Slavic tajati (EtymDB), with the sense 'to melt, to thaw'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "táyat",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *táyat*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "táyat, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *táyat*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with táyat",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *táyat*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Russian for stuffiness, then the Russian for to sweat, then say táyat again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Russian for stuffiness, then the Russian for to sweat, then say *táyat* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does таять (táyat) mean? (\"To melt, to thaw\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "RU-R468-review-467-468",
+      "sequence": 26580,
+      "title": "Town, shops, nature and weather — a review",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of chapters 467-468",
+      "script": "cyrillic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ab4fb555015f83c7",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Russian for frost and black ice."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "frost, black ice, a blizzard, to feel the cold, to slip",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: frost, black ice, a blizzard, to feel the cold, to slip]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hot weather, stuffy, stuffiness, to sweat, to melt",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: hot weather, stuffy, stuffiness, to sweat, to melt]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Frost? (мороз.) Black ice? (гололёд.) A blizzard? (метель.) To feel the cold? (мёрзнуть.) To slip? (поскользнуться.) Hot weather? (жара (zhará).) Stuffy? (душный (dúshnyy).) Stuffiness? (духота (dukhotá).) To sweat? (потеть (potét).) To melt? (таять (táyat).)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "RU-R468-review-final-468",
+      "sequence": 26590,
+      "title": "Heat — once more",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "one more pass over chapter 468",
+      "script": "cyrillic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:124b432528d34a50",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Russian for hot weather and stuffy."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hot weather, stuffy, stuffiness, to sweat, to melt",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: hot weather, stuffy, stuffiness, to sweat, to melt]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Hot weather? (жара (zhará).) Stuffy? (душный (dúshnyy).) Stuffiness? (духота (dukhotá).) To sweat? (потеть (potét).) To melt? (таять (táyat).)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

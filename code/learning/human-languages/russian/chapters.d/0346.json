@@ -1,0 +1,19 @@
+{
+  "chapter": 346,
+  "title": "Pros and cons",
+  "label": "ch:ru-pros-and-cons",
+  "canDo": "I can weigh an advantage against a drawback, say what use or harm something does, and assess it.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "RU-C346-ocenivat",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 346: I can weigh an advantage against a drawback, say what use or harm something does, and assess it.",
+    "assesses": [
+      "RU-LEX-C346-PLYUSY-03",
+      "RU-LEX-C346-PLYUSY-04",
+      "RU-LEX-C346-PLYUSY-05"
+    ]
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 324,
+  "sourceHash": "fnv1a64:44d4a674e1eba4df",
+  "lessonIds": [
+    "RU-C324-pobeda",
+    "RU-C324-pobezhdat",
+    "RU-C324-voyevat",
+    "RU-C324-pogibat",
+    "RU-C324-osvobozhdat"
+  ],
+  "tex": "russian/book/chapters/ch324-victory.tex"
+}

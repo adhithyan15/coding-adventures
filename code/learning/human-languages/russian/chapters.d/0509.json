@@ -1,0 +1,19 @@
+{
+  "chapter": 509,
+  "title": "Goals and Goalkeepers",
+  "label": "ch:ru-goals-and-goalkeepers",
+  "canDo": "I can talk about scoring and saving goals.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "RU-C509-zabivat",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 509: I can talk about scoring and saving goals.",
+    "assesses": [
+      "RU-LEX-C509-FOOTBALL-03",
+      "RU-LEX-C509-FOOTBALL-04",
+      "RU-LEX-C509-FOOTBALL-05"
+    ]
+  }
+}

@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "russian",
+  "chapter": 452,
+  "title": "Food shopping",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:eed63b2bf57c9aa8",
+  "lessons": [
+    {
+      "id": "RU-C452-bulochnaya",
+      "sequence": 25710,
+      "title": "булочная (búlochnaya) — a bakery (shop)",
+      "headword": "булочная",
+      "romanization": "búlochnaya",
+      "gloss": "a bakery (shop)",
+      "script": "cyrillic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:75a3c1f80f87b105",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Russian for an addressee, then the Russian for to issue."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: булочная",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "булочная (búlochnaya) — \"a bakery (shop)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Утром я покупаю хлеб в булочной. Útrom ya pokupáyu khleb v búlochnoy. In the morning I buy bread at the bakery."
+            },
+            {
+              "kind": "speech",
+              "text": "An adjective used as a noun. Traditionally чн is pronounced шн here."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "булочная (búlochnaya) is built on булочка, булка 'a roll' with an adjective ending: the shop for rolls. EtymDB lists булка without a deeper source."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "búlochnaya",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *búlochnaya*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "búlochnaya, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *búlochnaya*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with búlochnaya",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *búlochnaya*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Russian for an addressee, then the Russian for to issue, then say búlochnaya again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Russian for an addressee, then the Russian for to issue, then say *búlochnaya* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does булочная (búlochnaya) mean? (\"A bakery (shop)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "RU-C452-gastronom",
+      "sequence": 25720,
+      "title": "гастроном (gastronóm) — a grocery store, a food shop",
+      "headword": "гастроном",
+      "romanization": "gastronóm",
+      "gloss": "a grocery store, a food shop",
+      "script": "cyrillic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:bb3c6369ef4a2516",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Russian for to issue, then the Russian for a bakery."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: гастроном",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "гастроном (gastronóm) — \"a grocery store, a food shop\"."
+            },
+            {
+              "kind": "speech",
+              "text": "В гастрономе на углу мы купили сыр и колбасу. V gastronóme na uglú my kupíli syr i kolbasú. We bought cheese and sausage at the grocery store on the corner."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine. Also an old word for a gourmet."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "гастроном (gastronóm) is usually traced, probably through French gastronome, to Greek gastḗr 'belly' and nómos 'law': first a gourmet, then a food shop. EtymDB does not list it, so the line is hedged."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gastronóm",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gastronóm*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gastronóm, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gastronóm*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with gastronóm",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *gastronóm*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Russian for to issue, then the Russian for a bakery, then say gastronóm again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Russian for to issue, then the Russian for a bakery, then say *gastronóm* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does гастроном (gastronóm) mean? (\"A grocery store, a food shop\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "RU-C452-prilavok",
+      "sequence": 25730,
+      "title": "прилавок (prilávok) — a counter (in a shop)",
+      "headword": "прилавок",
+      "romanization": "prilávok",
+      "gloss": "a counter (in a shop)",
+      "script": "cyrillic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e6620564cffb4054",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Russian for a bakery, then the Russian for a grocery store."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: прилавок",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "прилавок (prilávok) — \"a counter (in a shop)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Продавец стоит за прилавком. Prodavéts stoít za prilávkom. The shop assistant stands behind the counter."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine; the о drops out: прилавка."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "прилавок (prilávok) is built from при- 'beside' and лавка 'a bench; a shop', which is inherited from Proto-Slavic lavŭka 'a bench, a shop' (EtymDB)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "prilávok",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *prilávok*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "prilávok, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *prilávok*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with prilávok",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *prilávok*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Russian for a bakery, then the Russian for a grocery store, then say prilávok again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Russian for a bakery, then the Russian for a grocery store, then say *prilávok* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does прилавок (prilávok) mean? (\"A counter (in a shop)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "RU-C452-prodavshchitsa",
+      "sequence": 25740,
+      "title": "продавщица (prodavshchítsa) — a shop assistant (woman)",
+      "headword": "продавщица",
+      "romanization": "prodavshchítsa",
+      "gloss": "a shop assistant (woman)",
+      "script": "cyrillic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e829ebf8f5f946d9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Russian for a grocery store, then the Russian for a counter."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: продавщица",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "продавщица (prodavshchítsa) — \"a shop assistant (woman)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Продавщица улыбнулась и дала мне сдачу. Prodavshchítsa ulybnúlas i dalá mne sdáchu. The shop assistant smiled and gave me my change."
+            },
+            {
+              "kind": "speech",
+              "text": "The feminine of продавец."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "продавщица (prodavshchítsa) is the feminine of продавец 'a seller', from продавать 'to sell', on давать 'to give', which is inherited from Proto-Slavic dāvati (EtymDB)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "prodavshchítsa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *prodavshchítsa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "prodavshchítsa, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *prodavshchítsa*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with prodavshchítsa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *prodavshchítsa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Russian for a grocery store, then the Russian for a counter, then say prodavshchítsa again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Russian for a grocery store, then the Russian for a counter, then say *prodavshchítsa* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does продавщица (prodavshchítsa) mean? (\"A shop assistant (woman)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "RU-C452-vzveshivat",
+      "sequence": 25750,
+      "title": "взвешивать (vzvéshivat) — to weigh",
+      "headword": "взвешивать",
+      "romanization": "vzvéshivat",
+      "gloss": "to weigh",
+      "script": "cyrillic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:27b61b7aa8ab2fea",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Russian for a counter, then the Russian for a shop assistant."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: взвешивать",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "взвешивать (vzvéshivat) — \"to weigh\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Продавщица взвешивает яблоки. Prodavshchítsa vzvéshivayet yábloki. The shop assistant weighs the apples."
+            },
+            {
+              "kind": "speech",
+              "text": "Imperfective; perfective взвесить (взвешу, взвесишь). Взвесить решение — to weigh up a decision."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "взвешивать (vzvéshivat) is built from вз- and -вешивать, from вес 'weight'. EtymDB lists the verb without a deeper source."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vzvéshivat",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vzvéshivat*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vzvéshivat, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vzvéshivat*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with vzvéshivat",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *vzvéshivat*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Russian for a counter, then the Russian for a shop assistant, then say vzvéshivat again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Russian for a counter, then the Russian for a shop assistant, then say *vzvéshivat* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does взвешивать (vzvéshivat) mean? (\"To weigh\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

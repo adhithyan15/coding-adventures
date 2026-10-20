@@ -1,0 +1,20 @@
+{
+  "chapter": 270,
+  "title": "Would, and a Letter About a Trip",
+  "label": "ch:ru-would-and-a-letter-about-a-trip",
+  "canDo": "I can say what I would like with я бы хотел, what would happen with если бы, and write six connected lines about a trip that end on a condition.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "RU-W270-pismo",
+    "kind": "task",
+    "summary": "Complete RU-W270-pismo: six lines to one reader about a trip, the scene in the imperfective, the events in order in the perfective, a feeling, and a last line with бы.",
+    "assesses": [
+      "RU-GRAMMAR-BY-POLITE-01",
+      "RU-GRAMMAR-BY-PAST-FORM-01",
+      "RU-GRAMMAR-YESLI-BY-01",
+      "RU-GRAMMAR-U-MENYA-BYLO-01"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 326,
+  "title": "Ancestors and chronicles",
+  "label": "ch:ru-ancestors-and-chronicles",
+  "canDo": "I can talk about an ancestor, a descendant, a chronicle and a prince of old Rus, and say that a town was founded.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "RU-R326-review-319-326",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 326: I can talk about an ancestor, a descendant, a chronicle and a prince of old Rus, and say that a town was founded.",
+    "assesses": [
+      "RU-LEX-C326-PREDOK-03",
+      "RU-LEX-C326-PREDOK-04",
+      "RU-LEX-C326-PREDOK-05"
+    ]
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 406,
+  "sourceHash": "fnv1a64:73d988572de9bda3",
+  "lessonIds": [
+    "RU-C406-bagazhnik",
+    "RU-C406-bamper",
+    "RU-C406-fara",
+    "RU-C406-sidenye",
+    "RU-C406-dvornik"
+  ],
+  "tex": "russian/book/chapters/ch406-parts-of-a-car.tex"
+}

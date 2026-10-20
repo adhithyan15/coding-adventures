@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C503-krossvord",
+    "language": "russian",
+    "chapter": 503,
+    "sequence": 28370,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d7d4de3529139e31"
+  },
+  "findings": []
+}

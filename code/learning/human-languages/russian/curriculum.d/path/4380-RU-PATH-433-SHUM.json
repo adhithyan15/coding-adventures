@@ -1,0 +1,9 @@
+{
+  "id": "RU-PATH-433-SHUM",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "RU-EXT-433-SHUM"
+  ],
+  "after": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 510,
+  "title": "Winning and Losing",
+  "label": "ch:ru-winning-and-losing",
+  "canDo": "I can talk about a defeat, a tie and the lead.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "RU-C510-lidirovat",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 510: I can talk about a defeat, a tie and the lead.",
+    "assesses": [
+      "RU-LEX-C510-RESULTS-03",
+      "RU-LEX-C510-RESULTS-04",
+      "RU-LEX-C510-RESULTS-05"
+    ]
+  }
+}

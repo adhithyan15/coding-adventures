@@ -1,0 +1,9 @@
+{
+  "id": "RU-PATH-335-OSTYVAT",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "RU-EXT-335-OSTYVAT"
+  ],
+  "after": []
+}

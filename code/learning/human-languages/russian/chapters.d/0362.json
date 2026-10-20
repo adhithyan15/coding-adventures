@@ -1,0 +1,19 @@
+{
+  "chapter": 362,
+  "title": "Getting a promotion",
+  "label": "ch:ru-getting-a-promotion",
+  "canDo": "I can talk about getting on at work: a promotion, a bonus, my skills, being a specialist, and being dismissed.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "RU-C362-uvolnyat",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 362: I can talk about getting on at work: a promotion, a bonus, my skills, being a specialist, and being dismissed.",
+    "assesses": [
+      "RU-LEX-C362-POVYSHENIYE-03",
+      "RU-LEX-C362-POVYSHENIYE-04",
+      "RU-LEX-C362-POVYSHENIYE-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 406,
+  "sourceHash": "fnv1a64:1cf3dbf4c326207a",
+  "lessonIds": [
+    "RU-C406-bagazhnik",
+    "RU-C406-bamper",
+    "RU-C406-fara",
+    "RU-C406-sidenye",
+    "RU-C406-dvornik"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch406.txt",
+  "json": "russian/narration/ch406.json",
+  "textHash": "fnv1a64:ece6f3fb20ca1795",
+  "jsonHash": "fnv1a64:57771ea11e0cc88e",
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C412-propuskat",
+    "language": "russian",
+    "chapter": 412,
+    "sequence": 23690,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:07dd58df4ea8e535"
+  },
+  "findings": []
+}

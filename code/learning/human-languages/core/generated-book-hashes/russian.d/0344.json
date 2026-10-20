@@ -1,0 +1,14 @@
+{
+  "language": "russian",
+  "chapter": 344,
+  "sourceHash": "fnv1a64:e9d9d920c6922d59",
+  "lessonIds": [
+    "RU-C344-logika",
+    "RU-C344-logichnyy",
+    "RU-C344-vyvod",
+    "RU-C344-rassuzhdat",
+    "RU-C344-ochevidnyy",
+    "RU-R344-review-337-344"
+  ],
+  "tex": "russian/book/chapters/ch344-logic-and-conclusions.tex"
+}

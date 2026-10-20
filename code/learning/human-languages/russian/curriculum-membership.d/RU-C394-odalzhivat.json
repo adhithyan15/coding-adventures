@@ -1,0 +1,11 @@
+{
+  "id": "RU-C394-odalzhivat",
+  "pathSegment": "RU-PATH-394-DOLG",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "RU-EXT-394-DOLG",
+      "order": 2
+    }
+  ]
+}

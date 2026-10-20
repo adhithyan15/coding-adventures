@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 337,
+  "sourceHash": "fnv1a64:512a8eea44eb7c66",
+  "lessonIds": [
+    "RU-C337-tochka-zreniya",
+    "RU-C337-poziciya",
+    "RU-C337-vzglyad",
+    "RU-C337-zayavlyat",
+    "RU-C337-schitatsya"
+  ],
+  "tex": "russian/book/chapters/ch337-my-point-of-view.tex"
+}

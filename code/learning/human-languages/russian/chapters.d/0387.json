@@ -1,0 +1,19 @@
+{
+  "chapter": 387,
+  "title": "Knowledge and skills",
+  "label": "ch:ru-knowledge-and-skills",
+  "canDo": "I can talk about knowledge and skills, say how well someone takes things in, call someone educated, and say a student was expelled.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "RU-C387-obrazovannyy",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 387: I can talk about knowledge and skills, say how well someone takes things in, call someone educated, and say a student was expelled.",
+    "assesses": [
+      "RU-LEX-C387-ZNANIYA-03",
+      "RU-LEX-C387-ZNANIYA-04",
+      "RU-LEX-C387-ZNANIYA-05"
+    ]
+  }
+}

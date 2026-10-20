@@ -1,0 +1,11 @@
+{
+  "id": "RU-C382-peresdavat",
+  "pathSegment": "RU-PATH-382-EKZAMEN",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "RU-EXT-382-EKZAMEN",
+      "order": 1
+    }
+  ]
+}

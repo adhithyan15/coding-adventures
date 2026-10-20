@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C433-shum",
+    "language": "russian",
+    "chapter": 433,
+    "sequence": 24730,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4a47959dae071196"
+  },
+  "findings": []
+}

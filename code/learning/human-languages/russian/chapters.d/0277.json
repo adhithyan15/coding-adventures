@@ -1,0 +1,19 @@
+{
+  "chapter": 277,
+  "title": "The one before and the next",
+  "label": "ch:ru-the-one-before-and-the-next",
+  "canDo": "I can place an event among others: previous, following, yet another, yearly and further.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "RU-C277-dalneyshiy",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 277: I can place an event among others: previous, following, yet another, yearly and further.",
+    "assesses": [
+      "RU-LEX-C277-OCHEREDNOY-03",
+      "RU-LEX-C277-OCHEREDNOY-04",
+      "RU-LEX-C277-OCHEREDNOY-05"
+    ]
+  }
+}

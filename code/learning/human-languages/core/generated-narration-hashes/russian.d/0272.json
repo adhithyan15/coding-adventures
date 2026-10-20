@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 272,
+  "sourceHash": "fnv1a64:803c1ffed1474905",
+  "lessonIds": [
+    "RU-C272-zaranee",
+    "RU-C272-nakanune",
+    "RU-C272-prezhde",
+    "RU-C272-vskore",
+    "RU-C272-spustya"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch272.txt",
+  "json": "russian/narration/ch272.json",
+  "textHash": "fnv1a64:4512cebd7e21b691",
+  "jsonHash": "fnv1a64:4e82a70d0e055548",
+  "findings": []
+}

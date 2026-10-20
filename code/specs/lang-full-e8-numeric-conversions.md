@@ -68,28 +68,27 @@ fork.
 | **JIT** | cold-interprets on VM (free, like E5/E6) | — | — |
 | **LLVM** | `sitofp i64 → double` | `fptosi double → i64` | `llvm.floor.f64` then `fptosi` |
 | **WASM** | `f64.convert_i64_s` | `i64.trunc_sat_f64_s` ¹ | `f64.floor` then `i64.trunc_sat_f64_s` |
-| **JVM** | `i2d` ² | `d2l` (truncates toward zero by spec) | `Math.floor(D)D` then `d2l` |
+| **JVM** | `i2d` ² | range check ² then `d2l` | `Math.floor(D)D`, range check ², then `d2l` |
 | **CLR** | `conv.r8` | `conv.ovf.i4` ³ (truncate toward zero **+ trap**) | `[System.Runtime]Math::Floor(float64)` then `conv.ovf.i4` ³ |
-| **native x86_64** | `cvtsi2sd` | `cvttsd2si` (truncating convert) | `roundsd $1,…` (SSE4.1, round-down) then `cvttsd2si` |
-| **native aarch64** | `scvtf` | `fcvtzs` (round-toward-zero) | `frintm` (round-toward-−∞) then `fcvtzs` |
+| **native x86_64** | `cvtsi2sd` | `roundsd $3,…`, `cvttsd2si`, round-trip check ⁴ | `roundsd $1,…` (SSE4.1, round-down), `cvttsd2si`, round-trip check ⁴ |
+| **native aarch64** | `scvtf` | `frintz`, `fcvtzs`, round-trip check ⁴ | `frintm` (round-toward-−∞), `fcvtzs`, round-trip check ⁴ |
 
 ¹ `trunc_sat` saturates rather than traps on overflow at the wasm level; the
 range check the frontend/VM applies still gives the uniform trap semantics, and
 we assert the operand is in range before lowering for the non-saturating story.
 Open question O-2 below.
 ² JVM `i2d` is always exact (an `int` fits a `double`); when the operand is a
-concretised `long`, use `l2d`. **Trap divergence (PR-4, iir-to-jvm-class-file
-0.18.0):** unlike the VM/LLVM/WASM trap on NaN/±∞/out-of-range (O-2's
-recommendation), JVM `d2i`/`d2l` *saturate* (NaN→0, +∞→MAX, −∞→MIN) and cannot
-throw. Matching the trap would need from-scratch exception bytecode (range-check
-+ `athrow` + an exception table) with **no reusable precedent** in this backend
-— its E5 array bounds rely on the JVM's *native* `*aload` check, not an explicit
-trap. Since every finite, in-range value (all `entier`/coercion ever produces)
-converts identically, the matrix cells agree bit-for-bit; the divergence is
-confined to pathological inputs the matrix never feeds. PR-4 therefore ships the
-**saturating** lowering and documents it here rather than block the arc on
-exception-table plumbing. If a future caller needs the trap on the JVM, add the
-range-check guard then.
+concretised `long`, use `l2d`. **Fail-closed narrowing (iir-to-jvm-class-file
+0.37.0).** `d2i`/`d2l` *saturate* (NaN→0, +∞→MAX, −∞→MIN) and cannot throw.
+PR-4 (0.18.0) shipped that saturating lowering as a documented divergence,
+on the argument that every value `entier` or coercion produces is finite and
+in range. That stopped being true once ALGOL proofs admitted runtime `exp`
+chains: `entier(exp(exp(x)))` can exceed `2^63`, and the JVM returned
+`i64::MAX`. Each narrowing is now preceded by an explicit range check
+(`dup2; ldc2_w lo; dcmpl; if… T; dup2; ldc2_w hi; dcmpg; iflt OK`). It throws
+`ArithmeticException` for NaN, ±∞ and values outside the destination range,
+and needs no exception table because nothing catches it. The choice of
+`dcmpl` and `dcmpg` sends NaN down the throwing path.
 ³ CLR (PR-5, iir-to-cil-bytecode 0.26.0): the **overflow-checking**
 `conv.ovf.i4` truncates toward zero *and* throws `OverflowException` on
 NaN/±∞/out-of-range, so it gives the VM's fail-closed trap (O-2's recommendation)
@@ -98,6 +97,20 @@ for free — one opcode, no exception-table plumbing — unlike the JVM, whose
 (`i64`/`i32` both lower to `int32`, as the existing scalar paths do), so the
 narrowing target is always the 32-bit `conv.ovf.i4` (no scalar `int64` local
 exists to land a `conv.ovf.i8` in). The widen `conv.r8` needs no check.
+
+⁴ Native (x86_64-backend 0.41.0, aarch64-backend): neither `cvttsd2si` nor
+`fcvtzs` traps. On NaN, ±∞ or out-of-range input, x86-64 yields the
+integer-indefinite `i64::MIN`, a sign-flipped answer, and aarch64 saturates.
+Both backends now round the input to an integral double in place (`roundsd`
+mode 1 or 3; `frintm` or `frintz`), convert it, convert the result back
+(`cvtsi2sd` / `scvtf`) and compare it with the rounded input. The program
+falls through to a trap (`ud2` / `udf #0xDEAD`, as for array bounds) when the
+compare is unordered (NaN) or unequal. aarch64 also traps on a result of
+`i64::MAX`. `fcvtzs` saturates `2^63` to that value, which converts back to
+exactly `2^63`, and no in-range double truncates to it. The matrix rows
+`entier(exp(exp(pick())))` (finite, ≈ 5.1e23) and
+`entier(exp(exp(exp(pick()))))` (+∞) pin the trap on all seven standard
+backends.
 
 **No backend needs a new capability** — every one already emits float
 arithmetic (E3); these are just the convert opcodes that sit next to the

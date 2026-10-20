@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 341,
+  "sourceHash": "fnv1a64:7e9d14d98b210f1c",
+  "lessonIds": [
+    "RU-C341-protivorechit",
+    "RU-C341-otvergat",
+    "RU-C341-kompromiss",
+    "RU-C341-nastaivat",
+    "RU-C341-priznavat"
+  ],
+  "tex": "russian/book/chapters/ch341-reaching-a-compromise.tex"
+}

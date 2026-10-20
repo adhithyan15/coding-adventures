@@ -1,0 +1,11 @@
+{
+  "id": "RU-C522-skulptura",
+  "pathSegment": "RU-PATH-522-SCULPTURE",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "RU-EXT-522-SCULPTURE",
+      "order": 1
+    }
+  ]
+}

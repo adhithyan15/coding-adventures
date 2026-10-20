@@ -1,0 +1,9 @@
+{
+  "id": "RU-PATH-506-VEGETABLES",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "RU-EXT-506-VEGETABLES"
+  ],
+  "after": []
+}

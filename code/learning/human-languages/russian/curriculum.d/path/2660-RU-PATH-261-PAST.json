@@ -1,0 +1,9 @@
+{
+  "id": "RU-PATH-261-PAST",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "RU-EXT-261-PAST"
+  ],
+  "after": []
+}

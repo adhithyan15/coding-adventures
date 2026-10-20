@@ -1,0 +1,9 @@
+{
+  "id": "RU-PATH-326-PREDOK",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "RU-EXT-326-PREDOK"
+  ],
+  "after": []
+}

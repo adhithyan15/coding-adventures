@@ -1,0 +1,11 @@
+{
+  "id": "RU-C409-evakuator",
+  "pathSegment": "RU-PATH-409-POLOMKA",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "RU-EXT-409-POLOMKA",
+      "order": 1
+    }
+  ]
+}

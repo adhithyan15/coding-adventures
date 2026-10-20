@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C336-zharenyy",
+    "language": "russian",
+    "chapter": 336,
+    "sequence": 19760,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9cc79d57a23de41c"
+  },
+  "findings": []
+}

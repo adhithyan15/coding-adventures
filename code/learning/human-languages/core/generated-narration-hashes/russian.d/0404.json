@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 404,
+  "sourceHash": "fnv1a64:b97e5fa01107063b",
+  "lessonIds": [
+    "RU-C404-kapot",
+    "RU-C404-dvigatel",
+    "RU-C404-akkumulyator",
+    "RU-C404-zavodit",
+    "RU-C404-glokhnut"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch404.txt",
+  "json": "russian/narration/ch404.json",
+  "textHash": "fnv1a64:3ac8d8832f0c27d7",
+  "jsonHash": "fnv1a64:d6d24736b9607b48",
+  "findings": []
+}

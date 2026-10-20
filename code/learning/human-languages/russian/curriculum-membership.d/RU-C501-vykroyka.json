@@ -1,0 +1,11 @@
+{
+  "id": "RU-C501-vykroyka",
+  "pathSegment": "RU-PATH-501-SEWING",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "RU-EXT-501-SEWING",
+      "order": 3
+    }
+  ]
+}

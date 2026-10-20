@@ -1,0 +1,19 @@
+{
+  "chapter": 455,
+  "title": "Paying at the till",
+  "label": "ch:ru-paying-at-the-till",
+  "canDo": "I can pay: settling up, the payment, a bank card, changing money and being shortchanged.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "RU-C455-obschityvat",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 455: I can pay: settling up, the payment, a bank card, changing money and being shortchanged.",
+    "assesses": [
+      "RU-LEX-C455-OPLATA-03",
+      "RU-LEX-C455-OPLATA-04",
+      "RU-LEX-C455-OPLATA-05"
+    ]
+  }
+}

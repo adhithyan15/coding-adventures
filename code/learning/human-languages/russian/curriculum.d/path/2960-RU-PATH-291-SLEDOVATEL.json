@@ -1,0 +1,9 @@
+{
+  "id": "RU-PATH-291-SLEDOVATEL",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "RU-EXT-291-SLEDOVATEL"
+  ],
+  "after": []
+}

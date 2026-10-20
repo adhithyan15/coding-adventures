@@ -1,0 +1,11 @@
+{
+  "id": "RU-C468-tayat",
+  "pathSegment": "RU-PATH-468-ZHARA",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "RU-EXT-468-ZHARA",
+      "order": 4
+    }
+  ]
+}

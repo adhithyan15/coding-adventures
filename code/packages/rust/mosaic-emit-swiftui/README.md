@@ -132,7 +132,7 @@ pressed or selected variant still exposes that more-specific state.
 | `HostScroll`     | `ScrollView { ... }`; `axis` selects `ScrollView(.horizontal)` / `ScrollView([.horizontal, .vertical])` (UI61) *(v0.2.0; UI29 kernel)*  |
 | `HostNavigationSplit` | `NavigationSplitView { pane } detail: { detail }`; the pane receives its title and ideal width *(UI29-6)* |
 | `Input`          | `TextEditor` when `multiline: true`; otherwise the native `TextField` path *(UI25 compatibility)* |
-| `HostInput`      | `TextField` with a dispatching `Binding` when `onChange` is wired *(UI29 kernel)*; `TextEditor` with `multiline: true` |
+| `HostInput`      | `TextField` with a dispatching `Binding` when `onChange` is wired *(UI29 kernel)*; `TextEditor` with `multiline: true`, committing on Cmd/Ctrl+Return (macOS 14 / iOS 17+) |
 | `HostButton`     | `Button(action: { dispatch(.tap) }) { Text(label) }` *(v0.2.0; UI29 kernel)* |
 | `HostSlider`     | Native `Slider` with controlled live value and movement/release events |
 | `HostSurface`    | Host-supplied `AnyView` from a `node` slot          |

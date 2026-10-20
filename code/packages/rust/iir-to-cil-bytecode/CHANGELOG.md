@@ -1,5 +1,56 @@
 # Changelog — iir-to-cil-bytecode
 
+## [0.48.0] — 2026-10-20 (LANG83 PR4 — overflow-checked arithmetic on the textual path)
+
+- **`i64_add_ovf` / `i64_sub_ovf` / `i64_mul_ovf` / `i64_neg_ovf`**
+  ([LANG83](../../../specs/LANG83-iir-standard-operation-registry.md) PR4),
+  `int64` destinations only. The overflow condition is branched around first
+  and the plain wrapping instruction runs last:
+  - add / sub: `((a ^ r) & (b ^ r))` / `((a ^ b) & (a ^ r))`, then
+    `ldc.i8 0; bge OK`;
+  - neg: `ldc.i8 MIN; bne.un OK`;
+  - mul: `a != -1 || b != MIN` (which also keeps the check's own `div` from
+    seeing `MIN / -1`, which would throw), then `a == 0 || (a*b)/a == b`.
+
+  A failing test runs PR1b's `Console.Out.Flush()` +
+  `throw new System.Exception("Trap.Overflow")`. `add.ovf` / `sub.ovf` /
+  `mul.ovf` are deliberately not used: their `OverflowException` carries no
+  kind and skips the flush, and mapping it would need a `.try`/`catch`
+  region, which this path has never emitted and which CoreCLR checks more
+  strictly than `ilasm`. Internal labels use the PR1b unforgeable prefix.
+- The binary `lower_iir_to_cil` path (32-bit simulator) refuses the PR4 ops
+  with a typed error, like the PR1b ops.
+- `op_support`: all four `Lowered`.
+- New `tests/lang83_pr4.rs` pins the IL and runs a stack-depth model over
+  every emitted line: no underflow, every conditional branch and every label
+  at an empty stack, every branch target defined once, nothing reachable after
+  `throw`.
+
+## [0.47.0] — 2026-10-19 (LANG83 PR1b — floor division, `trap`, `write_i64` on the textual path)
+
+- **`i64_div_floor` / `i64_mod_floor`** on `emit_il` ([LANG83](../../../specs/LANG83-iir-standard-operation-registry.md)):
+  CIL `div`/`rem` would throw `DivideByZeroException` / `OverflowException`, so
+  both edges are branched around first (`ldc.i8 0; bne.un`, then `-1` and
+  (div) `MIN` compares, to per-function `'__lang83_<n>'` labels — the prefix
+  grows a leading `_` until no name the function mentions starts with it, so
+  a user label or branch target spelled `__lang83_1` cannot collide with an
+  internal label; security review note). Div traps
+  `Trap.Overflow` on `MIN / -1`; mod stores 0 for any `b == -1`. Floor fix-up
+  with no scratch locals: `adj = ((a rem b) ^ b < 0) & ((a rem b) != 0)`,
+  `div − conv.i8(adj)` / `rem + conv.i8(adj)·b`. The dest must be `int64`.
+- **`trap "<kind>"`** → `Console.Out.Flush()`, then
+  `throw new System.Exception("<kind>")` (CoreCLR reports
+  `Unhandled exception. System.Exception: <kind>` and exits non-zero).
+- **`write_i64`** → `Console.Write(int64)`, the same writer as every other
+  output builtin.
+- The binary `lower_iir_to_cil` path (32-bit `clr-simulator`) does not lower
+  these ops and refuses them with a typed `UnsupportedOp`; `op_support`
+  describes the textual path, which is now `Lowered` for all four.
+- Tests (`tests/lang83_pr1b.rs`): line-by-line IL for both floor ops (guards
+  before `div`/`rem`, trap sequences, every branch label defined once), trap,
+  `write_i64`, unregistered kind refused, binary path refuses. Not executed
+  locally (no `dotnet`); CI's CLR column runs it on CoreCLR.
+
 ## [0.46.0] — 2026-10-19 (LANG83 PR1a — standard operation support)
 
 - **LANG83 op support.** New `op_support` module exporting `OP_SUPPORT` and

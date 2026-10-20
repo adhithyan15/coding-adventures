@@ -1,0 +1,19 @@
+{
+  "chapter": 425,
+  "title": "Seasickness",
+  "label": "ch:ru-seasickness",
+  "canDo": "I can talk about a sea trip: setting sail, mooring, the rolling of the ship, seasickness and the anchor.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "RU-C425-yakor",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 425: I can talk about a sea trip: setting sail, mooring, the rolling of the ship, seasickness and the anchor.",
+    "assesses": [
+      "RU-LEX-C425-KACHKA-03",
+      "RU-LEX-C425-KACHKA-04",
+      "RU-LEX-C425-KACHKA-05"
+    ]
+  }
+}

@@ -61,6 +61,10 @@ input and repeated EOF reads; this does not change existing integer parsing.
 `Lowered` or `Refused(reason)`, for every operation in the
 [LANG83](../../../specs/LANG83-iir-standard-operation-registry.md) standard registry
 (`interpreter_ir::op_registry::STANDARD_OPS`). "Lowered" means the native AOT pipeline that ends in this backend (twig-aot's IIR rewriting, then `jit_core::specialise`, then this crate) compiles the op. This crate dispatches CIR ops by name prefix, which is why LANG83 requires new op names to be type-first. `lang-aot` refuses a
-module that uses a refused op at compile time, with a typed error. The four
-LANG83 PR1b ops (`write_i64`, `i64_div_floor`, `i64_mod_floor`, `trap`) are
-refused until PR1b lowers them.
+module that uses a refused op at compile time, with a typed error. Since LANG83 PR1b this backend also lowers `write_i64`
+(`__twig_write_i64`), `i64_div_floor`/`i64_mod_floor` (explicit zero and
+`MIN / -1` checks before `SDIV`, which would otherwise silently return 0 or
+`MIN`) and `trap` (`bl __twig_trap` with the stable kind id, then `udf`).
+LANG83 PR4 adds the overflow-checked `i64_add_ovf`/`i64_sub_ovf`/`i64_neg_ovf`
+(`adds`/`subs`/`negs`, then `b.vc` over a `Trap.Overflow` trap call) and
+`i64_mul_ovf` (`mul` + `smulh`, `cmp hi, lo, asr #63`, `b.eq` over the trap).

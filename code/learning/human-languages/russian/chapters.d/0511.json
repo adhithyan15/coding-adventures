@@ -1,0 +1,19 @@
+{
+  "chapter": 511,
+  "title": "Medals and Champions",
+  "label": "ch:ru-medals-and-champions",
+  "canDo": "I can talk about tournaments, champions and medals.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "RU-C511-nagrazhdat",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 511: I can talk about tournaments, champions and medals.",
+    "assesses": [
+      "RU-LEX-C511-CHAMPIONS-03",
+      "RU-LEX-C511-CHAMPIONS-04",
+      "RU-LEX-C511-CHAMPIONS-05"
+    ]
+  }
+}

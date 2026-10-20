@@ -1,0 +1,19 @@
+{
+  "chapter": 398,
+  "title": "Renting and insurance",
+  "label": "ch:ru-renting-and-insurance",
+  "canDo": "I can talk about renting and leasing, a mortgage, and insurance, and say what we insure.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "RU-C398-strakhovka",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 398: I can talk about renting and leasing, a mortgage, and insurance, and say what we insure.",
+    "assesses": [
+      "RU-LEX-C398-ARENDA-03",
+      "RU-LEX-C398-ARENDA-04",
+      "RU-LEX-C398-ARENDA-05"
+    ]
+  }
+}

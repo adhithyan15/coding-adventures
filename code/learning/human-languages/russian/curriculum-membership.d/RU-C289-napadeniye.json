@@ -1,0 +1,11 @@
+{
+  "id": "RU-C289-napadeniye",
+  "pathSegment": "RU-PATH-289-OGRABLENIYE",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "RU-EXT-289-OGRABLENIYE",
+      "order": 3
+    }
+  ]
+}

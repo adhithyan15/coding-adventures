@@ -1,0 +1,11 @@
+{
+  "id": "RU-C397-oplachivat",
+  "pathSegment": "RU-PATH-397-OPLATA",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "RU-EXT-397-OPLATA",
+      "order": 0
+    }
+  ]
+}

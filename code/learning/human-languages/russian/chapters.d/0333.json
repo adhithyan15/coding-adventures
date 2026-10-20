@@ -1,0 +1,19 @@
+{
+  "chapter": 333,
+  "title": "Seasoning",
+  "label": "ch:ru-seasoning",
+  "canDo": "I can describe seasoning food: salting, peppering, sprinkling, a seasoning and marinating.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "RU-C333-marinovat",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 333: I can describe seasoning food: salting, peppering, sprinkling, a seasoning and marinating.",
+    "assesses": [
+      "RU-LEX-C333-SOLIT-03",
+      "RU-LEX-C333-SOLIT-04",
+      "RU-LEX-C333-SOLIT-05"
+    ]
+  }
+}

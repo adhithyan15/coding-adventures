@@ -1,0 +1,11 @@
+{
+  "id": "RU-C325-pravit",
+  "pathSegment": "RU-PATH-325-IMPERIYA",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "RU-EXT-325-IMPERIYA",
+      "order": 4
+    }
+  ]
+}

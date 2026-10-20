@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 531,
+  "sourceHash": "fnv1a64:056f6a832bb1c189",
+  "lessonIds": [
+    "RU-C531-besporyadok",
+    "RU-C531-khlam",
+    "RU-C531-kladovka",
+    "RU-C531-skladyvat",
+    "RU-C531-vybrasyvat"
+  ],
+  "tex": "russian/book/chapters/ch531-clutter-and-clearing-out.tex"
+}

@@ -185,7 +185,7 @@ function renderHero(model: LandingModel): string {
       <p class="hero-intro">${html(hero.intro)}</p>
       <div class="hero-actions">${button(hero.primaryAction, "button-primary", " ↓")}${button(hero.secondaryAction, "button-secondary")}</div>
     </div><aside class="stack-map" aria-label="Computing stack map">
-      <div class="map-head"><span>System map / 01</span><span>All layers live</span></div>
+      <div class="map-head"><span>System map / 01</span><span>Explore the layers</span></div>
       <ol class="stack-list">${hero.stack.map(item => `<li><span>${html(item.label)}</span><small>${html(item.detail)}</small></li>`).join("")}</ol>
     </aside></div></section>`;
 }
@@ -200,8 +200,8 @@ function renderSnapshot(model: LandingModel): string {
 
 function renderPaths(paths: readonly LandingPath[]): string {
   return `<section class="section trails" id="paths"><div class="shell">
-    <div class="section-head"><div><p class="eyebrow">Three ways in</p><h2>Pick a thread.<br>Follow it end to end.</h2></div>
-      <p class="section-lede">Each route crosses specifications, teaching material, reusable packages, tests, and a runnable surface. The destination matters; the layers are the lesson.</p></div>
+    <div class="section-head"><div><p class="eyebrow">Ways to explore</p><h2>Pick a thread.<br>Follow it end to end.</h2></div>
+      <p class="section-lede">Explore computing through specifications, teaching material, reusable packages, and runnable experiments. Learn human languages through cumulative books and practice.</p></div>
     <div class="trail-grid">${paths.map(path => `<article class="trail-card"><span class="trail-number">${html(path.number)}</span><h3>${html(path.title)}</h3><p>${html(path.description)}</p><div class="trail-links">${path.links.map(link).join("")}</div></article>`).join("")}</div>
   </div></section>`;
 }
@@ -209,7 +209,7 @@ function renderPaths(paths: readonly LandingPath[]): string {
 function renderLabs(labs: readonly LandingLab[]): string {
   return `<section class="section labs" id="labs"><div class="shell">
     <div class="section-head"><div><p class="eyebrow">Live from the repository</p><h2>Open the machinery.</h2></div>
-      <p class="section-lede">These are working builds, not screenshots. Change inputs, inspect intermediate state, and watch the repository's packages collaborate in real time.</p></div>
+      <p class="section-lede">Open browser experiments, applications, documentation, and generated books. The interactive labs let you change inputs and inspect intermediate state.</p></div>
     <div class="lab-grid">${labs.map(lab => `<a class="lab-card${lab.featured ? " featured" : ""}" href="${attr(lab.href)}"><div class="card-top"><span>${html(lab.kicker)}</span><span class="card-arrow">↗</span></div><h3>${html(lab.title)}</h3><p>${html(lab.description)}</p><div class="tag-row">${lab.tags.map(tag => `<span class="tag">${html(tag)}</span>`).join("")}</div></a>`).join("")}</div>
   </div></section>`;
 }
@@ -226,7 +226,7 @@ function renderForme(model: LandingModel): string {
 
 function renderWorkshop(items: readonly LandingWorkshopItem[]): string {
   return `<section class="section workshop"><div class="shell">
-    <div class="section-head"><div><p class="eyebrow">On the workbench</p><h2>What the lab is building now.</h2></div><p class="section-lede">The repository is active infrastructure. These are the current integration fronts on main.</p></div>
+    <div class="section-head"><div><p class="eyebrow">Explore the source</p><h2>What the lab is building now.</h2></div><p class="section-lede">Follow these links into the repository's source and design records. Each track keeps its own implementation status and acceptance evidence.</p></div>
     <div class="workshop-grid">${items.map(item => `<article class="workshop-item"><span>${html(item.kicker)}</span><h3><a href="${attr(item.href)}">${html(item.title)}</a></h3><p>${html(item.description)}</p></article>`).join("")}</div>
   </div></section>`;
 }

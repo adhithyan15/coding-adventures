@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 425,
+  "sourceHash": "fnv1a64:84ec2546017db1ed",
+  "lessonIds": [
+    "RU-C425-otplyvat",
+    "RU-C425-prichalivat",
+    "RU-C425-kachka",
+    "RU-C425-ukachivat",
+    "RU-C425-yakor"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch425.txt",
+  "json": "russian/narration/ch425.json",
+  "textHash": "fnv1a64:3d89d55d3832a8eb",
+  "jsonHash": "fnv1a64:42c998a3613d4284",
+  "findings": []
+}

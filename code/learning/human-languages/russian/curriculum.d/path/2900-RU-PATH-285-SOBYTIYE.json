@@ -1,0 +1,9 @@
+{
+  "id": "RU-PATH-285-SOBYTIYE",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "RU-EXT-285-SOBYTIYE"
+  ],
+  "after": []
+}

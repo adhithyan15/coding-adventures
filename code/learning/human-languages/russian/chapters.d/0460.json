@@ -1,0 +1,19 @@
+{
+  "chapter": 460,
+  "title": "Streams and ponds",
+  "label": "ch:ru-streams-and-ponds",
+  "canDo": "I can describe water in the countryside: a stream, a swamp, a spring, a pond and water babbling.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "RU-C460-zhurchat",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 460: I can describe water in the countryside: a stream, a swamp, a spring, a pond and water babbling.",
+    "assesses": [
+      "RU-LEX-C460-RUCHEY-03",
+      "RU-LEX-C460-RUCHEY-04",
+      "RU-LEX-C460-RUCHEY-05"
+    ]
+  }
+}

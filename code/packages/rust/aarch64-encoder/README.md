@@ -6,7 +6,9 @@ lowering in this repo (jit-core / aot-core).
 
 ## What's in scope
 
-- 64-bit GPR-form integer instructions
+- 64-bit GPR-form integer instructions, including the flag-setting `adds` /
+  `subs` / `negs`, `smulh` (high half of a signed product) and
+  `cmp Xn, Xm, asr #k` that overflow-checked arithmetic (LANG83 PR4) needs
 - Branches with label-resolution at finish-time (no two-pass exposure to callers)
 - Output: little-endian 32-bit instruction words concatenated as a `Vec<u8>`
 

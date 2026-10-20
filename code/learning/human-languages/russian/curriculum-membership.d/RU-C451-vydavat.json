@@ -1,0 +1,11 @@
+{
+  "id": "RU-C451-vydavat",
+  "pathSegment": "RU-PATH-451-POSOLSTVO",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "RU-EXT-451-POSOLSTVO",
+      "order": 4
+    }
+  ]
+}

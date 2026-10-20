@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 445,
+  "sourceHash": "fnv1a64:3aed480a5710f33f",
+  "lessonIds": [
+    "RU-C445-fonar",
+    "RU-C445-skameyka",
+    "RU-C445-urna",
+    "RU-C445-kiosk",
+    "RU-C445-klumba"
+  ],
+  "tex": "russian/book/chapters/ch445-lamps-and-benches.tex"
+}

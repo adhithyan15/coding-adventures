@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 275,
+  "sourceHash": "fnv1a64:b82b6c263eb473d8",
+  "lessonIds": [
+    "RU-C275-zatyagivatsya",
+    "RU-C275-otkladyvat",
+    "RU-C275-zaderzhivatsya",
+    "RU-C275-povtoryatsya",
+    "RU-C275-sovpadat"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch275.txt",
+  "json": "russian/narration/ch275.json",
+  "textHash": "fnv1a64:0cf1f362521dff82",
+  "jsonHash": "fnv1a64:9c0af2dac6581400",
+  "findings": []
+}

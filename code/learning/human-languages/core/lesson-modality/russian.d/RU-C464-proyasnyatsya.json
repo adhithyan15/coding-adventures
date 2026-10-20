@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C464-proyasnyatsya",
+    "language": "russian",
+    "chapter": 464,
+    "sequence": 26360,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8c7ce1d4c03287ea"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C411-poputchik",
+    "language": "russian",
+    "chapter": 411,
+    "sequence": 23610,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c105e6f2fa0a854b"
+  },
+  "findings": []
+}

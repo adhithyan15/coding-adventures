@@ -1,0 +1,11 @@
+{
+  "id": "RU-C526-izdatelstvo",
+  "pathSegment": "RU-PATH-526-BOOKS",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "RU-EXT-526-BOOKS",
+      "order": 3
+    }
+  ]
+}

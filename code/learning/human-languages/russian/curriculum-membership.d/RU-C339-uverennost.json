@@ -1,0 +1,11 @@
+{
+  "id": "RU-C339-uverennost",
+  "pathSegment": "RU-PATH-339-UBEZHDAT",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "RU-EXT-339-UBEZHDAT",
+      "order": 3
+    }
+  ]
+}

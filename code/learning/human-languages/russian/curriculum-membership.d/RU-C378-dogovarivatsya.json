@@ -1,0 +1,11 @@
+{
+  "id": "RU-C378-dogovarivatsya",
+  "pathSegment": "RU-PATH-378-DOGOVORILIS",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "RU-EXT-378-DOGOVORILIS",
+      "order": 0
+    }
+  ]
+}

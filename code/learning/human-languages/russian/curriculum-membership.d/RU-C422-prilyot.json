@@ -1,0 +1,11 @@
+{
+  "id": "RU-C422-prilyot",
+  "pathSegment": "RU-PATH-422-VYLET",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "RU-EXT-422-VYLET",
+      "order": 2
+    }
+  ]
+}

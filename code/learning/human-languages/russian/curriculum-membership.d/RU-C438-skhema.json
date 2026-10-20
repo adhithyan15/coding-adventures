@@ -1,0 +1,11 @@
+{
+  "id": "RU-C438-skhema",
+  "pathSegment": "RU-PATH-438-UKAZATEL",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "RU-EXT-438-UKAZATEL",
+      "order": 4
+    }
+  ]
+}

@@ -6013,8 +6013,9 @@ fn pick_signal_arg_with(
 /// | `onChange: emit: onE`   | `onTextChanged: e(<arg>)`  — `arg` is `text` when the signal      |
 /// |                         | declares one parameter, empty when it declares zero (see          |
 /// |                         | `pick_signal_arg`).                                               |
-/// | `onCommit: emit: onE`   | `onAccepted: e(<arg>)` — fires on Enter, same arg rule            |
-/// | `onCancel: emit: onE`   | `Keys.onEscapePressed: { e(<arg>); event.accepted = true }`       |
+/// | `onCommit: emit: onE`   | `onAccepted: e(<arg>)` — fires on Enter, same arg rule;           |
+/// |                         | a `TextArea` uses `Keys.onPressed` for Ctrl/Cmd+Enter instead     |
+/// | `onCancel: emit: onE`   | `Keys.onEscapePressed: function(event) { e(<arg>); event.accepted = true }` |
 ///
 /// ## Signal arity matters
 ///
@@ -6070,7 +6071,7 @@ fn emit_text_input_qml(
     let inner_pad = "    ".repeat(depth + 1);
     let mut out = String::new();
     let typography = typography_lines(node, ctx);
-    let placeholder_line = build_placeholder_text_attribute(node);
+    let placeholder_line = build_placeholder_text_attribute(node)?;
     let control_tag = if multiline {
         "TextArea"
     } else if placeholder_line.is_some() {
@@ -6215,23 +6216,44 @@ fn emit_text_input_qml(
         writeln!(out, "{inner_pad}onTextChanged: {camel}({arg})").unwrap();
     }
 
-    // TextArea has no `accepted` signal: Enter inserts a newline. The
-    // single-line controls preserve HostInput's Enter-to-commit contract.
-    if !multiline {
-        if let Some(emit_name) = find_emit_ref_prop(node, "onCommit") {
-            let camel = qml_signal_name(emit_name, ctx.signal_names)?;
-            let arg = pick_signal_arg(emit_name, ctx.emits);
+    // The single-line controls commit on Enter through `accepted`.
+    //
+    // TextArea has no `accepted` signal: Enter inserts a newline. Its commit
+    // key is UI25 §4's Ctrl+Enter (Windows, Linux) or Cmd+Enter (macOS),
+    // caught in `Keys.onPressed`, which runs before TextArea's own key
+    // handling, so accepting the event keeps the chord out of the text.
+    //
+    // Qt swaps the modifier names on macOS: Cmd arrives as ControlModifier
+    // and the physical Control key as MetaModifier. Testing both is what
+    // makes one handler mean "Ctrl+Enter here, Cmd+Enter on a Mac".
+    // `Key_Enter` is the keypad Enter; `Key_Return` the main one.
+    //
+    // `Keys.onEscapePressed` (onCancel, below) is a key-specific handler, so
+    // Qt runs it before `onPressed`; the two never compete for a key.
+    if let Some(emit_name) = find_emit_ref_prop(node, "onCommit") {
+        let camel = qml_signal_name(emit_name, ctx.signal_names)?;
+        let arg = pick_signal_arg(emit_name, ctx.emits);
+        if multiline {
+            writeln!(
+                out,
+                "{inner_pad}Keys.onPressed: function(event) {{ if ((event.key === Qt.Key_Return || event.key === Qt.Key_Enter) && (event.modifiers & (Qt.ControlModifier | Qt.MetaModifier))) {{ {camel}({arg}); event.accepted = true }} }}"
+            )
+            .unwrap();
+        } else {
             writeln!(out, "{inner_pad}onAccepted: {camel}({arg})").unwrap();
         }
     }
 
-    // Keys.onEscapePressed: { e(<arg>); event.accepted = true }
+    // Keys.onEscapePressed: function(event) { e(<arg>); event.accepted = true }
+    //
+    // `event` is a declared parameter, not an injected one: Qt 6 deprecates
+    // signal-parameter injection into handler blocks and warns at run time.
     if let Some(emit_name) = find_emit_ref_prop(node, "onCancel") {
         let camel = qml_signal_name(emit_name, ctx.signal_names)?;
         let arg = pick_signal_arg(emit_name, ctx.emits);
         writeln!(
             out,
-            "{inner_pad}Keys.onEscapePressed: {{ {camel}({arg}); event.accepted = true }}"
+            "{inner_pad}Keys.onEscapePressed: function(event) {{ {camel}({arg}); event.accepted = true }}"
         )
         .unwrap();
     }
@@ -7808,7 +7830,7 @@ fn emit_host_navigation_split_qml(
 /// | moslayout prop  | QML output                                |
 /// |---|---|
 /// | `value: slot|n` | `text: String(<bare-identifier>|n)`          |
-/// | `placeholder`   | `placeholderText: "..."`                    |
+/// | `placeholder`   | `placeholderText: "..."` / `placeholderText: x` |
 /// | `min: <n>`      | `validator.bottom: <n>`                     |
 /// | `max: <n>`      | `validator.top: <n>`                        |
 /// | `disabled: ...` | `enabled: !d` (polarity flip)               |
@@ -7841,9 +7863,10 @@ fn emit_host_number_input_qml(
         writeln!(out, "{inner}text: String({n})").unwrap();
     }
 
-    if let Some(placeholder) = find_string_prop(node, "placeholder") {
-        let escaped = escape_qml_string(placeholder);
-        writeln!(out, "{inner}placeholderText: \"{escaped}\"").unwrap();
+    // placeholder — a literal or a bound value, through the same lowering
+    // as HostInput (EM-14: this read literals only).
+    if let Some(line) = build_placeholder_text_attribute(node)? {
+        writeln!(out, "{inner}{line}").unwrap();
     }
     writeln!(out, "{inner}inputMethodHints: Qt.ImhFormattedNumbersOnly").unwrap();
     writeln!(out, "{inner}validator: DoubleValidator {{").unwrap();
@@ -8057,7 +8080,7 @@ fn tree_needs_controls_import(node: &LayoutNode) -> bool {
     // load error, not a degraded field.
     if matches!(node.tag.as_str(), "Input" | "HostInput")
         && (find_keyword_prop(node, "multiline") == Some("true")
-            || build_placeholder_text_attribute(node).is_some())
+            || node.props.iter().any(|p| p.name == "placeholder"))
     {
         return true;
     }
@@ -8510,17 +8533,17 @@ fn emit_native_host_table_qml(
         .unwrap();
         writeln!(
             out,
-            "{component_inner}    Keys.onReturnPressed: {{ {activation}; event.accepted = true }}"
+            "{component_inner}    Keys.onReturnPressed: function(event) {{ {activation}; event.accepted = true }}"
         )
         .unwrap();
         writeln!(
             out,
-            "{component_inner}    Keys.onEnterPressed: {{ {activation}; event.accepted = true }}"
+            "{component_inner}    Keys.onEnterPressed: function(event) {{ {activation}; event.accepted = true }}"
         )
         .unwrap();
         writeln!(
             out,
-            "{component_inner}    Keys.onSpacePressed: {{ {activation}; event.accepted = true }}"
+            "{component_inner}    Keys.onSpacePressed: function(event) {{ {activation}; event.accepted = true }}"
         )
         .unwrap();
         writeln!(out, "{component_inner}    TapHandler {{").unwrap();
@@ -9181,26 +9204,40 @@ fn build_read_only_attribute(node: &LayoutNode) -> Option<String> {
     })
 }
 
-/// Build the `placeholderText: ...` attribute for a `HostInput`.
-fn build_placeholder_text_attribute(node: &LayoutNode) -> Option<String> {
-    let prop = node.props.iter().find(|p| p.name == "placeholder")?;
-    Some(match &prop.value {
+/// Build the `placeholderText: ...` attribute for a text field: `HostInput`,
+/// the legacy `Input` (as `TextField` or `TextArea`) and `HostNumberInput`.
+///
+/// | authored form          | QML                                         |
+/// |------------------------|---------------------------------------------|
+/// | `placeholder : "Text"` | `placeholderText: "Text"` (escaped)         |
+/// | `placeholder : 3`      | `placeholderText: "3"`                      |
+/// | `placeholder : slot: s`| `placeholderText: s` (camelCased, validated) |
+/// | `placeholder : item`   | `placeholderText: item` (a `For` binding)   |
+/// | `placeholder : ( e )`  | `placeholderText: ( e )`, verbatim          |
+///
+/// A slot or binding name that is not a QML identifier is an
+/// `UnsafeSlotName` error. Until EM-14 an unsafe name silently became
+/// `placeholderText: ""`, and a bare binding name was quoted, so a `For`
+/// row's hint showed the binding's own name as text.
+fn build_placeholder_text_attribute(
+    node: &LayoutNode,
+) -> Result<Option<String>, PipelineEmitError> {
+    let Some(prop) = node.props.iter().find(|p| p.name == "placeholder") else {
+        return Ok(None);
+    };
+    Ok(Some(match &prop.value {
         LayoutPropValue::String(s) => {
             format!("placeholderText: \"{}\"", escape_qml_string(s))
         }
-        LayoutPropValue::SlotRef(s) => {
-            let camel = to_camel_case_first_lower(s);
-            if is_safe_identifier(&camel) {
-                format!("placeholderText: {camel}")
-            } else {
-                "placeholderText: \"\"".to_string()
-            }
+        LayoutPropValue::SlotRef(name) | LayoutPropValue::Keyword(name) => {
+            let camel = to_camel_case_first_lower(name);
+            validate_safe_identifier(&camel).map_err(PipelineEmitError::UnsafeSlotName)?;
+            format!("placeholderText: {camel}")
         }
-        LayoutPropValue::Keyword(k) => format!("placeholderText: \"{k}\""),
         LayoutPropValue::Number(n) => format!("placeholderText: \"{n}\""),
         LayoutPropValue::Expr(text) => format!("placeholderText: {text}"),
         LayoutPropValue::EmitRef(_) => "placeholderText: \"\"".to_string(),
-    })
+    }))
 }
 
 /// Build the `text: ...` attribute for a `HostButton` from its `label` prop.
@@ -11720,7 +11757,18 @@ mod tests {
             "TextArea Enter must insert a newline rather than commit:\n{}",
             result.output
         );
+        // UI25 §4: Ctrl/Cmd+Enter commits instead, with the text payload the
+        // one-parameter signal declares.
+        assert!(
+            result.output.contains(QT_MOD_ENTER_COMMIT_BODY_CHANGE),
+            "TextArea must commit on Ctrl/Cmd+Enter:\n{}",
+            result.output
+        );
     }
+
+    /// The `Keys.onPressed` line a multiline field with
+    /// `onCommit: emit: onBodyChange` (one text parameter) must carry.
+    const QT_MOD_ENTER_COMMIT_BODY_CHANGE: &str = "Keys.onPressed: function(event) { if ((event.key === Qt.Key_Return || event.key === Qt.Key_Enter) && (event.modifiers & (Qt.ControlModifier | Qt.MetaModifier))) { bodyChange(text); event.accepted = true } }";
 
     /// #15930 — the kernel `HostInput` honours `multiline: true` with the
     /// same native `TextArea` the legacy `Input` gets. Qt hard-wired the
@@ -11774,6 +11822,37 @@ mod tests {
             !out.contains("onAccepted:"),
             "TextArea Enter must insert a newline rather than commit:\n{out}"
         );
+        // UI25 §4: the commit key of a text area is Ctrl+Enter, or Cmd+Enter
+        // on macOS. Qt maps Cmd to ControlModifier and Ctrl to MetaModifier
+        // there, so the handler accepts either. `onSave` is parameterless.
+        assert!(
+            out.contains(
+                "Keys.onPressed: function(event) { if ((event.key === Qt.Key_Return || event.key === Qt.Key_Enter) && (event.modifiers & (Qt.ControlModifier | Qt.MetaModifier))) { save(); event.accepted = true } }"
+            ),
+            "TextArea must commit on Ctrl/Cmd+Enter:\n{out}"
+        );
+    }
+
+    /// A single-line field keeps `onAccepted` (bare Enter) and gets no
+    /// modifier-key handler.
+    #[test]
+    fn a_single_line_host_input_still_commits_on_accepted() {
+        let m = component("Editor", vec![], vec![emit_decl("onSave", vec![])]);
+        let l = LayoutDef {
+            component_name: "Editor".to_string(),
+            root: LayoutNode {
+                tag: "HostInput".to_string(),
+                part_name: None,
+                props: vec![LayoutProp {
+                    name: "onCommit".to_string(),
+                    value: LayoutPropValue::EmitRef("onSave".to_string()),
+                }],
+                children: Vec::new(),
+            },
+        };
+        let out = from_pipeline(&m, &l, &empty_style("Editor")).unwrap().output;
+        assert!(out.contains("onAccepted: save()"), "got:\n{out}");
+        assert!(!out.contains("Keys.onPressed"), "got:\n{out}");
     }
 
     #[test]
@@ -12423,10 +12502,30 @@ mod tests {
             result.output
         );
         assert!(
-            result.output.contains("event.accepted = true"),
-            "missing event.accepted in:\n{}",
+            result
+                .output
+                .contains("Keys.onEscapePressed: function(event) { abort(); event.accepted = true }"),
+            "Escape must take `event` as a declared parameter:\n{}",
             result.output
         );
+        assert_no_injected_key_parameters(&result.output);
+    }
+
+    /// Qt 6 deprecates injecting a signal's parameters into a handler block
+    /// (`Keys.onEscapePressed: { ...; event.accepted = true }`): it warns
+    /// "Parameter \"event\" is not declared" at run time and is slated for
+    /// removal. Every `Keys.*` handler that touches `event` must declare it,
+    /// as `function(event) { ... }`.
+    fn assert_no_injected_key_parameters(qml: &str) {
+        for line in qml.lines() {
+            let line = line.trim_start();
+            if line.starts_with("Keys.on") && line.contains("event.") {
+                assert!(
+                    line.contains(": function(event) {"),
+                    "a Keys handler uses an injected `event`: {line}\nin:\n{qml}"
+                );
+            }
+        }
     }
 
     // -------- Test 22: HostButton with label + onTap --------
@@ -13104,7 +13203,10 @@ mod tests {
         assert!(result.output.contains("TableView {"));
         assert!(result.output.contains("Accessible.role: Accessible.Table"));
         assert!(result.output.contains("Accessible.role: Accessible.Cell"));
-        assert!(result.output.contains("Keys.onReturnPressed:"));
+        assert!(result.output.contains("Keys.onReturnPressed: function(event) {"));
+        assert!(result.output.contains("Keys.onEnterPressed: function(event) {"));
+        assert!(result.output.contains("Keys.onSpacePressed: function(event) {"));
+        assert_no_injected_key_parameters(&result.output);
         assert!(result.output.contains("TapHandler {"));
         assert!(result.output.contains("navigate((r), (c))"));
         assert!(result
@@ -15837,6 +15939,102 @@ mod tests {
             "expected QtQuick.Controls import, got:\n{}",
             r.output
         );
+    }
+
+    fn placeholder_layout(tag: &str, value: LayoutPropValue) -> LayoutDef {
+        LayoutDef {
+            component_name: "X".to_string(),
+            root: LayoutNode {
+                tag: tag.to_string(),
+                part_name: None,
+                props: vec![LayoutProp {
+                    name: "placeholder".to_string(),
+                    value,
+                }],
+                children: Vec::new(),
+            },
+        }
+    }
+
+    /// EM-14 — a bound `placeholder` is the number field's
+    /// `placeholderText`. This read string literals only, so
+    /// mosaic-pkg-toolkit's `NumberInput` (`placeholder : slot:
+    /// placeholder`) had no placeholder on Qt, with nothing reported. The
+    /// literal form is unchanged.
+    #[test]
+    fn host_number_input_bound_placeholder_is_the_placeholder_text() {
+        let m = component(
+            "X",
+            vec![slot("amount-hint", SlotType::Text, false)],
+            vec![],
+        );
+        for (value, expected) in [
+            (
+                LayoutPropValue::SlotRef("amount-hint".to_string()),
+                "placeholderText: amountHint",
+            ),
+            (
+                LayoutPropValue::Keyword("hint".to_string()),
+                "placeholderText: hint",
+            ),
+            (
+                LayoutPropValue::Expr("( hints[0] )".to_string()),
+                "placeholderText: ( hints[0] )",
+            ),
+            (
+                LayoutPropValue::String("Amount".to_string()),
+                "placeholderText: \"Amount\"",
+            ),
+        ] {
+            let out = from_pipeline(
+                &m,
+                &placeholder_layout("HostNumberInput", value),
+                &empty_style("X"),
+            )
+            .unwrap()
+            .output;
+            assert!(out.contains(expected), "expected `{expected}` in:\n{out}");
+        }
+    }
+
+    /// EM-14 — the shared placeholder lowering treats a bare name as what
+    /// the layout compiler means by it, a `For` binding, on every text
+    /// field. It used to quote it, so `placeholder : hint` inside
+    /// `For ( as: hint )` showed the word "hint" on Qt alone.
+    #[test]
+    fn host_input_placeholder_binding_is_not_quoted() {
+        let m = component("X", vec![], vec![]);
+        for tag in ["HostInput", "Input", "HostNumberInput"] {
+            let out = from_pipeline(
+                &m,
+                &placeholder_layout(tag, LayoutPropValue::Keyword("hint".to_string())),
+                &empty_style("X"),
+            )
+            .unwrap()
+            .output;
+            assert!(out.contains("placeholderText: hint"), "{tag}:\n{out}");
+            assert!(!out.contains("placeholderText: \"hint\""), "{tag}:\n{out}");
+        }
+    }
+
+    /// EM-14 — a slot name that is not a QML identifier is an
+    /// `UnsafeSlotName` error on every text field. It used to become
+    /// `placeholderText: ""`, a silent drop.
+    #[test]
+    fn placeholder_unsafe_slot_name_is_rejected() {
+        let m = component("X", vec![], vec![]);
+        for tag in ["HostInput", "Input", "HostNumberInput"] {
+            let err = from_pipeline(
+                &m,
+                &placeholder_layout(tag, LayoutPropValue::SlotRef("x; evil()".to_string())),
+                &empty_style("X"),
+            )
+            .unwrap_err();
+            assert!(
+                matches!(err, PipelineEmitError::UnsafeSlotName(_)),
+                "{tag}: got {err:?}"
+            );
+        }
     }
 
     /// UI29-4 Qt test 5 — `min`/`max` numeric literals map to

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C279-izvestiye",
+    "language": "russian",
+    "chapter": 279,
+    "sequence": 16810,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d3acfde0e28d46f9"
+  },
+  "findings": []
+}

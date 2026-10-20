@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C288-krast",
+    "language": "russian",
+    "chapter": 288,
+    "sequence": 17290,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:400a48f6be6e78b0"
+  },
+  "findings": []
+}

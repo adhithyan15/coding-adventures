@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 412,
+  "sourceHash": "fnv1a64:3d63c6dfcc3bba5f",
+  "lessonIds": [
+    "RU-C412-peshekhod",
+    "RU-C412-velosipedist",
+    "RU-C412-ustupat",
+    "RU-C412-propuskat",
+    "RU-C412-razmetka"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch412.txt",
+  "json": "russian/narration/ch412.json",
+  "textHash": "fnv1a64:2530596f5568000d",
+  "jsonHash": "fnv1a64:8fe78a2b371d4681",
+  "findings": []
+}

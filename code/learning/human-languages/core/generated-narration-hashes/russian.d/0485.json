@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 485,
+  "sourceHash": "fnv1a64:2f3632b9cd2c26ef",
+  "lessonIds": [
+    "RU-C485-toshnit",
+    "RU-C485-toshnota",
+    "RU-C485-golovokruzheniye",
+    "RU-C485-obmorok",
+    "RU-C485-znobit"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch485.txt",
+  "json": "russian/narration/ch485.json",
+  "textHash": "fnv1a64:18eb8704917ee3d4",
+  "jsonHash": "fnv1a64:2d13a98fbfaad9ef",
+  "findings": []
+}

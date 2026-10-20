@@ -12,8 +12,8 @@
 //! | Op (`instr.op == name`) | the standard dispatch table (`dispatch::lookup_standard`) has a handler |
 //! | Builtin (`call_builtin name`) | the default [`BuiltinRegistry`] registers it |
 //!
-//! So when PR1b adds an `i64_div_floor` handler to the dispatch table, this
-//! module's answer flips to `Lowered` with no edit here — there is no second
+//! So when PR1b added the `i64_div_floor` handler to the dispatch table, this
+//! module's answer flipped to `Lowered` with no edit here — there is no second
 //! list to forget.
 
 use interpreter_ir::op_registry::{
@@ -36,7 +36,8 @@ pub const NO_VM_HANDLER: &str =
 ///
 /// assert_eq!(op_support("f64_sin"), OpSupport::Lowered);   // dispatch handler
 /// assert_eq!(op_support("print_i64"), OpSupport::Lowered); // default builtin
-/// assert!(!op_support("i64_div_floor").is_lowered());       // PR1b
+/// assert_eq!(op_support("i64_div_floor"), OpSupport::Lowered); // PR1b handler
+/// assert_eq!(op_support("write_i64"), OpSupport::Lowered);   // PR1b builtin
 /// ```
 pub fn op_support(name: &str) -> OpSupport {
     let Some(spec) = lookup(name) else {
@@ -72,16 +73,13 @@ mod tests {
     }
 
     #[test]
-    fn every_existing_standard_op_is_executed_and_pr1b_ops_are_refused() {
+    fn every_standard_op_is_executed() {
         // Pins today's answer so a regression (a handler removed from the
-        // dispatch table, a default builtin dropped) is loud.
+        // dispatch table, a default builtin dropped) is loud. Since LANG83
+        // PR1b this includes write_i64, i64_div_floor, i64_mod_floor and trap,
+        // and since PR4 the four i64_*_ovf ops.
         for spec in STANDARD_OPS {
-            let support = op_support(spec.name);
-            if spec.is_pr1b() {
-                assert_eq!(support, OpSupport::Refused(NOT_YET_LOWERED_PR1B), "{}", spec.name);
-            } else {
-                assert_eq!(support, OpSupport::Lowered, "{}", spec.name);
-            }
+            assert_eq!(op_support(spec.name), OpSupport::Lowered, "{}", spec.name);
         }
     }
 

@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 365,
+  "sourceHash": "fnv1a64:29e9f38dff50faa4",
+  "lessonIds": [
+    "RU-C365-gosudarstvo",
+    "RU-C365-pravitelstvo",
+    "RU-C365-vlast",
+    "RU-C365-politika",
+    "RU-C365-politik"
+  ],
+  "tex": "russian/book/chapters/ch365-the-state-and-power.tex"
+}

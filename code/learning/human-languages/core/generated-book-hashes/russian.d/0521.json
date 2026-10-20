@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 521,
+  "sourceHash": "fnv1a64:31694517e0410c2a",
+  "lessonIds": [
+    "RU-C521-kist",
+    "RU-C521-kholst",
+    "RU-C521-akvarel",
+    "RU-C521-peyzazh",
+    "RU-C521-pozirovat"
+  ],
+  "tex": "russian/book/chapters/ch521-brush-and-canvas.tex"
+}

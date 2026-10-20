@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 319,
+  "sourceHash": "fnv1a64:a3db12cb893e69e0",
+  "lessonIds": [
+    "RU-C319-legenda",
+    "RU-C319-mif",
+    "RU-C319-geroy",
+    "RU-C319-rasskazchik",
+    "RU-C319-sochinyat"
+  ],
+  "tex": "russian/book/chapters/ch319-legends-and-heroes.tex"
+}

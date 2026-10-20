@@ -79,7 +79,7 @@
 //!   and `maxLength` attributes bound from slot refs / numbers, plus an
 //!   `onChange` handler that carries `e.target.value` as the dispatch
 //!   payload and an `onKeyDown` handler that fires `onCommit` on Enter
-//!   and `onCancel` on Escape.
+//!   (Ctrl/Cmd+Enter in a `<textarea>`) and `onCancel` on Escape.
 //! - **No style inlining yet.** The mosstyle `StyleDef` is accepted but not
 //!   yet inlined into the JSX `style={{...}}` objects.
 //!
@@ -1824,8 +1824,9 @@ fn push_text_field_aria_label(
     push_text_field_text_attr(node, "a11y-label", "aria-label", attrs)
 }
 
-/// Append `placeholder` for a text field. Shared by `HostInput` and the
-/// legacy `Input`, on both the `<input>` and the `<textarea>` shape.
+/// Append `placeholder` for a text field. Shared by `HostInput`, the
+/// legacy `Input` (on both the `<input>` and the `<textarea>` shape) and
+/// `HostNumberInput`.
 ///
 /// This used to read string literals only, so `placeholder : slot: x` — the
 /// shape every toolkit `Input` and the note-type editor's template fields
@@ -1896,7 +1897,7 @@ fn push_text_field_text_attr(
 /// | `placeholder: slot: x`   | `placeholder={x}` (camelCased)                           |
 /// | `max-length: 100`        | `maxLength={100}`                                        |
 /// | `onChange: emit: onX`    | `onChange={e => dispatch({type: "x", value: e.target.value})}` |
-/// | `onCommit: emit: onX`    | `onKeyDown` handler with an `e.key === "Enter"` branch   |
+/// | `onCommit: emit: onX`    | `onKeyDown` handler with an `e.key === "Enter"` branch (Ctrl/Cmd+Enter in a `<textarea>`) |
 /// | `onCancel: emit: onX`    | `onKeyDown` handler with an `e.key === "Escape"` branch  |
 ///
 /// `onCommit` and `onCancel` are merged into a *single* `onKeyDown`
@@ -2014,7 +2015,9 @@ fn emit_input_jsx(
         ));
     }
 
-    // onCommit + onCancel are merged into a single onKeyDown handler.
+    // onCommit + onCancel are merged into a single onKeyDown handler. A
+    // `<textarea>` commits on Ctrl/Cmd+Enter, never bare Enter (UI25 §4):
+    // see `commit_key_branch`.
     let commit_emit = find_emit_ref_prop(node, "onCommit");
     let cancel_emit = find_emit_ref_prop(node, "onCancel");
     if commit_emit.is_some() || cancel_emit.is_some() {
@@ -2022,9 +2025,7 @@ fn emit_input_jsx(
         if let Some(emit) = commit_emit {
             let t = to_camel_case_first_lower(&strip_on_prefix(emit));
             validate_emit_name(&t)?;
-            h.push_str(&format!(
-                " if (e.key === \"Enter\") dispatch({{ type: \"{t}\" }});"
-            ));
+            h.push_str(&commit_key_branch(multiline, &format!("{{ type: \"{t}\" }}")));
         }
         if let Some(emit) = cancel_emit {
             let t = to_camel_case_first_lower(&strip_on_prefix(emit));
@@ -2040,6 +2041,29 @@ fn emit_input_jsx(
     Ok(format!("{pad}<{tag_name}{attrs} />\n"))
 }
 
+/// The `onKeyDown` branch that raises a text field's `onCommit`.
+///
+/// A single-line field commits on Enter. In a `<textarea>` Enter is a line
+/// break, so UI25 §4's multi-line commit key is Ctrl+Enter (Windows, Linux)
+/// or Cmd+Enter (macOS) — `ctrlKey || metaKey` covers both without sniffing
+/// the platform. The browser inserts no newline for either chord, but the
+/// branch still calls `preventDefault()`: the chord is the commit gesture,
+/// not text, whatever an embedding page's own key handling does.
+///
+/// | field       | branch                                                     |
+/// |-------------|------------------------------------------------------------|
+/// | single-line | `if (e.key === "Enter") dispatch(...);`                    |
+/// | multiline   | `if (e.key === "Enter" && (e.ctrlKey \|\| e.metaKey)) { e.preventDefault(); dispatch(...); }` |
+fn commit_key_branch(multiline: bool, action: &str) -> String {
+    if multiline {
+        format!(
+            " if (e.key === \"Enter\" && (e.ctrlKey || e.metaKey)) {{ e.preventDefault(); dispatch({action}); }}"
+        )
+    } else {
+        format!(" if (e.key === \"Enter\") dispatch({action});")
+    }
+}
+
 // =====================================================================
 // HostInput primitive (UI29 §2.1)
 // =====================================================================
@@ -2053,7 +2077,7 @@ fn emit_input_jsx(
 ///
 /// | Concern         | `Input` (UI25)                  | `HostInput` (UI29)         |
 /// |---|---|---|
-/// | `multiline`     | toggles `<textarea>`            | toggles `<textarea>`; Enter is then a newline, not `onCommit` (#15930) |
+/// | `multiline`     | toggles `<textarea>`            | toggles `<textarea>`; Enter is then a newline and Ctrl/Cmd+Enter commits (#15930, UI25 §4) |
 /// | `max-length`    | emits `maxLength={N}`           | **not supported** — userland clamping component owns this |
 /// | `value` slot    | `value={x}`                     | `value={x}` (same)          |
 /// | `read-only`     | `readOnly={x}` / literal        | `readOnly={x}` / literal (same) |
@@ -2077,12 +2101,13 @@ fn emit_host_input_jsx(
     // `multiline: true` (UI29 §2.1, #15930) turns the field into a
     // `<textarea>`: the one native text area the web has. Everything below
     // is shared by both shapes except two things — a `<textarea>` takes no
-    // `type`, and Enter belongs to the text (a new line), not to `onCommit`.
+    // `type`, and Enter belongs to the text (a new line), so `onCommit` moves
+    // to Ctrl/Cmd+Enter (UI25 §4).
     //
-    //   multiline | element                 | Enter
-    //   ----------+-------------------------+----------------------
-    //   absent    | <input type="text" />   | dispatches onCommit
-    //   true      | <textarea />            | inserts a newline
+    //   multiline | element               | Enter               | Ctrl/Cmd+Enter
+    //   ----------+-----------------------+---------------------+---------------------
+    //   absent    | <input type="text" /> | dispatches onCommit | dispatches onCommit
+    //   true      | <textarea />          | inserts a newline   | dispatches onCommit
     let multiline = find_keyword_prop(node, "multiline") == Some("true");
     let mut attrs = if multiline {
         String::new()
@@ -2171,9 +2196,9 @@ fn emit_host_input_jsx(
     }
 
     // onCommit + onCancel are merged into a single onKeyDown handler,
-    // exactly as the legacy `emit_input_jsx` does. A multiline field has no
-    // commit key: Enter is a line break there (see the table above).
-    let commit_emit = find_emit_ref_prop(node, "onCommit").filter(|_| !multiline);
+    // exactly as the legacy `emit_input_jsx` does. A multiline field commits
+    // on Ctrl/Cmd+Enter instead of Enter (see the table above).
+    let commit_emit = find_emit_ref_prop(node, "onCommit");
     let cancel_emit = find_emit_ref_prop(node, "onCancel");
     if commit_emit.is_some() || cancel_emit.is_some() {
         let mut h = String::from(" onKeyDown={e => {");
@@ -2193,13 +2218,12 @@ fn emit_host_input_jsx(
                 // `target` as the loose `EventTarget` (no `.value`) but narrows
                 // `currentTarget` to `T` — unlike ChangeEvent<T>, where `target` is
                 // itself already narrowed (see the onChange handler above).
-                h.push_str(&format!(
-                    " if (e.key === \"Enter\") dispatch({{ type: \"{t}\", value: e.currentTarget.value }});"
+                h.push_str(&commit_key_branch(
+                    multiline,
+                    &format!("{{ type: \"{t}\", value: e.currentTarget.value }}"),
                 ));
             } else {
-                h.push_str(&format!(
-                    " if (e.key === \"Enter\") dispatch({{ type: \"{t}\" }});"
-                ));
+                h.push_str(&commit_key_branch(multiline, &format!("{{ type: \"{t}\" }}")));
             }
         }
         if let Some(emit) = cancel_emit {
@@ -3952,6 +3976,7 @@ fn emit_host_navigation_split_jsx(
 /// | `max: <number>`         | `max={<n>}`                                            |
 /// | `step: <number>`        | `step={<n>}`                                           |
 /// | `placeholder: "..."`    | `placeholder="..."`                                    |
+/// | `placeholder: slot: p`  | `placeholder={p}` (any `push_text_field_placeholder` form) |
 /// | `disabled: slot|bool`   | `disabled={...}`                                       |
 /// | `onChange: emit: onX`   | `onChange={e => dispatch({type:"x", value: e.target.valueAsNumber})}` |
 ///
@@ -3992,10 +4017,10 @@ fn emit_host_number_input_jsx(
         }
     }
 
-    // placeholder.
-    if let Some(s) = find_string_prop(node, "placeholder") {
-        attrs.push_str(&jsx_string_attr("placeholder", s));
-    }
+    // placeholder — a literal or a bound value, through the same lowering
+    // as HostInput (EM-14: this read literals only, so the toolkit
+    // `NumberInput`'s `placeholder : slot: placeholder` vanished).
+    push_text_field_placeholder(node, &mut attrs)?;
 
     // disabled.
     if let Some(slot) = find_slot_ref_prop(node, "disabled") {
@@ -8789,11 +8814,12 @@ mod tests {
         }
     }
 
-    /// #15930 — in a multiline field Enter inserts a newline, so it cannot
-    /// also be the commit key: a `<textarea>` that dispatched `onCommit` on
-    /// every Enter would commit on every line break. Escape still cancels.
+    /// UI25 §4 — in a text area plain Enter is a line break, so the commit
+    /// key is Ctrl+Enter (Windows/Linux) or Cmd+Enter (macOS). The handler
+    /// must require the modifier: a `<textarea>` that dispatched `onCommit`
+    /// on every Enter would commit on every line break. Escape still cancels.
     #[test]
-    fn host_input_multiline_enter_inserts_a_newline_instead_of_committing() {
+    fn host_input_multiline_commits_on_ctrl_or_cmd_enter() {
         let m = component(
             "X",
             vec![],
@@ -8814,11 +8840,96 @@ mod tests {
             },
         ]);
         let out = from_pipeline(&m, &l, &empty_style("X")).unwrap().output;
-        assert!(!out.contains("\"Enter\""), "Enter must not commit a textarea:\n{out}");
+        assert!(
+            out.contains(
+                "if (e.key === \"Enter\" && (e.ctrlKey || e.metaKey)) { e.preventDefault(); dispatch({ type: \"save\" }); }"
+            ),
+            "a textarea commits on Ctrl/Cmd+Enter, got:\n{out}"
+        );
+        assert!(
+            !out.contains("if (e.key === \"Enter\") "),
+            "bare Enter must stay a line break in a textarea:\n{out}"
+        );
         assert!(
             out.contains("if (e.key === \"Escape\") dispatch({ type: \"discard\" });"),
             "Escape must still cancel, got:\n{out}"
         );
+    }
+
+    /// The accelerator carries the same payload as a single-line commit: a
+    /// text-payload `onCommit` dispatches the textarea's current text.
+    #[test]
+    fn host_input_multiline_commit_carries_the_text_payload() {
+        let m = component(
+            "X",
+            vec![],
+            vec![emit("onSave", vec![param("value", EmitPayloadType::Text)])],
+        );
+        let l = host_input_layout(vec![
+            LayoutProp {
+                name: "multiline".to_string(),
+                value: LayoutPropValue::Keyword("true".to_string()),
+            },
+            LayoutProp {
+                name: "onCommit".to_string(),
+                value: LayoutPropValue::EmitRef("onSave".to_string()),
+            },
+        ]);
+        let out = from_pipeline(&m, &l, &empty_style("X")).unwrap().output;
+        assert!(
+            out.contains(
+                "if (e.key === \"Enter\" && (e.ctrlKey || e.metaKey)) { e.preventDefault(); dispatch({ type: \"save\", value: e.currentTarget.value }); }"
+            ),
+            "got:\n{out}"
+        );
+    }
+
+    /// The legacy UI25 `Input` lowers a multiline field the same way. It
+    /// kept a bare-Enter commit on its `<textarea>`, so every line break
+    /// committed there.
+    #[test]
+    fn legacy_multiline_input_commits_on_ctrl_or_cmd_enter() {
+        let m = component("X", vec![], vec![emit("onSave", vec![])]);
+        let l = input_layout(vec![
+            LayoutProp {
+                name: "multiline".to_string(),
+                value: LayoutPropValue::Keyword("true".to_string()),
+            },
+            LayoutProp {
+                name: "onCommit".to_string(),
+                value: LayoutPropValue::EmitRef("onSave".to_string()),
+            },
+        ]);
+        let out = from_pipeline(&m, &l, &empty_style("X")).unwrap().output;
+        assert!(out.contains("<textarea"), "got:\n{out}");
+        assert!(
+            out.contains(
+                "if (e.key === \"Enter\" && (e.ctrlKey || e.metaKey)) { e.preventDefault(); dispatch({ type: \"save\" }); }"
+            ),
+            "got:\n{out}"
+        );
+        assert!(!out.contains("if (e.key === \"Enter\") "), "got:\n{out}");
+    }
+
+    /// A single-line field keeps bare Enter as its commit key.
+    #[test]
+    fn single_line_inputs_still_commit_on_bare_enter() {
+        let m = component("X", vec![], vec![emit("onSave", vec![])]);
+        let commit = LayoutProp {
+            name: "onCommit".to_string(),
+            value: LayoutPropValue::EmitRef("onSave".to_string()),
+        };
+        for l in [
+            host_input_layout(vec![commit.clone()]),
+            input_layout(vec![commit.clone()]),
+        ] {
+            let out = from_pipeline(&m, &l, &empty_style("X")).unwrap().output;
+            assert!(
+                out.contains("if (e.key === \"Enter\") dispatch({ type: \"save\" });"),
+                "got:\n{out}"
+            );
+            assert!(!out.contains("ctrlKey"), "got:\n{out}");
+        }
     }
 
     /// `multiline: false` is the authored spelling of the default.
@@ -11486,6 +11597,56 @@ mod tests {
             ),
             "expected onChange with e.target.valueAsNumber payload, got:\n{out}"
         );
+    }
+
+    /// EM-14 — `placeholder : slot: placeholder`, the shape
+    /// mosaic-pkg-toolkit's `NumberInput` uses, binds as a JSX expression
+    /// attribute. This path read string literals only, so the toolkit's
+    /// number field lost its placeholder on React with nothing reported.
+    /// A loop binding and an expression reach the attribute the same way,
+    /// and the literal form is unchanged.
+    #[test]
+    fn host_number_input_placeholder_binds_slot_binding_and_expression() {
+        let m = component(
+            "X",
+            vec![slot("placeholder", SlotType::Text, false)],
+            vec![],
+        );
+        for (value, expected) in [
+            (
+                LayoutPropValue::SlotRef("placeholder".into()),
+                " placeholder={placeholder}",
+            ),
+            (LayoutPropValue::Keyword("hint".into()), " placeholder={hint}"),
+            (
+                LayoutPropValue::Expr("( hints[0] )".into()),
+                " placeholder={( hints[0] )}",
+            ),
+            (
+                LayoutPropValue::String("Amount".into()),
+                " placeholder=\"Amount\"",
+            ),
+        ] {
+            let l = host_number_input_layout(vec![LayoutProp {
+                name: "placeholder".into(),
+                value,
+            }]);
+            let out = from_pipeline(&m, &l, &empty_style("X")).unwrap().output;
+            assert!(out.contains(expected), "expected `{expected}`, got:\n{out}");
+        }
+    }
+
+    /// EM-14 — a slot name that is not a JavaScript identifier is refused
+    /// loudly instead of being spliced into the JSX expression.
+    #[test]
+    fn host_number_input_placeholder_unsafe_slot_name_is_rejected() {
+        let m = component("X", vec![], vec![]);
+        let l = host_number_input_layout(vec![LayoutProp {
+            name: "placeholder".into(),
+            value: LayoutPropValue::SlotRef("x}{alert(1)".into()),
+        }]);
+        let err = from_pipeline(&m, &l, &empty_style("X")).unwrap_err();
+        assert!(matches!(err, PipelineEmitError::UnsafeSlotName(_)), "got {err:?}");
     }
 
     #[test]

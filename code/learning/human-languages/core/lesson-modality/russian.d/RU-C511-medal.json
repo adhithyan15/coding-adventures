@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C511-medal",
+    "language": "russian",
+    "chapter": 511,
+    "sequence": 28780,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:107be1f7ceb0047a"
+  },
+  "findings": []
+}

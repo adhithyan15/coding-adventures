@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C320-prevrashchatsya",
+    "language": "russian",
+    "chapter": 320,
+    "sequence": 18950,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e8cc51ea6ed91a8d"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "RU-C344-rassuzhdat",
+  "pathSegment": "RU-PATH-344-LOGIKA",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "RU-EXT-344-LOGIKA",
+      "order": 3
+    }
+  ]
+}

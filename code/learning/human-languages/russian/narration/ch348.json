@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "russian",
+  "chapter": 348,
+  "title": "Grounds and motives",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:3cb2c6d64c88334e",
+  "lessons": [
+    {
+      "id": "RU-C348-povod",
+      "sequence": 20360,
+      "title": "повод (póvod) — an occasion, a reason (for); a pretext",
+      "headword": "повод",
+      "romanization": "póvod",
+      "gloss": "an occasion, a reason (for); a pretext",
+      "script": "cyrillic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:fcc56f6bca5531c5",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Russian for so, then the Russian for in other words."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: повод",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "повод (póvod) — \"an occasion, a reason (for); a pretext\"."
+            },
+            {
+              "kind": "speech",
+              "text": "У нас есть повод для радости: сестра вышла замуж. U nas yest póvod dlya rádosti: sestrá výshla zámuzh. We have a reason to be happy: my sister has got married."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine. По поводу + genitive — about, concerning. Its first sense is a horse’s rein."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "повод (póvod) is built from по- and вод-, the root of водить \"to lead\", from Proto-Slavic voditi \"to lead, to conduct\" (EtymDB). It was first the rein that leads a horse, then whatever leads to an event."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "póvod",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *póvod*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "póvod, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *póvod*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with póvod",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *póvod*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Russian for so, then the Russian for in other words, then say póvod again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Russian for so, then the Russian for in other words, then say *póvod* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does повод (póvod) mean? (\"An occasion, a reason (for); a pretext\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "RU-C348-osnovanie",
+      "sequence": 20370,
+      "title": "основание (osnovániye) — grounds, a basis; a founding",
+      "headword": "основание",
+      "romanization": "osnovániye",
+      "gloss": "grounds, a basis; a founding",
+      "script": "cyrillic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ea6349807301cb69",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Russian for in other words, then the Russian for an occasion."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: основание",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "основание (osnovániye) — \"grounds, a basis; a founding\"."
+            },
+            {
+              "kind": "speech",
+              "text": "У тебя нет оснований так думать. U tebyá net osnovániy tak dúmat. You have no grounds for thinking so."
+            },
+            {
+              "kind": "speech",
+              "text": "Neuter. На основании + genitive — on the basis of. It also means the founding of a city: основание (osnovániye) Москвы."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "основание (osnovániye) is built on основать \"to found\", from основа \"a base, a warp\", inherited from Proto-Slavic osnova (EtymDB)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "osnovániye",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *osnovániye*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "osnovániye, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *osnovániye*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with osnovániye",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *osnovániye*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Russian for in other words, then the Russian for an occasion, then say osnovániye again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Russian for in other words, then the Russian for an occasion, then say *osnovániye* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does основание (osnovániye) mean? (\"Grounds, a basis; a founding\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "RU-C348-faktor",
+      "sequence": 20380,
+      "title": "фактор (fáktor) — a factor",
+      "headword": "фактор",
+      "romanization": "fáktor",
+      "gloss": "a factor",
+      "script": "cyrillic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:de732bab3434d867",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Russian for an occasion, then the Russian for grounds."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: фактор",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "фактор (fáktor) — \"a factor\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Погода — важный фактор для туризма. Pogóda — vázhnyy fáktor dlya turízma. The weather is an important factor for tourism."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine. Человеческий фактор (fáktor) — the human factor."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "фактор (fáktor) is usually traced, through German, to Latin factor \"a maker, a doer\" (Lewis & Short), built on facere \"to do, to make\". A factor is something that does part of the work."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "fáktor",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *fáktor*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "fáktor, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *fáktor*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with fáktor",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *fáktor*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Russian for an occasion, then the Russian for grounds, then say fáktor again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Russian for an occasion, then the Russian for grounds, then say *fáktor* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does фактор (fáktor) mean? (\"A factor\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "RU-C348-motiv",
+      "sequence": 20390,
+      "title": "мотив (motív) — a motive; a tune",
+      "headword": "мотив",
+      "romanization": "motív",
+      "gloss": "a motive; a tune",
+      "script": "cyrillic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:48e634b673e809e0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Russian for grounds, then the Russian for a factor."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: мотив",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "мотив (motív) — \"a motive; a tune\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Какой у него был мотив? Kakóy u negó byl motív? What was his motive?"
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine. It also means a melody: знакомый мотив (motív)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "мотив (motív) was borrowed from German Motiv, from French motif, from Medieval Latin motivum, from Latin mōtīvus \"serving to move\" (EtymDB), built on movēre \"to move\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "motív",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *motív*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "motív, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *motív*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with motív",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *motív*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Russian for grounds, then the Russian for a factor, then say motív again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Russian for grounds, then the Russian for a factor, then say *motív* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does мотив (motív) mean? (\"A motive; a tune\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "RU-C348-proiskhozhdenie",
+      "sequence": 20400,
+      "title": "происхождение (proiskhozhdéniye) — origin, descent",
+      "headword": "происхождение",
+      "romanization": "proiskhozhdéniye",
+      "gloss": "origin, descent",
+      "script": "cyrillic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7dedba36615782a9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Russian for a factor, then the Russian for a motive."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: происхождение",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "происхождение (proiskhozhdéniye) — \"origin, descent\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Он русский по происхождению. On rússkiy po proiskhozhdéniyu. He is Russian by origin."
+            },
+            {
+              "kind": "speech",
+              "text": "A neuter noun. По происхождению — by origin, by birth. From происходить, to come from; the жд is the Church Slavonic softening of д."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "происхождение (proiskhozhdéniye) is built on происходить \"to come from\", made of про-, из- \"out of\" and ходить \"to go\", inherited from Proto-Slavic xoditi. The жд is the Church Slavonic way of softening д."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "proiskhozhdéniye",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *proiskhozhdéniye*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "proiskhozhdéniye, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *proiskhozhdéniye*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with proiskhozhdéniye",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *proiskhozhdéniye*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Russian for a factor, then the Russian for a motive, then say proiskhozhdéniye again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Russian for a factor, then the Russian for a motive, then say *proiskhozhdéniye* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does происхождение (proiskhozhdéniye) mean? (\"Origin, descent\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

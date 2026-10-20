@@ -4373,10 +4373,12 @@ def _run_deck_analysis_plan(
     if plan.analysis == "op":
         result = dc_op(circuit)
         table = format_deck_op_table(result, netlist)
-        _select_deck_measurement_cards_for_analysis(netlist, plan.analysis)
+        measurements = measure_operating_point_cards(
+            result,
+            _select_deck_measurement_cards_for_analysis(netlist, plan.analysis),
+        )
         fourier: list[FourierResult] = []
         _select_deck_fourier_cards_for_analysis(netlist, plan.analysis)
-        measurements: list[ProbeMeasurement] = []
         output_probes = select_deck_output_probes(netlist, plan.analysis)
         output_probe_lines = select_deck_output_probe_lines(netlist, plan.analysis)
         output_directives = select_deck_output_directives(netlist, plan.analysis)
@@ -6451,6 +6453,51 @@ def measure_transient_deck(
             f"measure_transient_deck: line {diagnostic.line_number}: {diagnostic.message}"
         )
     return measure_transient_cards(transient_result, summary.measurements)
+
+
+def measure_operating_point_probe(
+    result: DcResult,
+    name: str,
+    probe: str,
+) -> ProbeMeasurement:
+    """Measure one operating-point probe at the canonical operating-point axis."""
+
+    return ProbeMeasurement(
+        name=name,
+        analysis="op",
+        probe=probe,
+        mode="find",
+        value=_table_probe_value(
+            result.node_voltages,
+            result.branch_currents,
+            probe,
+            "measure_operating_point_probe",
+        ),
+        from_value=0.0,
+        to_value=0.0,
+    )
+
+
+def measure_operating_point_cards(
+    result: DcResult,
+    measurements: Iterable[DeckMeasurementCard],
+) -> list[ProbeMeasurement]:
+    """Execute parsed operating-point ``.measure`` / ``.meas`` cards."""
+
+    measured: list[ProbeMeasurement] = []
+    for measurement in measurements:
+        if measurement.analysis != "op":
+            raise ValueError(
+                "measure_operating_point_cards: only operating-point measurement cards are supported"
+            )
+        if measurement.mode != "find" or (
+            measurement.at_value is not None and measurement.at_value != 0.0
+        ):
+            raise ValueError(
+                "measure_operating_point_cards: operating-point measurements require FIND probe with optional AT=0"
+            )
+        measured.append(measure_operating_point_probe(result, measurement.name, measurement.probe))
+    return measured
 
 
 def measure_dc_sweep_probe(

@@ -1,0 +1,11 @@
+{
+  "id": "RU-C364-naselenie",
+  "pathSegment": "RU-PATH-364-OBSHCHESTVO",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "RU-EXT-364-OBSHCHESTVO",
+      "order": 1
+    }
+  ]
+}
