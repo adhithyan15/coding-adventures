@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 387,
+  "sourceHash": "fnv1a64:1581d4d79bd1383f",
+  "lessonIds": [
+    "GE-C387-kontostand",
+    "GE-C387-guthaben",
+    "GE-C387-ueberziehen",
+    "GE-C387-abbuchen",
+    "GE-C387-betrag"
+  ],
+  "tex": "german/book/chapters/ch387-auf-dem-konto.tex"
+}

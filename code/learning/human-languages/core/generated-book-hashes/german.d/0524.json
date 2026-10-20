@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 524,
+  "sourceHash": "fnv1a64:be7172347e1a48a5",
+  "lessonIds": [
+    "GE-C524-komoedie",
+    "GE-C524-tragoedie",
+    "GE-C524-dokumentarfilm",
+    "GE-C524-untertitel",
+    "GE-C524-synchronisieren"
+  ],
+  "tex": "german/book/chapters/ch524-komodie-und-tragodie.tex"
+}

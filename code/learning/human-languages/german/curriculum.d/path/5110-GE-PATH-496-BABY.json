@@ -1,0 +1,9 @@
+{
+  "id": "GE-PATH-496-BABY",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "GE-EXT-496-BABY"
+  ],
+  "after": []
+}

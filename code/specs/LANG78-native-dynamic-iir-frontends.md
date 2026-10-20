@@ -17,6 +17,16 @@ source-to-source frontends remain separate; any future integration must not
 change the direct language-to-IIR contract. A host runtime may serve as a
 test oracle, but must not execute the compiled program in production.
 
+LANG84 (`LANG84-grammar-driven-versioned-frontends.md`) is the frontend
+contract for these four lines and for every other IIR frontend. Lexing and
+parsing come only from the generic grammar-driven lexer and parser over a
+per-release `<lang><release>.tokens` / `.grammar` pair. The IIR compiler walks
+that parse tree directly; it does not lift it into a typed AST. Every tagged
+release is inventoried in `releases.csv` and selectable without silent
+fallback, and the emitted operations come from LANG83. Where this spec's
+earlier slices describe a typed-AST bridge (JavaScript), a hand-written Ruby
+lexer, or a hard-coded version, LANG84's migration plan supersedes them.
+
 Use one active implementation PR at a time. Interleave this queue with the
 existing LANG VM backlog and PREP01 preprocessor queue, selecting the next
 bounded item after each verified merge.
@@ -108,6 +118,49 @@ separate output oracle. Argument evaluation follows ECMAScript
 [ArgumentListEvaluation](https://tc39.es/ecma262/multipage/ecmascript-language-expressions.html#sec-argument-lists-runtime-semantics-argumentlistevaluation);
 the numeric console fixtures use Node's
 [console.log](https://nodejs.org/api/console.html#consolelogdata-args) behavior.
+
+The next bounded stage accepts top-level numeric `let` and `const`
+declarations with exactly one plain-identifier binding and an initializer in
+the existing numeric expression subset, plus identifier references wherever a
+numeric expression is accepted (including `console.log` arguments and other
+initializers). Lower each binding directly from the typed AST to a named IIR
+register written by `mov` after its initializer evaluates. Register names are
+mangled into a namespace that cannot meet compiler temporaries (`js<n>`) or
+runner builtins (`js_<name>`). There is no assignment or control flow yet, so
+binding state is statically known at every program point.
+
+Script semantics follow ECMAScript
+[ScriptEvaluation](https://tc39.es/ecma262/multipage/ecmascript-language-scripts-and-modules.html#sec-runtime-semantics-scriptevaluation)
+and [GlobalDeclarationInstantiation](https://tc39.es/ecma262/multipage/ecmascript-language-scripts-and-modules.html#sec-globaldeclarationinstantiation):
+
+- A duplicate lexical name in the script is an early error. Compilation fails
+  with `SyntaxError: Identifier '<name>' has already been declared` and no
+  output, as V8 reports it.
+- Reading a name declared later in the script (or inside its own initializer)
+  is a temporal-dead-zone read. Reading a name declared nowhere is an
+  unresolvable reference. Both lower to a narrow runner builtin call at that
+  point, raising `ReferenceError: Cannot access '<name>' before initialization`
+  or `ReferenceError: <name> is not defined` at runtime. Earlier completed
+  console output is kept, as for other VM errors.
+- The runner's global object is defined to hold the ECMA-262 standard global
+  properties (plus Annex B `escape`/`unescape` and ECMA-402 `Intl`) and
+  `console`. None is implemented as a value yet. Reading such a name, or binding one with
+  `let`/`const`, is rejected at compile time; this keeps `NaN`, `undefined`
+  and similar names from becoming false ReferenceErrors and avoids
+  restricted-global declaration rules. Over-listing only rejects more input.
+  Node-only host globals (`process`, `require`, ...) are not part of this
+  runner's host, so they read as undeclared.
+
+Reject with compile-time diagnostics and empty output: `var`, a declaration
+without an initializer, more than one declarator per declaration, destructuring
+patterns, non-numeric initializers, assignment expressions (so assignment to a
+`const` cannot arise), and caller-supplied AST identifiers that are not plain
+IdentifierName spellings. A direct AST charges one node for each declarator and
+one for its binding, then applies the existing node and depth budget to the
+initializer. Verify source → AST → IIR → `VMCore` execution, direct typed-AST
+lowering, the IIR register namespace, each rejection, both ReferenceError forms
+retaining prior output, the early duplicate error, and initializer budgets;
+Node remains only an output oracle.
 
 ### Native numeric source division goal
 

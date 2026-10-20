@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 430,
+  "sourceHash": "fnv1a64:ea7abb87442697f5",
+  "lessonIds": [
+    "GE-C430-wanze",
+    "GE-C430-kakerlake",
+    "GE-C430-muecke",
+    "GE-C430-stechen",
+    "GE-C430-krabbeln"
+  ],
+  "tex": "german/book/chapters/ch430-ungebetene-gaste.tex"
+}

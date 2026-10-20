@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 417,
+  "sourceHash": "fnv1a64:3835e8fea3344831",
+  "lessonIds": [
+    "GE-C417-sicherheitskontrolle",
+    "GE-C417-durchsuchen",
+    "GE-C417-zoll",
+    "GE-C417-verzollen",
+    "GE-C417-reisepass"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch417.txt",
+  "json": "german/narration/ch417.json",
+  "textHash": "fnv1a64:61a29ff014e2cf5e",
+  "jsonHash": "fnv1a64:710b403adb321a09",
+  "findings": []
+}

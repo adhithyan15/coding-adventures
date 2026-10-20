@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 450,
+  "sourceHash": "fnv1a64:4f3086cc1cb0d076",
+  "lessonIds": [
+    "GE-C450-geldautomat",
+    "GE-C450-geheimzahl",
+    "GE-C450-kontoauszug",
+    "GE-C450-einloesen",
+    "GE-C450-auszahlen"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch450.txt",
+  "json": "german/narration/ch450.json",
+  "textHash": "fnv1a64:91abf4e1f2d3064a",
+  "jsonHash": "fnv1a64:430a1e1b44961c4b",
+  "findings": []
+}

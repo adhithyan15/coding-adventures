@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C411-entwerten",
+    "language": "german",
+    "chapter": 411,
+    "sequence": 22190,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0b2b6d3d7e14173d"
+  },
+  "findings": []
+}

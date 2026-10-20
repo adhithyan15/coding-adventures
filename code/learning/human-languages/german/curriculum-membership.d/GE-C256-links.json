@@ -1,0 +1,11 @@
+{
+  "id": "GE-C256-links",
+  "pathSegment": "GE-PATH-256-WEG",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GE-EXT-256-WEG",
+      "order": 1
+    }
+  ]
+}

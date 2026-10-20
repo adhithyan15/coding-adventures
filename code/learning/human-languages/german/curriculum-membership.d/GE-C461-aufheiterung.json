@@ -1,0 +1,11 @@
+{
+  "id": "GE-C461-aufheiterung",
+  "pathSegment": "GE-PATH-461-NIESELREGEN",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-461-NIESELREGEN",
+      "order": 3
+    }
+  ]
+}

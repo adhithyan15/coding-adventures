@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 418,
+  "sourceHash": "fnv1a64:edae598106cbe2c0",
+  "lessonIds": [
+    "GE-C418-flugbegleiter",
+    "GE-C418-fensterplatz",
+    "GE-C418-gangplatz",
+    "GE-C418-abfliegen",
+    "GE-C418-landung"
+  ],
+  "tex": "german/book/chapters/ch418-an-bord.tex"
+}

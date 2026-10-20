@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C360-minderheit",
+    "language": "german",
+    "chapter": 360,
+    "sequence": 19550,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c61b59fdaf540e80"
+  },
+  "findings": []
+}

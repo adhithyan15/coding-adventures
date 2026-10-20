@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 392,
+  "sourceHash": "fnv1a64:df1396007551dca8",
+  "lessonIds": [
+    "GE-C392-geraet",
+    "GE-C392-akku",
+    "GE-C392-aufladen",
+    "GE-C392-ladegeraet",
+    "GE-C392-stecker"
+  ],
+  "tex": "german/book/chapters/ch392-gerate-laden.tex"
+}

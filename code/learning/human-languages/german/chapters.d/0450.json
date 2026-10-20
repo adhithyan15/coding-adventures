@@ -1,0 +1,19 @@
+{
+  "chapter": 450,
+  "title": "Geld und Konto",
+  "label": "ch:ge-geld-und-konto",
+  "canDo": "I can deal with money and an account: the cash machine, the PIN, the bank statement, redeeming a voucher and paying out.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "GE-C450-auszahlen",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 450: I can deal with money and an account: the cash machine, the PIN, the bank statement, redeeming a voucher and paying out.",
+    "assesses": [
+      "GE-LEX-C450-GELDAUTOMAT-03",
+      "GE-LEX-C450-GELDAUTOMAT-04",
+      "GE-LEX-C450-GELDAUTOMAT-05"
+    ]
+  }
+}

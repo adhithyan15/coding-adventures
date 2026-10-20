@@ -1,0 +1,9 @@
+{
+  "id": "GE-PATH-441-FASSADE",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "GE-EXT-441-FASSADE"
+  ],
+  "after": []
+}

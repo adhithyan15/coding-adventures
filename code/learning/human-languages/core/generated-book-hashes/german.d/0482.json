@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 482,
+  "sourceHash": "fnv1a64:402ae7682140807e",
+  "lessonIds": [
+    "GE-C482-verstauchen",
+    "GE-C482-prellung",
+    "GE-C482-verband",
+    "GE-C482-desinfizieren",
+    "GE-C482-narbe"
+  ],
+  "tex": "german/book/chapters/ch482-kleine-verletzungen.tex"
+}

@@ -1,0 +1,11 @@
+{
+  "id": "GE-C467-schaemen",
+  "pathSegment": "GE-PATH-467-SCHAM",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GE-EXT-467-SCHAM",
+      "order": 1
+    }
+  ]
+}

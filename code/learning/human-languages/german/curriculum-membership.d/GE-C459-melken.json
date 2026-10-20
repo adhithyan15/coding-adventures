@@ -1,0 +1,11 @@
+{
+  "id": "GE-C459-melken",
+  "pathSegment": "GE-PATH-459-BAUERNHOF",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-459-BAUERNHOF",
+      "order": 4
+    }
+  ]
+}

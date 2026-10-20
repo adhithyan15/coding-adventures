@@ -1,0 +1,14 @@
+{
+  "language": "german",
+  "chapter": 421,
+  "sourceHash": "fnv1a64:81d699c877c068d5",
+  "lessonIds": [
+    "GE-C421-faehre",
+    "GE-C421-ueberfahrt",
+    "GE-C421-kabine",
+    "GE-C421-schwimmweste",
+    "GE-C421-seekrank",
+    "GE-R421-review-414-421"
+  ],
+  "tex": "german/book/chapters/ch421-mit-der-fahre.tex"
+}

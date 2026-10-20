@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C270-ablauf",
+    "language": "german",
+    "chapter": 270,
+    "sequence": 14950,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2146ead8fd9d7de9"
+  },
+  "findings": []
+}

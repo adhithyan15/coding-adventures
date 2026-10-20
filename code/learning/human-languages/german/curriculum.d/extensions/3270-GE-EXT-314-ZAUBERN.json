@@ -1,0 +1,8 @@
+{
+  "id": "GE-EXT-314-ZAUBERN",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can tell what happens by magic: to conjure, to bewitch, to turn into, a curse and a dragon.",
+  "prerequisites": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "GE-C294-erdbeben",
+  "pathSegment": "GE-PATH-294-ERDBEBEN",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GE-EXT-294-ERDBEBEN",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,9 @@
+{
+  "id": "GE-PATH-343-KONSEQUENZ",
+  "spine_node": "SPINE-GIVE-REASONS",
+  "before": [],
+  "inline": [
+    "GE-EXT-343-KONSEQUENZ"
+  ],
+  "after": []
+}

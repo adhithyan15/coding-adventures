@@ -1,0 +1,19 @@
+{
+  "chapter": 512,
+  "title": "Im Schnee",
+  "label": "ch:ge-im-schnee",
+  "canDo": "I can talk about winter sports.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "GE-C512-skilift",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 512: I can talk about winter sports.",
+    "assesses": [
+      "GE-LEX-C512-WINTERSPORT-03",
+      "GE-LEX-C512-WINTERSPORT-04",
+      "GE-LEX-C512-WINTERSPORT-05"
+    ]
+  }
+}

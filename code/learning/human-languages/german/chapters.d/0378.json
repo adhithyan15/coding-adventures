@@ -1,0 +1,19 @@
+{
+  "chapter": 378,
+  "title": "Die Hausarbeit",
+  "label": "ch:ge-die-hausarbeit",
+  "canDo": "I can talk about written work for a course: a term paper, a talk in class, an essay and a summary.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "GE-C378-zusammenfassen",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 378: I can talk about written work for a course: a term paper, a talk in class, an essay and a summary.",
+    "assesses": [
+      "GE-LEX-C378-HAUSARBEIT-03",
+      "GE-LEX-C378-HAUSARBEIT-04",
+      "GE-LEX-C378-HAUSARBEIT-05"
+    ]
+  }
+}

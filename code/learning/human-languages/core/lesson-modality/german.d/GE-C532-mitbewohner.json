@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C532-mitbewohner",
+    "language": "german",
+    "chapter": 532,
+    "sequence": 28390,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b68c29fe8512d270"
+  },
+  "findings": []
+}

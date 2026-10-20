@@ -1,0 +1,11 @@
+{
+  "id": "GE-C312-tracht",
+  "pathSegment": "GE-PATH-312-VOLKSFEST",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-312-VOLKSFEST",
+      "order": 3
+    }
+  ]
+}

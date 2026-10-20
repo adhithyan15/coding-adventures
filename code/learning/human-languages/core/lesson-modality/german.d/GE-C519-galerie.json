@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C519-galerie",
+    "language": "german",
+    "chapter": 519,
+    "sequence": 27710,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:88677016bf67a5ca"
+  },
+  "findings": []
+}

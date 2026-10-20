@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 352,
+  "sourceHash": "fnv1a64:e41913104060e074",
+  "lessonIds": [
+    "GE-C352-entlassen",
+    "GE-C352-arbeitslos",
+    "GE-C352-arbeitslosigkeit",
+    "GE-C352-probezeit",
+    "GE-C352-einarbeiten"
+  ],
+  "tex": "german/book/chapters/ch352-ohne-arbeit.tex"
+}

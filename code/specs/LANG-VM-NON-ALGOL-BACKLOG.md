@@ -1,6 +1,41 @@
 # LANG VM non-ALGOL completion backlog
 
-Status date: 2026-10-11 — re-audited for PREP01 octal integer stringization
+Status date: 2026-10-19 — restarted after an eight-day pause; shared-backend
+reds VM-D005 and #12032 closed
+
+## Restart — 2026-10-19
+
+The non-ALGOL rotation made no merges between 2026-10-11 and 2026-10-19. In
+that time the separately owned ALGOL stream merged forty-four PRs, each raising
+one hand-enumerated `sign`-offset cap by a single unit. PR #17793 replaces that
+cap with the derived `2^53 - 1` exact-integer budget, and its lesson shard
+records the anti-pattern.
+
+A full local `lang_matrix` run then showed the remaining reds were shared
+backend defects, not ALGOL frontend gaps:
+
+- **VM-D005 (x86_64):** `x86_64-backend` refused calls with more than six
+  integer arguments. A captured 4-D array value formal is eight values (a
+  handle, four lower bounds and three strides). Overflow arguments now use the
+  standard SysV and Microsoft x64 stack layouts.
+- **#12032 (JVM):** `iir-to-jvm-class-file` declared a fixed `max_stack = 8`,
+  which captured 3-D and 4-D `double[]` stores exceed. `max_stack` is now
+  measured by a verifier-style stack-depth dataflow over the emitted bytecode.
+
+With both fixed, `lang-aot/BUILD` runs the full-corpus
+`matrix_every_proven_cell_agrees` aggregate and
+`proven_columns_do_not_silently_skip` in CI. Before this, only the non-ALGOL
+aggregate ran. The rotation resumes with the queue below, plus two items found
+during this audit:
+
+- **VM-078:** ALGOL accepts runtime reals that can become non-finite or exceed
+  the i64 range, such as `exp(exp(exp(pick())))` and `entier(exp(...))`. The
+  portable formatter and `real_to_int_*` have no specified cross-backend
+  behaviour for those values.
+- **VM-079:** `twig-aot`'s `gc_stress_live_bytes_differential_on_linux` and
+  `gc_recursive_frame_live_bytes_differential_on_linux` fail locally on
+  `origin/main` (x86_64 Linux). They need triage to decide whether this is a
+  host difference or a real precise-GC regression.
 
 This is the execution backlog for completing the shared LANG VM platform while
 the ALGOL campaign is owned separately. It complements
@@ -516,7 +551,23 @@ The refreshed inventory has 776 unique rows, 117 partial pairs and 659 pending,
 with none complete. The next selection rotates to PREP01 unsuffixed octal
 integer stringization, preserving raw spelling and generic bounds.
 
-The separately owned ALGOL campaign remains outside this backlog.
+PR #17284 delivered LANG79's float literal validation for caller-supplied
+Python ASTs and merged as `b0cd9e15aa467712fde66804071bec1b12fc0ed8`.
+FLOAT atoms now require the canonical `Name` kind with the `FLOAT` named type
+and a complete versioned ASCII spelling, checked before underscore removal
+and f64 conversion; valid exponent overflow still reaches IEEE infinity and
+fails only at display. Source behavior and resource bounds are unchanged.
+
+The next LANG79 selection is module-level float bindings (python-iir-compiler
+0.2.0): single-target `NAME = <float expression>`, rebinding, and NAME reads
+in every float-expression position. Bindings lower to `mov` into a `py:`
+register namespace. In this branch-free subset an unbound read is known at
+compile time and lowers to a raising `py_name_error` call, preserving earlier
+output as CPython does. Chained, tuple, annotated, augmented, attribute and
+subscript targets, binding `print`, integer values and unbound builtin or
+dunder reads are explicit compile errors; direct-AST NAME and EQUALS tokens
+require canonical kind and spelling. Host Python remains oracle only.
+
 
 The refreshed queue follows the user's 2026-10-11 consumer-priority correction.
 Alternate bounded work across the streams below; the list is not a requirement
@@ -525,15 +576,23 @@ implementation PRs may be active. Include documentation, lesson shards,
 generated files and transitive dependencies in each DAG ownership audit.
 
 1. **PREP01 generic engine / MacroNib and MacroOct:** these are the first
-   consumers. Audit their existing composition and select a demonstrated gap
+   consumers. 2026-10-19 audit: MacroOct lacked the pre-lex byte budgets
+   MacroNib and the C dialect enforce (8 MB dense input → ~2 GB before
+   rejection); fixed by macrooct-iir-compiler 0.3.0. Next demonstrated gap:
+   MacroNib is not wired into `lang-aot` (no `Language` variant, matrix rows,
+   or `PROGRAMS`-reading identity oracle like MacroOct's). Audit their existing composition and select a demonstrated gap
    in preprocessing, provenance, bounds or IIR identity against hand-expanded
    Nib/Oct. The already published octal-stringize PR #17281 is existing work;
    further C-specific stages and full C preprocessing are long-term work,
    not the default next PREP01 selection.
-2. **LANG79 Python:** arithmetic AST token validation is complete; broader
-   native frontend semantics remain open. Host Python is oracle only.
-3. **LANG78 JavaScript:** restricted numeric division is complete; general
-   lexical-goal selection and broader native semantics remain open, Node oracle only.
+2. **LANG79 Python:** arithmetic and float-literal AST token validation are
+   complete; module-level float bindings are the current slice. Integers,
+   strings, control flow and functions remain open. Host Python is oracle only.
+3. **LANG78 JavaScript:** restricted numeric division is complete. Top-level
+   numeric `let`/`const` bindings with the early duplicate-name SyntaxError and
+   runtime TDZ/undeclared ReferenceErrors (`javascript-iir-compiler` 0.2.0) are
+   the current slice. Assignment, control flow, general lexical-goal selection
+   and broader native semantics remain open, Node oracle only.
 4. **LANG82 continued:** the partial Perl 5.004_72 contract is complete.
    Continue distinct own-release source-backed pairs; full syntax remains open.
 5. **LANG80 Ruby:** arithmetic/grouping AST token validation is complete;

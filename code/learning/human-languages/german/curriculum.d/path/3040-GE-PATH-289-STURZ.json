@@ -1,0 +1,9 @@
+{
+  "id": "GE-PATH-289-STURZ",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "GE-EXT-289-STURZ"
+  ],
+  "after": []
+}

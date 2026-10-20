@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 358,
+  "sourceHash": "fnv1a64:6e98f664f897b97c",
+  "lessonIds": [
+    "GE-C358-gesellschaft",
+    "GE-C358-demokratie",
+    "GE-C358-abstimmen",
+    "GE-C358-abstimmung",
+    "GE-C358-beitragen"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch358.txt",
+  "json": "german/narration/ch358.json",
+  "textHash": "fnv1a64:d1e501253ba66b9a",
+  "jsonHash": "fnv1a64:4494e2f4c2e708fd",
+  "findings": []
+}

@@ -1,0 +1,18 @@
+{
+  "language": "german",
+  "chapter": 252,
+  "sourceHash": "fnv1a64:693de29fa530865f",
+  "lessonIds": [
+    "GE-C252-ich-ging",
+    "GE-C252-ich-las",
+    "GE-C252-als",
+    "GE-C252-review"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 4,
+  "text": "german/narration/ch252.txt",
+  "json": "german/narration/ch252.json",
+  "textHash": "fnv1a64:bfa86ff3e6650c6a",
+  "jsonHash": "fnv1a64:949c7d31a262b64f",
+  "findings": []
+}

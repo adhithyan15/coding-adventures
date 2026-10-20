@@ -1,0 +1,19 @@
+{
+  "chapter": 314,
+  "title": "Verzaubert",
+  "label": "ch:ge-verzaubert",
+  "canDo": "I can tell what happens by magic: to conjure, to bewitch, to turn into, a curse and a dragon.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "GE-C314-drache",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 314: I can tell what happens by magic: to conjure, to bewitch, to turn into, a curse and a dragon.",
+    "assesses": [
+      "GE-LEX-C314-ZAUBERN-03",
+      "GE-LEX-C314-ZAUBERN-04",
+      "GE-LEX-C314-ZAUBERN-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "GE-C333-einwand",
+  "pathSegment": "GE-PATH-333-WIDERSPRUCH",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GE-EXT-333-WIDERSPRUCH",
+      "order": 2
+    }
+  ]
+}

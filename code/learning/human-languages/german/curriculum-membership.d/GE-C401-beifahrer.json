@@ -1,0 +1,11 @@
+{
+  "id": "GE-C401-beifahrer",
+  "pathSegment": "GE-PATH-401-GURT",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-401-GURT",
+      "order": 4
+    }
+  ]
+}

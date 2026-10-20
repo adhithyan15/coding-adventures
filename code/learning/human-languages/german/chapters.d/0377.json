@@ -1,0 +1,19 @@
+{
+  "chapter": 377,
+  "title": "An der Hochschule",
+  "label": "ch:ge-an-der-hochschule",
+  "canDo": "I can talk about higher education: lectures, lecturers, a degree programme and an internship.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "GE-R377-review-370-377",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 377: I can talk about higher education: lectures, lecturers, a degree programme and an internship.",
+    "assesses": [
+      "GE-LEX-C377-HOCHSCHULE-03",
+      "GE-LEX-C377-HOCHSCHULE-04",
+      "GE-LEX-C377-HOCHSCHULE-05"
+    ]
+  }
+}

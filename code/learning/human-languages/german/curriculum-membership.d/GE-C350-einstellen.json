@@ -1,0 +1,11 @@
+{
+  "id": "GE-C350-einstellen",
+  "pathSegment": "GE-PATH-350-ARBEITGEBER",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GE-EXT-350-ARBEITGEBER",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 528,
+  "sourceHash": "fnv1a64:fb4abe0b1449bd66",
+  "lessonIds": [
+    "GE-C528-unordnung",
+    "GE-C528-ausmisten",
+    "GE-C528-abfall",
+    "GE-C528-muelltonne",
+    "GE-C528-entsorgen"
+  ],
+  "tex": "german/book/chapters/ch528-mull-und-unordnung.tex"
+}

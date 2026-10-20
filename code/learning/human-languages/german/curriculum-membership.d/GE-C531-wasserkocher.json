@@ -1,0 +1,11 @@
+{
+  "id": "GE-C531-wasserkocher",
+  "pathSegment": "GE-PATH-531-KUECHE",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GE-EXT-531-KUECHE",
+      "order": 2
+    }
+  ]
+}

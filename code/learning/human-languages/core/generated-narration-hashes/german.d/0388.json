@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 388,
+  "sourceHash": "fnv1a64:c4a69e7a1bb41db9",
+  "lessonIds": [
+    "GE-C388-kredit",
+    "GE-C388-darlehen",
+    "GE-C388-schulden",
+    "GE-C388-zurueckzahlen",
+    "GE-C388-borgen"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch388.txt",
+  "json": "german/narration/ch388.json",
+  "textHash": "fnv1a64:b5b7f86217bd501d",
+  "jsonHash": "fnv1a64:bbfdcd168d6b3412",
+  "findings": []
+}

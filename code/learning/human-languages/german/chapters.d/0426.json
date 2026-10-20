@@ -1,0 +1,19 @@
+{
+  "chapter": 426,
+  "title": "An der Rezeption",
+  "label": "ch:ge-an-der-rezeption",
+  "canDo": "I can arrive at and leave a hotel: the reception, arriving, leaving, the stay and checking out.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "GE-C426-auschecken",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 426: I can arrive at and leave a hotel: the reception, arriving, leaving, the stay and checking out.",
+    "assesses": [
+      "GE-LEX-C426-REZEPTION-03",
+      "GE-LEX-C426-REZEPTION-04",
+      "GE-LEX-C426-REZEPTION-05"
+    ]
+  }
+}

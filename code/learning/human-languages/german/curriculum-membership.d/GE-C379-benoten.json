@@ -1,0 +1,11 @@
+{
+  "id": "GE-C379-benoten",
+  "pathSegment": "GE-PATH-379-BEWERTUNG",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GE-EXT-379-BEWERTUNG",
+      "order": 2
+    }
+  ]
+}

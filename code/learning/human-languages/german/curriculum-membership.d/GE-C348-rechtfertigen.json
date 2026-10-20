@@ -1,0 +1,11 @@
+{
+  "id": "GE-C348-rechtfertigen",
+  "pathSegment": "GE-PATH-348-VERANTWORTUNG",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GE-EXT-348-VERANTWORTUNG",
+      "order": 2
+    }
+  ]
+}

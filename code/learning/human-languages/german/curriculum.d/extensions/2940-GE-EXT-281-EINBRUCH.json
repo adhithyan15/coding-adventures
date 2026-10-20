@@ -1,0 +1,8 @@
+{
+  "id": "GE-EXT-281-EINBRUCH",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can report a break-in: to break in, a burglary, a burglar, to pinch and the loot.",
+  "prerequisites": []
+}

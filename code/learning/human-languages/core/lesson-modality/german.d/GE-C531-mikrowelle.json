@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C531-mikrowelle",
+    "language": "german",
+    "chapter": 531,
+    "sequence": 28340,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:134bec028e9477d1"
+  },
+  "findings": []
+}

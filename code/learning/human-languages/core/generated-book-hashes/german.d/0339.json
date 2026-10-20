@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 339,
+  "sourceHash": "fnv1a64:64a7e7cee72262b2",
+  "lessonIds": [
+    "GE-C339-aeusserung",
+    "GE-C339-hinweisen",
+    "GE-C339-hinweis",
+    "GE-C339-hervorheben",
+    "GE-C339-darlegen"
+  ],
+  "tex": "german/book/chapters/ch339-etwas-hervorheben.tex"
+}

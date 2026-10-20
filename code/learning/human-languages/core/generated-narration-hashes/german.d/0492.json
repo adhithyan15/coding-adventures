@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 492,
+  "sourceHash": "fnv1a64:651250ad5268ee7e",
+  "lessonIds": [
+    "GE-C492-verlieben",
+    "GE-C492-flirten",
+    "GE-C492-kuscheln",
+    "GE-C492-kuessen",
+    "GE-C492-kuss"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch492.txt",
+  "json": "german/narration/ch492.json",
+  "textHash": "fnv1a64:02998691c1a4d6ef",
+  "jsonHash": "fnv1a64:f0ec8ca63b3ad421",
+  "findings": []
+}

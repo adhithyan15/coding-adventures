@@ -1,0 +1,11 @@
+{
+  "id": "GE-R521-review-514-521",
+  "pathSegment": "GE-PATH-521-GEDICHT",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "GE-EXT-521-GEDICHT",
+      "order": 5
+    }
+  ]
+}

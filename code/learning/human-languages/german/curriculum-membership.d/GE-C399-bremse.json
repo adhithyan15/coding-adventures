@@ -1,0 +1,11 @@
+{
+  "id": "GE-C399-bremse",
+  "pathSegment": "GE-PATH-399-LENKRAD",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-399-LENKRAD",
+      "order": 3
+    }
+  ]
+}

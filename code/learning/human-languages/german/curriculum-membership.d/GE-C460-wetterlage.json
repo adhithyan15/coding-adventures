@@ -1,0 +1,11 @@
+{
+  "id": "GE-C460-wetterlage",
+  "pathSegment": "GE-PATH-460-WETTERBERICHT",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GE-EXT-460-WETTERBERICHT",
+      "order": 1
+    }
+  ]
+}

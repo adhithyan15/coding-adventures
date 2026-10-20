@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 477,
+  "sourceHash": "fnv1a64:e2eb04fce57a0684",
+  "lessonIds": [
+    "GE-C477-tapfer",
+    "GE-C477-feige",
+    "GE-C477-feigling",
+    "GE-C477-leichtsinnig",
+    "GE-C477-trauen"
+  ],
+  "tex": "german/book/chapters/ch477-tapfer-oder-feige.tex"
+}

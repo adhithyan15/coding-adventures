@@ -1,0 +1,8 @@
+{
+  "id": "GE-EXT-485-GELENKE",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can name the joints and describe aches.",
+  "prerequisites": []
+}

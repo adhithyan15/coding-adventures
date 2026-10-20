@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C378-referat",
+    "language": "german",
+    "chapter": 378,
+    "sequence": 20470,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:164e47eed08bc5f5"
+  },
+  "findings": []
+}

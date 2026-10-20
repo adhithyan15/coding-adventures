@@ -1,0 +1,11 @@
+{
+  "id": "GE-C458-hirsch",
+  "pathSegment": "GE-PATH-458-WILDTIERE",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-458-WILDTIERE",
+      "order": 3
+    }
+  ]
+}

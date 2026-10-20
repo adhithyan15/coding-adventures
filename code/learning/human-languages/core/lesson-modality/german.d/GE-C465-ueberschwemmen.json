@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C465-ueberschwemmen",
+    "language": "german",
+    "chapter": 465,
+    "sequence": 24960,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:34237a141b815586"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 285,
+  "title": "Der Betrug",
+  "label": "ch:ge-der-betrug",
+  "canDo": "I can report fraud: to cheat, fraud, a con man, to forge and to blackmail.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "GE-R285-review-278-285",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 285: I can report fraud: to cheat, fraud, a con man, to forge and to blackmail.",
+    "assesses": [
+      "GE-LEX-C285-BETRUG-03",
+      "GE-LEX-C285-BETRUG-04",
+      "GE-LEX-C285-BETRUG-05"
+    ]
+  }
+}

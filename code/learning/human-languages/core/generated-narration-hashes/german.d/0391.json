@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 391,
+  "sourceHash": "fnv1a64:8e09255609045c3c",
+  "lessonIds": [
+    "GE-C391-steuer",
+    "GE-C391-zins",
+    "GE-C391-investieren",
+    "GE-C391-anschaffen",
+    "GE-C391-versichern"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch391.txt",
+  "json": "german/narration/ch391.json",
+  "textHash": "fnv1a64:33da7094376b903d",
+  "jsonHash": "fnv1a64:5b84bdf5a744f9aa",
+  "findings": []
+}

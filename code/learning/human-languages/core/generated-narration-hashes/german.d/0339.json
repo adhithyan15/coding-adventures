@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 339,
+  "sourceHash": "fnv1a64:77c68fb4d80e5102",
+  "lessonIds": [
+    "GE-C339-aeusserung",
+    "GE-C339-hinweisen",
+    "GE-C339-hinweis",
+    "GE-C339-hervorheben",
+    "GE-C339-darlegen"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch339.txt",
+  "json": "german/narration/ch339.json",
+  "textHash": "fnv1a64:f96a8324055e550d",
+  "jsonHash": "fnv1a64:2571ac2fc825632f",
+  "findings": []
+}

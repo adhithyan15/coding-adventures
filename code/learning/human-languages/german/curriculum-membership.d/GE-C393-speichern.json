@@ -1,0 +1,11 @@
+{
+  "id": "GE-C393-speichern",
+  "pathSegment": "GE-PATH-393-DATEI",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GE-EXT-393-DATEI",
+      "order": 1
+    }
+  ]
+}

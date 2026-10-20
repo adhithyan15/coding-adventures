@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C320-antike",
+    "language": "german",
+    "chapter": 320,
+    "sequence": 17480,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:017cf4645669f5e3"
+  },
+  "findings": []
+}

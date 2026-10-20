@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C426-rezeption",
+    "language": "german",
+    "chapter": 426,
+    "sequence": 22930,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c0e9588abd5f49f9"
+  },
+  "findings": []
+}

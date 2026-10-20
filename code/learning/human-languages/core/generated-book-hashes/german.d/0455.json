@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 455,
+  "sourceHash": "fnv1a64:1719b1129da248af",
+  "lessonIds": [
+    "GE-C455-wasserfall",
+    "GE-C455-sumpf",
+    "GE-C455-tuempel",
+    "GE-C455-plaetschern",
+    "GE-C455-fliessen"
+  ],
+  "tex": "german/book/chapters/ch455-wasser-in-der-natur.tex"
+}

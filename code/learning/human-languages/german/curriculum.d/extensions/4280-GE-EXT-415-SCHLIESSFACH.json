@@ -1,0 +1,8 @@
+{
+  "id": "GE-EXT-415-SCHLIESSFACH",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can manage at a busy station: the locker, the left-luggage office, the escalator, riding without a ticket and queueing.",
+  "prerequisites": []
+}

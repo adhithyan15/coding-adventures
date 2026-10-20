@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 272,
+  "sourceHash": "fnv1a64:5c2d7f2aecdb0a13",
+  "lessonIds": [
+    "GE-C272-sendung",
+    "GE-C272-rundfunk",
+    "GE-C272-presse",
+    "GE-C272-journalist",
+    "GE-C272-titelseite"
+  ],
+  "tex": "german/book/chapters/ch272-im-radio.tex"
+}

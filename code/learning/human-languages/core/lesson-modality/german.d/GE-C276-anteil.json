@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C276-anteil",
+    "language": "german",
+    "chapter": 276,
+    "sequence": 15230,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b4d5a4d61e6b09fb"
+  },
+  "findings": []
+}

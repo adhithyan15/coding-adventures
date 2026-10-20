@@ -1,0 +1,11 @@
+{
+  "id": "GE-C355-organisieren",
+  "pathSegment": "GE-PATH-355-PROJEKT",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-355-PROJEKT",
+      "order": 4
+    }
+  ]
+}

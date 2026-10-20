@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 394,
+  "sourceHash": "fnv1a64:8d114c84dcc24535",
+  "lessonIds": [
+    "GE-C394-hochladen",
+    "GE-C394-webseite",
+    "GE-C394-suchmaschine",
+    "GE-C394-posten",
+    "GE-C394-kommentieren"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch394.txt",
+  "json": "german/narration/ch394.json",
+  "textHash": "fnv1a64:82e59bf70adbc329",
+  "jsonHash": "fnv1a64:eba3d3fa76f17f9f",
+  "findings": []
+}

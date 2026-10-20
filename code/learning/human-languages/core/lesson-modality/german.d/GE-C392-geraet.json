@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C392-geraet",
+    "language": "german",
+    "chapter": 392,
+    "sequence": 21170,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:37b8a0589e94fd9f"
+  },
+  "findings": []
+}

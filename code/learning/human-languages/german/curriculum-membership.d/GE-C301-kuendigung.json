@@ -1,0 +1,11 @@
+{
+  "id": "GE-C301-kuendigung",
+  "pathSegment": "GE-PATH-301-KUENDIGEN",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GE-EXT-301-KUENDIGEN",
+      "order": 1
+    }
+  ]
+}

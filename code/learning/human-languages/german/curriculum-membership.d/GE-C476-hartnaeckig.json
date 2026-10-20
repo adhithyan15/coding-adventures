@@ -1,0 +1,11 @@
+{
+  "id": "GE-C476-hartnaeckig",
+  "pathSegment": "GE-PATH-476-LAUNISCH",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GE-EXT-476-LAUNISCH",
+      "order": 1
+    }
+  ]
+}

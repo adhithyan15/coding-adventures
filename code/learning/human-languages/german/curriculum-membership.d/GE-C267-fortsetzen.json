@@ -1,0 +1,11 @@
+{
+  "id": "GE-C267-fortsetzen",
+  "pathSegment": "GE-PATH-267-DAUERN",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-267-DAUERN",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,9 @@
+{
+  "id": "GE-PATH-336-EINIGUNG",
+  "spine_node": "SPINE-GIVE-REASONS",
+  "before": [],
+  "inline": [
+    "GE-EXT-336-EINIGUNG"
+  ],
+  "after": []
+}

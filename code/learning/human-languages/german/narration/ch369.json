@@ -1,0 +1,858 @@
+{
+  "version": 1,
+  "language": "german",
+  "chapter": 369,
+  "title": "Ein Risiko eingehen",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:b8faadd94089d182",
+  "lessons": [
+    {
+      "id": "GE-C369-risiko",
+      "sequence": 19990,
+      "title": "das Risiko — the risk",
+      "headword": "das Risiko",
+      "romanization": "das Risiko",
+      "gloss": "the risk",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e4d040a2243c024e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the German for to do without, then the German for to replace."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: das Risiko",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "das Risiko — \"the risk\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Das Risiko ist mir zu groß. The risk is too great for me."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: die Risiken. Ein Risiko eingehen — to take a risk."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Risiko was borrowed from Italian risico, rischio, a word of the merchants; EtymDB traces French risque to Old Italian risco. Further back the origin is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "das Risiko",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *das Risiko*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "das Risiko, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *das Risiko*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with das Risiko",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *das Risiko*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the German for to do without, then the German for to replace, then say das Risiko again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the German for to do without, then the German for to replace, then say *das Risiko* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does das Risiko mean? (\"The risk\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GE-C369-riskieren",
+      "sequence": 20000,
+      "title": "riskieren — to risk",
+      "headword": "riskieren",
+      "romanization": "riskieren",
+      "gloss": "to risk",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:66cf6a3792804090",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the German for to replace, then the German for the risk."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: riskieren",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "riskieren — \"to risk\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Er hat alles riskiert und seine eigene Firma gegründet. He risked everything and started his own company."
+            },
+            {
+              "kind": "speech",
+              "text": "Perfekt: hat riskiert, with no ge-."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "riskieren was borrowed from French risquer \"to risk\", from risque \"risk\", which EtymDB traces to Old Italian risco."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "riskieren",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *riskieren*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "riskieren, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *riskieren*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with riskieren",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *riskieren*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the German for to replace, then the German for the risk, then say riskieren again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the German for to replace, then the German for the risk, then say *riskieren* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does riskieren mean? (\"To risk\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GE-C369-absichern",
+      "sequence": 20010,
+      "title": "absichern — to protect, to safeguard (mostly reflexive, sich absichern)",
+      "headword": "absichern",
+      "romanization": "absichern",
+      "gloss": "to protect, to safeguard (mostly reflexive, sich absichern)",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a8834e07d8c81fdf",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the German for the risk, then the German for to risk."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: absichern",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "absichern — \"to protect, to safeguard (mostly reflexive, sich absichern)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Bevor ich unterschreibe, will ich mich gut absichern. Before I sign, I want to protect myself properly."
+            },
+            {
+              "kind": "speech",
+              "text": "Separable: er sichert sich ab, er hat sich abgesichert."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "absichern is built on sichern \"to make safe\", from sicher \"safe\", inherited from Old High German sihhur, which goes back to Latin sēcūrus \"free from care\" (EtymDB; Lewis & Short)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "absichern",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *absichern*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "absichern, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *absichern*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with absichern",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *absichern*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the German for the risk, then the German for to risk, then say absichern again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the German for the risk, then the German for to risk, then say *absichern* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does absichern mean? (\"To protect, to safeguard (mostly reflexive, sich absichern)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GE-C369-garantie",
+      "sequence": 20020,
+      "title": "die Garantie — the guarantee, the warranty",
+      "headword": "die Garantie",
+      "romanization": "die Garantie",
+      "gloss": "the guarantee, the warranty",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a5af92e56894cb6c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the German for to risk, then the German for to protect."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: die Garantie",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "die Garantie — \"the guarantee, the warranty\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Auf den Fernseher gibt es zwei Jahre Garantie. The television comes with a two-year warranty."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: die Garantien. Das ist noch in der Garantie — that is still under warranty."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Garantie was borrowed from French garantie (EtymDB), from Old French guarantie \"protection\", from guarantir \"to vouch for\", which goes back to a Frankish word; EtymDB links German gewähren \"to grant\" to the same family."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "die Garantie",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *die Garantie*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "die Garantie, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *die Garantie*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with die Garantie",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *die Garantie*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the German for to risk, then the German for to protect, then say die Garantie again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the German for to risk, then the German for to protect, then say *die Garantie* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does die Garantie mean? (\"The guarantee, the warranty\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GE-C369-garantieren",
+      "sequence": 20030,
+      "title": "garantieren — to guarantee",
+      "headword": "garantieren",
+      "romanization": "garantieren",
+      "gloss": "to guarantee",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:15c285bd7bb1fe1c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the German for to protect, then the German for the guarantee."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: garantieren",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "garantieren — \"to guarantee\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Ich kann dir garantieren, dass das Essen dort gut ist. I can guarantee you that the food there is good."
+            },
+            {
+              "kind": "speech",
+              "text": "Perfekt: hat garantiert. Garantiert! — definitely!"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "garantieren was borrowed from French garantir \"to guarantee\", from Old French guarantir (EtymDB), a verb built on a Frankish word."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "garantieren",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *garantieren*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "garantieren, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *garantieren*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with garantieren",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *garantieren*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the German for to protect, then the German for the guarantee, then say garantieren again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the German for to protect, then the German for the guarantee, then say *garantieren* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does garantieren mean? (\"To guarantee\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GE-R369-review-362-369",
+      "sequence": 20040,
+      "title": "Words from chapters 362–369 — a review",
+      "headword": "(dialogue)",
+      "romanization": "(dialogue)",
+      "gloss": "a review of chapters 362-369",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:cea17c3c304b751e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the German for voluntary work and unpaid."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "voluntary work, unpaid, voluntary, to donate, to get involved",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: voluntary work, unpaid, voluntary, to donate, to get involved]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "environmental protection, climate change, sustainable, to recycle, to consume",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: environmental protection, climate change, sustainable, to recycle, to consume]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the condition, the precondition, to require, provided that, as far as",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the condition, the precondition, to require, provided that, as far as]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "unless, except when, otherwise, apart from that, if need be",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: unless, except when, otherwise, apart from that, if need be]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the hypothesis, in theory, under certain circumstances, if applicable, at least",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the hypothesis, in theory, under certain circumstances, if applicable, at least]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "possibly, maybe, at any rate, after all, perhaps even",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: possibly, maybe, at any rate, after all, perhaps even]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "instead, instead of, without, to do without, to replace",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: instead, instead of, without, to do without, to replace]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the risk, to risk, to protect, the guarantee, to guarantee",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the risk, to risk, to protect, the guarantee, to guarantee]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Voluntary work? (das Ehrenamt.) Unpaid? (ehrenamtlich.) Voluntary? (freiwillig.) To donate? (spenden.) To get involved? (engagieren.) Environmental protection? (der Umweltschutz.) Climate change? (der Klimawandel.) Sustainable? (nachhaltig.) To recycle? (recyceln.) To consume? (verbrauchen.) The condition? (die Bedingung.) The precondition? (die Voraussetzung.) To require? (voraussetzen.) Provided that? (sofern.) As far as? (soweit.) Unless? (es sei denn.) Except when? (außer wenn.) Otherwise? (andernfalls.) Apart from that? (ansonsten.) If need be? (notfalls.) The hypothesis? (die Hypothese.) In theory? (theoretisch.) Under certain circumstances? (unter Umständen.) If applicable? (gegebenenfalls.) At least? (wenigstens.) Possibly? (eventuell.) Maybe? (möglicherweise.) At any rate? (zumindest.) After all? (immerhin.) Perhaps even? (womöglich.) Instead? (stattdessen.) Instead of? (anstatt.) Without? (ohne dass.) To do without? (verzichten.) To replace? (ersetzen.) The risk? (das Risiko.) To risk? (riskieren.) To protect? (absichern.) The guarantee? (die Garantie.) To guarantee? (garantieren.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -1,0 +1,12 @@
+{
+  "language": "german",
+  "chapter": 260,
+  "sourceHash": "fnv1a64:fd95be8b2f93e9b8",
+  "lessonIds": [
+    "GE-C260-wenn-falls",
+    "GE-C260-wenn-es-regnet",
+    "GE-C260-es-kommt-darauf-an",
+    "GE-C260-review"
+  ],
+  "tex": "german/book/chapters/ch260-if.tex"
+}

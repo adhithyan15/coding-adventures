@@ -1,0 +1,11 @@
+{
+  "id": "GE-C266-rechtzeitig",
+  "pathSegment": "GE-PATH-266-PLOETZLICH",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-266-PLOETZLICH",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 433,
+  "sourceHash": "fnv1a64:c673d9ce314e7fa5",
+  "lessonIds": [
+    "GE-C433-orientieren",
+    "GE-C433-kompass",
+    "GE-C433-himmelsrichtung",
+    "GE-C433-zurechtfinden",
+    "GE-C433-verirren"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch433.txt",
+  "json": "german/narration/ch433.json",
+  "textHash": "fnv1a64:d29eb9ecd7dc0514",
+  "jsonHash": "fnv1a64:df0665973ac3b69f",
+  "findings": []
+}

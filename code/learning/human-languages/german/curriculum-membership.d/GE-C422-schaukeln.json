@@ -1,0 +1,11 @@
+{
+  "id": "GE-C422-schaukeln",
+  "pathSegment": "GE-PATH-422-KREUZFAHRT",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-422-KREUZFAHRT",
+      "order": 3
+    }
+  ]
+}

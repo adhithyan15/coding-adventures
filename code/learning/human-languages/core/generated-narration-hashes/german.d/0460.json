@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 460,
+  "sourceHash": "fnv1a64:d20fc6cf6185af31",
+  "lessonIds": [
+    "GE-C460-wetterbericht",
+    "GE-C460-wetterlage",
+    "GE-C460-wolkenlos",
+    "GE-C460-bedeckt",
+    "GE-C460-umschlagen"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch460.txt",
+  "json": "german/narration/ch460.json",
+  "textHash": "fnv1a64:1d582262c74a7ba1",
+  "jsonHash": "fnv1a64:57c5e550fd6e9035",
+  "findings": []
+}

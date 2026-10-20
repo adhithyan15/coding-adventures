@@ -1,0 +1,9 @@
+{
+  "id": "GE-PATH-318-KRIEG",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "GE-EXT-318-KRIEG"
+  ],
+  "after": []
+}

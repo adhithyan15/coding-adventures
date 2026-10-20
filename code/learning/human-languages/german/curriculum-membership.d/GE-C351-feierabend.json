@@ -1,0 +1,11 @@
+{
+  "id": "GE-C351-feierabend",
+  "pathSegment": "GE-PATH-351-ARBEITSZEIT",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-351-ARBEITSZEIT",
+      "order": 4
+    }
+  ]
+}

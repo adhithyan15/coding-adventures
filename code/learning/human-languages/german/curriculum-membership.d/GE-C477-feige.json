@@ -1,0 +1,11 @@
+{
+  "id": "GE-C477-feige",
+  "pathSegment": "GE-PATH-477-MUT",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GE-EXT-477-MUT",
+      "order": 1
+    }
+  ]
+}

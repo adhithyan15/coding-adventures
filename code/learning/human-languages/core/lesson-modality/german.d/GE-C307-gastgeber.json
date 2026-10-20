@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C307-gastgeber",
+    "language": "german",
+    "chapter": 307,
+    "sequence": 16800,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5c9b6bf12d4a8da3"
+  },
+  "findings": []
+}

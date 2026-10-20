@@ -1,0 +1,20 @@
+{
+  "language": "german",
+  "chapter": 461,
+  "sourceHash": "fnv1a64:e06927efa47320ef",
+  "lessonIds": [
+    "GE-C461-nieselregen",
+    "GE-C461-nieseln",
+    "GE-C461-schauer",
+    "GE-C461-aufheiterung",
+    "GE-C461-aufklaren",
+    "GE-R461-review-454-461"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "german/narration/ch461.txt",
+  "json": "german/narration/ch461.json",
+  "textHash": "fnv1a64:0e7fb73796ca45d1",
+  "jsonHash": "fnv1a64:b5b4a025cf54d1bd",
+  "findings": []
+}

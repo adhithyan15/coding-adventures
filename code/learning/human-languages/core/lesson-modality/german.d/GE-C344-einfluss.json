@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C344-einfluss",
+    "language": "german",
+    "chapter": 344,
+    "sequence": 18720,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0552c00cf6b00685"
+  },
+  "findings": []
+}

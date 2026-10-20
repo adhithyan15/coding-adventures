@@ -1,0 +1,11 @@
+{
+  "id": "GE-C445-polieren",
+  "pathSegment": "GE-PATH-445-SCHUSTER",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GE-EXT-445-SCHUSTER",
+      "order": 2
+    }
+  ]
+}

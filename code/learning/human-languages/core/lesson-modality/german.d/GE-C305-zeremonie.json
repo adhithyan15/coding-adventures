@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C305-zeremonie",
+    "language": "german",
+    "chapter": 305,
+    "sequence": 16730,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6700047b3a9e3313"
+  },
+  "findings": []
+}

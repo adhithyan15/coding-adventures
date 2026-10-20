@@ -1,0 +1,19 @@
+{
+  "chapter": 481,
+  "title": "Allergien und Ausschlag",
+  "label": "ch:ge-allergien-und-ausschlag",
+  "canDo": "I can talk about allergies and skin problems.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "GE-R481-review-474-481",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 481: I can talk about allergies and skin problems.",
+    "assesses": [
+      "GE-LEX-C481-ALLERGIE-03",
+      "GE-LEX-C481-ALLERGIE-04",
+      "GE-LEX-C481-ALLERGIE-05"
+    ]
+  }
+}

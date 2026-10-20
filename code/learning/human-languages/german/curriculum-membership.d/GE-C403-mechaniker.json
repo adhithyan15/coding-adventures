@@ -1,0 +1,11 @@
+{
+  "id": "GE-C403-mechaniker",
+  "pathSegment": "GE-PATH-403-STARTHILFE",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-403-STARTHILFE",
+      "order": 4
+    }
+  ]
+}

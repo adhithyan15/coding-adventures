@@ -1,0 +1,11 @@
+{
+  "id": "GE-C486-gaehnen",
+  "pathSegment": "GE-PATH-486-MUEDE",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GE-EXT-486-MUEDE",
+      "order": 2
+    }
+  ]
+}

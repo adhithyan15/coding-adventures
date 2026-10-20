@@ -1,0 +1,19 @@
+{
+  "chapter": 430,
+  "title": "Ungebetene Gäste",
+  "label": "ch:ge-ungebetene-gaste",
+  "canDo": "I can complain about insects in a room: the bedbug, the cockroach, the mosquito, being bitten and crawling.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "GE-C430-krabbeln",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 430: I can complain about insects in a room: the bedbug, the cockroach, the mosquito, being bitten and crawling.",
+    "assesses": [
+      "GE-LEX-C430-MUECKE-03",
+      "GE-LEX-C430-MUECKE-04",
+      "GE-LEX-C430-MUECKE-05"
+    ]
+  }
+}

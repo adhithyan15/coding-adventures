@@ -1,0 +1,8 @@
+{
+  "id": "GE-EXT-443-FEINKOST",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can find small food and health shops: the delicatessen, the cake shop, the greengrocer, the chemist and the health food shop.",
+  "prerequisites": []
+}

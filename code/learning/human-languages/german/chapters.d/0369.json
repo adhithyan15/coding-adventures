@@ -1,0 +1,19 @@
+{
+  "chapter": 369,
+  "title": "Ein Risiko eingehen",
+  "label": "ch:ge-ein-risiko-eingehen",
+  "canDo": "I can talk about risks and guarantees, and how to protect myself.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "GE-R369-review-362-369",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 369: I can talk about risks and guarantees, and how to protect myself.",
+    "assesses": [
+      "GE-LEX-C369-RISIKO-03",
+      "GE-LEX-C369-RISIKO-04",
+      "GE-LEX-C369-RISIKO-05"
+    ]
+  }
+}

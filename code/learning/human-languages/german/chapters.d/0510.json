@@ -1,0 +1,19 @@
+{
+  "chapter": 510,
+  "title": "Auf der Tribüne",
+  "label": "ch:ge-auf-der-tribune",
+  "canDo": "I can talk about watching sport in a stadium.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "GE-C510-buhen",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 510: I can talk about watching sport in a stadium.",
+    "assesses": [
+      "GE-LEX-C510-TRIBUENE-03",
+      "GE-LEX-C510-TRIBUENE-04",
+      "GE-LEX-C510-TRIBUENE-05"
+    ]
+  }
+}

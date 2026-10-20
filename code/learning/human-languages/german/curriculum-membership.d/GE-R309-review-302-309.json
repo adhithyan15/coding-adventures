@@ -1,0 +1,11 @@
+{
+  "id": "GE-R309-review-302-309",
+  "pathSegment": "GE-PATH-309-SCHMUECKEN",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "GE-EXT-309-SCHMUECKEN",
+      "order": 5
+    }
+  ]
+}

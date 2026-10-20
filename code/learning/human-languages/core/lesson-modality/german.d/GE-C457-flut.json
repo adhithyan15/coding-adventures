@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C457-flut",
+    "language": "german",
+    "chapter": 457,
+    "sequence": 24540,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9ba396cf2ae4c499"
+  },
+  "findings": []
+}

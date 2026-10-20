@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C345-beweis",
+    "language": "german",
+    "chapter": 345,
+    "sequence": 18780,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4cfbc3aa96b2a134"
+  },
+  "findings": []
+}

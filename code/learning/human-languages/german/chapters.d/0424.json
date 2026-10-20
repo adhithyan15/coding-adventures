@@ -1,0 +1,19 @@
+{
+  "chapter": 424,
+  "title": "Wo schlafen wir",
+  "label": "ch:ge-wo-schlafen-wir",
+  "canDo": "I can talk about places to stay: the inn, the holiday flat, staying the night, the overnight stay and half board.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "GE-C424-halbpension",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 424: I can talk about places to stay: the inn, the holiday flat, staying the night, the overnight stay and half board.",
+    "assesses": [
+      "GE-LEX-C424-GASTHOF-03",
+      "GE-LEX-C424-GASTHOF-04",
+      "GE-LEX-C424-GASTHOF-05"
+    ]
+  }
+}

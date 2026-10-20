@@ -1,0 +1,11 @@
+{
+  "id": "GE-C316-handlung",
+  "pathSegment": "GE-PATH-316-ERZAEHLER",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GE-EXT-316-ERZAEHLER",
+      "order": 1
+    }
+  ]
+}

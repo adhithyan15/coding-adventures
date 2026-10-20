@@ -1,0 +1,19 @@
+{
+  "chapter": 433,
+  "title": "Wo ist Norden",
+  "label": "ch:ge-wo-ist-norden",
+  "canDo": "I can find my bearings: getting my bearings, the compass, the points of the compass, finding my way and getting lost.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "GE-C433-verirren",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 433: I can find my bearings: getting my bearings, the compass, the points of the compass, finding my way and getting lost.",
+    "assesses": [
+      "GE-LEX-C433-KOMPASS-03",
+      "GE-LEX-C433-KOMPASS-04",
+      "GE-LEX-C433-KOMPASS-05"
+    ]
+  }
+}

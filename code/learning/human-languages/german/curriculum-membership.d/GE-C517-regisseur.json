@@ -1,0 +1,11 @@
+{
+  "id": "GE-C517-regisseur",
+  "pathSegment": "GE-PATH-517-THEATER",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GE-EXT-517-THEATER",
+      "order": 1
+    }
+  ]
+}

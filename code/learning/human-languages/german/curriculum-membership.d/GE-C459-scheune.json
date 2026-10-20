@@ -1,0 +1,11 @@
+{
+  "id": "GE-C459-scheune",
+  "pathSegment": "GE-PATH-459-BAUERNHOF",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GE-EXT-459-BAUERNHOF",
+      "order": 2
+    }
+  ]
+}

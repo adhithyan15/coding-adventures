@@ -1,0 +1,11 @@
+{
+  "id": "GE-C263-solange",
+  "pathSegment": "GE-PATH-263-NACHDEM",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-263-NACHDEM",
+      "order": 3
+    }
+  ]
+}

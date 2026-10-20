@@ -1,0 +1,19 @@
+{
+  "chapter": 328,
+  "title": "Abgießen und abschmecken",
+  "label": "ch:ge-abgie-en-und-abschmecken",
+  "canDo": "I can describe finishing a dish: a sieve, to drain, to drip dry, to taste for seasoning and to season.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "GE-C328-wuerzen",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 328: I can describe finishing a dish: a sieve, to drain, to drip dry, to taste for seasoning and to season.",
+    "assesses": [
+      "GE-LEX-C328-SIEB-03",
+      "GE-LEX-C328-SIEB-04",
+      "GE-LEX-C328-SIEB-05"
+    ]
+  }
+}

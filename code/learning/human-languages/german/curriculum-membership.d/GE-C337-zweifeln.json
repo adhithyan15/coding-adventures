@@ -1,0 +1,11 @@
+{
+  "id": "GE-C337-zweifeln",
+  "pathSegment": "GE-PATH-337-IRRTUM",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-337-IRRTUM",
+      "order": 3
+    }
+  ]
+}

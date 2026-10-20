@@ -1,0 +1,8 @@
+{
+  "id": "GE-EXT-300-SCHEIDUNG",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can tell about changes in a family: a divorce, to divorce, a separation, to adopt and to go through.",
+  "prerequisites": []
+}

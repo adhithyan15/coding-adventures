@@ -2,11 +2,40 @@
 //!
 //! The source is parsed by the Rust Python parser and executed by `vm-core`.
 //! Semantic IR and a host Python runtime are not part of the execution path.
+//!
+//! # What a program may contain
+//!
+//! A program is a sequence of module-level statements, each one of:
+//!
+//! ```text
+//! <float expression>                   # evaluated, result discarded
+//! print(<zero to three float exprs>)   # written to captured stdout
+//! NAME = <float expression>            # module-level binding (rebinding OK)
+//! ```
+//!
+//! A float expression is built from float literals, bound NAMEs, parentheses,
+//! unary `+`/`-` and binary `+ - * /`. Everything else is rejected at compile
+//! time with a message naming the unsupported form.
+//!
+//! # Where values live in the generated IIR
+//!
+//! The VM addresses values by register *name*. Two disjoint namespaces exist:
+//!
+//! | Register        | Spelling          | Written by                       |
+//! |-----------------|-------------------|----------------------------------|
+//! | temporary       | `py0`, `py1`, ... | every `const`, `neg`, `add`, ... |
+//! | Python binding  | `py:x`, `py:total`| the `mov` that ends `x = ...`    |
+//!
+//! A Python identifier can never contain `:`, and a temporary is `py` followed
+//! only by decimal digits, so `x = ...` cannot overwrite a temporary however
+//! the user names it. Builtins (`py_print_float`, `py_name_error`, ...) are not
+//! registers at all: `call_builtin` reads its first operand as a literal name.
 
 use coding_adventures_python_parser::parse_python;
 use interpreter_ir::{IIRFunction, IIRInstr, IIRModule, Operand};
 use lexer::token::{Token, TokenType};
 use parser::grammar_parser::{ASTNodeOrToken, GrammarASTNode};
+use std::collections::HashSet;
 use std::sync::{Arc, Mutex};
 use vm_core::{errors::VMError, value::Value, VMCore};
 
@@ -152,6 +181,17 @@ pub fn run_source(source: &str) -> Result<String, PythonRunError> {
         }
         Ok(Value::Float(*left / *right))
     });
+    // A read of a name with no earlier binding lowers to this builtin. It never
+    // returns a value: it raises CPython's exact NameError text so that the
+    // run stops at that point with every earlier print still in `output`.
+    vm.builtins_mut().register("py_name_error", |args| {
+        let [Value::Str(name)] = args else {
+            return Err(VMError::Custom("py_name_error expects one name".into()));
+        };
+        Err(VMError::Custom(format!(
+            "NameError: name '{name}' is not defined"
+        )))
+    });
     vm.builtins_mut().register("py_print_empty", move |args| {
         if !args.is_empty() {
             return Err(VMError::Custom(
@@ -253,6 +293,15 @@ fn format_python_float(number: f64) -> Result<String, String> {
 struct Compiler {
     instructions: Vec<IIRInstr>,
     next_register: usize,
+    /// Python names bound by an earlier statement of this module.
+    ///
+    /// The subset has no branches, loops, functions or `del`, so execution is
+    /// one straight line: once a statement binds `x`, every later program
+    /// point sees `x` bound, and every earlier one sees it unbound. That makes
+    /// "is this read a NameError?" a compile-time question. Statement order is
+    /// lowering order, so this set is exactly the bound names at the statement
+    /// being compiled.
+    bound: HashSet<String>,
 }
 
 impl Compiler {
@@ -284,9 +333,100 @@ impl Compiler {
         if newline.value != "\\n" {
             return Err("unsupported Python statement separator".into());
         }
+        // Every Python 3.12 simple statement we accept parses as `assign_stmt`;
+        // a bare expression is the degenerate assignment with no `=` tail:
+        //
+        //   assign_stmt = expression_list
+        //                 [ COLON expression [ EQUALS expression_list ]   (annotated)
+        //                 | EQUALS expression_list { EQUALS expression_list } (plain)
+        //                 | augmented_assign_op expression_list ] ;        (x += ...)
+        //
+        // The child count and the second child's kind tell the forms apart.
         let assign = only_node(small, "assign_stmt")?;
-        let expression_list = only_node(assign, "expression_list")?;
-        let expression = only_node(expression_list, "expression")?;
+        match assign.children.as_slice() {
+            [ASTNodeOrToken::Node(expression_list)]
+                if expression_list.rule_name == "expression_list" =>
+            {
+                self.compile_expression_statement(only_node(expression_list, "expression")?)
+            }
+            [ASTNodeOrToken::Node(target), ASTNodeOrToken::Token(operator), ASTNodeOrToken::Node(value)] =>
+            {
+                if operator.type_ == TokenType::Colon {
+                    return Err(ANNOTATED_ASSIGNMENT.into());
+                }
+                // Direct-AST callers can hand us any token here. Only the
+                // lexer's own EQUALS token (enum kind, no override, exact "=")
+                // makes this a binding; `==`, `:=` or a forged kind do not.
+                if !syntax_token(operator, TokenType::Equals, "=") {
+                    return Err("Python assignment requires an actual = token".into());
+                }
+                self.compile_binding(target, value)
+            }
+            [ASTNodeOrToken::Node(_), ASTNodeOrToken::Node(operator), ..]
+                if operator.rule_name == "augmented_assign_op" =>
+            {
+                Err(
+                    "augmented assignment such as x += 1.0 is outside the native float pilot"
+                        .into(),
+                )
+            }
+            [ASTNodeOrToken::Node(_), ASTNodeOrToken::Token(colon), ..]
+                if colon.type_ == TokenType::Colon =>
+            {
+                Err(ANNOTATED_ASSIGNMENT.into())
+            }
+            [ASTNodeOrToken::Node(_), ASTNodeOrToken::Token(_), ASTNodeOrToken::Node(_), ASTNodeOrToken::Token(_), ..] => {
+                Err(
+                    "chained assignment such as a = b = 1.0 is outside the native float pilot"
+                        .into(),
+                )
+            }
+            _ => Err("unsupported Python assignment statement shape".into()),
+        }
+    }
+
+    /// Lower `NAME = <float expression>`.
+    ///
+    /// ```text
+    ///   x = x + 1.0        py0 = const 1.0
+    ///                      py1 = add py:x, py0     <- reads the *old* x
+    ///                      py:x = mov py1          <- then binds
+    /// ```
+    ///
+    /// Python evaluates the whole right-hand side before it binds the target,
+    /// so the value is lowered first, the `mov` comes last, and only then is
+    /// the name added to `bound`. If the value raises (division by zero, or a
+    /// NameError for an unbound read) the binding never happens, exactly as in
+    /// CPython, and the run stops there anyway.
+    fn compile_binding(
+        &mut self,
+        target: &GrammarASTNode,
+        value: &GrammarASTNode,
+    ) -> Result<(), String> {
+        let name = binding_target(target)?;
+        let [ASTNodeOrToken::Node(expression)] = value.children.as_slice() else {
+            return Err("Python assignment value must be one float expression, not a tuple".into());
+        };
+        if value.rule_name != "expression_list" || expression.rule_name != "expression" {
+            return Err("unsupported Python assignment value".into());
+        }
+        // `x = print(...)` is valid Python, but it binds None, which no float
+        // operation in this pilot can consume. Say so rather than reporting a
+        // generic call-shape error.
+        if print_argument(expression)?.is_some() {
+            return Err(
+                "binding the None result of print() is outside the native float pilot".into(),
+            );
+        }
+        let operand = self.compile_number(expression)?;
+        self.emit("mov", Some(binding_register(name)), vec![operand], "f64");
+        self.bound.insert(name.to_owned());
+        Ok(())
+    }
+
+    /// Lower an expression statement: either a `print(...)` call or a float
+    /// expression whose value is discarded (but whose errors still raise).
+    fn compile_expression_statement(&mut self, expression: &GrammarASTNode) -> Result<(), String> {
         match print_argument(expression)? {
             Some(PrintCall::Empty) => {
                 self.emit(
@@ -336,6 +476,58 @@ impl Compiler {
             }
         }
         Ok(())
+    }
+
+    /// Lower a NAME read inside a float expression.
+    ///
+    /// | Name state at this program point      | Lowering                      |
+    /// |---------------------------------------|-------------------------------|
+    /// | bound by an earlier statement          | the binding register `py:x`   |
+    /// | `print`                                | compile error (call-only)     |
+    /// | unbound builtin or dunder name         | compile error (unsupported)   |
+    /// | unbound ordinary name                  | `call_builtin py_name_error`  |
+    ///
+    /// The bound case reads `py:x` directly instead of copying it into a
+    /// temporary: no expression in this subset can rebind a name, so the
+    /// register cannot change between this read and its use.
+    ///
+    /// The builtin rows exist because CPython would *not* raise NameError
+    /// there. `print(float)` prints `<class 'float'>` and `print(__name__)`
+    /// prints `__main__`; neither is a float this pilot can display, so the
+    /// honest answer is "unsupported", not an invented NameError.
+    fn compile_name(&mut self, token: &Token) -> Result<Operand, String> {
+        let name = token.value.as_str();
+        if !python_name_spelling(name) {
+            return Err("invalid Python NAME token spelling".into());
+        }
+        if name == "print" {
+            return Err(
+                "print is only supported as a direct call in the native float pilot".into(),
+            );
+        }
+        if self.bound.contains(name) {
+            return Ok(Operand::Var(binding_register(name)));
+        }
+        if is_dunder(name) || PYTHON_312_BUILTINS.binary_search(&name).is_ok() {
+            return Err(format!(
+                "Python builtin or module attribute {name} is not available as a value in the native float pilot"
+            ));
+        }
+        // Statically unbound: emit the raising builtin at exactly this point.
+        // It is given a destination so the instructions that would consume
+        // the value still have a well-formed operand; that code is never
+        // reached because the builtin always returns an error.
+        let dest = self.register();
+        self.emit(
+            "call_builtin",
+            Some(dest.clone()),
+            vec![
+                Operand::Var("py_name_error".into()),
+                Operand::Str(name.into()),
+            ],
+            "f64",
+        );
+        Ok(Operand::Var(dest))
     }
 
     fn compile_number(&mut self, node: &GrammarASTNode) -> Result<Operand, String> {
@@ -454,6 +646,14 @@ impl Compiler {
             ASTNodeOrToken::Token(token) if token.type_name.as_deref() == Some("INT") => {
                 Err("Python int requires arbitrary-precision runtime support".into())
             }
+            // The versioned lexer emits identifiers as plain `Name` tokens with
+            // no named override (FLOAT and INT literals are `Name` *with* one).
+            // Keywords such as True arrive as `Keyword` and fall through below.
+            ASTNodeOrToken::Token(token)
+                if token.type_ == TokenType::Name && token.type_name.is_none() =>
+            {
+                self.compile_name(token)
+            }
             ASTNodeOrToken::Node(paren) if paren.rule_name == "paren_expr" => {
                 self.compile_number(paren)
             }
@@ -529,6 +729,146 @@ fn arithmetic_token(token: &Token) -> bool {
         _ => false,
     }
 }
+
+const ANNOTATED_ASSIGNMENT: &str =
+    "annotated assignment such as x: float = 1.0 is outside the native float pilot";
+
+/// The VM register that holds Python module global `name` (see the namespace
+/// table at the top of this file).
+fn binding_register(name: &str) -> String {
+    format!("py:{name}")
+}
+
+/// Find the single NAME an assignment target binds, or explain why not.
+///
+/// The parser wraps even a bare `x` in the full precedence ladder:
+///
+/// ```text
+/// expression_list > expression > or_expr > ... > primary > atom > NAME "x"
+/// ```
+///
+/// so the walk follows single-child nodes down to where the tree branches or
+/// ends in a token. What it finds there classifies the target:
+///
+/// | Source            | Walk stops at                   | Result               |
+/// |-------------------|---------------------------------|----------------------|
+/// | `x`               | `atom` holding one NAME token   | bind `x`             |
+/// | `a, b` / `x,`     | `expression_list`, 2+ children  | tuple target error   |
+/// | `a.b` / `a[0]`    | `primary` with a `suffix`       | attribute/subscript  |
+/// | `(x)` / `[x]`     | `atom` holding a node           | single-name error    |
+/// | `-x`              | `factor` with a sign token      | single-name error    |
+/// | `True` / `1.0`    | `atom` holding a non-NAME token | not-a-name error     |
+///
+/// The AST depth budget has already bounded this loop.
+fn binding_target(target: &GrammarASTNode) -> Result<&str, String> {
+    if target.rule_name != "expression_list" {
+        return Err("unsupported Python assignment target".into());
+    }
+    let [ASTNodeOrToken::Node(first)] = target.children.as_slice() else {
+        return Err(
+            "native Python assignment requires one name target; tuple, list and starred targets are unsupported"
+                .into(),
+        );
+    };
+    let mut node = first;
+    while let [ASTNodeOrToken::Node(inner)] = node.children.as_slice() {
+        node = inner;
+    }
+    if node.rule_name == "primary" && node.children.len() > 1 {
+        return Err(
+            "attribute, subscript and call assignment targets are outside the native float pilot"
+                .into(),
+        );
+    }
+    let [ASTNodeOrToken::Token(token)] = node.children.as_slice() else {
+        return Err(
+            "native Python assignment requires one name target; tuple, list and starred targets are unsupported"
+                .into(),
+        );
+    };
+    if node.rule_name != "atom" || token.type_ != TokenType::Name || token.type_name.is_some() {
+        return Err("Python assignment target must be a name".into());
+    }
+    let name = token.value.as_str();
+    if !python_name_spelling(name) {
+        return Err("invalid Python NAME token spelling".into());
+    }
+    match name {
+        "print" => {
+            Err("binding print is outside the native float pilot; print stays the builtin".into())
+        }
+        // CPython: "SyntaxError: cannot assign to __debug__".
+        "__debug__" => Err("cannot assign to __debug__".into()),
+        _ => Ok(name),
+    }
+}
+
+/// Python 3.12's hard keywords (`keyword.kwlist`). The lexer tags these as
+/// `Keyword`, but a caller-built `Name` token could spell one; such a token is
+/// not an identifier. Soft keywords (`match`, `case`, `type`, `_`) are ordinary
+/// identifiers outside their statement contexts and remain valid names.
+#[rustfmt::skip]
+const PYTHON_KEYWORDS: [&str; 35] = [
+    "False", "None", "True", "and", "as", "assert", "async", "await", "break", "class", "continue",
+    "def", "del", "elif", "else", "except", "finally", "for", "from", "global", "if", "import",
+    "in", "is", "lambda", "nonlocal", "not", "or", "pass", "raise", "return", "try", "while",
+    "with", "yield",
+];
+
+/// Check a NAME spelling against the versioned lexer pattern
+/// `/[a-zA-Z_][a-zA-Z0-9_]*/` (ASCII only) and the hard-keyword list. One
+/// linear byte scan; the AST text budget bounds its length.
+fn python_name_spelling(spelling: &str) -> bool {
+    let bytes = spelling.as_bytes();
+    let Some((first, rest)) = bytes.split_first() else {
+        return false;
+    };
+    (first.is_ascii_alphabetic() || *first == b'_')
+        && rest
+            .iter()
+            .all(|byte| byte.is_ascii_alphanumeric() || *byte == b'_')
+        && !PYTHON_KEYWORDS.contains(&spelling)
+}
+
+/// `__name__`-shaped identifiers. In a CPython script several of these
+/// (`__name__`, `__doc__`, `__spec__`, ...) exist before any assignment, and
+/// `__debug__` is a builtin, so an unbound read is rejected as unsupported
+/// rather than lowered to a NameError that CPython would not raise.
+fn is_dunder(name: &str) -> bool {
+    name.len() > 4 && name.starts_with("__") && name.ends_with("__")
+}
+
+/// Non-dunder names in Python 3.12's `builtins` module as a script sees it
+/// (including the `site`-added `exit`, `quit`, `help`, `copyright`, `credits`
+/// and `license`). Reading one before the module binds it resolves to the
+/// builtin object in CPython, not to a NameError, so the compiler must know
+/// them. Kept in byte order for `binary_search`.
+#[rustfmt::skip]
+const PYTHON_312_BUILTINS: [&str; 149] = [
+    "ArithmeticError", "AssertionError", "AttributeError", "BaseException", "BaseExceptionGroup",
+    "BlockingIOError", "BrokenPipeError", "BufferError", "BytesWarning", "ChildProcessError",
+    "ConnectionAbortedError", "ConnectionError", "ConnectionRefusedError", "ConnectionResetError",
+    "DeprecationWarning", "EOFError", "Ellipsis", "EncodingWarning", "EnvironmentError",
+    "Exception", "ExceptionGroup", "False", "FileExistsError", "FileNotFoundError",
+    "FloatingPointError", "FutureWarning", "GeneratorExit", "IOError", "ImportError",
+    "ImportWarning", "IndentationError", "IndexError", "InterruptedError", "IsADirectoryError",
+    "KeyError", "KeyboardInterrupt", "LookupError", "MemoryError", "ModuleNotFoundError",
+    "NameError", "None", "NotADirectoryError", "NotImplemented", "NotImplementedError", "OSError",
+    "OverflowError", "PendingDeprecationWarning", "PermissionError", "ProcessLookupError",
+    "RecursionError", "ReferenceError", "ResourceWarning", "RuntimeError", "RuntimeWarning",
+    "StopAsyncIteration", "StopIteration", "SyntaxError", "SyntaxWarning", "SystemError",
+    "SystemExit", "TabError", "TimeoutError", "True", "TypeError", "UnboundLocalError",
+    "UnicodeDecodeError", "UnicodeEncodeError", "UnicodeError", "UnicodeTranslateError",
+    "UnicodeWarning", "UserWarning", "ValueError", "Warning", "ZeroDivisionError", "abs", "aiter",
+    "all", "anext", "any", "ascii", "bin", "bool", "breakpoint", "bytearray", "bytes", "callable",
+    "chr", "classmethod", "compile", "complex", "copyright", "credits", "delattr", "dict", "dir",
+    "divmod", "enumerate", "eval", "exec", "exit", "filter", "float", "format", "frozenset",
+    "getattr", "globals", "hasattr", "hash", "help", "hex", "id", "input", "int", "isinstance",
+    "issubclass", "iter", "len", "license", "list", "locals", "map", "max", "memoryview", "min",
+    "next", "object", "oct", "open", "ord", "pow", "print", "property", "quit", "range", "repr",
+    "reversed", "round", "set", "setattr", "slice", "sorted", "staticmethod", "str", "sum",
+    "super", "tuple", "type", "vars", "zip",
+];
 
 fn only_child(node: &GrammarASTNode) -> Result<&GrammarASTNode, String> {
     let [ASTNodeOrToken::Node(inner)] = node.children.as_slice() else {
@@ -802,7 +1142,7 @@ mod tests {
         for source in [
             "print(1 + 2)\n",
             "print(1.0 // 2.0)\n",
-            "x = 1.0\n",
+            "x = 1\n",
             "print(1.0, 2.0, 3.0, 4.0)\n",
             "print(1.0, 2.0, end=3.0)\n",
             "print(1.0, end=2.0)\n",
@@ -1152,5 +1492,387 @@ mod tests {
         assert!(compile_ast(&too_long, "boundary")
             .unwrap_err()
             .contains("text limit"));
+    }
+
+    // ---------------------------------------------------------------
+    // Module-level float bindings (LANG79 bounded follow-up). Expected
+    // outputs and error texts were checked against host CPython, which
+    // is only an oracle; nothing here runs it.
+    // ---------------------------------------------------------------
+
+    #[test]
+    fn bindings_execute_rebind_and_read_in_every_position() {
+        for (source, expected) in [
+            ("x = 1.5\nprint(x * 2.0)\n", "3.0\n"),
+            ("x = 1.0\nx = x + 1.0\nprint(x)\n", "2.0\n"),
+            (
+                "a = 2.0\nb = -a / 4.0\nprint(a, b, (a + b) * a)\n",
+                "2.0 -0.5 3.0\n",
+            ),
+            ("x = 1.0\ny = x\nx = 5.0\nprint(x, y)\n", "5.0 1.0\n"),
+            ("x = 3.0\nx\nprint(x)\n", "3.0\n"),
+            ("x = 2.0\nprint()\nprint(x)\n", "\n2.0\n"),
+            ("x = 2.0\nprint(+x, -x, (x))\n", "2.0 -2.0 2.0\n"),
+            // Soft keywords are ordinary identifiers here.
+            (
+                "match = 1.0\ntype = 2.0\n_ = 3.0\nprint(match, type, _)\n",
+                "1.0 2.0 3.0\n",
+            ),
+            // Binding a builtin name shadows it as a module global.
+            ("float = 2.0\nprint(float)\n", "2.0\n"),
+            ("len = 1.0\nprint(len + 1.0)\n", "2.0\n"),
+            // User names cannot collide with temporaries or builtin names.
+            ("py0 = 2.0\nprint(py0 + 1.0)\n", "3.0\n"),
+            (
+                "py1 = 2.0\npy0 = 7.0\nprint(py1, py0, 1.0)\n",
+                "2.0 7.0 1.0\n",
+            ),
+            ("py_print_float = 1.0\nprint(py_print_float)\n", "1.0\n"),
+            ("py_name_error = 4.0\nprint(py_name_error)\n", "4.0\n"),
+        ] {
+            assert_eq!(run_source(source).unwrap(), expected, "{source:?}");
+        }
+    }
+
+    #[test]
+    fn unbound_reads_raise_name_error_after_prior_output() {
+        for (source, output, message) in [
+            (
+                "print(1.0)\nprint(y)\n",
+                "1.0\n",
+                "NameError: name 'y' is not defined",
+            ),
+            (
+                "print(1.0)\nprint(z)\nz = 2.0\nprint(z)\n",
+                "1.0\n",
+                "NameError: name 'z' is not defined",
+            ),
+            ("x = x + 1.0\n", "", "NameError: name 'x' is not defined"),
+            (
+                "print(1.0)\ny\nprint(2.0)\n",
+                "1.0\n",
+                "NameError: name 'y' is not defined",
+            ),
+            (
+                "print(y)\nprint(1.0)\n",
+                "",
+                "NameError: name 'y' is not defined",
+            ),
+            (
+                "print(1.0)\nprint(w, 2.0, 3.0)\n",
+                "1.0\n",
+                "NameError: name 'w' is not defined",
+            ),
+            (
+                "print(1.0)\nprint(2.0, w, 3.0)\n",
+                "1.0\n",
+                "NameError: name 'w' is not defined",
+            ),
+            (
+                "print(1.0)\nprint(2.0, 3.0, w)\n",
+                "1.0\n",
+                "NameError: name 'w' is not defined",
+            ),
+            (
+                "a = 1.0\nprint(a)\nb = a + c\n",
+                "1.0\n",
+                "NameError: name 'c' is not defined",
+            ),
+            // Left-to-right evaluation decides which error wins.
+            ("y + 1.0 / 0.0\n", "", "NameError: name 'y' is not defined"),
+            (
+                "print(1.0 / 0.0, y)\n",
+                "",
+                "ZeroDivisionError: float division by zero",
+            ),
+            (
+                "print(1.0)\nx = 1.0 / 0.0\nprint(x)\n",
+                "1.0\n",
+                "ZeroDivisionError: float division by zero",
+            ),
+        ] {
+            let error = run_source(source).unwrap_err();
+            assert_eq!(error.output, output, "{source:?}");
+            assert_eq!(error.message, message, "{source:?}");
+        }
+    }
+
+    #[test]
+    fn unsupported_binding_forms_are_rejected_with_specific_errors() {
+        for (source, expected) in [
+            ("print = 1.0\n", "binding print"),
+            ("a = b = 1.0\n", "chained assignment"),
+            ("a = b = c = 1.0\n", "chained assignment"),
+            ("x, y = 1.0, 2.0\n", "one name target"),
+            ("x, = 1.0,\n", "one name target"),
+            ("[x] = 1.0\n", "one name target"),
+            ("(x) = 1.0\n", "one name target"),
+            ("x = 1.0,\n", "not a tuple"),
+            ("x = 1.0, 2.0\n", "not a tuple"),
+            ("x: float = 1.0\n", "annotated assignment"),
+            ("x: float\n", "annotated assignment"),
+            ("x += 1.0\n", "augmented assignment"),
+            ("x -= 1.0\n", "augmented assignment"),
+            ("x /= 1.0\n", "augmented assignment"),
+            ("a.b = 1.0\n", "attribute, subscript"),
+            ("a[0.0] = 1.0\n", "attribute, subscript"),
+            ("True = 1.0\n", "must be a name"),
+            ("__debug__ = 1.0\n", "__debug__"),
+            ("x = 1\n", "arbitrary-precision"),
+            ("x = 1.0 + 1\n", "arbitrary-precision"),
+            ("x = print()\n", "None result of print()"),
+            ("x = print(1.0)\n", "None result of print()"),
+            ("x = print\n", "direct call"),
+            ("print(print)\n", "direct call"),
+            ("print\n", "direct call"),
+            ("print(float)\n", "not available as a value"),
+            ("x = len\n", "not available as a value"),
+            ("print(__name__)\n", "not available as a value"),
+            ("print(__debug__)\n", "not available as a value"),
+            ("print(float)\nfloat = 1.0\n", "not available as a value"),
+        ] {
+            let error = compile_source(source, "negative").unwrap_err();
+            assert!(error.contains(expected), "{source:?}: {error}");
+        }
+        for source in [
+            "x = 1.0; print(x)\n",
+            "x = other()\n",
+            "x = 1.0\nx()\n",
+            "x = 1.0\nprint(x.real)\n",
+            "x = (y := 1.0)\n",
+            "x = 1.0\nprint(x, end=x)\n",
+            "x = 'a'\n",
+            "x = None\n",
+        ] {
+            assert!(compile_source(source, "negative").is_err(), "{source:?}");
+        }
+    }
+
+    #[test]
+    fn bindings_lower_to_const_and_mov_into_mangled_registers() {
+        let module = compile_source("x = 1.5\nprint(x)\nprint(y)\n", "shape").unwrap();
+        let main = module.get_function("main").unwrap();
+        let shape: Vec<(&str, Option<&str>, &[Operand])> = main
+            .instructions
+            .iter()
+            .map(|instr| {
+                (
+                    instr.op.as_str(),
+                    instr.dest.as_deref(),
+                    instr.srcs.as_slice(),
+                )
+            })
+            .collect();
+        assert_eq!(
+            shape,
+            vec![
+                ("const", Some("py0"), &[Operand::Float(1.5)][..]),
+                ("mov", Some("py:x"), &[Operand::Var("py0".into())][..]),
+                (
+                    "call_builtin",
+                    None,
+                    &[
+                        Operand::Var("py_print_float".into()),
+                        Operand::Var("py:x".into())
+                    ][..]
+                ),
+                (
+                    "call_builtin",
+                    Some("py1"),
+                    &[
+                        Operand::Var("py_name_error".into()),
+                        Operand::Str("y".into())
+                    ][..]
+                ),
+                (
+                    "call_builtin",
+                    None,
+                    &[
+                        Operand::Var("py_print_float".into()),
+                        Operand::Var("py1".into())
+                    ][..]
+                ),
+                ("ret_void", None, &[][..]),
+            ]
+        );
+        // Rebinding reads the old register before the closing mov replaces it.
+        let module = compile_source("x = 1.0\nx = x + 1.0\n", "shape").unwrap();
+        let ops: Vec<(&str, Option<&str>)> = module
+            .get_function("main")
+            .unwrap()
+            .instructions
+            .iter()
+            .map(|instr| (instr.op.as_str(), instr.dest.as_deref()))
+            .collect();
+        assert_eq!(
+            ops,
+            vec![
+                ("const", Some("py0")),
+                ("mov", Some("py:x")),
+                ("const", Some("py1")),
+                ("add", Some("py2")),
+                ("mov", Some("py:x")),
+                ("ret_void", None),
+            ]
+        );
+    }
+
+    // Find the `index`-th NAME token spelled `x` (FLOAT/INT literals also use
+    // the Name enum kind, but carry a named override, and never spell `x`).
+    fn name_token_mut<'a>(
+        node: &'a mut GrammarASTNode,
+        index: &mut usize,
+    ) -> Option<&'a mut ASTNodeOrToken> {
+        for child in &mut node.children {
+            match child {
+                ASTNodeOrToken::Token(token) if token.value == "x" => {
+                    if *index == 0 {
+                        return Some(child);
+                    }
+                    *index -= 1;
+                }
+                ASTNodeOrToken::Node(inner) => {
+                    if let Some(found) = name_token_mut(inner, index) {
+                        return Some(found);
+                    }
+                }
+                _ => {}
+            }
+        }
+        None
+    }
+
+    #[test]
+    fn direct_ast_name_tokens_require_canonical_kind_and_spelling() {
+        let sources = [
+            ("x = 1.0\nx\n", 2),
+            ("x = 1.0\ny = x\n", 2),
+            ("x = 1.0\nprint(x)\n", 2),
+            ("x = 1.0\nprint(x, 2.0, 3.0)\n", 2),
+            ("x = 1.0\nprint(2.0, x, 3.0)\n", 2),
+            ("x = 1.0\nprint(2.0, 3.0, x)\n", 2),
+            ("x = 1.0\nprint(-x + (x))\n", 3),
+        ];
+        let invalid_spellings = [
+            "", "1x", "x-y", "x y", "x\0", " x", "x\n", "é", "ｘ", "if", "None", "True", "lambda",
+            "print",
+        ];
+        for (source, occurrences) in sources {
+            let original = parse_python(source, "3.12").unwrap();
+            assert!(compile_ast(&original, "valid").is_ok(), "{source:?}");
+            for index in 0..occurrences {
+                for mode in 0..5 {
+                    let mut forged = original.clone();
+                    let slot = name_token_mut(&mut forged, &mut { index }).unwrap();
+                    match (mode, &mut *slot) {
+                        (0, ASTNodeOrToken::Token(token)) => token.type_ = TokenType::String,
+                        (1, ASTNodeOrToken::Token(token)) => token.type_ = TokenType::Keyword,
+                        (2, ASTNodeOrToken::Token(token)) => token.type_name = Some("NAME".into()),
+                        (3, ASTNodeOrToken::Token(token)) => {
+                            token.type_name = Some("STRING".into())
+                        }
+                        (4, _) => *slot = ASTNodeOrToken::Node(empty_node("forged_name")),
+                        _ => unreachable!(),
+                    }
+                    assert!(
+                        compile_ast(&forged, "forged").is_err(),
+                        "{source:?} index={index} mode={mode}"
+                    );
+                }
+                for spelling in invalid_spellings {
+                    let mut forged = original.clone();
+                    let Some(ASTNodeOrToken::Token(token)) =
+                        name_token_mut(&mut forged, &mut { index })
+                    else {
+                        unreachable!()
+                    };
+                    token.value = spelling.into();
+                    assert!(
+                        compile_ast(&forged, "forged").is_err(),
+                        "{source:?} index={index} {spelling:?}"
+                    );
+                }
+            }
+        }
+    }
+
+    #[test]
+    fn direct_ast_assignment_requires_an_actual_equals_token() {
+        fn equals_slot(node: &mut GrammarASTNode) -> Option<&mut ASTNodeOrToken> {
+            if node.rule_name == "assign_stmt" && node.children.len() == 3 {
+                return node.children.get_mut(1);
+            }
+            node.children.iter_mut().find_map(|child| match child {
+                ASTNodeOrToken::Node(inner) => equals_slot(inner),
+                ASTNodeOrToken::Token(_) => None,
+            })
+        }
+        for source in ["x = 1.0\n", "x = 1.0\nprint(x)\n"] {
+            let original = parse_python(source, "3.12").unwrap();
+            assert!(compile_ast(&original, "valid").is_ok());
+            for mode in 0..8 {
+                let mut forged = original.clone();
+                let slot = equals_slot(&mut forged).unwrap();
+                let ASTNodeOrToken::Token(token) = &mut *slot else {
+                    unreachable!()
+                };
+                match mode {
+                    0 => token.type_ = TokenType::String,
+                    1 => token.type_ = TokenType::EqualsEquals,
+                    2 => token.type_ = TokenType::Colon,
+                    3 => token.type_name = Some("EQUALS".into()),
+                    4 => token.type_name = Some("STRING".into()),
+                    5 => token.value = "==".into(),
+                    6 => token.value = ":=".into(),
+                    7 => *slot = ASTNodeOrToken::Node(empty_node("forged_equals")),
+                    _ => unreachable!(),
+                }
+                assert!(
+                    compile_ast(&forged, "forged").is_err(),
+                    "{source:?} mode={mode}"
+                );
+            }
+        }
+    }
+
+    #[test]
+    fn binding_names_stay_inside_existing_text_budgets() {
+        fn rename_all(node: &mut GrammarASTNode, name: &str) {
+            for child in &mut node.children {
+                match child {
+                    ASTNodeOrToken::Token(token) if token.value == "x" => {
+                        token.value = name.into();
+                    }
+                    ASTNodeOrToken::Node(inner) => rename_all(inner, name),
+                    _ => {}
+                }
+            }
+        }
+        let source = "x = 1.0\nprint(x)\n";
+        let mut boundary = parse_python(source, "3.12").unwrap();
+        rename_all(&mut boundary, &"a".repeat(MAX_AST_FIELD_BYTES));
+        assert!(compile_ast(&boundary, "boundary").is_ok());
+        let mut too_long = parse_python(source, "3.12").unwrap();
+        rename_all(&mut too_long, &"a".repeat(MAX_AST_FIELD_BYTES + 1));
+        assert!(compile_ast(&too_long, "boundary")
+            .unwrap_err()
+            .contains("text limit"));
+        // Many bindings still hit the source cap before parsing.
+        let many = "x = 1.0\n".repeat(MAX_SOURCE_BYTES / 8 + 1);
+        assert!(compile_source(&many, "many")
+            .unwrap_err()
+            .contains("source exceeds"));
+    }
+
+    #[test]
+    fn name_tables_are_sorted_and_consistent() {
+        assert!(PYTHON_312_BUILTINS.windows(2).all(|pair| pair[0] < pair[1]));
+        assert!(PYTHON_KEYWORDS
+            .iter()
+            .all(|keyword| !python_name_spelling(keyword)));
+        for name in ["x", "_", "_x1", "match", "case", "type", "Z9"] {
+            assert!(python_name_spelling(name), "{name}");
+        }
+        assert!(is_dunder("__name__") && !is_dunder("____") && !is_dunder("__x"));
     }
 }

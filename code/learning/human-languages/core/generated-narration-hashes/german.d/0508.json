@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 508,
+  "sourceHash": "fnv1a64:8bef7abdc2cf876f",
+  "lessonIds": [
+    "GE-C508-siegen",
+    "GE-C508-sieger",
+    "GE-C508-verlierer",
+    "GE-C508-gegner",
+    "GE-C508-turnier"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch508.txt",
+  "json": "german/narration/ch508.json",
+  "textHash": "fnv1a64:4ef5f3d29e0191a9",
+  "jsonHash": "fnv1a64:66a619bf08290610",
+  "findings": []
+}

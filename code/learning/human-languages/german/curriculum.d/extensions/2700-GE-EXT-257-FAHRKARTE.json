@@ -1,0 +1,8 @@
+{
+  "id": "GE-EXT-257-FAHRKARTE",
+  "stage": "B1",
+  "kind": "required",
+  "category": "grammar",
+  "canDo": "I can buy a ticket one way or there and back, and report a problem such as a missed train.",
+  "prerequisites": []
+}
