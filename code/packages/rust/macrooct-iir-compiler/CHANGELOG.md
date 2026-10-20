@@ -1,5 +1,36 @@
 # Changelog — `coding-adventures-macrooct-iir-compiler`
 
+## 0.3.0 — 2026-10-19 (PREP01 pre-lex budgets)
+
+MacroOct now enforces the pre-lex input budgets that MacroNib and the C
+dialect already had. The public API is unchanged; inputs over budget are
+now rejected.
+
+### Fixed
+
+- Source bytes are charged against the translation unit's budget **before**
+  lexing, for the primary file and for every `@include`d file. The cap is the
+  tightest of `bytes_per_file`, `total_source_bytes` and `tokens_produced - 1`.
+  Previously the engine's token check could only fire after the lexer had
+  built the whole file, so an 8 MB file of `;` (primary or included) used
+  about 2 GB and 12 s before being rejected. It is now rejected in about 20 µs.
+- `compile_source` rejects a primary over `bytes_per_file`. A 17 MB
+  whitespace-only primary previously compiled, because the primary is never
+  read through the engine's filesystem.
+- `compile_source_with_includes` checks every bundle entry (including unused
+  ones), each name, the include count and the aggregate size before copying
+  them into `MemoryFs`.
+
+### Added
+
+- `BudgetedMacroOct` (public): `MacroOctDialect` plus one translation unit's
+  pre-lex budget, with `new(bounds)` and `reserve_primary(source)`. Every
+  entry point here uses it, and embedders calling the engine directly should
+  use it too. `MacroOctDialect` stays a stateless public `Copy` value, and its
+  docs now warn that its `lex` charges nothing.
+- `tests/prelex_budget.rs`: seven tests, one for each route by which bytes
+  reach the lexer, plus a within-budget include program.
+
 ## 0.2.0 — 2026-09-21 (PREP01 slice 2)
 
 `@define` works. MacroOct gains a full macro facility — object-like and
