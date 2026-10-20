@@ -1,0 +1,11 @@
+{
+  "id": "LA-C503-lascivus",
+  "pathSegment": "LA-PATH-503-INDO",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "LA-EXT-503-INDO",
+      "order": 4
+    }
+  ]
+}

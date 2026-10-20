@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C473-bubile",
+    "language": "latin",
+    "chapter": 473,
+    "sequence": 25180,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8f452027d6c3a36a"
+  },
+  "findings": []
+}

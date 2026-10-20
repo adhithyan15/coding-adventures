@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C307-insidiae",
+    "language": "latin",
+    "chapter": 307,
+    "sequence": 16640,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4501af85e3efc929"
+  },
+  "findings": []
+}

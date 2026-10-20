@@ -1,0 +1,9 @@
+{
+  "id": "LA-PATH-447-CIMEX",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "LA-EXT-447-CIMEX"
+  ],
+  "after": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 338,
+  "title": "Legiō",
+  "label": "ch:la-legio",
+  "canDo": "I can name the parts of a Roman army: the legion, the cohort, the centurion, the standard-bearer and the tribune.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "LA-R338-review-331-338",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 338: I can name the parts of a Roman army: the legion, the cohort, the centurion, the standard-bearer and the tribune.",
+    "assesses": [
+      "LA-LEX-C338-LEGIO-03",
+      "LA-LEX-C338-LEGIO-04",
+      "LA-LEX-C338-LEGIO-05"
+    ]
+  }
+}

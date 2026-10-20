@@ -1,0 +1,11 @@
+{
+  "id": "LA-C438-vectura",
+  "pathSegment": "LA-PATH-438-CONSCENDO",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "LA-EXT-438-CONSCENDO",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 379,
+  "sourceHash": "fnv1a64:c73aa2b3e567116c",
+  "lessonIds": [
+    "LA-C379-quaestus",
+    "LA-C379-stipendium",
+    "LA-C379-mercenarius",
+    "LA-C379-laboriosus",
+    "LA-C379-diligentia"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch379.txt",
+  "json": "latin/narration/ch379.json",
+  "textHash": "fnv1a64:0277e9b08dd944cf",
+  "jsonHash": "fnv1a64:60ae3020880be617",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "LA-C539-fritillus",
+  "pathSegment": "LA-PATH-539-ALEA",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "LA-EXT-539-ALEA",
+      "order": 1
+    }
+  ]
+}

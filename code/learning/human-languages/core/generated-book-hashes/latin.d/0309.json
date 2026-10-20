@@ -1,0 +1,13 @@
+{
+  "language": "latin",
+  "chapter": 309,
+  "sourceHash": "fnv1a64:7da11674ceb7013e",
+  "lessonIds": [
+    "LA-C309-accuso",
+    "LA-C309-accusator",
+    "LA-C309-advocatus",
+    "LA-C309-patronus",
+    "LA-C309-testimonium"
+  ],
+  "tex": "latin/book/chapters/ch309-accusator-et-patronus.tex"
+}

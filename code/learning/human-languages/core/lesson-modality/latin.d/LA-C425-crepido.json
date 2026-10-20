@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C425-crepido",
+    "language": "latin",
+    "chapter": 425,
+    "sequence": 22720,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3fd7f86b0bbacf5b"
+  },
+  "findings": []
+}

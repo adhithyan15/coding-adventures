@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C461-thermopolium",
+    "language": "latin",
+    "chapter": 461,
+    "sequence": 24540,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6e012f2d645f0c46"
+  },
+  "findings": []
+}

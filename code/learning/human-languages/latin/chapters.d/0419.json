@@ -1,0 +1,19 @@
+{
+  "chapter": 419,
+  "title": "Paying It Back",
+  "label": "ch:la-paying-it-back",
+  "canDo": "I can say that a debt was paid in full, and talk about interest, a pledge, a written bond and a moneylender.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "LA-C419-fenerator",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 419: I can say that a debt was paid in full, and talk about interest, a pledge, a written bond and a moneylender.",
+    "assesses": [
+      "LA-LEX-C419-PERSOLVO-03",
+      "LA-LEX-C419-PERSOLVO-04",
+      "LA-LEX-C419-PERSOLVO-05"
+    ]
+  }
+}

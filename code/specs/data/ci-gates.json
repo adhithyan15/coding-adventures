@@ -483,7 +483,8 @@
         "rust/chief-of-staff-windows-sandbox",
         "rust/programs/closurec",
         "typescript/forme-sandbox-core",
-        "typescript/forme-sandbox-windows"
+        "typescript/forme-sandbox-windows",
+        "typescript/ir-to-jvm-class-file"
       ],
       "paths": [
         "code/scripts/adj_stdlib_provenance.py",

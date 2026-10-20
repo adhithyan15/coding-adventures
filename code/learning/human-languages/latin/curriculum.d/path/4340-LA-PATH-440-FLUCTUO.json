@@ -1,0 +1,9 @@
+{
+  "id": "LA-PATH-440-FLUCTUO",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "LA-EXT-440-FLUCTUO"
+  ],
+  "after": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C400-praecipio",
+    "language": "latin",
+    "chapter": 400,
+    "sequence": 21440,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:360596939a5ea22a"
+  },
+  "findings": []
+}

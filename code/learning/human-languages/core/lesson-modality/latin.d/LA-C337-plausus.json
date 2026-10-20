@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C337-plausus",
+    "language": "latin",
+    "chapter": 337,
+    "sequence": 18190,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1d448cdd708fd5c9"
+  },
+  "findings": []
+}

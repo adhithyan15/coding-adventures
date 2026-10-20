@@ -1,0 +1,11 @@
+{
+  "id": "LA-C385-imperium",
+  "pathSegment": "LA-PATH-385-REGO",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "LA-EXT-385-REGO",
+      "order": 3
+    }
+  ]
+}

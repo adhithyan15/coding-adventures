@@ -1,0 +1,11 @@
+{
+  "id": "LA-C479-prelum",
+  "pathSegment": "LA-PATH-479-POMARIUM",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "LA-EXT-479-POMARIUM",
+      "order": 2
+    }
+  ]
+}

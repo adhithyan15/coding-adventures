@@ -1,0 +1,8 @@
+{
+  "id": "LA-EXT-297-INCIPIO",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say that an action began, was finished, was completed or was broken off.",
+  "prerequisites": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C468-ostrum",
+    "language": "latin",
+    "chapter": 468,
+    "sequence": 24920,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:04297b185b432ac0"
+  },
+  "findings": []
+}

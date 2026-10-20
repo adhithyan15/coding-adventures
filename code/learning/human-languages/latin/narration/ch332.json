@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "latin",
+  "chapter": 332,
+  "title": "Testāmentum",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:44900d9fc0cfc03e",
+  "lessons": [
+    {
+      "id": "LA-C332-heres",
+      "sequence": 17900,
+      "title": "hērēs, hērēdis — an heir",
+      "headword": "hērēs, hērēdis",
+      "romanization": "hērēs, hērēdis",
+      "gloss": "an heir",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a58b704cdae877c7",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for a memorial, then the Latin for offerings to the dead."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: hērēs, hērēdis",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "hērēs, hērēdis — \"an heir\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Fīlius ūnus hērēs patris erat. The only son was his father's heir."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine or feminine, 3rd declension. Hērēdem facere: to name someone heir in a will. English heir."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "hērēs is inherited; EtymDB traces it to a Proto-Indo-European root meaning \"to leave behind\", while Lewis & Short compare a Sanskrit root meaning \"to take\", so the details are not settled. English heir comes from it through French."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hērēs, hērēdis",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hērēs, hērēdis*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hērēs, hērēdis, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hērēs, hērēdis*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with hērēs, hērēdis",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *hērēs, hērēdis*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for a memorial, then the Latin for offerings to the dead, then say hērēs, hērēdis again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for a memorial, then the Latin for offerings to the dead, then say *hērēs, hērēdis* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does hērēs, hērēdis mean? (\"An heir\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C332-hereditas",
+      "sequence": 17910,
+      "title": "hērēditās, hērēditātis — an inheritance",
+      "headword": "hērēditās, hērēditātis",
+      "romanization": "hērēditās, hērēditātis",
+      "gloss": "an inheritance",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:140edc3eaeba65df",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for offerings to the dead, then the Latin for an heir."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: hērēditās, hērēditātis",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "hērēditās, hērēditātis — \"an inheritance\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Magnam hērēditātem ab avunculō accēpit. He received a large inheritance from his uncle."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine, 3rd declension, from hērēs. English heredity and heritage belong to its family."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "hērēditās is built on hērēs, \"heir\" (EtymDB), with the ending -tās: what comes to an heir. English heredity comes from it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hērēditās, hērēditātis",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hērēditās, hērēditātis*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hērēditās, hērēditātis, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hērēditās, hērēditātis*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with hērēditās, hērēditātis",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *hērēditās, hērēditātis*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for offerings to the dead, then the Latin for an heir, then say hērēditās, hērēditātis again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for offerings to the dead, then the Latin for an heir, then say *hērēditās, hērēditātis* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does hērēditās, hērēditātis mean? (\"An inheritance\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C332-testamentum",
+      "sequence": 17920,
+      "title": "testāmentum, testāmentī — a will, a testament",
+      "headword": "testāmentum, testāmentī",
+      "romanization": "testāmentum, testāmentī",
+      "gloss": "a will, a testament",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8953e75c7008a07f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for an heir, then the Latin for an inheritance."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: testāmentum, testāmentī",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "testāmentum, testāmentī — \"a will, a testament\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Senex testāmentum cōram testibus scrīpsit. The old man wrote his will in front of witnesses."
+            },
+            {
+              "kind": "speech",
+              "text": "Neuter, from a verb meaning 'to call to witness', and so from testis (taught). Seven witnesses sealed a Roman will."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "testāmentum is built on testor, \"to call to witness\", from testis, \"witness\" (EtymDB): a declaration made before witnesses. English testament comes from it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "testāmentum, testāmentī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *testāmentum, testāmentī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "testāmentum, testāmentī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *testāmentum, testāmentī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with testāmentum, testāmentī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *testāmentum, testāmentī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for an heir, then the Latin for an inheritance, then say testāmentum, testāmentī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for an heir, then the Latin for an inheritance, then say *testāmentum, testāmentī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does testāmentum, testāmentī mean? (\"A will, a testament\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C332-obsigno",
+      "sequence": 17930,
+      "title": "obsignō, obsignāre — to seal, to seal up",
+      "headword": "obsignō, obsignāre",
+      "romanization": "obsignō, obsignāre",
+      "gloss": "to seal, to seal up",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8b625404b8b2048e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for an inheritance, then the Latin for a will."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: obsignō, obsignāre",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "obsignō, obsignāre — \"to seal, to seal up\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Testēs testāmentum ānulīs suīs obsignāvērunt. The witnesses sealed the will with their rings."
+            },
+            {
+              "kind": "speech",
+              "text": "obsignō, obsignāre, obsignāvī, obsignātum: ob + signō (taught). A seal of wax pressed with a signet ring."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "obsignō is built on signō, \"to mark, to seal\", with ob- (EtymDB): to put a seal over."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "obsignō, obsignāre",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *obsignō, obsignāre*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "obsignō, obsignāre, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *obsignō, obsignāre*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with obsignō, obsignāre",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *obsignō, obsignāre*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for an inheritance, then the Latin for a will, then say obsignō, obsignāre again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for an inheritance, then the Latin for a will, then say *obsignō, obsignāre* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does obsignō, obsignāre mean? (\"To seal, to seal up\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C332-relinquo",
+      "sequence": 17940,
+      "title": "relinquō, relinquere — to leave behind; to leave (in a will)",
+      "headword": "relinquō, relinquere",
+      "romanization": "relinquō, relinquere",
+      "gloss": "to leave behind; to leave (in a will)",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3bd316eebf36371d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for a will, then the Latin for to seal."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: relinquō, relinquere",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "relinquō, relinquere — \"to leave behind; to leave (in a will)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Pater fīliīs domum et agrōs relīquit. The father left the house and the fields to his sons."
+            },
+            {
+              "kind": "speech",
+              "text": "relinquō, relinquere, relīquī, relictum. English relinquish and relic belong to its family."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "relinquō is built on linquō, \"to leave\", with re-, \"back, behind\" (EtymDB). English relinquish comes from it through French, and relic from reliquiae, \"remains\", of the same family."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "relinquō, relinquere",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *relinquō, relinquere*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "relinquō, relinquere, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *relinquō, relinquere*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with relinquō, relinquere",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *relinquō, relinquere*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for a will, then the Latin for to seal, then say relinquō, relinquere again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for a will, then the Latin for to seal, then say *relinquō, relinquere* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does relinquō, relinquere mean? (\"To leave behind; to leave (in a will)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

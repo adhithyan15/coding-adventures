@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 293,
+  "sourceHash": "fnv1a64:c0636b534269b30a",
+  "lessonIds": [
+    "LA-C293-paulatim",
+    "LA-C293-sensim",
+    "LA-C293-gradatim",
+    "LA-C293-paulisper",
+    "LA-C293-aliquamdiu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch293.txt",
+  "json": "latin/narration/ch293.json",
+  "textHash": "fnv1a64:7ccbcb2900e5e105",
+  "jsonHash": "fnv1a64:27a4b5d76896e7bc",
+  "findings": []
+}

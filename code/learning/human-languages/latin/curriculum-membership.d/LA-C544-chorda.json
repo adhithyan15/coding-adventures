@@ -1,0 +1,11 @@
+{
+  "id": "LA-C544-chorda",
+  "pathSegment": "LA-PATH-544-CITH",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "LA-EXT-544-CITH",
+      "order": 2
+    }
+  ]
+}

@@ -287,11 +287,9 @@ fn drops_code_after_if_both_branches_return() {
 
 /// Upstream treats `break`/`continue` as terminating the enclosing loop
 /// body, so code after a `break` inside a loop is unreachable
-/// (`while (c) { break; y(); }` → `while (c) { break; }`). closurec only
-/// treats break/continue as terminators inside switch-case consequents,
-/// so the loop-body `y()` survives today.
+/// (`while (c) { break; y(); }` → `while (c) { break; }`). Resolved by
+/// CCR-082 (#15878, gap-152): `is_terminator` now includes both.
 #[test]
-#[ignore = "blocked on gap-152: break/continue only terminate switch cases, not general loop blocks"]
 fn drops_code_after_break_in_loop_block() {
     assert_dce_yields(
         vec![while_stmt(ident("c"), block(vec![break_stmt(), expr_stmt("y")]))],

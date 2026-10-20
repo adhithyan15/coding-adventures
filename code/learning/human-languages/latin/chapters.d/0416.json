@@ -1,0 +1,19 @@
+{
+  "chapter": 416,
+  "title": "Justice and Obedience",
+  "label": "ch:la-justice-and-obedience",
+  "canDo": "I can talk about justice and fairness, say that someone obeys the law or restrains people, and that a wrong was avenged.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "LA-C416-vindico",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 416: I can talk about justice and fairness, say that someone obeys the law or restrains people, and that a wrong was avenged.",
+    "assesses": [
+      "LA-LEX-C416-IUSTITIA-03",
+      "LA-LEX-C416-IUSTITIA-04",
+      "LA-LEX-C416-IUSTITIA-05"
+    ]
+  }
+}

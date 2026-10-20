@@ -1,0 +1,11 @@
+{
+  "id": "LA-C468-pigmentum",
+  "pathSegment": "LA-PATH-468-TINGO",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "LA-EXT-468-TINGO",
+      "order": 3
+    }
+  ]
+}

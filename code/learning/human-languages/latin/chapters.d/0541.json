@@ -1,0 +1,19 @@
+{
+  "chapter": 541,
+  "title": "At the baths",
+  "label": "ch:la-at-the-baths",
+  "canDo": "I can name the rooms of the Roman baths.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "LA-C541-piscina",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 541: I can name the rooms of the Roman baths.",
+    "assesses": [
+      "LA-LEX-C541-BALN-03",
+      "LA-LEX-C541-BALN-04",
+      "LA-LEX-C541-BALN-05"
+    ]
+  }
+}

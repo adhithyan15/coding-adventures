@@ -1,0 +1,11 @@
+{
+  "id": "LA-C296-intervallum",
+  "pathSegment": "LA-PATH-296-INITIUM",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "LA-EXT-296-INITIUM",
+      "order": 3
+    }
+  ]
+}

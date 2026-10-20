@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "latin",
+  "chapter": 449,
+  "title": "Flat wine, Neat wine, To water down, Rotten, Tavern hostess",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:ef5ccd6290b4773f",
+  "lessons": [
+    {
+      "id": "LA-C449-vappa",
+      "sequence": 23930,
+      "title": "vappa, vappae — flat wine, wine gone off; a good-for-nothing",
+      "headword": "vappa, vappae",
+      "romanization": "vappa, vappae",
+      "gloss": "flat wine, wine gone off; a good-for-nothing",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0f1102e664d6d42e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for a drinker, then the Latin for hoarse."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: vappa, vappae",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "vappa, vappae — \"flat wine, wine gone off; a good-for-nothing\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Caupō nōn vīnum bonum sed vappam vendit. The innkeeper sells not good wine but flat wine."
+            },
+            {
+              "kind": "speech",
+              "text": "First declension, feminine: vappa, vappae f. Wine that has lost its taste; also, of a person, a worthless fellow."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "vappa is usually linked with vapor 'steam' (Lewis & Short): wine whose spirit has gone up in vapour. Lewis & Short also compare vapidus 'flat', the source of English vapid."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vappa, vappae",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vappa, vappae*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vappa, vappae, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vappa, vappae*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with vappa, vappae",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *vappa, vappae*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for a drinker, then the Latin for hoarse, then say vappa, vappae again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for a drinker, then the Latin for hoarse, then say *vappa, vappae* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does vappa, vappae mean? (\"Flat wine, wine gone off; a good-for-nothing\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C449-merum",
+      "sequence": 23940,
+      "title": "merum, merī — neat wine, wine without water",
+      "headword": "merum, merī",
+      "romanization": "merum, merī",
+      "gloss": "neat wine, wine without water",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3228b251dfd6a60b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for hoarse, then the Latin for flat wine."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: merum, merī",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "merum, merī — \"neat wine, wine without water\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Pōtor merum bibit, nōn vīnum cum aquā. The drinker drinks neat wine, not wine with water."
+            },
+            {
+              "kind": "speech",
+              "text": "Second declension, neuter: merum, merī n., the neuter of merus 'pure, unmixed'. Romans mixed wine with water; drinking it neat was a sign of excess. English mere comes from merus."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "merum is the neuter of the adjective merus 'pure, unmixed' (Lewis & Short), used as a noun for wine with no water. English mere comes from merus."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "merum, merī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *merum, merī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "merum, merī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *merum, merī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with merum, merī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *merum, merī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for hoarse, then the Latin for flat wine, then say merum, merī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for hoarse, then the Latin for flat wine, then say *merum, merī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does merum, merī mean? (\"Neat wine, wine without water\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C449-diluo",
+      "sequence": 23950,
+      "title": "dīluō, dīluere — to water down, to dilute; to wash away",
+      "headword": "dīluō, dīluere",
+      "romanization": "dīluō, dīluere",
+      "gloss": "to water down, to dilute; to wash away",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:57460e534bfe41e2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for flat wine, then the Latin for neat wine."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: dīluō, dīluere",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "dīluō, dīluere — \"to water down, to dilute; to wash away\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Caupō vīnum aquā dīluit et magnō pretiō vendit. The innkeeper waters the wine and sells it at a high price."
+            },
+            {
+              "kind": "speech",
+              "text": "dīluō, dīluere, dīluī, dīlūtum. English dilute comes from its participle and deluge from the noun dīluvium."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "dīluō is built from dis- 'apart' and luō 'to wash', a verb akin to lavō (Lewis & Short). English dilute comes from its participle dīlūtus, and deluge from the noun dīluvium 'flood'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dīluō, dīluere",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dīluō, dīluere*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dīluō, dīluere, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dīluō, dīluere*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with dīluō, dīluere",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *dīluō, dīluere*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for flat wine, then the Latin for neat wine, then say dīluō, dīluere again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for flat wine, then the Latin for neat wine, then say *dīluō, dīluere* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does dīluō, dīluere mean? (\"To water down, to dilute; to wash away\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C449-putidus",
+      "sequence": 23960,
+      "title": "pūtidus, pūtida, pūtidum — rotten, stinking",
+      "headword": "pūtidus, pūtida, pūtidum",
+      "romanization": "pūtidus, pūtida, pūtidum",
+      "gloss": "rotten, stinking",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f25731ebac6a620b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for neat wine, then the Latin for to water down."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: pūtidus, pūtida, pūtidum",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "pūtidus, pūtida, pūtidum — \"rotten, stinking\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Carō in caupōnā pūtida est. The meat in the inn is rotten."
+            },
+            {
+              "kind": "speech",
+              "text": "An adjective of three endings, from pūteō 'to stink'. Also of style: affected, tiresome."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "pūtidus is built on pūteō 'to stink, to be rotten' (Lewis & Short) with the adjective suffix -idus, as in frīgidus."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pūtidus, pūtida, pūtidum",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pūtidus, pūtida, pūtidum*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pūtidus, pūtida, pūtidum, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pūtidus, pūtida, pūtidum*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with pūtidus, pūtida, pūtidum",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *pūtidus, pūtida, pūtidum*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for neat wine, then the Latin for to water down, then say pūtidus, pūtida, pūtidum again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for neat wine, then the Latin for to water down, then say *pūtidus, pūtida, pūtidum* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does pūtidus, pūtida, pūtidum mean? (\"Rotten, stinking\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C449-copa",
+      "sequence": 23970,
+      "title": "cōpa, cōpae — a tavern hostess, a barmaid",
+      "headword": "cōpa, cōpae",
+      "romanization": "cōpa, cōpae",
+      "gloss": "a tavern hostess, a barmaid",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7db8e28fde87a59d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for to water down, then the Latin for rotten."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: cōpa, cōpae",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "cōpa, cōpae — \"a tavern hostess, a barmaid\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Cōpa vīnum hospitibus dat et cum eīs rīdet. The tavern hostess gives the guests wine and laughs with them."
+            },
+            {
+              "kind": "speech",
+              "text": "First declension, feminine: cōpa, cōpae f. The woman who kept or served in a tavern."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "cōpa is the feminine of cōpō, another form of caupō 'innkeeper' (Lewis & Short), with the au turned to ō as in everyday speech."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cōpa, cōpae",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cōpa, cōpae*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cōpa, cōpae, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cōpa, cōpae*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with cōpa, cōpae",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *cōpa, cōpae*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for to water down, then the Latin for rotten, then say cōpa, cōpae again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for to water down, then the Latin for rotten, then say *cōpa, cōpae* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does cōpa, cōpae mean? (\"A tavern hostess, a barmaid\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

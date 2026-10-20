@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 376,
+  "sourceHash": "fnv1a64:408a451ee11a8c66",
+  "lessonIds": [
+    "LA-C376-opus",
+    "LA-C376-opifex",
+    "LA-C376-artifex",
+    "LA-C376-operarius",
+    "LA-C376-operor"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch376.txt",
+  "json": "latin/narration/ch376.json",
+  "textHash": "fnv1a64:eff3975e338751e7",
+  "jsonHash": "fnv1a64:d9290a365aa92b9d",
+  "findings": []
+}

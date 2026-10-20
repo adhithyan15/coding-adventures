@@ -1,0 +1,13 @@
+{
+  "language": "latin",
+  "chapter": 342,
+  "sourceHash": "fnv1a64:2a1f8919af88fcfb",
+  "lessonIds": [
+    "LA-C342-fugo",
+    "LA-C342-supero",
+    "LA-C342-caedo",
+    "LA-C342-vasto",
+    "LA-C342-clades"
+  ],
+  "tex": "latin/book/chapters/ch342-clades.tex"
+}

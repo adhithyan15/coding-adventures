@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C418-aes-alienum",
+    "language": "latin",
+    "chapter": 418,
+    "sequence": 22320,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d013b255c039323b"
+  },
+  "findings": []
+}

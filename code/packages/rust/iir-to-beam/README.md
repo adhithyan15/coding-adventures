@@ -450,6 +450,7 @@ in `code/specs/BEAM-normal-x-prefix-gc-safety.md`.
 `Lowered` or `Refused(reason)`, for every operation in the
 [LANG83](../../../specs/LANG83-iir-standard-operation-registry.md) standard registry
 (`interpreter_ir::op_registry::STANDARD_OPS`). "Lowered" means `lower_iir_to_beam` emits BEAM code for the op. All output builtins (`print_i64`, `putchar`) and `print_str` write through the Erlang `io` server, so a program's output is one ordered stream. `lang-aot` refuses a
-module that uses a refused op at compile time, with a typed error. The four
-LANG83 PR1b ops (`write_i64`, `i64_div_floor`, `i64_mod_floor`, `trap`) are
-refused until PR1b lowers them.
+module that uses a refused op at compile time, with a typed error. Since LANG83 PR1b this backend also lowers `write_i64`
+(`io:format("~w", [X])`), `i64_div_floor`/`i64_mod_floor` (explicit zero and
+`MIN / -1` tests, then a branchy floor fix-up over truncating `div`/`rem`) and
+`trap` (`erlang:error('<kind>')`).

@@ -1,0 +1,13 @@
+{
+  "language": "latin",
+  "chapter": 327,
+  "sourceHash": "fnv1a64:463e9d365904772b",
+  "lessonIds": [
+    "LA-C327-sponsa",
+    "LA-C327-sponsalia",
+    "LA-C327-despondeo",
+    "LA-C327-nupta",
+    "LA-C327-matrimonium"
+  ],
+  "tex": "latin/book/chapters/ch327-sponsalia.tex"
+}

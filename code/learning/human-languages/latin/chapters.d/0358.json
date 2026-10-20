@@ -1,0 +1,19 @@
+{
+  "chapter": 358,
+  "title": "Agreeing and Disagreeing",
+  "label": "ch:la-agreeing-and-disagreeing",
+  "canDo": "I can say that I agree or disagree, that we are of one mind, and that a question is in dispute.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "LA-C358-controversia",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 358: I can say that I agree or disagree, that we are of one mind, and that a question is in dispute.",
+    "assesses": [
+      "LA-LEX-C358-ASSENSUS-03",
+      "LA-LEX-C358-ASSENSUS-04",
+      "LA-LEX-C358-ASSENSUS-05"
+    ]
+  }
+}

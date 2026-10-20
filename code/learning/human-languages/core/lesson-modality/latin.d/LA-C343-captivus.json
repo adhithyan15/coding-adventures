@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C343-captivus",
+    "language": "latin",
+    "chapter": 343,
+    "sequence": 18460,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e7aa4f099531145a"
+  },
+  "findings": []
+}

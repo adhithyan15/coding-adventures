@@ -1,0 +1,17 @@
+{
+  "language": "latin",
+  "chapter": 287,
+  "sourceHash": "fnv1a64:3c99cbc4009a858a",
+  "lessonIds": [
+    "LA-C287-laetus-eram",
+    "LA-C287-spero",
+    "LA-R287-how-it-felt"
+  ],
+  "voiceLessons": 3,
+  "drivablePrefix": 3,
+  "text": "latin/narration/ch287.txt",
+  "json": "latin/narration/ch287.json",
+  "textHash": "fnv1a64:0581830a8a6d09db",
+  "jsonHash": "fnv1a64:5dc6e6cac29e93a7",
+  "findings": []
+}

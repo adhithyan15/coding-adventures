@@ -1,0 +1,11 @@
+{
+  "id": "LA-C351-mortarium",
+  "pathSegment": "LA-PATH-351-CONCIDO",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "LA-EXT-351-CONCIDO",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 305,
+  "sourceHash": "fnv1a64:db6903d0debbe2c0",
+  "lessonIds": [
+    "LA-C305-scelus",
+    "LA-C305-facinus",
+    "LA-C305-sceleratus",
+    "LA-C305-fraus",
+    "LA-C305-dolus"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch305.txt",
+  "json": "latin/narration/ch305.json",
+  "textHash": "fnv1a64:eedaeca076dbeba2",
+  "jsonHash": "fnv1a64:f97fba8410af993a",
+  "findings": []
+}

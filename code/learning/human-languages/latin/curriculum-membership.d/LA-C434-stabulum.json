@@ -1,0 +1,11 @@
+{
+  "id": "LA-C434-stabulum",
+  "pathSegment": "LA-PATH-434-STABULUM",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "LA-EXT-434-STABULUM",
+      "order": 0
+    }
+  ]
+}

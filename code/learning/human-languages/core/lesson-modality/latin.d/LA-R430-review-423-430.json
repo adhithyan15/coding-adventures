@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-R430-review-423-430",
+    "language": "latin",
+    "chapter": 430,
+    "sequence": 23000,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e5697ee650d9c3dd"
+  },
+  "findings": []
+}

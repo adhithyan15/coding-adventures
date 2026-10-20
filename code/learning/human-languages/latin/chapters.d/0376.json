@@ -1,0 +1,19 @@
+{
+  "chapter": 376,
+  "title": "Work and Workers",
+  "label": "ch:la-work-and-workers",
+  "canDo": "I can talk about a piece of work and say that I need something, and name a craftsman, an artist and a labourer at work.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "LA-C376-operor",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 376: I can talk about a piece of work and say that I need something, and name a craftsman, an artist and a labourer at work.",
+    "assesses": [
+      "LA-LEX-C376-OPUS-03",
+      "LA-LEX-C376-OPUS-04",
+      "LA-LEX-C376-OPUS-05"
+    ]
+  }
+}

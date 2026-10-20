@@ -1,0 +1,19 @@
+{
+  "chapter": 494,
+  "title": "Hatred and disgust",
+  "label": "ch:la-hatred-and-disgust",
+  "canDo": "I can talk about hatred, disgust and weariness.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "LA-C494-taedet",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 494: I can talk about hatred, disgust and weariness.",
+    "assesses": [
+      "LA-LEX-C494-ODI-03",
+      "LA-LEX-C494-ODI-04",
+      "LA-LEX-C494-ODI-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 287,
+  "title": "How It Felt",
+  "label": "ch:la-how-it-felt",
+  "canDo": "I can say how I felt, with laetus eram, and what I hope for and long to do.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "LA-R287-how-it-felt",
+    "kind": "production",
+    "summary": "Complete LA-R287-how-it-felt: I can say how I felt, with laetus eram, and what I hope for and long to do.",
+    "assesses": [
+      "LA-GRAMMAR-C287-AFFECTUS-01",
+      "LA-LEX-C287-SPERO-01",
+      "LA-GRAMMAR-C287-CUPIO-INF-02"
+    ]
+  }
+}

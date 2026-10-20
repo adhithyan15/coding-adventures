@@ -1,0 +1,13 @@
+{
+  "language": "latin",
+  "chapter": 447,
+  "sourceHash": "fnv1a64:564f5ea55f6630fc",
+  "lessonIds": [
+    "LA-C447-cimex",
+    "LA-C447-mordeo",
+    "LA-C447-scalpo",
+    "LA-C447-insomnis",
+    "LA-C447-cubo"
+  ],
+  "tex": "latin/book/chapters/ch447-bedbug-to-bite-to-scratch-sleepless-to-lie-down.tex"
+}

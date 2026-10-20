@@ -1,0 +1,13 @@
+{
+  "language": "latin",
+  "chapter": 340,
+  "sourceHash": "fnv1a64:2759b718848d6bae",
+  "lessonIds": [
+    "LA-C340-arma",
+    "LA-C340-eques",
+    "LA-C340-pedes",
+    "LA-C340-lorica",
+    "LA-C340-clipeus"
+  ],
+  "tex": "latin/book/chapters/ch340-arma.tex"
+}

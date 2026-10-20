@@ -1,0 +1,11 @@
+{
+  "id": "LA-C520-sternuo",
+  "pathSegment": "LA-PATH-520-SPIR",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "LA-EXT-520-SPIR",
+      "order": 4
+    }
+  ]
+}

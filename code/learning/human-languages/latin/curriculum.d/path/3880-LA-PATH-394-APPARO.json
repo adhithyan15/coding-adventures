@@ -1,0 +1,9 @@
+{
+  "id": "LA-PATH-394-APPARO",
+  "spine_node": "SPINE-EXPRESS-CONDITION",
+  "before": [],
+  "inline": [
+    "LA-EXT-394-APPARO"
+  ],
+  "after": []
+}

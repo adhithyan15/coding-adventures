@@ -1,0 +1,19 @@
+{
+  "chapter": 395,
+  "title": "Sooner or Later",
+  "label": "ch:la-sooner-or-later",
+  "canDo": "I can say that I hurry something on or put it off, that a command was extended, and talk about a delay and what people expect.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "LA-C395-exspectatio",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 395: I can say that I hurry something on or put it off, that a command was extended, and talk about a delay and what people expect.",
+    "assesses": [
+      "LA-LEX-C395-DIFFERO-03",
+      "LA-LEX-C395-DIFFERO-04",
+      "LA-LEX-C395-DIFFERO-05"
+    ]
+  }
+}

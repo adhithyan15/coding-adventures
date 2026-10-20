@@ -143,9 +143,10 @@
   <!-- The Rust spreadsheet-core engine compiled to WebAssembly. Sets
        window.SpreadsheetEngine (same API as the TS engine) and resolves
        window.__spreadsheetEngineReady once instantiated. .wasm embedded as
-       base64 so the page opens from file://. The SAME module backs the HTML
-       demo; the native demos use it through a C ABI. -->
-  <script src="vendor/spreadsheet-engine-wasm.js"></script>
+       base64 so the page opens from file://. It is the HTML demo's bundle,
+       loaded from there rather than copied (a copy here had gone stale);
+       the native demos use the same engine through a C ABI. -->
+  <script src="../visicalc-html/vendor/spreadsheet-engine-wasm.js"></script>
 
   <script type="module">
     // The compiled custom elements (self-register via customElements.define).

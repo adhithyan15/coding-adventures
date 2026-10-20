@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 529,
+  "sourceHash": "fnv1a64:8cf23cd7add1f4b1",
+  "lessonIds": [
+    "LA-C529-noverca",
+    "LA-C529-vitricus",
+    "LA-C529-privignus",
+    "LA-C529-filiola",
+    "LA-C529-fraternus"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch529.txt",
+  "json": "latin/narration/ch529.json",
+  "textHash": "fnv1a64:6a436127587132f4",
+  "jsonHash": "fnv1a64:25ad629e0a81217a",
+  "findings": []
+}

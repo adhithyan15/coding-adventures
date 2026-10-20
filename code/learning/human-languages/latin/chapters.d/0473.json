@@ -1,0 +1,19 @@
+{
+  "chapter": 473,
+  "title": "Countryside, Farm, Ox stall, Cottage, Hut",
+  "label": "ch:la-countryside-farm-ox-stall-cottage-hut",
+  "canDo": "I can talk about the countryside and the buildings of a farm: the country, a farm, the ox stall, a cottage and a hut.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "LA-C473-tugurium",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 473: I can talk about the countryside and the buildings of a farm: the country, a farm, the ox stall, a cottage and a hut.",
+    "assesses": [
+      "LA-LEX-C473-RUS-03",
+      "LA-LEX-C473-RUS-04",
+      "LA-LEX-C473-RUS-05"
+    ]
+  }
+}

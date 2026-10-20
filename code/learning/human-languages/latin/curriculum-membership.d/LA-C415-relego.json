@@ -1,0 +1,11 @@
+{
+  "id": "LA-C415-relego",
+  "pathSegment": "LA-PATH-415-CASTIGO",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "LA-EXT-415-CASTIGO",
+      "order": 1
+    }
+  ]
+}

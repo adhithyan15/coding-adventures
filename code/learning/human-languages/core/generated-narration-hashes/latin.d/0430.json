@@ -1,0 +1,20 @@
+{
+  "language": "latin",
+  "chapter": 430,
+  "sourceHash": "fnv1a64:4c71aab022d5ed33",
+  "lessonIds": [
+    "LA-C430-temo",
+    "LA-C430-modiolus",
+    "LA-C430-sufflamen",
+    "LA-C430-subiungo",
+    "LA-C430-disiungo",
+    "LA-R430-review-423-430"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "latin/narration/ch430.txt",
+  "json": "latin/narration/ch430.json",
+  "textHash": "fnv1a64:4e57d3f5baedc5df",
+  "jsonHash": "fnv1a64:1aa98a1c91682477",
+  "findings": []
+}

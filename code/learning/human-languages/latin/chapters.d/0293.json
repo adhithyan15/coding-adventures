@@ -1,0 +1,19 @@
+{
+  "chapter": 293,
+  "title": "Paulātim",
+  "label": "ch:la-paulatim",
+  "canDo": "I can tell how slowly things happened: little by little, gradually, step by step, for a little while and for some time.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "LA-C293-aliquamdiu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 293: I can tell how slowly things happened: little by little, gradually, step by step, for a little while and for some time.",
+    "assesses": [
+      "LA-LEX-C293-PAULATIM-03",
+      "LA-LEX-C293-PAULATIM-04",
+      "LA-LEX-C293-PAULATIM-05"
+    ]
+  }
+}

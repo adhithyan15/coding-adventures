@@ -1,0 +1,11 @@
+{
+  "id": "LA-C491-gemitus",
+  "pathSegment": "LA-PATH-491-LACR",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "LA-EXT-491-LACR",
+      "order": 3
+    }
+  ]
+}

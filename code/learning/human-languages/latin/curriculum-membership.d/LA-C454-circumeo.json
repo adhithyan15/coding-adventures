@@ -1,0 +1,11 @@
+{
+  "id": "LA-C454-circumeo",
+  "pathSegment": "LA-PATH-454-DEXTRORSUM",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "LA-EXT-454-DEXTRORSUM",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 510,
+  "sourceHash": "fnv1a64:9dd82ac9ab083c6f",
+  "lessonIds": [
+    "LA-C510-ineptus",
+    "LA-C510-insanus",
+    "LA-C510-insania",
+    "LA-C510-demens",
+    "LA-C510-deliro"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch510.txt",
+  "json": "latin/narration/ch510.json",
+  "textHash": "fnv1a64:863aaa79d0c7e4a8",
+  "jsonHash": "fnv1a64:0f9f8b08b044da5e",
+  "findings": []
+}

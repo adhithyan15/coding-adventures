@@ -1,0 +1,11 @@
+{
+  "id": "LA-C455-commoror",
+  "pathSegment": "LA-PATH-455-CONSPICOR",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "LA-EXT-455-CONSPICOR",
+      "order": 4
+    }
+  ]
+}

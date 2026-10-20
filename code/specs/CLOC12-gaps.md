@@ -1399,7 +1399,7 @@ no remaining uses. Placeholder: `removes_dead_const_after_inlining`.
   code before the terminator, bare `return` unchanged, empty-statement removal,
   dead-code cleanup inside a nested `if`-consequent block, and the
   hoisting-soundness decline (a dead tail carrying a `var` is kept verbatim).
-- **2 `#[ignore]` placeholders** — see gap-151, gap-152.
+- **1 `#[ignore]` placeholder** — see gap-151 (gap-152 resolved by CCR-082).
 
   (Numbering note: authored off `origin/main` in parallel with the emitter
   object-literal port CLOC12.147, so this takes CLOC12.148 to avoid collision
@@ -1415,11 +1415,31 @@ only truncates after a *direct* terminator statement; an `IfStatement` is not
 
 ### gap-152 — `break`/`continue` only terminate switch cases, not loop blocks
 
+**Resolved by CCR-082 (#15878).** `is_terminator` now includes `break` and
+`continue`, so a dead tail after either one is truncated, subject to the same
+`tail_is_safe_to_truncate` hoisting guard. The placeholder is now an active
+test. Still open: a dead tail that holds a `var`. Upstream hoists it into the
+`for` head (`for(var z,c=0;…)`), but closurec keeps the whole tail.
+
 Upstream treats `break`/`continue` as ending the enclosing loop body, so code
 after a `break` inside a loop is unreachable (`while (c) { break; y(); }` →
 `while (c) { break; }`). closurec only treats break/continue as terminators
 inside switch-case consequents (`is_case_terminator`), so the loop-body `y()`
 survives. Placeholder: `drops_code_after_break_in_loop_block`.
+
+### #17841 — fold-control-flow's dead-after-`return` drop ignored hoisting
+
+**Resolved.** `closure-pass-fold-control-flow` truncated a block after
+`return` independently of DCE, and without DCE's hoisting guard. That
+deleted:
+
+- a hoisted `function h(){}`, causing a `ReferenceError`;
+- a hoisted `var x`, so the function's local leaked to the global;
+- a TDZ-shadowing `let x`.
+
+`is_droppable_dead_statement` now applies, per statement, the same whitelist as DCE's
+`tail_is_safe_to_truncate`. The `let`/`const` case also needs DCE to keep
+such tails, which is the CCR-082 review fix.
 
 ## CLOC12.149 — `FunctionExpression` (function in value position)
 

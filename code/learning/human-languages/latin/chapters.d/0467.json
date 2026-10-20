@@ -1,0 +1,19 @@
+{
+  "chapter": 467,
+  "title": "Cobbler's shop, Barber's shop, Awl, Tanner, Furrier",
+  "label": "ch:la-cobbler-s-shop-barber-s-shop-awl-tanner-furrier",
+  "canDo": "I can talk about small shops and leather work: the cobbler's shop, the barber's, an awl, the tanner and the furrier.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "LA-C467-pellio",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 467: I can talk about small shops and leather work: the cobbler's shop, the barber's, an awl, the tanner and the furrier.",
+    "assesses": [
+      "LA-LEX-C467-SUTRINA-03",
+      "LA-LEX-C467-SUTRINA-04",
+      "LA-LEX-C467-SUTRINA-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 346,
+  "title": "Deī et deae",
+  "label": "ch:la-dei-et-deae",
+  "canDo": "I can talk about the gods in stories: a god, a deified one, divine power, mortal and immortal.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "LA-R346-review-339-346",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 346: I can talk about the gods in stories: a god, a deified one, divine power, mortal and immortal.",
+    "assesses": [
+      "LA-LEX-C346-DEUS-03",
+      "LA-LEX-C346-DEUS-04",
+      "LA-LEX-C346-DEUS-05"
+    ]
+  }
+}

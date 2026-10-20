@@ -1,0 +1,11 @@
+{
+  "id": "LA-C317-ardor",
+  "pathSegment": "LA-PATH-317-INCENDIUM",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "LA-EXT-317-INCENDIUM",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "LA-C533-diligo",
+  "pathSegment": "LA-PATH-533-FAMI",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "LA-EXT-533-FAMI",
+      "order": 3
+    }
+  ]
+}

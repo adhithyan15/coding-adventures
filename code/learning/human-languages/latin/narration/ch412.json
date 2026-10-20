@@ -1,0 +1,858 @@
+{
+  "version": 1,
+  "language": "latin",
+  "chapter": 412,
+  "title": "The Inquiry",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:1c79514abf7730fa",
+  "lessons": [
+    {
+      "id": "LA-C412-cognitio",
+      "sequence": 22010,
+      "title": "cognitiō, cognitiōnis — an inquiry, a hearing; knowledge",
+      "headword": "cognitiō, cognitiōnis",
+      "romanization": "cognitiō, cognitiōnis",
+      "gloss": "an inquiry, a hearing; knowledge",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b958d4499dd70f7f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for a promise to appear in court, then the Latin for a legal expert."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: cognitiō, cognitiōnis",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "cognitiō, cognitiōnis — \"an inquiry, a hearing; knowledge\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Cōnsul cognitiōnem dē caede habuit. The consul held an inquiry into the murder."
+            },
+            {
+              "kind": "speech",
+              "text": "cognitiō, cognitiōnis f., built on cognōscō: getting to know, and a judge's hearing of a case. English cognition."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "cognitiō is the noun built on cognitus, the participle of cognōscō \"to get to know\" (EtymDB; Lewis & Short). English cognition comes from it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cognitiō, cognitiōnis",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cognitiō, cognitiōnis*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cognitiō, cognitiōnis, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cognitiō, cognitiōnis*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with cognitiō, cognitiōnis",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *cognitiō, cognitiōnis*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for a promise to appear in court, then the Latin for a legal expert, then say cognitiō, cognitiōnis again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for a promise to appear in court, then the Latin for a legal expert, then say *cognitiō, cognitiōnis* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does cognitiō, cognitiōnis mean? (\"An inquiry, a hearing; knowledge\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C412-quaesitor",
+      "sequence": 22020,
+      "title": "quaesītor, quaesītōris — an investigator; a presiding judge",
+      "headword": "quaesītor, quaesītōris",
+      "romanization": "quaesītor, quaesītōris",
+      "gloss": "an investigator; a presiding judge",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c95f3144d1e9078d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for a legal expert, then the Latin for an inquiry."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: quaesītor, quaesītōris",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "quaesītor, quaesītōris — \"an investigator; a presiding judge\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Quaesītor testēs audīvit. The investigator heard the witnesses."
+            },
+            {
+              "kind": "speech",
+              "text": "quaesītor, quaesītōris m., built on quaerō, to seek, to inquire."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "quaesītor is built on quaerō \"to seek, to inquire\" (EtymDB; Lewis & Short), from its participle quaesītus."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "quaesītor, quaesītōris",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *quaesītor, quaesītōris*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "quaesītor, quaesītōris, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *quaesītor, quaesītōris*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with quaesītor, quaesītōris",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *quaesītor, quaesītōris*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for a legal expert, then the Latin for an inquiry, then say quaesītor, quaesītōris again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for a legal expert, then the Latin for an inquiry, then say *quaesītor, quaesītōris* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does quaesītor, quaesītōris mean? (\"An investigator; a presiding judge\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C412-interrogo",
+      "sequence": 22030,
+      "title": "interrogō, interrogāre — to question, to examine",
+      "headword": "interrogō, interrogāre",
+      "romanization": "interrogō, interrogāre",
+      "gloss": "to question, to examine",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c5b4ca036d432e64",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for an inquiry, then the Latin for an investigator."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: interrogō, interrogāre",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "interrogō, interrogāre — \"to question, to examine\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Iūdex testem interrogāvit. The judge questioned the witness."
+            },
+            {
+              "kind": "speech",
+              "text": "interrogō, interrogāre, interrogāvī, interrogātum, inter + rogō. English interrogate."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "interrogō is built from inter \"between\" and rogō \"to ask\" (EtymDB; Lewis & Short). English interrogate comes from it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "interrogō, interrogāre",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *interrogō, interrogāre*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "interrogō, interrogāre, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *interrogō, interrogāre*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with interrogō, interrogāre",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *interrogō, interrogāre*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for an inquiry, then the Latin for an investigator, then say interrogō, interrogāre again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for an inquiry, then the Latin for an investigator, then say *interrogō, interrogāre* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does interrogō, interrogāre mean? (\"To question, to examine\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C412-delator",
+      "sequence": 22040,
+      "title": "dēlātor, dēlātōris — an informer, an accuser",
+      "headword": "dēlātor, dēlātōris",
+      "romanization": "dēlātor, dēlātōris",
+      "gloss": "an informer, an accuser",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:84f5f2cea46279ad",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for an investigator, then the Latin for to question."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: dēlātor, dēlātōris",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "dēlātor, dēlātōris — \"an informer, an accuser\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Dēlātōrēs multōs innocentēs accūsāvērunt. Informers accused many innocent people."
+            },
+            {
+              "kind": "speech",
+              "text": "dēlātor, dēlātōris m., built on the verb for reporting a name to a magistrate. Under the emperors, informers could grow rich."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "dēlātor is built on dēlātum, the supine of dēferō \"to carry down, to report\" (Lewis & Short): one who reports a name. English delator comes from it (EtymDB)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dēlātor, dēlātōris",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dēlātor, dēlātōris*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dēlātor, dēlātōris, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dēlātor, dēlātōris*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with dēlātor, dēlātōris",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *dēlātor, dēlātōris*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for an investigator, then the Latin for to question, then say dēlātor, dēlātōris again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for an investigator, then the Latin for to question, then say *dēlātor, dēlātōris* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does dēlātor, dēlātōris mean? (\"An informer, an accuser\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C412-defensio",
+      "sequence": 22050,
+      "title": "dēfēnsiō, dēfēnsiōnis — a defence",
+      "headword": "dēfēnsiō, dēfēnsiōnis",
+      "romanization": "dēfēnsiō, dēfēnsiōnis",
+      "gloss": "a defence",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c6d4e0710999d5f6",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for to question, then the Latin for an informer."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: dēfēnsiō, dēfēnsiōnis",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "dēfēnsiō, dēfēnsiōnis — \"a defence\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Dēfēnsiō reī longa fuit. The defence of the accused was long."
+            },
+            {
+              "kind": "speech",
+              "text": "dēfēnsiō, dēfēnsiōnis f., the noun of dēfendō. English defence comes through French from the same verb."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "dēfēnsiō is the noun built on dēfendō \"to ward off, to defend\" (Lewis & Short). English defence comes through French from the same verb."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dēfēnsiō, dēfēnsiōnis",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dēfēnsiō, dēfēnsiōnis*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dēfēnsiō, dēfēnsiōnis, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dēfēnsiō, dēfēnsiōnis*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with dēfēnsiō, dēfēnsiōnis",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *dēfēnsiō, dēfēnsiōnis*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for to question, then the Latin for an informer, then say dēfēnsiō, dēfēnsiōnis again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for to question, then the Latin for an informer, then say *dēfēnsiō, dēfēnsiōnis* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does dēfēnsiō, dēfēnsiōnis mean? (\"A defence\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-R412-review-405-412",
+      "sequence": 22060,
+      "title": "Words from chapters 405–412 — a review",
+      "headword": "(dialogue)",
+      "romanization": "(dialogue)",
+      "gloss": "a review of chapters 405-412",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ecc24529cdc7df97",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Latin for a counting board and a pebble."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a counting board, a pebble, to count out, to say repeatedly, a task",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a counting board, a pebble, to count out, to say repeatedly, a task]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "clever, attentive, slow, painstaking, careless",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: clever, attentive, slow, painstaking, careless]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "knowledge, understanding, teaching, ignorance, to imitate",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: knowledge, understanding, teaching, ignorance, to imitate]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a mistake, a fault, a cane, a lash, to be beaten",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a mistake, a fault, a cane, a lash, to be beaten]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "an edict, a decree, a rule, lawful, allowed",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: an edict, a decree, a rule, lawful, allowed]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a bill, to publish, to repeal, to make sacred and binding, to lay down",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a bill, to publish, to repeal, to make sacred and binding, to lay down]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the judgement seat, a lawsuit, to go to law, a promise to appear in court, a legal expert",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the judgement seat, a lawsuit, to go to law, a promise to appear in court, a legal expert]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "an inquiry, an investigator, to question, an informer, a defence",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: an inquiry, an investigator, to question, an informer, a defence]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A counting board? (abacus, abacī.) A pebble? (calculus, calculī.) To count out? (ēnumerō, ēnumerāre.) To say repeatedly? (dictō, dictāre.) A task? (pēnsum, pēnsī.) Clever? (ingeniōsus, ingeniōsa, ingeniōsum.) Attentive? (attentus, attenta, attentum.) Slow? (tardus, tarda, tardum.) Painstaking? (sēdulus, sēdula, sēdulum.) Careless? (neglegēns, neglegentis.) Knowledge? (scientia, scientiae.) Understanding? (intellegentia, intellegentiae.) Teaching? (doctrīna, doctrīnae.) Ignorance? (īnscītia, īnscītiae.) To imitate? (imitor, imitārī.) A mistake? (mendum, mendī.) A fault? (vitium, vitiī.) A cane? (ferula, ferulae.) A lash? (verber, verberis.) To be beaten? (vāpulō, vāpulāre.) An edict? (ēdictum, ēdictī.) A decree? (dēcrētum, dēcrētī.) A rule? (praeceptum, praeceptī.) Lawful? (lēgitimus, lēgitima, lēgitimum.) Allowed? (licitus, licita, licitum.) A bill? (rogātiō, rogātiōnis.) To publish? (prōmulgō, prōmulgāre.) To repeal? (abrogō, abrogāre.) To make sacred and binding? (sanciō, sancīre.) To lay down? (praescrībō, praescrībere.) The judgement seat? (tribūnal, tribūnālis.) A lawsuit? (līs, lītis.) To go to law? (lītigō, lītigāre.) A promise to appear in court? (vadimōnium, vadimōniī.) A legal expert? (iūriscōnsultus, iūriscōnsultī.) An inquiry? (cognitiō, cognitiōnis.) An investigator? (quaesītor, quaesītōris.) To question? (interrogō, interrogāre.) An informer? (dēlātor, dēlātōris.) A defence? (dēfēnsiō, dēfēnsiōnis.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

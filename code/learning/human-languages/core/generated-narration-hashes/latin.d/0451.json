@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 451,
+  "sourceHash": "fnv1a64:132f9d3e983ff63d",
+  "lessonIds": [
+    "LA-C451-percontor",
+    "LA-C451-sciscitor",
+    "LA-C451-requiro",
+    "LA-C451-monstro",
+    "LA-C451-indico"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch451.txt",
+  "json": "latin/narration/ch451.json",
+  "textHash": "fnv1a64:5a6c896afe2879de",
+  "jsonHash": "fnv1a64:45c940d7b1a2b7a9",
+  "findings": []
+}

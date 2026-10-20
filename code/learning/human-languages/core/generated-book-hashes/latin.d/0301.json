@@ -1,0 +1,13 @@
+{
+  "language": "latin",
+  "chapter": 301,
+  "sourceHash": "fnv1a64:dac3884559feae1a",
+  "lessonIds": [
+    "LA-C301-susurrus",
+    "LA-C301-susurro",
+    "LA-C301-vulgo",
+    "LA-C301-crebresco",
+    "LA-C301-perhibeo"
+  ],
+  "tex": "latin/book/chapters/ch301-rumor-et-susurrus.tex"
+}

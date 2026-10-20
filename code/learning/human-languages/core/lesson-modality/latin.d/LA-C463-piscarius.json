@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C463-piscarius",
+    "language": "latin",
+    "chapter": 463,
+    "sequence": 24660,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:65430825a5ecc176"
+  },
+  "findings": []
+}

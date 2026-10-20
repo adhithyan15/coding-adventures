@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C391-tametsi",
+    "language": "latin",
+    "chapter": 391,
+    "sequence": 20950,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4669f016b06b4481"
+  },
+  "findings": []
+}

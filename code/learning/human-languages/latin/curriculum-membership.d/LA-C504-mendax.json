@@ -1,0 +1,11 @@
+{
+  "id": "LA-C504-mendax",
+  "pathSegment": "LA-PATH-504-PROB",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "LA-EXT-504-PROB",
+      "order": 2
+    }
+  ]
+}

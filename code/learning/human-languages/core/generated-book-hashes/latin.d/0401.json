@@ -1,0 +1,13 @@
+{
+  "language": "latin",
+  "chapter": 401,
+  "sourceHash": "fnv1a64:70630939d6b296b8",
+  "lessonIds": [
+    "LA-C401-paedagogus",
+    "LA-C401-praeceptor",
+    "LA-C401-grammaticus",
+    "LA-C401-litterator",
+    "LA-C401-condiscipulus"
+  ],
+  "tex": "latin/book/chapters/ch401-at-school.tex"
+}

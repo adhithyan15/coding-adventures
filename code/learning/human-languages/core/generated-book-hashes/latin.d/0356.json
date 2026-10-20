@@ -1,0 +1,15 @@
+{
+  "language": "latin",
+  "chapter": 356,
+  "sourceHash": "fnv1a64:3b7eb759b5133447",
+  "lessonIds": [
+    "LA-C356-appono",
+    "LA-C356-ministro",
+    "LA-C356-triclinium",
+    "LA-C356-discumbo",
+    "LA-C356-ferculum",
+    "LA-R356-review-355-356",
+    "LA-R356-review-final-356"
+  ],
+  "tex": "latin/book/chapters/ch356-cena-apponitur.tex"
+}

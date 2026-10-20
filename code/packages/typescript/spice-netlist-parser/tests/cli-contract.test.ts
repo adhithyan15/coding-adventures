@@ -59,6 +59,35 @@ describe("Berkeley SPICE CLI contract", () => {
     expect(payload.analyses[0]?.records).toEqual(testCase.expected.records);
   });
 
+  it("expands global temperature cards into labeled result rows", () => {
+    const corpus = JSON.parse(readFileSync(
+      new URL("../../../../grammars/spice/berkeley-v1-cli-corpus.json", import.meta.url),
+      "utf8",
+    )) as {
+      cases: readonly {
+        id: string;
+        deck: string;
+        expected: {
+          analysisIndexes: readonly number[];
+          temperatureKelvin: readonly number[];
+          outputTemperaturesKelvin: readonly number[];
+          measureTemperaturesKelvin: readonly number[];
+        };
+      }[];
+    };
+    const testCase = corpus.cases.find((candidate) => candidate.id === "global-temperature-op")!;
+    const payload = JSON.parse(runNetlistJson(testCase.deck)) as {
+      analyses: readonly { index: number; temperatureKelvin: number }[];
+      outputs: readonly { temperatureKelvin: number }[];
+      measures: readonly { temperatureKelvin: number }[];
+    };
+
+    expect(payload.analyses.map((analysis) => analysis.index)).toEqual(testCase.expected.analysisIndexes);
+    expect(payload.analyses.map((analysis) => analysis.temperatureKelvin)).toEqual(testCase.expected.temperatureKelvin);
+    expect(payload.outputs.map((output) => output.temperatureKelvin)).toEqual(testCase.expected.outputTemperaturesKelvin);
+    expect(payload.measures.map((measure) => measure.temperatureKelvin)).toEqual(testCase.expected.measureTemperaturesKelvin);
+  });
+
   it("exposes deck-selected outputs and evaluated measures", () => {
     const corpus = JSON.parse(readFileSync(
       new URL("../../../../grammars/spice/berkeley-v1-cli-corpus.json", import.meta.url),

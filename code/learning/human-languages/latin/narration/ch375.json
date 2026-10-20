@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "latin",
+  "chapter": 375,
+  "title": "Things That Happen",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:b4ab90afd0f2a545",
+  "lessons": [
+    {
+      "id": "LA-C375-contingo",
+      "sequence": 20120,
+      "title": "contingō, contingere — to touch; to happen (to), to fall to one's lot",
+      "headword": "contingō, contingere",
+      "romanization": "contingō, contingere",
+      "gloss": "to touch; to happen (to), to fall to one's lot",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:54b784716f58f14f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for to hinder, then the Latin for to throw into confusion."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: contingō, contingere",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "contingō, contingere — \"to touch; to happen (to), to fall to one's lot\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Mihi contigit ut eum vidērem. I had the good luck to see him."
+            },
+            {
+              "kind": "speech",
+              "text": "contingō, contingere, contigī, contactum. Built on tangō, to touch. Contingit + dative, often of good luck. English contact and contingent."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "contingō is built from con- and tangō \"to touch\" (EtymDB; Lewis & Short), the vowel weakened inside the compound: what touches you is what happens to you. English contact and contingent come from it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "contingō, contingere",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *contingō, contingere*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "contingō, contingere, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *contingō, contingere*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with contingō, contingere",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *contingō, contingere*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for to hinder, then the Latin for to throw into confusion, then say contingō, contingere again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for to hinder, then the Latin for to throw into confusion, then say *contingō, contingere* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does contingō, contingere mean? (\"To touch; to happen (to), to fall to one's lot\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C375-exsisto",
+      "sequence": 20130,
+      "title": "exsistō, exsistere — to arise, to come forth; to exist",
+      "headword": "exsistō, exsistere",
+      "romanization": "exsistō, exsistere",
+      "gloss": "to arise, to come forth; to exist",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:23672647fe8c4893",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for to throw into confusion, then the Latin for to touch."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: exsistō, exsistere",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "exsistō, exsistere — \"to arise, to come forth; to exist\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Ex parvīs initiīs magnum bellum exstitit. From small beginnings a great war arose."
+            },
+            {
+              "kind": "speech",
+              "text": "exsistō, exsistere, exstitī. Ex + sistō, to set, to stand: to stand out, to appear. English exist."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "exsistō is built from ex \"out\" and sistō \"to stand, to set\" (Lewis & Short): to step forth. English exist comes from it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "exsistō, exsistere",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *exsistō, exsistere*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "exsistō, exsistere, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *exsistō, exsistere*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with exsistō, exsistere",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *exsistō, exsistere*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for to throw into confusion, then the Latin for to touch, then say exsistō, exsistere again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for to throw into confusion, then the Latin for to touch, then say *exsistō, exsistere* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does exsistō, exsistere mean? (\"To arise, to come forth; to exist\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C375-fortuitus",
+      "sequence": 20140,
+      "title": "fortuītus, fortuīta, fortuītum — by chance, accidental",
+      "headword": "fortuītus, fortuīta, fortuītum",
+      "romanization": "fortuītus, fortuīta, fortuītum",
+      "gloss": "by chance, accidental",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:52f1f7d731a98fb5",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for to touch, then the Latin for to arise."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: fortuītus, fortuīta, fortuītum",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "fortuītus, fortuīta, fortuītum — \"by chance, accidental\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Nōn fortuītus erat ille cāsus. That event was no accident."
+            },
+            {
+              "kind": "speech",
+              "text": "fortuītus, fortuīta, fortuītum, built on fors, chance; fortūna is its cousin. English fortuitous."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "fortuītus is built on fors \"chance\" (EtymDB; Lewis & Short), the same word that gives fortūna. English fortuitous comes from it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "fortuītus, fortuīta, fortuītum",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *fortuītus, fortuīta, fortuītum*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "fortuītus, fortuīta, fortuītum, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *fortuītus, fortuīta, fortuītum*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with fortuītus, fortuīta, fortuītum",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *fortuītus, fortuīta, fortuītum*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for to touch, then the Latin for to arise, then say fortuītus, fortuīta, fortuītum again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for to touch, then the Latin for to arise, then say *fortuītus, fortuīta, fortuītum* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does fortuītus, fortuīta, fortuītum mean? (\"By chance, accidental\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C375-inopinatus",
+      "sequence": 20150,
+      "title": "inopīnātus, inopīnāta, inopīnātum — unexpected",
+      "headword": "inopīnātus, inopīnāta, inopīnātum",
+      "romanization": "inopīnātus, inopīnāta, inopīnātum",
+      "gloss": "unexpected",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d0590ac07fa1840c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for to arise, then the Latin for by chance."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: inopīnātus, inopīnāta, inopīnātum",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "inopīnātus, inopīnāta, inopīnātum — \"unexpected\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Inopīnātum perīculum nōs terruit. An unexpected danger frightened us."
+            },
+            {
+              "kind": "speech",
+              "text": "inopīnātus, inopīnāta, inopīnātum: in- not + the participle of opīnor: not supposed. Ex inopīnātō, unexpectedly."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "inopīnātus is built from in- \"not\" and opīnātus, the participle of opīnor \"to suppose\" (Lewis & Short): not supposed beforehand."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "inopīnātus, inopīnāta, inopīnātum",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *inopīnātus, inopīnāta, inopīnātum*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "inopīnātus, inopīnāta, inopīnātum, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *inopīnātus, inopīnāta, inopīnātum*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with inopīnātus, inopīnāta, inopīnātum",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *inopīnātus, inopīnāta, inopīnātum*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for to arise, then the Latin for by chance, then say inopīnātus, inopīnāta, inopīnātum again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for to arise, then the Latin for by chance, then say *inopīnātus, inopīnāta, inopīnātum* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does inopīnātus, inopīnāta, inopīnātum mean? (\"Unexpected\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C375-motus",
+      "sequence": 20160,
+      "title": "mōtus, mōtūs — a movement; a stirring (of the mind); a disturbance",
+      "headword": "mōtus, mōtūs",
+      "romanization": "mōtus, mōtūs",
+      "gloss": "a movement; a stirring (of the mind); a disturbance",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c45f1b3d46edbf36",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for by chance, then the Latin for unexpected."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: mōtus, mōtūs",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "mōtus, mōtūs — \"a movement; a stirring (of the mind); a disturbance\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Magnus mōtus in urbe fuit. There was a great commotion in the city."
+            },
+            {
+              "kind": "speech",
+              "text": "mōtus, mōtūs m., from moveō. Mōtus animī, a stirring of the mind; mōtus terrae, an earthquake. English motion and motor belong to the family."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "mōtus is the noun built on moveō \"to move\" (Lewis & Short), from its participle mōtus. English motion and motor belong to the same family."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mōtus, mōtūs",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mōtus, mōtūs*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mōtus, mōtūs, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mōtus, mōtūs*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with mōtus, mōtūs",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *mōtus, mōtūs*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for by chance, then the Latin for unexpected, then say mōtus, mōtūs again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for by chance, then the Latin for unexpected, then say *mōtus, mōtūs* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does mōtus, mōtūs mean? (\"A movement; a stirring (of the mind); a disturbance\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

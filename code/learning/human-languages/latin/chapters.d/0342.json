@@ -1,0 +1,19 @@
+{
+  "chapter": 342,
+  "title": "Clādēs",
+  "label": "ch:la-clades",
+  "canDo": "I can tell how a battle ended: to put to flight, to overcome, to cut down, to lay waste and a disaster.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "LA-C342-clades",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 342: I can tell how a battle ended: to put to flight, to overcome, to cut down, to lay waste and a disaster.",
+    "assesses": [
+      "LA-LEX-C342-CLADES-03",
+      "LA-LEX-C342-CLADES-04",
+      "LA-LEX-C342-CLADES-05"
+    ]
+  }
+}

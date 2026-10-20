@@ -1,0 +1,11 @@
+{
+  "id": "LA-C337-plausus",
+  "pathSegment": "LA-PATH-337-PALMA",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "LA-EXT-337-PALMA",
+      "order": 4
+    }
+  ]
+}

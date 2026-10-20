@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C365-scilicet",
+    "language": "latin",
+    "chapter": 365,
+    "sequence": 19650,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:dc637cc6e06f8aef"
+  },
+  "findings": []
+}

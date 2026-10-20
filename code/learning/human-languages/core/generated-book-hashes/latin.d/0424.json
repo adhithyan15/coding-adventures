@@ -1,0 +1,13 @@
+{
+  "language": "latin",
+  "chapter": 424,
+  "sourceHash": "fnv1a64:e2f52f743545795b",
+  "lessonIds": [
+    "LA-C424-compitum",
+    "LA-C424-bivium",
+    "LA-C424-flexus",
+    "LA-C424-anfractus",
+    "LA-C424-flecto"
+  ],
+  "tex": "latin/book/chapters/ch424-crossroads-fork-in-the-road-bend-winding-to-bend.tex"
+}

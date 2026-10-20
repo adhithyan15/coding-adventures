@@ -1,0 +1,11 @@
+{
+  "id": "LA-C389-obsequium",
+  "pathSegment": "LA-PATH-389-SERVITUS",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "LA-EXT-389-SERVITUS",
+      "order": 4
+    }
+  ]
+}

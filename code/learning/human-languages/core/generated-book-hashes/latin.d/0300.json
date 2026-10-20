@@ -1,0 +1,13 @@
+{
+  "language": "latin",
+  "chapter": 300,
+  "sourceHash": "fnv1a64:7b8676f28a3c5c81",
+  "lessonIds": [
+    "LA-C300-tabellarius",
+    "LA-C300-praeco",
+    "LA-C300-mandatum",
+    "LA-C300-legatio",
+    "LA-C300-renuntio"
+  ],
+  "tex": "latin/book/chapters/ch300-tabellarius-et-praeco.tex"
+}

@@ -1,0 +1,9 @@
+{
+  "id": "LA-PATH-355-CONDIO",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "LA-EXT-355-CONDIO"
+  ],
+  "after": []
+}

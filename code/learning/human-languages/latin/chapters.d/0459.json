@@ -1,0 +1,19 @@
+{
+  "chapter": 459,
+  "title": "Colonnade, Temple, Shrine, Sacred boundary, To build up",
+  "label": "ch:la-colonnade-temple-shrine-sacred-boundary-to-build-up",
+  "canDo": "I can describe the public buildings of a town: a colonnade, a temple, a shrine, the sacred boundary, and putting buildings up.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "LA-C459-exstruo",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 459: I can describe the public buildings of a town: a colonnade, a temple, a shrine, the sacred boundary, and putting buildings up.",
+    "assesses": [
+      "LA-LEX-C459-PORTICUS-03",
+      "LA-LEX-C459-PORTICUS-04",
+      "LA-LEX-C459-PORTICUS-05"
+    ]
+  }
+}

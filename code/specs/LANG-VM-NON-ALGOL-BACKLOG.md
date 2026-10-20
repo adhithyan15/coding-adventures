@@ -63,13 +63,32 @@ JIT, LLVM and native. WASM, VM, JIT and BEAM output is now one ordered stream.
 Evidence: the ALGOL row mixing `print_i64` and `print_str` printed `ABC` on
 WASM/VM/JIT before the fix and prints `A1\nB-2\nC` after it.
 
+**VM-078b / PR1b — first op family on all nine backends (implemented on
+`claude/lang-vm-status-4xtyw8-op-lowering`, stacked on PR1a).** `write_i64`,
+`i64_div_floor`, `i64_mod_floor` and `trap` are `Lowered` on x86-64, AArch64,
+LLVM, WASM, JVM, CLR (textual IL), BEAM, VM and JIT. Every backend tests the
+zero divisor and `MIN / -1` explicitly before its hardware or library divide;
+none relies on a native divide for those edges. Every trap path flushes output
+first. Native traps call the new `__twig_trap` in `twig_runtime.c`. LLVM emits
+self-contained `linkonce_odr` `@__iir_trap` and `@__iir_write_i64`. WASM
+imports `env.__trap` and `env.__write_i64`. The JVM and CLR throw after
+flushing, BEAM calls `erlang:error('<kind>')`, the VM returns
+`VMError::Trap { kind }`, and the JIT's `TRAP` bytecode records the kind.
+`op_conformance` adds 10 PR1b cases and a real-`java` JVM column. It proves
+print-then-trap on WASM, VM, JIT, LLVM, native and JVM (276 compilations, 256
+executions locally). CLR and BEAM compile locally; CI executes them. AArch64
+is checked structurally against `aarch64-encoder`. vm-core's legacy `div`/`mod`
+no longer panic on `MIN / -1`: they wrap.
+
 **Next, in order:**
 
-1. **VM-078b / LANG83 PR1b:** lower `write_i64`, `i64_div_floor`,
-   `i64_mod_floor` and `trap` on all nine backends, with flush-before-trap, using
-   the LANG83 per-backend plan. Its cases are the sign table, a zero divisor,
-   `MIN / -1`, `MIN / 1` and print-then-trap. Port `lang_matrix`'s data-less
-   `RunResult::Trapped` to carry stdout. The work may split per backend.
+1. **VM-078b follow-ups:** port `lang_matrix`'s data-less
+   `RunResult::Trapped` (and its WASM/VM/JIT hosts) to carry stdout and the
+   PR1b imports when the first language row emits a PR1b op (LANG83 PR2,
+   Ruby). The binary CLR `lower_iir_to_cil` path (32-bit simulator) refuses
+   the PR1b ops with a typed error. Make that refusal part of
+   `check_module_for` for `compile_iir_to_cil_artifact` if a frontend ever
+   targets it.
 2. **VM-078c (found by the PR1a conformance suite):** the native pipeline
    miscompiles a `bool`-typed comparison with negative operands.
    `jit_core::specialise` names the CIR op after the result hint

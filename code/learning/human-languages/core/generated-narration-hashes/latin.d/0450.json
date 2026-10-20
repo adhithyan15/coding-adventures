@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 450,
+  "sourceHash": "fnv1a64:41c48e97c22eb52d",
+  "lessonIds": [
+    "LA-C450-querela",
+    "LA-C450-conqueror",
+    "LA-C450-fraudo",
+    "LA-C450-rapax",
+    "LA-C450-sordes"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch450.txt",
+  "json": "latin/narration/ch450.json",
+  "textHash": "fnv1a64:fa59c50dd19b2da5",
+  "jsonHash": "fnv1a64:8106d267e5a369c0",
+  "findings": []
+}

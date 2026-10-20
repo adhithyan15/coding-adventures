@@ -1,0 +1,19 @@
+{
+  "chapter": 375,
+  "title": "Things That Happen",
+  "label": "ch:la-things-that-happen",
+  "canDo": "I can say that something befalls someone or arises, call an event chance or unexpected, and speak of a commotion.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "LA-C375-motus",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 375: I can say that something befalls someone or arises, call an event chance or unexpected, and speak of a commotion.",
+    "assesses": [
+      "LA-LEX-C375-EXSISTO-03",
+      "LA-LEX-C375-EXSISTO-04",
+      "LA-LEX-C375-EXSISTO-05"
+    ]
+  }
+}

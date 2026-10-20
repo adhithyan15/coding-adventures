@@ -1,0 +1,13 @@
+{
+  "language": "latin",
+  "chapter": 411,
+  "sourceHash": "fnv1a64:39a5aee48bbba17b",
+  "lessonIds": [
+    "LA-C411-tribunal",
+    "LA-C411-lis",
+    "LA-C411-litigo",
+    "LA-C411-vadimonium",
+    "LA-C411-iurisconsultus"
+  ],
+  "tex": "latin/book/chapters/ch411-going-to-law.tex"
+}

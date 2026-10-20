@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C350-obsonium",
+    "language": "latin",
+    "chapter": 350,
+    "sequence": 18830,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7e51fd537e73cd30"
+  },
+  "findings": []
+}

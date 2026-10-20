@@ -1,0 +1,20 @@
+{
+  "language": "latin",
+  "chapter": 322,
+  "sourceHash": "fnv1a64:e42056a10cc2eab6",
+  "lessonIds": [
+    "LA-C322-fuga",
+    "LA-C322-effugio",
+    "LA-C322-evado",
+    "LA-C322-pereo",
+    "LA-C322-custos",
+    "LA-R322-review-315-322"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "latin/narration/ch322.txt",
+  "json": "latin/narration/ch322.json",
+  "textHash": "fnv1a64:f60854bb12c4ba4d",
+  "jsonHash": "fnv1a64:48bf807ed2eadb82",
+  "findings": []
+}

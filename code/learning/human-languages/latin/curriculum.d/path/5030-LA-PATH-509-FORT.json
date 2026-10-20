@@ -1,0 +1,9 @@
+{
+  "id": "LA-PATH-509-FORT",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "LA-EXT-509-FORT"
+  ],
+  "after": []
+}

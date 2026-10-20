@@ -1,0 +1,11 @@
+{
+  "id": "LA-C303-grassator",
+  "pathSegment": "LA-PATH-303-FURTUM",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "LA-EXT-303-FURTUM",
+      "order": 2
+    }
+  ]
+}
