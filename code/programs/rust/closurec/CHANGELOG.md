@@ -29,6 +29,25 @@ A child-PATH shadow regression verifies the native utility and intended denial;
 a missing setup path remains fatal. No production publication checks change.
 Fresh complete validation, exact-head review and three-platform CI are required.
 
+### Added - ladder rung for an array spread before an index read (#15942)
+
+`ladder_t6_array_spread_index_{ws,simple,advanced}` compiles
+`var a = [..."xy", 5]; console.log(a[1]);`. Its `expected.stdout` was captured
+from the pinned `v20260915` jar, verified by sha256 and byte length, using the
+manifest's `closure-flags-file-v1` argv under Java 21.0.10. This is the shape
+behind the CLOC28 miscompile, where folding past the spread printed `5`
+instead of `y`. Until now no rung covered it.
+
+- WHITESPACE_ONLY and SIMPLE match upstream byte for byte.
+- ADVANCED is a known divergence: closurec doesn't inline the single-use
+  array (CCR-068), but its output is still correct.
+
+The other changes that go with the new rung:
+
+- The ledger gains one entry; its count pin moves from 59 to 60.
+- The fixture tripwire moves from 797 to 800.
+- The parity figures are now 55/58, 35/58 and 24/58.
+
 ### Fixed - token-independent OWNER RIGHTS admission (CV02)
 
 Native Windows CI at `c76de302f8` reached compiler tests and failed the inherited

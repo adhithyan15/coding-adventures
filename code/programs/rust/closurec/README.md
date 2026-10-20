@@ -289,15 +289,15 @@ runtime validation remains pending CI. Cross-compilation is not ACL runtime evid
 
 `tests/diff/ladder_*` is an ordered complexity ladder compiled by both
 `closurec` and the pinned Closure `v20260915` oracle. The fixture and
-divergence-ledger checks on 2026-09-26 cover 57 rungs:
+divergence-ledger checks on 2026-10-20 cover 58 rungs:
 
 | Level | Rungs agreeing | |
 |-------|---------------:|---|
-| `WHITESPACE_ONLY` | 54 / 57 | 95% |
-| `SIMPLE` | 34 / 57 | 60% |
-| `ADVANCED` | 24 / 57 | 42% |
+| `WHITESPACE_ONLY` | 55 / 58 | 95% |
+| `SIMPLE` | 35 / 58 | 60% |
+| `ADVANCED` | 24 / 58 | 41% |
 
-All 57 rungs are committed as fixtures under `tests/diff/ladder_*`. Agreement falls as the amount of claimed optimization rises. The `ADVANCED`
+All 58 rungs are committed as fixtures under `tests/diff/ladder_*`. Agreement falls as the amount of claimed optimization rises. The `ADVANCED`
 figure flatters it: most of its agreements are rungs with nothing to optimize.
 Upstream `ADVANCED` reduces whole programs to their observable effect —
 `var o={a:1,b:2};console.log(o.a)` becomes `console.log(1)` — where `closurec`
