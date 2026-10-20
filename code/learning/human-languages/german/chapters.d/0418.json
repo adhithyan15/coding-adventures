@@ -1,0 +1,19 @@
+{
+  "chapter": 418,
+  "title": "An Bord",
+  "label": "ch:ge-an-bord",
+  "canDo": "I can talk about a flight: the flight attendant, the window seat, the aisle seat, taking off and the landing.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "GE-C418-landung",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 418: I can talk about a flight: the flight attendant, the window seat, the aisle seat, taking off and the landing.",
+    "assesses": [
+      "GE-LEX-C418-BORD-03",
+      "GE-LEX-C418-BORD-04",
+      "GE-LEX-C418-BORD-05"
+    ]
+  }
+}

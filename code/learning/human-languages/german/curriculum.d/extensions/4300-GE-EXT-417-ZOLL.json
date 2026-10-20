@@ -1,0 +1,8 @@
+{
+  "id": "GE-EXT-417-ZOLL",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can go through security and customs: the security check, searching bags, customs, declaring goods and the passport.",
+  "prerequisites": []
+}

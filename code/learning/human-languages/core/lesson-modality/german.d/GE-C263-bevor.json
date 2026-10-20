@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C263-bevor",
+    "language": "german",
+    "chapter": 263,
+    "sequence": 14560,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:506d38771770cf37"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C442-glatteis",
+    "language": "german",
+    "chapter": 442,
+    "sequence": 23750,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:645ff648e89e74d2"
+  },
+  "findings": []
+}

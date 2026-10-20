@@ -1,0 +1,11 @@
+{
+  "id": "GE-C254-darum",
+  "pathSegment": "GE-PATH-254-MEINUNG",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GE-EXT-254-MEINUNG",
+      "order": 2
+    }
+  ]
+}

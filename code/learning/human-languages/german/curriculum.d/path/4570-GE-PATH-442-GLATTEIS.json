@@ -1,0 +1,9 @@
+{
+  "id": "GE-PATH-442-GLATTEIS",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "GE-EXT-442-GLATTEIS"
+  ],
+  "after": []
+}

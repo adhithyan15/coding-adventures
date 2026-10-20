@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 396,
+  "sourceHash": "fnv1a64:1899d36b55e27091",
+  "lessonIds": [
+    "GE-C396-tastatur",
+    "GE-C396-drucker",
+    "GE-C396-ausdrucken",
+    "GE-C396-installieren",
+    "GE-C396-programm"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch396.txt",
+  "json": "german/narration/ch396.json",
+  "textHash": "fnv1a64:77dd2d7bd6aa55a3",
+  "jsonHash": "fnv1a64:bb66df5e7293ecac",
+  "findings": []
+}

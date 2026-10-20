@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 336,
+  "sourceHash": "fnv1a64:459f37542f945e6c",
+  "lessonIds": [
+    "GE-C336-einigung",
+    "GE-C336-nachgeben",
+    "GE-C336-abwaegen",
+    "GE-C336-einerseits",
+    "GE-C336-andererseits"
+  ],
+  "tex": "german/book/chapters/ch336-eine-einigung-finden.tex"
+}

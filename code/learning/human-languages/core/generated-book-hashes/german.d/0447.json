@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 447,
+  "sourceHash": "fnv1a64:278e3a4d3ac56eb7",
+  "lessonIds": [
+    "GE-C447-friseur",
+    "GE-C447-foehnen",
+    "GE-C447-optiker",
+    "GE-C447-uhrmacher",
+    "GE-C447-juwelier"
+  ],
+  "tex": "german/book/chapters/ch447-friseur-und-optiker.tex"
+}

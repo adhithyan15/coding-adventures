@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C369-risiko",
+    "language": "german",
+    "chapter": 369,
+    "sequence": 19990,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e4d040a2243c024e"
+  },
+  "findings": []
+}

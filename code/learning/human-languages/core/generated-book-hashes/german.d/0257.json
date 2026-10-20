@@ -1,0 +1,11 @@
+{
+  "language": "german",
+  "chapter": 257,
+  "sourceHash": "fnv1a64:38a388906fb71c33",
+  "lessonIds": [
+    "GE-C257-hin-und-zurueck",
+    "GE-C257-zug-verpasst",
+    "GE-C257-review"
+  ],
+  "tex": "german/book/chapters/ch257-at-the-station.tex"
+}

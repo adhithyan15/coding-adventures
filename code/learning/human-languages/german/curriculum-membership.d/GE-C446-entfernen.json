@@ -1,0 +1,11 @@
+{
+  "id": "GE-C446-entfernen",
+  "pathSegment": "GE-PATH-446-REINIGUNG",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GE-EXT-446-REINIGUNG",
+      "order": 2
+    }
+  ]
+}

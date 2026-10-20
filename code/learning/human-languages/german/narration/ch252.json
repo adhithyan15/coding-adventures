@@ -1,0 +1,683 @@
+{
+  "version": 1,
+  "language": "german",
+  "chapter": 252,
+  "title": "The Told Story — ging, kam, las, als",
+  "drivablePrefix": 4,
+  "sourceHash": "fnv1a64:693de29fa530865f",
+  "lessons": [
+    {
+      "id": "GE-C252-ich-ging",
+      "sequence": 14100,
+      "title": "ich ging, ich kam — the past a story is told in",
+      "headword": "ich ging, ich kam, ich sah",
+      "romanization": "ich ging, ich kam, ich sah",
+      "gloss": "the strong Präteritum — the past of going, coming and seeing, made by changing the vowel instead of adding -te",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:30ab1592720a0a4b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"I said\" in one word. (Ich sagte.) Now \"I made\". (Ich machte.)"
+            },
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "That -te is the Präteritum, the past a German book or a fairy tale is told in. But the verbs a story leans on hardest, going, coming, seeing, do not take -te at all."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: the vowel changes, and nothing is added",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Six verbs you already own, and their one-word past:"
+            },
+            {
+              "kind": "speech",
+              "text": "gehen — ich ging, I went kommen — ich kam, I came sehen — ich sah, I saw fahren — ich fuhr, I travelled, I drove nehmen — ich nahm, I took stehen — ich stand, I stood."
+            },
+            {
+              "kind": "speech",
+              "text": "No -te anywhere. The stem's vowel changes instead, and for ich and for er or sie nothing is added: ich ging, er ging, just as ich sagte, er sagte. The plural adds -en: wir gingen, sie sahen. And du adds -st: du gingst."
+            },
+            {
+              "kind": "speech",
+              "text": "These are the strong verbs. Which vowel each one takes is learned verb by verb, like English went, came and saw."
+            },
+            {
+              "kind": "speech",
+              "text": "A separable verb splits in the Präteritum as it does in the present: ankommen, ich kam in Berlin an."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart: why the vowel changes",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Changing the vowel to make a past is older than German. The Germanic languages inherited it, and English kept it too: sing, sang; come, came. German calls it Ablaut, \"off-sound\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Kommen goes back to Old High German kweman and sehen to sehan, which EtymDB 2.1 traces to the Proto-Germanic parents of English come and see. EtymDB does not list the past forms, so this is the usual account, given as one: Old High German already said quam, \"came\", and sah, \"saw\". Ging is usually traced to a second old verb of going, gangan."
+            },
+            {
+              "kind": "speech",
+              "text": "The -te of sagte is the younger Germanic invention from chapter twenty-five, and new verbs still take it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gehen, ich ging; kommen, ich kam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gehen*, *ich ging*; *kommen*, *ich kam*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sehen, ich sah; fahren, ich fuhr",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sehen*, *ich sah*; *fahren*, *ich fuhr*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nehmen, ich nahm; stehen, ich stand",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nehmen*, *ich nahm*; *stehen*, *ich stand*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ich ging, er ging, wir gingen: nothing, nothing, then -en",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ich ging*, *er ging*, *wir gingen*: nothing, nothing, then *-en*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Ich kam in Berlin an. The prefix still goes last",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Ich kam in Berlin an.* The prefix still goes last]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ich sagte, then ich sah: one with -te, one with a new vowel",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ich sagte*, then *ich sah*: one with *-te*, one with a new vowel]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"I travelled\"? (Ich fuhr.) \"He took\"? (Er nahm, the same as ich nahm.) \"We came\"? (Wir kamen.) What changes in a strong verb's past, if not the ending? (The vowel.) And what is the old name for that change? (Ablaut.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GE-C252-ich-las",
+      "sequence": 14110,
+      "title": "ich las — the reading, and the having read",
+      "headword": "ich las / ich habe gelesen",
+      "romanization": "ich las / ich habe gelesen",
+      "gloss": "one past for I read and I was reading — the Präteritum carries a scene that is still going on, and während holds it open",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b5522ca76daf59ed",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"I went\" and \"I saw\". (Ich ging. Ich sah.)"
+            },
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Lesen is strong too. Its past is ich las."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: one past, two English meanings",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "English has two pasts for one verb: \"I read\", finished, and \"I was reading\", still going on. German has no \"-ing\" past. Ich las is both:"
+            },
+            {
+              "kind": "speech",
+              "text": "Ich las die Nachricht. — I read the message. Ich las, und es regnete. — I was reading, and it was raining."
+            },
+            {
+              "kind": "speech",
+              "text": "The sentence around the verb tells you which. A message gets read and is done. A rainy afternoon of reading is a scene: it was going on while something else happened."
+            },
+            {
+              "kind": "speech",
+              "text": "That is how a German story sets its scene. Es war Samstag. Es regnete. Ich las. Three Präteritum verbs, and none of them is finished yet. The weather verb takes the plain -te, with one extra e to make it sayable: es regnet, es regnete. Warten does the same: ich wartete, I waited, I was waiting."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way: während holds the scene open",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "When German wants to say plainly that one thing was still going on, it reaches for während, \"while\". It works like weil: the verb goes to the end of its clause."
+            },
+            {
+              "kind": "speech",
+              "text": "Während ich las, klingelte das Telefon. — While I was reading, the phone rang."
+            },
+            {
+              "kind": "speech",
+              "text": "The reading is the scene; the phone is the event that cut into it."
+            },
+            {
+              "kind": "speech",
+              "text": "In conversation the same afternoon comes out in the Perfekt: ich habe gelesen. The book and the story keep ich las. You may also hear ich war am Lesen, \"I was at the reading\", in everyday speech, especially in the west; it is colloquial, and a written story keeps the plain ich las."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "lesen from Old High German lesan from Proto-Germanic lesaną, \"to gather\" (EtymDB 2.1), and it still means \"to pick\" in Weinlese, the grape harvest. Las is its past by the vowel change of the last lesson, already las in Old High German by the usual account."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ich las, then \"I read\" and \"I was reading\": one German form",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ich las*, then \"I read\" and \"I was reading\": one German form]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a scene in three: Es war Samstag. Es regnete. Ich las.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a scene in three: *Es war Samstag. Es regnete. Ich las.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Während ich las, klingelte das Telefon.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Während ich las, klingelte das Telefon.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ich wartete: the extra e after the t",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ich wartete*: the extra *e* after the *t*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the conversation version: Ich habe gelesen.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the conversation version: *Ich habe gelesen.*]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "How does German say \"I was reading\" in a story? (Ich las, the same as \"I read\".) Which word holds a scene open? (Während.) And where does the verb go after it? (To the end.) \"It was raining\"? (Es regnete.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GE-C252-als",
+      "sequence": 14120,
+      "title": "als and wenn — once, or every time",
+      "headword": "als, wenn",
+      "romanization": "als, wenn",
+      "gloss": "when, in the past — als for one occasion, wenn for every time it happened; both send the verb to the end",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9fa9c672c0d77e05",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"while I was reading\". (Während ich las.) Then ask \"when are you coming?\" (Wann kommst du?)"
+            },
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Wann asks. Inside a story, German has two other words for \"when\", and it chooses by counting."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: one occasion, or every occasion",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "For one occasion in the past, German says als:"
+            },
+            {
+              "kind": "speech",
+              "text": "Als ich in Berlin war, sah ich meine Großmutter. — When I was in Berlin (that one time), I saw my grandmother."
+            },
+            {
+              "kind": "speech",
+              "text": "For something that happened every time, it says wenn, \"whenever\":"
+            },
+            {
+              "kind": "speech",
+              "text": "Wenn ich in Berlin war, besuchte ich meine Großmutter. — Whenever I was in Berlin, I visited my grandmother."
+            },
+            {
+              "kind": "speech",
+              "text": "English says \"when\" for both. Both German words work like weil: the verb goes to the end of its clause, als ich in Berlin war."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way: verb, comma, verb",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "In the first sentence two verbs meet at the comma: … in Berlin war, sah ich. The whole als clause is the first piece of the sentence, and the main verb comes second, so it follows the comma at once, with the subject behind it."
+            },
+            {
+              "kind": "speech",
+              "text": "Turn the sentence round and the meeting disappears: Ich sah meine Großmutter, als ich in Berlin war."
+            },
+            {
+              "kind": "speech",
+              "text": "With the present, wenn means \"when\" or \"whenever\": Wenn ich in Berlin bin, besuche ich sie. Als belongs to one occasion that is over."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "wenn and wann were one word in Old High German, wanne or wenne; EtymDB 2.1 traces wann to Proto-Germanic hwannē, the parent of English when. It lists no parent for wenn, so the split of one old word into a question word and a joining word is given as the usual account."
+            },
+            {
+              "kind": "speech",
+              "text": "als from Old High German alsō (EtymDB 2.1), worn down to one syllable. EtymDB gives no meaning for it; by the usual account it was al + sō, \"all so, just so\"."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Als ich in Berlin war, sah ich meine Großmutter. One time",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Als ich in Berlin war, sah ich meine Großmutter.* One time]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Wenn ich in Berlin war, besuchte ich meine Großmutter. Every time",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Wenn ich in Berlin war, besuchte ich meine Großmutter.* Every time]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the two verbs at the comma: war, sah",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the two verbs at the comma: *war, sah*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "turned round: Ich sah meine Großmutter, als ich in Berlin war.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: turned round: *Ich sah meine Großmutter, als ich in Berlin war.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Als ich las, klingelte das Telefon. One time",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Als ich las, klingelte das Telefon.* One time]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "One time in the past: which word? (Als.) Every time? (Wenn.) A question about time? (Wann.) Where does the verb go after als? (To the end.) And what comes straight after the comma when the als clause goes first? (The main verb.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GE-C252-review",
+      "sequence": 14130,
+      "title": "Review — the scene, and what cut into it",
+      "headword": "(review)",
+      "romanization": "(review)",
+      "gloss": "a scene and an event in one breath — strong Präteritum verbs, während for the background and als for the moment",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d4567333ea6c8d9c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"I went\", \"I came\" and \"I saw\". (Ich ging. Ich kam. Ich sah.) Then \"I waited\". (Ich wartete.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Three lessons, and the past of a story is in your hands. Two ways to make it: the -te of sagte and wartete, and the vowel change of ging, kam, sah, fuhr, nahm, stand and las. One form for \"I read\" and \"I was reading\", with the sentence around it deciding which. And während to hold a scene open while something happens."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Then the moment itself: als for one occasion, wenn for every time."
+            },
+            {
+              "kind": "speech",
+              "text": "Während ich las, klingelte das Telefon. Als ich in Berlin ankam, regnete es."
+            },
+            {
+              "kind": "speech",
+              "text": "The second one is worth hearing twice. Ankommen splits in a main clause: ich kam an. After als, the verb goes to the end, and the prefix joins it again: als ich in Berlin ankam. Then verb, comma, verb: ankam, regnete."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a scene in three: Es war Samstag. Es regnete. Ich las.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a scene in three: *Es war Samstag. Es regnete. Ich las.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Während ich las, klingelte das Telefon.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Während ich las, klingelte das Telefon.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Ich kam in Berlin an, then Als ich in Berlin ankam, regnete es.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Ich kam in Berlin an*, then *Als ich in Berlin ankam, regnete es.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "every time: Wenn ich in Berlin war, besuchte ich meine Großmutter.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: every time: *Wenn ich in Berlin war, besuchte ich meine Großmutter.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "one of your own: a scene with während, and one thing that happened, with als",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: one of your own: a scene with *während*, and one thing that happened, with *als*]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"I took\"? (Ich nahm.) \"I was reading\"? (Ich las.) One occasion in the past: als or wenn? (Als.) What happens to the an of ankommen after als? (It joins the verb again, at the end: ankam.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

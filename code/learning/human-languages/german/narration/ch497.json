@@ -1,0 +1,858 @@
+{
+  "version": 1,
+  "language": "german",
+  "chapter": 497,
+  "title": "Frech und trotzig",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:9db09f1627d57be2",
+  "lessons": [
+    {
+      "id": "GE-C497-trotzig",
+      "sequence": 26580,
+      "title": "trotzig — defiant",
+      "headword": "trotzig",
+      "romanization": "trotzig",
+      "gloss": "defiant",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d3a4a9075ae83cb4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the German for pram, then the German for dummy."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: trotzig",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "trotzig — \"defiant\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Der Kleine ist müde und deshalb trotzig. The little one is tired and so he's being defiant."
+            },
+            {
+              "kind": "speech",
+              "text": "Die Trotzphase — the terrible twos."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "trotzig is built on Trotz \"defiance\", from Middle High German traz (EtymDB), with -ig."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "trotzig",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *trotzig*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "trotzig, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *trotzig*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with trotzig",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *trotzig*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the German for pram, then the German for dummy, then say trotzig again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the German for pram, then the German for dummy, then say *trotzig* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does trotzig mean? (\"Defiant\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GE-C497-schimpfen",
+      "sequence": 26590,
+      "title": "schimpfen — to scold; to grumble",
+      "headword": "schimpfen",
+      "romanization": "schimpfen",
+      "gloss": "to scold; to grumble",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e5a310bf959fbf34",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the German for dummy, then the German for defiant."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: schimpfen",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "schimpfen — \"to scold; to grumble\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Die Mutter schimpft, weil die Kinder so laut sind. The mother is scolding because the children are so noisy."
+            },
+            {
+              "kind": "speech",
+              "text": "Mit jemandem schimpfen — to tell someone off. Über etwas schimpfen — to grumble about something."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "schimpfen goes back to Middle High German schimpfen \"to joke, to mock\"; the meaning later shifted to scolding. EtymDB lists the German word without a source."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "schimpfen",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *schimpfen*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "schimpfen, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *schimpfen*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with schimpfen",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *schimpfen*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the German for dummy, then the German for defiant, then say schimpfen again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the German for dummy, then the German for defiant, then say *schimpfen* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does schimpfen mean? (\"To scold; to grumble\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GE-C497-loben",
+      "sequence": 26600,
+      "title": "loben — to praise",
+      "headword": "loben",
+      "romanization": "loben",
+      "gloss": "to praise",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8d301ae340bec6e0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the German for defiant, then the German for to scold."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: loben",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "loben — \"to praise\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Die Lehrerin lobt den Jungen für seine Arbeit. The teacher praises the boy for his work."
+            },
+            {
+              "kind": "speech",
+              "text": "The noun: das Lob — praise."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "loben is inherited from Middle High German loben, from Proto-Germanic lubōną \"to praise\" (EtymDB)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "loben",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *loben*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "loben, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *loben*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with loben",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *loben*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the German for defiant, then the German for to scold, then say loben again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the German for defiant, then the German for to scold, then say *loben* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does loben mean? (\"To praise\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GE-C497-necken",
+      "sequence": 26610,
+      "title": "necken — to tease",
+      "headword": "necken",
+      "romanization": "necken",
+      "gloss": "to tease",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2d154b83a91c5684",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the German for to scold, then the German for to praise."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: necken",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "necken — \"to tease\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Mein großer Bruder neckt mich gern wegen meiner Haare. My big brother likes to tease me about my hair."
+            },
+            {
+              "kind": "speech",
+              "text": "Gentle, friendly teasing."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The origin of necken is not settled; EtymDB lists the German word without a source."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "necken",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *necken*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "necken, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *necken*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with necken",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *necken*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the German for to scold, then the German for to praise, then say necken again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the German for to scold, then the German for to praise, then say *necken* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does necken mean? (\"To tease\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GE-C497-taschengeld",
+      "sequence": 26620,
+      "title": "das Taschengeld — pocket money",
+      "headword": "das Taschengeld",
+      "romanization": "das Taschengeld",
+      "gloss": "pocket money",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f8113c378f9dd551",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the German for to praise, then the German for to tease."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: das Taschengeld",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "das Taschengeld — \"pocket money\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Von seinem Taschengeld kauft er Comics. He buys comics with his pocket money."
+            },
+            {
+              "kind": "speech",
+              "text": "No plural."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Taschengeld is built on Tasche \"pocket\", inherited from Old High German tasca, and Geld \"money\", from Old High German gelt \"payment\" (EtymDB)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "das Taschengeld",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *das Taschengeld*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "das Taschengeld, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *das Taschengeld*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with das Taschengeld",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *das Taschengeld*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the German for to praise, then the German for to tease, then say das Taschengeld again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the German for to praise, then the German for to tease, then say *das Taschengeld* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does das Taschengeld mean? (\"Pocket money\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GE-R497-review-490-497",
+      "sequence": 26630,
+      "title": "Words from chapters 490–497 — a review",
+      "headword": "(dialogue)",
+      "romanization": "(dialogue)",
+      "gloss": "a review of chapters 490-497",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1374268a9183bf77",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the German for father-in-law and stepfather."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "father-in-law, stepfather, great-grandfather, twin, only child",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: father-in-law, stepfather, great-grandfather, twin, only child]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "half-brother, godfather, godchild, spouse, offspring",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: half-brother, godfather, godchild, spouse, offspring]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to fall in love, to flirt, to cuddle, to kiss, kiss",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to fall in love, to flirt, to cuddle, to kiss, kiss]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "affection, hug, tender, feeling of safety, solidarity",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: affection, hug, tender, feeling of safety, solidarity]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to squabble, to sulk, to get along, to reconcile, reconciliation",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to squabble, to sulk, to get along, to reconcile, reconciliation]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to bring up, upbringing, to spoil, to obey, puberty",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to bring up, upbringing, to spoil, to obey, puberty]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to breastfeed, nappy, to change, pram, dummy",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to breastfeed, nappy, to change, pram, dummy]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "defiant, to scold, to praise, to tease, pocket money",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: defiant, to scold, to praise, to tease, pocket money]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Father-in-law? (der Schwiegervater.) Stepfather? (der Stiefvater.) Great-grandfather? (der Urgroßvater.) Twin? (der Zwilling.) Only child? (das Einzelkind.) Half-brother? (der Halbbruder.) Godfather? (der Pate.) Godchild? (das Patenkind.) Spouse? (der Ehepartner.) Offspring? (der Nachwuchs.) To fall in love? (verlieben.) To flirt? (flirten.) To cuddle? (kuscheln.) To kiss? (küssen.) Kiss? (der Kuss.) Affection? (die Zuneigung.) Hug? (die Umarmung.) Tender? (zärtlich.) Feeling of safety? (die Geborgenheit.) Solidarity? (der Zusammenhalt.) To squabble? (zanken.) To sulk? (schmollen.) To get along? (vertragen.) To reconcile? (versöhnen.) Reconciliation? (die Versöhnung.) To bring up? (erziehen.) Upbringing? (die Erziehung.) To spoil? (verwöhnen.) To obey? (gehorchen.) Puberty? (die Pubertät.) To breastfeed? (stillen.) Nappy? (die Windel.) To change? (wickeln.) Pram? (der Kinderwagen.) Dummy? (der Schnuller.) Defiant? (trotzig.) To scold? (schimpfen.) To praise? (loben.) To tease? (necken.) Pocket money? (das Taschengeld.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

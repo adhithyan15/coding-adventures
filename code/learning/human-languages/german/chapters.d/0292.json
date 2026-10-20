@@ -1,0 +1,19 @@
+{
+  "chapter": 292,
+  "title": "Die Rettung",
+  "label": "ch:ge-die-rettung",
+  "canDo": "I can report a rescue: to warn, a rescue, to bring out alive, to evacuate and to survive.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "GE-C292-ueberleben",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 292: I can report a rescue: to warn, a rescue, to bring out alive, to evacuate and to survive.",
+    "assesses": [
+      "GE-LEX-C292-RETTUNG-03",
+      "GE-LEX-C292-RETTUNG-04",
+      "GE-LEX-C292-RETTUNG-05"
+    ]
+  }
+}

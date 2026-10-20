@@ -1,0 +1,19 @@
+{
+  "chapter": 386,
+  "title": "Vor Gericht",
+  "label": "ch:ge-vor-gericht",
+  "canDo": "I can talk about taking someone to court, a trial, and who is liable.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "GE-C386-haftung",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 386: I can talk about taking someone to court, a trial, and who is liable.",
+    "assesses": [
+      "GE-LEX-C386-KLAGE-03",
+      "GE-LEX-C386-KLAGE-04",
+      "GE-LEX-C386-KLAGE-05"
+    ]
+  }
+}

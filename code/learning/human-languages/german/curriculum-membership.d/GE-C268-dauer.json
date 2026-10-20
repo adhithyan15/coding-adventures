@@ -1,0 +1,11 @@
+{
+  "id": "GE-C268-dauer",
+  "pathSegment": "GE-PATH-268-AUGENBLICK",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-268-AUGENBLICK",
+      "order": 3
+    }
+  ]
+}

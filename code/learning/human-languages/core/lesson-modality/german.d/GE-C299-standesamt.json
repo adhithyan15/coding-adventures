@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C299-standesamt",
+    "language": "german",
+    "chapter": 299,
+    "sequence": 16430,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4873839dabf4f9b1"
+  },
+  "findings": []
+}

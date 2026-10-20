@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C337-zweifeln",
+    "language": "german",
+    "chapter": 337,
+    "sequence": 18380,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:bdc591e5ce12c272"
+  },
+  "findings": []
+}

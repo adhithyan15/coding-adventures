@@ -1,0 +1,19 @@
+{
+  "chapter": 312,
+  "title": "Das Volksfest",
+  "label": "ch:ge-das-volksfest",
+  "canDo": "I can talk about a fair: a public festival, a funfair, a merry-go-round, traditional dress and a band.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "GE-C312-kapelle",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 312: I can talk about a fair: a public festival, a funfair, a merry-go-round, traditional dress and a band.",
+    "assesses": [
+      "GE-LEX-C312-VOLKSFEST-03",
+      "GE-LEX-C312-VOLKSFEST-04",
+      "GE-LEX-C312-VOLKSFEST-05"
+    ]
+  }
+}

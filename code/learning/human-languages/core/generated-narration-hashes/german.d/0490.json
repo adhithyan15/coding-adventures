@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 490,
+  "sourceHash": "fnv1a64:6813017db7d9ce7a",
+  "lessonIds": [
+    "GE-C490-schwiegervater",
+    "GE-C490-stiefvater",
+    "GE-C490-urgrossvater",
+    "GE-C490-zwilling",
+    "GE-C490-einzelkind"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch490.txt",
+  "json": "german/narration/ch490.json",
+  "textHash": "fnv1a64:c4013eb72050de7b",
+  "jsonHash": "fnv1a64:750bf942ef877019",
+  "findings": []
+}

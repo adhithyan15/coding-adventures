@@ -1,0 +1,9 @@
+{
+  "id": "GE-PATH-253-REIHENFOLGE",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "GE-EXT-253-REIHENFOLGE"
+  ],
+  "after": []
+}

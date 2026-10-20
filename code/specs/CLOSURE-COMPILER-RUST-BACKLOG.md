@@ -75,6 +75,10 @@ stop and ask the owner. Don't stretch the PR to satisfy both.
 Standing owner directions remain in force:
 
 - Match Closure on **observable output**, not on internal pass structure.
+- **Refuse what Closure refuses** (CCR-075, decided 2026-10-19). If the
+  pinned upstream rejects an input, closurec rejects it the same way: the same
+  diagnostic, location and exit status, and no output. closurec does not
+  compile a superset of what Closure compiles.
 - Base ESTree is the canonical serialized AST boundary, using our own types
   and no external AST crate (#15840).
 - No new crates.io dependencies without a recorded decision. `serde`,
@@ -138,6 +142,7 @@ Ranking:
 | 3 | #15939 | `cargo clippy -- -D warnings` can't pass: `Cargo.toml` allows a lint that clippy 0.1.94 doesn't know. | Strict clippy passes on `closurec`. | Ready |
 | 4 | #15942 | Add a ladder rung for an array spread before an index read, the gap the CLOC28 miscompile slipped through. | The rung is committed and agrees at every level. | Ready |
 | 5 | CCR-078 #15863 | At SIMPLE, closurec propagates a const that upstream keeps. This output has never been validated. | Either match upstream, or record the divergence as intentional with runtime-equivalence evidence. | Ready |
+| 5.5 | CCR-075 #15860 | closurec compiles input that upstream refuses, starting with private class elements. Refuse it the same way upstream does. | The `private_field` rungs and the CCR-081 `upstream_refuses` fixtures produce upstream's diagnostic key and message, location and exit status 2, with no output or sidecars. The ladder harness gains a "both declined identically" verdict that counts as agreement. | Ready |
 
 ### Q1 — cheap ladder wins (emitter and DCE parity)
 
@@ -202,9 +207,7 @@ migration trial). Each one starts with a survey PR that splits it into issues.
 
 ### Decisions needed from the owner
 
-| ID | Question |
-|---|---|
-| CCR-075 #15860 | What should closurec do with JavaScript that Closure itself refuses to compile? |
+None open.
 
 ### Filler (only while waiting on CI)
 
@@ -227,3 +230,4 @@ Add one line per selection or merge.
 | Date | Event |
 |---|---|
 | 2026-10-19 | Backlog reset. #17288 closed; lexer intervals salvaged as #17803. Provenance is no longer a gate. Next: #16008. |
+| 2026-10-19 | Owner decided CCR-075: refuse what Closure refuses. Added to Q0 as rank 5.5. |

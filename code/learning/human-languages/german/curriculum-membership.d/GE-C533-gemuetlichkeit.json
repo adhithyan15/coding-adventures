@@ -1,0 +1,11 @@
+{
+  "id": "GE-C533-gemuetlichkeit",
+  "pathSegment": "GE-PATH-533-GEMUETLICH",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-533-GEMUETLICH",
+      "order": 4
+    }
+  ]
+}

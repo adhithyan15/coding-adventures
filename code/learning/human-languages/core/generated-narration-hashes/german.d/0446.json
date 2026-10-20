@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 446,
+  "sourceHash": "fnv1a64:dba02d9f0fca9a73",
+  "lessonIds": [
+    "GE-C446-reinigung",
+    "GE-C446-waschsalon",
+    "GE-C446-entfernen",
+    "GE-C446-flicken",
+    "GE-C446-trocknen"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch446.txt",
+  "json": "german/narration/ch446.json",
+  "textHash": "fnv1a64:10ab5a540e4c3428",
+  "jsonHash": "fnv1a64:44b2cf0f522aa808",
+  "findings": []
+}

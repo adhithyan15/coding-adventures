@@ -1,0 +1,19 @@
+{
+  "chapter": 413,
+  "title": "Im Nachtzug",
+  "label": "ch:ge-im-nachtzug",
+  "canDo": "I can travel on a night train: the sleeping car, the dining car, the end of the line, booking and travelling on.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "GE-R413-review-406-413",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 413: I can travel on a night train: the sleeping car, the dining car, the end of the line, booking and travelling on.",
+    "assesses": [
+      "GE-LEX-C413-NACHTZUG-03",
+      "GE-LEX-C413-NACHTZUG-04",
+      "GE-LEX-C413-NACHTZUG-05"
+    ]
+  }
+}

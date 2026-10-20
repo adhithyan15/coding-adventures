@@ -1,0 +1,8 @@
+{
+  "id": "GE-EXT-370-KLAPPEN",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say whether something worked out or went wrong, whether a case arose and whether a claim is true.",
+  "prerequisites": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "GE-C468-toben",
+  "pathSegment": "GE-PATH-468-WUT",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-468-WUT",
+      "order": 4
+    }
+  ]
+}

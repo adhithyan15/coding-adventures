@@ -1,0 +1,11 @@
+{
+  "id": "GE-C422-kapitaen",
+  "pathSegment": "GE-PATH-422-KREUZFAHRT",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-422-KREUZFAHRT",
+      "order": 4
+    }
+  ]
+}

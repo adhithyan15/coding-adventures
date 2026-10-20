@@ -1,0 +1,9 @@
+{
+  "id": "GE-PATH-423-ANKER",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "GE-EXT-423-ANKER"
+  ],
+  "after": []
+}

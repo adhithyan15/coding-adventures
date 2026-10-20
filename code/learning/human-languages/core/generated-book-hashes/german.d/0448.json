@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 448,
+  "sourceHash": "fnv1a64:55d8412b880c2ef3",
+  "lessonIds": [
+    "GE-C448-frankieren",
+    "GE-C448-verschicken",
+    "GE-C448-einwerfen",
+    "GE-C448-paeckchen",
+    "GE-C448-einschreiben"
+  ],
+  "tex": "german/book/chapters/ch448-briefe-und-packchen.tex"
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C324-ruehren",
+    "language": "german",
+    "chapter": 324,
+    "sequence": 17670,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:46b9a42aba63cf2e"
+  },
+  "findings": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 289,
+  "sourceHash": "fnv1a64:4be57b5e29eecaf5",
+  "lessonIds": [
+    "GE-C289-ausrutschen",
+    "GE-C289-stolpern",
+    "GE-C289-stuerzen",
+    "GE-C289-sturz",
+    "GE-C289-bluten"
+  ],
+  "tex": "german/book/chapters/ch289-ein-sturz.tex"
+}

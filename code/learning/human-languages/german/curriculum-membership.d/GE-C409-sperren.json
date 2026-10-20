@@ -1,0 +1,11 @@
+{
+  "id": "GE-C409-sperren",
+  "pathSegment": "GE-PATH-409-UMLEITUNG",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-409-UMLEITUNG",
+      "order": 3
+    }
+  ]
+}

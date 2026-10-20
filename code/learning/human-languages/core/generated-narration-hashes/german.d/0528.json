@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 528,
+  "sourceHash": "fnv1a64:75b517ab26bf6760",
+  "lessonIds": [
+    "GE-C528-unordnung",
+    "GE-C528-ausmisten",
+    "GE-C528-abfall",
+    "GE-C528-muelltonne",
+    "GE-C528-entsorgen"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch528.txt",
+  "json": "german/narration/ch528.json",
+  "textHash": "fnv1a64:ba79a0fea1659dc8",
+  "jsonHash": "fnv1a64:17ddf191d5e029dd",
+  "findings": []
+}

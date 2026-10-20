@@ -1,0 +1,11 @@
+{
+  "id": "GE-C479-hustensaft",
+  "pathSegment": "GE-PATH-479-SCHNUPFEN",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GE-EXT-479-SCHNUPFEN",
+      "order": 2
+    }
+  ]
+}

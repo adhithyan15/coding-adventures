@@ -1,0 +1,11 @@
+{
+  "id": "GE-C271-bericht",
+  "pathSegment": "GE-PATH-271-MELDUNG",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GE-EXT-271-MELDUNG",
+      "order": 2
+    }
+  ]
+}

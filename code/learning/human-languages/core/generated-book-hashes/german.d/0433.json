@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 433,
+  "sourceHash": "fnv1a64:e364219fcce0b7b2",
+  "lessonIds": [
+    "GE-C433-orientieren",
+    "GE-C433-kompass",
+    "GE-C433-himmelsrichtung",
+    "GE-C433-zurechtfinden",
+    "GE-C433-verirren"
+  ],
+  "tex": "german/book/chapters/ch433-wo-ist-norden.tex"
+}

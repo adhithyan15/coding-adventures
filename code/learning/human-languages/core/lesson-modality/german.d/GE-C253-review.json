@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C253-review",
+    "language": "german",
+    "chapter": 253,
+    "sequence": 14170,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:579ce5dd1740fa69"
+  },
+  "findings": []
+}

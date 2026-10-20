@@ -1,0 +1,15 @@
+{
+  "language": "german",
+  "chapter": 397,
+  "sourceHash": "fnv1a64:35864590418b5c3a",
+  "lessonIds": [
+    "GE-C397-abstuerzen",
+    "GE-C397-aktualisieren",
+    "GE-C397-fehlermeldung",
+    "GE-C397-wiederherstellen",
+    "GE-C397-sicherung",
+    "GE-R397-review-394-397",
+    "GE-R397-review-final-397"
+  ],
+  "tex": "german/book/chapters/ch397-der-computer-sturzt-ab.tex"
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C528-entsorgen",
+    "language": "german",
+    "chapter": 528,
+    "sequence": 28210,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8b91c821cdef4c57"
+  },
+  "findings": []
+}

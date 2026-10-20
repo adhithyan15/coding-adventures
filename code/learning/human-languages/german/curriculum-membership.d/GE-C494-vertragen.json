@@ -1,0 +1,11 @@
+{
+  "id": "GE-C494-vertragen",
+  "pathSegment": "GE-PATH-494-STREIT",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GE-EXT-494-STREIT",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 475,
+  "sourceHash": "fnv1a64:e606e89853bb5b85",
+  "lessonIds": [
+    "GE-C475-prahlen",
+    "GE-C475-angeben",
+    "GE-C475-angeber",
+    "GE-C475-bescheiden",
+    "GE-C475-eitel"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch475.txt",
+  "json": "german/narration/ch475.json",
+  "textHash": "fnv1a64:34744231d4ea5fce",
+  "jsonHash": "fnv1a64:f9d5d92bdeadecc8",
+  "findings": []
+}

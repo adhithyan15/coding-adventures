@@ -1,0 +1,8 @@
+{
+  "id": "GE-EXT-460-WETTERBERICHT",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can follow a weather report: the weather report, the weather situation, a cloudless sky, an overcast sky and a sudden change.",
+  "prerequisites": []
+}

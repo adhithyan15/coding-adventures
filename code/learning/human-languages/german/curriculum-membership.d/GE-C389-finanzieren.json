@@ -1,0 +1,11 @@
+{
+  "id": "GE-C389-finanzieren",
+  "pathSegment": "GE-PATH-389-LEISTEN",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GE-EXT-389-LEISTEN",
+      "order": 2
+    }
+  ]
+}

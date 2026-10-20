@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C444-kleben",
+    "language": "german",
+    "chapter": 444,
+    "sequence": 23890,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b2081426b9d5b7c6"
+  },
+  "findings": []
+}

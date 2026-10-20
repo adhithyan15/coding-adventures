@@ -1,0 +1,20 @@
+{
+  "language": "german",
+  "chapter": 301,
+  "sourceHash": "fnv1a64:66c517135ff29ada",
+  "lessonIds": [
+    "GE-C301-kuendigen",
+    "GE-C301-kuendigung",
+    "GE-C301-befoerdern",
+    "GE-C301-befoerderung",
+    "GE-C301-wendepunkt",
+    "GE-R301-review-294-301"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "german/narration/ch301.txt",
+  "json": "german/narration/ch301.json",
+  "textHash": "fnv1a64:c4601f07b4fe07a7",
+  "jsonHash": "fnv1a64:a045a9789b6fe017",
+  "findings": []
+}

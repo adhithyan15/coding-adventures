@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C468-aergern",
+    "language": "german",
+    "chapter": 468,
+    "sequence": 25120,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:11a17214cb938c02"
+  },
+  "findings": []
+}

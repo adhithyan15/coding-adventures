@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-R277-review-270-277",
+    "language": "german",
+    "chapter": 277,
+    "sequence": 15310,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c06996ca09a5ddf5"
+  },
+  "findings": []
+}

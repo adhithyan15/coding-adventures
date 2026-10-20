@@ -1,0 +1,19 @@
+{
+  "chapter": 399,
+  "title": "Am Steuer",
+  "label": "ch:ge-am-steuer",
+  "canDo": "I can describe driving: the steering wheel, steering, braking, the brake and changing gear.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "GE-C399-schalten",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 399: I can describe driving: the steering wheel, steering, braking, the brake and changing gear.",
+    "assesses": [
+      "GE-LEX-C399-LENKRAD-03",
+      "GE-LEX-C399-LENKRAD-04",
+      "GE-LEX-C399-LENKRAD-05"
+    ]
+  }
+}

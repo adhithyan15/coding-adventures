@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 392,
+  "sourceHash": "fnv1a64:9c210af3c883b2b6",
+  "lessonIds": [
+    "GE-C392-geraet",
+    "GE-C392-akku",
+    "GE-C392-aufladen",
+    "GE-C392-ladegeraet",
+    "GE-C392-stecker"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch392.txt",
+  "json": "german/narration/ch392.json",
+  "textHash": "fnv1a64:95fdf4b76739fc08",
+  "jsonHash": "fnv1a64:8c78d54cb19ae5d8",
+  "findings": []
+}

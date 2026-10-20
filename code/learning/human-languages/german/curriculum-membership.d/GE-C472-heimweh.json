@@ -1,0 +1,11 @@
+{
+  "id": "GE-C472-heimweh",
+  "pathSegment": "GE-PATH-472-SEHNSUCHT",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-472-SEHNSUCHT",
+      "order": 3
+    }
+  ]
+}

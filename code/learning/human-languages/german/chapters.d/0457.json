@@ -1,0 +1,19 @@
+{
+  "chapter": 457,
+  "title": "An der Küste",
+  "label": "ch:ge-an-der-kuste",
+  "canDo": "I can describe the coast: the dune, low tide, high tide, the bay and the shell.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "GE-C457-muschel",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 457: I can describe the coast: the dune, low tide, high tide, the bay and the shell.",
+    "assesses": [
+      "GE-LEX-C457-KUESTE-03",
+      "GE-LEX-C457-KUESTE-04",
+      "GE-LEX-C457-KUESTE-05"
+    ]
+  }
+}

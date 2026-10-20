@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 278,
+  "sourceHash": "fnv1a64:e907abb5a02894f3",
+  "lessonIds": [
+    "GE-C278-verhandeln",
+    "GE-C278-verhandlung",
+    "GE-C278-vertrag",
+    "GE-C278-unterzeichnen",
+    "GE-C278-konferenz"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch278.txt",
+  "json": "german/narration/ch278.json",
+  "textHash": "fnv1a64:b81e19b4035fe89e",
+  "jsonHash": "fnv1a64:144384e11fb8bc44",
+  "findings": []
+}

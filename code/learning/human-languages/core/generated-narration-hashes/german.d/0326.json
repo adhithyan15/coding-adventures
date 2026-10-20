@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 326,
+  "sourceHash": "fnv1a64:70ce72a5f2b2929b",
+  "lessonIds": [
+    "GE-C326-vorheizen",
+    "GE-C326-einfetten",
+    "GE-C326-backblech",
+    "GE-C326-auflaufform",
+    "GE-C326-braeunen"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch326.txt",
+  "json": "german/narration/ch326.json",
+  "textHash": "fnv1a64:d9b05c0fe64edc09",
+  "jsonHash": "fnv1a64:76ad998cace6d8b7",
+  "findings": []
+}

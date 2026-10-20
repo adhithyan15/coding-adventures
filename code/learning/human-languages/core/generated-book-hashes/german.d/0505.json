@@ -1,0 +1,14 @@
+{
+  "language": "german",
+  "chapter": 505,
+  "sourceHash": "fnv1a64:e5a449bdecf4921d",
+  "lessonIds": [
+    "GE-C505-trainieren",
+    "GE-C505-ausdauer",
+    "GE-C505-kondition",
+    "GE-C505-dehnen",
+    "GE-C505-muskelkater",
+    "GE-R505-review-498-505"
+  ],
+  "tex": "german/book/chapters/ch505-trainieren.tex"
+}

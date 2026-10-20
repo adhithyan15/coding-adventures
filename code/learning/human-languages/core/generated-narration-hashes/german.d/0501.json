@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 501,
+  "sourceHash": "fnv1a64:c8cbf7107d732f05",
+  "lessonIds": [
+    "GE-C501-brettspiel",
+    "GE-C501-schach",
+    "GE-C501-wuerfel",
+    "GE-C501-mogeln",
+    "GE-C501-runde"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch501.txt",
+  "json": "german/narration/ch501.json",
+  "textHash": "fnv1a64:56fa657e763044b9",
+  "jsonHash": "fnv1a64:798fee54cbbb6f75",
+  "findings": []
+}

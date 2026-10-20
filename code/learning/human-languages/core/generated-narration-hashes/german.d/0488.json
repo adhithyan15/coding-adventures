@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 488,
+  "sourceHash": "fnv1a64:4d1110c0c96c59b1",
+  "lessonIds": [
+    "GE-C488-anstecken",
+    "GE-C488-infektion",
+    "GE-C488-impfen",
+    "GE-C488-erholen",
+    "GE-C488-genesen"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch488.txt",
+  "json": "german/narration/ch488.json",
+  "textHash": "fnv1a64:9bf07e45474f1701",
+  "jsonHash": "fnv1a64:49a27aa3836f0de6",
+  "findings": []
+}

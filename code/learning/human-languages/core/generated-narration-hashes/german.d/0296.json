@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 296,
+  "sourceHash": "fnv1a64:18dfa2db441bc07a",
+  "lessonIds": [
+    "GE-C296-geburt",
+    "GE-C296-schwanger",
+    "GE-C296-schwangerschaft",
+    "GE-C296-taufen",
+    "GE-C296-taufe"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch296.txt",
+  "json": "german/narration/ch296.json",
+  "textHash": "fnv1a64:f576a9e526a1670b",
+  "jsonHash": "fnv1a64:5c588a9b5345e3d8",
+  "findings": []
+}

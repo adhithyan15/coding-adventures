@@ -1,0 +1,11 @@
+{
+  "id": "GE-C338-offensichtlich",
+  "pathSegment": "GE-PATH-338-VERMUTUNG",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-338-VERMUTUNG",
+      "order": 3
+    }
+  ]
+}

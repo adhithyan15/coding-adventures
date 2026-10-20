@@ -1,0 +1,11 @@
+{
+  "id": "GE-C514-summen",
+  "pathSegment": "GE-PATH-514-MELODIE",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-514-MELODIE",
+      "order": 4
+    }
+  ]
+}

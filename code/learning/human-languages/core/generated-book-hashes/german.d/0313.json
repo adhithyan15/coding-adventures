@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 313,
+  "sourceHash": "fnv1a64:5ad8b1d1ed7c9c7d",
+  "lessonIds": [
+    "GE-C313-maerchen",
+    "GE-C313-legende",
+    "GE-C313-fabel",
+    "GE-C313-hexe",
+    "GE-C313-zauberer"
+  ],
+  "tex": "german/book/chapters/ch313-es-war-einmal.tex"
+}

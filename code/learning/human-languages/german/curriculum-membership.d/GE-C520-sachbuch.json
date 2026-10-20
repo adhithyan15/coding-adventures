@@ -1,0 +1,11 @@
+{
+  "id": "GE-C520-sachbuch",
+  "pathSegment": "GE-PATH-520-BUECHER",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-520-BUECHER",
+      "order": 3
+    }
+  ]
+}

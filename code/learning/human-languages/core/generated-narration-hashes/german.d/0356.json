@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 356,
+  "sourceHash": "fnv1a64:75f3c908b609b06d",
+  "lessonIds": [
+    "GE-C356-karriere",
+    "GE-C356-aufstieg",
+    "GE-C356-herausforderung",
+    "GE-C356-bewaeltigen",
+    "GE-C356-scheitern"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch356.txt",
+  "json": "german/narration/ch356.json",
+  "textHash": "fnv1a64:9e7fcc0fb1695b84",
+  "jsonHash": "fnv1a64:aa7929d726fe9600",
+  "findings": []
+}

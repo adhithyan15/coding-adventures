@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C404-warndreieck",
+    "language": "german",
+    "chapter": 404,
+    "sequence": 21840,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d0eca44f192d65e4"
+  },
+  "findings": []
+}

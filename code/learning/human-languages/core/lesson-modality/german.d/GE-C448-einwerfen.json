@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C448-einwerfen",
+    "language": "german",
+    "chapter": 448,
+    "sequence": 24080,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:222ad6ae41e2e4ad"
+  },
+  "findings": []
+}

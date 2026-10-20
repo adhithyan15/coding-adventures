@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C303-beerdigen",
+    "language": "german",
+    "chapter": 303,
+    "sequence": 16610,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2244cd65e35e4457"
+  },
+  "findings": []
+}

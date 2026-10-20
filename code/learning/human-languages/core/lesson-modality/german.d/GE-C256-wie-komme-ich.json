@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C256-wie-komme-ich",
+    "language": "german",
+    "chapter": 256,
+    "sequence": 14250,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:48b08f33eaaa43bb"
+  },
+  "findings": []
+}

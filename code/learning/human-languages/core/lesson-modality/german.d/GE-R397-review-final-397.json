@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-R397-review-final-397",
+    "language": "german",
+    "chapter": 397,
+    "sequence": 21490,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ce0f4045bb3db050"
+  },
+  "findings": []
+}

@@ -1,0 +1,9 @@
+{
+  "id": "GE-PATH-372-VEREINBARUNG",
+  "spine_node": "SPINE-EXPRESS-CONDITION",
+  "before": [],
+  "inline": [
+    "GE-EXT-372-VEREINBARUNG"
+  ],
+  "after": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 348,
+  "sourceHash": "fnv1a64:24528a79ea7b785e",
+  "lessonIds": [
+    "GE-C348-verantwortung",
+    "GE-C348-verantwortlich",
+    "GE-C348-rechtfertigen",
+    "GE-C348-ausrede",
+    "GE-C348-deswegen"
+  ],
+  "tex": "german/book/chapters/ch348-wer-ist-verantwortlich.tex"
+}

@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 466,
+  "sourceHash": "fnv1a64:8363f38aff54a726",
+  "lessonIds": [
+    "GE-C466-eifersucht",
+    "GE-C466-neid",
+    "GE-C466-neidisch",
+    "GE-C466-beneiden",
+    "GE-C466-goennen"
+  ],
+  "tex": "german/book/chapters/ch466-neid-und-eifersucht.tex"
+}

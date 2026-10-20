@@ -1,0 +1,11 @@
+{
+  "id": "GE-C295-beschaedigen",
+  "pathSegment": "GE-PATH-295-PANNE",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-295-PANNE",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,8 @@
+{
+  "id": "GE-EXT-331-UEBERZEUGEN",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can convince someone, talk someone into something, argue my case and say whether an answer is convincing.",
+  "prerequisites": []
+}

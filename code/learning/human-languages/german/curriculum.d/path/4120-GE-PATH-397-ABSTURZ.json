@@ -1,0 +1,9 @@
+{
+  "id": "GE-PATH-397-ABSTURZ",
+  "spine_node": "SPINE-EXPRESS-CONDITION",
+  "before": [],
+  "inline": [
+    "GE-EXT-397-ABSTURZ"
+  ],
+  "after": []
+}

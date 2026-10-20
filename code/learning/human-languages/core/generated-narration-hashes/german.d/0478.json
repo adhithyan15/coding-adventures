@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 478,
+  "sourceHash": "fnv1a64:41eb357e448ba940",
+  "lessonIds": [
+    "GE-C478-reue",
+    "GE-C478-bereuen",
+    "GE-C478-verzeihen",
+    "GE-C478-beleidigen",
+    "GE-C478-kraenken"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch478.txt",
+  "json": "german/narration/ch478.json",
+  "textHash": "fnv1a64:6674cae0fd9d3b44",
+  "jsonHash": "fnv1a64:6484a78e004b2989",
+  "findings": []
+}

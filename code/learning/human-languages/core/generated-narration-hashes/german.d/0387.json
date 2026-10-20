@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 387,
+  "sourceHash": "fnv1a64:1f3f64ff06fa3773",
+  "lessonIds": [
+    "GE-C387-kontostand",
+    "GE-C387-guthaben",
+    "GE-C387-ueberziehen",
+    "GE-C387-abbuchen",
+    "GE-C387-betrag"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch387.txt",
+  "json": "german/narration/ch387.json",
+  "textHash": "fnv1a64:22edec351131efff",
+  "jsonHash": "fnv1a64:8894c9e4e71cb444",
+  "findings": []
+}

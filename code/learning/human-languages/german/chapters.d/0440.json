@@ -1,0 +1,19 @@
+{
+  "chapter": 440,
+  "title": "Auf der Straße",
+  "label": "ch:ge-auf-der-stra-e",
+  "canDo": "I can describe things in a street: the pavement, the park bench, the street lamp, the cobbles and the fountain.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "GE-C440-brunnen",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 440: I can describe things in a street: the pavement, the park bench, the street lamp, the cobbles and the fountain.",
+    "assesses": [
+      "GE-LEX-C440-BRUNNEN-03",
+      "GE-LEX-C440-BRUNNEN-04",
+      "GE-LEX-C440-BRUNNEN-05"
+    ]
+  }
+}

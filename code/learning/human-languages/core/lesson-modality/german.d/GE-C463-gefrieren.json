@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C463-gefrieren",
+    "language": "german",
+    "chapter": 463,
+    "sequence": 24840,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:555ecbb6bc34a104"
+  },
+  "findings": []
+}

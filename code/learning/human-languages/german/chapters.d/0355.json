@@ -1,0 +1,19 @@
+{
+  "chapter": 355,
+  "title": "Ein Projekt",
+  "label": "ch:ge-ein-projekt",
+  "canDo": "I can talk about a project and an order, working together and organizing the work.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "GE-C355-organisieren",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 355: I can talk about a project and an order, working together and organizing the work.",
+    "assesses": [
+      "GE-LEX-C355-PROJEKT-03",
+      "GE-LEX-C355-PROJEKT-04",
+      "GE-LEX-C355-PROJEKT-05"
+    ]
+  }
+}

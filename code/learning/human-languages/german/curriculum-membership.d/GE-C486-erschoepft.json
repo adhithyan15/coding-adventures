@@ -1,0 +1,11 @@
+{
+  "id": "GE-C486-erschoepft",
+  "pathSegment": "GE-PATH-486-MUEDE",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GE-EXT-486-MUEDE",
+      "order": 1
+    }
+  ]
+}

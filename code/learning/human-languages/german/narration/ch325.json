@@ -1,0 +1,858 @@
+{
+  "version": 1,
+  "language": "german",
+  "chapter": 325,
+  "title": "Der Teig",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:17438e75764ac55b",
+  "lessons": [
+    {
+      "id": "GE-C325-teig",
+      "sequence": 17720,
+      "title": "der Teig — the dough, the batter",
+      "headword": "der Teig",
+      "romanization": "der Teig",
+      "gloss": "the dough, the batter",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:33e2c97b067d24fe",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the German for to crack open, then the German for the whisk."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: der Teig",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "der Teig — \"the dough, the batter\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Der Teig muss eine Stunde ruhen. The dough has to rest for an hour."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: die Teige."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Teig is inherited from Old High German teig, from Proto-Germanic daigaz (EtymDB), the same source as English dough."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "der Teig",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *der Teig*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "der Teig, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *der Teig*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with der Teig",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *der Teig*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the German for to crack open, then the German for the whisk, then say der Teig again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the German for to crack open, then the German for the whisk, then say *der Teig* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does der Teig mean? (\"The dough, the batter\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GE-C325-hefe",
+      "sequence": 17730,
+      "title": "die Hefe — the yeast",
+      "headword": "die Hefe",
+      "romanization": "die Hefe",
+      "gloss": "the yeast",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1b4239d25a46ba4c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the German for the whisk, then the German for the dough."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: die Hefe",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "die Hefe — \"the yeast\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Für das Brot braucht man frische Hefe. For the bread you need fresh yeast."
+            },
+            {
+              "kind": "speech",
+              "text": "No plural. In Austria: die Germ."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Hefe is inherited from Old High German hevo, from Proto-Germanic hafjô \"yeast\" (EtymDB), related to heben \"to lift\": what makes dough rise."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "die Hefe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *die Hefe*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "die Hefe, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *die Hefe*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with die Hefe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *die Hefe*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the German for the whisk, then the German for the dough, then say die Hefe again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the German for the whisk, then the German for the dough, then say *die Hefe* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does die Hefe mean? (\"The yeast\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GE-C325-kneten",
+      "sequence": 17740,
+      "title": "kneten — to knead",
+      "headword": "kneten",
+      "romanization": "kneten",
+      "gloss": "to knead",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:cee3ff420b9db8d8",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the German for the dough, then the German for the yeast."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: kneten",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "kneten — \"to knead\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Er knetete den Teig zehn Minuten lang. He kneaded the dough for ten minutes."
+            },
+            {
+              "kind": "speech",
+              "text": "Regular: knetete, hat geknetet."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "kneten is inherited from Old High German knetan, from Proto-Germanic knedaną \"to knead\" (EtymDB), the same source as English knead."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kneten",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kneten*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kneten, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kneten*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with kneten",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *kneten*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the German for the dough, then the German for the yeast, then say kneten again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the German for the dough, then the German for the yeast, then say *kneten* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does kneten mean? (\"To knead\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GE-C325-ausrollen",
+      "sequence": 17750,
+      "title": "ausrollen — to roll out",
+      "headword": "ausrollen",
+      "romanization": "ausrollen",
+      "gloss": "to roll out",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:516007ad01cf08da",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the German for the yeast, then the German for to knead."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ausrollen",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ausrollen — \"to roll out\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Sie rollte den Teig dünn aus. She rolled the dough out thin."
+            },
+            {
+              "kind": "speech",
+              "text": "Separable: sie rollt aus, sie hat ausgerollt."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ausrollen is built on rollen, from Rolle \"roll\", which came through Old French rolle from Latin rotulus \"a little wheel\" (EtymDB)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ausrollen",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ausrollen*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ausrollen, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ausrollen*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with ausrollen",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *ausrollen*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the German for the yeast, then the German for to knead, then say ausrollen again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the German for the yeast, then the German for to knead, then say *ausrollen* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ausrollen mean? (\"To roll out\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GE-C325-nudelholz",
+      "sequence": 17760,
+      "title": "das Nudelholz — the rolling pin",
+      "headword": "das Nudelholz",
+      "romanization": "das Nudelholz",
+      "gloss": "the rolling pin",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9040a02bf685aaf6",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the German for to knead, then the German for to roll out."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: das Nudelholz",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "das Nudelholz — \"the rolling pin\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Mit dem Nudelholz rollte er den Teig aus. He rolled out the dough with the rolling pin."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: die Nudelhölzer. In Austria: der Nudelwalker."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Nudelholz joins Nudel \"noodle\" and Holz \"wood\", Old High German holz, Proto-Germanic hultą (EtymDB): the wooden tool for noodle dough."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "das Nudelholz",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *das Nudelholz*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "das Nudelholz, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *das Nudelholz*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with das Nudelholz",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *das Nudelholz*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the German for to knead, then the German for to roll out, then say das Nudelholz again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the German for to knead, then the German for to roll out, then say *das Nudelholz* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does das Nudelholz mean? (\"The rolling pin\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GE-R325-review-318-325",
+      "sequence": 17770,
+      "title": "Words from chapters 318–325 — a review",
+      "headword": "(dialogue)",
+      "romanization": "(dialogue)",
+      "gloss": "a review of chapters 318-325",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:002e21011eba4903",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the German for the war and the peace."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the war, the peace, the battle, to defeat, the defeat",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the war, the peace, the battle, to defeat, the defeat]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the emperor, to rule, to govern, to conquer, the victory",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the emperor, to rule, to govern, to conquer, the victory]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the Middle Ages, antiquity, the chronicle, the ancestor, the downfall",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the Middle Ages, antiquity, the chronicle, the ancestor, the downfall]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to invent, the invention, to found, to come into being, to return",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to invent, the invention, to found, to come into being, to return]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the ingredient, the pinch, the tablespoon, to measure out, the bowl",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the ingredient, the pinch, the tablespoon, to measure out, the bowl]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to peel, to chop, to dice, to grate, to halve",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to peel, to chop, to dice, to grate, to halve]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to stir, to give a stir, to whisk, to crack open, the whisk",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to stir, to give a stir, to whisk, to crack open, the whisk]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the dough, the yeast, to knead, to roll out, the rolling pin",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the dough, the yeast, to knead, to roll out, the rolling pin]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The war? (der Krieg.) The peace? (der Frieden.) The battle? (die Schlacht.) To defeat? (besiegen.) The defeat? (die Niederlage.) The emperor? (der Kaiser.) To rule? (herrschen.) To govern? (regieren.) To conquer? (erobern.) The victory? (der Sieg.) The Middle Ages? (das Mittelalter.) Antiquity? (die Antike.) The chronicle? (die Chronik.) The ancestor? (der Vorfahr.) The downfall? (der Untergang.) To invent? (erfinden.) The invention? (die Erfindung.) To found? (gründen.) To come into being? (entstehen.) To return? (zurückkehren.) The ingredient? (die Zutat.) The pinch? (die Prise.) The tablespoon? (der Esslöffel.) To measure out? (abmessen.) The bowl? (die Schüssel.) To peel? (schälen.) To chop? (hacken.) To dice? (würfeln.) To grate? (raspeln.) To halve? (halbieren.) To stir? (rühren.) To give a stir? (umrühren.) To whisk? (verquirlen.) To crack open? (aufschlagen.) The whisk? (der Schneebesen.) The dough? (der Teig.) The yeast? (die Hefe.) To knead? (kneten.) To roll out? (ausrollen.) The rolling pin? (das Nudelholz.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

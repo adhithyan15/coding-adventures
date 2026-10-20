@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 341,
+  "sourceHash": "fnv1a64:c580fbe19ad8524b",
+  "lessonIds": [
+    "GE-C341-obwohl",
+    "GE-C341-zwar",
+    "GE-C341-allerdings",
+    "GE-C341-dennoch",
+    "GE-C341-tatsaechlich"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch341.txt",
+  "json": "german/narration/ch341.json",
+  "textHash": "fnv1a64:12934e1408e6e86a",
+  "jsonHash": "fnv1a64:0c3f805d75aa69b9",
+  "findings": []
+}

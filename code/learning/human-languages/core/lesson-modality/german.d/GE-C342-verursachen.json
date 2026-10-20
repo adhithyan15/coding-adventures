@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C342-verursachen",
+    "language": "german",
+    "chapter": 342,
+    "sequence": 18630,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f28bbdedc032075e"
+  },
+  "findings": []
+}
