@@ -5731,6 +5731,17 @@ model-card parameter, or a UI artifact is not a completion signal.
      measurement artifact for each `.temp` execution. Keep vendor-specific
      expression and multi-point measurement
      forms outside this focused closure.
+   - **Raw-output CLI artifacts** (completed in the cross-language CLI/API
+     slice): discovery from the engine artifact APIs: selected `.control`
+     `write <rawfile> [probes...]` and `wrdata <file> [probes...]` blocks built
+     deterministic in-memory ASCII artifacts, but every parser CLI rejected the
+     block before execution and discarded the output. Python, Rust, and
+     TypeScript now preserve those selected control blocks while parsing and
+     publish source-analysis and temperature-scoped `rawfiles` and `wrdata`
+     records from `run --json`. The schema-versioned shared corpus freezes
+     target, requested and unmatched probes, normalized options, and complete
+     ASCII content. Arbitrary control flow and filesystem-backed writes remain
+     deliberately outside this contract.
    - Expand deck-owned output compatibility beyond source-order analysis
      execution and stable artifact exports toward nested sweeps, raw-format
      interoperability, and remaining vendor-style output controls.
