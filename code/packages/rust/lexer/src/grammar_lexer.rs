@@ -63,7 +63,7 @@ use grammar_tools::token_grammar::{
 
 use crate::token::{
     LexerError, Token, TokenType, string_to_token_type, TOKEN_CONTEXT_KEYWORD,
-    TOKEN_PRECEDED_BY_NEWLINE,
+    TOKEN_PRECEDED_BY_NEWLINE, TOKEN_PRECEDED_BY_SPACE,
 };
 
 // ===========================================================================
@@ -562,7 +562,24 @@ pub struct GrammarLexer<'a> {
     /// never sets this flag — the token *after* a multi-line template is only
     /// "preceded by a newline" if there is an actual line break between them.
     /// Languages with automatic semicolon insertion (JavaScript) rely on this.
+    ///
+    /// F11: a built-in `NEWLINE` token also sets it (for the token after the
+    /// `NEWLINE`), so the answer is the same whether or not the parser keeps
+    /// `NEWLINE` tokens.
     newline_before_next: bool,
+
+    /// Whether *anything* has been consumed without becoming a token since
+    /// the last emitted token: a skip match, built-in whitespace, a built-in
+    /// `NEWLINE`, a suppressed token (F11). Read into the next token's
+    /// [`TOKEN_PRECEDED_BY_SPACE`] flag and then cleared — exactly like
+    /// `newline_before_next`, of which it is a superset.
+    ///
+    /// ```text
+    /// f -1    `-` gets SPACE, `1` gets nothing   → Ruby command argument
+    /// f - 1   `-` and `1` both get SPACE         → subtraction
+    /// f-1     neither gets SPACE                 → subtraction
+    /// ```
+    space_before_next: bool,
 
     /// Per-type bracket nesting depth counters.
     ///
@@ -754,6 +771,7 @@ impl<'a> GrammarLexer<'a> {
             case_insensitive,
             last_emitted_token: None,
             newline_before_next: false,
+            space_before_next: false,
             bracket_depths: BracketDepths::default(),
             template_entry_depths: Vec::new(),
             context_keyword_set,
@@ -968,10 +986,71 @@ impl<'a> GrammarLexer<'a> {
                 if has_line_terminator {
                     self.newline_before_next = true;
                 }
+                // Any skipped trivia separates the next token from the last.
+                self.space_before_next = true;
                 self.advance_n(char_count);
                 true
             }
             None => false,
+        }
+    }
+
+    // -----------------------------------------------------------------------
+    // Gap flags (F11): what was consumed between two emitted tokens
+    // -----------------------------------------------------------------------
+    //
+    // Two pending bits ride between tokens. Everything the lexer consumes
+    // without emitting it sets them; the next emitted pattern token takes
+    // them (as `TOKEN_PRECEDED_BY_SPACE` / `TOKEN_PRECEDED_BY_NEWLINE`) and
+    // clears them:
+    //
+    //   consumed as trivia                      space  newline
+    //   --------------------------------------  -----  -------
+    //   skip match without a line terminator      x
+    //   skip match with one (`/* ⏎ */`, `\n`)     x       x
+    //   built-in ' ' / '\t'                       x
+    //   built-in '\r' (a line terminator)         x       x
+    //   built-in NEWLINE token (for the next)     x       x
+    //   suppressed token                          x    if its text has one
+
+    /// Record a character skipped by the built-in whitespace rule (used when
+    /// a grammar has no `skip:` patterns, and always in indentation mode).
+    fn note_builtin_whitespace(&mut self, ch: char) {
+        self.space_before_next = true;
+        if ch == '\r' {
+            self.newline_before_next = true;
+        }
+    }
+
+    /// Record that a built-in `NEWLINE` token (or a newline swallowed inside
+    /// brackets in indentation mode) separates the next token from the last.
+    fn note_builtin_newline(&mut self) {
+        self.space_before_next = true;
+        self.newline_before_next = true;
+    }
+
+    /// Return the pending gap bits as token flags, clearing them.
+    fn take_gap_flags(&mut self) -> u32 {
+        let mut bits = 0;
+        if self.newline_before_next {
+            bits |= TOKEN_PRECEDED_BY_NEWLINE;
+        }
+        if self.space_before_next {
+            bits |= TOKEN_PRECEDED_BY_SPACE;
+        }
+        self.newline_before_next = false;
+        self.space_before_next = false;
+        bits
+    }
+
+    /// A token was matched but suppressed: give its gap back, plus the token
+    /// itself, which is now trivia for whatever is emitted next.
+    fn restore_gap_flags(&mut self, gap_bits: u32, suppressed_text: &str) {
+        self.space_before_next = true;
+        if gap_bits & TOKEN_PRECEDED_BY_NEWLINE != 0
+            || suppressed_text.contains(['\n', '\r', '\u{2028}', '\u{2029}'])
+        {
+            self.newline_before_next = true;
         }
     }
 
@@ -1162,6 +1241,7 @@ impl<'a> GrammarLexer<'a> {
                 // Without skip patterns, use hardcoded behavior: skip
                 // spaces, tabs, carriage returns silently.
                 if ch == ' ' || ch == '\t' || ch == '\r' {
+                    self.note_builtin_whitespace(ch);
                     self.advance();
                     continue;
                 }
@@ -1177,6 +1257,7 @@ impl<'a> GrammarLexer<'a> {
                     type_name: None, flags: None,
                 });
                 self.advance();
+                self.note_builtin_newline();
                 continue;
             }
 
@@ -1271,10 +1352,10 @@ impl<'a> GrammarLexer<'a> {
                 {
                     flag_bits |= TOKEN_CONTEXT_KEYWORD;
                 }
-                if self.newline_before_next {
-                    flag_bits |= TOKEN_PRECEDED_BY_NEWLINE;
-                }
-                self.newline_before_next = false;
+                // - TOKEN_PRECEDED_BY_SPACE (F11): any trivia at all was
+                //   consumed since the previous token. Same read-and-clear.
+                let gap_bits = self.take_gap_flags();
+                flag_bits |= gap_bits;
                 let flags = if flag_bits == 0 { None } else { Some(flag_bits) };
 
                 let token = Token { cv: None,
@@ -1365,6 +1446,13 @@ impl<'a> GrammarLexer<'a> {
                         }
                     }
 
+                    // F11: a suppressed token becomes trivia for the next
+                    // emitted token — it separates it from the previous one —
+                    // and the gap before it is not lost.
+                    if main_token_for_trans.is_none() {
+                        self.restore_gap_flags(gap_bits, &matched);
+                    }
+
                     // F10: the declarative table is the default; a registered
                     // callback runs first (above) and the table refines.
                     if let Some(t) = main_token_for_trans {
@@ -1413,6 +1501,7 @@ impl<'a> GrammarLexer<'a> {
         self.group_stack = vec![self.start_mode.clone()];
         self.template_entry_depths.clear();
         self.skip_enabled = true;
+        self.take_gap_flags();
 
         Ok(tokens)
     }
@@ -1458,6 +1547,10 @@ impl<'a> GrammarLexer<'a> {
                         break;
                     }
                 }
+                // F11: indentation is trivia before the line's first token.
+                if spaces > 0 {
+                    self.space_before_next = true;
+                }
 
                 // Check for blank line or comment-only line.
                 let is_blank_or_comment = if self.char_pos >= self.chars.len() {
@@ -1475,6 +1568,9 @@ impl<'a> GrammarLexer<'a> {
                     // Consume the newline if present.
                     if self.char_pos < self.chars.len() {
                         let ch = self.chars[self.char_pos];
+                        if ch == '\n' || ch == '\r' {
+                            self.note_builtin_newline();
+                        }
                         if ch == '\n' {
                             self.advance();
                         } else if ch == '\r' {
@@ -1532,6 +1628,7 @@ impl<'a> GrammarLexer<'a> {
 
             // --- Skip whitespace (not newlines) ---
             if ch == ' ' || ch == '\t' || ch == '\r' {
+                self.note_builtin_whitespace(ch);
                 self.advance();
                 continue;
             }
@@ -1554,6 +1651,9 @@ impl<'a> GrammarLexer<'a> {
                     at_line_start = true;
                 }
                 self.advance();
+                // F11: whether emitted or swallowed inside brackets, the
+                // newline separates the next token from the previous one.
+                self.note_builtin_newline();
                 continue;
             }
 
@@ -1597,13 +1697,15 @@ impl<'a> GrammarLexer<'a> {
                     matched.clone()
                 };
 
+                // F11: the same gap flags as standard mode.
+                let gap_bits = self.take_gap_flags();
                 tokens.push(Token { cv: None,
                     type_: token_type,
                     value: final_value,
                     line: start_line,
                     column: start_col,
                     type_name,
-                    flags: None,
+                    flags: if gap_bits == 0 { None } else { Some(gap_bits) },
                 });
 
                 let char_count = matched.chars().count();
@@ -1651,6 +1753,7 @@ impl<'a> GrammarLexer<'a> {
             column: self.column,
             type_name: None, flags: None,
         });
+        self.take_gap_flags();
 
         Ok(tokens)
     }

@@ -493,6 +493,15 @@ fn element_src(element: &GrammarElement, indent: &str) -> String {
                 elem_child, sep_child, at_least_one
             )
         }
+        // F11 adjacency predicate. The enum is written with its fully
+        // qualified path so the generated file's `use` line stays exactly as
+        // it is for grammars without predicates (no regeneration churn).
+        GrammarElement::AdjacencyPredicate { predicate } => {
+            format!(
+                "GrammarElement::AdjacencyPredicate {{ predicate: grammar_tools::parser_grammar::AdjacencyPredicate::{} }}",
+                predicate.variant_name()
+            )
+        }
     }
 }
 
@@ -874,5 +883,42 @@ transitions:
         assert!(code.contains(r#"on_value: Some(r#"return"#));
         // The emitted import line carries the new types.
         assert!(code.contains("ModeTransition") && code.contains("TransitionAction"));
+    }
+
+    // --- F11 adjacency predicates ------------------------------------------
+
+    #[test]
+    fn parser_grammar_adjacency_predicates_use_qualified_paths() {
+        let g = parse_parser_grammar(
+            "r = @space_before @no_space_before @newline_before @no_newline_before \
+             @space_after_next !@no_space_after_next NAME ;",
+        )
+        .unwrap();
+        let code = compile_parser_grammar(&g, "adj.grammar");
+        for variant in [
+            "SpaceBefore",
+            "NoSpaceBefore",
+            "NewlineBefore",
+            "NoNewlineBefore",
+            "SpaceAfterNext",
+            "NoSpaceAfterNext",
+        ] {
+            let emitted = format!(
+                "GrammarElement::AdjacencyPredicate {{ predicate: grammar_tools::parser_grammar::AdjacencyPredicate::{} }}",
+                variant
+            );
+            assert!(code.contains(&emitted), "missing {}", emitted);
+        }
+        // The `use` line is the same one a predicate-free grammar gets.
+        assert!(code.contains(
+            "use grammar_tools::parser_grammar::{GrammarElement, GrammarRule, ParserGrammar};"
+        ));
+    }
+
+    #[test]
+    fn parser_grammar_without_predicates_never_mentions_them() {
+        let g = parse_parser_grammar("r = NAME { COMMA NAME } [ \"x\" ] !SEMI ;").unwrap();
+        let code = compile_parser_grammar(&g, "plain.grammar");
+        assert!(!code.contains("AdjacencyPredicate"));
     }
 }

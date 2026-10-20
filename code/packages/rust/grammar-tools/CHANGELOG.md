@@ -2,6 +2,41 @@
 
 All notable changes to this project will be documented in this file.
 
+## [Unreleased] - F11 token-adjacency predicates (LANG84 E6)
+
+### Added
+- `.grammar` predicates `@space_before`, `@no_space_before`,
+  `@newline_before`, `@no_newline_before`, `@space_after_next` and
+  `@no_space_after_next`: zero-width elements that test the gap in front of
+  the next token (`code/specs/F11-grammar-token-adjacency-predicates.md`).
+  LANG84 §E6's examples parse verbatim, including `!@space_after_next`.
+- `GrammarElement::AdjacencyPredicate { predicate }` and the
+  `AdjacencyPredicate` enum (`name`, `variant_name`, `from_name`,
+  `reads_after_next`, `holds`, `Display` as `@name`).
+- `compile_parser_grammar` emits predicates with the fully qualified path
+  `grammar_tools::parser_grammar::AdjacencyPredicate::…`, so the generated
+  `use` line is unchanged.
+- Validation: a repetition (`{ }`, `{ }+`, `{ x // sep }`) whose body is made
+  only of zero-width elements (predicates, `&`/`!` lookaheads) is an error,
+  because it could never consume a token.
+- 14 tests: every predicate by name, the truth table, the LANG84 examples,
+  predicates after tokens and under `&`/`!`/`[ ]`/`{ }+`, error messages, no
+  reference side effects, validation both ways, and compiler emission.
+
+### Changed
+- `@` is now meaningful in rule bodies. Unknown names are an error that lists
+  the valid ones; `@asi(...)` is rejected as "not implemented yet"; LANG84 E7
+  binding forms such as `NAME@declare` are rejected as unknown predicates.
+  The existing "unexpected character" test now uses `$`.
+
+### Notes
+- Grammars without predicates are byte-identical: regenerating all 94 Rust
+  compiled grammars that `generate-rust-compiled-grammars` can build gives the
+  same bytes before and after this change.
+- The 14 non-Rust grammar-tools ports already reject `@` ("unexpected
+  character"), which satisfies LANG84's must-reject rule; clearer messages and
+  real ports are follow-ups recorded in F11.
+
 ## [Unreleased] - F10 declarative lexer mode transitions
 
 ### Added

@@ -45,6 +45,30 @@ EQUALS = "="
 let tokens = GrammarLexer::new("x = 1 + 2", &grammar).tokenize().unwrap();
 ```
 
+### Token flags: the gap before each token (F11)
+
+Each token from the grammar-driven lexer records what was consumed between it
+and the previous token, in `Token.flags`:
+
+| Flag | Set when |
+|------|----------|
+| `TOKEN_PRECEDED_BY_SPACE` | anything was skipped: whitespace, a comment, a line break, a built-in `NEWLINE` token, a suppressed token |
+| `TOKEN_PRECEDED_BY_NEWLINE` | that gap contains a line terminator (also inside a skipped multi-line comment, and after a built-in `NEWLINE` token) |
+
+```text
+source   flags on `-`   flags on `1`
+f -1     SPACE          -
+f - 1    SPACE          SPACE
+f-1      -              -
+```
+
+This works the same with skip patterns, the built-in whitespace rule, F10
+modes and indentation mode. Token types, values and positions do not change.
+`NEWLINE`, `INDENT`, `DEDENT`, `EOF` and layout virtual tokens carry no flags.
+The parser reads the flags through `.grammar` predicates such as
+`@space_before` and `@no_newline_before`
+(`code/specs/F11-grammar-token-adjacency-predicates.md`).
+
 ## Token types
 
 The lexer recognizes these token types:

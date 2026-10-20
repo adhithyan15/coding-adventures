@@ -43,9 +43,12 @@
 //!    | RuleReference | Recursively parse the named rule            |
 //!    | TokenReference| Match if current token has the right type   |
 //!    | Literal       | Match if current token has the right value  |
+//!    | AdjacencyPredicate | Test the gap before the next token (F11) |
 
-use lexer::token::{Token, TokenType, string_to_token_type};
-use grammar_tools::parser_grammar::{GrammarElement, ParserGrammar};
+use lexer::token::{
+    Token, TokenType, string_to_token_type, TOKEN_PRECEDED_BY_NEWLINE, TOKEN_PRECEDED_BY_SPACE,
+};
+use grammar_tools::parser_grammar::{AdjacencyPredicate, GrammarElement, ParserGrammar};
 use std::collections::HashMap;
 use std::fmt;
 use std::rc::Rc;
@@ -1005,6 +1008,19 @@ impl GrammarParser {
             }
 
             // ---------------------------------------------------------------
+            // Extension: token-adjacency predicates (F11 / LANG84 E6)
+            // ---------------------------------------------------------------
+
+            GrammarElement::AdjacencyPredicate { predicate } => {
+                // Zero-width, like a lookahead: the cursor never moves, no
+                // child is produced, and — also like `&`/`!` — a failure is
+                // not recorded as an expectation. The element that would
+                // have come next reports its own expectation instead, so
+                // error messages and error positions stay as they were.
+                if self.adjacency_holds(*predicate) { Some(Vec::new()) } else { None }
+            }
+
+            // ---------------------------------------------------------------
             // Extension: One-or-more repetition
             // ---------------------------------------------------------------
 
@@ -1074,6 +1090,65 @@ impl GrammarParser {
                 }
             }
         }
+    }
+
+    // =========================================================================
+    // Token-adjacency predicates (F11)
+    // =========================================================================
+
+    /// Find the token the next element would try to match, starting at
+    /// `from`, and the gap bits in front of it.
+    ///
+    /// This mirrors how [`Self::match_token_reference`] and `Literal`
+    /// matching find their token: when newlines are insignificant they step
+    /// over `NEWLINE` tokens first. A stepped-over `NEWLINE` *is* a line
+    /// break before the found token, so it contributes
+    /// `PRECEDED_BY_SPACE | PRECEDED_BY_NEWLINE` on top of the token's own
+    /// flags. (`GrammarLexer` already sets those bits on the token after a
+    /// built-in `NEWLINE`; OR-ing them here keeps the answer right for token
+    /// streams from elsewhere too.)
+    ///
+    /// Past the end of the stream the last token (EOF) stands in, exactly as
+    /// [`Self::current`] does. Returns `(index, bits)`.
+    fn next_token_gap(&self, from: usize) -> (usize, u32) {
+        let mut index = from;
+        let mut bits = 0;
+        if !self.newlines_significant {
+            while index < self.tokens.len() && self.tokens[index].type_ == TokenType::Newline {
+                bits |= TOKEN_PRECEDED_BY_SPACE | TOKEN_PRECEDED_BY_NEWLINE;
+                index += 1;
+            }
+        }
+        // `get` rather than indexing: an empty stream (possible through a
+        // pre-parse hook) reads as "no gap" instead of panicking.
+        let last = self.tokens.len().saturating_sub(1);
+        let flags = self.tokens.get(index.min(last)).and_then(|t| t.flags).unwrap_or(0);
+        (index, bits | flags)
+    }
+
+    /// Evaluate an adjacency predicate at the cursor, without moving it.
+    ///
+    /// ```text
+    ///   tokens:  f   -   1          (source `f -1`)
+    ///   flags:       S   .
+    ///   cursor:      ^
+    ///   @space_before        → S on `-`          → true
+    ///   @no_space_after_next → nothing on `1`    → true
+    /// ```
+    ///
+    /// Only tokens at and just after the cursor are read, and tokens never
+    /// change except through the `>>` split (whose memo invalidation already
+    /// covers the split position), so the packrat key `(rule, position)`
+    /// still determines every result.
+    fn adjacency_holds(&self, predicate: AdjacencyPredicate) -> bool {
+        let (next, mut bits) = self.next_token_gap(self.pos);
+        if predicate.reads_after_next() {
+            bits = self.next_token_gap(next + 1).1;
+        }
+        predicate.holds(
+            bits & TOKEN_PRECEDED_BY_SPACE != 0,
+            bits & TOKEN_PRECEDED_BY_NEWLINE != 0,
+        )
     }
 
     // =========================================================================
@@ -1586,7 +1661,9 @@ fn element_references_newline(element: &GrammarElement) -> bool {
         GrammarElement::SeparatedRepetition { element, separator, .. } => {
             element_references_newline(element) || element_references_newline(separator)
         }
-        GrammarElement::Literal { .. } => false,
+        // `@newline_before` and friends read token flags; they do not make
+        // newlines significant (that is their whole point).
+        GrammarElement::Literal { .. } | GrammarElement::AdjacencyPredicate { .. } => false,
     }
 }
 

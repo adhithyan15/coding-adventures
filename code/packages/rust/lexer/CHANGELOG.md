@@ -2,6 +2,39 @@
 
 All notable changes to this package will be documented in this file.
 
+## [Unreleased] — F11: tokens record the gap before them (LANG84 E6)
+
+`GrammarLexer` now records, on every token it matches from a `.tokens`
+pattern, whether anything was consumed between it and the previous emitted
+token, and whether that gap held a line terminator. The `.grammar` adjacency
+predicates (`@space_before`, `@no_newline_before`, …) read these bits. See
+`code/specs/F11-grammar-token-adjacency-predicates.md`.
+
+- **New flag `TOKEN_PRECEDED_BY_SPACE = 4`**, set after a skip-pattern match,
+  the built-in whitespace skip (` `, `\t`, `\r`), a built-in `NEWLINE` token,
+  a newline swallowed inside brackets in indentation mode, or a token
+  suppressed by an F04 callback. `f -1` flags `-` but not `1`; `f-1` flags
+  neither.
+- **`TOKEN_PRECEDED_BY_NEWLINE` is now also set** on the token after a
+  built-in `NEWLINE` token (so the answer does not depend on whether the
+  parser keeps `NEWLINE` tokens), after a lone `\r`, after a suppressed token
+  containing a line break, and in indentation mode (which previously left
+  every token's `flags` as `None`). Skip matches containing a line terminator
+  (including multi-line comments) set it as before.
+- Token types, values, lines and columns are unchanged. `NEWLINE`, `INDENT`,
+  `DEDENT`, `EOF` and layout virtual tokens keep `flags: None`.
+- `flags` is now usually `Some(..)`. Code that tests bits with
+  `flags.unwrap_or(0) & BIT` is unaffected; whole-token comparisons against
+  `flags: None` fixtures need the new bit. The JavaScript ASI pass, the only
+  previous reader of the newline flag, skips newlines as whitespace and is
+  unaffected (javascript-parser: 263 tests pass).
+- F10 mode switches and skip toggles need no special handling: the bits
+  describe what was consumed, whichever group consumed it.
+- New `tests/adjacency_flags.rs` (14 tests): skip patterns, multi-line
+  comments, newlines inside tokens, built-in whitespace and `NEWLINE`, lone
+  `\r`, F10 modes, `disable-skip`, indentation mode, callback suppression,
+  context keywords, and unchanged values and positions.
+
 ## [0.7.0] — 2026-06-29 — `Token` carries an optional correlation-vector id (CLOC27 P1)
 
 `Token` gains a `pub cv: Option<String>` field — the correlation-vector id of

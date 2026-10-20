@@ -123,19 +123,23 @@ always equivalent to the `no_` form (`!@space_after_next` ≡
 preferred because it reads as a fact.
 
 Predicate names are case-sensitive lowercase. Unknown names are a parse
-error that lists the six valid names. Two reserved E6/E7 forms get a
-specific error rather than a generic one:
+error that lists the six valid names, and a bare `@` is an error too. The
+reserved E6/E7 forms fail loudly rather than parsing into something else:
 
-- `@asi(...)` — "not implemented yet (LANG84 E6 follow-up)".
-- `NAME@declare`, `@scope(...)` and other E7 binding forms — rejected as
+- `@asi(...)` gets its own error: not implemented yet (LANG84 E6 follow-up).
+  It is raised while tokenizing, before the comma-separated argument list
+  could produce a confusing "unexpected character ','".
+- `NAME@declare`, `@scope(...)` and the other E7 binding forms are rejected as
   unknown predicates.
 
 ## Validation
 
-`validate_parser_grammar` adds one check: a repetition (`{ }`, `{ }+` or the
-element of `{ x // sep }`) whose body is made only of zero-width elements
-(predicates and `&`/`!` lookaheads) is an error, because it can never consume
-a token and the engine would loop forever. Predicates in any other position
+`validate_parser_grammar` adds one check: a repetition (`{ }`, `{ }+`, or
+`{ x // sep }` when both `x` and `sep` are) whose body is made only of
+zero-width elements (predicates and `&`/`!` lookaheads) is an error, because
+it can never consume a token and the engine would loop forever. A body that
+merely *can* match empty (`{ [ X ] }`) is not flagged; that pre-existing
+hazard is outside F11. Predicates in any other position
 are valid, including as the last element of a rule (a trailing-context test)
 and as the only element of an alternative.
 
