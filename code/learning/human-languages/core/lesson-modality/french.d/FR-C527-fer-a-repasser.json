@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C527-fer-a-repasser",
+    "language": "french",
+    "chapter": 527,
+    "sequence": 28820,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:61657528a3775048"
+  },
+  "findings": []
+}

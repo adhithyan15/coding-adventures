@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C505-siffler",
+    "language": "french",
+    "chapter": 505,
+    "sequence": 27710,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:12721cbb72c13527"
+  },
+  "findings": []
+}

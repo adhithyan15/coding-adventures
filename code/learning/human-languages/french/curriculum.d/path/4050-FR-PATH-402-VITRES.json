@@ -1,0 +1,9 @@
+{
+  "id": "FR-PATH-402-VITRES",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "FR-EXT-402-VITRES"
+  ],
+  "after": []
+}

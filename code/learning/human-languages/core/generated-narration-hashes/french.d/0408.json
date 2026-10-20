@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 408,
+  "sourceHash": "fnv1a64:f0e36e1422b513dd",
+  "lessonIds": [
+    "FR-C408-contravention",
+    "FR-C408-radar",
+    "FR-C408-flasher",
+    "FR-C408-verbaliser",
+    "FR-C408-controler"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch408.txt",
+  "json": "french/narration/ch408.json",
+  "textHash": "fnv1a64:5ee6d50327a3e3c0",
+  "jsonHash": "fnv1a64:d2b9c3ab27dee9ad",
+  "findings": []
+}

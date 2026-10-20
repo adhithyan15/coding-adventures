@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C308-enceinte",
+    "language": "french",
+    "chapter": 308,
+    "sequence": 17560,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:73a27a2ff423cce1"
+  },
+  "findings": []
+}

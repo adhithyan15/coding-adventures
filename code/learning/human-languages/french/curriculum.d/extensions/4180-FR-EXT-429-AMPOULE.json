@@ -1,0 +1,8 @@
+{
+  "id": "FR-EXT-429-AMPOULE",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can describe small problems in a room: the light bulb, the socket, the minibar, the carpet and a stain.",
+  "prerequisites": []
+}

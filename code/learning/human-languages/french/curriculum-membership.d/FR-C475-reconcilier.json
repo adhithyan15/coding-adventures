@@ -1,0 +1,11 @@
+{
+  "id": "FR-C475-reconcilier",
+  "pathSegment": "FR-PATH-475-RANCUNE",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-475-RANCUNE",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 388,
+  "sourceHash": "fnv1a64:4e765c00dbc2ec17",
+  "lessonIds": [
+    "FR-C388-peine",
+    "FR-C388-condamner",
+    "FR-C388-condamnation",
+    "FR-C388-detenu",
+    "FR-C388-punir"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch388.txt",
+  "json": "french/narration/ch388.json",
+  "textHash": "fnv1a64:a4eecbd011b0d90c",
+  "jsonHash": "fnv1a64:18b195c65f4235c2",
+  "findings": []
+}

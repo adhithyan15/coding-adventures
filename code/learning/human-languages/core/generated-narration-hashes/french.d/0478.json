@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 478,
+  "sourceHash": "fnv1a64:09b8c6d4539baa9d",
+  "lessonIds": [
+    "FR-C478-sourcil",
+    "FR-C478-paupiere",
+    "FR-C478-cil",
+    "FR-C478-narine",
+    "FR-C478-tempe"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch478.txt",
+  "json": "french/narration/ch478.json",
+  "textHash": "fnv1a64:753b861e749b05b3",
+  "jsonHash": "fnv1a64:e1efd3e49b64662c",
+  "findings": []
+}

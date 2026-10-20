@@ -1,0 +1,858 @@
+{
+  "version": 1,
+  "language": "french",
+  "chapter": 389,
+  "title": "L'enquête",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:9f9e94d1b4106661",
+  "lessons": [
+    {
+      "id": "FR-C389-enquete",
+      "sequence": 21710,
+      "title": "l'enquête — the investigation, the inquiry; the survey",
+      "headword": "l'enquête",
+      "romanization": "l'enquête",
+      "gloss": "the investigation, the inquiry; the survey",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e5ed399adace351b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the French for the prisoner, then the French for to punish."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: l'enquête",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "l'enquête — \"the investigation, the inquiry; the survey\"."
+            },
+            {
+              "kind": "speech",
+              "text": "La police a ouvert une enquête. The police have opened an investigation."
+            },
+            {
+              "kind": "speech",
+              "text": "Also a survey: une enquête sur les jeunes. Feminine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "enquête comes from Old French enqueste (EtymDB), from Latin inquīsīta \"things searched for\", from inquīrere \"to search into\", built on quaerere \"to seek\" (Lewis & Short)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "l'enquête",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *l'enquête*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "l'enquête, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *l'enquête*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with l'enquête",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *l'enquête*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the French for the prisoner, then the French for to punish, then say l'enquête again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the French for the prisoner, then the French for to punish, then say *l'enquête* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does l'enquête mean? (\"The investigation, the inquiry; the survey\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FR-C389-enqueter",
+      "sequence": 21720,
+      "title": "enquêter — to investigate",
+      "headword": "enquêter",
+      "romanization": "enquêter",
+      "gloss": "to investigate",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9ee7d27a541c24d5",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the French for to punish, then the French for the investigation."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: enquêter",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "enquêter — \"to investigate\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Deux policiers enquêtent sur l'accident. Two police officers are investigating the accident."
+            },
+            {
+              "kind": "speech",
+              "text": "Enquêter sur quelque chose."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "enquêter is built on enquête \"inquiry\", from Old French enqueste, from Latin inquīrere \"to search into\" (Lewis & Short), built on quaerere \"to seek\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "enquêter",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *enquêter*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "enquêter, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *enquêter*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with enquêter",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *enquêter*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the French for to punish, then the French for the investigation, then say enquêter again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the French for to punish, then the French for the investigation, then say *enquêter* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does enquêter mean? (\"To investigate\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FR-C389-temoin",
+      "sequence": 21730,
+      "title": "le témoin — the witness",
+      "headword": "le témoin",
+      "romanization": "le témoin",
+      "gloss": "the witness",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:dec88e32159d898d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the French for the investigation, then the French for to investigate."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: le témoin",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "le témoin — \"the witness\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Un témoin a tout vu depuis sa fenêtre. A witness saw everything from his window."
+            },
+            {
+              "kind": "speech",
+              "text": "At a wedding, le témoin is the best man or a witness."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "témoin comes from Old French tesmoing (EtymDB), from Latin testimōnium \"evidence, testimony\", built on testis \"witness\" (Lewis & Short)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "le témoin",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *le témoin*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "le témoin, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *le témoin*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with le témoin",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *le témoin*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the French for the investigation, then the French for to investigate, then say le témoin again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the French for the investigation, then the French for to investigate, then say *le témoin* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does le témoin mean? (\"The witness\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FR-C389-temoigner",
+      "sequence": 21740,
+      "title": "témoigner — to testify, to give evidence",
+      "headword": "témoigner",
+      "romanization": "témoigner",
+      "gloss": "to testify, to give evidence",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:64b1d2ab5e4f0f28",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the French for to investigate, then the French for the witness."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: témoigner",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "témoigner — \"to testify, to give evidence\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Elle a accepté de témoigner au procès. She agreed to testify at the trial."
+            },
+            {
+              "kind": "speech",
+              "text": "Témoigner de — to show, to bear witness to."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "témoigner comes from Old French tesmoignier (EtymDB), formed on tesmoing \"witness\", from Latin testimōnium \"testimony\", built on testis \"witness\" (Lewis & Short)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "témoigner",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *témoigner*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "témoigner, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *témoigner*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with témoigner",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *témoigner*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the French for to investigate, then the French for the witness, then say témoigner again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the French for to investigate, then the French for the witness, then say *témoigner* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does témoigner mean? (\"To testify, to give evidence\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FR-C389-victime",
+      "sequence": 21750,
+      "title": "la victime — the victim",
+      "headword": "la victime",
+      "romanization": "la victime",
+      "gloss": "the victim",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c0502bf292cdb153",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the French for the witness, then the French for to testify."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: la victime",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la victime — \"the victim\"."
+            },
+            {
+              "kind": "speech",
+              "text": "La victime est encore à l'hôpital. The victim is still in hospital."
+            },
+            {
+              "kind": "speech",
+              "text": "Always feminine in grammar, even for a man: il est la victime."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "victime is a learned borrowing from Latin victima \"an animal offered in sacrifice\" (EtymDB; Lewis & Short)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la victime",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la victime*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la victime, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la victime*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with la victime",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *la victime*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the French for the witness, then the French for to testify, then say la victime again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the French for the witness, then the French for to testify, then say *la victime* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does la victime mean? (\"The victim\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FR-R389-revision-382-389",
+      "sequence": 21760,
+      "title": "Retour sur les chapitres 382–389",
+      "headword": "(dialogue)",
+      "romanization": "(dialogue)",
+      "gloss": "a review of chapters 382-389",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:321346fc657ea997",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the French for to break and the offence."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to break, the offence, to transgress, the penalty, to penalise",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to break, the offence, to transgress, the penalty, to penalise]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the requirement, the criterion, eligible, the admission, to exclude",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the requirement, the criterion, eligible, the admission, to exclude]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to expire, acceptable, valid, to renew, the renewal",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to expire, acceptable, valid, to renew, the renewal]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the bureaucracy, the step, the procedure, the certificate, the official statement",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the bureaucracy, the step, the procedure, the certificate, the official statement]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to accuse, the accusation, the thief, the complaint, the misdemeanour",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to accuse, the accusation, the thief, the complaint, the misdemeanour]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the trial, the defence, the verdict, guilty, innocent",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the trial, the defence, the verdict, guilty, innocent]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the sentence, to sentence, the conviction, the prisoner, to punish",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the sentence, to sentence, the conviction, the prisoner, to punish]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the investigation, to investigate, the witness, to testify, the victim",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the investigation, to investigate, the witness, to testify, the victim]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "To break? (enfreindre.) The offence? (l'infraction.) To transgress? (transgresser.) The penalty? (la sanction.) To penalise? (sanctionner.) The requirement? (l'exigence.) The criterion? (le critère.) Eligible? (éligible.) The admission? (l'admission.) To exclude? (exclure.) To expire? (expirer.) Acceptable? (valable.) Valid? (valide.) To renew? (renouveler.) The renewal? (le renouvellement.) The bureaucracy? (la bureaucratie.) The step? (la démarche.) The procedure? (la procédure.) The certificate? (le certificat.) The official statement? (l'attestation.) To accuse? (accuser.) The accusation? (l'accusation.) The thief? (le voleur.) The complaint? (la plainte.) The misdemeanour? (le délit.) The trial? (le procès.) The defence? (la défense.) The verdict? (le verdict.) Guilty? (coupable.) Innocent? (innocent.) The sentence? (la peine.) To sentence? (condamner.) The conviction? (la condamnation.) The prisoner? (le détenu.) To punish? (punir.) The investigation? (l'enquête.) To investigate? (enquêter.) The witness? (le témoin.) To testify? (témoigner.) The victim? (la victime.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C339-incontestable",
+    "language": "french",
+    "chapter": 339,
+    "sequence": 19180,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:84f0e7a620850716"
+  },
+  "findings": []
+}

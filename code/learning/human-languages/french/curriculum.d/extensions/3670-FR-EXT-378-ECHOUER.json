@@ -1,0 +1,8 @@
+{
+  "id": "FR-EXT-378-ECHOUER",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can talk about passing or failing: failing an exam, repeating a year, a competitive exam, the average mark and a resit.",
+  "prerequisites": []
+}

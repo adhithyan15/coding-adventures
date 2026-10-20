@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 514,
+  "sourceHash": "fnv1a64:b84090f8babe8331",
+  "lessonIds": [
+    "FR-C514-troupe",
+    "FR-C514-coulisses",
+    "FR-C514-decor",
+    "FR-C514-costume",
+    "FR-C514-entracte"
+  ],
+  "tex": "french/book/chapters/ch514-au-theatre.tex"
+}

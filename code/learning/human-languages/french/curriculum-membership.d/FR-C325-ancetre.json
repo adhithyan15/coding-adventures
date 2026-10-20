@@ -1,0 +1,11 @@
+{
+  "id": "FR-C325-ancetre",
+  "pathSegment": "FR-PATH-325-PASSE",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FR-EXT-325-PASSE",
+      "order": 1
+    }
+  ]
+}

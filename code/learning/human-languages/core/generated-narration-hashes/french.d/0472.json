@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 472,
+  "sourceHash": "fnv1a64:d44c0b384c10c741",
+  "lessonIds": [
+    "FR-C472-nostalgie",
+    "FR-C472-regretter",
+    "FR-C472-melancolie",
+    "FR-C472-emouvoir",
+    "FR-C472-bouleverser"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch472.txt",
+  "json": "french/narration/ch472.json",
+  "textHash": "fnv1a64:fc528f182f9e4ce5",
+  "jsonHash": "fnv1a64:77e6b6deb42b6347",
+  "findings": []
+}

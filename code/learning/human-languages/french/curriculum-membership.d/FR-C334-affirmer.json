@@ -1,0 +1,11 @@
+{
+  "id": "FR-C334-affirmer",
+  "pathSegment": "FR-PATH-334-POINTDEVUE",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FR-EXT-334-POINTDEVUE",
+      "order": 3
+    }
+  ]
+}

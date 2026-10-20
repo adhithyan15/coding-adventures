@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C415-tramway",
+    "language": "french",
+    "chapter": 415,
+    "sequence": 23090,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5f3ae0239050dec0"
+  },
+  "findings": []
+}

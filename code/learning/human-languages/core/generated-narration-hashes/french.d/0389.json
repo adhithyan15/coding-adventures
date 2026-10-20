@@ -1,0 +1,20 @@
+{
+  "language": "french",
+  "chapter": 389,
+  "sourceHash": "fnv1a64:9f9e94d1b4106661",
+  "lessonIds": [
+    "FR-C389-enquete",
+    "FR-C389-enqueter",
+    "FR-C389-temoin",
+    "FR-C389-temoigner",
+    "FR-C389-victime",
+    "FR-R389-revision-382-389"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "french/narration/ch389.txt",
+  "json": "french/narration/ch389.json",
+  "textHash": "fnv1a64:109e3ee5699f2fb7",
+  "jsonHash": "fnv1a64:95103bb87d7042bb",
+  "findings": []
+}

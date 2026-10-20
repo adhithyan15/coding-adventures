@@ -1,0 +1,858 @@
+{
+  "version": 1,
+  "language": "french",
+  "chapter": 323,
+  "title": "Le règne",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:5f8e5a95f98d4995",
+  "lessons": [
+    {
+      "id": "FR-C323-regner",
+      "sequence": 18310,
+      "title": "régner — to reign, to rule",
+      "headword": "régner",
+      "romanization": "régner",
+      "gloss": "to reign, to rule",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:26ff6c847454e8a9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the French for the myth, then the French for the moral."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: régner",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "régner — \"to reign, to rule\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Ce roi a régné pendant quarante ans. This king reigned for forty years."
+            },
+            {
+              "kind": "speech",
+              "text": "Figurative: le silence régnait — silence reigned."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "régner comes from Old French reignier, from Latin rēgnāre \"to rule\" (EtymDB), built on rēgnum \"kingship\", from rēx \"king\" (Lewis & Short)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "régner",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *régner*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "régner, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *régner*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with régner",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *régner*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the French for the myth, then the French for the moral, then say régner again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the French for the myth, then the French for the moral, then say *régner* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does régner mean? (\"To reign, to rule\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FR-C323-regne",
+      "sequence": 18320,
+      "title": "le règne — the reign",
+      "headword": "le règne",
+      "romanization": "le règne",
+      "gloss": "the reign",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ba4f6ac6512f601c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the French for the moral, then the French for to reign."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: le règne",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "le règne — \"the reign\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Pendant son règne, le pays a connu la paix. During his reign, the country knew peace."
+            },
+            {
+              "kind": "speech",
+              "text": "Also a kingdom in nature: le règne animal."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "règne comes from Old French regne, from Latin rēgnum \"kingship, authority\" (EtymDB)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "le règne",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *le règne*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "le règne, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *le règne*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with le règne",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *le règne*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the French for the moral, then the French for to reign, then say le règne again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the French for the moral, then the French for to reign, then say *le règne* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does le règne mean? (\"The reign\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FR-C323-trone",
+      "sequence": 18330,
+      "title": "le trône — the throne",
+      "headword": "le trône",
+      "romanization": "le trône",
+      "gloss": "the throne",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:175a60e242095e40",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the French for to reign, then the French for the reign."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: le trône",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "le trône — \"the throne\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Le fils du roi est monté sur le trône. The king's son came to the throne."
+            },
+            {
+              "kind": "speech",
+              "text": "Monter sur le trône — to come to the throne."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "trône comes from Old French trone, from Latin thronus \"throne\" (EtymDB), a borrowing from Greek thrónos \"a seat\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "le trône",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *le trône*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "le trône, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *le trône*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with le trône",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *le trône*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the French for to reign, then the French for the reign, then say le trône again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the French for to reign, then the French for the reign, then say *le trône* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does le trône mean? (\"The throne\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FR-C323-couronne",
+      "sequence": 18340,
+      "title": "la couronne — the crown; the wreath",
+      "headword": "la couronne",
+      "romanization": "la couronne",
+      "gloss": "the crown; the wreath",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a1397faefc70e42e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the French for the reign, then the French for the throne."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: la couronne",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la couronne — \"the crown; the wreath\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Le roi portait une couronne d'or. The king wore a gold crown."
+            },
+            {
+              "kind": "speech",
+              "text": "Also a ring of flowers or of bread: une couronne de fleurs."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "couronne is inherited from Latin corōna \"a wreath, a crown\" (EtymDB), itself a borrowing from Greek."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la couronne",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la couronne*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la couronne, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la couronne*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with la couronne",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *la couronne*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the French for the reign, then the French for the throne, then say la couronne again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the French for the reign, then the French for the throne, then say *la couronne* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does la couronne mean? (\"The crown; the wreath\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FR-C323-couronner",
+      "sequence": 18350,
+      "title": "couronner — to crown",
+      "headword": "couronner",
+      "romanization": "couronner",
+      "gloss": "to crown",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e9adbba684fb09df",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the French for the throne, then the French for the crown."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: couronner",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "couronner — \"to crown\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Le nouveau roi a été couronné dans la grande église. The new king was crowned in the great church."
+            },
+            {
+              "kind": "speech",
+              "text": "Figurative: couronner une carrière — to crown a career."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "couronner is inherited from Latin corōnāre \"to crown\" (EtymDB), built on corōna."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "couronner",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *couronner*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "couronner, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *couronner*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with couronner",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *couronner*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the French for the throne, then the French for the crown, then say couronner again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the French for the throne, then the French for the crown, then say *couronner* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does couronner mean? (\"To crown\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FR-R323-revision-316-323",
+      "sequence": 18360,
+      "title": "Retour sur les chapitres 316–323",
+      "headword": "(dialogue)",
+      "romanization": "(dialogue)",
+      "gloss": "a review of chapters 316-323",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:96deb1fdcef3f936",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the French for to celebrate and the celebration."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to celebrate, the celebration, the procession, the brass band, the public holiday",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to celebrate, the celebration, the procession, the brass band, the public holiday]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the parade, to march past, the carnival, the float, to dress up",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the parade, to march past, the carnival, the float, to dress up]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the fireworks, the firecracker, the dance, the garland, to decorate",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the fireworks, the firecracker, the dance, the garland, to decorate]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the festive late-night dinner, to have the festive late-night dinner, the fir tree, the log, the king cake",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the festive late-night dinner, to have the festive late-night dinner, the fir tree, the log, the king cake]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to clink glasses, the toast, to wish, the candle, the wish",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to clink glasses, the toast, to wish, the candle, the wish]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "once upon a time, the fairy, the witch, the dragon, the fable",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: once upon a time, the fairy, the witch, the dragon, the fable]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the account, to narrate, the legend, the myth, the moral",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the account, to narrate, the legend, the myth, the moral]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to reign, the reign, the throne, the crown, to crown",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to reign, the reign, the throne, the crown, to crown]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "To celebrate? (célébrer.) The celebration? (la célébration.) The procession? (le cortège.) The brass band? (la fanfare.) The public holiday? (le jour férié.) The parade? (le défilé.) To march past? (défiler.) The carnival? (le carnaval.) The float? (le char.) To dress up? (déguiser.) The fireworks? (le feu d'artifice.) The firecracker? (le pétard.) The dance? (le bal.) The garland? (la guirlande.) To decorate? (décorer.) The festive late-night dinner? (le réveillon.) To have the festive late-night dinner? (réveillonner.) The fir tree? (le sapin.) The log? (la bûche.) The king cake? (la galette.) To clink glasses? (trinquer.) The toast? (le toast.) To wish? (souhaiter.) The candle? (la bougie.) The wish? (le vœu.) Once upon a time? (il était une fois.) The fairy? (la fée.) The witch? (la sorcière.) The dragon? (le dragon.) The fable? (la fable.) The account? (le récit.) To narrate? (narrer.) The legend? (la légende.) The myth? (le mythe.) The moral? (la morale.) To reign? (régner.) The reign? (le règne.) The throne? (le trône.) The crown? (la couronne.) To crown? (couronner.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

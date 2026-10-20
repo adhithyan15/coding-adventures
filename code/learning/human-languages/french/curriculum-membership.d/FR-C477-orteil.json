@@ -1,0 +1,11 @@
+{
+  "id": "FR-C477-orteil",
+  "pathSegment": "FR-PATH-477-JAMBE",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FR-EXT-477-JAMBE",
+      "order": 3
+    }
+  ]
+}

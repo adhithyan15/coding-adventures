@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 449,
+  "sourceHash": "fnv1a64:1f09c4856a3efd11",
+  "lessonIds": [
+    "FR-C449-fleuriste",
+    "FR-C449-buraliste",
+    "FR-C449-affranchir",
+    "FR-C449-expedier",
+    "FR-C449-ficeler"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch449.txt",
+  "json": "french/narration/ch449.json",
+  "textHash": "fnv1a64:179b1f856a03d59c",
+  "jsonHash": "fnv1a64:a866cc4d0f83f1f2",
+  "findings": []
+}

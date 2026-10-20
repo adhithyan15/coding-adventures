@@ -1,0 +1,11 @@
+{
+  "id": "FR-C497-hamecon",
+  "pathSegment": "FR-PATH-497-PECHE",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FR-EXT-497-PECHE",
+      "order": 1
+    }
+  ]
+}

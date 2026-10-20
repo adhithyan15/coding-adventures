@@ -1,0 +1,11 @@
+{
+  "id": "FR-C513-partition",
+  "pathSegment": "FR-PATH-513-ORCHESTRE",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-513-ORCHESTRE",
+      "order": 2
+    }
+  ]
+}

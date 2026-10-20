@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C412-tarif",
+    "language": "french",
+    "chapter": 412,
+    "sequence": 22920,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0b7347d4ed1d6323"
+  },
+  "findings": []
+}

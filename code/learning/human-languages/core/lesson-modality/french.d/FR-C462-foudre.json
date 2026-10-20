@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C462-foudre",
+    "language": "french",
+    "chapter": 462,
+    "sequence": 25480,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ce90ac2387f6a094"
+  },
+  "findings": []
+}

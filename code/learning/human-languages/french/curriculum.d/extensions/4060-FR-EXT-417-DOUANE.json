@@ -1,0 +1,8 @@
+{
+  "id": "FR-EXT-417-DOUANE",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can go through security and customs: the customs officer, declaring goods, the scanner gate, searching bags and changing planes.",
+  "prerequisites": []
+}

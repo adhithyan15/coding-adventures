@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C471-sangloter",
+    "language": "french",
+    "chapter": 471,
+    "sequence": 25980,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c091ee99efe47636"
+  },
+  "findings": []
+}

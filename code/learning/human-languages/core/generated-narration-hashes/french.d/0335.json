@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 335,
+  "sourceHash": "fnv1a64:20f2441c1e1bab40",
+  "lessonIds": [
+    "FR-C335-debat",
+    "FR-C335-debattre",
+    "FR-C335-these",
+    "FR-C335-argumentation",
+    "FR-C335-persuader"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch335.txt",
+  "json": "french/narration/ch335.json",
+  "textHash": "fnv1a64:bc673e44c2493d7d",
+  "jsonHash": "fnv1a64:7127a2d812026554",
+  "findings": []
+}

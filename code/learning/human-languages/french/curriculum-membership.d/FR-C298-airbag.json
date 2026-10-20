@@ -1,0 +1,11 @@
+{
+  "id": "FR-C298-airbag",
+  "pathSegment": "FR-PATH-298-CHOC",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FR-EXT-298-CHOC",
+      "order": 3
+    }
+  ]
+}

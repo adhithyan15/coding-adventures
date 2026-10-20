@@ -1,0 +1,11 @@
+{
+  "id": "FR-C345-adversaire",
+  "pathSegment": "FR-PATH-345-PARTISAN",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FR-EXT-345-PARTISAN",
+      "order": 3
+    }
+  ]
+}

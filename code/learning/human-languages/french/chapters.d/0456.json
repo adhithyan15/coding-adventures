@@ -1,0 +1,19 @@
+{
+  "chapter": 456,
+  "title": "Ruisseaux et marais",
+  "label": "ch:fr-ruisseaux-et-marais",
+  "canDo": "I can describe wet places: the stream, the pond, the marsh, splashing about and water running down.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "FR-C456-ruisseler",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 456: I can describe wet places: the stream, the pond, the marsh, splashing about and water running down.",
+    "assesses": [
+      "FR-LEX-C456-RUISSEAU-03",
+      "FR-LEX-C456-RUISSEAU-04",
+      "FR-LEX-C456-RUISSEAU-05"
+    ]
+  }
+}

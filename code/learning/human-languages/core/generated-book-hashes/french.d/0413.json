@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 413,
+  "sourceHash": "fnv1a64:6371c22f1b6ea118",
+  "lessonIds": [
+    "FR-C413-voie",
+    "FR-C413-composter",
+    "FR-C413-controleur",
+    "FR-C413-wagon",
+    "FR-C413-desservir"
+  ],
+  "tex": "french/book/chapters/ch413-sur-le-quai.tex"
+}

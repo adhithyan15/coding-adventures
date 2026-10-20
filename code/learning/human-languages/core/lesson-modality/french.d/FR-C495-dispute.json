@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C495-dispute",
+    "language": "french",
+    "chapter": 495,
+    "sequence": 27180,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:72d4414a1e8f6f60"
+  },
+  "findings": []
+}

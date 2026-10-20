@@ -1,0 +1,9 @@
+{
+  "id": "FR-PATH-307-DEGATS",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "FR-EXT-307-DEGATS"
+  ],
+  "after": []
+}

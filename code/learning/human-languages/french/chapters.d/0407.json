@@ -1,0 +1,19 @@
+{
+  "chapter": 407,
+  "title": "Se garer en ville",
+  "label": "ch:fr-se-garer-en-ville",
+  "canDo": "I can talk about parking in town: parking, stopping, the ticket machine, a tight parking space and the pound.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "FR-R407-revision-400-407",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 407: I can talk about parking in town: parking, stopping, the ticket machine, a tight parking space and the pound.",
+    "assesses": [
+      "FR-LEX-C407-STATIONNEMENT-03",
+      "FR-LEX-C407-STATIONNEMENT-04",
+      "FR-LEX-C407-STATIONNEMENT-05"
+    ]
+  }
+}

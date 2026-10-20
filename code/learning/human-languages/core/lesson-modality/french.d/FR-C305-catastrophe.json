@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C305-catastrophe",
+    "language": "french",
+    "chapter": 305,
+    "sequence": 17430,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:600adc6095619836"
+  },
+  "findings": []
+}

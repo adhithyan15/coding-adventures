@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 386,
+  "sourceHash": "fnv1a64:76b31c151f34c957",
+  "lessonIds": [
+    "FR-C386-accuser",
+    "FR-C386-accusation",
+    "FR-C386-voleur",
+    "FR-C386-plainte",
+    "FR-C386-delit"
+  ],
+  "tex": "french/book/chapters/ch386-les-accusations.tex"
+}

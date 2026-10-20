@@ -1,0 +1,11 @@
+{
+  "id": "FR-C462-rafale",
+  "pathSegment": "FR-PATH-462-ORAGE",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-462-ORAGE",
+      "order": 4
+    }
+  ]
+}

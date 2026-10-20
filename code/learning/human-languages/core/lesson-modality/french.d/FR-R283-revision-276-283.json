@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-R283-revision-276-283",
+    "language": "french",
+    "chapter": 283,
+    "sequence": 16310,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a5ca29e5b15886db"
+  },
+  "findings": []
+}

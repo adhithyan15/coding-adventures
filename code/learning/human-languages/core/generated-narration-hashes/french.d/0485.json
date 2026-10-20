@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 485,
+  "sourceHash": "fnv1a64:fd29d279c03fa09d",
+  "lessonIds": [
+    "FR-C485-guerir",
+    "FR-C485-guerison",
+    "FR-C485-retablir",
+    "FR-C485-convalescence",
+    "FR-C485-soigner"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch485.txt",
+  "json": "french/narration/ch485.json",
+  "textHash": "fnv1a64:f4d0a732c6423c43",
+  "jsonHash": "fnv1a64:2f99357a983e19ab",
+  "findings": []
+}

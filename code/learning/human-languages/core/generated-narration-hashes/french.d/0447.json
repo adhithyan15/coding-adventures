@@ -1,0 +1,20 @@
+{
+  "language": "french",
+  "chapter": 447,
+  "sourceHash": "fnv1a64:5936e9c988b333aa",
+  "lessonIds": [
+    "FR-C447-pressing",
+    "FR-C447-laverie",
+    "FR-C447-detacher",
+    "FR-C447-teindre",
+    "FR-C447-retoucher",
+    "FR-R447-revision-440-447"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "french/narration/ch447.txt",
+  "json": "french/narration/ch447.json",
+  "textHash": "fnv1a64:186a32165103ba63",
+  "jsonHash": "fnv1a64:6485d1e6f9cdc1d8",
+  "findings": []
+}

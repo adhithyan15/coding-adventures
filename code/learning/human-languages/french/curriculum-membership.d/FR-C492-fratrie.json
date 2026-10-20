@@ -1,0 +1,11 @@
+{
+  "id": "FR-C492-fratrie",
+  "pathSegment": "FR-PATH-492-FAMILLES",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FR-EXT-492-FAMILLES",
+      "order": 3
+    }
+  ]
+}

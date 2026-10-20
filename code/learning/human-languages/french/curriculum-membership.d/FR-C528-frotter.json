@@ -1,0 +1,11 @@
+{
+  "id": "FR-C528-frotter",
+  "pathSegment": "FR-PATH-528-MENAGE",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-528-MENAGE",
+      "order": 2
+    }
+  ]
+}

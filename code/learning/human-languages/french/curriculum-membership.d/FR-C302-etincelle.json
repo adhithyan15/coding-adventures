@@ -1,0 +1,11 @@
+{
+  "id": "FR-C302-etincelle",
+  "pathSegment": "FR-PATH-302-INCENDIE",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-302-INCENDIE",
+      "order": 4
+    }
+  ]
+}

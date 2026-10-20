@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 406,
+  "sourceHash": "fnv1a64:b876359df7f97257",
+  "lessonIds": [
+    "FR-C406-carrosserie",
+    "FR-C406-capot",
+    "FR-C406-portiere",
+    "FR-C406-coffre",
+    "FR-C406-banquette"
+  ],
+  "tex": "french/book/chapters/ch406-la-voiture-de-pres.tex"
+}

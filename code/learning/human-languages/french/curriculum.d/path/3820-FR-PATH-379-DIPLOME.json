@@ -1,0 +1,9 @@
+{
+  "id": "FR-PATH-379-DIPLOME",
+  "spine_node": "SPINE-EXPRESS-CONDITION",
+  "before": [],
+  "inline": [
+    "FR-EXT-379-DIPLOME"
+  ],
+  "after": []
+}

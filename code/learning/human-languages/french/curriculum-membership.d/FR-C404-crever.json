@@ -1,0 +1,11 @@
+{
+  "id": "FR-C404-crever",
+  "pathSegment": "FR-PATH-404-CREVAISON",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FR-EXT-404-CREVAISON",
+      "order": 1
+    }
+  ]
+}

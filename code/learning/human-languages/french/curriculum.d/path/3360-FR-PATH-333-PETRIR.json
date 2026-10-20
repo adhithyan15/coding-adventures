@@ -1,0 +1,9 @@
+{
+  "id": "FR-PATH-333-PETRIR",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "FR-EXT-333-PETRIR"
+  ],
+  "after": []
+}

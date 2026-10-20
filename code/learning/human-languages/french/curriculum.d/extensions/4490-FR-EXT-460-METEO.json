@@ -1,0 +1,8 @@
+{
+  "id": "FR-EXT-460-METEO",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can follow a weather report: the weather forecast, the outlook, cloudy, sunny and the thermometer.",
+  "prerequisites": []
+}

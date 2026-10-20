@@ -1,0 +1,19 @@
+{
+  "chapter": 387,
+  "title": "Au tribunal",
+  "label": "ch:fr-au-tribunal",
+  "canDo": "I can describe a trial: the defence, the verdict, and whether someone is guilty or innocent.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "FR-C387-innocent",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 387: I can describe a trial: the defence, the verdict, and whether someone is guilty or innocent.",
+    "assesses": [
+      "FR-LEX-C387-PROCES-03",
+      "FR-LEX-C387-PROCES-04",
+      "FR-LEX-C387-PROCES-05"
+    ]
+  }
+}

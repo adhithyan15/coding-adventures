@@ -1,0 +1,11 @@
+{
+  "id": "FR-C332-saupoudrer",
+  "pathSegment": "FR-PATH-332-ASSAISONNER",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-332-ASSAISONNER",
+      "order": 2
+    }
+  ]
+}

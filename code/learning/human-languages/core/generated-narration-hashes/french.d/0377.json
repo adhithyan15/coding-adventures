@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 377,
+  "sourceHash": "fnv1a64:5831d727a22db4c2",
+  "lessonIds": [
+    "FR-C377-reviser",
+    "FR-C377-revision",
+    "FR-C377-memoriser",
+    "FR-C377-par-coeur",
+    "FR-C377-manuel"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch377.txt",
+  "json": "french/narration/ch377.json",
+  "textHash": "fnv1a64:f6cdde8bc0c0eb8a",
+  "jsonHash": "fnv1a64:d5d6cd6d1a21738b",
+  "findings": []
+}

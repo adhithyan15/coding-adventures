@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 416,
+  "sourceHash": "fnv1a64:658c03aacd3d2e07",
+  "lessonIds": [
+    "FR-C416-vol",
+    "FR-C416-aerogare",
+    "FR-C416-enregistrement",
+    "FR-C416-soute",
+    "FR-C416-embarquement"
+  ],
+  "tex": "french/book/chapters/ch416-a-l-aerogare.tex"
+}

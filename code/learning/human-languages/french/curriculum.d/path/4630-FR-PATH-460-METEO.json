@@ -1,0 +1,9 @@
+{
+  "id": "FR-PATH-460-METEO",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "FR-EXT-460-METEO"
+  ],
+  "after": []
+}

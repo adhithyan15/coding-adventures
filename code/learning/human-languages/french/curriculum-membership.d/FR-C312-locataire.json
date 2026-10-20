@@ -1,0 +1,11 @@
+{
+  "id": "FR-C312-locataire",
+  "pathSegment": "FR-PATH-312-DEMENAGEMENT",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FR-EXT-312-DEMENAGEMENT",
+      "order": 3
+    }
+  ]
+}

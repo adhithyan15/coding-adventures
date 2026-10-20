@@ -1,0 +1,11 @@
+{
+  "id": "FR-C296-rancon",
+  "pathSegment": "FR-PATH-296-BRAQUAGE",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FR-EXT-296-BRAQUAGE",
+      "order": 3
+    }
+  ]
+}

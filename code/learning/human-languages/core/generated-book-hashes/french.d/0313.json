@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 313,
+  "sourceHash": "fnv1a64:4570633a3deba077",
+  "lessonIds": [
+    "FR-C313-retraite",
+    "FR-C313-retraite-personne",
+    "FR-C313-vieillesse",
+    "FR-C313-hospitaliser",
+    "FR-C313-deces"
+  ],
+  "tex": "french/book/chapters/ch313-la-retraite.tex"
+}

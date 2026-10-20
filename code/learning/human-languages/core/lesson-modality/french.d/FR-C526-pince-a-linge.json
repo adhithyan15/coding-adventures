@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C526-pince-a-linge",
+    "language": "french",
+    "chapter": 526,
+    "sequence": 28800,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b362b06ef442fb93"
+  },
+  "findings": []
+}

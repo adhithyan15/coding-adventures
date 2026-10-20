@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C476-optimiste",
+    "language": "french",
+    "chapter": 476,
+    "sequence": 26240,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9ee59311ec66e5ca"
+  },
+  "findings": []
+}

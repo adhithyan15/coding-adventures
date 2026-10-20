@@ -1,0 +1,9 @@
+{
+  "id": "FR-PATH-337-COMPROMIS",
+  "spine_node": "SPINE-GIVE-REASONS",
+  "before": [],
+  "inline": [
+    "FR-EXT-337-COMPROMIS"
+  ],
+  "after": []
+}

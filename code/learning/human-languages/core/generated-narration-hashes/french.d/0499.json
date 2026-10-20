@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 499,
+  "sourceHash": "fnv1a64:283833606a56bbcc",
+  "lessonIds": [
+    "FR-C499-jeu-de-societe",
+    "FR-C499-de",
+    "FR-C499-pion",
+    "FR-C499-echiquier",
+    "FR-C499-tricher"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch499.txt",
+  "json": "french/narration/ch499.json",
+  "textHash": "fnv1a64:ea3532753237231a",
+  "jsonHash": "fnv1a64:7b425dfe8c6e7468",
+  "findings": []
+}

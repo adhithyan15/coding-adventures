@@ -1,0 +1,11 @@
+{
+  "id": "FR-C456-etang",
+  "pathSegment": "FR-PATH-456-RUISSEAU",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FR-EXT-456-RUISSEAU",
+      "order": 1
+    }
+  ]
+}

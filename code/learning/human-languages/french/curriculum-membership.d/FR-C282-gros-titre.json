@@ -1,0 +1,11 @@
+{
+  "id": "FR-C282-gros-titre",
+  "pathSegment": "FR-PATH-282-TITRES",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "FR-EXT-282-TITRES",
+      "order": 0
+    }
+  ]
+}

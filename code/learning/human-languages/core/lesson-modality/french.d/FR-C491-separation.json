@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C491-separation",
+    "language": "french",
+    "chapter": 491,
+    "sequence": 27000,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:946265b467d643f4"
+  },
+  "findings": []
+}

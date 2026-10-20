@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 483,
+  "sourceHash": "fnv1a64:86fea7352f9bc080",
+  "lessonIds": [
+    "FR-C483-nausee",
+    "FR-C483-vomir",
+    "FR-C483-migraine",
+    "FR-C483-vertige",
+    "FR-C483-digerer"
+  ],
+  "tex": "french/book/chapters/ch483-mal-au-c-ur.tex"
+}

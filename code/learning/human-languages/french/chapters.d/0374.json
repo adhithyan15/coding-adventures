@@ -1,0 +1,19 @@
+{
+  "chapter": 374,
+  "title": "Mes objectifs",
+  "label": "ch:fr-mes-objectifs",
+  "canDo": "I can say what I aim to do: my goal, my intention, an objective, a resolution and what I am aiming at.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "FR-C374-viser",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 374: I can say what I aim to do: my goal, my intention, an objective, a resolution and what I am aiming at.",
+    "assesses": [
+      "FR-LEX-C374-BUT-03",
+      "FR-LEX-C374-BUT-04",
+      "FR-LEX-C374-BUT-05"
+    ]
+  }
+}

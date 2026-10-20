@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C347-etant-donne-que",
+    "language": "french",
+    "chapter": 347,
+    "sequence": 19570,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c89c422b4d547753"
+  },
+  "findings": []
+}

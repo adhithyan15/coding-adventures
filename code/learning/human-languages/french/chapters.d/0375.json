@@ -1,0 +1,19 @@
+{
+  "chapter": 375,
+  "title": "Au lycée",
+  "label": "ch:fr-au-lycee",
+  "canDo": "I can talk about secondary school: the lycée, its pupils, attending it, the school report and the head.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "FR-C375-proviseur",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 375: I can talk about secondary school: the lycée, its pupils, attending it, the school report and the head.",
+    "assesses": [
+      "FR-LEX-C375-LYCEE-03",
+      "FR-LEX-C375-LYCEE-04",
+      "FR-LEX-C375-LYCEE-05"
+    ]
+  }
+}

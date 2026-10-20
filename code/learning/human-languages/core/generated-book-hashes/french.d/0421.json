@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 421,
+  "sourceHash": "fnv1a64:ae6d3013ffebe99c",
+  "lessonIds": [
+    "FR-C421-annulation",
+    "FR-C421-remboursement",
+    "FR-C421-confirmer",
+    "FR-C421-decommander",
+    "FR-C421-surreservation"
+  ],
+  "tex": "french/book/chapters/ch421-vol-annule.tex"
+}

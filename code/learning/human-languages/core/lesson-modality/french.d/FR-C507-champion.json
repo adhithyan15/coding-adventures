@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C507-champion",
+    "language": "french",
+    "chapter": 507,
+    "sequence": 27830,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:850910113bc09d7e"
+  },
+  "findings": []
+}

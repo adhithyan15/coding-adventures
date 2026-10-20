@@ -1,0 +1,19 @@
+{
+  "chapter": 385,
+  "title": "La paperasse",
+  "label": "ch:fr-la-paperasse",
+  "canDo": "I can deal with red tape: bureaucracy, the steps to take, a procedure, a certificate and an official statement.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "FR-C385-attestation",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 385: I can deal with red tape: bureaucracy, the steps to take, a procedure, a certificate and an official statement.",
+    "assesses": [
+      "FR-LEX-C385-DEMARCHE-03",
+      "FR-LEX-C385-DEMARCHE-04",
+      "FR-LEX-C385-DEMARCHE-05"
+    ]
+  }
+}

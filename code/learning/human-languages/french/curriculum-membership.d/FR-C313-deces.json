@@ -1,0 +1,11 @@
+{
+  "id": "FR-C313-deces",
+  "pathSegment": "FR-PATH-313-RETRAITE",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-313-RETRAITE",
+      "order": 4
+    }
+  ]
+}

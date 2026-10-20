@@ -1,0 +1,9 @@
+{
+  "id": "FR-PATH-405-DEPANNEUSE",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "FR-EXT-405-DEPANNEUSE"
+  ],
+  "after": []
+}

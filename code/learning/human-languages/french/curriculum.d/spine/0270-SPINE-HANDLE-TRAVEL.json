@@ -1,8 +1,4 @@
 {
-  "omits": [
-    "DIRECTION-ASK",
-    "TRANSPORT-TICKET",
-    "PROBLEM-REPORT"
-  ],
+  "omits": [],
   "relocates": {}
 }

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C342-subjectif",
+    "language": "french",
+    "chapter": 342,
+    "sequence": 19340,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8aa2dd812445c65c"
+  },
+  "findings": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 369,
+  "sourceHash": "fnv1a64:8364960e1e1628a3",
+  "lessonIds": [
+    "FR-C369-selon",
+    "FR-C369-eventuel",
+    "FR-C369-eventuellement",
+    "FR-C369-eventualite",
+    "FR-C369-faute-de"
+  ],
+  "tex": "french/book/chapters/ch369-selon-les-cas.tex"
+}

@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 346,
+  "sourceHash": "fnv1a64:b2975d2aaa517f1e",
+  "lessonIds": [
+    "FR-C346-causer",
+    "FR-C346-provoquer",
+    "FR-C346-consequence",
+    "FR-C346-entrainer",
+    "FR-C346-decouler"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch346.txt",
+  "json": "french/narration/ch346.json",
+  "textHash": "fnv1a64:07641df818b9891b",
+  "jsonHash": "fnv1a64:35b7e746fbaef3cc",
+  "findings": []
+}

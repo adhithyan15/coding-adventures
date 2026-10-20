@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 427,
+  "sourceHash": "fnv1a64:896a0aa4e85a9b36",
+  "lessonIds": [
+    "FR-C427-climatisation",
+    "FR-C427-chauffage",
+    "FR-C427-radiateur",
+    "FR-C427-taie",
+    "FR-C427-peignoir"
+  ],
+  "tex": "french/book/chapters/ch427-le-confort-de-la-chambre.tex"
+}

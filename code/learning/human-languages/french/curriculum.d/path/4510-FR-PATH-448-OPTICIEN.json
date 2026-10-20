@@ -1,0 +1,9 @@
+{
+  "id": "FR-PATH-448-OPTICIEN",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "FR-EXT-448-OPTICIEN"
+  ],
+  "after": []
+}

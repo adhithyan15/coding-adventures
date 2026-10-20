@@ -1,0 +1,14 @@
+{
+  "language": "french",
+  "chapter": 397,
+  "sourceHash": "fnv1a64:929ad233eed10520",
+  "lessonIds": [
+    "FR-C397-fichier",
+    "FR-C397-supprimer",
+    "FR-C397-copier",
+    "FR-C397-coller",
+    "FR-C397-sauvegarder",
+    "FR-R397-revision-390-397"
+  ],
+  "tex": "french/book/chapters/ch397-les-fichiers.tex"
+}

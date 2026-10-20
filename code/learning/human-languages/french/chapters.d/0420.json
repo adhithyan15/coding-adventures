@@ -1,0 +1,19 @@
+{
+  "chapter": 420,
+  "title": "Escale et retard",
+  "label": "ch:fr-escale-et-retard",
+  "canDo": "I can talk about bumpy flights and changed times: turbulence, the stopover, jet lag, moving a time and delaying.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "FR-C420-retarder",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 420: I can talk about bumpy flights and changed times: turbulence, the stopover, jet lag, moving a time and delaying.",
+    "assesses": [
+      "FR-LEX-C420-ESCALE-03",
+      "FR-LEX-C420-ESCALE-04",
+      "FR-LEX-C420-ESCALE-05"
+    ]
+  }
+}

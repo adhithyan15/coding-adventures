@@ -1,0 +1,11 @@
+{
+  "id": "FR-C258-pendant-que",
+  "pathSegment": "FR-PATH-258-SCENE",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-258-SCENE",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 364,
+  "title": "Juste et injuste",
+  "label": "ch:fr-juste-et-injuste",
+  "canDo": "I can talk about justice and injustice, say what is unfair, and name prejudice and stereotypes.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "FR-C364-stereotype",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 364: I can talk about justice and injustice, say what is unfair, and name prejudice and stereotypes.",
+    "assesses": [
+      "FR-LEX-C364-JUSTICE-03",
+      "FR-LEX-C364-JUSTICE-04",
+      "FR-LEX-C364-JUSTICE-05"
+    ]
+  }
+}

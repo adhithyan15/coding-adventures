@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 330,
+  "sourceHash": "fnv1a64:6bf9a348fce2482c",
+  "lessonIds": [
+    "FR-C330-bouillir",
+    "FR-C330-ebullition",
+    "FR-C330-marmite",
+    "FR-C330-mijoter",
+    "FR-C330-cocotte"
+  ],
+  "tex": "french/book/chapters/ch330-sur-le-feu.tex"
+}

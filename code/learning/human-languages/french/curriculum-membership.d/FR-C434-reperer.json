@@ -1,0 +1,11 @@
+{
+  "id": "FR-C434-reperer",
+  "pathSegment": "FR-PATH-434-ORIENTER",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-434-ORIENTER",
+      "order": 2
+    }
+  ]
+}

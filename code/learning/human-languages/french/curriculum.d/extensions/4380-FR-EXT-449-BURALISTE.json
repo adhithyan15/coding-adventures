@@ -1,0 +1,8 @@
+{
+  "id": "FR-EXT-449-BURALISTE",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can use local shops and send things: the florist, the tobacconist, putting a stamp on, sending off and tying up a parcel.",
+  "prerequisites": []
+}

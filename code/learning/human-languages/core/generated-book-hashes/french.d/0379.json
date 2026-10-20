@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 379,
+  "sourceHash": "fnv1a64:86c496d07972a319",
+  "lessonIds": [
+    "FR-C379-diplome",
+    "FR-C379-epreuve",
+    "FR-C379-mention",
+    "FR-C379-doctorat",
+    "FR-C379-bourse"
+  ],
+  "tex": "french/book/chapters/ch379-le-diplome.tex"
+}

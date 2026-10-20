@@ -1,0 +1,11 @@
+{
+  "id": "FR-C319-buche",
+  "pathSegment": "FR-PATH-319-REVEILLON",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FR-EXT-319-REVEILLON",
+      "order": 3
+    }
+  ]
+}

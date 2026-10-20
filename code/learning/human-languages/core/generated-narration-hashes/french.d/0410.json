@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 410,
+  "sourceHash": "fnv1a64:bd4fc0733ccbe39a",
+  "lessonIds": [
+    "FR-C410-bouchon",
+    "FR-C410-embouteillage",
+    "FR-C410-deviation",
+    "FR-C410-aire",
+    "FR-C410-doubler"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch410.txt",
+  "json": "french/narration/ch410.json",
+  "textHash": "fnv1a64:bfb325ddb620c3d2",
+  "jsonHash": "fnv1a64:429a039884480894",
+  "findings": []
+}

@@ -1,0 +1,9 @@
+{
+  "id": "FR-PATH-528-MENAGE",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "FR-EXT-528-MENAGE"
+  ],
+  "after": []
+}

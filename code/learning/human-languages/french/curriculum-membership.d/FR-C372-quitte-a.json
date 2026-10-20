@@ -1,0 +1,11 @@
+{
+  "id": "FR-C372-quitte-a",
+  "pathSegment": "FR-PATH-372-RISQUE",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-372-RISQUE",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "FR-C262-revision-chemin",
+  "pathSegment": "FR-PATH-262-CHEMIN",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-262-CHEMIN",
+      "order": 2
+    }
+  ]
+}

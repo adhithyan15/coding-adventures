@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C521-lecteur",
+    "language": "french",
+    "chapter": 521,
+    "sequence": 28510,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:832ffaaf74a2927a"
+  },
+  "findings": []
+}

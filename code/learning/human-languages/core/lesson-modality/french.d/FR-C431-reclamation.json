@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C431-reclamation",
+    "language": "french",
+    "chapter": 431,
+    "sequence": 23880,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a1fdc0c9ef88404e"
+  },
+  "findings": []
+}

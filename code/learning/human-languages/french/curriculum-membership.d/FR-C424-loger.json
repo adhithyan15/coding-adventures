@@ -1,0 +1,11 @@
+{
+  "id": "FR-C424-loger",
+  "pathSegment": "FR-PATH-424-HEBERGEMENT",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FR-EXT-424-HEBERGEMENT",
+      "order": 3
+    }
+  ]
+}

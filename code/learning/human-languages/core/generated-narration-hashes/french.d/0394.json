@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 394,
+  "sourceHash": "fnv1a64:465dca24fa7f5a6b",
+  "lessonIds": [
+    "FR-C394-benefice",
+    "FR-C394-perte",
+    "FR-C394-faillite",
+    "FR-C394-rembourser",
+    "FR-C394-emprunt"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch394.txt",
+  "json": "french/narration/ch394.json",
+  "textHash": "fnv1a64:5f5d0a941ef26d67",
+  "jsonHash": "fnv1a64:c5d8d0b15abbe190",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "FR-C372-probabilite",
+  "pathSegment": "FR-PATH-372-RISQUE",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FR-EXT-372-RISQUE",
+      "order": 3
+    }
+  ]
+}

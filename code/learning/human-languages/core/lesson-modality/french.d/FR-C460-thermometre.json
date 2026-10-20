@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C460-thermometre",
+    "language": "french",
+    "chapter": 460,
+    "sequence": 25410,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ed084f768d77827a"
+  },
+  "findings": []
+}

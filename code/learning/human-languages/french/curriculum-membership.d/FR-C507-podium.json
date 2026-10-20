@@ -1,0 +1,11 @@
+{
+  "id": "FR-C507-podium",
+  "pathSegment": "FR-PATH-507-TOURNOI",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-507-TOURNOI",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "FR-C447-pressing",
+  "pathSegment": "FR-PATH-447-PRESSING",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "FR-EXT-447-PRESSING",
+      "order": 0
+    }
+  ]
+}

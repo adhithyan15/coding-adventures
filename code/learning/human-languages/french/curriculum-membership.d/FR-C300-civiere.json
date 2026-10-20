@@ -1,0 +1,11 @@
+{
+  "id": "FR-C300-civiere",
+  "pathSegment": "FR-PATH-300-SECOURS",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-300-SECOURS",
+      "order": 4
+    }
+  ]
+}

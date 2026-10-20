@@ -1,0 +1,11 @@
+{
+  "id": "FR-C490-aine",
+  "pathSegment": "FR-PATH-490-PARRAIN",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FR-EXT-490-PARRAIN",
+      "order": 3
+    }
+  ]
+}

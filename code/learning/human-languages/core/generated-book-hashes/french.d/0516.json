@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 516,
+  "sourceHash": "fnv1a64:c16db459a7e41937",
+  "lessonIds": [
+    "FR-C516-pinceau",
+    "FR-C516-toile",
+    "FR-C516-aquarelle",
+    "FR-C516-chevalet",
+    "FR-C516-esquisser"
+  ],
+  "tex": "french/book/chapters/ch516-pinceaux-et-couleurs.tex"
+}

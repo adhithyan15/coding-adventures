@@ -1,0 +1,11 @@
+{
+  "id": "FR-C323-regne",
+  "pathSegment": "FR-PATH-323-REGNE",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FR-EXT-323-REGNE",
+      "order": 1
+    }
+  ]
+}

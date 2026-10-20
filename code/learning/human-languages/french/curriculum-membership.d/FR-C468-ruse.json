@@ -1,0 +1,11 @@
+{
+  "id": "FR-C468-ruse",
+  "pathSegment": "FR-PATH-468-FRANCHISE",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FR-EXT-468-FRANCHISE",
+      "order": 3
+    }
+  ]
+}

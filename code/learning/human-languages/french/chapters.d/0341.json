@@ -1,0 +1,19 @@
+{
+  "chapter": 341,
+  "title": "Je m'explique",
+  "label": "ch:fr-je-m-explique",
+  "canDo": "I can clear up a misunderstanding: clarify, specify, give more details and clear a question up.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "FR-R341-revision-334-341",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 341: I can clear up a misunderstanding: clarify, specify, give more details and clear a question up.",
+    "assesses": [
+      "FR-LEX-C341-MALENTENDU-03",
+      "FR-LEX-C341-MALENTENDU-04",
+      "FR-LEX-C341-MALENTENDU-05"
+    ]
+  }
+}

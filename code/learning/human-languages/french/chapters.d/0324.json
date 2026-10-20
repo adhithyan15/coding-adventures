@@ -1,0 +1,19 @@
+{
+  "chapter": 324,
+  "title": "La conquête",
+  "label": "ch:fr-la-conquete",
+  "canDo": "I can talk about wars of long ago: invading, an invasion, conquering, a conquest and defeating an enemy.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "FR-C324-vaincre",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 324: I can talk about wars of long ago: invading, an invasion, conquering, a conquest and defeating an enemy.",
+    "assesses": [
+      "FR-LEX-C324-CONQUETE-03",
+      "FR-LEX-C324-CONQUETE-04",
+      "FR-LEX-C324-CONQUETE-05"
+    ]
+  }
+}

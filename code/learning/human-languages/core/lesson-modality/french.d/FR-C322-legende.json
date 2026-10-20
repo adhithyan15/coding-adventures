@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C322-legende",
+    "language": "french",
+    "chapter": 322,
+    "sequence": 18280,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1342f00d5d522091"
+  },
+  "findings": []
+}

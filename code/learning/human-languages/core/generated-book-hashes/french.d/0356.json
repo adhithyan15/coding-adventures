@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 356,
+  "sourceHash": "fnv1a64:957130e12f222e35",
+  "lessonIds": [
+    "FR-C356-emploi",
+    "FR-C356-chomage",
+    "FR-C356-chomeur",
+    "FR-C356-embaucher",
+    "FR-C356-recruter"
+  ],
+  "tex": "french/book/chapters/ch356-sans-emploi.tex"
+}

@@ -1,0 +1,11 @@
+{
+  "id": "FR-C469-lunatique",
+  "pathSegment": "FR-PATH-469-HUMEUR",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-469-HUMEUR",
+      "order": 2
+    }
+  ]
+}

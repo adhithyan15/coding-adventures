@@ -1,0 +1,11 @@
+{
+  "id": "FR-R399-revision-398-399",
+  "pathSegment": "FR-PATH-399-PANNE",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "FR-EXT-399-PANNE",
+      "order": 5
+    }
+  ]
+}

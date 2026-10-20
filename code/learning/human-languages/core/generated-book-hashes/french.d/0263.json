@@ -1,0 +1,11 @@
+{
+  "language": "french",
+  "chapter": 263,
+  "sourceHash": "fnv1a64:7a424b376fb277b2",
+  "lessonIds": [
+    "FR-C263-aller-retour",
+    "FR-C263-rate-le-train",
+    "FR-C263-revision-voyage"
+  ],
+  "tex": "french/book/chapters/ch263-at-the-station.tex"
+}

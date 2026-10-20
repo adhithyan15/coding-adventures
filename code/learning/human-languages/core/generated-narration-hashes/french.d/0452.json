@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 452,
+  "sourceHash": "fnv1a64:5f9e6b4bdef25e33",
+  "lessonIds": [
+    "FR-C452-remise",
+    "FR-C452-rabais",
+    "FR-C452-marchander",
+    "FR-C452-brader",
+    "FR-C452-braderie"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch452.txt",
+  "json": "french/narration/ch452.json",
+  "textHash": "fnv1a64:c856cba2207cbae7",
+  "jsonHash": "fnv1a64:692d211d3b908147",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 398,
+  "title": "Sur internet",
+  "label": "ch:fr-sur-internet",
+  "canDo": "I can talk about being online: the network, the connection, browsing, a link and posting something.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "FR-C398-publier",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 398: I can talk about being online: the network, the connection, browsing, a link and posting something.",
+    "assesses": [
+      "FR-LEX-C398-RESEAU-03",
+      "FR-LEX-C398-RESEAU-04",
+      "FR-LEX-C398-RESEAU-05"
+    ]
+  }
+}

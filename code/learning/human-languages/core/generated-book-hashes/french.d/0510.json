@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 510,
+  "sourceHash": "fnv1a64:540b5ee72c77b0b5",
+  "lessonIds": [
+    "FR-C510-patin",
+    "FR-C510-patiner",
+    "FR-C510-luge",
+    "FR-C510-patinoire",
+    "FR-C510-piste"
+  ],
+  "tex": "french/book/chapters/ch510-glace-et-neige.tex"
+}
