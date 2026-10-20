@@ -12,10 +12,10 @@ canonical pass set.
 module-level docs in `src/lib.rs` for the authoritative description.)
 
 - **Dead-after-terminator**: in any block body, drop every statement after an
-  unconditional terminator — a `return` **or a `throw`** (both end the
-  statement list's execution in every block context). `break` / `continue` are
-  handled only inside switch-case consequents (they terminate flow only
-  relative to an enclosing loop/switch). **Hoisting guard:** the tail is dropped
+  unconditional terminator: a `return`, `throw`, `break` or `continue`. Each
+  ends the statement list's execution in every block context; `break` and
+  `continue` joined in CCR-082 (#15878), so `for(…){continue;g()}` empties to
+  `for(…);`. **Hoisting guard:** the tail is dropped
   only when *every* statement in it is provably free of a hoisted binding
   (expression / empty / break / continue / return / throw / `let` / `const`).
   A `var` or `function` declaration — or any compound statement that could wrap
@@ -104,9 +104,9 @@ Once the AST grows the needed variants:
   Pins the block-level reachability cleanup this pass performs
   (drop-after-`return`/`throw`, empty-statement removal, nested-block
   recursion, and the hoisting-soundness decline when a dead tail carries a
-  `var`/`function`). **8 active `#[test]`s** plus **2 `#[ignore]` placeholders**
+  `var`/`function`). **9 active `#[test]`s** plus **1 `#[ignore]` placeholder**
   for the CFG-based reachability we don't do yet (`if`-both-branches-terminate →
-  gap-151; `break`/`continue` in a general loop block → gap-152), pinned in
+  gap-151; gap-152, `break`/`continue` in a loop block, is resolved), pinned in
   `code/specs/CLOC12-gaps.md`. Run with
   `cargo test --test upstream_unreachable_code_elimination`.
 

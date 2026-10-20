@@ -2,6 +2,27 @@
 
 ## [Unreleased]
 
+### Fixed - drop the dead tail after `continue` and `break` (CCR-082, #15878)
+
+`is_terminator` now includes `ContinueStatement` and `BreakStatement`, labelled
+or not. Each one leaves its statement list unconditionally, so what follows in
+the same block never runs. At SIMPLE and ADVANCED:
+
+- `for(var c=0;c<1;c++){continue;g()}` now empties to `for(var c=0;c<1;c++);`,
+  as upstream does.
+- The CCR-053 residual `for(…){continue;debugger}` matches upstream again.
+
+The `tail_is_safe_to_truncate` hoisting guard is unchanged, so a dead `var` or
+`function` still keeps its tail. Upstream instead hoists such a `var` into the
+`for` head; that remains open.
+
+Tests:
+
+- Five new unit tests: `continue`, labelled `continue`, statements before the
+  terminator, `break`, and the hoisting guard.
+- The upstream-ported `drops_code_after_break_in_loop_block` (gap-152) is no
+  longer ignored.
+
 ### Fixed - reject unrecordable deletion provenance (CV02)
 
 Use fallible tombstone recording and return a pass-specific error before accepting

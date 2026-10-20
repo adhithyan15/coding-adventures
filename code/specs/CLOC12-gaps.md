@@ -1368,7 +1368,7 @@ no remaining uses. Placeholder: `removes_dead_const_after_inlining`.
   code before the terminator, bare `return` unchanged, empty-statement removal,
   dead-code cleanup inside a nested `if`-consequent block, and the
   hoisting-soundness decline (a dead tail carrying a `var` is kept verbatim).
-- **2 `#[ignore]` placeholders** — see gap-151, gap-152.
+- **1 `#[ignore]` placeholder** — see gap-151 (gap-152 resolved by CCR-082).
 
   (Numbering note: authored off `origin/main` in parallel with the emitter
   object-literal port CLOC12.147, so this takes CLOC12.148 to avoid collision
@@ -1383,6 +1383,12 @@ only truncates after a *direct* terminator statement; an `IfStatement` is not
 `drops_code_after_if_both_branches_return`.
 
 ### gap-152 — `break`/`continue` only terminate switch cases, not loop blocks
+
+**Resolved by CCR-082 (#15878).** `is_terminator` now includes `break` and
+`continue`, so a dead tail after either one is truncated, subject to the same
+`tail_is_safe_to_truncate` hoisting guard. The placeholder is now an active
+test. Still open: a dead tail that holds a `var`. Upstream hoists it into the
+`for` head (`for(var z,c=0;…)`), but closurec keeps the whole tail.
 
 Upstream treats `break`/`continue` as ending the enclosing loop body, so code
 after a `break` inside a loop is unreachable (`while (c) { break; y(); }` →
