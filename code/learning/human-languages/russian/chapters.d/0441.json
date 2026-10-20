@@ -1,0 +1,19 @@
+{
+  "chapter": 441,
+  "title": "Asking the way",
+  "label": "ch:ru-asking-the-way",
+  "canDo": "I can ask the way: a passer-by, asking around, telling someone the way, tracking a place down and asking again.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "RU-C441-peresprashivat",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 441: I can ask the way: a passer-by, asking around, telling someone the way, tracking a place down and asking again.",
+    "assesses": [
+      "RU-LEX-C441-PROKHOZHIY-03",
+      "RU-LEX-C441-PROKHOZHIY-04",
+      "RU-LEX-C441-PROKHOZHIY-05"
+    ]
+  }
+}

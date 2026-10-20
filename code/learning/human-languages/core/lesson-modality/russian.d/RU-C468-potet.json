@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C468-potet",
+    "language": "russian",
+    "chapter": 468,
+    "sequence": 26560,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:215fec2d04b5b5a8"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C533-ploskogubtsy",
+    "language": "russian",
+    "chapter": 533,
+    "sequence": 29890,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:dbf4645a296e15b3"
+  },
+  "findings": []
+}

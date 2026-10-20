@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C326-letopis",
+    "language": "russian",
+    "chapter": 326,
+    "sequence": 19230,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:25b5ee7bcd6a94c9"
+  },
+  "findings": []
+}

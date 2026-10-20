@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C426-shlyupka",
+    "language": "russian",
+    "chapter": 426,
+    "sequence": 24380,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d4e92f00a50b39cc"
+  },
+  "findings": []
+}

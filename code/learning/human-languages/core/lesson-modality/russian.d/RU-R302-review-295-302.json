@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-R302-review-295-302",
+    "language": "russian",
+    "chapter": 302,
+    "sequence": 18030,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c7b5ab009f4667ac"
+  },
+  "findings": []
+}

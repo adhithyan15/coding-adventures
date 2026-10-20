@@ -1,0 +1,9 @@
+{
+  "id": "RU-PATH-382-EKZAMEN",
+  "spine_node": "SPINE-EXPRESS-CONDITION",
+  "before": [],
+  "inline": [
+    "RU-EXT-382-EKZAMEN"
+  ],
+  "after": []
+}

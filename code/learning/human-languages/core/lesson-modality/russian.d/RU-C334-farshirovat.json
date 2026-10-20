@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C334-farshirovat",
+    "language": "russian",
+    "chapter": 334,
+    "sequence": 19630,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9de4d5abe6dffc8e"
+  },
+  "findings": []
+}

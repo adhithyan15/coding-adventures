@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C292-pokazaniya",
+    "language": "russian",
+    "chapter": 292,
+    "sequence": 17510,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:41ec55683a87ae11"
+  },
+  "findings": []
+}

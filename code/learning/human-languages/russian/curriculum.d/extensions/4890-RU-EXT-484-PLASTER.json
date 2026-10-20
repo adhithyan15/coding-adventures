@@ -1,0 +1,8 @@
+{
+  "id": "RU-EXT-484-PLASTER",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can talk about broken bones, sprains and limping.",
+  "prerequisites": []
+}

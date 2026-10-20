@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 349,
+  "sourceHash": "fnv1a64:4705ad64ff7653c2",
+  "lessonIds": [
+    "RU-C349-sposobstvovat",
+    "RU-C349-privodit",
+    "RU-C349-vliyat",
+    "RU-C349-vliyanie",
+    "RU-C349-vozdeystvie"
+  ],
+  "tex": "russian/book/chapters/ch349-causes-and-influence.tex"
+}

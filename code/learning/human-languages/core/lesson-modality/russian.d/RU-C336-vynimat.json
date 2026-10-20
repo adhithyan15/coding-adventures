@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C336-vynimat",
+    "language": "russian",
+    "chapter": 336,
+    "sequence": 19770,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e58cd4c902a4a22e"
+  },
+  "findings": []
+}

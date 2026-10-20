@@ -1,0 +1,19 @@
+{
+  "chapter": 358,
+  "title": "Looking for a job",
+  "label": "ch:ru-looking-for-a-job",
+  "canDo": "I can look for a job: talk about a vacancy, a job interview and the candidates, say who is hiring and how long I have worked.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "RU-C358-stazh",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 358: I can look for a job: talk about a vacancy, a job interview and the candidates, say who is hiring and how long I have worked.",
+    "assesses": [
+      "RU-LEX-C358-VAKANSIYA-03",
+      "RU-LEX-C358-VAKANSIYA-04",
+      "RU-LEX-C358-VAKANSIYA-05"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "chapter": 264,
+  "title": "Advice, and Why",
+  "label": "ch:ru-advice-and-why",
+  "canDo": "I can give advice with тебе стоит, ты должен and лучше, and explain why with причина в том, что and поэтому.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "RU-C264-review",
+    "kind": "production",
+    "summary": "Complete RU-C264-review: a friend's problem answered with advice at three strengths, then an explanation with потому что and поэтому.",
+    "assesses": [
+      "RU-GRAMMAR-STOIT-INFINITIVE-01",
+      "RU-GRAMMAR-LUCHSHE-INFINITIVE-01",
+      "RU-GRAMMAR-DOLZHEN-01",
+      "RU-GRAMMAR-PRICHINA-V-TOM-01",
+      "RU-GRAMMAR-EXPLAIN-STEPS-01"
+    ]
+  }
+}

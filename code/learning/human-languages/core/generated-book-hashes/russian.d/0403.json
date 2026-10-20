@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 403,
+  "sourceHash": "fnv1a64:c4d58671f4cd84e8",
+  "lessonIds": [
+    "RU-C403-rul",
+    "RU-C403-tormoz",
+    "RU-C403-tormozit",
+    "RU-C403-razgonyatsya",
+    "RU-C403-signalit"
+  ],
+  "tex": "russian/book/chapters/ch403-behind-the-wheel.tex"
+}

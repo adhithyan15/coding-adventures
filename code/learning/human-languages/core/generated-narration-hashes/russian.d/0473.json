@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 473,
+  "sourceHash": "fnv1a64:c1ccd8049ccab312",
+  "lessonIds": [
+    "RU-C473-razocharovaniye",
+    "RU-C473-razocharovannyy",
+    "RU-C473-oblegcheniye",
+    "RU-C473-otchayaniye",
+    "RU-C473-vzdykhat"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch473.txt",
+  "json": "russian/narration/ch473.json",
+  "textHash": "fnv1a64:cb25fc2f695d3aed",
+  "jsonHash": "fnv1a64:e2110e6f1682e33e",
+  "findings": []
+}

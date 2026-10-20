@@ -1,0 +1,11 @@
+{
+  "id": "RU-C423-zaderzhivat",
+  "pathSegment": "RU-PATH-423-ZADERZHKA",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "RU-EXT-423-ZADERZHKA",
+      "order": 1
+    }
+  ]
+}

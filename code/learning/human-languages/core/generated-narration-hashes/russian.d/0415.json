@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 415,
+  "sourceHash": "fnv1a64:d06eb9fe75800a14",
+  "lessonIds": [
+    "RU-C415-otpravlyatsya",
+    "RU-C415-pribyvat",
+    "RU-C415-otkhodit",
+    "RU-C415-obyavlyat",
+    "RU-C415-uspevat"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch415.txt",
+  "json": "russian/narration/ch415.json",
+  "textHash": "fnv1a64:e6957705c414f8f7",
+  "jsonHash": "fnv1a64:48c43e424b3d34de",
+  "findings": []
+}

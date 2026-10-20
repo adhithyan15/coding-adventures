@@ -1,0 +1,19 @@
+{
+  "chapter": 385,
+  "title": "Higher education",
+  "label": "ch:ru-higher-education",
+  "canDo": "I can talk about education and degrees: a bachelor and a master, a dissertation, and a university department.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "RU-C385-magistr",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 385: I can talk about education and degrees: a bachelor and a master, a dissertation, and a university department.",
+    "assesses": [
+      "RU-LEX-C385-OBRAZOVANIYE-03",
+      "RU-LEX-C385-OBRAZOVANIYE-04",
+      "RU-LEX-C385-OBRAZOVANIYE-05"
+    ]
+  }
+}

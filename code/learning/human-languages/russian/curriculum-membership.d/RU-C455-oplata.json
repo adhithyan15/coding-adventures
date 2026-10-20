@@ -1,0 +1,11 @@
+{
+  "id": "RU-C455-oplata",
+  "pathSegment": "RU-PATH-455-OPLATA",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "RU-EXT-455-OPLATA",
+      "order": 1
+    }
+  ]
+}

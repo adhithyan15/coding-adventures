@@ -1,0 +1,11 @@
+{
+  "id": "RU-C336-varyonyy",
+  "pathSegment": "RU-PATH-336-GOTOVO",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "RU-EXT-336-GOTOVO",
+      "order": 2
+    }
+  ]
+}

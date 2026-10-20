@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C438-oriyentir",
+    "language": "russian",
+    "chapter": 438,
+    "sequence": 25020,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f1d537f997c7f125"
+  },
+  "findings": []
+}

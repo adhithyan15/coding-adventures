@@ -1,0 +1,19 @@
+{
+  "chapter": 361,
+  "title": "Profit and loss",
+  "label": "ch:ru-profit-and-loss",
+  "canDo": "I can talk about a business, its profit and its losses, someone’s income, and a deal.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "RU-C361-sdelka",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 361: I can talk about a business, its profit and its losses, someone’s income, and a deal.",
+    "assesses": [
+      "RU-LEX-C361-PRIBYL-03",
+      "RU-LEX-C361-PRIBYL-04",
+      "RU-LEX-C361-PRIBYL-05"
+    ]
+  }
+}

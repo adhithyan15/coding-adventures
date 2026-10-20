@@ -1,0 +1,11 @@
+{
+  "id": "RU-C514-skolzit",
+  "pathSegment": "RU-PATH-514-ICE",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "RU-EXT-514-ICE",
+      "order": 2
+    }
+  ]
+}

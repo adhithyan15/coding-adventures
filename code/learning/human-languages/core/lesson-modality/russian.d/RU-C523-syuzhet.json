@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C523-syuzhet",
+    "language": "russian",
+    "chapter": 523,
+    "sequence": 29360,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7854eaea95b3b933"
+  },
+  "findings": []
+}

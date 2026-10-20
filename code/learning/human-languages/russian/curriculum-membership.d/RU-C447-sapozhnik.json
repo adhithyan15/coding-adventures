@@ -1,0 +1,11 @@
+{
+  "id": "RU-C447-sapozhnik",
+  "pathSegment": "RU-PATH-447-MASTERSKAYA",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "RU-EXT-447-MASTERSKAYA",
+      "order": 1
+    }
+  ]
+}

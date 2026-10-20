@@ -1,0 +1,19 @@
+{
+  "chapter": 311,
+  "title": "Celebrating",
+  "label": "ch:ru-celebrating",
+  "canDo": "I can say that people celebrated or marked an occasion, and talk about a celebration, a solemn moment and a festive meal.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "RU-C311-prazdnichnyy",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 311: I can say that people celebrated or marked an occasion, and talk about a celebration, a solemn moment and a festive meal.",
+    "assesses": [
+      "RU-LEX-C311-PRAZDNOVAT-03",
+      "RU-LEX-C311-PRAZDNOVAT-04",
+      "RU-LEX-C311-PRAZDNOVAT-05"
+    ]
+  }
+}

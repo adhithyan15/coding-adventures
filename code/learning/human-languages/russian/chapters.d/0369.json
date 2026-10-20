@@ -1,0 +1,19 @@
+{
+  "chapter": 369,
+  "title": "The environment",
+  "label": "ch:ru-the-environment",
+  "canDo": "I can talk about the environment, pollution and recycling, and say that we must look after nature.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "RU-C369-berech",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 369: I can talk about the environment, pollution and recycling, and say that we must look after nature.",
+    "assesses": [
+      "RU-LEX-C369-EKOLOGIYA-03",
+      "RU-LEX-C369-EKOLOGIYA-04",
+      "RU-LEX-C369-EKOLOGIYA-05"
+    ]
+  }
+}

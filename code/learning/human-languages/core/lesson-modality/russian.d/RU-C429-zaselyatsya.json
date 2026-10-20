@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C429-zaselyatsya",
+    "language": "russian",
+    "chapter": 429,
+    "sequence": 24540,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0a1194c4f1f731a3"
+  },
+  "findings": []
+}

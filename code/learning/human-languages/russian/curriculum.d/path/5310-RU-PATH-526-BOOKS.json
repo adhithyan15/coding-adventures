@@ -1,0 +1,9 @@
+{
+  "id": "RU-PATH-526-BOOKS",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "RU-EXT-526-BOOKS"
+  ],
+  "after": []
+}

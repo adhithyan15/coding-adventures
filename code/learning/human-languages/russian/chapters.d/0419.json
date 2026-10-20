@@ -1,0 +1,19 @@
+{
+  "chapter": 419,
+  "title": "Checking in for a flight",
+  "label": "ch:ru-checking-in-for-a-flight",
+  "canDo": "I can check in for a flight: check-in, checking in, the flight, hand luggage and the boarding pass.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "RU-C419-posadochnyy",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 419: I can check in for a flight: check-in, checking in, the flight, hand luggage and the boarding pass.",
+    "assesses": [
+      "RU-LEX-C419-REGISTRATSIYA-03",
+      "RU-LEX-C419-REGISTRATSIYA-04",
+      "RU-LEX-C419-REGISTRATSIYA-05"
+    ]
+  }
+}

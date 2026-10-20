@@ -1,0 +1,11 @@
+{
+  "id": "RU-C328-tyorka",
+  "pathSegment": "RU-PATH-328-NAREZAT",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "RU-EXT-328-NAREZAT",
+      "order": 4
+    }
+  ]
+}

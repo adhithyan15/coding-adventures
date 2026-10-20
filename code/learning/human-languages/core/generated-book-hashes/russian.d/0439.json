@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 439,
+  "sourceHash": "fnv1a64:10f63f861f9bae61",
+  "lessonIds": [
+    "RU-C439-povorot",
+    "RU-C439-razvilka",
+    "RU-C439-tupik",
+    "RU-C439-srezat",
+    "RU-C439-ogibat"
+  ],
+  "tex": "russian/book/chapters/ch439-turns-and-dead-ends.tex"
+}

@@ -1,0 +1,9 @@
+{
+  "id": "RU-PATH-436-VOZVRAT",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "RU-EXT-436-VOZVRAT"
+  ],
+  "after": []
+}

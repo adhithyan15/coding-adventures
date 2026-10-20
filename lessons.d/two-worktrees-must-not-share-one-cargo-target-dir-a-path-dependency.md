@@ -32,3 +32,14 @@ stale dependencies.
   differs between the checkouts (`git diff --name-only A...B`), or
   `cargo clean -p <crate>` for each, before trusting a build in the other
   checkout.
+
+**It happened again (2026-10-19).** The session disk filled at 97%, so I
+deleted the per-worktree target directories and pointed three worktrees at
+one `target-baseline/`. Clippy in the PR 2 worktree built `aarch64-encoder`
+without `FRINTZ`. Clippy in the PR 3 checkout then reused that build and
+failed with `no method named frintz`, although the source had it. Earlier, a
+full `lang_matrix` run in that setup failed one test that passed on every
+rerun, probably the same reuse. Under disk pressure, sharing is sometimes the
+only option. In that case `touch` every crate the two checkouts differ in
+before *each* build you rely on, not once, and treat a failure that
+disappears on rerun as this until you have proved otherwise.

@@ -1,0 +1,11 @@
+{
+  "id": "RU-C276-srok",
+  "pathSegment": "RU-PATH-276-DESYATILETIYE",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "RU-EXT-276-DESYATILETIYE",
+      "order": 4
+    }
+  ]
+}

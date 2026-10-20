@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 457,
+  "sourceHash": "fnv1a64:b1d04ed347ceca54",
+  "lessonIds": [
+    "RU-C457-upakovyvat",
+    "RU-C457-zavorachivat",
+    "RU-C457-dostavka",
+    "RU-C457-dostavlyat",
+    "RU-C457-kuryer"
+  ],
+  "tex": "russian/book/chapters/ch457-packing-and-delivery.tex"
+}

@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 347,
+  "sourceHash": "fnv1a64:fd871f73f46c6a48",
+  "lessonIds": [
+    "RU-C347-odnako",
+    "RU-C347-zato",
+    "RU-C347-prichyom",
+    "RU-C347-itak",
+    "RU-C347-inymi-slovami"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch347.txt",
+  "json": "russian/narration/ch347.json",
+  "textHash": "fnv1a64:dc1bd7feda54218f",
+  "jsonHash": "fnv1a64:95a3ede590dfffad",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "RU-C306-ukhazhivat",
+  "pathSegment": "RU-PATH-306-POMOLVKA",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "RU-EXT-306-POMOLVKA",
+      "order": 2
+    }
+  ]
+}

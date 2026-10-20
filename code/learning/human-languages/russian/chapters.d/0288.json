@@ -1,0 +1,19 @@
+{
+  "chapter": 288,
+  "title": "Theft",
+  "label": "ch:ru-theft",
+  "canDo": "I can report a theft: a theft, a thief, stealing, a pickpocket and a break-in.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "RU-C288-vzlom",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 288: I can report a theft: a theft, a thief, stealing, a pickpocket and a break-in.",
+    "assesses": [
+      "RU-LEX-C288-KRAZHA-03",
+      "RU-LEX-C288-KRAZHA-04",
+      "RU-LEX-C288-KRAZHA-05"
+    ]
+  }
+}

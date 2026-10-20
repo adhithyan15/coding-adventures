@@ -1,0 +1,19 @@
+{
+  "chapter": 321,
+  "title": "Kings and queens",
+  "label": "ch:ru-kings-and-queens",
+  "canDo": "I can talk about a king, a queen, a princess, a prince and a kingdom.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "RU-C321-korolevstvo",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 321: I can talk about a king, a queen, a princess, a prince and a kingdom.",
+    "assesses": [
+      "RU-LEX-C321-KOROL-03",
+      "RU-LEX-C321-KOROL-04",
+      "RU-LEX-C321-KOROL-05"
+    ]
+  }
+}

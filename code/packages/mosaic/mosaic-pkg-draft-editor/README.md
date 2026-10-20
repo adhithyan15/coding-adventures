@@ -25,9 +25,13 @@ component DraftEditor {
 - **No preview inside.** Journal composes its markdown preview beside this
   component. The preview is a `node` slot with real costs that Trestle and
   Engram should not inherit.
-- **Its own package, not the toolkit.** The body is the legacy
-  `Input ( multiline : true )`, Mosaic's only portable text area. Inside the
-  toolkit, a bare `Input` is rewritten to the toolkit's single-line component.
+- **Ctrl/Cmd+Enter saves.** The body is the kernel's text area,
+  `HostInput ( multiline : true )`: Enter is a line break, and Ctrl+Enter
+  (Cmd+Enter on macOS) raises `onSave`, as the Save button does (UI25 §4). The
+  chord raises `onSave` even when no Save is offered; such a host ignores it.
+- **Its own package, not the toolkit.** It was written when the only portable
+  text area was the legacy `Input ( multiline : true )`, which inside the
+  toolkit is rewritten to the toolkit's single-line component.
 
 ## Usage
 

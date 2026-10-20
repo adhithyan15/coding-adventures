@@ -1,0 +1,19 @@
+{
+  "chapter": 393,
+  "title": "Applications and wills",
+  "label": "ch:ru-applications-and-wills",
+  "canDo": "I can put in an application, submit documents, go to a notary, and talk about a power of attorney and a will.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "RU-C393-zaveshchanie",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 393: I can put in an application, submit documents, go to a notary, and talk about a power of attorney and a will.",
+    "assesses": [
+      "RU-LEX-C393-DOKUMENTY-03",
+      "RU-LEX-C393-DOKUMENTY-04",
+      "RU-LEX-C393-DOKUMENTY-05"
+    ]
+  }
+}

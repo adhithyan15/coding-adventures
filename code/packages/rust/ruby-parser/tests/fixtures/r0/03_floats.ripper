@@ -1,0 +1,17 @@
+# oracle: Ripper.lex, ruby 3.3.6 (2024-11-05 revision 75015d4c1f)
+1	0	on_ident	x
+1	2	on_op	=
+1	4	on_float	1.5
+1	8	on_op	+
+1	10	on_float	0.25
+1	15	on_op	+
+1	17	on_float	1e3
+1	21	on_op	+
+1	23	on_float	1E-3
+1	28	on_op	+
+1	30	on_float	2.5e+10
+1	38	on_op	+
+1	40	on_float	1_0.0_1
+1	48	on_op	+
+1	50	on_float	1e1_0
+1	55	on_nl	\n

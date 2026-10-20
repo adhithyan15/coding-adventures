@@ -1,0 +1,9 @@
+{
+  "id": "RU-PATH-309-POKHORONY",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "RU-EXT-309-POKHORONY"
+  ],
+  "after": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 512,
+  "title": "The Marathon",
+  "label": "ch:ru-the-marathon",
+  "canDo": "I can talk about running a race.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "RU-C512-distantsiya",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 512: I can talk about running a race.",
+    "assesses": [
+      "RU-LEX-C512-RACE-03",
+      "RU-LEX-C512-RACE-04",
+      "RU-LEX-C512-RACE-05"
+    ]
+  }
+}

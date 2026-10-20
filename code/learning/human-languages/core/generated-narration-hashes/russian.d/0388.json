@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 388,
+  "sourceHash": "fnv1a64:0af6824ca10f827d",
+  "lessonIds": [
+    "RU-C388-zakon",
+    "RU-C388-zakonnyy",
+    "RU-C388-nezakonnyy",
+    "RU-C388-narushat",
+    "RU-C388-narushenie"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch388.txt",
+  "json": "russian/narration/ch388.json",
+  "textHash": "fnv1a64:a93faa5a17ea24a5",
+  "jsonHash": "fnv1a64:5e462db3995d2113",
+  "findings": []
+}

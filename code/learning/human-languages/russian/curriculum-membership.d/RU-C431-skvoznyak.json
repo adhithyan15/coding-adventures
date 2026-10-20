@@ -1,0 +1,11 @@
+{
+  "id": "RU-C431-skvoznyak",
+  "pathSegment": "RU-PATH-431-SKVOZNYAK",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "RU-EXT-431-SKVOZNYAK",
+      "order": 2
+    }
+  ]
+}

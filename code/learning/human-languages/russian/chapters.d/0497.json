@@ -1,0 +1,19 @@
+{
+  "chapter": 497,
+  "title": "Bringing up Children",
+  "label": "ch:ru-bringing-up-children",
+  "canDo": "I can talk about bringing up children and how they behave.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "RU-C497-neposlushnyy",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 497: I can talk about bringing up children and how they behave.",
+    "assesses": [
+      "RU-LEX-C497-UPBRINGING-03",
+      "RU-LEX-C497-UPBRINGING-04",
+      "RU-LEX-C497-UPBRINGING-05"
+    ]
+  }
+}

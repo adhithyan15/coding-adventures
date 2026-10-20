@@ -1,0 +1,9 @@
+{
+  "id": "RU-PATH-450-SPRAVKA",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "RU-EXT-450-SPRAVKA"
+  ],
+  "after": []
+}

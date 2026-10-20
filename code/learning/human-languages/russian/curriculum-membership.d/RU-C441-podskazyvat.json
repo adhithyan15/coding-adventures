@@ -1,0 +1,11 @@
+{
+  "id": "RU-C441-podskazyvat",
+  "pathSegment": "RU-PATH-441-PROKHOZHIY",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "RU-EXT-441-PROKHOZHIY",
+      "order": 2
+    }
+  ]
+}

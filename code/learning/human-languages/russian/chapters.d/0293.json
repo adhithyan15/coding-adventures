@@ -1,0 +1,19 @@
+{
+  "chapter": 293,
+  "title": "In court",
+  "label": "ch:ru-in-court",
+  "canDo": "I can talk about a court, a lawyer, a sentence and prison, and say that someone was accused.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "RU-C293-obvinyat",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 293: I can talk about a court, a lawyer, a sentence and prison, and say that someone was accused.",
+    "assesses": [
+      "RU-LEX-C293-SUD-03",
+      "RU-LEX-C293-SUD-04",
+      "RU-LEX-C293-SUD-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "RU-C423-otmena",
+  "pathSegment": "RU-PATH-423-ZADERZHKA",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "RU-EXT-423-ZADERZHKA",
+      "order": 2
+    }
+  ]
+}

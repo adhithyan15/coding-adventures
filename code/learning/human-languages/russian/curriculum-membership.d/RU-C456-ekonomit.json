@@ -1,0 +1,11 @@
+{
+  "id": "RU-C456-ekonomit",
+  "pathSegment": "RU-PATH-456-OBMENNIK",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "RU-EXT-456-OBMENNIK",
+      "order": 4
+    }
+  ]
+}

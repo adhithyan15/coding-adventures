@@ -1,0 +1,20 @@
+{
+  "language": "russian",
+  "chapter": 418,
+  "sourceHash": "fnv1a64:3882b360c0a2642d",
+  "lessonIds": [
+    "RU-C418-peresazhivatsya",
+    "RU-C418-konechnaya",
+    "RU-C418-prigorodnyy",
+    "RU-C418-proyezzhat",
+    "RU-C418-provozhat",
+    "RU-R418-review-411-418"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "russian/narration/ch418.txt",
+  "json": "russian/narration/ch418.json",
+  "textHash": "fnv1a64:6200a0febba1eade",
+  "jsonHash": "fnv1a64:b01dbef93a11bf37",
+  "findings": []
+}

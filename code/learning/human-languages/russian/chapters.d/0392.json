@@ -1,0 +1,19 @@
+{
+  "chapter": 392,
+  "title": "Limits and offenders",
+  "label": "ch:ru-limits-and-offenders",
+  "canDo": "I can say that a rule limits something, takes something away from someone or obliges them to act, and talk about an offender and an innocent person.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "RU-R392-review-385-392",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 392: I can say that a rule limits something, takes something away from someone or obliges them to act, and talk about an offender and an innocent person.",
+    "assesses": [
+      "RU-LEX-C392-OGRANICHENIYA-03",
+      "RU-LEX-C392-OGRANICHENIYA-04",
+      "RU-LEX-C392-OGRANICHENIYA-05"
+    ]
+  }
+}

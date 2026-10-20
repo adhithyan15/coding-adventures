@@ -1,0 +1,19 @@
+{
+  "chapter": 329,
+  "title": "Boiling",
+  "label": "ch:ru-boiling",
+  "canDo": "I can describe boiling: bringing water to the boil, water boiling, cooking food in water, a lid and covering a pan.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "RU-C329-nakryvat",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 329: I can describe boiling: bringing water to the boil, water boiling, cooking food in water, a lid and covering a pan.",
+    "assesses": [
+      "RU-LEX-C329-KIPYATIT-03",
+      "RU-LEX-C329-KIPYATIT-04",
+      "RU-LEX-C329-KIPYATIT-05"
+    ]
+  }
+}

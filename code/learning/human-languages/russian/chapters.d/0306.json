@@ -1,0 +1,19 @@
+{
+  "chapter": 306,
+  "title": "Love and engagement",
+  "label": "ch:ru-love-and-engagement",
+  "canDo": "I can talk about an engagement, falling in love, courting, a church wedding and breaking up.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "RU-C306-rasstavatsya",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 306: I can talk about an engagement, falling in love, courting, a church wedding and breaking up.",
+    "assesses": [
+      "RU-LEX-C306-POMOLVKA-03",
+      "RU-LEX-C306-POMOLVKA-04",
+      "RU-LEX-C306-POMOLVKA-05"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C508-bolelshchik",
+    "language": "russian",
+    "chapter": 508,
+    "sequence": 28590,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5e19a2b719b02e02"
+  },
+  "findings": []
+}

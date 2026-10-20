@@ -6,6 +6,13 @@ the package follows semantic versioning.
 
 ## [Unreleased]
 
+### Changed — the note body is `HostInput` and saves on Ctrl/Cmd+Enter (UI25 §4)
+
+- `notes-body-input` moved from the retiring legacy `Input` to
+  `HostInput ( multiline : true )`, which lowers identically, with
+  `onCommit : emit: onSave`: Enter is a line break and Ctrl+Enter (Cmd+Enter
+  on macOS) saves, as the Save button does. The package test pins both.
+
 ### Changed
 
 - Documentation only: the layout comment and README no longer say the kernel

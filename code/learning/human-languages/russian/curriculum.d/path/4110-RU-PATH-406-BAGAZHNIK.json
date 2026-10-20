@@ -1,0 +1,9 @@
+{
+  "id": "RU-PATH-406-BAGAZHNIK",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "RU-EXT-406-BAGAZHNIK"
+  ],
+  "after": []
+}

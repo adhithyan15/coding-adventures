@@ -1,0 +1,19 @@
+{
+  "chapter": 271,
+  "title": "Suddenly and at once",
+  "label": "ch:ru-suddenly-and-at-once",
+  "canDo": "I can say that something happened suddenly, in a flash, at once, without delay and in an instant.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "RU-C271-mgnovenie",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 271: I can say that something happened suddenly, in a flash, at once, without delay and in an instant.",
+    "assesses": [
+      "RU-LEX-C271-VNEZAPNO-03",
+      "RU-LEX-C271-VNEZAPNO-04",
+      "RU-LEX-C271-VNEZAPNO-05"
+    ]
+  }
+}

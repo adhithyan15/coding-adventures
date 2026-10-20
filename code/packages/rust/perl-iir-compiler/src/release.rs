@@ -13,7 +13,7 @@
 //!   Some(id) ──► id in SUPPORTED_RELEASES? ── yes ─► Release(id)
 //!                     │ no
 //!                     ▼
-//!              id in INVENTORY_RELEASES? ── yes ─► ReleaseNotAvailable (pending)
+//!              id in INVENTORY?          ── yes ─► ReleaseNotAvailable (pending)
 //!                     │ no
 //!                     ▼
 //!               UnknownRelease { nearest: up to 5 IDs sharing the longest prefix }
@@ -22,7 +22,7 @@
 //! Nothing on the right-hand side ever substitutes a neighbouring release,
 //! the unversioned pair, or a "closest" grammar (LANG84 C4.3).
 
-use coding_adventures_perl_parser::{INVENTORY_RELEASES, SUPPORTED_RELEASES};
+use coding_adventures_perl_parser::{INVENTORY, SUPPORTED_RELEASES};
 use std::fmt;
 
 use crate::FrontendError;
@@ -85,7 +85,7 @@ pub fn resolve_release(requested: Option<&str>) -> Result<Release, FrontendError
     if let Some(id) = SUPPORTED_RELEASES.iter().find(|id| **id == requested) {
         return Ok(Release(id));
     }
-    if INVENTORY_RELEASES.contains(&requested) {
+    if inventory_ids().any(|id| id == requested) {
         return Err(FrontendError::ReleaseNotAvailable {
             release: echo(requested),
             stage: "pending",
@@ -95,6 +95,13 @@ pub fn resolve_release(requested: Option<&str>) -> Result<Release, FrontendError
         release: echo(requested),
         nearest: nearest_releases(requested),
     })
+}
+
+/// Every inventory release ID, pending rows included, in inventory order.
+/// The generated `INVENTORY` pairs each ID with its `grammar_stage`; release
+/// resolution needs only the ID (a pair's presence is SUPPORTED_RELEASES).
+fn inventory_ids() -> impl Iterator<Item = &'static str> {
+    INVENTORY.iter().map(|(id, _stage)| *id)
 }
 
 /// Bound and neutralize a caller-supplied release string before it enters a
@@ -128,17 +135,11 @@ fn nearest_releases(requested: &str) -> Vec<&'static str> {
             .take_while(|(a, b)| a == b)
             .count()
     };
-    let best = INVENTORY_RELEASES
-        .iter()
-        .map(|id| shared(id))
-        .max()
-        .unwrap_or(0);
+    let best = inventory_ids().map(shared).max().unwrap_or(0);
     if best == 0 {
         return Vec::new();
     }
-    INVENTORY_RELEASES
-        .iter()
-        .copied()
+    inventory_ids()
         .filter(|id| shared(id) == best)
         .take(MAX_SUGGESTIONS)
         .collect()

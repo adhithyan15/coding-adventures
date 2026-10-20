@@ -23,21 +23,32 @@ and `*-parser` crates with matching files under `code/grammars`, and writes
 `src/_grammar.rs` for each target. Optional arguments filter by package name
 (`sql-lexer`), package stem (`sql`), or grammar stem (`dartmouth_basic`).
 
-Some families are versioned: one module per release (C#, Java, Python, …).
-Perl is the first **inventory-driven** family (LANG84). Its release list
-comes from `code/grammars/perl/releases.csv`, read by header name: every
-non-pending row is compiled from its own `perl<release>.tokens`/`.grammar`,
-and releases whose grammars match after dropping comment lines and zeroing
-line numbers share one module, named `g_<first 12 hex of SHA-256>` of that
-canonical form. The generated file exports `INVENTORY_RELEASES`,
-`SUPPORTED_RELEASES`, `token_grammar(release)` / `parser_grammar(release)`
-(returning `None` for pending or unknown IDs, never a fallback) and
-`unversioned_*()` for the unversioned pair. Release IDs must match
-`[A-Za-z0-9._-]` without `..`, because each one becomes a file name.
+Languages with a LANG84 release inventory (`code/grammars/<dir>/releases.csv`;
+today Ruby and Perl) are generated as **release families**: the release list comes from
+the CSV, each row past stage `none` must have its own `<prefix><release>.tokens`
+and `.grammar`, and releases whose pairs are identical apart from comments and
+line numbers share one embedded module named `g_<first 12 hex of SHA-256>`.
+The generated file exposes `SUPPORTED_RELEASES`, `token_grammar(release)` or
+`parser_grammar(release)` (exact IDs only, `None` otherwise) and
+`grammar_class(release)`; parser tables also carry the full `INVENTORY` so a
+frontend can tell an unknown release from one whose pair is not written yet.
+The unversioned pair, when a family keeps it, is `unversioned_parser_grammar()`
+(and, for Perl, `unversioned_token_grammar()`), never the `""` release.
+
+The CSV is read by header name, and a row is refused, failing the whole
+generation, when it is quoted, has a different field count from the header,
+has an unsafe ID (outside `[A-Za-z0-9._-]`, empty, or containing `..`,
+because each ID becomes a file name) or a duplicate one, or names an unknown
+`grammar_status` or `grammar_stage`. Perl's inventory predates the LANG84
+schema's `grammar_stage` column, so its family derives the stage by the
+spec's migration rule (`pending` → `none`, otherwise `P`).
 
 ```bash
+grammar-tools generate-rust-compiled-grammars ruby   # 5 pairs
 grammar-tools generate-rust-compiled-grammars perl   # 117 pairs -> 5 + 2 tables
 ```
+
+See `code/specs/LANG84-grammar-driven-versioned-frontends.md`.
 
 Known validator gaps that are already handled safely by the consuming crates
 are encoded in the Rust command itself, so repo regeneration does not require a

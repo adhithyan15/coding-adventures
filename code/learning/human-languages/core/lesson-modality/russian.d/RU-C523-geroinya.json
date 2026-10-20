@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C523-geroinya",
+    "language": "russian",
+    "chapter": 523,
+    "sequence": 29380,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e418a38237379d74"
+  },
+  "findings": []
+}

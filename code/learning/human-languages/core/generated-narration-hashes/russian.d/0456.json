@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 456,
+  "sourceHash": "fnv1a64:821e63075816506c",
+  "lessonIds": [
+    "RU-C456-obmennik",
+    "RU-C456-valyuta",
+    "RU-C456-garantiya",
+    "RU-C456-brakovannyy",
+    "RU-C456-ekonomit"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch456.txt",
+  "json": "russian/narration/ch456.json",
+  "textHash": "fnv1a64:4c20860682ddff3b",
+  "jsonHash": "fnv1a64:34efd5594512c25c",
+  "findings": []
+}

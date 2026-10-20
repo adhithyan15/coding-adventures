@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C356-s-drugoy-storony",
+    "language": "russian",
+    "chapter": 356,
+    "sequence": 20810,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3f226bdb64bbaf03"
+  },
+  "findings": []
+}

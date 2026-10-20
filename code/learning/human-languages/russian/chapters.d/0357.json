@@ -1,0 +1,19 @@
+{
+  "chapter": 357,
+  "title": "Colleagues and managers",
+  "label": "ch:ru-colleagues-and-managers",
+  "canDo": "I can talk about the people I work with: colleagues, the manager, subordinates and the team, and say who is in charge.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "RU-C357-kollektiv",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 357: I can talk about the people I work with: colleagues, the manager, subordinates and the team, and say who is in charge.",
+    "assesses": [
+      "RU-LEX-C357-SOTRUDNIK-03",
+      "RU-LEX-C357-SOTRUDNIK-04",
+      "RU-LEX-C357-SOTRUDNIK-05"
+    ]
+  }
+}

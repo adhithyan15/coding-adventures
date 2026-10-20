@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C529-uborka",
+    "language": "russian",
+    "chapter": 529,
+    "sequence": 29680,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0a5241634250c53d"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 522,
+  "title": "Marble and Statues",
+  "label": "ch:ru-marble-and-statues",
+  "canDo": "I can talk about sculpture and what inspires artists.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "RU-C522-vdokhnovlyat",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 522: I can talk about sculpture and what inspires artists.",
+    "assesses": [
+      "RU-LEX-C522-SCULPTURE-03",
+      "RU-LEX-C522-SCULPTURE-04",
+      "RU-LEX-C522-SCULPTURE-05"
+    ]
+  }
+}

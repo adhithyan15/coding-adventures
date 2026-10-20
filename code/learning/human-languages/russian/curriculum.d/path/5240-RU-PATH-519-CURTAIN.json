@@ -1,0 +1,9 @@
+{
+  "id": "RU-PATH-519-CURTAIN",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "RU-EXT-519-CURTAIN"
+  ],
+  "after": []
+}

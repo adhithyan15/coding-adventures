@@ -1,0 +1,11 @@
+{
+  "id": "RU-C335-okhlazhdat",
+  "pathSegment": "RU-PATH-335-OSTYVAT",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "RU-EXT-335-OSTYVAT",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "RU-C476-vzdragivat",
+  "pathSegment": "RU-PATH-476-FRIGHT",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "RU-EXT-476-FRIGHT",
+      "order": 2
+    }
+  ]
+}

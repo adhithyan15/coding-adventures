@@ -1,0 +1,11 @@
+{
+  "id": "RU-C294-priznavatsya",
+  "pathSegment": "RU-PATH-294-NAKAZANIYE",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "RU-EXT-294-NAKAZANIYE",
+      "order": 3
+    }
+  ]
+}

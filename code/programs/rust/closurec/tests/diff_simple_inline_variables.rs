@@ -1,14 +1,13 @@
 //! Integration test for the `tests/diff/simple-inline-variables/` fixture.
 //!
-//! Exercises CLOC13.H — the `inline-variables` pass propagates a top-level
-//! `const = literal` to its use sites. It is a value-copying pass (it does not
-//! delete the source declaration) and runs at SIMPLE; the fixed-point
-//! `constant-fold` sweep then folds the now-concrete arithmetic it exposes.
-//! What does NOT run at SIMPLE is `remove-unused-vars`, so the emptied
-//! declaration is KEPT (open-world). `const RATE = 2; total(base * RATE);
-//! margin(RATE + 1);` becomes `const RATE=2;total(base*2);margin(3);`. Under
-//! ADVANCED the now-unused `const RATE = 2` is dropped, giving
-//! `total(base*2);margin(3);`.
+//! At SIMPLE a top-level `const` is kept at its ordinary uses (CCR-078,
+//! #15863): the reference compiler is open-world there, so
+//! `const RATE = 2; total(base * RATE); margin(RATE + 1);` stays
+//! `const RATE=2;total(base*RATE);margin(RATE+1);`. The expected bytes were
+//! re-captured from the pinned v20260915 jar. Until CCR-078 this fixture
+//! pinned closurec's old output (`total(base*2);margin(3)`), which upstream
+//! never produced. Under ADVANCED the const is propagated and dropped
+//! (`total(base*2);margin(3);`; see the `run.rs` unit test).
 
 use std::process::Command;
 

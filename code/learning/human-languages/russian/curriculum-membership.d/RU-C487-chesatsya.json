@@ -1,0 +1,11 @@
+{
+  "id": "RU-C487-chesatsya",
+  "pathSegment": "RU-PATH-487-RASH",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "RU-EXT-487-RASH",
+      "order": 2
+    }
+  ]
+}

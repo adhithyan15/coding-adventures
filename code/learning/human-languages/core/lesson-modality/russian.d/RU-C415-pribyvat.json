@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C415-pribyvat",
+    "language": "russian",
+    "chapter": 415,
+    "sequence": 23820,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c41fed5126d35527"
+  },
+  "findings": []
+}

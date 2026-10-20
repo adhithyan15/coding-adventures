@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 372,
+  "sourceHash": "fnv1a64:0a0ec97a98528227",
+  "lessonIds": [
+    "RU-C372-veroyatno",
+    "RU-C372-veroyatnost",
+    "RU-C372-maloveroyatnyy",
+    "RU-C372-shans",
+    "RU-C372-risk"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch372.txt",
+  "json": "russian/narration/ch372.json",
+  "textHash": "fnv1a64:0d60afe26ca01b14",
+  "jsonHash": "fnv1a64:728d1206453f828b",
+  "findings": []
+}

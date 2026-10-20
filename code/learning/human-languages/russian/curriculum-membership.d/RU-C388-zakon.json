@@ -1,0 +1,11 @@
+{
+  "id": "RU-C388-zakon",
+  "pathSegment": "RU-PATH-388-ZAKON",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "RU-EXT-388-ZAKON",
+      "order": 0
+    }
+  ]
+}
