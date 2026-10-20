@@ -834,7 +834,12 @@ fn dce_tagged_statement(stmt: &TaggedStatement, st: &mut DceState) -> TaggedStat
                 {
                     let original_len = case.consequent.len();
                     let dropped = original_len - (term_idx + 1);
-                    if dropped > 0 {
+                    // #17879: the whole switch body is ONE scope. A dead
+                    // `var x` after the `break` is still hoisted to the
+                    // function, and a dead `function g(){}` is still visible
+                    // to every case, so drop the tail only under the same
+                    // guard the block path uses.
+                    if dropped > 0 && tail_is_safe_to_truncate(&case.consequent[term_idx + 1..]) {
                         let removed_cvs: Vec<Option<String>> = case.consequent[term_idx + 1..]
                             .iter()
                             .map(statement_cv)
@@ -1013,9 +1018,19 @@ fn dce_tagged_statement(stmt: &TaggedStatement, st: &mut DceState) -> TaggedStat
                     // switch (`if (x) break;`) would, once the switch is
                     // gone, aim at whatever encloses it — exiting a loop, or
                     // failing to parse. Keep the switch then.
+                    // #17879: collapsing discards every other case. Their
+                    // declarations belong to the whole switch scope (`var`
+                    // hoists to the function; a `function`/`class` is
+                    // visible to the matched case), so keep the switch
+                    // unless each discarded case is safe to drop.
+                    let others_droppable = new_cases
+                        .iter()
+                        .filter(|c| !std::ptr::eq(*c, target))
+                        .all(|c| tail_is_safe_to_truncate(&c.consequent));
                     if terminates
                         && !target.consequent.is_empty()
                         && !has_break_targeting_enclosing(&new_body)
+                        && others_droppable
                     {
                         st.record(
                             &s.cv,
@@ -1031,9 +1046,11 @@ fn dce_tagged_statement(stmt: &TaggedStatement, st: &mut DceState) -> TaggedStat
                             body: new_body,
                         });
                     }
-                } else {
+                } else if new_cases.iter().all(|c| tail_is_safe_to_truncate(&c.consequent)) {
                     // No matching case and no default → nothing
-                    // runs. Discriminant is pure so safe to drop.
+                    // runs. Discriminant is pure so safe to drop, provided
+                    // no case declares anything: a `var` in a case that
+                    // never runs is still hoisted (#17879).
                     st.record(
                         &s.cv,
                         "switch_collapsed_no_match",
@@ -4350,5 +4367,109 @@ mod tests {
         let out = run_top(vec![throw_item(), ProgramItem::Statement(let_decl_stmt("y"))]);
         assert_eq!(out.body.len(), 2, "{:?}", out.body);
     }
-}
 
+    // ---- #17879: a switch body is one scope ------------------------------
+    //
+    // `var` in any case hoists to the function, and a `function`/`class` in
+    // any case is visible to every case. Neither case-tail truncation nor
+    // the constant-switch collapse may drop such a declaration.
+
+    fn var_decl_stmt(name: &str) -> Statement {
+        Statement::Declaration(Declaration::VariableDeclaration(VariableDeclaration {
+            cv: None,
+            kind: VarKind::Var,
+            declarations: vec![VariableDeclarator {
+                cv: None,
+                id: coding_adventures_javascript_ast::BindingTarget::Identifier(Identifier {
+                    cv: None,
+                    name: name.to_string(),
+                }),
+                init: None,
+            }],
+        }))
+    }
+
+    fn case(test: f64, consequent: Vec<Statement>) -> SwitchCase {
+        SwitchCase { cv: None, test: Some(num(test)), consequent }
+    }
+
+    fn switch_on_ident(cases: Vec<SwitchCase>) -> Vec<Statement> {
+        vec![switch_stmt(ident("k"), cases)]
+    }
+
+    #[test]
+    fn case_tail_keeps_a_dead_function_declaration() {
+        // switch (k) { case 1: return; function g(){} }  — `g` is visible to
+        // every case and must survive.
+        let body = switch_on_ident(vec![case(1.0, vec![return_stmt(), func_decl_stmt("g")])]);
+        let (out, _, _, _) = run_pass(program_with_function(body, Some("fn.1")));
+        assert_eq!(extract_switch(&out).cases[0].consequent.len(), 2);
+    }
+
+    #[test]
+    fn case_tail_keeps_a_dead_var() {
+        // switch (k) { case 1: break; var x; }  — `var x` hoists to the
+        // function, so `x` must stay local.
+        let body = switch_on_ident(vec![case(1.0, vec![break_stmt(), var_decl_stmt("x")])]);
+        let (out, _, _, _) = run_pass(program_with_function(body, Some("fn.1")));
+        assert_eq!(extract_switch(&out).cases[0].consequent.len(), 2);
+    }
+
+    #[test]
+    fn case_tail_still_drops_dead_expressions() {
+        let body = switch_on_ident(vec![case(1.0, vec![break_stmt(), expr_stmt(ident("dead"))])]);
+        let (out, _, _, _) = run_pass(program_with_function(body, Some("fn.1")));
+        assert_eq!(extract_switch(&out).cases[0].consequent.len(), 1);
+    }
+
+    #[test]
+    fn collapse_keeps_the_switch_when_a_discarded_case_declares_a_function() {
+        // switch (2) { case 1: function g(){} break; case 2: g(); break; }
+        // Collapsing to `{ g(); }` would drop the `g` that case 2 calls.
+        let body = vec![switch_stmt(
+            num(2.0),
+            vec![
+                case(1.0, vec![func_decl_stmt("g"), break_stmt()]),
+                case(2.0, vec![expr_stmt(ident("g")), break_stmt()]),
+            ],
+        )];
+        let (out, contribs, _, _) = run_pass(program_with_function(body, Some("fn.1")));
+        assert!(!contribs.iter().any(|c| c.tag == "switch_collapsed_to_matched_case"));
+        assert_eq!(extract_switch(&out).cases.len(), 2);
+    }
+
+    #[test]
+    fn collapse_keeps_the_switch_when_a_discarded_case_declares_a_var() {
+        let body = vec![switch_stmt(
+            num(2.0),
+            vec![
+                case(1.0, vec![var_decl_stmt("x"), break_stmt()]),
+                case(2.0, vec![expr_stmt(ident("x")), break_stmt()]),
+            ],
+        )];
+        let (_, contribs, _, _) = run_pass(program_with_function(body, Some("fn.1")));
+        assert!(!contribs.iter().any(|c| c.tag == "switch_collapsed_to_matched_case"));
+    }
+
+    #[test]
+    fn collapse_still_fires_when_discarded_cases_only_hold_expressions() {
+        let body = vec![switch_stmt(
+            num(2.0),
+            vec![
+                case(1.0, vec![expr_stmt(ident("a")), break_stmt()]),
+                case(2.0, vec![expr_stmt(ident("b")), break_stmt()]),
+            ],
+        )];
+        let (_, contribs, _, _) = run_pass(program_with_function(body, Some("fn.1")));
+        assert!(contribs.iter().any(|c| c.tag == "switch_collapsed_to_matched_case"));
+    }
+
+    #[test]
+    fn no_match_collapse_keeps_a_case_that_declares_a_var() {
+        // switch (3) { case 1: var x; }  — nothing runs, but `var x` still
+        // hoists, so the switch (and its declaration) must stay.
+        let body = vec![switch_stmt(num(3.0), vec![case(1.0, vec![var_decl_stmt("x")])])];
+        let (_, contribs, _, _) = run_pass(program_with_function(body, Some("fn.1")));
+        assert!(!contribs.iter().any(|c| c.tag == "switch_collapsed_no_match"));
+    }
+}
