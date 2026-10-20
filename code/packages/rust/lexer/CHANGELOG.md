@@ -2,6 +2,41 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.8.0] — 2026-10-20 — F10 transitions fire on the built-in NEWLINE token
+
+`GrammarLexer::tokenize_standard` now passes its built-in `NEWLINE` token (a
+bare `\n` that no skip pattern consumed) to `apply_transitions`, exactly as it
+does for tokens matched from `.tokens` patterns. Previously it emitted the
+`NEWLINE` and `continue`d, so a rule such as `on NEWLINE -> set-mode beg`
+parsed and validated but never fired, and the next line started in whatever
+mode the previous line ended in. Found by LANG84 Ruby R0: Ruby's lexer returns
+to EXPR_BEG at every line start, so `?a` / `:sym` at the start of a line after
+a line ending in a value lexed differently from the real Ruby lexer.
+
+- **Identical semantics to declared tokens:** first matching rule wins,
+  `in MODE` guards apply, and `set-mode` / `push` / `pop` / `enable-skip` /
+  `disable-skip` all work; the new mode governs the next match.
+- **Byte-identical for existing grammars:** a rule fires only if it names
+  `NEWLINE`, and `apply_transitions` still early-returns on an empty table.
+  Audit: only `cobol.tokens` and `es2025.tokens` in `code/grammars` declare
+  `transitions:`; neither names `NEWLINE` nor aliases a pattern to it, and both
+  skip `\n` as whitespace, so they never emit a `NEWLINE` at all.
+- **Deliberately unchanged:** the built-in `NEWLINE` is still not passed to an
+  F04 `on_token` callback, does not update `last_emitted_token`, and does not
+  touch bracket depths. Indentation and layout modes are unaffected
+  (transitions remain a no-op there). `set_on_token` docs now say so.
+- Nine new tests (`f10_newline_*`, `f10_table_without_newline_rule_*`): set-mode
+  reset, `in MODE` guard, NEWLINE popping and pushing a region, a table without
+  a NEWLINE rule keeping the mode across lines, a newline-eating skip pattern
+  suppressing the rule, a NEWLINE emitted while skip is disabled firing a
+  multi-action rule, coexistence with a callback, and reset to `start_mode`.
+  141 lexer tests pass.
+- F10 spec amended (Rules, interpreter semantics, testing); LANG84 R0 note
+  updated. The Python, Ruby, TypeScript, Go, Elixir and Lua lexer ports still
+  skip the table for `NEWLINE` (parity follow-up).
+- The two mosaic `Cargo.lock` files that record this path dependency's
+  version are updated to 0.8.0.
+
 ## [0.7.0] — 2026-06-29 — `Token` carries an optional correlation-vector id (CLOC27 P1)
 
 `Token` gains a `pub cv: Option<String>` field — the correlation-vector id of
