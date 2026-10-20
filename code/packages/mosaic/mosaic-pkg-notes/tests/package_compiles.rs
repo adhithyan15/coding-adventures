@@ -145,12 +145,16 @@ fn notes_mll_references_selected_note_id_in_camel_case() {
 
 #[test]
 fn notes_mll_uses_a_multiline_body_field() {
-    // Pins the deliberate legacy-`Input` use for the body's textarea — a
-    // regression guard against silently regressing to a single-line
-    // HostInput, which would be a real UX loss for a note body. See
-    // task-app-notes-ui-v1.md for why HostInput alone isn't enough.
+    // The body is the kernel's text area (#15930), not a one-line field, and
+    // Ctrl/Cmd+Enter saves from it as the Save button does (UI25 §4).
     let src = read_source("Notes.mll");
+    assert!(src.contains("HostInput [ notes-body-input ]"), "the kernel text area");
     assert!(src.contains("multiline : true"), "Notes.mll must use a multiline body field");
+    assert_eq!(
+        src.matches("onCommit : emit: onSave").count(),
+        1,
+        "the body saves on Ctrl/Cmd+Enter"
+    );
 }
 
 // ---------------------------------------------------------------------------

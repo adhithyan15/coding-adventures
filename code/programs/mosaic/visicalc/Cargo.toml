@@ -10,3 +10,7 @@ publish = false
 [[test]]
 name = "package_compiles"
 path = "tests/package_compiles.rs"
+
+[[test]]
+name = "web_demos_are_current"
+path = "tests/web_demos_are_current.rs"

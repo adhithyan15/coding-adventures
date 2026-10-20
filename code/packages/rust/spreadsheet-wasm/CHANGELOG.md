@@ -1,5 +1,20 @@
 # Changelog
 
+## Unreleased
+
+**The committed `.wasm` is checked against its sources.** `pkg/spreadsheet_engine.wasm`
+had not been rebuilt since 0.14.1 (#7713), so spreadsheet-core fixes such as
+#15541 never reached the VisiCalc web demos that embed it. It is rebuilt now,
+and `build-wasm.sh` records `pkg/spreadsheet_engine.wasm.inputs`: the SHA-256
+of every input (`inputs-digest.py`: each crate in `cargo tree` for the wasm
+target with its version, and for path crates their `Cargo.toml`, `build.rs`
+and `src/`), plus the `.wasm`'s own hash. `build-wasm.sh --check`, run by
+`BUILD_mac_and_linux`, fails when a source changed without a rebuild. It is a
+check on inputs rather than bytes, so it gives the same answer on any machine.
+The build also remaps checkout paths, so two checkouts build identical bytes
+(verified across two worktrees). Both JS smoke tests pass against the new
+`.wasm`.
+
 ## 0.14.1
 
 **JS loader file open/save wrappers + rebuilt `.wasm` (SSIO PR5).** The Rust ABI

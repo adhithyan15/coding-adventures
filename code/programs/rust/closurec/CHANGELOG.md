@@ -4,6 +4,16 @@ All notable changes to the `coding-adventures-closurec` binary will be documente
 
 ## [Unreleased]
 
+### Fixed - outer binding shadowed by a `for`-head `let`/`const` survives (#16008)
+
+`var x = 1; for (let x of [7]) console.log(x); console.log(x);` compiled at
+ADVANCED to output without `var x = 1;`, which threw `ReferenceError`. The fix
+is in `closure-scope-analyzer` 0.21.0, which gives a lexical `for` head its own
+loop scope. `tests/regression_for_head_shadow.rs` compiles the issue's matrix at
+SIMPLE and ADVANCED, checks that the outer declaration survives and pins the
+output bytes, and, when `node` is installed, checks that the output prints
+what the source prints.
+
 ### Added - actual bounded provenance chronology (CV03)
 
 Traced compilation starts a fresh checked chronology log before input graph
@@ -56,6 +66,22 @@ Decode the already range-checked, four-byte-aligned SID length using statically
 sized array chunks. Preserve revision/subauthority checks and little-endian
 word order, remove the slice-conversion unwrap, and keep warnings denied.
 Fresh review, local compiler/policy validation and native CI are required.
+
+### Changed - SIMPLE keeps a top-level `const`, as upstream does (CCR-078, #15863)
+
+SIMPLE no longer propagates a top-level `const` literal into its ordinary uses.
+The pinned oracle doesn't either. A literal-initialized const still folds a
+statement condition (`if(T)`, `T&&f()`, `T?a():b()`), as upstream does. See
+CLOC43.
+
+- `ladder_t6_let_const_simple` now matches upstream. Its ledger entry is gone,
+  the count pin moves from 59 to 58, and SIMPLE parity is now 35/57.
+- The `simple-inline-variables` golden pinned our old output, which upstream
+  never produced. It was re-captured from the jar.
+- Fixed (security review): a function, arrow, class-expression or catch
+  binding that shadows a top-level `const` no longer receives its value.
+  `tests/regression_expression_shadow.rs` runs six such programs under node
+  at both levels.
 
 ### Fixed - native Windows CI execution gate (CV02)
 
@@ -940,6 +966,14 @@ conditionally registered passes (`inline`, `remove-unused-vars`, `treeshake`,
 `rename-globals`, `rename-properties`) appear in the trace exactly when they
 were registered, that every reported name is a known pass, and pinning the
 scheduler's real order so a future fix to #15829 must consciously update it.
+
+### Fixed - strict clippy passes on closurec (#15939)
+
+`cargo clippy --all-targets -- -D warnings` now exits 0 with clippy 0.1.95.
+The unknown `doc_list_item_without_indentation` lint named in #15939 had
+already been removed from `Cargo.toml` by #16905. The one remaining error was
+`nonminimal_bool` in `tests/oracle_manifest.rs`: `a == !b` is now written as
+the equivalent `a != b`.
 
 ## [0.246.0] - 2026-09-19
 

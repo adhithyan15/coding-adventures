@@ -247,7 +247,8 @@ pub enum ErrorKind {
     /// A named component type was not found in the component library.
     MissingComponent,
     /// An emit takes a name the Mosaic runtime reserves (see
-    /// [`RESERVED_EMIT_NAMES`]).
+    /// [`RESERVED_EMIT_NAMES`]), or an emit parameter takes a key the
+    /// dispatched event object owns ([`RESERVED_EMIT_PARAM_NAMES`]).
     ReservedName,
 }
 
@@ -837,6 +838,20 @@ fn parse_emit_payload_type(node: &GrammarASTNode) -> Result<EmitPayloadType, Com
 /// `mosaic_app_runtime::ENVIRONMENT_CHANGED`.
 pub const RESERVED_EMIT_NAMES: &[&str] = &["environmentChanged"];
 
+/// Emit parameter names that collide with the dispatched event object's own
+/// keys, so a parameter can never overwrite or hijack them:
+///
+/// | name        | owned by                                                     |
+/// |-------------|--------------------------------------------------------------|
+/// | `type`      | the web backends' action object, `{ type: "save", value }`   |
+/// | `event`     | the native runtime envelope, `{ "event": "onSave", ... }`    |
+/// | `__proto__` | JavaScript object literals, where it sets the prototype      |
+///
+/// Before this list, `emit onSave ( type : text )` compiled, and a Web
+/// Component text field then dispatched `{type:'save',type:<typed text>}`:
+/// the user's text chose which action the host received.
+pub const RESERVED_EMIT_PARAM_NAMES: &[&str] = &["type", "event", "__proto__"];
+
 /// Validate a `MosmodelComponent` for semantic correctness.
 ///
 /// Checks (from the spec §5):
@@ -848,16 +863,31 @@ pub const RESERVED_EMIT_NAMES: &[&str] = &["environmentChanged"];
 /// 5. Types that cannot have defaults (`image`, `color`, `list`, component) don't.
 /// 6. Payload types exclude `image` and `node`.
 /// 7. No emit takes a name in [`RESERVED_EMIT_NAMES`].
+/// 8. No emit parameter takes a name in [`RESERVED_EMIT_PARAM_NAMES`].
 pub fn validate(component: &MosmodelComponent) -> Result<(), Vec<CompileError>> {
     let mut errors = Vec::new();
 
     // --- 1. Unique slot names ---
+    //
+    // Unique as every backend spells them: a slot becomes a camel-cased
+    // property (`cell-value` and `cellValue` are both `cellValue`), so two
+    // names with one key would redeclare the same property.
     let mut slot_names: HashSet<&str> = HashSet::new();
+    let mut slot_keys: HashSet<String> = HashSet::new();
     for slot in &component.slots {
         if !slot_names.insert(&slot.name) {
             errors.push(CompileError {
                 kind: ErrorKind::DuplicateName,
                 message: format!("Duplicate slot name '{}'", slot.name),
+            });
+        } else if !slot_keys.insert(emitted_key(&slot.name)) {
+            errors.push(CompileError {
+                kind: ErrorKind::DuplicateName,
+                message: format!(
+                    "Slot '{}' is the same name as another slot once camel-cased ('{}')",
+                    slot.name,
+                    emitted_key(&slot.name)
+                ),
             });
         }
     }
@@ -919,11 +949,65 @@ pub fn validate(component: &MosmodelComponent) -> Result<(), Vec<CompileError>> 
         }
     }
 
+    // --- 8. No emit parameter shadows the event object's own keys, and no
+    //        two parameters of one emit share a key ---
+    //
+    // Both are judged on the key backends emit, the camel-cased name: the
+    // grammar admits `Type`, which is the field `type`, and `my-type` and
+    // `myType` are one field `myType`, the later silently overwriting the
+    // earlier in a dispatched payload.
+    for emit in &component.emits {
+        let mut param_keys: HashSet<String> = HashSet::new();
+        for param in &emit.params {
+            let key = emitted_key(&param.name);
+            if RESERVED_EMIT_PARAM_NAMES.contains(&param.name.as_str())
+                || RESERVED_EMIT_PARAM_NAMES.contains(&key.as_str())
+            {
+                errors.push(CompileError {
+                    kind: ErrorKind::ReservedName,
+                    message: format!(
+                        "'{}' cannot be a parameter of '{}': the dispatched event object uses that key itself",
+                        param.name, emit.name
+                    ),
+                });
+            } else if !param_keys.insert(key.clone()) {
+                errors.push(CompileError {
+                    kind: ErrorKind::DuplicateName,
+                    message: format!(
+                        "Parameter '{}' of '{}' repeats the field '{key}' another parameter already names",
+                        param.name, emit.name
+                    ),
+                });
+            }
+        }
+    }
+
     if errors.is_empty() {
         Ok(())
     } else {
         Err(errors)
     }
+}
+
+/// The identifier every backend emits for a slot or parameter name: kebab
+/// segments camel-cased, first character lowered (`front-template` ->
+/// `frontTemplate`, `Type` -> `type`). It mirrors the emitters'
+/// `to_camel_case_first_lower`, so validation judges the name the generated
+/// code actually uses.
+fn emitted_key(name: &str) -> String {
+    let mut key = String::with_capacity(name.len());
+    for (i, segment) in name.split(['-', '_']).filter(|s| !s.is_empty()).enumerate() {
+        let mut chars = segment.chars();
+        if let Some(first) = chars.next() {
+            if i == 0 {
+                key.extend(first.to_lowercase());
+            } else {
+                key.extend(first.to_uppercase());
+            }
+            key.push_str(chars.as_str());
+        }
+    }
+    key
 }
 
 fn validate_slot_default(slot: &SlotDecl, errors: &mut Vec<CompileError>) {
@@ -1587,6 +1671,57 @@ component Cube {
     fn validate_reserved_emit_name_is_exact() {
         let src = r#"component Foo { emit onEnvironmentChanged ; slot environmentChanged : text ; }"#;
         assert!(compile(src).is_ok());
+    }
+
+    /// An emit parameter cannot take a name the dispatched event object
+    /// already uses for itself. Web backends dispatch `{ type, <params> }`,
+    /// so a parameter named `type` overwrote the event's own discriminant
+    /// with the field's text; native backends forward `{ event, <params> }`
+    /// to the runtime; `__proto__` in an object literal sets the prototype
+    /// instead of a field.
+    #[test]
+    fn validate_reserved_emit_param_names() {
+        for name in ["type", "event"] {
+            let src = format!("component Foo {{ emit onSave ( {name} : text ) ; }}");
+            let errs = compile(&src).expect_err(name);
+            assert_eq!(errs.len(), 1, "{name}: {errs:?}");
+            assert_eq!(errs[0].kind, ErrorKind::ReservedName, "{name}");
+            assert!(errs[0].message.contains(&format!("'{name}'")), "{name}: {}", errs[0].message);
+        }
+        // Backends key the payload by the camel-cased name, so a spelling
+        // that camel-cases onto a reserved key is refused too.
+        for name in ["Type", "Event"] {
+            let src = format!("component Foo {{ emit onSave ( {name} : text ) ; }}");
+            let errs = compile(&src).expect_err(name);
+            assert_eq!(errs[0].kind, ErrorKind::ReservedName, "{name}: {errs:?}");
+        }
+        // `__proto__` is not an identifier in the grammar today, so it never
+        // reaches `validate`; the reserved list still names it in case the
+        // identifier rule ever widens.
+        assert!(compile("component Foo { emit onSave ( __proto__ : text ) ; }").is_err());
+        assert!(RESERVED_EMIT_PARAM_NAMES.contains(&"__proto__"));
+        // Only the exact envelope keys are reserved.
+        assert!(compile("component Foo { emit onSave ( value : text , event-type : text ) ; }").is_ok());
+    }
+
+    /// Two names that camel-case to the same key are the same name to every
+    /// backend: `my-type` and `myType` are both the field `myType`, so one
+    /// would silently overwrite the other in a dispatched payload, or
+    /// redeclare the same property for slots.
+    #[test]
+    fn validate_names_that_camel_case_to_one_key_are_duplicates() {
+        let errs = compile("component Foo { emit onSave ( my-type : text , myType : text ) ; }")
+            .unwrap_err();
+        assert_eq!(errs.len(), 1, "{errs:?}");
+        assert_eq!(errs[0].kind, ErrorKind::DuplicateName);
+        assert!(errs[0].message.contains("'myType'"), "{}", errs[0].message);
+
+        let errs = compile("component Foo { slot cell-value : text ; slot cellValue : text ; }")
+            .unwrap_err();
+        assert_eq!(errs.len(), 1, "{errs:?}");
+        assert_eq!(errs[0].kind, ErrorKind::DuplicateName);
+
+        assert!(compile("component Foo { emit onSave ( my-type : text , my-kind : text ) ; }").is_ok());
     }
 
     /// The compiler's reserved list is the runtime's: if the runtime renames
