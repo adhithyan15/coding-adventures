@@ -47,12 +47,17 @@ use coding_adventures_type_sidecar::Sidecar;
 
 /// Parse `src`, bridge to a typed `Program`, run `InlineVariablesPass`,
 /// and emit the result as minified JS. Returns the emitted string.
+///
+/// Upstream's `InlineVariablesTest` inlines global bindings, so its cases are
+/// closed-world. Since CCR-078 (#15863) the open-world (SIMPLE) pass
+/// propagates no top-level binding, matching the oracle, so this harness uses
+/// `closed_world()`.
 fn propagate(src: &str) -> String {
     let es = EsVersion::Es2025;
     let node = parse_javascript_typed(src, es).expect("parse");
     let prog = bridge::grammar_to_program(&node, es).expect("bridge");
 
-    let pass = InlineVariablesPass::new();
+    let pass = InlineVariablesPass::closed_world();
     let sidecar = Sidecar::new();
     let mut cv = CVLog::new(false);
     let out = pass
@@ -131,11 +136,14 @@ fn inline_long_literal_at_single_site() {
     );
 }
 
-/// `let` / `var` are reassignable — never propagated by this pass.
+/// A `let` / `var` that is actually reassigned is never propagated: its value
+/// at a use may not be the initializer. (A never-reassigned scalar one is
+/// propagated in the closed world, CLOC29; in the open world nothing at the
+/// top level is, CCR-078.)
 #[test]
 fn does_not_inline_let_or_var() {
-    assert_eq!(propagate("let X = 5; use(X);"), "let X=5;use(X);");
-    assert_eq!(propagate("var Y = 5; use(Y);"), "var Y=5;use(Y);");
+    assert_eq!(propagate("let X = 5; X = 6; use(X);"), "let X=5;X=6;use(X);");
+    assert_eq!(propagate("var Y = 5; Y = 6; use(Y);"), "var Y=5;Y=6;use(Y);");
 }
 
 /// A non-literal initializer (identifier alias / call) is declined —
