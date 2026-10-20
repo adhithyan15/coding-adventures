@@ -1,0 +1,881 @@
+{
+  "version": 1,
+  "language": "german",
+  "chapter": 261,
+  "title": "Would — würde, hätte, wäre, and Six Lines",
+  "drivablePrefix": 4,
+  "sourceHash": "fnv1a64:372651c1a4772718",
+  "lessons": [
+    {
+      "id": "GE-C261-ich-haette-gern",
+      "sequence": 14410,
+      "title": "ich hätte gern — I'd like, and that would be",
+      "headword": "ich hätte gern / das wäre",
+      "romanization": "ich hätte gern / das wäre",
+      "gloss": "I'd like, that would be — the Konjunktiv II of haben and sein, made from hatte and war with an umlaut",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a140398b96499764",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"I had\" and \"I was\". (Ich hatte. Ich war.) Change the a of each to ä, add an e to the second, and the past turns into \"would\"."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ich hätte gern",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ich hätte gern — \"I'd like\", literally \"I would gladly have\": ikh HET-tuh gairn."
+            },
+            {
+              "kind": "speech",
+              "text": "Ich hätte gern einen Kaffee. — I'd like a coffee. Ich hätte gern eine Fahrkarte nach Berlin. — I'd like a ticket to Berlin."
+            },
+            {
+              "kind": "speech",
+              "text": "It sits beside ich möchte, and both are polite. At a counter or in a café, ich hätte gern is a common way to order."
+            },
+            {
+              "kind": "speech",
+              "text": "The forms: ich hätte, du hättest, er hätte, wir hätten, Sie hätten."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: das wäre",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "wäre is \"would be\", made from war:"
+            },
+            {
+              "kind": "speech",
+              "text": "Das wäre schön. — That would be lovely. Das wäre nett. — That would be kind."
+            },
+            {
+              "kind": "speech",
+              "text": "The forms: ich wäre, du wärst, er wäre, wir wären, Sie wären."
+            },
+            {
+              "kind": "speech",
+              "text": "This is the Konjunktiv II, the mood of what is not real, or not yet, or said gently. You have used one form already: du solltest, which is spelled like the Präteritum. Hätte and wäre add an umlaut to theirs."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "hätte is hatte and wäre is war, each with an umlaut. Neither form is in EtymDB 2.1, so this is the usual account in histories of German: the old subjunctive endings had an i in them, as in Old High German wārī, and that i pulled the vowel forward, a to ä. The i is gone; the umlaut it left is the mark of the mood. Haben itself EtymDB traces to Proto-Germanic habjaną."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hatte, hätte; war, wäre",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hatte*, *hätte*; *war*, *wäre*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Ich hätte gern einen Kaffee.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Ich hätte gern einen Kaffee.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Ich hätte gern eine Fahrkarte nach Berlin, hin und zurück.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Ich hätte gern eine Fahrkarte nach Berlin, hin und zurück.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Das wäre schön.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Das wäre schön.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Das wäre nett.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Das wäre nett.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a problem, then a polite request: Ich habe meine Fahrkarte verloren. Ich hätte gern eine neue.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a problem, then a polite request: *Ich habe meine Fahrkarte verloren. Ich hätte gern eine neue.*]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"I'd like a coffee\"? (Ich hätte gern einen Kaffee.) \"That would be lovely\"? (Das wäre schön.) What turns hatte into hätte? (An umlaut.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GE-C261-ich-wuerde",
+      "sequence": 14420,
+      "title": "ich würde — would",
+      "headword": "ich würde + infinitive",
+      "romanization": "ich würde + infinitive",
+      "gloss": "would — würde, the Konjunktiv II of werden, with the infinitive at the end, for most verbs that have no one-word form of their own",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d6758e3b6f7ba109",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"I'd like a coffee\" and \"that would be lovely\". (Ich hätte gern einen Kaffee. Das wäre schön.)"
+            },
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Haben and sein have \"would\" forms of their own. Most verbs borrow one."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: würde, and the infinitive last",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "For \"would\" with an ordinary verb, German takes würde and puts the verb's infinitive at the end, the same bracket a modal builds:"
+            },
+            {
+              "kind": "speech",
+              "text": "Ich würde gern nach Italien reisen. — I would like to travel to Italy. Was würdest du machen? — What would you do?"
+            },
+            {
+              "kind": "speech",
+              "text": "The forms: ich würde, du würdest, er würde, wir würden, ihr würdet, Sie würden."
+            },
+            {
+              "kind": "speech",
+              "text": "After dass or weil, würde goes to the very end, after the infinitive:"
+            },
+            {
+              "kind": "speech",
+              "text": "Ich glaube, dass er gern kommen würde."
+            },
+            {
+              "kind": "speech",
+              "text": "In everyday German the split is roughly this: haben, sein and the modals keep their one-word forms, hätte, wäre, sollte; most other verbs take würde."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "würde is wurde, the Präteritum of werden, \"to become\", with an umlaut. That is the same move as hatte to hätte and war to wäre: an umlaut on the past marks the Konjunktiv II. Not every verb takes one: sollte, wollte and the regular -te verbs look exactly like their past, and the sentence tells you which is meant."
+            },
+            {
+              "kind": "speech",
+              "text": "Werden from Old High German werdan from Proto-Germanic werþaną, \"to turn\" (EtymDB 2.1). EtymDB does not list würde; the umlaut history is the usual account."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wurde, then würde",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *wurde*, then *würde*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Ich würde gern nach Italien reisen.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Ich würde gern nach Italien reisen.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Was würdest du machen?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Was würdest du machen?*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Ich glaube, dass er gern kommen würde.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Ich glaube, dass er gern kommen würde.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "three pasts, three umlauts: hatte, hätte; war, wäre; wurde, würde",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: three pasts, three umlauts: *hatte, hätte; war, wäre; wurde, würde*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "an honest answer: Was würdest du machen? Das hängt davon ab.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: an honest answer: *Was würdest du machen? Das hängt davon ab.*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"I would like to travel\"? (Ich würde gern reisen.) Where does the infinitive go? (To the end.) Which past is würde made from? (Wurde, from werden.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GE-C261-wenn-ich-zeit-haette",
+      "sequence": 14430,
+      "title": "wenn ich Zeit hätte — if things were different",
+      "headword": "wenn ich Zeit hätte, würde ich …",
+      "romanization": "wenn ich Zeit hätte, würde ich …",
+      "gloss": "a condition that is not true now — wenn with the Konjunktiv II in both halves, and ich könnte for what you could do",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:484c5666e9511556",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"if I have time, I'll come\". (Wenn ich Zeit habe, komme ich.) That condition may well come true. Now one that is not true at all."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: the Konjunktiv II in both halves",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "When the condition is not real, both halves go into the Konjunktiv II:"
+            },
+            {
+              "kind": "speech",
+              "text": "Wenn ich Zeit hätte, würde ich mehr lesen. — If I had time, I would read more."
+            },
+            {
+              "kind": "speech",
+              "text": "I do not have time; that is the point. Set the two side by side:"
+            },
+            {
+              "kind": "speech",
+              "text": "Wenn ich Zeit habe, lese ich. — real: it may happen. Wenn ich Zeit hätte, würde ich lesen. — not real: it is not happening."
+            },
+            {
+              "kind": "speech",
+              "text": "The word order has not changed: the verb at the end of the wenn clause, then verb, comma, verb: hätte, würde."
+            },
+            {
+              "kind": "speech",
+              "text": "One short version is worth having on its own: Wenn ich du wäre …, if I were you."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way: ich könnte",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ich könnte is \"I could\", in the sense of \"I would be able to\". It is konnte with an umlaut, and like würde it puts the infinitive last:"
+            },
+            {
+              "kind": "speech",
+              "text": "Wenn ich Geld hätte, könnte ich nach Japan reisen. — If I had money, I could travel to Japan."
+            },
+            {
+              "kind": "speech",
+              "text": "It also makes a suggestion soft: Wir könnten morgen fahren, we could go tomorrow."
+            },
+            {
+              "kind": "speech",
+              "text": "Listen for the vowel. Ich konnte is \"I was able to\", over and done. Ich könnte is \"I could\", if things were different."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "könnte is konnte with the umlaut of the Konjunktiv II. EtymDB 2.1 traces können through Old High German kunnan to Proto-Germanic kunnaną; you met its link to English could, and its old sense \"to know how\", with konnte in chapter twenty-five. Zeit goes back to Proto-Germanic tīdiz, \"time, period\" (EtymDB 2.1), the same word as English tide."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Wenn ich Zeit hätte, würde ich mehr lesen.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Wenn ich Zeit hätte, würde ich mehr lesen.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "real, then not real: Wenn ich Zeit habe, lese ich. Wenn ich Zeit hätte, würde ich lesen.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: real, then not real: *Wenn ich Zeit habe, lese ich. Wenn ich Zeit hätte, würde ich lesen.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Wenn ich Geld hätte, könnte ich nach Japan reisen.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Wenn ich Geld hätte, könnte ich nach Japan reisen.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ich konnte, then ich könnte",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ich konnte*, then *ich könnte*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Wenn ich du wäre, würde ich ein Taxi nehmen.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Wenn ich du wäre, würde ich ein Taxi nehmen.*]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"If I had time, I would read more\"? (Wenn ich Zeit hätte, würde ich mehr lesen.) \"I could\", if things were different? (Ich könnte.) Which is over and done, konnte or könnte? (Konnte.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GE-C261-review",
+      "sequence": 14440,
+      "title": "Review — what would happen",
+      "headword": "(review)",
+      "romanization": "(review)",
+      "gloss": "real and not real — wenn with the present, wenn with hätte, wäre and würde, and the polite would of the counter",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:00a89c3fe485250e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Order a coffee, politely. (Ich hätte gern einen Kaffee.) And say \"that would be lovely\". (Das wäre schön.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Three lessons, and German can now say what is not so. Four pasts with an umlaut: hätte, wäre, würde, könnte. Würde with the infinitive last for most verbs. And two kinds of wenn: the present for what may well happen, the Konjunktiv II for what is not true now."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The two side by side, about the same weekend:"
+            },
+            {
+              "kind": "speech",
+              "text": "Wenn ich Zeit habe, fahre ich nach Berlin. Wenn ich Zeit hätte, würde ich nach Berlin fahren."
+            },
+            {
+              "kind": "speech",
+              "text": "The first is a plan. The second is a wish."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Wenn ich Zeit habe, fahre ich nach Berlin.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Wenn ich Zeit habe, fahre ich nach Berlin.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Wenn ich Zeit hätte, würde ich nach Berlin fahren.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Wenn ich Zeit hätte, würde ich nach Berlin fahren.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Wenn ich Geld hätte, könnte ich nach Japan reisen.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Wenn ich Geld hätte, könnte ich nach Japan reisen.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Das wäre schön, aber ich habe keine Zeit.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Das wäre schön, aber ich habe keine Zeit.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "one wish of your own: Wenn ich …, würde ich …",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: one wish of your own: *Wenn ich …, würde ich …*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Das Taxi wäre schneller als die U-Bahn, aber nicht so billig wie die U-Bahn.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Das Taxi wäre schneller als die U-Bahn, aber nicht so billig wie die U-Bahn.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Vor einem Jahr war ich in Berlin. Ich lerne seit einem Jahr Deutsch. Wenn ich mehr Zeit hätte, würde ich wieder nach Berlin fahren.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Vor einem Jahr war ich in Berlin. Ich lerne seit einem Jahr Deutsch. Wenn ich mehr Zeit hätte, würde ich wieder nach Berlin fahren.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Kommst du mit? Es kommt darauf an. Das hängt davon ab, ob ich Zeit habe.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Kommst du mit? Es kommt darauf an. Das hängt davon ab, ob ich Zeit habe.*]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A plan or a wish: Wenn ich Zeit hätte? (A wish: it is not true now.) \"I could\"? (Ich könnte.) Where does the infinitive go after würde? (To the end.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GE-W261-sechs-zeilen",
+      "sequence": 14450,
+      "title": "Six lines about a trip",
+      "headword": "(sechs Zeilen)",
+      "romanization": "(sechs Zeilen)",
+      "gloss": "six connected lines to one reader about a trip — a scene and events in the past, a reason, a feeling, and a last line with wenn and the Konjunktiv II",
+      "script": "latin",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block"
+      ],
+      "sourceHash": "fnv1a64:6e9c275f68df407e",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Chapter fifty-five asked for four lines that held together, with weil. This one asks for six, and they tell a story."
+            },
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Pick one person who will read it: ein Freund, eine Freundin, someone in your family."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A told story is more than a list of events. It has a scene: es war, es regnete. It has events in order, with the verb straight after each step word: zuerst, dann, danach, schließlich. It has at least one reason, pointing back with weil or forward with darum. And a good one ends by looking forward."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "For a message to a friend, either past is right. The Präteritum sounds like a story being told; the Perfekt sounds like you talking: ich bin nach Berlin gefahren. Keep war and hatte in the Präteritum either way."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The Goethe-Zertifikat B1 writing paper asks for personal and formal messages and a short opinion post. Six lines to a friend is a first step towards the personal message, not the whole of it."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "writing",
+          "title": "Writing — connected composition",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "On paper, write six lines to your reader about a trip, real or invented, one line for each of these:"
+            },
+            {
+              "kind": "speech",
+              "text": "the scene: when it was, with vor (vor einem Monat), and the weather;"
+            },
+            {
+              "kind": "speech",
+              "text": "the first thing that happened, with zuerst;"
+            },
+            {
+              "kind": "speech",
+              "text": "the next thing, with dann, and a reason, with weil or darum;"
+            },
+            {
+              "kind": "speech",
+              "text": "how it ended, with schließlich;"
+            },
+            {
+              "kind": "speech",
+              "text": "how you felt, with ich war froh, dass …, or what you thought of it, with meiner Meinung nach and a comparison: schöner als, so schön wie;"
+            },
+            {
+              "kind": "speech",
+              "text": "one line forward, with wenn ich … hätte, würde ich …, or das wäre …, or ich hoffe, … zu …."
+            },
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Use only words you already write. The exercise is the joining, and the place of each verb."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Now go through your lines and find every verb. In lines two, three and four, the verb should come straight after the step word: zuerst ging ich, not zuerst ich ging. That is the slip to check first."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Then every weil, dass and wenn. Is its verb at the end of the clause? If a line starts with the wenn clause, does the main verb come straight after the comma: hätte, würde?"
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Last, line six on its own. If it has hätte or würde, is it about something that is not true now? Then it looks forward, and the story is finished."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

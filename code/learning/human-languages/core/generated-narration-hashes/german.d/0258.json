@@ -1,0 +1,17 @@
+{
+  "language": "german",
+  "chapter": 258,
+  "sourceHash": "fnv1a64:ce197e0750fe8125",
+  "lessonIds": [
+    "GE-C258-ich-war-froh",
+    "GE-C258-ich-hoffe-dass",
+    "GE-C258-review"
+  ],
+  "voiceLessons": 3,
+  "drivablePrefix": 3,
+  "text": "german/narration/ch258.txt",
+  "json": "german/narration/ch258.json",
+  "textHash": "fnv1a64:f5e37c9640c28012",
+  "jsonHash": "fnv1a64:53b7687fe9a8589b",
+  "findings": []
+}

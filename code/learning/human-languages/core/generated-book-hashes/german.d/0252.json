@@ -1,0 +1,12 @@
+{
+  "language": "german",
+  "chapter": 252,
+  "sourceHash": "fnv1a64:8b04583c54c52058",
+  "lessonIds": [
+    "GE-C252-ich-ging",
+    "GE-C252-ich-las",
+    "GE-C252-als",
+    "GE-C252-review"
+  ],
+  "tex": "german/book/chapters/ch252-the-told-story.tex"
+}

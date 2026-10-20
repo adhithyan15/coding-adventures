@@ -1,0 +1,25 @@
+{
+  "lesson": {
+    "id": "GE-W261-sechs-zeilen",
+    "language": "german",
+    "chapter": 261,
+    "sequence": 14450,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:6e9c275f68df407e",
+    "detachableSegments": [
+      "Writing — connected composition"
+    ]
+  },
+  "findings": []
+}

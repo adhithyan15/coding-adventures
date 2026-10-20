@@ -1,0 +1,17 @@
+{
+  "language": "german",
+  "chapter": 255,
+  "sourceHash": "fnv1a64:a4ad974aea662ab5",
+  "lessonIds": [
+    "GE-C255-du-solltest",
+    "GE-C255-erklaeren",
+    "GE-C255-review"
+  ],
+  "voiceLessons": 3,
+  "drivablePrefix": 3,
+  "text": "german/narration/ch255.txt",
+  "json": "german/narration/ch255.json",
+  "textHash": "fnv1a64:a61b98d3aeaad26f",
+  "jsonHash": "fnv1a64:8965c7c0f9f483b4",
+  "findings": []
+}

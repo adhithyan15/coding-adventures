@@ -1,0 +1,12 @@
+{
+  "language": "german",
+  "chapter": 254,
+  "sourceHash": "fnv1a64:907d557bb9437c29",
+  "lessonIds": [
+    "GE-C254-ich-finde-dass",
+    "GE-C254-meiner-meinung-nach",
+    "GE-C254-darum",
+    "GE-C254-review"
+  ],
+  "tex": "german/book/chapters/ch254-what-i-think.tex"
+}

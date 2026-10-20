@@ -1,0 +1,489 @@
+{
+  "version": 1,
+  "language": "german",
+  "chapter": 258,
+  "title": "How It Felt — ich war froh, ich hoffe",
+  "drivablePrefix": 3,
+  "sourceHash": "fnv1a64:ce197e0750fe8125",
+  "lessons": [
+    {
+      "id": "GE-C258-ich-war-froh",
+      "sequence": 14310,
+      "title": "ich war froh — how it felt",
+      "headword": "ich war froh, dass …",
+      "romanization": "ich war froh, dass …",
+      "gloss": "how it felt — ich war with a feeling, the new word froh, and the reason after it with dass or weil",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e3bf08c310162c55",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"I was tired\". (Ich war müde.) That war is a Präteritum German says out loud, in speech as well as in books."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: froh",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "froh — \"glad\": froh, with a long o."
+            },
+            {
+              "kind": "speech",
+              "text": "Ich war froh. — I was glad."
+            },
+            {
+              "kind": "speech",
+              "text": "Froh and glücklich are close. Glücklich is happy, a state that can fill a day or a life. Froh is often glad about one thing, and relieved: the train came after all, the exam is over."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: the feeling, then the reason",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Ich war takes any feeling you own: froh, glücklich, traurig, stolz, nervös, wütend, müde. Then the reason, with dass or weil, and the verb at the end:"
+            },
+            {
+              "kind": "speech",
+              "text": "Ich war froh, dass der Zug endlich kam. — I was glad the train came at last. Ich war traurig, weil meine Großmutter krank war. — I was sad because my grandmother was ill. Ich war nervös, weil der Zug Verspätung hatte. — I was nervous because the train was late."
+            },
+            {
+              "kind": "speech",
+              "text": "Dass gives the thing you feel about; weil gives the cause. After froh, dass is the usual choice. In the present it works the same way: Ich bin froh, dass du kommst."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "froh from Middle High German vrō from Old High German frō (EtymDB 2.1). You met it inside freut mich in chapter two. EtymDB also sets English frolic beside it and links frolic to Dutch vrolijk, \"cheerful\"; the usual account is that English borrowed the word from Dutch."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "froh",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *froh*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Ich war froh, dass der Zug endlich kam.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Ich war froh, dass der Zug endlich kam.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Ich war traurig, weil meine Großmutter krank war.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Ich war traurig, weil meine Großmutter krank war.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Ich war stolz. Ich war müde, aber glücklich.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Ich war stolz. Ich war müde, aber glücklich.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "one feeling of your own from last week, with weil",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: one feeling of your own from last week, with *weil*]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"I was glad\"? (Ich war froh.) Glad about one thing, or happy through and through: froh or glücklich? (Froh for the one thing.) After dass and weil, where is the verb? (At the end.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GE-C258-ich-hoffe-dass",
+      "sequence": 14320,
+      "title": "ich hoffe, dass — hopes and dreams",
+      "headword": "ich hoffe, dass …; mein Traum ist es, … zu …",
+      "romanization": "ich hoffe, dass …; mein Traum ist es, … zu …",
+      "gloss": "hopes and dreams — ich hoffe with dass or with zu and an infinitive, and mein Traum ist es, with zu and the infinitive last",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:845a7dd16d483a91",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"I was glad the train came at last\". (Ich war froh, dass der Zug endlich kam.) That looks back. This lesson looks forward."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: ich hoffe, two ways",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "hoffen, to hope, takes a dass clause like finden and glauben:"
+            },
+            {
+              "kind": "speech",
+              "text": "Ich hoffe, dass du bald kommst. — I hope you come soon."
+            },
+            {
+              "kind": "speech",
+              "text": "When the one hoping and the one doing are the same person, German can drop dass and use zu with the infinitive at the end:"
+            },
+            {
+              "kind": "speech",
+              "text": "Ich hoffe, dich bald zu besuchen. — I hope to visit you soon."
+            },
+            {
+              "kind": "speech",
+              "text": "That zu is the German \"to\" of \"to visit\". It stands right before the infinitive, and both go to the end."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way: mein Traum ist es, … zu …",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "For a bigger ambition, German builds a frame around the dream:"
+            },
+            {
+              "kind": "speech",
+              "text": "Mein Traum ist es, nach Japan zu reisen. — My dream is to travel to Japan."
+            },
+            {
+              "kind": "speech",
+              "text": "The es holds a place for the dream, and the comma opens it: nach Japan zu reisen. The infinitive goes last, with zu in front of it."
+            },
+            {
+              "kind": "speech",
+              "text": "With a separable verb, zu slips inside, between prefix and verb: mitnehmen, mitzunehmen. Ich hoffe, meine Familie mitzunehmen."
+            },
+            {
+              "kind": "speech",
+              "text": "You can say the same dream more plainly, too: Ich möchte nach Japan reisen. The frame with es puts more weight on the dream."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Traum from Middle High German troum, from Proto-Germanic draumaz (EtymDB 2.1): the same word as English dream. hoffen, from chapter one hundred and thirty-six, came into Middle High German from Low German, beside English hope and Dutch hopen."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Ich hoffe, dass du bald kommst.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Ich hoffe, dass du bald kommst.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Ich hoffe, dich bald zu besuchen.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Ich hoffe, dich bald zu besuchen.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Mein Traum ist es, nach Japan zu reisen.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Mein Traum ist es, nach Japan zu reisen.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mitnehmen, then mitzunehmen",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mitnehmen*, then *mitzunehmen*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "your own dream: Mein Traum ist es, … zu …",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: your own dream: *Mein Traum ist es, … zu …*]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"I hope to visit you soon\"? (Ich hoffe, dich bald zu besuchen.) Where does zu go with mitnehmen? (Inside: mitzunehmen.) \"My dream is to travel to Japan\"? (Mein Traum ist es, nach Japan zu reisen.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GE-C258-review",
+      "sequence": 14330,
+      "title": "Review — a feeling, and a hope",
+      "headword": "(review)",
+      "romanization": "(review)",
+      "gloss": "how it felt and what comes next — ich war froh, dass …, and a hope or a dream with zu",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:61b041cb67b6182e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"I was glad\". (Ich war froh.) And \"I was tired, but happy\". (Ich war müde, aber glücklich.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Two lessons, and an experience can now have an inside. Ich war and a feeling, then the reason with dass or weil. And a hope, with ich hoffe, dass … or ich hoffe, … zu …, or a dream framed by mein Traum ist es."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The end of a story can carry both:"
+            },
+            {
+              "kind": "speech",
+              "text": "Schließlich war es Abend. Ich war froh, dass ich in Berlin war. Ich hoffe, meine Großmutter bald wieder zu besuchen."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Ich war froh, dass der Zug endlich kam.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Ich war froh, dass der Zug endlich kam.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Ich war traurig, weil es regnete.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Ich war traurig, weil es regnete.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Ich hoffe, dass du bald kommst.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Ich hoffe, dass du bald kommst.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Mein Traum ist es, nach Japan zu reisen.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Mein Traum ist es, nach Japan zu reisen.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the end of the journey from chapter two hundred and fifty-three, with one feeling and one hope",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the end of the journey from chapter two hundred and fifty-three, with one feeling and one hope]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a problem first, then the feeling: Ich habe den Zug verpasst. Was kann ich machen? Ich war sehr nervös.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a problem first, then the feeling: *Ich habe den Zug verpasst. Was kann ich machen? Ich war sehr nervös.*]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"I was glad that …\"? (Ich war froh, dass …) \"I hope to visit you\"? (Ich hoffe, dich zu besuchen.) Where does zu stand? (Right before the infinitive, at the end.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

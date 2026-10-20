@@ -1,0 +1,205 @@
+German, chapter 261: Would — würde, hätte, wäre, and Six Lines.
+5 lessons. You can do the first 4 of them in the car; after that you will want to have stopped.
+
+
+Lesson 1 of 5.
+ich hätte gern — I'd like, and that would be.
+
+Warm-up.
+[pause 2 seconds]
+Say "I had" and "I was". (Ich hatte. Ich war.) Change the a of each to ä, add an e to the second, and the past turns into "would".
+
+You'll want to know: ich hätte gern.
+ich hätte gern — "I'd like", literally "I would gladly have": ikh HET-tuh gairn.
+Ich hätte gern einen Kaffee. — I'd like a coffee. Ich hätte gern eine Fahrkarte nach Berlin. — I'd like a ticket to Berlin.
+It sits beside ich möchte, and both are polite. At a counter or in a café, ich hätte gern is a common way to order.
+The forms: ich hätte, du hättest, er hätte, wir hätten, Sie hätten.
+
+Grammar Lens: das wäre.
+wäre is "would be", made from war:
+Das wäre schön. — That would be lovely. Das wäre nett. — That would be kind.
+The forms: ich wäre, du wärst, er wäre, wir wären, Sie wären.
+This is the Konjunktiv II, the mood of what is not real, or not yet, or said gently. You have used one form already: du solltest, which is spelled like the Präteritum. Hätte and wäre add an umlaut to theirs.
+
+The word, taken apart.
+hätte is hatte and wäre is war, each with an umlaut. Neither form is in EtymDB 2.1, so this is the usual account in histories of German: the old subjunctive endings had an i in them, as in Old High German wārī, and that i pulled the vowel forward, a to ä. The i is gone; the umlaut it left is the mark of the mood. Haben itself EtymDB traces to Proto-Germanic habjaną.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: hatte, hätte; war, wäre]
+[pause 8 seconds for the answer]
+[your turn — say: Ich hätte gern einen Kaffee.]
+[pause 8 seconds for the answer]
+[your turn — say: Ich hätte gern eine Fahrkarte nach Berlin, hin und zurück.]
+[pause 8 seconds for the answer]
+[your turn — say: Das wäre schön.]
+[pause 8 seconds for the answer]
+[your turn — say: Das wäre nett.]
+[pause 8 seconds for the answer]
+[your turn — say: a problem, then a polite request: Ich habe meine Fahrkarte verloren. Ich hätte gern eine neue.]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+"I'd like a coffee"? (Ich hätte gern einen Kaffee.) "That would be lovely"? (Das wäre schön.) What turns hatte into hätte? (An umlaut.)
+
+
+Lesson 2 of 5.
+ich würde — would.
+
+Warm-up.
+[pause 2 seconds]
+Say "I'd like a coffee" and "that would be lovely". (Ich hätte gern einen Kaffee. Das wäre schön.)
+[pause 1 second]
+Haben and sein have "would" forms of their own. Most verbs borrow one.
+
+Grammar Lens: würde, and the infinitive last.
+For "would" with an ordinary verb, German takes würde and puts the verb's infinitive at the end, the same bracket a modal builds:
+Ich würde gern nach Italien reisen. — I would like to travel to Italy. Was würdest du machen? — What would you do?
+The forms: ich würde, du würdest, er würde, wir würden, ihr würdet, Sie würden.
+After dass or weil, würde goes to the very end, after the infinitive:
+Ich glaube, dass er gern kommen würde.
+In everyday German the split is roughly this: haben, sein and the modals keep their one-word forms, hätte, wäre, sollte; most other verbs take würde.
+
+The word, taken apart.
+würde is wurde, the Präteritum of werden, "to become", with an umlaut. That is the same move as hatte to hätte and war to wäre: an umlaut on the past marks the Konjunktiv II. Not every verb takes one: sollte, wollte and the regular -te verbs look exactly like their past, and the sentence tells you which is meant.
+Werden from Old High German werdan from Proto-Germanic werþaną, "to turn" (EtymDB 2.1). EtymDB does not list würde; the umlaut history is the usual account.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: wurde, then würde]
+[pause 8 seconds for the answer]
+[your turn — say: Ich würde gern nach Italien reisen.]
+[pause 8 seconds for the answer]
+[your turn — say: Was würdest du machen?]
+[pause 8 seconds for the answer]
+[your turn — say: Ich glaube, dass er gern kommen würde.]
+[pause 8 seconds for the answer]
+[your turn — say: three pasts, three umlauts: hatte, hätte; war, wäre; wurde, würde]
+[pause 8 seconds for the answer]
+[your turn — say: an honest answer: Was würdest du machen? Das hängt davon ab.]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+"I would like to travel"? (Ich würde gern reisen.) Where does the infinitive go? (To the end.) Which past is würde made from? (Wurde, from werden.)
+
+
+Lesson 3 of 5.
+wenn ich Zeit hätte — if things were different.
+
+Warm-up.
+[pause 2 seconds]
+Say "if I have time, I'll come". (Wenn ich Zeit habe, komme ich.) That condition may well come true. Now one that is not true at all.
+
+Grammar Lens: the Konjunktiv II in both halves.
+When the condition is not real, both halves go into the Konjunktiv II:
+Wenn ich Zeit hätte, würde ich mehr lesen. — If I had time, I would read more.
+I do not have time; that is the point. Set the two side by side:
+Wenn ich Zeit habe, lese ich. — real: it may happen. Wenn ich Zeit hätte, würde ich lesen. — not real: it is not happening.
+The word order has not changed: the verb at the end of the wenn clause, then verb, comma, verb: hätte, würde.
+One short version is worth having on its own: Wenn ich du wäre …, if I were you.
+
+Why it's said this way: ich könnte.
+ich könnte is "I could", in the sense of "I would be able to". It is konnte with an umlaut, and like würde it puts the infinitive last:
+Wenn ich Geld hätte, könnte ich nach Japan reisen. — If I had money, I could travel to Japan.
+It also makes a suggestion soft: Wir könnten morgen fahren, we could go tomorrow.
+Listen for the vowel. Ich konnte is "I was able to", over and done. Ich könnte is "I could", if things were different.
+
+The word, taken apart.
+könnte is konnte with the umlaut of the Konjunktiv II. EtymDB 2.1 traces können through Old High German kunnan to Proto-Germanic kunnaną; you met its link to English could, and its old sense "to know how", with konnte in chapter twenty-five. Zeit goes back to Proto-Germanic tīdiz, "time, period" (EtymDB 2.1), the same word as English tide.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: Wenn ich Zeit hätte, würde ich mehr lesen.]
+[pause 8 seconds for the answer]
+[your turn — say: real, then not real: Wenn ich Zeit habe, lese ich. Wenn ich Zeit hätte, würde ich lesen.]
+[pause 8 seconds for the answer]
+[your turn — say: Wenn ich Geld hätte, könnte ich nach Japan reisen.]
+[pause 8 seconds for the answer]
+[your turn — say: ich konnte, then ich könnte]
+[pause 8 seconds for the answer]
+[your turn — say: Wenn ich du wäre, würde ich ein Taxi nehmen.]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+"If I had time, I would read more"? (Wenn ich Zeit hätte, würde ich mehr lesen.) "I could", if things were different? (Ich könnte.) Which is over and done, konnte or könnte? (Konnte.)
+
+
+Lesson 4 of 5.
+Review — what would happen.
+
+Warm-up.
+[pause 2 seconds]
+Order a coffee, politely. (Ich hätte gern einen Kaffee.) And say "that would be lovely". (Das wäre schön.)
+
+What you've built.
+Three lessons, and German can now say what is not so. Four pasts with an umlaut: hätte, wäre, würde, könnte. Würde with the infinitive last for most verbs. And two kinds of wenn: the present for what may well happen, the Konjunktiv II for what is not true now.
+[pause 2 seconds]
+The two side by side, about the same weekend:
+Wenn ich Zeit habe, fahre ich nach Berlin. Wenn ich Zeit hätte, würde ich nach Berlin fahren.
+The first is a plan. The second is a wish.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: Wenn ich Zeit habe, fahre ich nach Berlin.]
+[pause 8 seconds for the answer]
+[your turn — say: Wenn ich Zeit hätte, würde ich nach Berlin fahren.]
+[pause 8 seconds for the answer]
+[your turn — say: Wenn ich Geld hätte, könnte ich nach Japan reisen.]
+[pause 8 seconds for the answer]
+[your turn — say: Das wäre schön, aber ich habe keine Zeit.]
+[pause 8 seconds for the answer]
+[your turn — say: one wish of your own: Wenn ich …, würde ich …]
+[pause 8 seconds for the answer]
+[your turn — say: Das Taxi wäre schneller als die U-Bahn, aber nicht so billig wie die U-Bahn.]
+[pause 8 seconds for the answer]
+[your turn — say: Vor einem Jahr war ich in Berlin. Ich lerne seit einem Jahr Deutsch. Wenn ich mehr Zeit hätte, würde ich wieder nach Berlin fahren.]
+[pause 8 seconds for the answer]
+[your turn — say: Kommst du mit? Es kommt darauf an. Das hängt davon ab, ob ich Zeit habe.]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+A plan or a wish: Wenn ich Zeit hätte? (A wish: it is not true now.) "I could"? (Ich könnte.) Where does the infinitive go after würde? (To the end.)
+
+
+Lesson 5 of 5.
+Six lines about a trip — six connected lines to one reader about a trip — a scene and events in the past, a reason, a feeling, and a last line with wenn and the Konjunktiv II.
+
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped.
+
+Warm-up.
+[pause 2 seconds]
+Chapter fifty-five asked for four lines that held together, with weil. This one asks for six, and they tell a story.
+[pause 1 second]
+Pick one person who will read it: ein Freund, eine Freundin, someone in your family.
+
+You'll want to know.
+[pause 2 seconds]
+A told story is more than a list of events. It has a scene: es war, es regnete. It has events in order, with the verb straight after each step word: zuerst, dann, danach, schließlich. It has at least one reason, pointing back with weil or forward with darum. And a good one ends by looking forward.
+[pause 2 seconds]
+For a message to a friend, either past is right. The Präteritum sounds like a story being told; the Perfekt sounds like you talking: ich bin nach Berlin gefahren. Keep war and hatte in the Präteritum either way.
+[pause 2 seconds]
+The Goethe-Zertifikat B1 writing paper asks for personal and formal messages and a short opinion post. Six lines to a friend is a first step towards the personal message, not the whole of it.
+
+Writing — connected composition.
+[pause 2 seconds]
+On paper, write six lines to your reader about a trip, real or invented, one line for each of these:
+the scene: when it was, with vor (vor einem Monat), and the weather;
+the first thing that happened, with zuerst;
+the next thing, with dann, and a reason, with weil or darum;
+how it ended, with schließlich;
+how you felt, with ich war froh, dass …, or what you thought of it, with meiner Meinung nach and a comparison: schöner als, so schön wie;
+one line forward, with wenn ich … hätte, würde ich …, or das wäre …, or ich hoffe, … zu ….
+[pause 3 seconds]
+Use only words you already write. The exercise is the joining, and the place of each verb.
+
+Wrap-up recall.
+[pause 2 seconds]
+Now go through your lines and find every verb. In lines two, three and four, the verb should come straight after the step word: zuerst ging ich, not zuerst ich ging. That is the slip to check first.
+[pause 2 seconds]
+Then every weil, dass and wenn. Is its verb at the end of the clause? If a line starts with the wenn clause, does the main verb come straight after the comma: hätte, würde?
+[pause 2 seconds]
+Last, line six on its own. If it has hätte or würde, is it about something that is not true now? Then it looks forward, and the story is finished.

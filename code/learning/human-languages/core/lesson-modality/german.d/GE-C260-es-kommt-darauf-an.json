@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C260-es-kommt-darauf-an",
+    "language": "german",
+    "chapter": 260,
+    "sequence": 14390,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:57bc8c948ee2a520"
+  },
+  "findings": []
+}

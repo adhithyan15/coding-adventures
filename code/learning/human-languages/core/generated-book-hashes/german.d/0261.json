@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 261,
+  "sourceHash": "fnv1a64:90513703f7ec0d30",
+  "lessonIds": [
+    "GE-C261-ich-haette-gern",
+    "GE-C261-ich-wuerde",
+    "GE-C261-wenn-ich-zeit-haette",
+    "GE-C261-review",
+    "GE-W261-sechs-zeilen"
+  ],
+  "tex": "german/book/chapters/ch261-would.tex"
+}

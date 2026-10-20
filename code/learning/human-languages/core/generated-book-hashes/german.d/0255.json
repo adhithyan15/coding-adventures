@@ -1,0 +1,11 @@
+{
+  "language": "german",
+  "chapter": 255,
+  "sourceHash": "fnv1a64:38eab0c81f1caed5",
+  "lessonIds": [
+    "GE-C255-du-solltest",
+    "GE-C255-erklaeren",
+    "GE-C255-review"
+  ],
+  "tex": "german/book/chapters/ch255-you-should.tex"
+}

@@ -1,0 +1,11 @@
+{
+  "id": "GE-C258-ich-hoffe-dass",
+  "pathSegment": "GE-PATH-258-GEFUEHLE",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GE-EXT-258-GEFUEHLE",
+      "order": 1
+    }
+  ]
+}

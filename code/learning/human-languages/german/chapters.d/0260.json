@@ -1,0 +1,22 @@
+{
+  "chapter": 260,
+  "title": "If — wenn, falls, es kommt darauf an",
+  "label": "ch:ge-if",
+  "canDo": "I can state a real condition with wenn or falls and the present, and say that something depends, naming on what.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "GE-C260-review",
+    "kind": "production",
+    "summary": "Complete GE-C260-review: a plan with a branch in it, a real condition with wenn or falls, and an answer that depends.",
+    "assesses": [
+      "GE-GRAMMAR-WENN-FALLS-01",
+      "GE-ETYMON-FALLS-FALL-02",
+      "GE-GRAMMAR-WENN-PRAESENS-01",
+      "GE-GRAMMAR-VERB-KOMMA-VERB-02",
+      "GE-LEX-ES-KOMMT-DARAUF-AN-01",
+      "GE-LEX-HAENGT-DAVON-AB-02"
+    ]
+  }
+}

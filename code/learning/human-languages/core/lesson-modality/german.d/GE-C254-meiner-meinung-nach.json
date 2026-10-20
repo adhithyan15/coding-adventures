@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C254-meiner-meinung-nach",
+    "language": "german",
+    "chapter": 254,
+    "sequence": 14190,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:70dbd11d4ce3bfea"
+  },
+  "findings": []
+}
