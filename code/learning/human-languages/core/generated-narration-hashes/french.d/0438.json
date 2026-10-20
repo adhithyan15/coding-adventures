@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 438,
+  "sourceHash": "fnv1a64:7998ddd8ce5899b8",
+  "lessonIds": [
+    "FR-C438-flaner",
+    "FR-C438-balader",
+    "FR-C438-deambuler",
+    "FR-C438-errer",
+    "FR-C438-arpenter"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch438.txt",
+  "json": "french/narration/ch438.json",
+  "textHash": "fnv1a64:a09a49487940745b",
+  "jsonHash": "fnv1a64:994c32f3cb85580d",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "FR-C416-enregistrement",
+  "pathSegment": "FR-PATH-416-AEROGARE",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-416-AEROGARE",
+      "order": 2
+    }
+  ]
+}

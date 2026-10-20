@@ -1,0 +1,11 @@
+{
+  "id": "FR-C470-rassurer",
+  "pathSegment": "FR-PATH-470-FRAYEUR",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-470-FRAYEUR",
+      "order": 4
+    }
+  ]
+}

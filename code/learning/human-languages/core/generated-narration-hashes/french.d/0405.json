@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 405,
+  "sourceHash": "fnv1a64:0aa65177503852e5",
+  "lessonIds": [
+    "FR-C405-depanner",
+    "FR-C405-depanneuse",
+    "FR-C405-depanneur",
+    "FR-C405-remorquer",
+    "FR-C405-garagiste"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch405.txt",
+  "json": "french/narration/ch405.json",
+  "textHash": "fnv1a64:e8d55f31a2154f25",
+  "jsonHash": "fnv1a64:43ebc4d2016e8679",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 475,
+  "title": "Jalousie et rancune",
+  "label": "ch:fr-jalousie-et-rancune",
+  "canDo": "I can talk about jealousy, grudges and making up.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "FR-C475-reconcilier",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 475: I can talk about jealousy, grudges and making up.",
+    "assesses": [
+      "FR-LEX-C475-RANCUNE-03",
+      "FR-LEX-C475-RANCUNE-04",
+      "FR-LEX-C475-RANCUNE-05"
+    ]
+  }
+}

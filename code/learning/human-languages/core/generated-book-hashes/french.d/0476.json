@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 476,
+  "sourceHash": "fnv1a64:3ebe730d8ec4f482",
+  "lessonIds": [
+    "FR-C476-inquietude",
+    "FR-C476-anxieux",
+    "FR-C476-mefier",
+    "FR-C476-optimiste",
+    "FR-C476-pessimiste"
+  ],
+  "tex": "french/book/chapters/ch476-optimistes-et-inquiets.tex"
+}

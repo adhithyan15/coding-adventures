@@ -1,0 +1,11 @@
+{
+  "id": "FR-C492-adoption",
+  "pathSegment": "FR-PATH-492-FAMILLES",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-492-FAMILLES",
+      "order": 2
+    }
+  ]
+}

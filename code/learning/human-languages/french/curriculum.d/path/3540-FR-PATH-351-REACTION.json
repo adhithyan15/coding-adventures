@@ -1,0 +1,9 @@
+{
+  "id": "FR-PATH-351-REACTION",
+  "spine_node": "SPINE-GIVE-REASONS",
+  "before": [],
+  "inline": [
+    "FR-EXT-351-REACTION"
+  ],
+  "after": []
+}

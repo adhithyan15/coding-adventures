@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 355,
+  "sourceHash": "fnv1a64:f1157d1c36956e52",
+  "lessonIds": [
+    "FR-C355-licencier",
+    "FR-C355-licenciement",
+    "FR-C355-demission",
+    "FR-C355-demissionner",
+    "FR-C355-preavis"
+  ],
+  "tex": "french/book/chapters/ch355-quitter-son-travail.tex"
+}

@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 444,
+  "sourceHash": "fnv1a64:4a664ff83191bdbf",
+  "lessonIds": [
+    "FR-C444-charcuterie",
+    "FR-C444-poissonnerie",
+    "FR-C444-traiteur",
+    "FR-C444-epicier",
+    "FR-C444-primeur"
+  ],
+  "tex": "french/book/chapters/ch444-les-commerces-de-bouche.tex"
+}

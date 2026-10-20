@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C473-vanter",
+    "language": "french",
+    "chapter": 473,
+    "sequence": 26090,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:823dbada61696e0a"
+  },
+  "findings": []
+}

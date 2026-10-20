@@ -1,0 +1,19 @@
+{
+  "chapter": 458,
+  "title": "Au bord de la mer",
+  "label": "ch:fr-au-bord-de-la-mer",
+  "canDo": "I can describe the coast: the dune, the tide, the cove, the reef and the seashell.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "FR-C458-coquillage",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 458: I can describe the coast: the dune, the tide, the cove, the reef and the seashell.",
+    "assesses": [
+      "FR-LEX-C458-LITTORAL-03",
+      "FR-LEX-C458-LITTORAL-04",
+      "FR-LEX-C458-LITTORAL-05"
+    ]
+  }
+}

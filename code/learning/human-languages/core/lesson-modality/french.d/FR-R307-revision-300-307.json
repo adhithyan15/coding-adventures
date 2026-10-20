@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-R307-revision-300-307",
+    "language": "french",
+    "chapter": 307,
+    "sequence": 17540,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a0e453223b076d99"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "FR-C432-signaler",
+  "pathSegment": "FR-PATH-432-GERANT",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-432-GERANT",
+      "order": 2
+    }
+  ]
+}

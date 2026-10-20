@@ -1,0 +1,8 @@
+{
+  "id": "FR-EXT-345-PARTISAN",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say who is for or against an idea: approve or disapprove, name a supporter and an opponent, and argue a case.",
+  "prerequisites": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 437,
+  "sourceHash": "fnv1a64:ff04929106c65879",
+  "lessonIds": [
+    "FR-C437-impasse",
+    "FR-C437-ruelle",
+    "FR-C437-avenue",
+    "FR-C437-boulevard",
+    "FR-C437-passant"
+  ],
+  "tex": "french/book/chapters/ch437-petites-rues-et-grandes-avenues.tex"
+}

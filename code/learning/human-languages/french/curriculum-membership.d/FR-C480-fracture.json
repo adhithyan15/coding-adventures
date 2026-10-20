@@ -1,0 +1,11 @@
+{
+  "id": "FR-C480-fracture",
+  "pathSegment": "FR-PATH-480-PLATRE",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "FR-EXT-480-PLATRE",
+      "order": 0
+    }
+  ]
+}

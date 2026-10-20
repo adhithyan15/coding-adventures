@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-R315-revision-308-315",
+    "language": "french",
+    "chapter": 315,
+    "sequence": 17950,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f1afd22181043f26"
+  },
+  "findings": []
+}

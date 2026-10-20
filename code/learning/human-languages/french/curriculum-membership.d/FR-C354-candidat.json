@@ -1,0 +1,11 @@
+{
+  "id": "FR-C354-candidat",
+  "pathSegment": "FR-PATH-354-CANDIDATURE",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FR-EXT-354-CANDIDATURE",
+      "order": 1
+    }
+  ]
+}

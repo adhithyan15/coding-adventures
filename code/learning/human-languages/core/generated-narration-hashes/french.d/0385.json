@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 385,
+  "sourceHash": "fnv1a64:870ea88d50cd1f70",
+  "lessonIds": [
+    "FR-C385-bureaucratie",
+    "FR-C385-demarche",
+    "FR-C385-procedure",
+    "FR-C385-certificat",
+    "FR-C385-attestation"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch385.txt",
+  "json": "french/narration/ch385.json",
+  "textHash": "fnv1a64:b0ece611639da2b0",
+  "jsonHash": "fnv1a64:e3ba5cc61a810f91",
+  "findings": []
+}

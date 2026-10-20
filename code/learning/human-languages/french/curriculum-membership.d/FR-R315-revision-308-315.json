@@ -1,0 +1,11 @@
+{
+  "id": "FR-R315-revision-308-315",
+  "pathSegment": "FR-PATH-315-DEUIL",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "FR-EXT-315-DEUIL",
+      "order": 5
+    }
+  ]
+}

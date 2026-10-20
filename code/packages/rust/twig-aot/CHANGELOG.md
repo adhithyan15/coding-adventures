@@ -15,6 +15,14 @@
   `1 // 0`, runs it, and asserts stdout `-4 1` survived the trap and stderr
   names `Trap.DivZero`.
 
+## Unreleased — direct-call arity check before native codegen
+
+`compile_module_x86_64_to_text` and the arm64 text path now refuse any direct
+`call` whose argument count differs from the in-module callee's parameter count,
+with the new `AotError::CallArityMismatch`. `x86_64-backend` now passes
+parameters beyond the register set on the stack. A short call would therefore
+let the callee read the caller's saved `rbp` and return address as arguments.
+
 ## Unreleased — FLOW-MATIC EOF peek (VM-039a)
 
 Support the zero-argument `input_more` builtin through the shared C runtime.

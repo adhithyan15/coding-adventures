@@ -1,0 +1,11 @@
+{
+  "id": "FR-C311-piece-montee",
+  "pathSegment": "FR-PATH-311-OUI",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FR-EXT-311-OUI",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 301,
+  "sourceHash": "fnv1a64:48c038b382ae1be4",
+  "lessonIds": [
+    "FR-C301-alerte",
+    "FR-C301-alerter",
+    "FR-C301-defibrillateur",
+    "FR-C301-sortie-de-secours",
+    "FR-C301-evacuer"
+  ],
+  "tex": "french/book/chapters/ch301-l-alerte.tex"
+}

@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 370,
+  "sourceHash": "fnv1a64:276e29b2a650625d",
+  "lessonIds": [
+    "FR-C370-imprevu",
+    "FR-C370-previsible",
+    "FR-C370-imprevisible",
+    "FR-C370-adapter",
+    "FR-C370-souple"
+  ],
+  "tex": "french/book/chapters/ch370-les-imprevus.tex"
+}

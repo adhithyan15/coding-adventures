@@ -1,0 +1,14 @@
+{
+  "language": "french",
+  "chapter": 283,
+  "sourceHash": "fnv1a64:90eb61feb22bb19f",
+  "lessonIds": [
+    "FR-C283-diffuser",
+    "FR-C283-diffusion",
+    "FR-C283-filmer",
+    "FR-C283-interviewer",
+    "FR-C283-antenne",
+    "FR-R283-revision-276-283"
+  ],
+  "tex": "french/book/chapters/ch283-a-l-antenne.tex"
+}

@@ -1,0 +1,11 @@
+{
+  "id": "FR-C349-resulter",
+  "pathSegment": "FR-PATH-349-INFLUENCE",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FR-EXT-349-INFLUENCE",
+      "order": 1
+    }
+  ]
+}

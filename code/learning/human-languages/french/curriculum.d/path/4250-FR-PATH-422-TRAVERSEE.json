@@ -1,0 +1,9 @@
+{
+  "id": "FR-PATH-422-TRAVERSEE",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "FR-EXT-422-TRAVERSEE"
+  ],
+  "after": []
+}

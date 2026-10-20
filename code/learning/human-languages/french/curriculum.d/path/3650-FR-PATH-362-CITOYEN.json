@@ -1,0 +1,9 @@
+{
+  "id": "FR-PATH-362-CITOYEN",
+  "spine_node": "SPINE-GIVE-REASONS",
+  "before": [],
+  "inline": [
+    "FR-EXT-362-CITOYEN"
+  ],
+  "after": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "FR-C325-fouille",
+  "pathSegment": "FR-PATH-325-PASSE",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-325-PASSE",
+      "order": 4
+    }
+  ]
+}

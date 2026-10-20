@@ -1,0 +1,11 @@
+{
+  "id": "FR-C505-terrain",
+  "pathSegment": "FR-PATH-505-TERRAIN",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FR-EXT-505-TERRAIN",
+      "order": 3
+    }
+  ]
+}

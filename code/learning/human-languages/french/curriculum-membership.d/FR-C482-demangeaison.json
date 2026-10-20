@@ -1,0 +1,11 @@
+{
+  "id": "FR-C482-demangeaison",
+  "pathSegment": "FR-PATH-482-ALLERGIE",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FR-EXT-482-ALLERGIE",
+      "order": 3
+    }
+  ]
+}

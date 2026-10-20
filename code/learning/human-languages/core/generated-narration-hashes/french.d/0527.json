@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 527,
+  "sourceHash": "fnv1a64:3092847c3c915323",
+  "lessonIds": [
+    "FR-C527-fer-a-repasser",
+    "FR-C527-froisse",
+    "FR-C527-tremper",
+    "FR-C527-penderie",
+    "FR-C527-accrocher"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch527.txt",
+  "json": "french/narration/ch527.json",
+  "textHash": "fnv1a64:b8e855fec961ed94",
+  "jsonHash": "fnv1a64:1c94fb5848697d43",
+  "findings": []
+}

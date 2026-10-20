@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 339,
+  "sourceHash": "fnv1a64:674d28225a3a3d2b",
+  "lessonIds": [
+    "FR-C339-preuve",
+    "FR-C339-evident",
+    "FR-C339-evidence",
+    "FR-C339-incontestable",
+    "FR-C339-manifeste"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch339.txt",
+  "json": "french/narration/ch339.json",
+  "textHash": "fnv1a64:309a1de187f6499e",
+  "jsonHash": "fnv1a64:3f289705b26e416e",
+  "findings": []
+}

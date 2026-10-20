@@ -1,0 +1,11 @@
+{
+  "id": "FR-C414-chariot",
+  "pathSegment": "FR-PATH-414-COUCHETTE",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FR-EXT-414-COUCHETTE",
+      "order": 3
+    }
+  ]
+}

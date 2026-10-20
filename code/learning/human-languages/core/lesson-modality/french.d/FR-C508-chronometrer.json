@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C508-chronometrer",
+    "language": "french",
+    "chapter": 508,
+    "sequence": 27890,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d81e96a2efb09a27"
+  },
+  "findings": []
+}

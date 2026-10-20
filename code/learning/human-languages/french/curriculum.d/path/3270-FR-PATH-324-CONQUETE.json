@@ -1,0 +1,9 @@
+{
+  "id": "FR-PATH-324-CONQUETE",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "FR-EXT-324-CONQUETE"
+  ],
+  "after": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 355,
+  "title": "Quitter son travail",
+  "label": "ch:fr-quitter-son-travail",
+  "canDo": "I can talk about leaving a job: being laid off, a dismissal, resigning, a resignation and the notice period.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "FR-C355-preavis",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 355: I can talk about leaving a job: being laid off, a dismissal, resigning, a resignation and the notice period.",
+    "assesses": [
+      "FR-LEX-C355-DEMISSION-03",
+      "FR-LEX-C355-DEMISSION-04",
+      "FR-LEX-C355-DEMISSION-05"
+    ]
+  }
+}

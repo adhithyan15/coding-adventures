@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C425-sac-de-couchage",
+    "language": "french",
+    "chapter": 425,
+    "sequence": 23600,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:05dcbb410eda02b7"
+  },
+  "findings": []
+}

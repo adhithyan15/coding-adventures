@@ -1,0 +1,19 @@
+{
+  "chapter": 506,
+  "title": "Le résultat",
+  "label": "ch:fr-le-resultat",
+  "canDo": "I can talk about results and rankings.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "FR-C506-vainqueur",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 506: I can talk about results and rankings.",
+    "assesses": [
+      "FR-LEX-C506-RESULTATS-03",
+      "FR-LEX-C506-RESULTATS-04",
+      "FR-LEX-C506-RESULTATS-05"
+    ]
+  }
+}

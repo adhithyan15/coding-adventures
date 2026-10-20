@@ -1,0 +1,11 @@
+{
+  "id": "FR-C388-detenu",
+  "pathSegment": "FR-PATH-388-PEINE",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FR-EXT-388-PEINE",
+      "order": 3
+    }
+  ]
+}

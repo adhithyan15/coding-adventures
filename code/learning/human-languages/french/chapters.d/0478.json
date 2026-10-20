@@ -1,0 +1,19 @@
+{
+  "chapter": 478,
+  "title": "Le visage de près",
+  "label": "ch:fr-le-visage-de-pres",
+  "canDo": "I can name the small parts of the face.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "FR-C478-tempe",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 478: I can name the small parts of the face.",
+    "assesses": [
+      "FR-LEX-C478-VISAGE-03",
+      "FR-LEX-C478-VISAGE-04",
+      "FR-LEX-C478-VISAGE-05"
+    ]
+  }
+}

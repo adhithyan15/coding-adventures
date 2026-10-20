@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 515,
+  "sourceHash": "fnv1a64:87a62e5f19c96192",
+  "lessonIds": [
+    "FR-C515-trac",
+    "FR-C515-replique",
+    "FR-C515-interpreter",
+    "FR-C515-comedien",
+    "FR-C515-applaudissements"
+  ],
+  "tex": "french/book/chapters/ch515-sur-scene.tex"
+}

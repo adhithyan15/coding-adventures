@@ -1,0 +1,9 @@
+{
+  "id": "FR-PATH-295-AVEUX",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "FR-EXT-295-AVEUX"
+  ],
+  "after": []
+}

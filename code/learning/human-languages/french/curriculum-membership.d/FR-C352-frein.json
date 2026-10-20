@@ -1,0 +1,11 @@
+{
+  "id": "FR-C352-frein",
+  "pathSegment": "FR-PATH-352-FREIN",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-352-FREIN",
+      "order": 4
+    }
+  ]
+}

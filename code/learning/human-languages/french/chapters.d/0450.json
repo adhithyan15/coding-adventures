@@ -1,0 +1,19 @@
+{
+  "chapter": 450,
+  "title": "À la caisse",
+  "label": "ch:fr-a-la-caisse",
+  "canDo": "I can pay at the till: the cashier, taking money, charging a card, the card machine and cash.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "FR-C450-liquide",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 450: I can pay at the till: the cashier, taking money, charging a card, the card machine and cash.",
+    "assesses": [
+      "FR-LEX-C450-CAISSE-03",
+      "FR-LEX-C450-CAISSE-04",
+      "FR-LEX-C450-CAISSE-05"
+    ]
+  }
+}

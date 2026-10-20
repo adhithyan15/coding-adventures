@@ -1,0 +1,11 @@
+{
+  "id": "FR-C510-piste",
+  "pathSegment": "FR-PATH-510-GLACE",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-510-GLACE",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "FR-C260-donc",
+  "pathSegment": "FR-PATH-260-OPINION",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FR-EXT-260-OPINION",
+      "order": 1
+    }
+  ]
+}

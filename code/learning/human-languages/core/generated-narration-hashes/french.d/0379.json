@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 379,
+  "sourceHash": "fnv1a64:5850ca4d82b6a0a1",
+  "lessonIds": [
+    "FR-C379-diplome",
+    "FR-C379-epreuve",
+    "FR-C379-mention",
+    "FR-C379-doctorat",
+    "FR-C379-bourse"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch379.txt",
+  "json": "french/narration/ch379.json",
+  "textHash": "fnv1a64:e8f7dd0fae41c612",
+  "jsonHash": "fnv1a64:c48686543324dcef",
+  "findings": []
+}

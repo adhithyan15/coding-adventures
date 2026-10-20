@@ -1,0 +1,11 @@
+{
+  "id": "FR-C404-gonfler",
+  "pathSegment": "FR-PATH-404-CREVAISON",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-404-CREVAISON",
+      "order": 4
+    }
+  ]
+}

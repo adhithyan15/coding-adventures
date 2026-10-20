@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 337,
+  "sourceHash": "fnv1a64:1ea2d3a328387dfb",
+  "lessonIds": [
+    "FR-C337-admettre",
+    "FR-C337-consensus",
+    "FR-C337-compromis",
+    "FR-C337-ceder",
+    "FR-C337-conceder"
+  ],
+  "tex": "french/book/chapters/ch337-trouver-un-accord.tex"
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 530,
+  "title": "Faire la vaisselle",
+  "label": "ch:fr-faire-la-vaisselle",
+  "canDo": "I can talk about doing the dishes.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "FR-C530-torchon",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 530: I can talk about doing the dishes.",
+    "assesses": [
+      "FR-LEX-C530-VAISSELLE-03",
+      "FR-LEX-C530-VAISSELLE-04",
+      "FR-LEX-C530-VAISSELLE-05"
+    ]
+  }
+}

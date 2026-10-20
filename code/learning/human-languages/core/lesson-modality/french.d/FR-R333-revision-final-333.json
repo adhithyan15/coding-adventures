@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-R333-revision-final-333",
+    "language": "french",
+    "chapter": 333,
+    "sequence": 18890,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b98c61ace67e8f1a"
+  },
+  "findings": []
+}

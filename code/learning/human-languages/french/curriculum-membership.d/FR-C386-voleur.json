@@ -1,0 +1,11 @@
+{
+  "id": "FR-C386-voleur",
+  "pathSegment": "FR-PATH-386-ACCUSER",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-386-ACCUSER",
+      "order": 2
+    }
+  ]
+}

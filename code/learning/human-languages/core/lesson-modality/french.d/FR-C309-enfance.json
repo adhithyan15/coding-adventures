@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C309-enfance",
+    "language": "french",
+    "chapter": 309,
+    "sequence": 17640,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:06f29471da465fb0"
+  },
+  "findings": []
+}

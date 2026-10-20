@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C394-perte",
+    "language": "french",
+    "chapter": 394,
+    "sequence": 21980,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:43e6e9c18ee0a3b3"
+  },
+  "findings": []
+}

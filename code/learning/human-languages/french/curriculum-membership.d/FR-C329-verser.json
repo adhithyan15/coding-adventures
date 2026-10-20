@@ -1,0 +1,11 @@
+{
+  "id": "FR-C329-verser",
+  "pathSegment": "FR-PATH-329-FOUETTER",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FR-EXT-329-FOUETTER",
+      "order": 1
+    }
+  ]
+}

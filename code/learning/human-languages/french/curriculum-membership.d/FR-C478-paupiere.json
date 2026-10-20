@@ -1,0 +1,11 @@
+{
+  "id": "FR-C478-paupiere",
+  "pathSegment": "FR-PATH-478-VISAGE",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FR-EXT-478-VISAGE",
+      "order": 1
+    }
+  ]
+}

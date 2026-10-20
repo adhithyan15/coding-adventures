@@ -1,0 +1,8 @@
+{
+  "id": "FR-EXT-302-INCENDIE",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can describe a fire and a blast: the blaze, the extinguisher, an explosion, blowing up and a spark.",
+  "prerequisites": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C327-recette",
+    "language": "french",
+    "chapter": 327,
+    "sequence": 18520,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:828bc95ad5b6f81c"
+  },
+  "findings": []
+}

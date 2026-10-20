@@ -1,0 +1,20 @@
+{
+  "language": "french",
+  "chapter": 291,
+  "sourceHash": "fnv1a64:d4b866f7eb6a9c87",
+  "lessonIds": [
+    "FR-C291-gendarme",
+    "FR-C291-gendarmerie",
+    "FR-C291-patrouiller",
+    "FR-C291-patrouille",
+    "FR-C291-brigade",
+    "FR-R291-revision-284-291"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "french/narration/ch291.txt",
+  "json": "french/narration/ch291.json",
+  "textHash": "fnv1a64:dd2a51144011febf",
+  "jsonHash": "fnv1a64:304a6de882b3c596",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "FR-C315-heritage",
+  "pathSegment": "FR-PATH-315-DEUIL",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-315-DEUIL",
+      "order": 4
+    }
+  ]
+}

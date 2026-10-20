@@ -1,0 +1,19 @@
+{
+  "chapter": 292,
+  "title": "Les enquêteurs",
+  "label": "ch:fr-les-enqueteurs",
+  "canDo": "I can talk about the people who look into a crime and what they find: the investigator, the inspector, the detective, a clue and a print.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "FR-C292-empreinte",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 292: I can talk about the people who look into a crime and what they find: the investigator, the inspector, the detective, a clue and a print.",
+    "assesses": [
+      "FR-LEX-C292-INDICES-03",
+      "FR-LEX-C292-INDICES-04",
+      "FR-LEX-C292-INDICES-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "FR-C269-tandis-que",
+  "pathSegment": "FR-PATH-269-QUAND",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-269-QUAND",
+      "order": 4
+    }
+  ]
+}

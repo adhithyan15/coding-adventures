@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 344,
+  "sourceHash": "fnv1a64:ff78c66d0d221c4a",
+  "lessonIds": [
+    "FR-C344-raisonner",
+    "FR-C344-raisonnement",
+    "FR-C344-conclure",
+    "FR-C344-nuance",
+    "FR-C344-nuancer"
+  ],
+  "tex": "french/book/chapters/ch344-raisonner.tex"
+}

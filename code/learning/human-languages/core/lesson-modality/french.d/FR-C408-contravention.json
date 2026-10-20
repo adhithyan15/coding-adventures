@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C408-contravention",
+    "language": "french",
+    "chapter": 408,
+    "sequence": 22710,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7a6137950f675bf1"
+  },
+  "findings": []
+}

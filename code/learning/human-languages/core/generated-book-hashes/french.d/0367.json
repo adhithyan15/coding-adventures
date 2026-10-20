@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 367,
+  "sourceHash": "fnv1a64:2d5bbd65be953f54",
+  "lessonIds": [
+    "FR-C367-supposer",
+    "FR-C367-hypothese",
+    "FR-C367-presumer",
+    "FR-C367-plausible",
+    "FR-C367-supposition"
+  ],
+  "tex": "french/book/chapters/ch367-supposons.tex"
+}

@@ -1,0 +1,11 @@
+{
+  "id": "FR-C451-crediter",
+  "pathSegment": "FR-PATH-451-BANQUE",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FR-EXT-451-BANQUE",
+      "order": 1
+    }
+  ]
+}

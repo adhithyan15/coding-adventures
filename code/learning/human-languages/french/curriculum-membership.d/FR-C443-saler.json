@@ -1,0 +1,11 @@
+{
+  "id": "FR-C443-saler",
+  "pathSegment": "FR-PATH-443-HIVER",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FR-EXT-443-HIVER",
+      "order": 3
+    }
+  ]
+}

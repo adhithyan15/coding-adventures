@@ -1,0 +1,11 @@
+{
+  "id": "FR-C426-deballer",
+  "pathSegment": "FR-PATH-426-RECEPTION",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-426-RECEPTION",
+      "order": 4
+    }
+  ]
+}

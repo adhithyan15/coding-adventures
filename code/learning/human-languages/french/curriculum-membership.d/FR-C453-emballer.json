@@ -1,0 +1,11 @@
+{
+  "id": "FR-C453-emballer",
+  "pathSegment": "FR-PATH-453-EMBALLAGE",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FR-EXT-453-EMBALLAGE",
+      "order": 1
+    }
+  ]
+}

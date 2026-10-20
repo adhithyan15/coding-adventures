@@ -1,0 +1,8 @@
+{
+  "id": "FR-EXT-286-CHIFFRES",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can report figures: a poll, a final count, a rise, a fall and a statistic.",
+  "prerequisites": []
+}

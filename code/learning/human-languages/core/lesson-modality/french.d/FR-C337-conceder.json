@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C337-conceder",
+    "language": "french",
+    "chapter": 337,
+    "sequence": 19090,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:12b7f598282730d9"
+  },
+  "findings": []
+}

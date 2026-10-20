@@ -1,0 +1,11 @@
+{
+  "id": "FR-C338-absurde",
+  "pathSegment": "FR-PATH-338-DOUTE",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FR-EXT-338-DOUTE",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "FR-C297-derapage",
+  "pathSegment": "FR-PATH-297-ROUTE",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-297-ROUTE",
+      "order": 4
+    }
+  ]
+}

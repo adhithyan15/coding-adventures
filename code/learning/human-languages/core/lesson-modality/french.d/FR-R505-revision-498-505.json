@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-R505-revision-498-505",
+    "language": "french",
+    "chapter": 505,
+    "sequence": 27740,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:dc35aa68a9cc8335"
+  },
+  "findings": []
+}

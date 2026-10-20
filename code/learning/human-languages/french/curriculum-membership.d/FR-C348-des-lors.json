@@ -1,0 +1,11 @@
+{
+  "id": "FR-C348-des-lors",
+  "pathSegment": "FR-PATH-348-GRACE",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FR-EXT-348-GRACE",
+      "order": 3
+    }
+  ]
+}

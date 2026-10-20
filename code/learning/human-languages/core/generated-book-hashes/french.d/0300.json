@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 300,
+  "sourceHash": "fnv1a64:29aa6bc4d6d387d0",
+  "lessonIds": [
+    "FR-C300-secours",
+    "FR-C300-secourir",
+    "FR-C300-reanimer",
+    "FR-C300-garrot",
+    "FR-C300-civiere"
+  ],
+  "tex": "french/book/chapters/ch300-les-secours.tex"
+}

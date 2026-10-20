@@ -1,0 +1,9 @@
+{
+  "id": "FR-PATH-529-TABLE",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "FR-EXT-529-TABLE"
+  ],
+  "after": []
+}

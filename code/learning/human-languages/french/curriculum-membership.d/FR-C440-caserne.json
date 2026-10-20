@@ -1,0 +1,11 @@
+{
+  "id": "FR-C440-caserne",
+  "pathSegment": "FR-PATH-440-QUARTIERS",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-440-QUARTIERS",
+      "order": 4
+    }
+  ]
+}

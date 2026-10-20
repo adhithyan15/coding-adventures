@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 383,
+  "sourceHash": "fnv1a64:387b8484c1732161",
+  "lessonIds": [
+    "FR-C383-exigence",
+    "FR-C383-critere",
+    "FR-C383-eligible",
+    "FR-C383-admission",
+    "FR-C383-exclure"
+  ],
+  "tex": "french/book/chapters/ch383-qui-peut-participer.tex"
+}

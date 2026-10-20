@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 297,
+  "sourceHash": "fnv1a64:32eddc7049ea42bf",
+  "lessonIds": [
+    "FR-C297-carambolage",
+    "FR-C297-chauffard",
+    "FR-C297-exces-de-vitesse",
+    "FR-C297-constat",
+    "FR-C297-derapage"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch297.txt",
+  "json": "french/narration/ch297.json",
+  "textHash": "fnv1a64:49cd05dc5f559b86",
+  "jsonHash": "fnv1a64:da157ddca65bf5b5",
+  "findings": []
+}

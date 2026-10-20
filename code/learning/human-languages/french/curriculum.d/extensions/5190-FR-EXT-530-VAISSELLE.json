@@ -1,0 +1,8 @@
+{
+  "id": "FR-EXT-530-VAISSELLE",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can talk about doing the dishes.",
+  "prerequisites": []
+}

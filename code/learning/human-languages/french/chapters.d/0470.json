@@ -1,0 +1,19 @@
+{
+  "chapter": 470,
+  "title": "Quelle frayeur !",
+  "label": "ch:fr-quelle-frayeur",
+  "canDo": "I can talk about a fright and the relief afterwards.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "FR-C470-rassurer",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 470: I can talk about a fright and the relief afterwards.",
+    "assesses": [
+      "FR-LEX-C470-FRAYEUR-03",
+      "FR-LEX-C470-FRAYEUR-04",
+      "FR-LEX-C470-FRAYEUR-05"
+    ]
+  }
+}

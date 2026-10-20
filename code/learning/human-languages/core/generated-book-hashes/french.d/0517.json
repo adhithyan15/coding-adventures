@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 517,
+  "sourceHash": "fnv1a64:155dace137c5d418",
+  "lessonIds": [
+    "FR-C517-sculpture",
+    "FR-C517-sculpter",
+    "FR-C517-argile",
+    "FR-C517-marbre",
+    "FR-C517-sculpteur"
+  ],
+  "tex": "french/book/chapters/ch517-marbre-et-argile.tex"
+}

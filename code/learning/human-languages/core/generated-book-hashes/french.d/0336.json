@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 336,
+  "sourceHash": "fnv1a64:791b0922ff3255e1",
+  "lessonIds": [
+    "FR-C336-desaccord",
+    "FR-C336-objecter",
+    "FR-C336-objection",
+    "FR-C336-retorquer",
+    "FR-C336-contredire"
+  ],
+  "tex": "french/book/chapters/ch336-pas-d-accord.tex"
+}

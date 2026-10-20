@@ -1,0 +1,11 @@
+{
+  "id": "FR-C264-jespere",
+  "pathSegment": "FR-PATH-264-SENTIMENTS",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FR-EXT-264-SENTIMENTS",
+      "order": 1
+    }
+  ]
+}

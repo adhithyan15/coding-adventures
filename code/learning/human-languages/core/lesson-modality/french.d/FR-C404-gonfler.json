@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C404-gonfler",
+    "language": "french",
+    "chapter": 404,
+    "sequence": 22540,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0c112485d13e7b31"
+  },
+  "findings": []
+}

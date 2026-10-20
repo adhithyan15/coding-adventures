@@ -1,0 +1,11 @@
+{
+  "id": "FR-C302-explosion",
+  "pathSegment": "FR-PATH-302-INCENDIE",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-302-INCENDIE",
+      "order": 2
+    }
+  ]
+}

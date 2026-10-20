@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C445-papeterie",
+    "language": "french",
+    "chapter": 445,
+    "sequence": 24620,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ae09c5a12883f206"
+  },
+  "findings": []
+}

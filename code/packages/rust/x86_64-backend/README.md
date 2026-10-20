@@ -107,6 +107,29 @@ ret                               ret
 Since `push rbp` shifts the inherited 8-mod-16 alignment to 0-mod-16,
 `<frame> ≡ 0 (mod 16)`.
 
+### Arguments beyond the registers
+
+Calls and functions may take more arguments than the ABI's integer
+registers (six for SysV, four for Microsoft x64). The overflow arguments
+travel on the stack in the standard layout:
+
+```
+; caller, for a call with n_stack overflow arguments
+sub  rsp, align16(shadow + 8 * n_stack)
+mov  rax, <arg k>  ;  mov [rsp + shadow + 8*k], rax     ; for each k
+<load register arguments>
+call callee
+add  rsp, align16(shadow + 8 * n_stack)
+
+; callee prologue, after the register spills
+mov  rax, [rbp + 16 + shadow + 8*k]  ;  mov [rbp - slot], rax
+```
+
+`shadow` is 0 on SysV and 32 on Microsoft x64. RAX is the copy scratch
+because it is never an argument register. Every source lives in an
+`rbp`-relative slot, so moving `rsp` for the outgoing area does not
+disturb them.
+
 For Microsoft x64, V1 unconditionally reserves the 32-byte shadow
 space in the prologue (treating every function as potentially
 non-leaf).  Costs at most 32 bytes of unused stack per leaf function;

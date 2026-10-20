@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 456,
+  "sourceHash": "fnv1a64:a777d150f76626ce",
+  "lessonIds": [
+    "FR-C456-ruisseau",
+    "FR-C456-etang",
+    "FR-C456-marais",
+    "FR-C456-patauger",
+    "FR-C456-ruisseler"
+  ],
+  "tex": "french/book/chapters/ch456-ruisseaux-et-marais.tex"
+}

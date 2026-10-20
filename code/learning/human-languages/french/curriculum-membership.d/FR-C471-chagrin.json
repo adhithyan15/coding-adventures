@@ -1,0 +1,11 @@
+{
+  "id": "FR-C471-chagrin",
+  "pathSegment": "FR-PATH-471-DECEPTION",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-471-DECEPTION",
+      "order": 2
+    }
+  ]
+}

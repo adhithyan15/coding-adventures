@@ -1,0 +1,8 @@
+{
+  "id": "FR-EXT-518-EXPOSITION",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can talk about going to an exhibition.",
+  "prerequisites": []
+}

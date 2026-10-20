@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 522,
+  "sourceHash": "fnv1a64:b6a2435674ba2d83",
+  "lessonIds": [
+    "FR-C522-poesie",
+    "FR-C522-bande-dessinee",
+    "FR-C522-polar",
+    "FR-C522-biographie",
+    "FR-C522-conte"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch522.txt",
+  "json": "french/narration/ch522.json",
+  "textHash": "fnv1a64:b169677553c14e88",
+  "jsonHash": "fnv1a64:81481daf8eea58ef",
+  "findings": []
+}

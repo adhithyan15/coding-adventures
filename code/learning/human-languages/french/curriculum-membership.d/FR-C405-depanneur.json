@@ -1,0 +1,11 @@
+{
+  "id": "FR-C405-depanneur",
+  "pathSegment": "FR-PATH-405-DEPANNEUSE",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-405-DEPANNEUSE",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "FR-C525-emission",
+  "pathSegment": "FR-PATH-525-ECRAN",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-525-ECRAN",
+      "order": 2
+    }
+  ]
+}

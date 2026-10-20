@@ -1,0 +1,11 @@
+{
+  "id": "FR-R275-revision-268-275",
+  "pathSegment": "FR-PATH-275-DELAI",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "FR-EXT-275-DELAI",
+      "order": 5
+    }
+  ]
+}

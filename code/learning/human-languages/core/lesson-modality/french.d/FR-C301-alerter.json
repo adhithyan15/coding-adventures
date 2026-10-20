@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C301-alerter",
+    "language": "french",
+    "chapter": 301,
+    "sequence": 17200,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:592f2e781fecbe17"
+  },
+  "findings": []
+}

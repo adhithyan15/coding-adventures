@@ -1,0 +1,11 @@
+{
+  "id": "FR-C270-dans-la-foulee",
+  "pathSegment": "FR-PATH-270-SOUDAIN",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-270-SOUDAIN",
+      "order": 4
+    }
+  ]
+}

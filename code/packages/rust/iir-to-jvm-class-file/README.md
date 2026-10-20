@@ -22,6 +22,17 @@ multiple functions with parameters, labels, and comparison operators.  This crat
 bridges that richer world to the JVM class file format without any loss of
 information through a deprecated intermediate.
 
+## Sizing the operand stack
+
+Every method's `max_stack` is measured, not guessed. After a method's bytecode
+is emitted, `compute_max_stack` walks it the way the verifier does. It starts
+at depth 0, applies each opcode's pops and pushes (a `long` or `double` counts
+as two words), follows both arms of every branch, and keeps the maximum depth
+seen. If a branch join disagrees on depth, the stack underflows, or the
+analysis meets an opcode it does not model, lowering fails with
+`IIRJvmError::StackDepthAnalysis` rather than emitting a class the JVM would
+reject.
+
 ## Why IIR → JVM directly?
 
 The JVM is a **stack machine** with a rich type system.  IIR's named variables

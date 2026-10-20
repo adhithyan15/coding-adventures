@@ -1,0 +1,11 @@
+{
+  "id": "FR-C377-manuel",
+  "pathSegment": "FR-PATH-377-REVISION",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-377-REVISION",
+      "order": 4
+    }
+  ]
+}

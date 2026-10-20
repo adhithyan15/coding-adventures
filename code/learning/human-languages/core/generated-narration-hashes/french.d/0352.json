@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 352,
+  "sourceHash": "fnv1a64:82b7a242a4ef56af",
+  "lessonIds": [
+    "FR-C352-empecher",
+    "FR-C352-entraver",
+    "FR-C352-favoriser",
+    "FR-C352-atout",
+    "FR-C352-frein"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch352.txt",
+  "json": "french/narration/ch352.json",
+  "textHash": "fnv1a64:e8e3fe22056a40c1",
+  "jsonHash": "fnv1a64:4783028740e62307",
+  "findings": []
+}
