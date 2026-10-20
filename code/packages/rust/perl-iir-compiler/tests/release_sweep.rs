@@ -25,7 +25,9 @@
 //! (`subset,case,release,class`, one row per positive case and checked
 //! release). This test regenerates it and fails if the committed file
 //! differs, so a release cannot change class without the CSV changing in the
-//! same PR. To accept a deliberate change:
+//! same PR. To accept a deliberate change (the run that writes the file
+//! fails on purpose, and refuses to run under `CI`/`GITHUB_ACTIONS`, so the
+//! switch can never turn the check into a pass):
 //!
 //! ```text
 //!   PERL_RELEASE_SWEEP_WRITE=1 cargo test -p perl-iir-compiler --test release_sweep
@@ -155,8 +157,14 @@ fn release_classes_csv_matches_the_sweep() {
     let rendered = render(&sweep);
     let path = perl_grammars().join("release_classes.csv");
     if std::env::var_os("PERL_RELEASE_SWEEP_WRITE").is_some() {
+        // Writing and then comparing would always pass, so a write never
+        // counts as a pass, and CI never writes.
+        assert!(
+            std::env::var_os("CI").is_none() && std::env::var_os("GITHUB_ACTIONS").is_none(),
+            "PERL_RELEASE_SWEEP_WRITE is for a developer's checkout, never for CI"
+        );
         std::fs::write(&path, &rendered).unwrap();
-        eprintln!("wrote {}", path.display());
+        panic!("wrote {}; review the diff, then re-run without PERL_RELEASE_SWEEP_WRITE", path.display());
     }
     let committed = std::fs::read_to_string(&path).unwrap_or_default();
     assert!(

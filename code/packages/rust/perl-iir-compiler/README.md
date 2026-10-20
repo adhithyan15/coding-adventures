@@ -88,6 +88,9 @@ and `.reject@perl_nv` where that profile refuses a case).
   `lang-aot`'s `lang_matrix` runs on every backend. After a deliberate change,
   regenerate with
   `PERL_RELEASE_SWEEP_WRITE=1 cargo test -p perl-iir-compiler --test release_sweep`.
+  That run writes the file and then fails on purpose (and refuses to run
+  under `CI` or `GITHUB_ACTIONS`); review the diff and run the test again
+  without the variable.
 
 ## Contract tests (LANG84 C5, C8)
 

@@ -22,7 +22,8 @@
 
 mod common;
 
-use std::process::Command;
+use std::process::{Command, Stdio};
+use std::time::{Duration, Instant};
 
 use common::{corpus, corpus_dir, inventory, lists_subset, Case, Outcome};
 use coding_adventures_perl_parser::SUPPORTED_RELEASES;
@@ -125,7 +126,13 @@ fn pl_int_print_corpus_holds_on_every_claiming_release() {
     let mut tally = std::collections::BTreeMap::new();
     for release in &releases {
         for case in &cases {
-            *tally.entry(check_case(release, case, &budgets)).or_insert(0usize) += 1;
+            let outcome = check_case(release, case, &budgets);
+            // A release whose grammar broke would make every positive case
+            // "not applicable" and pass vacuously; the smallest case must run.
+            if case.name == "add" {
+                assert_eq!(outcome, "ran", "{release}: the baseline case must compile and run");
+            }
+            *tally.entry(outcome).or_insert(0usize) += 1;
         }
     }
     assert_eq!(tally.values().sum::<usize>(), releases.len() * cases.len());
@@ -143,6 +150,58 @@ fn overrides_name_real_profiles() {
             assert!(case.is_positive(), "{}: an override needs the plain .expect", case.name);
         }
     }
+}
+
+/// The CRLF case is only a test while its line ends survive: `.gitattributes`
+/// must keep it `-text` (the repository default `eol=lf` would normalize it on
+/// commit), it must hold CRLF, and no other case may hold a CR at all.
+#[test]
+fn the_crlf_case_keeps_its_carriage_returns() {
+    let mut crlf = 0;
+    for case in corpus() {
+        if case.name == "crlf_layout" {
+            assert!(case.source.contains("\r\n"), "crlf_layout.pl lost its CRLF line ends");
+            assert_eq!(case.source.matches('\r').count(), case.source.matches("\r\n").count(), "bare CR");
+            crlf += 1;
+        } else {
+            assert!(!case.source.contains('\r'), "{}: a CR outside the CRLF case", case.name);
+        }
+    }
+    assert_eq!(crlf, 1);
+    let attributes = std::fs::read_to_string(common::perl_grammars().join("../../../.gitattributes")).unwrap();
+    assert!(
+        attributes.lines().any(|l| l.trim() == "code/grammars/perl/corpus/pl-int-print/crlf_layout.pl -text"),
+        ".gitattributes must keep crlf_layout.pl byte-exact"
+    );
+}
+
+/// Run the host `perl` on one corpus file, contained: no inherited
+/// environment (only `PATH`, to find `perl`), a scratch working directory,
+/// no stdin, and a wall-clock limit. A negative case may be any Perl at
+/// all, since only the compiler has to refuse it, so it must not be able to
+/// hang the suite or read the caller's environment.
+fn run_host_perl(path: &std::path::Path) -> std::process::Output {
+    const LIMIT: Duration = Duration::from_secs(20);
+    let scratch = std::env::temp_dir().join(format!("perl-oracle-{}", std::process::id()));
+    std::fs::create_dir_all(&scratch).unwrap();
+    let mut command = Command::new("perl");
+    command.env_clear().current_dir(&scratch).stdin(Stdio::null()).stdout(Stdio::piped()).stderr(Stdio::piped());
+    if let Some(search) = std::env::var_os("PATH") {
+        command.env("PATH", search);
+    }
+    // The file path as one argument: no shell, no interpolation.
+    let mut child = command.arg(path).spawn().expect("perl ran once already");
+    let started = Instant::now();
+    while child.try_wait().unwrap().is_none() {
+        if started.elapsed() > LIMIT {
+            child.kill().ok();
+            panic!("host perl ran {} for more than {LIMIT:?}", path.display());
+        }
+        std::thread::sleep(Duration::from_millis(10));
+    }
+    let output = child.wait_with_output().unwrap();
+    std::fs::remove_dir_all(&scratch).ok();
+    output
 }
 
 /// The host interpreter for this record: `perl` on PATH, on the 5.38 line
@@ -167,8 +226,7 @@ fn corpus_agrees_with_the_host_perl_oracle() {
     let dir = corpus_dir();
     for case in corpus() {
         assert!(case.cite.contains(&format!("host perl {version} ")), "{}: .cite names {version}", case.name);
-        // The file path as one argument: no shell, no interpolation.
-        let out = Command::new("perl").arg(dir.join(format!("{}.pl", case.name))).output().unwrap();
+        let out = run_host_perl(&dir.join(format!("{}.pl", case.name)));
         let stdout = String::from_utf8_lossy(&out.stdout).into_owned();
         match &case.outcome {
             Outcome::Prints(want) => {

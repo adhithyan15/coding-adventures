@@ -370,15 +370,27 @@ def corpus_cases(report: Report, directory: Path, subset: str) -> set[str] | Non
     corpus = directory / "corpus" / subset
     if not corpus.is_dir():
         return None
+    # A corpus file is a tiny program or record; a large one is a mistake or
+    # an attempt to make the oracle tests slow.
+    max_bytes = 64 * 1024
     if not is_plain(corpus, directory.parent):
         report.error(f"corpus/{subset}: must not be or sit under a symlink")
         return None
     files = []
     for path in corpus.iterdir():
+        shown = printable(repr(path.name))
         if path.is_symlink():
-            report.error(f"corpus/{subset}: {printable(repr(path.name))} is a symlink")
+            report.error(f"corpus/{subset}: {shown} is a symlink")
         elif path.is_file():
             files.append(path.name)
+            if path.stat().st_size > max_bytes:
+                report.error(f"corpus/{subset}: {shown} exceeds {max_bytes} bytes")
+                continue
+            # CRLF line ends are allowed (a case may test them); a bare CR is
+            # not, because it can hide text in terminal and diff views.
+            data = path.read_bytes()
+            if data.count(b"\r") != data.count(b"\r\n"):
+                report.error(f"corpus/{subset}: {shown} has a CR not followed by LF")
     stems: dict[str, set[str]] = {}
     for name in files:
         stem, dot, suffix = name.partition(".")
@@ -402,6 +414,9 @@ def corpus_cases(report: Report, directory: Path, subset: str) -> set[str] | Non
             report.error(f"{where}: .expect has no .cite oracle record")
         if overrides and not positive:
             report.error(f"{where}: a profile override needs the plain .expect")
+        profiles = [o.partition("@")[2] for o in overrides]
+        for profile in sorted({p for p in profiles if profiles.count(p) > 1}):
+            report.error(f"{where}: more than one override for profile {profile}")
         for override in sorted(overrides):
             profile = override.partition("@")[2]
             if not PROFILE_RE.match(profile) or not known_profile(profile):
@@ -419,13 +434,30 @@ def corpus_cases(report: Report, directory: Path, subset: str) -> set[str] | Non
 # ---------------------------------------------------------------------------
 
 
+# A profile is defined by a `name: "<id>"` field of a `ReleaseProfile` literal.
+PROFILE_NAME_RE = re.compile(r'\bname\s*:\s*"([A-Za-z_][A-Za-z0-9_]*)"')
+
+
+def profile_names(rust_packages: Path | None = None) -> set[str]:
+    """Every profile some IIR compiler crate's `profiles.rs` defines.
+
+    Only the string values of `name:` fields count. Matching the bare word
+    anywhere in the file (as phase 2b did) let `pub`, `Double` or a word in a
+    comment pass as a profile, so a misspelled `.expect@<p>` override was
+    accepted here and then silently ignored by the frontend's tests.
+    """
+    root = rust_packages or REPO / "code" / "packages" / "rust"
+    names: set[str] = set()
+    for path in sorted(root.glob("*/src/profiles.rs")):
+        if path.is_symlink():
+            continue
+        names.update(PROFILE_NAME_RE.findall(path.read_text(encoding="utf-8")))
+    return names
+
+
 def known_profile(name: str) -> bool:
-    """A profile is named in some IIR compiler crate's `profiles.rs`."""
-    pattern = re.compile(rf"\b{re.escape(name)}\b")
-    for path in (REPO / "code" / "packages" / "rust").glob("*/src/profiles.rs"):
-        if pattern.search(path.read_text(encoding="utf-8")):
-            return True
-    return False
+    """`name` is a profile some IIR compiler crate's `profiles.rs` defines."""
+    return name in profile_names()
 
 
 def check_rows(report: Report, rows: list[dict[str, str]], subsets: set[str]) -> None:

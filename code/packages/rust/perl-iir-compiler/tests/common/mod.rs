@@ -100,6 +100,9 @@ impl Case {
 pub fn corpus_dir() -> PathBuf {
     let rows = csv_rows(&perl_grammars().join("subsets.csv"));
     let row = rows.iter().find(|row| row["subset"] == SUBSET).expect("subsets.csv declares pl-int-print");
+    // The same rule release_inventory.py enforces: a CSV cell never names a
+    // directory outside the grammar tree.
+    assert_eq!(row["corpus_dir"], format!("corpus/{SUBSET}"), "subsets.csv corpus_dir");
     perl_grammars().join(&row["corpus_dir"])
 }
 
@@ -123,7 +126,11 @@ pub fn corpus() -> Vec<Case> {
     let dir = corpus_dir();
     let mut files: BTreeMap<String, Vec<String>> = BTreeMap::new();
     for entry in std::fs::read_dir(&dir).unwrap_or_else(|e| panic!("{}: {e}", dir.display())) {
-        let name = entry.unwrap().file_name().into_string().expect("UTF-8 file names");
+        let entry = entry.unwrap();
+        // Like release_inventory.py: a corpus file is a plain file, never a
+        // symlink to something outside the repository.
+        assert!(entry.file_type().unwrap().is_file(), "{:?} is not a plain file", entry.path());
+        let name = entry.file_name().into_string().expect("UTF-8 file names");
         let (stem, suffix) = name.split_once('.').unwrap_or_else(|| panic!("{name}: no suffix"));
         files.entry(stem.to_string()).or_default().push(suffix.to_string());
     }
@@ -138,15 +145,22 @@ pub fn corpus() -> Vec<Case> {
                 _ => panic!("{name}: exactly one of .expect and .reject"),
             };
             let mut overrides = BTreeMap::new();
+            let profiles: Vec<&str> = perl_iir_compiler::profiles::PROFILES.iter().map(|p| p.name).collect();
             for suffix in &suffixes {
                 let text = || read(suffix).unwrap();
-                if let Some(profile) = suffix.strip_prefix("expect@") {
-                    overrides.insert(profile.to_string(), Outcome::Prints(printed(&text(), &name)));
+                let (profile, outcome) = if let Some(profile) = suffix.strip_prefix("expect@") {
+                    (profile, Outcome::Prints(printed(&text(), &name)))
                 } else if let Some(profile) = suffix.strip_prefix("reject@") {
-                    overrides.insert(profile.to_string(), Outcome::Rejected(category(&text(), &name)));
+                    (profile, Outcome::Rejected(category(&text(), &name)))
                 } else {
                     assert!(["pl", "expect", "reject", "cite"].contains(&suffix.as_str()), "{name}.{suffix}");
-                }
+                    continue;
+                };
+                // A misspelled profile would never be looked up, so the case
+                // would silently run under the plain outcome instead.
+                assert!(profiles.contains(&profile), "{name}.{suffix}: no such profile in profiles.rs");
+                let earlier = overrides.insert(profile.to_string(), outcome);
+                assert!(earlier.is_none(), "{name}: two overrides for profile {profile}");
             }
             let cite = read("cite").unwrap_or_else(|_| panic!("{name}: every case has a .cite"));
             assert!(cite.starts_with("oracle: "), "{name}.cite must open with its oracle record");

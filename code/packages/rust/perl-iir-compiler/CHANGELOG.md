@@ -25,6 +25,17 @@
   - Fix: the hostile-probe instruction counts assumed a one-instruction
     `ret_void` epilogue; since 4a's `main` returns `i64` 0 (`const 0; ret`)
     they are two, named `EPILOGUE`.
+  - Security-review follow-ups (sibling session; verdict PASS, every low
+    finding fixed): the sweep's `PERL_RELEASE_SWEEP_WRITE` run writes the CSV
+    and then fails on purpose, and refuses to run under `CI` or
+    `GITHUB_ACTIONS`, so the switch can never make the check pass; the corpus
+    readers require `corpus_dir` to be exactly `corpus/pl-int-print`, refuse
+    a non-file entry, refuse an override for a profile `profiles.rs` does not
+    define and refuse two overrides for one profile; every claiming release
+    must run the baseline `add` case; `the_crlf_case_keeps_its_carriage_returns`
+    pins the CRLF bytes and the `.gitattributes` line; the host-`perl` oracle
+    runs each corpus file with a cleared environment (only `PATH`), a scratch
+    working directory, no stdin and a 20 s limit.
   - `the_selected_release_decides_what_lexes` pins the corrected bounds:
     5.38.2 refuses a 251-digit literal; 5.44.0 and 5.45.3 lex 1018 digits and
     refuse 1019.

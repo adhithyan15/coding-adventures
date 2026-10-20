@@ -1324,6 +1324,17 @@ proven by a named test or by `check --matrix`.
   `iir_status` (`the_default_release_claims_pl_int_print`). "Every release
   whose `iir_status` is non-empty" is now the same set as every checked
   release, which is what `cst_contract` walks.
+- **Security review.** A sibling session reviewed the change: verdict PASS,
+  no finding above low, all fixed. `release_inventory.py` now takes profile
+  names only from `name: "<id>"` fields of a `profiles.rs` (matching any
+  word let `pub` or a comment word pass as a profile), refuses two overrides
+  for one profile, a corpus file over 64 KiB and a CR not followed by LF.
+  The sweep's write switch fails the run that writes and refuses CI. The
+  Rust corpus readers repeat the checker's path and symlink rules. Every
+  claiming release must run a baseline case. The CRLF case and its
+  `.gitattributes` line are pinned. The host-`perl` oracle runs each corpus
+  file with a cleared environment, a scratch directory, no stdin and a
+  timeout.
 - **Merge fix.** The 4b hostile probes counted a one-instruction `ret_void`
   epilogue. Since 4a's `main` returns `i64` 0 (`const 0; ret`), the epilogue
   is two instructions.
