@@ -3698,7 +3698,7 @@ mod tests {
         const FRINTM_D0: u32 = 0x1E65_4000;
         const SCVTF_D1_X0: u32 = 0x9E62_0001;
         let words = |bytes: Vec<u8>| -> Vec<u32> {
-            bytes.chunks_exact(4).map(|w| u32::from_le_bytes([w[0], w[1], w[2], w[3]])).collect()
+            bytes.as_chunks::<4>().0.iter().map(|w| u32::from_le_bytes(*w)).collect()
         };
         for (op, frint) in [("real_to_int_trunc", FRINTZ_D0), ("real_to_int_floor", FRINTM_D0)] {
             let w = words(e8_round_module(op, 45, 0.0));
