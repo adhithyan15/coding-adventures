@@ -280,6 +280,28 @@ It does so only after a token that can end an expression: an identifier,
 number, string, `)`, `]`, `}`, or one of `this`/`true`/`false`/`null`/`super`.
 After `=` or `(` the `++` is already prefix (`x =⏎++y` → `x = ++y`).
 
+A `)` that closes an `if`/`while`/`for`/`with` header does **not** end an
+expression. `if (x)⏎++y` has `++y` as its body, so nothing is inserted
+there (`ends_expression_before` finds the matching `(` and checks the keyword).
+
+**Speculative pre-insertion (performance).** Every retry re-parses the whole
+stream, so a semicolon-free file used to cost O(lines × parse). 1,000 lines of
+`a()` took 177 s in a debug build. `speculate_line_semicolons` inserts, in one
+linear pass, the semicolons the retry loop would certainly insert:
+- **Rule 1:** a newline-led identifier, literal or statement keyword after a
+  token that ends an expression. Contextual words and a block-closing `}` are
+  excluded.
+- **Rule 2:** before a `}` that closes a block opened after `)`, `else`, `do`,
+  `try`, `finally`, `;`, `{` or `}`, when the statement inside is
+  unterminated. `=>` bodies are excluded because the grammar buckets
+  `() => {a:1}` as an object.
+
+The retry loop then handles anything left. If the speculated stream fails to
+parse, the plain algorithm runs on the unspeculated stream, so correctness
+never depends on the guess. A unit test checks that both routes give the same
+final stream. 1,000 lines of `a()` now take about 1.5 s, and 1,600
+`function f(){ a() }` about 1.1 s.
+
 **Measured** against the pinned `v20260915` jar at WHITESPACE_ONLY: 23
 semicolon-light shapes (`tests/regression_ws_newline_asi.rs`) are now
 byte-identical. That includes CCR-080's program-final `;` after a `do…while`.
