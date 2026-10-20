@@ -1462,6 +1462,11 @@ backend immediately) come before the enabler-dependent items.
   standard-function wrappers and applied independently to each runtime
   conditional path. Fractional, oversized and dynamic offsets remain
   conservative.
+  Exact whole-number multiplication may scale that sign-rooted integer
+  transform through magnitude `2^53`, including composition with exact
+  additive terms, when every intermediate result remains in the exact binary64
+  integer range. Fractional factors, non-unit divisors, denominator roots,
+  repeated roots, and oversized products remain conservative.
   Globals, captured locals, and other real-name branches remain conservative. Additive composition,
   multiplication, division, and exponentiation preserve it when every operand
   is independently runtime-real or a finite static numeric expression. The

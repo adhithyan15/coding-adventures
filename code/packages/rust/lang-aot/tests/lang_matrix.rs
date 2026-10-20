@@ -5321,6 +5321,15 @@ fn main() { out(1, VALUE); }\n",
         expect: Expect::Stdout("-9.0072E+15"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // ALGOL 60 - exact integer scaling and addition are tracked together on
+    // each runtime-selected path; the false branch computes 2*sign(3.5)+5.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := relay(entier(if choose() then ((entier(sign(left)) * 4) + 3) else ((2 * entier(sign(right))) + 5))); output(result) end",
+        expect: Expect::Stdout("7"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
     // ALGOL 60 — a variable-free false body condition makes its dependency
     // write unreachable, so capped while analysis keeps the stable local.
     Prog {
@@ -23173,6 +23182,32 @@ fn algol_pathwise_maximum_exact_offset_bounded_local_name_actual_runtime_real_ou
             assert!(
                 !toolchain_available,
                 "{backend:?} toolchain is present but the pathwise maximum-exact-offset local name actual did not run"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_pathwise_exact_scaled_local_name_actual_runtime_real_output_runs_on_every_available_standard_backend()
+{
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains(
+                    "relay(entier(if choose() then ((entier(sign(left)) * 4) + 3) else ((2 * entier(sign(right))) + 5)))",
+                )
+        })
+        .expect("the pathwise exact-scaled ALGOL local name-actual program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but the pathwise exact-scaled local name actual did not run"
             );
             continue;
         };
