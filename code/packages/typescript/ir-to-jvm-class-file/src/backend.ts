@@ -883,7 +883,9 @@ export function writeClassFileWithStrategy(
   const payload = Buffer.from(artifact.classBytes).toString("base64");
   const result = spawnSync(
     "python3",
-    ["-c", SECURE_CLASS_WRITER, root, relativePath, payload, strategy],
+    // -I: isolated mode, so neither the working directory nor PYTHON* env
+    // vars can put a planted module ahead of the standard library.
+    ["-I", "-c", SECURE_CLASS_WRITER, root, relativePath, payload, strategy],
     { encoding: "utf8" },
   );
   if (result.error) {
@@ -1061,18 +1063,32 @@ function asLabel(operand: IrOperand): IrLabel {
  * a NUL byte is rejected outright: each could steer the write elsewhere once
  * the operating system reinterprets it.
  *
+ * Two more Windows rewrites are refused on every platform, so a class tree
+ * that writes on Linux also writes (to the same place) on Windows:
+ *
+ * - a component ending in `.` or a space, which Win32 silently strips
+ *   (`demo/.. ` would become `..`);
+ * - a reserved device name such as `NUL`, `CON` or `COM1.class`, with or
+ *   without an extension, which Win32 opens as a device instead of a file.
+ *
  *   demo/Example.class    -> demo/Example.class
  *   //demo//Example.class -> demo/Example.class
  *   ../Example.class      -> JvmBackendError
  *   demo\Example.class    -> JvmBackendError
  *   C:/Example.class      -> JvmBackendError
+ *   demo./Example.class   -> JvmBackendError
+ *   demo/NUL.class        -> JvmBackendError
  */
+const WINDOWS_RESERVED_NAME_RE = /^(CON|PRN|AUX|NUL|COM[0-9]|LPT[0-9])(\..*)?$/i;
+
 function validatedOutputRelativePath(classFilename: string): string {
   const parts = classFilename.split("/").filter(Boolean);
   if (
     parts.length === 0
     || parts.some((component) => component === "." || component === "..")
     || parts.some((component) => /[\\:\0]/.test(component))
+    || parts.some((component) => /[. ]$/.test(component))
+    || parts.some((component) => WINDOWS_RESERVED_NAME_RE.test(component))
   ) {
     throw new JvmBackendError("Resolved class-file path escapes the requested classpath root");
   }
@@ -1120,8 +1136,18 @@ def is_link_like(path):
     if os.path.islink(path):
         return True
     # Windows junctions are reparse points that islink() does not report.
+    # os.path.isjunction only exists from Python 3.12, so also read the
+    # reparse-point bit from lstat(), which Windows Pythons have had far
+    # longer. A missing path is not a link; any other lstat error propagates
+    # and aborts the write.
     isjunction = getattr(os.path, "isjunction", None)
-    return bool(isjunction is not None and isjunction(path))
+    if isjunction is not None and isjunction(path):
+        return True
+    try:
+        attributes = getattr(os.lstat(path), "st_file_attributes", 0)
+    except FileNotFoundError:
+        return False
+    return bool(attributes & 0x400)  # FILE_ATTRIBUTE_REPARSE_POINT
 
 
 missing_parts = []

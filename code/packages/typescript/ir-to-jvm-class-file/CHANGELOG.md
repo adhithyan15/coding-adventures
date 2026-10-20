@@ -18,6 +18,17 @@
 - Reject `classFilename` components containing `\`, `:` or NUL, which
   Windows would treat as separators, drive or stream markers, or truncation
   points.
+- Junctions are now detected on every Windows Python. `os.path.isjunction`
+  only exists from Python 3.12; on older versions the check silently
+  passed, so a junction planted in the output tree could redirect the
+  write. The writer now also reads the reparse-point bit from `os.lstat()`.
+- Reject components ending in `.` or a space, and reserved device names
+  (`CON`, `PRN`, `AUX`, `NUL`, `COM0`-`COM9`, `LPT0`-`LPT9`, with or
+  without an extension). Win32 strips the first and opens the second as a
+  device, so neither would land where the path says.
+- The writer runs as `python3 -I`, so a module planted in the working
+  directory or a `PYTHON*` environment variable cannot shadow the standard
+  library it imports.
 
 ### Added
 

@@ -94,6 +94,13 @@ describe("ir-to-jvm-class-file", () => {
         "demo/\0Example.class",
         "../Example.class",
         "./",
+        "demo./Example.class",
+        "demo/Example.class ",
+        "demo/.. /Example.class",
+        "demo/NUL.class",
+        "con/Example.class",
+        "demo/COM1",
+        "LPT9.tar.class",
       ]) {
         expect(() => writeClassFile({ ...artifact, classFilename }, tempdir)).toThrow(JvmBackendError);
       }
