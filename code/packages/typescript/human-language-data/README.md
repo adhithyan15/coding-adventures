@@ -220,6 +220,7 @@ the discovery mechanism; it has no hand-maintained index, manifest, or aggregate
 | `report.ts` | deterministic duration, prerequisite, book, schema, and modality gap report | ✅ |
 | `lesson-budgets.ts` | explicit idiom, sense, and culture-claim budget measurement | ✅ |
 | `loader.ts` | reads the curriculum off disk | ⛔ (fs) |
+| `lesson-cache.ts` | test-suite-only, content-addressed cache of each track's parsed lessons | ⛔ (fs) |
 | `cli.ts` | `validate` command + report | ⛔ (fs) |
 | `report-cli.ts` | prints JSON or text for CI artifact capture | ⛔ (fs) |
 | `book-cli.ts` | writes or checks generated chapters and their hash manifest | ⛔ (fs) |
@@ -232,6 +233,29 @@ the discovery mechanism; it has no hand-maintained index, manifest, or aggregate
 Only the modules marked `fs` touch the filesystem (declared in
 `required_capabilities.json`); everything the app relies on is pure and unit-tested
 against inline fixtures.
+
+### Running the tests: the parsed-lesson cache
+
+About 200 of the suite's test files read the real corpus, and Vitest runs each
+file in its own module graph, so each one used to parse all ~38,000 lessons
+again (123 full-corpus parses and ~1,250 s of CPU per run). The suite now turns
+on `src/lesson-cache.ts`:
+
+- `tests/setup/warm-lesson-cache.ts` (Vitest `globalSetup`) parses the real
+  corpus once, before any worker starts, and stores one entry per track under
+  `node_modules/.cache/human-language-data/lessons/`.
+- `tests/setup/lesson-cache.ts` (Vitest `setupFiles`) turns the cache on in
+  every worker, for the real curriculum root only.
+
+Each entry is named by a SHA-256 of that track's lesson **bytes**, its script,
+the package's own source and the V8 version, so editing any lesson (or any
+parser code) is a miss and can never be answered from an old parse. Entries
+are read only from a private (0700) directory, only when they are regular 0600
+files owned by the current user, never through a symlink, and only when their
+embedded SHA-256 matches; anything else is a miss and the lessons are parsed
+from disk. The cache is off on Windows and in every CLI process — `generate:*`
+and `check:*` always parse from disk. Deleting `node_modules/.cache` is always
+safe.
 
 ## Validation rules (the CI gate)
 
