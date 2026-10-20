@@ -3515,6 +3515,30 @@ fn lower_function(
                         code.extend_from_slice(&mref.to_be_bytes());
                         emit_istore(&mut code, dest_slot);
                     }
+                    "write_i64" => {
+                        // LANG83 PR1b — decimal, NO newline, straight to
+                        // `System.out.print(J)V` (no host class needed). Every
+                        // other output path also ends in `System.out`, so the
+                        // stream stays ordered.
+                        let val_name = match instr.srcs.get(1) {
+                            Some(Operand::Var(s)) => s.clone(),
+                            _ => return Err(IIRJvmError::InvalidOperand {
+                                function: fname.clone(),
+                                detail: "call_builtin \"write_i64\" requires srcs[1] = Operand::Var(val:i64)".to_string(),
+                            }),
+                        };
+                        let (val_slot, val_type) = lookup_var(&val_name)?;
+                        let out_ref = cp.add_fieldref("java/lang/System", "out", "Ljava/io/PrintStream;");
+                        code.push(GETSTATIC);
+                        code.extend_from_slice(&out_ref.to_be_bytes());
+                        emit_typed_load(&mut code, val_slot, val_type);
+                        if val_type == JvmType::Int {
+                            code.push(I2L);
+                        }
+                        let print_ref = cp.add_methodref("java/io/PrintStream", "print", "(J)V");
+                        code.push(INVOKEVIRTUAL);
+                        code.extend_from_slice(&print_ref.to_be_bytes());
+                    }
                     "print_i64" => {
                         // print_i64 takes one i64 (`long` on the JVM) arg and
                         // returns void.  This is BASIC's `PRINT` lowered: the
@@ -4536,6 +4560,90 @@ fn lower_function(
                 code.extend_from_slice(&println_ref.to_be_bytes());
             }
 
+            // ── LANG83 PR1b: floor division ──────────────────────────────────
+            //
+            // `Math.floorDiv(JJ)J` / `Math.floorMod(JJ)J` (Java 8+) give the
+            // floor quotient / remainder, but their edges are not LANG83's:
+            // a zero divisor throws `ArithmeticException` (not a kind-naming
+            // trap, and without flushing) and `floorDiv(MIN, -1)` silently
+            // returns `MIN`. So both edges are tested first:
+            //
+            //   lload b; lconst_0; lcmp; ifne +T; <trap Trap.DivZero>
+            //   div: lload b; iconst_m1; i2l; lcmp; ifne +X;
+            //        lload a; ldc2_w MIN; lcmp; ifne +T; <trap Trap.Overflow>
+            //   lload a; lload b; invokestatic java/lang/Math.floorDiv(JJ)J; lstore dest
+            //
+            // `floorMod(MIN, -1)` is 0 (`lrem` does not overflow), as LANG83 wants.
+            "i64_div_floor" | "i64_mod_floor" => {
+                use interpreter_ir::exception_kind::{TRAP_DIV_ZERO, TRAP_OVERFLOW};
+                let want_mod = instr.op == "i64_mod_floor";
+                let (a, b) = two_srcs(func, instr, &slots)?;
+                let dest = instr.dest.as_ref().ok_or_else(|| IIRJvmError::InvalidOperand {
+                    function: fname.clone(),
+                    detail: format!("{} must have a dest", instr.op),
+                })?;
+                let (dest_slot, dest_type) = lookup_var(dest)?;
+                if a.1 != JvmType::Long || b.1 != JvmType::Long || dest_type != JvmType::Long {
+                    return Err(IIRJvmError::UnsupportedType {
+                        function: fname.clone(),
+                        type_hint: instr.type_hint.clone(),
+                    });
+                }
+                let zero_trap = lang83_trap_bytes(cp, TRAP_DIV_ZERO);
+                emit_lload(&mut code, b.0);
+                code.push(LCONST_0);
+                code.push(LCMP);
+                emit_skip_if_ne(&mut code, zero_trap.len());
+                code.extend_from_slice(&zero_trap);
+                if !want_mod {
+                    let ovf_trap = lang83_trap_bytes(cp, TRAP_OVERFLOW);
+                    let mut min_check: Vec<u8> = Vec::new();
+                    emit_lload(&mut min_check, a.0);
+                    min_check.push(LDC2_W);
+                    min_check.extend_from_slice(&cp.add_long(i64::MIN).to_be_bytes());
+                    min_check.push(LCMP);
+                    emit_skip_if_ne(&mut min_check, ovf_trap.len());
+                    min_check.extend_from_slice(&ovf_trap);
+                    emit_lload(&mut code, b.0);
+                    code.push(ICONST_M1);
+                    code.push(I2L);
+                    code.push(LCMP);
+                    emit_skip_if_ne(&mut code, min_check.len());
+                    code.extend_from_slice(&min_check);
+                }
+                emit_lload(&mut code, a.0);
+                emit_lload(&mut code, b.0);
+                let method = if want_mod { "floorMod" } else { "floorDiv" };
+                let mref = cp.add_methodref("java/lang/Math", method, "(JJ)J");
+                code.push(INVOKESTATIC);
+                code.extend_from_slice(&mref.to_be_bytes());
+                emit_lstore(&mut code, dest_slot);
+            }
+
+            // ── LANG83 PR1b: `trap "<kind>"` ─────────────────────────────────
+            //
+            //   getstatic System.out; invokevirtual PrintStream.flush()V
+            //   new RuntimeException; dup; ldc_w "<kind>"
+            //   invokespecial RuntimeException.<init>(String)V; athrow
+            //
+            // Uncaught, the JVM prints `Exception in thread "main"
+            // java.lang.RuntimeException: Trap.User` on stderr and exits 1 —
+            // after the flush, so earlier `System.out` output is never lost.
+            // Class files are version 49, so the old type-inferring verifier
+            // accepts the dead code after `athrow` without a StackMapTable.
+            "trap" => {
+                let kind = match instr.srcs.as_slice() {
+                    [Operand::Str(k)] if interpreter_ir::exception_kind::is_registered_trap_kind(k) => k.clone(),
+                    other => {
+                        return Err(IIRJvmError::InvalidOperand {
+                            function: fname.clone(),
+                            detail: format!("trap requires srcs = [Operand::Str(registered trap kind)], got {other:?}"),
+                        })
+                    }
+                };
+                code.extend_from_slice(&lang83_trap_bytes(cp, &kind));
+            }
+
             // ── Unknown op ───────────────────────────────────────────────────
             //
             // If we reach here, the validator missed something or an opcode was
@@ -4652,6 +4760,45 @@ fn one_src(
             detail: format!("{} expects a Var source", instr.op),
         }),
     }
+}
+
+// ── LANG83 PR1b helpers ──────────────────────────────────────────────────────
+
+const NEW: u8 = 0xBB;           // new <class>           (2-byte CP index)
+const INVOKESPECIAL: u8 = 0xB7; // invokespecial <method> (2-byte CP index)
+const ATHROW: u8 = 0xBF;        // throw the Throwable on TOS
+
+/// The self-contained trap sequence for `kind` (LANG83): flush `System.out`,
+/// then throw `new RuntimeException(kind)`. A fixed 17 bytes (`ldc_w`, never
+/// the 2-byte `ldc`), so callers can branch over it with a known offset.
+fn lang83_trap_bytes(cp: &mut ConstantPoolBuilder, kind: &str) -> Vec<u8> {
+    let out_ref = cp.add_fieldref("java/lang/System", "out", "Ljava/io/PrintStream;");
+    let flush_ref = cp.add_methodref("java/io/PrintStream", "flush", "()V");
+    let exc_class = cp.add_class("java/lang/RuntimeException");
+    let kind_str = cp.add_string(kind);
+    let init_ref = cp.add_methodref("java/lang/RuntimeException", "<init>", "(Ljava/lang/String;)V");
+    let mut b = Vec::with_capacity(17);
+    b.push(GETSTATIC);
+    b.extend_from_slice(&out_ref.to_be_bytes());
+    b.push(INVOKEVIRTUAL);
+    b.extend_from_slice(&flush_ref.to_be_bytes());
+    b.push(NEW);
+    b.extend_from_slice(&exc_class.to_be_bytes());
+    b.push(DUP);
+    b.push(LDC_W);
+    b.extend_from_slice(&kind_str.to_be_bytes());
+    b.push(INVOKESPECIAL);
+    b.extend_from_slice(&init_ref.to_be_bytes());
+    b.push(ATHROW);
+    debug_assert_eq!(b.len(), 17);
+    b
+}
+
+/// `ifne +(3 + skip)` — jump over the next `skip` bytes when TOS int != 0.
+fn emit_skip_if_ne(code: &mut Vec<u8>, skip: usize) {
+    let offset = i16::try_from(3 + skip).expect("LANG83 trap sequences are short");
+    code.push(IFNE);
+    code.extend_from_slice(&offset.to_be_bytes());
 }
 
 /// Extract (slot, type) for both sources of a binary instruction (must both be Vars).

@@ -1,5 +1,29 @@
 # Changelog — iir-to-jvm-class-file
 
+## [0.37.0] — 2026-10-19 (LANG83 PR1b — floor division, `trap`, `write_i64`)
+
+- **`i64_div_floor` / `i64_mod_floor`** ([LANG83](../../../specs/LANG83-iir-standard-operation-registry.md)) →
+  `invokestatic java/lang/Math.floorDiv(JJ)J` / `floorMod(JJ)J`, preceded by
+  explicit `lcmp`/`ifne` checks: a zero divisor traps `Trap.DivZero` (instead
+  of `ArithmeticException`) and (div) `MIN / -1` traps `Trap.Overflow` (instead
+  of `floorDiv` silently returning `MIN`). `floorMod(MIN, -1)` is already 0.
+  Operands and dest must be `long`.
+- **`trap "<kind>"`** → a fixed 17-byte sequence: `System.out.flush()`, then
+  `throw new RuntimeException("<kind>")` (`ldc_w` so branch offsets over it are
+  constant). Uncaught, the JVM reports `java.lang.RuntimeException: <kind>` on
+  stderr and exits 1, after earlier output was flushed. Class files stay
+  version 49, so the type-inferring verifier accepts the dead code after
+  `athrow` without a `StackMapTable`.
+- **`write_i64`** → `System.out.print(J)V` inline (no host class), the same
+  `PrintStream` every other output path ends in.
+- `op_support`: the four PR1b ops are `Lowered`; `write_i64` joins
+  `CALL_BUILTIN_SUPPORTED_NAMES`.
+- Tests (`tests/lang83_pr1b.rs`): bytecode shape — both guards and their
+  `ifne` targets, the trap sequence resolved through the constant pool
+  (flush before `athrow`, kind string), `floorDiv`/`floorMod` refs, `write_i64`'s
+  `print(J)V`, unregistered kinds refused. Real-`java` execution is in
+  `lang-aot`'s `op_conformance` JVM column.
+
 ## [0.36.0] — 2026-10-19 (LANG83 PR1a — standard operation support)
 
 - **LANG83 op support.** New `op_support` module exporting `OP_SUPPORT` and
