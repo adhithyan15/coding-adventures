@@ -1,0 +1,13 @@
+{
+  "language": "latin",
+  "chapter": 413,
+  "sourceHash": "fnv1a64:db150ce2ba1f6c58",
+  "lessonIds": [
+    "LA-C413-condemno",
+    "LA-C413-damnatio",
+    "LA-C413-absolutio",
+    "LA-C413-deprecor",
+    "LA-C413-patrocinium"
+  ],
+  "tex": "latin/book/chapters/ch413-the-verdict.tex"
+}

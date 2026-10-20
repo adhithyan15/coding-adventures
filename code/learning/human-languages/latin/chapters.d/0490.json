@@ -1,0 +1,19 @@
+{
+  "chapter": 490,
+  "title": "Sadness and grief",
+  "label": "ch:la-sadness-and-grief",
+  "canDo": "I can talk about sadness and grief.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "LA-C490-luctuosus",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 490: I can talk about sadness and grief.",
+    "assesses": [
+      "LA-LEX-C490-MAER-03",
+      "LA-LEX-C490-MAER-04",
+      "LA-LEX-C490-MAER-05"
+    ]
+  }
+}

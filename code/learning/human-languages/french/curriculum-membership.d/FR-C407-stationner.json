@@ -1,0 +1,11 @@
+{
+  "id": "FR-C407-stationner",
+  "pathSegment": "FR-PATH-407-STATIONNEMENT",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FR-EXT-407-STATIONNEMENT",
+      "order": 1
+    }
+  ]
+}

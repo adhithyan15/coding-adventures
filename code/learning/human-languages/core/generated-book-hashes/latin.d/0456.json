@@ -1,0 +1,13 @@
+{
+  "language": "latin",
+  "chapter": 456,
+  "sourceHash": "fnv1a64:3846f53f64307d13",
+  "lessonIds": [
+    "LA-C456-inquilinus",
+    "LA-C456-oppidanus",
+    "LA-C456-incola",
+    "LA-C456-incolo",
+    "LA-C456-habitator"
+  ],
+  "tex": "latin/book/chapters/ch456-tenant-townsman-resident-to-live-in-occupant.tex"
+}

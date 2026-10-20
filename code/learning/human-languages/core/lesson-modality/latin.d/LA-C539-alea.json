@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C539-alea",
+    "language": "latin",
+    "chapter": 539,
+    "sequence": 28560,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4369d8bdcff585d0"
+  },
+  "findings": []
+}

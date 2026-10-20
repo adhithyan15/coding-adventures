@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C369-partito",
+    "language": "italian",
+    "chapter": 369,
+    "sequence": 21130,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4e2c546a34b8dd16"
+  },
+  "findings": []
+}

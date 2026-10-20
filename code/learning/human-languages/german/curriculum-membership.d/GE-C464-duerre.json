@@ -1,0 +1,11 @@
+{
+  "id": "GE-C464-duerre",
+  "pathSegment": "GE-PATH-464-HITZEWELLE",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GE-EXT-464-HITZEWELLE",
+      "order": 1
+    }
+  ]
+}

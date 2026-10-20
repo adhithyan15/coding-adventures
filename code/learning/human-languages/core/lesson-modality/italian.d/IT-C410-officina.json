@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C410-officina",
+    "language": "italian",
+    "chapter": 410,
+    "sequence": 23390,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c44359c1115477bb"
+  },
+  "findings": []
+}

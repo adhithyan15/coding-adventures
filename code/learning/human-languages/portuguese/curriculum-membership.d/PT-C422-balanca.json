@@ -1,0 +1,11 @@
+{
+  "id": "PT-C422-balanca",
+  "pathSegment": "PT-PATH-422-BAGAGENS",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PT-EXT-422-BAGAGENS",
+      "order": 1
+    }
+  ]
+}

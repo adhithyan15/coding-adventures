@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 333,
+  "sourceHash": "fnv1a64:3e1a1f45643a1a54",
+  "lessonIds": [
+    "GE-C333-widersprechen",
+    "GE-C333-widerspruch",
+    "GE-C333-einwand",
+    "GE-C333-einwenden",
+    "GE-C333-bestreiten"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch333.txt",
+  "json": "german/narration/ch333.json",
+  "textHash": "fnv1a64:bd548f5b8eff3596",
+  "jsonHash": "fnv1a64:68b81dd5a51541e0",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "ES-C528-terremoto",
+  "pathSegment": "ES-PATH-528-DESASTRE",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ES-EXT-528-DESASTRE",
+      "order": 3
+    }
+  ]
+}

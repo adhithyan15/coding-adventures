@@ -1,0 +1,9 @@
+{
+  "id": "IT-PATH-422-BARCA",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "IT-EXT-422-BARCA"
+  ],
+  "after": []
+}

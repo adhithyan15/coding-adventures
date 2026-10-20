@@ -1,0 +1,11 @@
+{
+  "id": "IT-C524-colpo-di-scena",
+  "pathSegment": "IT-PATH-524-ROMANZO",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "IT-EXT-524-ROMANZO",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 351,
+  "sourceHash": "fnv1a64:95fd52d2abf132e7",
+  "lessonIds": [
+    "PT-C351-impacto",
+    "PT-C351-repercussao",
+    "PT-C351-implicar",
+    "PT-C351-acarretar",
+    "PT-C351-desencadear"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch351.txt",
+  "json": "portuguese/narration/ch351.json",
+  "textHash": "fnv1a64:bd27bd6810370a47",
+  "jsonHash": "fnv1a64:6cf880b122b677d4",
+  "findings": []
+}

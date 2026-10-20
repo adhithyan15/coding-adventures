@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C352-clibanus",
+    "language": "latin",
+    "chapter": 352,
+    "sequence": 18960,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:31f673bc41a2e9a4"
+  },
+  "findings": []
+}

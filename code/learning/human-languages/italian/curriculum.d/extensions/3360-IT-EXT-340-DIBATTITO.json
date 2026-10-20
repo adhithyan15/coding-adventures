@@ -1,0 +1,8 @@
+{
+  "id": "IT-EXT-340-DIBATTITO",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can take part in a debate: state a thesis, build an argument and try to persuade with a convincing reason.",
+  "prerequisites": []
+}

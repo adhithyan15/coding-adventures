@@ -1,0 +1,19 @@
+{
+  "chapter": 389,
+  "title": "La burocrazia",
+  "label": "ch:it-la-burocrazia",
+  "canDo": "I can deal with red tape: a file of paperwork, the procedure, a request and a certificate.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "IT-C389-certificato",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 389: I can deal with red tape: a file of paperwork, the procedure, a request and a certificate.",
+    "assesses": [
+      "IT-LEX-C389-PRATICA-03",
+      "IT-LEX-C389-PRATICA-04",
+      "IT-LEX-C389-PRATICA-05"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-R284-advice-and-reasons",
+    "language": "latin",
+    "chapter": 284,
+    "sequence": 15550,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8358519853712d66"
+  },
+  "findings": []
+}

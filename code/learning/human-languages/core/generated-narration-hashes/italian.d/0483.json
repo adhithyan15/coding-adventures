@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 483,
+  "sourceHash": "fnv1a64:2df450ecc086d888",
+  "lessonIds": [
+    "IT-C483-livido",
+    "IT-C483-graffio",
+    "IT-C483-scottatura",
+    "IT-C483-inciampare",
+    "IT-C483-tagliarsi"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch483.txt",
+  "json": "italian/narration/ch483.json",
+  "textHash": "fnv1a64:1f63ed8d916b7312",
+  "jsonHash": "fnv1a64:10632d80a65c227f",
+  "findings": []
+}

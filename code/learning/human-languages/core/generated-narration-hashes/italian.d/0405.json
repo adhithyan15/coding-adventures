@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 405,
+  "sourceHash": "fnv1a64:8ddbce3deba1549d",
+  "lessonIds": [
+    "IT-C405-casello",
+    "IT-C405-corsia",
+    "IT-C405-tangenziale",
+    "IT-C405-svincolo",
+    "IT-C405-sorpassare"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch405.txt",
+  "json": "italian/narration/ch405.json",
+  "textHash": "fnv1a64:6b3aac4e713522ee",
+  "jsonHash": "fnv1a64:d975eacc853c198f",
+  "findings": []
+}

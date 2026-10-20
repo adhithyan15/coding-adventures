@@ -1,0 +1,11 @@
+{
+  "id": "FR-C521-narrateur",
+  "pathSegment": "FR-PATH-521-AUTEURS",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FR-EXT-521-AUTEURS",
+      "order": 1
+    }
+  ]
+}

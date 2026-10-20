@@ -1,0 +1,19 @@
+{
+  "chapter": 515,
+  "title": "Lesões e batota",
+  "label": "ch:pt-lesoes-e-batota",
+  "canDo": "I can talk about injuries, cheating and the changing room.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "PT-C515-batota",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 515: I can talk about injuries, cheating and the changing room.",
+    "assesses": [
+      "PT-LEX-C515-LESAO-03",
+      "PT-LEX-C515-LESAO-04",
+      "PT-LEX-C515-LESAO-05"
+    ]
+  }
+}

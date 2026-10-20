@@ -1,0 +1,11 @@
+{
+  "id": "LA-C281-eram",
+  "pathSegment": "LA-PATH-281-SCAENA",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "LA-EXT-281-SCAENA",
+      "order": 1
+    }
+  ]
+}

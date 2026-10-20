@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 325,
+  "sourceHash": "fnv1a64:443681fe13a53895",
+  "lessonIds": [
+    "IT-C325-principe",
+    "IT-C325-principessa",
+    "IT-C325-regina",
+    "IT-C325-regno",
+    "IT-C325-regnare"
+  ],
+  "tex": "italian/book/chapters/ch325-nel-regno-lontano.tex"
+}

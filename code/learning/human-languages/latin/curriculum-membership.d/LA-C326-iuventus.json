@@ -1,0 +1,11 @@
+{
+  "id": "LA-C326-iuventus",
+  "pathSegment": "LA-PATH-326-SENECTUS",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "LA-EXT-326-SENECTUS",
+      "order": 1
+    }
+  ]
+}

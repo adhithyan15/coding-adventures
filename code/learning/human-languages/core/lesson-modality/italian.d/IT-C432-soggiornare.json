@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C432-soggiornare",
+    "language": "italian",
+    "chapter": 432,
+    "sequence": 24510,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6d672d9b7bc61149"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "IT-C495-fratellastro",
+  "pathSegment": "IT-PATH-495-FAMIGLIE",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "IT-EXT-495-FAMIGLIE",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "IT-C464-brucare",
+  "pathSegment": "IT-PATH-464-SELVATICI",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "IT-EXT-464-SELVATICI",
+      "order": 4
+    }
+  ]
+}

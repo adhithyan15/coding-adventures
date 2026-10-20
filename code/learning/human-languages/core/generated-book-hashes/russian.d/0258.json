@@ -1,0 +1,9 @@
+{
+  "language": "russian",
+  "chapter": 258,
+  "sourceHash": "fnv1a64:344b62b5971bcb00",
+  "lessonIds": [
+    "RU-W258-own-line"
+  ],
+  "tex": "russian/book/chapters/ch258-writing-my-own-line.tex"
+}

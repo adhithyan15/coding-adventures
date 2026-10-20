@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C312-karussell",
+    "language": "german",
+    "chapter": 312,
+    "sequence": 17080,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ad2fa12df71b58e3"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "FR-C333-etaler",
+  "pathSegment": "FR-PATH-333-PETRIR",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FR-EXT-333-PETRIR",
+      "order": 3
+    }
+  ]
+}

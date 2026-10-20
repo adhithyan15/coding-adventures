@@ -1,0 +1,474 @@
+{
+  "version": 1,
+  "language": "italian",
+  "chapter": 265,
+  "title": "Secondo Me --- An Opinion, and What Follows",
+  "drivablePrefix": 3,
+  "sourceHash": "fnv1a64:247cf5eda3500bc5",
+  "lessons": [
+    {
+      "id": "IT-C265-secondo-me",
+      "sequence": 15790,
+      "title": "secondo me — following me, which is to say, in my opinion",
+      "headword": "secondo me",
+      "romanization": "secondo me",
+      "gloss": "in my opinion — literally 'following me', and the ordinal second, the one that follows, doing a new job",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:242a0e077aa1b4ca",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"the second\". (Il secondo.) Then \"I think that\". (Penso che.)"
+            },
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A story says what happened. Giving reasons starts one step earlier, with what you think about it."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: secondo me",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "secondo me — \"in my opinion\", \"if you ask me\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Secondo me il treno è in ritardo. — If you ask me, the train is late. Secondo me è vero. — In my opinion it's true."
+            },
+            {
+              "kind": "speech",
+              "text": "The me is the stressed pronoun of per me, and the others follow it: secondo te?, \"what do you think?\", is the easiest way to hand the opinion back to the other person."
+            },
+            {
+              "kind": "speech",
+              "text": "And after secondo me the verb stays plain. Chapter thirty-one warned that careful Italian bends the verb after penso che into the congiuntivo. Secondo me asks for nothing of the kind: what follows is an ordinary sentence. That makes it the safest opinion-opener you own."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: credo di sì",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "You have credere, \"to believe\". Its \"I\" form is credo, and two short answers built on it are worth more than the verb:"
+            },
+            {
+              "kind": "speech",
+              "text": "Credo di sì. — I think so. Credo di no. — I don't think so."
+            },
+            {
+              "kind": "speech",
+              "text": "The di has no English twin; Italian will not drop it. Credo che … also exists and behaves exactly like penso che, careful congiuntivo and all."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The phrase, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "secondo is inherited from Latin secundum, \"following, according to\" (EtymDB 2.1), from the verb sequī, \"to follow\" (Lewis & Short, under secundus). The ordinal secondo is the same word: the second is the one that follows the first. Secondo me is \"following me\", the view as it looks from where I stand. English second, sequence and consequence share it."
+            },
+            {
+              "kind": "speech",
+              "text": "credo comes from Latin crēdere, \"to trust, to believe\" (EtymDB 2.1)."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Secondo me il treno è in ritardo.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Secondo me il treno è in ritardo.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hand it back — Secondo te?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: hand it back — *Secondo te?*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "answer Il treno è in ritardo? both ways — Credo di sì. then Credo di no.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: answer *Il treno è in ritardo?* both ways — *Credo di sì.* then *Credo di no.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "secondo, the ordinal, then secondo me — one word, two jobs",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *secondo*, the ordinal, then *secondo me* — one word, two jobs]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does secondo me say, word for word? (Following me.) Why is it safer than penso che? (The verb after it stays plain.) Say \"I think so\". (Credo di sì.) And which Latin verb is behind both secondo and sequence? (Sequī, \"to follow\".)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "IT-C265-cosi",
+      "sequence": 15800,
+      "title": "quindi, così — the arrow that points forward",
+      "headword": "quindi, così",
+      "romanization": "quindi, così",
+      "gloss": "so — two words you already own, pointing forward from a reason to what follows, where perché points back",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:23c0e2c2568d450a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Give an opinion with a reason: \"If you ask me, it's going to rain, because there's no sun.\" (Secondo me piove, perché non c'è il sole.)"
+            },
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Perché runs from the claim back to its reason. This lesson runs the other way."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: the two arrows",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The same two facts, in opposite orders:"
+            },
+            {
+              "kind": "speech",
+              "text": "Ho preso l'autobus perché pioveva. — I took the bus because it was raining. Pioveva, quindi ho preso l'autobus. — It was raining, so I took the bus."
+            },
+            {
+              "kind": "speech",
+              "text": "Perché points back, from what happened to its cause. Quindi points forward, from the cause to what followed. Which one you reach for depends only on which fact you want to say first, and that is a choice about emphasis, not about grammar."
+            },
+            {
+              "kind": "speech",
+              "text": "Notice the tenses keep their jobs. Pioveva is the scene, the reason; ho preso is the event, the consequence."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: così, the spoken so",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "così can stand in the same place: Pioveva, così ho preso l'autobus. It is lighter and more conversational than quindi, which suits a letter or a report as well as speech. Both are right; così is what you will hear most at a table, quindi what you will read most."
+            },
+            {
+              "kind": "speech",
+              "text": "You have been saying this word since chapter two. Così così, \"so-so\", is così twice: \"this way, that way\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "così comes from Latin eccum sīc, \"look, thus\" (EtymDB 2.1 lists it as a compound of the two). The sīc, \"thus, in this way\", is the one English borrowed whole as sic, the mark an editor writes after a quoted mistake: \"thus it stood\". Quindi has no row in EtymDB 2.1. The usual account takes it back to eccum inde, \"look, from there\", and Latin inde did mean \"from that place\" (Lewis & Short): from there, and so, therefore."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "back — Ho preso l'autobus perché pioveva.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: back — *Ho preso l'autobus perché pioveva.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "forward — Pioveva, quindi ho preso l'autobus.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: forward — *Pioveva, quindi ho preso l'autobus.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the same, at a table — Pioveva, così ho preso l'autobus.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the same, at a table — *Pioveva, così ho preso l'autobus.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Secondo me piove, quindi resto a casa.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Secondo me piove, quindi resto a casa.*]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which way does perché point, and which way quindi? (Perché back to the cause; quindi forward to the consequence.) Which of quindi and così is the lighter, spoken one? (Così.) What did Latin sīc mean? (Thus, in this way.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "IT-C265-ripasso-opinione",
+      "sequence": 15810,
+      "title": "Review — what you think, why, and what follows",
+      "headword": "(review)",
+      "romanization": "(review)",
+      "gloss": "an opinion, its reason and what follows from it — three moves, said in either order",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:70f204a6b0fc714c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Someone asks Il museo è interessante? Answer \"I think so\". (Credo di sì.) Then ask them back. (Secondo te?)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Three moves, and you own a word for each. An opinion: secondo me. A reason, pointing back: perché. A consequence, pointing forward: quindi or così."
+            },
+            {
+              "kind": "speech",
+              "text": "Secondo me il museo è interessante, perché è molto antico. Il treno è caro, quindi prendo l'autobus."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The first sentence runs claim, then cause. The second runs cause, then consequence. Put them side by side and you can argue a small point in either direction, which is most of what giving reasons is."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Secondo me il museo è interessante, perché è molto antico.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Secondo me il museo è interessante, perché è molto antico.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the same facts, forward — Il museo è molto antico, quindi è interessante.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the same facts, forward — *Il museo è molto antico, quindi è interessante.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Il treno è caro, così prendo l'autobus.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Il treno è caro, così prendo l'autobus.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a reason in the past — Pioveva, quindi sono restato a casa.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a reason in the past — *Pioveva, quindi sono restato a casa.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "your own opinion about a place you know, with a perché",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: your own opinion about a place you know, with a *perché*]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Name the three moves and a word for each. (Opinion secondo me, reason perché, consequence quindi or così.) Say \"I don't think so\". (Credo di no.) In pioveva, quindi sono restato a casa, which half is the scene? (Pioveva — the reason.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "PT-C320-peregrinacao",
+  "pathSegment": "PT-PATH-320-CERIMONIA",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PT-EXT-320-CERIMONIA",
+      "order": 4
+    }
+  ]
+}

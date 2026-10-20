@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C453-klippe",
+    "language": "german",
+    "chapter": 453,
+    "sequence": 24310,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:740a443f77757f58"
+  },
+  "findings": []
+}

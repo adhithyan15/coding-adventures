@@ -1,0 +1,9 @@
+{
+  "id": "PT-PATH-512-PAVILHAO",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "PT-EXT-512-PAVILHAO"
+  ],
+  "after": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 387,
+  "sourceHash": "fnv1a64:bdd0d4663e86b645",
+  "lessonIds": [
+    "LA-C387-discordia",
+    "LA-C387-seditio",
+    "LA-C387-seditiosus",
+    "LA-C387-turbulentus",
+    "LA-C387-concito"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch387.txt",
+  "json": "latin/narration/ch387.json",
+  "textHash": "fnv1a64:040ee236572d42b9",
+  "jsonHash": "fnv1a64:6b35d5a8517eae7f",
+  "findings": []
+}

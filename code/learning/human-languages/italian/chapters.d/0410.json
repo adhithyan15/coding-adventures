@@ -1,0 +1,19 @@
+{
+  "chapter": 410,
+  "title": "Il guasto",
+  "label": "ch:it-il-guasto",
+  "canDo": "I can deal with a breakdown: the fault, breaking down, the tow truck, towing and the garage.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "IT-C410-officina",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 410: I can deal with a breakdown: the fault, breaking down, the tow truck, towing and the garage.",
+    "assesses": [
+      "IT-LEX-C410-GUASTO-03",
+      "IT-LEX-C410-GUASTO-04",
+      "IT-LEX-C410-GUASTO-05"
+    ]
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 369,
+  "sourceHash": "fnv1a64:946941afd499920e",
+  "lessonIds": [
+    "PT-C369-condicao",
+    "PT-C369-desde-que",
+    "PT-C369-contanto-que",
+    "PT-C369-caso",
+    "PT-C369-consoante"
+  ],
+  "tex": "portuguese/book/chapters/ch369-com-uma-condicao.tex"
+}

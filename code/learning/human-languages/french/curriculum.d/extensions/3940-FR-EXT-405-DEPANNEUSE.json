@@ -1,0 +1,8 @@
+{
+  "id": "FR-EXT-405-DEPANNEUSE",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can get help after a breakdown: the tow truck, the mechanic who comes, fixing the car on the spot, towing and the garage owner.",
+  "prerequisites": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PT-C305-socorrer",
+    "language": "portuguese",
+    "chapter": 305,
+    "sequence": 17660,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c50c6577a021e579"
+  },
+  "findings": []
+}

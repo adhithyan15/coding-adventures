@@ -1,0 +1,19 @@
+{
+  "chapter": 333,
+  "title": "Faire du pain",
+  "label": "ch:fr-faire-du-pain",
+  "canDo": "I can describe making dough: yeast, kneading, the rolling pin, rolling out and turning out a cake.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "FR-R333-revision-final-333",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 333: I can describe making dough: yeast, kneading, the rolling pin, rolling out and turning out a cake.",
+    "assesses": [
+      "FR-LEX-C333-PETRIR-03",
+      "FR-LEX-C333-PETRIR-04",
+      "FR-LEX-C333-PETRIR-05"
+    ]
+  }
+}

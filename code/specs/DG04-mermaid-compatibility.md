@@ -818,34 +818,35 @@ and remain presentation concerns; the native pipeline renders those source bodie
 with its deterministic portable geometry. Venn is therefore full at the pinned
 native compatibility level.
 
-### Ishikawa Native Slice
+### Ishikawa Native Compatibility
 
-The initial Mermaid 11.16.1 Ishikawa slice recognizes `ishikawa` and
-`ishikawa-beta`, takes the first content line as the effect, and preserves
-subsequent indentation as dedicated causal-tree IR. Deterministic alternating
-fishbone layout lowers through backend-neutral paths, a rounded effect box,
-and glyph runs, with native Metal-to-PNG validation. Non-negative `diagramPadding`
-and boolean `useMaxWidth` values from Mermaid init directives or YAML front matter
-survive causal IR and layout. Root `fontFamily`, `lineColor`, `mainBkg`, and
-`textColor` theme variables also flow through typed configuration into
-backend-neutral Paint instructions and metadata. Cause labels lower as bounded,
-width-aware theme boxes, and deeply nested trees expand the canvas vertically before
-Paint lowering. Exact upstream sizing and collision behavior, remaining
-configuration parity, and interactive behavior remain unsupported at the partial level.
-The global Mermaid `fontSize` setting survives typed causal IR, scales cause-label
-geometry during layout, and selects the matching glyph size before Paint lowering.
-Global `look: handDrawn` and `handDrawnSeed` settings also survive causal IR;
-layout deterministically perturbs spine, bone, effect-box, and cause-box paths before
-backend-neutral Paint lowering. Five-pixel, negative-41-degree hachure lines are clipped
-to those seeded outlines and lower as portable paths with Mermaid's fill color and weight.
-Every causal bone also carries a tangent-aligned arrowhead through layout IR and lowers
-to a filled backend-neutral Paint path in both classic and hand-drawn modes.
-The effect uses Mermaid's closed fish-head silhouette, sampled from the upstream quadratic
-curve in layout and emitted as a portable filled path rather than a renderer-specific shape.
-Cause labels on each side of the spine resolve deterministic box collisions outward from
-the spine before outlines, hachures, and glyph runs are lowered.
+The Mermaid 11.16.1 Ishikawa implementation recognizes `ishikawa` and
+`ishikawa-beta`, takes the first content line as the effect, and preserves the
+remaining indentation hierarchy in dedicated causal-tree IR. The first cause
+establishes the indentation baseline, matching upstream behavior when the effect
+or later root causes are indented differently. Root-only diagrams and arbitrarily
+deep cause trees are accepted.
 
-### Wardley Native Slice
+Deterministic alternating fishbone layout carries the causal IR into portable
+spine, branch, arrowhead, label-box, and closed fish-head geometry. The complete
+layout lowers to backend-neutral Paint paths and glyph runs. Cause boxes are
+width-aware, deep trees expand the canvas, and same-side collisions resolve
+outward from the spine before Paint lowering. `diagramPadding`, `useMaxWidth`,
+global `fontSize`, `look: handDrawn`, `handDrawnSeed`, and the `fontFamily`,
+`lineColor`, `mainBkg`, and `textColor` theme variables survive typed configuration.
+Hand-drawn mode uses seeded path perturbations and clipped hachure paths rather
+than backend-specific rough.js objects.
+
+The pinned syntax corpus includes every upstream parser fixture and all thirteen
+active upstream rendering fixtures, including root-only, uneven indentation,
+many-cause, and very deep trees. Its matching visual corpus lowers every valid
+fixture through causal IR, layout, PaintScene instructions, Metal, and PNG.
+Named browser themes affect externally supplied Mermaid theme variables rather
+than Ishikawa source grammar, and browser DOM sizing and interaction behavior are
+outside the portable native contract. Ishikawa is therefore full at the pinned
+native compatibility level.
+
+### Wardley Native Compatibility
 
 The initial Mermaid 11.16.1 Wardley slice recognizes `wardley-beta` and parses
 titles, canvas sizes, custom evolution stages, anchors, components,
@@ -881,7 +882,14 @@ forward, backward, and bidirectional flow ports, and inline flow labels. Layout 
 links to component boundaries and positions rotated labels before backend-neutral paths,
 arrowheads, and glyph groups are emitted. Annotation stroke, text, and fill theme fields
 also survive typed configuration and control marker, connector, and annotations-box Paint.
-Exact browser rendering remains unsupported at the partial level.
+The pinned corpus covers every active Mermaid 11.16.1 Wardley parser test and
+renderer acceptance fixture, including compact arrows, consecutive and trailing
+hyphens, all four upstream theme runs, pipelines, and the large GPT tokeniser
+map. Every valid fixture is lowered through `PaintScene` and rendered to PNG by
+the native Metal backend. Browser DOM measurement, responsive SVG sizing, and
+interactive behavior remain outside the portable native contract, so Wardley
+is full at the pinned native compatibility level rather than pixel-identical to
+Mermaid's browser renderer.
 
 ### Cynefin Native Slice
 
@@ -951,7 +959,7 @@ parser and renderer cases, so TreeView is `full` in the compatibility manifest.
 Automatic Iconify pack loading remains host-owned and exact typography remains
 backend-specific; resolved icon identities and geometry stay backend-neutral.
 
-### Railroad Native Slice
+### Railroad Native Compatibility
 
 The initial Mermaid 11.16.1 Railroad slice recognizes `railroad-beta` and
 parses the upstream explicit constructor notation into dedicated recursive
@@ -1000,6 +1008,12 @@ Root `themeVariables` now provide Mermaid-compatible typography and color
 fallbacks for terminals, non-terminals, specials, connections, markers, and
 rule names. Explicit Railroad options retain precedence, and the resolved
 values continue through layout and backend-neutral PaintScene lowering.
+The pinned compatibility corpus covers every active Mermaid 11.16.1 Railroad
+renderer fixture plus the complete constructor, EBNF, ABNF, and PEG native
+notation corpora. Every valid fixture lowers through `PaintScene` and renders
+to PNG through Metal. Browser DOM text measurement, responsive SVG sizing, and
+interaction remain outside the portable native contract, so Railroad is full
+at the pinned native compatibility level.
 Color and font-family options now follow the pinned Mermaid allowlists before
 entering semantic IR: supported CSS colors and portable family lists survive,
 while unsafe or malformed values fall back to the resolved theme defaults.
@@ -1026,12 +1040,26 @@ suffixes, and the native Metal-to-PNG path validates the complete family.
 ### ZenUML Partial Compatibility
 
 The native ZenUML frontend accepts the documented title, participant ordering,
-aliases, Actor and Database annotators, and asynchronous `A->B: message` forms.
-It lowers into the shared Sequence IR, layout, and backend-neutral PaintScene
-pipeline, with a Metal-to-PNG fixture. Mermaid 11.16.1 delegates the broader
-language to external `@zenuml/core`; synchronous nesting, creation and reply
-messages, comments-as-notes, and control fragments remain unsupported and fail
-grammar validation rather than degrading silently.
+aliases, Actor, Boundary, Control, Entity, Database, Collections, Queue, and
+Starter annotators, and asynchronous `A->B: message` forms.
+It also parses nested synchronous calls, typed reply assignments, explicit
+return statements, `@return` and `@reply` annotators, creation statements, and
+if, loop, opt, parallel, and try-family scopes into shared Sequence messages,
+activations, participant lifecycle events, notes, and control blocks. Alternative
+and try/catch/finally branches preserve one enclosing fragment and lower to
+typed branch events. Comments attached to messages and fragments lower to
+Sequence notes. These semantics flow through the existing layout and
+backend-neutral PaintScene pipeline, with the expanded reply-and-branch example
+covered by Metal-to-PNG validation. Mermaid 11.16.1 delegates the broader
+language to external `@zenuml/core`. Assigned and typed creation forms preserve
+the authored binding and class label on the created participant, creation blocks
+participate in activation nesting, and statement semicolon terminators are
+accepted without leaking punctuation into semantic labels. Custom participant
+annotators lower to the backend-neutral participant fallback, while inline
+comments attached to messages lower to Sequence notes without treating URL
+slashes or quoted `//` text as comments. Custom annotator glyphs and the full
+external expression grammar remain unsupported, so ZenUML remains at the
+manifest's `partial` level.
 
 ### Structural Groups
 

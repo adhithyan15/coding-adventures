@@ -1,0 +1,11 @@
+{
+  "id": "IT-C449-sgomberare",
+  "pathSegment": "IT-PATH-449-LAVORI",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "IT-EXT-449-LAVORI",
+      "order": 4
+    }
+  ]
+}

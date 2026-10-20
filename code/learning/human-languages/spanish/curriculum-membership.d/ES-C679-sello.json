@@ -1,0 +1,11 @@
+{
+  "id": "ES-C679-sello",
+  "pathSegment": "ES-PATH-679-SERVICIOS",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ES-EXT-679-SERVICIOS",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "PT-C451-bainha",
+  "pathSegment": "PT-PATH-451-ARRANJOS",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PT-EXT-451-ARRANJOS",
+      "order": 2
+    }
+  ]
+}

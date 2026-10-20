@@ -1,0 +1,11 @@
+{
+  "id": "IT-C457-camerino",
+  "pathSegment": "IT-PATH-457-CASSA",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "IT-EXT-457-CASSA",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,9 @@
+{
+  "id": "LA-PATH-495-MIRA",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "LA-EXT-495-MIRA"
+  ],
+  "after": []
+}

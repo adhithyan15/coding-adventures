@@ -1,0 +1,11 @@
+{
+  "id": "PT-R474-revisao-467-474",
+  "pathSegment": "PT-PATH-474-RABUGENTO",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "PT-EXT-474-RABUGENTO",
+      "order": 5
+    }
+  ]
+}

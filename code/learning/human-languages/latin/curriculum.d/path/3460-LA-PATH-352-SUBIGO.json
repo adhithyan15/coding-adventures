@@ -1,0 +1,9 @@
+{
+  "id": "LA-PATH-352-SUBIGO",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "LA-EXT-352-SUBIGO"
+  ],
+  "after": []
+}

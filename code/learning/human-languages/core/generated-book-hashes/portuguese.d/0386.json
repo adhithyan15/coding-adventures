@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 386,
+  "sourceHash": "fnv1a64:fb5821597a24759d",
+  "lessonIds": [
+    "PT-C386-ladrao",
+    "PT-C386-acusar",
+    "PT-C386-acusacao",
+    "PT-C386-licito",
+    "PT-C386-ilicito"
+  ],
+  "tex": "portuguese/book/chapters/ch386-as-acusacoes.tex"
+}

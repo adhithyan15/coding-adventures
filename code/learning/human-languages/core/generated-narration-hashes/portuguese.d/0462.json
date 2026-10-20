@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 462,
+  "sourceHash": "fnv1a64:3453efb18d785002",
+  "lessonIds": [
+    "PT-C462-abafado",
+    "PT-C462-seca",
+    "PT-C462-aragem",
+    "PT-C462-insolacao",
+    "PT-C462-transpirar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch462.txt",
+  "json": "portuguese/narration/ch462.json",
+  "textHash": "fnv1a64:8b5a37ae69200efa",
+  "jsonHash": "fnv1a64:8735b26d9074d702",
+  "findings": []
+}

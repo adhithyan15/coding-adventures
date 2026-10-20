@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C463-holitor",
+    "language": "latin",
+    "chapter": 463,
+    "sequence": 24650,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6a77a4db139d3b4e"
+  },
+  "findings": []
+}

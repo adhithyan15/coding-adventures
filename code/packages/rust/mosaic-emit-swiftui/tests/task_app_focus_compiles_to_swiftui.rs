@@ -10,6 +10,24 @@ use std::path::PathBuf;
 #[cfg(target_os = "macos")]
 use std::process::Command;
 
+/// A scratch-name nonce that is unique for every call in this process.
+///
+/// The clock alone is not: macOS reports `SystemTime` in whole microseconds,
+/// so two tests running in parallel threads could read the same "nanos" and
+/// be handed the same directory, each seeing the other's files (this made
+/// `compose_fixtures` fail about one run in five). The counter makes every
+/// call distinct; the clock keeps names from a previous run apart.
+#[cfg(target_os = "macos")] // its only caller type-checks with the macOS SDK
+fn unique_nonce() -> String {
+    static NEXT: std::sync::atomic::AtomicU64 = std::sync::atomic::AtomicU64::new(0);
+    let n = NEXT.fetch_add(1, std::sync::atomic::Ordering::Relaxed);
+    let nanos = std::time::SystemTime::now()
+        .duration_since(std::time::UNIX_EPOCH)
+        .expect("system clock after epoch")
+        .as_nanos();
+    format!("{nanos}-{n}")
+}
+
 fn code_packages_root() -> PathBuf {
     // CARGO_MANIFEST_DIR is .../code/packages/rust/mosaic-emit-swiftui — two
     // parents up is .../code/packages, the same default search root
@@ -141,13 +159,11 @@ fn task_app_package_graph_lowers_notes_to_native_multiline_swiftui() {
 #[cfg(target_os = "macos")]
 #[test]
 fn complete_task_app_generated_swift_typechecks() {
-    let unique = std::time::SystemTime::now()
-        .duration_since(std::time::UNIX_EPOCH)
-        .expect("system time after epoch")
-        .as_nanos();
+    let unique = unique_nonce();
     let project_root =
         std::env::temp_dir().join(format!("mosaic-task-app-{}-{unique}", std::process::id()));
     let sources = project_root.join("Sources").join("App");
+    fs::create_dir(&project_root).expect("create a fresh temporary project root");
     fs::create_dir_all(&sources).expect("create temporary SwiftPM source tree");
     fs::write(
         project_root.join("Package.swift"),

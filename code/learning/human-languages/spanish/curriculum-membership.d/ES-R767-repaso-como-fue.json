@@ -1,0 +1,11 @@
+{
+  "id": "ES-R767-repaso-como-fue",
+  "pathSegment": "ES-PATH-767-PORVENIR",
+  "pathOrder": 7,
+  "extensions": [
+    {
+      "id": "ES-EXT-767-PORVENIR",
+      "order": 7
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 288,
+  "sourceHash": "fnv1a64:725b7f35f7df0f37",
+  "lessonIds": [
+    "GE-C288-zusammenstossen",
+    "GE-C288-zusammenstoss",
+    "GE-C288-prallen",
+    "GE-C288-verungluecken",
+    "GE-C288-schaden"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch288.txt",
+  "json": "german/narration/ch288.json",
+  "textHash": "fnv1a64:3777df1b489cdb8f",
+  "jsonHash": "fnv1a64:5280c60c5caf5a3f",
+  "findings": []
+}

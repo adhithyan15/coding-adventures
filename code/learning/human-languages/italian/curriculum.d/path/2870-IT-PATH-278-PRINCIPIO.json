@@ -1,0 +1,9 @@
+{
+  "id": "IT-PATH-278-PRINCIPIO",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "IT-EXT-278-PRINCIPIO"
+  ],
+  "after": []
+}

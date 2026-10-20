@@ -1,0 +1,11 @@
+{
+  "id": "GE-C456-rascheln",
+  "pathSegment": "GE-PATH-456-LICHTUNG",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-456-LICHTUNG",
+      "order": 4
+    }
+  ]
+}

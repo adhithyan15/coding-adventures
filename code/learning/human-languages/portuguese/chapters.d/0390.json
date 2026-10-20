@@ -1,0 +1,19 @@
+{
+  "chapter": 390,
+  "title": "Culpado ou inocente",
+  "label": "ch:pt-culpado-ou-inocente",
+  "canDo": "I can talk about a trial: who testifies, who is to blame, and guilt and innocence.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "PT-R390-revisao-383-390",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 390: I can talk about a trial: who testifies, who is to blame, and guilt and innocence.",
+    "assesses": [
+      "PT-LEX-C390-CULPA-03",
+      "PT-LEX-C390-CULPA-04",
+      "PT-LEX-C390-CULPA-05"
+    ]
+  }
+}

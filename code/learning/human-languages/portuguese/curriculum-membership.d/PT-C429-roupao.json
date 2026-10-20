@@ -1,0 +1,11 @@
+{
+  "id": "PT-C429-roupao",
+  "pathSegment": "PT-PATH-429-QUARTO",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PT-EXT-429-QUARTO",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,8 @@
+{
+  "id": "FR-EXT-368-CONDITION",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can set a condition: provided that, as long as, unless, in case, or else — with the right mood after each.",
+  "prerequisites": []
+}

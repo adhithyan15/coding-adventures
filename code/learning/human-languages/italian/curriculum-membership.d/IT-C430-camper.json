@@ -1,0 +1,11 @@
+{
+  "id": "IT-C430-camper",
+  "pathSegment": "IT-PATH-430-TENDA",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "IT-EXT-430-TENDA",
+      "order": 3
+    }
+  ]
+}

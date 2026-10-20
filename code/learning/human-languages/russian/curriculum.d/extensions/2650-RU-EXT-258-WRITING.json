@@ -1,0 +1,10 @@
+{
+  "id": "RU-EXT-258-WRITING",
+  "stage": "A1",
+  "kind": "required",
+  "category": "writing",
+  "canDo": "I can write my own line by hand, write against a clock with the TORFL rule in mind, and join four lines with и, но, а and потому что, commas in place.",
+  "prerequisites": [
+    "RU-EXT-025-REASON-AND-TIME"
+  ]
+}

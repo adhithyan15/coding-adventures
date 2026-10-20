@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C406-frenata",
+    "language": "italian",
+    "chapter": 406,
+    "sequence": 23170,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:76dfe7515ea34e47"
+  },
+  "findings": []
+}

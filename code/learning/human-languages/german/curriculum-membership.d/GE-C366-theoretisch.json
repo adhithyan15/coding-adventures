@@ -1,0 +1,11 @@
+{
+  "id": "GE-C366-theoretisch",
+  "pathSegment": "GE-PATH-366-HYPOTHESE",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GE-EXT-366-HYPOTHESE",
+      "order": 1
+    }
+  ]
+}

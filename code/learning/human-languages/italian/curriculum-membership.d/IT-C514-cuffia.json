@@ -1,0 +1,11 @@
+{
+  "id": "IT-C514-cuffia",
+  "pathSegment": "IT-PATH-514-ACQUA",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "IT-EXT-514-ACQUA",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "PT-C509-penalti",
+  "pathSegment": "PT-PATH-509-BALIZA",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PT-EXT-509-BALIZA",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "ES-C561-regreso",
+  "pathSegment": "ES-PATH-561-PARTIDA",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ES-EXT-561-PARTIDA",
+      "order": 3
+    }
+  ]
+}

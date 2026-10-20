@@ -1,0 +1,11 @@
+{
+  "id": "IT-C299-ammaccare",
+  "pathSegment": "IT-PATH-299-SCONTRO",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "IT-EXT-299-SCONTRO",
+      "order": 3
+    }
+  ]
+}

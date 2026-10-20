@@ -1,0 +1,19 @@
+{
+  "chapter": 502,
+  "title": "Pescar e caçar",
+  "label": "ch:pt-pescar-e-cacar",
+  "canDo": "I can talk about fishing and hunting.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "PT-C502-cacar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 502: I can talk about fishing and hunting.",
+    "assesses": [
+      "PT-LEX-C502-PESCA-03",
+      "PT-LEX-C502-PESCA-04",
+      "PT-LEX-C502-PESCA-05"
+    ]
+  }
+}

@@ -1,0 +1,858 @@
+{
+  "version": 1,
+  "language": "latin",
+  "chapter": 478,
+  "title": "Shepherd, Ox-driver, Sheepfold, To shear, To milk",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:2d7153a68cd56daa",
+  "lessons": [
+    {
+      "id": "LA-C478-opilio",
+      "sequence": 25410,
+      "title": "ōpiliō, ōpiliōnis — a shepherd (of sheep)",
+      "headword": "ōpiliō, ōpiliōnis",
+      "romanization": "ōpiliō, ōpiliōnis",
+      "gloss": "a shepherd (of sheep)",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c0bdd22c1aaa56ff",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for to pasture, then the Latin for a pasture."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ōpiliō, ōpiliōnis",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ōpiliō, ōpiliōnis — \"a shepherd (of sheep)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Ōpiliō ovēs in colle servat. The shepherd watches over the sheep on the hill."
+            },
+            {
+              "kind": "speech",
+              "text": "Third declension, masculine: ōpiliō, ōpiliōnis m., a word of comedy and the farm writers. Pāstor is the general word."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ōpiliō is usually traced to ovis 'sheep' (Lewis & Short, from an older ovilio), so a sheep-keeper; the second part is not settled. EtymDB lists it without a parent."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ōpiliō, ōpiliōnis",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ōpiliō, ōpiliōnis*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ōpiliō, ōpiliōnis, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ōpiliō, ōpiliōnis*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with ōpiliō, ōpiliōnis",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *ōpiliō, ōpiliōnis*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for to pasture, then the Latin for a pasture, then say ōpiliō, ōpiliōnis again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for to pasture, then the Latin for a pasture, then say *ōpiliō, ōpiliōnis* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ōpiliō, ōpiliōnis mean? (\"A shepherd (of sheep)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C478-bubulcus",
+      "sequence": 25420,
+      "title": "bubulcus, bubulcī — an ox-driver, a herdsman",
+      "headword": "bubulcus, bubulcī",
+      "romanization": "bubulcus, bubulcī",
+      "gloss": "an ox-driver, a herdsman",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3f21c0fc49796805",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for a pasture, then the Latin for a shepherd."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: bubulcus, bubulcī",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "bubulcus, bubulcī — \"an ox-driver, a herdsman\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Bubulcus cum bōbus ad agrum it. The ox-driver goes to the field with the oxen."
+            },
+            {
+              "kind": "speech",
+              "text": "Second declension, masculine: bubulcus, bubulcī m. The man who drives the plough oxen."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "bubulcus is built on būbulus 'of cattle', from bōs, bovis 'ox' (EtymDB; Lewis & Short), from PIE gʷṓws 'cow'. English cow is a Germanic cousin."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bubulcus, bubulcī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bubulcus, bubulcī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bubulcus, bubulcī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bubulcus, bubulcī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with bubulcus, bubulcī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *bubulcus, bubulcī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for a pasture, then the Latin for a shepherd, then say bubulcus, bubulcī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for a pasture, then the Latin for a shepherd, then say *bubulcus, bubulcī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does bubulcus, bubulcī mean? (\"An ox-driver, a herdsman\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C478-caulae",
+      "sequence": 25430,
+      "title": "caulae, caulārum — a sheepfold, a pen; an opening",
+      "headword": "caulae, caulārum",
+      "romanization": "caulae, caulārum",
+      "gloss": "a sheepfold, a pen; an opening",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3db8d49e94f229f0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for a shepherd, then the Latin for an ox-driver."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: caulae, caulārum",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "caulae, caulārum — \"a sheepfold, a pen; an opening\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Lupus prope caulās vagātur. A wolf prowls near the sheepfold."
+            },
+            {
+              "kind": "speech",
+              "text": "First declension, feminine plural: caulae, caulārum f. First a hole or passage, then a fenced pen."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "caulae is usually traced to cavus 'hollow', through an older cavile (Lewis & Short, after an ancient grammarian); EtymDB gives no parent, so the line is hedged."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "caulae, caulārum",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *caulae, caulārum*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "caulae, caulārum, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *caulae, caulārum*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with caulae, caulārum",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *caulae, caulārum*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for a shepherd, then the Latin for an ox-driver, then say caulae, caulārum again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for a shepherd, then the Latin for an ox-driver, then say *caulae, caulārum* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does caulae, caulārum mean? (\"A sheepfold, a pen; an opening\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C478-tondeo",
+      "sequence": 25440,
+      "title": "tondeō, tondēre — to shear, to clip; to shave",
+      "headword": "tondeō, tondēre",
+      "romanization": "tondeō, tondēre",
+      "gloss": "to shear, to clip; to shave",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:27c5836f5eee5f08",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for an ox-driver, then the Latin for a sheepfold."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: tondeō, tondēre",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "tondeō, tondēre — \"to shear, to clip; to shave\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Vēre agricolae ovēs tondent. In spring the farmers shear the sheep."
+            },
+            {
+              "kind": "speech",
+              "text": "tondeō, tondēre, totondī, tōnsum, with a reduplicated perfect. Tōnsor 'barber' comes from it, and English tonsure."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "tondeō is inherited and is usually traced to PIE temh₂- 'to cut' (EtymDB; Lewis & Short compare Greek temnō 'to cut'). English tonsure comes from its participle tōnsus."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tondeō, tondēre",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tondeō, tondēre*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tondeō, tondēre, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tondeō, tondēre*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with tondeō, tondēre",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *tondeō, tondēre*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for an ox-driver, then the Latin for a sheepfold, then say tondeō, tondēre again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for an ox-driver, then the Latin for a sheepfold, then say *tondeō, tondēre* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does tondeō, tondēre mean? (\"To shear, to clip; to shave\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C478-mulgeo",
+      "sequence": 25450,
+      "title": "mulgeō, mulgēre — to milk",
+      "headword": "mulgeō, mulgēre",
+      "romanization": "mulgeō, mulgēre",
+      "gloss": "to milk",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3ffb321c220c70b2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for a sheepfold, then the Latin for to shear."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: mulgeō, mulgēre",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "mulgeō, mulgēre — \"to milk\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Ancilla mane caprās mulget. In the morning the maid milks the goats."
+            },
+            {
+              "kind": "speech",
+              "text": "mulgeō, mulgēre, mulsī, mulsum or mulctum. English milk is a Germanic cousin, and emulsion comes from ēmulgēre."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "mulgeō is inherited from PIE h₂melǵ- 'to milk' (EtymDB); German melken and English milk are Germanic cousins (Lewis & Short). English emulsion comes from the compound ēmulgēre."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mulgeō, mulgēre",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mulgeō, mulgēre*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mulgeō, mulgēre, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mulgeō, mulgēre*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with mulgeō, mulgēre",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *mulgeō, mulgēre*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for a sheepfold, then the Latin for to shear, then say mulgeō, mulgēre again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for a sheepfold, then the Latin for to shear, then say *mulgeō, mulgēre* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does mulgeō, mulgēre mean? (\"To milk\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-R478-review-471-478",
+      "sequence": 25460,
+      "title": "Words from chapters 471–478 — a review",
+      "headword": "(dialogue)",
+      "romanization": "(dialogue)",
+      "gloss": "a review of chapters 471-478",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:54597c951304fead",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Latin for a lathe and to turn on a lathe."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a lathe, to turn on a lathe, to polish, to sharpen, a stonecutter",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a lathe, to turn on a lathe, to polish, to sharpen, a stonecutter]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a distaff, a spindle, a web on the loom, to spin, wool-working",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a distaff, a spindle, a web on the loom, to spin, wool-working]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the countryside, a farm, an ox stall, a cottage, a hut",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the countryside, a farm, an ox stall, a cottage, a hut]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to plough, a furrow, a ploughshare, a ploughman, to harrow",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to plough, a furrow, a ploughshare, a ploughman, to harrow]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the harvest, a reaper, a sickle, an ear of grain, wheat",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the harvest, a reaper, a sickle, an ear of grain, wheat]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to thresh, to winnow, chaff, a stalk, a granary",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to thresh, to winnow, chaff, a stalk, a granary]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "livestock, a flock, a herd, to pasture, a pasture",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: livestock, a flock, a herd, to pasture, a pasture]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a shepherd, an ox-driver, a sheepfold, to shear, to milk",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a shepherd, an ox-driver, a sheepfold, to shear, to milk]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A lathe? (tornus, tornī.) To turn on a lathe? (tornō, tornāre.) To polish? (poliō, polīre.) To sharpen? (acuō, acuere.) A stonecutter? (lapicīda, lapicīdae.) A distaff? (colus, colī.) A spindle? (fūsus, fūsī.) A web on the loom? (tēla, tēlae.) To spin? (neō, nēre.) Wool-working? (lānificium, lānificiī.) The countryside? (rūs, rūris.) A farm? (fundus, fundī.) An ox stall? (būbīle, būbīlis.) A cottage? (casa, casae.) A hut? (tugurium, tuguriī.) To plough? (arō, arāre.) A furrow? (sulcus, sulcī.) A ploughshare? (vōmer, vōmeris.) A ploughman? (arātor, arātōris.) To harrow? (occō, occāre.) The harvest? (messis, messis.) A reaper? (messor, messōris.) A sickle? (falx, falcis.) An ear of grain? (spīca, spīcae.) Wheat? (trīticum, trīticī.) To thresh? (trītūrō, trītūrāre.) To winnow? (ventilō, ventilāre.) Chaff? (palea, paleae.) A stalk? (stipula, stipulae.) A granary? (horreum, horreī.) Livestock? (pecus, pecoris.) A flock? (grex, gregis.) A herd? (armentum, armentī.) To pasture? (pāscō, pāscere.) A pasture? (pāscuum, pāscuī.) A shepherd? (ōpiliō, ōpiliōnis.) An ox-driver? (bubulcus, bubulcī.) A sheepfold? (caulae, caulārum.) To shear? (tondeō, tondēre.) To milk? (mulgeō, mulgēre.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

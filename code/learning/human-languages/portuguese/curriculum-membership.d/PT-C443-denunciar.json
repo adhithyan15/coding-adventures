@@ -1,0 +1,11 @@
+{
+  "id": "PT-C443-denunciar",
+  "pathSegment": "PT-PATH-443-SERVICOS",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-443-SERVICOS",
+      "order": 3
+    }
+  ]
+}

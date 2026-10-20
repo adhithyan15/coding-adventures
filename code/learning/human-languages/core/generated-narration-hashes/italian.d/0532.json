@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 532,
+  "sourceHash": "fnv1a64:31f6905c389ffba8",
+  "lessonIds": [
+    "IT-C532-spazzare",
+    "IT-C532-spolverare",
+    "IT-C532-straccio",
+    "IT-C532-detersivo",
+    "IT-C532-aspirapolvere"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch532.txt",
+  "json": "italian/narration/ch532.json",
+  "textHash": "fnv1a64:dfdd0375175634c6",
+  "jsonHash": "fnv1a64:cc13e7d6064ca97b",
+  "findings": []
+}

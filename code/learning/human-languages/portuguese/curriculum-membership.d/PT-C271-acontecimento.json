@@ -1,0 +1,11 @@
+{
+  "id": "PT-C271-acontecimento",
+  "pathSegment": "PT-PATH-271-OCORRER",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-271-OCORRER",
+      "order": 3
+    }
+  ]
+}

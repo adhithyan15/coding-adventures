@@ -1,5 +1,10 @@
 # Changelog
 
+## Unreleased
+
+- Added canonical schema-selected implicit BIT STRING validation for composed
+  ASN.1 schemas such as RFC 5280 unique identifiers.
+
 ## 0.1.0 — 2026-09-19
 
 - Added allocation-free typed DER decoding above `der-tlv`.

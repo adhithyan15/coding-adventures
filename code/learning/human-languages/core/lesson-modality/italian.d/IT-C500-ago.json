@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C500-ago",
+    "language": "italian",
+    "chapter": 500,
+    "sequence": 28090,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:38fc741c1f75735f"
+  },
+  "findings": []
+}

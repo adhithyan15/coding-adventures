@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 554,
+  "sourceHash": "fnv1a64:66ef319a1e3da003",
+  "lessonIds": [
+    "ES-C554-graduarse",
+    "ES-C554-graduacion",
+    "ES-C554-licenciarse",
+    "ES-C554-mayoria-de-edad",
+    "ES-C554-envejecer"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch554.txt",
+  "json": "spanish/narration/ch554.json",
+  "textHash": "fnv1a64:e2fcf4825bab0531",
+  "jsonHash": "fnv1a64:d33fb197ddbfc115",
+  "findings": []
+}

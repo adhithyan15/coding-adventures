@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C599-metodo",
+    "language": "spanish",
+    "chapter": 599,
+    "sequence": 19710,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:cab1d34fa973699c"
+  },
+  "findings": []
+}

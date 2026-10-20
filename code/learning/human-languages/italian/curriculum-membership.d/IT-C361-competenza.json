@@ -1,0 +1,11 @@
+{
+  "id": "IT-C361-competenza",
+  "pathSegment": "IT-PATH-361-CARRIERA",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "IT-EXT-361-CARRIERA",
+      "order": 2
+    }
+  ]
+}

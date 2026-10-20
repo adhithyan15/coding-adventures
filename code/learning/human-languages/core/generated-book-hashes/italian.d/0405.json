@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 405,
+  "sourceHash": "fnv1a64:562d73b2d2bfa5b7",
+  "lessonIds": [
+    "IT-C405-casello",
+    "IT-C405-corsia",
+    "IT-C405-tangenziale",
+    "IT-C405-svincolo",
+    "IT-C405-sorpassare"
+  ],
+  "tex": "italian/book/chapters/ch405-in-autostrada.tex"
+}

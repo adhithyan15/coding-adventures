@@ -1,0 +1,9 @@
+{
+  "id": "PT-PATH-508-ARBITRO",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "PT-EXT-508-ARBITRO"
+  ],
+  "after": []
+}

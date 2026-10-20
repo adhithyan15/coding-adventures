@@ -1,0 +1,8 @@
+{
+  "id": "FR-EXT-339-PREUVE",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can talk about proof: say something is obvious, plain to see, indisputable or clear.",
+  "prerequisites": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 536,
+  "sourceHash": "fnv1a64:6d8597ae6e8b382c",
+  "lessonIds": [
+    "ES-C536-mientras-tanto",
+    "ES-C536-al-mismo-tiempo",
+    "ES-C536-a-la-vez",
+    "ES-C536-en-cuanto",
+    "ES-C536-tan-pronto-como"
+  ],
+  "tex": "spanish/book/chapters/ch536-mientras-tanto.tex"
+}

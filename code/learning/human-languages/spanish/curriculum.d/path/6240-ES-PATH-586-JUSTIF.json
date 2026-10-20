@@ -1,0 +1,9 @@
+{
+  "id": "ES-PATH-586-JUSTIF",
+  "spine_node": "SPINE-GIVE-REASONS",
+  "before": [],
+  "inline": [
+    "ES-EXT-586-JUSTIF"
+  ],
+  "after": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 293,
+  "title": "Ladri in casa",
+  "label": "ch:it-ladri-in-casa",
+  "canDo": "I can say that thieves broke into a house: the break-in, the forced window, the burglar alarm and the vandals.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "IT-C293-vandalo",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 293: I can say that thieves broke into a house: the break-in, the forced window, the burglar alarm and the vandals.",
+    "assesses": [
+      "IT-LEX-C293-SCASSO-03",
+      "IT-LEX-C293-SCASSO-04",
+      "IT-LEX-C293-SCASSO-05"
+    ]
+  }
+}

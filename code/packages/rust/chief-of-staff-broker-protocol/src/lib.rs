@@ -103,6 +103,11 @@ pub const KEY_BYTES: usize = 32;
 /// The descriptor that key slot 0 is inherited on; slot `i` is at
 /// `FIRST_KEY_DESCRIPTOR + i`.
 pub const FIRST_KEY_DESCRIPTOR: i32 = 3;
+/// On Windows (D18S P2.8b-1) there are no descriptor numbers to place keys
+/// on: the applier passes the key handles on its handle list and names
+/// their values, in slot order, comma-separated and in decimal, in this
+/// environment variable. It is the applier's `HANDLES_VARIABLE`.
+pub const KEY_HANDLES_VARIABLE: &str = "CHIEF_OF_STAFF_HANDLES";
 /// The most messages one receiver page returns.
 pub const MAX_PAGE_MESSAGES: usize = 64;
 /// The most bytes one receiver page carries, messages and grants together:

@@ -1,0 +1,11 @@
+{
+  "id": "GE-C351-ueberstunde",
+  "pathSegment": "GE-PATH-351-ARBEITSZEIT",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-351-ARBEITSZEIT",
+      "order": 3
+    }
+  ]
+}

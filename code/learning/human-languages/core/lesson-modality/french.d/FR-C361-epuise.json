@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C361-epuise",
+    "language": "french",
+    "chapter": 361,
+    "sequence": 20290,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:df0f6e262fa50033"
+  },
+  "findings": []
+}

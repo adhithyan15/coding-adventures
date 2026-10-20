@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C340-dibattito",
+    "language": "italian",
+    "chapter": 340,
+    "sequence": 19650,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:879660b19703feee"
+  },
+  "findings": []
+}

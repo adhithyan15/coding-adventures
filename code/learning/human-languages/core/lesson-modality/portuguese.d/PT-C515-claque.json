@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PT-C515-claque",
+    "language": "portuguese",
+    "chapter": 515,
+    "sequence": 28470,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5b0798c37a003a04"
+  },
+  "findings": []
+}

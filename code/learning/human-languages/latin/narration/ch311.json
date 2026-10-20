@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "latin",
+  "chapter": 311,
+  "title": "Damnātus aut absolūtus",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:b30161d83e1e7733",
+  "lessons": [
+    {
+      "id": "LA-C311-damno",
+      "sequence": 16820,
+      "title": "damnō, damnāre — to condemn, to find guilty",
+      "headword": "damnō, damnāre",
+      "romanization": "damnō, damnāre",
+      "gloss": "to condemn, to find guilty",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3a01dd0848adc1ff",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for to prove, then the Latin for information."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: damnō, damnāre",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "damnō, damnāre — \"to condemn, to find guilty\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Iūdicēs eum fūrtī damnāvērunt. The judges found him guilty of theft."
+            },
+            {
+              "kind": "speech",
+              "text": "damnō, damnāre, damnāvī, damnātum, with the genitive of the charge. From damnum, 'loss' (taught). English damn."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "damnō is built on damnum, \"loss, damage\" (EtymDB): to inflict a loss, a penalty. English damn and condemn come from its family."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "damnō, damnāre",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *damnō, damnāre*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "damnō, damnāre, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *damnō, damnāre*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with damnō, damnāre",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *damnō, damnāre*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for to prove, then the Latin for information, then say damnō, damnāre again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for to prove, then the Latin for information, then say *damnō, damnāre* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does damnō, damnāre mean? (\"To condemn, to find guilty\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C311-absolvo",
+      "sequence": 16830,
+      "title": "absolvō, absolvere — to acquit; to set free; to finish",
+      "headword": "absolvō, absolvere",
+      "romanization": "absolvō, absolvere",
+      "gloss": "to acquit; to set free; to finish",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a35620063ce28d2b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for information, then the Latin for to condemn."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: absolvō, absolvere",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "absolvō, absolvere — \"to acquit; to set free; to finish\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Reus absolūtus est et laetus domum rediit. The defendant was acquitted and went home happy."
+            },
+            {
+              "kind": "speech",
+              "text": "absolvō, absolvere, absolvī, absolūtum: ab + solvō (taught), to loosen from. English absolve."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "absolvō joins ab, \"from\", and solvō, \"to loosen\" (EtymDB): to set loose from a charge. English absolve comes from it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "absolvō, absolvere",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *absolvō, absolvere*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "absolvō, absolvere, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *absolvō, absolvere*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with absolvō, absolvere",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *absolvō, absolvere*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for information, then the Latin for to condemn, then say absolvō, absolvere again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for information, then the Latin for to condemn, then say *absolvō, absolvere* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does absolvō, absolvere mean? (\"To acquit; to set free; to finish\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C311-nocens",
+      "sequence": 16840,
+      "title": "nocēns, nocentis — guilty; harmful",
+      "headword": "nocēns, nocentis",
+      "romanization": "nocēns, nocentis",
+      "gloss": "guilty; harmful",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:219f1b6a9a0d62d4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for to condemn, then the Latin for to acquit."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: nocēns, nocentis",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "nocēns, nocentis — \"guilty; harmful\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Nocēns poenam dare dēbet. The guilty man must pay the penalty."
+            },
+            {
+              "kind": "speech",
+              "text": "One ending, genitive nocentis: the present participle of a verb meaning 'to harm'."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "nocēns is the present participle of noceō, \"to harm\" (Lewis & Short): doing harm, and so guilty."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nocēns, nocentis",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nocēns, nocentis*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nocēns, nocentis, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nocēns, nocentis*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with nocēns, nocentis",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *nocēns, nocentis*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for to condemn, then the Latin for to acquit, then say nocēns, nocentis again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for to condemn, then the Latin for to acquit, then say *nocēns, nocentis* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does nocēns, nocentis mean? (\"Guilty; harmful\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C311-innocens",
+      "sequence": 16850,
+      "title": "innocēns, innocentis — innocent, harmless",
+      "headword": "innocēns, innocentis",
+      "romanization": "innocēns, innocentis",
+      "gloss": "innocent, harmless",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:13875c56a4d8e595",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for to acquit, then the Latin for guilty."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: innocēns, innocentis",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "innocēns, innocentis — \"innocent, harmless\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Omnēs scīvērunt eum innocentem esse. Everyone knew that he was innocent."
+            },
+            {
+              "kind": "speech",
+              "text": "One ending, genitive innocentis: in- 'not' + nocēns. English innocent."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "innocēns joins in-, \"not\", and nocēns, \"harmful, guilty\" (EtymDB): doing no harm. English innocent comes from it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "innocēns, innocentis",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *innocēns, innocentis*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "innocēns, innocentis, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *innocēns, innocentis*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with innocēns, innocentis",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *innocēns, innocentis*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for to acquit, then the Latin for guilty, then say innocēns, innocentis again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for to acquit, then the Latin for guilty, then say *innocēns, innocentis* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does innocēns, innocentis mean? (\"Innocent, harmless\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C311-culpa",
+      "sequence": 16860,
+      "title": "culpa, culpae — fault, blame; guilt",
+      "headword": "culpa, culpae",
+      "romanization": "culpa, culpae",
+      "gloss": "fault, blame; guilt",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:11226c1a279ed35c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for guilty, then the Latin for innocent."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: culpa, culpae",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "culpa, culpae — \"fault, blame; guilt\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Nōn mea culpa erat, sed tua. It was not my fault, but yours."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine. In culpā esse: to be to blame. English culpable comes from it."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "culpa is inherited from Proto-Italic kʷolpā, \"a wrong, a mistake\" (EtymDB). English culpable and culprit come from its family."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "culpa, culpae",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *culpa, culpae*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "culpa, culpae, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *culpa, culpae*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with culpa, culpae",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *culpa, culpae*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for guilty, then the Latin for innocent, then say culpa, culpae again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for guilty, then the Latin for innocent, then say *culpa, culpae* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does culpa, culpae mean? (\"Fault, blame; guilt\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

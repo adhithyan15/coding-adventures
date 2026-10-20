@@ -1,0 +1,20 @@
+{
+  "language": "italian",
+  "chapter": 436,
+  "sourceHash": "fnv1a64:5bfa29b40395cce6",
+  "lessonIds": [
+    "IT-C436-lampadina",
+    "IT-C436-interruttore",
+    "IT-C436-fusibile",
+    "IT-C436-ricaricare",
+    "IT-C436-fulminarsi",
+    "IT-R436-ripasso-429-436"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "italian/narration/ch436.txt",
+  "json": "italian/narration/ch436.json",
+  "textHash": "fnv1a64:02ed4019f3eba8dd",
+  "jsonHash": "fnv1a64:ca009f458cf9ed07",
+  "findings": []
+}

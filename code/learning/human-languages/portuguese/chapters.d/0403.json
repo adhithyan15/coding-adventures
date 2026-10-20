@@ -1,0 +1,19 @@
+{
+  "chapter": 403,
+  "title": "Vidros e espelhos",
+  "label": "ch:pt-vidros-e-espelhos",
+  "canDo": "I can talk about seeing clearly from a car: the glass, the mirror, the horn, honking and windows that mist up.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "PT-C403-embaciar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 403: I can talk about seeing clearly from a car: the glass, the mirror, the horn, honking and windows that mist up.",
+    "assesses": [
+      "PT-LEX-C403-VIDROS-03",
+      "PT-LEX-C403-VIDROS-04",
+      "PT-LEX-C403-VIDROS-05"
+    ]
+  }
+}

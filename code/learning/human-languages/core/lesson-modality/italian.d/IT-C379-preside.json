@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C379-preside",
+    "language": "italian",
+    "chapter": 379,
+    "sequence": 21690,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:707fcf0d0c59ee07"
+  },
+  "findings": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 556,
+  "sourceHash": "fnv1a64:894de2d3d726eb58",
+  "lessonIds": [
+    "ES-C556-entierro",
+    "ES-C556-enterrar",
+    "ES-C556-velatorio",
+    "ES-C556-tumba",
+    "ES-C556-cementerio"
+  ],
+  "tex": "spanish/book/chapters/ch556-el-entierro.tex"
+}

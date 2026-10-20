@@ -1,0 +1,11 @@
+{
+  "id": "IT-C400-dispositivo",
+  "pathSegment": "IT-PATH-400-INSTALLARE",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "IT-EXT-400-INSTALLARE",
+      "order": 3
+    }
+  ]
+}

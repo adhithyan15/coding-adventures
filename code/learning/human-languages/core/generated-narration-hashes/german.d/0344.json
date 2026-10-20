@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 344,
+  "sourceHash": "fnv1a64:48f9746dfa47b2ce",
+  "lessonIds": [
+    "GE-C344-beeinflussen",
+    "GE-C344-einfluss",
+    "GE-C344-auswirkung",
+    "GE-C344-auswirken",
+    "GE-C344-betreffen"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch344.txt",
+  "json": "german/narration/ch344.json",
+  "textHash": "fnv1a64:f03c83c50d191a38",
+  "jsonHash": "fnv1a64:2ad2f265a1926fa1",
+  "findings": []
+}

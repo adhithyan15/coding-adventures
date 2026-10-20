@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C268-dauer",
+    "language": "german",
+    "chapter": 268,
+    "sequence": 14830,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:30a84d1f157822bc"
+  },
+  "findings": []
+}

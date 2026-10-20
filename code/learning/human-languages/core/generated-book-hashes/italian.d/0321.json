@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 321,
+  "sourceHash": "fnv1a64:fc4387cd5852ab86",
+  "lessonIds": [
+    "IT-C321-presepe",
+    "IT-C321-panettone",
+    "IT-C321-cenone",
+    "IT-C321-addobbare",
+    "IT-C321-tombola"
+  ],
+  "tex": "italian/book/chapters/ch321-le-feste-d-inverno.tex"
+}

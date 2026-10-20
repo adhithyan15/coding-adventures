@@ -1,0 +1,11 @@
+{
+  "id": "IT-C536-arredare",
+  "pathSegment": "IT-PATH-536-CASA",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "IT-EXT-536-CASA",
+      "order": 2
+    }
+  ]
+}

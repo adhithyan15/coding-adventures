@@ -1,0 +1,11 @@
+{
+  "id": "FR-C444-poissonnerie",
+  "pathSegment": "FR-PATH-444-COMMERCES",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FR-EXT-444-COMMERCES",
+      "order": 1
+    }
+  ]
+}

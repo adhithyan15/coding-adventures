@@ -1,0 +1,11 @@
+{
+  "id": "LA-C461-immundus",
+  "pathSegment": "LA-PATH-461-THERMOPOLIUM",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "LA-EXT-461-THERMOPOLIUM",
+      "order": 4
+    }
+  ]
+}

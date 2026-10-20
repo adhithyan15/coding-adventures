@@ -1,0 +1,9 @@
+{
+  "id": "IT-PATH-388-VALIDO",
+  "spine_node": "SPINE-EXPRESS-CONDITION",
+  "before": [],
+  "inline": [
+    "IT-EXT-388-VALIDO"
+  ],
+  "after": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 468,
+  "sourceHash": "fnv1a64:59bd6b58573d4069",
+  "lessonIds": [
+    "GE-C468-wut",
+    "GE-C468-zorn",
+    "GE-C468-aergern",
+    "GE-C468-aufregen",
+    "GE-C468-toben"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch468.txt",
+  "json": "german/narration/ch468.json",
+  "textHash": "fnv1a64:69eeed4464adaa11",
+  "jsonHash": "fnv1a64:e524822ffe672fb0",
+  "findings": []
+}

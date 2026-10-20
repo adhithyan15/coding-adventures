@@ -1,0 +1,19 @@
+{
+  "chapter": 307,
+  "title": "Feridos",
+  "label": "ch:pt-feridos",
+  "canDo": "I can talk about the injured, their injuries and fractures, and a plaster cast.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "PT-C307-gesso",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 307: I can talk about the injured, their injuries and fractures, and a plaster cast.",
+    "assesses": [
+      "PT-LEX-C307-FERIDO-03",
+      "PT-LEX-C307-FERIDO-04",
+      "PT-LEX-C307-FERIDO-05"
+    ]
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "language": "italian",
+  "chapter": 494,
+  "sourceHash": "fnv1a64:a1a4cef6deecd72d",
+  "lessonIds": [
+    "IT-C494-rapporto",
+    "IT-C494-separarsi",
+    "IT-C494-separazione",
+    "IT-C494-lasciarsi",
+    "IT-C494-risposarsi",
+    "IT-R494-ripasso-487-494"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "italian/narration/ch494.txt",
+  "json": "italian/narration/ch494.json",
+  "textHash": "fnv1a64:f700308b961bb92d",
+  "jsonHash": "fnv1a64:44a970becb18293b",
+  "findings": []
+}

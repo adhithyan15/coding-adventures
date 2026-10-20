@@ -1,0 +1,858 @@
+{
+  "version": 1,
+  "language": "spanish",
+  "chapter": 711,
+  "title": "Emociones fuertes",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:49d97475d4313ddb",
+  "lessons": [
+    {
+      "id": "ES-C711-emocion",
+      "sequence": 25450,
+      "title": "la emoción — emotion; excitement",
+      "headword": "la emoción",
+      "romanization": "la emoción",
+      "gloss": "emotion; excitement",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c4da7d5e87eaf1ab",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Spanish for tension, then the Spanish for to calm."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: la emoción",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la emoción — \"emotion; excitement\"."
+            },
+            {
+              "kind": "speech",
+              "text": "¡Qué emoción! Mañana nos vamos. How exciting! We leave tomorrow."
+            },
+            {
+              "kind": "speech",
+              "text": "¡Qué emoción! — How exciting!"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "emoción was borrowed from French émotion (EtymDB), which goes back to Latin ēmovēre \"to stir up\", from movēre \"to move\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la emoción",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la emoción*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la emoción, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la emoción*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with la emoción",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *la emoción*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Spanish for tension, then the Spanish for to calm, then say la emoción again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Spanish for tension, then the Spanish for to calm, then say *la emoción* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does la emoción mean? (\"Emotion; excitement\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C711-emocionado",
+      "sequence": 25460,
+      "title": "emocionado — excited; moved",
+      "headword": "emocionado",
+      "romanization": "emocionado",
+      "gloss": "excited; moved",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4d88b9bfa531f874",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Spanish for to calm, then the Spanish for emotion."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: emocionado",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "emocionado — \"excited; moved\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Estoy muy emocionado por el viaje. I am very excited about the trip."
+            },
+            {
+              "kind": "speech",
+              "text": "Used with estar. It covers both excited and touched."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "emocionado is the participle of emocionar, built on emoción, which was borrowed from French émotion (EtymDB)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "emocionado",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *emocionado*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "emocionado, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *emocionado*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with emocionado",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *emocionado*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Spanish for to calm, then the Spanish for emotion, then say emocionado again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Spanish for to calm, then the Spanish for emotion, then say *emocionado* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does emocionado mean? (\"Excited; moved\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C711-emocionante",
+      "sequence": 25470,
+      "title": "emocionante — exciting; moving",
+      "headword": "emocionante",
+      "romanization": "emocionante",
+      "gloss": "exciting; moving",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9d6ba531f7a01107",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Spanish for emotion, then the Spanish for excited."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: emocionante",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "emocionante — \"exciting; moving\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Fue un partido emocionante. It was an exciting match."
+            },
+            {
+              "kind": "speech",
+              "text": "Emocionante describes the thing; emocionado describes the person."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "emocionante is built on emocionar with the ending -ante; the verb is made from emoción, borrowed from French émotion (EtymDB)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "emocionante",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *emocionante*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "emocionante, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *emocionante*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with emocionante",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *emocionante*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Spanish for emotion, then the Spanish for excited, then say emocionante again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Spanish for emotion, then the Spanish for excited, then say *emocionante* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does emocionante mean? (\"Exciting; moving\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C711-emotivo",
+      "sequence": 25480,
+      "title": "emotivo — moving, emotional",
+      "headword": "emotivo",
+      "romanization": "emotivo",
+      "gloss": "moving, emotional",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5d28ebead3193683",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Spanish for excited, then the Spanish for exciting."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: emotivo",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "emotivo — \"moving, emotional\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Fue una boda muy emotiva. It was a very moving wedding."
+            },
+            {
+              "kind": "speech",
+              "text": "Emotivo describes the moment; emocionado describes the person."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "emotivo is usually explained as a learned word built on Latin ēmōtus \"stirred up\", the participle of ēmovēre, from movēre \"to move\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "emotivo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *emotivo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "emotivo, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *emotivo*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with emotivo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *emotivo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Spanish for excited, then the Spanish for exciting, then say emotivo again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Spanish for excited, then the Spanish for exciting, then say *emotivo* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does emotivo mean? (\"Moving, emotional\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C711-conmover",
+      "sequence": 25490,
+      "title": "conmover — to move, to touch (emotionally)",
+      "headword": "conmover",
+      "romanization": "conmover",
+      "gloss": "to move, to touch (emotionally)",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8a3f9a7316aff253",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Spanish for exciting, then the Spanish for moving."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: conmover",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "conmover — \"to move, to touch (emotionally)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Su historia me conmovió. Her story moved me."
+            },
+            {
+              "kind": "speech",
+              "text": "Stem change: conmueve. Conmovido — moved, touched."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "conmover is inherited from Latin commovēre \"to stir deeply\" (EtymDB), built on movēre \"to move\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "conmover",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *conmover*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "conmover, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *conmover*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with conmover",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *conmover*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Spanish for exciting, then the Spanish for moving, then say conmover again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Spanish for exciting, then the Spanish for moving, then say *conmover* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does conmover mean? (\"To move, to touch (emotionally)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-R711-repaso-704-711",
+      "sequence": 25500,
+      "title": "Sentimientos y experiencias",
+      "headword": "(dialogue)",
+      "romanization": "(dialogue)",
+      "gloss": "a review of chapters 704-711",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6b26b2a616cd268e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Spanish for joy and melancholy."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "joy, melancholy, happiness, to be moved, to cry",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: joy, melancholy, happiness, to be moved, to cry]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pride, proud, shame, ashamed, to be ashamed",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: pride, proud, shame, ashamed, to be ashamed]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to frighten, frightened, the fright, panic, to fear",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to frighten, frightened, the fright, panic, to fear]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "angry, cross, rage, anger, to annoy",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: angry, cross, rage, anger, to annoy]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jealousy, jealous, envy, to envy, resentment",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: jealousy, jealous, envy, to envy, resentment]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "isolation, lonely, to miss, nostalgia, to long for",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: isolation, lonely, to miss, nostalgia, to long for]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nerves, stress, anxiety, tension, to calm",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: nerves, stress, anxiety, tension, to calm]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "emotion, excited, exciting, moving, to move",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: emotion, excited, exciting, moving, to move]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Joy? (la alegría.) Melancholy? (la melancolía.) Happiness? (la dicha.) To be moved? (emocionarse.) To cry? (llorar.) Pride? (el orgullo.) Proud? (orgulloso.) Shame? (la vergüenza.) Ashamed? (avergonzado.) To be ashamed? (avergonzarse.) To frighten? (asustar.) Frightened? (asustado.) The fright? (el susto.) Panic? (el pánico.) To fear? (temer.) Angry? (enfadado.) Cross? (enojado.) Rage? (la rabia.) Anger? (la ira.) To annoy? (fastidiar.) Jealousy? (los celos.) Jealous? (celoso.) Envy? (la envidia.) To envy? (envidiar.) Resentment? (el rencor.) Isolation? (el aislamiento.) Lonely? (solitario.) To miss? (extrañar.) Nostalgia? (la nostalgia.) To long for? (añorar.) Nerves? (los nervios.) Stress? (el estrés.) Anxiety? (la ansiedad.) Tension? (la tensión.) To calm? (calmar.) Emotion? (la emoción.) Excited? (emocionado.) Exciting? (emocionante.) Moving? (emotivo.) To move? (conmover.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

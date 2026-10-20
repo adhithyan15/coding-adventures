@@ -135,6 +135,7 @@ fn ac_sweep_measurements_execute_probe_and_parsed_cards() {
         "
 .measure ac out_swing PP V(out) FROM=10 TO=1000
 .meas ac out_final FINAL V(out)
+.measure ac out_at FIND V(out) AT=550
 .end
 ",
     )
@@ -142,7 +143,7 @@ fn ac_sweep_measurements_execute_probe_and_parsed_cards() {
 
     assert_eq!(
         format_measurement_table(&measurements),
-        "Name\tAnalysis\tProbe\tMode\tFrom\tTo\tValue\nout_swing\tac\tV(out)\tpp\t1.000000e+01\t1.000000e+03\t1.500000e+00\nout_final\tac\tV(out)\tlast\t\t\t5.000000e-01\n"
+        "Name\tAnalysis\tProbe\tMode\tFrom\tTo\tValue\nout_swing\tac\tV(out)\tpp\t1.000000e+01\t1.000000e+03\t1.500000e+00\nout_final\tac\tV(out)\tlast\t\t\t5.000000e-01\nout_at\tac\tV(out)\tfind\t5.500000e+02\t5.500000e+02\t1.250000e+00\n"
     );
 }
 

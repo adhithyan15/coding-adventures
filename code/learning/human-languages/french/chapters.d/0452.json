@@ -1,0 +1,19 @@
+{
+  "chapter": 452,
+  "title": "Les bonnes affaires",
+  "label": "ch:fr-les-bonnes-affaires",
+  "canDo": "I can find a bargain: the discount, the price cut, haggling, selling off and the street sale.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "FR-C452-braderie",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 452: I can find a bargain: the discount, the price cut, haggling, selling off and the street sale.",
+    "assesses": [
+      "FR-LEX-C452-BRADERIE-03",
+      "FR-LEX-C452-BRADERIE-04",
+      "FR-LEX-C452-BRADERIE-05"
+    ]
+  }
+}

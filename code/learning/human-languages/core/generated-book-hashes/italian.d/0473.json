@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 473,
+  "sourceHash": "fnv1a64:4803ac7c9116060e",
+  "lessonIds": [
+    "IT-C473-sincero",
+    "IT-C473-bugiardo",
+    "IT-C473-ingenuo",
+    "IT-C473-furbo",
+    "IT-C473-ammirare"
+  ],
+  "tex": "italian/book/chapters/ch473-sinceri-e-bugiardi.tex"
+}

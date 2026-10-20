@@ -1,0 +1,19 @@
+{
+  "chapter": 560,
+  "title": "El reencuentro",
+  "label": "ch:es-el-reencuentro",
+  "canDo": "I can say that people gathered, got together, met to talk, were called to a meeting and saw each other again.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "ES-C560-reencuentro",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 560: I can say that people gathered, got together, met to talk, were called to a meeting and saw each other again.",
+    "assesses": [
+      "ES-LEX-C560-ENCUENTRO-03",
+      "ES-LEX-C560-ENCUENTRO-04",
+      "ES-LEX-C560-ENCUENTRO-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 382,
+  "title": "Gegen die Regeln",
+  "label": "ch:ge-gegen-die-regeln",
+  "canDo": "I can talk about bans and what is permitted, about offences, and about breaking a rule.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "GE-C382-verstoss",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 382: I can talk about bans and what is permitted, about offences, and about breaking a rule.",
+    "assesses": [
+      "GE-LEX-C382-VERSTOSS-03",
+      "GE-LEX-C382-VERSTOSS-04",
+      "GE-LEX-C382-VERSTOSS-05"
+    ]
+  }
+}

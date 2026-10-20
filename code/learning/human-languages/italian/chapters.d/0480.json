@@ -1,0 +1,19 @@
+{
+  "chapter": 480,
+  "title": "Perdonare",
+  "label": "ch:it-perdonare",
+  "canDo": "I can talk about taking offence, grudges and forgiving.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "IT-C480-sfogarsi",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 480: I can talk about taking offence, grudges and forgiving.",
+    "assesses": [
+      "IT-LEX-C480-RANCORE-03",
+      "IT-LEX-C480-RANCORE-04",
+      "IT-LEX-C480-RANCORE-05"
+    ]
+  }
+}

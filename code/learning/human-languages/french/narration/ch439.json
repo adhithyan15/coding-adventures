@@ -1,0 +1,858 @@
+{
+  "version": 1,
+  "language": "french",
+  "chapter": 439,
+  "title": "Clochers et remparts",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:47af9dcb6f2287cb",
+  "lessons": [
+    {
+      "id": "FR-C439-cathedrale",
+      "sequence": 24290,
+      "title": "la cathédrale — the cathedral",
+      "headword": "la cathédrale",
+      "romanization": "la cathédrale",
+      "gloss": "the cathedral",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:13966ef513133472",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the French for to wander, then the French for to pace up and down."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: la cathédrale",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la cathédrale — \"the cathedral\"."
+            },
+            {
+              "kind": "speech",
+              "text": "La cathédrale est au centre de la vieille ville. The cathedral is in the middle of the old town."
+            },
+            {
+              "kind": "speech",
+              "text": "The bishop's church."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "cathédrale is a learned borrowing from Medieval Latin (ecclēsia) cathedrālis 'church with a bishop's chair', from cathedra 'chair', from Greek kathédra (Lewis & Short)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la cathédrale",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la cathédrale*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la cathédrale, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la cathédrale*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with la cathédrale",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *la cathédrale*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the French for to wander, then the French for to pace up and down, then say la cathédrale again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the French for to wander, then the French for to pace up and down, then say *la cathédrale* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does la cathédrale mean? (\"The cathedral\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FR-C439-basilique",
+      "sequence": 24300,
+      "title": "la basilique — the basilica",
+      "headword": "la basilique",
+      "romanization": "la basilique",
+      "gloss": "the basilica",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6e232bd5f46b101d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the French for to pace up and down, then the French for the cathedral."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: la basilique",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la basilique — \"the basilica\"."
+            },
+            {
+              "kind": "speech",
+              "text": "On monte à la basilique par un long escalier. You go up to the basilica by a long flight of steps."
+            },
+            {
+              "kind": "speech",
+              "text": "A large and important church."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "basilique is a learned borrowing from Latin basilica, from Greek basilikḗ (stoá) 'royal hall' (EtymDB)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la basilique",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la basilique*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la basilique, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la basilique*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with la basilique",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *la basilique*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the French for to pace up and down, then the French for the cathedral, then say la basilique again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the French for to pace up and down, then the French for the cathedral, then say *la basilique* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does la basilique mean? (\"The basilica\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FR-C439-clocher",
+      "sequence": 24310,
+      "title": "le clocher — the bell tower, the steeple",
+      "headword": "le clocher",
+      "romanization": "le clocher",
+      "gloss": "the bell tower, the steeple",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ceab5b2c6fc47758",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the French for the cathedral, then the French for the basilica."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: le clocher",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "le clocher — \"the bell tower, the steeple\"."
+            },
+            {
+              "kind": "speech",
+              "text": "On voit le clocher du village de très loin. The village steeple is visible from far away."
+            },
+            {
+              "kind": "speech",
+              "text": "L'esprit de clocher — small-town thinking."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "clocher is built on cloche 'bell', which goes back to Late Latin clocca, usually traced to a Celtic word."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "le clocher",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *le clocher*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "le clocher, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *le clocher*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with le clocher",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *le clocher*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the French for the cathedral, then the French for the basilica, then say le clocher again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the French for the cathedral, then the French for the basilica, then say *le clocher* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does le clocher mean? (\"The bell tower, the steeple\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FR-C439-beffroi",
+      "sequence": 24320,
+      "title": "le beffroi — the belfry (town bell tower)",
+      "headword": "le beffroi",
+      "romanization": "le beffroi",
+      "gloss": "the belfry (town bell tower)",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2e51a8fa5f262f63",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the French for the basilica, then the French for the bell tower."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: le beffroi",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "le beffroi — \"the belfry (town bell tower)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Du haut du beffroi, la vue sur la ville est superbe. From the top of the belfry the view over the town is superb."
+            },
+            {
+              "kind": "speech",
+              "text": "Many towns in the north of France and in Belgium have a beffroi."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "beffroi is usually traced to Middle High German bercfrit 'tower that protects'; EtymDB does not list it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "le beffroi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *le beffroi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "le beffroi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *le beffroi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with le beffroi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *le beffroi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the French for the basilica, then the French for the bell tower, then say le beffroi again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the French for the basilica, then the French for the bell tower, then say *le beffroi* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does le beffroi mean? (\"The belfry (town bell tower)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FR-C439-remparts",
+      "sequence": 24330,
+      "title": "les remparts — the town walls, the ramparts",
+      "headword": "les remparts",
+      "romanization": "les remparts",
+      "gloss": "the town walls, the ramparts",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:483f30ae4412ddaa",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the French for the bell tower, then the French for the belfry."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: les remparts",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "les remparts — \"the town walls, the ramparts\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Le soir, nous faisons le tour des remparts. In the evening we walk round the town walls."
+            },
+            {
+              "kind": "speech",
+              "text": "Mostly plural."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "rempart is built on remparer 'to fortify again', from re- and emparer, which is usually traced to Provençal amparar 'to protect', from Latin ante and parāre (Lewis & Short). EtymDB does not list it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "les remparts",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *les remparts*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "les remparts, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *les remparts*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with les remparts",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *les remparts*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the French for the bell tower, then the French for the belfry, then say les remparts again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the French for the bell tower, then the French for the belfry, then say *les remparts* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does les remparts mean? (\"The town walls, the ramparts\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FR-R439-revision-432-439",
+      "sequence": 24340,
+      "title": "Retour sur les chapitres 432–439",
+      "headword": "(dialogue)",
+      "romanization": "(dialogue)",
+      "gloss": "a review of chapters 432-439",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:06a092760eb641fd",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the French for the manager and the inconvenience."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the manager, the inconvenience, to report, the cleaning, faulty",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the manager, the inconvenience, to report, the cleaning, faulty]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the down payment, the deposit, to compensate, the compensation, to pay damages to",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the down payment, the deposit, to compensate, the compensation, to pay damages to]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to get one’s bearings, the compass, to spot, the landmark, to mislay",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to get one’s bearings, the compass, to spot, the landmark, to mislay]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the road sign, the arrow, the crossroads, the marker post, the corner",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the road sign, the arrow, the crossroads, the marker post, the corner]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the shortcut, the detour, the route, to go round, to turn back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the shortcut, the detour, the route, to go round, to turn back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the dead end, the alley, the avenue, the boulevard, the passer-by",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the dead end, the alley, the avenue, the boulevard, the passer-by]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to stroll, to go for a walk, to walk about, to wander, to pace up and down",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to stroll, to go for a walk, to walk about, to wander, to pace up and down]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the cathedral, the basilica, the bell tower, the belfry, the town walls",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the cathedral, the basilica, the bell tower, the belfry, the town walls]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The manager? (le gérant.) The inconvenience? (le désagrément.) To report? (signaler.) The cleaning? (le ménage.) Faulty? (défectueux.) The down payment? (l'acompte.) The deposit? (les arrhes.) To compensate? (dédommager.) The compensation? (le dédommagement.) To pay damages to? (indemniser.) To get one’s bearings? (orienter.) The compass? (la boussole.) To spot? (repérer.) The landmark? (le repère.) To mislay? (égarer.) The road sign? (le panneau.) The arrow? (la flèche.) The crossroads? (le croisement.) The marker post? (la borne.) The corner? (l'angle.) The shortcut? (le raccourci.) The detour? (le détour.) The route? (l'itinéraire.) To go round? (contourner.) To turn back? (rebrousser.) The dead end? (l'impasse.) The alley? (la ruelle.) The avenue? (l'avenue.) The boulevard? (le boulevard.) The passer-by? (le passant.) To stroll? (flâner.) To go for a walk? (balader.) To walk about? (déambuler.) To wander? (errer.) To pace up and down? (arpenter.) The cathedral? (la cathédrale.) The basilica? (la basilique.) The bell tower? (le clocher.) The belfry? (le beffroi.) The town walls? (les remparts.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

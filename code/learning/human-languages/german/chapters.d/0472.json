@@ -1,0 +1,19 @@
+{
+  "chapter": 472,
+  "title": "Sehnsucht und Heimweh",
+  "label": "ch:ge-sehnsucht-und-heimweh",
+  "canDo": "I can talk about longing, loneliness and missing people.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "GE-C472-vermissen",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 472: I can talk about longing, loneliness and missing people.",
+    "assesses": [
+      "GE-LEX-C472-SEHNSUCHT-03",
+      "GE-LEX-C472-SEHNSUCHT-04",
+      "GE-LEX-C472-SEHNSUCHT-05"
+    ]
+  }
+}

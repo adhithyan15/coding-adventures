@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 317,
+  "sourceHash": "fnv1a64:d294791c45d6f2ef",
+  "lessonIds": [
+    "PT-C317-aposentar",
+    "PT-C317-pensionista",
+    "PT-C317-emigrar",
+    "PT-C317-emigracao",
+    "PT-C317-emigrante"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch317.txt",
+  "json": "portuguese/narration/ch317.json",
+  "textHash": "fnv1a64:9b5894d8519950ed",
+  "jsonHash": "fnv1a64:80101a03f8262eac",
+  "findings": []
+}

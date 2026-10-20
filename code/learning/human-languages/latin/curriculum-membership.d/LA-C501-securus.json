@@ -1,0 +1,11 @@
+{
+  "id": "LA-C501-securus",
+  "pathSegment": "LA-PATH-501-AFFE",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "LA-EXT-501-AFFE",
+      "order": 4
+    }
+  ]
+}

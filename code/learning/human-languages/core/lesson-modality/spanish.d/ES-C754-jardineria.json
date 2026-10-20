@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C754-jardineria",
+    "language": "spanish",
+    "chapter": 754,
+    "sequence": 27690,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2a9c1e6412c06f28"
+  },
+  "findings": []
+}

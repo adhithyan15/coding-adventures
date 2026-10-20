@@ -1,0 +1,11 @@
+{
+  "id": "PT-C314-falecimento",
+  "pathSegment": "PT-PATH-314-FALECER",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "PT-EXT-314-FALECER",
+      "order": 0
+    }
+  ]
+}

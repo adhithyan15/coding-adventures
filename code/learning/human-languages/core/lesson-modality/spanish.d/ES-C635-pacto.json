@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C635-pacto",
+    "language": "spanish",
+    "chapter": 635,
+    "sequence": 21520,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c9f5a8986b3bdf94"
+  },
+  "findings": []
+}

@@ -1,0 +1,9 @@
+{
+  "id": "ES-PATH-619-QUIZA",
+  "spine_node": "SPINE-EXPRESS-CONDITION",
+  "before": [],
+  "inline": [
+    "ES-EXT-619-QUIZA"
+  ],
+  "after": []
+}

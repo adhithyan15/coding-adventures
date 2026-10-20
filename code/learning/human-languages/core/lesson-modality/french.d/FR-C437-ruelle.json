@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C437-ruelle",
+    "language": "french",
+    "chapter": 437,
+    "sequence": 24200,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:732cc8efea92e1fb"
+  },
+  "findings": []
+}

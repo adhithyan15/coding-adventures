@@ -1,0 +1,11 @@
+{
+  "id": "LA-C307-veneficus",
+  "pathSegment": "LA-PATH-307-VENENUM",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "LA-EXT-307-VENENUM",
+      "order": 1
+    }
+  ]
+}

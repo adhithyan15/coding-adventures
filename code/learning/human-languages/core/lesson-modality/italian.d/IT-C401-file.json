@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C401-file",
+    "language": "italian",
+    "chapter": 401,
+    "sequence": 22770,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2c4411a3c90ad62a"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "PT-C387-arguido",
+  "pathSegment": "PT-PATH-387-TRIBUNAL",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PT-EXT-387-TRIBUNAL",
+      "order": 1
+    }
+  ]
+}

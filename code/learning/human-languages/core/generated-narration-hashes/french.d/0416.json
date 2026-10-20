@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 416,
+  "sourceHash": "fnv1a64:af72325d7c29aa6a",
+  "lessonIds": [
+    "FR-C416-vol",
+    "FR-C416-aerogare",
+    "FR-C416-enregistrement",
+    "FR-C416-soute",
+    "FR-C416-embarquement"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch416.txt",
+  "json": "french/narration/ch416.json",
+  "textHash": "fnv1a64:ecebb78e320e4ed8",
+  "jsonHash": "fnv1a64:576330a5ce788157",
+  "findings": []
+}

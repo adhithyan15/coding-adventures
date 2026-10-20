@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 340,
+  "sourceHash": "fnv1a64:f94e197dea1090dc",
+  "lessonIds": [
+    "GE-C340-beurteilen",
+    "GE-C340-einschaetzen",
+    "GE-C340-einschaetzung",
+    "GE-C340-kritisieren",
+    "GE-C340-kritik"
+  ],
+  "tex": "german/book/chapters/ch340-kritik-uben.tex"
+}

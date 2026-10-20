@@ -1,0 +1,21 @@
+{
+  "language": "french",
+  "chapter": 531,
+  "sourceHash": "fnv1a64:52d9241f7d5e5ba3",
+  "lessonIds": [
+    "FR-C531-bricolage",
+    "FR-C531-bricoler",
+    "FR-C531-vis",
+    "FR-C531-tournevis",
+    "FR-C531-percer",
+    "FR-R531-revision-530-531",
+    "FR-R531-revision-final-531"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "french/narration/ch531.txt",
+  "json": "french/narration/ch531.json",
+  "textHash": "fnv1a64:870d319f84fe688a",
+  "jsonHash": "fnv1a64:f69ced34e2b38e32",
+  "findings": []
+}

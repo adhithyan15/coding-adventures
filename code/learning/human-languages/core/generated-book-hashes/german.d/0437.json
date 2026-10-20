@@ -1,0 +1,14 @@
+{
+  "language": "german",
+  "chapter": 437,
+  "sourceHash": "fnv1a64:3ee67aba236a52b2",
+  "lessonIds": [
+    "GE-C437-bummeln",
+    "GE-C437-schlendern",
+    "GE-C437-erkundigen",
+    "GE-C437-auskunft",
+    "GE-C437-auskennen",
+    "GE-R437-review-430-437"
+  ],
+  "tex": "german/book/chapters/ch437-durch-die-stadt.tex"
+}

@@ -1,0 +1,11 @@
+{
+  "id": "IT-C441-senso-unico",
+  "pathSegment": "IT-PATH-441-VICOLI",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "IT-EXT-441-VICOLI",
+      "order": 4
+    }
+  ]
+}

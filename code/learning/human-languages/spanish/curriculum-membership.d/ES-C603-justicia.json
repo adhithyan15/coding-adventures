@@ -1,0 +1,11 @@
+{
+  "id": "ES-C603-justicia",
+  "pathSegment": "ES-PATH-603-DERECHO",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ES-EXT-603-DERECHO",
+      "order": 3
+    }
+  ]
+}

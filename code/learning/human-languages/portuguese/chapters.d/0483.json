@@ -1,0 +1,19 @@
+{
+  "chapter": 483,
+  "title": "Espirros e comichão",
+  "label": "ch:pt-espirros-e-comichao",
+  "canDo": "I can describe sneezing, itching and allergies.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "PT-C483-cocar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 483: I can describe sneezing, itching and allergies.",
+    "assesses": [
+      "PT-LEX-C483-ALERGIA-03",
+      "PT-LEX-C483-ALERGIA-04",
+      "PT-LEX-C483-ALERGIA-05"
+    ]
+  }
+}

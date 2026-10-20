@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C452-remise",
+    "language": "french",
+    "chapter": 452,
+    "sequence": 24960,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:408ce36e7b875126"
+  },
+  "findings": []
+}

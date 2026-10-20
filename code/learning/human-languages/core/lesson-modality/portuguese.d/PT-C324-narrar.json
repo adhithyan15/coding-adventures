@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PT-C324-narrar",
+    "language": "portuguese",
+    "chapter": 324,
+    "sequence": 18620,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7cbd372d2d559f82"
+  },
+  "findings": []
+}

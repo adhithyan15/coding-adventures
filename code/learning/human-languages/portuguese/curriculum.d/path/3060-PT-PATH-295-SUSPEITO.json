@@ -1,0 +1,9 @@
+{
+  "id": "PT-PATH-295-SUSPEITO",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "PT-EXT-295-SUSPEITO"
+  ],
+  "after": []
+}

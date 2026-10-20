@@ -1,0 +1,11 @@
+{
+  "id": "ES-C672-senalizacion",
+  "pathSegment": "ES-PATH-672-SENAL",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ES-EXT-672-SENAL",
+      "order": 3
+    }
+  ]
+}

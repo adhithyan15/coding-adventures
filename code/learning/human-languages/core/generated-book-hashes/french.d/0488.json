@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 488,
+  "sourceHash": "fnv1a64:1f3e0323674cd5fb",
+  "lessonIds": [
+    "FR-C488-calin",
+    "FR-C488-caliner",
+    "FR-C488-complicite",
+    "FR-C488-chuchoter",
+    "FR-C488-confier"
+  ],
+  "tex": "french/book/chapters/ch488-calins-et-confidences.tex"
+}

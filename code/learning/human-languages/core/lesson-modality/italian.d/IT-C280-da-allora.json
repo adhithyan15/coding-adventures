@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C280-da-allora",
+    "language": "italian",
+    "chapter": 280,
+    "sequence": 16460,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e1e03d6294be6bfb"
+  },
+  "findings": []
+}

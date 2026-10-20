@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 660,
+  "sourceHash": "fnv1a64:64230df72d1d0d56",
+  "lessonIds": [
+    "ES-C660-alojamiento",
+    "ES-C660-alojarse",
+    "ES-C660-hospedarse",
+    "ES-C660-hostal",
+    "ES-C660-albergue"
+  ],
+  "tex": "spanish/book/chapters/ch660-donde-dormir.tex"
+}

@@ -1,0 +1,11 @@
+{
+  "id": "FR-C416-embarquement",
+  "pathSegment": "FR-PATH-416-AEROGARE",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-416-AEROGARE",
+      "order": 4
+    }
+  ]
+}

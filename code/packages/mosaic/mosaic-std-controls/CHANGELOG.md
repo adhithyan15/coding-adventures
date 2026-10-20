@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Depends on `mosaic-std-foundation` 0.2.0 (`Surface`'s `items` slot).
+
 - Fixed two stale acceptance pins that kept main's shard 15 red: the Flutter
   Slider readout is now matched open-ended (`Text(displayValue` — it gained a
   themed `style:`), and Compose is exempt from the number-field placeholder

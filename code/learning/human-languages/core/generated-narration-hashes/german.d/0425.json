@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 425,
+  "sourceHash": "fnv1a64:9af5c193a777d020",
+  "lessonIds": [
+    "GE-C425-campingplatz",
+    "GE-C425-wohnwagen",
+    "GE-C425-wohnmobil",
+    "GE-C425-aufbauen",
+    "GE-C425-abbauen"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch425.txt",
+  "json": "german/narration/ch425.json",
+  "textHash": "fnv1a64:ae19c340edb005ca",
+  "jsonHash": "fnv1a64:1c84a2d7747c3dcd",
+  "findings": []
+}

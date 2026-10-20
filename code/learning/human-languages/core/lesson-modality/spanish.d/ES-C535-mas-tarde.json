@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C535-mas-tarde",
+    "language": "spanish",
+    "chapter": 535,
+    "sequence": 16390,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7fd6ed058a239996"
+  },
+  "findings": []
+}

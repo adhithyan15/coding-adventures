@@ -1,0 +1,11 @@
+{
+  "id": "LA-C347-vellus",
+  "pathSegment": "LA-PATH-347-MONSTRUM",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "LA-EXT-347-MONSTRUM",
+      "order": 4
+    }
+  ]
+}

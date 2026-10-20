@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 411,
+  "sourceHash": "fnv1a64:becd92219b7977ef",
+  "lessonIds": [
+    "LA-C411-tribunal",
+    "LA-C411-lis",
+    "LA-C411-litigo",
+    "LA-C411-vadimonium",
+    "LA-C411-iurisconsultus"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch411.txt",
+  "json": "latin/narration/ch411.json",
+  "textHash": "fnv1a64:39efc90d8b176168",
+  "jsonHash": "fnv1a64:bbaa678e6613c652",
+  "findings": []
+}

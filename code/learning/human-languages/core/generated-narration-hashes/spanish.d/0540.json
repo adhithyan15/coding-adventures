@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 540,
+  "sourceHash": "fnv1a64:5e23e2529ff20f32",
+  "lessonIds": [
+    "ES-C540-a-principios-de",
+    "ES-C540-a-mediados-de",
+    "ES-C540-a-finales-de",
+    "ES-C540-semanal",
+    "ES-C540-anual"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch540.txt",
+  "json": "spanish/narration/ch540.json",
+  "textHash": "fnv1a64:06d375c96026ea18",
+  "jsonHash": "fnv1a64:131479f2ff94626f",
+  "findings": []
+}

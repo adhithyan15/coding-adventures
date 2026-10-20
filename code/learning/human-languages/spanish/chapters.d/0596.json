@@ -1,0 +1,19 @@
+{
+  "chapter": 596,
+  "title": "En la universidad",
+  "label": "ch:es-en-la-universidad",
+  "canDo": "I can talk about the syllabus, enrolment, tutorials and a master's degree.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "ES-C596-master",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 596: I can talk about the syllabus, enrolment, tutorials and a master's degree.",
+    "assesses": [
+      "ES-LEX-C596-ESTUDIOS-03",
+      "ES-LEX-C596-ESTUDIOS-04",
+      "ES-LEX-C596-ESTUDIOS-05"
+    ]
+  }
+}

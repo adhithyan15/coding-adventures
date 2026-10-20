@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C583-factor",
+    "language": "spanish",
+    "chapter": 583,
+    "sequence": 18880,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:890f2bdd94ca82bc"
+  },
+  "findings": []
+}

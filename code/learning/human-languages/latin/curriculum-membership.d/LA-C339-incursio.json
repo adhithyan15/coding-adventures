@@ -1,0 +1,11 @@
+{
+  "id": "LA-C339-incursio",
+  "pathSegment": "LA-PATH-339-PROELIUM",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "LA-EXT-339-PROELIUM",
+      "order": 3
+    }
+  ]
+}

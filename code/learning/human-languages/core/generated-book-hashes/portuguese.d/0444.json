@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 444,
+  "sourceHash": "fnv1a64:4f222d9009451a3e",
+  "lessonIds": [
+    "PT-C444-poste",
+    "PT-C444-ecoponto",
+    "PT-C444-sarjeta",
+    "PT-C444-pilarete",
+    "PT-C444-obstruir"
+  ],
+  "tex": "portuguese/book/chapters/ch444-coisas-da-rua.tex"
+}

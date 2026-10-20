@@ -1,0 +1,9 @@
+{
+  "id": "IT-PATH-408-BENZINAIO",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "IT-EXT-408-BENZINAIO"
+  ],
+  "after": []
+}

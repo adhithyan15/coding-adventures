@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 294,
+  "sourceHash": "fnv1a64:b2f37b57645c507c",
+  "lessonIds": [
+    "IT-C294-carabiniere",
+    "IT-C294-commissariato",
+    "IT-C294-pattuglia",
+    "IT-C294-telecamera",
+    "IT-C294-inseguimento"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch294.txt",
+  "json": "italian/narration/ch294.json",
+  "textHash": "fnv1a64:e1bff0299edbbb45",
+  "jsonHash": "fnv1a64:f6a75edd7d220643",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 772,
+  "sourceHash": "fnv1a64:4627fee92b3fd9a0",
+  "lessonIds": [
+    "ES-C772-brisa",
+    "ES-C772-soplar",
+    "ES-C772-ladera",
+    "ES-C772-resbalar",
+    "ES-C772-brujula"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch772.txt",
+  "json": "spanish/narration/ch772.json",
+  "textHash": "fnv1a64:ea46f7f2f1d9e40c",
+  "jsonHash": "fnv1a64:913949090d350709",
+  "findings": []
+}

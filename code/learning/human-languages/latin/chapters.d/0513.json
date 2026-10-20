@@ -1,0 +1,19 @@
+{
+  "chapter": 513,
+  "title": "Pity and shame",
+  "label": "ch:la-pity-and-shame",
+  "canDo": "I can talk about pity, compassion and shame.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "LA-C513-verecundia",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 513: I can talk about pity, compassion and shame.",
+    "assesses": [
+      "LA-LEX-C513-MISE-03",
+      "LA-LEX-C513-MISE-04",
+      "LA-LEX-C513-MISE-05"
+    ]
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "id": "LA-EXT-403-DOCTUS",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can call someone learned or unlearned, educated or knowing, and say that someone lacks experience.",
+  "prerequisites": []
+}

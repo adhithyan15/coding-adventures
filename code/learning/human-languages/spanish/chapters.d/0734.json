@@ -1,0 +1,19 @@
+{
+  "chapter": 734,
+  "title": "Quemaduras y cortes",
+  "label": "ch:es-quemaduras-y-cortes",
+  "canDo": "I can describe a burn or a cut that bleeds, the bandage and the scar.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "ES-C734-cicatriz",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 734: I can describe a burn or a cut that bleeds, the bandage and the scar.",
+    "assesses": [
+      "ES-LEX-C734-HERIDA-03",
+      "ES-LEX-C734-HERIDA-04",
+      "ES-LEX-C734-HERIDA-05"
+    ]
+  }
+}

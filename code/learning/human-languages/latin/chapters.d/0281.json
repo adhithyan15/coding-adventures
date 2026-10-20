@@ -1,0 +1,21 @@
+{
+  "chapter": 281,
+  "title": "The Scene and the Event",
+  "label": "ch:la-the-scene-and-the-event",
+  "canDo": "I can tell what happened in the perfect, and paint the scene it happened in with the imperfect.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "LA-R281-the-scene-and-the-event",
+    "kind": "production",
+    "summary": "Complete LA-R281-the-scene-and-the-event: I can tell what happened in the perfect, and paint the scene it happened in with the imperfect.",
+    "assesses": [
+      "LA-GRAMMAR-C281-PERFECTUM-01",
+      "LA-GRAMMAR-C281-PERFECTUM-AVI-02",
+      "LA-GRAMMAR-C281-ERAM-01",
+      "LA-GRAMMAR-C281-IMPERFECTUM-01",
+      "LA-GRAMMAR-C281-SCAENA-01"
+    ]
+  }
+}

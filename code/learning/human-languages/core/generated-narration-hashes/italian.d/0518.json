@@ -1,0 +1,20 @@
+{
+  "language": "italian",
+  "chapter": 518,
+  "sourceHash": "fnv1a64:fcf9310a0e2bf4fd",
+  "lessonIds": [
+    "IT-C518-intonato",
+    "IT-C518-stonare",
+    "IT-C518-ritornello",
+    "IT-C518-strofa",
+    "IT-C518-canticchiare",
+    "IT-R518-ripasso-511-518"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "italian/narration/ch518.txt",
+  "json": "italian/narration/ch518.json",
+  "textHash": "fnv1a64:a93d27ff22f2c931",
+  "jsonHash": "fnv1a64:2106f7f34f7ed6f6",
+  "findings": []
+}

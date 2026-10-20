@@ -1,0 +1,9 @@
+{
+  "id": "IT-PATH-292-RAPINA",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "IT-EXT-292-RAPINA"
+  ],
+  "after": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 427,
+  "sourceHash": "fnv1a64:44dabe527590d05d",
+  "lessonIds": [
+    "IT-C427-doganiere",
+    "IT-C427-dichiarare",
+    "IT-C427-perquisire",
+    "IT-C427-perquisizione",
+    "IT-C427-valico"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch427.txt",
+  "json": "italian/narration/ch427.json",
+  "textHash": "fnv1a64:92505a6a8bf6a6f4",
+  "jsonHash": "fnv1a64:6c8bb17145289dab",
+  "findings": []
+}

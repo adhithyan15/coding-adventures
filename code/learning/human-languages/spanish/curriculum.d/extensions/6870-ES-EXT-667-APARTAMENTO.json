@@ -1,0 +1,8 @@
+{
+  "id": "ES-EXT-667-APARTAMENTO",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can rent a holiday flat or a car: meet the owner or host and talk about tenants.",
+  "prerequisites": []
+}

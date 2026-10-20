@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PT-C393-saldo",
+    "language": "portuguese",
+    "chapter": 393,
+    "sequence": 22170,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c6a54662d7c348e5"
+  },
+  "findings": []
+}

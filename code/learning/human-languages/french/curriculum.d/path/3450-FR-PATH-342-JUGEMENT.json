@@ -1,0 +1,9 @@
+{
+  "id": "FR-PATH-342-JUGEMENT",
+  "spine_node": "SPINE-GIVE-REASONS",
+  "before": [],
+  "inline": [
+    "FR-EXT-342-JUGEMENT"
+  ],
+  "after": []
+}

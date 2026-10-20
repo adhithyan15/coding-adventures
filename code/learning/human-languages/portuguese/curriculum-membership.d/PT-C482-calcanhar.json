@@ -1,0 +1,11 @@
+{
+  "id": "PT-C482-calcanhar",
+  "pathSegment": "PT-PATH-482-CORPO",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-482-CORPO",
+      "order": 3
+    }
+  ]
+}

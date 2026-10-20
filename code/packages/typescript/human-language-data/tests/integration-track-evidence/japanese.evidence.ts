@@ -38,9 +38,11 @@ export const integrationTrackEvidence: IntegrationTrackEvidence = {
     // negation and questions (six), the past (five), the future (five) and
     // practical texts (five notices), 26 word and phrase lessons, then a
     // first-pass and a second-pass review at the end of chapter 142.
-    expect(japanese).toHaveLength(837);
+    // 837 -> 840: chapters 143-145, the three A1 writing stages.
+    expect(japanese).toHaveLength(840);
+    // 142 -> 145: the same three writing chapters, one lesson each.
     expect(new Set(japanese.map((lesson) => lesson.realization.chapter)))
-      .toEqual(new Set(Array.from({ length: 142 }, (_, index) => index + 1)));
+      .toEqual(new Set(Array.from({ length: 145 }, (_, index) => index + 1)));
     expect(japanese.every((lesson) => lesson.frontmatter.schema_version === "2")).toBe(true);
     expect(japanese.map((lesson) => [
       lesson.realization.lessonId,

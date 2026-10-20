@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C676-turistico",
+    "language": "spanish",
+    "chapter": 676,
+    "sequence": 23660,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8773370e5db45b8b"
+  },
+  "findings": []
+}

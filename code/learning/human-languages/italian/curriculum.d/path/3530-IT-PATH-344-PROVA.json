@@ -1,0 +1,9 @@
+{
+  "id": "IT-PATH-344-PROVA",
+  "spine_node": "SPINE-GIVE-REASONS",
+  "before": [],
+  "inline": [
+    "IT-EXT-344-PROVA"
+  ],
+  "after": []
+}

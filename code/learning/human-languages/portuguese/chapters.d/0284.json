@@ -1,0 +1,19 @@
+{
+  "chapter": 284,
+  "title": "Escândalos",
+  "label": "ch:pt-escandalos",
+  "canDo": "I can talk about scandal, censorship, editorials, newspaper pieces and columnists.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "PT-R284-revisao-277-284",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 284: I can talk about scandal, censorship, editorials, newspaper pieces and columnists.",
+    "assesses": [
+      "PT-LEX-C284-ESCANDALO-03",
+      "PT-LEX-C284-ESCANDALO-04",
+      "PT-LEX-C284-ESCANDALO-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "PT-C380-partido",
+  "pathSegment": "PT-PATH-380-POLITICA",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PT-EXT-380-POLITICA",
+      "order": 1
+    }
+  ]
+}

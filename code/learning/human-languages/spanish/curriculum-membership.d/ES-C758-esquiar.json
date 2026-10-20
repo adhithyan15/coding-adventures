@@ -1,0 +1,11 @@
+{
+  "id": "ES-C758-esquiar",
+  "pathSegment": "ES-PATH-758-DEPORTES",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ES-EXT-758-DEPORTES",
+      "order": 2
+    }
+  ]
+}

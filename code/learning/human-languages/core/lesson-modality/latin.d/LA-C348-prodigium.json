@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C348-prodigium",
+    "language": "latin",
+    "chapter": 348,
+    "sequence": 18740,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:33de3fed2262fb2a"
+  },
+  "findings": []
+}

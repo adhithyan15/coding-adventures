@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 450,
+  "sourceHash": "fnv1a64:d71238d5474bb4e5",
+  "lessonIds": [
+    "PT-C450-mercearia",
+    "PT-C450-charcutaria",
+    "PT-C450-frutaria",
+    "PT-C450-garrafeira",
+    "PT-C450-fatiar"
+  ],
+  "tex": "portuguese/book/chapters/ch450-comida-na-loja.tex"
+}

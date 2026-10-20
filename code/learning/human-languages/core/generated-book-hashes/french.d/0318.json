@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 318,
+  "sourceHash": "fnv1a64:f6d49a5ab1c3204f",
+  "lessonIds": [
+    "FR-C318-feu-d-artifice",
+    "FR-C318-petard",
+    "FR-C318-bal",
+    "FR-C318-guirlande",
+    "FR-C318-decorer"
+  ],
+  "tex": "french/book/chapters/ch318-le-feu-d-artifice.tex"
+}

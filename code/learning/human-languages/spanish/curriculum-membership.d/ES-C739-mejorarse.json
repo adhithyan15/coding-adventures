@@ -1,0 +1,11 @@
+{
+  "id": "ES-C739-mejorarse",
+  "pathSegment": "ES-PATH-739-CURAR",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ES-EXT-739-CURAR",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 519,
+  "title": "Antes do espetáculo",
+  "label": "ch:pt-antes-do-espetaculo",
+  "canDo": "I can talk about rehearsals, the stage and the audience.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "PT-C519-aplauso",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 519: I can talk about rehearsals, the stage and the audience.",
+    "assesses": [
+      "PT-LEX-C519-ENSAIO-03",
+      "PT-LEX-C519-ENSAIO-04",
+      "PT-LEX-C519-ENSAIO-05"
+    ]
+  }
+}

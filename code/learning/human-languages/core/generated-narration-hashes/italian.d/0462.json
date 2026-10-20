@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 462,
+  "sourceHash": "fnv1a64:129804ae1b8e7ed1",
+  "lessonIds": [
+    "IT-C462-vetta",
+    "IT-C462-pendio",
+    "IT-C462-burrone",
+    "IT-C462-caverna",
+    "IT-C462-arrampicarsi"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch462.txt",
+  "json": "italian/narration/ch462.json",
+  "textHash": "fnv1a64:a895d1a3405195eb",
+  "jsonHash": "fnv1a64:fe37656fe779905d",
+  "findings": []
+}

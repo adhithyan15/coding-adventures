@@ -1,0 +1,14 @@
+{
+  "language": "latin",
+  "chapter": 346,
+  "sourceHash": "fnv1a64:34be6501c137be0e",
+  "lessonIds": [
+    "LA-C346-deus",
+    "LA-C346-divus",
+    "LA-C346-numen",
+    "LA-C346-mortalis",
+    "LA-C346-immortalis",
+    "LA-R346-review-339-346"
+  ],
+  "tex": "latin/book/chapters/ch346-dei-et-deae.tex"
+}

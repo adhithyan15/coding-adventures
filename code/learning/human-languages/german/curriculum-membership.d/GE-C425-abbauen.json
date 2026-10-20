@@ -1,0 +1,11 @@
+{
+  "id": "GE-C425-abbauen",
+  "pathSegment": "GE-PATH-425-CAMPING",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-425-CAMPING",
+      "order": 4
+    }
+  ]
+}

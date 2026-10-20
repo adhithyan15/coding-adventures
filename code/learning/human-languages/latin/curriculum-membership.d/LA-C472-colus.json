@@ -1,0 +1,11 @@
+{
+  "id": "LA-C472-colus",
+  "pathSegment": "LA-PATH-472-COLUS",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "LA-EXT-472-COLUS",
+      "order": 0
+    }
+  ]
+}

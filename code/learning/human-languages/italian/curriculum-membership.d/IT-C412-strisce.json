@@ -1,0 +1,11 @@
+{
+  "id": "IT-C412-strisce",
+  "pathSegment": "IT-PATH-412-VIGILE",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "IT-EXT-412-VIGILE",
+      "order": 2
+    }
+  ]
+}

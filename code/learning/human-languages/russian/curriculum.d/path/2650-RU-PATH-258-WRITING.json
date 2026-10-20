@@ -1,0 +1,9 @@
+{
+  "id": "RU-PATH-258-WRITING",
+  "spine_node": "SPINE-SAY-WHY",
+  "before": [],
+  "inline": [
+    "RU-EXT-258-WRITING"
+  ],
+  "after": []
+}

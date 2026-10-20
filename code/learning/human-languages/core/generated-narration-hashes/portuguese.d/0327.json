@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 327,
+  "sourceHash": "fnv1a64:6ee33eac43cb536c",
+  "lessonIds": [
+    "PT-C327-rei",
+    "PT-C327-rainha",
+    "PT-C327-reino",
+    "PT-C327-trono",
+    "PT-C327-coroa"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch327.txt",
+  "json": "portuguese/narration/ch327.json",
+  "textHash": "fnv1a64:84425f3cdc525fc5",
+  "jsonHash": "fnv1a64:edf7cd453eb820d0",
+  "findings": []
+}

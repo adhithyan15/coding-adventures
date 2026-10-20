@@ -1,0 +1,9 @@
+{
+  "id": "ES-PATH-630-ECONOMIA",
+  "spine_node": "SPINE-EXPRESS-CONDITION",
+  "before": [],
+  "inline": [
+    "ES-EXT-630-ECONOMIA"
+  ],
+  "after": []
+}

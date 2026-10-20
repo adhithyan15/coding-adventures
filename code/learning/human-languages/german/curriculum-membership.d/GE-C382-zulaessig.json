@@ -1,0 +1,11 @@
+{
+  "id": "GE-C382-zulaessig",
+  "pathSegment": "GE-PATH-382-VERSTOSS",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GE-EXT-382-VERSTOSS",
+      "order": 1
+    }
+  ]
+}

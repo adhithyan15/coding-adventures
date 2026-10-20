@@ -1,0 +1,11 @@
+{
+  "id": "IT-C360-reparto",
+  "pathSegment": "IT-PATH-360-REPARTO",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "IT-EXT-360-REPARTO",
+      "order": 1
+    }
+  ]
+}

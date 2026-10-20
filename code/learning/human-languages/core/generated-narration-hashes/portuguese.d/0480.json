@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 480,
+  "sourceHash": "fnv1a64:5220fe364a0e8d0c",
+  "lessonIds": [
+    "PT-C480-arrepender",
+    "PT-C480-arrependimento",
+    "PT-C480-remorso",
+    "PT-C480-envergonhar",
+    "PT-C480-envergonhado"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch480.txt",
+  "json": "portuguese/narration/ch480.json",
+  "textHash": "fnv1a64:f44ba92154d5b052",
+  "jsonHash": "fnv1a64:89fa488fa80cc7e3",
+  "findings": []
+}

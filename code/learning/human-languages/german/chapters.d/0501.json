@@ -1,0 +1,19 @@
+{
+  "chapter": 501,
+  "title": "Brettspiele",
+  "label": "ch:ge-brettspiele",
+  "canDo": "I can talk about board games.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "GE-C501-runde",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 501: I can talk about board games.",
+    "assesses": [
+      "GE-LEX-C501-BRETTSPIEL-03",
+      "GE-LEX-C501-BRETTSPIEL-04",
+      "GE-LEX-C501-BRETTSPIEL-05"
+    ]
+  }
+}

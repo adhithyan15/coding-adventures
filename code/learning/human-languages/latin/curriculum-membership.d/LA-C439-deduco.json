@@ -1,0 +1,11 @@
+{
+  "id": "LA-C439-deduco",
+  "pathSegment": "LA-PATH-439-EGREDIOR",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "LA-EXT-439-EGREDIOR",
+      "order": 3
+    }
+  ]
+}

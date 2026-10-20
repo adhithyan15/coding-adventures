@@ -1,0 +1,19 @@
+{
+  "chapter": 343,
+  "title": "Ho i miei dubbi",
+  "label": "ch:it-ho-i-miei-dubbi",
+  "canDo": "I can say I doubt something, that I am sceptical, that an idea is absurd or questionable, and deny a claim.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "IT-C343-discutibile",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 343: I can say I doubt something, that I am sceptical, that an idea is absurd or questionable, and deny a claim.",
+    "assesses": [
+      "IT-LEX-C343-DUBBIO-03",
+      "IT-LEX-C343-DUBBIO-04",
+      "IT-LEX-C343-DUBBIO-05"
+    ]
+  }
+}

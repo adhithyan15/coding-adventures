@@ -1,0 +1,19 @@
+{
+  "chapter": 477,
+  "title": "Lágrimas e gargalhadas",
+  "label": "ch:pt-lagrimas-e-gargalhadas",
+  "canDo": "I can describe crying, sighing and laughing out loud.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "PT-C477-gargalhada",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 477: I can describe crying, sighing and laughing out loud.",
+    "assesses": [
+      "PT-LEX-C477-CHORO-03",
+      "PT-LEX-C477-CHORO-04",
+      "PT-LEX-C477-CHORO-05"
+    ]
+  }
+}

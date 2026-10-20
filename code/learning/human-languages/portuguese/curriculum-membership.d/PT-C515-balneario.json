@@ -1,0 +1,11 @@
+{
+  "id": "PT-C515-balneario",
+  "pathSegment": "PT-PATH-515-LESAO",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "PT-EXT-515-LESAO",
+      "order": 0
+    }
+  ]
+}

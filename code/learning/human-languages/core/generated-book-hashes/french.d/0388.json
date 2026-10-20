@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 388,
+  "sourceHash": "fnv1a64:c8966f4e4ec15bd9",
+  "lessonIds": [
+    "FR-C388-peine",
+    "FR-C388-condamner",
+    "FR-C388-condamnation",
+    "FR-C388-detenu",
+    "FR-C388-punir"
+  ],
+  "tex": "french/book/chapters/ch388-la-peine.tex"
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C282-gros-titre",
+    "language": "french",
+    "chapter": 282,
+    "sequence": 16210,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9bee5d493257b0cd"
+  },
+  "findings": []
+}

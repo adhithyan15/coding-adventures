@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C273-surlendemain",
+    "language": "french",
+    "chapter": 273,
+    "sequence": 15770,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:871db547a9b27b23"
+  },
+  "findings": []
+}

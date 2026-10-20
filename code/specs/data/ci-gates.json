@@ -472,8 +472,13 @@
     },
     "build-windows-os-suites": {
       "scope": "step",
-      "description": "Native Windows suites, including Closure compiler publication/ACL regressions and the D18S Windows AppContainer applier, independent of any toolchain flag.",
+      "description": "Native Windows suites: Closure compiler publication/ACL regressions, the D18S AppContainer applier and the Windows broker (key files, key adoption, launch, supervised end to end), independent of any toolchain flag.",
       "packages": [
+        "rust/chief-of-staff-agent-broker",
+        "rust/chief-of-staff-broker-e2e",
+        "rust/chief-of-staff-broker-launcher",
+        "rust/chief-of-staff-daemon-secret-file",
+        "rust/chief-of-staff-process-supervisor",
         "rust/chief-of-staff-spawn-isolation",
         "rust/chief-of-staff-windows-sandbox",
         "rust/programs/closurec",

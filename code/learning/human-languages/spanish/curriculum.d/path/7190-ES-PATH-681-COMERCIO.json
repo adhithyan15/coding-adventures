@@ -1,0 +1,9 @@
+{
+  "id": "ES-PATH-681-COMERCIO",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "ES-EXT-681-COMERCIO"
+  ],
+  "after": []
+}

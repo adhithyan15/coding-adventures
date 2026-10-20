@@ -1,0 +1,8 @@
+{
+  "id": "IT-EXT-405-AUTOSTRADA",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can talk about a motorway trip: the toll booth, the lanes, the ring road, the junction and overtaking.",
+  "prerequisites": []
+}

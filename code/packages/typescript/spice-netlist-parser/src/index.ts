@@ -15,6 +15,7 @@ import {
   acSweep,
   dcOp,
   dcSweep,
+  dcSweep2d,
   defaultMosfetLevel1Params,
   inductorWithInitialCurrent,
   jfet,
@@ -22,9 +23,11 @@ import {
   mosfetFromModelCard,
   mutualInductor,
   normalizeModelCard,
+  noiseAc,
   formatDeckTableJson,
   runDeck,
   resistor,
+  sensDc,
   transmissionLine,
   vccs,
   vcvs,
@@ -42,6 +45,8 @@ import {
   type Element,
   type JfetPolarity,
   type MosfetLevel1Params,
+  type NoiseResult,
+  type SensResult,
   type TransientPoint,
   type TransientMethod,
   type TfResult,
@@ -72,6 +77,10 @@ export interface DcAnalysis {
   readonly start: number;
   readonly stop: number;
   readonly step: number;
+  readonly secondarySourceName?: string;
+  readonly secondaryStart?: number;
+  readonly secondaryStop?: number;
+  readonly secondaryStep?: number;
 }
 
 export interface AcAnalysis {
@@ -207,14 +216,16 @@ export type Analysis =
   | PoleZeroAnalysis
   | OptionsAnalysis;
 
-export type RunnableAnalysis = OpAnalysis | TranAnalysis | DcAnalysis | AcAnalysis | TfAnalysis;
+export type RunnableAnalysis = OpAnalysis | TranAnalysis | DcAnalysis | AcAnalysis | TfAnalysis | SensAnalysis | NoiseAnalysis;
 export type AnalysisKind = RunnableAnalysis["kind"];
 export type AnalysisResult =
   | DcResult
   | readonly DcSweepPoint[]
   | readonly AcPoint[]
   | readonly TransientPoint[]
-  | TfResult;
+  | TfResult
+  | SensResult
+  | NoiseResult;
 export type SelectedOutputValue = number | Complex;
 
 export interface AnalysisPlanStep {
@@ -235,6 +246,8 @@ export interface SelectedOutputRow {
   readonly axisName?: string;
   readonly axisValue?: number;
   readonly values: ReadonlyMap<string, SelectedOutputValue>;
+  readonly secondaryAxisName?: string;
+  readonly secondaryAxisValue?: number;
 }
 
 export interface SelectedAnalysisOutput {
@@ -664,6 +677,7 @@ export const CLI_ERROR_CODE = "SPICE_CLI_ERROR";
 export function runNetlistJson(text: string): string {
   const parsed = parseNetlist(text);
   const execution = runDeck(parsed.circuit, text);
+  const parserResults = runAnalysisPlan(parsed);
   return `${JSON.stringify(canonicalJson({
     schemaVersion: CLI_RESULT_SCHEMA_VERSION,
     title: parsed.title ?? null,
@@ -672,6 +686,8 @@ export function runNetlistJson(text: string): string {
       kind: item.plan.analysis,
       records: cliTableRecords(item.plan.analysis, item.table),
     })),
+    outputs: cliOutputArtifacts(selectOutputs(parsed, parserResults)),
+    measures: cliMeasureArtifacts(measureResults(parsed, parserResults)),
   }))}\n`;
 }
 
@@ -693,6 +709,48 @@ function cliTableRecords(analysis: string, table: string): unknown {
     : records;
 }
 
+function cliOutputArtifacts(outputs: readonly SelectedAnalysisOutput[]): readonly Record<string, unknown>[] {
+  return outputs.map((output) => ({
+    analysisIndex: output.index,
+    analysis: output.kind,
+    probes: output.probes.map(cliProbeText),
+    records: output.rows.map((row) => ({
+      index: row.index,
+      axisName: row.axisName ?? null,
+      axisValue: row.axisValue ?? null,
+      secondaryAxisName: row.secondaryAxisName ?? null,
+      secondaryAxisValue: row.secondaryAxisValue ?? null,
+      values: Object.fromEntries(
+        [...row.values.entries()].map(([name, value]) => [name, cliSelectedValue(value)]),
+      ),
+    })),
+  }));
+}
+
+function cliMeasureArtifacts(measures: readonly MeasureResult[]): readonly Record<string, unknown>[] {
+  return measures.map((measure) => ({
+    analysisIndex: measure.analysisIndex,
+    analysis: measure.analysis,
+    name: measure.name,
+    operation: measure.operation,
+    probe: cliProbeText(measure.probe),
+    value: measure.value,
+  }));
+}
+
+function cliProbeText(probe: OutputProbe): string {
+  if (probe.kind === "current") {
+    return `I(${probe.target})`;
+  }
+  return probe.negativeTarget === undefined
+    ? `V(${probe.target})`
+    : `V(${probe.target},${probe.negativeTarget})`;
+}
+
+function cliSelectedValue(value: SelectedOutputValue): number | { real: number; imag: number } {
+  return typeof value === "number" ? value : { real: value.real, imag: value.imag };
+}
+
 function canonicalJson(value: unknown): unknown {
   if (Array.isArray(value)) {
     return value.map(canonicalJson);
@@ -712,6 +770,9 @@ export function selectOutputs(
 ): SelectedAnalysisOutput[] {
   const selected: SelectedAnalysisOutput[] = [];
   for (const result of results) {
+    if (result.kind === "tf" || result.kind === "sens" || result.kind === "noise") {
+      continue;
+    }
     const probes = selectedOutputProbes(parsed, result.kind);
     if (probes.length === 0) {
       continue;
@@ -762,7 +823,9 @@ function analysisPlanStep(index: number, analysis: Analysis): AnalysisPlanStep |
     analysis.kind === "tran" ||
     analysis.kind === "dc" ||
     analysis.kind === "ac" ||
-    analysis.kind === "tf"
+    analysis.kind === "tf" ||
+    analysis.kind === "sens" ||
+    analysis.kind === "noise"
   ) {
     return { index, kind: analysis.kind, analysis };
   }
@@ -775,6 +838,26 @@ function executeAnalysisStep(parsed: ParsedNetlist, step: AnalysisPlanStep): Ana
     return dcOp(parsed.circuit, parsed.dcOpOptions());
   }
   if (analysis.kind === "dc") {
+    if (analysis.secondarySourceName !== undefined) {
+      if (
+        analysis.secondaryStart === undefined ||
+        analysis.secondaryStop === undefined ||
+        analysis.secondaryStep === undefined
+      ) {
+        throw new NetlistParseError("nested .dc analysis requires complete secondary sweep bounds");
+      }
+      return dcSweep2d(
+        parsed.circuit,
+        analysis.sourceName,
+        analysis.start,
+        analysis.stop,
+        analysis.step,
+        analysis.secondarySourceName,
+        analysis.secondaryStart,
+        analysis.secondaryStop,
+        analysis.secondaryStep,
+      );
+    }
     return dcSweep(
       parsed.circuit,
       analysis.sourceName,
@@ -801,6 +884,18 @@ function executeAnalysisStep(parsed: ParsedNetlist, step: AnalysisPlanStep): Ana
   }
   if (analysis.kind === "tf") {
     return tf(parsed.circuit, analysis.outputNode, analysis.inputSource);
+  }
+  if (analysis.kind === "sens") {
+    return sensDc(parsed.circuit, analysis.outputNode);
+  }
+  if (analysis.kind === "noise") {
+    return noiseAc(
+      parsed.circuit,
+      analysis.outputNode,
+      analysis.inputSource,
+      analysis.frequenciesHz.length === 0 ? undefined : analysis.frequenciesHz,
+      analysis.temperature,
+    );
   }
   throw new NetlistParseError(`analysis card at index ${step.index} is not executable`);
 }
@@ -879,6 +974,8 @@ function selectedOutputRows(
       index,
       axisName: "source",
       axisValue: point.value,
+      secondaryAxisName: point.secondarySourceName,
+      secondaryAxisValue: point.secondaryValue,
       values: selectedOutputValues(
         point.result.nodeVoltages,
         point.result.branchCurrents,
@@ -2963,13 +3060,22 @@ function parseDirective(fields: readonly string[]): Analysis {
     return method === undefined ? card : { ...card, method };
   }
   if (directive === ".dc") {
-    requireFields(fields, 5, ".dc");
-    return {
+    if (fields.length !== 5 && fields.length !== 9) {
+      throw new NetlistParseError(".dc requires one or two source start stop step axes");
+    }
+    const card: DcAnalysis = {
       kind: "dc",
       sourceName: fields[1],
       start: parseValue(fields[2]),
       stop: parseValue(fields[3]),
       step: parseValue(fields[4]),
+    };
+    return fields.length === 5 ? card : {
+      ...card,
+      secondarySourceName: fields[5],
+      secondaryStart: parseValue(fields[6]),
+      secondaryStop: parseValue(fields[7]),
+      secondaryStep: parseValue(fields[8]),
     };
   }
   if (directive === ".ac") {
@@ -3017,10 +3123,13 @@ function parseDirective(fields: readonly string[]): Analysis {
   }
   if (directive === ".noise") {
     requireMinFields(fields, 3, ".noise");
-    const frequenciesHz: number[] = [];
+    const canonicalSweep = fields.length === 7 && ["lin", "dec", "oct"].includes(fields[3].toLowerCase());
+    const frequenciesHz: number[] = canonicalSweep
+      ? noiseSweepFrequencies(fields[3], fields[4], fields[5], fields[6])
+      : [];
     let temperature = 300.0;
     let temperatureIsExplicit = false;
-    let tailIndex = 3;
+    let tailIndex = canonicalSweep ? 7 : 3;
     while (tailIndex < fields.length) {
       const token = fields[tailIndex];
       const lowerToken = token.toLowerCase();
@@ -3125,6 +3234,37 @@ function parseDirective(fields: readonly string[]): Analysis {
     return { kind: "options", values: parseOptions(fields.slice(1)) };
   }
   throw new NetlistParseError(`unsupported directive ${JSON.stringify(fields[0])}`);
+}
+
+function noiseSweepFrequencies(
+  mode: string,
+  pointCountToken: string,
+  startToken: string,
+  stopToken: string,
+): number[] {
+  const pointCountValue = parseValue(pointCountToken);
+  if (!Number.isInteger(pointCountValue) || pointCountValue <= 0) {
+    throw new NetlistParseError(".noise point count must be a positive integer");
+  }
+  const startHz = parseValue(startToken);
+  const stopHz = parseValue(stopToken);
+  if (startHz <= 0 || stopHz < startHz) {
+    throw new NetlistParseError(".noise frequencies must be positive and stop must be >= start");
+  }
+  const pointCount = pointCountValue;
+  if (mode.toLowerCase() === "lin") {
+    if (pointCount === 1) return [startHz];
+    const step = (stopHz - startHz) / (pointCount - 1);
+    return Array.from({ length: pointCount }, (_value, index) => startHz + index * step);
+  }
+  const base = mode.toLowerCase() === "dec" ? 10.0 : 2.0;
+  const ratio = base ** (1.0 / pointCount);
+  const epsilon = stopHz * 1.0e-12;
+  const frequencies: number[] = [];
+  for (let frequencyHz = startHz; frequencyHz <= stopHz + epsilon; frequencyHz *= ratio) {
+    frequencies.push(frequencyHz);
+  }
+  return frequencies;
 }
 
 function parseProbeCard(fields: readonly string[]): ProbeAnalysis {

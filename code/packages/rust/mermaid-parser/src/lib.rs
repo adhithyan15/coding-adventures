@@ -881,7 +881,13 @@ pub fn parse_any_mermaid(source: &str) -> Result<MermaidDiagram, ParseError> {
     }
 }
 
-/// Parse the documented native ZenUML subset into the shared sequence IR.
+#[derive(Clone)]
+enum ZenumlScope {
+    Activation { participant: String, caller: String },
+    Block(SequenceBlockKind),
+}
+
+/// Parse ZenUML messages and nested synchronous/control scopes into shared sequence IR.
 pub fn parse_zenuml(source: &str) -> Result<SequenceDiagram, ParseError> {
     let prepared = prepare_line_grammar_source(source)?;
     let tokens = try_tokenize_mermaid_zenuml(&prepared)
@@ -898,43 +904,268 @@ pub fn parse_zenuml(source: &str) -> Result<SequenceDiagram, ParseError> {
     };
     let mut participant_indices = HashMap::new();
     let mut header_seen = false;
+    let mut scopes = Vec::<ZenumlScope>::new();
+    let mut pending_comments = Vec::<String>::new();
+    let mut pending_reply = false;
     for raw_line in prepared.lines() {
         let line = raw_line.trim();
-        if line.is_empty() || line.starts_with("//") { continue; }
+        if line.is_empty() { continue; }
+        if let Some(comment) = line.strip_prefix("//") {
+            pending_comments.push(comment.trim().to_string());
+            continue;
+        }
+        let (line, inline_comment) = split_zenuml_inline_comment(line);
+        if let Some(comment) = inline_comment {
+            pending_comments.push(comment.to_string());
+        }
+        let line = line.trim();
+        if line.is_empty() { continue; }
+        let line = line.strip_suffix(';').map(str::trim).unwrap_or(line);
         if !header_seen {
             header_seen = line == "zenuml";
             continue;
         }
         if let Some(title) = line.strip_prefix("title ") {
             diagram.title = Some(title.trim().to_string());
+            pending_comments.clear();
+            continue;
+        }
+        if line.starts_with('}') {
+            let suffix = line.strip_prefix('}').map(str::trim).unwrap_or("");
+            if suffix.starts_with("else") || suffix.starts_with("catch") || suffix.starts_with("finally") {
+                if !matches!(scopes.last(), Some(ZenumlScope::Block(_))) {
+                    return Err(ParseError { message: "ZenUML branch outside a control fragment".into(), line: 1, col: 1 });
+                }
+                diagram.events.push(SequenceEvent::BlockBranch {
+                    label: suffix.trim_end_matches('{').trim().to_string(),
+                    wrap: SequenceTextWrap::Default,
+                });
+            } else {
+                let scope = scopes.pop().ok_or_else(|| ParseError {
+                    message: "unexpected ZenUML scope terminator".into(), line: 1, col: 1,
+                })?;
+                match scope {
+                    ZenumlScope::Activation { participant, .. } => diagram.events.push(
+                        SequenceEvent::Activation { participant, active: false }),
+                    ZenumlScope::Block(kind) => diagram.events.push(SequenceEvent::BlockEnd { kind }),
+                }
+            }
+            pending_comments.clear();
+            continue;
+        }
+        if let Some((kind, label)) = parse_zenuml_control(line) {
+            push_zenuml_comments(&mut diagram, &scopes, &mut pending_comments, &[]);
+            diagram.events.push(SequenceEvent::BlockStart {
+                kind: kind.clone(), label, wrap: SequenceTextWrap::Default, fill: None,
+            });
+            scopes.push(ZenumlScope::Block(kind));
+            continue;
+        }
+        if let Some((binding, class_name)) = parse_zenuml_creation(line) {
+            let active_parent = scopes.iter().rev().find_map(|scope| match scope {
+                ZenumlScope::Activation { participant, .. } => Some(participant.clone()),
+                ZenumlScope::Block(_) => None,
+            }).unwrap_or_else(|| binding.clone());
+            push_zenuml_comments(&mut diagram, &scopes, &mut pending_comments, &[&binding]);
+            upsert_sequence_participant(
+                &mut diagram,
+                &mut participant_indices,
+                binding.clone(),
+                class_name,
+                SequenceTextWrap::Default,
+                SequenceParticipantKind::Participant,
+            );
+            diagram.events.push(SequenceEvent::ParticipantCreated { participant: binding.clone() });
+            if line.contains('{') {
+                diagram.events.push(SequenceEvent::Activation { participant: binding.clone(), active: true });
+                scopes.push(ZenumlScope::Activation { participant: binding, caller: active_parent });
+            }
+            continue;
+        }
+        let return_line = line.strip_prefix("@return").map(str::trim).unwrap_or(line);
+        if return_line.starts_with("return") {
+            let active = scopes.iter().rev().find_map(|scope| match scope {
+                ZenumlScope::Activation { participant, caller } => Some((participant.clone(), caller.clone())),
+                ZenumlScope::Block(_) => None,
+            });
+            if let Some((from, to)) = active {
+                push_zenuml_comments(&mut diagram, &scopes, &mut pending_comments, &[&from, &to]);
+                diagram.events.push(zenuml_reply(&from, &to, return_line));
+            }
+            continue;
+        }
+        if matches!(line.to_ascii_lowercase().as_str(), "@return" | "@reply") {
+            pending_reply = true;
             continue;
         }
         if let Some(declaration) = line.strip_prefix('@') {
             let (annotation, id) = declaration.split_once(char::is_whitespace)
                 .ok_or_else(|| ParseError { message: "invalid ZenUML participant annotator".into(), line: 1, col: 1 })?;
-            let kind = match annotation { "Actor" => SequenceParticipantKind::Actor, "Database" => SequenceParticipantKind::Database, _ => unreachable!() };
+            let kind = match annotation {
+                "Actor" => SequenceParticipantKind::Actor,
+                "Boundary" => SequenceParticipantKind::Boundary,
+                "Control" => SequenceParticipantKind::Control,
+                "Entity" => SequenceParticipantKind::Entity,
+                "Database" => SequenceParticipantKind::Database,
+                "Collections" => SequenceParticipantKind::Collections,
+                "Queue" => SequenceParticipantKind::Queue,
+                "Starter" => SequenceParticipantKind::Participant,
+                _ => SequenceParticipantKind::Participant,
+            };
             upsert_sequence_participant(&mut diagram, &mut participant_indices, id.trim().into(), id.trim().into(), SequenceTextWrap::Default, kind);
+            pending_comments.clear();
             continue;
         }
         if let Some((message_head, label)) = line.split_once(':') {
             if let Some((from, to)) = message_head.split_once("->") {
                 let from = from.trim(); let to = to.trim();
+                push_zenuml_comments(&mut diagram, &scopes, &mut pending_comments, &[from, to]);
                 ensure_sequence_participant(&mut diagram, &mut participant_indices, from);
                 ensure_sequence_participant(&mut diagram, &mut participant_indices, to);
                 diagram.events.push(SequenceEvent::Message { from: from.into(), to: to.into(), label: label.trim().into(),
-                    wrap: SequenceTextWrap::Default, line_style: SequenceLineStyle::Solid,
+                    wrap: SequenceTextWrap::Default, line_style: if pending_reply { SequenceLineStyle::Dotted } else { SequenceLineStyle::Solid },
                     arrowhead: SequenceArrowhead::Open, bidirectional: false,
                     central_connection: SequenceCentralConnection::None, activate: false, deactivate: false });
+                pending_reply = false;
                 continue;
             }
+        }
+        let authored_call = line.split_once('{').map_or(line, |(call, _)| call).trim();
+        let (assignment, call) = authored_call.split_once('=').map_or((None, authored_call), |(lhs, rhs)| (Some(lhs.trim()), rhs.trim()));
+        if call.contains('.') || call.contains('(') {
+            let (explicit_from, call) = call.split_once("->").map_or((None, call), |(from, call)| (Some(from.trim()), call.trim()));
+            let open = call.find('(').unwrap_or(call.len());
+            let head = call[..open].trim();
+            let target = head.split('.').next().unwrap_or(head);
+            let active_parent = scopes.iter().rev().find_map(|scope| match scope {
+                ZenumlScope::Activation { participant, .. } => Some(participant.clone()),
+                ZenumlScope::Block(_) => None,
+            }).unwrap_or_else(|| target.to_string());
+            let parent = explicit_from.unwrap_or(&active_parent);
+            push_zenuml_comments(&mut diagram, &scopes, &mut pending_comments, &[parent, target]);
+            ensure_sequence_participant(&mut diagram, &mut participant_indices, parent);
+            ensure_sequence_participant(&mut diagram, &mut participant_indices, target);
+            diagram.events.push(zenuml_message(parent, target, call));
+            if let Some(reply_label) = assignment {
+                diagram.events.push(zenuml_reply(target, parent, reply_label));
+            }
+            if line.contains('{') {
+                diagram.events.push(SequenceEvent::Activation { participant: target.into(), active: true });
+                scopes.push(ZenumlScope::Activation { participant: target.into(), caller: parent.into() });
+                if let Some(return_text) = line.split_once('{').and_then(|(_, rest)| rest.split_once('}').map(|(body, _)| body.trim()))
+                    .filter(|body| body.starts_with("return")) {
+                    diagram.events.push(zenuml_reply(target, parent, return_text));
+                    diagram.events.push(SequenceEvent::Activation { participant: target.into(), active: false });
+                    scopes.pop();
+                }
+            }
+            continue;
         }
         if let Some((id, label)) = line.split_once(" as ") {
             upsert_sequence_participant(&mut diagram, &mut participant_indices, id.trim().into(), label.trim().into(), SequenceTextWrap::Default, SequenceParticipantKind::Participant);
         } else {
             ensure_sequence_participant(&mut diagram, &mut participant_indices, line);
         }
+        pending_comments.clear();
+    }
+    if !scopes.is_empty() {
+        return Err(ParseError { message: "unterminated ZenUML scope".into(), line: 1, col: 1 });
     }
     Ok(diagram)
+}
+
+fn zenuml_message(from: &str, to: &str, label: &str) -> SequenceEvent {
+    SequenceEvent::Message { from: from.into(), to: to.into(), label: label.into(),
+        wrap: SequenceTextWrap::Default, line_style: SequenceLineStyle::Solid,
+        arrowhead: SequenceArrowhead::Open, bidirectional: false,
+        central_connection: SequenceCentralConnection::None, activate: false, deactivate: false }
+}
+
+fn zenuml_reply(from: &str, to: &str, label: &str) -> SequenceEvent {
+    SequenceEvent::Message { from: from.into(), to: to.into(), label: label.into(),
+        wrap: SequenceTextWrap::Default, line_style: SequenceLineStyle::Dotted,
+        arrowhead: SequenceArrowhead::Open, bidirectional: false,
+        central_connection: SequenceCentralConnection::None, activate: false, deactivate: false }
+}
+
+fn parse_zenuml_creation(line: &str) -> Option<(String, String)> {
+    let (prefix, created) = line.split_once("new ")?;
+    let class_name = created.split(['(', ' ', '{']).next()?.trim();
+    if class_name.is_empty() { return None; }
+    let binding = if prefix.trim().is_empty() {
+        class_name
+    } else {
+        prefix.trim().strip_suffix('=')?.split_whitespace().last()?
+    };
+    Some((binding.to_string(), class_name.to_string()))
+}
+
+fn split_zenuml_inline_comment(line: &str) -> (&str, Option<&str>) {
+    let bytes = line.as_bytes();
+    let mut quote = None;
+    let mut escaped = false;
+    for index in 0..bytes.len().saturating_sub(1) {
+        let byte = bytes[index];
+        if escaped {
+            escaped = false;
+            continue;
+        }
+        if byte == b'\\' && quote.is_some() {
+            escaped = true;
+            continue;
+        }
+        if matches!(byte, b'\'' | b'"') {
+            if quote == Some(byte) {
+                quote = None;
+            } else if quote.is_none() {
+                quote = Some(byte);
+            }
+            continue;
+        }
+        if quote.is_none() && byte == b'/' && bytes[index + 1] == b'/'
+            && (index == 0 || bytes[index - 1].is_ascii_whitespace())
+        {
+            return (&line[..index], Some(line[index + 2..].trim()));
+        }
+    }
+    (line, None)
+}
+
+fn push_zenuml_comments(
+    diagram: &mut SequenceDiagram,
+    scopes: &[ZenumlScope],
+    comments: &mut Vec<String>,
+    message_participants: &[&str],
+) {
+    if comments.is_empty() { return; }
+    let participants = if message_participants.is_empty() {
+        scopes.iter().rev().find_map(|scope| match scope {
+            ZenumlScope::Activation { participant, .. } => Some(vec![participant.clone()]),
+            ZenumlScope::Block(_) => None,
+        }).unwrap_or_else(|| diagram.participants.iter().map(|participant| participant.id.clone()).collect())
+    } else {
+        message_participants.iter().map(|participant| (*participant).to_string()).collect()
+    };
+    if participants.is_empty() { return; }
+    diagram.events.push(SequenceEvent::Note {
+        participants, placement: SequenceNotePlacement::Over,
+        text: comments.join("\n"), wrap: SequenceTextWrap::Default,
+    });
+    comments.clear();
+}
+
+fn parse_zenuml_control(line: &str) -> Option<(SequenceBlockKind, String)> {
+    let authored = line.trim_end_matches('{').trim();
+    let keyword = authored.split(['(', ' ']).next()?;
+    let kind = match keyword {
+        "if" => SequenceBlockKind::Alt,
+        "while" | "for" | "forEach" | "foreach" | "loop" => SequenceBlockKind::Loop,
+        "opt" => SequenceBlockKind::Opt,
+        "par" => SequenceBlockKind::Par,
+        "try" | "catch" | "finally" => SequenceBlockKind::Break,
+        _ => return None,
+    };
+    Some((kind, authored.to_string()))
 }
 
 /// Parse Mermaid's complete 11.16.1 Info grammar and pin its injected version.
@@ -5730,23 +5961,38 @@ pub fn parse_ishikawa(source: &str) -> Result<IshikawaDiagram, ParseError> {
     GrammarParser::new(tokens, grammar).with_max_depth(MAX_RULE_DEPTH).parse()
         .map_err(|error| ParseError { message: error.message, line: error.token.line, col: error.token.column })?;
 
+    let mut saw_header = false;
     let lines: Vec<_> = prepared.lines().enumerate().filter_map(|(index, line)| {
         let text = line.trim();
-        if text.is_empty() || matches!(text.to_ascii_lowercase().as_str(), "ishikawa" | "ishikawa-beta") { None }
-        else { Some((index + 1, indentation_width(line), text.to_string())) }
+        if text.is_empty() {
+            None
+        } else if !saw_header {
+            saw_header = true;
+            let header_length = if text.get(..13).is_some_and(|head| head.eq_ignore_ascii_case("ishikawa-beta")) {
+                13
+            } else {
+                8
+            };
+            let effect = text[header_length..].trim_start();
+            (!effect.is_empty()).then(|| (index + 1, 0, effect.to_string()))
+        } else {
+            Some((index + 1, indentation_width(line), text.to_string()))
+        }
     }).collect();
     let Some((_, _, effect)) = lines.first() else { return Err(ParseError { message: "ishikawa requires an effect".into(), line: 1, col: 1 }); };
     let mut causes = Vec::new();
     let mut stack = Vec::<(usize, String)>::new();
+    let mut base_level = None;
     for (line, indentation, label) in lines.iter().skip(1) {
-        let effective_indent = *indentation;
-        while stack.last().is_some_and(|(level, _)| *level >= effective_indent) { stack.pop(); }
+        let base_level = *base_level.get_or_insert(*indentation);
+        let level = indentation.saturating_sub(base_level) + 1;
+        while stack.last().is_some_and(|(stack_level, _)| *stack_level >= level) { stack.pop(); }
         let parent_id = stack.last().map(|(_, id)| id.clone());
         let id = format!("cause-{}", causes.len() + 1);
         let depth = parent_id.as_ref().and_then(|parent| causes.iter().find(|cause: &&IshikawaCause| &cause.id == parent)).map_or(1, |cause| cause.depth + 1);
         if label.is_empty() { return Err(ParseError { message: "empty Ishikawa cause".into(), line: *line, col: 1 }); }
         causes.push(IshikawaCause { id: id.clone(), label: label.clone(), parent_id, depth });
-        stack.push((effective_indent, id));
+        stack.push((level, id));
     }
     Ok(IshikawaDiagram { effect: effect.clone(), causes, config })
 }

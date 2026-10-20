@@ -1,0 +1,20 @@
+{
+  "chapter": 286,
+  "title": "By Sea",
+  "label": "ch:la-by-sea",
+  "canDo": "I can book a passage on a ship, pay the fare, and report that something went wrong on the way.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "LA-R286-by-sea",
+    "kind": "production",
+    "summary": "Complete LA-R286-by-sea: I can book a passage on a ship, pay the fare, and report that something went wrong on the way.",
+    "assesses": [
+      "LA-LEX-C286-NAVIS-01",
+      "LA-LEX-C286-NAULUM-01",
+      "LA-LEX-C286-AMITTO-01",
+      "LA-GRAMMAR-C286-QUID-ACCIDIT-02"
+    ]
+  }
+}

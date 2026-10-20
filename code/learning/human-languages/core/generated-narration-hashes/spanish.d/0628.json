@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 628,
+  "sourceHash": "fnv1a64:75fa721b5adce864",
+  "lessonIds": [
+    "ES-C628-efectivo",
+    "ES-C628-transferencia",
+    "ES-C628-hipoteca",
+    "ES-C628-interes",
+    "ES-C628-retirar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch628.txt",
+  "json": "spanish/narration/ch628.json",
+  "textHash": "fnv1a64:e53ff930ceeae552",
+  "jsonHash": "fnv1a64:41774db6556f6c47",
+  "findings": []
+}

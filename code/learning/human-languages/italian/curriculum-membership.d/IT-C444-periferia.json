@@ -1,0 +1,11 @@
+{
+  "id": "IT-C444-periferia",
+  "pathSegment": "IT-PATH-444-INDIRIZZO",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "IT-EXT-444-INDIRIZZO",
+      "order": 1
+    }
+  ]
+}

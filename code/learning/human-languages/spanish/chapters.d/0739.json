@@ -1,0 +1,19 @@
+{
+  "chapter": 739,
+  "title": "Curarse",
+  "label": "ch:es-curarse",
+  "canDo": "I can talk about treating an illness, an operation and getting better.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "ES-C739-cirugia",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 739: I can talk about treating an illness, an operation and getting better.",
+    "assesses": [
+      "ES-LEX-C739-CURAR-03",
+      "ES-LEX-C739-CURAR-04",
+      "ES-LEX-C739-CURAR-05"
+    ]
+  }
+}

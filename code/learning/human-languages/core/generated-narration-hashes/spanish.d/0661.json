@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 661,
+  "sourceHash": "fnv1a64:41724ae7b5c39466",
+  "lessonIds": [
+    "ES-C661-recepcionista",
+    "ES-C661-botones",
+    "ES-C661-huesped",
+    "ES-C661-estancia",
+    "ES-C661-conserje"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch661.txt",
+  "json": "spanish/narration/ch661.json",
+  "textHash": "fnv1a64:65a05206ed27c332",
+  "jsonHash": "fnv1a64:f750633a94297e03",
+  "findings": []
+}

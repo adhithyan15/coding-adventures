@@ -1,0 +1,19 @@
+{
+  "chapter": 607,
+  "title": "El medio ambiente",
+  "label": "ch:es-el-medio-ambiente",
+  "canDo": "I can talk about the environment, consumption and what measures help.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "ES-R607-repaso-600-607",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 607: I can talk about the environment, consumption and what measures help.",
+    "assesses": [
+      "ES-LEX-C607-AMBIENTE-03",
+      "ES-LEX-C607-AMBIENTE-04",
+      "ES-LEX-C607-AMBIENTE-05"
+    ]
+  }
+}

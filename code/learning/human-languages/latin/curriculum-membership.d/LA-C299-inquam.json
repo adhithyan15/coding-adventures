@@ -1,0 +1,11 @@
+{
+  "id": "LA-C299-inquam",
+  "pathSegment": "LA-PATH-299-NARRATIO",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "LA-EXT-299-NARRATIO",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "FR-C409-devier",
+  "pathSegment": "FR-PATH-409-VIRAGE",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-409-VIRAGE",
+      "order": 4
+    }
+  ]
+}

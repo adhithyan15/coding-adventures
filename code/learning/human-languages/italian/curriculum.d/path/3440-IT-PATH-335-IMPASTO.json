@@ -1,0 +1,9 @@
+{
+  "id": "IT-PATH-335-IMPASTO",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "IT-EXT-335-IMPASTO"
+  ],
+  "after": []
+}

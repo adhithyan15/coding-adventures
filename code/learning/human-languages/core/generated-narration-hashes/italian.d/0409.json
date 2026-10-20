@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 409,
+  "sourceHash": "fnv1a64:bbe683bb2e121d00",
+  "lessonIds": [
+    "IT-C409-forare",
+    "IT-C409-foratura",
+    "IT-C409-pneumatico",
+    "IT-C409-cric",
+    "IT-C409-gonfiare"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch409.txt",
+  "json": "italian/narration/ch409.json",
+  "textHash": "fnv1a64:5db7b380e9ad79d2",
+  "jsonHash": "fnv1a64:7c686131627e5484",
+  "findings": []
+}

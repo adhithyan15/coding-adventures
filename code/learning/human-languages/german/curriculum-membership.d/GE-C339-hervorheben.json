@@ -1,0 +1,11 @@
+{
+  "id": "GE-C339-hervorheben",
+  "pathSegment": "GE-PATH-339-HINWEIS",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-339-HINWEIS",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 465,
+  "sourceHash": "fnv1a64:0643906f7b87a713",
+  "lessonIds": [
+    "PT-C465-rajada",
+    "PT-C465-soprar",
+    "PT-C465-temporal",
+    "PT-C465-furacao",
+    "PT-C465-nevasca"
+  ],
+  "tex": "portuguese/book/chapters/ch465-vento-e-tempestade.tex"
+}

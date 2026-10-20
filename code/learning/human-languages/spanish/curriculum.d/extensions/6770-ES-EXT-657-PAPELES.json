@@ -1,0 +1,8 @@
+{
+  "id": "ES-EXT-657-PAPELES",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can check that my documents are valid, renew a passport, bring a photocopy and go to the consulate.",
+  "prerequisites": []
+}

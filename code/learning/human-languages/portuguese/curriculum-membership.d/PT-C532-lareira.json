@@ -1,0 +1,11 @@
+{
+  "id": "PT-C532-lareira",
+  "pathSegment": "PT-PATH-532-ACOLHEDORA",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "PT-EXT-532-ACOLHEDORA",
+      "order": 0
+    }
+  ]
+}

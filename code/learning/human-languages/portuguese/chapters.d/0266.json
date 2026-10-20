@@ -1,0 +1,20 @@
+{
+  "chapter": 266,
+  "title": "Mais Do Que --- More Than, and How Long",
+  "label": "ch:pt-more-than-and-how-long",
+  "canDo": "I can compare two things with mais … do que, and say how long something has been going on with há … que and desde.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "PT-C266-revisao-experiencia",
+    "kind": "production",
+    "summary": "Complete PT-C266-revisao-experiencia: describe an experience by how it felt, what you hope, how it compared and how long it has lasted.",
+    "assesses": [
+      "PT-LEX-MAIS-DO-QUE-01",
+      "PT-GRAMMAR-O-MAIS-02",
+      "PT-LEX-HA-QUE-DURACAO-01",
+      "PT-GRAMMAR-DESDE-DURANTE-02"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "FR-C519-denouement",
+  "pathSegment": "FR-PATH-519-ROMAN",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-519-ROMAN",
+      "order": 2
+    }
+  ]
+}

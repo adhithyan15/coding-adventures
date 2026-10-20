@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C773-aplicacion",
+    "language": "spanish",
+    "chapter": 773,
+    "sequence": 28670,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f0f7a04eda18128b"
+  },
+  "findings": []
+}

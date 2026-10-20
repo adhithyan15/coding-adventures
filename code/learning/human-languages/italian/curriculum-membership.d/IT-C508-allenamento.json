@@ -1,0 +1,11 @@
+{
+  "id": "IT-C508-allenamento",
+  "pathSegment": "IT-PATH-508-PALESTRA",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "IT-EXT-508-PALESTRA",
+      "order": 1
+    }
+  ]
+}

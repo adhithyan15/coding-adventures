@@ -1,0 +1,11 @@
+{
+  "id": "GE-C380-abmelden",
+  "pathSegment": "GE-PATH-380-ZULASSUNG",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-380-ZULASSUNG",
+      "order": 4
+    }
+  ]
+}

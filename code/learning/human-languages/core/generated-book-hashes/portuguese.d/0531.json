@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 531,
+  "sourceHash": "fnv1a64:343033b2561616cf",
+  "lessonIds": [
+    "PT-C531-consertar",
+    "PT-C531-pendurar",
+    "PT-C531-martelar",
+    "PT-C531-berbequim",
+    "PT-C531-alicate"
+  ],
+  "tex": "portuguese/book/chapters/ch531-pequenos-arranjos.tex"
+}

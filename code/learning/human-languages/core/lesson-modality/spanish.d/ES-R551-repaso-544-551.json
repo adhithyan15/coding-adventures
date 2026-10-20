@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-R551-repaso-544-551",
+    "language": "spanish",
+    "chapter": 551,
+    "sequence": 17220,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5b23d2af8a151fe5"
+  },
+  "findings": []
+}

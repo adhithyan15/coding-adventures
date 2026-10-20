@@ -1,0 +1,11 @@
+{
+  "id": "PT-C315-enterrar",
+  "pathSegment": "PT-PATH-315-FUNERAL",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PT-EXT-315-FUNERAL",
+      "order": 1
+    }
+  ]
+}

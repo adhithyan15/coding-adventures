@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 693,
+  "sourceHash": "fnv1a64:253aa178b957c12b",
+  "lessonIds": [
+    "ES-C693-olivo",
+    "ES-C693-pino",
+    "ES-C693-arbusto",
+    "ES-C693-vegetacion",
+    "ES-C693-roble"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch693.txt",
+  "json": "spanish/narration/ch693.json",
+  "textHash": "fnv1a64:8e23636044a7a49c",
+  "jsonHash": "fnv1a64:c65d41a85b196281",
+  "findings": []
+}

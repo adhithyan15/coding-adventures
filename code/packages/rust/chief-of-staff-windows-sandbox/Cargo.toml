@@ -6,6 +6,7 @@ description = "The D18S Windows applier: a per-agent LPAC AppContainer, a one-pr
 license = "MIT"
 
 [dependencies]
+capability-cage = { path = "../capability-cage" }
 capability-os-sandbox = { path = "../capability-os-sandbox" }
 chief-of-staff-spawn-isolation = { path = "../chief-of-staff-spawn-isolation" }
 coding_adventures_sha256 = { path = "../sha256" }

@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 548,
+  "sourceHash": "fnv1a64:4032685fbe54fe4f",
+  "lessonIds": [
+    "ES-C548-matrimonio",
+    "ES-C548-ceremonia",
+    "ES-C548-banquete",
+    "ES-C548-brindis",
+    "ES-C548-luna-de-miel"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch548.txt",
+  "json": "spanish/narration/ch548.json",
+  "textHash": "fnv1a64:33e938277ab7e907",
+  "jsonHash": "fnv1a64:edf2ad66bf14afc2",
+  "findings": []
+}

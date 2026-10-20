@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 410,
+  "sourceHash": "fnv1a64:4b3fb82239bf1bbc",
+  "lessonIds": [
+    "IT-C410-guasto",
+    "IT-C410-guastarsi",
+    "IT-C410-carro-attrezzi",
+    "IT-C410-rimorchiare",
+    "IT-C410-officina"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch410.txt",
+  "json": "italian/narration/ch410.json",
+  "textHash": "fnv1a64:ca81f7a91e51d711",
+  "jsonHash": "fnv1a64:4444b997c481c2d4",
+  "findings": []
+}

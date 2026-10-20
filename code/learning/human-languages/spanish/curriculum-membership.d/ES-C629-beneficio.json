@@ -1,0 +1,11 @@
+{
+  "id": "ES-C629-beneficio",
+  "pathSegment": "ES-PATH-629-GANANCIA",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ES-EXT-629-GANANCIA",
+      "order": 2
+    }
+  ]
+}

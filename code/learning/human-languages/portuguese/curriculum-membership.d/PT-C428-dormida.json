@@ -1,0 +1,11 @@
+{
+  "id": "PT-C428-dormida",
+  "pathSegment": "PT-PATH-428-PERNOITAR",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PT-EXT-428-PERNOITAR",
+      "order": 2
+    }
+  ]
+}

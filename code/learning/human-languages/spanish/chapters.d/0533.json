@@ -1,0 +1,19 @@
+{
+  "chapter": 533,
+  "title": "Por casualidad",
+  "label": "ch:es-por-casualidad",
+  "canDo": "I can say that something happened by chance, by coincidence or by accident, when nobody expected it.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "ES-C533-repentino",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 533: I can say that something happened by chance, by coincidence or by accident, when nobody expected it.",
+    "assesses": [
+      "ES-LEX-C533-CASUAL-03",
+      "ES-LEX-C533-CASUAL-04",
+      "ES-LEX-C533-CASUAL-05"
+    ]
+  }
+}

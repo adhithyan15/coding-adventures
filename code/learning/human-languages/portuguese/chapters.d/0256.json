@@ -1,0 +1,20 @@
+{
+  "chapter": 256,
+  "title": "Writing --- My Own Line",
+  "label": "ch:pt-my-own-line",
+  "canDo": "I can write one line about myself from a closed supply of known words, with nothing to copy, and put every accent and til on.",
+  "spineNodes": [
+    "SPINE-SAY-WHY"
+  ],
+  "payoff": {
+    "lesson": "PT-W256-my-own-line",
+    "kind": "task",
+    "summary": "Complete PT-W256-my-own-line: name, home and language, chosen rather than copied, with the marks checked before anything else.",
+    "assesses": [
+      "PT-GRAMMAR-ME-CHAMO-04",
+      "PT-GRAMMAR-MORAR-04",
+      "PT-LEX-FALO-PORTUGUES-02"
+    ],
+    "note": "The first writing step with nothing to reach for. The Portuguese-specific check arrives with it: the til is not an accent but a nasal sign, and a hand that writes pao for pão has written a word Portuguese does not have."
+  }
+}

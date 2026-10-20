@@ -1,0 +1,11 @@
+{
+  "id": "IT-C512-qualificarsi",
+  "pathSegment": "IT-PATH-512-TORNEO",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "IT-EXT-512-TORNEO",
+      "order": 2
+    }
+  ]
+}

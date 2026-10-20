@@ -1,0 +1,9 @@
+{
+  "id": "GE-PATH-399-LENKRAD",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "GE-EXT-399-LENKRAD"
+  ],
+  "after": []
+}

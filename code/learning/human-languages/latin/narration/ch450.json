@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "latin",
+  "chapter": 450,
+  "title": "Complaint, To complain, To cheat, Grasping, Dirt",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:41c48e97c22eb52d",
+  "lessons": [
+    {
+      "id": "LA-C450-querela",
+      "sequence": 23980,
+      "title": "querēla, querēlae — a complaint",
+      "headword": "querēla, querēlae",
+      "romanization": "querēla, querēlae",
+      "gloss": "a complaint",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7bae384e9200bd03",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for rotten, then the Latin for a tavern hostess."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: querēla, querēlae",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "querēla, querēlae — \"a complaint\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Hospitēs multās querēlās dē caupōne habent. The guests have many complaints about the innkeeper."
+            },
+            {
+              "kind": "speech",
+              "text": "First declension, feminine: querēla, querēlae f., also spelled querella. English quarrel comes from it through French."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "querēla is built on queror 'to complain' with the suffix -ēla (EtymDB; Lewis & Short). English quarrel comes from it through Old French."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "querēla, querēlae",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *querēla, querēlae*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "querēla, querēlae, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *querēla, querēlae*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with querēla, querēlae",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *querēla, querēlae*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for rotten, then the Latin for a tavern hostess, then say querēla, querēlae again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for rotten, then the Latin for a tavern hostess, then say *querēla, querēlae* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does querēla, querēlae mean? (\"A complaint\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C450-conqueror",
+      "sequence": 23990,
+      "title": "conqueror, conquerī — to complain (loudly), to complain of",
+      "headword": "conqueror, conquerī",
+      "romanization": "conqueror, conquerī",
+      "gloss": "to complain (loudly), to complain of",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:cb6a96f755f6118c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for a tavern hostess, then the Latin for a complaint."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: conqueror, conquerī",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "conqueror, conquerī — \"to complain (loudly), to complain of\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Viātor dē cīmicibus et dē pretiō conqueritur. The traveller complains about the bedbugs and about the price."
+            },
+            {
+              "kind": "speech",
+              "text": "Deponent: conqueror, conquerī, conquestus sum. English conquer does not come from it; that word goes back to conquīrere 'to seek out'."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "conqueror is built from con-, which strengthens, and queror 'to complain' (EtymDB; Lewis & Short). English conquer looks like it but comes from a different verb, conquīrere 'to seek out'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "conqueror, conquerī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *conqueror, conquerī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "conqueror, conquerī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *conqueror, conquerī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with conqueror, conquerī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *conqueror, conquerī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for a tavern hostess, then the Latin for a complaint, then say conqueror, conquerī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for a tavern hostess, then the Latin for a complaint, then say *conqueror, conquerī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does conqueror, conquerī mean? (\"To complain (loudly), to complain of\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C450-fraudo",
+      "sequence": 24000,
+      "title": "fraudō, fraudāre — to cheat, to defraud",
+      "headword": "fraudō, fraudāre",
+      "romanization": "fraudō, fraudāre",
+      "gloss": "to cheat, to defraud",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:17cc45be0a006b76",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for a complaint, then the Latin for to complain."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: fraudō, fraudāre",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "fraudō, fraudāre — \"to cheat, to defraud\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Caupō malus hospitēs fraudat. The bad innkeeper cheats his guests."
+            },
+            {
+              "kind": "speech",
+              "text": "fraudō, fraudāre, fraudāvī, fraudātum, with the person in the accusative and the thing in the ablative. English defraud comes from dēfraudāre."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "fraudō is built on fraus, fraudis 'harm, deceit' (EtymDB; Lewis & Short). English fraud comes from the noun and defraud from the compound dēfraudāre."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "fraudō, fraudāre",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *fraudō, fraudāre*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "fraudō, fraudāre, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *fraudō, fraudāre*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with fraudō, fraudāre",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *fraudō, fraudāre*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for a complaint, then the Latin for to complain, then say fraudō, fraudāre again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for a complaint, then the Latin for to complain, then say *fraudō, fraudāre* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does fraudō, fraudāre mean? (\"To cheat, to defraud\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C450-rapax",
+      "sequence": 24010,
+      "title": "rapāx, rapācis — grasping, greedy",
+      "headword": "rapāx, rapācis",
+      "romanization": "rapāx, rapācis",
+      "gloss": "grasping, greedy",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4923a418de2d623d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for to complain, then the Latin for to cheat."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: rapāx, rapācis",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "rapāx, rapācis — \"grasping, greedy\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Caupō rapāx magnum pretium prō cēnā parvā rogat. The grasping innkeeper asks a big price for a small dinner."
+            },
+            {
+              "kind": "speech",
+              "text": "An adjective of one ending: rapāx, genitive rapācis. Also of wild beasts: ravenous. English rapacious comes from it."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "rapāx is built on rapiō 'to seize, to snatch' with the suffix -āx 'given to' (EtymDB; Lewis & Short). English rapacious comes from it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rapāx, rapācis",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rapāx, rapācis*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rapāx, rapācis, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rapāx, rapācis*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with rapāx, rapācis",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *rapāx, rapācis*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for to complain, then the Latin for to cheat, then say rapāx, rapācis again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for to complain, then the Latin for to cheat, then say *rapāx, rapācis* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does rapāx, rapācis mean? (\"Grasping, greedy\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C450-sordes",
+      "sequence": 24020,
+      "title": "sordēs, sordis — dirt, filth",
+      "headword": "sordēs, sordis",
+      "romanization": "sordēs, sordis",
+      "gloss": "dirt, filth",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c7ab7c06bd5c1dbf",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for to cheat, then the Latin for grasping."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: sordēs, sordis",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "sordēs, sordis — \"dirt, filth\"."
+            },
+            {
+              "kind": "speech",
+              "text": "In cubiculō sordēs sunt, et hospes īrātus est. There is dirt in the bedroom, and the guest is angry."
+            },
+            {
+              "kind": "speech",
+              "text": "Third declension, feminine: sordēs, sordis f., mostly plural sordēs, sordium. English sordid comes from the adjective sordidus."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "sordēs is built on sordeō 'to be dirty' (EtymDB; Lewis & Short). English sordid comes from the related adjective sordidus."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sordēs, sordis",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sordēs, sordis*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sordēs, sordis, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sordēs, sordis*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with sordēs, sordis",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *sordēs, sordis*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for to cheat, then the Latin for grasping, then say sordēs, sordis again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for to cheat, then the Latin for grasping, then say *sordēs, sordis* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does sordēs, sordis mean? (\"Dirt, filth\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

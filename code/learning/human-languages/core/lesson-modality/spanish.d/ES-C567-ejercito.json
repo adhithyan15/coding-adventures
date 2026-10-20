@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C567-ejercito",
+    "language": "spanish",
+    "chapter": 567,
+    "sequence": 18030,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f557bf6bf61ddfe9"
+  },
+  "findings": []
+}

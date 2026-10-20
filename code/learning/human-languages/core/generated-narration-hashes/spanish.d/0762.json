@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 762,
+  "sourceHash": "fnv1a64:1ea7a4bfc367add8",
+  "lessonIds": [
+    "ES-C762-crucigrama",
+    "ES-C762-revista",
+    "ES-C762-lector",
+    "ES-C762-portada",
+    "ES-C762-hojear"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch762.txt",
+  "json": "spanish/narration/ch762.json",
+  "textHash": "fnv1a64:01b37093827ad596",
+  "jsonHash": "fnv1a64:b232386fa711e702",
+  "findings": []
+}

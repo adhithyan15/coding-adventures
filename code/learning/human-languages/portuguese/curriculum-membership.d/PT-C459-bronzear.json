@@ -1,0 +1,11 @@
+{
+  "id": "PT-C459-bronzear",
+  "pathSegment": "PT-PATH-459-ROCHEDOS",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-459-ROCHEDOS",
+      "order": 3
+    }
+  ]
+}

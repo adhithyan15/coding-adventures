@@ -1,0 +1,11 @@
+{
+  "id": "FR-C304-maitre-nageur",
+  "pathSegment": "FR-PATH-304-NOYADE",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-304-NOYADE",
+      "order": 4
+    }
+  ]
+}

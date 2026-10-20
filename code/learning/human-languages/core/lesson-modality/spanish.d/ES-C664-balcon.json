@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C664-balcon",
+    "language": "spanish",
+    "chapter": 664,
+    "sequence": 23040,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:93e5b668f6ac8f77"
+  },
+  "findings": []
+}

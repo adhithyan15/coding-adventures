@@ -1,0 +1,11 @@
+{
+  "id": "IT-C335-mattarello",
+  "pathSegment": "IT-PATH-335-IMPASTO",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "IT-EXT-335-IMPASTO",
+      "order": 4
+    }
+  ]
+}

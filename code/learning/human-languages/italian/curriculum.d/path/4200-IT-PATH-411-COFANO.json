@@ -1,0 +1,9 @@
+{
+  "id": "IT-PATH-411-COFANO",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "IT-EXT-411-COFANO"
+  ],
+  "after": []
+}

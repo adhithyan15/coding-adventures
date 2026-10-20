@@ -1,0 +1,11 @@
+{
+  "id": "ES-C716-decepcionado",
+  "pathSegment": "ES-PATH-716-LASTIMA",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ES-EXT-716-LASTIMA",
+      "order": 3
+    }
+  ]
+}

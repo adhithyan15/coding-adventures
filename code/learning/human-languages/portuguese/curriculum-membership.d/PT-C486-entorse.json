@@ -1,0 +1,11 @@
+{
+  "id": "PT-C486-entorse",
+  "pathSegment": "PT-PATH-486-LIGADURA",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-486-LIGADURA",
+      "order": 3
+    }
+  ]
+}

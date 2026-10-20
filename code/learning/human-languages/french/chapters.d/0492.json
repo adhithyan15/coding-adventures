@@ -1,0 +1,19 @@
+{
+  "chapter": 492,
+  "title": "Familles d'aujourd'hui",
+  "label": "ch:fr-familles-d-aujourd-hui",
+  "canDo": "I can describe different kinds of families.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "FR-C492-famille-nombreuse",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 492: I can describe different kinds of families.",
+    "assesses": [
+      "FR-LEX-C492-FAMILLES-03",
+      "FR-LEX-C492-FAMILLES-04",
+      "FR-LEX-C492-FAMILLES-05"
+    ]
+  }
+}

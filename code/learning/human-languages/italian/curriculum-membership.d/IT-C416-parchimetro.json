@@ -1,0 +1,11 @@
+{
+  "id": "IT-C416-parchimetro",
+  "pathSegment": "IT-PATH-416-MOTORINO",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "IT-EXT-416-MOTORINO",
+      "order": 3
+    }
+  ]
+}

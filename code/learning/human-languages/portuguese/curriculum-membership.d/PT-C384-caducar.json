@@ -1,0 +1,11 @@
+{
+  "id": "PT-C384-caducar",
+  "pathSegment": "PT-PATH-384-VALIDO",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PT-EXT-384-VALIDO",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 602,
+  "title": "Las elecciones",
+  "label": "ch:es-las-elecciones",
+  "canDo": "I can talk about an election, the candidates and the voters.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "ES-C602-democracia",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 602: I can talk about an election, the candidates and the voters.",
+    "assesses": [
+      "ES-LEX-C602-VOTO-03",
+      "ES-LEX-C602-VOTO-04",
+      "ES-LEX-C602-VOTO-05"
+    ]
+  }
+}

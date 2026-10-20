@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PT-C423-apreender",
+    "language": "portuguese",
+    "chapter": 423,
+    "sequence": 23740,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:715569e2e069f250"
+  },
+  "findings": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 318,
+  "sourceHash": "fnv1a64:296c6b0dee7b6b35",
+  "lessonIds": [
+    "IT-C318-invito",
+    "IT-C318-invitato",
+    "IT-C318-ricevimento",
+    "IT-C318-rinfresco",
+    "IT-C318-confetto"
+  ],
+  "tex": "italian/book/chapters/ch318-gli-invitati.tex"
+}

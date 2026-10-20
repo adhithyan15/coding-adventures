@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C514-vela",
+    "language": "italian",
+    "chapter": 514,
+    "sequence": 28820,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1df40377f9d13e19"
+  },
+  "findings": []
+}

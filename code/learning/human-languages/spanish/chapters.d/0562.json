@@ -1,0 +1,19 @@
+{
+  "chapter": 562,
+  "title": "Volver a empezar",
+  "label": "ch:es-volver-a-empezar",
+  "canDo": "I can say that someone did something again, ended up doing it, started doing it or burst out doing it, and moved away.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "ES-C562-alejarse",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 562: I can say that someone did something again, ended up doing it, started doing it or burst out doing it, and moved away.",
+    "assesses": [
+      "ES-LEX-C562-VOLVER-03",
+      "ES-LEX-C562-VOLVER-04",
+      "ES-LEX-C562-VOLVER-05"
+    ]
+  }
+}

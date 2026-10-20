@@ -1,0 +1,19 @@
+{
+  "chapter": 438,
+  "title": "Il reclamo",
+  "label": "ch:it-il-reclamo",
+  "canDo": "I can make a complaint and get it put right: the complaint, complaining, a grumble, putting it right and compensation.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "IT-C438-risarcire",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 438: I can make a complaint and get it put right: the complaint, complaining, a grumble, putting it right and compensation.",
+    "assesses": [
+      "IT-LEX-C438-RECLAMO-03",
+      "IT-LEX-C438-RECLAMO-04",
+      "IT-LEX-C438-RECLAMO-05"
+    ]
+  }
+}

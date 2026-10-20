@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C468-sincere",
+    "language": "french",
+    "chapter": 468,
+    "sequence": 25800,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6d1fa6368fd8ef15"
+  },
+  "findings": []
+}

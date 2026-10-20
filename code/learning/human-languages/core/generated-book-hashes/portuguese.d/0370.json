@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 370,
+  "sourceHash": "fnv1a64:1ebf816f6818f437",
+  "lessonIds": [
+    "PT-C370-a-menos-que",
+    "PT-C370-a-nao-ser-que",
+    "PT-C370-senao",
+    "PT-C370-eventual",
+    "PT-C370-eventualmente"
+  ],
+  "tex": "portuguese/book/chapters/ch370-caso-contrario.tex"
+}

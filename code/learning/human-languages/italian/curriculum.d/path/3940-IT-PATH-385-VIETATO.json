@@ -1,0 +1,9 @@
+{
+  "id": "IT-PATH-385-VIETATO",
+  "spine_node": "SPINE-EXPRESS-CONDITION",
+  "before": [],
+  "inline": [
+    "IT-EXT-385-VIETATO"
+  ],
+  "after": []
+}

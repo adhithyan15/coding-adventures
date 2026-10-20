@@ -1,0 +1,11 @@
+{
+  "id": "PT-C357-aprendiz",
+  "pathSegment": "PT-PATH-357-ESTAGIO",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PT-EXT-357-ESTAGIO",
+      "order": 2
+    }
+  ]
+}

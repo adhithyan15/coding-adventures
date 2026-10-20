@@ -1,0 +1,19 @@
+{
+  "chapter": 674,
+  "title": "De paseo",
+  "label": "ch:es-de-paseo",
+  "canDo": "I can talk about walking round a town: strolling, going on foot and following a route.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "ES-C674-recorrido",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 674: I can talk about walking round a town: strolling, going on foot and following a route.",
+    "assesses": [
+      "ES-LEX-C674-PASEO-03",
+      "ES-LEX-C674-PASEO-04",
+      "ES-LEX-C674-PASEO-05"
+    ]
+  }
+}

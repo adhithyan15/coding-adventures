@@ -1,0 +1,11 @@
+{
+  "id": "FR-C321-dragon",
+  "pathSegment": "FR-PATH-321-CONTE",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FR-EXT-321-CONTE",
+      "order": 3
+    }
+  ]
+}

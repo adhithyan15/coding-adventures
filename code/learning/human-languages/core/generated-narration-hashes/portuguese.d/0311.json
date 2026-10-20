@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 311,
+  "sourceHash": "fnv1a64:026db0723406d787",
+  "lessonIds": [
+    "PT-C311-infancia",
+    "PT-C311-adolescencia",
+    "PT-C311-juventude",
+    "PT-C311-velhice",
+    "PT-C311-geracao"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch311.txt",
+  "json": "portuguese/narration/ch311.json",
+  "textHash": "fnv1a64:25c84ddafc375ecf",
+  "jsonHash": "fnv1a64:62a6bdcd5f6d17d9",
+  "findings": []
+}

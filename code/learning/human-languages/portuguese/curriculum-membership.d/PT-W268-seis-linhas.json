@@ -1,0 +1,11 @@
+{
+  "id": "PT-W268-seis-linhas",
+  "pathSegment": "PT-PATH-268-CONDICIONAL",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-268-CONDICIONAL",
+      "order": 3
+    }
+  ]
+}

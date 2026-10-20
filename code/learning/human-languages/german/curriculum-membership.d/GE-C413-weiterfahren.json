@@ -1,0 +1,11 @@
+{
+  "id": "GE-C413-weiterfahren",
+  "pathSegment": "GE-PATH-413-NACHTZUG",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-413-NACHTZUG",
+      "order": 4
+    }
+  ]
+}

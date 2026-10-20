@@ -1,0 +1,9 @@
+{
+  "id": "PT-PATH-464-GEADA",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "PT-EXT-464-GEADA"
+  ],
+  "after": []
+}

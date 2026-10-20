@@ -2,13 +2,17 @@
 //! agent, run in its AppContainer through `WindowsConfinement`, and the same
 //! probe run unconfined as a control. Each denial is checked against the
 //! control, so none passes only because the action fails everywhere.
+//!
+//! P2.8c adds `Direct` read grants: a granted file is readable while its
+//! neighbour is not, the grant is gone once the agent has exited, and each
+//! grant the applier must not make is refused before anything changes.
 
 #![cfg(windows)]
 
 use capability_os_sandbox::{plan_from_json, OsFamily, SandboxPlan};
 use chief_of_staff_spawn_isolation::VerifiedExecutable;
 use chief_of_staff_windows_sandbox::{
-    container_name, ConfinementError, SpawnRequest, WindowsConfinement,
+    broker_container_name, container_name, ConfinementError, SpawnRequest, WindowsConfinement,
 };
 use std::fs;
 use std::io::Read;
@@ -60,11 +64,16 @@ impl Agent {
     }
 
     fn confinement(&self) -> WindowsConfinement {
-        let path = probe_path();
-        let digest = coding_adventures_sha256::sha256(&fs::read(&path).unwrap());
-        let probe = VerifiedExecutable::open(&path, digest).unwrap();
-        WindowsConfinement::prepare_verified(&plan(), &probe, &self.0)
+        self.confinement_under(&plan())
+    }
+
+    fn confinement_under(&self, plan: &SandboxPlan) -> WindowsConfinement {
+        self.prepare(plan)
             .unwrap_or_else(|error| panic!("prepare: {error}"))
+    }
+
+    fn prepare(&self, plan: &SandboxPlan) -> Result<WindowsConfinement, ConfinementError> {
+        WindowsConfinement::prepare_verified(plan, &verified_probe(), &self.0)
     }
 
     /// Run the probe confined; its stdout, trimmed, and exit code.
@@ -76,8 +85,13 @@ impl Agent {
     }
 
     fn run_with(&self, request: SpawnRequest) -> (String, u32) {
+        self.run_under(&plan(), request)
+    }
+
+    /// Run the probe confined under `plan`.
+    fn run_under(&self, plan: &SandboxPlan, request: SpawnRequest) -> (String, u32) {
         let mut child = self
-            .confinement()
+            .confinement_under(plan)
             .spawn(request)
             .unwrap_or_else(|error| panic!("spawn: {error}"));
         let mut output = String::new();
@@ -95,12 +109,53 @@ impl Agent {
     }
 }
 
+/// The probe, verified against what is there now.
+fn verified_probe() -> VerifiedExecutable {
+    let path = probe_path();
+    let digest = coding_adventures_sha256::sha256(&fs::read(&path).unwrap());
+    VerifiedExecutable::open(&path, digest).unwrap()
+}
+
+/// A plan granting `action` on each of `targets` (P2.8c).
+fn plan_granting(action: &str, targets: &[&str]) -> SandboxPlan {
+    let capabilities: Vec<String> = targets
+        .iter()
+        .map(|target| {
+            format!(
+                r#"{{"category":"fs","action":"{action}","target":"{}","justification":"input"}}"#,
+                target.replace('\\', "\\\\")
+            )
+        })
+        .collect();
+    plan_from_json(
+        &format!(
+            r#"{{"version":1,"package":"rust/windows-sandbox-probe","capabilities":[{}],"justification":"The probe reads what it is granted."}}"#,
+            capabilities.join(",")
+        ),
+        OsFamily::Windows,
+    )
+    .unwrap()
+}
+
+/// `path` as the applier compares it: its final path, without `\\?\`.
+fn canonical(path: &std::path::Path) -> String {
+    let canonical = fs::canonicalize(path).unwrap();
+    let text = canonical.to_str().unwrap().to_string();
+    text.strip_prefix(r"\\?\").unwrap_or(&text).to_string()
+}
+
 /// The probe unconfined: the control.
 fn control(arguments: &[&str]) -> String {
-    let output = std::process::Command::new(PROBE)
-        .args(arguments)
-        .output()
-        .unwrap();
+    // Through the spawn lock, as the supervisor's std spawns are, so a
+    // control never inherits another test's agent handles mid-creation.
+    let child = chief_of_staff_spawn_isolation::spawn(
+        std::process::Command::new(PROBE)
+            .args(arguments)
+            .stdout(std::process::Stdio::piped())
+            .stderr(std::process::Stdio::null()),
+    )
+    .unwrap();
+    let output = child.wait_with_output().unwrap();
     String::from_utf8_lossy(&output.stdout).trim().to_string()
 }
 
@@ -403,15 +458,175 @@ fn a_plan_this_applier_cannot_enforce_is_refused() {
         WindowsConfinement::prepare_verified(&linux, &probe, "refused").err(),
         Some(ConfinementError::NotWindowsPlan)
     );
-    let with_grant = plan_from_json(
-        r#"{"version":1,"package":"rust/probe","capabilities":[{"category":"fs","action":"read","target":"C:\\data\\in.txt","justification":"input"}],"justification":"reads"}"#,
-        OsFamily::Windows,
-    )
-    .unwrap();
+    // A Direct write cannot be expressed (no-write-up, P2.8c).
     assert!(matches!(
-        WindowsConfinement::prepare_verified(&with_grant, &probe, "refused"),
+        WindowsConfinement::prepare_verified(
+            &plan_granting("write", &[r"C:\data\in.txt"]),
+            &probe,
+            "refused"
+        ),
         Err(ConfinementError::Unsupported(_))
     ));
+}
+
+#[test]
+fn a_granted_file_is_readable_and_its_neighbour_is_not() {
+    let agent = Agent::new();
+    let scratch = Scratch::new();
+    fs::write(scratch.0.join("granted.txt"), b"for the agent").unwrap();
+    fs::write(scratch.0.join("neighbour.txt"), b"not for the agent").unwrap();
+    let granted = canonical(&scratch.0.join("granted.txt"));
+    let neighbour = canonical(&scratch.0.join("neighbour.txt"));
+    assert_eq!(control(&["read", &granted]), "ok");
+    assert_eq!(control(&["read", &neighbour]), "ok");
+
+    let with_grant = plan_granting("read", &[&granted]);
+    let read = |plan: &SandboxPlan, path: &str| {
+        agent
+            .run_under(
+                plan,
+                SpawnRequest {
+                    arguments: vec!["read".to_string(), path.to_string()],
+                    ..SpawnRequest::default()
+                },
+            )
+            .0
+    };
+    assert_eq!(read(&with_grant, &granted), "ok");
+    assert_eq!(read(&with_grant, &neighbour), "error=5");
+    // The agent has exited, so its entry is gone: the same agent, the same
+    // SID, without the grant, cannot read the file.
+    assert_eq!(read(&plan(), &granted), "error=5");
+    // And the file is still the user's to read.
+    assert_eq!(control(&["read", &granted]), "ok");
+}
+
+/// Whether `path`'s access list is protected: inherits nothing from its
+/// directory.
+fn protected(path: &str) -> bool {
+    use windows_sys::Win32::Foundation::LocalFree;
+    use windows_sys::Win32::Security::Authorization::{GetSecurityInfo, SE_FILE_OBJECT};
+    use windows_sys::Win32::Security::{
+        GetSecurityDescriptorControl, DACL_SECURITY_INFORMATION, SE_DACL_PROTECTED,
+    };
+    let file = fs::File::open(path).unwrap();
+    let mut descriptor: *mut core::ffi::c_void = std::ptr::null_mut();
+    let mut control: u16 = 0;
+    let mut revision: u32 = 0;
+    // SAFETY: an open handle with read access (READ_CONTROL); the
+    // descriptor is freed once, below.
+    unsafe {
+        assert_eq!(
+            GetSecurityInfo(
+                file.as_raw_handle() as _,
+                SE_FILE_OBJECT,
+                DACL_SECURITY_INFORMATION,
+                std::ptr::null_mut(),
+                std::ptr::null_mut(),
+                std::ptr::null_mut(),
+                std::ptr::null_mut(),
+                &mut descriptor,
+            ),
+            0
+        );
+        assert_ne!(
+            GetSecurityDescriptorControl(descriptor, &mut control, &mut revision),
+            0
+        );
+        LocalFree(descriptor as _);
+    }
+    control & SE_DACL_PROTECTED != 0
+}
+
+#[test]
+fn a_protected_list_stays_protected_through_a_grant() {
+    let agent = Agent::new();
+    let scratch = Scratch::new();
+    fs::write(scratch.0.join("owner-only.txt"), b"for the agent").unwrap();
+    let granted = canonical(&scratch.0.join("owner-only.txt"));
+    // Protect it: inherited entries become explicit, nothing new inherits.
+    let protected_now = chief_of_staff_spawn_isolation::spawn(
+        std::process::Command::new("icacls")
+            .args([granted.as_str(), "/inheritance:d"])
+            .stdout(std::process::Stdio::null())
+            .stderr(std::process::Stdio::null()),
+    )
+    .unwrap()
+    .wait()
+    .unwrap();
+    assert!(protected_now.success(), "icacls /inheritance:d");
+    assert!(protected(&granted));
+    let (read, _) = agent.run_under(
+        &plan_granting("read", &[&granted]),
+        SpawnRequest {
+            arguments: vec!["read".to_string(), granted.clone()],
+            ..SpawnRequest::default()
+        },
+    );
+    assert_eq!(read, "ok");
+    // Granted and taken back, the list is still protected.
+    assert!(protected(&granted), "the grant unprotected the list");
+}
+
+#[test]
+fn a_grant_the_applier_must_not_make_is_refused() {
+    let agent = Agent::new();
+    let scratch = Scratch::new();
+    let file = scratch.0.join("data.txt");
+    fs::write(&file, b"data").unwrap();
+    let file = canonical(&file);
+    fs::create_dir(scratch.0.join("folder")).unwrap();
+    let folder = canonical(&scratch.0.join("folder"));
+    let refused = |target: &str, why: &str| {
+        assert!(
+            matches!(
+                agent.prepare(&plan_granting("read", &[target])),
+                Err(ConfinementError::Grant(_))
+            ),
+            "{why}: {target}"
+        );
+    };
+
+    refused(&format!("{folder}\\absent.txt"), "a missing file");
+    refused(&folder, "a directory");
+    // A junction: a reparse point, opened as itself and refused.
+    let junction = format!("{}\\junction", canonical(&scratch.0));
+    let made = chief_of_staff_spawn_isolation::spawn(
+        std::process::Command::new("cmd")
+            .args(["/c", "mklink", "/J", &junction, &folder])
+            .stdout(std::process::Stdio::null())
+            .stderr(std::process::Stdio::null()),
+    )
+    .unwrap()
+    .wait()
+    .unwrap();
+    assert!(made.success(), "mklink /J");
+    refused(&junction, "a junction");
+    // The same file, spelled in another case: not its final path.
+    refused(&file.to_uppercase(), "a non-canonical spelling");
+    // The agent's own image, and a hard link to it.
+    refused(probe_path().to_str().unwrap(), "the agent's image");
+    let link = scratch.0.join("link.exe");
+    fs::hard_link(probe_path(), &link).unwrap();
+    refused(&canonical(&link), "a hard link to the agent's image");
+    // A file Everyone may write.
+    let open = scratch.0.join("open.txt");
+    fs::write(&open, b"anyone's").unwrap();
+    let open = canonical(&open);
+    let granted = chief_of_staff_spawn_isolation::spawn(
+        std::process::Command::new("icacls")
+            .args([open.as_str(), "/grant", "*S-1-1-0:(W)"])
+            .stdout(std::process::Stdio::null())
+            .stderr(std::process::Stdio::null()),
+    )
+    .unwrap()
+    .wait()
+    .unwrap();
+    assert!(granted.success(), "icacls");
+    refused(&open, "a file Everyone may write");
+    // The plain file itself passes, so the refusals above are each for
+    // their own reason.
+    assert!(agent.prepare(&plan_granting("read", &[&file])).is_ok());
 }
 
 #[test]
@@ -426,4 +641,50 @@ fn a_path_that_is_not_canonical_is_refused() {
         WindowsConfinement::prepare_verified(&plan(), &probe, "dotted"),
         Err(ConfinementError::Executable(_))
     ));
+}
+
+#[test]
+fn a_broker_and_its_agent_are_different_principals() {
+    let agent = Agent::new();
+    let path = probe_path();
+    let digest = coding_adventures_sha256::sha256(&fs::read(&path).unwrap());
+    let probe = VerifiedExecutable::open(&path, digest).unwrap();
+    // The agent runs ...
+    let mut sleeping = agent
+        .confinement()
+        .spawn(SpawnRequest {
+            arguments: vec!["sleep".to_string()],
+            ..SpawnRequest::default()
+        })
+        .unwrap();
+    assert_eq!(sleeping.try_wait().unwrap(), None, "the agent is running");
+    // ... and its broker starts beside it: another container, so the
+    // one-instance rule does not see the agent, and so another SID.
+    let broker = WindowsConfinement::prepare_verified_broker(&plan(), &probe, agent.0.as_bytes())
+        .unwrap_or_else(|error| panic!("prepare the broker: {error}"));
+    let mut child = broker
+        .spawn(SpawnRequest {
+            arguments: vec!["env".to_string()],
+            ..SpawnRequest::default()
+        })
+        .unwrap_or_else(|error| panic!("spawn the broker: {error}"));
+    let mut output = String::new();
+    child
+        .stdout
+        .take()
+        .unwrap()
+        .read_to_string(&mut output)
+        .unwrap();
+    child.wait().unwrap();
+    let local = output
+        .lines()
+        .find_map(|line| line.strip_prefix("LOCALAPPDATA="))
+        .unwrap_or_else(|| panic!("no LOCALAPPDATA: {output}"))
+        .to_ascii_lowercase();
+    assert!(local.contains(&broker_container_name(&agent.0)), "{local}");
+    assert!(
+        !local.contains(&format!("\\{}\\", container_name(&agent.0))),
+        "{local}"
+    );
+    sleeping.kill().unwrap();
 }

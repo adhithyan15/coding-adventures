@@ -1,0 +1,8 @@
+{
+  "id": "ES-EXT-777-ENCHUFAR",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say what to do if the power goes or food goes off: freeze it, let it cool, iron later, plug in and restart.",
+  "prerequisites": []
+}

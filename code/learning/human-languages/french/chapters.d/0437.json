@@ -1,0 +1,19 @@
+{
+  "chapter": 437,
+  "title": "Petites rues et grandes avenues",
+  "label": "ch:fr-petites-rues-et-grandes-avenues",
+  "canDo": "I can describe streets: the dead end, the alley, the avenue, the boulevard and the passer-by.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "FR-C437-passant",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 437: I can describe streets: the dead end, the alley, the avenue, the boulevard and the passer-by.",
+    "assesses": [
+      "FR-LEX-C437-RUELLES-03",
+      "FR-LEX-C437-RUELLES-04",
+      "FR-LEX-C437-RUELLES-05"
+    ]
+  }
+}

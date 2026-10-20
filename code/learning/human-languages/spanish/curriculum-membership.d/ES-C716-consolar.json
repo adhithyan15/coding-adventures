@@ -1,0 +1,11 @@
+{
+  "id": "ES-C716-consolar",
+  "pathSegment": "ES-PATH-716-LASTIMA",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ES-EXT-716-LASTIMA",
+      "order": 1
+    }
+  ]
+}

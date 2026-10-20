@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C410-guasto",
+    "language": "italian",
+    "chapter": 410,
+    "sequence": 23350,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:07bf08d938242389"
+  },
+  "findings": []
+}

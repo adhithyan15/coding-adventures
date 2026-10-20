@@ -1,0 +1,8 @@
+{
+  "id": "ES-EXT-638-LIMITE",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say how much room there is, what is limited and controlled, with one exception.",
+  "prerequisites": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "IT-R420-ripasso-413-420",
+  "pathSegment": "IT-PATH-420-RITARDO",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "IT-EXT-420-RITARDO",
+      "order": 5
+    }
+  ]
+}

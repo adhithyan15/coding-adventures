@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 769,
+  "sourceHash": "fnv1a64:27c733e618d4a177",
+  "lessonIds": [
+    "ES-C769-gotear",
+    "ES-C769-gotera",
+    "ES-C769-averiado",
+    "ES-C769-fontanero",
+    "ES-C769-electricista"
+  ],
+  "tex": "spanish/book/chapters/ch769-una-gotera-en-casa.tex"
+}

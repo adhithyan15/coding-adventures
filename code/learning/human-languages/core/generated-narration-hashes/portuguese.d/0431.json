@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 431,
+  "sourceHash": "fnv1a64:78efdb0541e54432",
+  "lessonIds": [
+    "PT-C431-radiador",
+    "PT-C431-aquecedor",
+    "PT-C431-esquentador",
+    "PT-C431-termostato",
+    "PT-C431-arejar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch431.txt",
+  "json": "portuguese/narration/ch431.json",
+  "textHash": "fnv1a64:740ea2adf5994d07",
+  "jsonHash": "fnv1a64:1055904feb4e430c",
+  "findings": []
+}

@@ -1,0 +1,8 @@
+{
+  "id": "ES-EXT-651-TREN",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can travel by train: find my carriage, sleep in a berth, buy a ticket at the ticket office and get off at my stop.",
+  "prerequisites": []
+}

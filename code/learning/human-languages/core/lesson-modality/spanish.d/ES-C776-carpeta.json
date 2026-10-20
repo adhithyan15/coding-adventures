@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C776-carpeta",
+    "language": "spanish",
+    "chapter": 776,
+    "sequence": 28830,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c5888b1806209290"
+  },
+  "findings": []
+}

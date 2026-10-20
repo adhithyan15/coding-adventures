@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 494,
+  "sourceHash": "fnv1a64:09a9b189680b9b58",
+  "lessonIds": [
+    "FR-C494-elever",
+    "FR-C494-gater",
+    "FR-C494-punition",
+    "FR-C494-desobeir",
+    "FR-C494-creche"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch494.txt",
+  "json": "french/narration/ch494.json",
+  "textHash": "fnv1a64:284befcbf2a57192",
+  "jsonHash": "fnv1a64:5af1d91b916ea317",
+  "findings": []
+}

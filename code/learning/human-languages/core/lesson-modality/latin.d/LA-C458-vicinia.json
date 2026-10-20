@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C458-vicinia",
+    "language": "latin",
+    "chapter": 458,
+    "sequence": 24400,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:24b98135c4c1b3c8"
+  },
+  "findings": []
+}

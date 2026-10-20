@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C283-cronista",
+    "language": "italian",
+    "chapter": 283,
+    "sequence": 16620,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:87f8b91b9010ea5b"
+  },
+  "findings": []
+}

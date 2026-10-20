@@ -1,0 +1,19 @@
+{
+  "chapter": 143,
+  "title": "Writing: My Own Line",
+  "label": "ch:ja-writing-my-own-line",
+  "canDo": "I can write one line of Japanese about my day from a closed supply of known words, with nothing to copy, and write every small sign small.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-WANT"
+  ],
+  "payoff": {
+    "lesson": "JA-W143-my-own-line",
+    "kind": "task",
+    "summary": "Complete JA-W143-my-own-line: a time word, a polite verb and a full stop, chosen rather than copied, with the small signs checked before anything else.",
+    "assesses": [
+      "JA-LEX-C138-OKIMASU",
+      "JA-SCRIPT-SMALL-TSU-01"
+    ],
+    "note": "The first Japanese writing with nothing to reach for. The Japanese-specific check arrives with it: a small sign is a different sign, not a smaller copy, and a full-size one writes a different word or none."
+  }
+}

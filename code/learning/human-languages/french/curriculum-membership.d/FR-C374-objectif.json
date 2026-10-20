@@ -1,0 +1,11 @@
+{
+  "id": "FR-C374-objectif",
+  "pathSegment": "FR-PATH-374-BUT",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-374-BUT",
+      "order": 2
+    }
+  ]
+}

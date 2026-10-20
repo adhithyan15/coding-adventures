@@ -1,0 +1,11 @@
+{
+  "id": "ES-C654-piloto",
+  "pathSegment": "ES-PATH-654-AVION",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ES-EXT-654-AVION",
+      "order": 2
+    }
+  ]
+}

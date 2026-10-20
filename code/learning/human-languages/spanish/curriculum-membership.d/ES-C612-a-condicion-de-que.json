@@ -1,0 +1,11 @@
+{
+  "id": "ES-C612-a-condicion-de-que",
+  "pathSegment": "ES-PATH-612-SINO",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ES-EXT-612-SINO",
+      "order": 1
+    }
+  ]
+}

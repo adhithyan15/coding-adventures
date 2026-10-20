@@ -1,0 +1,11 @@
+{
+  "id": "LA-C438-velificor",
+  "pathSegment": "LA-PATH-438-CONSCENDO",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "LA-EXT-438-CONSCENDO",
+      "order": 3
+    }
+  ]
+}

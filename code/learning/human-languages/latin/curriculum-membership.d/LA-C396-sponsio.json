@@ -1,0 +1,11 @@
+{
+  "id": "LA-C396-sponsio",
+  "pathSegment": "LA-PATH-396-POLLICEOR",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "LA-EXT-396-POLLICEOR",
+      "order": 3
+    }
+  ]
+}

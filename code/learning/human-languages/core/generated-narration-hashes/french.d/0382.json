@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 382,
+  "sourceHash": "fnv1a64:b911d23603ce1eaa",
+  "lessonIds": [
+    "FR-C382-enfreindre",
+    "FR-C382-infraction",
+    "FR-C382-transgresser",
+    "FR-C382-sanction",
+    "FR-C382-sanctionner"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch382.txt",
+  "json": "french/narration/ch382.json",
+  "textHash": "fnv1a64:6dcec1713817f85e",
+  "jsonHash": "fnv1a64:da2f385d39b9caeb",
+  "findings": []
+}

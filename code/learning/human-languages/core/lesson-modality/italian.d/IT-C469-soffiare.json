@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C469-soffiare",
+    "language": "italian",
+    "chapter": 469,
+    "sequence": 26410,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7b39225ac58c687d"
+  },
+  "findings": []
+}

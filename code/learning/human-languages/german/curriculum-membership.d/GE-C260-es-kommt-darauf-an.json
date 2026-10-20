@@ -1,0 +1,11 @@
+{
+  "id": "GE-C260-es-kommt-darauf-an",
+  "pathSegment": "GE-PATH-260-WENN",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GE-EXT-260-WENN",
+      "order": 2
+    }
+  ]
+}

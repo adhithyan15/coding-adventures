@@ -1,0 +1,11 @@
+{
+  "id": "PT-C353-favorecer",
+  "pathSegment": "PT-PATH-353-OBSTACULO",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PT-EXT-353-OBSTACULO",
+      "order": 4
+    }
+  ]
+}

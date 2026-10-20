@@ -1,0 +1,11 @@
+{
+  "id": "IT-C362-esaurito",
+  "pathSegment": "IT-PATH-362-STRESS",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "IT-EXT-362-STRESS",
+      "order": 1
+    }
+  ]
+}

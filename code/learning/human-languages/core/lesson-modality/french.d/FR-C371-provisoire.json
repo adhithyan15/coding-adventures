@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C371-provisoire",
+    "language": "french",
+    "chapter": 371,
+    "sequence": 20810,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e88ceb9a83f397b9"
+  },
+  "findings": []
+}

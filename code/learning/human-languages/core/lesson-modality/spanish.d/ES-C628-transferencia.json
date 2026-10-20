@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C628-transferencia",
+    "language": "spanish",
+    "chapter": 628,
+    "sequence": 21170,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8edaf126130bdd20"
+  },
+  "findings": []
+}

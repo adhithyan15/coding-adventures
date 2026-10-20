@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 279,
+  "sourceHash": "fnv1a64:1e2f32ddf6f4fa3a",
+  "lessonIds": [
+    "FR-C279-rediger",
+    "FR-C279-redaction",
+    "FR-C279-imprimer",
+    "FR-C279-paraitre",
+    "FR-C279-parution"
+  ],
+  "tex": "french/book/chapters/ch279-ecrire-pour-le-journal.tex"
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 335,
+  "title": "Na minha opinião",
+  "label": "ch:pt-na-minha-opiniao",
+  "canDo": "I can give my opinion and my point of view, say that I am convinced and maintain an idea.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "PT-C335-sustentar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 335: I can give my opinion and my point of view, say that I am convinced and maintain an idea.",
+    "assesses": [
+      "PT-LEX-C335-OPINIAO-03",
+      "PT-LEX-C335-OPINIAO-04",
+      "PT-LEX-C335-OPINIAO-05"
+    ]
+  }
+}

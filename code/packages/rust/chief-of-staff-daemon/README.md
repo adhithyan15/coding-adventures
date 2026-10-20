@@ -215,7 +215,9 @@ key and serves no channel operation, so:
 - on macOS the table must also pin the Seatbelt shim that confines the
   broker (`seatbelt_shim`, `seatbelt_shim_sha256`; D18S P2.7b), or startup
   stops (`BrokerShimMissing`);
-- elsewhere, off Linux and macOS, `[hosts.broker]` is refused, so
+- on Windows the table pins the broker alone, as on Linux; the launcher
+  confines it in its own AppContainer (D18S P2.8b-2);
+- elsewhere, off Linux, macOS and Windows, `[hosts.broker]` is refused, so
   `channel_keys` cannot be configured yet.
 
 ```text
@@ -227,8 +229,9 @@ key and serves no channel operation, so:
 
 The daemon opens no key file here. The launcher opens an agent's files,
 owner-only or refused, when it launches that agent's broker, and passes
-them by descriptor. Off Linux and macOS the table is refused at startup
-(`BrokerUnsupported`), because there is no verified launch there yet.
+them by descriptor (on Windows, by handle). Off Linux, macOS and Windows
+the table is refused at startup (`BrokerUnsupported`), because there is no
+verified launch there yet.
 
 Each broker runs confined (P2.6d-3): it can open no file by path, and has
 no network and no exec. Before every launch, every directory holding
@@ -237,6 +240,9 @@ symlinks on the way), or the launch is refused. That set is:
 - the directory of every `channel_keys` file;
 - the vault's storage directory, once it exists;
 - the directory of the vault's KEK file.
+
+On Windows, owner-only means the directory's access list names only the
+user, SYSTEM and Administrators (D18S P2.8b-1).
 
 The daemon checks them at startup too (`BrokerSecretDirectory`), so give
 the KEK and the key files directories of their own rather than `$HOME`. A

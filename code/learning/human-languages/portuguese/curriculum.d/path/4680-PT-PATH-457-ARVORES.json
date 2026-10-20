@@ -1,0 +1,9 @@
+{
+  "id": "PT-PATH-457-ARVORES",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "PT-EXT-457-ARVORES"
+  ],
+  "after": []
+}

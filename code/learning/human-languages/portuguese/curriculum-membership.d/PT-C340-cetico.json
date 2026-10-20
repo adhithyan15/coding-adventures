@@ -1,0 +1,11 @@
+{
+  "id": "PT-C340-cetico",
+  "pathSegment": "PT-PATH-340-DUVIDA",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PT-EXT-340-DUVIDA",
+      "order": 1
+    }
+  ]
+}

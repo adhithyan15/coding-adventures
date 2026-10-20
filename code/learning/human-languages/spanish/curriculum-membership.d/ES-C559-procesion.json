@@ -1,0 +1,11 @@
+{
+  "id": "ES-C559-procesion",
+  "pathSegment": "ES-PATH-559-DESFILE",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ES-EXT-559-DESFILE",
+      "order": 1
+    }
+  ]
+}

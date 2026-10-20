@@ -1,0 +1,11 @@
+{
+  "id": "IT-C316-festeggiato",
+  "pathSegment": "IT-PATH-316-CANDELINE",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "IT-EXT-316-CANDELINE",
+      "order": 1
+    }
+  ]
+}

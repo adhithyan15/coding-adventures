@@ -1,0 +1,11 @@
+{
+  "id": "FR-C422-cabine",
+  "pathSegment": "FR-PATH-422-TRAVERSEE",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-422-TRAVERSEE",
+      "order": 2
+    }
+  ]
+}

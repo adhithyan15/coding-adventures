@@ -1,0 +1,14 @@
+{
+  "language": "spanish",
+  "chapter": 607,
+  "sourceHash": "fnv1a64:fa2978fba01c6ced",
+  "lessonIds": [
+    "ES-C607-medio-ambiente",
+    "ES-C607-consumo",
+    "ES-C607-consumir",
+    "ES-C607-recurso",
+    "ES-C607-medida",
+    "ES-R607-repaso-600-607"
+  ],
+  "tex": "spanish/book/chapters/ch607-el-medio-ambiente.tex"
+}

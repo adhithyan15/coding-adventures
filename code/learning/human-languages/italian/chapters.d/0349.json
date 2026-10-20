@@ -1,0 +1,19 @@
+{
+  "chapter": 349,
+  "title": "Cause ed effetti",
+  "label": "ch:it-cause-ed-effetti",
+  "canDo": "I can talk about causes: say what caused or provoked something, name a factor, an effect and the reason behind it.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "IT-C349-ragione",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 349: I can talk about causes: say what caused or provoked something, name a factor, an effect and the reason behind it.",
+    "assesses": [
+      "IT-LEX-C349-CAUSA-03",
+      "IT-LEX-C349-CAUSA-04",
+      "IT-LEX-C349-CAUSA-05"
+    ]
+  }
+}

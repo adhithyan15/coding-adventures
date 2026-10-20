@@ -1,0 +1,11 @@
+{
+  "id": "PT-C259-revisao-quando",
+  "pathSegment": "PT-PATH-259-CENA",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "PT-EXT-259-CENA",
+      "order": 5
+    }
+  ]
+}

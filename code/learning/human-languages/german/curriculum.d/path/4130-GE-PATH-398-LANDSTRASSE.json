@@ -1,0 +1,9 @@
+{
+  "id": "GE-PATH-398-LANDSTRASSE",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "GE-EXT-398-LANDSTRASSE"
+  ],
+  "after": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "LA-C520-oscito",
+  "pathSegment": "LA-PATH-520-SPIR",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "LA-EXT-520-SPIR",
+      "order": 3
+    }
+  ]
+}

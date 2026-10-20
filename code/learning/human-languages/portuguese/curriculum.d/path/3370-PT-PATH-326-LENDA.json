@@ -1,0 +1,9 @@
+{
+  "id": "PT-PATH-326-LENDA",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "PT-EXT-326-LENDA"
+  ],
+  "after": []
+}

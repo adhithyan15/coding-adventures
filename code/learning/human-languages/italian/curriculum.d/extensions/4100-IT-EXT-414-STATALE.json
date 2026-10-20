@@ -1,0 +1,8 @@
+{
+  "id": "IT-EXT-414-STATALE",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can describe country roads: the main road, the provincial road, bends, potholes and dirt tracks.",
+  "prerequisites": []
+}

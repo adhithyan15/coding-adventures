@@ -1,0 +1,11 @@
+{
+  "id": "IT-C445-campanile",
+  "pathSegment": "IT-PATH-445-PIAZZA",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "IT-EXT-445-PIAZZA",
+      "order": 0
+    }
+  ]
+}

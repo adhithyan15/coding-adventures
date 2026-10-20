@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 400,
+  "sourceHash": "fnv1a64:f8e7ac97148d86f0",
+  "lessonIds": [
+    "IT-C400-applicazione",
+    "IT-C400-installare",
+    "IT-C400-disinstallare",
+    "IT-C400-dispositivo",
+    "IT-C400-software"
+  ],
+  "tex": "italian/book/chapters/ch400-scaricare-un-app.tex"
+}

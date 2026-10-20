@@ -1,0 +1,19 @@
+{
+  "chapter": 732,
+  "title": "Cuidarse",
+  "label": "ch:es-cuidarse",
+  "canDo": "I can say how I look after my health and when someone gets worse.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "ES-C732-empeorar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 732: I can say how I look after my health and when someone gets worse.",
+    "assesses": [
+      "ES-LEX-C732-SALUD-03",
+      "ES-LEX-C732-SALUD-04",
+      "ES-LEX-C732-SALUD-05"
+    ]
+  }
+}

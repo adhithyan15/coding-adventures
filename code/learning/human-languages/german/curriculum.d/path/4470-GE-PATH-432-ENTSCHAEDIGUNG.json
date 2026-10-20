@@ -1,0 +1,9 @@
+{
+  "id": "GE-PATH-432-ENTSCHAEDIGUNG",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "GE-EXT-432-ENTSCHAEDIGUNG"
+  ],
+  "after": []
+}

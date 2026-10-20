@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 413,
+  "sourceHash": "fnv1a64:cde6abda149f55b6",
+  "lessonIds": [
+    "PT-C413-abrigo",
+    "PT-C413-terminal",
+    "PT-C413-camioneta",
+    "PT-C413-itinerario",
+    "PT-C413-apear"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch413.txt",
+  "json": "portuguese/narration/ch413.json",
+  "textHash": "fnv1a64:a78e03ebd98c4ffd",
+  "jsonHash": "fnv1a64:bdb475107a6c55fb",
+  "findings": []
+}

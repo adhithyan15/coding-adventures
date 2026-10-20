@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 321,
+  "sourceHash": "fnv1a64:6ae303cc0b3e9fd5",
+  "lessonIds": [
+    "FR-C321-il-etait-une-fois",
+    "FR-C321-fee",
+    "FR-C321-sorciere",
+    "FR-C321-dragon",
+    "FR-C321-fable"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch321.txt",
+  "json": "french/narration/ch321.json",
+  "textHash": "fnv1a64:b36916ce6bc21778",
+  "jsonHash": "fnv1a64:56885c78c4772b82",
+  "findings": []
+}

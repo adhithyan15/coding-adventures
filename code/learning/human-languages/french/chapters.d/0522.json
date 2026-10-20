@@ -1,0 +1,19 @@
+{
+  "chapter": 522,
+  "title": "Quel genre de livres ?",
+  "label": "ch:fr-quel-genre-de-livres",
+  "canDo": "I can say what kinds of books I like.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "FR-C522-conte",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 522: I can say what kinds of books I like.",
+    "assesses": [
+      "FR-LEX-C522-GENRES-03",
+      "FR-LEX-C522-GENRES-04",
+      "FR-LEX-C522-GENRES-05"
+    ]
+  }
+}

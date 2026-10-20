@@ -1,0 +1,11 @@
+{
+  "id": "PT-C275-crepusculo",
+  "pathSegment": "PT-PATH-275-ENTARDECER",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-275-ENTARDECER",
+      "order": 3
+    }
+  ]
+}

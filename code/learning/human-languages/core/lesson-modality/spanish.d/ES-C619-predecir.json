@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C619-predecir",
+    "language": "spanish",
+    "chapter": 619,
+    "sequence": 20740,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4a2de8711c268c97"
+  },
+  "findings": []
+}

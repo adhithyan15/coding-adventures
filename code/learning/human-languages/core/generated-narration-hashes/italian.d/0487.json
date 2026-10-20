@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 487,
+  "sourceHash": "fnv1a64:377172b0ff68e7a6",
+  "lessonIds": [
+    "IT-C487-masticare",
+    "IT-C487-digerire",
+    "IT-C487-malessere",
+    "IT-C487-vomitare",
+    "IT-C487-vertigini"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch487.txt",
+  "json": "italian/narration/ch487.json",
+  "textHash": "fnv1a64:b41e1d6226398a4a",
+  "jsonHash": "fnv1a64:3484546814007984",
+  "findings": []
+}

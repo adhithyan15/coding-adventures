@@ -1,0 +1,9 @@
+{
+  "id": "PT-PATH-274-OUTRORA",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "PT-EXT-274-OUTRORA"
+  ],
+  "after": []
+}

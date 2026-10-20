@@ -1,0 +1,11 @@
+{
+  "id": "ES-C628-hipoteca",
+  "pathSegment": "ES-PATH-628-BANCO",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ES-EXT-628-BANCO",
+      "order": 2
+    }
+  ]
+}

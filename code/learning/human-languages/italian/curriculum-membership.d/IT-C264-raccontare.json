@@ -1,0 +1,11 @@
+{
+  "id": "IT-C264-raccontare",
+  "pathSegment": "IT-PATH-264-ORDINE",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "IT-EXT-264-ORDINE",
+      "order": 1
+    }
+  ]
+}

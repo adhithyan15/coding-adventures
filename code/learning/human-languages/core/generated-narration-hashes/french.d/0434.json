@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 434,
+  "sourceHash": "fnv1a64:db59e096eb54f09e",
+  "lessonIds": [
+    "FR-C434-orienter",
+    "FR-C434-boussole",
+    "FR-C434-reperer",
+    "FR-C434-repere",
+    "FR-C434-egarer"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch434.txt",
+  "json": "french/narration/ch434.json",
+  "textHash": "fnv1a64:40d5a3ee79f469d1",
+  "jsonHash": "fnv1a64:51d871d32982c3ff",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "ES-C619-perspectiva",
+  "pathSegment": "ES-PATH-619-QUIZA",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ES-EXT-619-QUIZA",
+      "order": 3
+    }
+  ]
+}

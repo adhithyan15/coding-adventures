@@ -1,0 +1,19 @@
+{
+  "chapter": 532,
+  "title": "Un misterio",
+  "label": "ch:es-un-misterio",
+  "canDo": "I can say that there was a mystery or a secret, and that someone hid something.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "ES-C532-secreto",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 532: I can say that there was a mystery or a secret, and that someone hid something.",
+    "assesses": [
+      "ES-LEX-C532-SECRETO-03",
+      "ES-LEX-C532-SECRETO-04",
+      "ES-LEX-C532-SECRETO-05"
+    ]
+  }
+}

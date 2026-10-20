@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C396-mise-a-jour",
+    "language": "french",
+    "chapter": 396,
+    "sequence": 22110,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5e4624edde36d26e"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 360,
+  "title": "Faire carrière",
+  "label": "ch:fr-faire-carriere",
+  "canDo": "I can talk about getting on at work: a pay rise, a promotion, qualifications, skills and training.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "FR-C360-formation",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 360: I can talk about getting on at work: a pay rise, a promotion, qualifications, skills and training.",
+    "assesses": [
+      "FR-LEX-C360-CARRIERE-03",
+      "FR-LEX-C360-CARRIERE-04",
+      "FR-LEX-C360-CARRIERE-05"
+    ]
+  }
+}

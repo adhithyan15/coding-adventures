@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 732,
+  "sourceHash": "fnv1a64:fc3f4bce7e68ee23",
+  "lessonIds": [
+    "ES-C732-saludable",
+    "ES-C732-cuidarse",
+    "ES-C732-enfermedad",
+    "ES-C732-enfermarse",
+    "ES-C732-empeorar"
+  ],
+  "tex": "spanish/book/chapters/ch732-cuidarse.tex"
+}

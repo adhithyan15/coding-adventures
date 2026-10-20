@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PT-C509-penalti",
+    "language": "portuguese",
+    "chapter": 509,
+    "sequence": 28160,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:56870a5d49adad96"
+  },
+  "findings": []
+}

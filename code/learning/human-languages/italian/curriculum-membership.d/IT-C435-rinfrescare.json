@@ -1,0 +1,11 @@
+{
+  "id": "IT-C435-rinfrescare",
+  "pathSegment": "IT-PATH-435-RISCALDAMENTO",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "IT-EXT-435-RISCALDAMENTO",
+      "order": 3
+    }
+  ]
+}

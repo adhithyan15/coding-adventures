@@ -1,0 +1,11 @@
+{
+  "id": "ES-C606-voluntariado",
+  "pathSegment": "ES-PATH-606-SOLIDAR",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ES-EXT-606-SOLIDAR",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 626,
+  "sourceHash": "fnv1a64:2552be38ca71bc74",
+  "lessonIds": [
+    "ES-C626-sentencia",
+    "ES-C626-acusacion",
+    "ES-C626-tribunal",
+    "ES-C626-culpable",
+    "ES-C626-fraude"
+  ],
+  "tex": "spanish/book/chapters/ch626-en-el-tribunal.tex"
+}

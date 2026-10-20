@@ -1,0 +1,11 @@
+{
+  "id": "GE-C486-schnarchen",
+  "pathSegment": "GE-PATH-486-MUEDE",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-486-MUEDE",
+      "order": 3
+    }
+  ]
+}

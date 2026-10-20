@@ -1,0 +1,11 @@
+{
+  "id": "FR-C403-gazole",
+  "pathSegment": "FR-PATH-403-POMPE",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FR-EXT-403-POMPE",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,14 @@
+{
+  "language": "italian",
+  "chapter": 452,
+  "sourceHash": "fnv1a64:b43f793b52bee1a2",
+  "lessonIds": [
+    "IT-C452-tabaccheria",
+    "IT-C452-tabaccaio",
+    "IT-C452-edicola",
+    "IT-C452-edicolante",
+    "IT-C452-cartoleria",
+    "IT-R452-ripasso-445-452"
+  ],
+  "tex": "italian/book/chapters/ch452-giornali-e-tabacchi.tex"
+}

@@ -1,0 +1,9 @@
+{
+  "id": "LA-PATH-373-EFFECTUS",
+  "spine_node": "SPINE-GIVE-REASONS",
+  "before": [],
+  "inline": [
+    "LA-EXT-373-EFFECTUS"
+  ],
+  "after": []
+}

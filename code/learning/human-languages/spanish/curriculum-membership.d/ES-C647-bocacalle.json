@@ -1,0 +1,11 @@
+{
+  "id": "ES-C647-bocacalle",
+  "pathSegment": "ES-PATH-647-CRUZAR",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ES-EXT-647-CRUZAR",
+      "order": 1
+    }
+  ]
+}

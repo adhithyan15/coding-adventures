@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 349,
+  "sourceHash": "fnv1a64:6963d8128268cde7",
+  "lessonIds": [
+    "GE-C349-stellenanzeige",
+    "GE-C349-vorstellungsgespraech",
+    "GE-C349-faehigkeit",
+    "GE-C349-qualifiziert",
+    "GE-C349-beherrschen"
+  ],
+  "tex": "german/book/chapters/ch349-eine-stelle-suchen.tex"
+}

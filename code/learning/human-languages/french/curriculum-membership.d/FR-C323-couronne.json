@@ -1,0 +1,11 @@
+{
+  "id": "FR-C323-couronne",
+  "pathSegment": "FR-PATH-323-REGNE",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FR-EXT-323-REGNE",
+      "order": 3
+    }
+  ]
+}

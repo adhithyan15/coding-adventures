@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 550,
+  "sourceHash": "fnv1a64:fe8e2742121c8a54",
+  "lessonIds": [
+    "ES-C550-divorcio",
+    "ES-C550-separarse",
+    "ES-C550-divorciado",
+    "ES-C550-viudo",
+    "ES-C550-viuda"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch550.txt",
+  "json": "spanish/narration/ch550.json",
+  "textHash": "fnv1a64:72eb5ccda338ef2d",
+  "jsonHash": "fnv1a64:b1ff4e92623e7a60",
+  "findings": []
+}

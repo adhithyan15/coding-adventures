@@ -1,0 +1,11 @@
+{
+  "id": "PT-C335-opinar",
+  "pathSegment": "PT-PATH-335-OPINIAO",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-335-OPINIAO",
+      "order": 3
+    }
+  ]
+}

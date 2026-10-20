@@ -1,0 +1,19 @@
+{
+  "chapter": 272,
+  "title": "Would, Could, Should --- The Condizionale, and Six Lines",
+  "label": "ch:it-the-condizionale",
+  "canDo": "I can say what would happen with the condizionale, and write six connected lines about a journey that end looking forward.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "IT-W272-sei-righe",
+    "kind": "task",
+    "summary": "Complete IT-W272-sei-righe: six lines to one reader, scene in the imperfetto, events in order, a reason, and a last line with spero di, sarebbe or se.",
+    "assesses": [
+      "IT-GRAMMAR-CONDIZIONALE-01",
+      "IT-LEX-SAREBBE-01",
+      "IT-GRAMMAR-SAREBBE-BELLO-02"
+    ]
+  }
+}

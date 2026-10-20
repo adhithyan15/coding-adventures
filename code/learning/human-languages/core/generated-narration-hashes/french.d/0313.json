@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 313,
+  "sourceHash": "fnv1a64:10eb25a7a55f2b81",
+  "lessonIds": [
+    "FR-C313-retraite",
+    "FR-C313-retraite-personne",
+    "FR-C313-vieillesse",
+    "FR-C313-hospitaliser",
+    "FR-C313-deces"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch313.txt",
+  "json": "french/narration/ch313.json",
+  "textHash": "fnv1a64:d2e386cf0819e2a7",
+  "jsonHash": "fnv1a64:98a66dc60e9349a2",
+  "findings": []
+}

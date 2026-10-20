@@ -1,0 +1,11 @@
+{
+  "id": "ES-C725-fingir",
+  "pathSegment": "ES-PATH-725-FIEL",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "ES-EXT-725-FIEL",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "FR-C402-embuer",
+  "pathSegment": "FR-PATH-402-VITRES",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-402-VITRES",
+      "order": 4
+    }
+  ]
+}

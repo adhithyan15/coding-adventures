@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PT-C399-hiperligacao",
+    "language": "portuguese",
+    "chapter": 399,
+    "sequence": 22520,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:fa0d5c9d71635410"
+  },
+  "findings": []
+}

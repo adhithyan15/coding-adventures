@@ -1,0 +1,19 @@
+{
+  "chapter": 417,
+  "title": "Alla fermata",
+  "label": "ch:it-alla-fermata",
+  "canDo": "I can wait for a bus or train: the platform, the shelter, the terminus, the coach and trains passing through.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "IT-C417-transitare",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 417: I can wait for a bus or train: the platform, the shelter, the terminus, the coach and trains passing through.",
+    "assesses": [
+      "IT-LEX-C417-FERMATA-03",
+      "IT-LEX-C417-FERMATA-04",
+      "IT-LEX-C417-FERMATA-05"
+    ]
+  }
+}

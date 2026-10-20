@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C344-prova",
+    "language": "italian",
+    "chapter": 344,
+    "sequence": 19850,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d10d312301d7717e"
+  },
+  "findings": []
+}

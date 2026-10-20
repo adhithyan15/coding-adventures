@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C365-ausser-wenn",
+    "language": "german",
+    "chapter": 365,
+    "sequence": 19800,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5184de35d39ba38f"
+  },
+  "findings": []
+}

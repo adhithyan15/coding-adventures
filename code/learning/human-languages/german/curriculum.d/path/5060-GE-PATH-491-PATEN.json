@@ -1,0 +1,9 @@
+{
+  "id": "GE-PATH-491-PATEN",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "GE-EXT-491-PATEN"
+  ],
+  "after": []
+}

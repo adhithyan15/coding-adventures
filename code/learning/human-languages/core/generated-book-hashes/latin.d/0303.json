@@ -1,0 +1,13 @@
+{
+  "language": "latin",
+  "chapter": 303,
+  "sourceHash": "fnv1a64:7b56153d5cb1135a",
+  "lessonIds": [
+    "LA-C303-furtum",
+    "LA-C303-latrocinium",
+    "LA-C303-grassator",
+    "LA-C303-praedo",
+    "LA-C303-praeda"
+  ],
+  "tex": "latin/book/chapters/ch303-furtum.tex"
+}

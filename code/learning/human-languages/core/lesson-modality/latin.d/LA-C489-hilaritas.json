@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C489-hilaritas",
+    "language": "latin",
+    "chapter": 489,
+    "sequence": 26020,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1c5187ec9c05d77e"
+  },
+  "findings": []
+}

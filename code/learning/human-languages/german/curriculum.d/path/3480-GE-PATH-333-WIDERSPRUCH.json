@@ -1,0 +1,9 @@
+{
+  "id": "GE-PATH-333-WIDERSPRUCH",
+  "spine_node": "SPINE-GIVE-REASONS",
+  "before": [],
+  "inline": [
+    "GE-EXT-333-WIDERSPRUCH"
+  ],
+  "after": []
+}

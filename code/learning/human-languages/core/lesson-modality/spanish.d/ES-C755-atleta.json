@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C755-atleta",
+    "language": "spanish",
+    "chapter": 755,
+    "sequence": 27730,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:15cbc24f2758c247"
+  },
+  "findings": []
+}

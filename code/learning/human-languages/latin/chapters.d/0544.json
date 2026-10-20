@@ -1,0 +1,19 @@
+{
+  "chapter": 544,
+  "title": "Strings",
+  "label": "ch:la-strings",
+  "canDo": "I can talk about the lyre and those who play it.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "LA-R544-review-537-544",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 544: I can talk about the lyre and those who play it.",
+    "assesses": [
+      "LA-LEX-C544-CITH-03",
+      "LA-LEX-C544-CITH-04",
+      "LA-LEX-C544-CITH-05"
+    ]
+  }
+}

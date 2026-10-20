@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C316-candelina",
+    "language": "italian",
+    "chapter": 316,
+    "sequence": 18300,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9e7e747c1b1c6ee7"
+  },
+  "findings": []
+}

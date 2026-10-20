@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C308-cresima",
+    "language": "italian",
+    "chapter": 308,
+    "sequence": 17930,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ad6d47ac9ae50f9a"
+  },
+  "findings": []
+}

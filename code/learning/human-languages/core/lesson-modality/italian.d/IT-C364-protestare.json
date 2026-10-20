@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C364-protestare",
+    "language": "italian",
+    "chapter": 364,
+    "sequence": 20890,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:db7e4f53bb75a622"
+  },
+  "findings": []
+}

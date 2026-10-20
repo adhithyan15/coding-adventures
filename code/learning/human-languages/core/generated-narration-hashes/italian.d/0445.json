@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 445,
+  "sourceHash": "fnv1a64:ee966e9929668eed",
+  "lessonIds": [
+    "IT-C445-campanile",
+    "IT-C445-duomo",
+    "IT-C445-cattedrale",
+    "IT-C445-portico",
+    "IT-C445-loggia"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch445.txt",
+  "json": "italian/narration/ch445.json",
+  "textHash": "fnv1a64:4d7f481df1d584e3",
+  "jsonHash": "fnv1a64:99a2544b75bdf269",
+  "findings": []
+}

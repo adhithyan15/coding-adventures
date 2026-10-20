@@ -1,0 +1,8 @@
+{
+  "id": "IT-EXT-421-PORTO",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can get around a harbour: the pier, the jetty, boarding, landing and setting sail.",
+  "prerequisites": []
+}

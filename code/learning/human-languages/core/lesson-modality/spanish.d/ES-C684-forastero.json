@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C684-forastero",
+    "language": "spanish",
+    "chapter": 684,
+    "sequence": 24050,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5d8469d86099e661"
+  },
+  "findings": []
+}

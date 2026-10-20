@@ -1,0 +1,11 @@
+{
+  "id": "FR-C415-trottinette",
+  "pathSegment": "FR-PATH-415-METRO",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-415-METRO",
+      "order": 4
+    }
+  ]
+}

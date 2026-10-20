@@ -1,0 +1,11 @@
+{
+  "id": "ES-C529-explotar",
+  "pathSegment": "ES-PATH-529-BOMBA",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ES-EXT-529-BOMBA",
+      "order": 1
+    }
+  ]
+}

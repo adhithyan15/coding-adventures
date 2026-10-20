@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PT-C503-tabuleiro",
+    "language": "portuguese",
+    "chapter": 503,
+    "sequence": 27860,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8b8f772a7b4a588a"
+  },
+  "findings": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 375,
+  "sourceHash": "fnv1a64:63949554007146f0",
+  "lessonIds": [
+    "IT-C375-annullare",
+    "IT-C375-rinviare",
+    "IT-C375-provvisorio",
+    "IT-C375-definitivo",
+    "IT-C375-stabilire"
+  ],
+  "tex": "italian/book/chapters/ch375-cambio-di-programma.tex"
+}

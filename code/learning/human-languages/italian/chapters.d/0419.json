@@ -1,0 +1,19 @@
+{
+  "chapter": 419,
+  "title": "In treno",
+  "label": "ch:it-in-treno",
+  "canDo": "I can find my place on a train: the carriage, the coach number, the compartment, the couchette and the guard.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "IT-C419-capotreno",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 419: I can find my place on a train: the carriage, the coach number, the compartment, the couchette and the guard.",
+    "assesses": [
+      "IT-LEX-C419-CARROZZA-03",
+      "IT-LEX-C419-CARROZZA-04",
+      "IT-LEX-C419-CARROZZA-05"
+    ]
+  }
+}

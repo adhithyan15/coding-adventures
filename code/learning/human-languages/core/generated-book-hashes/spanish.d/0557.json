@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 557,
+  "sourceHash": "fnv1a64:bcf1cee7b65c6da3",
+  "lessonIds": [
+    "ES-C557-luto",
+    "ES-C557-esquela",
+    "ES-C557-pesame",
+    "ES-C557-ataud",
+    "ES-C557-herencia"
+  ],
+  "tex": "spanish/book/chapters/ch557-de-luto.tex"
+}

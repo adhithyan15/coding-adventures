@@ -1,0 +1,19 @@
+{
+  "chapter": 280,
+  "title": "Da allora a oggi",
+  "label": "ch:it-da-allora-a-oggi",
+  "canDo": "I can link the past to now: so far, since then, still, lately and previously.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "IT-R280-ripasso-273-280",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 280: I can link the past to now: so far, since then, still, lately and previously.",
+    "assesses": [
+      "IT-LEX-C280-FINORA-03",
+      "IT-LEX-C280-FINORA-04",
+      "IT-LEX-C280-FINORA-05"
+    ]
+  }
+}

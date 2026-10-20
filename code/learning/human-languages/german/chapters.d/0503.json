@@ -1,0 +1,19 @@
+{
+  "chapter": 503,
+  "title": "Im Garten",
+  "label": "ch:ge-im-garten",
+  "canDo": "I can talk about gardening.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "GE-C503-kompost",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 503: I can talk about gardening.",
+    "assesses": [
+      "GE-LEX-C503-GARTEN-03",
+      "GE-LEX-C503-GARTEN-04",
+      "GE-LEX-C503-GARTEN-05"
+    ]
+  }
+}

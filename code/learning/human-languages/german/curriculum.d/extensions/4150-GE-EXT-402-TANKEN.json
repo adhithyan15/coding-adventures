@@ -1,0 +1,8 @@
+{
+  "id": "GE-EXT-402-TANKEN",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can fill up the car: filling up, filling the tank, petrol, the pump and the oil change.",
+  "prerequisites": []
+}

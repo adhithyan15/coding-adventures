@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 485,
+  "sourceHash": "fnv1a64:a55362274751f100",
+  "lessonIds": [
+    "GE-C485-nacken",
+    "GE-C485-ellbogen",
+    "GE-C485-handgelenk",
+    "GE-C485-knoechel",
+    "GE-C485-huefte"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch485.txt",
+  "json": "german/narration/ch485.json",
+  "textHash": "fnv1a64:fb9d5fd6ba79394c",
+  "jsonHash": "fnv1a64:dfb477bbc99fc78e",
+  "findings": []
+}

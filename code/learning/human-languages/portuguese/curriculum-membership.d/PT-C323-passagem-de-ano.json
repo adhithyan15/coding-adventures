@@ -1,0 +1,11 @@
+{
+  "id": "PT-C323-passagem-de-ano",
+  "pathSegment": "PT-PATH-323-CONSOADA",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PT-EXT-323-CONSOADA",
+      "order": 2
+    }
+  ]
+}

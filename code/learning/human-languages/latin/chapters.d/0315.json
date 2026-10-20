@@ -1,0 +1,19 @@
+{
+  "chapter": 315,
+  "title": "Naufragium",
+  "label": "ch:la-naufragium",
+  "canDo": "I can tell the story of a shipwreck: the wreck, shipwrecked, to sink, to overwhelm and a disaster.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "LA-C315-calamitas",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 315: I can tell the story of a shipwreck: the wreck, shipwrecked, to sink, to overwhelm and a disaster.",
+    "assesses": [
+      "LA-LEX-C315-NAUFRAGIUM-03",
+      "LA-LEX-C315-NAUFRAGIUM-04",
+      "LA-LEX-C315-NAUFRAGIUM-05"
+    ]
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 424,
+  "sourceHash": "fnv1a64:879e449d21ac504b",
+  "lessonIds": [
+    "IT-C424-boa",
+    "IT-C424-approdare",
+    "IT-C424-ormeggiare",
+    "IT-C424-salvagente",
+    "IT-C424-nausea"
+  ],
+  "tex": "italian/book/chapters/ch424-arrivare-in-porto.tex"
+}

@@ -1,0 +1,11 @@
+{
+  "id": "IT-C472-vantarsi",
+  "pathSegment": "IT-PATH-472-DIFETTI",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "IT-EXT-472-DIFETTI",
+      "order": 4
+    }
+  ]
+}

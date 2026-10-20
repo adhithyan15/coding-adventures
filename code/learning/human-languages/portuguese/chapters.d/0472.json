@@ -1,0 +1,19 @@
+{
+  "chapter": 472,
+  "title": "Espertos e ingénuos",
+  "label": "ch:pt-espertos-e-ingenuos",
+  "canDo": "I can describe clever, cunning and naive people.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "PT-C472-desconfiado",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 472: I can describe clever, cunning and naive people.",
+    "assesses": [
+      "PT-LEX-C472-ESPERTO-03",
+      "PT-LEX-C472-ESPERTO-04",
+      "PT-LEX-C472-ESPERTO-05"
+    ]
+  }
+}

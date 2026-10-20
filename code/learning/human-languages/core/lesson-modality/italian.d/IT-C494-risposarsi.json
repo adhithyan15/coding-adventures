@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C494-risposarsi",
+    "language": "italian",
+    "chapter": 494,
+    "sequence": 27810,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1cfbd20ac3bfaa8a"
+  },
+  "findings": []
+}

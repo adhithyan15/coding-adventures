@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 499,
+  "sourceHash": "fnv1a64:dc7ee71823e64097",
+  "lessonIds": [
+    "IT-C499-litigio",
+    "IT-C499-riconciliarsi",
+    "IT-C499-tradire",
+    "IT-C499-fedelta",
+    "IT-C499-confidarsi"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch499.txt",
+  "json": "italian/narration/ch499.json",
+  "textHash": "fnv1a64:8c73fcfa246847a3",
+  "jsonHash": "fnv1a64:73a945824229b85f",
+  "findings": []
+}

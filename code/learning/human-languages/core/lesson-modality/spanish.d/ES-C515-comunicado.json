@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C515-comunicado",
+    "language": "spanish",
+    "chapter": 515,
+    "sequence": 15340,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:bc68ef153fc8fa54"
+  },
+  "findings": []
+}

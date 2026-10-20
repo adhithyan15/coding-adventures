@@ -1,0 +1,19 @@
+{
+  "chapter": 362,
+  "title": "Troppo lavoro",
+  "label": "ch:it-troppo-lavoro",
+  "canDo": "I can say I am stressed or worn out and talk about efficiency and productivity.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "IT-R362-ripasso-355-362",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 362: I can say I am stressed or worn out and talk about efficiency and productivity.",
+    "assesses": [
+      "IT-LEX-C362-STRESS-03",
+      "IT-LEX-C362-STRESS-04",
+      "IT-LEX-C362-STRESS-05"
+    ]
+  }
+}

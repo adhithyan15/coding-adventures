@@ -1,0 +1,11 @@
+{
+  "id": "PT-C312-alianca",
+  "pathSegment": "PT-PATH-312-NOIVADO",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PT-EXT-312-NOIVADO",
+      "order": 1
+    }
+  ]
+}

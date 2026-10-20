@@ -1,0 +1,19 @@
+{
+  "chapter": 357,
+  "title": "O primeiro emprego",
+  "label": "ch:pt-o-primeiro-emprego",
+  "canDo": "I can talk about a first job: an internship, a trainee, an apprentice and the employer.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "PT-C357-entidade-patronal",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 357: I can talk about a first job: an internship, a trainee, an apprentice and the employer.",
+    "assesses": [
+      "PT-LEX-C357-ESTAGIO-03",
+      "PT-LEX-C357-ESTAGIO-04",
+      "PT-LEX-C357-ESTAGIO-05"
+    ]
+  }
+}

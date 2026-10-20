@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 407,
+  "sourceHash": "fnv1a64:fc534a09cc110dae",
+  "lessonIds": [
+    "IT-C407-parabrezza",
+    "IT-C407-tergicristallo",
+    "IT-C407-specchietto",
+    "IT-C407-clacson",
+    "IT-C407-appannarsi"
+  ],
+  "tex": "italian/book/chapters/ch407-vetri-e-specchietti.tex"
+}

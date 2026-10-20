@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 426,
+  "sourceHash": "fnv1a64:66f8950527890590",
+  "lessonIds": [
+    "FR-C426-reception",
+    "FR-C426-receptionniste",
+    "FR-C426-etage",
+    "FR-C426-sejour",
+    "FR-C426-deballer"
+  ],
+  "tex": "french/book/chapters/ch426-a-la-reception.tex"
+}

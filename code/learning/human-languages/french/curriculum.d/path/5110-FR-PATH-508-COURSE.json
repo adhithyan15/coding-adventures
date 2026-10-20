@@ -1,0 +1,9 @@
+{
+  "id": "FR-PATH-508-COURSE",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "FR-EXT-508-COURSE"
+  ],
+  "after": []
+}

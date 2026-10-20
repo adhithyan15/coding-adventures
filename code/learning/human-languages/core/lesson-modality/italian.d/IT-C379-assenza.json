@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C379-assenza",
+    "language": "italian",
+    "chapter": 379,
+    "sequence": 21670,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:12905f909d8f5281"
+  },
+  "findings": []
+}

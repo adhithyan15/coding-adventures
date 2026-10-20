@@ -1,0 +1,11 @@
+{
+  "id": "PT-C329-batalha",
+  "pathSegment": "PT-PATH-329-BATALHA",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PT-EXT-329-BATALHA",
+      "order": 1
+    }
+  ]
+}

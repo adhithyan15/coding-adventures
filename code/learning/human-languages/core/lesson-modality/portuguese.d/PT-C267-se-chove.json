@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PT-C267-se-chove",
+    "language": "portuguese",
+    "chapter": 267,
+    "sequence": 15700,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9699a52a2ef58ad5"
+  },
+  "findings": []
+}

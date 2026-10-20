@@ -1,0 +1,11 @@
+{
+  "id": "PT-C335-convencido",
+  "pathSegment": "PT-PATH-335-OPINIAO",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PT-EXT-335-OPINIAO",
+      "order": 1
+    }
+  ]
+}

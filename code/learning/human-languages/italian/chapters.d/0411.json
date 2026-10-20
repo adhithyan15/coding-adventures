@@ -1,0 +1,19 @@
+{
+  "chapter": 411,
+  "title": "Sotto il cofano",
+  "label": "ch:it-sotto-il-cofano",
+  "canDo": "I can talk about parts of a car: the bonnet, the boot, the clutch, the lights, and unscrewing a wheel.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "IT-C411-svitare",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 411: I can talk about parts of a car: the bonnet, the boot, the clutch, the lights, and unscrewing a wheel.",
+    "assesses": [
+      "IT-LEX-C411-COFANO-03",
+      "IT-LEX-C411-COFANO-04",
+      "IT-LEX-C411-COFANO-05"
+    ]
+  }
+}

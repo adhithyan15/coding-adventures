@@ -1,0 +1,9 @@
+{
+  "id": "IT-PATH-347-GIUDIZIO",
+  "spine_node": "SPINE-GIVE-REASONS",
+  "before": [],
+  "inline": [
+    "IT-EXT-347-GIUDIZIO"
+  ],
+  "after": []
+}

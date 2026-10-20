@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 461,
+  "sourceHash": "fnv1a64:de2df28170f8e7c6",
+  "lessonIds": [
+    "PT-C461-lagarto",
+    "PT-C461-vibora",
+    "PT-C461-sapo",
+    "PT-C461-caracol",
+    "PT-C461-rastejar"
+  ],
+  "tex": "portuguese/book/chapters/ch461-bichos-pequenos.tex"
+}

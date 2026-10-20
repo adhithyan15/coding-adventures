@@ -1,0 +1,11 @@
+{
+  "id": "PT-C497-trair",
+  "pathSegment": "PT-PATH-497-SEPARACAO",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PT-EXT-497-SEPARACAO",
+      "order": 2
+    }
+  ]
+}

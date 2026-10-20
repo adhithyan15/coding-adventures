@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 594,
+  "sourceHash": "fnv1a64:9f33766eb1294548",
+  "lessonIds": [
+    "ES-C594-liderazgo",
+    "ES-C594-motivar",
+    "ES-C594-colaboracion",
+    "ES-C594-dirigir",
+    "ES-C594-gestionar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch594.txt",
+  "json": "spanish/narration/ch594.json",
+  "textHash": "fnv1a64:25272120cb40e8c0",
+  "jsonHash": "fnv1a64:303ec1cb3db8a36a",
+  "findings": []
+}

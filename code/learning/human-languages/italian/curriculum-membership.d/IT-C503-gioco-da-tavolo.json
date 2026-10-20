@@ -1,0 +1,11 @@
+{
+  "id": "IT-C503-gioco-da-tavolo",
+  "pathSegment": "IT-PATH-503-GIOCHI",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "IT-EXT-503-GIOCHI",
+      "order": 3
+    }
+  ]
+}

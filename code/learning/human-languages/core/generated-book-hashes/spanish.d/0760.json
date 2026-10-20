@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 760,
+  "sourceHash": "fnv1a64:d092e34f2c6a3077",
+  "lessonIds": [
+    "ES-C760-disfraz",
+    "ES-C760-disfrazarse",
+    "ES-C760-maquillaje",
+    "ES-C760-estreno",
+    "ES-C760-interpretar"
+  ],
+  "tex": "spanish/book/chapters/ch760-teatro-y-disfraces.tex"
+}

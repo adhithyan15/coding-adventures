@@ -1,0 +1,11 @@
+{
+  "id": "PT-C299-sinistro",
+  "pathSegment": "PT-PATH-299-ACIDENTE",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PT-EXT-299-ACIDENTE",
+      "order": 4
+    }
+  ]
+}

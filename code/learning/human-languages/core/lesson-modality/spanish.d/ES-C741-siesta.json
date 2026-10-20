@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C741-siesta",
+    "language": "spanish",
+    "chapter": 741,
+    "sequence": 27030,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1e8d1304672bbbed"
+  },
+  "findings": []
+}

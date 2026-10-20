@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C296-schwanger",
+    "language": "german",
+    "chapter": 296,
+    "sequence": 16250,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c1b09b3391fcab71"
+  },
+  "findings": []
+}

@@ -1,0 +1,20 @@
+{
+  "language": "italian",
+  "chapter": 412,
+  "sourceHash": "fnv1a64:31ca45259150947e",
+  "lessonIds": [
+    "IT-C412-vigile",
+    "IT-C412-pedone",
+    "IT-C412-strisce",
+    "IT-C412-investire",
+    "IT-C412-contravvenzione",
+    "IT-R412-ripasso-405-412"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "italian/narration/ch412.txt",
+  "json": "italian/narration/ch412.json",
+  "textHash": "fnv1a64:b856258ee5f984b0",
+  "jsonHash": "fnv1a64:88ee72cf42400631",
+  "findings": []
+}

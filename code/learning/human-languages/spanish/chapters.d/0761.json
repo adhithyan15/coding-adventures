@@ -1,0 +1,19 @@
+{
+  "chapter": 761,
+  "title": "Tardes en el sofá",
+  "label": "ch:es-tardes-en-el-sofa",
+  "canDo": "I can describe a lazy afternoon at home: a series, video games, cushions and yawns.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "ES-C761-grabar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 761: I can describe a lazy afternoon at home: a series, video games, cushions and yawns.",
+    "assesses": [
+      "ES-LEX-C761-SERIE-03",
+      "ES-LEX-C761-SERIE-04",
+      "ES-LEX-C761-SERIE-05"
+    ]
+  }
+}

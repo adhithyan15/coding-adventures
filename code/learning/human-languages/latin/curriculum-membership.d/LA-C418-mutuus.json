@@ -1,0 +1,11 @@
+{
+  "id": "LA-C418-mutuus",
+  "pathSegment": "LA-PATH-418-AESALIENUM",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "LA-EXT-418-AESALIENUM",
+      "order": 4
+    }
+  ]
+}

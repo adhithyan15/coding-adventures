@@ -1,0 +1,11 @@
+{
+  "id": "LA-R504-review-497-504",
+  "pathSegment": "LA-PATH-504-PROB",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "LA-EXT-504-PROB",
+      "order": 5
+    }
+  ]
+}

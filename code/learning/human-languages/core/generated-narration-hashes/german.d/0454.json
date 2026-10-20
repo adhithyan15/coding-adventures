@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 454,
+  "sourceHash": "fnv1a64:bbd4297f97e8fae9",
+  "lessonIds": [
+    "GE-C454-wanderung",
+    "GE-C454-wanderweg",
+    "GE-C454-besteigen",
+    "GE-C454-absteigen",
+    "GE-C454-rasten"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch454.txt",
+  "json": "german/narration/ch454.json",
+  "textHash": "fnv1a64:7c04f1a8225cfe65",
+  "jsonHash": "fnv1a64:63c2a0ec04d1a7ba",
+  "findings": []
+}

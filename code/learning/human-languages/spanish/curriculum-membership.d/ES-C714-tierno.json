@@ -1,0 +1,11 @@
+{
+  "id": "ES-C714-tierno",
+  "pathSegment": "ES-PATH-714-CARINO",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ES-EXT-714-CARINO",
+      "order": 3
+    }
+  ]
+}

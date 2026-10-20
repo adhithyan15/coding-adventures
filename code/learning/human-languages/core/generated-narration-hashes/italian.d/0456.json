@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 456,
+  "sourceHash": "fnv1a64:8c87ff25f1042199",
+  "lessonIds": [
+    "IT-C456-parrucchiere",
+    "IT-C456-barbiere",
+    "IT-C456-estetista",
+    "IT-C456-ottico",
+    "IT-C456-smacchiare"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch456.txt",
+  "json": "italian/narration/ch456.json",
+  "textHash": "fnv1a64:d642e4263cbaea0a",
+  "jsonHash": "fnv1a64:be9fe876736eb8aa",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "PT-C295-detido",
+  "pathSegment": "PT-PATH-295-SUSPEITO",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PT-EXT-295-SUSPEITO",
+      "order": 4
+    }
+  ]
+}

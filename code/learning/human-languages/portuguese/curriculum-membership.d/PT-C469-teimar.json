@@ -1,0 +1,11 @@
+{
+  "id": "PT-C469-teimar",
+  "pathSegment": "PT-PATH-469-TEIMOSIA",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PT-EXT-469-TEIMOSIA",
+      "order": 2
+    }
+  ]
+}

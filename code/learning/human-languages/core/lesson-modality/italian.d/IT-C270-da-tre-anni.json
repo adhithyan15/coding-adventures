@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C270-da-tre-anni",
+    "language": "italian",
+    "chapter": 270,
+    "sequence": 15950,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:083a6af127d1a9fe"
+  },
+  "findings": []
+}

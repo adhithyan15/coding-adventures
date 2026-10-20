@@ -1,0 +1,11 @@
+{
+  "id": "LA-C445-pernocto",
+  "pathSegment": "LA-PATH-445-DEVERTICULUM",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "LA-EXT-445-DEVERTICULUM",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C525-herir",
+    "language": "spanish",
+    "chapter": 525,
+    "sequence": 15850,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:344914c3011c589c"
+  },
+  "findings": []
+}

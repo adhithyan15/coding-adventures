@@ -1,0 +1,9 @@
+{
+  "id": "IT-PATH-300-FERITI",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "IT-EXT-300-FERITI"
+  ],
+  "after": []
+}

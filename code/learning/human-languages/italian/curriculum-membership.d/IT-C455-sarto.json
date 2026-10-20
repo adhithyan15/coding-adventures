@@ -1,0 +1,11 @@
+{
+  "id": "IT-C455-sarto",
+  "pathSegment": "IT-PATH-455-ARTIGIANI",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "IT-EXT-455-ARTIGIANI",
+      "order": 2
+    }
+  ]
+}

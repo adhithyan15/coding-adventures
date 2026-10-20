@@ -1,0 +1,11 @@
+{
+  "id": "GE-C371-absage",
+  "pathSegment": "GE-PATH-371-ZUSAGE",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-371-ZUSAGE",
+      "order": 3
+    }
+  ]
+}

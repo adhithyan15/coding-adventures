@@ -1,0 +1,11 @@
+{
+  "id": "PT-C294-investigar",
+  "pathSegment": "PT-PATH-294-INVESTIGAR",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PT-EXT-294-INVESTIGAR",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 303,
+  "sourceHash": "fnv1a64:b1e85fe0c2136783",
+  "lessonIds": [
+    "GE-C303-tod",
+    "GE-C303-beerdigen",
+    "GE-C303-beerdigung",
+    "GE-C303-sarg",
+    "GE-C303-friedhof"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch303.txt",
+  "json": "german/narration/ch303.json",
+  "textHash": "fnv1a64:6dddf6cea35ebb5e",
+  "jsonHash": "fnv1a64:2db46fdabd7187d9",
+  "findings": []
+}

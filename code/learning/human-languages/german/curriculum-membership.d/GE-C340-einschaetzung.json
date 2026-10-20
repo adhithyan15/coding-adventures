@@ -1,0 +1,11 @@
+{
+  "id": "GE-C340-einschaetzung",
+  "pathSegment": "GE-PATH-340-KRITIK",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GE-EXT-340-KRITIK",
+      "order": 2
+    }
+  ]
+}

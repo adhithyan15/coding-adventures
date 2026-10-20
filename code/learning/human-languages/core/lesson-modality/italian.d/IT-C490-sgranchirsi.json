@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C490-sgranchirsi",
+    "language": "italian",
+    "chapter": 490,
+    "sequence": 27610,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3ffe777197f49f04"
+  },
+  "findings": []
+}

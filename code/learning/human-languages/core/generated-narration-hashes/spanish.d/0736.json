@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 736,
+  "sourceHash": "fnv1a64:7265563de4532a39",
+  "lessonIds": [
+    "ES-C736-frente",
+    "ES-C736-mejilla",
+    "ES-C736-barbilla",
+    "ES-C736-barba",
+    "ES-C736-oreja"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch736.txt",
+  "json": "spanish/narration/ch736.json",
+  "textHash": "fnv1a64:c26b9b176d9331e4",
+  "jsonHash": "fnv1a64:d5ea10bd8d6943e9",
+  "findings": []
+}

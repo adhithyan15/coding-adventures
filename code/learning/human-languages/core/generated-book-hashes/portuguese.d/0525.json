@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 525,
+  "sourceHash": "fnv1a64:f0fe8e36d5ba313a",
+  "lessonIds": [
+    "PT-C525-bibliotecario",
+    "PT-C525-requisitar",
+    "PT-C525-editora",
+    "PT-C525-traducao",
+    "PT-C525-tradutor"
+  ],
+  "tex": "portuguese/book/chapters/ch525-na-biblioteca.tex"
+}

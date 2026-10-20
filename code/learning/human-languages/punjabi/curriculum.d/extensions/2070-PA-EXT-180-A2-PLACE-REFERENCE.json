@@ -1,0 +1,10 @@
+{
+  "id": "PA-EXT-180-A2-PLACE-REFERENCE",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can understand and give one simple practical-place note about people in a room.",
+  "prerequisites": [
+    "PA-EXT-179-A2-SCHEDULE-STATUS"
+  ]
+}

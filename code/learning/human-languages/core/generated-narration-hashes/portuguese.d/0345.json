@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 345,
+  "sourceHash": "fnv1a64:f5aef7001db39ab0",
+  "lessonIds": [
+    "PT-C345-vantagem",
+    "PT-C345-desvantagem",
+    "PT-C345-aspeto",
+    "PT-C345-critica",
+    "PT-C345-ponderar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch345.txt",
+  "json": "portuguese/narration/ch345.json",
+  "textHash": "fnv1a64:4ef149ea1ab64822",
+  "jsonHash": "fnv1a64:2fc6f02ee44ecba8",
+  "findings": []
+}

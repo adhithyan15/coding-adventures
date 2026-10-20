@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 717,
+  "sourceHash": "fnv1a64:7f382ced09be1a25",
+  "lessonIds": [
+    "ES-C717-deprimido",
+    "ES-C717-desahogarse",
+    "ES-C717-sufrimiento",
+    "ES-C717-lagrima",
+    "ES-C717-desesperado"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch717.txt",
+  "json": "spanish/narration/ch717.json",
+  "textHash": "fnv1a64:2270d1540c45f90e",
+  "jsonHash": "fnv1a64:69ed160468d7fc30",
+  "findings": []
+}

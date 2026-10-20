@@ -1,0 +1,11 @@
+{
+  "id": "ES-C624-autorizacion",
+  "pathSegment": "ES-PATH-624-PERMISO",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ES-EXT-624-PERMISO",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "FR-C295-relacher",
+  "pathSegment": "FR-PATH-295-AVEUX",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-295-AVEUX",
+      "order": 4
+    }
+  ]
+}

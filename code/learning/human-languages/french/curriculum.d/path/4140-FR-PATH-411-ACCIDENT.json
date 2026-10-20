@@ -1,0 +1,9 @@
+{
+  "id": "FR-PATH-411-ACCIDENT",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "FR-EXT-411-ACCIDENT"
+  ],
+  "after": []
+}

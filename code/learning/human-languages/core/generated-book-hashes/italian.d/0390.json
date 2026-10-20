@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 390,
+  "sourceHash": "fnv1a64:73fcdac1f9ffb699",
+  "lessonIds": [
+    "IT-C390-legale",
+    "IT-C390-illegale",
+    "IT-C390-lecito",
+    "IT-C390-illecito",
+    "IT-C390-abusivo"
+  ],
+  "tex": "italian/book/chapters/ch390-legale-o-no.tex"
+}

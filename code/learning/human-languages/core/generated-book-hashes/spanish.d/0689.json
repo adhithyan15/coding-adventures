@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 689,
+  "sourceHash": "fnv1a64:3514baea005ddff1",
+  "lessonIds": [
+    "ES-C689-cascada",
+    "ES-C689-arroyo",
+    "ES-C689-laguna",
+    "ES-C689-pantano",
+    "ES-C689-acantilado"
+  ],
+  "tex": "spanish/book/chapters/ch689-agua-en-el-paisaje.tex"
+}

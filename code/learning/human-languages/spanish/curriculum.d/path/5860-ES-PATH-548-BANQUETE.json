@@ -1,0 +1,9 @@
+{
+  "id": "ES-PATH-548-BANQUETE",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "ES-EXT-548-BANQUETE"
+  ],
+  "after": []
+}

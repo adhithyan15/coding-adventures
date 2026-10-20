@@ -1,0 +1,11 @@
+{
+  "id": "IT-C269-ero-contento",
+  "pathSegment": "IT-PATH-269-SENTIMENTI",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "IT-EXT-269-SENTIMENTI",
+      "order": 0
+    }
+  ]
+}

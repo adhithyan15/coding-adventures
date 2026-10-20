@@ -1,0 +1,9 @@
+{
+  "id": "FR-PATH-329-FOUETTER",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "FR-EXT-329-FOUETTER"
+  ],
+  "after": []
+}

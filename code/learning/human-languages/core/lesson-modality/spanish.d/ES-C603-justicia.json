@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C603-justicia",
+    "language": "spanish",
+    "chapter": 603,
+    "sequence": 19910,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:644dc9d402f39bd9"
+  },
+  "findings": []
+}

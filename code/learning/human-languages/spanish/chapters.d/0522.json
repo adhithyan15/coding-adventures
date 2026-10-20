@@ -1,0 +1,19 @@
+{
+  "chapter": 522,
+  "title": "Ante el juez",
+  "label": "ch:es-ante-el-juez",
+  "canDo": "I can say that there was a trial, that the judge judged and sentenced someone, and that they went to prison.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "ES-C522-carcel",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 522: I can say that there was a trial, that the judge judged and sentenced someone, and that they went to prison.",
+    "assesses": [
+      "ES-LEX-C522-JUEZ-03",
+      "ES-LEX-C522-JUEZ-04",
+      "ES-LEX-C522-JUEZ-05"
+    ]
+  }
+}

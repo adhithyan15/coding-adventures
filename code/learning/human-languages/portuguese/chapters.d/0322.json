@@ -1,0 +1,19 @@
+{
+  "chapter": 322,
+  "title": "Fogo de artifício",
+  "label": "ch:pt-fogo-de-artificio",
+  "canDo": "I can describe fireworks, rockets, bonfires and decorations at a festival.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "PT-C322-enfeite",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 322: I can describe fireworks, rockets, bonfires and decorations at a festival.",
+    "assesses": [
+      "PT-LEX-C322-FOGUETE-03",
+      "PT-LEX-C322-FOGUETE-04",
+      "PT-LEX-C322-FOGUETE-05"
+    ]
+  }
+}

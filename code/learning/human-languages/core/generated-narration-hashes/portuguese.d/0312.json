@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 312,
+  "sourceHash": "fnv1a64:fc23e7ee1b10720a",
+  "lessonIds": [
+    "PT-C312-noivado",
+    "PT-C312-alianca",
+    "PT-C312-casamento",
+    "PT-C312-pedir-em-casamento",
+    "PT-C312-matrimonio"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch312.txt",
+  "json": "portuguese/narration/ch312.json",
+  "textHash": "fnv1a64:7c39955620c82e7f",
+  "jsonHash": "fnv1a64:c67de274558fa811",
+  "findings": []
+}

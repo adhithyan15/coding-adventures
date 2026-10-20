@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 285,
+  "sourceHash": "fnv1a64:74ee7669e2de85be",
+  "lessonIds": [
+    "FR-C285-rumeur",
+    "FR-C285-scoop",
+    "FR-C285-desinformation",
+    "FR-C285-censure",
+    "FR-C285-polemique"
+  ],
+  "tex": "french/book/chapters/ch285-on-dit-que.tex"
+}

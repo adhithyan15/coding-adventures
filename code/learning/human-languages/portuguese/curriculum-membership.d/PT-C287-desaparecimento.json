@@ -1,0 +1,11 @@
+{
+  "id": "PT-C287-desaparecimento",
+  "pathSegment": "PT-PATH-287-ROUBO",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PT-EXT-287-ROUBO",
+      "order": 4
+    }
+  ]
+}

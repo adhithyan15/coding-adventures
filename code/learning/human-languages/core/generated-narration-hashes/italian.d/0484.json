@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 484,
+  "sourceHash": "fnv1a64:70601d87a5fd86c1",
+  "lessonIds": [
+    "IT-C484-radiografia",
+    "IT-C484-gesso",
+    "IT-C484-stampella",
+    "IT-C484-ingessare",
+    "IT-C484-zoppicare"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch484.txt",
+  "json": "italian/narration/ch484.json",
+  "textHash": "fnv1a64:eb48a406b4b5f77d",
+  "jsonHash": "fnv1a64:458d0e66bb0bda8d",
+  "findings": []
+}

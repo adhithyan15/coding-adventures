@@ -1,0 +1,20 @@
+{
+  "language": "italian",
+  "chapter": 394,
+  "sourceHash": "fnv1a64:fd2f7c0a5778a827",
+  "lessonIds": [
+    "IT-C394-bilancio",
+    "IT-C394-reddito",
+    "IT-C394-bolletta",
+    "IT-C394-canone",
+    "IT-C394-mutuo",
+    "IT-R394-ripasso-387-394"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "italian/narration/ch394.txt",
+  "json": "italian/narration/ch394.json",
+  "textHash": "fnv1a64:9728fb47e9438a00",
+  "jsonHash": "fnv1a64:65931cac6f95118c",
+  "findings": []
+}

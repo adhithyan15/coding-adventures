@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-R404-ripasso-403-404",
+    "language": "italian",
+    "chapter": 404,
+    "sequence": 22980,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2908e36ff92e8417"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "GE-C408-ausweichen",
+  "pathSegment": "GE-PATH-408-VORFAHRT",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-408-VORFAHRT",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "ES-C543-adelantar",
+  "pathSegment": "ES-PATH-543-RETRASO",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ES-EXT-543-RETRASO",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-R703-repaso-696-703",
+    "language": "spanish",
+    "chapter": 703,
+    "sequence": 25070,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:90283fe3e1136797"
+  },
+  "findings": []
+}

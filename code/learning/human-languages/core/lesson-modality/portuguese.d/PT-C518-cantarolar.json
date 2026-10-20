@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PT-C518-cantarolar",
+    "language": "portuguese",
+    "chapter": 518,
+    "sequence": 28640,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c37d0fda0e54fcd4"
+  },
+  "findings": []
+}

@@ -1,0 +1,9 @@
+{
+  "id": "ES-PATH-720-GRACIAS",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "ES-EXT-720-GRACIAS"
+  ],
+  "after": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 459,
+  "sourceHash": "fnv1a64:aeaefcce6b1457a9",
+  "lessonIds": [
+    "GE-C459-bauernhof",
+    "GE-C459-weide",
+    "GE-C459-scheune",
+    "GE-C459-grasen",
+    "GE-C459-melken"
+  ],
+  "tex": "german/book/chapters/ch459-auf-dem-land.tex"
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 435,
+  "title": "Abkürzung oder Umweg",
+  "label": "ch:ge-abkurzung-oder-umweg",
+  "canDo": "I can talk about routes: the shortcut, taking a shortcut, the detour, turning back and getting lost by car.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "GE-C435-verfahren",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 435: I can talk about routes: the shortcut, taking a shortcut, the detour, turning back and getting lost by car.",
+    "assesses": [
+      "GE-LEX-C435-UMWEG-03",
+      "GE-LEX-C435-UMWEG-04",
+      "GE-LEX-C435-UMWEG-05"
+    ]
+  }
+}

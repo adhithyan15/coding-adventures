@@ -1,0 +1,9 @@
+{
+  "id": "GE-PATH-401-GURT",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "GE-EXT-401-GURT"
+  ],
+  "after": []
+}

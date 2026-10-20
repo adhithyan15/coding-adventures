@@ -1,0 +1,19 @@
+{
+  "chapter": 314,
+  "title": "Il testamento",
+  "label": "ch:it-il-testamento",
+  "canDo": "I can talk about what is left behind: the will, inheriting, the inheritance, the heir and the grave.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "IT-C314-tomba",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 314: I can talk about what is left behind: the will, inheriting, the inheritance, the heir and the grave.",
+    "assesses": [
+      "IT-LEX-C314-EREDITA-03",
+      "IT-LEX-C314-EREDITA-04",
+      "IT-LEX-C314-EREDITA-05"
+    ]
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 372,
+  "sourceHash": "fnv1a64:624e493acc47133c",
+  "lessonIds": [
+    "IT-C372-supporre",
+    "IT-C372-ipotesi",
+    "IT-C372-presumere",
+    "IT-C372-plausibile",
+    "IT-C372-presupposto"
+  ],
+  "tex": "italian/book/chapters/ch372-supponiamo.tex"
+}

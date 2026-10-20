@@ -1,0 +1,9 @@
+{
+  "id": "FR-PATH-527-REPASSAGE",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "FR-EXT-527-REPASSAGE"
+  ],
+  "after": []
+}

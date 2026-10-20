@@ -1,0 +1,23 @@
+{
+  "lesson": {
+    "id": "GE-C253-lesung",
+    "language": "german",
+    "chapter": 253,
+    "sequence": 14160,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "reading-type",
+      "eyes-or-hands-step"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "reading-type",
+      "eyes-or-hands-step"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:117aa500ee690b6b"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "IT-C423-poppa",
+  "pathSegment": "IT-PATH-423-TRAGHETTO",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "IT-EXT-423-TRAGHETTO",
+      "order": 4
+    }
+  ]
+}

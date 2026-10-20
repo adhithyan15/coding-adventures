@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C268-andata-e-ritorno",
+    "language": "italian",
+    "chapter": 268,
+    "sequence": 15880,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1d577712d930b13a"
+  },
+  "findings": []
+}

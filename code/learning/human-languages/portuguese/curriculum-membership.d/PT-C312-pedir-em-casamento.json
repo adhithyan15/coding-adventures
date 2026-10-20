@@ -1,0 +1,11 @@
+{
+  "id": "PT-C312-pedir-em-casamento",
+  "pathSegment": "PT-PATH-312-NOIVADO",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-312-NOIVADO",
+      "order": 3
+    }
+  ]
+}

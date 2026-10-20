@@ -1,0 +1,19 @@
+{
+  "chapter": 439,
+  "title": "Stadtteile",
+  "label": "ch:ge-stadtteile",
+  "canDo": "I can talk about parts of a town: the district, the neighbourhood, the suburb, the police station and the barracks.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "GE-C439-kaserne",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 439: I can talk about parts of a town: the district, the neighbourhood, the suburb, the police station and the barracks.",
+    "assesses": [
+      "GE-LEX-C439-VIERTEL-03",
+      "GE-LEX-C439-VIERTEL-04",
+      "GE-LEX-C439-VIERTEL-05"
+    ]
+  }
+}

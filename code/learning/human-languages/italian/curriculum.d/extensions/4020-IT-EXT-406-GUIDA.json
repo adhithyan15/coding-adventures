@@ -1,0 +1,8 @@
+{
+  "id": "IT-EXT-406-GUIDA",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can describe driving: speeding up, the brake, braking hard, steering and skidding.",
+  "prerequisites": []
+}

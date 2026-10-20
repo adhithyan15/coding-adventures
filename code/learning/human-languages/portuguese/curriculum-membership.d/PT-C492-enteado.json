@@ -1,0 +1,11 @@
+{
+  "id": "PT-C492-enteado",
+  "pathSegment": "PT-PATH-492-FAMILIA",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-492-FAMILIA",
+      "order": 3
+    }
+  ]
+}

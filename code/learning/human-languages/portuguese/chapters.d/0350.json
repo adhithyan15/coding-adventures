@@ -1,0 +1,19 @@
+{
+  "chapter": 350,
+  "title": "De onde vem",
+  "label": "ch:pt-de-onde-vem",
+  "canDo": "I can say where something comes from, what it results from and what it gives rise to.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "PT-R350-revisao-343-350",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 350: I can say where something comes from, what it results from and what it gives rise to.",
+    "assesses": [
+      "PT-LEX-C350-ORIGEM-03",
+      "PT-LEX-C350-ORIGEM-04",
+      "PT-LEX-C350-ORIGEM-05"
+    ]
+  }
+}

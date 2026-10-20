@@ -1,0 +1,9 @@
+{
+  "id": "ES-PATH-624-PERMISO",
+  "spine_node": "SPINE-EXPRESS-CONDITION",
+  "before": [],
+  "inline": [
+    "ES-EXT-624-PERMISO"
+  ],
+  "after": []
+}

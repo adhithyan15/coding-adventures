@@ -1,0 +1,19 @@
+{
+  "chapter": 353,
+  "title": "Trouver un remède",
+  "label": "ch:fr-trouver-un-remede",
+  "canDo": "I can say how to fix a situation: find a remedy, put it right, soften it or make up for it, or say it got worse.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "FR-C353-compenser",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 353: I can say how to fix a situation: find a remedy, put it right, soften it or make up for it, or say it got worse.",
+    "assesses": [
+      "FR-LEX-C353-REMEDE-03",
+      "FR-LEX-C353-REMEDE-04",
+      "FR-LEX-C353-REMEDE-05"
+    ]
+  }
+}

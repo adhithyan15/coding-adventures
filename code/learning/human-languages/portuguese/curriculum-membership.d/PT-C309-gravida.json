@@ -1,0 +1,11 @@
+{
+  "id": "PT-C309-gravida",
+  "pathSegment": "PT-PATH-309-NASCIMENTO",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PT-EXT-309-NASCIMENTO",
+      "order": 2
+    }
+  ]
+}

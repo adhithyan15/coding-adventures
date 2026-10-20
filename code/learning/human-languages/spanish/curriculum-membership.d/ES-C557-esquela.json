@@ -1,0 +1,11 @@
+{
+  "id": "ES-C557-esquela",
+  "pathSegment": "ES-PATH-557-LUTO",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ES-EXT-557-LUTO",
+      "order": 1
+    }
+  ]
+}

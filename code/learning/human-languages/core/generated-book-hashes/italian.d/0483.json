@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 483,
+  "sourceHash": "fnv1a64:e070eacfe04522ef",
+  "lessonIds": [
+    "IT-C483-livido",
+    "IT-C483-graffio",
+    "IT-C483-scottatura",
+    "IT-C483-inciampare",
+    "IT-C483-tagliarsi"
+  ],
+  "tex": "italian/book/chapters/ch483-piccoli-incidenti.tex"
+}

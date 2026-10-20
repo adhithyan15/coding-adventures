@@ -1,0 +1,19 @@
+{
+  "chapter": 321,
+  "title": "Neues entsteht",
+  "label": "ch:ge-neues-entsteht",
+  "canDo": "I can tell how things began: to invent, an invention, to found, to come into being and to return.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "GE-C321-zurueckkehren",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 321: I can tell how things began: to invent, an invention, to found, to come into being and to return.",
+    "assesses": [
+      "GE-LEX-C321-ERFINDEN-03",
+      "GE-LEX-C321-ERFINDEN-04",
+      "GE-LEX-C321-ERFINDEN-05"
+    ]
+  }
+}

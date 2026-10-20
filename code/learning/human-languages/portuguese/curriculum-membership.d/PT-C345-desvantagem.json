@@ -1,0 +1,11 @@
+{
+  "id": "PT-C345-desvantagem",
+  "pathSegment": "PT-PATH-345-VANTAGEM",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PT-EXT-345-VANTAGEM",
+      "order": 1
+    }
+  ]
+}

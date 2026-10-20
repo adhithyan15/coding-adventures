@@ -1,0 +1,11 @@
+{
+  "id": "GE-C488-infektion",
+  "pathSegment": "GE-PATH-488-GENESEN",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GE-EXT-488-GENESEN",
+      "order": 1
+    }
+  ]
+}

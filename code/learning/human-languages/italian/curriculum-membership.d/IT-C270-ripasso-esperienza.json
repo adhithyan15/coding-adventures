@@ -1,0 +1,11 @@
+{
+  "id": "IT-C270-ripasso-esperienza",
+  "pathSegment": "IT-PATH-270-CONFRONTO",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "IT-EXT-270-CONFRONTO",
+      "order": 2
+    }
+  ]
+}

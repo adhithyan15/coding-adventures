@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C447-optiker",
+    "language": "german",
+    "chapter": 447,
+    "sequence": 24030,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e53006d3e5076f93"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C537-iurgium",
+    "language": "latin",
+    "chapter": 537,
+    "sequence": 28460,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8afe522d80c3c07a"
+  },
+  "findings": []
+}

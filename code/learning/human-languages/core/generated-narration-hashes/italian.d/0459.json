@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 459,
+  "sourceHash": "fnv1a64:9234f69bd1296df5",
+  "lessonIds": [
+    "IT-C459-prelevare",
+    "IT-C459-prelievo",
+    "IT-C459-addebitare",
+    "IT-C459-bonifico",
+    "IT-C459-rata"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch459.txt",
+  "json": "italian/narration/ch459.json",
+  "textHash": "fnv1a64:5f057159872d6fdb",
+  "jsonHash": "fnv1a64:356f5945bf2a23bf",
+  "findings": []
+}

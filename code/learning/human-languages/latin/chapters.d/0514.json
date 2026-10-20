@@ -1,0 +1,19 @@
+{
+  "chapter": 514,
+  "title": "Scorn and displeasure",
+  "label": "ch:la-scorn-and-displeasure",
+  "canDo": "I can talk about scorn and displeasure.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "LA-C514-displiceo",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 514: I can talk about scorn and displeasure.",
+    "assesses": [
+      "LA-LEX-C514-CONT-03",
+      "LA-LEX-C514-CONT-04",
+      "LA-LEX-C514-CONT-05"
+    ]
+  }
+}

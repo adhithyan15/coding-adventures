@@ -1,0 +1,11 @@
+{
+  "id": "IT-C435-condizionatore",
+  "pathSegment": "IT-PATH-435-RISCALDAMENTO",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "IT-EXT-435-RISCALDAMENTO",
+      "order": 2
+    }
+  ]
+}

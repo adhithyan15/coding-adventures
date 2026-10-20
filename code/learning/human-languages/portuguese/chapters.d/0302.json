@@ -1,0 +1,19 @@
+{
+  "chapter": 302,
+  "title": "A terra tremeu",
+  "label": "ch:pt-a-terra-tremeu",
+  "canDo": "I can talk about earthquakes, tremors, buildings that collapsed and the rubble.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "PT-C302-escombros",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 302: I can talk about earthquakes, tremors, buildings that collapsed and the rubble.",
+    "assesses": [
+      "PT-LEX-C302-SISMO-03",
+      "PT-LEX-C302-SISMO-04",
+      "PT-LEX-C302-SISMO-05"
+    ]
+  }
+}

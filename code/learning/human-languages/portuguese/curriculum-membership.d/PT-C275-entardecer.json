@@ -1,0 +1,11 @@
+{
+  "id": "PT-C275-entardecer",
+  "pathSegment": "PT-PATH-275-ENTARDECER",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PT-EXT-275-ENTARDECER",
+      "order": 1
+    }
+  ]
+}

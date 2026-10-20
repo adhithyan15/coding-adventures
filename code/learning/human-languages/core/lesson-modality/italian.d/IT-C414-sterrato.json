@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C414-sterrato",
+    "language": "italian",
+    "chapter": 414,
+    "sequence": 23600,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f797d52d7057172d"
+  },
+  "findings": []
+}

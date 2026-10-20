@@ -11,6 +11,101 @@
         "analysisIndexes": [1, 2, 3, 4, 5],
         "recordCounts": [1, 2, 1, 1, 1]
       }
+    },
+    {
+      "id": "nested-dc-sweep",
+      "deck": "* Berkeley SPICE v1 nested DC CLI corpus\nV1 in 0 DC 0\nV2 bias 0 DC 0\nR1 in out 1k\nR2 out bias 1k\n.dc V1 0 1 1 V2 0 2 2\n.save V(out)\n.end\n",
+      "expected": {
+        "title": "Berkeley SPICE v1 nested DC CLI corpus",
+        "analysisKinds": ["dc"],
+        "analysisIndexes": [0],
+        "recordCounts": [4],
+        "records": [
+          {
+            "Index": "0",
+            "SecondarySource": "V2",
+            "SecondaryValue": "0.000000e+00",
+            "Source": "V1",
+            "V(out)": "0.000000e+00",
+            "Value": "0.000000e+00"
+          },
+          {
+            "Index": "1",
+            "SecondarySource": "V2",
+            "SecondaryValue": "0.000000e+00",
+            "Source": "V1",
+            "V(out)": "5.000000e-01",
+            "Value": "1.000000e+00"
+          },
+          {
+            "Index": "2",
+            "SecondarySource": "V2",
+            "SecondaryValue": "2.000000e+00",
+            "Source": "V1",
+            "V(out)": "1.000000e+00",
+            "Value": "0.000000e+00"
+          },
+          {
+            "Index": "3",
+            "SecondarySource": "V2",
+            "SecondaryValue": "2.000000e+00",
+            "Source": "V1",
+            "V(out)": "1.500000e+00",
+            "Value": "1.000000e+00"
+          }
+        ]
+      }
+    },
+    {
+      "id": "deck-output-artifacts",
+      "deck": "* Berkeley SPICE v1 output artifact CLI corpus\nV1 in 0 0\nR1 in out 1k\nR2 out 0 1k\n.save V(out)\n.print dc V(in)\n.measure dc half FIND V(out) AT=0.5\n.dc V1 0 1 1\n.end\n",
+      "expected": {
+        "title": "Berkeley SPICE v1 output artifact CLI corpus",
+        "outputs": [
+          {
+            "analysisIndex": 3,
+            "analysis": "dc",
+            "probes": ["V(out)", "V(in)"],
+            "records": [
+              {
+                "index": 0,
+                "axisName": "source",
+                "axisValue": 0.0,
+                "secondaryAxisName": null,
+                "secondaryAxisValue": null,
+                "values": { "V(out)": 0.0, "V(in)": 0.0 }
+              },
+              {
+                "index": 1,
+                "axisName": "source",
+                "axisValue": 1.0,
+                "secondaryAxisName": null,
+                "secondaryAxisValue": null,
+                "values": { "V(out)": 0.5, "V(in)": 1.0 }
+              }
+            ]
+          }
+        ],
+        "measures": [
+          {
+            "analysisIndex": 3,
+            "analysis": "dc",
+            "name": "half",
+            "operation": "find",
+            "probe": "V(out)",
+            "value": 0.25
+          }
+        ]
+      }
+    },
+    {
+      "id": "engine-backed-analysis-plan",
+      "deck": "* Berkeley SPICE engine-backed analysis CLI corpus\nV1 in 0 DC 1 AC 1\nR1 in out 1k\nR2 out 0 1k\n.sens V(out)\n.noise V(out) V1 LIN 2 1k 2k\n.end\n",
+      "expected": {
+        "title": "Berkeley SPICE engine-backed analysis CLI corpus",
+        "analysisKinds": ["sens", "noise"],
+        "analysisIndexes": [0, 1]
+      }
     }
   ],
   "failureCases": [

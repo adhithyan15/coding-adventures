@@ -1,0 +1,9 @@
+{
+  "id": "ES-PATH-710-NERVIOS",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "ES-EXT-710-NERVIOS"
+  ],
+  "after": []
+}

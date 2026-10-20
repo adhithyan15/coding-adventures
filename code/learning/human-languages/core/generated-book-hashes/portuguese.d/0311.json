@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 311,
+  "sourceHash": "fnv1a64:d2afc544acd6ed44",
+  "lessonIds": [
+    "PT-C311-infancia",
+    "PT-C311-adolescencia",
+    "PT-C311-juventude",
+    "PT-C311-velhice",
+    "PT-C311-geracao"
+  ],
+  "tex": "portuguese/book/chapters/ch311-as-idades-da-vida.tex"
+}

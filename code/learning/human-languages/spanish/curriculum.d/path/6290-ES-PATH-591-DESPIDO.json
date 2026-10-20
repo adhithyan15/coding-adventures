@@ -1,0 +1,9 @@
+{
+  "id": "ES-PATH-591-DESPIDO",
+  "spine_node": "SPINE-GIVE-REASONS",
+  "before": [],
+  "inline": [
+    "ES-EXT-591-DESPIDO"
+  ],
+  "after": []
+}

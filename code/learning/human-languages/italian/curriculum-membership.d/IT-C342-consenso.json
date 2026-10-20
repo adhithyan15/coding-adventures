@@ -1,0 +1,11 @@
+{
+  "id": "IT-C342-consenso",
+  "pathSegment": "IT-PATH-342-COMPROMESSO",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "IT-EXT-342-COMPROMESSO",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C344-origo",
+    "language": "latin",
+    "chapter": 344,
+    "sequence": 18540,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9e9c893a79794400"
+  },
+  "findings": []
+}

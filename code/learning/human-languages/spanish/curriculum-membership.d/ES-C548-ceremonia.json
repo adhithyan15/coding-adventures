@@ -1,0 +1,11 @@
+{
+  "id": "ES-C548-ceremonia",
+  "pathSegment": "ES-PATH-548-BANQUETE",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ES-EXT-548-BANQUETE",
+      "order": 1
+    }
+  ]
+}

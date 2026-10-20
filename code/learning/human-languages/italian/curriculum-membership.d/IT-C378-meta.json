@@ -1,0 +1,11 @@
+{
+  "id": "IT-C378-meta",
+  "pathSegment": "IT-PATH-378-SCOPO",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "IT-EXT-378-SCOPO",
+      "order": 4
+    }
+  ]
+}

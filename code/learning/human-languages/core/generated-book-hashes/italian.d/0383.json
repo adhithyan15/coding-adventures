@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 383,
+  "sourceHash": "fnv1a64:05281aae65b63fae",
+  "lessonIds": [
+    "IT-C383-bocciare",
+    "IT-C383-bocciatura",
+    "IT-C383-promuovere",
+    "IT-C383-valutazione",
+    "IT-C383-punteggio"
+  ],
+  "tex": "italian/book/chapters/ch383-promosso-o-bocciato.tex"
+}

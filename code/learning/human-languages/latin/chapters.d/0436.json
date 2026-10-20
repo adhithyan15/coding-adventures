@@ -1,0 +1,19 @@
+{
+  "chapter": 436,
+  "title": "Stern, Prow, Keel, Rowing bench, For cargo",
+  "label": "ch:la-stern-prow-keel-rowing-bench-for-cargo",
+  "canDo": "I can name the parts of a ship: the stern, the prow, the keel, the rowing benches, and say a ship is for cargo.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "LA-C436-onerarius",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 436: I can name the parts of a ship: the stern, the prow, the keel, the rowing benches, and say a ship is for cargo.",
+    "assesses": [
+      "LA-LEX-C436-PUPPIS-03",
+      "LA-LEX-C436-PUPPIS-04",
+      "LA-LEX-C436-PUPPIS-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "PT-C272-prolongar",
+  "pathSegment": "PT-PATH-272-DURAR",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PT-EXT-272-DURAR",
+      "order": 1
+    }
+  ]
+}

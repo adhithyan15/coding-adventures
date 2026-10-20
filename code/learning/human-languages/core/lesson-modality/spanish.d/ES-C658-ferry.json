@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C658-ferry",
+    "language": "spanish",
+    "chapter": 658,
+    "sequence": 22720,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:cb71d3e6212fbdb8"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "IT-C408-rifornire",
+  "pathSegment": "IT-PATH-408-BENZINAIO",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "IT-EXT-408-BENZINAIO",
+      "order": 4
+    }
+  ]
+}

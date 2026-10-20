@@ -1,0 +1,9 @@
+{
+  "id": "IT-PATH-303-ESPLOSIONE",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "IT-EXT-303-ESPLOSIONE"
+  ],
+  "after": []
+}

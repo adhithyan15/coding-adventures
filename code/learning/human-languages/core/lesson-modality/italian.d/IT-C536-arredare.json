@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C536-arredare",
+    "language": "italian",
+    "chapter": 536,
+    "sequence": 29950,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3d6c812f736990b6"
+  },
+  "findings": []
+}

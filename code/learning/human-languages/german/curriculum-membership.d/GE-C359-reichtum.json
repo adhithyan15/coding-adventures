@@ -1,0 +1,11 @@
+{
+  "id": "GE-C359-reichtum",
+  "pathSegment": "GE-PATH-359-GERECHTIGKEIT",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-359-GERECHTIGKEIT",
+      "order": 3
+    }
+  ]
+}

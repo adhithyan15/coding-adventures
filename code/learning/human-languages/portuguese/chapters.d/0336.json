@@ -1,0 +1,19 @@
+{
+  "chapter": 336,
+  "title": "O debate",
+  "label": "ch:pt-o-debate",
+  "canDo": "I can take part in a debate: name the topic, raise an issue and put forward an argument.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "PT-C336-argumento",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 336: I can take part in a debate: name the topic, raise an issue and put forward an argument.",
+    "assesses": [
+      "PT-LEX-C336-DEBATE-03",
+      "PT-LEX-C336-DEBATE-04",
+      "PT-LEX-C336-DEBATE-05"
+    ]
+  }
+}

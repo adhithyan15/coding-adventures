@@ -1,0 +1,19 @@
+{
+  "chapter": 425,
+  "title": "Onde dormir",
+  "label": "ch:pt-onde-dormir",
+  "canDo": "I can choose where to sleep: a hostel, a country inn, a roadside inn, a guesthouse or a campsite.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "PT-C425-campismo",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 425: I can choose where to sleep: a hostel, a country inn, a roadside inn, a guesthouse or a campsite.",
+    "assesses": [
+      "PT-LEX-C425-DORMIR-03",
+      "PT-LEX-C425-DORMIR-04",
+      "PT-LEX-C425-DORMIR-05"
+    ]
+  }
+}

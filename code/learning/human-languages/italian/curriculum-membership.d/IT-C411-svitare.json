@@ -1,0 +1,11 @@
+{
+  "id": "IT-C411-svitare",
+  "pathSegment": "IT-PATH-411-COFANO",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "IT-EXT-411-COFANO",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,18 @@
+{
+  "language": "french",
+  "chapter": 267,
+  "sourceHash": "fnv1a64:fce9b1d8b3a1356b",
+  "lessonIds": [
+    "FR-C267-je-pourrais",
+    "FR-C267-ce-serait",
+    "FR-C267-revision-conditionnel",
+    "FR-W267-six-lignes"
+  ],
+  "voiceLessons": 3,
+  "drivablePrefix": 3,
+  "text": "french/narration/ch267.txt",
+  "json": "french/narration/ch267.json",
+  "textHash": "fnv1a64:75aae2c714032bf6",
+  "jsonHash": "fnv1a64:ecdc0461945a90a3",
+  "findings": []
+}

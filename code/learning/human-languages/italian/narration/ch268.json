@@ -1,0 +1,488 @@
+{
+  "version": 1,
+  "language": "italian",
+  "chapter": 268,
+  "title": "A Return Ticket --- And When It Goes Wrong",
+  "drivablePrefix": 3,
+  "sourceHash": "fnv1a64:c71aaae908f2e4fe",
+  "lessons": [
+    {
+      "id": "IT-C268-andata-e-ritorno",
+      "sequence": 15880,
+      "title": "andata e ritorno — the going and the coming back",
+      "headword": "andata e ritorno",
+      "romanization": "andata e ritorno",
+      "gloss": "a return ticket — the going and the coming back, and solo andata when you only need the first half",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1d577712d930b13a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"a ticket\". (Un biglietto.) Ask for a coffee the polite way. (Vorrei un caffè.)"
+            },
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Put the two together and you are standing at a ticket window."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: andata e ritorno",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "andata e ritorno — \"there and back\": a return ticket. solo andata — \"one way\", the going only."
+            },
+            {
+              "kind": "speech",
+              "text": "Un biglietto di andata e ritorno. — A return ticket. Solo andata. — One way only."
+            },
+            {
+              "kind": "speech",
+              "text": "ritorno you have, \"the return\". andata is new, and you can almost hear how it was made: it is andato, \"gone\", turned into a feminine noun, \"the going\". solo means \"only\", the same as soltanto."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: vorrei un biglietto per…",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The whole request takes one frame:"
+            },
+            {
+              "kind": "speech",
+              "text": "Vorrei un biglietto per Roma, andata e ritorno. — I'd like a return ticket to Rome."
+            },
+            {
+              "kind": "speech",
+              "text": "per plus the place names where you are going, the same per as in per andare. No article before a city: per Roma, per Milano."
+            },
+            {
+              "kind": "speech",
+              "text": "Then the questions that come back at you, and the answers you need:"
+            },
+            {
+              "kind": "speech",
+              "text": "— Andata e ritorno? — Sì, andata e ritorno. / No, solo andata. — Che binario? — Binario tre."
+            },
+            {
+              "kind": "speech",
+              "text": "Che binario?, \"which platform?\", is the same che that asks che cosa?."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The phrase, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "andata is built on andare, whose own origin is not settled: EtymDB 2.1 gives it no Latin parent, and the candidates usually proposed, such as Latin ambulāre, \"to walk\", are disputed. ritorno is ri-, \"back\", plus tornare, \"to turn\", inherited from Latin tornāre, \"to turn on a lathe\" (Lewis & Short, under torno); EtymDB 2.1 derives the noun through French retour. Either way, a return is a turning round."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "andata e ritorno, then solo andata",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *andata e ritorno*, then *solo andata*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Vorrei un biglietto per Roma, andata e ritorno.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Vorrei un biglietto per Roma, andata e ritorno.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the one-way version — Vorrei un biglietto per Milano, solo andata.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the one-way version — *Vorrei un biglietto per Milano, solo andata.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ask the platform — Scusi, che binario?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: ask the platform — *Scusi, che binario?*]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What is a one-way ticket? (Solo andata.) Which word goes before the city, and does it take an article? (Per — and no article.) What is andata, taken apart? (Andato, \"gone\", made a noun: the going.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "IT-C268-ho-perso",
+      "sequence": 15890,
+      "title": "ho perso il treno — when it goes wrong",
+      "headword": "ho perso il treno",
+      "romanization": "ho perso il treno",
+      "gloss": "I've missed the train — perdere's irregular past, and the short frame for saying something has gone wrong",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:271070c82dbf85c0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Ask for a one-way ticket to Rome. (Vorrei un biglietto per Roma, solo andata.)"
+            },
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Now the ticket is in your pocket, and the train has gone without you."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ho perso il treno",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ho perso il treno — \"I've missed the train\"."
+            },
+            {
+              "kind": "speech",
+              "text": "You have perdere, \"to lose\". Italian uses the same verb for a train you missed: you lost it. Its past does not follow the -uto pattern of credere, creduto. The participle is short: perso."
+            },
+            {
+              "kind": "speech",
+              "text": "Ho perso il treno. — I've missed the train. Ho perso la coincidenza. — I've missed my connection. Ho perso il biglietto. — I've lost my ticket."
+            },
+            {
+              "kind": "speech",
+              "text": "Italian says il biglietto where English says my ticket: whose it is goes without saying."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: reporting a problem",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "A complaint to a stranger has three parts, and the first is a courtesy:"
+            },
+            {
+              "kind": "speech",
+              "text": "Scusi, ho un problema. — Excuse me, I have a problem. Ho perso il treno. — What went wrong. C'è un altro treno oggi? A che ora? — What you need."
+            },
+            {
+              "kind": "speech",
+              "text": "Or the fault is not yours: Il treno è in ritardo, \"the train is late\". Say what happened, in the passato prossimo, then ask the question that gets you moving again."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The phrase, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "perdere is inherited from Latin perdere (EtymDB 2.1), built on per-, \"through\", and dare, \"to give\": to give something away for good, to squander, to lose (Lewis & Short, under perdo). Its Latin participle was perditus (Lewis & Short), but Italian made new ones of its own: the short perso, and the longer perduto, which sounds older and more literary. Neither source says how perso was formed, so that step is left open here."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Ho perso il treno. — then Ho perso la coincidenza.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Ho perso il treno.* — then *Ho perso la coincidenza.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the three parts — Scusi, ho un problema. Ho perso il treno. C'è un altro treno oggi?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the three parts — *Scusi, ho un problema. Ho perso il treno. C'è un altro treno oggi?*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the fault that is not yours — Il treno è in ritardo.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the fault that is not yours — *Il treno è in ritardo.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the worst one — Ho perso il biglietto.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the worst one — *Ho perso il biglietto.*]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What is the past participle of perdere? (Perso.) How do you say you missed your connection? (Ho perso la coincidenza.) What are the three parts of a complaint? (A courtesy, what went wrong, what you need.) And what are the two Latin pieces of perdere? (Per-, through, and dare, to give.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "IT-C268-ripasso-stazione",
+      "sequence": 15900,
+      "title": "Review — one morning at the station",
+      "headword": "(review)",
+      "romanization": "(review)",
+      "gloss": "one morning at the station — find it, buy the ticket, miss the train, and get moving again",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9efe67c78fe085a3",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"I've missed the train\". (Ho perso il treno.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Two chapters of travel, and they make one morning. You find the station, you buy the ticket, something goes wrong, and you ask your way out of it."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Every step is a sentence you have said: Scusi, per andare alla stazione?, Vorrei un biglietto per Roma, andata e ritorno., Scusi, ho un problema: ho perso il treno., C'è un altro treno oggi?"
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "And when you tell someone about it afterwards, the morning becomes a story: Il treno era in ritardo, quindi ho perso la coincidenza. Scene, arrow, event."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "find it — Scusi, per andare alla stazione?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: find it — *Scusi, per andare alla stazione?*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the answer, said back — Dritto, poi a sinistra?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the answer, said back — *Dritto, poi a sinistra?*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "buy it — Vorrei un biglietto per Roma, andata e ritorno.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: buy it — *Vorrei un biglietto per Roma, andata e ritorno.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the problem — Scusi, ho un problema. Ho perso il treno.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the problem — *Scusi, ho un problema. Ho perso il treno.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tell it afterwards — Il treno era in ritardo, quindi ho perso la coincidenza.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: tell it afterwards — *Il treno era in ritardo, quindi ho perso la coincidenza.*]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What is a return ticket? (Andata e ritorno.) What do you say before the problem itself? (Scusi, ho un problema.) In il treno era in ritardo, quindi ho perso la coincidenza, which verb is the scene? (Era.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

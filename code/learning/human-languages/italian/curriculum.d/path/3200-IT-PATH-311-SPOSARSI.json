@@ -1,0 +1,9 @@
+{
+  "id": "IT-PATH-311-SPOSARSI",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "IT-EXT-311-SPOSARSI"
+  ],
+  "after": []
+}

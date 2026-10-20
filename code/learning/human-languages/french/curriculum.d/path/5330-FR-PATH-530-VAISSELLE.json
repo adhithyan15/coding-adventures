@@ -1,0 +1,9 @@
+{
+  "id": "FR-PATH-530-VAISSELLE",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "FR-EXT-530-VAISSELLE"
+  ],
+  "after": []
+}

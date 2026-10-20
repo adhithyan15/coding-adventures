@@ -1,0 +1,11 @@
+{
+  "id": "PT-C328-naufragio",
+  "pathSegment": "PT-PATH-328-NAVEGAR",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-328-NAVEGAR",
+      "order": 3
+    }
+  ]
+}

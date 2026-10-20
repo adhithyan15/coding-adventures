@@ -1,0 +1,14 @@
+{
+  "language": "french",
+  "chapter": 291,
+  "sourceHash": "fnv1a64:503c36647e83d4c9",
+  "lessonIds": [
+    "FR-C291-gendarme",
+    "FR-C291-gendarmerie",
+    "FR-C291-patrouiller",
+    "FR-C291-patrouille",
+    "FR-C291-brigade",
+    "FR-R291-revision-284-291"
+  ],
+  "tex": "french/book/chapters/ch291-les-gendarmes.tex"
+}

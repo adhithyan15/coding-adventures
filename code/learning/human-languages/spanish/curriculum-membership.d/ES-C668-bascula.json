@@ -1,0 +1,11 @@
+{
+  "id": "ES-C668-bascula",
+  "pathSegment": "ES-PATH-668-EQUIPAJE",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ES-EXT-668-EQUIPAJE",
+      "order": 2
+    }
+  ]
+}

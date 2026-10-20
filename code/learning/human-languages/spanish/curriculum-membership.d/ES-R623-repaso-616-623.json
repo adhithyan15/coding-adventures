@@ -1,0 +1,11 @@
+{
+  "id": "ES-R623-repaso-616-623",
+  "pathSegment": "ES-PATH-623-SANCION",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "ES-EXT-623-SANCION",
+      "order": 5
+    }
+  ]
+}

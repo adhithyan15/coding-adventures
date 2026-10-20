@@ -1,0 +1,11 @@
+{
+  "id": "IT-C503-dado",
+  "pathSegment": "IT-PATH-503-GIOCHI",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "IT-EXT-503-GIOCHI",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 310,
+  "sourceHash": "fnv1a64:6fbca018fc9fed56",
+  "lessonIds": [
+    "PT-C310-batizado",
+    "PT-C310-batizar",
+    "PT-C310-padrinho",
+    "PT-C310-madrinha",
+    "PT-C310-amamentar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch310.txt",
+  "json": "portuguese/narration/ch310.json",
+  "textHash": "fnv1a64:0e189af915a98fbb",
+  "jsonHash": "fnv1a64:f95e6f3fbd75c7ee",
+  "findings": []
+}

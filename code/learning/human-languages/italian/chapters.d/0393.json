@@ -1,0 +1,19 @@
+{
+  "chapter": 393,
+  "title": "Pagare per gli errori",
+  "label": "ch:it-pagare-per-gli-errori",
+  "canDo": "I can talk about punishment: prison, a prisoner, punishing someone, a punishment and a fine or sanction.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "IT-C393-sanzione",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 393: I can talk about punishment: prison, a prisoner, punishing someone, a punishment and a fine or sanction.",
+    "assesses": [
+      "IT-LEX-C393-CARCERE-03",
+      "IT-LEX-C393-CARCERE-04",
+      "IT-LEX-C393-CARCERE-05"
+    ]
+  }
+}

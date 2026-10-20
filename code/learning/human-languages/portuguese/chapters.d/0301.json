@@ -1,0 +1,19 @@
+{
+  "chapter": 301,
+  "title": "Fogo!",
+  "label": "ch:pt-fogo",
+  "canDo": "I can talk about fires and explosions, extinguishers and burns.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "PT-C301-queimadura",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 301: I can talk about fires and explosions, extinguishers and burns.",
+    "assesses": [
+      "PT-LEX-C301-INCENDIO-03",
+      "PT-LEX-C301-INCENDIO-04",
+      "PT-LEX-C301-INCENDIO-05"
+    ]
+  }
+}

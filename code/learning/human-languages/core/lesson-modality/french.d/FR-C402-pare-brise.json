@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C402-pare-brise",
+    "language": "french",
+    "chapter": 402,
+    "sequence": 22400,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:86efe5daeb18ddf7"
+  },
+  "findings": []
+}

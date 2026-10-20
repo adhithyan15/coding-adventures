@@ -1,0 +1,9 @@
+{
+  "id": "IT-PATH-288-ANNUNCIO",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "IT-EXT-288-ANNUNCIO"
+  ],
+  "after": []
+}

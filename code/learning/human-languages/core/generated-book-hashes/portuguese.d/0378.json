@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 378,
+  "sourceHash": "fnv1a64:da186ae4da1d82ec",
+  "lessonIds": [
+    "PT-C378-rever",
+    "PT-C378-apontamentos",
+    "PT-C378-manual",
+    "PT-C378-decorar",
+    "PT-C378-teste"
+  ],
+  "tex": "portuguese/book/chapters/ch378-antes-do-exame.tex"
+}

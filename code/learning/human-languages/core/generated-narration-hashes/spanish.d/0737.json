@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 737,
+  "sourceHash": "fnv1a64:a77edc84f777e61a",
+  "lessonIds": [
+    "ES-C737-codo",
+    "ES-C737-muneca",
+    "ES-C737-cintura",
+    "ES-C737-cadera",
+    "ES-C737-costilla"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch737.txt",
+  "json": "spanish/narration/ch737.json",
+  "textHash": "fnv1a64:91b9c3fb3c610a9e",
+  "jsonHash": "fnv1a64:e7a4cb093e8dfd5f",
+  "findings": []
+}

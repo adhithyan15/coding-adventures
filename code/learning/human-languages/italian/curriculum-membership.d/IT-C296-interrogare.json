@@ -1,0 +1,11 @@
+{
+  "id": "IT-C296-interrogare",
+  "pathSegment": "IT-PATH-296-MOVENTE",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "IT-EXT-296-MOVENTE",
+      "order": 3
+    }
+  ]
+}

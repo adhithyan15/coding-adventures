@@ -1,0 +1,11 @@
+{
+  "id": "GE-C396-drucker",
+  "pathSegment": "GE-PATH-396-COMPUTER",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GE-EXT-396-COMPUTER",
+      "order": 1
+    }
+  ]
+}

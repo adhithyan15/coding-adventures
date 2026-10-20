@@ -9,8 +9,9 @@
 
 use chief_of_staff_broker_callbacks::InFlight;
 use chief_of_staff_broker_launcher::{
-    abandon_pending_on_write_channels, launch as launch_broker, start_relay, BrokerKeyFiles,
-    BrokerProgram, BrokerRelay, HostGone, PinnedBindingResolver, RelayConfig, ResponseSink,
+    abandon_pending_on_write_channels, launch as launch_broker, start_relay, BrokerChild,
+    BrokerKeyFiles, BrokerProgram, BrokerRelay, HostGone, PinnedBindingResolver, RelayConfig,
+    ResponseSink,
 };
 use chief_of_staff_channel_crypto::ChannelId;
 use chief_of_staff_channel_endpoints::MessageMetadataSource;
@@ -531,9 +532,10 @@ impl ResponseSink for LinkSink {
     }
 }
 
-/// One agent's broker, while its host lives (D18S P2.6d-2b).
+/// One agent's broker, while its host lives (D18S P2.6d-2b). Its process
+/// is the launcher's [`BrokerChild`], the same on every OS (P2.8b-2).
 struct OwnedBroker {
-    child: Option<Child>,
+    child: Option<BrokerChild>,
     relay: BrokerRelay,
     identity: (PipelineId, Vec<u8>),
     /// Latched once an end is seen: the relay's report is consumed when it
@@ -546,10 +548,8 @@ impl OwnedBroker {
     /// Kill and reap the broker, then stop its relay. Killing first is what
     /// lets the relay's joins finish at once.
     fn end(&mut self) {
-        if let Some(mut child) = self.child.take() {
-            let _ = chief_of_staff_spawn_isolation::kill_session(&child);
-            let _ = child.kill();
-            let _ = child.wait();
+        if let Some(child) = self.child.take() {
+            child.end();
         }
         let _ = self.relay.stop();
     }
@@ -566,9 +566,7 @@ impl OwnedBroker {
     fn has_ended(&mut self) -> bool {
         if !self.ended {
             self.ended = self.relay.ended().is_some()
-                || self.child.as_ref().is_some_and(|child| {
-                    matches!(chief_of_staff_spawn_isolation::has_exited(child), Ok(true))
-                });
+                || self.child.as_mut().is_some_and(BrokerChild::has_exited);
         }
         self.ended
     }
@@ -997,7 +995,7 @@ impl ProcessHostSupervisor {
             .as_ref()?
             .child
             .as_ref()
-            .map(Child::id)
+            .map(BrokerChild::id)
     }
 
     /// Automatically answer authenticated child requests through one injected dispatcher.
@@ -1181,7 +1179,11 @@ impl ProcessHostSupervisor {
         // supervisor byte channel the broker never sees. Nothing above fd 2
         // is inherited, and a terminal on fd 0-2 refuses the spawn.
         chief_of_staff_spawn_isolation::isolate(&mut command);
-        let mut child = command.spawn().map_err(|_| ProcessSupervisorError::Spawn)?;
+        // Under the spawn lock: on Windows this child inherits every
+        // inheritable handle, so it must not be created inside the
+        // applier's inheritable span (D18S P2.8b-1).
+        let mut child = chief_of_staff_spawn_isolation::spawn(&mut command)
+            .map_err(|_| ProcessSupervisorError::Spawn)?;
         let process_id = child.id();
         let started_at_ns = self.clock.now_ns();
         let child_stdin = match child.stdin.take() {

@@ -1,0 +1,19 @@
+{
+  "chapter": 309,
+  "title": "Di padre in figlio",
+  "label": "ch:it-di-padre-in-figlio",
+  "canDo": "I can talk about youth, coming of age and the generations that hand things down.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "IT-C309-tramandare",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 309: I can talk about youth, coming of age and the generations that hand things down.",
+    "assesses": [
+      "IT-LEX-C309-GENERAZIONE-03",
+      "IT-LEX-C309-GENERAZIONE-04",
+      "IT-LEX-C309-GENERAZIONE-05"
+    ]
+  }
+}

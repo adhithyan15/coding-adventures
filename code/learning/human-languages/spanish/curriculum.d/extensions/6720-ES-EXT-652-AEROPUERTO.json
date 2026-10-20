@@ -1,0 +1,8 @@
+{
+  "id": "ES-EXT-652-AEROPUERTO",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can sort things out at the airport: the terminal, the airline, a label for my bag and luggage that goes missing.",
+  "prerequisites": []
+}

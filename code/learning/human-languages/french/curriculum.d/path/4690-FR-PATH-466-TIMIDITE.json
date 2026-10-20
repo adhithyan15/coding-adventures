@@ -1,0 +1,9 @@
+{
+  "id": "FR-PATH-466-TIMIDITE",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "FR-EXT-466-TIMIDITE"
+  ],
+  "after": []
+}

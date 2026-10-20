@@ -1,0 +1,11 @@
+{
+  "id": "PT-C279-reportagem",
+  "pathSegment": "PT-PATH-279-IMPRENSA",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PT-EXT-279-IMPRENSA",
+      "order": 1
+    }
+  ]
+}

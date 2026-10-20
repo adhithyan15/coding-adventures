@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C558-festejar",
+    "language": "spanish",
+    "chapter": 558,
+    "sequence": 17540,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7ff632c9e12f8d9b"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PT-C259-revisao-quando",
+    "language": "portuguese",
+    "chapter": 259,
+    "sequence": 15450,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b634df23bf9b1758"
+  },
+  "findings": []
+}

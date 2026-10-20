@@ -1,0 +1,11 @@
+{
+  "id": "ES-C686-roca",
+  "pathSegment": "ES-PATH-686-CIMA",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ES-EXT-686-CIMA",
+      "order": 3
+    }
+  ]
+}

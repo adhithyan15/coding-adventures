@@ -1,0 +1,9 @@
+{
+  "id": "LA-PATH-304-COMPREHENDO",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "LA-EXT-304-COMPREHENDO"
+  ],
+  "after": []
+}

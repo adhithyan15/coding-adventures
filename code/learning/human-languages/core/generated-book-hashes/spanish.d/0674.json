@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 674,
+  "sourceHash": "fnv1a64:f1fc430c1f3287e7",
+  "lessonIds": [
+    "ES-C674-pasear",
+    "ES-C674-paseo",
+    "ES-C674-callejear",
+    "ES-C674-recorrer",
+    "ES-C674-recorrido"
+  ],
+  "tex": "spanish/book/chapters/ch674-de-paseo.tex"
+}

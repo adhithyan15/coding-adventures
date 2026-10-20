@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 629,
+  "sourceHash": "fnv1a64:3dca0340ca1e3f95",
+  "lessonIds": [
+    "ES-C629-ganancia",
+    "ES-C629-perdida",
+    "ES-C629-beneficio",
+    "ES-C629-inversion",
+    "ES-C629-financiar"
+  ],
+  "tex": "spanish/book/chapters/ch629-ganar-y-perder.tex"
+}

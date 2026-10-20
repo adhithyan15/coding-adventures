@@ -1,0 +1,11 @@
+{
+  "id": "PT-C426-estaca",
+  "pathSegment": "PT-PATH-426-TENDA",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-426-TENDA",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,8 @@
+{
+  "id": "GE-EXT-349-STELLE",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can read a job advertisement, talk about a job interview and say what I am able to do.",
+  "prerequisites": []
+}

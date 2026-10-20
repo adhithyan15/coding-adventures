@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 504,
+  "sourceHash": "fnv1a64:5d656711e96cedb2",
+  "lessonIds": [
+    "FR-C504-musculation",
+    "FR-C504-haltere",
+    "FR-C504-etirer",
+    "FR-C504-sueur",
+    "FR-C504-echauffer"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch504.txt",
+  "json": "french/narration/ch504.json",
+  "textHash": "fnv1a64:e067acdea94eaafb",
+  "jsonHash": "fnv1a64:0f74cf44575e27af",
+  "findings": []
+}

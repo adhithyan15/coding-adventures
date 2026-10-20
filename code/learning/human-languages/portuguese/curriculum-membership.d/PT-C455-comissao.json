@@ -1,0 +1,11 @@
+{
+  "id": "PT-C455-comissao",
+  "pathSegment": "PT-PATH-455-BANCO",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PT-EXT-455-BANCO",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 406,
+  "sourceHash": "fnv1a64:72fe927dabeec984",
+  "lessonIds": [
+    "GE-C406-einparken",
+    "GE-C406-ausparken",
+    "GE-C406-parkluecke",
+    "GE-C406-parkhaus",
+    "GE-C406-parkschein"
+  ],
+  "tex": "german/book/chapters/ch406-einen-platz-finden.tex"
+}

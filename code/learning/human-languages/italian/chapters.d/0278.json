@@ -1,0 +1,19 @@
+{
+  "chapter": 278,
+  "title": "Dal principio alla fine",
+  "label": "ch:it-dal-principio-alla-fine",
+  "canDo": "I can say how something began, started again, and came to an end.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "IT-C278-riprendere",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 278: I can say how something began, started again, and came to an end.",
+    "assesses": [
+      "IT-LEX-C278-PRINCIPIO-03",
+      "IT-LEX-C278-PRINCIPIO-04",
+      "IT-LEX-C278-PRINCIPIO-05"
+    ]
+  }
+}

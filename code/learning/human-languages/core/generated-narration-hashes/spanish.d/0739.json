@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 739,
+  "sourceHash": "fnv1a64:df5026b010b38c16",
+  "lessonIds": [
+    "ES-C739-curar",
+    "ES-C739-mejorarse",
+    "ES-C739-recuperacion",
+    "ES-C739-operar",
+    "ES-C739-cirugia"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch739.txt",
+  "json": "spanish/narration/ch739.json",
+  "textHash": "fnv1a64:9fe8dbd0e0dc4d7c",
+  "jsonHash": "fnv1a64:ffd475f859f08b93",
+  "findings": []
+}

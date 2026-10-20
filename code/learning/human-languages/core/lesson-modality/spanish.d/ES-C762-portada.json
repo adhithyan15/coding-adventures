@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C762-portada",
+    "language": "spanish",
+    "chapter": 762,
+    "sequence": 28100,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a87c93ac482966b6"
+  },
+  "findings": []
+}

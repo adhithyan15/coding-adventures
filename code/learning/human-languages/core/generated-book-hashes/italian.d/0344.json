@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 344,
+  "sourceHash": "fnv1a64:fd9889f42d70591c",
+  "lessonIds": [
+    "IT-C344-prova",
+    "IT-C344-evidente",
+    "IT-C344-ovvio",
+    "IT-C344-indiscutibile",
+    "IT-C344-palese"
+  ],
+  "tex": "italian/book/chapters/ch344-le-prove.tex"
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 597,
+  "title": "Aprender y evaluar",
+  "label": "ch:es-aprender-y-evaluar",
+  "canDo": "I can talk about how people learn, how they are taught and how they are assessed.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "ES-C597-evaluacion",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 597: I can talk about how people learn, how they are taught and how they are assessed.",
+    "assesses": [
+      "ES-LEX-C597-APRENDE-03",
+      "ES-LEX-C597-APRENDE-04",
+      "ES-LEX-C597-APRENDE-05"
+    ]
+  }
+}

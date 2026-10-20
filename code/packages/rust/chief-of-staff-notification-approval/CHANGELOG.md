@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+- The helper is spawned through `chief_of_staff_spawn_isolation::spawn`,
+  under the daemon's process-wide spawn lock (D18S P2.8b-1): this runs in
+  the daemon, where on Windows a child created inside the broker applier's
+  inheritable span would inherit a broker's key handles.
+
 - Assert that the spawned helper observes only the protocol variable, which this
   crate's suite never checked. `src/lib.rs` has always called `env_clear()` so a
   Tier 1 helper cannot read the daemon's secrets, tokens, or paths, but nothing

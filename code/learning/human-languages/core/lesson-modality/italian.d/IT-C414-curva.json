@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C414-curva",
+    "language": "italian",
+    "chapter": 414,
+    "sequence": 23580,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:810069b9c9b45732"
+  },
+  "findings": []
+}

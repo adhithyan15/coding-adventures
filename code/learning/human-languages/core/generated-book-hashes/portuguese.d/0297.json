@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 297,
+  "sourceHash": "fnv1a64:850bb8d9cdfa88ae",
+  "lessonIds": [
+    "PT-C297-denuncia",
+    "PT-C297-depoimento",
+    "PT-C297-testemunho",
+    "PT-C297-condenar",
+    "PT-C297-absolver"
+  ],
+  "tex": "portuguese/book/chapters/ch297-em-tribunal.tex"
+}

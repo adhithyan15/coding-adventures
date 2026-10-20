@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 481,
+  "sourceHash": "fnv1a64:adb1a699b0e8291b",
+  "lessonIds": [
+    "PT-C481-sobrancelha",
+    "PT-C481-pestana",
+    "PT-C481-palpebra",
+    "PT-C481-narina",
+    "PT-C481-gengiva"
+  ],
+  "tex": "portuguese/book/chapters/ch481-olhos-e-boca.tex"
+}

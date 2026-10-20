@@ -1,0 +1,9 @@
+{
+  "id": "IT-PATH-485-STORTA",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "IT-EXT-485-STORTA"
+  ],
+  "after": []
+}

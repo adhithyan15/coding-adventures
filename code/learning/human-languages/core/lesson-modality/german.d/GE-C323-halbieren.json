@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C323-halbieren",
+    "language": "german",
+    "chapter": 323,
+    "sequence": 17660,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c2f3580d7e0a1b10"
+  },
+  "findings": []
+}

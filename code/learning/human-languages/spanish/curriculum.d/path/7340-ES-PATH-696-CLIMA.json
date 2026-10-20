@@ -1,0 +1,9 @@
+{
+  "id": "ES-PATH-696-CLIMA",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "ES-EXT-696-CLIMA"
+  ],
+  "after": []
+}

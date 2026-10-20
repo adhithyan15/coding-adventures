@@ -1,0 +1,11 @@
+{
+  "id": "IT-C345-attendibile",
+  "pathSegment": "IT-PATH-345-AFFERMARE",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "IT-EXT-345-AFFERMARE",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,7 @@
+[package]
+name = "rsa-pkcs1-v1-5-sha256"
+version = "0.1.0"
+edition = "2021"
+description = "Exact RFC 8017 PKCS #1 v1.5 SHA-256 encoded-message validation"
+
+[dependencies]

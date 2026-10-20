@@ -1,0 +1,11 @@
+{
+  "id": "GE-C467-verlegen",
+  "pathSegment": "GE-PATH-467-SCHAM",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GE-EXT-467-SCHAM",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 382,
+  "title": "Prima dell'esame",
+  "label": "ch:it-prima-dell-esame",
+  "canDo": "I can talk about getting ready for a test: revising, an oral test, learning by heart, my notes and the textbook.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "IT-C382-manuale",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 382: I can talk about getting ready for a test: revising, an oral test, learning by heart, my notes and the textbook.",
+    "assesses": [
+      "IT-LEX-C382-RIPASSO-03",
+      "IT-LEX-C382-RIPASSO-04",
+      "IT-LEX-C382-RIPASSO-05"
+    ]
+  }
+}

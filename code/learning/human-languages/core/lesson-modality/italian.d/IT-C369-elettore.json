@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C369-elettore",
+    "language": "italian",
+    "chapter": 369,
+    "sequence": 21170,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3473cc8ec4328b30"
+  },
+  "findings": []
+}

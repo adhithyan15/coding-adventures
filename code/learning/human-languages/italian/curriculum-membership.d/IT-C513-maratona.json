@@ -1,0 +1,11 @@
+{
+  "id": "IT-C513-maratona",
+  "pathSegment": "IT-PATH-513-GARA",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "IT-EXT-513-GARA",
+      "order": 2
+    }
+  ]
+}

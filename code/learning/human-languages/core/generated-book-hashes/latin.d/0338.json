@@ -1,0 +1,14 @@
+{
+  "language": "latin",
+  "chapter": 338,
+  "sourceHash": "fnv1a64:ce89d2ac207d7927",
+  "lessonIds": [
+    "LA-C338-legio",
+    "LA-C338-cohors",
+    "LA-C338-centurio",
+    "LA-C338-signifer",
+    "LA-C338-tribunus",
+    "LA-R338-review-331-338"
+  ],
+  "tex": "latin/book/chapters/ch338-legio.tex"
+}

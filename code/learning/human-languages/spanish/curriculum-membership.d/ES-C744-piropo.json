@@ -1,0 +1,11 @@
+{
+  "id": "ES-C744-piropo",
+  "pathSegment": "ES-PATH-744-NOVIOS",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ES-EXT-744-NOVIOS",
+      "order": 1
+    }
+  ]
+}

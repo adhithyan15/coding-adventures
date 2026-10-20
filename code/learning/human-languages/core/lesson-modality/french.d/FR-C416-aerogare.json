@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C416-aerogare",
+    "language": "french",
+    "chapter": 416,
+    "sequence": 23130,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1a762098d4344d88"
+  },
+  "findings": []
+}

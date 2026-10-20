@@ -1,0 +1,9 @@
+{
+  "id": "IT-PATH-346-MALINTESO",
+  "spine_node": "SPINE-GIVE-REASONS",
+  "before": [],
+  "inline": [
+    "IT-EXT-346-MALINTESO"
+  ],
+  "after": []
+}

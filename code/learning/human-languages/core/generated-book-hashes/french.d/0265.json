@@ -1,0 +1,11 @@
+{
+  "language": "french",
+  "chapter": 265,
+  "sourceHash": "fnv1a64:56c877bf1ff89800",
+  "lessonIds": [
+    "FR-C265-plus-que",
+    "FR-C265-depuis-pendant",
+    "FR-C265-revision-experience"
+  ],
+  "tex": "french/book/chapters/ch265-more-than-and-how-long.tex"
+}

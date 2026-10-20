@@ -1,0 +1,9 @@
+{
+  "id": "PT-PATH-299-ACIDENTE",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "PT-EXT-299-ACIDENTE"
+  ],
+  "after": []
+}

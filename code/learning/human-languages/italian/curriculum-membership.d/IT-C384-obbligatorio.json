@@ -1,0 +1,11 @@
+{
+  "id": "IT-C384-obbligatorio",
+  "pathSegment": "IT-PATH-384-NORMA",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "IT-EXT-384-NORMA",
+      "order": 2
+    }
+  ]
+}

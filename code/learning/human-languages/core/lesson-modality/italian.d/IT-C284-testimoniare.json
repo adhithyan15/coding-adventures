@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C284-testimoniare",
+    "language": "italian",
+    "chapter": 284,
+    "sequence": 16690,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:82b73b58ae12311f"
+  },
+  "findings": []
+}

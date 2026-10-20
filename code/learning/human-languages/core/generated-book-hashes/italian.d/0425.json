@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 425,
+  "sourceHash": "fnv1a64:e09c59248038c676",
+  "lessonIds": [
+    "IT-C425-terminal",
+    "IT-C425-scalo",
+    "IT-C425-imbarco",
+    "IT-C425-navetta",
+    "IT-C425-fuso-orario"
+  ],
+  "tex": "italian/book/chapters/ch425-in-aeroporto.tex"
+}

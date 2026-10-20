@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 387,
+  "sourceHash": "fnv1a64:ca7968b1c6730dd6",
+  "lessonIds": [
+    "PT-C387-queixa",
+    "PT-C387-arguido",
+    "PT-C387-testemunha",
+    "PT-C387-defesa",
+    "PT-C387-sentenca"
+  ],
+  "tex": "portuguese/book/chapters/ch387-no-tribunal.tex"
+}

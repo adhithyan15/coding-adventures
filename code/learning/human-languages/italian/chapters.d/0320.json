@@ -1,0 +1,19 @@
+{
+  "chapter": 320,
+  "title": "Feste di paese",
+  "label": "ch:it-feste-di-paese",
+  "canDo": "I can talk about town festivities: the fair, the horse race, the merry-go-round, name days and saints.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "IT-R320-ripasso-313-320",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 320: I can talk about town festivities: the fair, the horse race, the merry-go-round, name days and saints.",
+    "assesses": [
+      "IT-LEX-C320-FIERA-03",
+      "IT-LEX-C320-FIERA-04",
+      "IT-LEX-C320-FIERA-05"
+    ]
+  }
+}

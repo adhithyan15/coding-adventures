@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C448-lampione",
+    "language": "italian",
+    "chapter": 448,
+    "sequence": 25310,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d4f85dcab4a25d87"
+  },
+  "findings": []
+}

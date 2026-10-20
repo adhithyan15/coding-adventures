@@ -1,0 +1,11 @@
+{
+  "id": "PT-C490-massagem",
+  "pathSegment": "PT-PATH-490-FORMA",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PT-EXT-490-FORMA",
+      "order": 4
+    }
+  ]
+}

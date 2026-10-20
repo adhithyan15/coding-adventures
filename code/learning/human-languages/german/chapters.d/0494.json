@@ -1,0 +1,19 @@
+{
+  "chapter": 494,
+  "title": "Zanken und versöhnen",
+  "label": "ch:ge-zanken-und-versohnen",
+  "canDo": "I can talk about quarrels and making up.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "GE-C494-versoehnung",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 494: I can talk about quarrels and making up.",
+    "assesses": [
+      "GE-LEX-C494-STREIT-03",
+      "GE-LEX-C494-STREIT-04",
+      "GE-LEX-C494-STREIT-05"
+    ]
+  }
+}

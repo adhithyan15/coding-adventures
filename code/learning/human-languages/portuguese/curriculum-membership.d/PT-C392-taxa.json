@@ -1,0 +1,11 @@
+{
+  "id": "PT-C392-taxa",
+  "pathSegment": "PT-PATH-392-INVESTIR",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-392-INVESTIR",
+      "order": 3
+    }
+  ]
+}

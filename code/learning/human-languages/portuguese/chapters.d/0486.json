@@ -1,0 +1,19 @@
+{
+  "chapter": 486,
+  "title": "Vacinas e ligaduras",
+  "label": "ch:pt-vacinas-e-ligaduras",
+  "canDo": "I can talk about thermometers, jabs, sprains and bandages.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "PT-C486-ligadura",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 486: I can talk about thermometers, jabs, sprains and bandages.",
+    "assesses": [
+      "PT-LEX-C486-LIGADURA-03",
+      "PT-LEX-C486-LIGADURA-04",
+      "PT-LEX-C486-LIGADURA-05"
+    ]
+  }
+}

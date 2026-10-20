@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PT-C435-bussola",
+    "language": "portuguese",
+    "chapter": 435,
+    "sequence": 24350,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:74dba47e4d1a5e20"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "ES-C619-previsible",
+  "pathSegment": "ES-PATH-619-QUIZA",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ES-EXT-619-QUIZA",
+      "order": 1
+    }
+  ]
+}

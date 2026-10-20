@@ -1,0 +1,19 @@
+{
+  "chapter": 680,
+  "title": "Tiendas del barrio",
+  "label": "ch:es-tiendas-del-barrio",
+  "canDo": "I can find the cake shop, the stationer’s, the hairdresser, the launderette and the ice-cream shop.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "ES-C680-heladeria",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 680: I can find the cake shop, the stationer’s, the hairdresser, the launderette and the ice-cream shop.",
+    "assesses": [
+      "ES-LEX-C680-TIENDAS-03",
+      "ES-LEX-C680-TIENDAS-04",
+      "ES-LEX-C680-TIENDAS-05"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C464-lepre",
+    "language": "italian",
+    "chapter": 464,
+    "sequence": 26140,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7b827400685fd292"
+  },
+  "findings": []
+}

@@ -1,0 +1,9 @@
+{
+  "id": "IT-PATH-370-MAGGIORANZA",
+  "spine_node": "SPINE-GIVE-REASONS",
+  "before": [],
+  "inline": [
+    "IT-EXT-370-MAGGIORANZA"
+  ],
+  "after": []
+}

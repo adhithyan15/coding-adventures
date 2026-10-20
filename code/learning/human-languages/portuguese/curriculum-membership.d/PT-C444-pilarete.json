@@ -1,0 +1,11 @@
+{
+  "id": "PT-C444-pilarete",
+  "pathSegment": "PT-PATH-444-MOBILIARIO",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-444-MOBILIARIO",
+      "order": 3
+    }
+  ]
+}

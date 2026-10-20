@@ -25,12 +25,12 @@
 // undefined identifiers, not one — a real bug found live-testing this
 // package, not a hypothetical.
 //
-// The legacy `Input` primitive, once, deliberately: UI29's kernel
-// `HostInput` is single-line only (no `multiline` support was carried
-// forward from `Input`/UI25 — see code/specs/task-app-notes-ui-v1.md).
-// The note body genuinely needs multiple lines, so `notes-body-input`
-// uses `Input ( multiline: true )` rather than a single-line `HostInput`.
-// This is the only such use in this package.
+// The legacy `Input` primitive, once: the note body needs multiple lines,
+// and when this package was written UI29's kernel `HostInput` was
+// single-line only (see code/specs/task-app-notes-ui-v1.md). HostInput has
+// since gained `multiline: true` on every backend (#15930) and lowers it
+// exactly as `Input` does, so `notes-body-input` can move to HostInput when
+// the legacy `Input` retires (U29-X1). This is the only such use here.
 
 layout Notes {
   Column [ notes-root ] {

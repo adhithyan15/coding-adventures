@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PT-C371-prever",
+    "language": "portuguese",
+    "chapter": 371,
+    "sequence": 21040,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a780b8f9261d007d"
+  },
+  "findings": []
+}

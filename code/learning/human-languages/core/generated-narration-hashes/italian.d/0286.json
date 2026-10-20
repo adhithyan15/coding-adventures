@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 286,
+  "sourceHash": "fnv1a64:a82e1c9a94a0d176",
+  "lessonIds": [
+    "IT-C286-edizione",
+    "IT-C286-didascalia",
+    "IT-C286-scoop",
+    "IT-C286-censura",
+    "IT-C286-censurare"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch286.txt",
+  "json": "italian/narration/ch286.json",
+  "textHash": "fnv1a64:6a5e7fcd3628c13d",
+  "jsonHash": "fnv1a64:160dab147a97ef0d",
+  "findings": []
+}

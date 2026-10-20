@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 337,
+  "sourceHash": "fnv1a64:ebe0913d41c4a1d0",
+  "lessonIds": [
+    "IT-C337-condire",
+    "IT-C337-salare",
+    "IT-C337-insaporire",
+    "IT-C337-farcire",
+    "IT-C337-guarnire"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch337.txt",
+  "json": "italian/narration/ch337.json",
+  "textHash": "fnv1a64:ac111e4ff08c4e08",
+  "jsonHash": "fnv1a64:03530a1959363521",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "ES-C706-susto",
+  "pathSegment": "ES-PATH-706-SUSTO",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ES-EXT-706-SUSTO",
+      "order": 2
+    }
+  ]
+}

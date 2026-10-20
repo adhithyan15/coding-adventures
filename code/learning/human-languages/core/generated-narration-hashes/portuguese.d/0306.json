@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 306,
+  "sourceHash": "fnv1a64:7a97d9b996652b57",
+  "lessonIds": [
+    "PT-C306-evacuar",
+    "PT-C306-resgatar",
+    "PT-C306-resgate",
+    "PT-C306-sobreviver",
+    "PT-C306-sobrevivente"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch306.txt",
+  "json": "portuguese/narration/ch306.json",
+  "textHash": "fnv1a64:f49fc35da4bcba23",
+  "jsonHash": "fnv1a64:3951ffb76a2cfa80",
+  "findings": []
+}

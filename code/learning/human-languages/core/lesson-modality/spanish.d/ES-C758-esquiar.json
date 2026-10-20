@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C758-esquiar",
+    "language": "spanish",
+    "chapter": 758,
+    "sequence": 27880,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:bccf0d1e64178880"
+  },
+  "findings": []
+}

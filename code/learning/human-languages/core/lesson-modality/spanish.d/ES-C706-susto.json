@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C706-susto",
+    "language": "spanish",
+    "chapter": 706,
+    "sequence": 25220,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:47c92562f254c0c9"
+  },
+  "findings": []
+}

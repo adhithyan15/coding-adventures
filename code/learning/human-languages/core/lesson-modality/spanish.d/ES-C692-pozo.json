@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C692-pozo",
+    "language": "spanish",
+    "chapter": 692,
+    "sequence": 24490,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f777664e49c872f8"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "FR-C397-copier",
+  "pathSegment": "FR-PATH-397-FICHIER",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-397-FICHIER",
+      "order": 2
+    }
+  ]
+}

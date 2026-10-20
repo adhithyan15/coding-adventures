@@ -1,0 +1,19 @@
+{
+  "chapter": 366,
+  "title": "Problemas sociais",
+  "label": "ch:pt-problemas-sociais",
+  "canDo": "I can talk about social problems: poverty, discrimination, immigration and integration.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "PT-R366-revisao-359-366",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 366: I can talk about social problems: poverty, discrimination, immigration and integration.",
+    "assesses": [
+      "PT-LEX-C366-SOCIEDADE-03",
+      "PT-LEX-C366-SOCIEDADE-04",
+      "PT-LEX-C366-SOCIEDADE-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 347,
+  "sourceHash": "fnv1a64:0087b124d0e9def1",
+  "lessonIds": [
+    "PT-C347-polemica",
+    "PT-C347-polemico",
+    "PT-C347-contestar",
+    "PT-C347-rebater",
+    "PT-C347-relevante"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch347.txt",
+  "json": "portuguese/narration/ch347.json",
+  "textHash": "fnv1a64:c48a9a36fcd8275a",
+  "jsonHash": "fnv1a64:0965243275d0e051",
+  "findings": []
+}

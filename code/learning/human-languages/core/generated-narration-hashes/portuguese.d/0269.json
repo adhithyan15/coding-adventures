@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 269,
+  "sourceHash": "fnv1a64:39ee6b3ac781792b",
+  "lessonIds": [
+    "PT-C269-primeiramente",
+    "PT-C269-inicialmente",
+    "PT-C269-seguidamente",
+    "PT-C269-posteriormente",
+    "PT-C269-por-fim"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch269.txt",
+  "json": "portuguese/narration/ch269.json",
+  "textHash": "fnv1a64:598d84ddcab34c89",
+  "jsonHash": "fnv1a64:1049bdaef2681e60",
+  "findings": []
+}

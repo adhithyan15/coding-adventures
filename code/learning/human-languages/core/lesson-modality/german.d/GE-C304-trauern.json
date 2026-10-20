@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C304-trauern",
+    "language": "german",
+    "chapter": 304,
+    "sequence": 16660,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:eea7945c905d6738"
+  },
+  "findings": []
+}

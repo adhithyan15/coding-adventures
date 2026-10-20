@@ -1,0 +1,14 @@
+{
+  "language": "italian",
+  "chapter": 510,
+  "sourceHash": "fnv1a64:1c0911379420202a",
+  "lessonIds": [
+    "IT-C510-attaccante",
+    "IT-C510-difensore",
+    "IT-C510-centrocampista",
+    "IT-C510-titolare",
+    "IT-C510-parare",
+    "IT-R510-ripasso-503-510"
+  ],
+  "tex": "italian/book/chapters/ch510-in-campo.tex"
+}

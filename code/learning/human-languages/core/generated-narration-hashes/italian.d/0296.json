@@ -1,0 +1,20 @@
+{
+  "language": "italian",
+  "chapter": 296,
+  "sourceHash": "fnv1a64:ba447d5306ff9af5",
+  "lessonIds": [
+    "IT-C296-sospettato",
+    "IT-C296-movente",
+    "IT-C296-alibi",
+    "IT-C296-interrogare",
+    "IT-C296-confessare",
+    "IT-R296-ripasso-289-296"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "italian/narration/ch296.txt",
+  "json": "italian/narration/ch296.json",
+  "textHash": "fnv1a64:905a85755e6e8d6b",
+  "jsonHash": "fnv1a64:8105b03a0f563fbe",
+  "findings": []
+}

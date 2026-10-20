@@ -1,0 +1,11 @@
+{
+  "id": "ES-C548-banquete",
+  "pathSegment": "ES-PATH-548-BANQUETE",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ES-EXT-548-BANQUETE",
+      "order": 2
+    }
+  ]
+}

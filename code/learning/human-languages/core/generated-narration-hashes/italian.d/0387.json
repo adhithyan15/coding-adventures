@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 387,
+  "sourceHash": "fnv1a64:aae0203ff2296fbc",
+  "lessonIds": [
+    "IT-C387-requisito",
+    "IT-C387-idoneo",
+    "IT-C387-ammissione",
+    "IT-C387-escludere",
+    "IT-C387-condizione"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch387.txt",
+  "json": "italian/narration/ch387.json",
+  "textHash": "fnv1a64:b080e593961082aa",
+  "jsonHash": "fnv1a64:97a93cb76631c9ff",
+  "findings": []
+}

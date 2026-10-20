@@ -1,0 +1,11 @@
+{
+  "id": "IT-C510-parare",
+  "pathSegment": "IT-PATH-510-SQUADRA",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "IT-EXT-510-SQUADRA",
+      "order": 4
+    }
+  ]
+}

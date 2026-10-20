@@ -1,0 +1,11 @@
+{
+  "id": "IT-C335-lievito",
+  "pathSegment": "IT-PATH-335-IMPASTO",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "IT-EXT-335-IMPASTO",
+      "order": 2
+    }
+  ]
+}

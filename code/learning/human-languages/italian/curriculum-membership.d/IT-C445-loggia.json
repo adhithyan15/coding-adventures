@@ -1,0 +1,11 @@
+{
+  "id": "IT-C445-loggia",
+  "pathSegment": "IT-PATH-445-PIAZZA",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "IT-EXT-445-PIAZZA",
+      "order": 4
+    }
+  ]
+}

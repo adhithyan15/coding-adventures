@@ -1,0 +1,19 @@
+{
+  "chapter": 656,
+  "title": "En la aduana",
+  "label": "ch:es-en-la-aduana",
+  "canDo": "I can cross a border: customs and the customs officer, a visa, a passport stamp and a bag search.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "ES-C656-registrar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 656: I can cross a border: customs and the customs officer, a visa, a passport stamp and a bag search.",
+    "assesses": [
+      "ES-LEX-C656-FRONTERA-03",
+      "ES-LEX-C656-FRONTERA-04",
+      "ES-LEX-C656-FRONTERA-05"
+    ]
+  }
+}

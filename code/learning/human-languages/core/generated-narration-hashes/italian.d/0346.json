@@ -1,0 +1,20 @@
+{
+  "language": "italian",
+  "chapter": 346,
+  "sourceHash": "fnv1a64:0e4b79574188bb04",
+  "lessonIds": [
+    "IT-C346-malinteso",
+    "IT-C346-fraintendere",
+    "IT-C346-chiarire",
+    "IT-C346-precisare",
+    "IT-C346-chiarimento",
+    "IT-R346-ripasso-339-346"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "italian/narration/ch346.txt",
+  "json": "italian/narration/ch346.json",
+  "textHash": "fnv1a64:b9769c5e33bc70ec",
+  "jsonHash": "fnv1a64:076d0131fb7641da",
+  "findings": []
+}

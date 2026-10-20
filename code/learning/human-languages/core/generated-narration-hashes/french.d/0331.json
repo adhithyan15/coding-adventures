@@ -1,0 +1,20 @@
+{
+  "language": "french",
+  "chapter": 331,
+  "sourceHash": "fnv1a64:040322065393b8b3",
+  "lessonIds": [
+    "FR-C331-moule",
+    "FR-C331-enfourner",
+    "FR-C331-cuisson",
+    "FR-C331-dorer",
+    "FR-C331-gratiner",
+    "FR-R331-revision-324-331"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "french/narration/ch331.txt",
+  "json": "french/narration/ch331.json",
+  "textHash": "fnv1a64:8ab90965c9b6bca8",
+  "jsonHash": "fnv1a64:bc4815dfe17a80bd",
+  "findings": []
+}

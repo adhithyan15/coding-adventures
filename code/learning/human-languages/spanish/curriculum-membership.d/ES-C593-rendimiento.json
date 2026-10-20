@@ -1,0 +1,11 @@
+{
+  "id": "ES-C593-rendimiento",
+  "pathSegment": "ES-PATH-593-TAREA",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ES-EXT-593-TAREA",
+      "order": 2
+    }
+  ]
+}

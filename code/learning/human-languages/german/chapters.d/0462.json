@@ -1,0 +1,19 @@
+{
+  "chapter": 462,
+  "title": "Ein Unwetter",
+  "label": "ch:ge-ein-unwetter",
+  "canDo": "I can describe a storm coming: severe weather, a storm building up, hail, hailing and thunder.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "GE-C462-donnern",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 462: I can describe a storm coming: severe weather, a storm building up, hail, hailing and thunder.",
+    "assesses": [
+      "GE-LEX-C462-UNWETTER-03",
+      "GE-LEX-C462-UNWETTER-04",
+      "GE-LEX-C462-UNWETTER-05"
+    ]
+  }
+}

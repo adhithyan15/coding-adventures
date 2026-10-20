@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 505,
+  "sourceHash": "fnv1a64:cf88d5746aff1f8d",
+  "lessonIds": [
+    "IT-C505-collezionare",
+    "IT-C505-collezione",
+    "IT-C505-puzzle",
+    "IT-C505-modellismo",
+    "IT-C505-assemblare"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch505.txt",
+  "json": "italian/narration/ch505.json",
+  "textHash": "fnv1a64:20f2e8592ee6dc21",
+  "jsonHash": "fnv1a64:89e0e4e30b309c38",
+  "findings": []
+}

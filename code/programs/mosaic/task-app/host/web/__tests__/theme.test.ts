@@ -9,15 +9,18 @@
  */
 import { describe, it, expect, afterEach, vi } from "vitest";
 import {
+  applyThemeGround,
   boardAccent,
   resolveTheme,
   ringGradient,
+  startupChrome,
   storeTheme,
   storedTheme,
   systemTheme,
   watchSystemTheme,
   THEME_KEY,
 } from "../src/theme";
+import { MSL_TOKENS } from "../src/theme-tokens.generated";
 
 /** Install a `matchMedia` that answers `dark` / `light` as told. */
 function fakeMatchMedia(answers: Record<string, boolean>) {
@@ -157,30 +160,65 @@ describe("theme selection", () => {
   });
 });
 
+// The expected colours are read from the generated tokens, not spelled here: the
+// tokens are the stylesheet's own values (a cargo test regenerates and checks them),
+// so these tests pin *which* stylesheet colour each host surface uses, and keep
+// passing when a designer re-tints the .msl.
 describe("ringGradient", () => {
   it("fills proportionally to the percent, clamped to 0..100", () => {
-    expect(ringGradient("light", 0)).toBe("conic-gradient(#e0942a 0deg, #e6ded3 0deg)");
-    expect(ringGradient("light", 50)).toBe("conic-gradient(#e0942a 180deg, #e6ded3 180deg)");
-    expect(ringGradient("light", 100)).toBe("conic-gradient(#e0942a 360deg, #e6ded3 360deg)");
+    const { accent, hairline } = MSL_TOKENS.light;
+    expect(ringGradient("light", 0)).toBe(`conic-gradient(${accent} 0deg, ${hairline} 0deg)`);
+    expect(ringGradient("light", 50)).toBe(`conic-gradient(${accent} 180deg, ${hairline} 180deg)`);
+    expect(ringGradient("light", 100)).toBe(`conic-gradient(${accent} 360deg, ${hairline} 360deg)`);
     expect(ringGradient("light", 150)).toBe(ringGradient("light", 100));
     expect(ringGradient("light", -10)).toBe(ringGradient("light", 0));
   });
 
   it("uses the dark theme's own fill/track colours", () => {
-    expect(ringGradient("dark", 25)).toBe("conic-gradient(#eaa63f 90deg, #352e25 90deg)");
+    const { accent, hairline } = MSL_TOKENS.dark;
+    expect(ringGradient("dark", 25)).toBe(`conic-gradient(${accent} 90deg, ${hairline} 90deg)`);
+    expect(ringGradient("dark", 25)).not.toBe(ringGradient("light", 25));
+  });
+});
+
+describe("startupChrome and applyThemeGround", () => {
+  it("draw the startup states in app-shell's ground, ink and font, alerting in storage-warning's red", () => {
+    for (const theme of ["light", "dark"] as const) {
+      const t = MSL_TOKENS[theme];
+      expect(startupChrome(theme)).toEqual({
+        ground: t.ground,
+        text: t.ink,
+        alert: t.alert,
+        fontFamily: t.fontFamily,
+      });
+      applyThemeGround(theme);
+      // jsdom normalises a hex colour to rgb(), so compare through the same parser.
+      const probe = document.createElement("div");
+      probe.style.background = t.ground;
+      expect(document.documentElement.style.background).toBe(probe.style.background);
+    }
   });
 });
 
 describe("boardAccent", () => {
-  it("returns the right colour for each of the four statuses, per theme", () => {
-    expect(boardAccent("light", "next")).toBe("#9b9289");
-    expect(boardAccent("light", "doing")).toBe("#e0942a");
-    expect(boardAccent("light", "review")).toBe("#5b84ad");
-    expect(boardAccent("light", "done")).toBe("#4f8e6a");
-    expect(boardAccent("dark", "next")).toBe("#867c70");
-    expect(boardAccent("dark", "doing")).toBe("#eaa63f");
-    expect(boardAccent("dark", "review")).toBe("#7fa8d1");
-    expect(boardAccent("dark", "done")).toBe("#6fb489");
+  it("reuses the stylesheet's muted, accent and on-track colours for next/doing/done", () => {
+    for (const theme of ["light", "dark"] as const) {
+      const t = MSL_TOKENS[theme];
+      expect(boardAccent(theme, "next")).toBe(t.muted);
+      expect(boardAccent(theme, "doing")).toBe(t.accent);
+      expect(boardAccent(theme, "done")).toBe(t.ok);
+    }
+  });
+
+  it("gives review a colour of its own, distinct from the other three, per theme", () => {
+    for (const theme of ["light", "dark"] as const) {
+      const review = boardAccent(theme, "review");
+      expect(review).toMatch(/^#[0-9a-f]{6}$/);
+      for (const other of ["next", "doing", "done"]) {
+        expect(review).not.toBe(boardAccent(theme, other));
+      }
+    }
+    expect(boardAccent("dark", "review")).not.toBe(boardAccent("light", "review"));
   });
 
   it("falls back to the 'next' colour for an unrecognised status id", () => {

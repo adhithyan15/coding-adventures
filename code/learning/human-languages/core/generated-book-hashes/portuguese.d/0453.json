@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 453,
+  "sourceHash": "fnv1a64:b82f5c20ee1d32b4",
+  "lessonIds": [
+    "PT-C453-talao",
+    "PT-C453-pechincha",
+    "PT-C453-liquidacao",
+    "PT-C453-regatear",
+    "PT-C453-embrulhar"
+  ],
+  "tex": "portuguese/book/chapters/ch453-na-caixa.tex"
+}

@@ -1,0 +1,11 @@
+{
+  "id": "PT-C365-injustica",
+  "pathSegment": "PT-PATH-365-JUSTICA",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PT-EXT-365-JUSTICA",
+      "order": 2
+    }
+  ]
+}

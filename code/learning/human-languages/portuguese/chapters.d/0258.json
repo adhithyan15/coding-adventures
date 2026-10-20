@@ -1,0 +1,21 @@
+{
+  "chapter": 258,
+  "title": "Writing --- Four Lines, And The Joiner That Points Back",
+  "label": "ch:pt-four-lines",
+  "canDo": "I can write four connected lines to a named reader, adding with e and giving a result with por isso, with the reason placed before it.",
+  "spineNodes": [
+    "SPINE-SAY-WHY"
+  ],
+  "payoff": {
+    "lesson": "PT-W258-four-lines",
+    "kind": "task",
+    "summary": "Complete PT-W258-four-lines: four lines to one reader, at least one joined with e and one with por isso, then check the reason stands before por isso.",
+    "assesses": [
+      "PT-LEX-C02-PRACTICE-02",
+      "PT-LEX-C84-PORQUE84-04",
+      "PT-GRAMMAR-MORAR-04",
+      "PT-LEX-FALO-PORTUGUES-02"
+    ],
+    "note": "The track has not taught a word for because, so the reason link is por isso, which points back: the reason comes first and the result follows. Swapping the halves stays grammatical and reverses the claim, which is what the wrap-up check catches."
+  }
+}

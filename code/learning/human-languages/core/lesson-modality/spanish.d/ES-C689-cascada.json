@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C689-cascada",
+    "language": "spanish",
+    "chapter": 689,
+    "sequence": 24310,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b0d7b7d71e365793"
+  },
+  "findings": []
+}

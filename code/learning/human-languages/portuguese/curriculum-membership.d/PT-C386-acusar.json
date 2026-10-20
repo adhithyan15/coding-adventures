@@ -1,0 +1,11 @@
+{
+  "id": "PT-C386-acusar",
+  "pathSegment": "PT-PATH-386-ACUSACAO",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PT-EXT-386-ACUSACAO",
+      "order": 1
+    }
+  ]
+}

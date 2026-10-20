@@ -1,0 +1,19 @@
+{
+  "chapter": 426,
+  "title": "I bagagli",
+  "label": "ch:it-i-bagagli",
+  "canDo": "I can deal with luggage: the wheeled case, the hold, the baggage belt, the scales and packing things up.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "IT-C426-imballare",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 426: I can deal with luggage: the wheeled case, the hold, the baggage belt, the scales and packing things up.",
+    "assesses": [
+      "IT-LEX-C426-BAGAGLI-03",
+      "IT-LEX-C426-BAGAGLI-04",
+      "IT-LEX-C426-BAGAGLI-05"
+    ]
+  }
+}

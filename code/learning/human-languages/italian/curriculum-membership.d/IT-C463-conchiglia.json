@@ -1,0 +1,11 @@
+{
+  "id": "IT-C463-conchiglia",
+  "pathSegment": "IT-PATH-463-SCOGLI",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "IT-EXT-463-SCOGLI",
+      "order": 2
+    }
+  ]
+}

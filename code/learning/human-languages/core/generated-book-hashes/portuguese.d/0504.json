@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 504,
+  "sourceHash": "fnv1a64:efc992badd6b3ff1",
+  "lessonIds": [
+    "PT-C504-colecao",
+    "PT-C504-colecionar",
+    "PT-C504-artesanato",
+    "PT-C504-barro",
+    "PT-C504-olaria"
+  ],
+  "tex": "portuguese/book/chapters/ch504-colecoes-e-artesanato.tex"
+}

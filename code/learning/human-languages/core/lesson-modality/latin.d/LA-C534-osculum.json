@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C534-osculum",
+    "language": "latin",
+    "chapter": 534,
+    "sequence": 28300,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:85d58f4e34c79383"
+  },
+  "findings": []
+}

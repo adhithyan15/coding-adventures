@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 297,
+  "sourceHash": "fnv1a64:06365119f1318ef4",
+  "lessonIds": [
+    "GE-C297-aufwachsen",
+    "GE-C297-einschulung",
+    "GE-C297-abitur",
+    "GE-C297-abschluss",
+    "GE-C297-umzug"
+  ],
+  "tex": "german/book/chapters/ch297-aufwachsen.tex"
+}

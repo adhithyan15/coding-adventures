@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C489-ammalarsi",
+    "language": "italian",
+    "chapter": 489,
+    "sequence": 27520,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:dcebb09c9460d77f"
+  },
+  "findings": []
+}

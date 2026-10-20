@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 469,
+  "sourceHash": "fnv1a64:0c02b4f9cc14f0ba",
+  "lessonIds": [
+    "GE-C469-enttaeuschen",
+    "GE-C469-enttaeuschung",
+    "GE-C469-erleichterung",
+    "GE-C469-aufatmen",
+    "GE-C469-seufzen"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch469.txt",
+  "json": "german/narration/ch469.json",
+  "textHash": "fnv1a64:bdb96020ac70147a",
+  "jsonHash": "fnv1a64:fac295b98e31e091",
+  "findings": []
+}

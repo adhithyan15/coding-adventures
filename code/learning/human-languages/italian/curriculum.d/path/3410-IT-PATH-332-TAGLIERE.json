@@ -1,0 +1,9 @@
+{
+  "id": "IT-PATH-332-TAGLIERE",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "IT-EXT-332-TAGLIERE"
+  ],
+  "after": []
+}

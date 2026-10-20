@@ -1,0 +1,19 @@
+{
+  "chapter": 665,
+  "title": "Una queja",
+  "label": "ch:es-una-queja",
+  "canDo": "I can complain about damage or a problem, ask for the manager or the owner and ask to be compensated.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "ES-C665-dueno",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 665: I can complain about damage or a problem, ask for the manager or the owner and ask to be compensated.",
+    "assesses": [
+      "ES-LEX-C665-QUEJA-03",
+      "ES-LEX-C665-QUEJA-04",
+      "ES-LEX-C665-QUEJA-05"
+    ]
+  }
+}

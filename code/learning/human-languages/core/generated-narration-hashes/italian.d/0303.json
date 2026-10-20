@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 303,
+  "sourceHash": "fnv1a64:75744c7d53bd2e37",
+  "lessonIds": [
+    "IT-C303-esplosione",
+    "IT-C303-esplodere",
+    "IT-C303-scoppiare",
+    "IT-C303-scoppio",
+    "IT-C303-crollo"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch303.txt",
+  "json": "italian/narration/ch303.json",
+  "textHash": "fnv1a64:247fcfe698ecc365",
+  "jsonHash": "fnv1a64:181d2495bf9e34b3",
+  "findings": []
+}

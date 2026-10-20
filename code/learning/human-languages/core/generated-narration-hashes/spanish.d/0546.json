@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 546,
+  "sourceHash": "fnv1a64:cf3d30ec83027573",
+  "lessonIds": [
+    "ES-C546-bautizo",
+    "ES-C546-padrino",
+    "ES-C546-madrina",
+    "ES-C546-nieto",
+    "ES-C546-panal"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch546.txt",
+  "json": "spanish/narration/ch546.json",
+  "textHash": "fnv1a64:d515a40cc310559d",
+  "jsonHash": "fnv1a64:14e60d4af2bb8ae5",
+  "findings": []
+}

@@ -1,0 +1,9 @@
+{
+  "id": "ES-PATH-545-NINEZ",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "ES-EXT-545-NINEZ"
+  ],
+  "after": []
+}

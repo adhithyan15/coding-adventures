@@ -1,0 +1,11 @@
+{
+  "id": "IT-C499-tradire",
+  "pathSegment": "IT-PATH-499-LITIGI",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "IT-EXT-499-LITIGI",
+      "order": 2
+    }
+  ]
+}

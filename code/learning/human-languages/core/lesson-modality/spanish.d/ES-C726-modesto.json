@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C726-modesto",
+    "language": "spanish",
+    "chapter": 726,
+    "sequence": 26250,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:cdca462c87414c38"
+  },
+  "findings": []
+}

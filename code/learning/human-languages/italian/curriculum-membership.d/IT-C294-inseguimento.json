@@ -1,0 +1,11 @@
+{
+  "id": "IT-C294-inseguimento",
+  "pathSegment": "IT-PATH-294-PATTUGLIA",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "IT-EXT-294-PATTUGLIA",
+      "order": 4
+    }
+  ]
+}

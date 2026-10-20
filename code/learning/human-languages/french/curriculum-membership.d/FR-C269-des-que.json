@@ -1,0 +1,11 @@
+{
+  "id": "FR-C269-des-que",
+  "pathSegment": "FR-PATH-269-QUAND",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FR-EXT-269-QUAND",
+      "order": 1
+    }
+  ]
+}

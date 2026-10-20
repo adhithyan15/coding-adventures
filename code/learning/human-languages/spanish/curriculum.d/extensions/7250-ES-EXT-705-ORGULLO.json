@@ -1,0 +1,8 @@
+{
+  "id": "ES-EXT-705-ORGULLO",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say when I feel proud of someone or ashamed of something.",
+  "prerequisites": []
+}

@@ -26,7 +26,7 @@
 //! 2. All node shapes (filled over edges so endpoints are hidden).
 //! 3. All text (node labels + edge labels + title) via `layout-to-paint`.
 
-pub const VERSION: &str = "0.75.0";
+pub const VERSION: &str = "0.76.0";
 
 use std::collections::HashMap;
 
@@ -2152,6 +2152,7 @@ where S: TextShaper, M: FontMetrics<Handle = S::Handle>, R: FontResolver<Handle 
     label_font.size = diagram.config.font_size;
     let mut title_font = options.title_font.clone();
     title_font.family.clone_from(&diagram.config.font_family);
+    title_font.size = diagram.config.font_size;
     let hand_drawn = diagram.config.look == diagram_ir::IshikawaLook::HandDrawn;
     let mut instructions = vec![PaintInstruction::Path(line_path(&diagram.spine_path, &stroke, 3.0))];
     let mut text_children = Vec::new();
@@ -2191,8 +2192,8 @@ where S: TextShaper, M: FontMetrics<Handle = S::Handle>, R: FontResolver<Handle 
     instructions.push(ishikawa_outline_instruction(&diagram.effect_outline,
         if hand_drawn { "none" } else { &diagram.config.fill_color }, &stroke, 2.0));
     let effect_label_width = diagram.effect_width / 2.4;
-    text_children.push(text_node(&diagram.effect, diagram.effect_x + 3.0, diagram.effect_y + 8.0,
-        effect_label_width - 6.0, diagram.effect_height - 16.0, title_font, text_color));
+    text_children.push(text_node(&diagram.effect, diagram.effect_x + 3.0, diagram.effect_y + diagram.effect_height * 0.3,
+        effect_label_width - 6.0, diagram.effect_height * 0.4, title_font, text_color));
     let text_scene = layout_to_paint(&PositionedNode { x: 0.0, y: 0.0, width: diagram.width, height: diagram.height,
         id: None, content: None, children: text_children, ext: HashMap::new() }, &LayoutToPaintOptions {
         width: diagram.width, height: diagram.height, background: Color { r: 0, g: 0, b: 0, a: 0 }, device_pixel_ratio: 1.0,
@@ -9880,7 +9881,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.75.0");
+        assert_eq!(crate::VERSION, "0.76.0");
     }
 
     #[test]

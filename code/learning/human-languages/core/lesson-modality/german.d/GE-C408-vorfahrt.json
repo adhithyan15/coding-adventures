@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C408-vorfahrt",
+    "language": "german",
+    "chapter": 408,
+    "sequence": 22010,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c34480db142dda4a"
+  },
+  "findings": []
+}

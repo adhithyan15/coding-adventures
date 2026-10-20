@@ -1,0 +1,19 @@
+{
+  "chapter": 494,
+  "title": "Élever des enfants",
+  "label": "ch:fr-elever-des-enfants",
+  "canDo": "I can talk about bringing up children.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "FR-C494-creche",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 494: I can talk about bringing up children.",
+    "assesses": [
+      "FR-LEX-C494-EDUCATION-03",
+      "FR-LEX-C494-EDUCATION-04",
+      "FR-LEX-C494-EDUCATION-05"
+    ]
+  }
+}

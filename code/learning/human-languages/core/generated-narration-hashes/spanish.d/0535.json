@@ -1,0 +1,20 @@
+{
+  "language": "spanish",
+  "chapter": 535,
+  "sourceHash": "fnv1a64:c8d4fbc8d71404a8",
+  "lessonIds": [
+    "ES-C535-en-un-principio",
+    "ES-C535-a-la-larga",
+    "ES-C535-tarde-o-temprano",
+    "ES-C535-finalmente",
+    "ES-C535-mas-tarde",
+    "ES-R535-repaso-528-535"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "spanish/narration/ch535.txt",
+  "json": "spanish/narration/ch535.json",
+  "textHash": "fnv1a64:d7180274e98b1264",
+  "jsonHash": "fnv1a64:5e02a173de56029c",
+  "findings": []
+}

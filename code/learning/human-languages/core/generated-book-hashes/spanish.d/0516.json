@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 516,
+  "sourceHash": "fnv1a64:6b4133196187e61b",
+  "lessonIds": [
+    "ES-C516-asegurar",
+    "ES-C516-rectificar",
+    "ES-C516-revelar",
+    "ES-C516-desmentir",
+    "ES-C516-version"
+  ],
+  "tex": "spanish/book/chapters/ch516-su-version.tex"
+}

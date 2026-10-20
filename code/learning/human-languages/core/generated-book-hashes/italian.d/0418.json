@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 418,
+  "sourceHash": "fnv1a64:77a3e196e7212300",
+  "lessonIds": [
+    "IT-C418-biglietteria",
+    "IT-C418-abbonamento",
+    "IT-C418-timbrare",
+    "IT-C418-controllore",
+    "IT-C418-supplemento"
+  ],
+  "tex": "italian/book/chapters/ch418-il-biglietto.tex"
+}

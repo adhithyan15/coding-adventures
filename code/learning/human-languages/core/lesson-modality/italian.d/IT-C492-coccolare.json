@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C492-coccolare",
+    "language": "italian",
+    "chapter": 492,
+    "sequence": 27680,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:bf667bd4e44fe4d1"
+  },
+  "findings": []
+}

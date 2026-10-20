@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-R535-repaso-528-535",
+    "language": "spanish",
+    "chapter": 535,
+    "sequence": 16400,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0d441c8c282045fe"
+  },
+  "findings": []
+}

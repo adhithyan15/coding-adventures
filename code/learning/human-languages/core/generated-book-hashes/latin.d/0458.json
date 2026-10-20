@@ -1,0 +1,13 @@
+{
+  "language": "latin",
+  "chapter": 458,
+  "sourceHash": "fnv1a64:fc2c8c7d82c3b31b",
+  "lessonIds": [
+    "LA-C458-angiportum",
+    "LA-C458-vicinia",
+    "LA-C458-latrina",
+    "LA-C458-cloaca",
+    "LA-C458-castellum"
+  ],
+  "tex": "latin/book/chapters/ch458-alley-neighbourhood-privy-sewer-water-tower.tex"
+}

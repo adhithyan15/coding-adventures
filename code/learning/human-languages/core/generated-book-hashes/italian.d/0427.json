@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 427,
+  "sourceHash": "fnv1a64:985edf3a1bf12c92",
+  "lessonIds": [
+    "IT-C427-doganiere",
+    "IT-C427-dichiarare",
+    "IT-C427-perquisire",
+    "IT-C427-perquisizione",
+    "IT-C427-valico"
+  ],
+  "tex": "italian/book/chapters/ch427-al-confine.tex"
+}

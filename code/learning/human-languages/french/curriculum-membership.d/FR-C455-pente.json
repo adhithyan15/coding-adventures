@@ -1,0 +1,11 @@
+{
+  "id": "FR-C455-pente",
+  "pathSegment": "FR-PATH-455-RANDONNEE",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-455-RANDONNEE",
+      "order": 2
+    }
+  ]
+}

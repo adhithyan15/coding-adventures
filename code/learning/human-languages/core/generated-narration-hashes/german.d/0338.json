@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 338,
+  "sourceHash": "fnv1a64:3b85a41d634775e7",
+  "lessonIds": [
+    "GE-C338-vermutung",
+    "GE-C338-annahme",
+    "GE-C338-anscheinend",
+    "GE-C338-offensichtlich",
+    "GE-C338-ahnen"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch338.txt",
+  "json": "german/narration/ch338.json",
+  "textHash": "fnv1a64:c1dff86537fa4c1d",
+  "jsonHash": "fnv1a64:e6aa5365c7b5bd8b",
+  "findings": []
+}

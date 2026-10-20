@@ -1,0 +1,9 @@
+{
+  "id": "PT-PATH-286-DELITO",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "PT-EXT-286-DELITO"
+  ],
+  "after": []
+}

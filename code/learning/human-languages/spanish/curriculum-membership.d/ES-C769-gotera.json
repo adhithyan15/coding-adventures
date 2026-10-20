@@ -1,0 +1,11 @@
+{
+  "id": "ES-C769-gotera",
+  "pathSegment": "ES-PATH-769-GOTERA",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ES-EXT-769-GOTERA",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "IT-C292-bottino",
+  "pathSegment": "IT-PATH-292-RAPINA",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "IT-EXT-292-RAPINA",
+      "order": 4
+    }
+  ]
+}

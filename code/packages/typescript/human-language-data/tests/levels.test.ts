@@ -265,7 +265,7 @@ describe("corpus level summary", () => {
       expect(readdirSync(join(root, "core", entry.name)), entry.name).toEqual([]);
     }
   });
-  it("shows twenty-two tracks have reached A2, and every track has now reached A1", () => {
+  it("shows seventeen tracks have reached A2, and every track has now reached A1", () => {
     const { lessons, curricula: paths, spine } = REAL_EVERYTHING;
     const summary = summarizeLevels(lessons, paths, spine);
     // `reach` is the highest level a track has ANY lesson at, so this names the tracks
@@ -275,6 +275,13 @@ describe("corpus level summary", () => {
     // writing chapter, so the list is 21 and the ceiling for everyone else is A2.
     // Japanese joins with chapters 138-142, one chapter per A2 spine node, so
     // the list is 22: every track but Spanish reaches A2 and stops there.
+    // Italian leaves it with chapters 263-272, which realize the five B1 spine
+    // nodes, so the list is 21. `reach` only touches B1; attained stays A2.
+    // Portuguese leaves it with chapters 259-268, which realize the five B1
+    // spine nodes, so the list is 20. French leaves it with chapters 258-267,
+    // the same five nodes, so the list is 19. German leaves it with chapters
+    // 252-261, the same five nodes, so the list is 18. Latin leaves it with
+    // chapters 281-290, the same five nodes, so the list is 17.
     expect(
       summary.tracks.filter((track) => track.reach === "A2").map((track) => track.language),
     ).toEqual([
@@ -285,23 +292,18 @@ describe("corpus level summary", () => {
       // SPINE-NEGATE-AND-ASK, which are the two A2 grammar nodes this track had
       // never reached. Both are one character each.
       "chinese",
-      "french",
-      "german",
       "gujarati",
       "hindi",
-      "italian",
       // Japanese joins with chapters 138-142: what I do, negation and
       // questions, the past, the future and practical texts, the five A2 spine
       // nodes. `reach` only TOUCHES A2; attained stays A1 until the A2
       // vocabulary and verb counts are met.
       "japanese",
       "kannada",
-      "latin",
       "malayalam",
       "marathi",
       "marwadi",
       "persian",
-      "portuguese",
       "punjabi",
       "russian",
       "sanskrit",
@@ -309,12 +311,16 @@ describe("corpus level summary", () => {
       "telugu",
       "urdu",
     ]);
-    // Exactly one track now exceeds A2, and naming it is stronger than a blanket
-    // "nothing does" -- it says which rung was climbed and by whom.
+    // Six tracks now exceed A2, and naming them is stronger than a blanket
+    // "nothing does" -- it says which rung was climbed and by whom. Italian joins
+    // Spanish with its B1 core, chapters 263-272, Portuguese with its B1
+    // core, chapters 259-268, French with its B1 core, chapters 258-267,
+    // German with its B1 core, chapters 252-261, and Latin with its B1 core,
+    // chapters 281-290.
     expect(
       summary.tracks.filter((track) => track.reach !== null && levelRank(track.reach) > levelRank("A2"))
         .map((track) => track.language),
-    ).toEqual(["spanish"]);
+    ).toEqual(["french", "german", "italian", "latin", "portuguese", "spanish"]);
     expect(
       summary.tracks.filter((track) => track.reach === "pre-A1").map((track) => track.language),
       // HL-C230: chinese leaves this list. Its numerals chapter realizes

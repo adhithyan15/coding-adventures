@@ -1,0 +1,19 @@
+{
+  "chapter": 445,
+  "title": "In piazza",
+  "label": "ch:it-in-piazza",
+  "canDo": "I can describe the buildings round a square: the bell tower, the main church, the cathedral, the arcades and the loggia.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "IT-C445-loggia",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 445: I can describe the buildings round a square: the bell tower, the main church, the cathedral, the arcades and the loggia.",
+    "assesses": [
+      "IT-LEX-C445-PIAZZA-03",
+      "IT-LEX-C445-PIAZZA-04",
+      "IT-LEX-C445-PIAZZA-05"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C656-aduana",
+    "language": "spanish",
+    "chapter": 656,
+    "sequence": 22630,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:84b8a16001512351"
+  },
+  "findings": []
+}

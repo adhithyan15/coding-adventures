@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C536-al-mismo-tiempo",
+    "language": "spanish",
+    "chapter": 536,
+    "sequence": 16420,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b124c62c9b41ca08"
+  },
+  "findings": []
+}

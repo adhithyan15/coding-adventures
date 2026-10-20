@@ -1,0 +1,19 @@
+{
+  "chapter": 516,
+  "title": "Su versión",
+  "label": "ch:es-su-version",
+  "canDo": "I can say that someone assured, corrected, revealed or publicly denied something, and give their version.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "ES-C516-version",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 516: I can say that someone assured, corrected, revealed or publicly denied something, and give their version.",
+    "assesses": [
+      "ES-LEX-C516-VERSION-03",
+      "ES-LEX-C516-VERSION-04",
+      "ES-LEX-C516-VERSION-05"
+    ]
+  }
+}

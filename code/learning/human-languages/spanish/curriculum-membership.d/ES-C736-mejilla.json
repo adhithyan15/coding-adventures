@@ -1,0 +1,11 @@
+{
+  "id": "ES-C736-mejilla",
+  "pathSegment": "ES-PATH-736-CARA",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ES-EXT-736-CARA",
+      "order": 1
+    }
+  ]
+}

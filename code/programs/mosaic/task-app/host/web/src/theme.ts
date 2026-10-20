@@ -13,6 +13,8 @@
 // Only (1) is stored, and only when the user actually picks — so someone who never
 // touches the toggle keeps following their OS, including when it flips at sunset.
 
+import { MSL_TOKENS } from "./theme-tokens.generated";
+
 /** The themes the build emits. Keep in step with `build-web`'s loop. */
 export type Theme = "light" | "dark";
 
@@ -97,19 +99,15 @@ export function watchSystemTheme(onChange: (theme: Theme) => void): () => void {
  * choice that disagrees with the OS leaves the wrong colour showing in the overscroll
  * area and behind the app.
  *
- * These two values are the `app-shell` background from TaskApp.{light,dark}.msl. They
- * are duplicated here because the emitted component inlines its styles and exposes no
- * token to read back — if the .msl ground changes, change it here too.
+ * The ground is the `app-shell` background from TaskApp.{light,dark}.msl. The emitted
+ * component inlines its styles and exposes no token to read back, so every stylesheet
+ * colour the host needs comes from `MSL_TOKENS` in `theme-tokens.generated.ts`. A
+ * cargo test in the task-app package writes that module from the stylesheets and fails
+ * while it is stale, so nothing in this file spells a stylesheet colour by hand.
  */
-const GROUND: Record<Theme, string> = {
-  light: "#f0ebe3",
-  dark: "#1a1714",
-};
-
-/** Paint the page ground to match the resolved theme. */
 export function applyThemeGround(theme: Theme): void {
   const root = globalThis.document?.documentElement;
-  if (root) root.style.background = GROUND[theme];
+  if (root) root.style.background = MSL_TOKENS[theme].ground;
 }
 
 /**
@@ -124,11 +122,9 @@ export function applyThemeGround(theme: Theme): void {
  *
  * That makes this the one deliberate exception to "never style the app outside
  * mosstyle" (see `index.html`'s comment, which makes the same point about CSS).
- * The exception is kept as small as possible: four values, taken verbatim from
- * `app-shell` and `storage-warning` in TaskApp.{light,dark}.msl, so the startup
- * states are visually continuous with the app that replaces them. Same
- * duplication caveat as `GROUND` above — if those parts change in the .msl,
- * change them here too.
+ * The exception is kept as small as possible: four values, read from `app-shell`
+ * and `storage-warning` in TaskApp.{light,dark}.msl through the generated tokens,
+ * so the startup states are visually continuous with the app that replaces them.
  */
 export interface StartupChrome {
   ground: string;
@@ -137,52 +133,51 @@ export interface StartupChrome {
   fontFamily: string;
 }
 
-const SHELL_FONT =
-  "-apple-system, Segoe UI, system-ui, Helvetica Neue, Arial, sans-serif";
-
-const STARTUP: Record<Theme, StartupChrome> = {
-  light: { ground: GROUND.light, text: "#2b2723", alert: "#b53f2f", fontFamily: SHELL_FONT },
-  dark: { ground: GROUND.dark, text: "#f1ebe1", alert: "#e26a52", fontFamily: SHELL_FONT },
-};
-
 /** The startup chrome palette for a resolved theme. */
 export function startupChrome(theme: Theme): StartupChrome {
-  return STARTUP[theme];
+  const t = MSL_TOKENS[theme];
+  return { ground: t.ground, text: t.ink, alert: t.alert, fontFamily: t.fontFamily };
 }
 
 /**
- * The progress ring's fill/track colours (task-app-icon-assets-v1.md). Same
- * duplication reasoning as `GROUND` above — `ring-fill`'s background is the one
- * UI36-bound property in the whole component, so the host computes the actual
- * `conic-gradient(...)` string, and needs the right two colours per theme to do it.
+ * The ring's `background` value for a percent-complete, 0..100, in the given theme.
+ *
+ * The progress ring (task-app-icon-assets-v1.md) fills with the honey accent
+ * (`brand-mark`'s background) over the hairline track (`rail`'s border). `ring-fill`'s
+ * background is a UI36-bound property, so the host computes the `conic-gradient(...)`
+ * string itself and takes both colours from the generated tokens.
  */
-const RING_FILL: Record<Theme, string> = {
-  light: "#e0942a",
-  dark: "#eaa63f",
-};
-const RING_TRACK: Record<Theme, string> = {
-  light: "#e6ded3",
-  dark: "#352e25",
-};
-
-/** The ring's `background` value for a percent-complete, 0..100, in the given theme. */
 export function ringGradient(theme: Theme, percent: number): string {
+  const { accent, hairline } = MSL_TOKENS[theme];
   const deg = (Math.max(0, Math.min(100, Math.round(percent))) / 100) * 360;
-  return `conic-gradient(${RING_FILL[theme]} ${deg}deg, ${RING_TRACK[theme]} ${deg}deg)`;
+  return `conic-gradient(${accent} ${deg}deg, ${hairline} ${deg}deg)`;
 }
 
 /**
- * Board's column accent bars (Board design-fidelity item, BACKLOG.md). Same
- * duplication reasoning as `RING_FILL`/`RING_TRACK` above — `col-bar`'s background
- * is a UI36-bound property (it varies per `For`-loop row, which is knowable from the
- * status id alone but not statically by the stylesheet), and `getProps()` builds
- * `board-columns` without knowing the active theme, so `Root` resolves the real hex
- * per row. Reuses established semantic tokens (`GROUND`/pill/theme-toggle) rather
- * than inventing four new colours — `review` is the one genuinely new addition.
+ * Board's column accent bars (Board design-fidelity item, BACKLOG.md). Like the
+ * ring, `col-bar`'s background is a UI36-bound property (it varies per `For`-loop
+ * row, which is knowable from the status id alone but not statically by the
+ * stylesheet), and `getProps()` builds `board-columns` without knowing the active
+ * theme, so `Root` resolves the real hex per row.
+ *
+ * Three columns reuse established stylesheet colours through the generated tokens:
+ * `next` is `group-head`'s muted ink, `doing` the honey accent, `done` `pill-ok`'s
+ * on-track sage. `review` is the one colour the stylesheet has no part for, so it is
+ * authored here, once: it is the host's own value, not a copy of anything.
  */
+const REVIEW_ACCENT: Record<Theme, string> = {
+  light: "#5b84ad",
+  dark: "#7fa8d1",
+};
+
+function boardAccents(theme: Theme): Record<string, string> {
+  const t = MSL_TOKENS[theme];
+  return { next: t.muted, doing: t.accent, review: REVIEW_ACCENT[theme], done: t.ok };
+}
+
 const BOARD_ACCENT: Record<Theme, Record<string, string>> = {
-  light: { next: "#9b9289", doing: "#e0942a", review: "#5b84ad", done: "#4f8e6a" },
-  dark: { next: "#867c70", doing: "#eaa63f", review: "#7fa8d1", done: "#6fb489" },
+  light: boardAccents("light"),
+  dark: boardAccents("dark"),
 };
 
 /** The accent-bar `background` for a status id, in the given theme. */

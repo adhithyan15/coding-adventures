@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C439-kaserne",
+    "language": "german",
+    "chapter": 439,
+    "sequence": 23640,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3fc7d49e72a26ea2"
+  },
+  "findings": []
+}

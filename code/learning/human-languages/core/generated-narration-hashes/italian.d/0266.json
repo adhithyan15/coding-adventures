@@ -1,0 +1,17 @@
+{
+  "language": "italian",
+  "chapter": 266,
+  "sourceHash": "fnv1a64:8aeaee598ea76b43",
+  "lessonIds": [
+    "IT-C266-dovrei",
+    "IT-C266-spiegare",
+    "IT-C266-ripasso-spiegazione"
+  ],
+  "voiceLessons": 3,
+  "drivablePrefix": 3,
+  "text": "italian/narration/ch266.txt",
+  "json": "italian/narration/ch266.json",
+  "textHash": "fnv1a64:ad798acf1686b2f8",
+  "jsonHash": "fnv1a64:59291b58f9637189",
+  "findings": []
+}

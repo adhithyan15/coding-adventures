@@ -1,0 +1,11 @@
+{
+  "id": "ES-C741-insomnio",
+  "pathSegment": "ES-PATH-741-CANSANCIO",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ES-EXT-741-CANSANCIO",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 699,
+  "sourceHash": "fnv1a64:658592fc6d6f86e2",
+  "lessonIds": [
+    "ES-C699-rayo",
+    "ES-C699-relampaguear",
+    "ES-C699-granizo",
+    "ES-C699-granizar",
+    "ES-C699-tronar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch699.txt",
+  "json": "spanish/narration/ch699.json",
+  "textHash": "fnv1a64:7e85201e53754c1a",
+  "jsonHash": "fnv1a64:32e13abc4ace67a7",
+  "findings": []
+}

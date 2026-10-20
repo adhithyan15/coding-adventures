@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C508-siegen",
+    "language": "german",
+    "chapter": 508,
+    "sequence": 27150,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:45ccac585c5d6b10"
+  },
+  "findings": []
+}

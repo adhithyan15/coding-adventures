@@ -1,0 +1,19 @@
+{
+  "chapter": 418,
+  "title": "Il biglietto",
+  "label": "ch:it-il-biglietto",
+  "canDo": "I can buy and use tickets: the ticket office, a season ticket, stamping it, the inspector and the supplement.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "IT-C418-supplemento",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 418: I can buy and use tickets: the ticket office, a season ticket, stamping it, the inspector and the supplement.",
+    "assesses": [
+      "IT-LEX-C418-BIGLIETTERIA-03",
+      "IT-LEX-C418-BIGLIETTERIA-04",
+      "IT-LEX-C418-BIGLIETTERIA-05"
+    ]
+  }
+}

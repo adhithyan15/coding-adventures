@@ -1,0 +1,11 @@
+{
+  "id": "PT-C402-travao",
+  "pathSegment": "PT-PATH-402-VOLANTE",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "PT-EXT-402-VOLANTE",
+      "order": 0
+    }
+  ]
+}

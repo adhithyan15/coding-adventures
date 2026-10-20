@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 472,
+  "sourceHash": "fnv1a64:ff35ad9f3abcefd8",
+  "lessonIds": [
+    "PT-C472-esperto",
+    "PT-C472-astuto",
+    "PT-C472-ingenuo",
+    "PT-C472-desconfiar",
+    "PT-C472-desconfiado"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch472.txt",
+  "json": "portuguese/narration/ch472.json",
+  "textHash": "fnv1a64:d483a5880f570f4a",
+  "jsonHash": "fnv1a64:e4c97efe67f6b58f",
+  "findings": []
+}

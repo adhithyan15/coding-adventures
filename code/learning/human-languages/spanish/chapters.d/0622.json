@@ -1,0 +1,19 @@
+{
+  "chapter": 622,
+  "title": "Las reglas",
+  "label": "ch:es-las-reglas",
+  "canDo": "I can read the rules of a place and say what is obligatory.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "ES-C622-obligacion",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 622: I can read the rules of a place and say what is obligatory.",
+    "assesses": [
+      "ES-LEX-C622-REGLA-03",
+      "ES-LEX-C622-REGLA-04",
+      "ES-LEX-C622-REGLA-05"
+    ]
+  }
+}

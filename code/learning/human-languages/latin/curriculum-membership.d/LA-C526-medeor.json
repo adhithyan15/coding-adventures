@@ -1,0 +1,11 @@
+{
+  "id": "LA-C526-medeor",
+  "pathSegment": "LA-PATH-526-SANO",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "LA-EXT-526-SANO",
+      "order": 1
+    }
+  ]
+}

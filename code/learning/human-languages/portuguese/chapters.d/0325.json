@@ -1,0 +1,19 @@
+{
+  "chapter": 325,
+  "title": "Heróis e vilões",
+  "label": "ch:pt-herois-e-viloes",
+  "canDo": "I can talk about the characters of a story: the protagonist, the hero, the villain and the ending.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "PT-C325-desfecho",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 325: I can talk about the characters of a story: the protagonist, the hero, the villain and the ending.",
+    "assesses": [
+      "PT-LEX-C325-HEROI-03",
+      "PT-LEX-C325-HEROI-04",
+      "PT-LEX-C325-HEROI-05"
+    ]
+  }
+}

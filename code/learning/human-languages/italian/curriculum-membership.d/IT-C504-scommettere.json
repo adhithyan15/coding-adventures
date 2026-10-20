@@ -1,0 +1,11 @@
+{
+  "id": "IT-C504-scommettere",
+  "pathSegment": "IT-PATH-504-CARTE",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "IT-EXT-504-CARTE",
+      "order": 2
+    }
+  ]
+}

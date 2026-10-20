@@ -1,0 +1,11 @@
+{
+  "id": "PT-C436-rotunda",
+  "pathSegment": "PT-PATH-436-INDICACOES",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PT-EXT-436-INDICACOES",
+      "order": 1
+    }
+  ]
+}

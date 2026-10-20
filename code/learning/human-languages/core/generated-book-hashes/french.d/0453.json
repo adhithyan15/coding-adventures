@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 453,
+  "sourceHash": "fnv1a64:32b88a46f12789d5",
+  "lessonIds": [
+    "FR-C453-emballage",
+    "FR-C453-emballer",
+    "FR-C453-livreur",
+    "FR-C453-carton",
+    "FR-C453-recommande"
+  ],
+  "tex": "french/book/chapters/ch453-emballer-et-envoyer.tex"
+}

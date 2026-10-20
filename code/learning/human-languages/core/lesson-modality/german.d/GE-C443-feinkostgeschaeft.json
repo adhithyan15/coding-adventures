@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C443-feinkostgeschaeft",
+    "language": "german",
+    "chapter": 443,
+    "sequence": 23800,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ce9040c5b2e2966b"
+  },
+  "findings": []
+}

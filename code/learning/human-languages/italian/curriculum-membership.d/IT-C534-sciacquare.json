@@ -1,0 +1,11 @@
+{
+  "id": "IT-C534-sciacquare",
+  "pathSegment": "IT-PATH-534-PIATTI",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "IT-EXT-534-PIATTI",
+      "order": 1
+    }
+  ]
+}

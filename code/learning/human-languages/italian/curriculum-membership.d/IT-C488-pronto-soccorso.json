@@ -1,0 +1,11 @@
+{
+  "id": "IT-C488-pronto-soccorso",
+  "pathSegment": "IT-PATH-488-OSPEDALE",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "IT-EXT-488-OSPEDALE",
+      "order": 0
+    }
+  ]
+}

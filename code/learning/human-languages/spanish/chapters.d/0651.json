@@ -1,0 +1,19 @@
+{
+  "chapter": 651,
+  "title": "En el tren",
+  "label": "ch:es-en-el-tren",
+  "canDo": "I can travel by train: find my carriage, sleep in a berth, buy a ticket at the ticket office and get off at my stop.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "ES-C651-apearse",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 651: I can travel by train: find my carriage, sleep in a berth, buy a ticket at the ticket office and get off at my stop.",
+    "assesses": [
+      "ES-LEX-C651-TREN-03",
+      "ES-LEX-C651-TREN-04",
+      "ES-LEX-C651-TREN-05"
+    ]
+  }
+}

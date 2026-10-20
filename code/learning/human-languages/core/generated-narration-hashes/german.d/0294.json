@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 294,
+  "sourceHash": "fnv1a64:6a2996102d1f0324",
+  "lessonIds": [
+    "GE-C294-katastrophe",
+    "GE-C294-erdbeben",
+    "GE-C294-ueberschwemmung",
+    "GE-C294-hochwasser",
+    "GE-C294-einstuerzen"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch294.txt",
+  "json": "german/narration/ch294.json",
+  "textHash": "fnv1a64:111664e49eecc9e9",
+  "jsonHash": "fnv1a64:18bf1e2b34bef1df",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 692,
+  "title": "Sembrar y regar",
+  "label": "ch:es-sembrar-y-regar",
+  "canDo": "I can describe farm work: sowing, watering, harvesting, the well and the first flowers.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "ES-C692-florecer",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 692: I can describe farm work: sowing, watering, harvesting, the well and the first flowers.",
+    "assesses": [
+      "ES-LEX-C692-SEMBRAR-03",
+      "ES-LEX-C692-SEMBRAR-04",
+      "ES-LEX-C692-SEMBRAR-05"
+    ]
+  }
+}

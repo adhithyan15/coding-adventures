@@ -1,0 +1,9 @@
+{
+  "id": "FR-PATH-435-PANNEAUX",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "FR-EXT-435-PANNEAUX"
+  ],
+  "after": []
+}

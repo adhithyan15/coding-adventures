@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 457,
+  "sourceHash": "fnv1a64:accb2b1eae5970ce",
+  "lessonIds": [
+    "FR-C457-clairiere",
+    "FR-C457-buisson",
+    "FR-C457-fougere",
+    "FR-C457-mousse",
+    "FR-C457-ecorce"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch457.txt",
+  "json": "french/narration/ch457.json",
+  "textHash": "fnv1a64:0ad93c8dd545fe4b",
+  "jsonHash": "fnv1a64:1146afde513e63f0",
+  "findings": []
+}

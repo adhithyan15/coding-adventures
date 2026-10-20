@@ -1,0 +1,19 @@
+{
+  "chapter": 387,
+  "title": "Chi può partecipare",
+  "label": "ch:it-chi-puo-partecipare",
+  "canDo": "I can say who can take part: the requirements, being eligible, admission, being left out and the conditions.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "IT-C387-condizione",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 387: I can say who can take part: the requirements, being eligible, admission, being left out and the conditions.",
+    "assesses": [
+      "IT-LEX-C387-REQUISITO-03",
+      "IT-LEX-C387-REQUISITO-04",
+      "IT-LEX-C387-REQUISITO-05"
+    ]
+  }
+}

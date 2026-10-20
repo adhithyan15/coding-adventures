@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 527,
+  "sourceHash": "fnv1a64:79e71cd5ab940468",
+  "lessonIds": [
+    "GE-C527-trockner",
+    "GE-C527-waescheleine",
+    "GE-C527-waescheklammer",
+    "GE-C527-buegeln",
+    "GE-C527-falten"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch527.txt",
+  "json": "german/narration/ch527.json",
+  "textHash": "fnv1a64:123e0c43337d1a2e",
+  "jsonHash": "fnv1a64:8db1016afd91f477",
+  "findings": []
+}

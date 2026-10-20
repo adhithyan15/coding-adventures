@@ -1,0 +1,11 @@
+{
+  "id": "GE-C403-abschleppwagen",
+  "pathSegment": "GE-PATH-403-STARTHILFE",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-403-STARTHILFE",
+      "order": 3
+    }
+  ]
+}

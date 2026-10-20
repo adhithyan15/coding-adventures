@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PT-C403-vidro",
+    "language": "portuguese",
+    "chapter": 403,
+    "sequence": 22700,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b61e441cc82d2232"
+  },
+  "findings": []
+}

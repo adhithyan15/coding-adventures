@@ -1,0 +1,14 @@
+{
+  "language": "german",
+  "chapter": 277,
+  "sourceHash": "fnv1a64:d1e6a1945711f38a",
+  "lessonIds": [
+    "GE-C277-streik",
+    "GE-C277-streiken",
+    "GE-C277-protestieren",
+    "GE-C277-demonstrieren",
+    "GE-C277-krise",
+    "GE-R277-review-270-277"
+  ],
+  "tex": "german/book/chapters/ch277-der-streik.tex"
+}

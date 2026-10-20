@@ -1,0 +1,19 @@
+{
+  "chapter": 516,
+  "title": "Pinceaux et couleurs",
+  "label": "ch:fr-pinceaux-et-couleurs",
+  "canDo": "I can talk about painting and drawing.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "FR-C516-esquisser",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 516: I can talk about painting and drawing.",
+    "assesses": [
+      "FR-LEX-C516-PEINTURE-03",
+      "FR-LEX-C516-PEINTURE-04",
+      "FR-LEX-C516-PEINTURE-05"
+    ]
+  }
+}

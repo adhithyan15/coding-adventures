@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C424-bivium",
+    "language": "latin",
+    "chapter": 424,
+    "sequence": 22660,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2b1c4d3cfbdbfca7"
+  },
+  "findings": []
+}

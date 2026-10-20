@@ -1,0 +1,11 @@
+{
+  "id": "GE-C420-erstattung",
+  "pathSegment": "GE-PATH-420-STORNO",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-420-STORNO",
+      "order": 4
+    }
+  ]
+}

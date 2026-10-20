@@ -1,0 +1,858 @@
+{
+  "version": 1,
+  "language": "latin",
+  "chapter": 346,
+  "title": "Deī et deae",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:8b4ca74b58a48744",
+  "lessons": [
+    {
+      "id": "LA-C346-deus",
+      "sequence": 18610,
+      "title": "deus, deī — a god",
+      "headword": "deus, deī",
+      "romanization": "deus, deī",
+      "gloss": "a god",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1fd320c7c7b1a5bb",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for the common people, then the Latin for a dictator."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: deus, deī",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "deus, deī — \"a god\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Poētae dē deīs multa canunt. Poets sing many things about the gods."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine, 2nd declension; plural deī or dī. Its feminine dea is taught."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "deus is inherited from Old Latin deivos, Proto-Indo-European deywós, \"god\" (EtymDB). English deity comes from its family."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "deus, deī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *deus, deī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "deus, deī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *deus, deī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with deus, deī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *deus, deī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for the common people, then the Latin for a dictator, then say deus, deī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for the common people, then the Latin for a dictator, then say *deus, deī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does deus, deī mean? (\"A god\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C346-divus",
+      "sequence": 18620,
+      "title": "dīvus, dīvī — a deified emperor; a god",
+      "headword": "dīvus, dīvī",
+      "romanization": "dīvus, dīvī",
+      "gloss": "a deified emperor; a god",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:096d4340d4eab6c7",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for a dictator, then the Latin for a god."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: dīvus, dīvī",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "dīvus, dīvī — \"a deified emperor; a god\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Post mortem imperātor dīvus factus est. After his death the emperor was declared a god."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine, also an adjective, dīvus, -a, -um, 'divine'. Coins call dead emperors dīvus. English divine is of its family."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "dīvus is usually traced to the same Old Latin deivos, \"god\", as deus; Lewis & Short compare Greek dios, \"divine\". English divine comes from its family."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dīvus, dīvī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dīvus, dīvī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dīvus, dīvī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dīvus, dīvī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with dīvus, dīvī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *dīvus, dīvī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for a dictator, then the Latin for a god, then say dīvus, dīvī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for a dictator, then the Latin for a god, then say *dīvus, dīvī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does dīvus, dīvī mean? (\"A deified emperor; a god\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C346-numen",
+      "sequence": 18630,
+      "title": "nūmen, nūminis — divine power, divine will",
+      "headword": "nūmen, nūminis",
+      "romanization": "nūmen, nūminis",
+      "gloss": "divine power, divine will",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9cbb714facafbb1c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for a god, then the Latin for a deified emperor."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: nūmen, nūminis",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "nūmen, nūminis — \"divine power, divine will\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Nūmen deae hunc lūcum servābat. The power of the goddess protected this grove."
+            },
+            {
+              "kind": "speech",
+              "text": "Neuter, 3rd declension: the nod of a god, and so divine power. English numinous."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "nūmen is built, says Lewis & Short, on nuō, \"to nod\", seen in innuō: a nod, the nod of a god. English numinous comes from it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nūmen, nūminis",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nūmen, nūminis*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nūmen, nūminis, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nūmen, nūminis*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with nūmen, nūminis",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *nūmen, nūminis*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for a god, then the Latin for a deified emperor, then say nūmen, nūminis again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for a god, then the Latin for a deified emperor, then say *nūmen, nūminis* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does nūmen, nūminis mean? (\"Divine power, divine will\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C346-mortalis",
+      "sequence": 18640,
+      "title": "mortālis, mortāle — mortal",
+      "headword": "mortālis, mortāle",
+      "romanization": "mortālis, mortāle",
+      "gloss": "mortal",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1fd590c6f66ad150",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for a deified emperor, then the Latin for divine power."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: mortālis, mortāle",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "mortālis, mortāle — \"mortal\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Omnēs hominēs mortālēs sunt. All human beings are mortal."
+            },
+            {
+              "kind": "speech",
+              "text": "Two endings, from mors, 'death'. As a noun, mortālēs: human beings."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "mortālis is built on mors, \"death\" (EtymDB): subject to death. English mortal comes from it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mortālis, mortāle",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mortālis, mortāle*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mortālis, mortāle, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mortālis, mortāle*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with mortālis, mortāle",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *mortālis, mortāle*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for a deified emperor, then the Latin for divine power, then say mortālis, mortāle again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for a deified emperor, then the Latin for divine power, then say *mortālis, mortāle* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does mortālis, mortāle mean? (\"Mortal\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C346-immortalis",
+      "sequence": 18650,
+      "title": "immortālis, immortāle — immortal, undying",
+      "headword": "immortālis, immortāle",
+      "romanization": "immortālis, immortāle",
+      "gloss": "immortal, undying",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:37d67e8bd3d0231e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for divine power, then the Latin for mortal."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: immortālis, immortāle",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "immortālis, immortāle — \"immortal, undying\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Deī immortālēs numquam moriuntur. The immortal gods never die."
+            },
+            {
+              "kind": "speech",
+              "text": "Two endings: in- 'not' + mortālis. Dī immortālēs!: Good gods!"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "immortālis joins in-, \"not\", and mortālis, \"mortal\" (EtymDB). English immortal comes from it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "immortālis, immortāle",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *immortālis, immortāle*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "immortālis, immortāle, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *immortālis, immortāle*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with immortālis, immortāle",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *immortālis, immortāle*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for divine power, then the Latin for mortal, then say immortālis, immortāle again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for divine power, then the Latin for mortal, then say *immortālis, immortāle* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does immortālis, immortāle mean? (\"Immortal, undying\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-R346-review-339-346",
+      "sequence": 18660,
+      "title": "Words from chapters 339–346 — a review",
+      "headword": "(dialogue)",
+      "romanization": "(dialogue)",
+      "gloss": "a review of chapters 339-346",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:93d13c67b6eda241",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Latin for a battle and a battle line."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a battle, a battle line, an army on the march, a raid, to fight it out",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a battle, a battle line, an army on the march, a raid, to fight it out]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "weapons, a horseman, a foot soldier, a breastplate, a round shield",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: weapons, a horseman, a foot soldier, a breastplate, a round shield]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to besiege, a siege, to attack, to take by storm, a battering ram",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to besiege, a siege, to attack, to take by storm, a battering ram]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to put to flight, to overcome, to cut down, to lay waste, a defeat",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to put to flight, to overcome, to cut down, to lay waste, a defeat]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a prisoner, to give up, a surrender, a treaty, a triumph",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a prisoner, to give up, a surrender, a treaty, a triumph]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ancestors, annals, a founder, an origin, great age",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: ancestors, annals, a founder, an origin, great age]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a king, to reign, a tyrant, the common people, a dictator",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a king, to reign, a tyrant, the common people, a dictator]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a god, a deified emperor, divine power, mortal, immortal",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a god, a deified emperor, divine power, mortal, immortal]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A battle? (proelium, proeliī.) A battle line? (aciēs, aciēī.) An army on the march? (agmen, agminis.) A raid? (incursiō, incursiōnis.) To fight it out? (dīmicō, dīmicāre.) Weapons? (arma, armōrum.) A horseman? (eques, equitis.) A foot soldier? (pedes, peditis.) A breastplate? (lōrīca, lōrīcae.) A round shield? (clipeus, clipeī.) To besiege? (obsideō, obsidēre.) A siege? (obsidiō, obsidiōnis.) To attack? (oppugnō, oppugnāre.) To take by storm? (expugnō, expugnāre.) A battering ram? (ariēs, arietis.) To put to flight? (fugō, fugāre.) To overcome? (superō, superāre.) To cut down? (caedō, caedere.) To lay waste? (vāstō, vāstāre.) A defeat? (clādēs, clādis.) A prisoner? (captīvus, captīvī.) To give up? (dēdō, dēdere.) A surrender? (dēditiō, dēditiōnis.) A treaty? (foedus, foederis.) A triumph? (triumphus, triumphī.) Ancestors? (maiōrēs, maiōrum.) Annals? (annālēs, annālium.) A founder? (conditor, conditōris.) An origin? (orīgō, orīginis.) Great age? (vetustās, vetustātis.) A king? (rēx, rēgis.) To reign? (rēgnō, rēgnāre.) A tyrant? (tyrannus, tyrannī.) The common people? (plēbs, plēbis.) A dictator? (dictātor, dictātōris.) A god? (deus, deī.) A deified emperor? (dīvus, dīvī.) Divine power? (nūmen, nūminis.) Mortal? (mortālis, mortāle.) Immortal? (immortālis, immortāle.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

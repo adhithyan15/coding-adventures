@@ -1,0 +1,19 @@
+{
+  "chapter": 355,
+  "title": "Condīmenta",
+  "label": "ch:la-condimenta",
+  "canDo": "I can tell how a dish was seasoned: to season, a seasoning, to sprinkle, to pour in and to strain.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "LA-C355-colo",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 355: I can tell how a dish was seasoned: to season, a seasoning, to sprinkle, to pour in and to strain.",
+    "assesses": [
+      "LA-LEX-C355-CONDIO-03",
+      "LA-LEX-C355-CONDIO-04",
+      "LA-LEX-C355-CONDIO-05"
+    ]
+  }
+}

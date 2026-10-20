@@ -1,0 +1,19 @@
+{
+  "chapter": 402,
+  "title": "An der Tankstelle",
+  "label": "ch:ge-an-der-tankstelle",
+  "canDo": "I can fill up the car: filling up, filling the tank, petrol, the pump and the oil change.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "GE-C402-oelwechsel",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 402: I can fill up the car: filling up, filling the tank, petrol, the pump and the oil change.",
+    "assesses": [
+      "GE-LEX-C402-TANKEN-03",
+      "GE-LEX-C402-TANKEN-04",
+      "GE-LEX-C402-TANKEN-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 531,
+  "sourceHash": "fnv1a64:90aeb847d7bd8c26",
+  "lessonIds": [
+    "GE-C531-aufwaermen",
+    "GE-C531-mikrowelle",
+    "GE-C531-wasserkocher",
+    "GE-C531-abwaschen",
+    "GE-C531-abtrocknen"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch531.txt",
+  "json": "german/narration/ch531.json",
+  "textHash": "fnv1a64:055522a8773fe256",
+  "jsonHash": "fnv1a64:f81eed44ad48a522",
+  "findings": []
+}

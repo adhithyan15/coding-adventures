@@ -1,0 +1,11 @@
+{
+  "id": "FR-C475-envier",
+  "pathSegment": "FR-PATH-475-RANCUNE",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FR-EXT-475-RANCUNE",
+      "order": 1
+    }
+  ]
+}

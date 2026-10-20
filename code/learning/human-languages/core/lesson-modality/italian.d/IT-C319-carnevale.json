@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C319-carnevale",
+    "language": "italian",
+    "chapter": 319,
+    "sequence": 18450,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b6f45350c537a50d"
+  },
+  "findings": []
+}

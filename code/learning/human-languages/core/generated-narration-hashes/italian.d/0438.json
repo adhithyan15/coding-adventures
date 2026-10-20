@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 438,
+  "sourceHash": "fnv1a64:f174e6bcaaf79eb4",
+  "lessonIds": [
+    "IT-C438-reclamo",
+    "IT-C438-reclamare",
+    "IT-C438-lamentela",
+    "IT-C438-rimediare",
+    "IT-C438-risarcire"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch438.txt",
+  "json": "italian/narration/ch438.json",
+  "textHash": "fnv1a64:3117e261592fb909",
+  "jsonHash": "fnv1a64:c54ffb4dab9574dc",
+  "findings": []
+}

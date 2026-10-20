@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C652-extraviarse",
+    "language": "spanish",
+    "chapter": 652,
+    "sequence": 22420,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b8520027b9a47c93"
+  },
+  "findings": []
+}

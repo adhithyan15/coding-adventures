@@ -1,0 +1,9 @@
+{
+  "id": "IT-PATH-491-INNAMORATI",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "IT-EXT-491-INNAMORATI"
+  ],
+  "after": []
+}

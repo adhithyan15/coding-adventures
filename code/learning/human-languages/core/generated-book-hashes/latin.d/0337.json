@@ -1,0 +1,13 @@
+{
+  "language": "latin",
+  "chapter": 337,
+  "sourceHash": "fnv1a64:7fdc6af58bfa5d01",
+  "lessonIds": [
+    "LA-C337-palma",
+    "LA-C337-praemium",
+    "LA-C337-certo",
+    "LA-C337-certamen",
+    "LA-C337-plausus"
+  ],
+  "tex": "latin/book/chapters/ch337-palma-et-praemium.tex"
+}

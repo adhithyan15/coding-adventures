@@ -1,0 +1,9 @@
+{
+  "id": "ES-PATH-768-COCINAR",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "ES-EXT-768-COCINAR"
+  ],
+  "after": []
+}

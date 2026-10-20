@@ -1,0 +1,11 @@
+{
+  "id": "PT-C349-devido-a",
+  "pathSegment": "PT-PATH-349-VISTOQUE",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PT-EXT-349-VISTOQUE",
+      "order": 4
+    }
+  ]
+}

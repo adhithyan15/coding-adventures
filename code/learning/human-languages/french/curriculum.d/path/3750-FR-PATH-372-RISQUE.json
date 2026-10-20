@@ -1,0 +1,9 @@
+{
+  "id": "FR-PATH-372-RISQUE",
+  "spine_node": "SPINE-EXPRESS-CONDITION",
+  "before": [],
+  "inline": [
+    "FR-EXT-372-RISQUE"
+  ],
+  "after": []
+}

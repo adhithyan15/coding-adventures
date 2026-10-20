@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C404-virus",
+    "language": "italian",
+    "chapter": 404,
+    "sequence": 22950,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:71cacfd47197e899"
+  },
+  "findings": []
+}

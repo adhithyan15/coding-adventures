@@ -1,0 +1,19 @@
+{
+  "chapter": 538,
+  "title": "Antes y después",
+  "label": "ch:es-antes-y-despues",
+  "canDo": "I can say that something happened earlier, afterwards, beforehand, recently or lately.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "ES-C538-ultimamente",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 538: I can say that something happened earlier, afterwards, beforehand, recently or lately.",
+    "assesses": [
+      "ES-LEX-C538-ANTES-03",
+      "ES-LEX-C538-ANTES-04",
+      "ES-LEX-C538-ANTES-05"
+    ]
+  }
+}

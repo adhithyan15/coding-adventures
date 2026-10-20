@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C308-applaudieren",
+    "language": "german",
+    "chapter": 308,
+    "sequence": 16890,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6f7145fcb88be209"
+  },
+  "findings": []
+}

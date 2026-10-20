@@ -1,0 +1,11 @@
+{
+  "id": "IT-R320-ripasso-313-320",
+  "pathSegment": "IT-PATH-320-FIERA",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "IT-EXT-320-FIERA",
+      "order": 5
+    }
+  ]
+}

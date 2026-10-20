@@ -1,0 +1,15 @@
+{
+  "language": "portuguese",
+  "chapter": 400,
+  "sourceHash": "fnv1a64:56297a8daddb905c",
+  "lessonIds": [
+    "PT-C400-publicar",
+    "PT-C400-comentar",
+    "PT-C400-seguidor",
+    "PT-C400-reencaminhar",
+    "PT-C400-bloquear",
+    "PT-R400-revisao-399-400",
+    "PT-R400-revisao-final-400"
+  ],
+  "tex": "portuguese/book/chapters/ch400-nas-redes-sociais.tex"
+}

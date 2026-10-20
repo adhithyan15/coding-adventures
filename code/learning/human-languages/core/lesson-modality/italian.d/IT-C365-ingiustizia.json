@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C365-ingiustizia",
+    "language": "italian",
+    "chapter": 365,
+    "sequence": 20950,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9622a33ec04c2de0"
+  },
+  "findings": []
+}

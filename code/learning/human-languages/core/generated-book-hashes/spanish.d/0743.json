@@ -1,0 +1,14 @@
+{
+  "language": "spanish",
+  "chapter": 743,
+  "sourceHash": "fnv1a64:51ef77a72aeb6f1b",
+  "lessonIds": [
+    "ES-C743-terapeuta",
+    "ES-C743-terapia",
+    "ES-C743-psicologo",
+    "ES-C743-bienestar",
+    "ES-C743-autoestima",
+    "ES-R743-repaso-736-743"
+  ],
+  "tex": "spanish/book/chapters/ch743-salud-emocional.tex"
+}

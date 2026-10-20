@@ -1,0 +1,19 @@
+{
+  "chapter": 400,
+  "title": "Nas redes sociais",
+  "label": "ch:pt-nas-redes-sociais",
+  "canDo": "I can use social media: post and comment, see my followers, forward messages and block someone.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "PT-R400-revisao-final-400",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 400: I can use social media: post and comment, see my followers, forward messages and block someone.",
+    "assesses": [
+      "PT-LEX-C400-PUBLICAR-03",
+      "PT-LEX-C400-PUBLICAR-04",
+      "PT-LEX-C400-PUBLICAR-05"
+    ]
+  }
+}

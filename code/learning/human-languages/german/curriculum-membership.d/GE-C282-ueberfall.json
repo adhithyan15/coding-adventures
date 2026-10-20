@@ -1,0 +1,11 @@
+{
+  "id": "GE-C282-ueberfall",
+  "pathSegment": "GE-PATH-282-UEBERFALL",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GE-EXT-282-UEBERFALL",
+      "order": 1
+    }
+  ]
+}

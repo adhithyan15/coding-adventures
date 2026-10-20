@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 379,
+  "sourceHash": "fnv1a64:64c8cd7ec2129164",
+  "lessonIds": [
+    "PT-C379-chumbar",
+    "PT-C379-aprovar",
+    "PT-C379-avaliacao",
+    "PT-C379-media",
+    "PT-C379-licenciatura"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch379.txt",
+  "json": "portuguese/narration/ch379.json",
+  "textHash": "fnv1a64:3e94c8ec67409819",
+  "jsonHash": "fnv1a64:da8ead4d7741e9ee",
+  "findings": []
+}

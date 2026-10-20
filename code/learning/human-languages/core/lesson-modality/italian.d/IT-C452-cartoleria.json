@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C452-cartoleria",
+    "language": "italian",
+    "chapter": 452,
+    "sequence": 25540,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5a3101587f915732"
+  },
+  "findings": []
+}

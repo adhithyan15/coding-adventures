@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 434,
+  "sourceHash": "fnv1a64:640c63fe73d5508c",
+  "lessonIds": [
+    "PT-C434-reclamar",
+    "PT-C434-reclamacao",
+    "PT-C434-resmungar",
+    "PT-C434-lamentar",
+    "PT-C434-indemnizacao"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch434.txt",
+  "json": "portuguese/narration/ch434.json",
+  "textHash": "fnv1a64:08423d1cc5a6c5fc",
+  "jsonHash": "fnv1a64:1b60b31fe712ab5a",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 562,
+  "sourceHash": "fnv1a64:3f37adad8275f3b2",
+  "lessonIds": [
+    "ES-C562-volver-a",
+    "ES-C562-acabar-por",
+    "ES-C562-ponerse-a",
+    "ES-C562-echarse-a",
+    "ES-C562-alejarse"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch562.txt",
+  "json": "spanish/narration/ch562.json",
+  "textHash": "fnv1a64:6cf6ba09aef22478",
+  "jsonHash": "fnv1a64:20f1205c5819bae8",
+  "findings": []
+}

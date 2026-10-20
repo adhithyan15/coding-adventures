@@ -1,0 +1,9 @@
+{
+  "id": "GE-PATH-354-BESPRECHUNG",
+  "spine_node": "SPINE-GIVE-REASONS",
+  "before": [],
+  "inline": [
+    "GE-EXT-354-BESPRECHUNG"
+  ],
+  "after": []
+}

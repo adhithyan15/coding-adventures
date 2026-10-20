@@ -1,0 +1,9 @@
+{
+  "id": "IT-PATH-277-DURATA",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "IT-EXT-277-DURATA"
+  ],
+  "after": []
+}

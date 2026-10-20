@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C473-ammirare",
+    "language": "italian",
+    "chapter": 473,
+    "sequence": 26740,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c12e5796072d8a50"
+  },
+  "findings": []
+}

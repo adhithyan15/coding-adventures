@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 458,
+  "sourceHash": "fnv1a64:6740a9bc98a7516a",
+  "lessonIds": [
+    "LA-C458-angiportum",
+    "LA-C458-vicinia",
+    "LA-C458-latrina",
+    "LA-C458-cloaca",
+    "LA-C458-castellum"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch458.txt",
+  "json": "latin/narration/ch458.json",
+  "textHash": "fnv1a64:afce1b55da376ecf",
+  "jsonHash": "fnv1a64:964c8539cd1d2d60",
+  "findings": []
+}

@@ -1,0 +1,20 @@
+{
+  "language": "spanish",
+  "chapter": 607,
+  "sourceHash": "fnv1a64:fa72c14cd3762674",
+  "lessonIds": [
+    "ES-C607-medio-ambiente",
+    "ES-C607-consumo",
+    "ES-C607-consumir",
+    "ES-C607-recurso",
+    "ES-C607-medida",
+    "ES-R607-repaso-600-607"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "spanish/narration/ch607.txt",
+  "json": "spanish/narration/ch607.json",
+  "textHash": "fnv1a64:9482c1f5f31fedd9",
+  "jsonHash": "fnv1a64:436d40dc5c2d3aad",
+  "findings": []
+}

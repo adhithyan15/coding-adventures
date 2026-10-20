@@ -1,0 +1,11 @@
+{
+  "id": "PT-C401-no",
+  "pathSegment": "PT-PATH-401-AUTOESTRADA",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-401-AUTOESTRADA",
+      "order": 3
+    }
+  ]
+}

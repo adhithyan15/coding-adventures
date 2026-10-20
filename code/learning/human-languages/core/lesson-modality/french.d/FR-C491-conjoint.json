@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C491-conjoint",
+    "language": "french",
+    "chapter": 491,
+    "sequence": 26980,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0aa18863a3ee0a19"
+  },
+  "findings": []
+}

@@ -1,0 +1,9 @@
+{
+  "id": "IT-PATH-367-VOLONTARIO",
+  "spine_node": "SPINE-GIVE-REASONS",
+  "before": [],
+  "inline": [
+    "IT-EXT-367-VOLONTARIO"
+  ],
+  "after": []
+}

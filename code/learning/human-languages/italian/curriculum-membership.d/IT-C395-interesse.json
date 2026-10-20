@@ -1,0 +1,11 @@
+{
+  "id": "IT-C395-interesse",
+  "pathSegment": "IT-PATH-395-RISPARMIO",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "IT-EXT-395-RISPARMIO",
+      "order": 2
+    }
+  ]
+}

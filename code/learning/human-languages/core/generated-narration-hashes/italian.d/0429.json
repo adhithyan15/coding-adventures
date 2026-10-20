@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 429,
+  "sourceHash": "fnv1a64:40bbd7597e0fabd7",
+  "lessonIds": [
+    "IT-C429-ostello",
+    "IT-C429-agriturismo",
+    "IT-C429-locanda",
+    "IT-C429-pensione",
+    "IT-C429-campeggio"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch429.txt",
+  "json": "italian/narration/ch429.json",
+  "textHash": "fnv1a64:72f4b317d2e8a1b9",
+  "jsonHash": "fnv1a64:0a01e31aae329b30",
+  "findings": []
+}

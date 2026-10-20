@@ -1,0 +1,11 @@
+{
+  "id": "ES-C773-enlace",
+  "pathSegment": "ES-PATH-773-COBERTURA",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ES-EXT-773-COBERTURA",
+      "order": 3
+    }
+  ]
+}

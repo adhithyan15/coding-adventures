@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 411,
+  "sourceHash": "fnv1a64:43957b9ee1f31a85",
+  "lessonIds": [
+    "PT-C411-aluguer",
+    "PT-C411-condutor",
+    "PT-C411-matricula",
+    "PT-C411-quilometragem",
+    "PT-C411-franquia"
+  ],
+  "tex": "portuguese/book/chapters/ch411-um-carro-de-aluguer.tex"
+}

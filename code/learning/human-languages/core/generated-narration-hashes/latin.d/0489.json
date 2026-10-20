@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 489,
+  "sourceHash": "fnv1a64:24a0e8ee74f8ee6a",
+  "lessonIds": [
+    "LA-C489-laetitia",
+    "LA-C489-laetor",
+    "LA-C489-hilaritas",
+    "LA-C489-exsulto",
+    "LA-C489-iucunditas"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch489.txt",
+  "json": "latin/narration/ch489.json",
+  "textHash": "fnv1a64:a22cc3923dba68f8",
+  "jsonHash": "fnv1a64:8ede2e28be9edc59",
+  "findings": []
+}

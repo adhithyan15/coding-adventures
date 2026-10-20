@@ -1,0 +1,11 @@
+{
+  "id": "IT-C520-ruolo",
+  "pathSegment": "IT-PATH-520-RECITARE",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "IT-EXT-520-RECITARE",
+      "order": 2
+    }
+  ]
+}

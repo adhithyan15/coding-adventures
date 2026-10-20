@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 461,
+  "sourceHash": "fnv1a64:2328ec78c098320a",
+  "lessonIds": [
+    "PT-C461-lagarto",
+    "PT-C461-vibora",
+    "PT-C461-sapo",
+    "PT-C461-caracol",
+    "PT-C461-rastejar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch461.txt",
+  "json": "portuguese/narration/ch461.json",
+  "textHash": "fnv1a64:2df0fd1326c24b54",
+  "jsonHash": "fnv1a64:ac71688bec41876d",
+  "findings": []
+}

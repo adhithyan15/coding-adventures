@@ -1,0 +1,11 @@
+{
+  "id": "GE-C470-aufregung",
+  "pathSegment": "GE-PATH-470-GEDULD",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-470-GEDULD",
+      "order": 3
+    }
+  ]
+}

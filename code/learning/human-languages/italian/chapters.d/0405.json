@@ -1,0 +1,19 @@
+{
+  "chapter": 405,
+  "title": "In autostrada",
+  "label": "ch:it-in-autostrada",
+  "canDo": "I can talk about a motorway trip: the toll booth, the lanes, the ring road, the junction and overtaking.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "IT-C405-sorpassare",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 405: I can talk about a motorway trip: the toll booth, the lanes, the ring road, the junction and overtaking.",
+    "assesses": [
+      "IT-LEX-C405-AUTOSTRADA-03",
+      "IT-LEX-C405-AUTOSTRADA-04",
+      "IT-LEX-C405-AUTOSTRADA-05"
+    ]
+  }
+}

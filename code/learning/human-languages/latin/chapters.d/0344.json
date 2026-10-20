@@ -1,0 +1,19 @@
+{
+  "chapter": 344,
+  "title": "Maiōrēs nostrī",
+  "label": "ch:la-maiores-nostri",
+  "canDo": "I can talk about the past and its records: the ancestors, the annals, the founder, the origin and great age.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "LA-C344-vetustas",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 344: I can talk about the past and its records: the ancestors, the annals, the founder, the origin and great age.",
+    "assesses": [
+      "LA-LEX-C344-MAIORES-03",
+      "LA-LEX-C344-MAIORES-04",
+      "LA-LEX-C344-MAIORES-05"
+    ]
+  }
+}

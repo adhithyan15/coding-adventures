@@ -1,0 +1,19 @@
+{
+  "chapter": 349,
+  "title": "D'où ça vient",
+  "label": "ch:fr-d-ou-ca-vient",
+  "canDo": "I can say where something comes from, what it results from, what influences it and what it gives rise to.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "FR-R349-revision-342-349",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 349: I can say where something comes from, what it results from, what influences it and what it gives rise to.",
+    "assesses": [
+      "FR-LEX-C349-INFLUENCE-03",
+      "FR-LEX-C349-INFLUENCE-04",
+      "FR-LEX-C349-INFLUENCE-05"
+    ]
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "id": "ES-EXT-512-PASO",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say what happened: that something occurred, came about or took place, and call it an incident or an event.",
+  "prerequisites": []
+}

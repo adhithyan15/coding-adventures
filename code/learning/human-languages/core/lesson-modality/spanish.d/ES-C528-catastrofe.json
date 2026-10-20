@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C528-catastrofe",
+    "language": "spanish",
+    "chapter": 528,
+    "sequence": 16010,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2b6ddee94e1bb562"
+  },
+  "findings": []
+}

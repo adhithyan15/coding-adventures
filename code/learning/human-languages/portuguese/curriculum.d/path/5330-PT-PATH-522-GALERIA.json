@@ -1,0 +1,9 @@
+{
+  "id": "PT-PATH-522-GALERIA",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "PT-EXT-522-GALERIA"
+  ],
+  "after": []
+}

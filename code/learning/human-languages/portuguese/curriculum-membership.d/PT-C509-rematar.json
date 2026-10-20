@@ -1,0 +1,11 @@
+{
+  "id": "PT-C509-rematar",
+  "pathSegment": "PT-PATH-509-BALIZA",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-509-BALIZA",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,8 @@
+{
+  "id": "FR-EXT-441-MOBILIER",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can describe things in a street: the bench, the street lamp, the old lamp post, the kiosk and the cobblestones.",
+  "prerequisites": []
+}

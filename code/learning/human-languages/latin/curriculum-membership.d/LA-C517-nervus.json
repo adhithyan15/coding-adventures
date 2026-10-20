@@ -1,0 +1,11 @@
+{
+  "id": "LA-C517-nervus",
+  "pathSegment": "LA-PATH-517-VENA",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "LA-EXT-517-VENA",
+      "order": 1
+    }
+  ]
+}

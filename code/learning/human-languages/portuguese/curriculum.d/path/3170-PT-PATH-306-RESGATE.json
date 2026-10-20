@@ -1,0 +1,9 @@
+{
+  "id": "PT-PATH-306-RESGATE",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "PT-EXT-306-RESGATE"
+  ],
+  "after": []
+}

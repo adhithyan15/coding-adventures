@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PT-C431-esquentador",
+    "language": "portuguese",
+    "chapter": 431,
+    "sequence": 24150,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e90d633a8a1213ff"
+  },
+  "findings": []
+}

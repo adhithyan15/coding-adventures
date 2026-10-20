@@ -1,0 +1,11 @@
+{
+  "id": "JA-W145-four-lines",
+  "pathSegment": "JA-PATH-143-WRITING",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "JA-EXT-143-WRITING",
+      "order": 2
+    }
+  ]
+}

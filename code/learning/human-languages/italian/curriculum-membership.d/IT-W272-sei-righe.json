@@ -1,0 +1,11 @@
+{
+  "id": "IT-W272-sei-righe",
+  "pathSegment": "IT-PATH-272-CONDIZIONALE",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "IT-EXT-272-CONDIZIONALE",
+      "order": 3
+    }
+  ]
+}

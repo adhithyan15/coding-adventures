@@ -1,0 +1,19 @@
+{
+  "chapter": 296,
+  "title": "Algemas e celas",
+  "label": "ch:pt-algemas-e-celas",
+  "canDo": "I can describe an arrest and life in a cell: handcuffs, prisoners and cells.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "PT-C296-cela",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 296: I can describe an arrest and life in a cell: handcuffs, prisoners and cells.",
+    "assesses": [
+      "PT-LEX-C296-ALGEMAS-03",
+      "PT-LEX-C296-ALGEMAS-04",
+      "PT-LEX-C296-ALGEMAS-05"
+    ]
+  }
+}

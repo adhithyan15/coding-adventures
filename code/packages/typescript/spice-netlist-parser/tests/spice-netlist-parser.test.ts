@@ -90,6 +90,67 @@ C1 out 0 1u IC=0
     expect(runNetlist(deck)).toHaveLength(5);
   });
 
+  it("builds and runs engine-backed sensitivity and noise cards", () => {
+    const deck = `
+V1 in 0 DC 1 AC 1
+R1 in out 1k
+R2 out 0 1k
+.sens V(out)
+.noise V(out) V1
+.end
+`;
+    const parsed = parseNetlist(deck);
+
+    expect(parsed.analysisPlan().map((step) => [step.index, step.kind])).toEqual([
+      [0, "sens"],
+      [1, "noise"],
+    ]);
+    const results = parsed.runAnalysisPlan();
+    expect(results.map((result) => result.kind)).toEqual(["sens", "noise"]);
+    expect((results[0].result as { nominalVoltage: number }).nominalVoltage).toBeCloseTo(0.5, 9);
+    expect((results[0].result as { entries: readonly unknown[] }).entries).not.toHaveLength(0);
+    const noisePoints = (results[1].result as { points: readonly { frequencyHz: number }[] }).points;
+    expect(noisePoints).toHaveLength(50);
+    expect(noisePoints[0]?.frequencyHz).toBe(1);
+    expect(runNetlist(deck)).toHaveLength(2);
+  });
+
+  it("runs two-axis DC sweeps with the second source as the outer axis", () => {
+    const corpus = JSON.parse(readFileSync(
+      new URL("../../../../grammars/spice/nested-dc-sweep-v1-corpus.json", import.meta.url),
+      "utf8",
+    )) as { cases: readonly { deck: string; expected: {
+      primarySource: string;
+      secondarySource: string;
+      points: readonly (readonly [number, number])[];
+      finalOut: number;
+    } }[] };
+    const testCase = corpus.cases[0];
+    const parsed = parseNetlist(testCase.deck);
+
+    expect(parsed.dcCards()[0]).toEqual({
+      kind: "dc",
+      sourceName: testCase.expected.primarySource,
+      start: 0,
+      stop: 1,
+      step: 1,
+      secondarySourceName: testCase.expected.secondarySource,
+      secondaryStart: 0,
+      secondaryStop: 2,
+      secondaryStep: 2,
+    });
+    const results = parsed.runAnalysisPlan();
+    const points = results[0].result as readonly {
+      value: number;
+      secondaryValue?: number;
+      result: { voltage(node: string): number | undefined };
+    }[];
+    expect(points.map((point) => [point.value, point.secondaryValue])).toEqual(testCase.expected.points);
+    expect(points.at(-1)?.result.voltage("out")).toBeCloseTo(testCase.expected.finalOut, 9);
+    expect(parsed.selectOutputs(results)[0].rows.map((row) => [row.axisValue, row.secondaryAxisValue]))
+      .toEqual(testCase.expected.points);
+  });
+
   it("runs the shared Berkeley v1 core corpus", () => {
     const corpus = JSON.parse(readFileSync(
       new URL("../../../../grammars/spice/berkeley-v1-op-corpus.json", import.meta.url),
@@ -111,7 +172,9 @@ C1 out 0 1u IC=0
     expect(corpus.schemaVersion).toBe(1);
     expect(corpus.suite).toBe("berkeley-v1-core");
     expect(corpus.cases.map((testCase) => testCase.analysis)).toEqual([
-      "op", "op", "op", "op", "ac", "ac", "ac", "ac", "tran", "tran", "tran", "tran", "dc", "tf",
+      "op", "op", "op", "op", "op", "op", "op", "op", "op", "ac", "ac", "ac", "ac", "ac",
+      "ac", "ac", "ac", "tran", "tran", "tran", "tran", "tran", "tran", "tran", "dc", "dc", "dc", "dc", "dc",
+      "dc", "dc", "dc", "tf", "tf", "tf", "tf", "tf", "tf", "tf", "tf",
     ]);
 
     for (const testCase of corpus.cases) {
@@ -780,6 +843,22 @@ Rbot out 0 1k
 
     expect(card.temperatureIsExplicit).toBeUndefined();
     expect(parsed.noiseTemperatureKelvin(card)).toBeCloseTo(323.15, 12);
+  });
+
+  it("parses canonical .noise LIN, DEC, and OCT sweeps", () => {
+    const parsed = parseNetlist(`
+Vin in 0 DC 1
+Rtop in out 1k
+Rbot out 0 1k
+.noise V(out) Vin LIN 2 1k 2k
+.noise V(out) Vin DEC 1 1 1k
+.noise V(out) Vin OCT 1 1 8
+`);
+
+    const cards = parsed.noiseCards();
+    expect(cards[0]?.frequenciesHz).toEqual([1e3, 2e3]);
+    expect(cards[1]?.frequenciesHz).toEqual([1, 10, 100, 1e3]);
+    expect(cards[2]?.frequenciesHz).toEqual([1, 2, 4, 8]);
   });
 
   it("rejects .noise cards without a voltage output probe", () => {

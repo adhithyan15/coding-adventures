@@ -1,0 +1,11 @@
+{
+  "id": "IT-C370-riforma",
+  "pathSegment": "IT-PATH-370-MAGGIORANZA",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "IT-EXT-370-MAGGIORANZA",
+      "order": 3
+    }
+  ]
+}

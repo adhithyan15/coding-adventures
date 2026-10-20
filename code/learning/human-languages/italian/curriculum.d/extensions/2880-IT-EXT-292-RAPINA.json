@@ -1,0 +1,8 @@
+{
+  "id": "IT-EXT-292-RAPINA",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can report a robbery: robbing, the robbers, the safe and the loot.",
+  "prerequisites": []
+}

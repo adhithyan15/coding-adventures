@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 360,
+  "sourceHash": "fnv1a64:549fa6eaa266f183",
+  "lessonIds": [
+    "IT-C360-dirigente",
+    "IT-C360-reparto",
+    "IT-C360-mansione",
+    "IT-C360-proroga",
+    "IT-C360-consegna"
+  ],
+  "tex": "italian/book/chapters/ch360-in-ufficio.tex"
+}

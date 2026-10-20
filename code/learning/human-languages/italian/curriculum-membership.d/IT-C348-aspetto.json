@@ -1,0 +1,11 @@
+{
+  "id": "IT-C348-aspetto",
+  "pathSegment": "IT-PATH-348-VANTAGGIO",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "IT-EXT-348-VANTAGGIO",
+      "order": 2
+    }
+  ]
+}

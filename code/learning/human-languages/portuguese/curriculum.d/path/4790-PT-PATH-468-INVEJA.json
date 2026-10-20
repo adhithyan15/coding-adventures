@@ -1,0 +1,9 @@
+{
+  "id": "PT-PATH-468-INVEJA",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "PT-EXT-468-INVEJA"
+  ],
+  "after": []
+}

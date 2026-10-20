@@ -1,0 +1,13 @@
+{
+  "language": "latin",
+  "chapter": 363,
+  "sourceHash": "fnv1a64:8d5599741c9a4844",
+  "lessonIds": [
+    "LA-C363-concedo",
+    "LA-C363-denego",
+    "LA-C363-confiteor",
+    "LA-C363-obicio",
+    "LA-C363-contendo"
+  ],
+  "tex": "latin/book/chapters/ch363-granting-and-denying.tex"
+}

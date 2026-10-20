@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 499,
+  "sourceHash": "fnv1a64:6f77c23d0cb672e2",
+  "lessonIds": [
+    "LA-C499-delecto",
+    "LA-C499-delectatio",
+    "LA-C499-voluptas",
+    "LA-C499-oblecto",
+    "LA-C499-placeo"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch499.txt",
+  "json": "latin/narration/ch499.json",
+  "textHash": "fnv1a64:e80467e567027fc9",
+  "jsonHash": "fnv1a64:3f7b868dda1d3046",
+  "findings": []
+}

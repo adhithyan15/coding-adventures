@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 466,
+  "sourceHash": "fnv1a64:c3aa5b0a289e63f4",
+  "lessonIds": [
+    "FR-C466-timidite",
+    "FR-C466-sociable",
+    "FR-C466-reserve",
+    "FR-C466-bouder",
+    "FR-C466-taquiner"
+  ],
+  "tex": "french/book/chapters/ch466-timides-et-sociables.tex"
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 460,
+  "title": "Animais selvagens",
+  "label": "ch:pt-animais-selvagens",
+  "canDo": "I can name wild animals I might see: the wild boar, the deer, the hare, the falcon, and animals grazing.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "PT-C460-pastar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 460: I can name wild animals I might see: the wild boar, the deer, the hare, the falcon, and animals grazing.",
+    "assesses": [
+      "PT-LEX-C460-SELVAGENS-03",
+      "PT-LEX-C460-SELVAGENS-04",
+      "PT-LEX-C460-SELVAGENS-05"
+    ]
+  }
+}

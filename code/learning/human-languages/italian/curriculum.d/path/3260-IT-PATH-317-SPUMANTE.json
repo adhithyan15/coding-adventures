@@ -1,0 +1,9 @@
+{
+  "id": "IT-PATH-317-SPUMANTE",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "IT-EXT-317-SPUMANTE"
+  ],
+  "after": []
+}

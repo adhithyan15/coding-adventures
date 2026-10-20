@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C361-gewalt",
+    "language": "german",
+    "chapter": 361,
+    "sequence": 19620,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:20bf1744feb1adcd"
+  },
+  "findings": []
+}

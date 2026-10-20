@@ -1,0 +1,9 @@
+{
+  "id": "FR-PATH-406-CARROSSERIE",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "FR-EXT-406-CARROSSERIE"
+  ],
+  "after": []
+}

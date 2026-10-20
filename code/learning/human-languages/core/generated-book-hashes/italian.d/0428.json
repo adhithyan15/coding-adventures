@@ -1,0 +1,14 @@
+{
+  "language": "italian",
+  "chapter": 428,
+  "sourceHash": "fnv1a64:33ef90d775c84945",
+  "lessonIds": [
+    "IT-C428-decollare",
+    "IT-C428-atterrare",
+    "IT-C428-turbolenza",
+    "IT-C428-allacciare",
+    "IT-C428-finestrino",
+    "IT-R428-ripasso-421-428"
+  ],
+  "tex": "italian/book/chapters/ch428-in-volo.tex"
+}

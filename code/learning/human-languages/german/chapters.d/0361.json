@@ -1,0 +1,19 @@
+{
+  "chapter": 361,
+  "title": "Ein neues Land",
+  "label": "ch:ge-ein-neues-land",
+  "canDo": "I can talk about immigration, flight and refugees, integration and violence.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "GE-R361-review-354-361",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 361: I can talk about immigration, flight and refugees, integration and violence.",
+    "assesses": [
+      "GE-LEX-C361-EINWANDERUNG-03",
+      "GE-LEX-C361-EINWANDERUNG-04",
+      "GE-LEX-C361-EINWANDERUNG-05"
+    ]
+  }
+}

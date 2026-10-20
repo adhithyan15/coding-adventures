@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C672-desvio",
+    "language": "spanish",
+    "chapter": 672,
+    "sequence": 23480,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:20f84ed283a7bf91"
+  },
+  "findings": []
+}

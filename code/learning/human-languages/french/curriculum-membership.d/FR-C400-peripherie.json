@@ -1,0 +1,11 @@
+{
+  "id": "FR-C400-peripherie",
+  "pathSegment": "FR-PATH-400-PERIPH",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FR-EXT-400-PERIPH",
+      "order": 1
+    }
+  ]
+}

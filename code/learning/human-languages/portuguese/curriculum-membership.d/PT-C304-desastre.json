@@ -1,0 +1,11 @@
+{
+  "id": "PT-C304-desastre",
+  "pathSegment": "PT-PATH-304-CATASTROFE",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PT-EXT-304-CATASTROFE",
+      "order": 1
+    }
+  ]
+}

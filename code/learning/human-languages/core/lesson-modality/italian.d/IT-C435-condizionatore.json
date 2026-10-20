@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C435-condizionatore",
+    "language": "italian",
+    "chapter": 435,
+    "sequence": 24650,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8d130af0103f558f"
+  },
+  "findings": []
+}

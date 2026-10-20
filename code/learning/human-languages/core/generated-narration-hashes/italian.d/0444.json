@@ -1,0 +1,20 @@
+{
+  "language": "italian",
+  "chapter": 444,
+  "sourceHash": "fnv1a64:756cf1e287b3376c",
+  "lessonIds": [
+    "IT-C444-quartiere",
+    "IT-C444-periferia",
+    "IT-C444-rintracciare",
+    "IT-C444-numero-civico",
+    "IT-C444-citofono",
+    "IT-R444-ripasso-437-444"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "italian/narration/ch444.txt",
+  "json": "italian/narration/ch444.json",
+  "textHash": "fnv1a64:979f329363a5cd50",
+  "jsonHash": "fnv1a64:49c14917dab05147",
+  "findings": []
+}

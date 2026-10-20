@@ -1,0 +1,11 @@
+{
+  "id": "IT-C362-produttivita",
+  "pathSegment": "IT-PATH-362-STRESS",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "IT-EXT-362-STRESS",
+      "order": 4
+    }
+  ]
+}

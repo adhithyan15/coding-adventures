@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C643-acelerar",
+    "language": "spanish",
+    "chapter": 643,
+    "sequence": 21980,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:58f0339480c15502"
+  },
+  "findings": []
+}

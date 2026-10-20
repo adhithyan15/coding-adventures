@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 400,
+  "sourceHash": "fnv1a64:81aa74fe00cb12cf",
+  "lessonIds": [
+    "FR-C400-peripherique",
+    "FR-C400-peripherie",
+    "FR-C400-echangeur",
+    "FR-C400-bretelle",
+    "FR-C400-bifurquer"
+  ],
+  "tex": "french/book/chapters/ch400-autour-de-la-ville-en-voiture.tex"
+}

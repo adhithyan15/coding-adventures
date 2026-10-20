@@ -1,0 +1,19 @@
+{
+  "chapter": 510,
+  "title": "Ganhar, empatar, perder",
+  "label": "ch:pt-ganhar-empatar-perder",
+  "canDo": "I can talk about match results.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "PT-C510-eliminar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 510: I can talk about match results.",
+    "assesses": [
+      "PT-LEX-C510-RESULTADO-03",
+      "PT-LEX-C510-RESULTADO-04",
+      "PT-LEX-C510-RESULTADO-05"
+    ]
+  }
+}

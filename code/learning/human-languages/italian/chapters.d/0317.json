@@ -1,0 +1,19 @@
+{
+  "chapter": 317,
+  "title": "Cin cin",
+  "label": "ch:it-cin-cin",
+  "canDo": "I can describe opening the bubbly: the sparkling wine, the cork, uncorking, the corkscrew and the feast.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "IT-C317-banchetto",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 317: I can describe opening the bubbly: the sparkling wine, the cork, uncorking, the corkscrew and the feast.",
+    "assesses": [
+      "IT-LEX-C317-SPUMANTE-03",
+      "IT-LEX-C317-SPUMANTE-04",
+      "IT-LEX-C317-SPUMANTE-05"
+    ]
+  }
+}

@@ -103,13 +103,18 @@ impl ApprovalProvider for HardwareKeyCommandProvider {
             }
         };
         let request = encode_request(prompt.request(), timeout.as_millis());
-        let mut child = Command::new(&self.executable)
+        let mut command = Command::new(&self.executable);
+        command
             .env_clear()
             .env(PROTOCOL_ENVIRONMENT, "3")
             .stdin(Stdio::piped())
             .stdout(Stdio::piped())
-            .stderr(Stdio::null())
-            .spawn()
+            .stderr(Stdio::null());
+        // Under the supervisor's spawn lock: this runs in the daemon, where
+        // on Windows a child created inside the broker applier's
+        // inheritable span would inherit a broker's key handles (D18S
+        // P2.8b-1).
+        let mut child = chief_of_staff_spawn_isolation::spawn(&mut command)
             .map_err(|_| HardwareKeyApprovalError::SpawnFailed)?;
         let stdin = match child.stdin.take() {
             Some(stdin) => stdin,

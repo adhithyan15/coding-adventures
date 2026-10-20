@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C584-positivo",
+    "language": "spanish",
+    "chapter": 584,
+    "sequence": 18940,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:bd166e47a6d9df61"
+  },
+  "findings": []
+}

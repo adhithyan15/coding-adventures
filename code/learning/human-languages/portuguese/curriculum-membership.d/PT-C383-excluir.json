@@ -1,0 +1,11 @@
+{
+  "id": "PT-C383-excluir",
+  "pathSegment": "PT-PATH-383-EXCECAO",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PT-EXT-383-EXCECAO",
+      "order": 2
+    }
+  ]
+}

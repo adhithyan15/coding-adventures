@@ -1,0 +1,11 @@
+{
+  "id": "ES-C770-carniceria",
+  "pathSegment": "ES-PATH-770-COMERCIOS",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ES-EXT-770-COMERCIOS",
+      "order": 3
+    }
+  ]
+}

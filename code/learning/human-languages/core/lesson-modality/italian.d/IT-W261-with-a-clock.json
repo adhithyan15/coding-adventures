@@ -1,0 +1,25 @@
+{
+  "lesson": {
+    "id": "IT-W261-with-a-clock",
+    "language": "italian",
+    "chapter": 261,
+    "sequence": 15630,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:aca0d096919c3a96",
+    "detachableSegments": [
+      "Writing — timed production"
+    ]
+  },
+  "findings": []
+}

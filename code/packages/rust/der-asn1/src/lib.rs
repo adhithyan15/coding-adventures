@@ -401,6 +401,21 @@ impl<'a> DerBitString<'a> {
 /// Validate and borrow one canonical BIT STRING value.
 pub fn decode_bit_string(element: Asn1Element<'_>) -> Result<DerBitString<'_>, Asn1Error> {
     expect_universal_primitive(element, BIT_STRING_TAG)?;
+    decode_bit_string_contents(element)
+}
+
+/// Validate and borrow one implicitly tagged canonical BIT STRING.
+///
+/// The caller supplies the context-specific tag number from its ASN.1 schema.
+pub fn decode_implicit_bit_string(
+    element: Asn1Element<'_>,
+    tag_number: u32,
+) -> Result<DerBitString<'_>, Asn1Error> {
+    expect_context_specific_primitive(element, tag_number)?;
+    decode_bit_string_contents(element)
+}
+
+fn decode_bit_string_contents(element: Asn1Element<'_>) -> Result<DerBitString<'_>, Asn1Error> {
     let value = element.value();
     let Some((&unused_bits, bytes)) = value.split_first() else {
         return Err(Asn1Error::new(

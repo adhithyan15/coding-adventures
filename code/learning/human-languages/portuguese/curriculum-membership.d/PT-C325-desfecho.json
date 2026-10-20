@@ -1,0 +1,11 @@
+{
+  "id": "PT-C325-desfecho",
+  "pathSegment": "PT-PATH-325-HEROI",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PT-EXT-325-HEROI",
+      "order": 4
+    }
+  ]
+}

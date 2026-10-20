@@ -1,0 +1,11 @@
+{
+  "id": "FR-C363-protester",
+  "pathSegment": "FR-PATH-363-MANIFESTATION",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-363-MANIFESTATION",
+      "order": 4
+    }
+  ]
+}

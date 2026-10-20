@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C449-putidus",
+    "language": "latin",
+    "chapter": 449,
+    "sequence": 23960,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f25731ebac6a620b"
+  },
+  "findings": []
+}

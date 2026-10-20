@@ -1,0 +1,19 @@
+{
+  "chapter": 410,
+  "title": "Bouchons sur l'autoroute",
+  "label": "ch:fr-bouchons-sur-l-autoroute",
+  "canDo": "I can talk about heavy traffic: the jam, the gridlock, the diversion, the rest area and overtaking.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "FR-C410-doubler",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 410: I can talk about heavy traffic: the jam, the gridlock, the diversion, the rest area and overtaking.",
+    "assesses": [
+      "FR-LEX-C410-BOUCHONS-03",
+      "FR-LEX-C410-BOUCHONS-04",
+      "FR-LEX-C410-BOUCHONS-05"
+    ]
+  }
+}

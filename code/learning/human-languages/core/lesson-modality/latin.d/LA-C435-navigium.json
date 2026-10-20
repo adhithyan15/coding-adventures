@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C435-navigium",
+    "language": "latin",
+    "chapter": 435,
+    "sequence": 23210,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:09442587d3f00f5e"
+  },
+  "findings": []
+}

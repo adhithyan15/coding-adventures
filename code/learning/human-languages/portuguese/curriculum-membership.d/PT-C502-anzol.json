@@ -1,0 +1,11 @@
+{
+  "id": "PT-C502-anzol",
+  "pathSegment": "PT-PATH-502-PESCA",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-502-PESCA",
+      "order": 3
+    }
+  ]
+}

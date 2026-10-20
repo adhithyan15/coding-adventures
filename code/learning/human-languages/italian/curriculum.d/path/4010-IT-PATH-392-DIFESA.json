@@ -1,0 +1,9 @@
+{
+  "id": "IT-PATH-392-DIFESA",
+  "spine_node": "SPINE-EXPRESS-CONDITION",
+  "before": [],
+  "inline": [
+    "IT-EXT-392-DIFESA"
+  ],
+  "after": []
+}

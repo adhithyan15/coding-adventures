@@ -1,0 +1,19 @@
+{
+  "chapter": 513,
+  "title": "En el periódico",
+  "label": "ch:es-en-el-periodico",
+  "canDo": "I can read a headline and talk about the press, the newsroom, a correspondent and what was published.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "ES-C513-publicar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 513: I can read a headline and talk about the press, the newsroom, a correspondent and what was published.",
+    "assesses": [
+      "ES-LEX-C513-PRENSA-03",
+      "ES-LEX-C513-PRENSA-04",
+      "ES-LEX-C513-PRENSA-05"
+    ]
+  }
+}

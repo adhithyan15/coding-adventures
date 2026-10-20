@@ -44,14 +44,21 @@ it("pins Portuguese lesson-content budgets", () =>
     // 231-255. 125 word lessons (forty-five verbs) and two reviews per run of
     // at most nine chapters. No idiom, sense or culture claim. Portuguese
     // attains A2 here.
-    lessons: 1296,
+    // 1296 -> 1299: chapters 256-258, the A1 writing stages Portuguese had
+    // not proved. No new word or atom.
+    // 1299 -> 1336: chapters 259-268, the B1 core that realizes all five B1
+    // spine nodes (imperfeito, reasons, travel, experience, condicional):
+    // 37 lessons, one reading and one writing, no idiom, sense or culture claim.
+    // 1336 -> 2696: chapters 269-532, the B1 vocabulary: 1,320 word lessons
+    // (one headword each) and 40 spaced reviews. Portuguese attains B1 here.
+    lessons: 2696,
     idioms: 7,
     senses: 7,
     cultureClaims: 11,
     unitPrefix: "PT",
   }));
 
-it("pins Portuguese's pre-A1 writing ladder, now complete", () => {
+it("pins Portuguese's writing ladder IN ORDER, pre-A1 through A1", () => {
   const portuguese = languageWritingStages("portuguese");
 
   // Was ["observe-trace", "guided-copy"] -- a foothold, and the pin said so.
@@ -65,6 +72,14 @@ it("pins Portuguese's pre-A1 writing ladder, now complete", () => {
     "guided-copy",
     "delayed-copy",
     "dictation-transcription",
+    // The three A1 stages, proved by the appended writing chapters. ORDER is
+    // the point: a timed or connected paper before a controlled one is invalid.
+    "controlled-composition",
+    "timed-assessment-production",
+    "connected-composition",
+    // PT-W268-seis-linhas: six connected lines about a journey, the B1 core's
+    // writing task. A second connected composition, later in sequence.
+    "connected-composition",
   ]);
   expect(portuguese.defects).toEqual([]);
   expect(portuguese.levels[0]).toMatchObject({

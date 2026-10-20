@@ -1,0 +1,11 @@
+{
+  "id": "IT-C466-scottarsi",
+  "pathSegment": "IT-PATH-466-AFA",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "IT-EXT-466-AFA",
+      "order": 2
+    }
+  ]
+}

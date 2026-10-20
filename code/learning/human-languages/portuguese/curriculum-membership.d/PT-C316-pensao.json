@@ -1,0 +1,11 @@
+{
+  "id": "PT-C316-pensao",
+  "pathSegment": "PT-PATH-316-HERANCA",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PT-EXT-316-HERANCA",
+      "order": 4
+    }
+  ]
+}

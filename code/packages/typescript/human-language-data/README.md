@@ -35,6 +35,11 @@ visible per-part spans in the learner paper, rubric, and answer key. The plan's
 `mock-assessment/<language>/<level>` family counts mocks still missing a
 distinct paper, rubric, key, or valid manifest; undeclared legacy manifests
 remain visible debt rather than becoming a parse error.
+For present full-mock evidence, the validator uses the repository's Python 3
+handle-relative reader so a concurrent symlink or Windows junction swap cannot
+redirect the manifest, paper, rubric, or key outside the audited track. Python 3
+must be available as `python3` on Unix or `python` on Windows for this check;
+an unavailable reader fails the gate rather than counting evidence as missing.
 See the [structure-manifest contract](docs/feature-contracts/full-mock-structure-manifests.md)
 for the JSON shape and migration rule.
 
@@ -297,6 +302,15 @@ new contracts must never name missing evidence. See
 [`HL15`](../../../specs/HL15-the-completion-plan.md).
 The separate `mock-assessment` item is blocked on an absent task-shape
 inventory; it cannot infer a complete timed paper from `timed: true` alone.
+
+For a human review of Spanish mock question vocabulary, run
+`npm run report:mock-stem-coverage -- --level A2` (or `pre-A1`/`A1`). The
+report lists unaccounted and plausibly derivable stem/option forms; it is not
+a pass/fail gate. Unknown levels are rejected before corpus reads. Valid
+reports read Spanish lessons, curriculum membership, and the shared spine,
+not every other language track. The taught-form conversion remains shared
+with the Spanish mock audit, so narrowing the read does not narrow what the
+report credits or hides.
 
 ## Scope note
 

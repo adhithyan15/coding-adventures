@@ -1,0 +1,11 @@
+{
+  "id": "IT-C437-chiasso",
+  "pathSegment": "IT-PATH-437-RUMORE",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "IT-EXT-437-RUMORE",
+      "order": 1
+    }
+  ]
+}

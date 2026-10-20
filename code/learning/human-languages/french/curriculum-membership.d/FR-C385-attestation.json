@@ -1,0 +1,11 @@
+{
+  "id": "FR-C385-attestation",
+  "pathSegment": "FR-PATH-385-DEMARCHE",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-385-DEMARCHE",
+      "order": 4
+    }
+  ]
+}

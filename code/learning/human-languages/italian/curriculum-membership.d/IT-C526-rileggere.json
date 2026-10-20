@@ -1,0 +1,11 @@
+{
+  "id": "IT-C526-rileggere",
+  "pathSegment": "IT-PATH-526-RECENSIONE",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "IT-EXT-526-RECENSIONE",
+      "order": 4
+    }
+  ]
+}

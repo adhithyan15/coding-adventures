@@ -91,7 +91,9 @@ const TREEMAP_VISUAL_CORPUS: &str = include_str!(concat!(
 const VENN_CORPUS: &str = include_str!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../../grammars/mermaid/venn-11.16.1-corpus.json"));
 const VENN_VISUAL_CORPUS: &str = include_str!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../../grammars/mermaid/venn-11.16.1-visual-corpus.json"));
 const ISHIKAWA_CORPUS: &str = include_str!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../../grammars/mermaid/ishikawa-11.16.1-corpus.json"));
+const ISHIKAWA_VISUAL_CORPUS: &str = include_str!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../../grammars/mermaid/ishikawa-11.16.1-visual-corpus.json"));
 const WARDLEY_CORPUS: &str = include_str!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../../grammars/mermaid/wardley-11.16.1-corpus.json"));
+const WARDLEY_VISUAL_CORPUS: &str = include_str!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../../grammars/mermaid/wardley-11.16.1-visual-corpus.json"));
 const CYNEFIN_CORPUS: &str = include_str!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../../grammars/mermaid/cynefin-11.16.1-corpus.json"));
 const CYNEFIN_VISUAL_CORPUS: &str = include_str!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../../grammars/mermaid/cynefin-11.16.1-visual-corpus.json"));
 const TREEVIEW_CORPUS: &str = include_str!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../../grammars/mermaid/treeview-11.16.1-corpus.json"));
@@ -100,6 +102,8 @@ const RAILROAD_CORPUS: &str = include_str!(concat!(env!("CARGO_MANIFEST_DIR"), "
 const RAILROAD_EBNF_CORPUS: &str = include_str!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../../grammars/mermaid/railroad-ebnf-11.16.1-corpus.json"));
 const RAILROAD_ABNF_CORPUS: &str = include_str!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../../grammars/mermaid/railroad-abnf-11.16.1-corpus.json"));
 const RAILROAD_PEG_CORPUS: &str = include_str!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../../grammars/mermaid/railroad-peg-11.16.1-corpus.json"));
+const RAILROAD_COMPATIBILITY_CORPUS: &str = include_str!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../../grammars/mermaid/railroad-11.16.1-compatibility-corpus.json"));
+const RAILROAD_VISUAL_CORPUS: &str = include_str!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../../grammars/mermaid/railroad-11.16.1-visual-corpus.json"));
 const INFO_CORPUS: &str = include_str!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../../grammars/mermaid/info-11.16.1-corpus.json"));
 const ZENUML_CORPUS: &str = include_str!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../../grammars/mermaid/zenuml-11.16.1-corpus.json"));
 
@@ -179,6 +183,49 @@ fn pinned_railroad_peg_corpus_parses_to_recursive_ir() {
             assert_eq!(diagram.accessibility_description.as_deref(), Some("PEG grammar"));
         }
     }
+}
+
+#[test]
+fn pinned_railroad_corpus_matches_upstream_and_native_acceptance() {
+    let corpus: Value = serde_json::from_str(RAILROAD_COMPATIBILITY_CORPUS)
+        .expect("railroad compatibility corpus must be JSON");
+    assert_eq!(corpus["upstream"].as_str(), Some("mermaid@11.16.1"));
+    assert_eq!(corpus["level"].as_str(), Some("full"));
+    assert_eq!(corpus["upstream_commit"].as_str(), Some("7ecca0cd7f1658ef74f4e7e91f925724ef403bbf"));
+    for fixture in corpus["valid"].as_array().expect("valid fixtures") {
+        let id = fixture["id"].as_str().expect("fixture id");
+        let diagram = parse_railroad(fixture["source"].as_str().expect("fixture source"))
+            .unwrap_or_else(|error| panic!("railroad fixture {id} failed: {error}"));
+        assert!(!diagram.rules.is_empty(), "railroad fixture {id} must contain rules");
+    }
+    for fixture in corpus["invalid"].as_array().expect("invalid fixtures") {
+        let id = fixture["id"].as_str().expect("fixture id");
+        assert!(parse_railroad(fixture["source"].as_str().expect("fixture source")).is_err(),
+            "invalid railroad fixture {id} parsed");
+    }
+}
+
+#[test]
+fn railroad_full_status_is_backed_by_pinned_syntax_and_visual_corpora() {
+    let manifest: Value = serde_json::from_str(COMPATIBILITY_MANIFEST)
+        .expect("compatibility manifest must be JSON");
+    let railroad = manifest["families"].as_array().expect("families").iter()
+        .find(|family| family["id"] == "railroad").expect("railroad family");
+    assert_eq!(railroad["status"].as_str(), Some("full"));
+
+    let syntax: Value = serde_json::from_str(RAILROAD_COMPATIBILITY_CORPUS)
+        .expect("railroad compatibility corpus JSON");
+    let visual: Value = serde_json::from_str(RAILROAD_VISUAL_CORPUS)
+        .expect("railroad visual corpus JSON");
+    assert_eq!(syntax["upstream_commit"], visual["upstream_commit"]);
+    let expected = syntax["valid"].as_array().expect("valid fixtures").iter()
+        .map(|fixture| fixture["id"].as_str().expect("fixture id"))
+        .collect::<BTreeSet<_>>();
+    let actual = visual["fixtures"].as_array().expect("visual fixtures").iter()
+        .map(|id| id.as_str().expect("visual fixture id"))
+        .collect::<BTreeSet<_>>();
+    assert_eq!(actual, expected);
+    assert!(!syntax["invalid"].as_array().expect("invalid fixtures").is_empty());
 }
 
 #[test]
@@ -419,23 +466,17 @@ fn cynefin_full_status_is_backed_by_pinned_syntax_and_visual_corpora() {
 }
 
 #[test]
-fn pinned_wardley_subset_corpus_parses_to_strategic_map_ir() {
+fn pinned_wardley_corpus_matches_upstream_acceptance() {
     let corpus: Value = serde_json::from_str(WARDLEY_CORPUS).expect("wardley corpus must be JSON");
     assert_eq!(corpus["upstream"].as_str(), Some("mermaid@11.16.1"));
-    for fixture in corpus["fixtures"].as_array().expect("fixture array") {
-        let name = fixture["name"].as_str().expect("fixture name");
+    assert_eq!(corpus["level"].as_str(), Some("full"));
+    assert_eq!(corpus["upstream_commit"].as_str(), Some("7ecca0cd7f1658ef74f4e7e91f925724ef403bbf"));
+    for fixture in corpus["valid"].as_array().expect("valid fixture array") {
+        let name = fixture["id"].as_str().expect("fixture id");
         let diagram = parse_wardley(fixture["source"].as_str().expect("fixture source"))
             .unwrap_or_else(|error| panic!("wardley fixture {name} failed: {error}"));
         assert!(!diagram.nodes.is_empty());
-        if name == "basic" {
-            assert_eq!(diagram.notes.len(), 1);
-            assert_eq!(diagram.notes[0].text, "Standardising power accelerates evolution");
-            assert_eq!((diagram.notes[0].visibility, diagram.notes[0].evolution), (0.30, 0.49));
-            assert_eq!(diagram.annotations_box, Some((0.10, 0.90)));
-            assert_eq!(diagram.annotations.len(), 1);
-            assert_eq!(diagram.annotations[0].coordinates, [(0.60, 0.65), (0.50, 0.50)]);
-        }
-        if name == "renderer-config" {
+        if name == "native-config-theme-accessibility" {
             assert_eq!((diagram.config.width, diagram.config.height, diagram.config.padding), (760.0, 480.0, 36.0));
             assert_eq!((diagram.config.node_radius, diagram.config.node_label_offset), (9.0, 12.0));
             assert_eq!((diagram.config.axis_font_size, diagram.config.label_font_size), (15.0, 13.0));
@@ -443,70 +484,57 @@ fn pinned_wardley_subset_corpus_parses_to_strategic_map_ir() {
             assert_eq!((&diagram.config.theme.background_color, &diagram.config.theme.axis_color,
                 &diagram.config.theme.component_fill, &diagram.config.theme.link_stroke),
                 (&"#f8fafc".to_string(), &"#123456".to_string(), &"#abcdef".to_string(), &"#6789ab".to_string()));
-        }
-        if name == "annotation-theme" {
             assert_eq!((&diagram.config.theme.annotation_stroke, &diagram.config.theme.annotation_text_color,
                 &diagram.config.theme.annotation_fill), (&"#7c3aed".to_string(), &"#f97316".to_string(),
                 &"#fef3c7".to_string()));
-        }
-        if name == "stage-boundaries" {
-            assert_eq!(diagram.stages, ["Genesis / Concept", "Custom / Emerging", "Product / Converging", "Commodity / Accepted"]);
-            assert_eq!(diagram.stage_boundaries, [0.2, 0.4, 0.75, 1.0]);
-        }
-        if name == "label-offsets" {
-            assert_eq!((diagram.nodes[0].label_offset_x, diagram.nodes[0].label_offset_y), (Some(-50.0), Some(10.0)));
-        }
-        if name == "decorators" {
-            assert_eq!(diagram.nodes.iter().map(|node| node.source_strategy).collect::<Vec<_>>(), [
-                Some(diagram_ir::WardleySourceStrategy::Build), Some(diagram_ir::WardleySourceStrategy::Buy),
-                Some(diagram_ir::WardleySourceStrategy::Outsource), Some(diagram_ir::WardleySourceStrategy::Market)]);
-            assert!(diagram.nodes[3].inertia);
-        }
-        if name == "flow-links" {
-            assert_eq!(diagram.links.len(), 6);
-            assert_eq!(diagram.links[0].label.as_deref(), Some("request"));
-            assert!(diagram.links[1].dashed);
-            assert_eq!(diagram.links[2].flow, Some(diagram_ir::WardleyLinkFlow::Forward));
-            assert_eq!(diagram.links[3].flow, Some(diagram_ir::WardleyLinkFlow::Backward));
-            assert_eq!(diagram.links[4].flow, Some(diagram_ir::WardleyLinkFlow::Bidirectional));
-            assert_eq!(diagram.links[4].label.as_deref(), Some("sync"));
-            assert_eq!(diagram.links[5].flow, Some(diagram_ir::WardleyLinkFlow::Forward));
-        }
-        if name == "accessibility" {
             assert_eq!(diagram.accessibility_title.as_deref(), Some("Accessible strategy map"));
             assert_eq!(diagram.accessibility_description.as_deref(),
                 Some("Components and dependencies\nacross the value chain"));
         }
-        if name == "forces" {
-            assert_eq!(diagram.forces.len(), 2);
-            assert_eq!(diagram.forces[0].label, "AI Adoption");
-            assert_eq!(diagram.forces[0].kind, diagram_ir::WardleyForceKind::Accelerator);
-            assert_eq!((diagram.forces[1].visibility, diagram.forces[1].evolution), (0.15, 0.75));
-            assert_eq!(diagram.forces[1].kind, diagram_ir::WardleyForceKind::Deaccelerator);
-        }
-        if name == "pipeline" {
-            assert_eq!(diagram.pipelines.len(), 1);
-            assert_eq!(diagram.pipelines[0].component_ids.len(), 4);
-            assert_eq!(diagram.nodes.len(), 5);
-            assert!(diagram.nodes[0].pipeline_parent);
-            assert_eq!((diagram.nodes[1].label.as_str(), diagram.nodes[1].visibility, diagram.nodes[1].evolution),
-                ("File System", 0.40, 0.25));
-            assert_eq!((diagram.nodes[1].label_offset_x, diagram.nodes[1].label_offset_y), (Some(-12.0), Some(8.0)));
-        }
+    }
+    for fixture in corpus["invalid"].as_array().expect("invalid fixture array") {
+        let name = fixture["id"].as_str().expect("invalid fixture id");
+        assert!(parse_wardley(fixture["source"].as_str().expect("invalid fixture source")).is_err(),
+            "invalid wardley fixture {name} parsed");
     }
 }
 
 #[test]
-fn pinned_ishikawa_subset_corpus_parses_to_causal_tree_ir() {
+fn wardley_full_status_is_backed_by_pinned_syntax_and_visual_corpora() {
+    let manifest: Value = serde_json::from_str(COMPATIBILITY_MANIFEST)
+        .expect("compatibility manifest must be JSON");
+    let wardley = manifest["families"].as_array().expect("families array").iter()
+        .find(|family| family["id"] == "wardley").expect("wardley family");
+    assert_eq!(wardley["status"].as_str(), Some("full"));
+
+    let syntax: Value = serde_json::from_str(WARDLEY_CORPUS).expect("wardley corpus JSON");
+    let visual: Value = serde_json::from_str(WARDLEY_VISUAL_CORPUS)
+        .expect("wardley visual corpus JSON");
+    assert_eq!(syntax["upstream_commit"], visual["upstream_commit"]);
+    let expected = syntax["valid"].as_array().expect("valid fixtures").iter()
+        .map(|fixture| fixture["id"].as_str().expect("fixture id"))
+        .collect::<BTreeSet<_>>();
+    let actual = visual["fixtures"].as_array().expect("visual fixtures").iter()
+        .map(|id| id.as_str().expect("visual fixture id"))
+        .collect::<BTreeSet<_>>();
+    assert_eq!(actual, expected);
+    assert!(!syntax["invalid"].as_array().expect("invalid fixtures").is_empty());
+}
+
+#[test]
+fn pinned_ishikawa_corpus_matches_upstream_acceptance() {
     let corpus: Value = serde_json::from_str(ISHIKAWA_CORPUS).expect("ishikawa corpus must be JSON");
     assert_eq!(corpus["upstream"].as_str(), Some("mermaid@11.16.1"));
-    for fixture in corpus["fixtures"].as_array().expect("fixture array") {
-        let name = fixture["name"].as_str().expect("fixture name");
+    assert_eq!(corpus["level"].as_str(), Some("full"));
+    for fixture in corpus["valid"].as_array().expect("valid fixture array") {
+        let name = fixture["id"].as_str().expect("fixture id");
         let diagram = parse_ishikawa(fixture["source"].as_str().expect("fixture source"))
             .unwrap_or_else(|error| panic!("ishikawa fixture {name} failed: {error}"));
         assert!(!diagram.effect.is_empty());
-        assert!(!diagram.causes.is_empty());
-        if name == "diagram-padding-config" {
+        if name == "upstream-render-5-root-only" {
+            assert!(diagram.causes.is_empty());
+        }
+        if name == "configured-theme-and-canvas" {
             assert_eq!(diagram.config.diagram_padding, 64.0);
             assert!(diagram.config.use_max_width);
             assert_eq!(diagram.config.font_size, 22.0);
@@ -515,15 +543,44 @@ fn pinned_ishikawa_subset_corpus_parses_to_causal_tree_ir() {
             assert_eq!(diagram.config.fill_color, "#abcdef");
             assert_eq!(diagram.config.text_color, "#654321");
         }
-        if name == "deep-long-labels" {
-            assert_eq!(diagram.causes.iter().map(|cause| cause.depth).max(), Some(3));
-            assert!(diagram.causes.iter().any(|cause| cause.label == "Legal approval queues delay publication"));
-        }
-        if name == "hand-drawn-config" {
+        if name == "upstream-render-6-hand-drawn" {
             assert_eq!(diagram.config.look, diagram_ir::IshikawaLook::HandDrawn);
-            assert_eq!(diagram.config.hand_drawn_seed, 17);
+        }
+        if name == "first-cause-baseline-clamps-shallower-indent" {
+            assert!(diagram.causes.iter().all(|cause| cause.parent_id.is_none()));
+        }
+        if name == "header-prefix-becomes-inline-effect" {
+            assert_eq!(diagram.effect, "-diagram");
+            assert_eq!(diagram.causes[0].label, "Problem");
         }
     }
+    for fixture in corpus["invalid"].as_array().expect("invalid fixture array") {
+        let name = fixture["id"].as_str().expect("fixture id");
+        assert!(parse_ishikawa(fixture["source"].as_str().expect("fixture source")).is_err(),
+            "invalid ishikawa fixture {name} parsed");
+    }
+}
+
+#[test]
+fn ishikawa_full_status_is_backed_by_pinned_syntax_and_visual_corpora() {
+    let manifest: Value =
+        serde_json::from_str(COMPATIBILITY_MANIFEST).expect("compatibility manifest must be JSON");
+    let ishikawa = manifest["families"].as_array().expect("families array").iter()
+        .find(|family| family["id"] == "ishikawa").expect("ishikawa family");
+    assert_eq!(ishikawa["status"].as_str(), Some("full"));
+
+    let syntax: Value = serde_json::from_str(ISHIKAWA_CORPUS).expect("ishikawa corpus JSON");
+    let visual: Value = serde_json::from_str(ISHIKAWA_VISUAL_CORPUS)
+        .expect("ishikawa visual corpus JSON");
+    assert_eq!(syntax["upstream_commit"], visual["upstream_commit"]);
+    let expected = syntax["valid"].as_array().expect("valid fixtures").iter()
+        .map(|fixture| fixture["id"].as_str().expect("fixture id"))
+        .collect::<BTreeSet<_>>();
+    let actual = visual["fixtures"].as_array().expect("visual fixtures").iter()
+        .map(|id| id.as_str().expect("visual fixture id"))
+        .collect::<BTreeSet<_>>();
+    assert_eq!(actual, expected);
+    assert!(!syntax["invalid"].as_array().expect("invalid fixtures").is_empty());
 }
 
 #[test]
@@ -3222,4 +3279,114 @@ fn zenuml_dispatches_to_shared_sequence_ir() {
         }
         _ => panic!("zenuml should lower to shared sequence IR"),
     }
+}
+
+#[test]
+fn zenuml_parses_nested_sync_calls_controls_returns_and_creation() {
+    let diagram = parse_zenuml(
+        "zenuml\nnew Worker\nA.method() {\n  if(x) {\n    B.method() {\n      selfCall() { return X }\n    }\n  }\n}",
+    ).expect("nested ZenUML should parse");
+    assert!(diagram.participants.iter().any(|participant| participant.id == "Worker"));
+    assert!(diagram.events.iter().any(|event| matches!(
+        event, diagram_ir::SequenceEvent::ParticipantCreated { participant } if participant == "Worker"
+    )));
+    assert!(diagram.events.iter().any(|event| matches!(
+        event,
+        diagram_ir::SequenceEvent::BlockStart {
+            kind: diagram_ir::SequenceBlockKind::Alt,
+            ..
+        }
+    )));
+    assert!(diagram.events.iter().filter(|event| matches!(
+        event, diagram_ir::SequenceEvent::Activation { active: true, .. }
+    )).count() >= 3);
+    assert!(diagram.events.iter().any(|event| matches!(
+        event, diagram_ir::SequenceEvent::Message { label, .. } if label == "return X"
+    )));
+}
+
+#[test]
+fn zenuml_lowers_reply_forms_comments_and_control_branches() {
+    let diagram = parse_zenuml(
+        "zenuml\nClient->A.method() {\n  // lookup result\n  SomeType result = B.lookup()\n  if(ok) {\n    return result\n  } else {\n    @reply\n    A->Client: fallback\n  }\n}\ntry {\n  A->B: work\n} catch {\n  B->A: failed\n} finally {\n  A->B: cleanup\n}",
+    ).expect("ZenUML replies and branches should parse");
+
+    assert!(diagram.events.iter().any(|event| matches!(
+        event,
+        diagram_ir::SequenceEvent::Note { text, .. } if text == "lookup result"
+    )));
+    assert!(diagram.events.iter().any(|event| matches!(
+        event,
+        diagram_ir::SequenceEvent::Message {
+            from,
+            to,
+            label,
+            line_style: diagram_ir::SequenceLineStyle::Dotted,
+            ..
+        } if from == "B" && to == "A" && label == "SomeType result"
+    )));
+    assert!(diagram.events.iter().any(|event| matches!(
+        event,
+        diagram_ir::SequenceEvent::Message {
+            from,
+            to,
+            label,
+            line_style: diagram_ir::SequenceLineStyle::Dotted,
+            ..
+        } if from == "A" && to == "Client" && label == "fallback"
+    )));
+    assert_eq!(diagram.events.iter().filter(|event| matches!(
+        event, diagram_ir::SequenceEvent::BlockBranch { .. }
+    )).count(), 3);
+    assert_eq!(diagram.events.iter().filter(|event| matches!(
+        event, diagram_ir::SequenceEvent::BlockEnd { .. }
+    )).count(), 2);
+}
+
+#[test]
+fn zenuml_preserves_participant_kinds_assigned_creation_and_semicolons() {
+    let diagram = parse_zenuml(
+        "zenuml\n@Boundary API;\n@Control Controller;\n@Entity Order;\n@Collections Items;\n@Queue Jobs;\n@Starter Client;\nClient->API.start() {\n  Worker worker = new Worker(config);\n  worker.init();\n}\n",
+    ).expect("ZenUML annotations and assigned creation should parse");
+
+    let kinds = diagram.participants.iter().map(|participant| {
+        (participant.id.as_str(), &participant.kind)
+    }).collect::<std::collections::HashMap<_, _>>();
+    assert_eq!(kinds["API"], &diagram_ir::SequenceParticipantKind::Boundary);
+    assert_eq!(kinds["Controller"], &diagram_ir::SequenceParticipantKind::Control);
+    assert_eq!(kinds["Order"], &diagram_ir::SequenceParticipantKind::Entity);
+    assert_eq!(kinds["Items"], &diagram_ir::SequenceParticipantKind::Collections);
+    assert_eq!(kinds["Jobs"], &diagram_ir::SequenceParticipantKind::Queue);
+    assert_eq!(kinds["Client"], &diagram_ir::SequenceParticipantKind::Participant);
+    assert!(diagram.events.iter().any(|event| matches!(
+        event,
+        diagram_ir::SequenceEvent::ParticipantCreated { participant } if participant == "worker"
+    )));
+    assert!(diagram.events.iter().any(|event| matches!(
+        event,
+        diagram_ir::SequenceEvent::Message { from, to, label, .. }
+            if from == "API" && to == "worker" && label == "worker.init()"
+    )));
+}
+
+#[test]
+fn zenuml_preserves_custom_annotators_inline_comments_and_creation_labels() {
+    let diagram = parse_zenuml(
+        "zenuml\n@Service API\nClient->API.start() {\n  Worker worker = new Worker(config) // provision worker\n  worker.init() // initialize it\n}\n",
+    ).expect("ZenUML custom annotations and inline comments should parse");
+
+    let api = diagram.participants.iter().find(|participant| participant.id == "API").unwrap();
+    assert_eq!(api.kind, diagram_ir::SequenceParticipantKind::Participant);
+    let worker = diagram.participants.iter().find(|participant| participant.id == "worker").unwrap();
+    assert_eq!(worker.label.text, "Worker");
+    assert!(diagram.events.iter().any(|event| matches!(
+        event,
+        diagram_ir::SequenceEvent::Note { text, participants, .. }
+            if text == "provision worker" && participants == &["worker"]
+    )));
+    assert!(diagram.events.iter().any(|event| matches!(
+        event,
+        diagram_ir::SequenceEvent::Note { text, participants, .. }
+            if text == "initialize it" && participants == &["API", "worker"]
+    )));
 }

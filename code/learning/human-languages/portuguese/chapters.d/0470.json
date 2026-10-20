@@ -1,0 +1,19 @@
+{
+  "chapter": 470,
+  "title": "Humildes e modestos",
+  "label": "ch:pt-humildes-e-modestos",
+  "canDo": "I can talk about humble and modest people and about praise.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "PT-C470-elogiar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 470: I can talk about humble and modest people and about praise.",
+    "assesses": [
+      "PT-LEX-C470-MODESTIA-03",
+      "PT-LEX-C470-MODESTIA-04",
+      "PT-LEX-C470-MODESTIA-05"
+    ]
+  }
+}

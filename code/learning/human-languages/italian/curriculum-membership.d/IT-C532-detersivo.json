@@ -1,0 +1,11 @@
+{
+  "id": "IT-C532-detersivo",
+  "pathSegment": "IT-PATH-532-PULIZIE",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "IT-EXT-532-PULIZIE",
+      "order": 3
+    }
+  ]
+}

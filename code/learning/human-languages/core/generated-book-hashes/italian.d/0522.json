@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 522,
+  "sourceHash": "fnv1a64:98bbc9b98b38baad",
+  "lessonIds": [
+    "IT-C522-scolpire",
+    "IT-C522-scultore",
+    "IT-C522-marmo",
+    "IT-C522-argilla",
+    "IT-C522-modellare"
+  ],
+  "tex": "italian/book/chapters/ch522-marmo-e-argilla.tex"
+}

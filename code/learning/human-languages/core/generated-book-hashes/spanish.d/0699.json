@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 699,
+  "sourceHash": "fnv1a64:cc20aa00e2382c75",
+  "lessonIds": [
+    "ES-C699-rayo",
+    "ES-C699-relampaguear",
+    "ES-C699-granizo",
+    "ES-C699-granizar",
+    "ES-C699-tronar"
+  ],
+  "tex": "spanish/book/chapters/ch699-rayos-y-truenos.tex"
+}

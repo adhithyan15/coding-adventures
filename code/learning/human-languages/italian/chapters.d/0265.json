@@ -1,0 +1,20 @@
+{
+  "chapter": 265,
+  "title": "Secondo Me --- An Opinion, and What Follows",
+  "label": "ch:it-an-opinion-and-what-follows",
+  "canDo": "I can give my opinion with secondo me or credo di sì, and run a reason back with perché or forward with quindi and così.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "IT-C265-ripasso-opinione",
+    "kind": "production",
+    "summary": "Complete IT-C265-ripasso-opinione: an opinion, its reason and its consequence, said in either order.",
+    "assesses": [
+      "IT-LEX-SECONDO-ME-01",
+      "IT-GRAMMAR-CREDO-DI-SI-02",
+      "IT-GRAMMAR-DUE-FRECCE-01",
+      "IT-GRAMMAR-COSI-QUINDI-02"
+    ]
+  }
+}

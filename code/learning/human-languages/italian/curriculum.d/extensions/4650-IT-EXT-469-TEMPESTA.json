@@ -1,0 +1,8 @@
+{
+  "id": "IT-EXT-469-TEMPESTA",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can describe wild weather: a blizzard, a hurricane, a gust of wind, the wind blowing and a cloudburst.",
+  "prerequisites": []
+}

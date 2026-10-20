@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C583-afectar",
+    "language": "spanish",
+    "chapter": 583,
+    "sequence": 18870,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8458b98ba5fb28a5"
+  },
+  "findings": []
+}

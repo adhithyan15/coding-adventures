@@ -1,0 +1,13 @@
+{
+  "language": "latin",
+  "chapter": 442,
+  "sourceHash": "fnv1a64:718c27a3f50be2ab",
+  "lessonIds": [
+    "LA-C442-salum",
+    "LA-C442-pelagus",
+    "LA-C442-aequor",
+    "LA-C442-marinus",
+    "LA-C442-maritimus"
+  ],
+  "tex": "latin/book/chapters/ch442-open-sea-high-sea-level-sea-of-the-sea-coastal.tex"
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 701,
+  "title": "Calor y sequía",
+  "label": "ch:es-calor-y-sequia",
+  "canDo": "I can talk about warm weather: mild, hot and muggy days, a drought, and sweating.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "ES-C701-sudar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 701: I can talk about warm weather: mild, hot and muggy days, a drought, and sweating.",
+    "assesses": [
+      "ES-LEX-C701-CALOR-03",
+      "ES-LEX-C701-CALOR-04",
+      "ES-LEX-C701-CALOR-05"
+    ]
+  }
+}

@@ -40,6 +40,10 @@ Selected `.options` keys can also be turned into engine-call options with
 Runnable `.op`, `.dc`, `.ac dec` / `.ac log`, and `.tran` cards can be planned
 and executed directly:
 
+`.dc` accepts either `source start stop step` or a second four-token source
+axis. The first source is the inner loop, while each result and selected-output
+row retains the outer-axis source and value.
+
 ```ts
 import { runNetlist } from "@coding-adventures/spice-netlist-parser";
 

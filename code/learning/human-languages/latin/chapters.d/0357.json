@@ -1,0 +1,19 @@
+{
+  "chapter": 357,
+  "title": "What I Think and Judge",
+  "label": "ch:la-what-i-think-and-judge",
+  "canDo": "I can say what I judge, reckon, propose and suppose, and talk about an opinion.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "LA-C357-opinio",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 357: I can say what I judge, reckon, propose and suppose, and talk about an opinion.",
+    "assesses": [
+      "LA-LEX-C357-SENTENTIA-03",
+      "LA-LEX-C357-SENTENTIA-04",
+      "LA-LEX-C357-SENTENTIA-05"
+    ]
+  }
+}

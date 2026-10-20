@@ -1,0 +1,11 @@
+{
+  "id": "IT-C525-tascabile",
+  "pathSegment": "IT-PATH-525-LIBRERIA",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "IT-EXT-525-LIBRERIA",
+      "order": 4
+    }
+  ]
+}

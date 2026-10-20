@@ -1,0 +1,19 @@
+{
+  "chapter": 364,
+  "title": "In piazza",
+  "label": "ch:it-in-piazza",
+  "canDo": "I can describe a protest: people protest, demonstrate in the square and carry a banner.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "IT-C364-striscione",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 364: I can describe a protest: people protest, demonstrate in the square and carry a banner.",
+    "assesses": [
+      "IT-LEX-C364-PROTESTA-03",
+      "IT-LEX-C364-PROTESTA-04",
+      "IT-LEX-C364-PROTESTA-05"
+    ]
+  }
+}

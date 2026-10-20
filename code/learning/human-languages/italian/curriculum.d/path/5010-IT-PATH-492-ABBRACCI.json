@@ -1,0 +1,9 @@
+{
+  "id": "IT-PATH-492-ABBRACCI",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "IT-EXT-492-ABBRACCI"
+  ],
+  "after": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 283,
+  "title": "Der Zeuge",
+  "label": "ch:ge-der-zeuge",
+  "canDo": "I can talk about witnesses: a witness, to testify, a statement, to observe and to recount.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "GE-C283-schildern",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 283: I can talk about witnesses: a witness, to testify, a statement, to observe and to recount.",
+    "assesses": [
+      "GE-LEX-C283-ZEUGE-03",
+      "GE-LEX-C283-ZEUGE-04",
+      "GE-LEX-C283-ZEUGE-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 564,
+  "title": "El héroe de la historia",
+  "label": "ch:es-el-heroe-de-la-historia",
+  "canDo": "I can talk about the people in a story: the character, the main character, the hero, and the legends and myths they come from.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "ES-C564-mito",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 564: I can talk about the people in a story: the character, the main character, the hero, and the legends and myths they come from.",
+    "assesses": [
+      "ES-LEX-C564-HEROE-03",
+      "ES-LEX-C564-HEROE-04",
+      "ES-LEX-C564-HEROE-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 401,
+  "sourceHash": "fnv1a64:1c2f064893422228",
+  "lessonIds": [
+    "GE-C401-hupe",
+    "GE-C401-hupen",
+    "GE-C401-sicherheitsgurt",
+    "GE-C401-anschnallen",
+    "GE-C401-beifahrer"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch401.txt",
+  "json": "german/narration/ch401.json",
+  "textHash": "fnv1a64:606926f75775fa8b",
+  "jsonHash": "fnv1a64:cdca4d9c3a9895f3",
+  "findings": []
+}

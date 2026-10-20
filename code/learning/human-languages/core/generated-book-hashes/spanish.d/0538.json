@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 538,
+  "sourceHash": "fnv1a64:bbd9fad36a905bf3",
+  "lessonIds": [
+    "ES-C538-anteriormente",
+    "ES-C538-posteriormente",
+    "ES-C538-previamente",
+    "ES-C538-recientemente",
+    "ES-C538-ultimamente"
+  ],
+  "tex": "spanish/book/chapters/ch538-antes-y-despues.tex"
+}

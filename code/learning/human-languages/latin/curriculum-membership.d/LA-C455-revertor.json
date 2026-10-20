@@ -1,0 +1,11 @@
+{
+  "id": "LA-C455-revertor",
+  "pathSegment": "LA-PATH-455-CONSPICOR",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "LA-EXT-455-CONSPICOR",
+      "order": 2
+    }
+  ]
+}

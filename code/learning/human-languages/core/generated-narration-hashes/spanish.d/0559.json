@@ -1,0 +1,20 @@
+{
+  "language": "spanish",
+  "chapter": 559,
+  "sourceHash": "fnv1a64:1ee629a9c417afff",
+  "lessonIds": [
+    "ES-C559-desfile",
+    "ES-C559-procesion",
+    "ES-C559-feria",
+    "ES-C559-carroza",
+    "ES-C559-multitud",
+    "ES-R559-repaso-552-559"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "spanish/narration/ch559.txt",
+  "json": "spanish/narration/ch559.json",
+  "textHash": "fnv1a64:09883f9693dc3c5a",
+  "jsonHash": "fnv1a64:7322001eef5ef8aa",
+  "findings": []
+}

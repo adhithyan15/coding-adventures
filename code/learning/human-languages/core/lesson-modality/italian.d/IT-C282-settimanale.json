@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C282-settimanale",
+    "language": "italian",
+    "chapter": 282,
+    "sequence": 16580,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:aed46a4bada0b4d5"
+  },
+  "findings": []
+}

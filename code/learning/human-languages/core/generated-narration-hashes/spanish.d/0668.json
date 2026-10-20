@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 668,
+  "sourceHash": "fnv1a64:a8879d333c411fea",
+  "lessonIds": [
+    "ES-C668-deshacer",
+    "ES-C668-empaquetar",
+    "ES-C668-bascula",
+    "ES-C668-exceso",
+    "ES-C668-arrastrar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch668.txt",
+  "json": "spanish/narration/ch668.json",
+  "textHash": "fnv1a64:6fa6790b3c98637c",
+  "jsonHash": "fnv1a64:eb42aa7acc4915a9",
+  "findings": []
+}

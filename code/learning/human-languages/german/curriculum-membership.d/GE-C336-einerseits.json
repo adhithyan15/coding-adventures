@@ -1,0 +1,11 @@
+{
+  "id": "GE-C336-einerseits",
+  "pathSegment": "GE-PATH-336-EINIGUNG",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-336-EINIGUNG",
+      "order": 3
+    }
+  ]
+}

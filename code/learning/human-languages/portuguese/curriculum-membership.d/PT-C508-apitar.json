@@ -1,0 +1,11 @@
+{
+  "id": "PT-C508-apitar",
+  "pathSegment": "PT-PATH-508-ARBITRO",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PT-EXT-508-ARBITRO",
+      "order": 2
+    }
+  ]
+}

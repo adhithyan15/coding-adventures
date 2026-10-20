@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C295-indizio",
+    "language": "italian",
+    "chapter": 295,
+    "sequence": 17250,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:fda9920e80f82250"
+  },
+  "findings": []
+}

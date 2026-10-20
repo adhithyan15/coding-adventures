@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 762,
+  "sourceHash": "fnv1a64:1af52d0a4b5e25f2",
+  "lessonIds": [
+    "ES-C762-crucigrama",
+    "ES-C762-revista",
+    "ES-C762-lector",
+    "ES-C762-portada",
+    "ES-C762-hojear"
+  ],
+  "tex": "spanish/book/chapters/ch762-leer-en-casa.tex"
+}

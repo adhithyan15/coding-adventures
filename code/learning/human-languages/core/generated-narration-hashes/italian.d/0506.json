@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 506,
+  "sourceHash": "fnv1a64:83a5e4bfcc1d68d0",
+  "lessonIds": [
+    "IT-C506-scattare",
+    "IT-C506-inquadrare",
+    "IT-C506-treppiede",
+    "IT-C506-rullino",
+    "IT-C506-sviluppare"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch506.txt",
+  "json": "italian/narration/ch506.json",
+  "textHash": "fnv1a64:d6cf29436841f9c9",
+  "jsonHash": "fnv1a64:15d64c4c85cce80a",
+  "findings": []
+}

@@ -1,0 +1,9 @@
+{
+  "id": "GE-PATH-378-HAUSARBEIT",
+  "spine_node": "SPINE-EXPRESS-CONDITION",
+  "before": [],
+  "inline": [
+    "GE-EXT-378-HAUSARBEIT"
+  ],
+  "after": []
+}

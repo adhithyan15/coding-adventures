@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 439,
+  "sourceHash": "fnv1a64:2bbdfe4e6ece39fc",
+  "lessonIds": [
+    "IT-C439-orientarsi",
+    "IT-C439-smarrirsi",
+    "IT-C439-cartina",
+    "IT-C439-piantina",
+    "IT-C439-bussola"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch439.txt",
+  "json": "italian/narration/ch439.json",
+  "textHash": "fnv1a64:19e7f717e3512c1a",
+  "jsonHash": "fnv1a64:2f47e07e5c99869f",
+  "findings": []
+}

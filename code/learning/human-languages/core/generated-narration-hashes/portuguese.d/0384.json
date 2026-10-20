@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 384,
+  "sourceHash": "fnv1a64:6a0a71001f967436",
+  "lessonIds": [
+    "PT-C384-valido",
+    "PT-C384-caducar",
+    "PT-C384-expirar",
+    "PT-C384-renovar",
+    "PT-C384-certificado"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch384.txt",
+  "json": "portuguese/narration/ch384.json",
+  "textHash": "fnv1a64:52101438f203da79",
+  "jsonHash": "fnv1a64:2ae1a9c40552ff38",
+  "findings": []
+}

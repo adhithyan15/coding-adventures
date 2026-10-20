@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C734-sangrar",
+    "language": "spanish",
+    "chapter": 734,
+    "sequence": 26660,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:23410420e3a3374a"
+  },
+  "findings": []
+}

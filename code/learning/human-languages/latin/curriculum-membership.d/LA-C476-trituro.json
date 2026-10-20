@@ -1,0 +1,11 @@
+{
+  "id": "LA-C476-trituro",
+  "pathSegment": "LA-PATH-476-TRITURO",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "LA-EXT-476-TRITURO",
+      "order": 0
+    }
+  ]
+}

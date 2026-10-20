@@ -1,0 +1,11 @@
+{
+  "id": "PT-C266-ha-tres-anos-que",
+  "pathSegment": "PT-PATH-266-COMPARAR",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PT-EXT-266-COMPARAR",
+      "order": 1
+    }
+  ]
+}

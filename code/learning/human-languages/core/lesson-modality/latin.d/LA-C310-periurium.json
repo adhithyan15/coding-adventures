@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C310-periurium",
+    "language": "latin",
+    "chapter": 310,
+    "sequence": 16780,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:622af3ad5fdea7f5"
+  },
+  "findings": []
+}

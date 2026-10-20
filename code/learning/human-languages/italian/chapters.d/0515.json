@@ -1,0 +1,19 @@
+{
+  "chapter": 515,
+  "title": "Ghiaccio e neve",
+  "label": "ch:it-ghiaccio-e-neve",
+  "canDo": "I can talk about winter sports.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "IT-C515-seggiovia",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 515: I can talk about winter sports.",
+    "assesses": [
+      "IT-LEX-C515-NEVE-03",
+      "IT-LEX-C515-NEVE-04",
+      "IT-LEX-C515-NEVE-05"
+    ]
+  }
+}

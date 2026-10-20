@@ -1,0 +1,11 @@
+{
+  "id": "IT-C446-borgo",
+  "pathSegment": "IT-PATH-446-BORGO",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "IT-EXT-446-BORGO",
+      "order": 2
+    }
+  ]
+}

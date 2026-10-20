@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 715,
+  "sourceHash": "fnv1a64:c21f06ed2a4857f3",
+  "lessonIds": [
+    "ES-C715-amar",
+    "ES-C715-detestar",
+    "ES-C715-enamorado",
+    "ES-C715-besar",
+    "ES-C715-pasion"
+  ],
+  "tex": "spanish/book/chapters/ch715-amar-y-detestar.tex"
+}

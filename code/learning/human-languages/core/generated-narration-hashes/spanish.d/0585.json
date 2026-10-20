@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 585,
+  "sourceHash": "fnv1a64:f084a8289b225def",
+  "lessonIds": [
+    "ES-C585-proponer",
+    "ES-C585-propuesta",
+    "ES-C585-sugerencia",
+    "ES-C585-advertir",
+    "ES-C585-advertencia"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch585.txt",
+  "json": "spanish/narration/ch585.json",
+  "textHash": "fnv1a64:7d3197de70f1dbd8",
+  "jsonHash": "fnv1a64:c658f7c076cfd8fe",
+  "findings": []
+}

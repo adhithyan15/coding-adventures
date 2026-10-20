@@ -1,0 +1,11 @@
+{
+  "id": "GE-C308-beifall",
+  "pathSegment": "GE-PATH-308-ANSTOSSEN",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-308-ANSTOSSEN",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 755,
+  "title": "Calentar y trotar",
+  "label": "ch:es-calentar-y-trotar",
+  "canDo": "I can talk about warming up, jogging, muscles and sports injuries.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "ES-C755-musculo",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 755: I can talk about warming up, jogging, muscles and sports injuries.",
+    "assesses": [
+      "ES-LEX-C755-ENTRENAR-03",
+      "ES-LEX-C755-ENTRENAR-04",
+      "ES-LEX-C755-ENTRENAR-05"
+    ]
+  }
+}

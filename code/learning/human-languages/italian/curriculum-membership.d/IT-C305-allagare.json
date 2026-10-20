@@ -1,0 +1,11 @@
+{
+  "id": "IT-C305-allagare",
+  "pathSegment": "IT-PATH-305-ALLUVIONE",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "IT-EXT-305-ALLUVIONE",
+      "order": 1
+    }
+  ]
+}

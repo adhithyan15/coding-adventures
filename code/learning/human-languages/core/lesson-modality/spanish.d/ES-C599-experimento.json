@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C599-experimento",
+    "language": "spanish",
+    "chapter": 599,
+    "sequence": 19670,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:079ba7f054060a12"
+  },
+  "findings": []
+}

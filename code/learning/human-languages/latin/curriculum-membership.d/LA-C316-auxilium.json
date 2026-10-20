@@ -1,0 +1,11 @@
+{
+  "id": "LA-C316-auxilium",
+  "pathSegment": "LA-PATH-316-ERIPIO",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "LA-EXT-316-ERIPIO",
+      "order": 4
+    }
+  ]
+}

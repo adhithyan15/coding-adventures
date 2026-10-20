@@ -1,0 +1,11 @@
+{
+  "id": "PT-C318-comemorar",
+  "pathSegment": "PT-PATH-318-FESTEJAR",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PT-EXT-318-FESTEJAR",
+      "order": 1
+    }
+  ]
+}

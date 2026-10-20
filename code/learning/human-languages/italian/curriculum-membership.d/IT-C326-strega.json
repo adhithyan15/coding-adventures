@@ -1,0 +1,11 @@
+{
+  "id": "IT-C326-strega",
+  "pathSegment": "IT-PATH-326-MAGIA",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "IT-EXT-326-MAGIA",
+      "order": 1
+    }
+  ]
+}

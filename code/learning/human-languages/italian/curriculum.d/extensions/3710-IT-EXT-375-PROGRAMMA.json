@@ -1,0 +1,8 @@
+{
+  "id": "IT-EXT-375-PROGRAMMA",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can change a plan: cancel it, put it off, say it is provisional or final and fix a date.",
+  "prerequisites": []
+}

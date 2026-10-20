@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 302,
+  "sourceHash": "fnv1a64:a3f53bf262b9268a",
+  "lessonIds": [
+    "FR-C302-incendie",
+    "FR-C302-extincteur",
+    "FR-C302-explosion",
+    "FR-C302-exploser",
+    "FR-C302-etincelle"
+  ],
+  "tex": "french/book/chapters/ch302-au-feu.tex"
+}

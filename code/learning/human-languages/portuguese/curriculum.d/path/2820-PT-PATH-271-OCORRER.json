@@ -1,0 +1,9 @@
+{
+  "id": "PT-PATH-271-OCORRER",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "PT-EXT-271-OCORRER"
+  ],
+  "after": []
+}

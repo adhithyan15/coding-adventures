@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C739-recuperacion",
+    "language": "spanish",
+    "chapter": 739,
+    "sequence": 26910,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7d7199a72db3a7f8"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C515-pattinare",
+    "language": "italian",
+    "chapter": 515,
+    "sequence": 28850,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8cf4f6142c8d5527"
+  },
+  "findings": []
+}

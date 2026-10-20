@@ -1,0 +1,19 @@
+{
+  "chapter": 514,
+  "title": "El reportaje",
+  "label": "ch:es-el-reportaje",
+  "canDo": "I can say that a reporter interviewed someone, spread the news and announced something.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "ES-C514-anunciar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 514: I can say that a reporter interviewed someone, spread the news and announced something.",
+    "assesses": [
+      "ES-LEX-C514-REPORTE-03",
+      "ES-LEX-C514-REPORTE-04",
+      "ES-LEX-C514-REPORTE-05"
+    ]
+  }
+}

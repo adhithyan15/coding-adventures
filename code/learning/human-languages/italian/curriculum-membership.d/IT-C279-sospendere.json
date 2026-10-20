@@ -1,0 +1,11 @@
+{
+  "id": "IT-C279-sospendere",
+  "pathSegment": "IT-PATH-279-RINVIO",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "IT-EXT-279-RINVIO",
+      "order": 1
+    }
+  ]
+}

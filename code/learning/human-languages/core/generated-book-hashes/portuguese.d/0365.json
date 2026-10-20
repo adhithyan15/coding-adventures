@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 365,
+  "sourceHash": "fnv1a64:9fd1ecb03c4cacf7",
+  "lessonIds": [
+    "PT-C365-justica",
+    "PT-C365-injusto",
+    "PT-C365-injustica",
+    "PT-C365-preconceito",
+    "PT-C365-estereotipo"
+  ],
+  "tex": "portuguese/book/chapters/ch365-justo-e-injusto.tex"
+}

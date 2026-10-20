@@ -1,0 +1,11 @@
+{
+  "id": "PT-C471-sinceridade",
+  "pathSegment": "PT-PATH-471-MENTIRA",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "PT-EXT-471-MENTIRA",
+      "order": 0
+    }
+  ]
+}

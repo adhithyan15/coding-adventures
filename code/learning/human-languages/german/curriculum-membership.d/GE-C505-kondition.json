@@ -1,0 +1,11 @@
+{
+  "id": "GE-C505-kondition",
+  "pathSegment": "GE-PATH-505-TRAINING",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GE-EXT-505-TRAINING",
+      "order": 2
+    }
+  ]
+}

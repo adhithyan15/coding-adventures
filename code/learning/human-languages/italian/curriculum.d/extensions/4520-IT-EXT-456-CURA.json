@@ -1,0 +1,8 @@
+{
+  "id": "IT-EXT-456-CURA",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can use personal services: the hairdresser, the barber, the beautician, the optician and getting a stain out.",
+  "prerequisites": []
+}

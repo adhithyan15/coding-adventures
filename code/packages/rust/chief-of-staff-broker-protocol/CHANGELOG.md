@@ -4,6 +4,9 @@
 
 ### Added
 
+- `KEY_HANDLES_VARIABLE` (D18S P2.8b-1): the environment variable naming
+  a Windows broker's key handles, in slot order. It is the applier's
+  `HANDLES_VARIABLE` (a test in the broker checks).
 - The D18K frame protocol between the supervisor and one agent's broker
   (D18S P2.6d-1):
   - Frames to the broker: `Bootstrap`, `Request`, `CallbackResult` and

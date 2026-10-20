@@ -1,0 +1,11 @@
+{
+  "id": "GE-C493-zaertlich",
+  "pathSegment": "GE-PATH-493-ZUNEIGUNG",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GE-EXT-493-ZUNEIGUNG",
+      "order": 2
+    }
+  ]
+}

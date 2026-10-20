@@ -1,0 +1,17 @@
+{
+  "language": "italian",
+  "chapter": 267,
+  "sourceHash": "fnv1a64:f1c944816a5a715c",
+  "lessonIds": [
+    "IT-C267-scusi",
+    "IT-C267-destra-sinistra",
+    "IT-C267-ripasso-strada"
+  ],
+  "voiceLessons": 3,
+  "drivablePrefix": 3,
+  "text": "italian/narration/ch267.txt",
+  "json": "italian/narration/ch267.json",
+  "textHash": "fnv1a64:c335157ce5d53d82",
+  "jsonHash": "fnv1a64:27a8c9825779162b",
+  "findings": []
+}

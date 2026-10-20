@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 587,
+  "sourceHash": "fnv1a64:3bd5d5a9214edd20",
+  "lessonIds": [
+    "ES-C587-comprobar",
+    "ES-C587-evidente",
+    "ES-C587-obvio",
+    "ES-C587-certeza",
+    "ES-C587-aparentemente"
+  ],
+  "tex": "spanish/book/chapters/ch587-esta-claro.tex"
+}

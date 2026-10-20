@@ -1,0 +1,11 @@
+{
+  "id": "IT-C474-sbuffare",
+  "pathSegment": "IT-PATH-474-UMORE",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "IT-EXT-474-UMORE",
+      "order": 4
+    }
+  ]
+}

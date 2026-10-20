@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 271,
+  "sourceHash": "fnv1a64:2b6f2952ef50f5bb",
+  "lessonIds": [
+    "PT-C271-ocorrer",
+    "PT-C271-suceder",
+    "PT-C271-decorrer",
+    "PT-C271-acontecimento",
+    "PT-C271-ocorrencia"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch271.txt",
+  "json": "portuguese/narration/ch271.json",
+  "textHash": "fnv1a64:0630ca78e39e7a13",
+  "jsonHash": "fnv1a64:a189f8ee4a0372e9",
+  "findings": []
+}

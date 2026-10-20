@@ -1,0 +1,19 @@
+{
+  "chapter": 292,
+  "title": "Fugir da polícia",
+  "label": "ch:pt-fugir-da-policia",
+  "canDo": "I can tell how someone ran away and escaped, and talk about the escape and the chase.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "PT-R292-revisao-285-292",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 292: I can tell how someone ran away and escaped, and talk about the escape and the chase.",
+    "assesses": [
+      "PT-LEX-C292-FUGA-03",
+      "PT-LEX-C292-FUGA-04",
+      "PT-LEX-C292-FUGA-05"
+    ]
+  }
+}

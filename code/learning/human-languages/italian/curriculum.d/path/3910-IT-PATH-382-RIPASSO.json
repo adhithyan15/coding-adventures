@@ -1,0 +1,9 @@
+{
+  "id": "IT-PATH-382-RIPASSO",
+  "spine_node": "SPINE-EXPRESS-CONDITION",
+  "before": [],
+  "inline": [
+    "IT-EXT-382-RIPASSO"
+  ],
+  "after": []
+}

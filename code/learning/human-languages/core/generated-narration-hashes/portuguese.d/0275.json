@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 275,
+  "sourceHash": "fnv1a64:389193d0b53f550e",
+  "lessonIds": [
+    "PT-C275-amanhecer",
+    "PT-C275-entardecer",
+    "PT-C275-anoitecer",
+    "PT-C275-crepusculo",
+    "PT-C275-vespera"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch275.txt",
+  "json": "portuguese/narration/ch275.json",
+  "textHash": "fnv1a64:e6048f822764d42c",
+  "jsonHash": "fnv1a64:c6d80c2c6acc5954",
+  "findings": []
+}

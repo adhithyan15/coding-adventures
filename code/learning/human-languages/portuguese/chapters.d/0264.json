@@ -1,0 +1,20 @@
+{
+  "chapter": 264,
+  "title": "Ida e Volta --- The Ticket, and the Missed Train",
+  "label": "ch:pt-the-ticket-and-the-missed-train",
+  "canDo": "I can buy a single or return ticket, and report a problem at the station with perdi o comboio.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "PT-C264-revisao-estacao",
+    "kind": "production",
+    "summary": "Complete PT-C264-revisao-estacao: find the station, buy the ticket, miss the train and get moving again.",
+    "assesses": [
+      "PT-LEX-IDA-E-VOLTA-01",
+      "PT-GRAMMAR-QUERIA-UM-BILHETE-02",
+      "PT-LEX-PERDI-01",
+      "PT-GRAMMAR-TENHO-UM-PROBLEMA-02"
+    ]
+  }
+}

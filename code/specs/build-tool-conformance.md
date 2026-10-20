@@ -1798,6 +1798,11 @@ of each shard's direct assignments, and `estimated_cost` is the sum of every
 closed package's cost. Every declared edge endpoint and scheduled name MUST
 reference a declared package.
 
+The Go build tool also implements an opt-in sharding v2 (`-shard-weights`,
+closure-aware assignment on measured durations; see `build-plan-sharding.md`).
+It is outside these fixtures: without the flag every port, Go included, must
+produce exactly the v1 result above.
+
 Starlark v1 injects `repo_root` into `_ctx` from the runner-owned workspace; it
 is never accepted from fixture input. Repository `load()` labels are resolved
 only against the immutable inline file table and cannot escape the root.

@@ -1,0 +1,11 @@
+{
+  "id": "IT-C272-ripasso-condizionale",
+  "pathSegment": "IT-PATH-272-CONDIZIONALE",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "IT-EXT-272-CONDIZIONALE",
+      "order": 2
+    }
+  ]
+}

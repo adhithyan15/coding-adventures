@@ -1,0 +1,8 @@
+{
+  "id": "IT-EXT-433-CAMERA",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can ask for things in my room: a double room, a cot, a pillowcase, soap and a hair dryer.",
+  "prerequisites": []
+}

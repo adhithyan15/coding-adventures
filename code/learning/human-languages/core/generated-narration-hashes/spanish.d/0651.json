@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 651,
+  "sourceHash": "fnv1a64:c737d331fbfb95ab",
+  "lessonIds": [
+    "ES-C651-vagon",
+    "ES-C651-maquinista",
+    "ES-C651-taquilla",
+    "ES-C651-litera",
+    "ES-C651-apearse"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch651.txt",
+  "json": "spanish/narration/ch651.json",
+  "textHash": "fnv1a64:64bc6afb215097ea",
+  "jsonHash": "fnv1a64:a2f0da149a1be10a",
+  "findings": []
+}

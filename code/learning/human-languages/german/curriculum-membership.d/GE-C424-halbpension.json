@@ -1,0 +1,11 @@
+{
+  "id": "GE-C424-halbpension",
+  "pathSegment": "GE-PATH-424-GASTHOF",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-424-GASTHOF",
+      "order": 4
+    }
+  ]
+}

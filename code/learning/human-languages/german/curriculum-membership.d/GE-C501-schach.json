@@ -1,0 +1,11 @@
+{
+  "id": "GE-C501-schach",
+  "pathSegment": "GE-PATH-501-BRETTSPIEL",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GE-EXT-501-BRETTSPIEL",
+      "order": 1
+    }
+  ]
+}

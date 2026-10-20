@@ -1,0 +1,11 @@
+{
+  "id": "LA-C474-arator",
+  "pathSegment": "LA-PATH-474-ARO",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "LA-EXT-474-ARO",
+      "order": 3
+    }
+  ]
+}

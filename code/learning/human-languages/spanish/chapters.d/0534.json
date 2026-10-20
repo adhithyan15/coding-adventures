@@ -1,0 +1,19 @@
+{
+  "chapter": 534,
+  "title": "De pronto",
+  "label": "ch:es-de-pronto",
+  "canDo": "I can tell a story that moves fast: suddenly, abruptly, immediately and next.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "ES-C534-bruscamente",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 534: I can tell a story that moves fast: suddenly, abruptly, immediately and next.",
+    "assesses": [
+      "ES-LEX-C534-PRONTO-03",
+      "ES-LEX-C534-PRONTO-04",
+      "ES-LEX-C534-PRONTO-05"
+    ]
+  }
+}

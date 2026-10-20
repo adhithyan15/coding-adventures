@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PT-R522-revisao-515-522",
+    "language": "portuguese",
+    "chapter": 522,
+    "sequence": 28860,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:075f2e31dfea7b08"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C577-razonable",
+    "language": "spanish",
+    "chapter": 577,
+    "sequence": 18580,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b188f45311522db3"
+  },
+  "findings": []
+}

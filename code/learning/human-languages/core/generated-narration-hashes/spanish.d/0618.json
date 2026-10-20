@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 618,
+  "sourceHash": "fnv1a64:a5afe349ae089504",
+  "lessonIds": [
+    "ES-C618-imaginar",
+    "ES-C618-hipotesis",
+    "ES-C618-en-teoria",
+    "ES-C618-posiblemente",
+    "ES-C618-seguramente"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch618.txt",
+  "json": "spanish/narration/ch618.json",
+  "textHash": "fnv1a64:a59ef67ac3d1c46d",
+  "jsonHash": "fnv1a64:2f98a5d58d6a155f",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 748,
+  "title": "Familias de hoy",
+  "label": "ch:es-familias-de-hoy",
+  "canDo": "I can talk about adoption, fostering and step-parents in a family.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "ES-C748-padrastro",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 748: I can talk about adoption, fostering and step-parents in a family.",
+    "assesses": [
+      "ES-LEX-C748-NIETOS-03",
+      "ES-LEX-C748-NIETOS-04",
+      "ES-LEX-C748-NIETOS-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "LA-C507-vanitas",
+  "pathSegment": "LA-PATH-507-SUPB",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "LA-EXT-507-SUPB",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "GE-R533-review-final-533",
+  "pathSegment": "GE-PATH-533-GEMUETLICH",
+  "pathOrder": 6,
+  "extensions": [
+    {
+      "id": "GE-EXT-533-GEMUETLICH",
+      "order": 6
+    }
+  ]
+}

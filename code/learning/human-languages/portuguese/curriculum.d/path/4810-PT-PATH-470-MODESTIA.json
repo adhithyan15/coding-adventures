@@ -1,0 +1,9 @@
+{
+  "id": "PT-PATH-470-MODESTIA",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "PT-EXT-470-MODESTIA"
+  ],
+  "after": []
+}

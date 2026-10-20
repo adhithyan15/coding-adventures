@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 701,
+  "sourceHash": "fnv1a64:c110a36af42e7928",
+  "lessonIds": [
+    "ES-C701-caluroso",
+    "ES-C701-templado",
+    "ES-C701-bochorno",
+    "ES-C701-sequia",
+    "ES-C701-sudar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch701.txt",
+  "json": "spanish/narration/ch701.json",
+  "textHash": "fnv1a64:4959916ac6c2f930",
+  "jsonHash": "fnv1a64:c1c8bd60a7abb806",
+  "findings": []
+}

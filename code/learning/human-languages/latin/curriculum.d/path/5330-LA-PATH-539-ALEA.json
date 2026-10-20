@@ -1,0 +1,9 @@
+{
+  "id": "LA-PATH-539-ALEA",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "LA-EXT-539-ALEA"
+  ],
+  "after": []
+}

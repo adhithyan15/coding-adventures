@@ -1,0 +1,14 @@
+{
+  "language": "spanish",
+  "chapter": 695,
+  "sourceHash": "fnv1a64:783e5b7c43b01abd",
+  "lessonIds": [
+    "ES-C695-picar",
+    "ES-C695-fauna",
+    "ES-C695-flora",
+    "ES-C695-pescar",
+    "ES-C695-ciervo",
+    "ES-R695-repaso-688-695"
+  ],
+  "tex": "spanish/book/chapters/ch695-fauna-y-flora.tex"
+}

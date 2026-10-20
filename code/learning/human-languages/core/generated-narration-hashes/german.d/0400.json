@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 400,
+  "sourceHash": "fnv1a64:7ec9b794e0f2ef75",
+  "lessonIds": [
+    "GE-C400-scheinwerfer",
+    "GE-C400-windschutzscheibe",
+    "GE-C400-scheibenwischer",
+    "GE-C400-rueckspiegel",
+    "GE-C400-blinken"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch400.txt",
+  "json": "german/narration/ch400.json",
+  "textHash": "fnv1a64:ea56305cab141638",
+  "jsonHash": "fnv1a64:dcc33e1b5ce2da2e",
+  "findings": []
+}

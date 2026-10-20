@@ -1,0 +1,11 @@
+{
+  "id": "IT-C314-eredita",
+  "pathSegment": "IT-PATH-314-EREDITA",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "IT-EXT-314-EREDITA",
+      "order": 2
+    }
+  ]
+}

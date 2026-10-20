@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 295,
+  "sourceHash": "fnv1a64:ee8fb05fee807a6e",
+  "lessonIds": [
+    "FR-C295-avouer",
+    "FR-C295-aveu",
+    "FR-C295-complice",
+    "FR-C295-acquitter",
+    "FR-C295-relacher"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch295.txt",
+  "json": "french/narration/ch295.json",
+  "textHash": "fnv1a64:b4715039dd452944",
+  "jsonHash": "fnv1a64:bbe4ac91259f8ed1",
+  "findings": []
+}

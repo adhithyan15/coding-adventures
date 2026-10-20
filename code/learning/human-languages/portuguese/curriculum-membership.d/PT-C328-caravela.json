@@ -1,0 +1,11 @@
+{
+  "id": "PT-C328-caravela",
+  "pathSegment": "PT-PATH-328-NAVEGAR",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PT-EXT-328-NAVEGAR",
+      "order": 1
+    }
+  ]
+}

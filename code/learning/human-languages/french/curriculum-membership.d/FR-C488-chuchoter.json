@@ -1,0 +1,11 @@
+{
+  "id": "FR-C488-chuchoter",
+  "pathSegment": "FR-PATH-488-CALINS",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FR-EXT-488-CALINS",
+      "order": 3
+    }
+  ]
+}

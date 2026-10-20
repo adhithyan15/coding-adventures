@@ -1,0 +1,9 @@
+{
+  "id": "ES-PATH-554-GRADUA",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "ES-EXT-554-GRADUA"
+  ],
+  "after": []
+}

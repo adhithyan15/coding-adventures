@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 346,
+  "sourceHash": "fnv1a64:fb5cc4ee080e9f36",
+  "lessonIds": [
+    "PT-C346-raciocinio",
+    "PT-C346-deduzir",
+    "PT-C346-concluir",
+    "PT-C346-conclusao",
+    "PT-C346-criterio"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch346.txt",
+  "json": "portuguese/narration/ch346.json",
+  "textHash": "fnv1a64:9a1d483090afc54a",
+  "jsonHash": "fnv1a64:8a3e3aa246c85fc2",
+  "findings": []
+}

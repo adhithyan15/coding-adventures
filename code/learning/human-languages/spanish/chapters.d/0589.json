@@ -1,0 +1,19 @@
+{
+  "chapter": 589,
+  "title": "En realidad",
+  "label": "ch:es-en-realidad",
+  "canDo": "I can correct an idea, stress a point and say what is true deep down.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "ES-C589-en-el-fondo",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 589: I can correct an idea, stress a point and say what is true deep down.",
+    "assesses": [
+      "ES-LEX-C589-MATIZA-03",
+      "ES-LEX-C589-MATIZA-04",
+      "ES-LEX-C589-MATIZA-05"
+    ]
+  }
+}

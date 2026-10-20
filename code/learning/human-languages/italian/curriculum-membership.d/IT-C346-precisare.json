@@ -1,0 +1,11 @@
+{
+  "id": "IT-C346-precisare",
+  "pathSegment": "IT-PATH-346-MALINTESO",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "IT-EXT-346-MALINTESO",
+      "order": 3
+    }
+  ]
+}

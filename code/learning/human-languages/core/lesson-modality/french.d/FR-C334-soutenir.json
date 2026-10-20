@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C334-soutenir",
+    "language": "french",
+    "chapter": 334,
+    "sequence": 18910,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e2829630a3f975e4"
+  },
+  "findings": []
+}

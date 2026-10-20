@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 472,
+  "sourceHash": "fnv1a64:4df3b0c4651df303",
+  "lessonIds": [
+    "LA-C472-colus",
+    "LA-C472-fusus",
+    "LA-C472-tela",
+    "LA-C472-neo",
+    "LA-C472-lanificium"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch472.txt",
+  "json": "latin/narration/ch472.json",
+  "textHash": "fnv1a64:36c58d4b1554d98e",
+  "jsonHash": "fnv1a64:9e4e635f4ab7a9dc",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 597,
+  "sourceHash": "fnv1a64:227a9f44d6e013a2",
+  "lessonIds": [
+    "ES-C597-aprendizaje",
+    "ES-C597-ensenanza",
+    "ES-C597-educar",
+    "ES-C597-evaluar",
+    "ES-C597-evaluacion"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch597.txt",
+  "json": "spanish/narration/ch597.json",
+  "textHash": "fnv1a64:1db37ed0d429885a",
+  "jsonHash": "fnv1a64:11ccf44bca4e240a",
+  "findings": []
+}

@@ -1,0 +1,14 @@
+{
+  "language": "latin",
+  "chapter": 420,
+  "sourceHash": "fnv1a64:138ca703300a98d5",
+  "lessonIds": [
+    "LA-C420-consto",
+    "LA-C420-auctio",
+    "LA-C420-liceor",
+    "LA-C420-emptor",
+    "LA-C420-venditor",
+    "LA-R420-review-413-420"
+  ],
+  "tex": "latin/book/chapters/ch420-buying-and-selling.tex"
+}

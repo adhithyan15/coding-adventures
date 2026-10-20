@@ -1,0 +1,11 @@
+{
+  "id": "IT-R486-ripasso-479-486",
+  "pathSegment": "IT-PATH-486-PRURITO",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "IT-EXT-486-PRURITO",
+      "order": 5
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 402,
+  "sourceHash": "fnv1a64:6aa9d2ec5625dc99",
+  "lessonIds": [
+    "PT-C402-travao",
+    "PT-C402-derrapar",
+    "PT-C402-pedal",
+    "PT-C402-embraiagem",
+    "PT-C402-engatar"
+  ],
+  "tex": "portuguese/book/chapters/ch402-ao-volante.tex"
+}

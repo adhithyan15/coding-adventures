@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C347-vermeiden",
+    "language": "german",
+    "chapter": 347,
+    "sequence": 18900,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:84fbc80397e9c0ee"
+  },
+  "findings": []
+}

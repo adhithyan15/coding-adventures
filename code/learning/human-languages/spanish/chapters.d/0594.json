@@ -1,0 +1,19 @@
+{
+  "chapter": 594,
+  "title": "En equipo",
+  "label": "ch:es-en-equipo",
+  "canDo": "I can talk about leadership, motivating people, working together and managing.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "ES-C594-gestionar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 594: I can talk about leadership, motivating people, working together and managing.",
+    "assesses": [
+      "ES-LEX-C594-EQUIPO-03",
+      "ES-LEX-C594-EQUIPO-04",
+      "ES-LEX-C594-EQUIPO-05"
+    ]
+  }
+}

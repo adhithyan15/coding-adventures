@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 464,
+  "sourceHash": "fnv1a64:4321f8b75cdf3135",
+  "lessonIds": [
+    "IT-C464-cinghiale",
+    "IT-C464-cervo",
+    "IT-C464-lepre",
+    "IT-C464-falco",
+    "IT-C464-brucare"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch464.txt",
+  "json": "italian/narration/ch464.json",
+  "textHash": "fnv1a64:6c22b1854c5c5fa4",
+  "jsonHash": "fnv1a64:b319364a5de3099c",
+  "findings": []
+}

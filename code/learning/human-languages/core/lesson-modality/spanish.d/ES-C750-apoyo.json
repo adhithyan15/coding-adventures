@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C750-apoyo",
+    "language": "spanish",
+    "chapter": 750,
+    "sequence": 27490,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6c02651a272b4c39"
+  },
+  "findings": []
+}

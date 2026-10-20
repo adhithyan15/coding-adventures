@@ -1,0 +1,14 @@
+{
+  "language": "portuguese",
+  "chapter": 316,
+  "sourceHash": "fnv1a64:3e2d2a1486009d5d",
+  "lessonIds": [
+    "PT-C316-heranca",
+    "PT-C316-herdar",
+    "PT-C316-herdeiro",
+    "PT-C316-testamento",
+    "PT-C316-pensao",
+    "PT-R316-revisao-309-316"
+  ],
+  "tex": "portuguese/book/chapters/ch316-a-heranca.tex"
+}

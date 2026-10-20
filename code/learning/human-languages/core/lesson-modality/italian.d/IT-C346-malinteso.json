@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C346-malinteso",
+    "language": "italian",
+    "chapter": 346,
+    "sequence": 19950,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:22b851c2d45b3d50"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 401,
+  "title": "File e cartelle",
+  "label": "ch:it-file-e-cartelle",
+  "canDo": "I can work with files: delete, copy and paste them, and make a backup.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "IT-C401-backup",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 401: I can work with files: delete, copy and paste them, and make a backup.",
+    "assesses": [
+      "IT-LEX-C401-FILE-03",
+      "IT-LEX-C401-FILE-04",
+      "IT-LEX-C401-FILE-05"
+    ]
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "language": "portuguese",
+  "chapter": 456,
+  "sourceHash": "fnv1a64:bb7712f990e22bf6",
+  "lessonIds": [
+    "PT-C456-clareira",
+    "PT-C456-riacho",
+    "PT-C456-ribeira",
+    "PT-C456-arbusto",
+    "PT-C456-vadear",
+    "PT-R456-revisao-449-456"
+  ],
+  "tex": "portuguese/book/chapters/ch456-no-bosque.tex"
+}

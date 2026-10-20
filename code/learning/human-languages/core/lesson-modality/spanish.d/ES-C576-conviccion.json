@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C576-conviccion",
+    "language": "spanish",
+    "chapter": 576,
+    "sequence": 18530,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:094c0cbc4a1752d8"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C621-facilitar",
+    "language": "spanish",
+    "chapter": 621,
+    "sequence": 20810,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3e48e3e7b6ac165a"
+  },
+  "findings": []
+}

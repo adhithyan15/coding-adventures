@@ -1,0 +1,11 @@
+{
+  "id": "FR-C306-intoxication",
+  "pathSegment": "FR-PATH-306-PIQURES",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FR-EXT-306-PIQURES",
+      "order": 1
+    }
+  ]
+}

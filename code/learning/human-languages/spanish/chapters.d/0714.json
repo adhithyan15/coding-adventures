@@ -1,0 +1,19 @@
+{
+  "chapter": 714,
+  "title": "Cariño y ternura",
+  "label": "ch:es-carino-y-ternura",
+  "canDo": "I can show affection and talk about tenderness in a family.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "ES-C714-adorar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 714: I can show affection and talk about tenderness in a family.",
+    "assesses": [
+      "ES-LEX-C714-CARINO-03",
+      "ES-LEX-C714-CARINO-04",
+      "ES-LEX-C714-CARINO-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 444,
+  "sourceHash": "fnv1a64:405a6a400caf11b5",
+  "lessonIds": [
+    "LA-C444-malacia",
+    "LA-C444-tranquillitas",
+    "LA-C444-paeninsula",
+    "LA-C444-litoreus",
+    "LA-C444-enavigo"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch444.txt",
+  "json": "latin/narration/ch444.json",
+  "textHash": "fnv1a64:be4762c9448997c5",
+  "jsonHash": "fnv1a64:10c03b51bb733688",
+  "findings": []
+}

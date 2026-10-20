@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 364,
+  "sourceHash": "fnv1a64:89380198a8f9060f",
+  "lessonIds": [
+    "IT-C364-protesta",
+    "IT-C364-protestare",
+    "IT-C364-manifestazione",
+    "IT-C364-manifestare",
+    "IT-C364-striscione"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch364.txt",
+  "json": "italian/narration/ch364.json",
+  "textHash": "fnv1a64:f8fd19d39bc9e90e",
+  "jsonHash": "fnv1a64:5832f0cae974aab1",
+  "findings": []
+}

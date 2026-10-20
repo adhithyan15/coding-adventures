@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C476-consolare",
+    "language": "italian",
+    "chapter": 476,
+    "sequence": 26870,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:bf5b9979cf7388d2"
+  },
+  "findings": []
+}

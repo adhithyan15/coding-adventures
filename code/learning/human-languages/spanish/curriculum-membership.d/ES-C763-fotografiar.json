@@ -1,0 +1,11 @@
+{
+  "id": "ES-C763-fotografiar",
+  "pathSegment": "ES-PATH-763-ARTE",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "ES-EXT-763-ARTE",
+      "order": 4
+    }
+  ]
+}

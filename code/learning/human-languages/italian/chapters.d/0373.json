@@ -1,0 +1,19 @@
+{
+  "chapter": 373,
+  "title": "A una condizione",
+  "label": "ch:it-a-una-condizione",
+  "canDo": "I can set a condition: provided that, in case, otherwise, or else, and a possible extra cost.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "IT-C373-eventuale",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 373: I can set a condition: provided that, in case, otherwise, or else, and a possible extra cost.",
+    "assesses": [
+      "IT-LEX-C373-PURCHE-03",
+      "IT-LEX-C373-PURCHE-04",
+      "IT-LEX-C373-PURCHE-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 530,
+  "sourceHash": "fnv1a64:e543a5e12cdd0f7f",
+  "lessonIds": [
+    "ES-C530-arriesgado",
+    "ES-C530-riesgo",
+    "ES-C530-amenaza",
+    "ES-C530-ataque",
+    "ES-C530-atacar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch530.txt",
+  "json": "spanish/narration/ch530.json",
+  "textHash": "fnv1a64:a37d1f5e0a046bfd",
+  "jsonHash": "fnv1a64:e51d6e08d86b7eda",
+  "findings": []
+}

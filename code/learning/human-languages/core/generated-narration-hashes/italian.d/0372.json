@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 372,
+  "sourceHash": "fnv1a64:278ff0a85d577012",
+  "lessonIds": [
+    "IT-C372-supporre",
+    "IT-C372-ipotesi",
+    "IT-C372-presumere",
+    "IT-C372-plausibile",
+    "IT-C372-presupposto"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch372.txt",
+  "json": "italian/narration/ch372.json",
+  "textHash": "fnv1a64:640978149ae3df0e",
+  "jsonHash": "fnv1a64:2107c6e9a81de10f",
+  "findings": []
+}

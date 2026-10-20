@@ -1,0 +1,11 @@
+{
+  "id": "PT-C485-inchado",
+  "pathSegment": "PT-PATH-485-ARRANHAO",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PT-EXT-485-ARRANHAO",
+      "order": 4
+    }
+  ]
+}

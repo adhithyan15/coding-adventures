@@ -1,0 +1,9 @@
+{
+  "id": "IT-PATH-280-FINORA",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "IT-EXT-280-FINORA"
+  ],
+  "after": []
+}

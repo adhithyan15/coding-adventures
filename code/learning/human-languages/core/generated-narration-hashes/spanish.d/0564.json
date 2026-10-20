@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 564,
+  "sourceHash": "fnv1a64:d4320a77acb4d3fb",
+  "lessonIds": [
+    "ES-C564-personaje",
+    "ES-C564-protagonista",
+    "ES-C564-heroe",
+    "ES-C564-leyenda",
+    "ES-C564-mito"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch564.txt",
+  "json": "spanish/narration/ch564.json",
+  "textHash": "fnv1a64:369f5d9be02621ce",
+  "jsonHash": "fnv1a64:53baf9771cdd3400",
+  "findings": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "latin",
+  "chapter": 377,
+  "sourceHash": "fnv1a64:b836cf1d7905e0e5",
+  "lessonIds": [
+    "LA-C377-fullo",
+    "LA-C377-aurifex",
+    "LA-C377-lignarius",
+    "LA-C377-caementarius",
+    "LA-C377-statuarius"
+  ],
+  "tex": "latin/book/chapters/ch377-trades-of-the-town.tex"
+}

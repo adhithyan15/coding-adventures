@@ -1,0 +1,11 @@
+{
+  "id": "LA-C433-clitellae",
+  "pathSegment": "LA-PATH-433-IUMENTUM",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "LA-EXT-433-IUMENTUM",
+      "order": 3
+    }
+  ]
+}

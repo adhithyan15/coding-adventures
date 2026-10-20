@@ -1,0 +1,19 @@
+{
+  "chapter": 320,
+  "title": "Ritos e costumes",
+  "label": "ch:pt-ritos-e-costumes",
+  "canDo": "I can talk about customs, rituals, ceremonies and pilgrimages.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "PT-C320-peregrinacao",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 320: I can talk about customs, rituals, ceremonies and pilgrimages.",
+    "assesses": [
+      "PT-LEX-C320-CERIMONIA-03",
+      "PT-LEX-C320-CERIMONIA-04",
+      "PT-LEX-C320-CERIMONIA-05"
+    ]
+  }
+}

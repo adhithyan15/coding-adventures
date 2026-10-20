@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C394-mutuo",
+    "language": "italian",
+    "chapter": 394,
+    "sequence": 22450,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b0dc94dcc26d0c9d"
+  },
+  "findings": []
+}

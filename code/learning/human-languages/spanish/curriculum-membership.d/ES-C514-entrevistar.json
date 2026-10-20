@@ -1,0 +1,11 @@
+{
+  "id": "ES-C514-entrevistar",
+  "pathSegment": "ES-PATH-514-REPORTE",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ES-EXT-514-REPORTE",
+      "order": 2
+    }
+  ]
+}

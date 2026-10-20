@@ -1,5 +1,77 @@
 # Changelog — iir-to-beam
 
+## [0.21.0] — 2026-10-19 (LANG83 PR1b — floor division, `trap`, `write_i64`)
+
+- **`i64_div_floor` / `i64_mod_floor`** ([LANG83](../../../specs/LANG83-iir-standard-operation-registry.md)): Erlang's
+  `div`/`rem` truncate, raise a kind-less `badarith` for a zero divisor and
+  never overflow (`MIN div -1` is the bignum 2^63), so both edges are tested
+  with `is_eq_exact` first (`Trap.DivZero`; div `Trap.Overflow`; mod returns 0
+  for any `b == -1`), then the floor fix-up is done with `is_eq_exact`/`is_lt`
+  branches. The truncating remainder lives in a dedicated **anonymous**
+  register (`FnMeta::floor_tmp`) allocated **below** `next_reg`, so it is a GC
+  root at every `gc_bif` (a bignum `div`/`rem` can collect) and is
+  nil-initialised by the prologue. A dest that aliases an operand stays
+  correct. (Security review, LOW: the register was first keyed by the name
+  `__lang83_floor_tmp` in `reg_map` and reused a user variable of that name,
+  which the expansion then clobbered; it is no longer reachable from any IIR
+  name — test `user_variable_named_like_the_floor_temp_is_not_clobbered`.)
+- **`trap "<kind>"`** → `move {atom,'<kind>'} x0; call_ext erlang:error/1`.
+  The error reason is the kind atom itself (LANG83 updated: no
+  `{iir_trap, Kind}` tuple — this backend has no tuple-construction opcodes,
+  and a registered kind atom is already unambiguous).
+- **`write_i64`** → `io:format("~w", [X])`, the `print_i64` sequence without
+  `~n`, through the same `io` server; listed with the other `call_ext`
+  builtins in the live-across analysis.
+- `op_support`: the four PR1b ops are `Lowered`; `write_i64` joins
+  `CALL_BUILTIN_SUPPORTED_NAMES`.
+- Tests (`tests/lang83_pr1b.rs`): with no local `erl`, the emitted instruction
+  stream is **executed on a model** of the opcodes it uses (i128 arithmetic,
+  Erlang truncating `div`/`rem`): full sign tables, `MIN / 1`, `MIN mod -1`,
+  both traps, aliasing dest, and the GC-root property of the temp; plus
+  `trap`'s kind atom and `write_i64`'s `"~w"` format. CI's BEAM column runs
+  the real emulator.
+
+## [0.20.0] — 2026-10-19 (LANG83 PR1a — standard operation support)
+
+- **LANG83 op support.** New `op_support` module exporting `OP_SUPPORT` and
+  `op_support(name) -> OpSupport`: this backend's declaration for every entry of
+  `interpreter_ir::op_registry::STANDARD_OPS` ([LANG83](../../../specs/LANG83-iir-standard-operation-registry.md)). Every existing registered op is `Lowered`. The four PR1b ops
+  (`write_i64`, `i64_div_floor`, `i64_mod_floor`, `trap`) are
+  `Refused("not yet lowered; LANG83 PR1b")`. `lang-aot`'s `check_module_for`
+  uses the table to refuse an unsupported op at compile time.
+- Tests: every registry entry is declared exactly once; the PR1b ops are
+  refused; the Builtin rows agree with the new `validate::CALL_BUILTIN_SUPPORTED_NAMES`.
+- **`print_i64` now writes through the `io` server** (`io:format("~w~n", [X])`)
+  instead of `erlang:display/1`. The bytes are identical for integers (`42\n`),
+  but `erlang:display` writes straight from the emulator and bypasses the `io`
+  server `putchar`/`print_str` use, so mixed output could be reordered (LANG83
+  "ordered output stream"). The new sequence is a real `call_ext`, so
+  `print_i64` joins the call-emitting builtins in the live-across analysis (live
+  values are saved to Y slots); a new test pins the sequence, the `io:format/2`
+  import and GC-root validity, and runs it on real `erl` when present.
+  `io_out` still uses `erlang:display/1`.
+- The validator's inline builtin list is hoisted into
+  `validate::CALL_BUILTIN_SUPPORTED_NAMES` (the predicates folded in; behaviour
+  unchanged) so the validator and `OP_SUPPORT` share one list.
+
+## Unreleased - reserve heap for string literals
+
+`str_const` now emits `test_heap` for two words per byte before the
+`put_list` chain that builds the literal, and parks live variables in their
+Y slots around it, because a reservation may collect (`str_const` joins the
+other GC points in `live_across`). Before this, every string literal wrote
+2 x len words past whatever an earlier `test_heap` had reserved. It was the
+same omission BEAM10 fixed in `alloc_array` and `array_set`. Whether the
+overrun reached the stack depended on how full the heap was. On main's CI it
+aborted erl with `erl_gc.c, line 775: Overrun stack and heap` in lang-aot's
+`b11_str_3d` on one Linux shard, twice in a row (PR #17759), and never on
+macOS. An empty literal is plain nil and still reserves nothing.
+
+New tests: the reservation precedes the first `put_list` and covers every
+cell; an empty literal emits no reservation; and a real-`erl` stress test of
+3,000 literals with an integer live across them. Without the fix the stress
+test crashes the emulator deterministically on macOS too.
+
 ## Unreleased - BEAM13: root intermediate imported-call values
 
 ETS-backed `array_set` now saves the table identifier in an initialized Y

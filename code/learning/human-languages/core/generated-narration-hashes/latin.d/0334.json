@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 334,
+  "sourceHash": "fnv1a64:2ac2c02168fc48b6",
+  "lessonIds": [
+    "LA-C334-sacerdos",
+    "LA-C334-victima",
+    "LA-C334-immolo",
+    "LA-C334-voveo",
+    "LA-C334-votum"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch334.txt",
+  "json": "latin/narration/ch334.json",
+  "textHash": "fnv1a64:99fd0a53a0bfb1ab",
+  "jsonHash": "fnv1a64:c342c96b47acaddb",
+  "findings": []
+}

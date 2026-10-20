@@ -1,0 +1,19 @@
+{
+  "chapter": 287,
+  "title": "In onda",
+  "label": "ch:it-in-onda",
+  "canDo": "I can talk about broadcasting: going out live, a programme, a channel and a station.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "IT-C287-emittente",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 287: I can talk about broadcasting: going out live, a programme, a channel and a station.",
+    "assesses": [
+      "IT-LEX-C287-DIRETTA-03",
+      "IT-LEX-C287-DIRETTA-04",
+      "IT-LEX-C287-DIRETTA-05"
+    ]
+  }
+}

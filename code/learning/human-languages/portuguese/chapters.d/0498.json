@@ -1,0 +1,19 @@
+{
+  "chapter": 498,
+  "title": "Amigos e vizinhos",
+  "label": "ch:pt-amigos-e-vizinhos",
+  "canDo": "I can talk about getting on with friends and neighbours.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "PT-R498-revisao-491-498",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 498: I can talk about getting on with friends and neighbours.",
+    "assesses": [
+      "PT-LEX-C498-CONVIVIO-03",
+      "PT-LEX-C498-CONVIVIO-04",
+      "PT-LEX-C498-CONVIVIO-05"
+    ]
+  }
+}

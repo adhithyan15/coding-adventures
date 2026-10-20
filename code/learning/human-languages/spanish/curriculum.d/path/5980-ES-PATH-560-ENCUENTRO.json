@@ -1,0 +1,9 @@
+{
+  "id": "ES-PATH-560-ENCUENTRO",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "ES-EXT-560-ENCUENTRO"
+  ],
+  "after": []
+}

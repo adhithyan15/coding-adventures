@@ -6,6 +6,13 @@ export default defineConfig({
     // jsdom has no IndexedDB, so openWorkspaceStorage() takes its in-memory
     // fallback — precisely the path we want these tests to cover.
     environment: "jsdom",
+    // Node 25 turned its own Web Storage on by default. Without a
+    // --localstorage-file, Node's global `localStorage` is a stub with no
+    // setItem, and it shadows jsdom's working one, so every theme-persistence
+    // test fails on Node 25 while passing on CI's Node 22. Switching Node's copy
+    // off restores jsdom's on every Node version (the flag is a no-op where the
+    // feature was already off).
+    execArgv: ["--no-experimental-webstorage"],
     globals: true,
     // .tsx is listed explicitly: the previous glob was .test.ts only, so a
     // component test would have been collected by nobody and reported as a

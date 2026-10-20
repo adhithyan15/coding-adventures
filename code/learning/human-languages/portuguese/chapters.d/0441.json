@@ -1,0 +1,19 @@
+{
+  "chapter": 441,
+  "title": "Na praça",
+  "label": "ch:pt-na-praca",
+  "canDo": "I can describe the buildings round a square: the bell tower, the cathedral, the arcades, the fountain and the stone pillory.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "PT-C441-pelourinho",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 441: I can describe the buildings round a square: the bell tower, the cathedral, the arcades, the fountain and the stone pillory.",
+    "assesses": [
+      "PT-LEX-C441-PRACA-03",
+      "PT-LEX-C441-PRACA-04",
+      "PT-LEX-C441-PRACA-05"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C738-sintoma",
+    "language": "spanish",
+    "chapter": 738,
+    "sequence": 26860,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:df1078ae7f4aa1be"
+  },
+  "findings": []
+}

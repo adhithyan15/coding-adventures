@@ -1,0 +1,11 @@
+{
+  "id": "ES-C518-robo",
+  "pathSegment": "ES-PATH-518-ROBO",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ES-EXT-518-ROBO",
+      "order": 1
+    }
+  ]
+}

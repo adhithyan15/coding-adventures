@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PT-C339-acordo",
+    "language": "portuguese",
+    "chapter": 339,
+    "sequence": 19400,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:85d7c47d3af70f17"
+  },
+  "findings": []
+}

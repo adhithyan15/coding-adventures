@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C346-immortalis",
+    "language": "latin",
+    "chapter": 346,
+    "sequence": 18650,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:37d67e8bd3d0231e"
+  },
+  "findings": []
+}

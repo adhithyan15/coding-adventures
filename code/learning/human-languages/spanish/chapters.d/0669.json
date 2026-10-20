@@ -1,0 +1,19 @@
+{
+  "chapter": 669,
+  "title": "Con el plano",
+  "label": "ch:es-con-el-plano",
+  "canDo": "I can find a place on a street map, point it out and say where it is.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "ES-C669-situado",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 669: I can find a place on a street map, point it out and say where it is.",
+    "assesses": [
+      "ES-LEX-C669-PLANO-03",
+      "ES-LEX-C669-PLANO-04",
+      "ES-LEX-C669-PLANO-05"
+    ]
+  }
+}

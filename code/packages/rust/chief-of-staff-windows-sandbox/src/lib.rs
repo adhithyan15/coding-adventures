@@ -113,7 +113,33 @@
 //!
 //! An LPAC token reads nothing ALL APPLICATION PACKAGES may, its own image
 //! included. So `WindowsConfinement::prepare_verified` adds one ACE to the
-//! image: this SID may read and execute it. The working directory is the
+//! image: this SID may read and execute it.
+//!
+//! ## Direct grants (P2.8c)
+//!
+//! A `Direct` `fs:read` of one exact file ([`direct_read_grants`]) becomes
+//! one more ACE: this SID may read that file. Nothing else `Direct` runs:
+//!
+//! ```text
+//!   Direct rule      here
+//!   ---------------  ----------------------------------------------------
+//!   fs:read          an allow ACE (read, never execute) on the file, for
+//!                    the agent's SID, from creation until it has exited
+//!   fs:write         refused: the agent is Low integrity, and no-write-up
+//!                    refuses its write to an ordinary (Medium) file
+//!                    whatever the list says. Lowering the file's label
+//!                    would open it to every Low process of the user.
+//!   create, delete,  refused: each would need rights over the whole
+//!   list             directory
+//! ```
+//!
+//! The file is opened when the confinement is prepared, and that handle is
+//! held until the agent has exited. It shares read and write but not
+//! delete, so the file can be neither renamed nor deleted meanwhile. It
+//! must be a regular file and not a reparse point, at exactly its final
+//! path, owned and writable only as an executable must be, and not the
+//! agent's own image. Once the agent has exited, every ACE naming its SID
+//! is removed from the file again. The working directory is the
 //! system directory, which ALL RESTRICTED APPLICATION PACKAGES (S-1-15-2-2,
 //! which LPAC keeps) may read.
 //!
@@ -130,6 +156,7 @@
 
 #![deny(unsafe_op_in_unsafe_fn)]
 
+use capability_cage::{Action, Category};
 use capability_os_sandbox::{OsFamily, PlanRejection, SandboxCoverage, SandboxPlan};
 use std::fmt;
 
@@ -152,9 +179,14 @@ pub enum ConfinementError {
     Plan(Vec<PlanRejection>),
     /// The plan is for another OS.
     NotWindowsPlan,
-    /// The plan has a `Direct` grant, which this applier does not express
-    /// yet (P2.8c). Refused rather than run without it.
+    /// The plan has a `Direct` rule this applier cannot express: anything
+    /// but a file read (P2.8c). Refused rather than run without it.
     Unsupported(String),
+    /// A `Direct` read grant's file is not one this applier will grant:
+    /// missing, not a regular file, a reparse point, not at its final path,
+    /// open to someone else's writes, the agent's own image, or its access
+    /// list could not be changed.
+    Grant(String),
     /// The agent failed its digest, or its path is not the canonical path
     /// of the file that was verified.
     Executable(String),
@@ -184,8 +216,9 @@ impl fmt::Display for ConfinementError {
             ),
             Self::NotWindowsPlan => f.write_str("sandbox plan is not for Windows"),
             Self::Unsupported(key) => {
-                write!(f, "Direct grants are not supported on Windows yet: {key}")
+                write!(f, "this Direct grant cannot be expressed on Windows: {key}")
             }
+            Self::Grant(why) => write!(f, "Direct grant refused: {why}"),
             Self::Executable(why) => write!(f, "executable refused: {why}"),
             Self::Container(why) => write!(f, "AppContainer refused: {why}"),
             Self::ImageAccess(why) => write!(f, "image access entry refused: {why}"),
@@ -200,21 +233,44 @@ impl fmt::Display for ConfinementError {
 impl std::error::Error for ConfinementError {}
 
 /// The plan is one this applier can run: for Windows, launchable, and with
-/// no `Direct` grant (those are P2.8c).
+/// no `Direct` rule but file reads ([`direct_read_grants`], P2.8c).
 pub fn check_plan(plan: &SandboxPlan) -> Result<(), ConfinementError> {
     if plan.os != OsFamily::Windows {
         return Err(ConfinementError::NotWindowsPlan);
     }
     plan.launch_preconditions()
         .map_err(ConfinementError::Plan)?;
-    if let Some(rule) = plan
-        .rules
-        .iter()
-        .find(|rule| rule.coverage == SandboxCoverage::Direct)
-    {
-        return Err(ConfinementError::Unsupported(rule.capability_key()));
+    direct_read_grants(plan).map(|_| ())
+}
+
+/// The plan's `Direct` rules, each the path of one file the agent may read
+/// (P2.8c). Any other `Direct` rule refuses the plan
+/// ([`ConfinementError::Unsupported`]).
+///
+/// ```text
+///   Direct fs:read   C:\data\in.txt   →  "C:\data\in.txt"
+///   Direct fs:write  ...                →  Unsupported: no-write-up
+///   Direct fs:create / delete / list    →  Unsupported: a whole directory
+///   Brokered or LaunchTime rules        →  not a grant; skipped
+/// ```
+///
+/// The paths are only syntactically exact here (`capability-os-sandbox`
+/// lowers a target to `Direct` only when it is one normalised drive path).
+/// Whether each names a file that may be granted is checked against the
+/// file itself when the confinement is prepared.
+pub fn direct_read_grants(plan: &SandboxPlan) -> Result<Vec<String>, ConfinementError> {
+    let mut grants = Vec::new();
+    for rule in &plan.rules {
+        if rule.coverage != SandboxCoverage::Direct {
+            continue;
+        }
+        let capability = &rule.capability;
+        match (capability.category, capability.action) {
+            (Category::Fs, Action::Read) => grants.push(capability.target.clone()),
+            _ => return Err(ConfinementError::Unsupported(rule.capability_key())),
+        }
     }
-    Ok(())
+    Ok(grants)
 }
 
 /// The AppContainer name for `agent_id`, from which its SID is derived:
@@ -225,9 +281,28 @@ pub fn check_plan(plan: &SandboxPlan) -> Result<(), ConfinementError> {
 /// ```text
 ///   agent_id "weather-reporter"  →  chief-of-staff.<32 hex digits>
 /// ```
-pub fn container_name(agent_id: &str) -> String {
-    let digest = coding_adventures_sha256::sha256(agent_id.as_bytes());
-    let mut name = String::from("chief-of-staff.");
+pub fn container_name(agent_id: impl AsRef<[u8]>) -> String {
+    named("chief-of-staff.", agent_id.as_ref())
+}
+
+/// The AppContainer name for the broker that serves `agent_id` (D18S
+/// P2.8b-1): `chief-of-staff-broker.` and the same 32 hex digits. 54
+/// characters. No agent's name has this prefix, so a broker and any agent,
+/// its own included, are always different principals: processes of one
+/// AppContainer can open each other, and a broker holds keys its agent
+/// must not reach.
+///
+/// ```text
+///   agent   chief-of-staff.<32 hex>
+///   broker  chief-of-staff-broker.<32 hex>     (same digest, other prefix)
+/// ```
+pub fn broker_container_name(agent_id: impl AsRef<[u8]>) -> String {
+    named("chief-of-staff-broker.", agent_id.as_ref())
+}
+
+fn named(prefix: &str, agent_id: &[u8]) -> String {
+    let digest = coding_adventures_sha256::sha256(agent_id);
+    let mut name = String::from(prefix);
     for byte in &digest[..16] {
         name.push_str(&format!("{byte:02x}"));
     }
@@ -465,6 +540,25 @@ mod tests {
     }
 
     #[test]
+    fn a_broker_s_container_is_never_an_agent_s() {
+        let broker = broker_container_name("weather-reporter");
+        assert!(broker.starts_with("chief-of-staff-broker."));
+        assert_eq!(broker.len(), 54);
+        assert!(broker.len() <= 64);
+        // The same digest, under a prefix no agent name has.
+        assert_eq!(broker[22..], container_name("weather-reporter")[15..]);
+        for id in ["weather-reporter", "", "chief-of-staff-broker."] {
+            assert!(!container_name(id).starts_with("chief-of-staff-broker."));
+            assert_ne!(container_name(id), broker_container_name(id));
+        }
+        // An id that is not UTF-8 is a valid id.
+        assert_eq!(
+            broker_container_name([0xff, 0xfe]),
+            broker_container_name(vec![0xff, 0xfe])
+        );
+    }
+
+    #[test]
     fn the_mitigation_bits_are_the_documented_ones() {
         // WinBase.h: PROCESS_CREATION_MITIGATION_POLICY_*_ALWAYS_ON.
         assert_eq!(always_on(12), 0x0000_0000_0000_1000); // HEAP_TERMINATE
@@ -564,8 +658,20 @@ mod tests {
         assert_eq!(strip_verbatim_prefix(r"C:\a.exe"), r"C:\a.exe");
     }
 
+    /// A Windows plan with one capability, `action` on `target`.
+    fn plan_with(action: &str, target: &str) -> SandboxPlan {
+        capability_os_sandbox::plan_from_json(
+            &format!(
+                r#"{{"version":1,"package":"rust/probe","capabilities":[{{"category":"fs","action":"{action}","target":"{}","justification":"input"}}],"justification":"reads"}}"#,
+                target.replace('\\', "\\\\")
+            ),
+            OsFamily::Windows,
+        )
+        .unwrap()
+    }
+
     #[test]
-    fn only_a_launchable_windows_plan_without_direct_grants_runs() {
+    fn only_a_launchable_windows_plan_runs() {
         let plan = |os| {
             capability_os_sandbox::plan_from_json(
                 r#"{"version":1,"package":"rust/probe","capabilities":[],"justification":"none"}"#,
@@ -578,14 +684,33 @@ mod tests {
             check_plan(&plan(OsFamily::Linux)),
             Err(ConfinementError::NotWindowsPlan)
         );
-        let with_grant = capability_os_sandbox::plan_from_json(
-            r#"{"version":1,"package":"rust/probe","capabilities":[{"category":"fs","action":"read","target":"C:\\data\\in.txt","justification":"input"}],"justification":"reads"}"#,
-            OsFamily::Windows,
-        )
-        .unwrap();
-        assert!(matches!(
-            check_plan(&with_grant),
-            Err(ConfinementError::Unsupported(_))
-        ));
+    }
+
+    #[test]
+    fn a_direct_read_is_a_grant_of_its_exact_path() {
+        let plan = plan_with("read", r"C:\data\in.txt");
+        assert!(check_plan(&plan).is_ok());
+        assert_eq!(
+            direct_read_grants(&plan),
+            Ok(vec![r"C:\data\in.txt".to_string()])
+        );
+    }
+
+    #[test]
+    fn every_other_direct_rule_refuses_the_plan() {
+        for action in ["write", "create", "delete", "list"] {
+            let plan = plan_with(action, r"C:\data\in.txt");
+            assert!(
+                matches!(check_plan(&plan), Err(ConfinementError::Unsupported(_))),
+                "{action}"
+            );
+        }
+    }
+
+    #[test]
+    fn a_brokered_rule_is_not_a_grant() {
+        // A directory is a wildcard in disguise: lowered to Brokered.
+        let plan = plan_with("read", r"C:\data\");
+        assert_eq!(direct_read_grants(&plan), Ok(Vec::new()));
     }
 }

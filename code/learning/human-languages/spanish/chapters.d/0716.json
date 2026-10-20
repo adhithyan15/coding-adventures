@@ -1,0 +1,19 @@
+{
+  "chapter": 716,
+  "title": "Malas noticias",
+  "label": "ch:es-malas-noticias",
+  "canDo": "I can react to bad news, show pity and comfort someone who is disappointed.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "ES-C716-decepcion",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 716: I can react to bad news, show pity and comfort someone who is disappointed.",
+    "assesses": [
+      "ES-LEX-C716-LASTIMA-03",
+      "ES-LEX-C716-LASTIMA-04",
+      "ES-LEX-C716-LASTIMA-05"
+    ]
+  }
+}

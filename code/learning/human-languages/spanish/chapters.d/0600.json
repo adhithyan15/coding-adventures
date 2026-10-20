@@ -1,0 +1,19 @@
+{
+  "chapter": 600,
+  "title": "La sociedad",
+  "label": "ch:es-la-sociedad",
+  "canDo": "I can talk about citizenship, civic behaviour and the groups people belong to.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "ES-C600-pertenecer",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 600: I can talk about citizenship, civic behaviour and the groups people belong to.",
+    "assesses": [
+      "ES-LEX-C600-SOCIEDAD-03",
+      "ES-LEX-C600-SOCIEDAD-04",
+      "ES-LEX-C600-SOCIEDAD-05"
+    ]
+  }
+}

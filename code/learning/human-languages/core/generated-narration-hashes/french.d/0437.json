@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 437,
+  "sourceHash": "fnv1a64:e32eceae3288a2bb",
+  "lessonIds": [
+    "FR-C437-impasse",
+    "FR-C437-ruelle",
+    "FR-C437-avenue",
+    "FR-C437-boulevard",
+    "FR-C437-passant"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch437.txt",
+  "json": "french/narration/ch437.json",
+  "textHash": "fnv1a64:f07dd91d515fbbfe",
+  "jsonHash": "fnv1a64:3d25eea49c2b583e",
+  "findings": []
+}

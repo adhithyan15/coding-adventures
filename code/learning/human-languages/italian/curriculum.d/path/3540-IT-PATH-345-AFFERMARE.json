@@ -1,0 +1,9 @@
+{
+  "id": "IT-PATH-345-AFFERMARE",
+  "spine_node": "SPINE-GIVE-REASONS",
+  "before": [],
+  "inline": [
+    "IT-EXT-345-AFFERMARE"
+  ],
+  "after": []
+}

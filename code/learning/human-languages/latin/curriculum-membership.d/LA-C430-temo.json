@@ -1,0 +1,11 @@
+{
+  "id": "LA-C430-temo",
+  "pathSegment": "LA-PATH-430-TEMO",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "LA-EXT-430-TEMO",
+      "order": 0
+    }
+  ]
+}

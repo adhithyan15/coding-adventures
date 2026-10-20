@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C400-scheibenwischer",
+    "language": "german",
+    "chapter": 400,
+    "sequence": 21620,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:88e63ac3de4d5f43"
+  },
+  "findings": []
+}

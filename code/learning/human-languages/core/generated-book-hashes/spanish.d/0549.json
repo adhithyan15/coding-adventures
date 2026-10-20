@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 549,
+  "sourceHash": "fnv1a64:8b0db2c194f0d4eb",
+  "lessonIds": [
+    "ES-C549-casado",
+    "ES-C549-soltero",
+    "ES-C549-casar",
+    "ES-C549-marido",
+    "ES-C549-brindar"
+  ],
+  "tex": "spanish/book/chapters/ch549-casados.tex"
+}

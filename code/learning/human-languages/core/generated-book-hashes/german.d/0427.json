@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 427,
+  "sourceHash": "fnv1a64:d6cf2f0c411f798a",
+  "lessonIds": [
+    "GE-C427-klimaanlage",
+    "GE-C427-heizung",
+    "GE-C427-heizkoerper",
+    "GE-C427-aufdrehen",
+    "GE-C427-zudrehen"
+  ],
+  "tex": "german/book/chapters/ch427-warm-oder-kalt.tex"
+}

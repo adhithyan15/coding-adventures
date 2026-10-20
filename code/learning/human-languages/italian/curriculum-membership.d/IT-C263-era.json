@@ -1,0 +1,11 @@
+{
+  "id": "IT-C263-era",
+  "pathSegment": "IT-PATH-263-SCENA",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "IT-EXT-263-SCENA",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,8 @@
+{
+  "id": "LA-EXT-515-VULT",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can describe a face.",
+  "prerequisites": []
+}

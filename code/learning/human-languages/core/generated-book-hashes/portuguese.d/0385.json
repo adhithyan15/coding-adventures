@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 385,
+  "sourceHash": "fnv1a64:468293b96eb9da1a",
+  "lessonIds": [
+    "PT-C385-burocracia",
+    "PT-C385-processo",
+    "PT-C385-pedido",
+    "PT-C385-legal",
+    "PT-C385-ilegal"
+  ],
+  "tex": "portuguese/book/chapters/ch385-a-burocracia.tex"
+}

@@ -1452,12 +1452,16 @@ backend immediately) come before the enabler-dependent items.
   One additional built-in `entier` may wrap a supported bounded transform rooted
   in `sign(...)`, including the exact `entier(sign(...))` root; broader runtime
   `entier` operands remain conservative.
-  The bounded sign-rooted transform may include up to thirty-eight exact additive
-  offset units, either as one exact `38` term or a checked sum of exact `1`
-  through `37` terms. The cap is
-  preserved through parentheses and supported standard-function wrappers and
-  applied independently to each runtime conditional path. Larger and dynamic
-  offsets remain conservative.
+  The bounded sign-rooted transform may include whole-number additive offsets
+  whose checked total stays within `2^53 - 1` units, so `sign(x) ± offset`
+  remains an exact binary64 integer on every path. This single budget replaced
+  a hand-enumerated cap that had grown from one to forty-four units in
+  forty-four separate changes without protecting any additional property: the
+  outer runtime-real selector rule already accepts finite static terms of any
+  size. The budget is preserved through parentheses and supported
+  standard-function wrappers and applied independently to each runtime
+  conditional path. Fractional, oversized and dynamic offsets remain
+  conservative.
   Globals, captured locals, and other real-name branches remain conservative. Additive composition,
   multiplication, division, and exponentiation preserve it when every operand
   is independently runtime-real or a finite static numeric expression. The

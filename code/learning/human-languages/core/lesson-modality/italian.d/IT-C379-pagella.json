@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C379-pagella",
+    "language": "italian",
+    "chapter": 379,
+    "sequence": 21680,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:597d1d1b0bf7f321"
+  },
+  "findings": []
+}

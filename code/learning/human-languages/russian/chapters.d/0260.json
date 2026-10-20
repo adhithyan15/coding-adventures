@@ -1,0 +1,22 @@
+{
+  "chapter": 260,
+  "title": "Writing --- Four Lines And The Comma You Cannot Hear",
+  "label": "ch:ru-four-lines",
+  "canDo": "I can write four connected lines to a named reader, joining with и, но or а and giving a reason with потому что, with a comma in front of every joiner that takes one.",
+  "spineNodes": [
+    "SPINE-SAY-WHY"
+  ],
+  "payoff": {
+    "lesson": "RU-W260-four-lines",
+    "kind": "task",
+    "summary": "Complete RU-W260-four-lines: four lines to one reader using и, но or а, and потому что, then check the comma in front of each joiner.",
+    "assesses": [
+      "RU-LEX-I-01",
+      "RU-GRAMMAR-I-TWO-CLAUSES-01",
+      "RU-LEX-POTOMU-CHTO-01",
+      "RU-GRAMMAR-POTOMU-CHTO-CLAUSE-01",
+      "RU-PUNCT-ZAPYATAYA-01"
+    ],
+    "note": "French's parce que moves nothing and German's weil moves the verb; Russian marks the join on paper instead. A comma stands before но, а and потому что and none before и joining two halves about the same person, so the ear never hears the join and the examiner always sees it."
+  }
+}

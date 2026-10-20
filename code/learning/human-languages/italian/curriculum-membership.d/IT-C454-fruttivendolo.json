@@ -1,0 +1,11 @@
+{
+  "id": "IT-C454-fruttivendolo",
+  "pathSegment": "IT-PATH-454-ALIMENTARI",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "IT-EXT-454-ALIMENTARI",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 295,
+  "title": "Eine Panne",
+  "label": "ch:ge-eine-panne",
+  "canDo": "I can report a breakdown and damage: a breakdown, the breakdown service, to tow away, to damage and to destroy.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "GE-C295-zerstoeren",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 295: I can report a breakdown and damage: a breakdown, the breakdown service, to tow away, to damage and to destroy.",
+    "assesses": [
+      "GE-LEX-C295-PANNE-03",
+      "GE-LEX-C295-PANNE-04",
+      "GE-LEX-C295-PANNE-05"
+    ]
+  }
+}

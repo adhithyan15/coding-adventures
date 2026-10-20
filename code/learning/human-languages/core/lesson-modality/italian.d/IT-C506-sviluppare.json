@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C506-sviluppare",
+    "language": "italian",
+    "chapter": 506,
+    "sequence": 28430,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:31b1f3f3e870b80f"
+  },
+  "findings": []
+}

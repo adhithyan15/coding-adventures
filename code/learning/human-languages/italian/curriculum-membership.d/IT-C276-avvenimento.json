@@ -1,0 +1,11 @@
+{
+  "id": "IT-C276-avvenimento",
+  "pathSegment": "IT-PATH-276-VICENDA",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "IT-EXT-276-VICENDA",
+      "order": 0
+    }
+  ]
+}

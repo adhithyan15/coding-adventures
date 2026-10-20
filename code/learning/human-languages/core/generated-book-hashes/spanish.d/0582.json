@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 582,
+  "sourceHash": "fnv1a64:a2e6b916f3fb51ae",
+  "lessonIds": [
+    "ES-C582-consecuencia",
+    "ES-C582-impacto",
+    "ES-C582-conllevar",
+    "ES-C582-por-consiguiente",
+    "ES-C582-de-modo-que"
+  ],
+  "tex": "spanish/book/chapters/ch582-las-consecuencias.tex"
+}

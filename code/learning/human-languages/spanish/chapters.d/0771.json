@@ -1,0 +1,19 @@
+{
+  "chapter": 771,
+  "title": "Por el sabor",
+  "label": "ch:es-por-el-sabor",
+  "canDo": "I can say why I like or dislike a dish: its taste, whether it is hot, salty or raw, and how it smells.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "ES-C771-oler",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 771: I can say why I like or dislike a dish: its taste, whether it is hot, salty or raw, and how it smells.",
+    "assesses": [
+      "ES-LEX-C771-SABOR-03",
+      "ES-LEX-C771-SABOR-04",
+      "ES-LEX-C771-SABOR-05"
+    ]
+  }
+}

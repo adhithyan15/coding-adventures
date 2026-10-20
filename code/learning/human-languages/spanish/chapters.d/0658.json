@@ -1,0 +1,19 @@
+{
+  "chapter": 658,
+  "title": "En barco",
+  "label": "ch:es-en-barco",
+  "canDo": "I can travel by sea: a ferry or a cruise, sailing and going ashore at the quay.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "ES-C658-desembarcar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 658: I can travel by sea: a ferry or a cruise, sailing and going ashore at the quay.",
+    "assesses": [
+      "ES-LEX-C658-BARCO-03",
+      "ES-LEX-C658-BARCO-04",
+      "ES-LEX-C658-BARCO-05"
+    ]
+  }
+}

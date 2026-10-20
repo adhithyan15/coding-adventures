@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C718-bromear",
+    "language": "spanish",
+    "chapter": 718,
+    "sequence": 25840,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e9dcd4246c3c08f4"
+  },
+  "findings": []
+}

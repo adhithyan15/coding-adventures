@@ -1,0 +1,19 @@
+{
+  "chapter": 326,
+  "title": "Aetātēs",
+  "label": "ch:la-aetates",
+  "canDo": "I can talk about the ages of life: young adulthood, youth, old age, orphaned and a ward.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "LA-C326-pupillus",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 326: I can talk about the ages of life: young adulthood, youth, old age, orphaned and a ward.",
+    "assesses": [
+      "LA-LEX-C326-SENECTUS-03",
+      "LA-LEX-C326-SENECTUS-04",
+      "LA-LEX-C326-SENECTUS-05"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C325-regina",
+    "language": "italian",
+    "chapter": 325,
+    "sequence": 18780,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:427211ceca678478"
+  },
+  "findings": []
+}

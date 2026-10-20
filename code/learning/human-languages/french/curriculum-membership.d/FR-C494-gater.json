@@ -1,0 +1,11 @@
+{
+  "id": "FR-C494-gater",
+  "pathSegment": "FR-PATH-494-EDUCATION",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FR-EXT-494-EDUCATION",
+      "order": 1
+    }
+  ]
+}

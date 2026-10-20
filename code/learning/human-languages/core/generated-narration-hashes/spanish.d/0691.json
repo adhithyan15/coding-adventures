@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 691,
+  "sourceHash": "fnv1a64:8b6299cbd2b25b57",
+  "lessonIds": [
+    "ES-C691-agricultor",
+    "ES-C691-campesino",
+    "ES-C691-finca",
+    "ES-C691-vinedo",
+    "ES-C691-cultivar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch691.txt",
+  "json": "spanish/narration/ch691.json",
+  "textHash": "fnv1a64:d68269edfb63945d",
+  "jsonHash": "fnv1a64:dcdc39df26377024",
+  "findings": []
+}

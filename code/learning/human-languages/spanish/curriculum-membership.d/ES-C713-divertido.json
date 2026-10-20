@@ -1,0 +1,11 @@
+{
+  "id": "ES-C713-divertido",
+  "pathSegment": "ES-PATH-713-DIVERTIDO",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ES-EXT-713-DIVERTIDO",
+      "order": 1
+    }
+  ]
+}

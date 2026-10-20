@@ -1,0 +1,11 @@
+{
+  "id": "ES-C597-ensenanza",
+  "pathSegment": "ES-PATH-597-APRENDE",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ES-EXT-597-APRENDE",
+      "order": 1
+    }
+  ]
+}

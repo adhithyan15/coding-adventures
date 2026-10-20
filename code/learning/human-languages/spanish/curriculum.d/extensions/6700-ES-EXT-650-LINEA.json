@@ -1,0 +1,8 @@
+{
+  "id": "ES-EXT-650-LINEA",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can take a coach or a tram, use a bus pass, change and validate my ticket.",
+  "prerequisites": []
+}

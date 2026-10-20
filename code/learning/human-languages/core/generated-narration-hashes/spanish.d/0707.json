@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 707,
+  "sourceHash": "fnv1a64:ed4c2a15c7a08f30",
+  "lessonIds": [
+    "ES-C707-enfadado",
+    "ES-C707-enojado",
+    "ES-C707-rabia",
+    "ES-C707-ira",
+    "ES-C707-fastidiar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch707.txt",
+  "json": "spanish/narration/ch707.json",
+  "textHash": "fnv1a64:75195e629a996494",
+  "jsonHash": "fnv1a64:033772bb50eb8910",
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C540-trochus",
+    "language": "latin",
+    "chapter": 540,
+    "sequence": 28620,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:313d561d3bb2e40e"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "ES-R767-repaso-final-767",
+  "pathSegment": "ES-PATH-767-PORVENIR",
+  "pathOrder": 6,
+  "extensions": [
+    {
+      "id": "ES-EXT-767-PORVENIR",
+      "order": 6
+    }
+  ]
+}

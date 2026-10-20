@@ -1,0 +1,8 @@
+{
+  "id": "FR-EXT-401-CONDUITE",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can describe how someone drives: speeding up, turning the wheel, skidding, stalling and the pedals.",
+  "prerequisites": []
+}

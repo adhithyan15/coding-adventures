@@ -1,0 +1,19 @@
+{
+  "chapter": 448,
+  "title": "To snore, To make a noise, To make a din, Drinker, Hoarse",
+  "label": "ch:la-to-snore-to-make-a-noise-to-make-a-din-drinker-hoarse",
+  "canDo": "I can complain about a noisy night: someone snoring, people making noise, a din, the drinkers and their hoarse voices.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "LA-C448-raucus",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 448: I can complain about a noisy night: someone snoring, people making noise, a din, the drinkers and their hoarse voices.",
+    "assesses": [
+      "LA-LEX-C448-STERTO-03",
+      "LA-LEX-C448-STERTO-04",
+      "LA-LEX-C448-STERTO-05"
+    ]
+  }
+}

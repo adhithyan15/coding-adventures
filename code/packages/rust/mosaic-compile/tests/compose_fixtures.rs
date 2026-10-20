@@ -9,7 +9,23 @@
 use std::fs;
 use std::path::{Path, PathBuf};
 use std::process::{Command, Output};
-use std::time::{SystemTime, UNIX_EPOCH};
+
+/// A scratch-name nonce that is unique for every call in this process.
+///
+/// The clock alone is not: macOS reports `SystemTime` in whole microseconds,
+/// so two tests running in parallel threads could read the same "nanos" and
+/// be handed the same directory, each seeing the other's files (this made
+/// `compose_fixtures` fail about one run in five). The counter makes every
+/// call distinct; the clock keeps names from a previous run apart.
+fn unique_nonce() -> String {
+    static NEXT: std::sync::atomic::AtomicU64 = std::sync::atomic::AtomicU64::new(0);
+    let n = NEXT.fetch_add(1, std::sync::atomic::Ordering::Relaxed);
+    let nanos = std::time::SystemTime::now()
+        .duration_since(std::time::UNIX_EPOCH)
+        .expect("system clock after epoch")
+        .as_nanos();
+    format!("{nanos}-{n}")
+}
 
 fn repository_root() -> PathBuf {
     Path::new(env!("CARGO_MANIFEST_DIR"))
@@ -20,15 +36,13 @@ fn repository_root() -> PathBuf {
 }
 
 fn scratch() -> PathBuf {
-    let nonce = SystemTime::now()
-        .duration_since(UNIX_EPOCH)
-        .expect("system clock")
-        .as_nanos();
+    let nonce = unique_nonce();
     let path = std::env::temp_dir().join(format!(
         "mosaic-compile-compose-fixtures-{}-{nonce}",
         std::process::id()
     ));
-    fs::create_dir_all(&path).expect("scratch directory");
+    // `create_dir`, not `create_dir_all`: a fresh directory must not already exist.
+    fs::create_dir(&path).expect("scratch directory");
     path
 }
 
@@ -168,4 +182,13 @@ fn an_unrenderable_fixture_still_fails_under_strict_mode() {
         String::from_utf8_lossy(&result.stderr)
     );
     fs::remove_dir_all(&dir).ok();
+}
+
+/// Every scratch directory is a fresh one. A clock-only name repeated
+/// whenever two calls landed in the same microsecond, which on macOS is a
+/// tight loop, and parallel tests then shared a directory.
+#[test]
+fn scratch_names_never_repeat_within_a_process() {
+    let names: std::collections::HashSet<String> = (0..1000).map(|_| unique_nonce()).collect();
+    assert_eq!(names.len(), 1000);
 }

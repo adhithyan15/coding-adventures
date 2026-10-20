@@ -1,0 +1,11 @@
+{
+  "id": "PT-C431-termostato",
+  "pathSegment": "PT-PATH-431-AQUECIMENTO",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-431-AQUECIMENTO",
+      "order": 3
+    }
+  ]
+}

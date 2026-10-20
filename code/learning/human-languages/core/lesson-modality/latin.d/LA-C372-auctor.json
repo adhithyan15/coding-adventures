@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C372-auctor",
+    "language": "latin",
+    "chapter": 372,
+    "sequence": 19960,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:df34c5c9d64ac7ff"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C428-reditus",
+    "language": "latin",
+    "chapter": 428,
+    "sequence": 22860,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:58164c2a1350171b"
+  },
+  "findings": []
+}

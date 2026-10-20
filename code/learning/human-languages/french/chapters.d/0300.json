@@ -1,0 +1,19 @@
+{
+  "chapter": 300,
+  "title": "Les secours",
+  "label": "ch:fr-les-secours",
+  "canDo": "I can describe a rescue: the emergency services, coming to help, reviving someone, a tourniquet and a stretcher.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "FR-C300-civiere",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 300: I can describe a rescue: the emergency services, coming to help, reviving someone, a tourniquet and a stretcher.",
+    "assesses": [
+      "FR-LEX-C300-SECOURS-03",
+      "FR-LEX-C300-SECOURS-04",
+      "FR-LEX-C300-SECOURS-05"
+    ]
+  }
+}

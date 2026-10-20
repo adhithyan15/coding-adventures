@@ -1,0 +1,11 @@
+{
+  "id": "ES-C521-investigar",
+  "pathSegment": "ES-PATH-521-PISTA",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "ES-EXT-521-PISTA",
+      "order": 0
+    }
+  ]
+}

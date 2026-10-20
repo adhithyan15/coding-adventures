@@ -1,0 +1,13 @@
+{
+  "language": "latin",
+  "chapter": 415,
+  "sourceHash": "fnv1a64:7d5e3dde6a1a78f1",
+  "lessonIds": [
+    "LA-C415-castigo",
+    "LA-C415-relego",
+    "LA-C415-proscribo",
+    "LA-C415-flagellum",
+    "LA-C415-custodia"
+  ],
+  "tex": "latin/book/chapters/ch415-punishment.tex"
+}

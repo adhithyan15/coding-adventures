@@ -1,0 +1,11 @@
+{
+  "id": "PT-C519-plateia",
+  "pathSegment": "PT-PATH-519-ENSAIO",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-519-ENSAIO",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 327,
+  "sourceHash": "fnv1a64:549b3a1a0cdfacc3",
+  "lessonIds": [
+    "IT-C327-battaglia",
+    "IT-C327-cavaliere",
+    "IT-C327-spada",
+    "IT-C327-scudo",
+    "IT-C327-conquistare"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch327.txt",
+  "json": "italian/narration/ch327.json",
+  "textHash": "fnv1a64:f09193f4960f8b9e",
+  "jsonHash": "fnv1a64:b14c5625746b4442",
+  "findings": []
+}

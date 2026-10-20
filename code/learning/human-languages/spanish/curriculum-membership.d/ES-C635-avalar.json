@@ -1,0 +1,11 @@
+{
+  "id": "ES-C635-avalar",
+  "pathSegment": "ES-PATH-635-PROMESA",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ES-EXT-635-PROMESA",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C278-abonne",
+    "language": "french",
+    "chapter": 278,
+    "sequence": 16050,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3c378af70caf1a3e"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 359,
+  "title": "Gerecht oder nicht?",
+  "label": "ch:ge-gerecht-oder-nicht",
+  "canDo": "I can talk about justice and inequality, poverty and wealth, and people who are put at a disadvantage.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "GE-C359-benachteiligen",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 359: I can talk about justice and inequality, poverty and wealth, and people who are put at a disadvantage.",
+    "assesses": [
+      "GE-LEX-C359-GERECHTIGKEIT-03",
+      "GE-LEX-C359-GERECHTIGKEIT-04",
+      "GE-LEX-C359-GERECHTIGKEIT-05"
+    ]
+  }
+}

@@ -184,14 +184,14 @@
     {
       "id": "ishikawa",
       "headers": ["ishikawa", "ishikawa-beta"],
-      "status": "partial",
+      "status": "full",
       "ir": "causal",
       "smoke_source": "ishikawa-beta\nProblem\n  Cause"
     },
     {
       "id": "wardley",
       "headers": ["wardley-beta"],
-      "status": "partial",
+      "status": "full",
       "ir": "wardley",
       "smoke_source": "wardley-beta\ncomponent User [0.9, 0.5]"
     },
@@ -219,7 +219,7 @@
     {
       "id": "railroad",
       "headers": ["railroad-beta", "railroad-ebnf-beta", "railroad-abnf-beta", "railroad-peg-beta"],
-      "status": "partial",
+      "status": "full",
       "ir": "railroad",
       "smoke_source": "railroad-beta\nexpression = nonterminal(\"term\");"
     },
