@@ -4,9 +4,9 @@ id: PA-C181-yatra
 spine_node: SPINE-READ-PRACTICAL-TEXTS
 sequence: 9490
 chapter: 181
-type: vocabulary
+type: listening-speaking
 headword: ਯਾਤਰਾ
-romanization: "yatra"
+romanization: "yātrā"
 gloss: journey, travel
 concept_tag: PA-A2-TRAVEL-JOURNEY
 prerequisites: [PA-C181-ticket]
@@ -32,7 +32,7 @@ variety: standard-punjabi
 reviews_of: [PA-C181-ticket, PA-C181-rel]
 ---
 
-# ਯਾਤਰਾ — hear and say journey or travel
+# Yatra — hear and say journey or travel
 
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[PA-TRAVEL-TICKET-01, PA-TRAVEL-RAIL-01] -->
@@ -66,4 +66,4 @@ waits until the next lesson takes the new opening letter from this known word.
 
 [PAUSE 3s] Say *travel by train*. (*Rel nāl yātrā*.)
 
-Source: Punjabi University, [RCPLT dictionary](https://dic.learnpunjabi.org/default.aspx?look=%E0%A8%AF%E0%A8%BE%E0%A8%A4%E0%A8%B0%E0%A8%BE), lists **ਯਾਤਰਾ** as journey or travel.
+Source: Punjabi University, [RCPLT dictionary](https://dic.learnpunjabi.org/default.aspx?look=%E0%A8%AF%E0%A8%BE%E0%A8%A4%E0%A8%B0%E0%A8%BE), lists *yātrā* as journey or travel.

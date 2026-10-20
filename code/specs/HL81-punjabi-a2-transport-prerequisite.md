@@ -15,13 +15,15 @@ confidential examiner script. The next bounded semantic group is **ਰੇਲ** (
 
 ## Scope and sequence
 
-Add chapter 181 with eight lessons of at most 300 seconds. A short recognition
-lesson introduces **ਯ** immediately before its first use in **ਯਾਤਰਾ**; no
-stroke order is claimed without evidence. The five vocabulary lessons
-introduce exactly one of the measured forms each. An atom-free review
-and an atom-free four-skill payoff give every atom at least two later
-retrievals. Build on already taught **ਸਟੇਸ਼ਨ**, **ਗੱਡੀ**, **ਘਰ**, **ਜਾਣਾ**,
-**ਮੈਨੂੰ ... ਪਸੰਦ ਹੈ**, and **ਨਾਲ** rather than opening a new grammar table.
+Add chapter 181 with eight lessons of at most 300 seconds. Learners first hear
+and say *yātrā* without seeing its Gurmukhi spelling. A short recognition lesson
+then introduces and copies **ਯ** from that known spoken word; no stroke order is
+claimed without evidence. Later lessons read **ਯਾਤਰਾ** and use it in a practical
+travel chunk. The five vocabulary lessons introduce exactly one of the measured
+forms each. An atom-free review and an atom-free four-skill payoff give every
+atom at least two later retrievals. Build on already taught **ਸਟੇਸ਼ਨ**, **ਗੱਡੀ**,
+**ਘਰ**, **ਜਾਣਾ**, **ਮੈਨੂੰ ... ਪਸੰਦ ਹੈ**, and **ਨਾਲ** rather than opening a new
+grammar table.
 
 The bounded payoff is:
 

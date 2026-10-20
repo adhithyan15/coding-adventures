@@ -4,7 +4,7 @@
   "chapter": 181,
   "title": "A Train Ticket and the Way Home",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:ebd6c35dad087b13",
+  "sourceHash": "fnv1a64:f04978b78d18ed65",
   "lessons": [
     {
       "id": "PA-C181-rel",
@@ -236,9 +236,9 @@
     {
       "id": "PA-C181-yatra",
       "sequence": 9490,
-      "title": "ਯਾਤਰਾ (yatra) — hear and say journey or travel",
+      "title": "Yatra — hear and say journey or travel",
       "headword": "ਯਾਤਰਾ",
-      "romanization": "yatra",
+      "romanization": "yātrā",
       "gloss": "journey, travel",
       "script": "gurmukhi",
       "modality": "voice",
@@ -246,7 +246,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6287a6decfc5d085",
+      "sourceHash": "fnv1a64:7a7379c27c09e521",
       "notice": null,
       "blocks": [
         {
@@ -365,7 +365,7 @@
             },
             {
               "kind": "speech",
-              "text": "Source: Punjabi University, RCPLT dictionary, lists ਯਾਤਰਾ (yatra) as journey or travel."
+              "text": "Source: Punjabi University, RCPLT dictionary, lists yātrā as journey or travel."
             }
           ]
         }
@@ -544,7 +544,7 @@
             },
             {
               "kind": "speech",
-              "text": "Say journey, then home. (ਯਾਤਰਾ (yatra), ਘਰ.)"
+              "text": "Say journey, then home. (ਯਾਤਰਾ (yātrā), ਘਰ.)"
             }
           ]
         },
@@ -593,7 +593,7 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "ਯਾਤਰਾ (yatra), then ਵਾਪਸ (vapas) ਘਰ",
+              "instruction": "ਯਾਤਰਾ (yātrā), then ਵਾਪਸ (vapas) ਘਰ",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
@@ -762,7 +762,7 @@
             },
             {
               "kind": "speech",
-              "text": "Recall ਰੇਲ (rel), ਟਿਕਟ (tikat), ਯਾਤਰਾ (yatra), ਵਾਪਸ (vapas), and ਪੈਦਲ (paidal)."
+              "text": "Recall ਰੇਲ (rel), ਟਿਕਟ (tikat), ਯਾਤਰਾ (yātrā), ਵਾਪਸ (vapas), and ਪੈਦਲ (paidal)."
             }
           ]
         },
@@ -777,7 +777,7 @@
             },
             {
               "kind": "speech",
-              "text": "ਰੇਲ (rel) ਨਾਲ ਯਾਤਰਾ (yatra) — travel by train."
+              "text": "ਰੇਲ (rel) ਨਾਲ ਯਾਤਰਾ (yātrā) — travel by train."
             },
             {
               "kind": "speech",
@@ -829,7 +829,7 @@
             },
             {
               "kind": "speech",
-              "text": "Sources: Punjabi University RCPLT entries for ਰੇਲ (rel), ਟਿਕਟ (tikat), ਯਾਤਰਾ (yatra), ਵਾਪਸ (vapas), and ਪੈਦਲ (paidal)."
+              "text": "Sources: Punjabi University RCPLT entries for ਰੇਲ (rel), ਟਿਕਟ (tikat), ਯਾਤਰਾ (yātrā), ਵਾਪਸ (vapas), and ਪੈਦਲ (paidal)."
             }
           ]
         }
@@ -875,7 +875,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ਰੇਲ ਦੀ ਟਿਕਟ ਇੱਥੇ ਹੈ। ਮੈਨੂੰ ਰੇਲ ਨਾਲ ਯਾਤਰਾ ਪਸੰਦ ਹੈ। ਮੈਨੂੰ ਪੈਦਲ ਵਾਪਸ ਘਰ ਜਾਣਾ ਪਸੰਦ ਹੈ। (rel di tikat itthe hai. mainu rel naal yatra pasand hai. mainu paidal vapas ghar jaana pasand hai.)"
+              "text": "ਰੇਲ ਦੀ ਟਿਕਟ ਇੱਥੇ ਹੈ। ਮੈਨੂੰ ਰੇਲ ਨਾਲ ਯਾਤਰਾ (yātrā) ਪਸੰਦ ਹੈ। ਮੈਨੂੰ ਪੈਦਲ ਵਾਪਸ ਘਰ ਜਾਣਾ ਪਸੰਦ ਹੈ। (rel di tikat itthe hai. mainu rel naal yatra pasand hai. mainu paidal vapas ghar jaana pasand hai.)"
             },
             {
               "kind": "prompt",
@@ -927,7 +927,7 @@
             },
             {
               "kind": "speech",
-              "text": "Sources: Punjabi University RCPLT entries for ਰੇਲ (rel), ਟਿਕਟ (tikat), ਯਾਤਰਾ (yatra), ਵਾਪਸ (vapas), and ਪੈਦਲ (paidal)."
+              "text": "Sources: Punjabi University RCPLT entries for ਰੇਲ (rel), ਟਿਕਟ (tikat), ਯਾਤਰਾ (yātrā), ਵਾਪਸ (vapas), and ਪੈਦਲ (paidal)."
             }
           ]
         }

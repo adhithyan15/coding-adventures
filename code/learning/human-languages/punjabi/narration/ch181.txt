@@ -56,7 +56,7 @@ Source: Punjabi University, RCPLT dictionary, lists ਟਿਕਟ (tikat) as a ti
 
 
 Lesson 3 of 8.
-ਯਾਤਰਾ (yatra) — hear and say journey or travel.
+Yatra — hear and say journey or travel.
 
 Warm-up.
 [pause 2 seconds]
@@ -85,7 +85,7 @@ Guided Practice.
 Wrap-up Recall.
 [pause 3 seconds]
 Say travel by train. (Rel nāl yātrā.)
-Source: Punjabi University, RCPLT dictionary, lists ਯਾਤਰਾ (yatra) as journey or travel.
+Source: Punjabi University, RCPLT dictionary, lists yātrā as journey or travel.
 
 
 Lesson 4 of 8.
@@ -128,7 +128,7 @@ Lesson 5 of 8.
 
 Warm-up.
 [pause 2 seconds]
-Say journey, then home. (ਯਾਤਰਾ (yatra), ਘਰ.)
+Say journey, then home. (ਯਾਤਰਾ (yātrā), ਘਰ.)
 
 Grammar Lens: one direction word.
 ਵਾਪਸ (vapas) — vāpas — back; returning.
@@ -139,7 +139,7 @@ Guided Practice.
 [your turn — hear: vāpas; YOU SAY: ਵਾਪਸ (vapas)]
 [pause 8 seconds for the answer]
 [once you have stopped driving — read: ਵਾਪਸ (vapas) ਘਰ]
-[your turn — say: ਯਾਤਰਾ (yatra), then ਵਾਪਸ (vapas) ਘਰ]
+[your turn — say: ਯਾਤਰਾ (yātrā), then ਵਾਪਸ (vapas) ਘਰ]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
@@ -178,11 +178,11 @@ Three small travel chunks — guided review.
 
 Warm-up.
 [pause 3 seconds]
-Recall ਰੇਲ (rel), ਟਿਕਟ (tikat), ਯਾਤਰਾ (yatra), ਵਾਪਸ (vapas), and ਪੈਦਲ (paidal).
+Recall ਰੇਲ (rel), ਟਿਕਟ (tikat), ਯਾਤਰਾ (yātrā), ਵਾਪਸ (vapas), and ਪੈਦਲ (paidal).
 
 Guided Practice: fit the known pieces.
 ਰੇਲ (rel) ਦੀ ਟਿਕਟ (tikat) — a train ticket.
-ਰੇਲ (rel) ਨਾਲ ਯਾਤਰਾ (yatra) — travel by train.
+ਰੇਲ (rel) ਨਾਲ ਯਾਤਰਾ (yātrā) — travel by train.
 ਪੈਦਲ (paidal) ਵਾਪਸ (vapas) ਘਰ — back home on foot.
 [your turn — hear: each chunk; YOU SAY: it once]
 [pause 8 seconds for the answer]
@@ -193,7 +193,7 @@ Guided Practice: fit the known pieces.
 Wrap-up Recall.
 [pause 3 seconds]
 Rebuild all three travel chunks without looking.
-Sources: Punjabi University RCPLT entries for ਰੇਲ (rel), ਟਿਕਟ (tikat), ਯਾਤਰਾ (yatra), ਵਾਪਸ (vapas), and ਪੈਦਲ (paidal).
+Sources: Punjabi University RCPLT entries for ਰੇਲ (rel), ਟਿਕਟ (tikat), ਯਾਤਰਾ (yātrā), ਵਾਪਸ (vapas), and ਪੈਦਲ (paidal).
 
 
 Lesson 8 of 8.
@@ -204,7 +204,7 @@ Warm-up.
 Say the three travel chunks from the review.
 
 Guided Practice: four-skill payoff.
-ਰੇਲ ਦੀ ਟਿਕਟ ਇੱਥੇ ਹੈ। ਮੈਨੂੰ ਰੇਲ ਨਾਲ ਯਾਤਰਾ ਪਸੰਦ ਹੈ। ਮੈਨੂੰ ਪੈਦਲ ਵਾਪਸ ਘਰ ਜਾਣਾ ਪਸੰਦ ਹੈ। (rel di tikat itthe hai. mainu rel naal yatra pasand hai. mainu paidal vapas ghar jaana pasand hai.)
+ਰੇਲ ਦੀ ਟਿਕਟ ਇੱਥੇ ਹੈ। ਮੈਨੂੰ ਰੇਲ ਨਾਲ ਯਾਤਰਾ (yātrā) ਪਸੰਦ ਹੈ। ਮੈਨੂੰ ਪੈਦਲ ਵਾਪਸ ਘਰ ਜਾਣਾ ਪਸੰਦ ਹੈ। (rel di tikat itthe hai. mainu rel naal yatra pasand hai. mainu paidal vapas ghar jaana pasand hai.)
 [your turn — hear: the three-line travel note; YOU SAY: it one line at a time]
 [pause 8 seconds for the answer]
 [once you have stopped driving — read: the whole travel note]
@@ -214,4 +214,4 @@ Wrap-up Recall.
 [pause 3 seconds]
 Rebuild the ticket line, journey line, and homeward line without looking.
 This is the fourth prerequisite tranche exposed by Punjabi A2 mock drafting. It removes 22 measured unsupported occurrences but does not unblock Punjabi A2 mock 1 by itself. It is not an A2 mock, not A2 readiness or attainment, and not external or human validation.
-Sources: Punjabi University RCPLT entries for ਰੇਲ (rel), ਟਿਕਟ (tikat), ਯਾਤਰਾ (yatra), ਵਾਪਸ (vapas), and ਪੈਦਲ (paidal).
+Sources: Punjabi University RCPLT entries for ਰੇਲ (rel), ਟਿਕਟ (tikat), ਯਾਤਰਾ (yātrā), ਵਾਪਸ (vapas), and ਪੈਦਲ (paidal).

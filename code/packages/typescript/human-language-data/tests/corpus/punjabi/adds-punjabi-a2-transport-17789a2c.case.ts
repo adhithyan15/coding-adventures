@@ -1,3 +1,4 @@
+import { readFileSync } from "node:fs";
 import { expect, it } from "vitest";
 import {
   loadTrackChapters,
@@ -56,8 +57,27 @@ it("adds a bounded Punjabi A2 transport prerequisite without mock credit", () =>
   }
   const yatra = chapterLessons[2]!;
   expect(yatra.frontmatter.skills).toEqual(["listening", "speaking"]);
-  expect(yatra.blocks.map((block) => block.markdown).join("\n"))
-    .not.toContain("[YOU READ:");
+  const yatraLearnerCopy = yatra.blocks.map((block) => block.markdown).join("\n");
+  expect(yatraLearnerCopy).not.toContain("[YOU READ:");
+  expect(yatraLearnerCopy).not.toContain("ਯ");
+  const yatraSource = readFileSync(new URL(
+    "../../../../../../learning/human-languages/punjabi/lessons/PA-C181-yatra.md",
+    import.meta.url,
+  ), "utf8");
+  const yatraAuthoredBody = yatraSource.replace(/^---[\s\S]*?---\s*/u, "");
+  expect(yatraAuthoredBody).not.toContain("ਯ");
+  const generatedBook = readFileSync(new URL(
+    "../../../../../../learning/human-languages/punjabi/book/chapters/" +
+      "ch181-a-train-ticket-and-the-way-home.tex",
+    import.meta.url,
+  ), "utf8");
+  const yayyaTitle = generatedBook.indexOf(
+    "one new letter from a journey word you can say",
+  );
+  expect(yayyaTitle).toBeGreaterThan(0);
+  const yayyaSectionStart = generatedBook.lastIndexOf("\\section[", yayyaTitle);
+  expect(yayyaSectionStart).toBeGreaterThan(0);
+  expect(generatedBook.slice(0, yayyaSectionStart)).not.toContain("ਯ");
   const yayya = chapterLessons[3]!;
   expect(yayya.frontmatter.headword).toBe("ਯ");
   expect(yayya.frontmatter.delivery).toBe("script");
