@@ -3189,6 +3189,11 @@ pub fn whitespace_only_minify(
     let mut prev_emitted_tok: Option<&lexer::token::Token> = None;
 
     let mut idx = 0usize;
+    // CCR-084 slice 2 (#15919): which `;` tokens terminate a `throw`? Indexed
+    // by position in `kept`, which the emit loop below never mutates. See
+    // `throw_terminators`.
+    let throw_terminator = throw_terminators(&kept);
+
     while idx < kept.len() {
         let tok = kept[idx];
         let val = tok.value.as_str();
@@ -3595,8 +3600,9 @@ pub fn whitespace_only_minify(
         }
 
         // Rule A: drop `;` directly before `}`, UNLESS the
-        // `;` is a body slot (body_position_next).
-        if val == ";" && !body_position_next {
+        // `;` is a body slot (body_position_next), or it ends a `throw`:
+        // upstream forces that one (CCR-084, `function f(){throw 1;}`).
+        if val == ";" && !body_position_next && !throw_terminator[idx] {
             if let Some(next) = kept.get(idx + 1) {
                 if next.value == "}" {
                     // Skip this `;`. We are still at a stmt
@@ -6104,6 +6110,83 @@ fn is_plain_identifier(tok: &lexer::token::Token) -> bool {
         );
     }
     matches!(tok.type_, lexer::token::TokenType::Name)
+}
+
+/// For each token in `kept`, does it terminate a `throw` statement?
+/// (CCR-084 slice 2, #15919)
+///
+/// Upstream ends every `throw` with a forced `;`. The `CodeGenerator` calls
+/// `endStatement(/* needSemiColon= */ true, …)`, "otherwise safari can't
+/// parse this". So that `;` survives even right before a `}`, where
+/// gap-030 rule A drops every other terminator:
+///
+/// | source                    | upstream WHITESPACE_ONLY   |
+/// |---------------------------|----------------------------|
+/// | `function f(){throw 1}`   | `function f(){throw 1;};`  |
+/// | `function f(){return}`    | `function f(){return};`    |
+///
+/// After the #17840 ASI splice every `throw` ends in a `;`, so the terminator
+/// is simply the first `;` at the `throw`'s own nesting depth, which skips a
+/// function body inside the thrown expression.
+///
+/// `throw` is a reserved word, so it names a property or method only after
+/// `.`/`?.` (`a.throw(1)`), before `:` (`{throw:1}`), or as a method
+/// (`throw(){…}`, a `(…)` followed by `{`). Those are skipped.
+fn throw_terminators(kept: &[&lexer::token::Token]) -> Vec<bool> {
+    let mut marks = vec![false; kept.len()];
+    for i in 0..kept.len() {
+        if kept[i].value != "throw" || !is_word_like(kept[i]) {
+            continue;
+        }
+        let after_dot = i > 0
+            && (is_structural_punct(kept[i - 1], ".") || is_structural_punct(kept[i - 1], "?."));
+        let next = kept.get(i + 1);
+        let property_key = next.is_some_and(|t| is_structural_punct(t, ":"));
+        if after_dot || property_key {
+            continue;
+        }
+        // `throw(…){` is a method named `throw`, not a statement.
+        let span = paren_span(kept, i + 1);
+        if span > 0 && kept.get(i + 1 + span).is_some_and(|t| is_structural_punct(t, "{")) {
+            continue;
+        }
+        // The terminator is the first `;` at the `throw`'s own depth.
+        let mut depth: i32 = 0;
+        for (j, t) in kept.iter().enumerate().skip(i + 1) {
+            if is_structural_punct(t, "(") || is_structural_punct(t, "[") || is_structural_punct(t, "{") {
+                depth += 1;
+            } else if is_structural_punct(t, ")") || is_structural_punct(t, "]") || is_structural_punct(t, "}") {
+                depth -= 1;
+                if depth < 0 {
+                    break; // left the enclosing block without a terminator
+                }
+            } else if depth == 0 && is_structural_punct(t, ";") {
+                marks[j] = true;
+                break;
+            }
+        }
+    }
+    marks
+}
+
+/// If `kept[start]` is `(`, the number of tokens up to and including its
+/// matching `)`; otherwise 0.
+fn paren_span(kept: &[&lexer::token::Token], start: usize) -> usize {
+    if !kept.get(start).is_some_and(|t| is_structural_punct(t, "(")) {
+        return 0;
+    }
+    let mut depth = 0i32;
+    for (k, t) in kept.iter().enumerate().skip(start) {
+        if is_structural_punct(t, "(") || is_structural_punct(t, "[") || is_structural_punct(t, "{") {
+            depth += 1;
+        } else if is_structural_punct(t, ")") || is_structural_punct(t, "]") || is_structural_punct(t, "}") {
+            depth -= 1;
+            if depth == 0 {
+                return k - start + 1;
+            }
+        }
+    }
+    0
 }
 
 fn is_word_like(tok: &lexer::token::Token) -> bool {
