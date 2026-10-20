@@ -188,7 +188,9 @@ const MIN: i64 = i64::MIN;
 
 #[test]
 fn checked_ops_return_exact_results_at_the_range_edges_on_wasm() {
-    let cases: [(&str, &[(i64, i64)], &str); 4] = [
+    /// (op, operand pairs, expected output)
+    type EdgeCase<'a> = (&'a str, &'a [(i64, i64)], &'a str);
+    let cases: [EdgeCase; 4] = [
         ("i64_add_ovf", &[(MAX, 0), (MAX - 1, 1), (MIN, MAX), (-5, 3)], "9223372036854775807 9223372036854775807 -1 -2 "),
         ("i64_sub_ovf", &[(MIN, 0), (MIN + 1, 1), (-1, MAX), (-5, 3)], "-9223372036854775808 -9223372036854775808 -9223372036854775808 -8 "),
         (
