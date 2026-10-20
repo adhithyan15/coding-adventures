@@ -1268,10 +1268,17 @@ fn chain_shape(node: &GrammarASTNode, end: usize) -> Shape<'_> {
                 computed: false,
             }
         }
-        (Some(ASTNodeOrToken::Token(_)), Some(ASTNodeOrToken::Node(key))) => Shape::Member {
-            object: prefix(end - 3),
-            property: Expr::Node(key),
-            computed: true,
+        // `object [ key ]`: the key node sits between `[` and `]`, so the
+        // object ends three children before `end`.  `chain_base` already
+        // rejects layouts where that underflows, but the subtraction is
+        // checked anyway so a hand-built tree can never wrap it.
+        (Some(ASTNodeOrToken::Token(_)), Some(ASTNodeOrToken::Node(key))) => match end.checked_sub(3) {
+            Some(start) => Shape::Member {
+                object: prefix(start),
+                property: Expr::Node(key),
+                computed: true,
+            },
+            None => Shape::Other,
         },
         // A tagged template `` tag`…` ``.
         _ => Shape::Other,
