@@ -11862,7 +11862,9 @@ fn ruby_rows_agree_with_the_host_ruby_oracle() {
     for program in ruby_rows() {
         // `-e` with the source as its own argument: no shell, no temp file.
         let out = Command::new("ruby").args(["-e", program.src]).output().expect("ruby ran once already");
-        let stdout = String::from_utf8_lossy(&out.stdout);
+        // Windows interpreters write text-mode stdout ("\r\n"); the rows
+        // record the language's output, so fold the line ending back.
+        let stdout = String::from_utf8_lossy(&out.stdout).replace("\r\n", "\n");
         match program.expect {
             Expect::Stdout(want) => {
                 assert!(out.status.success(), "{version} failed {:?}", program.src);
