@@ -1,0 +1,57 @@
+import{t as e}from"./rolldown-runtime-DK3Fl9T5.js";var t=e({default:()=>n}),n=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: LA-R454-review-447-454
+spine_node: SPINE-HANDLE-TRAVEL
+sequence: 24230
+chapter: 454
+type: review
+headword: (dialogue)
+gloss: a review of chapters 447-454
+concept_tag: REVIEW
+prerequisites: [LA-C447-cimex, LA-C447-mordeo, LA-C447-scalpo, LA-C447-insomnis, LA-C447-cubo, LA-C448-sterto, LA-C448-strepo, LA-C448-obstrepo, LA-C448-potor, LA-C448-raucus, LA-C449-vappa, LA-C449-merum, LA-C449-diluo, LA-C449-putidus, LA-C449-copa, LA-C450-querela, LA-C450-conqueror, LA-C450-fraudo, LA-C450-rapax, LA-C450-sordes, LA-C451-percontor, LA-C451-sciscitor, LA-C451-requiro, LA-C451-monstro, LA-C451-indico, LA-C452-aberro, LA-C452-devius, LA-C452-invius, LA-C452-ambages, LA-C452-vagor, LA-C453-ductor, LA-C453-gnarus, LA-C453-prosequor, LA-C453-reperio, LA-C453-vestigo, LA-C454-dextrorsum, LA-C454-sinistrorsum, LA-C454-obliquus, LA-C454-circumeo, LA-C454-circuitus]
+sounds: []
+roots: []
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [LA-LEX-C447-CIMEX-01, LA-LEX-C447-CIMEX-02, LA-LEX-C447-CIMEX-03, LA-LEX-C447-CIMEX-04, LA-LEX-C447-CIMEX-05, LA-LEX-C448-STERTO-01, LA-LEX-C448-STERTO-02, LA-LEX-C448-STERTO-03, LA-LEX-C448-STERTO-04, LA-LEX-C448-STERTO-05, LA-LEX-C449-VAPPA-01, LA-LEX-C449-VAPPA-02, LA-LEX-C449-VAPPA-03, LA-LEX-C449-VAPPA-04, LA-LEX-C449-VAPPA-05, LA-LEX-C450-QUERELA-01, LA-LEX-C450-QUERELA-02, LA-LEX-C450-QUERELA-03, LA-LEX-C450-QUERELA-04, LA-LEX-C450-QUERELA-05, LA-LEX-C451-PERCONTOR-01, LA-LEX-C451-PERCONTOR-02, LA-LEX-C451-PERCONTOR-03, LA-LEX-C451-PERCONTOR-04, LA-LEX-C451-PERCONTOR-05, LA-LEX-C452-ABERRO-01, LA-LEX-C452-ABERRO-02, LA-LEX-C452-ABERRO-03, LA-LEX-C452-ABERRO-04, LA-LEX-C452-ABERRO-05, LA-LEX-C453-PERITUS-01, LA-LEX-C453-PERITUS-02, LA-LEX-C453-PERITUS-03, LA-LEX-C453-PERITUS-04, LA-LEX-C453-PERITUS-05, LA-LEX-C454-DEXTRORSUM-01, LA-LEX-C454-DEXTRORSUM-02, LA-LEX-C454-DEXTRORSUM-03, LA-LEX-C454-DEXTRORSUM-04, LA-LEX-C454-DEXTRORSUM-05]
+introduces:
+  knowledge: []
+practises:
+  knowledge: [LA-LEX-C447-CIMEX-01, LA-LEX-C447-CIMEX-02, LA-LEX-C447-CIMEX-03, LA-LEX-C447-CIMEX-04, LA-LEX-C447-CIMEX-05, LA-LEX-C448-STERTO-01, LA-LEX-C448-STERTO-02, LA-LEX-C448-STERTO-03, LA-LEX-C448-STERTO-04, LA-LEX-C448-STERTO-05, LA-LEX-C449-VAPPA-01, LA-LEX-C449-VAPPA-02, LA-LEX-C449-VAPPA-03, LA-LEX-C449-VAPPA-04, LA-LEX-C449-VAPPA-05, LA-LEX-C450-QUERELA-01, LA-LEX-C450-QUERELA-02, LA-LEX-C450-QUERELA-03, LA-LEX-C450-QUERELA-04, LA-LEX-C450-QUERELA-05, LA-LEX-C451-PERCONTOR-01, LA-LEX-C451-PERCONTOR-02, LA-LEX-C451-PERCONTOR-03, LA-LEX-C451-PERCONTOR-04, LA-LEX-C451-PERCONTOR-05, LA-LEX-C452-ABERRO-01, LA-LEX-C452-ABERRO-02, LA-LEX-C452-ABERRO-03, LA-LEX-C452-ABERRO-04, LA-LEX-C452-ABERRO-05, LA-LEX-C453-PERITUS-01, LA-LEX-C453-PERITUS-02, LA-LEX-C453-PERITUS-03, LA-LEX-C453-PERITUS-04, LA-LEX-C453-PERITUS-05, LA-LEX-C454-DEXTRORSUM-01, LA-LEX-C454-DEXTRORSUM-02, LA-LEX-C454-DEXTRORSUM-03, LA-LEX-C454-DEXTRORSUM-04, LA-LEX-C454-DEXTRORSUM-05]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: classical
+reviews_of: [LA-C447-cimex, LA-C447-mordeo, LA-C447-scalpo, LA-C447-insomnis, LA-C447-cubo, LA-C448-sterto, LA-C448-strepo, LA-C448-obstrepo, LA-C448-potor, LA-C448-raucus, LA-C449-vappa, LA-C449-merum, LA-C449-diluo, LA-C449-putidus, LA-C449-copa, LA-C450-querela, LA-C450-conqueror, LA-C450-fraudo, LA-C450-rapax, LA-C450-sordes, LA-C451-percontor, LA-C451-sciscitor, LA-C451-requiro, LA-C451-monstro, LA-C451-indico, LA-C452-aberro, LA-C452-devius, LA-C452-invius, LA-C452-ambages, LA-C452-vagor, LA-C453-ductor, LA-C453-gnarus, LA-C453-prosequor, LA-C453-reperio, LA-C453-vestigo, LA-C454-dextrorsum, LA-C454-sinistrorsum, LA-C454-obliquus, LA-C454-circumeo, LA-C454-circuitus]
+---
+
+# Words from chapters 447–454 — a review
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[LA-LEX-C447-CIMEX-01, LA-LEX-C447-CIMEX-02] -->
+
+[PAUSE 3s] Say the Latin for a bedbug and to bite.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[LA-LEX-C447-CIMEX-01, LA-LEX-C447-CIMEX-02, LA-LEX-C447-CIMEX-03, LA-LEX-C447-CIMEX-04, LA-LEX-C447-CIMEX-05, LA-LEX-C448-STERTO-01, LA-LEX-C448-STERTO-02, LA-LEX-C448-STERTO-03, LA-LEX-C448-STERTO-04, LA-LEX-C448-STERTO-05, LA-LEX-C449-VAPPA-01, LA-LEX-C449-VAPPA-02, LA-LEX-C449-VAPPA-03, LA-LEX-C449-VAPPA-04, LA-LEX-C449-VAPPA-05, LA-LEX-C450-QUERELA-01, LA-LEX-C450-QUERELA-02, LA-LEX-C450-QUERELA-03, LA-LEX-C450-QUERELA-04, LA-LEX-C450-QUERELA-05, LA-LEX-C451-PERCONTOR-01, LA-LEX-C451-PERCONTOR-02, LA-LEX-C451-PERCONTOR-03, LA-LEX-C451-PERCONTOR-04, LA-LEX-C451-PERCONTOR-05, LA-LEX-C452-ABERRO-01, LA-LEX-C452-ABERRO-02, LA-LEX-C452-ABERRO-03, LA-LEX-C452-ABERRO-04, LA-LEX-C452-ABERRO-05, LA-LEX-C453-PERITUS-01, LA-LEX-C453-PERITUS-02, LA-LEX-C453-PERITUS-03, LA-LEX-C453-PERITUS-04, LA-LEX-C453-PERITUS-05, LA-LEX-C454-DEXTRORSUM-01, LA-LEX-C454-DEXTRORSUM-02, LA-LEX-C454-DEXTRORSUM-03, LA-LEX-C454-DEXTRORSUM-04, LA-LEX-C454-DEXTRORSUM-05] -->
+
+[PAUSE 2s each]
+- [YOU SAY: a bedbug, to bite, to scratch, sleepless, to lie down]
+- [YOU SAY: to snore, to make a noise, to make a din, a drinker, hoarse]
+- [YOU SAY: flat wine, neat wine, to water down, rotten, a tavern hostess]
+- [YOU SAY: a complaint, to complain, to cheat, grasping, dirt]
+- [YOU SAY: to inquire, to ask around, to ask after, to show, to make known]
+- [YOU SAY: to stray, off the road, without roads, a roundabout way, to wander about]
+- [YOU SAY: a leader, knowing, to escort, to find, to track]
+- [YOU SAY: to the right, to the left, slanting, to go round, a detour]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[LA-LEX-C447-CIMEX-01, LA-LEX-C447-CIMEX-02, LA-LEX-C447-CIMEX-03, LA-LEX-C447-CIMEX-04, LA-LEX-C447-CIMEX-05, LA-LEX-C448-STERTO-01, LA-LEX-C448-STERTO-02, LA-LEX-C448-STERTO-03, LA-LEX-C448-STERTO-04, LA-LEX-C448-STERTO-05, LA-LEX-C449-VAPPA-01, LA-LEX-C449-VAPPA-02, LA-LEX-C449-VAPPA-03, LA-LEX-C449-VAPPA-04, LA-LEX-C449-VAPPA-05, LA-LEX-C450-QUERELA-01, LA-LEX-C450-QUERELA-02, LA-LEX-C450-QUERELA-03, LA-LEX-C450-QUERELA-04, LA-LEX-C450-QUERELA-05, LA-LEX-C451-PERCONTOR-01, LA-LEX-C451-PERCONTOR-02, LA-LEX-C451-PERCONTOR-03, LA-LEX-C451-PERCONTOR-04, LA-LEX-C451-PERCONTOR-05, LA-LEX-C452-ABERRO-01, LA-LEX-C452-ABERRO-02, LA-LEX-C452-ABERRO-03, LA-LEX-C452-ABERRO-04, LA-LEX-C452-ABERRO-05, LA-LEX-C453-PERITUS-01, LA-LEX-C453-PERITUS-02, LA-LEX-C453-PERITUS-03, LA-LEX-C453-PERITUS-04, LA-LEX-C453-PERITUS-05, LA-LEX-C454-DEXTRORSUM-01, LA-LEX-C454-DEXTRORSUM-02, LA-LEX-C454-DEXTRORSUM-03, LA-LEX-C454-DEXTRORSUM-04, LA-LEX-C454-DEXTRORSUM-05] -->
+
+[PAUSE 3s] A bedbug? (**cīmex, cīmicis**.) To bite? (**mordeō, mordēre**.) To scratch? (**scalpō, scalpere**.) Sleepless? (**īnsomnis, īnsomne**.) To lie down? (**cubō, cubāre**.) To snore? (**stertō, stertere**.) To make a noise? (**strepō, strepere**.) To make a din? (**obstrepō, obstrepere**.) A drinker? (**pōtor, pōtōris**.) Hoarse? (**raucus, rauca, raucum**.) Flat wine? (**vappa, vappae**.) Neat wine? (**merum, merī**.) To water down? (**dīluō, dīluere**.) Rotten? (**pūtidus, pūtida, pūtidum**.) A tavern hostess? (**cōpa, cōpae**.) A complaint? (**querēla, querēlae**.) To complain? (**conqueror, conquerī**.) To cheat? (**fraudō, fraudāre**.) Grasping? (**rapāx, rapācis**.) Dirt? (**sordēs, sordis**.) To inquire? (**percontor, percontārī**.) To ask around? (**scīscitor, scīscitārī**.) To ask after? (**requīrō, requīrere**.) To show? (**mōnstrō, mōnstrāre**.) To make known? (**indicō, indicāre**.) To stray? (**aberrō, aberrāre**.) Off the road? (**dēvius, dēvia, dēvium**.) Without roads? (**invius, invia, invium**.) A roundabout way? (**ambāgēs, ambāgum**.) To wander about? (**vagor, vagārī**.) A leader? (**ductor, ductōris**.) Knowing? (**gnārus, gnāra, gnārum**.) To escort? (**prōsequor, prōsequī**.) To find? (**reperiō, reperīre**.) To track? (**vestīgō, vestīgāre**.) To the right? (**dextrōrsum**.) To the left? (**sinistrōrsum**.) Slanting? (**oblīquus, oblīqua, oblīquum**.) To go round? (**circumeō, circumīre**.) A detour? (**circuitus, circuitūs**.)
+`;export{t};

@@ -1,0 +1,57 @@
+import{t as e}from"./rolldown-runtime-DK3Fl9T5.js";var t=e({default:()=>n}),n=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: LA-R322-review-315-322
+spine_node: SPINE-NARRATE-EVENTS
+sequence: 17430
+chapter: 322
+type: review
+headword: (dialogue)
+gloss: a review of chapters 315-322
+concept_tag: REVIEW
+prerequisites: [LA-C315-naufragium, LA-C315-naufragus, LA-C315-mergo, LA-C315-obruo, LA-C315-calamitas, LA-C316-eripio, LA-C316-incolumis, LA-C316-subvenio, LA-C316-succurro, LA-C316-auxilium, LA-C317-incendium, LA-C317-aestus, LA-C317-favilla, LA-C317-torris, LA-C317-ardor, LA-C318-cremo, LA-C318-uro, LA-C318-flagro, LA-C318-fumo, LA-C318-conflagro, LA-C319-sipho, LA-C319-hama, LA-C319-restinguo, LA-C319-excubiae, LA-C319-amburo, LA-C320-pavor, LA-C320-metus, LA-C320-formido, LA-C320-pavidus, LA-C320-trepido, LA-C321-minae, LA-C321-minitor, LA-C321-terreo, LA-C321-tumultus, LA-C321-clamor, LA-C322-fuga, LA-C322-effugio, LA-C322-evado, LA-C322-pereo, LA-C322-custos]
+sounds: []
+roots: []
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [LA-LEX-C315-NAUFRAGIUM-01, LA-LEX-C315-NAUFRAGIUM-02, LA-LEX-C315-NAUFRAGIUM-03, LA-LEX-C315-NAUFRAGIUM-04, LA-LEX-C315-NAUFRAGIUM-05, LA-LEX-C316-ERIPIO-01, LA-LEX-C316-ERIPIO-02, LA-LEX-C316-ERIPIO-03, LA-LEX-C316-ERIPIO-04, LA-LEX-C316-ERIPIO-05, LA-LEX-C317-INCENDIUM-01, LA-LEX-C317-INCENDIUM-02, LA-LEX-C317-INCENDIUM-03, LA-LEX-C317-INCENDIUM-04, LA-LEX-C317-INCENDIUM-05, LA-LEX-C318-CREMO-01, LA-LEX-C318-CREMO-02, LA-LEX-C318-CREMO-03, LA-LEX-C318-CREMO-04, LA-LEX-C318-CREMO-05, LA-LEX-C319-SIPHO-01, LA-LEX-C319-SIPHO-02, LA-LEX-C319-SIPHO-03, LA-LEX-C319-SIPHO-04, LA-LEX-C319-SIPHO-05, LA-LEX-C320-PAVOR-01, LA-LEX-C320-PAVOR-02, LA-LEX-C320-PAVOR-03, LA-LEX-C320-PAVOR-04, LA-LEX-C320-PAVOR-05, LA-LEX-C321-MINAE-01, LA-LEX-C321-MINAE-02, LA-LEX-C321-MINAE-03, LA-LEX-C321-MINAE-04, LA-LEX-C321-MINAE-05, LA-LEX-C322-FUGA-01, LA-LEX-C322-FUGA-02, LA-LEX-C322-FUGA-03, LA-LEX-C322-FUGA-04, LA-LEX-C322-FUGA-05]
+introduces:
+  knowledge: []
+practises:
+  knowledge: [LA-LEX-C315-NAUFRAGIUM-01, LA-LEX-C315-NAUFRAGIUM-02, LA-LEX-C315-NAUFRAGIUM-03, LA-LEX-C315-NAUFRAGIUM-04, LA-LEX-C315-NAUFRAGIUM-05, LA-LEX-C316-ERIPIO-01, LA-LEX-C316-ERIPIO-02, LA-LEX-C316-ERIPIO-03, LA-LEX-C316-ERIPIO-04, LA-LEX-C316-ERIPIO-05, LA-LEX-C317-INCENDIUM-01, LA-LEX-C317-INCENDIUM-02, LA-LEX-C317-INCENDIUM-03, LA-LEX-C317-INCENDIUM-04, LA-LEX-C317-INCENDIUM-05, LA-LEX-C318-CREMO-01, LA-LEX-C318-CREMO-02, LA-LEX-C318-CREMO-03, LA-LEX-C318-CREMO-04, LA-LEX-C318-CREMO-05, LA-LEX-C319-SIPHO-01, LA-LEX-C319-SIPHO-02, LA-LEX-C319-SIPHO-03, LA-LEX-C319-SIPHO-04, LA-LEX-C319-SIPHO-05, LA-LEX-C320-PAVOR-01, LA-LEX-C320-PAVOR-02, LA-LEX-C320-PAVOR-03, LA-LEX-C320-PAVOR-04, LA-LEX-C320-PAVOR-05, LA-LEX-C321-MINAE-01, LA-LEX-C321-MINAE-02, LA-LEX-C321-MINAE-03, LA-LEX-C321-MINAE-04, LA-LEX-C321-MINAE-05, LA-LEX-C322-FUGA-01, LA-LEX-C322-FUGA-02, LA-LEX-C322-FUGA-03, LA-LEX-C322-FUGA-04, LA-LEX-C322-FUGA-05]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: classical
+reviews_of: [LA-C315-naufragium, LA-C315-naufragus, LA-C315-mergo, LA-C315-obruo, LA-C315-calamitas, LA-C316-eripio, LA-C316-incolumis, LA-C316-subvenio, LA-C316-succurro, LA-C316-auxilium, LA-C317-incendium, LA-C317-aestus, LA-C317-favilla, LA-C317-torris, LA-C317-ardor, LA-C318-cremo, LA-C318-uro, LA-C318-flagro, LA-C318-fumo, LA-C318-conflagro, LA-C319-sipho, LA-C319-hama, LA-C319-restinguo, LA-C319-excubiae, LA-C319-amburo, LA-C320-pavor, LA-C320-metus, LA-C320-formido, LA-C320-pavidus, LA-C320-trepido, LA-C321-minae, LA-C321-minitor, LA-C321-terreo, LA-C321-tumultus, LA-C321-clamor, LA-C322-fuga, LA-C322-effugio, LA-C322-evado, LA-C322-pereo, LA-C322-custos]
+---
+
+# Words from chapters 315–322 — a review
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[LA-LEX-C315-NAUFRAGIUM-01, LA-LEX-C315-NAUFRAGIUM-02] -->
+
+[PAUSE 3s] Say the Latin for a shipwreck and shipwrecked.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[LA-LEX-C315-NAUFRAGIUM-01, LA-LEX-C315-NAUFRAGIUM-02, LA-LEX-C315-NAUFRAGIUM-03, LA-LEX-C315-NAUFRAGIUM-04, LA-LEX-C315-NAUFRAGIUM-05, LA-LEX-C316-ERIPIO-01, LA-LEX-C316-ERIPIO-02, LA-LEX-C316-ERIPIO-03, LA-LEX-C316-ERIPIO-04, LA-LEX-C316-ERIPIO-05, LA-LEX-C317-INCENDIUM-01, LA-LEX-C317-INCENDIUM-02, LA-LEX-C317-INCENDIUM-03, LA-LEX-C317-INCENDIUM-04, LA-LEX-C317-INCENDIUM-05, LA-LEX-C318-CREMO-01, LA-LEX-C318-CREMO-02, LA-LEX-C318-CREMO-03, LA-LEX-C318-CREMO-04, LA-LEX-C318-CREMO-05, LA-LEX-C319-SIPHO-01, LA-LEX-C319-SIPHO-02, LA-LEX-C319-SIPHO-03, LA-LEX-C319-SIPHO-04, LA-LEX-C319-SIPHO-05, LA-LEX-C320-PAVOR-01, LA-LEX-C320-PAVOR-02, LA-LEX-C320-PAVOR-03, LA-LEX-C320-PAVOR-04, LA-LEX-C320-PAVOR-05, LA-LEX-C321-MINAE-01, LA-LEX-C321-MINAE-02, LA-LEX-C321-MINAE-03, LA-LEX-C321-MINAE-04, LA-LEX-C321-MINAE-05, LA-LEX-C322-FUGA-01, LA-LEX-C322-FUGA-02, LA-LEX-C322-FUGA-03, LA-LEX-C322-FUGA-04, LA-LEX-C322-FUGA-05] -->
+
+[PAUSE 2s each]
+- [YOU SAY: a shipwreck, shipwrecked, to sink, to overwhelm, a disaster]
+- [YOU SAY: to snatch away, unharmed, to come to help, to run to help, help]
+- [YOU SAY: a fire, heat, glowing ash, a firebrand, burning heat]
+- [YOU SAY: to burn up, to burn, to blaze, to smoke, to go up in flames]
+- [YOU SAY: a fire pump, a fire bucket, to put out, the watch, to scorch]
+- [YOU SAY: panic, fear, dread, frightened, to panic]
+- [YOU SAY: threats, to threaten, to frighten, an uproar, a shout]
+- [YOU SAY: flight, to escape, to get away, to perish, a guard]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[LA-LEX-C315-NAUFRAGIUM-01, LA-LEX-C315-NAUFRAGIUM-02, LA-LEX-C315-NAUFRAGIUM-03, LA-LEX-C315-NAUFRAGIUM-04, LA-LEX-C315-NAUFRAGIUM-05, LA-LEX-C316-ERIPIO-01, LA-LEX-C316-ERIPIO-02, LA-LEX-C316-ERIPIO-03, LA-LEX-C316-ERIPIO-04, LA-LEX-C316-ERIPIO-05, LA-LEX-C317-INCENDIUM-01, LA-LEX-C317-INCENDIUM-02, LA-LEX-C317-INCENDIUM-03, LA-LEX-C317-INCENDIUM-04, LA-LEX-C317-INCENDIUM-05, LA-LEX-C318-CREMO-01, LA-LEX-C318-CREMO-02, LA-LEX-C318-CREMO-03, LA-LEX-C318-CREMO-04, LA-LEX-C318-CREMO-05, LA-LEX-C319-SIPHO-01, LA-LEX-C319-SIPHO-02, LA-LEX-C319-SIPHO-03, LA-LEX-C319-SIPHO-04, LA-LEX-C319-SIPHO-05, LA-LEX-C320-PAVOR-01, LA-LEX-C320-PAVOR-02, LA-LEX-C320-PAVOR-03, LA-LEX-C320-PAVOR-04, LA-LEX-C320-PAVOR-05, LA-LEX-C321-MINAE-01, LA-LEX-C321-MINAE-02, LA-LEX-C321-MINAE-03, LA-LEX-C321-MINAE-04, LA-LEX-C321-MINAE-05, LA-LEX-C322-FUGA-01, LA-LEX-C322-FUGA-02, LA-LEX-C322-FUGA-03, LA-LEX-C322-FUGA-04, LA-LEX-C322-FUGA-05] -->
+
+[PAUSE 3s] A shipwreck? (**naufragium, naufragiī**.) Shipwrecked? (**naufragus, naufraga, naufragum**.) To sink? (**mergō, mergere**.) To overwhelm? (**obruō, obruere**.) A disaster? (**calamitās, calamitātis**.) To snatch away? (**ēripiō, ēripere**.) Unharmed? (**incolumis, incolume**.) To come to help? (**subveniō, subvenīre**.) To run to help? (**succurrō, succurrere**.) Help? (**auxilium, auxiliī**.) A fire? (**incendium, incendiī**.) Heat? (**aestus, aestūs**.) Glowing ash? (**favilla, favillae**.) A firebrand? (**torris, torris**.) Burning heat? (**ārdor, ārdōris**.) To burn up? (**cremō, cremāre**.) To burn? (**ūrō, ūrere**.) To blaze? (**flagrō, flagrāre**.) To smoke? (**fūmō, fūmāre**.) To go up in flames? (**cōnflagrō, cōnflagrāre**.) A fire pump? (**sīphō, sīphōnis**.) A fire bucket? (**hama, hamae**.) To put out? (**restinguō, restinguere**.) The watch? (**excubiae, excubiārum**.) To scorch? (**ambūrō, ambūrere**.) Panic? (**pavor, pavōris**.) Fear? (**metus, metūs**.) Dread? (**formīdō, formīdinis**.) Frightened? (**pavidus, pavida, pavidum**.) To panic? (**trepidō, trepidāre**.) Threats? (**minae, minārum**.) To threaten? (**minitor, minitārī**.) To frighten? (**terreō, terrēre**.) An uproar? (**tumultus, tumultūs**.) A shout? (**clāmor, clāmōris**.) Flight? (**fuga, fugae**.) To escape? (**effugiō, effugere**.) To get away? (**ēvādō, ēvādere**.) To perish? (**pereō, perīre**.) A guard? (**custōs, custōdis**.)
+`;export{t};

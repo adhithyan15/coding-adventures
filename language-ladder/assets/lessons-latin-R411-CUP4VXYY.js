@@ -1,0 +1,57 @@
+import{t as e}from"./rolldown-runtime-DK3Fl9T5.js";var t=e({default:()=>n}),n=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: LA-R412-review-405-412
+spine_node: SPINE-EXPRESS-CONDITION
+sequence: 22060
+chapter: 412
+type: review
+headword: (dialogue)
+gloss: a review of chapters 405-412
+concept_tag: REVIEW
+prerequisites: [LA-C405-abacus, LA-C405-calculus, LA-C405-enumero, LA-C405-dicto, LA-C405-pensum, LA-C406-ingeniosus, LA-C406-attentus, LA-C406-tardus, LA-C406-sedulus, LA-C406-neglegens, LA-C407-scientia, LA-C407-intellegentia, LA-C407-doctrina, LA-C407-inscitia, LA-C407-imitor, LA-C408-mendum, LA-C408-vitium, LA-C408-ferula, LA-C408-verber, LA-C408-vapulo, LA-C409-edictum, LA-C409-decretum, LA-C409-praeceptum, LA-C409-legitimus, LA-C409-licitus, LA-C410-rogatio, LA-C410-promulgo, LA-C410-abrogo, LA-C410-sancio, LA-C410-praescribo, LA-C411-tribunal, LA-C411-lis, LA-C411-litigo, LA-C411-vadimonium, LA-C411-iurisconsultus, LA-C412-cognitio, LA-C412-quaesitor, LA-C412-interrogo, LA-C412-delator, LA-C412-defensio]
+sounds: []
+roots: []
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [LA-LEX-C405-CALCULUS-01, LA-LEX-C405-CALCULUS-02, LA-LEX-C405-CALCULUS-03, LA-LEX-C405-CALCULUS-04, LA-LEX-C405-CALCULUS-05, LA-LEX-C406-SEDULUS-01, LA-LEX-C406-SEDULUS-02, LA-LEX-C406-SEDULUS-03, LA-LEX-C406-SEDULUS-04, LA-LEX-C406-SEDULUS-05, LA-LEX-C407-SCIENTIA-01, LA-LEX-C407-SCIENTIA-02, LA-LEX-C407-SCIENTIA-03, LA-LEX-C407-SCIENTIA-04, LA-LEX-C407-SCIENTIA-05, LA-LEX-C408-MENDUM-01, LA-LEX-C408-MENDUM-02, LA-LEX-C408-MENDUM-03, LA-LEX-C408-MENDUM-04, LA-LEX-C408-MENDUM-05, LA-LEX-C409-EDICTUM-01, LA-LEX-C409-EDICTUM-02, LA-LEX-C409-EDICTUM-03, LA-LEX-C409-EDICTUM-04, LA-LEX-C409-EDICTUM-05, LA-LEX-C410-ROGATIO-01, LA-LEX-C410-ROGATIO-02, LA-LEX-C410-ROGATIO-03, LA-LEX-C410-ROGATIO-04, LA-LEX-C410-ROGATIO-05, LA-LEX-C411-TRIBUNAL-01, LA-LEX-C411-TRIBUNAL-02, LA-LEX-C411-TRIBUNAL-03, LA-LEX-C411-TRIBUNAL-04, LA-LEX-C411-TRIBUNAL-05, LA-LEX-C412-COGNITIO-01, LA-LEX-C412-COGNITIO-02, LA-LEX-C412-COGNITIO-03, LA-LEX-C412-COGNITIO-04, LA-LEX-C412-COGNITIO-05]
+introduces:
+  knowledge: []
+practises:
+  knowledge: [LA-LEX-C405-CALCULUS-01, LA-LEX-C405-CALCULUS-02, LA-LEX-C405-CALCULUS-03, LA-LEX-C405-CALCULUS-04, LA-LEX-C405-CALCULUS-05, LA-LEX-C406-SEDULUS-01, LA-LEX-C406-SEDULUS-02, LA-LEX-C406-SEDULUS-03, LA-LEX-C406-SEDULUS-04, LA-LEX-C406-SEDULUS-05, LA-LEX-C407-SCIENTIA-01, LA-LEX-C407-SCIENTIA-02, LA-LEX-C407-SCIENTIA-03, LA-LEX-C407-SCIENTIA-04, LA-LEX-C407-SCIENTIA-05, LA-LEX-C408-MENDUM-01, LA-LEX-C408-MENDUM-02, LA-LEX-C408-MENDUM-03, LA-LEX-C408-MENDUM-04, LA-LEX-C408-MENDUM-05, LA-LEX-C409-EDICTUM-01, LA-LEX-C409-EDICTUM-02, LA-LEX-C409-EDICTUM-03, LA-LEX-C409-EDICTUM-04, LA-LEX-C409-EDICTUM-05, LA-LEX-C410-ROGATIO-01, LA-LEX-C410-ROGATIO-02, LA-LEX-C410-ROGATIO-03, LA-LEX-C410-ROGATIO-04, LA-LEX-C410-ROGATIO-05, LA-LEX-C411-TRIBUNAL-01, LA-LEX-C411-TRIBUNAL-02, LA-LEX-C411-TRIBUNAL-03, LA-LEX-C411-TRIBUNAL-04, LA-LEX-C411-TRIBUNAL-05, LA-LEX-C412-COGNITIO-01, LA-LEX-C412-COGNITIO-02, LA-LEX-C412-COGNITIO-03, LA-LEX-C412-COGNITIO-04, LA-LEX-C412-COGNITIO-05]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: classical
+reviews_of: [LA-C405-abacus, LA-C405-calculus, LA-C405-enumero, LA-C405-dicto, LA-C405-pensum, LA-C406-ingeniosus, LA-C406-attentus, LA-C406-tardus, LA-C406-sedulus, LA-C406-neglegens, LA-C407-scientia, LA-C407-intellegentia, LA-C407-doctrina, LA-C407-inscitia, LA-C407-imitor, LA-C408-mendum, LA-C408-vitium, LA-C408-ferula, LA-C408-verber, LA-C408-vapulo, LA-C409-edictum, LA-C409-decretum, LA-C409-praeceptum, LA-C409-legitimus, LA-C409-licitus, LA-C410-rogatio, LA-C410-promulgo, LA-C410-abrogo, LA-C410-sancio, LA-C410-praescribo, LA-C411-tribunal, LA-C411-lis, LA-C411-litigo, LA-C411-vadimonium, LA-C411-iurisconsultus, LA-C412-cognitio, LA-C412-quaesitor, LA-C412-interrogo, LA-C412-delator, LA-C412-defensio]
+---
+
+# Words from chapters 405–412 — a review
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[LA-LEX-C405-CALCULUS-01, LA-LEX-C405-CALCULUS-02] -->
+
+[PAUSE 3s] Say the Latin for a counting board and a pebble.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[LA-LEX-C405-CALCULUS-01, LA-LEX-C405-CALCULUS-02, LA-LEX-C405-CALCULUS-03, LA-LEX-C405-CALCULUS-04, LA-LEX-C405-CALCULUS-05, LA-LEX-C406-SEDULUS-01, LA-LEX-C406-SEDULUS-02, LA-LEX-C406-SEDULUS-03, LA-LEX-C406-SEDULUS-04, LA-LEX-C406-SEDULUS-05, LA-LEX-C407-SCIENTIA-01, LA-LEX-C407-SCIENTIA-02, LA-LEX-C407-SCIENTIA-03, LA-LEX-C407-SCIENTIA-04, LA-LEX-C407-SCIENTIA-05, LA-LEX-C408-MENDUM-01, LA-LEX-C408-MENDUM-02, LA-LEX-C408-MENDUM-03, LA-LEX-C408-MENDUM-04, LA-LEX-C408-MENDUM-05, LA-LEX-C409-EDICTUM-01, LA-LEX-C409-EDICTUM-02, LA-LEX-C409-EDICTUM-03, LA-LEX-C409-EDICTUM-04, LA-LEX-C409-EDICTUM-05, LA-LEX-C410-ROGATIO-01, LA-LEX-C410-ROGATIO-02, LA-LEX-C410-ROGATIO-03, LA-LEX-C410-ROGATIO-04, LA-LEX-C410-ROGATIO-05, LA-LEX-C411-TRIBUNAL-01, LA-LEX-C411-TRIBUNAL-02, LA-LEX-C411-TRIBUNAL-03, LA-LEX-C411-TRIBUNAL-04, LA-LEX-C411-TRIBUNAL-05, LA-LEX-C412-COGNITIO-01, LA-LEX-C412-COGNITIO-02, LA-LEX-C412-COGNITIO-03, LA-LEX-C412-COGNITIO-04, LA-LEX-C412-COGNITIO-05] -->
+
+[PAUSE 2s each]
+- [YOU SAY: a counting board, a pebble, to count out, to say repeatedly, a task]
+- [YOU SAY: clever, attentive, slow, painstaking, careless]
+- [YOU SAY: knowledge, understanding, teaching, ignorance, to imitate]
+- [YOU SAY: a mistake, a fault, a cane, a lash, to be beaten]
+- [YOU SAY: an edict, a decree, a rule, lawful, allowed]
+- [YOU SAY: a bill, to publish, to repeal, to make sacred and binding, to lay down]
+- [YOU SAY: the judgement seat, a lawsuit, to go to law, a promise to appear in court, a legal expert]
+- [YOU SAY: an inquiry, an investigator, to question, an informer, a defence]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[LA-LEX-C405-CALCULUS-01, LA-LEX-C405-CALCULUS-02, LA-LEX-C405-CALCULUS-03, LA-LEX-C405-CALCULUS-04, LA-LEX-C405-CALCULUS-05, LA-LEX-C406-SEDULUS-01, LA-LEX-C406-SEDULUS-02, LA-LEX-C406-SEDULUS-03, LA-LEX-C406-SEDULUS-04, LA-LEX-C406-SEDULUS-05, LA-LEX-C407-SCIENTIA-01, LA-LEX-C407-SCIENTIA-02, LA-LEX-C407-SCIENTIA-03, LA-LEX-C407-SCIENTIA-04, LA-LEX-C407-SCIENTIA-05, LA-LEX-C408-MENDUM-01, LA-LEX-C408-MENDUM-02, LA-LEX-C408-MENDUM-03, LA-LEX-C408-MENDUM-04, LA-LEX-C408-MENDUM-05, LA-LEX-C409-EDICTUM-01, LA-LEX-C409-EDICTUM-02, LA-LEX-C409-EDICTUM-03, LA-LEX-C409-EDICTUM-04, LA-LEX-C409-EDICTUM-05, LA-LEX-C410-ROGATIO-01, LA-LEX-C410-ROGATIO-02, LA-LEX-C410-ROGATIO-03, LA-LEX-C410-ROGATIO-04, LA-LEX-C410-ROGATIO-05, LA-LEX-C411-TRIBUNAL-01, LA-LEX-C411-TRIBUNAL-02, LA-LEX-C411-TRIBUNAL-03, LA-LEX-C411-TRIBUNAL-04, LA-LEX-C411-TRIBUNAL-05, LA-LEX-C412-COGNITIO-01, LA-LEX-C412-COGNITIO-02, LA-LEX-C412-COGNITIO-03, LA-LEX-C412-COGNITIO-04, LA-LEX-C412-COGNITIO-05] -->
+
+[PAUSE 3s] A counting board? (**abacus, abacī**.) A pebble? (**calculus, calculī**.) To count out? (**ēnumerō, ēnumerāre**.) To say repeatedly? (**dictō, dictāre**.) A task? (**pēnsum, pēnsī**.) Clever? (**ingeniōsus, ingeniōsa, ingeniōsum**.) Attentive? (**attentus, attenta, attentum**.) Slow? (**tardus, tarda, tardum**.) Painstaking? (**sēdulus, sēdula, sēdulum**.) Careless? (**neglegēns, neglegentis**.) Knowledge? (**scientia, scientiae**.) Understanding? (**intellegentia, intellegentiae**.) Teaching? (**doctrīna, doctrīnae**.) Ignorance? (**īnscītia, īnscītiae**.) To imitate? (**imitor, imitārī**.) A mistake? (**mendum, mendī**.) A fault? (**vitium, vitiī**.) A cane? (**ferula, ferulae**.) A lash? (**verber, verberis**.) To be beaten? (**vāpulō, vāpulāre**.) An edict? (**ēdictum, ēdictī**.) A decree? (**dēcrētum, dēcrētī**.) A rule? (**praeceptum, praeceptī**.) Lawful? (**lēgitimus, lēgitima, lēgitimum**.) Allowed? (**licitus, licita, licitum**.) A bill? (**rogātiō, rogātiōnis**.) To publish? (**prōmulgō, prōmulgāre**.) To repeal? (**abrogō, abrogāre**.) To make sacred and binding? (**sanciō, sancīre**.) To lay down? (**praescrībō, praescrībere**.) The judgement seat? (**tribūnal, tribūnālis**.) A lawsuit? (**līs, lītis**.) To go to law? (**lītigō, lītigāre**.) A promise to appear in court? (**vadimōnium, vadimōniī**.) A legal expert? (**iūriscōnsultus, iūriscōnsultī**.) An inquiry? (**cognitiō, cognitiōnis**.) An investigator? (**quaesītor, quaesītōris**.) To question? (**interrogō, interrogāre**.) An informer? (**dēlātor, dēlātōris**.) A defence? (**dēfēnsiō, dēfēnsiōnis**.)
+`;export{t};

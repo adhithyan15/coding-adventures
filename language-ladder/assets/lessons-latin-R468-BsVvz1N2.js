@@ -1,0 +1,57 @@
+import{t as e}from"./rolldown-runtime-DK3Fl9T5.js";var t=e({default:()=>n}),n=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: LA-R470-review-463-470
+spine_node: SPINE-HANDLE-TRAVEL
+sequence: 25050
+chapter: 470
+type: review
+headword: (dialogue)
+gloss: a review of chapters 463-470
+concept_tag: REVIEW
+prerequisites: [LA-C463-holitor, LA-C463-piscarius, LA-C463-sporta, LA-C463-corbis, LA-C463-canistrum, LA-C464-statera, LA-C464-trutina, LA-C464-lanx, LA-C464-appendo, LA-C464-penso, LA-C465-modius, LA-C465-sextarius, LA-C465-pondo, LA-C465-quadrans, LA-C465-nummularius, LA-C466-annona, LA-C466-caritas, LA-C466-vilitas, LA-C466-aestimo, LA-C466-veneo, LA-C467-sutrina, LA-C467-tonstrina, LA-C467-subula, LA-C467-coriarius, LA-C467-pellio, LA-C468-tingo, LA-C468-murex, LA-C468-ostrum, LA-C468-pigmentum, LA-C468-penicillus, LA-C469-incus, LA-C469-follis, LA-C469-caminus, LA-C469-ferrarius, LA-C469-cudo, LA-C470-ascia, LA-C470-terebra, LA-C470-runcina, LA-C470-lima, LA-C470-dolo]
+sounds: []
+roots: []
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [LA-LEX-C463-HOLITOR-01, LA-LEX-C463-HOLITOR-02, LA-LEX-C463-HOLITOR-03, LA-LEX-C463-HOLITOR-04, LA-LEX-C463-HOLITOR-05, LA-LEX-C464-STATERA-01, LA-LEX-C464-STATERA-02, LA-LEX-C464-STATERA-03, LA-LEX-C464-STATERA-04, LA-LEX-C464-STATERA-05, LA-LEX-C465-MODIUS-01, LA-LEX-C465-MODIUS-02, LA-LEX-C465-MODIUS-03, LA-LEX-C465-MODIUS-04, LA-LEX-C465-MODIUS-05, LA-LEX-C466-ANNONA-01, LA-LEX-C466-ANNONA-02, LA-LEX-C466-ANNONA-03, LA-LEX-C466-ANNONA-04, LA-LEX-C466-ANNONA-05, LA-LEX-C467-SUTRINA-01, LA-LEX-C467-SUTRINA-02, LA-LEX-C467-SUTRINA-03, LA-LEX-C467-SUTRINA-04, LA-LEX-C467-SUTRINA-05, LA-LEX-C468-TINGO-01, LA-LEX-C468-TINGO-02, LA-LEX-C468-TINGO-03, LA-LEX-C468-TINGO-04, LA-LEX-C468-TINGO-05, LA-LEX-C469-INCUS-01, LA-LEX-C469-INCUS-02, LA-LEX-C469-INCUS-03, LA-LEX-C469-INCUS-04, LA-LEX-C469-INCUS-05, LA-LEX-C470-ASCIA-01, LA-LEX-C470-ASCIA-02, LA-LEX-C470-ASCIA-03, LA-LEX-C470-ASCIA-04, LA-LEX-C470-ASCIA-05]
+introduces:
+  knowledge: []
+practises:
+  knowledge: [LA-LEX-C463-HOLITOR-01, LA-LEX-C463-HOLITOR-02, LA-LEX-C463-HOLITOR-03, LA-LEX-C463-HOLITOR-04, LA-LEX-C463-HOLITOR-05, LA-LEX-C464-STATERA-01, LA-LEX-C464-STATERA-02, LA-LEX-C464-STATERA-03, LA-LEX-C464-STATERA-04, LA-LEX-C464-STATERA-05, LA-LEX-C465-MODIUS-01, LA-LEX-C465-MODIUS-02, LA-LEX-C465-MODIUS-03, LA-LEX-C465-MODIUS-04, LA-LEX-C465-MODIUS-05, LA-LEX-C466-ANNONA-01, LA-LEX-C466-ANNONA-02, LA-LEX-C466-ANNONA-03, LA-LEX-C466-ANNONA-04, LA-LEX-C466-ANNONA-05, LA-LEX-C467-SUTRINA-01, LA-LEX-C467-SUTRINA-02, LA-LEX-C467-SUTRINA-03, LA-LEX-C467-SUTRINA-04, LA-LEX-C467-SUTRINA-05, LA-LEX-C468-TINGO-01, LA-LEX-C468-TINGO-02, LA-LEX-C468-TINGO-03, LA-LEX-C468-TINGO-04, LA-LEX-C468-TINGO-05, LA-LEX-C469-INCUS-01, LA-LEX-C469-INCUS-02, LA-LEX-C469-INCUS-03, LA-LEX-C469-INCUS-04, LA-LEX-C469-INCUS-05, LA-LEX-C470-ASCIA-01, LA-LEX-C470-ASCIA-02, LA-LEX-C470-ASCIA-03, LA-LEX-C470-ASCIA-04, LA-LEX-C470-ASCIA-05]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: classical
+reviews_of: [LA-C463-holitor, LA-C463-piscarius, LA-C463-sporta, LA-C463-corbis, LA-C463-canistrum, LA-C464-statera, LA-C464-trutina, LA-C464-lanx, LA-C464-appendo, LA-C464-penso, LA-C465-modius, LA-C465-sextarius, LA-C465-pondo, LA-C465-quadrans, LA-C465-nummularius, LA-C466-annona, LA-C466-caritas, LA-C466-vilitas, LA-C466-aestimo, LA-C466-veneo, LA-C467-sutrina, LA-C467-tonstrina, LA-C467-subula, LA-C467-coriarius, LA-C467-pellio, LA-C468-tingo, LA-C468-murex, LA-C468-ostrum, LA-C468-pigmentum, LA-C468-penicillus, LA-C469-incus, LA-C469-follis, LA-C469-caminus, LA-C469-ferrarius, LA-C469-cudo, LA-C470-ascia, LA-C470-terebra, LA-C470-runcina, LA-C470-lima, LA-C470-dolo]
+---
+
+# Words from chapters 463–470 — a review
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[LA-LEX-C463-HOLITOR-01, LA-LEX-C463-HOLITOR-02] -->
+
+[PAUSE 3s] Say the Latin for a vegetable grower and a fishmonger.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[LA-LEX-C463-HOLITOR-01, LA-LEX-C463-HOLITOR-02, LA-LEX-C463-HOLITOR-03, LA-LEX-C463-HOLITOR-04, LA-LEX-C463-HOLITOR-05, LA-LEX-C464-STATERA-01, LA-LEX-C464-STATERA-02, LA-LEX-C464-STATERA-03, LA-LEX-C464-STATERA-04, LA-LEX-C464-STATERA-05, LA-LEX-C465-MODIUS-01, LA-LEX-C465-MODIUS-02, LA-LEX-C465-MODIUS-03, LA-LEX-C465-MODIUS-04, LA-LEX-C465-MODIUS-05, LA-LEX-C466-ANNONA-01, LA-LEX-C466-ANNONA-02, LA-LEX-C466-ANNONA-03, LA-LEX-C466-ANNONA-04, LA-LEX-C466-ANNONA-05, LA-LEX-C467-SUTRINA-01, LA-LEX-C467-SUTRINA-02, LA-LEX-C467-SUTRINA-03, LA-LEX-C467-SUTRINA-04, LA-LEX-C467-SUTRINA-05, LA-LEX-C468-TINGO-01, LA-LEX-C468-TINGO-02, LA-LEX-C468-TINGO-03, LA-LEX-C468-TINGO-04, LA-LEX-C468-TINGO-05, LA-LEX-C469-INCUS-01, LA-LEX-C469-INCUS-02, LA-LEX-C469-INCUS-03, LA-LEX-C469-INCUS-04, LA-LEX-C469-INCUS-05, LA-LEX-C470-ASCIA-01, LA-LEX-C470-ASCIA-02, LA-LEX-C470-ASCIA-03, LA-LEX-C470-ASCIA-04, LA-LEX-C470-ASCIA-05] -->
+
+[PAUSE 2s each]
+- [YOU SAY: a vegetable grower, a fishmonger, a plaited basket, a wicker basket, a bread basket]
+- [YOU SAY: a steelyard, a pair of scales, a scale pan, to weigh out, to weigh carefully]
+- [YOU SAY: a peck, a pint, by weight, a quarter-as, a money-changer]
+- [YOU SAY: the corn supply, dearness, cheapness, to value, to be sold]
+- [YOU SAY: a cobbler's shop, a barber's shop, an awl, a tanner, a furrier]
+- [YOU SAY: to dye, the purple shellfish, purple dye, a paint, a paintbrush]
+- [YOU SAY: an anvil, a pair of bellows, a forge, a blacksmith, to hammer]
+- [YOU SAY: an adze, a drill, a plane, a file, to hew]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[LA-LEX-C463-HOLITOR-01, LA-LEX-C463-HOLITOR-02, LA-LEX-C463-HOLITOR-03, LA-LEX-C463-HOLITOR-04, LA-LEX-C463-HOLITOR-05, LA-LEX-C464-STATERA-01, LA-LEX-C464-STATERA-02, LA-LEX-C464-STATERA-03, LA-LEX-C464-STATERA-04, LA-LEX-C464-STATERA-05, LA-LEX-C465-MODIUS-01, LA-LEX-C465-MODIUS-02, LA-LEX-C465-MODIUS-03, LA-LEX-C465-MODIUS-04, LA-LEX-C465-MODIUS-05, LA-LEX-C466-ANNONA-01, LA-LEX-C466-ANNONA-02, LA-LEX-C466-ANNONA-03, LA-LEX-C466-ANNONA-04, LA-LEX-C466-ANNONA-05, LA-LEX-C467-SUTRINA-01, LA-LEX-C467-SUTRINA-02, LA-LEX-C467-SUTRINA-03, LA-LEX-C467-SUTRINA-04, LA-LEX-C467-SUTRINA-05, LA-LEX-C468-TINGO-01, LA-LEX-C468-TINGO-02, LA-LEX-C468-TINGO-03, LA-LEX-C468-TINGO-04, LA-LEX-C468-TINGO-05, LA-LEX-C469-INCUS-01, LA-LEX-C469-INCUS-02, LA-LEX-C469-INCUS-03, LA-LEX-C469-INCUS-04, LA-LEX-C469-INCUS-05, LA-LEX-C470-ASCIA-01, LA-LEX-C470-ASCIA-02, LA-LEX-C470-ASCIA-03, LA-LEX-C470-ASCIA-04, LA-LEX-C470-ASCIA-05] -->
+
+[PAUSE 3s] A vegetable grower? (**holitor, holitōris**.) A fishmonger? (**piscārius, piscāriī**.) A plaited basket? (**sporta, sportae**.) A wicker basket? (**corbis, corbis**.) A bread basket? (**canistrum, canistrī**.) A steelyard? (**statēra, statērae**.) A pair of scales? (**trutina, trutinae**.) A scale pan? (**lanx, lancis**.) To weigh out? (**appendō, appendere**.) To weigh carefully? (**pēnsō, pēnsāre**.) A peck? (**modius, modiī**.) A pint? (**sextārius, sextāriī**.) By weight? (**pondō**.) A quarter-as? (**quadrāns, quadrantis**.) A money-changer? (**nummulārius, nummulāriī**.) The corn supply? (**annōna, annōnae**.) Dearness? (**cāritās, cāritātis**.) Cheapness? (**vīlitās, vīlitātis**.) To value? (**aestimō, aestimāre**.) To be sold? (**vēneō, vēnīre**.) A cobbler's shop? (**sūtrīna, sūtrīnae**.) A barber's shop? (**tōnstrīna, tōnstrīnae**.) An awl? (**sūbula, sūbulae**.) A tanner? (**coriārius, coriāriī**.) A furrier? (**pelliō, pelliōnis**.) To dye? (**tingō, tingere**.) The purple shellfish? (**mūrex, mūricis**.) Purple dye? (**ostrum, ostrī**.) A paint? (**pigmentum, pigmentī**.) A paintbrush? (**pēnicillus, pēnicillī**.) An anvil? (**incūs, incūdis**.) A pair of bellows? (**follis, follis**.) A forge? (**camīnus, camīnī**.) A blacksmith? (**ferrārius, ferrāriī**.) To hammer? (**cūdō, cūdere**.) An adze? (**ascia, asciae**.) A drill? (**terebra, terebrae**.) A plane? (**runcīna, runcīnae**.) A file? (**līma, līmae**.) To hew? (**dolō, dolāre**.)
+`;export{t};

@@ -1,0 +1,57 @@
+import{t as e}from"./rolldown-runtime-DK3Fl9T5.js";var t=e({default:()=>n}),n=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: LA-R430-review-423-430
+spine_node: SPINE-HANDLE-TRAVEL
+sequence: 23000
+chapter: 430
+type: review
+headword: (dialogue)
+gloss: a review of chapters 423-430
+concept_tag: REVIEW
+prerequisites: [LA-C423-semita, LA-C423-callis, LA-C423-trames, LA-C423-clivus, LA-C423-gradior, LA-C424-compitum, LA-C424-bivium, LA-C424-flexus, LA-C424-anfractus, LA-C424-flecto, LA-C425-agger, LA-C425-silex, LA-C425-crepido, LA-C425-orbita, LA-C425-sterno, LA-C426-pulverulentus, LA-C426-lutulentus, LA-C426-vestigium, LA-C426-lassus, LA-C426-defatigo, LA-C427-mansio, LA-C427-raedarius, LA-C427-statio, LA-C427-viaticum, LA-C427-ingredior, LA-C428-profectio, LA-C428-reditus, LA-C428-peregrinatio, LA-C428-peregrinor, LA-C428-progredior, LA-C429-carrus, LA-C429-cisium, LA-C429-essedum, LA-C429-carpentum, LA-C429-carruca, LA-C430-temo, LA-C430-modiolus, LA-C430-sufflamen, LA-C430-subiungo, LA-C430-disiungo]
+sounds: []
+roots: []
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [LA-LEX-C423-SEMITA-01, LA-LEX-C423-SEMITA-02, LA-LEX-C423-SEMITA-03, LA-LEX-C423-SEMITA-04, LA-LEX-C423-SEMITA-05, LA-LEX-C424-COMPITUM-01, LA-LEX-C424-COMPITUM-02, LA-LEX-C424-COMPITUM-03, LA-LEX-C424-COMPITUM-04, LA-LEX-C424-COMPITUM-05, LA-LEX-C425-AGGER-01, LA-LEX-C425-AGGER-02, LA-LEX-C425-AGGER-03, LA-LEX-C425-AGGER-04, LA-LEX-C425-AGGER-05, LA-LEX-C426-LUTULENTUS-01, LA-LEX-C426-LUTULENTUS-02, LA-LEX-C426-LUTULENTUS-03, LA-LEX-C426-LUTULENTUS-04, LA-LEX-C426-LUTULENTUS-05, LA-LEX-C427-MANSIO-01, LA-LEX-C427-MANSIO-02, LA-LEX-C427-MANSIO-03, LA-LEX-C427-MANSIO-04, LA-LEX-C427-MANSIO-05, LA-LEX-C428-PROFECTIO-01, LA-LEX-C428-PROFECTIO-02, LA-LEX-C428-PROFECTIO-03, LA-LEX-C428-PROFECTIO-04, LA-LEX-C428-PROFECTIO-05, LA-LEX-C429-CARRUS-01, LA-LEX-C429-CARRUS-02, LA-LEX-C429-CARRUS-03, LA-LEX-C429-CARRUS-04, LA-LEX-C429-CARRUS-05, LA-LEX-C430-TEMO-01, LA-LEX-C430-TEMO-02, LA-LEX-C430-TEMO-03, LA-LEX-C430-TEMO-04, LA-LEX-C430-TEMO-05]
+introduces:
+  knowledge: []
+practises:
+  knowledge: [LA-LEX-C423-SEMITA-01, LA-LEX-C423-SEMITA-02, LA-LEX-C423-SEMITA-03, LA-LEX-C423-SEMITA-04, LA-LEX-C423-SEMITA-05, LA-LEX-C424-COMPITUM-01, LA-LEX-C424-COMPITUM-02, LA-LEX-C424-COMPITUM-03, LA-LEX-C424-COMPITUM-04, LA-LEX-C424-COMPITUM-05, LA-LEX-C425-AGGER-01, LA-LEX-C425-AGGER-02, LA-LEX-C425-AGGER-03, LA-LEX-C425-AGGER-04, LA-LEX-C425-AGGER-05, LA-LEX-C426-LUTULENTUS-01, LA-LEX-C426-LUTULENTUS-02, LA-LEX-C426-LUTULENTUS-03, LA-LEX-C426-LUTULENTUS-04, LA-LEX-C426-LUTULENTUS-05, LA-LEX-C427-MANSIO-01, LA-LEX-C427-MANSIO-02, LA-LEX-C427-MANSIO-03, LA-LEX-C427-MANSIO-04, LA-LEX-C427-MANSIO-05, LA-LEX-C428-PROFECTIO-01, LA-LEX-C428-PROFECTIO-02, LA-LEX-C428-PROFECTIO-03, LA-LEX-C428-PROFECTIO-04, LA-LEX-C428-PROFECTIO-05, LA-LEX-C429-CARRUS-01, LA-LEX-C429-CARRUS-02, LA-LEX-C429-CARRUS-03, LA-LEX-C429-CARRUS-04, LA-LEX-C429-CARRUS-05, LA-LEX-C430-TEMO-01, LA-LEX-C430-TEMO-02, LA-LEX-C430-TEMO-03, LA-LEX-C430-TEMO-04, LA-LEX-C430-TEMO-05]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: classical
+reviews_of: [LA-C423-semita, LA-C423-callis, LA-C423-trames, LA-C423-clivus, LA-C423-gradior, LA-C424-compitum, LA-C424-bivium, LA-C424-flexus, LA-C424-anfractus, LA-C424-flecto, LA-C425-agger, LA-C425-silex, LA-C425-crepido, LA-C425-orbita, LA-C425-sterno, LA-C426-pulverulentus, LA-C426-lutulentus, LA-C426-vestigium, LA-C426-lassus, LA-C426-defatigo, LA-C427-mansio, LA-C427-raedarius, LA-C427-statio, LA-C427-viaticum, LA-C427-ingredior, LA-C428-profectio, LA-C428-reditus, LA-C428-peregrinatio, LA-C428-peregrinor, LA-C428-progredior, LA-C429-carrus, LA-C429-cisium, LA-C429-essedum, LA-C429-carpentum, LA-C429-carruca, LA-C430-temo, LA-C430-modiolus, LA-C430-sufflamen, LA-C430-subiungo, LA-C430-disiungo]
+---
+
+# Roads, carts and ships
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[LA-LEX-C423-SEMITA-01, LA-LEX-C423-SEMITA-02] -->
+
+[PAUSE 3s] Say the Latin for a footpath and a mountain track.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[LA-LEX-C423-SEMITA-01, LA-LEX-C423-SEMITA-02, LA-LEX-C423-SEMITA-03, LA-LEX-C423-SEMITA-04, LA-LEX-C423-SEMITA-05, LA-LEX-C424-COMPITUM-01, LA-LEX-C424-COMPITUM-02, LA-LEX-C424-COMPITUM-03, LA-LEX-C424-COMPITUM-04, LA-LEX-C424-COMPITUM-05, LA-LEX-C425-AGGER-01, LA-LEX-C425-AGGER-02, LA-LEX-C425-AGGER-03, LA-LEX-C425-AGGER-04, LA-LEX-C425-AGGER-05, LA-LEX-C426-LUTULENTUS-01, LA-LEX-C426-LUTULENTUS-02, LA-LEX-C426-LUTULENTUS-03, LA-LEX-C426-LUTULENTUS-04, LA-LEX-C426-LUTULENTUS-05, LA-LEX-C427-MANSIO-01, LA-LEX-C427-MANSIO-02, LA-LEX-C427-MANSIO-03, LA-LEX-C427-MANSIO-04, LA-LEX-C427-MANSIO-05, LA-LEX-C428-PROFECTIO-01, LA-LEX-C428-PROFECTIO-02, LA-LEX-C428-PROFECTIO-03, LA-LEX-C428-PROFECTIO-04, LA-LEX-C428-PROFECTIO-05, LA-LEX-C429-CARRUS-01, LA-LEX-C429-CARRUS-02, LA-LEX-C429-CARRUS-03, LA-LEX-C429-CARRUS-04, LA-LEX-C429-CARRUS-05, LA-LEX-C430-TEMO-01, LA-LEX-C430-TEMO-02, LA-LEX-C430-TEMO-03, LA-LEX-C430-TEMO-04, LA-LEX-C430-TEMO-05] -->
+
+[PAUSE 2s each]
+- [YOU SAY: a footpath, a mountain track, a side path, a slope, to step]
+- [YOU SAY: a crossroads, a fork in the road, a bend, a winding, to bend]
+- [YOU SAY: a raised roadbed, a flint, a raised edge, a wheel rut, to spread]
+- [YOU SAY: dusty, muddy, a footprint, weary, to wear out]
+- [YOU SAY: an overnight stop, a coachman, a post, travel money, to set out on]
+- [YOU SAY: a departure, a return, travel abroad, to travel abroad, to go forward]
+- [YOU SAY: a wagon, a light gig, a two-wheeled chariot, a covered carriage, a travelling coach]
+- [YOU SAY: a cart pole, a wheel hub, a drag shoe, to yoke, to unyoke]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[LA-LEX-C423-SEMITA-01, LA-LEX-C423-SEMITA-02, LA-LEX-C423-SEMITA-03, LA-LEX-C423-SEMITA-04, LA-LEX-C423-SEMITA-05, LA-LEX-C424-COMPITUM-01, LA-LEX-C424-COMPITUM-02, LA-LEX-C424-COMPITUM-03, LA-LEX-C424-COMPITUM-04, LA-LEX-C424-COMPITUM-05, LA-LEX-C425-AGGER-01, LA-LEX-C425-AGGER-02, LA-LEX-C425-AGGER-03, LA-LEX-C425-AGGER-04, LA-LEX-C425-AGGER-05, LA-LEX-C426-LUTULENTUS-01, LA-LEX-C426-LUTULENTUS-02, LA-LEX-C426-LUTULENTUS-03, LA-LEX-C426-LUTULENTUS-04, LA-LEX-C426-LUTULENTUS-05, LA-LEX-C427-MANSIO-01, LA-LEX-C427-MANSIO-02, LA-LEX-C427-MANSIO-03, LA-LEX-C427-MANSIO-04, LA-LEX-C427-MANSIO-05, LA-LEX-C428-PROFECTIO-01, LA-LEX-C428-PROFECTIO-02, LA-LEX-C428-PROFECTIO-03, LA-LEX-C428-PROFECTIO-04, LA-LEX-C428-PROFECTIO-05, LA-LEX-C429-CARRUS-01, LA-LEX-C429-CARRUS-02, LA-LEX-C429-CARRUS-03, LA-LEX-C429-CARRUS-04, LA-LEX-C429-CARRUS-05, LA-LEX-C430-TEMO-01, LA-LEX-C430-TEMO-02, LA-LEX-C430-TEMO-03, LA-LEX-C430-TEMO-04, LA-LEX-C430-TEMO-05] -->
+
+[PAUSE 3s] A footpath? (**sēmita, sēmitae**.) A mountain track? (**callis, callis**.) A side path? (**trāmes, trāmitis**.) A slope? (**clīvus, clīvī**.) To step? (**gradior, gradī**.) A crossroads? (**compitum, compitī**.) A fork in the road? (**bivium, biviī**.) A bend? (**flexus, flexūs**.) A winding? (**anfrāctus, anfrāctūs**.) To bend? (**flectō, flectere**.) A raised roadbed? (**agger, aggeris**.) A flint? (**silex, silicis**.) A raised edge? (**crepīdō, crepīdinis**.) A wheel rut? (**orbita, orbitae**.) To spread? (**sternō, sternere**.) Dusty? (**pulverulentus, pulverulenta, pulverulentum**.) Muddy? (**lutulentus, lutulenta, lutulentum**.) A footprint? (**vestīgium, vestīgiī**.) Weary? (**lassus, lassa, lassum**.) To wear out? (**dēfatīgō, dēfatīgāre**.) An overnight stop? (**mānsiō, mānsiōnis**.) A coachman? (**raedārius, raedāriī**.) A post? (**statiō, statiōnis**.) Travel money? (**viāticum, viāticī**.) To set out on? (**ingredior, ingredī**.) A departure? (**profectiō, profectiōnis**.) A return? (**reditus, reditūs**.) Travel abroad? (**peregrīnātiō, peregrīnātiōnis**.) To travel abroad? (**peregrīnor, peregrīnārī**.) To go forward? (**prōgredior, prōgredī**.) A wagon? (**carrus, carrī**.) A light gig? (**cisium, cisiī**.) A two-wheeled chariot? (**essedum, essedī**.) A covered carriage? (**carpentum, carpentī**.) A travelling coach? (**carrūca, carrūcae**.) A cart pole? (**tēmō, tēmōnis**.) A wheel hub? (**modiolus, modiolī**.) A drag shoe? (**sufflāmen, sufflāminis**.) To yoke? (**subiungō, subiungere**.) To unyoke? (**disiungō, disiungere**.)
+`;export{t};

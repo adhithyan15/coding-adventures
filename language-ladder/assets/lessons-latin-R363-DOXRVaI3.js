@@ -1,0 +1,57 @@
+import{t as e}from"./rolldown-runtime-DK3Fl9T5.js";var t=e({default:()=>n}),n=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: LA-R364-review-357-364
+spine_node: SPINE-GIVE-REASONS
+sequence: 19600
+chapter: 364
+type: review
+headword: (dialogue)
+gloss: a review of chapters 357-364
+concept_tag: REVIEW
+prerequisites: [LA-C357-arbitror, LA-C357-existimo, LA-C357-censeo, LA-C357-opinor, LA-C357-opinio, LA-C358-assentior, LA-C358-dissentio, LA-C358-consentio, LA-C358-consensus, LA-C358-controversia, LA-C359-pondero, LA-C359-delibero, LA-C359-dubitatio, LA-C359-probabilis, LA-C359-verisimilis, LA-C360-manifestus, LA-C360-perspicuus, LA-C360-absurdus, LA-C360-stultitia, LA-C360-constantia, LA-C361-argumentum, LA-C361-exemplum, LA-C361-documentum, LA-C361-demonstro, LA-C361-confirmo, LA-C362-refello, LA-C362-refuto, LA-C362-redarguo, LA-C362-convinco, LA-C362-coniectura, LA-C363-concedo, LA-C363-denego, LA-C363-confiteor, LA-C363-obicio, LA-C363-contendo, LA-C364-concludo, LA-C364-conclusio, LA-C364-ratiocinor, LA-C364-significo, LA-C364-suspicio]
+sounds: []
+roots: []
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [LA-LEX-C357-SENTENTIA-01, LA-LEX-C357-SENTENTIA-02, LA-LEX-C357-SENTENTIA-03, LA-LEX-C357-SENTENTIA-04, LA-LEX-C357-SENTENTIA-05, LA-LEX-C358-ASSENSUS-01, LA-LEX-C358-ASSENSUS-02, LA-LEX-C358-ASSENSUS-03, LA-LEX-C358-ASSENSUS-04, LA-LEX-C358-ASSENSUS-05, LA-LEX-C359-PONDERO-01, LA-LEX-C359-PONDERO-02, LA-LEX-C359-PONDERO-03, LA-LEX-C359-PONDERO-04, LA-LEX-C359-PONDERO-05, LA-LEX-C360-MANIFESTUS-01, LA-LEX-C360-MANIFESTUS-02, LA-LEX-C360-MANIFESTUS-03, LA-LEX-C360-MANIFESTUS-04, LA-LEX-C360-MANIFESTUS-05, LA-LEX-C361-ARGUMENTUM-01, LA-LEX-C361-ARGUMENTUM-02, LA-LEX-C361-ARGUMENTUM-03, LA-LEX-C361-ARGUMENTUM-04, LA-LEX-C361-ARGUMENTUM-05, LA-LEX-C362-REFELLO-01, LA-LEX-C362-REFELLO-02, LA-LEX-C362-REFELLO-03, LA-LEX-C362-REFELLO-04, LA-LEX-C362-REFELLO-05, LA-LEX-C363-CONCEDO-01, LA-LEX-C363-CONCEDO-02, LA-LEX-C363-CONCEDO-03, LA-LEX-C363-CONCEDO-04, LA-LEX-C363-CONCEDO-05, LA-LEX-C364-CONCLUDO-01, LA-LEX-C364-CONCLUDO-02, LA-LEX-C364-CONCLUDO-03, LA-LEX-C364-CONCLUDO-04, LA-LEX-C364-CONCLUDO-05]
+introduces:
+  knowledge: []
+practises:
+  knowledge: [LA-LEX-C357-SENTENTIA-01, LA-LEX-C357-SENTENTIA-02, LA-LEX-C357-SENTENTIA-03, LA-LEX-C357-SENTENTIA-04, LA-LEX-C357-SENTENTIA-05, LA-LEX-C358-ASSENSUS-01, LA-LEX-C358-ASSENSUS-02, LA-LEX-C358-ASSENSUS-03, LA-LEX-C358-ASSENSUS-04, LA-LEX-C358-ASSENSUS-05, LA-LEX-C359-PONDERO-01, LA-LEX-C359-PONDERO-02, LA-LEX-C359-PONDERO-03, LA-LEX-C359-PONDERO-04, LA-LEX-C359-PONDERO-05, LA-LEX-C360-MANIFESTUS-01, LA-LEX-C360-MANIFESTUS-02, LA-LEX-C360-MANIFESTUS-03, LA-LEX-C360-MANIFESTUS-04, LA-LEX-C360-MANIFESTUS-05, LA-LEX-C361-ARGUMENTUM-01, LA-LEX-C361-ARGUMENTUM-02, LA-LEX-C361-ARGUMENTUM-03, LA-LEX-C361-ARGUMENTUM-04, LA-LEX-C361-ARGUMENTUM-05, LA-LEX-C362-REFELLO-01, LA-LEX-C362-REFELLO-02, LA-LEX-C362-REFELLO-03, LA-LEX-C362-REFELLO-04, LA-LEX-C362-REFELLO-05, LA-LEX-C363-CONCEDO-01, LA-LEX-C363-CONCEDO-02, LA-LEX-C363-CONCEDO-03, LA-LEX-C363-CONCEDO-04, LA-LEX-C363-CONCEDO-05, LA-LEX-C364-CONCLUDO-01, LA-LEX-C364-CONCLUDO-02, LA-LEX-C364-CONCLUDO-03, LA-LEX-C364-CONCLUDO-04, LA-LEX-C364-CONCLUDO-05]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: classical
+reviews_of: [LA-C357-arbitror, LA-C357-existimo, LA-C357-censeo, LA-C357-opinor, LA-C357-opinio, LA-C358-assentior, LA-C358-dissentio, LA-C358-consentio, LA-C358-consensus, LA-C358-controversia, LA-C359-pondero, LA-C359-delibero, LA-C359-dubitatio, LA-C359-probabilis, LA-C359-verisimilis, LA-C360-manifestus, LA-C360-perspicuus, LA-C360-absurdus, LA-C360-stultitia, LA-C360-constantia, LA-C361-argumentum, LA-C361-exemplum, LA-C361-documentum, LA-C361-demonstro, LA-C361-confirmo, LA-C362-refello, LA-C362-refuto, LA-C362-redarguo, LA-C362-convinco, LA-C362-coniectura, LA-C363-concedo, LA-C363-denego, LA-C363-confiteor, LA-C363-obicio, LA-C363-contendo, LA-C364-concludo, LA-C364-conclusio, LA-C364-ratiocinor, LA-C364-significo, LA-C364-suspicio]
+---
+
+# Reasons, causes and conditions
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[LA-LEX-C357-SENTENTIA-01, LA-LEX-C357-SENTENTIA-02] -->
+
+[PAUSE 3s] Say the Latin for to be of the opinion and to reckon.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[LA-LEX-C357-SENTENTIA-01, LA-LEX-C357-SENTENTIA-02, LA-LEX-C357-SENTENTIA-03, LA-LEX-C357-SENTENTIA-04, LA-LEX-C357-SENTENTIA-05, LA-LEX-C358-ASSENSUS-01, LA-LEX-C358-ASSENSUS-02, LA-LEX-C358-ASSENSUS-03, LA-LEX-C358-ASSENSUS-04, LA-LEX-C358-ASSENSUS-05, LA-LEX-C359-PONDERO-01, LA-LEX-C359-PONDERO-02, LA-LEX-C359-PONDERO-03, LA-LEX-C359-PONDERO-04, LA-LEX-C359-PONDERO-05, LA-LEX-C360-MANIFESTUS-01, LA-LEX-C360-MANIFESTUS-02, LA-LEX-C360-MANIFESTUS-03, LA-LEX-C360-MANIFESTUS-04, LA-LEX-C360-MANIFESTUS-05, LA-LEX-C361-ARGUMENTUM-01, LA-LEX-C361-ARGUMENTUM-02, LA-LEX-C361-ARGUMENTUM-03, LA-LEX-C361-ARGUMENTUM-04, LA-LEX-C361-ARGUMENTUM-05, LA-LEX-C362-REFELLO-01, LA-LEX-C362-REFELLO-02, LA-LEX-C362-REFELLO-03, LA-LEX-C362-REFELLO-04, LA-LEX-C362-REFELLO-05, LA-LEX-C363-CONCEDO-01, LA-LEX-C363-CONCEDO-02, LA-LEX-C363-CONCEDO-03, LA-LEX-C363-CONCEDO-04, LA-LEX-C363-CONCEDO-05, LA-LEX-C364-CONCLUDO-01, LA-LEX-C364-CONCLUDO-02, LA-LEX-C364-CONCLUDO-03, LA-LEX-C364-CONCLUDO-04, LA-LEX-C364-CONCLUDO-05] -->
+
+[PAUSE 2s each]
+- [YOU SAY: to be of the opinion, to reckon, to give an opinion, to suppose, an opinion]
+- [YOU SAY: to agree, to disagree, to agree together, agreement, a dispute]
+- [YOU SAY: to weigh, to deliberate, doubt, likely, probable]
+- [YOU SAY: evident, clear, absurd, foolishness, steadiness]
+- [YOU SAY: an argument, an example, a lesson, to show, to strengthen]
+- [YOU SAY: to prove false, to refute, to disprove, to prove wrong, a guess]
+- [YOU SAY: to grant, to deny flatly, to confess, to throw in the way, to insist]
+- [YOU SAY: to shut in, a conclusion, to reason, to indicate, a suspicion]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[LA-LEX-C357-SENTENTIA-01, LA-LEX-C357-SENTENTIA-02, LA-LEX-C357-SENTENTIA-03, LA-LEX-C357-SENTENTIA-04, LA-LEX-C357-SENTENTIA-05, LA-LEX-C358-ASSENSUS-01, LA-LEX-C358-ASSENSUS-02, LA-LEX-C358-ASSENSUS-03, LA-LEX-C358-ASSENSUS-04, LA-LEX-C358-ASSENSUS-05, LA-LEX-C359-PONDERO-01, LA-LEX-C359-PONDERO-02, LA-LEX-C359-PONDERO-03, LA-LEX-C359-PONDERO-04, LA-LEX-C359-PONDERO-05, LA-LEX-C360-MANIFESTUS-01, LA-LEX-C360-MANIFESTUS-02, LA-LEX-C360-MANIFESTUS-03, LA-LEX-C360-MANIFESTUS-04, LA-LEX-C360-MANIFESTUS-05, LA-LEX-C361-ARGUMENTUM-01, LA-LEX-C361-ARGUMENTUM-02, LA-LEX-C361-ARGUMENTUM-03, LA-LEX-C361-ARGUMENTUM-04, LA-LEX-C361-ARGUMENTUM-05, LA-LEX-C362-REFELLO-01, LA-LEX-C362-REFELLO-02, LA-LEX-C362-REFELLO-03, LA-LEX-C362-REFELLO-04, LA-LEX-C362-REFELLO-05, LA-LEX-C363-CONCEDO-01, LA-LEX-C363-CONCEDO-02, LA-LEX-C363-CONCEDO-03, LA-LEX-C363-CONCEDO-04, LA-LEX-C363-CONCEDO-05, LA-LEX-C364-CONCLUDO-01, LA-LEX-C364-CONCLUDO-02, LA-LEX-C364-CONCLUDO-03, LA-LEX-C364-CONCLUDO-04, LA-LEX-C364-CONCLUDO-05] -->
+
+[PAUSE 3s] To be of the opinion? (**arbitror, arbitrārī**.) To reckon? (**exīstimō, exīstimāre**.) To give an opinion? (**cēnseō, cēnsēre**.) To suppose? (**opīnor, opīnārī**.) An opinion? (**opīniō, opīniōnis**.) To agree? (**assentior, assentīrī**.) To disagree? (**dissentiō, dissentīre**.) To agree together? (**cōnsentiō, cōnsentīre**.) Agreement? (**cōnsēnsus, cōnsēnsūs**.) A dispute? (**contrōversia, contrōversiae**.) To weigh? (**ponderō, ponderāre**.) To deliberate? (**dēlīberō, dēlīberāre**.) Doubt? (**dubitātiō, dubitātiōnis**.) Likely? (**probābilis, probābile**.) Probable? (**vērisimilis, vērisimile**.) Evident? (**manifestus, manifesta, manifestum**.) Clear? (**perspicuus, perspicua, perspicuum**.) Absurd? (**absurdus, absurda, absurdum**.) Foolishness? (**stultitia, stultitiae**.) Steadiness? (**cōnstantia, cōnstantiae**.) An argument? (**argūmentum, argūmentī**.) An example? (**exemplum, exemplī**.) A lesson? (**documentum, documentī**.) To show? (**dēmōnstrō, dēmōnstrāre**.) To strengthen? (**cōnfirmō, cōnfirmāre**.) To prove false? (**refellō, refellere**.) To refute? (**refūtō, refūtāre**.) To disprove? (**redarguō, redarguere**.) To prove wrong? (**convincō, convincere**.) A guess? (**coniectūra, coniectūrae**.) To grant? (**concēdō, concēdere**.) To deny flatly? (**dēnegō, dēnegāre**.) To confess? (**cōnfiteor, cōnfitērī**.) To throw in the way? (**obiciō, obicere**.) To insist? (**contendō, contendere**.) To shut in? (**cōnclūdō, cōnclūdere**.) A conclusion? (**cōnclūsiō, cōnclūsiōnis**.) To reason? (**ratiōcinor, ratiōcinārī**.) To indicate? (**significō, significāre**.) A suspicion? (**suspīciō, suspīciōnis**.)
+`;export{t};

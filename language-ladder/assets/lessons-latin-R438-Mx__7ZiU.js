@@ -1,0 +1,57 @@
+import{t as e}from"./rolldown-runtime-DK3Fl9T5.js";var t=e({default:()=>n}),n=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: LA-R438-review-431-438
+spine_node: SPINE-HANDLE-TRAVEL
+sequence: 23410
+chapter: 438
+type: review
+headword: (dialogue)
+gloss: a review of chapters 431-438
+concept_tag: REVIEW
+prerequisites: [LA-C431-habena, LA-C431-lorum, LA-C431-frenum, LA-C431-freno, LA-C431-scutica, LA-C432-equito, LA-C432-ephippium, LA-C432-calcar, LA-C432-desilio, LA-C432-calcitro, LA-C433-iumentum, LA-C433-caballus, LA-C433-mula, LA-C433-clitellae, LA-C433-onero, LA-C434-stabulum, LA-C434-praesepe, LA-C434-faenum, LA-C434-hinnio, LA-C434-mulio, LA-C435-navigium, LA-C435-navicula, LA-C435-scapha, LA-C435-linter, LA-C435-ratis, LA-C436-puppis, LA-C436-prora, LA-C436-carina, LA-C436-transtrum, LA-C436-onerarius, LA-C437-rudens, LA-C437-funis, LA-C437-armamenta, LA-C437-gubernaculum, LA-C437-remigo, LA-C438-conscendo, LA-C438-vectura, LA-C438-nauclerus, LA-C438-velificor, LA-C438-portitor]
+sounds: []
+roots: []
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [LA-LEX-C431-HABENA-01, LA-LEX-C431-HABENA-02, LA-LEX-C431-HABENA-03, LA-LEX-C431-HABENA-04, LA-LEX-C431-HABENA-05, LA-LEX-C432-EQUITO-01, LA-LEX-C432-EQUITO-02, LA-LEX-C432-EQUITO-03, LA-LEX-C432-EQUITO-04, LA-LEX-C432-EQUITO-05, LA-LEX-C433-IUMENTUM-01, LA-LEX-C433-IUMENTUM-02, LA-LEX-C433-IUMENTUM-03, LA-LEX-C433-IUMENTUM-04, LA-LEX-C433-IUMENTUM-05, LA-LEX-C434-STABULUM-01, LA-LEX-C434-STABULUM-02, LA-LEX-C434-STABULUM-03, LA-LEX-C434-STABULUM-04, LA-LEX-C434-STABULUM-05, LA-LEX-C435-NAVIGIUM-01, LA-LEX-C435-NAVIGIUM-02, LA-LEX-C435-NAVIGIUM-03, LA-LEX-C435-NAVIGIUM-04, LA-LEX-C435-NAVIGIUM-05, LA-LEX-C436-PUPPIS-01, LA-LEX-C436-PUPPIS-02, LA-LEX-C436-PUPPIS-03, LA-LEX-C436-PUPPIS-04, LA-LEX-C436-PUPPIS-05, LA-LEX-C437-RUDENS-01, LA-LEX-C437-RUDENS-02, LA-LEX-C437-RUDENS-03, LA-LEX-C437-RUDENS-04, LA-LEX-C437-RUDENS-05, LA-LEX-C438-CONSCENDO-01, LA-LEX-C438-CONSCENDO-02, LA-LEX-C438-CONSCENDO-03, LA-LEX-C438-CONSCENDO-04, LA-LEX-C438-CONSCENDO-05]
+introduces:
+  knowledge: []
+practises:
+  knowledge: [LA-LEX-C431-HABENA-01, LA-LEX-C431-HABENA-02, LA-LEX-C431-HABENA-03, LA-LEX-C431-HABENA-04, LA-LEX-C431-HABENA-05, LA-LEX-C432-EQUITO-01, LA-LEX-C432-EQUITO-02, LA-LEX-C432-EQUITO-03, LA-LEX-C432-EQUITO-04, LA-LEX-C432-EQUITO-05, LA-LEX-C433-IUMENTUM-01, LA-LEX-C433-IUMENTUM-02, LA-LEX-C433-IUMENTUM-03, LA-LEX-C433-IUMENTUM-04, LA-LEX-C433-IUMENTUM-05, LA-LEX-C434-STABULUM-01, LA-LEX-C434-STABULUM-02, LA-LEX-C434-STABULUM-03, LA-LEX-C434-STABULUM-04, LA-LEX-C434-STABULUM-05, LA-LEX-C435-NAVIGIUM-01, LA-LEX-C435-NAVIGIUM-02, LA-LEX-C435-NAVIGIUM-03, LA-LEX-C435-NAVIGIUM-04, LA-LEX-C435-NAVIGIUM-05, LA-LEX-C436-PUPPIS-01, LA-LEX-C436-PUPPIS-02, LA-LEX-C436-PUPPIS-03, LA-LEX-C436-PUPPIS-04, LA-LEX-C436-PUPPIS-05, LA-LEX-C437-RUDENS-01, LA-LEX-C437-RUDENS-02, LA-LEX-C437-RUDENS-03, LA-LEX-C437-RUDENS-04, LA-LEX-C437-RUDENS-05, LA-LEX-C438-CONSCENDO-01, LA-LEX-C438-CONSCENDO-02, LA-LEX-C438-CONSCENDO-03, LA-LEX-C438-CONSCENDO-04, LA-LEX-C438-CONSCENDO-05]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: classical
+reviews_of: [LA-C431-habena, LA-C431-lorum, LA-C431-frenum, LA-C431-freno, LA-C431-scutica, LA-C432-equito, LA-C432-ephippium, LA-C432-calcar, LA-C432-desilio, LA-C432-calcitro, LA-C433-iumentum, LA-C433-caballus, LA-C433-mula, LA-C433-clitellae, LA-C433-onero, LA-C434-stabulum, LA-C434-praesepe, LA-C434-faenum, LA-C434-hinnio, LA-C434-mulio, LA-C435-navigium, LA-C435-navicula, LA-C435-scapha, LA-C435-linter, LA-C435-ratis, LA-C436-puppis, LA-C436-prora, LA-C436-carina, LA-C436-transtrum, LA-C436-onerarius, LA-C437-rudens, LA-C437-funis, LA-C437-armamenta, LA-C437-gubernaculum, LA-C437-remigo, LA-C438-conscendo, LA-C438-vectura, LA-C438-nauclerus, LA-C438-velificor, LA-C438-portitor]
+---
+
+# Words from chapters 431–438 — a review
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[LA-LEX-C431-HABENA-01, LA-LEX-C431-HABENA-02] -->
+
+[PAUSE 3s] Say the Latin for a rein and a leather strap.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[LA-LEX-C431-HABENA-01, LA-LEX-C431-HABENA-02, LA-LEX-C431-HABENA-03, LA-LEX-C431-HABENA-04, LA-LEX-C431-HABENA-05, LA-LEX-C432-EQUITO-01, LA-LEX-C432-EQUITO-02, LA-LEX-C432-EQUITO-03, LA-LEX-C432-EQUITO-04, LA-LEX-C432-EQUITO-05, LA-LEX-C433-IUMENTUM-01, LA-LEX-C433-IUMENTUM-02, LA-LEX-C433-IUMENTUM-03, LA-LEX-C433-IUMENTUM-04, LA-LEX-C433-IUMENTUM-05, LA-LEX-C434-STABULUM-01, LA-LEX-C434-STABULUM-02, LA-LEX-C434-STABULUM-03, LA-LEX-C434-STABULUM-04, LA-LEX-C434-STABULUM-05, LA-LEX-C435-NAVIGIUM-01, LA-LEX-C435-NAVIGIUM-02, LA-LEX-C435-NAVIGIUM-03, LA-LEX-C435-NAVIGIUM-04, LA-LEX-C435-NAVIGIUM-05, LA-LEX-C436-PUPPIS-01, LA-LEX-C436-PUPPIS-02, LA-LEX-C436-PUPPIS-03, LA-LEX-C436-PUPPIS-04, LA-LEX-C436-PUPPIS-05, LA-LEX-C437-RUDENS-01, LA-LEX-C437-RUDENS-02, LA-LEX-C437-RUDENS-03, LA-LEX-C437-RUDENS-04, LA-LEX-C437-RUDENS-05, LA-LEX-C438-CONSCENDO-01, LA-LEX-C438-CONSCENDO-02, LA-LEX-C438-CONSCENDO-03, LA-LEX-C438-CONSCENDO-04, LA-LEX-C438-CONSCENDO-05] -->
+
+[PAUSE 2s each]
+- [YOU SAY: a rein, a leather strap, a bridle, to bridle, a whip]
+- [YOU SAY: to ride, a saddle cloth, a spur, to jump down, to kick]
+- [YOU SAY: a beast of burden, a nag, a she-mule, a pack saddle, to load]
+- [YOU SAY: a stable, a manger, hay, to neigh, a muleteer]
+- [YOU SAY: a vessel, a little boat, a skiff, a punt, a raft]
+- [YOU SAY: the stern, the prow, the keel, a rowing bench, for cargo]
+- [YOU SAY: a ship's rope, a rope, a ship's tackle, a rudder, to row]
+- [YOU SAY: to go on board, transport, a ship's master, to set sail, a ferryman]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[LA-LEX-C431-HABENA-01, LA-LEX-C431-HABENA-02, LA-LEX-C431-HABENA-03, LA-LEX-C431-HABENA-04, LA-LEX-C431-HABENA-05, LA-LEX-C432-EQUITO-01, LA-LEX-C432-EQUITO-02, LA-LEX-C432-EQUITO-03, LA-LEX-C432-EQUITO-04, LA-LEX-C432-EQUITO-05, LA-LEX-C433-IUMENTUM-01, LA-LEX-C433-IUMENTUM-02, LA-LEX-C433-IUMENTUM-03, LA-LEX-C433-IUMENTUM-04, LA-LEX-C433-IUMENTUM-05, LA-LEX-C434-STABULUM-01, LA-LEX-C434-STABULUM-02, LA-LEX-C434-STABULUM-03, LA-LEX-C434-STABULUM-04, LA-LEX-C434-STABULUM-05, LA-LEX-C435-NAVIGIUM-01, LA-LEX-C435-NAVIGIUM-02, LA-LEX-C435-NAVIGIUM-03, LA-LEX-C435-NAVIGIUM-04, LA-LEX-C435-NAVIGIUM-05, LA-LEX-C436-PUPPIS-01, LA-LEX-C436-PUPPIS-02, LA-LEX-C436-PUPPIS-03, LA-LEX-C436-PUPPIS-04, LA-LEX-C436-PUPPIS-05, LA-LEX-C437-RUDENS-01, LA-LEX-C437-RUDENS-02, LA-LEX-C437-RUDENS-03, LA-LEX-C437-RUDENS-04, LA-LEX-C437-RUDENS-05, LA-LEX-C438-CONSCENDO-01, LA-LEX-C438-CONSCENDO-02, LA-LEX-C438-CONSCENDO-03, LA-LEX-C438-CONSCENDO-04, LA-LEX-C438-CONSCENDO-05] -->
+
+[PAUSE 3s] A rein? (**habēna, habēnae**.) A leather strap? (**lōrum, lōrī**.) A bridle? (**frēnum, frēnī**.) To bridle? (**frēnō, frēnāre**.) A whip? (**scutica, scuticae**.) To ride? (**equitō, equitāre**.) A saddle cloth? (**ephippium, ephippiī**.) A spur? (**calcar, calcāris**.) To jump down? (**dēsiliō, dēsilīre**.) To kick? (**calcitrō, calcitrāre**.) A beast of burden? (**iūmentum, iūmentī**.) A nag? (**caballus, caballī**.) A she-mule? (**mūla, mūlae**.) A pack saddle? (**clītellae, clītellārum**.) To load? (**onerō, onerāre**.) A stable? (**stabulum, stabulī**.) A manger? (**praesēpe, praesēpis**.) Hay? (**faenum, faenī**.) To neigh? (**hinniō, hinnīre**.) A muleteer? (**mūliō, mūliōnis**.) A vessel? (**nāvigium, nāvigiī**.) A little boat? (**nāvicula, nāviculae**.) A skiff? (**scapha, scaphae**.) A punt? (**linter, lintris**.) A raft? (**ratis, ratis**.) The stern? (**puppis, puppis**.) The prow? (**prōra, prōrae**.) The keel? (**carīna, carīnae**.) A rowing bench? (**trānstrum, trānstrī**.) For cargo? (**onerārius, onerāria, onerārium**.) A ship's rope? (**rudēns, rudentis**.) A rope? (**fūnis, fūnis**.) A ship's tackle? (**armāmenta, armāmentōrum**.) A rudder? (**gubernāculum, gubernāculī**.) To row? (**rēmigō, rēmigāre**.) To go on board? (**cōnscendō, cōnscendere**.) Transport? (**vectūra, vectūrae**.) A ship's master? (**nauclērus, nauclērī**.) To set sail? (**vēlificor, vēlificārī**.) A ferryman? (**portitor, portitōris**.)
+`;export{t};
