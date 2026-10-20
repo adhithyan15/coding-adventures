@@ -3223,21 +3223,6 @@ fn ignored_native_property(
                 "authored table-cell roles and wrapper geometry are currently implemented only by React",
             ))
         }
-        // #15930 — in a multiline text field Enter inserts a newline on every
-        // backend (a `<textarea>`, Qt's `TextArea`, SwiftUI's `TextEditor`,
-        // WinUI's `AcceptsReturn`, Compose's and Flutter's newline action),
-        // so an authored `onCommit` has no key to fire it. That is a property
-        // of the contract, not of one backend, so every backend reports it
-        // rather than shipping a handler nobody can trigger. Commit from a
-        // button instead, as DraftEditor's Save does.
-        ("HostInput" | "Input", "onCommit")
-            if node_has_keyword(node, "multiline", "true") =>
-        {
-            Some((
-                "interaction.multiline-commit-unbound",
-                "Enter inserts a newline in a multiline text field, so onCommit has no trigger; commit from a button instead",
-            ))
-        }
         ("Text", "a11y-label")
             if backend.is_native()
                 && !matches!(
@@ -13369,10 +13354,13 @@ layout Rows {{
         assert!(!analyze(Backend::Xaml).native_complete, "the report is no longer clean");
     }
 
-    /// #15930: a multiline field spends Enter on a line break on every
-    /// backend, so `onCommit` on one is reported everywhere — and only there.
+    /// UI25 §4: a multiline field spends Enter on a line break, and every
+    /// backend now commits it on Ctrl/Cmd+Enter instead. #15930 reported
+    /// `onCommit` there as `interaction.multiline-commit-unbound` while no
+    /// backend lowered the chord; now that all nine do, the property is
+    /// clean everywhere, in both shapes and on both primitives.
     #[test]
-    fn on_commit_in_a_multiline_field_is_reported_on_every_backend() {
+    fn on_commit_in_a_multiline_field_is_lowered_on_every_backend() {
         let pkg = make_package("mosaic-pkg-multiline-commit", &["Editor"]);
         fs::write(
             pkg.path().join("src/Editor.mil"),
@@ -13393,12 +13381,15 @@ layout Rows {{
             )
             .expect("multiline-commit analysis")
         };
-        let flagged = |report: &DegradationReport| -> Vec<String> {
+        let on_commit_reports = |report: &DegradationReport| -> Vec<String> {
             report
                 .degradations
                 .iter()
-                .filter(|d| d.code == "interaction.multiline-commit-unbound")
-                .map(|d| d.layout_path.clone())
+                .filter(|d| {
+                    d.code == "interaction.multiline-commit-unbound"
+                        || d.layout_path == "root.props[2]"
+                })
+                .map(|d| format!("{} at {}", d.code, d.layout_path))
                 .collect()
         };
         let all = [
@@ -13413,29 +13404,22 @@ layout Rows {{
             Backend::Flutter,
         ];
         for tag in ["HostInput", "Input"] {
-            fs::write(
-                pkg.path().join("src/Editor.mll"),
-                format!(
-                    "layout Editor {{\n  {tag} [ root ] ( value : slot: body , multiline : true , onCommit : emit: onSave )\n}}\n"
-                ),
-            )
-            .unwrap();
-            for backend in all {
-                assert_eq!(
-                    flagged(&analyze(backend)),
-                    vec!["root.props[2]".to_string()],
-                    "{tag} on {backend:?}"
-                );
+            for multiline in ["true", "false"] {
+                fs::write(
+                    pkg.path().join("src/Editor.mll"),
+                    format!(
+                        "layout Editor {{\n  {tag} [ root ] ( value : slot: body , multiline : {multiline} , onCommit : emit: onSave )\n}}\n"
+                    ),
+                )
+                .unwrap();
+                for backend in all {
+                    assert!(
+                        on_commit_reports(&analyze(backend)).is_empty(),
+                        "{tag} multiline:{multiline} on {backend:?}: {:?}",
+                        on_commit_reports(&analyze(backend))
+                    );
+                }
             }
-        }
-        // A single-line field keeps Enter as its commit key: nothing to say.
-        fs::write(
-            pkg.path().join("src/Editor.mll"),
-            "layout Editor {\n  HostInput [ root ] ( value : slot: body , multiline : false , onCommit : emit: onSave )\n}\n",
-        )
-        .unwrap();
-        for backend in all {
-            assert!(flagged(&analyze(backend)).is_empty(), "{backend:?}");
         }
     }
 

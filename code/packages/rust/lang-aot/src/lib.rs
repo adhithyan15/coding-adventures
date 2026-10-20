@@ -934,12 +934,19 @@ fn concretize_scalar_any_for_jvm(module: &mut IIRModule) {
     // `Int`, but `lstore` would tag it as `Long` in the verifier's type state →
     // `VerifyError: type mismatch` when the subsequent `iload` reads an `Int`
     // slot that the verifier sees as `Long`. (BA-JVM-INPUT)
-    const WIDE_I64_BUILTINS: &[&str] = &["print_i64", "input_i64", "input_more"];
+    //
+    // LANG83 PR1b: `write_i64` is a wide builtin like `print_i64`, and the
+    // `i64_div_floor` / `i64_mod_floor` ops are *defined* on i64 (their
+    // `MIN / -1` edge is an i64 fact) — narrowing a module that uses them to
+    // i32 would change their semantics, so they keep the module wide too.
+    const WIDE_I64_BUILTINS: &[&str] = &["print_i64", "write_i64", "input_i64", "input_more"];
+    const WIDE_I64_OPS: &[&str] = &["i64_div_floor", "i64_mod_floor"];
     let module_prints = module.functions.iter().any(|f| {
         f.instructions.iter().any(|i| {
-            i.op == "call_builtin"
-                && matches!(i.srcs.first(),
-                    Some(interpreter_ir::Operand::Var(n)) if WIDE_I64_BUILTINS.contains(&n.as_str()))
+            WIDE_I64_OPS.contains(&i.op.as_str())
+                || (i.op == "call_builtin"
+                    && matches!(i.srcs.first(),
+                        Some(interpreter_ir::Operand::Var(n)) if WIDE_I64_BUILTINS.contains(&n.as_str())))
         })
     });
     // Narrowing an explicit i64 constant that does not fit in i32 is a semantic

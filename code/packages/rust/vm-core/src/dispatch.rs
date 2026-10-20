@@ -109,11 +109,35 @@ pub struct DispatchCtx<'a> {
     pub tracer: Option<&'a mut Vec<crate::trace::VMTrace>>,
 }
 
+/// A compiled JIT handler: resolved arguments in, the function's result out.
+///
+/// The handler is **fallible**.  A compiled function can fail exactly the way
+/// an interpreted one can — a LANG83 `trap`, an `i64_div_floor` overflow, a
+/// divide-by-zero, a malformed binary — and the failure must stop the whole
+/// program, not just the callee.  Returning `Result` lets [`handle_call`]
+/// propagate the error with `?`, so the interpreted caller of a JIT-compiled
+/// function stops at the same instruction it would have stopped at had the
+/// callee been interpreted.
+///
+/// ```text
+///  interpreted caller          JIT handler
+///  ------------------          -----------
+///  call f a b      ──args──▶   backend.run(...)
+///                  ◀─Err────   trap: Trap.Overflow
+///  (stops here: the error propagates out of execute — the next
+///   instruction never runs)
+/// ```
+///
+/// An earlier design returned a plain `Value` and left the error in a side
+/// slot that nobody on the call path read: the caller got `Value::Null` and
+/// kept running ("fail open").  The `Result` makes that impossible to forget.
+pub type JitHandler = Box<dyn Fn(&[Value]) -> Result<Value, VMError> + Send + Sync>;
+
 /// Registry mapping a function name to its compiled JIT handler.
 ///
 /// Factored into a named alias (rather than repeating the boxed-closure type at
 /// every use site) both for readability and to satisfy `clippy::type_complexity`.
-pub type JitHandlerMap = HashMap<String, Box<dyn Fn(&[Value]) -> Value + Send + Sync>>;
+pub type JitHandlerMap = HashMap<String, JitHandler>;
 
 /// Signature for a language-specific opcode extension handler.
 ///
@@ -292,7 +316,13 @@ fn handle_div(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Option<Value>, 
         } else {
             let (a, b) = int_srcs(frame, &instr.srcs)?;
             if b == 0 { return Err(VMError::DivisionByZero); }
-            mask_result(a / b, &instr.type_hint, ctx.u8_wrap)
+            // `i64::MIN / -1` overflows; Rust's `/` panics on it (in every build
+            // profile), which took the whole host process down. The legacy `div`
+            // has backend-dependent edges (LANG83 "Legacy edge behaviour"), so
+            // the VM picks the JVM / generic-JIT answer — two's-complement wrap
+            // (`MIN`) — rather than inventing a trap. `i64_div_floor` is the op
+            // with a *defined* trap.
+            mask_result(a.wrapping_div(b), &instr.type_hint, ctx.u8_wrap)
         }
     };
     if let Some(dest) = &instr.dest {
@@ -307,11 +337,100 @@ fn handle_mod(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Option<Value>, 
         int_srcs(frame, &instr.srcs)?
     };
     if b == 0 { return Err(VMError::DivisionByZero); }
-    let result = mask_result(a % b, &instr.type_hint, ctx.u8_wrap);
+    // `i64::MIN % -1` is mathematically 0 but panics with Rust's `%`;
+    // `wrapping_rem` returns the 0.
+    let result = mask_result(a.wrapping_rem(b), &instr.type_hint, ctx.u8_wrap);
     if let Some(dest) = &instr.dest {
         ctx.frames.last_mut().unwrap().assign(dest, result.clone());
     }
     Ok(Some(result))
+}
+
+// LANG83 PR1b — floor division and `trap` -----------------------------------
+//
+// `i64_div_floor` / `i64_mod_floor` are Python's `//` and `%` (and Ruby's `/`
+// and `%`): the quotient rounds toward −∞ and the remainder takes the
+// divisor's sign. Unlike the legacy `div`/`mod`, their edges are *defined*:
+//
+// | a        | b  | i64_div_floor     | i64_mod_floor     |
+// |----------|----|-------------------|-------------------|
+// |  7       |  2 |  3                |  1                |
+// | -7       |  2 | -4                |  1                |
+// |  7       | -2 | -4                | -1                |
+// | -7       | -2 |  3                | -1                |
+// | any      |  0 | trap Trap.DivZero | trap Trap.DivZero |
+// | i64::MIN | -1 | trap Trap.Overflow|  0                |
+//
+// The floor fix-up from the truncating pair is the classic one: if the
+// remainder is non-zero and its sign differs from the divisor's
+// (`(r ^ b) < 0`), step the quotient down by one and move the remainder
+// into the divisor's sign by adding `b`.
+
+/// The trap a VM raises for a registered kind.
+fn trap(kind: &str) -> VMError {
+    VMError::Trap { kind: kind.to_string() }
+}
+
+/// Floor quotient and remainder of `a / b` with LANG83's defined edges.
+/// `Err` carries the trap kind. `MIN / -1` returns `Ok((MIN, 0))` — the
+/// caller decides whether the quotient overflowed (div) or not (mod).
+fn floor_divmod(a: i64, b: i64) -> Result<(i64, i64), VMError> {
+    if b == 0 {
+        return Err(trap(interpreter_ir::exception_kind::TRAP_DIV_ZERO));
+    }
+    // wrapping_* only matter for MIN / -1, whose remainder is exactly 0.
+    let (q, r) = (a.wrapping_div(b), a.wrapping_rem(b));
+    if r != 0 && (r ^ b) < 0 {
+        Ok((q - 1, r + b))
+    } else {
+        Ok((q, r))
+    }
+}
+
+/// `i64_div_floor dest <- a, b` — floor division (LANG83 PR1b).
+fn handle_i64_div_floor(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Option<Value>, VMError> {
+    let (a, b) = {
+        let frame = ctx.frames.last().ok_or_else(|| VMError::Custom("no frame".into()))?;
+        int_srcs(frame, &instr.srcs)?
+    };
+    if a == i64::MIN && b == -1 {
+        return Err(trap(interpreter_ir::exception_kind::TRAP_OVERFLOW));
+    }
+    let result = Value::Int(floor_divmod(a, b)?.0);
+    if let Some(dest) = &instr.dest {
+        ctx.frames.last_mut().unwrap().assign(dest, result.clone());
+    }
+    Ok(Some(result))
+}
+
+/// `i64_mod_floor dest <- a, b` — floor modulo (LANG83 PR1b); `MIN mod -1` is 0.
+fn handle_i64_mod_floor(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Option<Value>, VMError> {
+    let (a, b) = {
+        let frame = ctx.frames.last().ok_or_else(|| VMError::Custom("no frame".into()))?;
+        int_srcs(frame, &instr.srcs)?
+    };
+    let result = Value::Int(floor_divmod(a, b)?.1);
+    if let Some(dest) = &instr.dest {
+        ctx.frames.last_mut().unwrap().assign(dest, result.clone());
+    }
+    Ok(Some(result))
+}
+
+/// `trap "<kind>"` — terminate the program with a LANG83 trap.
+///
+/// The kind must be in the closed table (`exception_kind::is_registered_trap_kind`);
+/// anything else is malformed IR and reported as such rather than as a trap.
+/// Every VM output builtin flushes as it writes, so "flush, then trap" holds
+/// with nothing to do here.
+fn handle_trap(_ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Option<Value>, VMError> {
+    match instr.srcs.first() {
+        Some(Operand::Str(kind)) if interpreter_ir::exception_kind::is_registered_trap_kind(kind) => {
+            Err(trap(kind))
+        }
+        other => Err(VMError::Custom(format!(
+            "trap: srcs[0] must be a registered trap kind (Operand::Str), got {other:?}"
+        ))),
+    }
 }
 
 fn handle_neg(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Option<Value>, VMError> {
@@ -1648,8 +1767,13 @@ fn handle_call(
     // Step 2: JIT handler takes priority.
     if let Some(handler) = jit_handlers.get(&fn_name) {
         // jit_handlers borrow is a SEPARATE reference — no conflict with ctx.
-        let result = handler(&args);
+        //
+        // The handler is fallible: a compiled callee that traps (or divides by
+        // zero, or runs out of fuel) returns `Err`, and `?` stops the caller
+        // right here — the destination is never assigned and the caller's next
+        // instruction never runs.  This is the fail-closed contract.
         *ctx.metrics_jit_hits += 1;
+        let result = handler(&args)?;
         if let Some(dest) = &dest_name {
             ctx.frames.last_mut().unwrap().assign(dest, result.clone());
         }
@@ -1972,6 +2096,9 @@ pub(crate) fn lookup_standard(op: &str) -> Option<StdHandlerFn> {
         "div"          => Some(handle_div),
         "mod"          => Some(handle_mod),
         "neg"          => Some(handle_neg),
+        "i64_div_floor" => Some(handle_i64_div_floor),
+        "i64_mod_floor" => Some(handle_i64_mod_floor),
+        "trap"         => Some(handle_trap),
         "and"          => Some(handle_and),
         "or"           => Some(handle_or),
         "xor"          => Some(handle_xor),

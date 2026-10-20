@@ -329,6 +329,18 @@ When `jit-core` compiles a function, it registers a **JIT handler** with
 vm.register_jit_handler(fn_name, lambda args: backend.run(binary, args))
 ```
 
+A handler **must fail closed**: if the compiled code fails (a trap, a divide by
+zero, a malformed binary, fuel exhaustion), the failure propagates out of the
+`call` and stops the program, exactly as the same failure in interpreted code
+would. In Python an exception raised by `backend.run` does this naturally. The
+Rust implementation's `Backend::run` returns a plain `Value`, so a failing
+backend records the error on the side; the Rust handler type is therefore
+`Fn(&[Value]) -> Result<Value, VMError>`, and `jit-core` calls
+`Backend::take_error()` after every run and returns `Err` when it is set.
+(**Divergence, LANG83 PR1b security review:** the Rust handler used to return a
+bare `Value`, so an interpreted caller of a trapping JIT function received
+`Null` and kept running.)
+
 `vm-core`'s dispatch loop checks for a registered JIT handler before running
 the interpreted path:
 

@@ -109,10 +109,12 @@ fn layout_names_every_field_and_gates_every_optional_part() {
     assert_eq!(prop(title_input, "a11y-label").as_deref(), Some("SlotRef(\"title-label\")"));
     assert_eq!(prop(title_input, "onChange").as_deref(), Some("EmitRef(\"onTitleChange\")"));
 
-    // Body: the multi-line primitive, named by the body label.
+    // Body: the kernel's text area, named by the body label. Ctrl+Enter
+    // (Cmd+Enter on macOS) saves, as the Save button does (UI25 §4).
     let body = &root.children[2];
-    assert_eq!(body.tag, "Input", "the legacy multi-line primitive, not HostInput");
+    assert_eq!(body.tag, "HostInput", "the kernel text area, not the retiring legacy Input");
     assert_eq!(prop(body, "multiline").as_deref(), Some("Keyword(\"true\")"));
+    assert_eq!(prop(body, "onCommit").as_deref(), Some("EmitRef(\"onSave\")"));
     assert_eq!(prop(body, "a11y-label").as_deref(), Some("SlotRef(\"body-label\")"));
     assert_eq!(prop(body, "onChange").as_deref(), Some("EmitRef(\"onBodyChange\")"));
     assert!(prop(body, "placeholder").is_none(), "literal-only on three backends; see spec");

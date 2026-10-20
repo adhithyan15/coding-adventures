@@ -12,12 +12,14 @@
 # C++/QML, SwiftUI is Swift, Compose is Kotlin, XAML is C#, Flutter is Dart. The
 # UI is genuinely the platform's own.
 #
-# **Which cdylib depends on whether that host has migrated.** Qt and SwiftUI
-# reach the engine through the STANDARD Mosaic runtime — `libmosaic_app`, whose
-# `mosaic_app_*` symbols the generated `MosaicHost` resolves. Compose, XAML and
-# Flutter still ship a hand-written host bound to `engram-capi`'s `eg_*`
-# symbols. `STANDARD_RUNTIME_BACKENDS` below is the single place that says
-# which is which.
+# **Which cdylib depends on whether that host has migrated.** A migrated host
+# reaches the engine through the STANDARD Mosaic runtime — `libmosaic_app`,
+# whose `mosaic_app_*` symbols the generated `MosaicHost` resolves. A backend
+# that still ships a hand-written host (an `[host_assets]` override in
+# `mosaic-package.toml`) binds `engram-capi`'s `eg_*` symbols instead.
+# `STANDARD_RUNTIME_BACKENDS` below reads that from the manifest, and it is the
+# single place that says which is which; this comment deliberately names no
+# backend, because a list here is what went stale last time.
 #
 # ## The trap this script exists to close
 #

@@ -98,7 +98,8 @@ layout NoteTypeEditor {
               placeholder : slot: front-template-placeholder ,
               disabled : false ,
               multiline : true ,
-              onChange : emit: onFrontTemplateChange
+              onChange : emit: onFrontTemplateChange ,
+              onCommit : emit: onSaveNoteType
             )
             Text [ note-type-back-template-label ] (
               content : slot: back-template-label
@@ -108,7 +109,8 @@ layout NoteTypeEditor {
               placeholder : slot: back-template-placeholder ,
               disabled : false ,
               multiline : true ,
-              onChange : emit: onBackTemplateChange
+              onChange : emit: onBackTemplateChange ,
+              onCommit : emit: onSaveNoteType
             )
           }
         }

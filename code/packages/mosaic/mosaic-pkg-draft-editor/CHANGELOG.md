@@ -4,6 +4,17 @@
 
 - Tests read the backend list from `mosaic_package_artifact_builder::Backend` (`Backend::NATIVE` / `Backend::ALL`) instead of a hand-kept copy, so a backend added to Mosaic is gated here automatically.
 
+### Changed — the body is `HostInput` and saves on Ctrl/Cmd+Enter (UI25 §4)
+
+The body moved from the retiring legacy `Input` to the kernel text area,
+`HostInput ( multiline : true )`, which lowers identically. Its `onCommit` is
+`onSave`: Enter is a line break, and Ctrl+Enter (Cmd+Enter on macOS) saves, as
+the Save button does. The chord raises `onSave` even when `save-label` is
+empty; a host that offers no Save ignores it. Journal, the one consumer,
+always offers Save. The package test pins `HostInput` and the commit. Verified
+in Qt (`qmltestrunner`: bare Return no save, Ctrl+Return one save) and with
+`swiftc -typecheck` for macOS 13.
+
 ### Changed — documentation only (#15930)
 
 The layout comment notes that `HostInput ( multiline : true )` now lowers to
