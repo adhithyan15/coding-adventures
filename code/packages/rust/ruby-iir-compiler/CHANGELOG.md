@@ -1,6 +1,53 @@
 # Changelog
 
-## Unreleased
+## Unreleased — LANG84 phase 5a (= LANG83 PR2): the R0 release pairs, LANG83 ops
+
+### Changed (breaking)
+- The compiler now walks the tree `ruby-parser`'s **release API** builds
+  (`parse_ruby_at`: the generic `GrammarLexer`/`GrammarParser` over
+  `ruby<release>.tokens`/`.grammar`). The hand-written `ruby-lexer` is no
+  longer on the IIR path; `tests/iir_path.rs` keeps it that way, and
+  `ruby-lexer` is only a dev-dependency (for the C8 contract test's token
+  tables).
+- LANG83 operations replace every Ruby-named builtin: `/` is
+  `i64_div_floor`, `%` (new) is `i64_mod_floor`, `puts` writes each value
+  with `print_i64`, `puts()` with `putchar 10`. `rb_int_div`,
+  `rb_puts_int`, `rb_puts_empty`, `rb_puts_two_ints` and
+  `rb_puts_three_ints` are gone, so every lang-aot backend runs the output.
+- A zero divisor is no longer a compile error: like Ruby's
+  `ZeroDivisionError` it traps at run time (`Trap.DivZero`) after the
+  earlier output. Values after a certain trap are not range-checked.
+- `main` returns `i64` 0 instead of `ret_void`, the exit status every AOT
+  entry point expects (and what keeps the CLR and BEAM launchers' integer
+  readers happy).
+- Errors are a typed `FrontendError` (LANG84 C6) instead of `String`.
+- `puts` takes any number of arguments, bare or parenthesised, as the 3.3
+  grammar admits; an empty program compiles. `010` and `0x10` are refused by
+  the grammar (they lex as `OCTAL_INTEGER`/`HEX_INTEGER`, not `NUMBER`).
+- `puts -7` (bare command whose argument starts with `-`) is now refused:
+  the R0 grammar cannot tell unary from binary minus without the space
+  before it (LANG84 E6). Write `puts(-7)`. This narrows LANG80's accepted
+  set; nothing else LANG80 accepted is lost.
+
+### Added
+- `compile_source_at(source, release, module_name, &FrontendBudgets)`,
+  `compile_cst(ast, release, module_name)` (caller-supplied trees, measured
+  against item/depth/text budgets first), `run_source_at`, `run_module`,
+  `RunOutput { stdout, trap }`, `RunError`.
+- `profiles.rs`: `ReleaseProfile { name, int_div }`, profile `ruby33` for
+  3.3.5–3.3.7. 0.49/0.50 have no profile (`puts` is `IO#puts` only and
+  `Fixnum#/` truncates there; cited to the tags' `io.c`/`numeric.c`), so
+  they are `ReleaseNotAvailable`.
+- `DISPATCHED_RULES` / `DISPATCHED_TOKENS` and `tests/cst_contract.rs`
+  (LANG84 C8); `tests/release_subsets.rs` (stage I over the new
+  `code/grammars/ruby/corpus/rb-int-puts` corpus, IIR identity across
+  3.3.5–3.3.7, CSV/profile agreement, host-ruby oracle);
+  `tests/hostile.rs` (C5 probes in a child process).
+- `rubyvm --release <id>`; a trap prints the output so far, then
+  `trap: <kind>` on stderr, exit 1.
+
+### Earlier unreleased work (LANG80 pilot)
+
 
 - Reject forged direct-AST unary/binary arithmetic and grouping tokens by
   validating canonical enum kinds, exact spelling and absence of named
