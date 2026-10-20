@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C339-aeusserung",
+    "language": "german",
+    "chapter": 339,
+    "sequence": 18460,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2394510cc2d4dba4"
+  },
+  "findings": []
+}

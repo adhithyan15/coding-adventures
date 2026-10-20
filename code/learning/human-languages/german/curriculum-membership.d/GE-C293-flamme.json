@@ -1,0 +1,11 @@
+{
+  "id": "GE-C293-flamme",
+  "pathSegment": "GE-PATH-293-BRENNEN",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GE-EXT-293-BRENNEN",
+      "order": 2
+    }
+  ]
+}

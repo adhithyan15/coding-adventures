@@ -1,0 +1,8 @@
+{
+  "id": "GE-EXT-501-BRETTSPIEL",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can talk about board games.",
+  "prerequisites": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "GE-C435-umkehren",
+  "pathSegment": "GE-PATH-435-UMWEG",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-435-UMWEG",
+      "order": 3
+    }
+  ]
+}

@@ -1,7 +1,7 @@
 {
   "language": "german",
   "chapter": 256,
-  "sourceHash": "fnv1a64:d563c430de1fa898",
+  "sourceHash": "fnv1a64:faec1f3c0c1671c9",
   "lessonIds": [
     "GE-C256-wie-komme-ich",
     "GE-C256-links",
@@ -11,7 +11,7 @@
   "drivablePrefix": 3,
   "text": "german/narration/ch256.txt",
   "json": "german/narration/ch256.json",
-  "textHash": "fnv1a64:7ef8cd9391d45b60",
-  "jsonHash": "fnv1a64:1f34db8eede1d809",
+  "textHash": "fnv1a64:f1ee76b78109c5df",
+  "jsonHash": "fnv1a64:b014cbcba14293dd",
   "findings": []
 }

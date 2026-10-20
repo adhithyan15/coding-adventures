@@ -1,0 +1,9 @@
+{
+  "id": "GE-PATH-488-GENESEN",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "GE-EXT-488-GENESEN"
+  ],
+  "after": []
+}

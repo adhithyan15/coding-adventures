@@ -1,0 +1,19 @@
+{
+  "chapter": 290,
+  "title": "Bewusstlos",
+  "label": "ch:ge-bewusstlos",
+  "canDo": "I can describe a serious emergency: unconscious, faint, consciousness, to choke and to drown.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "GE-C290-ertrinken",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 290: I can describe a serious emergency: unconscious, faint, consciousness, to choke and to drown.",
+    "assesses": [
+      "GE-LEX-C290-BEWUSSTLOS-03",
+      "GE-LEX-C290-BEWUSSTLOS-04",
+      "GE-LEX-C290-BEWUSSTLOS-05"
+    ]
+  }
+}

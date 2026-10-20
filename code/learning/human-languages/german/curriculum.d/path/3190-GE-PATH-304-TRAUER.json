@@ -1,0 +1,9 @@
+{
+  "id": "GE-PATH-304-TRAUER",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "GE-EXT-304-TRAUER"
+  ],
+  "after": []
+}

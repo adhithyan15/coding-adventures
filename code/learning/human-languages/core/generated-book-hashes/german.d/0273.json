@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 273,
+  "sourceHash": "fnv1a64:c5c1d4f4cdf1baf0",
+  "lessonIds": [
+    "GE-C273-veroeffentlichen",
+    "GE-C273-erwaehnen",
+    "GE-C273-aeussern",
+    "GE-C273-ankuendigen",
+    "GE-C273-bekanntgeben"
+  ],
+  "tex": "german/book/chapters/ch273-bekannt-machen.tex"
+}

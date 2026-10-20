@@ -4,7 +4,7 @@
   "chapter": 252,
   "title": "The Told Story — ging, kam, las, als",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:2a7157709ac20a29",
+  "sourceHash": "fnv1a64:693de29fa530865f",
   "lessons": [
     {
       "id": "GE-C252-ich-ging",
@@ -371,7 +371,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b6fefccbfb03655d",
+      "sourceHash": "fnv1a64:9fa9c672c0d77e05",
       "notice": null,
       "blocks": [
         {
@@ -458,7 +458,7 @@
             },
             {
               "kind": "speech",
-              "text": "als from Old High German alsō, \"just so, in the same way\" (EtymDB 2.1), worn down to one syllable."
+              "text": "als from Old High German alsō (EtymDB 2.1), worn down to one syllable. EtymDB gives no meaning for it; by the usual account it was al + sō, \"all so, just so\"."
             }
           ]
         },

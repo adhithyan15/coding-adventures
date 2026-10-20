@@ -1,0 +1,11 @@
+{
+  "id": "GE-C277-protestieren",
+  "pathSegment": "GE-PATH-277-STREIK",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GE-EXT-277-STREIK",
+      "order": 2
+    }
+  ]
+}

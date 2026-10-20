@@ -1,0 +1,11 @@
+{
+  "id": "GE-C282-waffe",
+  "pathSegment": "GE-PATH-282-UEBERFALL",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-282-UEBERFALL",
+      "order": 4
+    }
+  ]
+}

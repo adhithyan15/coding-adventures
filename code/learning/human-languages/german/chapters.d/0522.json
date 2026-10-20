@@ -1,0 +1,19 @@
+{
+  "chapter": 522,
+  "title": "Bücher leihen",
+  "label": "ch:ge-bucher-leihen",
+  "canDo": "I can talk about borrowing and publishing books.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "GE-C522-uebersetzung",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 522: I can talk about borrowing and publishing books.",
+    "assesses": [
+      "GE-LEX-C522-VERLAG-03",
+      "GE-LEX-C522-VERLAG-04",
+      "GE-LEX-C522-VERLAG-05"
+    ]
+  }
+}

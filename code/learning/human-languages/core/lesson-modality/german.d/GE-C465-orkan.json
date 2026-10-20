@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C465-orkan",
+    "language": "german",
+    "chapter": 465,
+    "sequence": 24950,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:545640b8ed5a0d4e"
+  },
+  "findings": []
+}

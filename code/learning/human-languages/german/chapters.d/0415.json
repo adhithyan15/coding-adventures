@@ -1,0 +1,19 @@
+{
+  "chapter": 415,
+  "title": "Am großen Bahnhof",
+  "label": "ch:ge-am-gro-en-bahnhof",
+  "canDo": "I can manage at a busy station: the locker, the left-luggage office, the escalator, riding without a ticket and queueing.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "GE-C415-anstellen",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 415: I can manage at a busy station: the locker, the left-luggage office, the escalator, riding without a ticket and queueing.",
+    "assesses": [
+      "GE-LEX-C415-SCHLIESSFACH-03",
+      "GE-LEX-C415-SCHLIESSFACH-04",
+      "GE-LEX-C415-SCHLIESSFACH-05"
+    ]
+  }
+}

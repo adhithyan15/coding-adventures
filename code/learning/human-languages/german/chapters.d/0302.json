@@ -1,0 +1,19 @@
+{
+  "chapter": 302,
+  "title": "Der Ruhestand",
+  "label": "ch:ge-der-ruhestand",
+  "canDo": "I can tell about later life: a pension, retirement, a pensioner, an anniversary and a farewell.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "GE-C302-abschied",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 302: I can tell about later life: a pension, retirement, a pensioner, an anniversary and a farewell.",
+    "assesses": [
+      "GE-LEX-C302-RUHESTAND-03",
+      "GE-LEX-C302-RUHESTAND-04",
+      "GE-LEX-C302-RUHESTAND-05"
+    ]
+  }
+}

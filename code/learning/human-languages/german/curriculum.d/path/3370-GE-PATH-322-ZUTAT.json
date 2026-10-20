@@ -1,0 +1,9 @@
+{
+  "id": "GE-PATH-322-ZUTAT",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "GE-EXT-322-ZUTAT"
+  ],
+  "after": []
+}

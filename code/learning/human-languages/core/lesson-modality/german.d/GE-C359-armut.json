@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C359-armut",
+    "language": "german",
+    "chapter": 359,
+    "sequence": 19500,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f608bde08be2e390"
+  },
+  "findings": []
+}

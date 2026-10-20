@@ -1,0 +1,11 @@
+{
+  "id": "GE-C383-beantragen",
+  "pathSegment": "GE-PATH-383-ANTRAG",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GE-EXT-383-ANTRAG",
+      "order": 2
+    }
+  ]
+}

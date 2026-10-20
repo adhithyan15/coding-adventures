@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C460-wetterlage",
+    "language": "german",
+    "chapter": 460,
+    "sequence": 24680,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f8904d661282497a"
+  },
+  "findings": []
+}

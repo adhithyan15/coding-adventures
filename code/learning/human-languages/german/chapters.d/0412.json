@@ -1,0 +1,19 @@
+{
+  "chapter": 412,
+  "title": "Auf dem Bahnsteig",
+  "label": "ch:ge-auf-dem-bahnsteig",
+  "canDo": "I can manage on a platform: the platform, the announcement, the compartment, the conductor and checking tickets.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "GE-C412-kontrollieren",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 412: I can manage on a platform: the platform, the announcement, the compartment, the conductor and checking tickets.",
+    "assesses": [
+      "GE-LEX-C412-BAHNSTEIG-03",
+      "GE-LEX-C412-BAHNSTEIG-04",
+      "GE-LEX-C412-BAHNSTEIG-05"
+    ]
+  }
+}

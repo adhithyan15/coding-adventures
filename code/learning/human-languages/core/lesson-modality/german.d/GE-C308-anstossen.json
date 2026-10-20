@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C308-anstossen",
+    "language": "german",
+    "chapter": 308,
+    "sequence": 16850,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:552b83de7f223cbf"
+  },
+  "findings": []
+}

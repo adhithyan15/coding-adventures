@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 499,
+  "sourceHash": "fnv1a64:407fc9fa3688eba8",
+  "lessonIds": [
+    "GE-C499-nadel",
+    "GE-C499-faden",
+    "GE-C499-stricken",
+    "GE-C499-haekeln",
+    "GE-C499-sticken"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch499.txt",
+  "json": "german/narration/ch499.json",
+  "textHash": "fnv1a64:cf934ae74d130ab9",
+  "jsonHash": "fnv1a64:4d300a6a2d316178",
+  "findings": []
+}

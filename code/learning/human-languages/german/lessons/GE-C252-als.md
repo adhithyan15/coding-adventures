@@ -80,8 +80,9 @@ EtymDB 2.1 traces *wann* to Proto-Germanic *\*hwannē*, the parent of
 English *when*. It lists no parent for *wenn*, so the split of one old word
 into a question word and a joining word is given as the usual account.
 
-**als** ← Old High German *alsō*, "just so, in the same way" (EtymDB 2.1),
-worn down to one syllable.
+**als** ← Old High German *alsō* (EtymDB 2.1), worn down to one syllable.
+EtymDB gives no meaning for it; by the usual account it was *al* + *sō*,
+"all so, just so".
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[GE-GRAMMAR-ALS-EINMAL-01, GE-GRAMMAR-WENN-IMMER-02, GE-GRAMMAR-ERZAEHL-PRAETERITUM-01] -->

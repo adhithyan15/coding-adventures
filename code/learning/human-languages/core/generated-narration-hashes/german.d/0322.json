@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 322,
+  "sourceHash": "fnv1a64:5d40b5b332f18772",
+  "lessonIds": [
+    "GE-C322-zutat",
+    "GE-C322-prise",
+    "GE-C322-essloeffel",
+    "GE-C322-abmessen",
+    "GE-C322-schuessel"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch322.txt",
+  "json": "german/narration/ch322.json",
+  "textHash": "fnv1a64:3cb08e6f5c1a7100",
+  "jsonHash": "fnv1a64:d740bd257ec4d3ef",
+  "findings": []
+}

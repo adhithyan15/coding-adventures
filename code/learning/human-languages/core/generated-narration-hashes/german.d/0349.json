@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 349,
+  "sourceHash": "fnv1a64:5bccbf4109fc9c4c",
+  "lessonIds": [
+    "GE-C349-stellenanzeige",
+    "GE-C349-vorstellungsgespraech",
+    "GE-C349-faehigkeit",
+    "GE-C349-qualifiziert",
+    "GE-C349-beherrschen"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch349.txt",
+  "json": "german/narration/ch349.json",
+  "textHash": "fnv1a64:9020965c253ea06e",
+  "jsonHash": "fnv1a64:0b107e26355a7cf4",
+  "findings": []
+}

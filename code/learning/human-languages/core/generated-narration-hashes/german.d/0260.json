@@ -1,7 +1,7 @@
 {
   "language": "german",
   "chapter": 260,
-  "sourceHash": "fnv1a64:e1f4ab1ab8640408",
+  "sourceHash": "fnv1a64:b5e3f0c3038872d4",
   "lessonIds": [
     "GE-C260-wenn-falls",
     "GE-C260-wenn-es-regnet",
@@ -12,7 +12,7 @@
   "drivablePrefix": 4,
   "text": "german/narration/ch260.txt",
   "json": "german/narration/ch260.json",
-  "textHash": "fnv1a64:f7da02575f02bf3c",
-  "jsonHash": "fnv1a64:d923585eedcf2fa6",
+  "textHash": "fnv1a64:06a79619304c0c67",
+  "jsonHash": "fnv1a64:a4d715a589528eb5",
   "findings": []
 }

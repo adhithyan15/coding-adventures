@@ -50,7 +50,7 @@ It is a modal, so it builds the same bracket as *kann*: *solltest* second,
 the infinitive last. Its forms: *ich sollte*, *du solltest*, *er sollte*,
 *wir sollten*, *Sie sollten*.
 
-*Solltest* looks like a past, and it is spelled exactly like the
+*Solltest* sounds like a past, and it is spelled exactly like the
 Präteritum of *sollen*. Here it is the **Konjunktiv II**, the mood of "it
 would be good if". That is what makes it advice. The plain present, *du
 sollst*, is stronger: it passes on an order or a duty, "you are to".

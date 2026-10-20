@@ -62,7 +62,7 @@ Ich glaube, dass er gern kommen würde.
 In everyday German the split is roughly this: haben, sein and the modals keep their one-word forms, hätte, wäre, sollte; most other verbs take würde.
 
 The word, taken apart.
-würde is wurde, the Präteritum of werden, "to become", with an umlaut. That is the same move as hatte to hätte and war to wäre: an umlaut on the past marks the Konjunktiv II. Not every verb takes one: sollte, wollte and the regular -te verbs look exactly like their past, and the sentence tells you which is meant.
+würde is wurde, the Präteritum of werden, "to become", with an umlaut. That is the same move as hatte to hätte and war to wäre: an umlaut on the past marks the Konjunktiv II. Not every verb takes one: sollte, wollte and the regular -te verbs are identical to their past, and the sentence tells you which is meant.
 Werden from Old High German werdan from Proto-Germanic werþaną, "to turn" (EtymDB 2.1). EtymDB does not list würde; the umlaut history is the usual account.
 
 Guided Practice.
@@ -182,7 +182,7 @@ A told story is more than a list of events. It has a scene: es war, es regnete. 
 [pause 2 seconds]
 For a message to a friend, either past is right. The Präteritum sounds like a story being told; the Perfekt sounds like you talking: ich bin nach Berlin gefahren. Keep war and hatte in the Präteritum either way.
 [pause 2 seconds]
-The Goethe-Zertifikat B1 writing paper asks for personal and formal messages and a short opinion post. Six lines to a friend is a first step towards the personal message, not the whole of it.
+The Goethe-Zertifikat B1 writing paper asks for personal and formal messages and a short opinion post. Six lines to a friend is a first step towards the personal message.
 
 Writing — connected composition.
 [pause 2 seconds]
@@ -192,7 +192,7 @@ the first thing that happened, with zuerst;
 the next thing, with dann, and a reason, with weil or darum;
 how it ended, with schließlich;
 how you felt, with ich war froh, dass …, or what you thought of it, with meiner Meinung nach and a comparison: schöner als, so schön wie;
-one line forward, with wenn ich … hätte, würde ich …, or das wäre …, or ich hoffe, … zu ….
+one line forward, with wenn ich … hätte, würde ich … or wenn ich … hätte, könnte ich …, or das wäre …, or ich hoffe, … zu ….
 [pause 3 seconds]
 Use only words you already write. The exercise is the joining, and the place of each verb.
 
@@ -202,4 +202,4 @@ Now go through your lines and find every verb. In lines two, three and four, the
 [pause 2 seconds]
 Then every weil, dass and wenn. Is its verb at the end of the clause? If a line starts with the wenn clause, does the main verb come straight after the comma: hätte, würde?
 [pause 2 seconds]
-Last, line six on its own. If it has hätte or würde, is it about something that is not true now? Then it looks forward, and the story is finished.
+Last, line six on its own. If it has hätte, würde or könnte, is it about something that is not true now? Then it looks forward, and the story is finished.

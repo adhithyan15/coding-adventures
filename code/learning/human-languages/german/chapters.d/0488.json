@@ -1,0 +1,19 @@
+{
+  "chapter": 488,
+  "title": "Wieder gesund",
+  "label": "ch:ge-wieder-gesund",
+  "canDo": "I can talk about infections and getting better.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "GE-C488-genesen",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 488: I can talk about infections and getting better.",
+    "assesses": [
+      "GE-LEX-C488-GENESEN-03",
+      "GE-LEX-C488-GENESEN-04",
+      "GE-LEX-C488-GENESEN-05"
+    ]
+  }
+}

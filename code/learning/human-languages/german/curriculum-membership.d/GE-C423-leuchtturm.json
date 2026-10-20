@@ -1,0 +1,11 @@
+{
+  "id": "GE-C423-leuchtturm",
+  "pathSegment": "GE-PATH-423-ANKER",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GE-EXT-423-ANKER",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C307-ehrengast",
+    "language": "german",
+    "chapter": 307,
+    "sequence": 16820,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:47b3709cee4648f7"
+  },
+  "findings": []
+}

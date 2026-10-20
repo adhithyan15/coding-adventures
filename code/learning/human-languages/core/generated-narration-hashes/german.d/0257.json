@@ -1,7 +1,7 @@
 {
   "language": "german",
   "chapter": 257,
-  "sourceHash": "fnv1a64:f61d7371f2079bc9",
+  "sourceHash": "fnv1a64:ec5b0a2a666bfefd",
   "lessonIds": [
     "GE-C257-hin-und-zurueck",
     "GE-C257-zug-verpasst",
@@ -11,7 +11,7 @@
   "drivablePrefix": 3,
   "text": "german/narration/ch257.txt",
   "json": "german/narration/ch257.json",
-  "textHash": "fnv1a64:6eea2a109e889e46",
-  "jsonHash": "fnv1a64:dff9ac3807659fd9",
+  "textHash": "fnv1a64:f3de43909db45c40",
+  "jsonHash": "fnv1a64:373fade529dba6e6",
   "findings": []
 }

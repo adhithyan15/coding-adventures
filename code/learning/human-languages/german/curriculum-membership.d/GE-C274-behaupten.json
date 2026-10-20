@@ -1,0 +1,11 @@
+{
+  "id": "GE-C274-behaupten",
+  "pathSegment": "GE-PATH-274-GERUECHT",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GE-EXT-274-GERUECHT",
+      "order": 2
+    }
+  ]
+}

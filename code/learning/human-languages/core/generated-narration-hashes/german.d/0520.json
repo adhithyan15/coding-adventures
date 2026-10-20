@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 520,
+  "sourceHash": "fnv1a64:3272a8f8a3d53f3d",
+  "lessonIds": [
+    "GE-C520-krimi",
+    "GE-C520-biografie",
+    "GE-C520-kurzgeschichte",
+    "GE-C520-sachbuch",
+    "GE-C520-boesewicht"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch520.txt",
+  "json": "german/narration/ch520.json",
+  "textHash": "fnv1a64:97970ac27b338698",
+  "jsonHash": "fnv1a64:549c73ddc88b59ff",
+  "findings": []
+}

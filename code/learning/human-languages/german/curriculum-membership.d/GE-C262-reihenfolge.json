@@ -1,0 +1,11 @@
+{
+  "id": "GE-C262-reihenfolge",
+  "pathSegment": "GE-PATH-262-ZUNAECHST",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-262-ZUNAECHST",
+      "order": 4
+    }
+  ]
+}

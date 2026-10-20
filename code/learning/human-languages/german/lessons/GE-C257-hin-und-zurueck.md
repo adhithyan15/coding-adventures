@@ -71,7 +71,8 @@ Then the two questions for the platform:
 > *Von welchem Gleis?* — From which platform?
 
 In Switzerland the ticket is often *das Billett*, and a return is
-*retour*: *einmal Bern retour*. *Fahrkarte* is understood everywhere.
+*retour*: *einmal Bern retour*. In Austria, too, a return is often *hin und
+retour*. *Fahrkarte* is understood everywhere.
 
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-C193-THING193-02] -->

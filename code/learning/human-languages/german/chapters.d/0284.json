@@ -1,0 +1,19 @@
+{
+  "chapter": 284,
+  "title": "Der Verdacht",
+  "label": "ch:ge-der-verdacht",
+  "canDo": "I can talk about an investigation: suspicion, suspicious, to investigate, an investigation and to arrest.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "GE-C284-festnehmen",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 284: I can talk about an investigation: suspicion, suspicious, to investigate, an investigation and to arrest.",
+    "assesses": [
+      "GE-LEX-C284-VERDACHT-03",
+      "GE-LEX-C284-VERDACHT-04",
+      "GE-LEX-C284-VERDACHT-05"
+    ]
+  }
+}

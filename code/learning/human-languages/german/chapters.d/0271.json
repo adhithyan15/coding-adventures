@@ -1,0 +1,19 @@
+{
+  "chapter": 271,
+  "title": "Die Meldung",
+  "label": "ch:ge-die-meldung",
+  "canDo": "I can talk about the news: to report, a news item, a report, a headline and an article.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "GE-C271-artikel",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 271: I can talk about the news: to report, a news item, a report, a headline and an article.",
+    "assesses": [
+      "GE-LEX-C271-MELDUNG-03",
+      "GE-LEX-C271-MELDUNG-04",
+      "GE-LEX-C271-MELDUNG-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 316,
+  "sourceHash": "fnv1a64:e4c89b5c2af61511",
+  "lessonIds": [
+    "GE-C316-erzaehler",
+    "GE-C316-handlung",
+    "GE-C316-figur",
+    "GE-C316-kapitel",
+    "GE-C316-fortsetzung"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch316.txt",
+  "json": "german/narration/ch316.json",
+  "textHash": "fnv1a64:5d5829516579b288",
+  "jsonHash": "fnv1a64:caecdef90a815b36",
+  "findings": []
+}

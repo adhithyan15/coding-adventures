@@ -1,0 +1,19 @@
+{
+  "chapter": 453,
+  "title": "Berge und Täler",
+  "label": "ch:ge-berge-und-taler",
+  "canDo": "I can describe high and steep ground: the cliff, the plateau, the summit, the slope and the gorge.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "GE-R453-review-446-453",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 453: I can describe high and steep ground: the cliff, the plateau, the summit, the slope and the gorge.",
+    "assesses": [
+      "GE-LEX-C453-GIPFEL-03",
+      "GE-LEX-C453-GIPFEL-04",
+      "GE-LEX-C453-GIPFEL-05"
+    ]
+  }
+}

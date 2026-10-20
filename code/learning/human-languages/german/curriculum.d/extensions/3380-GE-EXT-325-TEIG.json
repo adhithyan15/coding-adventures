@@ -1,0 +1,8 @@
+{
+  "id": "GE-EXT-325-TEIG",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can describe making dough: dough, yeast, to knead, to roll out and a rolling pin.",
+  "prerequisites": []
+}

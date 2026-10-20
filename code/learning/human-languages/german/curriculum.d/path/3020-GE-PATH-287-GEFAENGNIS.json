@@ -1,0 +1,9 @@
+{
+  "id": "GE-PATH-287-GEFAENGNIS",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "GE-EXT-287-GEFAENGNIS"
+  ],
+  "after": []
+}

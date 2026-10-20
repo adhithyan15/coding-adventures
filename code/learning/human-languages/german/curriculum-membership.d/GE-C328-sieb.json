@@ -1,0 +1,11 @@
+{
+  "id": "GE-C328-sieb",
+  "pathSegment": "GE-PATH-328-SIEB",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "GE-EXT-328-SIEB",
+      "order": 0
+    }
+  ]
+}

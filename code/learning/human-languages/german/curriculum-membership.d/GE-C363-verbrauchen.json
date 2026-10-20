@@ -1,0 +1,11 @@
+{
+  "id": "GE-C363-verbrauchen",
+  "pathSegment": "GE-PATH-363-UMWELT",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-363-UMWELT",
+      "order": 4
+    }
+  ]
+}

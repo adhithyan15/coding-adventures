@@ -4,7 +4,7 @@
   "chapter": 253,
   "title": "Zuerst, Dann, Schließlich — A Story in Order",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:04ec445d89738dd9",
+  "sourceHash": "fnv1a64:f4d23e7bc0e94291",
   "lessons": [
     {
       "id": "GE-C253-dann",
@@ -341,7 +341,7 @@
         "reading-type",
         "eyes-or-hands-step"
       ],
-      "sourceHash": "fnv1a64:362105a08afc2025",
+      "sourceHash": "fnv1a64:117aa500ee690b6b",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -387,7 +387,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Es war Samstag, und es regnete. Ich wartete auf dem Bahnhof, aber der Zug hatte Verspätung. Zuerst kaufte ich einen Kaffee. Dann las ich die Nachrichten auf meinem Handy. Als der Zug endlich kam, war ich sehr müde. Ich fuhr zwei Stunden. Danach kam ich in Berlin an. Dort wartete meine Großmutter. Sie lachte, als sie mich sah. Wir gingen zusammen in ein Restaurant. Ich hatte Hunger und nahm einen Fisch, und meine Großmutter nahm eine Suppe. Sie erzählte mir eine Geschichte, und wir lachten. Schließlich war es Abend. Ich war müde, aber sehr glücklich."
+              "text": "Es war Samstag, und es regnete. Ich wartete am Bahnhof, aber der Zug hatte Verspätung. Zuerst kaufte ich einen Kaffee. Dann las ich die Nachrichten auf meinem Handy. Als der Zug endlich kam, war ich sehr müde. Ich fuhr zwei Stunden. Danach kam ich in Berlin an. Dort wartete meine Großmutter. Sie lachte, als sie mich sah. Wir gingen zusammen in ein Restaurant. Ich hatte Hunger und nahm einen Fisch, und meine Großmutter nahm eine Suppe. Sie erzählte mir eine Geschichte, und wir lachten. Schließlich war es Abend. Ich war müde, aber sehr glücklich."
             },
             {
               "kind": "pause",

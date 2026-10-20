@@ -74,10 +74,12 @@ reisen.* The frame with *es* puts more weight on the dream.
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-C240-THING240-03] -->
 
-**Traum** ← Middle High German *troum*, from Proto-Germanic *\*draumaz*
-(EtymDB 2.1): the same word as English *dream*. **hoffen**, from chapter
-one hundred and thirty-six, came into Middle High German from Low German,
-beside English *hope* and Dutch *hopen*.
+**Traum** ← Middle High German *troum* (EtymDB 2.1), which EtymDB sets
+beside English *dream*: one word, by the usual account from Proto-Germanic
+*\*draumaz*. **hoffen**, from chapter one hundred and thirty-six, goes back
+to Middle High German *hoffen*, and EtymDB sets English *hope* and Dutch
+*hopen* beside it; the usual account adds that the word reached High German
+from Low German.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[GE-GRAMMAR-HOFFEN-DASS-01, GE-GRAMMAR-TRAUM-ZU-02, GE-LEX-C136-WUNSCH136-03] -->

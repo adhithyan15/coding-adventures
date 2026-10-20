@@ -1,0 +1,11 @@
+{
+  "id": "GE-C330-auffassung",
+  "pathSegment": "GE-PATH-330-STANDPUNKT",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GE-EXT-330-STANDPUNKT",
+      "order": 2
+    }
+  ]
+}

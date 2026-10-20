@@ -84,8 +84,8 @@ condition.
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-C174-VERB174-03] -->
 
-**ankommen** is *an-* + *kommen*, and EtymDB 2.1 sets Old English
-*oncuman* beside it. **hängen** ← Middle High German *hengen* ← Old High
+**ankommen** is *an-* + *kommen*, and EtymDB 2.1 sets English *oncome*,
+from Old English *oncuman*, beside it. **hängen** ← Middle High German *hengen* ← Old High
 German *hengen* (EtymDB 2.1). *Abhängen*, to hang off, gives the same
 picture as English *depend*, from Latin *dēpendēre*, "to hang down from":
 what depends on a thing hangs from it.

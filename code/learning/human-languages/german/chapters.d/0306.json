@@ -1,0 +1,19 @@
+{
+  "chapter": 306,
+  "title": "Herzlichen Glückwunsch",
+  "label": "ch:ge-herzlichen-gluckwunsch",
+  "canDo": "I can talk about congratulations and presents: to congratulate, good wishes, to present, to give presents to and to unwrap.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "GE-C306-auspacken",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 306: I can talk about congratulations and presents: to congratulate, good wishes, to present, to give presents to and to unwrap.",
+    "assesses": [
+      "GE-LEX-C306-GLUECKWUNSCH-03",
+      "GE-LEX-C306-GLUECKWUNSCH-04",
+      "GE-LEX-C306-GLUECKWUNSCH-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 268,
+  "title": "Der Augenblick",
+  "label": "ch:ge-der-augenblick",
+  "canDo": "I can talk about moments and stretches of time: a moment, a point in time, a period, the length and a deadline.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "GE-C268-frist",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 268: I can talk about moments and stretches of time: a moment, a point in time, a period, the length and a deadline.",
+    "assesses": [
+      "GE-LEX-C268-AUGENBLICK-03",
+      "GE-LEX-C268-AUGENBLICK-04",
+      "GE-LEX-C268-AUGENBLICK-05"
+    ]
+  }
+}

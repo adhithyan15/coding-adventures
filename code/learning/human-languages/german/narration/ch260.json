@@ -4,7 +4,7 @@
   "chapter": 260,
   "title": "If — wenn, falls, es kommt darauf an",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:e1f4ab1ab8640408",
+  "sourceHash": "fnv1a64:b5e3f0c3038872d4",
   "lessons": [
     {
       "id": "GE-C260-wenn-falls",
@@ -356,7 +356,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:57bc8c948ee2a520",
+      "sourceHash": "fnv1a64:b252e97c8a5f0800",
       "notice": null,
       "blocks": [
         {
@@ -455,7 +455,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ankommen is an- + kommen, and EtymDB 2.1 sets Old English oncuman beside it. hängen from Middle High German hengen from Old High German hengen (EtymDB 2.1). Abhängen, to hang off, gives the same picture as English depend, from Latin dēpendēre, \"to hang down from\": what depends on a thing hangs from it."
+              "text": "ankommen is an- + kommen, and EtymDB 2.1 sets English oncome, from Old English oncuman, beside it. hängen from Middle High German hengen from Old High German hengen (EtymDB 2.1). Abhängen, to hang off, gives the same picture as English depend, from Latin dēpendēre, \"to hang down from\": what depends on a thing hangs from it."
             }
           ]
         },

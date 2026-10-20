@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 431,
+  "sourceHash": "fnv1a64:7cb11a2abbfec761",
+  "lessonIds": [
+    "GE-C431-beschwerde",
+    "GE-C431-beschweren",
+    "GE-C431-reklamieren",
+    "GE-C431-meckern",
+    "GE-C431-unzufrieden"
+  ],
+  "tex": "german/book/chapters/ch431-nicht-zufrieden.tex"
+}

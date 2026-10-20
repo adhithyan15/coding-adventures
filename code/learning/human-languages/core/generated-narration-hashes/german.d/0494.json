@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 494,
+  "sourceHash": "fnv1a64:6de8e47d07c0206c",
+  "lessonIds": [
+    "GE-C494-zanken",
+    "GE-C494-schmollen",
+    "GE-C494-vertragen",
+    "GE-C494-versoehnen",
+    "GE-C494-versoehnung"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch494.txt",
+  "json": "german/narration/ch494.json",
+  "textHash": "fnv1a64:3c87b13f79f7d1fe",
+  "jsonHash": "fnv1a64:e38bd498f66d2898",
+  "findings": []
+}

@@ -336,6 +336,9 @@ describe("the gate that would have caught the A2 claim", () => {
     // Portuguese followed as the third, with chapters 259-268 (the B1 core: the
     // imperfeito, reasons, travel, experience and the condicional, realizing all
     // five B1 nodes) and chapters 269-532 (1,320 headwords, 363 verbs).
+    // German followed as the fifth, with chapters 252-261 (the B1 core: the
+    // Präteritum, reasons, travel, experience and the Konjunktiv II, realizing
+    // all five B1 nodes) and chapters 262-533 (1,360 headwords, 485 verbs).
     for (const level of Object.values(HELD)) {
       expectedByLevel.set(level, (expectedByLevel.get(level) ?? 0) + 1);
     }

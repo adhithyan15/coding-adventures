@@ -1,0 +1,11 @@
+{
+  "id": "GE-C359-ungleichheit",
+  "pathSegment": "GE-PATH-359-GERECHTIGKEIT",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GE-EXT-359-GERECHTIGKEIT",
+      "order": 1
+    }
+  ]
+}

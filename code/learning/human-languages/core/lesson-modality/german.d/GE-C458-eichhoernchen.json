@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C458-eichhoernchen",
+    "language": "german",
+    "chapter": 458,
+    "sequence": 24570,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e61c15bf6a23da03"
+  },
+  "findings": []
+}

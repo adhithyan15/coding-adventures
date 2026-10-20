@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 347,
+  "sourceHash": "fnv1a64:284a278256744d10",
+  "lessonIds": [
+    "GE-C347-zufall",
+    "GE-C347-zufaellig",
+    "GE-C347-verhindern",
+    "GE-C347-vermeiden",
+    "GE-C347-weshalb"
+  ],
+  "tex": "german/book/chapters/ch347-zufall-oder-nicht.tex"
+}

@@ -71,14 +71,14 @@ Then the question that asks for help:
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-C190-VERB190-03] -->
 
-**der Zug** ← Middle High German *zuc* (EtymDB 2.1), which EtymDB traces,
-beside Old English *tyge*, to a Proto-Germanic word for "a tug, a pull". It
-belongs to the family of **ziehen**, "to pull": a train is the thing the
+**der Zug** ← Middle High German *zuc* (EtymDB 2.1). EtymDB sets it beside
+Old English *tyge*, which it traces to a Proto-Germanic word for "a tug, a
+pull". By the usual account it belongs to the family of **ziehen**, "to pull": a train is the thing the
 engine pulls.
 
-**verpassen**, from chapter one hundred and ninety, is *ver-* + *passen*,
-from Dutch, and further back from French *passer*, "to pass": to let a
-thing pass you by.
+**verpassen**, from chapter one hundred and ninety, is *ver-* + *passen*.
+EtymDB 2.1 traces *passen* to Dutch, and further back to French *passer*,
+"to pass": to let a thing pass you by.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-ZUG-VERPASST-01, GE-GRAMMAR-PROBLEM-MELDEN-02, GE-LEX-HIN-UND-ZURUECK-01, GE-GRAMMAR-FAHRKARTE-NACH-02] -->

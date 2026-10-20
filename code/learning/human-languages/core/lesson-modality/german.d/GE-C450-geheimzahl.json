@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C450-geheimzahl",
+    "language": "german",
+    "chapter": 450,
+    "sequence": 24170,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b02d91139bb9d894"
+  },
+  "findings": []
+}

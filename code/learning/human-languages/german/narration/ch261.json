@@ -4,7 +4,7 @@
   "chapter": 261,
   "title": "Would — würde, hätte, wäre, and Six Lines",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:372651c1a4772718",
+  "sourceHash": "fnv1a64:e0d9f63066e0d877",
   "lessons": [
     {
       "id": "GE-C261-ich-haette-gern",
@@ -195,7 +195,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d6758e3b6f7ba109",
+      "sourceHash": "fnv1a64:710cccec69e20b81",
       "notice": null,
       "blocks": [
         {
@@ -263,7 +263,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "würde is wurde, the Präteritum of werden, \"to become\", with an umlaut. That is the same move as hatte to hätte and war to wäre: an umlaut on the past marks the Konjunktiv II. Not every verb takes one: sollte, wollte and the regular -te verbs look exactly like their past, and the sentence tells you which is meant."
+              "text": "würde is wurde, the Präteritum of werden, \"to become\", with an umlaut. That is the same move as hatte to hätte and war to wäre: an umlaut on the past marks the Konjunktiv II. Not every verb takes one: sollte, wollte and the regular -te verbs are identical to their past, and the sentence tells you which is meant."
             },
             {
               "kind": "speech",
@@ -545,7 +545,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:00a89c3fe485250e",
+      "sourceHash": "fnv1a64:e34051defb4dc812",
       "notice": null,
       "blocks": [
         {
@@ -712,7 +712,7 @@
         "writing-type",
         "writing-block"
       ],
-      "sourceHash": "fnv1a64:6e9c275f68df407e",
+      "sourceHash": "fnv1a64:01d2bd75c151702e",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -782,7 +782,7 @@
             },
             {
               "kind": "speech",
-              "text": "The Goethe-Zertifikat B1 writing paper asks for personal and formal messages and a short opinion post. Six lines to a friend is a first step towards the personal message, not the whole of it."
+              "text": "The Goethe-Zertifikat B1 writing paper asks for personal and formal messages and a short opinion post. Six lines to a friend is a first step towards the personal message."
             }
           ]
         },
@@ -823,7 +823,7 @@
             },
             {
               "kind": "speech",
-              "text": "one line forward, with wenn ich … hätte, würde ich …, or das wäre …, or ich hoffe, … zu …."
+              "text": "one line forward, with wenn ich … hätte, würde ich … or wenn ich … hätte, könnte ich …, or das wäre …, or ich hoffe, … zu …."
             },
             {
               "kind": "pause",
@@ -870,7 +870,7 @@
             },
             {
               "kind": "speech",
-              "text": "Last, line six on its own. If it has hätte or würde, is it about something that is not true now? Then it looks forward, and the story is finished."
+              "text": "Last, line six on its own. If it has hätte, würde or könnte, is it about something that is not true now? Then it looks forward, and the story is finished."
             }
           ]
         }

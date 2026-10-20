@@ -1,0 +1,11 @@
+{
+  "id": "GE-C484-kinn",
+  "pathSegment": "GE-PATH-484-GESICHT",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GE-EXT-484-GESICHT",
+      "order": 2
+    }
+  ]
+}

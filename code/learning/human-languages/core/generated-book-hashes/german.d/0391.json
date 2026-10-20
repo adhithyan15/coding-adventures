@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 391,
+  "sourceHash": "fnv1a64:81608b024b4de588",
+  "lessonIds": [
+    "GE-C391-steuer",
+    "GE-C391-zins",
+    "GE-C391-investieren",
+    "GE-C391-anschaffen",
+    "GE-C391-versichern"
+  ],
+  "tex": "german/book/chapters/ch391-steuern-und-zinsen.tex"
+}

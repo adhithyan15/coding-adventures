@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 523,
+  "sourceHash": "fnv1a64:61d3cc3ee3840cec",
+  "lessonIds": [
+    "GE-C523-fernbedienung",
+    "GE-C523-zappen",
+    "GE-C523-serie",
+    "GE-C523-staffel",
+    "GE-C523-einschaltquote"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch523.txt",
+  "json": "german/narration/ch523.json",
+  "textHash": "fnv1a64:ce0c632a12867b34",
+  "jsonHash": "fnv1a64:f913f26fae0a3d19",
+  "findings": []
+}

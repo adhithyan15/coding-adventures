@@ -1,0 +1,858 @@
+{
+  "version": 1,
+  "language": "german",
+  "chapter": 301,
+  "title": "Im Beruf",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:66c517135ff29ada",
+  "lessons": [
+    {
+      "id": "GE-C301-kuendigen",
+      "sequence": 16490,
+      "title": "kündigen — to quit, to give notice; to cancel",
+      "headword": "kündigen",
+      "romanization": "kündigen",
+      "gloss": "to quit, to give notice; to cancel",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:886c6837f8e39bf2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the German for to adopt, then the German for to go through."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: kündigen",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "kündigen — \"to quit, to give notice; to cancel\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Sie kündigte nach zehn Jahren bei der Firma. She quit after ten years at the company."
+            },
+            {
+              "kind": "speech",
+              "text": "Jemandem kündigen — to dismiss someone. Also to cancel a Vertrag."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "kündigen is built on kund \"known\", an inherited word with the Gothic cousin kunþs \"known\" (EtymDB): to make something known."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kündigen",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kündigen*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kündigen, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kündigen*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with kündigen",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *kündigen*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the German for to adopt, then the German for to go through, then say kündigen again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the German for to adopt, then the German for to go through, then say *kündigen* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does kündigen mean? (\"To quit, to give notice; to cancel\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GE-C301-kuendigung",
+      "sequence": 16500,
+      "title": "die Kündigung — the notice, the dismissal",
+      "headword": "die Kündigung",
+      "romanization": "die Kündigung",
+      "gloss": "the notice, the dismissal",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:eb4a3a1825d65635",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the German for to go through, then the German for to quit."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: die Kündigung",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "die Kündigung — \"the notice, the dismissal\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Er bekam die Kündigung am Montag. He got his notice on Monday."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: die Kündigungen."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Kündigung is built on kündigen, from kund \"known\", an inherited Germanic word (EtymDB)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "die Kündigung",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *die Kündigung*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "die Kündigung, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *die Kündigung*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with die Kündigung",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *die Kündigung*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the German for to go through, then the German for to quit, then say die Kündigung again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the German for to go through, then the German for to quit, then say *die Kündigung* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does die Kündigung mean? (\"The notice, the dismissal\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GE-C301-befoerdern",
+      "sequence": 16510,
+      "title": "befördern — to promote; to transport",
+      "headword": "befördern",
+      "romanization": "befördern",
+      "gloss": "to promote; to transport",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:230f86b6b6798c68",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the German for to quit, then the German for the notice."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: befördern",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "befördern — \"to promote; to transport\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Nach zwei Jahren wurde sie befördert. After two years she was promoted."
+            },
+            {
+              "kind": "speech",
+              "text": "Also 'to transport': Pakete befördern."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "befördern is built on fördern \"to further\", from Middle High German vürdern (EtymDB), a cousin of English further."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "befördern",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *befördern*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "befördern, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *befördern*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with befördern",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *befördern*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the German for to quit, then the German for the notice, then say befördern again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the German for to quit, then the German for the notice, then say *befördern* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does befördern mean? (\"To promote; to transport\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GE-C301-befoerderung",
+      "sequence": 16520,
+      "title": "die Beförderung — the promotion; transport",
+      "headword": "die Beförderung",
+      "romanization": "die Beförderung",
+      "gloss": "the promotion; transport",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e631de2f029de88e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the German for the notice, then the German for to promote."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: die Beförderung",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "die Beförderung — \"the promotion; transport\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Die Beförderung kam ganz unerwartet. The promotion came quite unexpectedly."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: die Beförderungen."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Beförderung is built on befördern, from fördern \"to further\", Middle High German vürdern (EtymDB)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "die Beförderung",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *die Beförderung*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "die Beförderung, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *die Beförderung*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with die Beförderung",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *die Beförderung*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the German for the notice, then the German for to promote, then say die Beförderung again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the German for the notice, then the German for to promote, then say *die Beförderung* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does die Beförderung mean? (\"The promotion; transport\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GE-C301-wendepunkt",
+      "sequence": 16530,
+      "title": "der Wendepunkt — the turning point",
+      "headword": "der Wendepunkt",
+      "romanization": "der Wendepunkt",
+      "gloss": "the turning point",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5af16d3109e795a2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the German for to promote, then the German for the promotion."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: der Wendepunkt",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "der Wendepunkt — \"the turning point\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Diese Reise war ein Wendepunkt in meinem Leben. This journey was a turning point in my life."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: die Wendepunkte."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Wendepunkt joins wenden \"to turn\", Old High German wenten, Proto-Germanic wandijaną (EtymDB), and Punkt \"point\", from Latin punctum."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "der Wendepunkt",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *der Wendepunkt*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "der Wendepunkt, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *der Wendepunkt*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with der Wendepunkt",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *der Wendepunkt*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the German for to promote, then the German for the promotion, then say der Wendepunkt again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the German for to promote, then the German for the promotion, then say *der Wendepunkt* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does der Wendepunkt mean? (\"The turning point\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GE-R301-review-294-301",
+      "sequence": 16540,
+      "title": "Words from chapters 294–301 — a review",
+      "headword": "(dialogue)",
+      "romanization": "(dialogue)",
+      "gloss": "a review of chapters 294-301",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b2070a5d1eea458b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the German for the disaster and the earthquake."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the disaster, the earthquake, the flood, the high water, to collapse",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the disaster, the earthquake, the flood, the high water, to collapse]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the breakdown, the breakdown service, to tow away, to damage, to destroy",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the breakdown, the breakdown service, to tow away, to damage, to destroy]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the birth, pregnant, the pregnancy, to baptise, the christening",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the birth, pregnant, the pregnancy, to baptise, the christening]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to grow up, starting school, the school-leaving exam, the degree, the move",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to grow up, starting school, the school-leaving exam, the degree, the move]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to get engaged, the engagement, the bride, the bridegroom, the bride and groom",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to get engaged, the engagement, the bride, the bridegroom, the bride and groom]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the marriage, the husband, the wife, the wedding ceremony, the registry office",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the marriage, the husband, the wife, the wedding ceremony, the registry office]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the divorce, to divorce, the separation, to adopt, to go through",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the divorce, to divorce, the separation, to adopt, to go through]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to quit, the notice, to promote, the promotion, the turning point",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to quit, the notice, to promote, the promotion, the turning point]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The disaster? (die Katastrophe.) The earthquake? (das Erdbeben.) The flood? (die Überschwemmung.) The high water? (das Hochwasser.) To collapse? (einstürzen.) The breakdown? (die Panne.) The breakdown service? (der Pannendienst.) To tow away? (abschleppen.) To damage? (beschädigen.) To destroy? (zerstören.) The birth? (die Geburt.) Pregnant? (schwanger.) The pregnancy? (die Schwangerschaft.) To baptise? (taufen.) The christening? (die Taufe.) To grow up? (aufwachsen.) Starting school? (die Einschulung.) The school-leaving exam? (das Abitur.) The degree? (der Abschluss.) The move? (der Umzug.) To get engaged? (verloben.) The engagement? (die Verlobung.) The bride? (die Braut.) The bridegroom? (der Bräutigam.) The bride and groom? (das Brautpaar.) The marriage? (die Ehe.) The husband? (der Ehemann.) The wife? (die Ehefrau.) The wedding ceremony? (die Trauung.) The registry office? (das Standesamt.) The divorce? (die Scheidung.) To divorce? (scheiden.) The separation? (die Trennung.) To adopt? (adoptieren.) To go through? (erleben.) To quit? (kündigen.) The notice? (die Kündigung.) To promote? (befördern.) The promotion? (die Beförderung.) The turning point? (der Wendepunkt.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

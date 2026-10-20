@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 448,
+  "sourceHash": "fnv1a64:639c8e6c51d0a128",
+  "lessonIds": [
+    "GE-C448-frankieren",
+    "GE-C448-verschicken",
+    "GE-C448-einwerfen",
+    "GE-C448-paeckchen",
+    "GE-C448-einschreiben"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch448.txt",
+  "json": "german/narration/ch448.json",
+  "textHash": "fnv1a64:08e7709ebff159c3",
+  "jsonHash": "fnv1a64:4922e170bba430e5",
+  "findings": []
+}

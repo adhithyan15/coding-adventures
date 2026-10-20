@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C403-abschleppwagen",
+    "language": "german",
+    "chapter": 403,
+    "sequence": 21780,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4d1c07fada15e33f"
+  },
+  "findings": []
+}

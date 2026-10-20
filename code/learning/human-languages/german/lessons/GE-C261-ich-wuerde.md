@@ -69,7 +69,7 @@ verbs take *würde*.
 **würde** is **wurde**, the Präteritum of *werden*, "to become", with an
 umlaut. That is the same move as *hatte* to *hätte* and *war* to *wäre*:
 an umlaut on the past marks the Konjunktiv II. Not every verb takes one:
-*sollte*, *wollte* and the regular *-te* verbs look exactly like their
+*sollte*, *wollte* and the regular *-te* verbs are identical to their
 past, and the sentence tells you which is meant.
 
 *Werden* ← Old High German *werdan* ← Proto-Germanic *\*werþaną*, "to

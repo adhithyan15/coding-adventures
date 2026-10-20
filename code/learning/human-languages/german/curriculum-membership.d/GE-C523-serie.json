@@ -1,0 +1,11 @@
+{
+  "id": "GE-C523-serie",
+  "pathSegment": "GE-PATH-523-FERNSEHEN",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GE-EXT-523-FERNSEHEN",
+      "order": 2
+    }
+  ]
+}

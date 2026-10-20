@@ -51,8 +51,8 @@ end.
 
 Two things are unusual in it. **Nach** comes after its noun, and here it
 means "according to". *Nach meiner Meinung* exists too, but *nach* last is
-the usual order. And **meiner** is *meine* with a case ending,
-the form *nach* asks for. With "your": *deiner Meinung nach*.
+the usual order. And **meiner** is *mein* with the dative ending *-er*,
+the case *nach* asks for. With "your": *deiner Meinung nach*.
 
 ## Grammar Lens: one place, then the verb
 <!-- hl-knowledge: introduces=[GE-GRAMMAR-MEINUNG-ERSTE-STELLE-02]; assesses=[GE-GRAMMAR-VERB-SECOND-02, GE-GRAMMAR-DANN-VERB-ZWEI-02, GE-LEX-C93-ADJ5-03] -->

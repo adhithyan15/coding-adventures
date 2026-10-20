@@ -1,0 +1,11 @@
+{
+  "id": "GE-C357-forderung",
+  "pathSegment": "GE-PATH-357-GEWERKSCHAFT",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GE-EXT-357-GEWERKSCHAFT",
+      "order": 2
+    }
+  ]
+}

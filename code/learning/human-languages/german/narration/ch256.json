@@ -4,7 +4,7 @@
   "chapter": 256,
   "title": "Finding the Way — wie komme ich zum Bahnhof",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:d563c430de1fa898",
+  "sourceHash": "fnv1a64:faec1f3c0c1671c9",
   "lessons": [
     {
       "id": "GE-C256-wie-komme-ich",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a4ca4898ec2ae2c5",
+      "sourceHash": "fnv1a64:48b08f33eaaa43bb",
       "notice": null,
       "blocks": [
         {
@@ -85,7 +85,7 @@
             },
             {
               "kind": "speech",
-              "text": "In Switzerland you will hear Exgüsi in dialect for \"excuse me\", from French excusez; Entschuldigung is understood everywhere."
+              "text": "In Switzerland you will hear Exgüsi in dialect for \"excuse me\", usually traced to French excusez; Entschuldigung is understood everywhere."
             }
           ]
         },

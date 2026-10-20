@@ -4,7 +4,7 @@
   "chapter": 254,
   "title": "What I Think — ich finde, dass; darum",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:e04456e33b8c9615",
+  "sourceHash": "fnv1a64:5664223d3f1191ec",
   "lessons": [
     {
       "id": "GE-C254-ich-finde-dass",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:fbf01a98791cd620",
+      "sourceHash": "fnv1a64:61ae52c54c9d51a0",
       "notice": null,
       "blocks": [
         {
@@ -54,7 +54,7 @@
             },
             {
               "kind": "speech",
-              "text": "German writes a comma before dass, every time. German can drop dass, as English drops \"that\", but then the verb returns to second place: Ich glaube, der Zug hat Verspätung. Both are standard."
+              "text": "German sets the dass clause off with a comma. German can drop dass, as English drops \"that\", but then the verb returns to second place: Ich glaube, der Zug hat Verspätung. Both are standard."
             },
             {
               "kind": "speech",
@@ -190,7 +190,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:70dbd11d4ce3bfea",
+      "sourceHash": "fnv1a64:d921d905c85946ee",
       "notice": null,
       "blocks": [
         {
@@ -235,7 +235,7 @@
             },
             {
               "kind": "speech",
-              "text": "Two things are unusual in it. Nach comes after its noun, and here it means \"according to\". Nach meiner Meinung exists too, but nach last is the usual order. And meiner is meine with a case ending, the form nach asks for. With \"your\": deiner Meinung nach."
+              "text": "Two things are unusual in it. Nach comes after its noun, and here it means \"according to\". Nach meiner Meinung exists too, but nach last is the usual order. And meiner is mein with the dative ending -er, the case nach asks for. With \"your\": deiner Meinung nach."
             }
           ]
         },

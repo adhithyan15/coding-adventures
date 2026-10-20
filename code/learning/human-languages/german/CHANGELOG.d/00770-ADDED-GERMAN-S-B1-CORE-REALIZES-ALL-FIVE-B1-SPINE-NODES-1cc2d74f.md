@@ -68,3 +68,15 @@ at least twice later; no forward reference, idiom, sense or culture claim is
 added. The German lesson-content pin moves from 1384 to 1420, and
 `tests/levels.test.ts` moves German from the A2-reach list to the list of
 tracks that reach beyond A2.
+
+An independent review then fixed errors in 11 of the 36 lessons. Every
+paradigm, word-order and case claim held. The fixes were:
+- etymology citations credited to EtymDB that it does not carry (*als* =
+  *al* + *sō*, *Zug* from *ziehen*, *Traum* from *\*draumaz*, *hoffen* from Low
+  German), now hedged;
+- *auf dem Bahnhof* in the reading, now *am Bahnhof*;
+- a comma rule worded too broadly;
+- two "looks like" phrasings in spoken lessons;
+- a missing Austrian *hin und retour*;
+- one atom, *ich könnte*, now practised twice more in the writing task and the
+  last review.

@@ -48,7 +48,7 @@ and like *weil* it sends the verb to the end:
 > *Ich finde, dass Deutsch schön* **ist**. — I think German is beautiful.
 > *Ich glaube, dass der Zug Verspätung* **hat**. — I believe the train is late.
 
-German writes a comma before *dass*, every time. German can drop
+German sets the *dass* clause off with a comma. German can drop
 *dass*, as English drops "that", but then the verb returns to second
 place: *Ich glaube, der Zug* **hat** *Verspätung.* Both are standard.
 

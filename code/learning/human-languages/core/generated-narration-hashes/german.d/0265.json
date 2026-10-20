@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 265,
+  "sourceHash": "fnv1a64:e88eecd3b3e57551",
+  "lessonIds": [
+    "GE-C265-inzwischen",
+    "GE-C265-mittlerweile",
+    "GE-C265-waehrenddessen",
+    "GE-C265-bisher",
+    "GE-C265-laengst"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch265.txt",
+  "json": "german/narration/ch265.json",
+  "textHash": "fnv1a64:a2bc388505fabeb1",
+  "jsonHash": "fnv1a64:5ea19a663b8f2459",
+  "findings": []
+}

@@ -47,7 +47,9 @@ it("pins German lesson-content budgets", () =>
     // 1384 -> 1420: chapters 252-261, the B1 core that realizes all five B1
     // spine nodes (Präteritum, reasons, travel, experience, Konjunktiv II):
     // 36 lessons, one reading and one writing, no idiom, sense or culture claim.
-    lessons: 1420,
+    // 1420 -> 2820: chapters 262-533, the B1 vocabulary: 1,360 word lessons (one
+    // headword each) and 40 spaced reviews. German attains B1 here.
+    lessons: 2820,
     idioms: 1,
     senses: 5,
     cultureClaims: 32,

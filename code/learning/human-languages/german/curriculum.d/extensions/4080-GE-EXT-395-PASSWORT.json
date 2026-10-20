@@ -1,0 +1,8 @@
+{
+  "id": "GE-EXT-395-PASSWORT",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can talk about passwords, logging in, access and data protection.",
+  "prerequisites": []
+}

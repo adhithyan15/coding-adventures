@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C382-verstoss",
+    "language": "german",
+    "chapter": 382,
+    "sequence": 20700,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:15f61b1762dd27ac"
+  },
+  "findings": []
+}

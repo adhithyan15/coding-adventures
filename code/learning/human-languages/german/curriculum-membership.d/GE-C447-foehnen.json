@@ -1,0 +1,11 @@
+{
+  "id": "GE-C447-foehnen",
+  "pathSegment": "GE-PATH-447-FRISEUR",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GE-EXT-447-FRISEUR",
+      "order": 1
+    }
+  ]
+}

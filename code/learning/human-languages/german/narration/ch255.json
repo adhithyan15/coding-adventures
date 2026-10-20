@@ -4,7 +4,7 @@
   "chapter": 255,
   "title": "You Should — du solltest, and Explaining Why",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:a4ad974aea662ab5",
+  "sourceHash": "fnv1a64:c190b9dc0797a985",
   "lessons": [
     {
       "id": "GE-C255-du-solltest",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ec0d16c86f6a224e",
+      "sourceHash": "fnv1a64:e730bbdd8158734c",
       "notice": null,
       "blocks": [
         {
@@ -58,7 +58,7 @@
             },
             {
               "kind": "speech",
-              "text": "Solltest looks like a past, and it is spelled exactly like the Präteritum of sollen. Here it is the Konjunktiv II, the mood of \"it would be good if\". That is what makes it advice. The plain present, du sollst, is stronger: it passes on an order or a duty, \"you are to\"."
+              "text": "Solltest sounds like a past, and it is spelled exactly like the Präteritum of sollen. Here it is the Konjunktiv II, the mood of \"it would be good if\". That is what makes it advice. The plain present, du sollst, is stronger: it passes on an order or a duty, \"you are to\"."
             }
           ]
         },

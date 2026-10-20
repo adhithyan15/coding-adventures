@@ -1,0 +1,11 @@
+{
+  "id": "GE-C430-kakerlake",
+  "pathSegment": "GE-PATH-430-MUECKE",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GE-EXT-430-MUECKE",
+      "order": 1
+    }
+  ]
+}

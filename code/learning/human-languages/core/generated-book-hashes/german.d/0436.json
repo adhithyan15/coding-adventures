@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 436,
+  "sourceHash": "fnv1a64:661d9f2770f2d3d0",
+  "lessonIds": [
+    "GE-C436-gasse",
+    "GE-C436-sackgasse",
+    "GE-C436-allee",
+    "GE-C436-einbahnstrasse",
+    "GE-C436-passant"
+  ],
+  "tex": "german/book/chapters/ch436-kleine-und-gro-e-stra-en.tex"
+}

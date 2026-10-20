@@ -1,0 +1,8 @@
+{
+  "id": "GE-EXT-412-BAHNSTEIG",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can manage on a platform: the platform, the announcement, the compartment, the conductor and checking tickets.",
+  "prerequisites": []
+}

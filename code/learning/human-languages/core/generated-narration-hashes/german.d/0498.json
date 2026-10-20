@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 498,
+  "sourceHash": "fnv1a64:776054301b4771d3",
+  "lessonIds": [
+    "GE-C498-kennenlernen",
+    "GE-C498-befreundet",
+    "GE-C498-bekanntschaft",
+    "GE-C498-nachbarschaft",
+    "GE-C498-gastfreundschaft"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch498.txt",
+  "json": "german/narration/ch498.json",
+  "textHash": "fnv1a64:f881be23990b2db8",
+  "jsonHash": "fnv1a64:73764ade4e4d5c4d",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 332,
+  "sourceHash": "fnv1a64:4a4ebd0af1b84224",
+  "lessonIds": [
+    "GE-C332-begruenden",
+    "GE-C332-begruendung",
+    "GE-C332-naemlich",
+    "GE-C332-zumal",
+    "GE-C332-erlaeutern"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch332.txt",
+  "json": "german/narration/ch332.json",
+  "textHash": "fnv1a64:07616a0b45a26d6a",
+  "jsonHash": "fnv1a64:4d4e6537a478d479",
+  "findings": []
+}

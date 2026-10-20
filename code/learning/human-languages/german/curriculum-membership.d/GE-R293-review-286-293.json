@@ -1,0 +1,11 @@
+{
+  "id": "GE-R293-review-286-293",
+  "pathSegment": "GE-PATH-293-BRENNEN",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "GE-EXT-293-BRENNEN",
+      "order": 5
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 402,
+  "sourceHash": "fnv1a64:1d367e0c9731c747",
+  "lessonIds": [
+    "GE-C402-tanken",
+    "GE-C402-volltanken",
+    "GE-C402-benzin",
+    "GE-C402-zapfsaeule",
+    "GE-C402-oelwechsel"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch402.txt",
+  "json": "german/narration/ch402.json",
+  "textHash": "fnv1a64:b802c9c8f3c99041",
+  "jsonHash": "fnv1a64:167df2f047fc9247",
+  "findings": []
+}

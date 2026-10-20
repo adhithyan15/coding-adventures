@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C469-erleichterung",
+    "language": "german",
+    "chapter": 469,
+    "sequence": 25170,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c4b27c8434fbd5a3"
+  },
+  "findings": []
+}

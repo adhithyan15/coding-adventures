@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C362-ehrenamt",
+    "language": "german",
+    "chapter": 362,
+    "sequence": 19640,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:51ed3bde4b7f220b"
+  },
+  "findings": []
+}

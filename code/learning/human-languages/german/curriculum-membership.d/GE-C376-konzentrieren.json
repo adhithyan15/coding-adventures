@@ -1,0 +1,11 @@
+{
+  "id": "GE-C376-konzentrieren",
+  "pathSegment": "GE-PATH-376-LERNEN",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GE-EXT-376-LERNEN",
+      "order": 2
+    }
+  ]
+}

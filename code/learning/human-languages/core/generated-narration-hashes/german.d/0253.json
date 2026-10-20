@@ -1,7 +1,7 @@
 {
   "language": "german",
   "chapter": 253,
-  "sourceHash": "fnv1a64:04ec445d89738dd9",
+  "sourceHash": "fnv1a64:f4d23e7bc0e94291",
   "lessonIds": [
     "GE-C253-dann",
     "GE-C253-schliesslich",
@@ -12,7 +12,7 @@
   "drivablePrefix": 2,
   "text": "german/narration/ch253.txt",
   "json": "german/narration/ch253.json",
-  "textHash": "fnv1a64:1bff84d0d63d7066",
-  "jsonHash": "fnv1a64:3d5709cca0b23d20",
+  "textHash": "fnv1a64:3ff53a32587a41d0",
+  "jsonHash": "fnv1a64:ff7377511170c2db",
   "findings": []
 }

@@ -1,0 +1,19 @@
+{
+  "chapter": 273,
+  "title": "Bekannt machen",
+  "label": "ch:ge-bekannt-machen",
+  "canDo": "I can say how news was made known: to publish, to mention, to express, to announce and to make public.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "GE-C273-bekanntgeben",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 273: I can say how news was made known: to publish, to mention, to express, to announce and to make public.",
+    "assesses": [
+      "GE-LEX-C273-BEKANNT-03",
+      "GE-LEX-C273-BEKANNT-04",
+      "GE-LEX-C273-BEKANNT-05"
+    ]
+  }
+}

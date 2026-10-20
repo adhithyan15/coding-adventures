@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 443,
+  "sourceHash": "fnv1a64:88defc7e5756be48",
+  "lessonIds": [
+    "GE-C443-feinkostgeschaeft",
+    "GE-C443-konditorei",
+    "GE-C443-gemuesehaendler",
+    "GE-C443-drogerie",
+    "GE-C443-reformhaus"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch443.txt",
+  "json": "german/narration/ch443.json",
+  "textHash": "fnv1a64:a799eb0a696735d8",
+  "jsonHash": "fnv1a64:3b3fb8716ce0d9fb",
+  "findings": []
+}

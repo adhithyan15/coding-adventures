@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 407,
+  "sourceHash": "fnv1a64:a028a5b592c8680c",
+  "lessonIds": [
+    "GE-C407-rasen",
+    "GE-C407-blitzer",
+    "GE-C407-erwischen",
+    "GE-C407-bussgeld",
+    "GE-C407-strafzettel"
+  ],
+  "tex": "german/book/chapters/ch407-zu-schnell.tex"
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 416,
+  "title": "Am Flughafen",
+  "label": "ch:ge-am-flughafen",
+  "canDo": "I can check in for a flight: checking in, the boarding pass, the gate, hand luggage and checking a bag in.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "GE-C416-aufgeben",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 416: I can check in for a flight: checking in, the boarding pass, the gate, hand luggage and checking a bag in.",
+    "assesses": [
+      "GE-LEX-C416-FLUGSTEIG-03",
+      "GE-LEX-C416-FLUGSTEIG-04",
+      "GE-LEX-C416-FLUGSTEIG-05"
+    ]
+  }
+}

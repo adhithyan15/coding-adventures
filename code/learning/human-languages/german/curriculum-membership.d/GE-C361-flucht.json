@@ -1,0 +1,11 @@
+{
+  "id": "GE-C361-flucht",
+  "pathSegment": "GE-PATH-361-EINWANDERUNG",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GE-EXT-361-EINWANDERUNG",
+      "order": 1
+    }
+  ]
+}

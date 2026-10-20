@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 471,
+  "sourceHash": "fnv1a64:96c025600258af74",
+  "lessonIds": [
+    "GE-C471-traene",
+    "GE-C471-schluchzen",
+    "GE-C471-trost",
+    "GE-C471-troesten",
+    "GE-C471-mitleid"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch471.txt",
+  "json": "german/narration/ch471.json",
+  "textHash": "fnv1a64:3217b5edabb5b337",
+  "jsonHash": "fnv1a64:973e4f34bada036b",
+  "findings": []
+}

@@ -55,7 +55,7 @@ may well happen, the Konjunktiv II for what is not true now.
 The first is a plan. The second is a wish.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[GE-GRAMMAR-WENN-PRAESENS-01, GE-LEX-ES-KOMMT-DARAUF-AN-01, GE-GRAMMAR-KOMPARATIV-ALS-01, GE-GRAMMAR-SO-WIE-02, GE-GRAMMAR-SEIT-PRAESENS-01, GE-GRAMMAR-VOR-AGO-02, GE-LEX-HAENGT-DAVON-AB-02] -->
+<!-- hl-knowledge: introduces=[]; assesses=[GE-GRAMMAR-WENN-PRAESENS-01, GE-LEX-ICH-KOENNTE-02, GE-LEX-ES-KOMMT-DARAUF-AN-01, GE-GRAMMAR-KOMPARATIV-ALS-01, GE-GRAMMAR-SO-WIE-02, GE-GRAMMAR-SEIT-PRAESENS-01, GE-GRAMMAR-VOR-AGO-02, GE-LEX-HAENGT-DAVON-AB-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: *Wenn ich Zeit habe, fahre ich nach Berlin.*]

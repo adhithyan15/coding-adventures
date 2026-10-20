@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C285-faelschen",
+    "language": "german",
+    "chapter": 285,
+    "sequence": 15700,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:222bf65e02b7dfd9"
+  },
+  "findings": []
+}

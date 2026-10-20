@@ -1,0 +1,19 @@
+{
+  "chapter": 315,
+  "title": "Ritter und Riesen",
+  "label": "ch:ge-ritter-und-riesen",
+  "canDo": "I can name the people of old tales: a knight, a king, a princess, a giant and a dwarf.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "GE-C315-zwerg",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 315: I can name the people of old tales: a knight, a king, a princess, a giant and a dwarf.",
+    "assesses": [
+      "GE-LEX-C315-RITTER-03",
+      "GE-LEX-C315-RITTER-04",
+      "GE-LEX-C315-RITTER-05"
+    ]
+  }
+}

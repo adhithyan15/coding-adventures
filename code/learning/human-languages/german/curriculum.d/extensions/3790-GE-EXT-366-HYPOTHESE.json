@@ -1,0 +1,8 @@
+{
+  "id": "GE-EXT-366-HYPOTHESE",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can state a hypothesis, say what is true in theory, name the circumstances and say if applicable and at least.",
+  "prerequisites": []
+}

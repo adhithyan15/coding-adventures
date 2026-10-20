@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C508-verlierer",
+    "language": "german",
+    "chapter": 508,
+    "sequence": 27170,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e3d17a6ef4208453"
+  },
+  "findings": []
+}

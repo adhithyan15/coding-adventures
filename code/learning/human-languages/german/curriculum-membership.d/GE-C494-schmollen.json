@@ -1,0 +1,11 @@
+{
+  "id": "GE-C494-schmollen",
+  "pathSegment": "GE-PATH-494-STREIT",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GE-EXT-494-STREIT",
+      "order": 1
+    }
+  ]
+}

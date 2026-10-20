@@ -1,0 +1,19 @@
+{
+  "chapter": 423,
+  "title": "Im Hafen",
+  "label": "ch:ge-im-hafen",
+  "canDo": "I can talk about a harbour: the anchor, lying at anchor, the lighthouse, the sailor and capsizing.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "GE-C423-kentern",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 423: I can talk about a harbour: the anchor, lying at anchor, the lighthouse, the sailor and capsizing.",
+    "assesses": [
+      "GE-LEX-C423-ANKER-03",
+      "GE-LEX-C423-ANKER-04",
+      "GE-LEX-C423-ANKER-05"
+    ]
+  }
+}

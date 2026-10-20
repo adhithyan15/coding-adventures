@@ -1,0 +1,11 @@
+{
+  "id": "GE-C500-basteln",
+  "pathSegment": "GE-PATH-500-SAMMELN",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GE-EXT-500-SAMMELN",
+      "order": 2
+    }
+  ]
+}

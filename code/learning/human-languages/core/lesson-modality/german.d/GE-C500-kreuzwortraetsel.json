@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C500-kreuzwortraetsel",
+    "language": "german",
+    "chapter": 500,
+    "sequence": 26780,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b5887d50c2413b2c"
+  },
+  "findings": []
+}

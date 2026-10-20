@@ -1,0 +1,8 @@
+{
+  "id": "GE-EXT-429-SCHIMMEL",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can describe small problems in a room: mould, a flickering light, a door that sticks, a squeak and something broken.",
+  "prerequisites": []
+}

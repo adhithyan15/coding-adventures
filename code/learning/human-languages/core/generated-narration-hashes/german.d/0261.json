@@ -1,7 +1,7 @@
 {
   "language": "german",
   "chapter": 261,
-  "sourceHash": "fnv1a64:372651c1a4772718",
+  "sourceHash": "fnv1a64:e0d9f63066e0d877",
   "lessonIds": [
     "GE-C261-ich-haette-gern",
     "GE-C261-ich-wuerde",
@@ -13,7 +13,7 @@
   "drivablePrefix": 4,
   "text": "german/narration/ch261.txt",
   "json": "german/narration/ch261.json",
-  "textHash": "fnv1a64:31a0247ac077d093",
-  "jsonHash": "fnv1a64:0a24ae0e1b21329c",
+  "textHash": "fnv1a64:e7634127a3331d57",
+  "jsonHash": "fnv1a64:64694e7d65951684",
   "findings": []
 }

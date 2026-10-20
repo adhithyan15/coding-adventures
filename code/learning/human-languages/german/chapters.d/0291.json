@@ -1,0 +1,19 @@
+{
+  "chapter": 291,
+  "title": "Der Notruf",
+  "label": "ch:ge-der-notruf",
+  "canDo": "I can describe calling for help: the emergency number, the emergency doctor, a helicopter, a paramedic and the emergency room.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "GE-C291-notaufnahme",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 291: I can describe calling for help: the emergency number, the emergency doctor, a helicopter, a paramedic and the emergency room.",
+    "assesses": [
+      "GE-LEX-C291-NOTRUF-03",
+      "GE-LEX-C291-NOTRUF-04",
+      "GE-LEX-C291-NOTRUF-05"
+    ]
+  }
+}

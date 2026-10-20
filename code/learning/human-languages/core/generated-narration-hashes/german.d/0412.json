@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 412,
+  "sourceHash": "fnv1a64:f6a94d6e776e3422",
+  "lessonIds": [
+    "GE-C412-bahnsteig",
+    "GE-C412-durchsage",
+    "GE-C412-abteil",
+    "GE-C412-schaffner",
+    "GE-C412-kontrollieren"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch412.txt",
+  "json": "german/narration/ch412.json",
+  "textHash": "fnv1a64:3d39b7e3cd564744",
+  "jsonHash": "fnv1a64:6ff5fd416e1e6496",
+  "findings": []
+}

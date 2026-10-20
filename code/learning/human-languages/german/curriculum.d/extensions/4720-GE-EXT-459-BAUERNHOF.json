@@ -1,0 +1,8 @@
+{
+  "id": "GE-EXT-459-BAUERNHOF",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can talk about a farm: the farm, the pasture, the barn, grazing and milking.",
+  "prerequisites": []
+}

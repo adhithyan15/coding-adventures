@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C419-verspaeten",
+    "language": "german",
+    "chapter": 419,
+    "sequence": 22590,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e86c2c470a0fc46a"
+  },
+  "findings": []
+}

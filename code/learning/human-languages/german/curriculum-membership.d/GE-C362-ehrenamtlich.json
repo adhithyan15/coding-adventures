@@ -1,0 +1,11 @@
+{
+  "id": "GE-C362-ehrenamtlich",
+  "pathSegment": "GE-PATH-362-EHRENAMT",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GE-EXT-362-EHRENAMT",
+      "order": 1
+    }
+  ]
+}

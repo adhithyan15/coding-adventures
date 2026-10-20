@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 321,
+  "sourceHash": "fnv1a64:19de944341641039",
+  "lessonIds": [
+    "GE-C321-erfinden",
+    "GE-C321-erfindung",
+    "GE-C321-gruenden",
+    "GE-C321-entstehen",
+    "GE-C321-zurueckkehren"
+  ],
+  "tex": "german/book/chapters/ch321-neues-entsteht.tex"
+}

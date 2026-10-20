@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 379,
+  "sourceHash": "fnv1a64:553873a4283519c8",
+  "lessonIds": [
+    "GE-C379-bewerten",
+    "GE-C379-bewertung",
+    "GE-C379-benoten",
+    "GE-C379-nachholen",
+    "GE-C379-korrigieren"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch379.txt",
+  "json": "german/narration/ch379.json",
+  "textHash": "fnv1a64:df85ed76ab900e90",
+  "jsonHash": "fnv1a64:a7fe82026048f251",
+  "findings": []
+}

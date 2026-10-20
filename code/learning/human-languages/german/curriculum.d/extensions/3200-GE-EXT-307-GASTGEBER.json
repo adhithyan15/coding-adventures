@@ -1,0 +1,8 @@
+{
+  "id": "GE-EXT-307-GASTGEBER",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can talk about hosts and guests: a host, to treat guests, a guest of honour, a speech and a toast.",
+  "prerequisites": []
+}

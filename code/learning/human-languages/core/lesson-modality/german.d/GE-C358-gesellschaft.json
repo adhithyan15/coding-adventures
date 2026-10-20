@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C358-gesellschaft",
+    "language": "german",
+    "chapter": 358,
+    "sequence": 19430,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:91f76007b377f96a"
+  },
+  "findings": []
+}

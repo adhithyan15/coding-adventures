@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 343,
+  "sourceHash": "fnv1a64:b9e4a15eb9c68790",
+  "lessonIds": [
+    "GE-C343-konsequenz",
+    "GE-C343-resultat",
+    "GE-C343-folglich",
+    "GE-C343-sodass",
+    "GE-C343-daher"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch343.txt",
+  "json": "german/narration/ch343.json",
+  "textHash": "fnv1a64:586c51f4ddf80eed",
+  "jsonHash": "fnv1a64:880c43e77cf188bd",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "GE-C411-loesen",
+  "pathSegment": "GE-PATH-411-FAHRSCHEIN",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-411-FAHRSCHEIN",
+      "order": 4
+    }
+  ]
+}

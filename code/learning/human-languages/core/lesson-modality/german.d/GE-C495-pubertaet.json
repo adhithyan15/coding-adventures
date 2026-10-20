@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C495-pubertaet",
+    "language": "german",
+    "chapter": 495,
+    "sequence": 26520,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:fd2d6e65b5a9710d"
+  },
+  "findings": []
+}

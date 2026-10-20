@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C370-klappen",
+    "language": "german",
+    "chapter": 370,
+    "sequence": 20050,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2dc1e171dd300fa5"
+  },
+  "findings": []
+}

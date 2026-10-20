@@ -66,8 +66,8 @@ To a stranger, keep to *Sie*: *Können Sie mir helfen?*
 So the gender you learned with each noun decides the little word in front
 of it. *Der Bahnhof*, *zum Bahnhof*. *Die Post*, *zur Post*.
 
-In Switzerland you will hear *Exgüsi* in dialect for "excuse me", from
-French *excusez*; *Entschuldigung* is understood everywhere.
+In Switzerland you will hear *Exgüsi* in dialect for "excuse me", usually
+traced to French *excusez*; *Entschuldigung* is understood everywhere.
 
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-KOMMEN-01] -->

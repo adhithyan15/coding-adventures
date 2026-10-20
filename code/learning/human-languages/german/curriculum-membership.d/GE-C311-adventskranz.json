@@ -1,0 +1,11 @@
+{
+  "id": "GE-C311-adventskranz",
+  "pathSegment": "GE-PATH-311-ADVENT",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GE-EXT-311-ADVENT",
+      "order": 2
+    }
+  ]
+}

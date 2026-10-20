@@ -1,0 +1,11 @@
+{
+  "id": "GE-C489-verwandtschaft",
+  "pathSegment": "GE-PATH-489-VERWANDTE",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GE-EXT-489-VERWANDTE",
+      "order": 1
+    }
+  ]
+}

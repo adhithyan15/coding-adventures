@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 282,
+  "sourceHash": "fnv1a64:a03f463835757e52",
+  "lessonIds": [
+    "GE-C282-ueberfallen",
+    "GE-C282-ueberfall",
+    "GE-C282-rauben",
+    "GE-C282-bedrohen",
+    "GE-C282-waffe"
+  ],
+  "tex": "german/book/chapters/ch282-der-uberfall.tex"
+}

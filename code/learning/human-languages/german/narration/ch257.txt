@@ -21,7 +21,7 @@ Eine Fahrkarte nach Berlin, bitte. — A ticket to Berlin, please. Einmal nach H
 Inside the town, you went zum Bahnhof and zur Post. Between towns, you travel nach Berlin.
 Then the two questions for the platform:
 Wann fährt der Zug ab? — When does the train leave? Von welchem Gleis? — From which platform?
-In Switzerland the ticket is often das Billett, and a return is retour: einmal Bern retour. Fahrkarte is understood everywhere.
+In Switzerland the ticket is often das Billett, and a return is retour: einmal Bern retour. In Austria, too, a return is often hin und retour. Fahrkarte is understood everywhere.
 
 The word, taken apart.
 zurück is usually explained as zu, "to", + Rück-, "back": in Middle High German, ze rucke, "to the back". The Rück- is the same as in der Rücken and die Rückfahrt; EtymDB 2.1 lists zurück beside Dutch terug, built the same way, but does not take it apart.
@@ -64,8 +64,8 @@ Wann fährt der nächste Zug? — When is the next train? Was kann ich machen? �
 Der nächste Zug is the nächste of nächste Woche, next.
 
 The word, taken apart.
-der Zug from Middle High German zuc (EtymDB 2.1), which EtymDB traces, beside Old English tyge, to a Proto-Germanic word for "a tug, a pull". It belongs to the family of ziehen, "to pull": a train is the thing the engine pulls.
-verpassen, from chapter one hundred and ninety, is ver- + passen, from Dutch, and further back from French passer, "to pass": to let a thing pass you by.
+der Zug from Middle High German zuc (EtymDB 2.1). EtymDB sets it beside Old English tyge, which it traces to a Proto-Germanic word for "a tug, a pull". By the usual account it belongs to the family of ziehen, "to pull": a train is the thing the engine pulls.
+verpassen, from chapter one hundred and ninety, is ver- + passen. EtymDB 2.1 traces passen to Dutch, and further back to French passer, "to pass": to let a thing pass you by.
 
 Guided Practice.
 [pause 1 second]

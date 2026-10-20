@@ -1,0 +1,11 @@
+{
+  "id": "GE-C481-ausschlag",
+  "pathSegment": "GE-PATH-481-ALLERGIE",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GE-EXT-481-ALLERGIE",
+      "order": 2
+    }
+  ]
+}

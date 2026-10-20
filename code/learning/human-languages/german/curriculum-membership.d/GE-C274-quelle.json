@@ -1,0 +1,11 @@
+{
+  "id": "GE-C274-quelle",
+  "pathSegment": "GE-PATH-274-GERUECHT",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GE-EXT-274-GERUECHT",
+      "order": 1
+    }
+  ]
+}

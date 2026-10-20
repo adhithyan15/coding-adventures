@@ -1,0 +1,11 @@
+{
+  "id": "GE-C375-muendlich",
+  "pathSegment": "GE-PATH-375-KLAUSUR",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GE-EXT-375-KLAUSUR",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "GE-C401-hupen",
+  "pathSegment": "GE-PATH-401-GURT",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GE-EXT-401-GURT",
+      "order": 1
+    }
+  ]
+}

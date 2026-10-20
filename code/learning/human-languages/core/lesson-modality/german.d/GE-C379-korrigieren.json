@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C379-korrigieren",
+    "language": "german",
+    "chapter": 379,
+    "sequence": 20550,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5cf9d7b3fd9677e3"
+  },
+  "findings": []
+}

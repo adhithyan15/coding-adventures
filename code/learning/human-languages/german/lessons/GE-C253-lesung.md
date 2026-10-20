@@ -44,7 +44,7 @@ present. This passage is twice as long, and it happened last Saturday.
 ## Reading
 <!-- hl-knowledge: introduces=[GE-SKILL-READ-NARRATIVE-01]; assesses=[GE-LEX-C192-THING192-04, GE-LEX-C116-DINGE116-02, GE-LEX-C159-THING159-05, GE-LEX-C105-ORT105-01, GE-LEX-C62-FAMILIE-01] -->
 
-> Es war Samstag, und es regnete. Ich wartete auf dem Bahnhof, aber der Zug
+> Es war Samstag, und es regnete. Ich wartete am Bahnhof, aber der Zug
 > hatte Verspätung. Zuerst kaufte ich einen Kaffee. Dann las ich die
 > Nachrichten auf meinem Handy. Als der Zug endlich kam, war ich sehr müde.
 >

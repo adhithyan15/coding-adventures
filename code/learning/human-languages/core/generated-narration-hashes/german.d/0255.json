@@ -1,7 +1,7 @@
 {
   "language": "german",
   "chapter": 255,
-  "sourceHash": "fnv1a64:a4ad974aea662ab5",
+  "sourceHash": "fnv1a64:c190b9dc0797a985",
   "lessonIds": [
     "GE-C255-du-solltest",
     "GE-C255-erklaeren",
@@ -11,7 +11,7 @@
   "drivablePrefix": 3,
   "text": "german/narration/ch255.txt",
   "json": "german/narration/ch255.json",
-  "textHash": "fnv1a64:a61b98d3aeaad26f",
-  "jsonHash": "fnv1a64:8965c7c0f9f483b4",
+  "textHash": "fnv1a64:8cf0236b3e03a607",
+  "jsonHash": "fnv1a64:c7c688ef07b5535c",
   "findings": []
 }

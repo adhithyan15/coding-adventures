@@ -1,0 +1,11 @@
+{
+  "id": "GE-C310-brauch",
+  "pathSegment": "GE-PATH-310-KARNEVAL",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-310-KARNEVAL",
+      "order": 4
+    }
+  ]
+}

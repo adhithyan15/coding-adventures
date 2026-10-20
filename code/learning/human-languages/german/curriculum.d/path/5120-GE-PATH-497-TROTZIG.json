@@ -1,0 +1,9 @@
+{
+  "id": "GE-PATH-497-TROTZIG",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "GE-EXT-497-TROTZIG"
+  ],
+  "after": []
+}

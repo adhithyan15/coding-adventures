@@ -1,0 +1,19 @@
+{
+  "chapter": 383,
+  "title": "Bei der Behörde",
+  "label": "ch:ge-bei-der-behorde",
+  "canDo": "I can deal with an authority: make an application, fill in a form and sign it.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "GE-C383-unterschrift",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 383: I can deal with an authority: make an application, fill in a form and sign it.",
+    "assesses": [
+      "GE-LEX-C383-ANTRAG-03",
+      "GE-LEX-C383-ANTRAG-04",
+      "GE-LEX-C383-ANTRAG-05"
+    ]
+  }
+}

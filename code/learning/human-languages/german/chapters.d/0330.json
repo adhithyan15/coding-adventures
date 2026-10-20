@@ -1,0 +1,19 @@
+{
+  "chapter": 330,
+  "title": "Mein Standpunkt",
+  "label": "ch:ge-mein-standpunkt",
+  "canDo": "I can state my point of view, say how I see a question and say which view I stand up for.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "GE-C330-vertreten",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 330: I can state my point of view, say how I see a question and say which view I stand up for.",
+    "assesses": [
+      "GE-LEX-C330-STANDPUNKT-03",
+      "GE-LEX-C330-STANDPUNKT-04",
+      "GE-LEX-C330-STANDPUNKT-05"
+    ]
+  }
+}

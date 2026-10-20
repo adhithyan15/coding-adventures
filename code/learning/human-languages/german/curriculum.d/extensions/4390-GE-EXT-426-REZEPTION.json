@@ -1,0 +1,8 @@
+{
+  "id": "GE-EXT-426-REZEPTION",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can arrive at and leave a hotel: the reception, arriving, leaving, the stay and checking out.",
+  "prerequisites": []
+}

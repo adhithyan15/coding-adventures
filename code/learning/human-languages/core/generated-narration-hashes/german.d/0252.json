@@ -1,7 +1,7 @@
 {
   "language": "german",
   "chapter": 252,
-  "sourceHash": "fnv1a64:2a7157709ac20a29",
+  "sourceHash": "fnv1a64:693de29fa530865f",
   "lessonIds": [
     "GE-C252-ich-ging",
     "GE-C252-ich-las",
@@ -12,7 +12,7 @@
   "drivablePrefix": 4,
   "text": "german/narration/ch252.txt",
   "json": "german/narration/ch252.json",
-  "textHash": "fnv1a64:dcf435a2931e83e4",
-  "jsonHash": "fnv1a64:062fb69019c2ea46",
+  "textHash": "fnv1a64:bfa86ff3e6650c6a",
+  "jsonHash": "fnv1a64:949c7d31a262b64f",
   "findings": []
 }

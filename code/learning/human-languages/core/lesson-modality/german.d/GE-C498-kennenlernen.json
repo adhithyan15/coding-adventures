@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C498-kennenlernen",
+    "language": "german",
+    "chapter": 498,
+    "sequence": 26640,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8e23e7fa49758ef8"
+  },
+  "findings": []
+}

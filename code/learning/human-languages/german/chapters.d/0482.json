@@ -1,0 +1,19 @@
+{
+  "chapter": 482,
+  "title": "Kleine Verletzungen",
+  "label": "ch:ge-kleine-verletzungen",
+  "canDo": "I can talk about small injuries and first aid.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "GE-C482-narbe",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 482: I can talk about small injuries and first aid.",
+    "assesses": [
+      "GE-LEX-C482-VERLETZUNG-03",
+      "GE-LEX-C482-VERLETZUNG-04",
+      "GE-LEX-C482-VERLETZUNG-05"
+    ]
+  }
+}

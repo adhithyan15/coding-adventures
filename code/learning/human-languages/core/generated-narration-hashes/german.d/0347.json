@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 347,
+  "sourceHash": "fnv1a64:0f530a08f7650c6e",
+  "lessonIds": [
+    "GE-C347-zufall",
+    "GE-C347-zufaellig",
+    "GE-C347-verhindern",
+    "GE-C347-vermeiden",
+    "GE-C347-weshalb"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch347.txt",
+  "json": "german/narration/ch347.json",
+  "textHash": "fnv1a64:f502780dd0816dea",
+  "jsonHash": "fnv1a64:dd6cf98ca8afcbdc",
+  "findings": []
+}

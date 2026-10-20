@@ -1,0 +1,11 @@
+{
+  "id": "GE-C527-buegeln",
+  "pathSegment": "GE-PATH-527-WAESCHE",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-527-WAESCHE",
+      "order": 3
+    }
+  ]
+}

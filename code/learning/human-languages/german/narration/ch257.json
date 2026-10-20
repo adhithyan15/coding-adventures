@@ -4,7 +4,7 @@
   "chapter": 257,
   "title": "At the Station — hin und zurück, den Zug verpasst",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:f61d7371f2079bc9",
+  "sourceHash": "fnv1a64:ec5b0a2a666bfefd",
   "lessons": [
     {
       "id": "GE-C257-hin-und-zurueck",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:bfda553c01c7bd3c",
+      "sourceHash": "fnv1a64:a1696af804b78c2c",
       "notice": null,
       "blocks": [
         {
@@ -89,7 +89,7 @@
             },
             {
               "kind": "speech",
-              "text": "In Switzerland the ticket is often das Billett, and a return is retour: einmal Bern retour. Fahrkarte is understood everywhere."
+              "text": "In Switzerland the ticket is often das Billett, and a return is retour: einmal Bern retour. In Austria, too, a return is often hin und retour. Fahrkarte is understood everywhere."
             }
           ]
         },
@@ -198,7 +198,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e3d260b44306f853",
+      "sourceHash": "fnv1a64:83037b308f1008b7",
       "notice": null,
       "blocks": [
         {
@@ -267,11 +267,11 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "der Zug from Middle High German zuc (EtymDB 2.1), which EtymDB traces, beside Old English tyge, to a Proto-Germanic word for \"a tug, a pull\". It belongs to the family of ziehen, \"to pull\": a train is the thing the engine pulls."
+              "text": "der Zug from Middle High German zuc (EtymDB 2.1). EtymDB sets it beside Old English tyge, which it traces to a Proto-Germanic word for \"a tug, a pull\". By the usual account it belongs to the family of ziehen, \"to pull\": a train is the thing the engine pulls."
             },
             {
               "kind": "speech",
-              "text": "verpassen, from chapter one hundred and ninety, is ver- + passen, from Dutch, and further back from French passer, \"to pass\": to let a thing pass you by."
+              "text": "verpassen, from chapter one hundred and ninety, is ver- + passen. EtymDB 2.1 traces passen to Dutch, and further back to French passer, \"to pass\": to let a thing pass you by."
             }
           ]
         },

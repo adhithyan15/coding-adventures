@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 262,
+  "sourceHash": "fnv1a64:664c5fbe18c4e46e",
+  "lessonIds": [
+    "GE-C262-zunaechst",
+    "GE-C262-anschliessend",
+    "GE-C262-daraufhin",
+    "GE-C262-zuletzt",
+    "GE-C262-reihenfolge"
+  ],
+  "tex": "german/book/chapters/ch262-zunachst-und-anschlie-end.tex"
+}

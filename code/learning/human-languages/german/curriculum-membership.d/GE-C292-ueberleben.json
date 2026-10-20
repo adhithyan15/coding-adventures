@@ -1,0 +1,11 @@
+{
+  "id": "GE-C292-ueberleben",
+  "pathSegment": "GE-PATH-292-RETTUNG",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-292-RETTUNG",
+      "order": 4
+    }
+  ]
+}
