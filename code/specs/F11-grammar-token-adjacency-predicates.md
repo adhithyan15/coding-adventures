@@ -53,12 +53,21 @@ For each token matched from a `.tokens` pattern, the `GrammarLexer` sets:
   emitted token and this one without becoming a token: a skip-pattern match
   (whitespace or a comment), the built-in whitespace skip (` `, `\t`, `\r`)
   used by grammars without `skip:` patterns, a newline swallowed inside
-  brackets in indentation mode, a token suppressed by an F04 callback, or a
-  built-in `NEWLINE` token.
+  brackets in indentation mode, a token suppressed by an F04 callback with
+  nothing emitted in its place, or a built-in `NEWLINE` token.
 - `TOKEN_PRECEDED_BY_NEWLINE` when that gap contains a line terminator: a skip
   match containing `\n`, `\r`, U+2028 or U+2029 (so a line break inside a
   multi-line `/* … */` comment counts, as ECMAScript requires), a built-in
-  `NEWLINE` token, or a suppressed token whose text contains a line terminator.
+  `NEWLINE` token, or a suppressed (unreplaced) token whose text contains a
+  line terminator.
+
+When an F04 callback suppresses a token **and emits replacements** (as
+excel-lexer turns `NAME` into `FUNCTION_NAME` before `(`), the first emitted
+token stands where the suppressed one stood: the suppressed token's gap bits
+are OR'd into that token's own `flags`, and the suppressed text is *not*
+trivia for what follows. So `SUM(1)` gives `FUNCTION_NAME` no flags and `(`
+no flags, and `x + SUM(1)` gives `FUNCTION_NAME` the space before it. Only a
+suppression with nothing emitted turns the suppressed text into trivia.
 
 The built-in `NEWLINE` token counts as trivia **for the token after it**: the
 next token is flagged `SPACE | NEWLINE`. This gives the same answer whether or
@@ -134,12 +143,38 @@ reserved E6/E7 forms fail loudly rather than parsing into something else:
 
 ## Validation
 
-`validate_parser_grammar` adds one check: a repetition (`{ }`, `{ }+`, or
-`{ x // sep }` when both `x` and `sep` are) whose body is made only of
-zero-width elements (predicates and `&`/`!` lookaheads) is an error, because
-it can never consume a token and the engine would loop forever. A body that
-merely *can* match empty (`{ [ X ] }`) is not flagged; that pre-existing
-hazard is outside F11. Predicates in any other position
+Termination does not depend on validation: `GrammarParser::new` never
+validates, so the engine stops any repetition after an empty iteration (see
+[Parser semantics](#parser-semantics)). Validation exists to tell the author.
+
+`validate_parser_grammar` adds a **nullability analysis**. A rule is nullable
+when its body can succeed without consuming a token, computed as a least
+fixpoint over the rules:
+
+| Element | Nullable when |
+| --- | --- |
+| token, literal | never |
+| `@p`, `&x`, `!x`, `[ x ]`, `{ x }`, `{ x // s }` | always |
+| `( x )`, `{ x }+` | `x` is |
+| `{ x // s }+` | `x` is |
+| `a b c` | every element is |
+| `a \| b \| c` | any choice is |
+| rule reference | the rule is |
+
+A repetition (`{ }`, `{ }+`, or `{ x // s }` when both `x` and `s` are
+nullable) whose body is nullable is reported:
+
+- as an **error** when the body contains an adjacency predicate, directly or
+  through the rules it references (`{ @space_before | NAME }`,
+  `{ @space_before [ NAME ] }`, `{ p }` with `p = @space_before`). That is new
+  F11 syntax, so no existing grammar is affected;
+- as a **`Warning:`** otherwise (`{ [ NAME ] }`). Twelve existing grammars,
+  all `csharp*.grammar` (`switch_block = LBRACE { switch_section } RBRACE`
+  with `switch_section = { switch_label } { statement }`), have such a body.
+  Making it an error would make them invalid; the engine guard already makes
+  them terminate.
+
+Predicates in any other position
 are valid, including as the last element of a rule (a trailing-context test)
 and as the only element of an alternative.
 
@@ -190,6 +225,15 @@ Consequences:
 
 - **Zero-width everywhere.** Inside `[ ]`, an alternative, a repetition body
   or `&`/`!`, a predicate behaves like a lookahead that consumed nothing.
+- **Repetitions always terminate.** `{ }`, `{ }+` and `{ x // s }` stop after
+  an iteration that succeeded but left the cursor where it was and performed
+  no `>>` split (a split matches a `>` without moving the cursor, which is
+  progress). That iteration is undone, so it adds no children. Matching is a
+  pure function of the position, so before this guard such an iteration
+  repeated forever, and through memo hits on a rule body grew the tree
+  without bound. A parse that terminated before the guard never reaches it,
+  so its result is unchanged; the guard only turns hangs into results (for
+  example the C# `switch_block` above).
 - **Packrat-safe.** A predicate reads only the token stream at the cursor (and
   at most one significant token further for `_after_next`). The memo key
   `(rule, position)` therefore still determines the result. The only mutation
@@ -237,12 +281,15 @@ Follow-ups, in order of value:
 - **grammar-tools:** each of the six predicates parses, also under `!`, `&`,
   `[ ]`, `{ }` with a consuming element, and after a token; unknown names and
   `@asi(...)` are rejected with clear messages; a bare `@` is rejected; the
-  zero-width-repetition validation fires and does not fire on mixed bodies;
+  nullability fixpoint; nullable repetitions are errors with a predicate
+  (including the security-review probes and nullability through rule
+  references), warnings without one, and silent when the body consumes;
   predicates add no token or rule references; `compile_parser_grammar` emits
   the qualified path and the emitted text round-trips.
 - **lexer:** space and newline bits from skip patterns, from multi-line block
   comments, from the built-in whitespace skip, after a built-in `NEWLINE`,
-  across an F10 mode switch, in indentation mode, for suppressed tokens; none
+  across an F10 mode switch, in indentation mode, for suppressed tokens with
+  and without an emitted replacement (excel-lexer style); none
   for adjacent tokens or across a newline inside a string.
 - **parser:** Ruby-style `f -1` (command argument) versus `f - 1` and `f-1`
   (binary), in all three equivalent spellings; ECMAScript-style
@@ -250,7 +297,9 @@ Follow-ups, in order of value:
   with newlines as (insignificant) `NEWLINE` tokens; postfix `++`; predicates
   under `&`, `!`, repetition and alternation; memoized rules reused at
   different gaps; error message and error token unchanged by a failing
-  predicate.
+  predicate; every nullable-repetition probe (`{ }`, `{ }+`, `{ x // s }`,
+  through a rule) terminates with the right tree or error, and a `>>` split
+  still counts as progress.
 - **Regression:** existing grammar consumers' test suites pass unchanged, and
   regenerating every Rust compiled grammar gives the same output before and
   after F11.

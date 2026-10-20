@@ -1161,13 +1161,23 @@ pub fn validate_parser_grammar(
         }
     }
 
-    // --- Repetitions that can never consume a token (F11) ---
+    // --- Repetitions whose body can match without consuming (F11) ---
     //
-    // `{ @space_before }` or `{ !X }` succeeds without moving the cursor, so
-    // the engine would repeat it forever. Reject a repetition whose body is
-    // built only from zero-width elements.
+    // `{ [ X ] }`, `{ @space_before | X }` or `{ p }` with `p = &X` can
+    // succeed on an iteration that consumes nothing. The parser no longer
+    // hangs on them (it stops the repetition after such an iteration), but
+    // the body is almost certainly not what the author meant.
+    //
+    // Policy: an error when the nullable body involves an adjacency
+    // predicate (new F11 syntax, so no existing grammar is affected); a
+    // `Warning:` otherwise, because pre-F11 grammars in this repository
+    // already contain nullable repetition bodies that parse correctly.
+    let facts = RepetitionFacts {
+        nullable: nullable_rules(grammar),
+        with_predicate: predicate_rules(grammar),
+    };
     for rule in &grammar.rules {
-        check_zero_width_repetitions(&rule.body, rule, &mut issues);
+        check_nullable_repetitions(&rule.body, rule, &facts, &mut issues);
     }
 
     // --- Unreachable rules ---
@@ -1186,72 +1196,163 @@ pub fn validate_parser_grammar(
     issues
 }
 
-/// Whether `element` is built only from zero-width elements (adjacency
-/// predicates and `&`/`!` lookaheads), so it can never consume a token.
-fn is_zero_width_only(element: &GrammarElement) -> bool {
-    match element {
-        GrammarElement::AdjacencyPredicate { .. }
-        | GrammarElement::PositiveLookahead { .. }
-        | GrammarElement::NegativeLookahead { .. } => true,
-        GrammarElement::Sequence { elements } => elements.iter().all(is_zero_width_only),
-        GrammarElement::Alternation { choices } => choices.iter().all(is_zero_width_only),
-        GrammarElement::Group { element }
-        | GrammarElement::Optional { element }
-        | GrammarElement::Repetition { element }
-        | GrammarElement::OneOrMore { element } => is_zero_width_only(element),
-        GrammarElement::SeparatedRepetition { element, separator, .. } => {
-            is_zero_width_only(element) && is_zero_width_only(separator)
+/// The rules that can succeed without consuming a token ("nullable" rules),
+/// computed as a least fixpoint.
+///
+/// ```text
+///   element                     nullable when
+///   -------                     -------------
+///   NAME, "x"                   never
+///   @p, &x, !x                  always (zero-width)
+///   [ x ], { x }                always (zero matches is a match)
+///   { x }+, ( x )               x is
+///   { x // s }                  always;  { x // s }+ : x is
+///   a b c                       every element is
+///   a | b | c                   any choice is
+///   rule                        the rule's body is (fixpoint)
+/// ```
+///
+/// Each round adds at least one rule or stops, so this takes at most
+/// `rules.len() + 1` rounds.
+pub fn nullable_rules(grammar: &ParserGrammar) -> HashSet<String> {
+    let mut nullable = HashSet::new();
+    loop {
+        let mut changed = false;
+        for rule in &grammar.rules {
+            if !nullable.contains(&rule.name) && is_nullable(&rule.body, &nullable) {
+                nullable.insert(rule.name.clone());
+                changed = true;
+            }
         }
-        GrammarElement::RuleReference { .. }
-        | GrammarElement::TokenReference { .. }
-        | GrammarElement::Literal { .. } => false,
+        if !changed {
+            return nullable;
+        }
     }
 }
 
-/// Walk `element` and report every repetition whose body is zero-width only.
-fn check_zero_width_repetitions(
+/// Whether `element` can succeed without consuming a token, given the set
+/// of nullable rules (see [`nullable_rules`]).
+fn is_nullable(element: &GrammarElement, nullable: &HashSet<String>) -> bool {
+    match element {
+        GrammarElement::AdjacencyPredicate { .. }
+        | GrammarElement::PositiveLookahead { .. }
+        | GrammarElement::NegativeLookahead { .. }
+        | GrammarElement::Optional { .. }
+        | GrammarElement::Repetition { .. } => true,
+        GrammarElement::OneOrMore { element } | GrammarElement::Group { element } => {
+            is_nullable(element, nullable)
+        }
+        GrammarElement::SeparatedRepetition { element, at_least_one, .. } => {
+            !*at_least_one || is_nullable(element, nullable)
+        }
+        GrammarElement::Sequence { elements } => elements.iter().all(|e| is_nullable(e, nullable)),
+        GrammarElement::Alternation { choices } => choices.iter().any(|c| is_nullable(c, nullable)),
+        GrammarElement::RuleReference { name } => nullable.contains(name),
+        GrammarElement::TokenReference { .. } | GrammarElement::Literal { .. } => false,
+    }
+}
+
+/// The rules whose body contains an adjacency predicate, directly or through
+/// the rules it references (least fixpoint, like [`nullable_rules`]).
+fn predicate_rules(grammar: &ParserGrammar) -> HashSet<String> {
+    let mut with = HashSet::new();
+    loop {
+        let mut changed = false;
+        for rule in &grammar.rules {
+            if !with.contains(&rule.name) && contains_predicate(&rule.body, &with) {
+                with.insert(rule.name.clone());
+                changed = true;
+            }
+        }
+        if !changed {
+            return with;
+        }
+    }
+}
+
+/// Whether `element` contains an adjacency predicate, directly or through a
+/// rule in `with`.
+fn contains_predicate(element: &GrammarElement, with: &HashSet<String>) -> bool {
+    match element {
+        GrammarElement::AdjacencyPredicate { .. } => true,
+        GrammarElement::RuleReference { name } => with.contains(name),
+        GrammarElement::TokenReference { .. } | GrammarElement::Literal { .. } => false,
+        GrammarElement::Sequence { elements } => elements.iter().any(|e| contains_predicate(e, with)),
+        GrammarElement::Alternation { choices } => choices.iter().any(|c| contains_predicate(c, with)),
+        GrammarElement::Repetition { element }
+        | GrammarElement::Optional { element }
+        | GrammarElement::Group { element }
+        | GrammarElement::PositiveLookahead { element }
+        | GrammarElement::NegativeLookahead { element }
+        | GrammarElement::OneOrMore { element } => contains_predicate(element, with),
+        GrammarElement::SeparatedRepetition { element, separator, .. } => {
+            contains_predicate(element, with) || contains_predicate(separator, with)
+        }
+    }
+}
+
+/// Facts the repetition check needs about the whole grammar.
+struct RepetitionFacts {
+    nullable: HashSet<String>,
+    with_predicate: HashSet<String>,
+}
+
+/// Walk `element` and report every repetition whose body can match without
+/// consuming a token (see the F11 policy note in `validate_parser_grammar`).
+fn check_nullable_repetitions(
     element: &GrammarElement,
     rule: &GrammarRule,
+    facts: &RepetitionFacts,
     issues: &mut Vec<String>,
 ) {
+    let mut report = |body: &GrammarElement, nullable_body: bool| {
+        if !nullable_body {
+            return;
+        }
+        let severity = if contains_predicate(body, &facts.with_predicate) {
+            ""
+        } else {
+            "Warning: "
+        };
+        issues.push(format!(
+            "{}Line {}: Rule '{}' repeats a body that can match without consuming a \
+             token; the parser stops such a repetition after its first empty \
+             iteration instead of looping",
+            severity, rule.line_number, rule.name
+        ));
+    };
     match element {
         GrammarElement::Repetition { element: body }
         | GrammarElement::OneOrMore { element: body } => {
-            if is_zero_width_only(body) {
-                issues.push(format!(
-                    "Line {}: Rule '{}' repeats a body made only of zero-width \
-                     predicates/lookaheads; it can never consume a token",
-                    rule.line_number, rule.name
-                ));
-            }
-            check_zero_width_repetitions(body, rule, issues);
+            report(body, is_nullable(body, &facts.nullable));
+            check_nullable_repetitions(body, rule, facts, issues);
         }
         GrammarElement::SeparatedRepetition { element: body, separator, .. } => {
-            if is_zero_width_only(body) && is_zero_width_only(separator) {
-                issues.push(format!(
-                    "Line {}: Rule '{}' repeats a body made only of zero-width \
-                     predicates/lookaheads; it can never consume a token",
-                    rule.line_number, rule.name
-                ));
+            let both = is_nullable(body, &facts.nullable) && is_nullable(separator, &facts.nullable);
+            if both {
+                let joined = GrammarElement::Sequence {
+                    elements: vec![(**separator).clone(), (**body).clone()],
+                };
+                report(&joined, true);
             }
-            check_zero_width_repetitions(body, rule, issues);
-            check_zero_width_repetitions(separator, rule, issues);
+            check_nullable_repetitions(body, rule, facts, issues);
+            check_nullable_repetitions(separator, rule, facts, issues);
         }
         GrammarElement::Sequence { elements } => {
             for e in elements {
-                check_zero_width_repetitions(e, rule, issues);
+                check_nullable_repetitions(e, rule, facts, issues);
             }
         }
         GrammarElement::Alternation { choices } => {
             for c in choices {
-                check_zero_width_repetitions(c, rule, issues);
+                check_nullable_repetitions(c, rule, facts, issues);
             }
         }
         GrammarElement::Group { element: inner }
         | GrammarElement::Optional { element: inner }
         | GrammarElement::PositiveLookahead { element: inner }
         | GrammarElement::NegativeLookahead { element: inner } => {
-            check_zero_width_repetitions(inner, rule, issues);
+            check_nullable_repetitions(inner, rule, facts, issues);
         }
         GrammarElement::RuleReference { .. }
         | GrammarElement::TokenReference { .. }
@@ -1845,21 +1946,70 @@ primary          = NUMBER ;
         assert!(validate_parser_grammar(&g, Some(&token_set)).is_empty());
     }
 
+    fn nullable_issues(grammar: &str) -> Vec<String> {
+        let g = parse_parser_grammar(grammar).unwrap();
+        validate_parser_grammar(&g, None)
+            .into_iter()
+            .filter(|i| i.contains("without consuming a token"))
+            .collect()
+    }
+
     #[test]
-    fn test_validation_rejects_zero_width_only_repetitions() {
-        for body in [
-            "{ @space_before }",
-            "{ @space_before !NAME }+",
-            "{ ( @newline_before | &NAME ) }",
-            "{ @space_before // @no_space_before }",
-            "[ { [ @no_space_before ] } ]",
+    fn test_validation_rejects_nullable_repetitions_with_predicates() {
+        for grammar in [
+            // Every path zero-width.
+            "r = NAME { @space_before } ;",
+            "r = NAME { @space_before !NAME }+ ;",
+            "r = NAME { ( @newline_before | &NAME ) } ;",
+            "r = NAME { @space_before // @no_space_before } ;",
+            "r = NAME [ { [ @no_space_before ] } ] ;",
+            // Only *some* path is empty (security review probes).
+            "prog = NAME { @space_before | NAME } SEMI ;",
+            "prog = NAME { @space_before [ NAME ] } SEMI ;",
+            "prog = NAME { !@no_space_before | NAME } SEMI ;",
+            // Nullable through a rule reference.
+            "prog = NAME { p } SEMI ;\np = @space_before ;",
+            "prog = NAME { p } SEMI ;\np = q ;\nq = [ @space_before NAME ] ;",
         ] {
-            let g = parse_parser_grammar(&format!("r = NAME {} ;", body)).unwrap();
-            let issues = validate_parser_grammar(&g, None);
-            assert_eq!(issues.len(), 1, "{}: {:?}", body, issues);
-            assert!(issues[0].contains("can never consume a token"), "{}", issues[0]);
-            assert!(issues[0].starts_with("Line 1: Rule 'r'"), "{}", issues[0]);
+            let issues = nullable_issues(grammar);
+            assert_eq!(issues.len(), 1, "{}: {:?}", grammar, issues);
+            assert!(issues[0].starts_with("Line 1: Rule '"), "{}", issues[0]);
+            assert!(issues[0].contains("stops such a repetition"), "{}", issues[0]);
         }
+    }
+
+    #[test]
+    fn test_validation_warns_on_nullable_repetitions_without_predicates() {
+        // Pre-F11 shapes. The C# grammars' `switch_block` has exactly the
+        // second one; the parser now stops after an empty iteration, so these
+        // are warnings, not errors.
+        for grammar in [
+            "r = NAME { [ NAME ] } ;",
+            "block = { section } ;\nsection = { label } { NAME } ;\nlabel = COLON ;",
+        ] {
+            let issues = nullable_issues(grammar);
+            assert_eq!(issues.len(), 1, "{}: {:?}", grammar, issues);
+            assert!(issues[0].starts_with("Warning: Line 1: Rule '"), "{}", issues[0]);
+        }
+    }
+
+    #[test]
+    fn test_separated_repetition_with_a_consuming_element_is_fine() {
+        // The separator may be nullable as long as the element consumes.
+        assert!(nullable_issues("r = { NAME // [ COMMA ] }+ ;").is_empty());
+        assert!(nullable_issues("r = { NAME // @no_space_before } ;").is_empty());
+    }
+
+    #[test]
+    fn test_nullable_rules_fixpoint() {
+        let g = parse_parser_grammar(
+            "a = b c ;\nb = [ NAME ] ;\nc = d | NAME ;\nd = &NAME ;\ne = NAME b ;\nf = { NAME // COMMA }+ ;\nh = { b }+ ;",
+        )
+        .unwrap();
+        let nullable = nullable_rules(&g);
+        let mut names: Vec<&str> = nullable.iter().map(|s| s.as_str()).collect();
+        names.sort();
+        assert_eq!(names, vec!["a", "b", "c", "d", "h"]);
     }
 
     #[test]

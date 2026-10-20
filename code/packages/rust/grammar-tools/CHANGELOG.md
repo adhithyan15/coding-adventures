@@ -16,10 +16,16 @@ All notable changes to this project will be documented in this file.
 - `compile_parser_grammar` emits predicates with the fully qualified path
   `grammar_tools::parser_grammar::AdjacencyPredicate::…`, so the generated
   `use` line is unchanged.
-- Validation: a repetition (`{ }`, `{ }+`, `{ x // sep }`) whose body is made
-  only of zero-width elements (predicates, `&`/`!` lookaheads) is an error,
-  because it could never consume a token.
-- 14 tests: every predicate by name, the truth table, the LANG84 examples,
+- Validation: a nullability analysis (`nullable_rules`, a least fixpoint over
+  the rules) reports every repetition (`{ }`, `{ }+`, `{ x // sep }`) whose
+  body can match without consuming a token. It is an error when the body
+  involves an adjacency predicate (directly or through referenced rules) and
+  a `Warning:` otherwise, because 12 existing `csharp*.grammar` files
+  (`switch_block`) already have such a body. The message says what the
+  parser does (stops after the first empty iteration). This replaces a first
+  version that only rejected bodies where *every* path was zero-width and so
+  passed `{ @space_before | NAME }` (security review).
+- 17 tests: every predicate by name, the truth table, the LANG84 examples,
   predicates after tokens and under `&`/`!`/`[ ]`/`{ }+`, error messages, no
   reference side effects, validation both ways, and compiler emission.
 

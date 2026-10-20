@@ -28,9 +28,14 @@ predicates (`@space_before`, `@no_newline_before`, …) read these bits. See
   `flags: None` fixtures need the new bit. The JavaScript ASI pass, the only
   previous reader of the newline flag, skips newlines as whitespace and is
   unaffected (javascript-parser: 263 tests pass).
+- A token suppressed by an F04 callback that emits a replacement in its place
+  (excel-lexer's `NAME` → `FUNCTION_NAME`) hands its gap to the first emitted
+  token (OR'd into that token's own flags) and is not trivia for the next
+  token, so `SUM(1)` leaves `(` unflagged. Only a suppression with nothing
+  emitted becomes trivia. (Security review: the first version flagged `(`.)
 - F10 mode switches and skip toggles need no special handling: the bits
   describe what was consumed, whichever group consumed it.
-- New `tests/adjacency_flags.rs` (14 tests): skip patterns, multi-line
+- New `tests/adjacency_flags.rs` (15 tests): skip patterns, multi-line
   comments, newlines inside tokens, built-in whitespace and `NEWLINE`, lone
   `\r`, F10 modes, `disable-skip`, indentation mode, callback suppression,
   context keywords, and unchanged values and positions.

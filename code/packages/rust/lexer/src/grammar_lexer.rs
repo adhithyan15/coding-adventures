@@ -1421,6 +1421,19 @@ impl<'a> GrammarLexer<'a> {
                         tokens.push(token);
                     }
 
+                    // F11: if the callback suppressed this token, its gap
+                    // still has to land somewhere. When the callback emits a
+                    // replacement (excel-lexer turns NAME into FUNCTION_NAME
+                    // this way), the first emitted token stands where the
+                    // suppressed one stood, so it inherits the gap. Only when
+                    // nothing replaces it does the suppressed text become
+                    // trivia for the next matched token (below).
+                    let mut unplaced_gap = if main_token_for_trans.is_none() {
+                        Some(gap_bits)
+                    } else {
+                        None
+                    };
+
                     // Process actions in order.
                     for action in ctx.actions {
                         match action {
@@ -1432,7 +1445,13 @@ impl<'a> GrammarLexer<'a> {
                                     self.group_stack.pop();
                                 }
                             }
-                            ContextAction::Emit(emitted_token) => {
+                            ContextAction::Emit(mut emitted_token) => {
+                                if let Some(bits) = unplaced_gap.take() {
+                                    if bits != 0 {
+                                        emitted_token.flags =
+                                            Some(emitted_token.flags.unwrap_or(0) | bits);
+                                    }
+                                }
                                 self.bracket_depths.update(&emitted_token.value);
                                 self.last_emitted_token = Some(emitted_token.clone());
                                 tokens.push(emitted_token);
@@ -1446,11 +1465,11 @@ impl<'a> GrammarLexer<'a> {
                         }
                     }
 
-                    // F11: a suppressed token becomes trivia for the next
-                    // emitted token — it separates it from the previous one —
-                    // and the gap before it is not lost.
-                    if main_token_for_trans.is_none() {
-                        self.restore_gap_flags(gap_bits, &matched);
+                    // F11: a suppressed token that nothing replaced becomes
+                    // trivia for the next matched token — it separates it
+                    // from the previous one — and the gap before it is kept.
+                    if let Some(bits) = unplaced_gap {
+                        self.restore_gap_flags(bits, &matched);
                     }
 
                     // F10: the declarative table is the default; a registered

@@ -4,6 +4,20 @@ All notable changes to the `parser` crate will be documented in this file.
 
 ## Unreleased
 
+### Fixed — repetitions with a body that matches nothing no longer hang
+
+`{ }`, `{ }+` and `{ x // sep }` now stop after an iteration that succeeded
+without moving the cursor or splitting a `>>` token, undoing that iteration.
+Before, a body that can match empty (`{ [ NAME ] }`, `{ @space_before | NAME }`,
+`{ p }` with `p = @space_before`) repeated forever, and through memo hits on a
+rule body grew the tree until memory ran out. `GrammarParser::new` does not
+validate, so the engine itself now guarantees termination. Parses that
+terminated before are unchanged (such an iteration was always followed by an
+identical one). This also covers the C# grammars' nullable `switch_block`
+body. New `tests/repetition_progress.rs` (4 tests): the security review's
+probe grammars, `{ }+` and separated forms, ordered-choice results, and a
+`>>` split still counting as progress.
+
 ### Added — token-adjacency predicates (F11, LANG84 E6)
 
 `GrammarParser` evaluates the new `GrammarElement::AdjacencyPredicate`

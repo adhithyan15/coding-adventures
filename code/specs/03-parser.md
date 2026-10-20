@@ -182,7 +182,12 @@ They consume nothing, add no AST children, and record no expectation for
 error messages. They work inside alternation, repetition, optional groups and
 `&`/`!` lookahead, and they keep packrat memoization exact because they read
 only the token stream at the cursor. Using `@newline_before` does not make a
-grammar newline-significant. Full semantics:
+grammar newline-significant.
+
+Because a predicate (like `[ x ]` or a lookahead) can succeed without
+consuming, every repetition (`{ }`, `{ }+`, `{ x // sep }`) stops after an
+iteration that matched nothing, so the engine terminates on any grammar,
+validated or not. Full semantics:
 [F11](F11-grammar-token-adjacency-predicates.md).
 
 ## Future Extensions

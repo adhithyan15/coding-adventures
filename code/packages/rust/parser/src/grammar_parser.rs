@@ -903,6 +903,12 @@ impl GrammarParser {
                 loop {
                     let rep_checkpoint = self.checkpoint();
                     match self.match_element(inner) {
+                        Some(_) if self.made_no_progress(rep_checkpoint) => {
+                            // See `made_no_progress`: stop instead of looping
+                            // forever on a body that matched nothing.
+                            self.restore_to(rep_checkpoint);
+                            break;
+                        }
                         Some(mut result) => children.append(&mut result),
                         None => {
                             self.restore_to(rep_checkpoint);
@@ -1036,6 +1042,10 @@ impl GrammarParser {
                         loop {
                             let rep_checkpoint = self.checkpoint();
                             match self.match_element(inner) {
+                                Some(_) if self.made_no_progress(rep_checkpoint) => {
+                                    self.restore_to(rep_checkpoint);
+                                    break;
+                                }
                                 Some(mut result) => children.append(&mut result),
                                 None => {
                                     self.restore_to(rep_checkpoint);
@@ -1077,6 +1087,10 @@ impl GrammarParser {
                                             self.restore_to(sep_checkpoint);
                                             break;
                                         }
+                                        Some(_) if self.made_no_progress(sep_checkpoint) => {
+                                            self.restore_to(sep_checkpoint);
+                                            break;
+                                        }
                                         Some(mut next_children) => {
                                             children.append(&mut sep_children);
                                             children.append(&mut next_children);
@@ -1090,6 +1104,23 @@ impl GrammarParser {
                 }
             }
         }
+    }
+
+    /// Whether a repetition iteration that just *succeeded* left the parse
+    /// exactly where `checkpoint` was: same cursor, and no `>>` split
+    /// performed (a split matches a `>` without advancing the cursor, which
+    /// is real progress).
+    ///
+    /// Such an iteration matched nothing, and since matching is a pure
+    /// function of the position, every later iteration would do the same:
+    /// `{ [ X ] }`, `{ @space_before | X }` or `{ p }` with `p = &X` would
+    /// loop forever, and with a memoized rule body would also push a node per
+    /// turn until memory runs out. The repetition loops (`{ }`, `{ }+`,
+    /// `{ x // sep }`) therefore restore that iteration and stop. Any parse
+    /// that terminated before this guard existed never reached this state,
+    /// so its result is unchanged; the guard only turns hangs into results.
+    fn made_no_progress(&self, checkpoint: Checkpoint) -> bool {
+        self.pos == checkpoint.pos && self.split_undo_log.len() == checkpoint.undo_len
     }
 
     // =========================================================================

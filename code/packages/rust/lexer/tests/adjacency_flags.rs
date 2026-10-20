@@ -383,3 +383,57 @@ skip:
         assert_eq!(gaps(&toks), g(&[("a", 0), ("b", expected), ("<EOF>", 0)]), "{:?}", src);
     }
 }
+
+#[test]
+fn a_suppressed_token_with_a_replacement_hands_its_gap_to_the_replacement() {
+    // excel-lexer style: a NAME directly followed by `(` is suppressed and
+    // re-emitted as FUNCTION_NAME. The replacement stands where the original
+    // stood, so it inherits the gap, and the `(` after it must not.
+    let gr = grammar(
+        r#"
+NAME   = /[A-Za-z]+/
+NUMBER = /[0-9]+/
+PLUS   = "+"
+LPAREN = "("
+RPAREN = ")"
+skip:
+  WS = /[ \n]+/
+"#,
+    );
+    let lex_fn = |src: &str| {
+        let mut lx = GrammarLexer::new(src, &gr);
+        lx.set_on_token(Some(Box::new(|t: &Token, ctx: &mut LexerContext| {
+            if t.effective_type_name() == "NAME" && ctx.peek(1) == "(" {
+                ctx.suppress();
+                ctx.emit(Token {
+                    type_name: Some("FUNCTION_NAME".to_string()),
+                    flags: None,
+                    ..t.clone()
+                });
+            }
+        })));
+        lx.tokenize().unwrap()
+    };
+    let toks = lex_fn("SUM(1)");
+    assert_eq!(toks[0].type_name.as_deref(), Some("FUNCTION_NAME"));
+    assert_eq!(gaps(&toks), g(&[("SUM", 0), ("(", 0), ("1", 0), (")", 0), ("<EOF>", 0)]));
+
+    let toks = lex_fn("x +\nSUM(1)");
+    assert_eq!(
+        gaps(&toks),
+        g(&[("x", 0), ("+", S), ("SUM", S | N), ("(", 0), ("1", 0), (")", 0), ("<EOF>", 0)])
+    );
+    // A callback-emitted token's own flags are kept and the gap is OR'd in.
+    let mut lx = GrammarLexer::new("a b", &gr);
+    lx.set_on_token(Some(Box::new(|t: &Token, ctx: &mut LexerContext| {
+        if t.value == "b" {
+            ctx.suppress();
+            ctx.emit(Token { flags: Some(TOKEN_CONTEXT_KEYWORD), ..t.clone() });
+            ctx.emit(Token { value: "c".to_string(), flags: None, ..t.clone() });
+        }
+    })));
+    let toks = lx.tokenize().unwrap();
+    assert_eq!(toks[1].flags, Some(TOKEN_CONTEXT_KEYWORD | S));
+    // Only the first replacement inherits the gap.
+    assert_eq!(toks[2].flags, None);
+}
