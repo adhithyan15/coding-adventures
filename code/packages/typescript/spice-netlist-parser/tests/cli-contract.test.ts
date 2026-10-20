@@ -72,6 +72,8 @@ describe("Berkeley SPICE CLI contract", () => {
           temperatureKelvin: readonly number[];
           outputTemperaturesKelvin: readonly number[];
           measureTemperaturesKelvin: readonly number[];
+          measureAnalyses: readonly string[];
+          measureNames: readonly string[];
         };
       }[];
     };
@@ -79,13 +81,15 @@ describe("Berkeley SPICE CLI contract", () => {
     const payload = JSON.parse(runNetlistJson(testCase.deck)) as {
       analyses: readonly { index: number; temperatureKelvin: number }[];
       outputs: readonly { temperatureKelvin: number }[];
-      measures: readonly { temperatureKelvin: number }[];
+      measures: readonly { temperatureKelvin: number; analysis: string; name: string }[];
     };
 
     expect(payload.analyses.map((analysis) => analysis.index)).toEqual(testCase.expected.analysisIndexes);
     expect(payload.analyses.map((analysis) => analysis.temperatureKelvin)).toEqual(testCase.expected.temperatureKelvin);
     expect(payload.outputs.map((output) => output.temperatureKelvin)).toEqual(testCase.expected.outputTemperaturesKelvin);
     expect(payload.measures.map((measure) => measure.temperatureKelvin)).toEqual(testCase.expected.measureTemperaturesKelvin);
+    expect(payload.measures.map((measure) => measure.analysis)).toEqual(testCase.expected.measureAnalyses);
+    expect(payload.measures.map((measure) => measure.name)).toEqual(testCase.expected.measureNames);
   });
 
   it("exposes deck-selected outputs and evaluated measures", () => {
