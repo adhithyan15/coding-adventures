@@ -93,8 +93,11 @@ thread with an enlarged stack. The size is a reservation, so pages are touched
 only as deep recursion needs them. Without the worker, the reachable depth
 would depend on the platform's main-thread stack: 8 MiB on macOS and Linux,
 1 MiB on Windows. With it, the depth is the same everywhere. A panic in the
-worker is re-raised on the caller. If the thread cannot be spawned, the
-compile runs on the caller's stack.
+worker is re-raised on the caller. If the thread can't be spawned (for
+example because an address-space or thread limit can't hold the
+reservation), the compile fails closed. It returns `CompilerError::CompilerThread`
+and exits 2. Falling back to the caller's smaller stack would let an input
+inside the bound overflow it.
 
 Constant-fold already ran on its own worker. Its stack (`FOLD_STACK_SIZE`)
 rises from 128 MiB to 1 GiB, because `fold_call` keeps a large frame and was
@@ -119,6 +122,14 @@ The bound admits about 8,000 `+` operands. A release build of the compiler
 before this change compiled 8,000-term chains and aborted at 16,000, so the
 bound doesn't refuse anything that used to compile. The issue's 10,000-term
 reproduction costs about 20,000 units, so it now fails cleanly.
+
+### Memory cost
+
+The reservations are virtual, but a hostile input inside the bound really
+does touch its stack. A ~33 KB input of 16,000 calls touched about 630 MiB in
+a debug build. The worst case per process is bounded by the reservations:
+1 GiB for the compiler thread, 1 GiB for fold, 128 MiB for emit. A service
+that compiles untrusted JavaScript in parallel should cap per-process memory.
 
 ## Upstream parity
 

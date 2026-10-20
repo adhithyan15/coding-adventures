@@ -98,19 +98,49 @@ impl Shape {
     }
 }
 
-/// Write `source` to a fresh file and compile it.
-fn compile(tag: &str, source: &str, level: &str) -> Output {
-    let dir = std::env::temp_dir().join(format!("closurec-chain-depth-{}", std::process::id()));
-    std::fs::create_dir_all(&dir).expect("temp dir");
-    let path: PathBuf = dir.join(format!("{tag}-{level}.js"));
-    std::fs::write(&path, source).expect("write input");
-    let out = Command::new(BINARY)
-        .args(["--compilation_level", level, "--js"])
-        .arg(&path)
-        .output()
-        .expect("run closurec");
-    let _ = std::fs::remove_file(&path);
-    out
+/// A private scratch directory for this test process, created exclusively
+/// (`create_dir`, not `create_dir_all`) so a pre-planted directory or symlink
+/// in a shared temp root is an error rather than something we write through.
+/// Removed when dropped.
+struct Scratch(PathBuf);
+
+impl Scratch {
+    fn new(test: &str) -> Scratch {
+        let nanos = std::time::SystemTime::now()
+            .duration_since(std::time::UNIX_EPOCH)
+            .map(|d| d.as_nanos())
+            .unwrap_or(0);
+        let dir = std::env::temp_dir().join(format!(
+            "closurec-chain-depth-{test}-{}-{nanos}",
+            std::process::id()
+        ));
+        std::fs::create_dir(&dir).expect("create a fresh scratch dir");
+        Scratch(dir)
+    }
+
+    /// Write `source` to a new file in the scratch dir and compile it.
+    fn compile(&self, tag: &str, source: &str, level: &str) -> Output {
+        let path = self.0.join(format!("{tag}-{level}.js"));
+        std::fs::OpenOptions::new()
+            .write(true)
+            .create_new(true)
+            .open(&path)
+            .and_then(|mut file| std::io::Write::write_all(&mut file, source.as_bytes()))
+            .expect("write input");
+        let out = Command::new(BINARY)
+            .args(["--compilation_level", level, "--js"])
+            .arg(&path)
+            .output()
+            .expect("run closurec");
+        std::fs::remove_file(&path).expect("remove input");
+        out
+    }
+}
+
+impl Drop for Scratch {
+    fn drop(&mut self) {
+        let _ = std::fs::remove_dir_all(&self.0);
+    }
 }
 
 /// The process ended with an exit code — not killed by a signal, which is how
@@ -123,8 +153,9 @@ fn exited_normally(out: &Output) -> bool {
 fn the_issue_repro_fails_cleanly_instead_of_aborting() {
     // 10,000 `+` operands cost about 20,000 spine units, past the bound.
     let source = format!("var x = 1;\nconsole.log({});\n", vec!["x"; 10_000].join(" + "));
+    let scratch = Scratch::new("issue");
     for level in ["SIMPLE", "ADVANCED"] {
-        let out = compile("issue-16009", &source, level);
+        let out = scratch.compile("issue-16009", &source, level);
         let stderr = String::from_utf8_lossy(&out.stderr);
         assert!(exited_normally(&out), "{level}: killed by a signal: {stderr}");
         assert!(!out.status.success(), "{level}: a 10,000-term chain is past the bound");
@@ -144,10 +175,11 @@ fn every_chain_shape_compiles_up_to_the_bound_and_fails_cleanly_past_it() {
     // Sequential on purpose: each deep compile can touch a few hundred MiB of
     // stack in a debug build, so running them in parallel would only add
     // memory pressure.
+    let scratch = Scratch::new("shapes");
     for shape in SHAPES {
         let deepest = shape.deepest_admitted();
         for level in ["SIMPLE", "ADVANCED"] {
-            let at_bound = compile(shape.name, &shape.source(deepest), level);
+            let at_bound = scratch.compile(&format!("{}-at", shape.name), &shape.source(deepest), level);
             assert!(
                 at_bound.status.success(),
                 "{} × {deepest} at {level} must compile: {:?} {}",
@@ -156,7 +188,7 @@ fn every_chain_shape_compiles_up_to_the_bound_and_fails_cleanly_past_it() {
                 String::from_utf8_lossy(&at_bound.stderr),
             );
 
-            let past = compile(shape.name, &shape.source(deepest + 1), level);
+            let past = scratch.compile(&format!("{}-past", shape.name), &shape.source(deepest + 1), level);
             let stderr = String::from_utf8_lossy(&past.stderr);
             assert!(exited_normally(&past), "{} past the bound: killed: {stderr}", shape.name);
             assert!(!past.status.success() && past.stdout.is_empty());

@@ -146,6 +146,11 @@ pub enum CompilerError {
         stage: TypedPipelineStage,
         message: String,
     },
+    /// The compiler thread (CLOC42) could not be started, typically because
+    /// the address space or thread limit can't hold its stack reservation.
+    /// The compile fails closed rather than running on the caller's smaller
+    /// stack, where an input inside `MAX_CHAIN_SPINE` could overflow it.
+    CompilerThread { message: String },
 }
 
 fn compilation_level_name(level: CompilationLevel) -> &'static str {
@@ -181,6 +186,11 @@ impl std::fmt::Display for CompilerError {
             CompilerError::Define(e) => write!(f, "{e}"),
             CompilerError::Wrapper(e) => write!(f, "{e}"),
             CompilerError::PrintTree(e) => write!(f, "{e}"),
+            CompilerError::CompilerThread { message } => write!(
+                f,
+                "could not start the compiler thread with a {} MiB stack: {message}",
+                COMPILER_STACK_SIZE / (1024 * 1024),
+            ),
             CompilerError::TypedPipeline {
                 level,
                 stage,
@@ -1065,7 +1075,9 @@ const COMPILER_STACK_SIZE: usize = 1024 * 1024 * 1024;
 
 /// Run the compiler with `config`, on a dedicated thread with
 /// [`COMPILER_STACK_SIZE`] of stack (CLOC42). A panic inside the compile is
-/// re-raised on the caller, exactly as if it had run here.
+/// re-raised on the caller, exactly as if it had run here. If the thread
+/// cannot be started the compile fails with [`CompilerError::CompilerThread`]
+/// (exit 2) rather than running on a stack too small for admitted inputs.
 pub fn run_compiler(config: &CompilerConfig) -> Result<CompilerOutput, CompilerError> {
     std::thread::scope(|scope| {
         let worker = std::thread::Builder::new()
@@ -1076,9 +1088,11 @@ pub fn run_compiler(config: &CompilerConfig) -> Result<CompilerOutput, CompilerE
             Ok(handle) => handle
                 .join()
                 .unwrap_or_else(|panic| std::panic::resume_unwind(panic)),
-            // No thread (address space exhausted, thread limit hit): compile
-            // here rather than fail — shallow inputs never needed the stack.
-            Err(_) => run_compiler_on_this_stack(config),
+            // No thread (address-space or thread limit). Fail closed: the
+            // caller's stack is too small for inputs the bound admits.
+            Err(error) => Err(CompilerError::CompilerThread {
+                message: error.to_string(),
+            }),
         }
     })
 }

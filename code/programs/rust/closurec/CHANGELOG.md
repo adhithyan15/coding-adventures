@@ -19,6 +19,9 @@ with SIGABRT (exit 134) and gave no diagnostic. Two changes fix this:
 - **Compiler thread.** `run_compiler` runs the compile on a worker thread with
   a 1 GiB stack reservation. Every chain within the bound therefore compiles
   on every platform, including Windows, where the main thread only has 1 MiB.
+  If that thread can't be started, the compile fails closed with exit 2
+  (`could not start the compiler thread …`) instead of running on a smaller
+  stack.
 
 `tests/regression_chain_depth.rs` checks both changes in a debug build:
 
