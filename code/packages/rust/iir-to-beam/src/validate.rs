@@ -113,6 +113,8 @@ use interpreter_ir::{IIRModule, Operand};
 pub(crate) const CALL_BUILTIN_SUPPORTED_NAMES: &[&str] = &[
     "pair?", "equal?", "not", "print_i64", "putchar", "getchar", "input_more", "input_i64",
     "input_str",
+    // LANG83 PR1b: `io:format("~w", [X])` — `print_i64` without the newline.
+    "write_i64",
 ];
 
 const UNSUPPORTED_OPS: &[&str] = &[

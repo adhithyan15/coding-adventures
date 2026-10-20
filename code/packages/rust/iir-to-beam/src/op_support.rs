@@ -22,8 +22,8 @@
 //!
 //! See `code/specs/LANG83-iir-standard-operation-registry.md`.
 
-use interpreter_ir::op_registry::{support_from_table, OpSupport, NOT_YET_LOWERED_PR1B};
-use OpSupport::{Lowered, Refused};
+use interpreter_ir::op_registry::{support_from_table, OpSupport};
+use OpSupport::Lowered;
 
 /// This backend's answer for every LANG83 standard operation.
 pub const OP_SUPPORT: &[(&str, OpSupport)] = &[
@@ -31,7 +31,7 @@ pub const OP_SUPPORT: &[(&str, OpSupport)] = &[
     ("print_i64", Lowered),
     ("putchar", Lowered),
     ("print_str", Lowered),
-    ("write_i64", Refused(NOT_YET_LOWERED_PR1B)),
+    ("write_i64", Lowered),
     // ── Strings (LANG-FULL E4) ──────────────────────────────────────────────
     ("str_const", Lowered),
     ("str_len", Lowered),
@@ -47,8 +47,8 @@ pub const OP_SUPPORT: &[(&str, OpSupport)] = &[
     ("div", Lowered),
     ("mod", Lowered),
     ("neg", Lowered),
-    ("i64_div_floor", Refused(NOT_YET_LOWERED_PR1B)),
-    ("i64_mod_floor", Refused(NOT_YET_LOWERED_PR1B)),
+    ("i64_div_floor", Lowered),
+    ("i64_mod_floor", Lowered),
     // ── Comparison ──────────────────────────────────────────────────────────
     ("cmp_eq", Lowered),
     ("cmp_ne", Lowered),
@@ -70,7 +70,7 @@ pub const OP_SUPPORT: &[(&str, OpSupport)] = &[
     ("real_to_int_trunc", Lowered),
     ("real_to_int_floor", Lowered),
     // ── Errors ──────────────────────────────────────────────────────────────
-    ("trap", Refused(NOT_YET_LOWERED_PR1B)),
+    ("trap", Lowered),
 ];
 
 /// What this backend does with the standard operation `name` (LANG83).
@@ -92,9 +92,9 @@ mod tests {
     }
 
     #[test]
-    fn pr1b_ops_are_refused_until_pr1b_lowers_them() {
+    fn pr1b_ops_are_lowered() {
         for spec in STANDARD_OPS.iter().filter(|s| s.is_pr1b()) {
-            assert_eq!(op_support(spec.name), Refused(NOT_YET_LOWERED_PR1B), "{}", spec.name);
+            assert_eq!(op_support(spec.name), Lowered, "{}", spec.name);
         }
         assert!(!op_support("not_a_standard_op").is_lowered());
     }
