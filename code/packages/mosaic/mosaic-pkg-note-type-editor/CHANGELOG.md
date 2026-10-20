@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+### Added — the card templates save on Ctrl/Cmd+Enter (UI25 §4)
+
+The front and back template text areas take `onCommit : emit: onSaveNoteType`:
+Enter is a line break, and Ctrl+Enter (Cmd+Enter on macOS) saves the note type,
+as the Save button does. The package test pins both.
+
 ### Fixed — 5 stale style-drop pins removed (X-7)
 
 The emitters now lower these, so the gate's inverse ratchet

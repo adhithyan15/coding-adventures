@@ -1180,7 +1180,7 @@ fn emit_html_tree(
     // -----------------------------------------------------------------
     match node.tag.as_str() {
         "HostSurface" => return Ok(emit_host_surface(node, part_styles)),
-        "HostInput" | "Input" => return emit_host_input(node, part_styles),
+        "HostInput" | "Input" => return emit_host_input(node, part_styles, ctx),
         "HostButton" => return emit_host_button(node, ctx, part_styles),
         "HostDialog" => return emit_host_dialog(node, ctx, part_styles),
 
@@ -1707,11 +1707,16 @@ fn layout_value_to_js_expr(v: &LayoutPropValue) -> String {
 /// - `read-only: true`    → `readonly`
 /// - `onChange: emit: onX` → `onchange="this.getRootNode().host.dispatch({type:'x', value:event.target.value})"`
 /// - `onCommit: emit: onX` + `onCancel: emit: onY` → merged `onkeydown` handler
+///   (Enter commits a single-line field, Ctrl/Cmd+Enter a `<textarea>`)
 ///
 /// All inline handlers reach the host via `this.getRootNode().host`
 /// because in the shadow DOM `this` inside an inline handler is the
 /// element where the handler is declared, not the Custom Element.
-fn emit_host_input(node: &LayoutNode, part_styles: &HtmlStyles) -> Result<String, PipelineEmitError> {
+fn emit_host_input(
+    node: &LayoutNode,
+    part_styles: &HtmlStyles,
+    ctx: &RenderCtx<'_>,
+) -> Result<String, PipelineEmitError> {
     // `multiline: true` is a `<textarea>` on both primitives, the legacy
     // `Input` and the kernel `HostInput` (UI29 §2.1). Reading it only on the
     // legacy tag turned every multiline `HostInput` into a one-line
@@ -1793,24 +1798,40 @@ fn emit_host_input(node: &LayoutNode, part_styles: &HtmlStyles) -> Result<String
     if let Some(emit_name) = find_emit_ref(node, "onChange") {
         let type_field = to_camel_case_first_lower(&strip_on_prefix(emit_name));
         if is_safe_identifier(&type_field) {
+            let payload = text_field_payload(ctx, emit_name, ",value:event.target.value");
             attrs.push_str(&format!(
-                r#" onchange="this.getRootNode().host.dispatch({{type:'{type_field}',value:event.target.value}})""#
+                r#" onchange="this.getRootNode().host.dispatch({{type:'{type_field}'{payload}}})""#
             ));
         }
     }
 
-    // onkeydown — merges onCommit (Enter) and onCancel (Escape). In a text
-    // area Enter is a line break, so a multiline field has no commit key.
-    let commit = find_emit_ref(node, "onCommit").filter(|_| !multiline);
+    // onkeydown — merges onCommit and onCancel (Escape). A single-line field
+    // commits on Enter. In a text area Enter is a line break, so the commit
+    // key is UI25 §4's Ctrl+Enter (Windows, Linux) or Cmd+Enter (macOS):
+    // `ctrlKey||metaKey` covers both without sniffing the platform, and
+    // `preventDefault()` keeps the chord from ever reaching the text.
+    //
+    //   field       | handler branch
+    //   ------------+---------------------------------------------------------
+    //   single-line | if(event.key==='Enter')<dispatch>;
+    //   multiline   | if(event.key==='Enter'&&(event.ctrlKey||event.metaKey)){
+    //               |   event.preventDefault();<dispatch>;}
+    let commit = find_emit_ref(node, "onCommit");
     let cancel = find_emit_ref(node, "onCancel");
     if commit.is_some() || cancel.is_some() {
         let mut body = String::new();
         if let Some(e) = commit {
             let t = to_camel_case_first_lower(&strip_on_prefix(e));
             if is_safe_identifier(&t) {
-                body.push_str(&format!(
-                    "if(event.key==='Enter')this.getRootNode().host.dispatch({{type:'{t}'}});"
-                ));
+                let payload = text_field_payload(ctx, e, "");
+                let dispatch = format!("this.getRootNode().host.dispatch({{type:'{t}'{payload}}});");
+                if multiline {
+                    body.push_str(&format!(
+                        "if(event.key==='Enter'&&(event.ctrlKey||event.metaKey)){{event.preventDefault();{dispatch}}}"
+                    ));
+                } else {
+                    body.push_str(&format!("if(event.key==='Enter'){dispatch}"));
+                }
             }
         }
         if let Some(e) = cancel {
@@ -1832,6 +1853,46 @@ fn emit_host_input(node: &LayoutNode, part_styles: &HtmlStyles) -> Result<String
         attrs.push_str(" />");
     }
     Ok(attrs)
+}
+
+/// The payload fields a text field's inline dispatch carries for `emit_name`
+/// (`onChange` or `onCommit`), as a `,field:expr` suffix for the dispatched
+/// object literal.
+///
+/// The field is the declared parameter's camel-cased name — the same key the
+/// element's own `onX(param)` method dispatches — and the value is the
+/// field's current text, read as the parameter's type:
+///
+/// | declared parameter      | suffix                                          |
+/// |-------------------------|-------------------------------------------------|
+/// | none                    | (empty)                                         |
+/// | `( v : text )`          | `,v:event.target.value`                         |
+/// | `( n : number )`        | `,n:(Number(event.target.value)\|\|0)` — 0 when unreadable |
+/// | `( b : bool )`          | `,b:event.target.value.toLowerCase()==='true'`  |
+///
+/// An undeclared emit (a direct emitter caller with no interface) or one
+/// with several parameters keeps `fallback`, the shape each event had
+/// before payloads followed the declaration.
+fn text_field_payload(ctx: &RenderCtx<'_>, emit_name: &str, fallback: &str) -> String {
+    let Some(emit) = ctx.emits.iter().find(|emit| emit.name == emit_name) else {
+        return fallback.to_string();
+    };
+    match emit.params.as_slice() {
+        [] => String::new(),
+        [param] => {
+            let field = to_camel_case_first_lower(&param.name);
+            if !is_safe_identifier(&field) {
+                return String::new();
+            }
+            let value = match param.r#type {
+                EmitPayloadType::Number => "(Number(event.target.value)||0)",
+                EmitPayloadType::Bool => "event.target.value.toLowerCase()==='true'",
+                _ => "event.target.value",
+            };
+            format!(",{field}:{value}")
+        }
+        _ => fallback.to_string(),
+    }
 }
 
 /// Lower a `HostButton` node to a `<button>` block inside the shadow
@@ -5121,7 +5182,16 @@ mod tests {
         let m = component(
             "Edit",
             vec![slot("value", SlotType::Text, true)],
-            vec![emit_decl("onChange", vec![]), emit_decl("onCommit", vec![])],
+            vec![
+                emit_decl(
+                    "onChange",
+                    vec![EmitParam {
+                        name: "value".to_string(),
+                        r#type: EmitPayloadType::Text,
+                    }],
+                ),
+                emit_decl("onCommit", vec![]),
+            ],
         );
         let l = root_layout(
             "Edit",
@@ -8331,7 +8401,13 @@ mod tests {
                 slot("body", SlotType::Text, true),
                 slot("body-label", SlotType::Text, true),
             ],
-            vec![emit_decl("onBodyChange", vec![])],
+            vec![emit_decl(
+                "onBodyChange",
+                vec![EmitParam {
+                    name: "value".to_string(),
+                    r#type: EmitPayloadType::Text,
+                }],
+            )],
         );
         let l = multiline_field(
             "HostInput",
@@ -8353,10 +8429,11 @@ mod tests {
         );
     }
 
-    /// #15930 — Enter is a line break in a text area, so neither primitive
-    /// wires it to `onCommit` when multiline. Escape still cancels.
+    /// UI25 §4 — Enter is a line break in a text area, so a multiline field
+    /// commits on Ctrl+Enter (Windows/Linux) or Cmd+Enter (macOS) instead,
+    /// on both primitives. Escape still cancels.
     #[test]
-    fn a_multiline_field_does_not_commit_on_enter() {
+    fn a_multiline_field_commits_on_ctrl_or_cmd_enter() {
         for tag in ["HostInput", "Input"] {
             let m = component(
                 "X",
@@ -8371,12 +8448,116 @@ mod tests {
                 ],
             );
             let out = from_pipeline(&m, &l, &empty_style("X")).unwrap().output;
-            assert!(!out.contains("'Enter'"), "{tag}:\n{out}");
+            assert!(
+                out.contains(
+                    "if(event.key==='Enter'&&(event.ctrlKey||event.metaKey)){event.preventDefault();this.getRootNode().host.dispatch({type:'save'});}"
+                ),
+                "{tag}:\n{out}"
+            );
+            assert!(!out.contains("if(event.key==='Enter')"), "{tag}:\n{out}");
             assert!(
                 out.contains("if(event.key==='Escape')this.getRootNode().host.dispatch({type:'discard'});"),
                 "{tag}:\n{out}"
             );
         }
+    }
+
+    /// A text field's dispatch carries the payload its emit declares, under
+    /// the declared parameter's name, exactly as the element's own
+    /// `onX(param)` method does. `onCommit` used to dispatch `{type}` alone,
+    /// so a `( value : text )` commit reached listeners with no text, and
+    /// `onChange` always wrote `value`, whatever the parameter was called.
+    #[test]
+    fn text_field_dispatches_carry_the_declared_payload() {
+        let text = |name: &str| EmitParam {
+            name: name.to_string(),
+            r#type: EmitPayloadType::Text,
+        };
+        let m = component(
+            "X",
+            vec![],
+            vec![
+                emit_decl("onEdit", vec![text("draft-text")]),
+                emit_decl("onSave", vec![text("value")]),
+                emit_decl(
+                    "onPick",
+                    vec![EmitParam {
+                        name: "amount".to_string(),
+                        r#type: EmitPayloadType::Number,
+                    }],
+                ),
+                emit_decl("onPing", vec![]),
+            ],
+        );
+        let field = |multiline: bool, change: &str, commit: &str| {
+            let mut root = leaf("HostInput");
+            if multiline {
+                root.props.push(LayoutProp {
+                    name: "multiline".to_string(),
+                    value: LayoutPropValue::Keyword("true".to_string()),
+                });
+            }
+            root.props.push(LayoutProp {
+                name: "onChange".to_string(),
+                value: LayoutPropValue::EmitRef(change.to_string()),
+            });
+            root.props.push(LayoutProp {
+                name: "onCommit".to_string(),
+                value: LayoutPropValue::EmitRef(commit.to_string()),
+            });
+            let l = LayoutDef {
+                component_name: "X".to_string(),
+                root,
+            };
+            from_pipeline(&m, &l, &empty_style("X")).unwrap().output
+        };
+
+        let single = field(false, "onEdit", "onSave");
+        assert!(
+            single.contains("onchange=\"this.getRootNode().host.dispatch({type:'edit',draftText:event.target.value})\""),
+            "onChange uses the declared field name:\n{single}"
+        );
+        assert!(
+            single.contains("if(event.key==='Enter')this.getRootNode().host.dispatch({type:'save',value:event.target.value});"),
+            "a single-line text commit carries the text:\n{single}"
+        );
+
+        let multi = field(true, "onPing", "onSave");
+        assert!(
+            multi.contains("onchange=\"this.getRootNode().host.dispatch({type:'ping'})\""),
+            "a void onChange carries nothing:\n{multi}"
+        );
+        assert!(
+            multi.contains("{event.preventDefault();this.getRootNode().host.dispatch({type:'save',value:event.target.value});}"),
+            "the text-area chord carries the text too:\n{multi}"
+        );
+
+        let number = field(false, "onPing", "onPick");
+        assert!(
+            number.contains("dispatch({type:'pick',amount:(Number(event.target.value)||0)})"),
+            "a number payload is parsed, 0 when unreadable:\n{number}"
+        );
+    }
+
+    /// A single-line field keeps bare Enter as its commit key.
+    #[test]
+    fn a_single_line_field_still_commits_on_bare_enter() {
+        let m = component("X", vec![], vec![emit_decl("onSave", vec![])]);
+        let mut root = leaf("HostInput");
+        root.props.push(LayoutProp {
+            name: "onCommit".to_string(),
+            value: LayoutPropValue::EmitRef("onSave".to_string()),
+        });
+        let l = LayoutDef {
+            component_name: "X".to_string(),
+            root,
+        };
+        let out = from_pipeline(&m, &l, &empty_style("X")).unwrap().output;
+        assert!(
+            out.contains("if(event.key==='Enter')this.getRootNode().host.dispatch({type:'save'});"),
+            "got:\n{out}"
+        );
+        assert!(!out.contains("ctrlKey"), "got:\n{out}");
     }
 
 }
